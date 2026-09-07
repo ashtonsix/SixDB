@@ -64,7 +64,7 @@ owning module or study, rather than in a central implementation inventory.
 ## Initial support
 
 - One graph and a stable build directory per configuration.
-- `SIXDB_PROTOTYPES` selects which studies to configure. Their targets are
+- `SIXDB_SPIKES` selects which studies to configure. Their targets are
   excluded from `all`; build one requested target and its dependencies.
 - One object per TU, with compiled libraries reused within the configuration.
   Ninja object targets support compile-only iteration before linking.

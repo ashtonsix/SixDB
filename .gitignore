@@ -3,3 +3,13 @@
 __pycache__/
 *.pyc
 .DS_Store
+
+# Full run bundles live under build/ and in S3; retain compact evidence in Git.
+/workbench/spikes/**/evidence/**/benchmark.json
+/workbench/spikes/**/evidence/**/run.json
+/workbench/spikes/**/evidence/**/*.tar.gz
+/workbench/spikes/**/evidence/**/CMakeCache.txt
+/workbench/spikes/**/evidence/**/compile_commands.json
+/workbench/spikes/**/evidence/**/*.stdout
+/workbench/spikes/**/evidence/**/*.stderr
+/workbench/spikes/**/evidence/**/*.log

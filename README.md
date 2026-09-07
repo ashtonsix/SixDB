@@ -17,16 +17,16 @@ scope. This is a starting description, not an exhaustive list of constraints.
 | [loom](loom/README.md) | Binding to Orbital, task scheduling/routing, latency hiding, and the buffer pool |
 | [engine](engine/README.md) | Database core: SQL interface, planning, execution, and core data structures |
 | [shore](shore/README.md) | UI, shell, bindings, connectors, formats, and external utilities |
-| [workbench](workbench/README.md) | Science, design development, prototypes, benchmarks, datasets, and tooling |
+| [workbench](workbench/README.md) | Science, design development, spikes, benchmarks, datasets, and tooling |
 
 Design develops in Workbench through experiments and spikes. Module documents
 stay thin, brief, and easy to steer. Experiment priorities and architectural
 choices will follow the signal; no implementation roadmap is fixed here.
 
 One repository and a shared [CMake/Ninja build](BUILDING.md) support independent,
-incremental compilation of TUs, including opt-in prototypes. There are no
+incremental compilation of TUs, including opt-in spikes. There are no
 database implementation targets yet.
 
-[Calico references](workbench/prior-art/calico.md) preserve useful starting
+[Calico references](workbench/notebook/calico.md) preserve useful starting
 points. Calico's architecture and specifications do not automatically become
 SixDB's constraints.

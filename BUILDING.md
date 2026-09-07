@@ -17,8 +17,14 @@ compiler; it does not yet pin the standard library, linker, or worker image.
 
 Targets use ordinary CMake plus `sixdb_target(name)` for project settings.
 Each `.cpp` compiles independently; reusable implementation goes in compiled
-libraries. [Prototype builds](workbench/prototypes/README.md) are opt-in and
+libraries. [Spike builds](workbench/spikes/README.md) are opt-in and
 can build just one executable or object. There are no database targets yet.
+
+For editor support, `python3 workbench/tools/dev.py --add NAME` activates a
+spike in the stable `build/clang/dev/compile_commands.json`, preserving
+other active spikes. The repository's `.clangd` reads this database;
+experiment runners refresh it automatically. See the [dev helper](workbench/tools/README.md)
+for removal and refresh commands. This configures targets without building them.
 
 Floating-point settings disable fast-math and implicit contraction.
 `SIXDB_MARCH` selects the ISA; `SIXDB_TUNE` independently selects `generic`,

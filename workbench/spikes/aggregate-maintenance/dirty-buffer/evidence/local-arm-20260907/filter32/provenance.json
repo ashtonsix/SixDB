@@ -1,0 +1,83 @@
+{
+  "format": 1,
+  "status": "complete",
+  "source_unchanged": true,
+  "started_utc": "2026-09-07T21:34:30.407581+00:00",
+  "source_digest": "5ea6476db662c87b74af8efc483f553de814a6032f32235659664ad1561b4aba",
+  "source_archive_sha256": "e25f2c7884cbecf2bc33f296eba73b4cf7a1b6a2ea0271ffec15a03dc59d8665",
+  "git_head": "c7307bb2ffd211bab92c75427edc334ccf4d5ce6",
+  "config": {
+    "allowed_cpus": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "case": null,
+    "filter": "^(small|spread|hot|hot4096|hot_roots)/t[14]/(eager_plain|eager_atomic|eager_striped|scatter_record|word_or_record|word_check_record|word_check_span|exact_top_span|read_flush_span)/",
+    "filter_kib": 32,
+    "march": "armv8-a+lse",
+    "min_time": 0.04,
+    "repetitions": 5
+  },
+  "platform": "Linux-7.0.14-orbstack-00380-ga7e0a2dc9535-aarch64-with-glibc2.42",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=aggregate-maintenance",
+    "-DSIXDB_MARCH=armv8-a+lse",
+    "-DSIXDB_TUNE=generic"
+  ],
+  "context": {
+    "date": "2026-09-07T22:34:38+01:00",
+    "host_name": "ubuntu",
+    "num_cpus": 10,
+    "mhz_per_cpu": 2000,
+    "cpu_scaling_enabled": false,
+    "aslr_enabled": true,
+    "caches": [
+      {
+        "type": "Data",
+        "level": 1,
+        "size": 131072,
+        "num_sharing": 1
+      },
+      {
+        "type": "Instruction",
+        "level": 1,
+        "size": 196608,
+        "num_sharing": 1
+      },
+      {
+        "type": "Unified",
+        "level": 2,
+        "size": 12582912,
+        "num_sharing": 4
+      },
+      {
+        "type": "Unified",
+        "level": 3,
+        "size": 67108864,
+        "num_sharing": 10
+      }
+    ],
+    "load_avg": [
+      0.448242,
+      0.351074,
+      0.191895
+    ],
+    "library_version": "v1.9.4",
+    "library_build_type": "release",
+    "json_schema_version": 1
+  },
+  "files_sha256": {
+    "samples.csv": "9f08b75e4082920e9c683cbbc5c998105ee874d8e8eebfe810e2725d49634605",
+    "accounting.csv": "02426ffb3dcf7225b8dd05b9c2716bb17e16e5d7df0a1613ca7361290432aa3f"
+  },
+  "full_bundle": "artifact.json"
+}

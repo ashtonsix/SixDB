@@ -27,7 +27,8 @@ they do not establish SixDB contracts or reproduce its benchmark claims.
   planning, execution/joins, and pruning summaries.
 - [Science index](../../../calico/workbench/science/README.md) and
   [prior-art studies](../../../calico/workbench/science/prior-art/README.md).
-  The Calico process is historical context; SixDB's process is pending.
+  The Calico process is historical context; SixDB's lighter arrangement is
+  described in the [workbench](../README.md).
 - [Prototype directory](../../../calico/workbench/prototypes/): includes
   predictive PFOR, byte packing, compact row filters, point layouts, and
   three-array experiments. Consult each study's own findings and limitations.

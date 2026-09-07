@@ -26,7 +26,7 @@ def require(condition, message):
 
 def check_tuning(source, directory):
     """Compile header-free probes for both backends; no target executables run."""
-    study = source / "workbench/prototypes/tuning"
+    study = source / "workbench/spikes/tuning"
     study.mkdir()
     (study / "CMakeLists.txt").write_text('''
 add_library(tuning_probe OBJECT probe.cpp)
@@ -42,7 +42,7 @@ sixdb_target(tuning_probe)
     def configure(triple, march, tune, success=True):
         binary = Path(directory) / f"{triple}-{march}-{tune}"
         output = run("cmake", "-S", source, "-B", binary, "-G", "Ninja",
-                     "-DCMAKE_BUILD_TYPE=Release", "-DSIXDB_PROTOTYPES=tuning",
+                     "-DCMAKE_BUILD_TYPE=Release", "-DSIXDB_SPIKES=tuning",
                      f"-DCMAKE_CXX_COMPILER_TARGET={triple}",
                      "-DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY",
                      f"-DSIXDB_MARCH={march}", f"-DSIXDB_TUNE={tune}", success=success)
@@ -104,11 +104,11 @@ def main():
         for module in ("ikea", "orbital", "loom", "engine", "shore", "workbench"):
             (source / module).mkdir()
             (source / module / "CMakeLists.txt").write_text("")
-        (source / "workbench/CMakeLists.txt").write_text("add_subdirectory(prototypes)\n")
-        prototypes = source / "workbench/prototypes"
-        prototypes.mkdir()
-        shutil.copy2(ROOT / "workbench/prototypes/CMakeLists.txt", prototypes)
-        study = prototypes / "fixture"
+        (source / "workbench/CMakeLists.txt").write_text("add_subdirectory(spikes)\n")
+        spikes = source / "workbench/spikes"
+        spikes.mkdir()
+        shutil.copy2(ROOT / "workbench/spikes/CMakeLists.txt", spikes)
+        study = spikes / "fixture"
         study.mkdir()
         (study / "CMakeLists.txt").write_text('''
 add_library(fixture_core STATIC value.cpp)
@@ -125,17 +125,17 @@ sixdb_release_artifact(fixture_one)
         (study / "value.cpp").write_text('#include "value.h"\n#include "private.h"\nstd::expected<int, int> value() { return answer; }\n')
         for name in ("one", "two"):
             (study / f"{name}.cpp").write_text('#include "value.h"\nint main() { return value().has_value() ? 0 : 1; }\n')
-        broken = prototypes / "unselected"
+        broken = spikes / "unselected"
         broken.mkdir()
-        (broken / "CMakeLists.txt").write_text('message(FATAL_ERROR "Unselected prototype was configured")\n')
+        (broken / "CMakeLists.txt").write_text('message(FATAL_ERROR "Unselected spike was configured")\n')
 
         def configure(binary, config="RelWithDebInfo", *flags):
             return run("cmake", "-S", source, "-B", binary, "-G", "Ninja",
-                       f"-DCMAKE_BUILD_TYPE={config}", "-DSIXDB_PROTOTYPES=fixture", *flags)
+                       f"-DCMAKE_BUILD_TYPE={config}", "-DSIXDB_SPIKES=fixture", *flags)
 
         binary = Path(directory) / "dev"
         configure(binary)
-        base = binary / "workbench/prototypes/fixture"
+        base = binary / "workbench/spikes/fixture"
         objects = [base / "CMakeFiles/fixture_core.dir/value.cpp.o"]
         objects += [base / f"CMakeFiles/fixture_{name}.dir/{name}.cpp.o" for name in ("one", "two")]
 
@@ -146,7 +146,7 @@ sixdb_release_artifact(fixture_one)
             return [p.stat().st_mtime_ns for p in objects]
 
         run("cmake", "--build", binary)
-        require(not any(p.exists() for p in objects), "Default build compiled a prototype")
+        require(not any(p.exists() for p in objects), "Default build compiled a spike")
         build("fixture_one")
         require(not objects[2].exists(), "Focused build compiled another executable")
         shared = objects[0].stat().st_mtime_ns
@@ -199,7 +199,7 @@ sixdb_release_artifact(fixture_one)
         run("cmake", "--build", release, "--target", "fixture_one_dist")
         packed = release / "dist/bin/fixture_one"
         debug = release / "dist/symbols/fixture_one.debug"
-        original = release / "workbench/prototypes/fixture/fixture_one"
+        original = release / "workbench/spikes/fixture/fixture_one"
         run(packed)
         require(packed.stat().st_size < original.stat().st_size, "Stripping did not reduce artifact size")
         sections = run("readelf", "-SW", packed)
@@ -218,7 +218,7 @@ sixdb_release_artifact(fixture_one)
                            "-G", "Ninja", "-DCMAKE_CXX_COMPILER=g++", success=False)
             require("SixDB requires Clang" in rejected, "Wrong compiler failed for an unrelated reason")
         check_tuning(source, directory)
-        print("PASS: prototype isolation, shared objects, compile-only builds, source/header/flag invalidation, compiler pin, stripped release artifacts, and tuning/ISA separation")
+        print("PASS: spike isolation, shared objects, compile-only builds, source/header/flag invalidation, compiler pin, stripped release artifacts, and tuning/ISA separation")
 
 
 if __name__ == "__main__":

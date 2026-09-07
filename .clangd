@@ -1,0 +1,4 @@
+# The workbench workflow refreshes this configuration explicitly. clangd only
+# reads its compilation database; it does not configure or build the project.
+CompileFlags:
+  CompilationDatabase: build/clang/dev
