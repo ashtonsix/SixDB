@@ -13,6 +13,11 @@ Loose thoughts can stay in the [notebook](../notebook/ideas.md) indefinitely.
   descendant summaries without excessive mutation cost. The initial spike
   concluded with two count/sum probes; [conclusions](aggregate-maintenance/CONCLUSIONS.md)
   and reproducible evidence are available. The production design remains open.
+- [Trie remapping](trie-remapping/README.md): preserve natural-key trie regions
+  and pack difficult suffixes into ordered physical positions with growth room.
+  The first spike is concluded, with [findings](trie-remapping/FINDINGS.md) on
+  density, column movement, gap policy, and partial ordering. The broader design
+  question remains open.
 
 ## Building a study
 

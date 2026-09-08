@@ -1,4 +1,4 @@
-# Notes from the first research loop
+# Notes from the research loops
 
 The aggregate-maintenance spike is [closed](../spikes/aggregate-maintenance/CONCLUSIONS.md).
 These observations carry forward to the next question; they do not prescribe
@@ -173,3 +173,42 @@ convenience for chosen results, not an obligation to retain every run.
 Both local experiment runners subsequently passed smoke runs with the revised
 source capture and analyzers. Offline artifact checks exercise upload failure,
 retry, corrupt compact inputs/downloads, unsafe archives, and source exclusions.
+
+## Trie remapping: making the comparison answer the question
+
+The [first remapping probe](../spikes/trie-remapping/FINDINGS.md) reused the
+runner, editor configuration, source receipts, and S3 retention without a new
+shared framework. Its implementation is compiled once for separate correctness
+and benchmark drivers. A small default selection supports iteration; broad
+screens and focused confirmations remain explicit selections. The first spike
+is [concluded](../spikes/trie-remapping/README.md); the reusable machinery and
+unresolved questions stay in its existing home.
+
+The main work was making the competing mechanisms credible. Bulk shifts and
+common projection loops removed accidental scalar/dispatch costs from packed
+layouts. Natural terminals gained growth slack and larger-cutoff controls.
+Summaries were attached to materialized blocks instead of fictitious deep trie
+strata. Accounting made a superficially attractive result explainable: gapped
+keys saved locator repair while rank-packed columns still moved just as much.
+
+Negative-query distribution deserved the same care as inserted keys. Collision
+misses initially fell outside the shared prefix domains, making point queries
+and projected scans unrepresentatively easy. The final follow-up shares a
+domain generator for initial and final-state queries and checks the hit ratio.
+Its evidence note names which older results it supersedes. Post-history scans
+retain the mutated physical layout and use a separately replayed logical oracle.
+
+The strongest extra experiment was small: append-aware gap placement reduced
+an apparent full-order penalty by 3.4×. That separated a spacing-policy problem
+from a representation limit. Inspecting the actual comparison list also caught
+an omitted method registration before accepting that follow-up as evidence.
+The broader screen narrowed the question; it did not need to become thousands
+of committed raw result rows. Only its verified bundle reference is retained,
+alongside compact samples from the focused runs.
+
+This study took more implementation than aggregate maintenance because routing,
+layout, and repair needed to interact. The boundary is now explicit: these are
+resident access-method regions with real movement and lookup, while mixed-region
+discovery, actual dual-arity navigation, and production publication remain open.
+Keeping that contract next to the code makes the result useful without turning
+a convenient model into an Engine interface.
