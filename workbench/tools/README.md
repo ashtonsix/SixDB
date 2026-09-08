@@ -10,9 +10,9 @@ It does not compile Calico or a database implementation.
 
 [experiment.py](experiment.py) supplies a small local-run receipt helper:
 source snapshots excluding evidence, logged commands, hashes, and success/failure recording.
-The first caller is the [aggregate delta runner](../spikes/aggregate-maintenance/run.py).
-Study-specific execution and analysis remain in the study. This does not yet
-provide remote execution or an imposed research process.
+The [aggregate delta runner](../spikes/aggregate-maintenance/run.py) is an example.
+Study-specific execution and analysis remain in the study. Remote execution
+is not yet provided.
 
 Its optional `workspace` argument builds from captured sources while the live
 checkout remains editable. Stable workspace paths preserve incremental builds.

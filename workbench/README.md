@@ -22,17 +22,10 @@ the [row-signature findings](spikes/row-filter-signatures/FINDINGS.md),
 the separate [sketches, filters, and histograms note](notebook/secondary-summaries.md),
 or the [Calico overview](notebook/calico.md).
 
-Capture enough to recover an interesting thought. Browse relevant notebook
-entries when choosing a question or changing direction; link experimental
-surprises to ideas they change or revive. Notes can remain notes indefinitely
-and can inform several spikes. A spike can begin with one README and keeps
-its home through exploration, adoption, or abandonment.
-
-Investigation-specific reading, runners, benchmarks, and findings belong in
-that spike. Shared tools and datasets stay shared. Selected samples, counters,
-and provenance live beside findings; full bundles belong in ignored output or
-S3. These helpers can be used independently as an investigation needs them.
+The [spike guide](spikes/README.md) describes an investigation's home;
+the [notebook](notebook/ideas.md) holds thoughts that can inform several studies.
+Shared helpers can be used independently as an investigation needs them.
+Agent working defaults are in [AGENTS.md](../AGENTS.md).
 The [research-experience notes](design/research-experience.md#shared-inputs-and-fewer-chores)
 explain the recent changes; the [tools index](tools/README.md) lists the scripts
-and checks. There are no required forms, statuses, promotion stages, or review
-ceremonies.
+and checks.

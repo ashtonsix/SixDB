@@ -5,10 +5,6 @@ and a few sentences can be enough, especially why something caught our
 attention. Longer thoughts may get their own file. Notes can remain notes
 indefinitely, inform several investigations, or acquire a link to a spike.
 
-Browse relevant entries when choosing a question or changing direction, and
-link back when new evidence changes an earlier intuition. No required fields,
-statuses, or schedule.
-
 ## Sketches, filters, and histograms have different jobs
 
 Ashton's [secondary-summary question](secondary-summaries.md) is deliberately

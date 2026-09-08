@@ -9,9 +9,10 @@ options such as fast-math that compromise deterministic execution.
 
 Release artifacts should shed symbols and present a modest barrier to casual
 reverse engineering. Keep build time and binary size under control through
-CPS and deliberate inlining, particularly across combinatorial spaces. Reuse
-Calico's S3 bucket and datasets; draw on its operational approach with a fresh
-implementation. Detailed experiment/result process remains pending.
+CPS and deliberate inlining, particularly across combinatorial spaces.
+
+See the [Workbench guide](../README.md) for research tooling, shared datasets,
+and evidence storage, and [AGENTS.md](../../AGENTS.md) for agent working defaults.
 
 ## Implemented starting choices
 

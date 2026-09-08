@@ -19,9 +19,9 @@ scope. This is a starting description, not an exhaustive list of constraints.
 | [shore](shore/README.md) | UI, shell, bindings, connectors, formats, and external utilities |
 | [workbench](workbench/README.md) | Science, design development, spikes, benchmarks, datasets, and tooling |
 
-Design develops in Workbench through experiments and spikes. Module documents
-stay thin, brief, and easy to steer. Experiment priorities and architectural
-choices will follow the signal; no implementation roadmap is fixed here.
+Design develops in Workbench through experiments and spikes. Experiment priorities
+and architectural choices follow the signal; no implementation roadmap is fixed here.
+Agent working guidance lives in [AGENTS.md](AGENTS.md).
 
 The [Workbench guide](workbench/README.md) links the research tools by task:
 [start a spike](workbench/spikes/README.md),
