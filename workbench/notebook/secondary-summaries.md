@@ -57,6 +57,15 @@ merges; histogram plan-quality drift under moving hot values and correlation;
 and deletion/replacement cost for whichever min-sketch family is intended.
 These are separate from the first study's count/sum write-amplification probe.
 
+The [row-signature study](../spikes/row-filter-signatures/FINDINGS.md) now supplies
+one concrete filter comparison: retaining joint byte-code presence can reject
+blocks that marginal presence or Bloom-style OR cannot. Repeated values also
+make one hash collision persist across many rows and blocks. Row-level error
+rate, same-row correlation, Boolean projection onto planes, and physical
+grouping therefore need separate treatment when estimating pruning value.
+This is evidence for that filter family; the sketch and histogram questions
+above remain open.
+
 ## Starting references
 
 - [Bloom, “Space/Time Trade-offs in Hash Coding with Allowable Errors” (1970)](https://www.cs.princeton.edu/courses/archive/spr05/cos598E/bib/p422-bloom.pdf):
@@ -70,5 +79,6 @@ These are separate from the first study's count/sum write-amplification probe.
   a concrete example of histograms, common values, sampling, and multivariate
   statistics serving estimates rather than exact query answers.
 
-These sources are starting points only; no comparative literature review or
-experiment has yet been completed for this secondary question.
+These sources remain a starting list. The row-signature study supplies the
+filter evidence linked above; a broader comparative review and experiments
+for the sketch and histogram questions remain open.

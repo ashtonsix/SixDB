@@ -9,6 +9,12 @@ there is no required template. Several implementations or measurement campaigns
 can share the same home, which remains useful after adoption or abandonment.
 Loose thoughts can stay in the [notebook](../notebook/ideas.md) indefinitely.
 
+- [Row filter signatures](row-filter-signatures/README.md): compact per-row
+  evidence for conjunctive and factored Boolean filters, progressive refinement,
+  8/16/32-bit planes, and block rollups. The spike concluded with a resident
+  study and [findings](row-filter-signatures/FINDINGS.md) on conditional
+  rollup/text wins, direct-column controls, Boolean placement, and maintenance
+  costs. The production design remains open.
 - [Aggregate maintenance](aggregate-maintenance/README.md): maintaining useful
   descendant summaries without excessive mutation cost. The initial spike
   concluded with two count/sum probes; [conclusions](aggregate-maintenance/CONCLUSIONS.md)

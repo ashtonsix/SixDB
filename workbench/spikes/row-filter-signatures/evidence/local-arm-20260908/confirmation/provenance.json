@@ -1,0 +1,87 @@
+{
+  "format": 1,
+  "status": "complete",
+  "source_unchanged": true,
+  "started_utc": "2026-09-08T14:46:45.798816+00:00",
+  "source_digest": "e8cfc212ad49bc49db9a7de805e69fff16d2a6a4edabdd13fda3c70f0d936a60",
+  "source_archive_sha256": "8198072010cef9f3c4141c531e43dd4e9e7aac592f46f128aec5bf56022fdb5d",
+  "git_head": "b404d9cfe3bec31580ffb565bbe22b7fa7bddd96",
+  "config": {
+    "allowed_cpus": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "cpu": 0,
+    "hash": 13,
+    "march": "",
+    "min_time": 0.02,
+    "repetitions": 5,
+    "rows": 1048576,
+    "sanitize": true,
+    "seed": 41,
+    "select": "^(single|near|far|broad|clustered|hot|cnf)/(soa|tag32|tag16|tag8|tag8_eager|tag8_cnf|joint64|marginal64)/q0$|^absent/(soa|tag32|tag16|tag8|joint16|joint64|joint256|marginal64|shared8|shared16|shared32|union64)/q[0-3]$|^(exclusive|paired)/(soa|tag8|joint64|marginal64)/q[0-3]$|^(range|ties|range_clustered)/(native|prefix16|prefix8)/q0$|^rare/(aos|tag8|tag16|tag32|shared32)/(build|replace)$|^absent/(joint16|joint64|joint256|marginal64)/build$",
+    "text": false
+  },
+  "platform": "Linux-7.0.14-orbstack-00380-ga7e0a2dc9535-aarch64-with-glibc2.42",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=row-filter-signatures",
+    "-DSIXDB_TUNE=generic",
+    "-DSIXDB_MARCH="
+  ],
+  "context": {
+    "date": "2026-09-08T15:47:11+01:00",
+    "host_name": "ubuntu",
+    "num_cpus": 10,
+    "mhz_per_cpu": 2000,
+    "cpu_scaling_enabled": false,
+    "aslr_enabled": true,
+    "caches": [
+      {
+        "type": "Data",
+        "level": 1,
+        "size": 131072,
+        "num_sharing": 1
+      },
+      {
+        "type": "Instruction",
+        "level": 1,
+        "size": 196608,
+        "num_sharing": 1
+      },
+      {
+        "type": "Unified",
+        "level": 2,
+        "size": 12582912,
+        "num_sharing": 4
+      },
+      {
+        "type": "Unified",
+        "level": 3,
+        "size": 67108864,
+        "num_sharing": 10
+      }
+    ],
+    "load_avg": [
+      0.488281,
+      0.201172,
+      0.114746
+    ],
+    "library_version": "v1.9.4",
+    "library_build_type": "release",
+    "json_schema_version": 1
+  },
+  "files_sha256": {
+    "samples.csv": "bd684f334094888b56dc22fac756099a768d9c97e887b0c0d4067207fa8990af",
+    "accounting.csv": "e3e95942b2c52a9b929a81a2b0d6fa1b2c3638202355e2073acd433e6686038b"
+  },
+  "full_bundle": "artifact.json"
+}
