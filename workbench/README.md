@@ -13,7 +13,8 @@ Successor to Calico's `workbench`.
 | [tools/](tools/README.md) | Scripts, provisioning, and artifact tooling |
 | [datasets/](datasets/README.md) | Dataset references, preparation, and generators |
 
-Start with the [trie-remapping closeout](spikes/trie-remapping/README.md),
+Start with the [regexp-lowering closeout](spikes/regexp-lowering/CONCLUSIONS.md),
+the [trie-remapping closeout](spikes/trie-remapping/README.md),
 the [aggregate-maintenance closeout](spikes/aggregate-maintenance/CONCLUSIONS.md),
 the separate [sketches, filters, and histograms note](notebook/secondary-summaries.md),
 or the [Calico overview](notebook/calico.md).

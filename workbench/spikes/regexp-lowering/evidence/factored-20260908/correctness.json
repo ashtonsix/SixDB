@@ -1,0 +1,83 @@
+{
+  "check": {
+    "counters": {
+      "LIKE_mismatches": 0,
+      "bounds_mismatches": 0,
+      "exact_plans": 187,
+      "false_negatives": 0,
+      "pairs": 3178704,
+      "positive_pairs": 927400
+    },
+    "returncode": 0,
+    "stderr_bytes": 0,
+    "stdout_sha256": "e9b9423a8471b60707d482f03b4bc408eab0313db9c34fa8170652b5457cd5f2"
+  },
+  "check-sanitize": {
+    "counters": {
+      "LIKE_mismatches": 0,
+      "bounds_mismatches": 0,
+      "exact_plans": 187,
+      "false_negatives": 0,
+      "pairs": 3178704,
+      "positive_pairs": 927400
+    },
+    "returncode": 0,
+    "stderr_bytes": 0,
+    "stdout_sha256": "e9b9423a8471b60707d482f03b4bc408eab0313db9c34fa8170652b5457cd5f2"
+  },
+  "factor_check": {
+    "counters": {
+      "DAG_mismatches": 0,
+      "accounting_mismatches": 0,
+      "all_endpoint_pairs": 66120,
+      "false_negatives": 0,
+      "order_mismatches": 0,
+      "ordered_pairs": 914280,
+      "ordered_positive_pairs": 248643,
+      "pairs": 1828560,
+      "positive_pairs": 497286
+    },
+    "returncode": 0,
+    "stderr_bytes": 0,
+    "stdout_sha256": "19eb18ef53c1259b6cda539853cc9ce4d757bd9275fe529675f5542a82bba0d8"
+  },
+  "factor_check-sanitize": {
+    "counters": {
+      "DAG_mismatches": 0,
+      "accounting_mismatches": 0,
+      "all_endpoint_pairs": 66120,
+      "false_negatives": 0,
+      "order_mismatches": 0,
+      "ordered_pairs": 914280,
+      "ordered_positive_pairs": 248643,
+      "pairs": 1828560,
+      "positive_pairs": 497286
+    },
+    "returncode": 0,
+    "stderr_bytes": 0,
+    "stdout_sha256": "19eb18ef53c1259b6cda539853cc9ce4d757bd9275fe529675f5542a82bba0d8"
+  },
+  "probe-accidents": {
+    "counters": {
+      "exact_mismatches": 0,
+      "false_negatives": 0,
+      "order_mismatches": 0,
+      "pairs": 262144,
+      "patterns": 4
+    },
+    "returncode": 0,
+    "stderr_bytes": 0,
+    "stdout_sha256": "9a233bcb4816a8df959fe074c4b4ec839981357d387e2a4a7e0a71c98b6079bf"
+  },
+  "probe-uap": {
+    "counters": {
+      "exact_mismatches": 0,
+      "false_negatives": 0,
+      "order_mismatches": 0,
+      "pairs": 23130510,
+      "patterns": 1270
+    },
+    "returncode": 0,
+    "stdout_sha256": "4668fa45f68e211480373b41f69c40c4224857271697b8e732a58701d2c561df"
+  }
+}

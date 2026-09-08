@@ -1,0 +1,48 @@
+{
+  "baseline": {
+    "artifact": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/1b8e1270e10f8207676096fa9f7a308151dcffc1a6375b305b1543fa03f361e2.tar.gz",
+    "checked_patterns": 1274,
+    "counters_sha256": "c94c8fa75889ac82e43a9a959e7dfd73d8c8f1374653af099a39bd9561a38666"
+  },
+  "compact_sha256": {
+    "correctness.json": "a23685b58a079034a105b0e537aff58697a6ff9bf0fd816d1f5b5329e5b2a417",
+    "examples.csv": "76264e2f07e130b089e64fad852dee45936e5324d5f83582ff6830e69dc0bc72",
+    "factor_summary.csv": "77cf18ddda34148c7183bb938813b307d79bcdc3f04ceac4e4ada367f82853b0",
+    "inputs.json": "67d17cb43800250b9ffa3bd130d4d7d8ed7b379bfbfe0dfc3ee590fb72cf691e",
+    "structure.csv": "f36b341a966d09ea41694d2562914a08fcee375e1ca223d4a187cd15050f4911",
+    "summary.csv": "8d23a2458844d0a39f48a02916d79faa16ae7658da234a5bd098813d5ced2019",
+    "summary.md": "b6ae01397e0867d5e432dcff6593c0ae09b60b8989d2df400cce1aaac4aaaeb9"
+  },
+  "format": 1,
+  "git_head": "ae6a84e3a1777ca812b5cc201a2e6611a94ac856",
+  "platform": "Linux-7.0.14-orbstack-00380-ga7e0a2dc9535-aarch64-with-glibc2.42",
+  "run": "20260908T120746.015181Z",
+  "source_digest": "3bc4b8e5233934be1aa82d37ca15bfaa8063ac0c732bd56f734cd5cb37499175",
+  "source_files_sha256": {
+    "workbench/spikes/regexp-lowering/CMakeLists.txt": "f6b3dfb1ec29d72d2f03912fe0aa78752ce5b70518837ced3a762ecf1bc9629a",
+    "workbench/spikes/regexp-lowering/FINDINGS.md": "8733ba25a7fc6eb84c12c083cb92d4d097916e18160884f6a0233625ce0a44ae",
+    "workbench/spikes/regexp-lowering/README.md": "d215912de09716b85b247eef6adf262397c6a39bea23e4627db112c205694abc",
+    "workbench/spikes/regexp-lowering/analyze.py": "3e853aa921fee0f53aa942ff73bce28910eb603a7fb4af0d8160e05911ea94e0",
+    "workbench/spikes/regexp-lowering/check.cpp": "5d6a10e622f54e9f3fe3bbaedc54f3a3fe72ae706b3300c14ac3e353df27f0eb",
+    "workbench/spikes/regexp-lowering/design.md": "bfe7da982d8418bbf9b97d828295b114dee0ee310e045f8efb93e99e6f7a47c6",
+    "workbench/spikes/regexp-lowering/experiments.md": "ff83082d6ee319796353ec987b6fea8af5e46f6edaa47939fd9102d3810d98dc",
+    "workbench/spikes/regexp-lowering/factor.cpp": "37422bb69f47d348fd62fda3030e4c604bba8521498cd9f8afeef74770346a1e",
+    "workbench/spikes/regexp-lowering/factor.h": "b7a694926d92e1de2a5734549c756452410268756b0ee1b42db5bf3e4b4daae4",
+    "workbench/spikes/regexp-lowering/factor_analyze.py": "0cf9d44ca863fd7dfc69ca04c27940f9e5ef4d50566d13ddcd9e1a4269b929be",
+    "workbench/spikes/regexp-lowering/factor_check.cpp": "306a59b5636b421b216bf2b630c5bbd4791748a28a6093525b303d462320067f",
+    "workbench/spikes/regexp-lowering/factor_probe.cpp": "d1bc1da9efd96ad865dacb5fe8bf81dffaaed20e9dc615d906812a39a8b53cf0",
+    "workbench/spikes/regexp-lowering/factored-filters.md": "4dfb9c9db7cb458d2bd33f2ba62009dc46da70f90b1c9127709357a8d1c2ad67",
+    "workbench/spikes/regexp-lowering/fsst-follow-up.md": "7589ed8d6cf9e528063c855e2ad83df47388b22a89fa0218341b9e1a17df7129",
+    "workbench/spikes/regexp-lowering/literature.md": "a32d59d067ffee209ff6f06c158084652579e59262e4a46b7a4bf24c6948271e",
+    "workbench/spikes/regexp-lowering/lower.cpp": "2dd425b7082845e8c7df193e781a88ceec45ae0f1b67d3932d0f9d962cd1108d",
+    "workbench/spikes/regexp-lowering/lower.h": "e9851e5d9230f1b4e9e7850d4e5656589bbba9ddfc92cdfbb26ba18ac6328e6e",
+    "workbench/spikes/regexp-lowering/prepare.py": "6d62bacb0c0d63eb1014f92e4c64edb2fcfe8504d43c061849be572329c5e0b7",
+    "workbench/spikes/regexp-lowering/probe.cpp": "23ed81a50d8ec42ef4b52e41f8a9c9f1e29c139111c766422f7d07176565e21f",
+    "workbench/spikes/regexp-lowering/richer-ir.md": "6fb915f203c2bfd9108daead27e893810d868826b1fb5997d9c7d209ec16bcb0",
+    "workbench/spikes/regexp-lowering/run.py": "ccb8720c81bd10b5607b77774d12335b3cdec6ba9f626fb7e0e7844a21894640",
+    "workbench/spikes/regexp-lowering/survivor-bounds.md": "0047c572756bef3fe0d332dccc9a118ebd2bbe6f6e3a78c3d80b0894144929b7",
+    "workbench/spikes/regexp-lowering/workloads.md": "e7c00cf154bcd8168cca665322cade6a8bfd966509efa440259518f0b0c36370"
+  },
+  "source_unchanged": true,
+  "study": "factored"
+}

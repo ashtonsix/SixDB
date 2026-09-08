@@ -18,6 +18,12 @@ Loose thoughts can stay in the [notebook](../notebook/ideas.md) indefinitely.
   The first spike is concluded, with [findings](trie-remapping/FINDINGS.md) on
   density, column movement, gap policy, and partial ordering. The broader design
   question remains open.
+- [Regexp lowering](regexp-lowering/README.md): replace regexp predicates with
+  exact LIKE expressions, or prefilter with necessary LIKE signatures before
+  FSST decoding and RE2 evaluation. The spike is concluded, with
+  [provisional recommendations](regexp-lowering/CONCLUSIONS.md) from studies of
+  exact coverage, richer constraints, survivor bounds, switching, and factored
+  filters with explicit relative order. FSST execution and timing remain open.
 
 ## Building a study
 

@@ -1,0 +1,6 @@
+dataset,group,nonexact_queries,baseline_fallbacks,literal_fallbacks,chain_fallbacks,like_branches,like_tokens,like_literal_bytes,chain_nodes,chain_leaves,chain_tokens,chain_literal_bytes,ordered_nodes,ordered_leaves,peak_chain_nodes,peak_ordered_nodes,chain_relaxations,ordered_relaxations,unordered_extra_vs_ordered,source_warm_atoms,eager_warm_atoms,tail_source_atoms,tail_trained_atoms,training_net_saved_atoms,training_queries_better,training_queries_worse,gate_cache_hits,gate_node_visits
+accidents,all,4,0,0,0,4,31,36,4,4,27,36,4,4,1,1,0,0,0,4096,4096,258048,258048,0,0,0,0,262144
+uap,all,1039,76,66,23,7505,53200,103511,4995,3413,14887,23412,4997,3413,359,359,0,0,128934,1722685,3494912,31477604,29618156,87221,96,362,184441,49572518
+uap,device_parsers,519,62,65,22,5720,35401,79425,3194,2049,7963,11113,3196,2049,63,63,0,0,126244,765828,2098176,14517521,13751319,-566146,60,286,73826,26123445
+uap,os_parsers,152,3,0,0,495,4699,7328,384,296,1557,3258,384,296,26,26,0,0,855,205124,303104,3480904,3161201,221723,15,22,0,4780875
+uap,user_agent_parsers,368,11,1,1,1290,13100,16758,1417,1068,5367,9041,1417,1068,359,359,0,0,1835,751733,1093632,13479179,12705636,431644,21,54,110615,18668198

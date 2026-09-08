@@ -1,0 +1,112 @@
+{
+  "accidents": {
+    "block_rows": 1024,
+    "block_starts": [
+      0,
+      45147,
+      90295,
+      135443,
+      180591,
+      225739,
+      270887,
+      316035,
+      361183,
+      406331,
+      451479,
+      496626,
+      541774,
+      586922,
+      632070,
+      677218,
+      722366,
+      767514,
+      812662,
+      857810,
+      902958,
+      948106,
+      993253,
+      1038401,
+      1083549,
+      1128697,
+      1173845,
+      1218993,
+      1264141,
+      1309289,
+      1354437,
+      1399585,
+      1444732,
+      1489880,
+      1535028,
+      1580176,
+      1625324,
+      1670472,
+      1715620,
+      1760768,
+      1805916,
+      1851064,
+      1896212,
+      1941359,
+      1986507,
+      2031655,
+      2076803,
+      2121951,
+      2167099,
+      2212247,
+      2257395,
+      2302543,
+      2347691,
+      2392838,
+      2437986,
+      2483134,
+      2528282,
+      2573430,
+      2618578,
+      2663726,
+      2708874,
+      2754022,
+      2799170,
+      2844318
+    ],
+    "patterns": 4,
+    "selection": "evenly spaced contiguous source blocks, source order within blocks",
+    "source_rows": 2845342,
+    "strings": 65536,
+    "unique_strings": 53947
+  },
+  "prepared_sha256": {
+    "accidents.patterns": "98c5bbe980ee1b9c7f5e2724a75b4d6a89026e79953ccb2d631d97870aa4440f",
+    "accidents.strings": "e1864a11d941d8f7a3543659cf2c94a6359392a35c888fa95a0a4d96be14d0f9",
+    "uap-LICENSE": "0c6f6cd66573dd12f68c71bffca774e58087c3c9168aed0eabf0a5ae10d3800f",
+    "uap-origins.json": "139facfc6761894a27243bc41bbdf5733e97ee53883549bdac45fa8b58722c07",
+    "uap.patterns": "8c0a69f8dacef8b7de0d2217a4e18bb81bc754b17774206102671437da475c41",
+    "uap.strings": "5d712304e1a87387a20c2bf44496d5e89044648d698c6a5e1f6abcdd5afbbb63"
+  },
+  "semantics": "RE2 UTF-8 case-sensitive search, except explicit uap regex_flag=i; Boolean results only",
+  "sources": {
+    "accident_queries": {
+      "bytes": 71,
+      "sha256": "81fdde134963c9ecced6ada05f0b71e74291f34c971eb61d7f2d62ebaf173dfc",
+      "url": "https://raw.githubusercontent.com/mush-zhang/Blare/b3c2a344307aed76e70ad1c40fd772c160d89425/data/regexes_traffic.txt"
+    },
+    "accidents": {
+      "bytes": 1154730978,
+      "sha256": "6029cb1eb91a607ba9e08f58ad46297129c7e11b1fd83dfbc20a585db2fca885",
+      "url": "https://media.githubusercontent.com/media/mush-zhang/Blare/b3c2a344307aed76e70ad1c40fd772c160d89425/data/US_Accidents_Dec21_updated.csv"
+    },
+    "uap": {
+      "bytes": 849505,
+      "sha256": "8fb0f0e68f3eadf26000a32e7c33c553175893fdb73aa868c12460f1c27c7be0",
+      "url": "https://codeload.github.com/ua-parser/uap-core/tar.gz/73e7340c3ed8055051607b296bf46ead7aa5f19e"
+    }
+  },
+  "uap": {
+    "input_order": "test_ua, test_os, test_device; source order, duplicates retained",
+    "pattern_groups": {
+      "device_parsers": 633,
+      "os_parsers": 204,
+      "user_agent_parsers": 433
+    },
+    "strings": 18213,
+    "unique_strings": 17816
+  }
+}
