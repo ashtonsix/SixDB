@@ -11,7 +11,8 @@ import unittest
 from unittest.mock import patch
 
 import artifacts
-from evidence import digest, read_measurements
+import datasets
+from evidence import digest, read_measurements, verify_compact
 from experiment import source_files
 
 
@@ -114,6 +115,40 @@ class ArtifactsCheck(unittest.TestCase):
         self.assertEqual(set(source_files(repo)), {"probe.cpp"})
         (repo / "workbench/spikes/example/evidence/new.csv").write_text("new evidence")
         self.assertEqual(set(source_files(repo)), {"probe.cpp"})
+
+    def test_generic_counts_and_shared_input_recovery(self):
+        with patch.object(artifacts, 'aws', self.fake_aws), patch.object(artifacts, 'ROOT', self.root), \
+                patch.object(datasets, 'ROOT', self.root):
+            prepared = datasets.cached('fixture', self.source / 'summary.csv', {}, {},
+                                       lambda p: (p / 'values').write_bytes(b'original input\n'))
+            meta = datasets.verify(prepared)
+            self.receipt['inputs'] = {'inputs': {'path': str(prepared), 'id': meta['id'], 'key': meta['key']}}
+            self.receipt['compact'] = {'files': ['accounting.csv', 'summary.md'],
+                                       'regenerate': ['python3', 'analysis.py', '{evidence}']}
+            (self.source / 'accounting.csv').write_bytes(b'case,count\r\nfixture,123\r\n')
+            self.receipt['artifact_sha256']['accounting.csv'] = digest(self.source / 'accounting.csv')
+            (self.source / 'run.json').write_text(json.dumps(self.receipt))
+            artifacts.retain(self.source, self.root / 'evidence')
+            self.assertEqual(len(self.objects), 2)  # one input and one run
+            self.assertEqual((self.root / 'evidence/accounting.csv').read_bytes(), b'case,count\r\nfixture,123\r\n')
+            self.assertEqual((self.root / 'evidence/.gitattributes').read_text(), '* -text\n')
+            self.assertEqual(verify_compact(self.root / 'evidence')['regenerate'][0], 'python3')
+            import shutil
+            shutil.rmtree(prepared)
+            restored = self.root / 'build/restored'
+            artifacts.fetch(self.root / 'evidence', restored)
+            self.assertEqual((restored / 'inputs/values').read_bytes(), b'original input\n')
+            self.assertEqual(datasets.verify(prepared)['id'], meta['id'])
+            # Repacking a restored run still references the input rather than embedding it.
+            shutil.rmtree(prepared)  # The original machine/cache path need not exist.
+            with tempfile.TemporaryDirectory() as temp:
+                ref = artifacts.publish(restored, Path(temp))
+                with tarfile.open(fileobj=io.BytesIO(self.objects[ref['key']])) as archive:
+                    self.assertFalse(any(p.name.startswith('inputs/') for p in archive))
+            self.assertEqual(json.loads((restored / 'input-artifacts.json').read_text())['inputs']['id'], meta['id'])
+            (self.root / 'evidence/accounting.csv').write_text('corrupt')
+            with self.assertRaisesRegex(ValueError, 'changed'):
+                verify_compact(self.root / 'evidence')
 
 
 if __name__ == "__main__":

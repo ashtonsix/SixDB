@@ -27,7 +27,8 @@ def main():
     stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S.%fZ')
     out=ROOT/'build/experiments/aggregate-maintenance/dirty-buffer'/stamp
     build=ROOT/'build/clang/dirty-buffer'
-    run=Run(ROOT,out,vars(a)|{'allowed_cpus':sorted(os.sched_getaffinity(0))})
+    run=Run(ROOT,out,vars(a)|{'allowed_cpus':sorted(os.sched_getaffinity(0))}, workspace=ROOT / 'build/workspaces/dirty-buffer')
+    build = run.build_dir
     print(f'Run: {out}',flush=True)
     error=None
     try:
@@ -35,8 +36,8 @@ def main():
         run.step('git-status',['git','status','--short'])
         run.step('compiler',['clang++-21','--version'])
         run.step('hardware',['lscpu'])
-        run.step('dev-configure',[sys.executable,str(ROOT/'workbench/tools/dev.py'),'--add','aggregate-maintenance'])
-        run.step('configure',['cmake','-S',str(ROOT),'-B',str(build),'-G','Ninja','-DCMAKE_BUILD_TYPE=Release','-DSIXDB_SPIKES=aggregate-maintenance',f'-DSIXDB_MARCH={a.march}','-DSIXDB_TUNE=generic'])
+        run.step('dev-configure',[sys.executable,str(ROOT/'workbench/tools/dev.py'),'--add','aggregate-maintenance'], check=False)
+        run.step('configure',['cmake','-S',str(run.source_root),'-B',str(build),'-G','Ninja','-DCMAKE_BUILD_TYPE=Release','-DSIXDB_SPIKES=aggregate-maintenance',f'-DSIXDB_MARCH={a.march}','-DSIXDB_TUNE=generic'])
         run.step('build',['cmake','--build',str(build),'--target','dirty_buffer_probe','-j','4'])
         for name in ('CMakeCache.txt','compile_commands.json'): shutil.copy2(build/name,out/name)
         binary=out/'dirty_buffer_probe'
@@ -44,7 +45,7 @@ def main():
         common=[f'--filter-kib={a.filter_kib}']+([f'--case={a.case}'] if a.case else [])
         run.step('check',[str(binary),'--check',*common],'accounting.csv')
         run.step('benchmark',[str(binary),*common,f'--benchmark_filter={a.filter}',f'--benchmark_repetitions={a.repetitions}',f'--benchmark_min_time={a.min_time}s','--benchmark_enable_random_interleaving=false','--benchmark_report_aggregates_only=false','--benchmark_display_aggregates_only=true','--benchmark_color=false',f'--benchmark_out={out/"benchmark.json"}','--benchmark_out_format=json'])
-        run.step('analyse',[sys.executable,str(HERE/'analyze.py'),str(out)])
+        run.step('analyse',[sys.executable,str(run.source_root / HERE.relative_to(ROOT) / 'analyze.py'),str(out)])
     except Exception as e: error=e
     error=run.finish(error)
     if error: print(f'FAILED: {error}',file=sys.stderr); return 1

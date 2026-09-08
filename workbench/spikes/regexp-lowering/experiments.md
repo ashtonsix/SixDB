@@ -129,7 +129,8 @@ are the union of raw candidate intervals, not observed compressed bytes saved;
 they exclude codec seeking and boundary-symbol overfetch.
 
 The [runner](run.py) uses Workbench source snapshots, command logs, source/input
-hashes, and success/failure receipts. Source must stay unchanged while it runs.
+hashes, and success/failure receipts. It builds from captured sources; live
+checkout edits can continue while it runs.
 Raw per-query/per-container counters and policy traces live in the full bundle.
 The [analyzer](analyze.py) keeps every query's compact counts and aggregates every
 policy variant; it regenerates tables from those compact inputs. A retained run
@@ -140,6 +141,10 @@ python3 workbench/spikes/regexp-lowering/prepare.py build/datasets/regexp-loweri
 python3 workbench/spikes/regexp-lowering/run.py --sanitize
 python3 workbench/spikes/regexp-lowering/run.py --branch-budget 64
 ```
+
+The runner now resolves shared cached inputs automatically. The explicit
+preparation command remains a compatibility option; `--inputs DIRECTORY`
+selects an existing prepared set. See the [dataset catalog](../../datasets/README.md).
 
 From macOS, prefix each command with `orb -m ubuntu`. Preparation fetches a
 1.15 GB source CSV on first use, caches it under ignored `build/datasets/`, and

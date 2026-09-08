@@ -27,6 +27,14 @@ Loose thoughts can stay in the [notebook](../notebook/ideas.md) indefinitely.
 
 ## Building a study
 
+Use the parts of the [shared tooling](../tools/README.md) that help the question:
+[datasets](../datasets/README.md) can be reused across studies,
+[`Run`](../tools/experiment.py) can capture sources and reuse a build workspace,
+and [retention](../tools/artifacts.md) can keep selected counters or timing
+samples and recover full runs later. The [regexp runner](regexp-lowering/run.py)
+combines these; the [aggregate runner](aggregate-maintenance/run.py) shows a
+Google Benchmark study. A standalone prototype can start with the build below.
+
 The editor uses one stable development configuration. Activate a study with
 `python3 workbench/tools/dev.py --add NAME` (repeat `--add` for several), or
 use its runner when that integrates the helper. `--remove NAME` deactivates it;

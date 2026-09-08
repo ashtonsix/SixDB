@@ -28,7 +28,8 @@ def main():
         parser.error('Invalid repetitions, minimum time, or CPU')
     output = ROOT / 'build/experiments/trie-remapping' / datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S.%fZ')
     build = ROOT / 'build/clang/trie-remapping'
-    run = Run(ROOT, output, vars(args) | {'allowed_cpus': sorted(os.sched_getaffinity(0))})
+    run = Run(ROOT, output, vars(args) | {'allowed_cpus': sorted(os.sched_getaffinity(0))}, workspace=ROOT / 'build/workspaces/trie-remapping')
+    build = run.build_dir
     print(f'Run: {output}', flush=True)
     error = None
     try:
@@ -36,8 +37,8 @@ def main():
         run.step('git-status', ['git', 'status', '--short'])
         run.step('compiler', ['clang++-21', '--version'])
         run.step('hardware', ['lscpu'])
-        run.step('dev-configure', [sys.executable, str(ROOT / 'workbench/tools/dev.py'), '--add', 'trie-remapping'])
-        run.step('configure', ['cmake', '-S', str(ROOT), '-B', str(build), '-G', 'Ninja', '-DCMAKE_BUILD_TYPE=Release', '-DSIXDB_SPIKES=trie-remapping', '-DSIXDB_TUNE=generic'])
+        run.step('dev-configure', [sys.executable, str(ROOT / 'workbench/tools/dev.py'), '--add', 'trie-remapping'], check=False)
+        run.step('configure', ['cmake', '-S', str(run.source_root), '-B', str(build), '-G', 'Ninja', '-DCMAKE_BUILD_TYPE=Release', '-DSIXDB_SPIKES=trie-remapping', '-DSIXDB_TUNE=generic'])
         run.step('build', ['cmake', '--build', str(build), '--target', 'trie_remapping_check', 'trie_remapping_bench', '-j', '4'])
         for name in ('CMakeCache.txt', 'compile_commands.json'):
             shutil.copy2(build / name, output / name)
@@ -45,8 +46,8 @@ def main():
             shutil.copy2(build / 'workbench/spikes/trie-remapping' / name, output / name)
         run.step('check', [str(output / 'trie_remapping_check')])
         if args.sanitize:
-            sanitized = ROOT / 'build/clang/trie-remapping-sanitize'
-            run.step('configure-sanitize', ['cmake', '-S', str(ROOT), '-B', str(sanitized), '-G', 'Ninja', '-DCMAKE_BUILD_TYPE=Release', '-DSIXDB_SPIKES=trie-remapping', '-DSIXDB_TUNE=generic', '-DCMAKE_CXX_FLAGS=-fsanitize=address,undefined -fno-omit-frame-pointer', '-DCMAKE_CXX_FLAGS_RELEASE=-O1 -g'])
+            sanitized = run.build_dir.parent / 'sanitize'
+            run.step('configure-sanitize', ['cmake', '-S', str(run.source_root), '-B', str(sanitized), '-G', 'Ninja', '-DCMAKE_BUILD_TYPE=Release', '-DSIXDB_SPIKES=trie-remapping', '-DSIXDB_TUNE=generic', '-DCMAKE_CXX_FLAGS=-fsanitize=address,undefined -fno-omit-frame-pointer', '-DCMAKE_CXX_FLAGS_RELEASE=-O1 -g'])
             run.step('build-sanitize', ['cmake', '--build', str(sanitized), '--target', 'trie_remapping_check', '-j', '4'])
             shutil.copy2(sanitized / 'workbench/spikes/trie-remapping/trie_remapping_check', output / 'trie_remapping_check_sanitized')
             run.step('check-sanitize', [str(output / 'trie_remapping_check_sanitized')])
@@ -54,7 +55,7 @@ def main():
         common = [f'--select={args.select}', f'--cpu={args.cpu}', f'--natural-slack={args.natural_slack}']
         run.step('accounting', [binary, '--accounting', *common], 'accounting.csv')
         run.step('benchmark', [binary, *common, f'--benchmark_repetitions={args.repetitions}', f'--benchmark_min_time={args.min_time}s', '--benchmark_enable_random_interleaving=false', '--benchmark_report_aggregates_only=false', '--benchmark_display_aggregates_only=true', '--benchmark_color=false', f'--benchmark_out={output / "benchmark.json"}', '--benchmark_out_format=json'])
-        run.step('analyse', [sys.executable, str(HERE / 'analyze.py'), str(output)])
+        run.step('analyse', [sys.executable, str(run.source_root / HERE.relative_to(ROOT) / 'analyze.py'), str(output)])
     except Exception as exc:
         error = exc
     error = run.finish(error)

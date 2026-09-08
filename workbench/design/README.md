@@ -9,6 +9,7 @@ a bounded investigation belongs in its [spike](../spikes/README.md).
 - [Build iteration](build-iteration.md): Calico findings and incremental spike builds.
 - [Tuning flags](tuning.md): microarchitecture policy independent of ISA availability.
 - [Research experience](research-experience.md): observations and tooling changes
-  from the first executable investigation.
+  across the aggregate, trie-remapping, and regexp investigations, including
+  [shared inputs and fewer chores](research-experience.md#shared-inputs-and-fewer-chores).
 
 Loose questions and reading can stay in the [notebook](../notebook/ideas.md).

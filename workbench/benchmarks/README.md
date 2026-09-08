@@ -19,3 +19,8 @@ first working use: pinned Google Benchmark 1.9.4, affinity checked in the
 executable, sequential repetitions, raw JSON, and separate logical accounting.
 Its [runner](../spikes/aggregate-maintenance/run.py) is a concrete starting
 point; a general benchmark API and cache-residence harness remain open.
+
+Studies can also measure correctness, candidate counts, movement, or operation
+counts without timing them. The [regexp-lowering study](../spikes/regexp-lowering/CONCLUSIONS.md)
+uses the same receipts and retention for that purpose. Shared tooling leaves
+those choices to the question being investigated.

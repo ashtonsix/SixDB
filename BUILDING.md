@@ -23,8 +23,12 @@ can build just one executable or object. There are no database targets yet.
 For editor support, `python3 workbench/tools/dev.py --add NAME` activates a
 spike in the stable `build/clang/dev/compile_commands.json`, preserving
 other active spikes. The repository's `.clangd` reads this database;
-experiment runners refresh it automatically. See the [dev helper](workbench/tools/README.md)
+experiment runners attempt to refresh it automatically. See the [dev helper](workbench/tools/README.md)
 for removal and refresh commands. This configures targets without building them.
+
+For recorded experiments, the runners use [captured build workspaces](workbench/tools/artifacts.md#shared-inputs-and-captured-sources)
+that reuse compiled objects while allowing live checkout edits. An incomplete
+live editor configuration does not block the captured experiment.
 
 Floating-point settings disable fast-math and implicit contraction.
 `SIXDB_MARCH` selects the ISA; `SIXDB_TUNE` independently selects `generic`,

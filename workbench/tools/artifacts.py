@@ -5,13 +5,15 @@ import argparse
 import gzip
 import hashlib
 import json
+import os
 from pathlib import Path, PurePosixPath
 import shutil
+import shlex
 import subprocess
 import tarfile
 import tempfile
 
-from evidence import compact_run
+from evidence import compact_run, compact_files
 
 ROOT = Path(__file__).resolve().parents[2]
 BUCKET = "calico-fleet-artifacts"
@@ -84,6 +86,35 @@ def download(reference, destination):
 
 
 def publish(directory, temporary):
+    # Inputs are independent objects. Add a restoration manifest to the bundle
+    # without rewriting the completed run or copying datasets into every run.
+    receipt = directory / 'run.json'
+    if receipt.exists():
+        inputs = json.loads(receipt.read_text()).get('inputs', {})
+        if inputs:
+            import datasets
+            staged = temporary / 'with-input-references'
+            staged.mkdir()
+            mounts = [Path(m) for m in inputs]
+            if any(not m.parts or m.is_absolute() or '..' in m.parts for m in mounts):
+                raise ValueError('Invalid input mount')
+            for path in files(directory):
+                name = path.relative_to(directory)
+                if name == Path('input-artifacts.json') or any(name.is_relative_to(m) for m in mounts):
+                    continue
+                (staged / name).parent.mkdir(parents=True, exist_ok=True)
+                os.link(path, staged / name)
+            references = {}
+            for mount, entry in inputs.items():
+                path = directory / mount
+                if not (path / 'prepared.json').exists():
+                    path = Path(entry['path'])
+                meta = datasets.verify(path)
+                if meta['id'] != entry['id'] or meta['key'] != entry['key']:
+                    raise ValueError('Run input no longer matches its recorded identity')
+                references[mount] = datasets.publish(path)
+            (staged / 'input-artifacts.json').write_text(json.dumps(references, indent=2, sort_keys=True) + '\n')
+            directory = staged
     bundle = temporary / "bundle.tar.gz"
     count = pack(directory, bundle)
     checksum = sha256(bundle)
@@ -114,7 +145,7 @@ def install(staging, destination):
     staging.rename(destination)
 
 
-def retain(source, destination):
+def retain(source, destination, selected=None, regenerate=None):
     source, destination = source.resolve(), destination.resolve()
     if destination.is_relative_to(source):
         raise ValueError("keep retained evidence outside its input run")
@@ -123,7 +154,12 @@ def retain(source, destination):
         temporary = Path(name)
         staging = temporary / "evidence"
         staging.mkdir()
-        compact_run(source, staging)
+        if selected is None:
+            compact_run(source, staging)
+        else:
+            receipt = json.loads((source / 'run.json').read_text())
+            receipt['compact'] = {'files': selected, 'regenerate': regenerate or []}
+            compact_files(source, staging, receipt)
         reference = publish(source, temporary)
         (staging / "artifact.json").write_text(json.dumps(reference, indent=2) + "\n")
         install(staging, destination)
@@ -145,13 +181,9 @@ def unpack(bundle, destination):
             path.chmod(member.mode & 0o777)
 
 
-def fetch(reference_path, destination):
-    if reference_path.is_dir():
-        reference_path = reference_path / "artifact.json"
-    reference = json.loads(reference_path.read_text())
+def restore_bundle(reference, destination):
+    """Restore the verified bytes; prepared-input resolution is a separate step."""
     destination = destination.resolve()
-    if not destination.is_relative_to(ROOT / "build"):
-        raise ValueError("fetch into ignored build/ output")
     if destination.exists():
         raise ValueError("fetch destination already exists")
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -166,6 +198,37 @@ def fetch(reference_path, destination):
             raise ValueError("bundle file count mismatch")
         verify_run(staging)
         staging.rename(destination)
+
+
+def fetch(reference_path, destination):
+    if reference_path.is_dir():
+        reference_path = reference_path / "artifact.json"
+    reference = json.loads(reference_path.read_text())
+    destination = destination.resolve()
+    if not destination.is_relative_to(ROOT / 'build'):
+        raise ValueError('fetch into ignored build/ output')
+    if destination.exists():
+        raise ValueError('fetch destination already exists')
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(dir=destination.parent) as temp:
+        staging = Path(temp) / 'run'
+        restore_bundle(reference, staging)
+        refs = staging / 'input-artifacts.json'
+        if refs.exists():
+            import datasets
+            expected = json.loads((staging / 'run.json').read_text()).get('inputs', {})
+            references = json.loads(refs.read_text())
+            if references.keys() != expected.keys():
+                raise ValueError('Input references do not match the run')
+            for mount, ref in references.items():
+                p = Path(mount)
+                if not p.parts or p.is_absolute() or '..' in p.parts:
+                    raise ValueError('Invalid restored input mount')
+                if any(ref[k] != expected[mount][k] for k in ('id', 'key')):
+                    raise ValueError('Restored dependency has a different identity')
+                prepared = datasets.restore(ref)
+                shutil.copytree(prepared, staging / p)
+        staging.rename(destination)
     print(f"Restored and verified: {destination}")
 
 
@@ -175,6 +238,8 @@ def main():
     retain_parser = commands.add_parser("retain", help="upload a completed run and write compact Git evidence")
     retain_parser.add_argument("run", type=Path)
     retain_parser.add_argument("evidence", type=Path)
+    retain_parser.add_argument('--file', action='append', dest='selected', help='Keep this file byte-for-byte; repeat as needed')
+    retain_parser.add_argument('--regenerate', help='Record a table-regeneration command; {evidence} denotes its directory')
     put_parser = commands.add_parser("put", help="upload a validation/other bundle and write its reference")
     put_parser.add_argument("directory", type=Path)
     put_parser.add_argument("reference", type=Path)
@@ -183,7 +248,7 @@ def main():
     fetch_parser.add_argument("output", type=Path)
     args = parser.parse_args()
     if args.command == "retain":
-        retain(args.run, args.evidence)
+        retain(args.run, args.evidence, args.selected, shlex.split(args.regenerate) if args.regenerate else None)
     elif args.command == "fetch":
         fetch(args.reference, args.output)
     else:

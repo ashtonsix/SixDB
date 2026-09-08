@@ -27,6 +27,34 @@ beside the evidence. The run is still local if upload or verification fails;
 rerun the same retention command to retry. Repeating a successful command with
 identical inputs is safe. An existing, different evidence directory is refused.
 
+## Counts and other evidence
+
+The same command handles studies without Google Benchmark output. A runner may
+call `run.compact(files, regenerate_command)` to name the files worth keeping
+and record how to regenerate tables. Alternatively, select files at retention:
+
+```sh
+python3 workbench/tools/artifacts.py retain build/experiments/STUDY/RUN \
+  workbench/spikes/STUDY/evidence/NAME --file counts.csv --file summary.md \
+  --regenerate 'python3 workbench/spikes/STUDY/analyze.py {evidence}'
+```
+
+This preserves the selected bytes and writes hashes, source identity, available
+compiler/configuration details, and the regeneration command. A scoped
+`.gitattributes` prevents Git from changing already-hashed line endings. The
+study chooses its counters, examples, and interpretation; there is no common
+results schema. `verify_compact()` checks files before an analyzer uses them.
+Google Benchmark extraction remains the default for existing timing studies.
+
+## Shared inputs and captured sources
+
+Runs using `run.input()` reference [cached prepared data](../datasets/README.md).
+Retention publishes each input once before bundling the run's references; it
+does not copy those bytes into every S3 run object. Fetch retrieves the input
+objects, verifies their identities, and materializes them under the restored
+run. Keep these dependency objects while retaining the runs that reference them.
+Custom input directories embedded by older runners remain supported.
+
 Recover the full bundle into a new ignored directory:
 
 ```sh
@@ -41,6 +69,17 @@ members, and checks the restored run against its original receipt. Its
 commit named by the receipt. Unpack source into a separate build/ directory and
 use the recorded compiler and flags; toolchain/dependency binaries are not
 included in the source archive.
+
+The current runners build from captured sources in a per-study workspace.
+Live checkout edits can continue during a run. The workspace has a stable path,
+preserves unchanged source mtimes, and reuses Ninja's compiled objects. Runs
+sharing that workspace serialize; separate studies have separate workspaces.
+The lock covers the captured build and run, not the development checkout.
+Refreshing the live editor configuration is best-effort; its failure is logged
+but does not stop the captured experiment.
+The receipt checks the captured sources and prepared input bytes actually used.
+Direct incremental development builds and standalone prototype commands remain
+available; this adds no required research stages.
 
 For a validation or other non-benchmark bundle, use `artifacts.py put DIRECTORY
 REFERENCE.json`. Fetch accepts that reference file directly. This preserves

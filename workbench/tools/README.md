@@ -14,11 +14,24 @@ The first caller is the [aggregate delta runner](../spikes/aggregate-maintenance
 Study-specific execution and analysis remain in the study. This does not yet
 provide remote execution or an imposed research process.
 
+Its optional `workspace` argument builds from captured sources while the live
+checkout remains editable. Stable workspace paths preserve incremental builds.
+[check_experiment.py](check_experiment.py) verifies source isolation and Ninja
+reuse with an actual build. `input()` records a reusable prepared dependency;
+`compact()` declares study-selected evidence for later retention.
+
 [artifacts.py](artifacts.py) retains a selected run with one command: upload
 and verify its full bundle, then write compact evidence into the spike.
 It also fetches and verifies bundles. See the [retention and recovery commands](artifacts.md).
 [evidence.py](evidence.py) supplies compact samples and their reader;
 [check_artifacts.py](check_artifacts.py) exercises retention failures and recovery offline.
+Retention also supports arbitrary compact files and recorded regeneration
+commands, with shared inputs restored automatically.
+
+[datasets.py](datasets.py) resolves pinned source data and caches prepared
+variants independently of any one spike. Its [catalog and examples](../datasets/README.md)
+start with ua-parser and accident descriptions. [check_datasets.py](check_datasets.py)
+checks cache reuse, concurrent callers, preparation retry, and source hashes.
 
 [dev.py](dev.py) maintains the stable dev compilation database for explicitly
 active spikes. It preserves existing selections, supports `--add`,

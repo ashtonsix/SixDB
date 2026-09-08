@@ -3,7 +3,13 @@
 Retrieved 2026-09-08. [prepare.py](prepare.py) pins source revisions, verifies
 downloads, records file hashes, and produces length-delimited UTF-8 strings
 plus original regexp bytes and flags. No regexps were generated from the
-selected strings. Each run carries its exact prepared input and source manifest.
+selected strings. Each retained run can recover its exact prepared input and source manifest.
+
+Acquisition and reusable records now live in the [shared dataset catalog](../../datasets/README.md).
+The spike's preparation script is a cached binary adapter over those records;
+all six files and sample metadata reproduce the retained studies exactly.
+New runs reference prepared input objects; retention and fetch preserve and
+recover them separately. Historical bundles keep their original embedded inputs.
 
 ## Accident descriptions and their extraction queries
 

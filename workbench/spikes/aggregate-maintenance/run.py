@@ -25,7 +25,7 @@ def main() -> int:
     parser.add_argument("--cpu", type=int, help="Default: lowest CPU in the permitted affinity set")
     parser.add_argument("--repetitions", type=int, default=3)
     parser.add_argument("--min-time", type=float, default=0.05)
-    parser.add_argument("--build-dir", type=Path, default=ROOT / "build/clang/aggregate-maintenance")
+    parser.add_argument("--build-dir", type=Path, default=ROOT / "build/workspaces/aggregate-maintenance")
     parser.add_argument("--output", type=Path, help="New directory under build/; defaults to a unique timestamp")
     args = parser.parse_args()
     if not hasattr(os, "sched_getaffinity"):
@@ -45,7 +45,8 @@ def main() -> int:
         parser.error(f"output already exists: {output}")
     config = vars(args) | {"cpu": cpu, "allowed_cpus": allowed, "build_dir": str(build), "output": str(output)}
     config["min_time"] = args.min_time
-    run = Run(ROOT, output, config)
+    run = Run(ROOT, output, config, workspace=build)
+    build = run.build_dir
     print(f"Run: {output}", flush=True)
     error = None
     try:
@@ -54,8 +55,8 @@ def main() -> int:
         run.step("hardware", ["lscpu"])
         run.step("compiler", ["clang++-21", "--version"])
         run.step("dev-configure", [sys.executable, str(ROOT / "workbench/tools/dev.py"),
-            "--add", "aggregate-maintenance"])
-        run.step("configure", ["cmake", "-S", str(ROOT), "-B", str(build), "-G", "Ninja",
+            "--add", "aggregate-maintenance"], check=False)
+        run.step("configure", ["cmake", "-S", str(run.source_root), "-B", str(build), "-G", "Ninja",
             "-DCMAKE_BUILD_TYPE=Release", "-DSIXDB_SPIKES=aggregate-maintenance",
             "-DSIXDB_TUNE=generic", "-DSIXDB_MARCH="])
         run.step("build", ["cmake", "--build", str(build), "--target",
@@ -82,7 +83,7 @@ def main() -> int:
             "--benchmark_display_aggregates_only=true", "--benchmark_report_aggregates_only=false",
             "--benchmark_color=false", f"--benchmark_out={output / 'benchmark.json'}",
             "--benchmark_out_format=json"])
-        run.step("analyse", [sys.executable, str(STUDY / "analyze.py"), str(output)])
+        run.step("analyse", [sys.executable, str(run.source_root / STUDY.relative_to(ROOT) / "analyze.py"), str(output)])
     except Exception as exc:
         error = exc
     finally:

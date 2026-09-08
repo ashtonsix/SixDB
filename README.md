@@ -23,6 +23,11 @@ Design develops in Workbench through experiments and spikes. Module documents
 stay thin, brief, and easy to steer. Experiment priorities and architectural
 choices will follow the signal; no implementation roadmap is fixed here.
 
+The [Workbench guide](workbench/README.md) links the research tools by task:
+[start a spike](workbench/spikes/README.md),
+[reuse a dataset](workbench/datasets/README.md), or
+[keep and recover results](workbench/tools/artifacts.md).
+
 One repository and a shared [CMake/Ninja build](BUILDING.md) support independent,
 incremental compilation of TUs, including opt-in spikes. There are no
 database implementation targets yet.

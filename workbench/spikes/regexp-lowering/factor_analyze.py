@@ -4,6 +4,10 @@ import argparse
 from collections import defaultdict
 import csv
 from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'tools'))
+from evidence import verify_compact
 
 TEXT = {'dataset', 'id', 'group', 'pattern', 'like', 'literal_dag', 'chain_dag', 'ordered_dag'}
 DETAIL = TEXT - {'dataset', 'id', 'group'}
@@ -19,6 +23,8 @@ def write(path, rows):
         w = csv.DictWriter(f, fieldnames=list(rows[0])); w.writeheader(); w.writerows(rows)
 
 def analyze(root):
+    if (root / 'provenance.json').exists():
+        verify_compact(root)
     compact = root/'factor_summary.csv'
     if not compact.exists():
         full = [r for d in ('accidents', 'uap') for r in read(root/f'{d}-factor-patterns.csv')]

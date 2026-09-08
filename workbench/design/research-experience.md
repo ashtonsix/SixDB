@@ -212,3 +212,48 @@ resident access-method regions with real movement and lookup, while mixed-region
 discovery, actual dual-arity navigation, and production publication remain open.
 Keeping that contract next to the code makes the result useful without turning
 a convenient model into an Engine interface.
+
+## Shared inputs and fewer chores
+
+After the regexp spike, Ashton asked what should become easier across studies.
+That session independently identified repeated input preparation, manual compact
+evidence assembly for counts, and deferring documentation edits during runs.
+The response is a few reusable helpers, exercised by existing studies. They
+do not require a new study template, prescribed stages, or a retention ceremony.
+
+- [Shared datasets](../datasets/README.md) now preserve ua-parser source records
+  and accident samples independently of regexp execution. Sources and prepared
+  variants have separate caches; a plain local adapter can cache another format.
+  The regexp adapter reproduces all six historical input hashes and metadata.
+  A warm preparation call took 31 ms here, with no CSV parsing or download.
+- [Compact retention](../tools/artifacts.md) accepts study-chosen files and a
+  regeneration command. Counts, examples, and correctness outputs can use the
+  same storage support as Google Benchmark samples. Retention preserves bytes,
+  including CSV line endings, and publishes shared inputs once. Fetch restores
+  those dependencies automatically. Normal runs remain local by default.
+- Captured build workspaces let live editing continue during measurement.
+  Stable paths and unchanged file mtimes preserve independent TU compilation.
+  A real-build fixture confirms that live header edits do not affect captured
+  execution and documentation changes do not recompile the next run. Separate
+  studies have independent workspaces; calls sharing one workspace serialize.
+
+The factored regexp study reproduced its historical counters, examples, and
+tables byte-for-byte while live edits continued. All four existing runners
+passed their respective full-efficacy or small integration runs. Offline checks
+exercise concurrent cache callers, interrupted preparation, corrupt inputs,
+generic and benchmark retention, and independent recovery of input objects.
+These checks test the machinery; they do not certify the scientific conclusion
+of a future experiment. The [validation run](research-tools-20260908.json) keeps
+the full regexp result and its measured source in S3.
+
+Cold-cache recovery restored the exact prepared inputs without fetching or
+parsing the raw CSV, and compact tables regenerated unchanged. Review by the
+regexp session also improved three practical details: public-source fallback
+when S3 is unavailable, metadata covered by prepared identity, and nonfatal
+editor refresh when the live checkout is temporarily incomplete.
+
+Across the three questions, the useful habit is to identify both saved and
+introduced work. Fewer ancestor adjustments, fewer locator repairs, and fewer
+RE2 calls each left other costs to explain. A small comparison chosen to resolve
+that uncertainty often helped more than expanding a benchmark matrix. Shared
+tools should make that comparison cheap to run and easy to return to.

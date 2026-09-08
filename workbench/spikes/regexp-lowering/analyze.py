@@ -5,6 +5,10 @@ from collections import Counter, defaultdict
 import csv
 import json
 from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'tools'))
+from evidence import verify_compact
 
 TEXT = {'dataset', 'id', 'group', 'status', 'reason', 'pattern', 'like', 'mandatory'}
 
@@ -24,6 +28,8 @@ def pct(n, d):
     return 100*n/d if d else 0.0
 
 def analyze(root):
+    if (root / 'provenance.json').exists():
+        verify_compact(root)
     pattern_source = root/'pattern_summary.csv'
     if not pattern_source.exists():
         patterns = []
