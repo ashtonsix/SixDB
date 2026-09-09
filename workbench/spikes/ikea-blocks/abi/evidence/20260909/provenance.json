@@ -1,0 +1,198 @@
+{
+  "commands": [
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "host",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cpu",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "aarch64-configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "aarch64-build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "aarch64-producer",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "aarch64-caller",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "aarch64-sink",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "aarch64-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "aarch64-ir",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-sse2-configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-sse2-build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-sse2-producer",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-sse2-caller",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-sse2-sink",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-sse2-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-sse2-ir",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-avx2-configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-avx2-build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-avx2-producer",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-avx2-caller",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-avx2-sink",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-avx2-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-avx2-ir",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-avx512-configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-avx512-build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-avx512-producer",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-avx512-caller",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-avx512-sink",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-avx512-ir",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "aarch64-regcall-rejected",
+      "required": false,
+      "returncode": 1
+    }
+  ],
+  "config": {
+    "compiler": "21.1.8",
+    "question": "opaque return and CPS carrier ABI"
+  },
+  "configure_flags": [],
+  "files_sha256": {
+    "aarch64-excerpts.asm": "b5ced5bad4b99e6d2698d1fdbec03b4910160dfd1675a8dc6e835844930be28c",
+    "aarch64-layout.csv": "cdb3a46262849e707a9493ed0fc02b3aeb6755827bcad5b85d5ae671dc263fa1",
+    "aarch64-regcall-rejected.txt": "887cbee170e6fd3382b838e9442d6a5434a995514eedd94b7657155963e8c6f8",
+    "compiler.txt": "dfb0aa39f1baf9eb2391a5b89e349f1570faa009cb0d02cfe112778cd10328fb",
+    "host.txt": "280d3ce8df2d04e007565946838592e48741f60e5e1dd323d1dd63b86008577f",
+    "regcall-lowering.txt": "13928ff951a06dab929ab232e621c77097e02feb6a0c322d95a9412378c650e6",
+    "x86-avx2-excerpts.asm": "0e3067bd58b0919e8d8cf6ef11778bbca68b7d65e84d8acfb08b085a07206dc8",
+    "x86-avx2-layout.csv": "bc79657f295f3914bdd6be0e2a3a47f6983acd7f6800eef6102ec171340bb03c",
+    "x86-avx512-excerpts.asm": "2f19baa1d1d5665c429ac4b17dccf71900f5163c4cbd26580fac3e1f3bfcd234",
+    "x86-sse2-excerpts.asm": "17d370158d8cbd22eae79c99ac4733167bd9437e203b94b5451a350badcb2f1d",
+    "x86-sse2-layout.csv": "bc79657f295f3914bdd6be0e2a3a47f6983acd7f6800eef6102ec171340bb03c"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {},
+  "platform": "Linux-7.0.14-orbstack-00380-ga7e0a2dc9535-aarch64-with-glibc2.42",
+  "regenerate": [],
+  "selection": {
+    "command": [
+      "python3",
+      "workbench/spikes/ikea-blocks/assembly.py",
+      "abi",
+      "{run}",
+      "{output}"
+    ],
+    "description": "Complete illustrative functions selected from the original full bundle; measured source and raw run unchanged.",
+    "script_sha256": "89fa1b38e3517a5ece0c630af547bfa2f7f186ca7241feaef0b50ff0abebb7dc"
+  },
+  "source_archive_sha256": "444c5a988c5b08d240424b080197a772cff90f66af72c27c15d803a7040b786e",
+  "source_digest": "4995d51fb1b7f0dbaf5e8153d94d7ea496abab434f92d38ab16e74201ab32783",
+  "source_unchanged": true,
+  "started_utc": "2026-09-09T11:28:04.998532+00:00",
+  "status": "complete"
+}

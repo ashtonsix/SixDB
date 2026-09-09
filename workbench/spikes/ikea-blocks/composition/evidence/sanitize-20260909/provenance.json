@@ -1,0 +1,59 @@
+{
+  "commands": [
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cpu",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "native-configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "native-build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "native-assembly",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "native-check",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "config": {
+    "benchmark": false,
+    "question": "same authoring work, carrier costs and model identity",
+    "variants": {
+      "native": [
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer"
+      ]
+    }
+  },
+  "configure_flags": [],
+  "files_sha256": {
+    "compiler.txt": "dfb0aa39f1baf9eb2391a5b89e349f1570faa009cb0d02cfe112778cd10328fb",
+    "native-check.txt": "b0c845a00e61031f4d257e4b01c8d6596038a914dc069bea8da56a9ff546334c"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {},
+  "platform": "Linux-7.0.14-orbstack-00380-ga7e0a2dc9535-aarch64-with-glibc2.42",
+  "regenerate": [],
+  "source_archive_sha256": "71a2dc3932dbf773318859a64f3336a19b41a294d45a561578e325d1575c26ef",
+  "source_digest": "52f9cf508486777b30f181613316626d5d885a690c3f7112720f5ca8afc4c28b",
+  "source_unchanged": true,
+  "started_utc": "2026-09-09T12:05:42.259774+00:00",
+  "status": "complete"
+}

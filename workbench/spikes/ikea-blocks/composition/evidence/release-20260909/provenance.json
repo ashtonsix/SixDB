@@ -1,0 +1,114 @@
+{
+  "commands": [
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cpu",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "native-configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "native-build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "native-assembly",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "native-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-avx2-configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-avx2-build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-avx2-assembly",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-avx2-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-zen5-configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-zen5-build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "x86-zen5-assembly",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "config": {
+    "benchmark": false,
+    "question": "same authoring work, carrier costs and model identity",
+    "variants": {
+      "native": [],
+      "x86-avx2": [
+        "--target=x86_64-linux-gnu",
+        "-march=x86-64-v3"
+      ],
+      "x86-zen5": [
+        "--target=x86_64-linux-gnu",
+        "-march=znver5"
+      ]
+    }
+  },
+  "configure_flags": [],
+  "files_sha256": {
+    "compiler.txt": "dfb0aa39f1baf9eb2391a5b89e349f1570faa009cb0d02cfe112778cd10328fb",
+    "native-check.txt": "b0c845a00e61031f4d257e4b01c8d6596038a914dc069bea8da56a9ff546334c",
+    "native-excerpts.asm": "a2a1b69d3888b45359c3fe7542650f0c9dfdd65bac6186bf7e34409889fd1cf4",
+    "x86-avx2-check.txt": "b0c845a00e61031f4d257e4b01c8d6596038a914dc069bea8da56a9ff546334c",
+    "x86-avx2-excerpts.asm": "091946840da60cb4a290f3eeddde937d018db83dbe3fd9b28b4d8b50b237ef52",
+    "x86-zen5-excerpts.asm": "a869a9b3b13f8080b363ce4183dbfe61c18c5891bead200ba5a397c1e806688e"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {},
+  "platform": "Linux-7.0.14-orbstack-00380-ga7e0a2dc9535-aarch64-with-glibc2.42",
+  "regenerate": [],
+  "selection": {
+    "command": [
+      "python3",
+      "workbench/spikes/ikea-blocks/assembly.py",
+      "composition",
+      "{run}",
+      "{output}"
+    ],
+    "description": "Complete illustrative functions selected from the original full bundle; measured source and raw run unchanged.",
+    "script_sha256": "89fa1b38e3517a5ece0c630af547bfa2f7f186ca7241feaef0b50ff0abebb7dc"
+  },
+  "source_archive_sha256": "155ae925287770ed29a41ded56afa1f9f54e13f5a67853fef7872b58f4207a59",
+  "source_digest": "affd300009f5d355f2ce19d19bdfbf5076251b1568e4de0197116213d591ded8",
+  "source_unchanged": true,
+  "started_utc": "2026-09-09T12:03:44.815983+00:00",
+  "status": "complete"
+}

@@ -1,0 +1,4 @@
+/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/ikea-blocks-abi/source/workbench/spikes/ikea-blocks/abi/regcall-unsupported.cpp:3:27: error: 'regcall' calling convention is not supported for this target [-Werror,-Wignored-attributes]
+    3 | extern "C" __attribute__((regcall)) unsigned unsupported(unsigned x) { return x; }
+      |                           ^
+1 error generated.

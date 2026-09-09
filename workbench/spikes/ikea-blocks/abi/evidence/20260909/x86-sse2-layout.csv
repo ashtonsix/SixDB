@@ -1,0 +1,16 @@
+type,size,alignment,trivially_copyable,trivially_destructible,trivial_copy_ctor,trivial_move_ctor
+V128,16,16,1,1,1,1
+Tagged128,32,16,1,1,1,1
+Expected128,32,16,0,1,1,1
+V256,32,32,1,1,1,1
+Tagged256,64,32,1,1,1,1
+Expected256,64,32,0,1,1,1
+V512,64,64,1,1,1,1
+Tagged512,128,64,1,1,1,1
+Expected512,128,64,0,1,1,1
+ExpectedScalar,16,8,0,1,1,1
+HVA256,32,16,1,1,1,1
+Union128,32,16,1,1,1,1
+libstdcxx_release,15
+libstdcxx_date,20250917
+status,pass

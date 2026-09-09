@@ -1,0 +1,15 @@
+%struct.Tagged = type { i64, <2 x i64> }
+%"class.std::expected" = type <{ %union.anon, i8, [15 x i8] }>
+%union.anon = type { <2 x i64> }
+%struct.Tagged.0 = type { i64, <4 x i64> }
+%"class.std::expected.1" = type <{ %union.anon.2, i8, [31 x i8] }>
+%union.anon.2 = type { <4 x i64> }
+%struct.Tagged.4 = type { i64, <8 x i64> }
+%"class.std::expected.5" = type <{ %union.anon.6, i8, [63 x i8] }>
+%union.anon.6 = type { <8 x i64> }
+%struct.HVA256 = type { <2 x i64>, <2 x i64> }
+%struct.UnionChecked = type { %union.anon.11, i8 }
+%union.anon.11 = type { <2 x i64> }
+define dso_local x86_regcallcc %"class.std::expected" @__regcall3__reg_expected128(ptr noundef readonly captures(none) %0, i1 noundef zeroext %1) local_unnamed_addr #0 {
+define dso_local x86_regcallcc void @__regcall3__reg_expected256(ptr dead_on_unwind noalias writable writeonly sret(%"class.std::expected.1") align 32 captures(none) initializes((0, 1), (32, 33)) %0, ptr noundef readonly captures(none) %1, i1 noundef zeroext %2) local_unnamed_addr #6 {
+define dso_local x86_regcallcc %struct.UnionChecked @__regcall3__reg_union128(ptr noundef readonly captures(none) %0, i1 noundef zeroext %1) local_unnamed_addr #0 {

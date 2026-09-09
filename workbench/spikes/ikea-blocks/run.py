@@ -41,20 +41,26 @@ def main():
                              '-DCMAKE_BUILD_TYPE='+('RelWithDebInfo' if a.sanitize else 'Release'),
                              '-DSIXDB_SPIKES=ikea-blocks','-DIKEA_PRIOR_DIR='+str(prior)]+flags)
         run.step('build',['cmake','--build',str(run.build_dir),'--target','ikea_bitsets_check','ikea_bitsets_bench',
+                          'ikea_composition_check','ikea_composition_bench',
                           '-j',os.environ.get('SIXDB_BUILD_JOBS','1')])
         binaries=run.build_dir/'workbench/spikes/ikea-blocks'
         run.step('check',[str(binaries/'ikea_bitsets_check')],'checks.csv')
+        run.step('composition-check',[str(binaries/'composition/ikea_composition_check')],'composition-checks.txt')
         run.step('assembly',['llvm-objdump-21','-d','-C',str(binaries/'ikea_bitsets_check')],'assembly.txt')
-        compact=['checks.csv']
+        run.step('composition-assembly',['llvm-objdump-21','-d','-C',str(binaries/'composition/ikea_composition_check')],'composition-assembly.txt')
+        compact=['checks.csv','composition-checks.txt']
         if not a.check_only and not a.sanitize:
             cpu=int(os.environ.get('SIXDB_CPU',min(os.sched_getaffinity(0))))
             run.receipt['pinned_cpu']=cpu; run.save()
             args=['taskset','-c',str(cpu),str(binaries/'ikea_bitsets_bench')]
             if data: args.append(str(data))
             run.step('benchmark',args,'timings.csv')
-            compact+=['timings.csv']
+            run.step('composition-benchmark',['taskset','-c',str(cpu),str(binaries/'composition/ikea_composition_bench')],'composition-timings.csv')
+            compact+=['timings.csv','composition-timings.csv']
         for name in ['ikea_bitsets_check','ikea_bitsets_bench']:
             shutil.copyfile(binaries/name,out/name)
+        for name in ['ikea_composition_check','ikea_composition_bench']:
+            shutil.copyfile(binaries/'composition'/name,out/name)
         regenerate=['python3','workbench/spikes/ikea-blocks/report.py','{evidence}']
         run.compact(compact,regenerate)
     except Exception as exc:

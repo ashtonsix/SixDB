@@ -1,6 +1,7 @@
 add_library(ikea_bitsets STATIC native.cpp reference.cpp)
 sixdb_target(ikea_bitsets)
 target_include_directories(ikea_bitsets PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+add_subdirectory(composition)
 add_executable(ikea_bitsets_check check.cpp)
 sixdb_target(ikea_bitsets_check)
 target_link_libraries(ikea_bitsets_check PRIVATE ikea_bitsets)
