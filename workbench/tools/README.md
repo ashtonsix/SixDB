@@ -49,6 +49,10 @@ active spikes. It preserves existing selections, supports `--add`,
 an intentionally broken inactive study. See the
 [first research-experience notes](../design/research-experience.md).
 
+[Editor setup](editors.md) describes the shared clangd/Pylance configuration and
+VS Code tasks. [check_ide.py](check_ide.py) screens every Git-visible C++ source
+and header with clangd, including new files and headers outside active targets.
+
 SixDB uses Calico's S3 bucket, `calico-fleet-artifacts`, and reuses its
 existing datasets in place. Its [fleet tooling](../../../calico/tools/fleet/README.md)
 is a reference for source snapshots, worker provisioning, remote recipes,

@@ -2,3 +2,32 @@
 # reads its compilation database; it does not configure or build the project.
 CompileFlags:
   CompilationDatabase: build/clang/dev
+---
+# Headers without a compile command still need the project's language version.
+If:
+  PathMatch: .*\.(h|hh|hpp|hxx|cc|cpp|cxx)
+  PathExclude: build/.*
+CompileFlags:
+  Add: [-std=c++23]
+---
+# Headers named *_avx2.h, *_avx512.h or *_neon.h (also .hpp) declare their editor ISA.
+# An ISA-specific header can be opened on the other development architecture.
+# Override only its editor target; ordinary TUs keep their CMake build flags.
+# Clang also needs the selected target's C++/libc development headers installed.
+If:
+  PathMatch: .*_avx2\.(h|hpp)
+CompileFlags:
+  Remove: [-march=*, -mcpu=*, -mtune=*, --target=*, -target]
+  Add: [--target=x86_64-linux-gnu, -march=x86-64-v3]
+---
+If:
+  PathMatch: .*_avx512\.(h|hpp)
+CompileFlags:
+  Remove: [-march=*, -mcpu=*, -mtune=*, --target=*, -target]
+  Add: [--target=x86_64-linux-gnu, -march=znver5]
+---
+If:
+  PathMatch: .*_neon\.(h|hpp)
+CompileFlags:
+  Remove: [-march=*, -mcpu=*, -mtune=*, --target=*, -target]
+  Add: [--target=aarch64-linux-gnu, -march=armv8-a]

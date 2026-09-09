@@ -25,6 +25,8 @@ spike in the stable `build/clang/dev/compile_commands.json`, preserving
 other active spikes. The repository's `.clangd` reads this database;
 experiment runners attempt to refresh it automatically. See the [dev helper](workbench/tools/README.md)
 for removal and refresh commands. This configures targets without building them.
+The [editor guide](workbench/tools/editors.md) covers VS Code over Remote SSH,
+cross-architecture headers, optional dependencies, and repeatable diagnostic scans.
 
 For recorded experiments, the runners use [captured build workspaces](workbench/tools/artifacts.md#shared-inputs-and-captured-sources)
 that reuse compiled objects while allowing live checkout edits. An incomplete

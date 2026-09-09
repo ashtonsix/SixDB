@@ -1,0 +1,15 @@
+{
+  "clangd.path": "clangd-21",
+  "C_Cpp.intelliSenseEngine": "disabled",
+  "cmake.configureOnOpen": false,
+  "cmake.configureOnEdit": false,
+  "cmake.automaticReconfigure": false,
+  "cmake.buildBeforeRun": false,
+  "python.analysis.diagnosticMode": "workspace",
+  "files.watcherExclude": {
+    "**/build/**": true
+  },
+  "search.exclude": {
+    "**/build/**": true
+  }
+}

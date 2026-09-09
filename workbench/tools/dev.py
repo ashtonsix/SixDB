@@ -10,7 +10,19 @@ import re
 import subprocess
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+def checkout_root(path, home):
+    # OrbStack exposes the same Linux home at both /home/... and the macOS
+    # mount path. resolve() cannot collapse bind mounts. Prefer the native home
+    # so clangd sees the same source paths as a Remote SSH editor, whichever
+    # alias was used to launch this helper. Check identity, not path spelling.
+    root = path.resolve()
+    for parent in root.parents:
+        if parent.samefile(home):
+            return home / root.relative_to(parent)
+    return root
+
+
+ROOT = checkout_root(Path(__file__).resolve().parents[2], Path.home())
 BUILD = ROOT / "build/clang/dev"
 
 

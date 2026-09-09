@@ -8,12 +8,24 @@ import sys
 import tempfile
 from pathlib import Path
 
+from dev import checkout_root
+
 ROOT = Path(__file__).resolve().parents[2]
 
 
 def main():
     with tempfile.TemporaryDirectory(prefix="sixdb-dev-check-") as directory:
         root = Path(directory)
+        # Home aliases must not leak into the editor database. Projects outside
+        # that home remain untouched; symlinks and spaces are legitimate paths.
+        home = root / 'native home'
+        home.mkdir()
+        project = home / 'project'
+        project.mkdir()
+        alias = root / 'home alias'
+        alias.symlink_to(home, target_is_directory=True)
+        assert checkout_root(alias / 'project', home) == project
+        assert checkout_root(root, home) == root.resolve()
         for file in ["CMakeLists.txt", "CMakePresets.json"]:
             shutil.copy2(ROOT / file, root / file)
         shutil.copytree(ROOT / "cmake", root / "cmake")

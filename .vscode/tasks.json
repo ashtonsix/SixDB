@@ -1,0 +1,21 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "SixDB: refresh editor configuration",
+      "type": "process",
+      "command": "python3",
+      "args": ["${workspaceFolder}/workbench/tools/dev.py"],
+      "options": {"cwd": "${workspaceFolder}"},
+      "problemMatcher": []
+    },
+    {
+      "label": "SixDB: check C++ editor diagnostics",
+      "type": "process",
+      "command": "python3",
+      "args": ["${workspaceFolder}/workbench/tools/check_ide.py"],
+      "options": {"cwd": "${workspaceFolder}"},
+      "problemMatcher": []
+    }
+  ]
+}
