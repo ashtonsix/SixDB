@@ -20,7 +20,9 @@ and evidence storage, and [AGENTS.md](../../AGENTS.md) for agent working default
   version is checked; the pin lives in
   [ClangVersion.cmake](../../cmake/ClangVersion.cmake). This is an initial
   working pin, not a claim that it is the latest release. Standard-library,
-  linker, sysroot, and worker-image pins remain to be selected.
+  linker, and sysroot pins remain to be selected. The
+  [worker configuration](../tools/workers.md) selects base AMIs; package versions
+  installed during setup are recorded with each run.
 - C++23, with language extensions off. The installed Clang/libstdc++ combination
   can compile `std::expected`; this does not establish full library coverage.
 - Development uses `-O2 -g`; release uses `-O3 -g`. Both retain assertions for

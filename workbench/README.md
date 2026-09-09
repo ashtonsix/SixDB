@@ -16,17 +16,17 @@ Successor to Calico's `workbench`.
 | Keep selected evidence or recover a run | [Retention and recovery](tools/artifacts.md): compact Git evidence, full S3 bundles, and shared inputs |
 | Find current direction and conventions | [Design](design/README.md): cross-cutting notes |
 
-Start with the [regexp-lowering closeout](spikes/regexp-lowering/CONCLUSIONS.md),
-the [trie-remapping closeout](spikes/trie-remapping/README.md),
-the [aggregate-maintenance closeout](spikes/aggregate-maintenance/CONCLUSIONS.md),
-the [row-signature findings](spikes/row-filter-signatures/FINDINGS.md),
-the separate [sketches, filters, and histograms note](notebook/secondary-summaries.md),
-or the [Calico overview](notebook/calico.md).
+The [spike catalog](spikes/README.md) is the place to browse investigations.
+Each study's entry page connects its question to the relevant findings and
+follow-ups. The [Calico overview](notebook/calico.md) maps earlier work.
 
-The [spike guide](spikes/README.md) describes an investigation's home;
-the [notebook](notebook/ideas.md) holds thoughts that can inform several studies.
-Shared helpers can be used independently as an investigation needs them.
-Agent working defaults are in [AGENTS.md](../AGENTS.md).
-The [research-experience notes](design/research-experience.md#shared-inputs-and-fewer-chores)
-explain the recent changes; the [tools index](tools/README.md) lists the scripts
-and checks.
+A useful pattern is a short pointer when evidence moves on: “This note records
+the first probe; [the follow-up](spikes/aggregate-maintenance/dirty-buffer/README.md)
+tests the cheaper dirty-marking idea.” Older reasoning stays readable, and a
+new reader can follow what changed. Catalog entries can describe the question;
+the study holds its evolving answer.
+
+Shared helpers can be used independently as an investigation needs them. The
+[tools index](tools/README.md) has commands and runnable examples;
+[research-experience notes](design/research-experience.md) record how those
+affordances developed. Agent working defaults are in [AGENTS.md](../AGENTS.md).

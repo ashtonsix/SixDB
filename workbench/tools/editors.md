@@ -17,6 +17,10 @@ to be listed in their CMake target to get its exact includes and definitions.
 Standalone prototypes still get C++23 from `.clangd`, but inferred flags cannot
 substitute for target-specific build configuration.
 
+Some study runners refresh this database as a convenience; others configure
+only their captured experiment. The explicit dev command works in either case.
+Experiment ISA and sanitizer choices stay in the experiment's build directory.
+
 From macOS, prefix Linux commands with `orb -m ubuntu`. The dev helper maps a
 home-directory bind-mount alias back to the native Linux home by filesystem
 identity, so launching it through the macOS mount does not change source paths

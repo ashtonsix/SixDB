@@ -8,8 +8,9 @@ a bounded investigation belongs in its [spike](../spikes/README.md).
 - [Conventions](conventions.md): current settings and proposals for discussion.
 - [Build iteration](build-iteration.md): Calico findings and incremental spike builds.
 - [Tuning flags](tuning.md): microarchitecture policy independent of ISA availability.
-- [Research experience](research-experience.md): observations and tooling changes
+- [Research experience](research-experience.md): historical observations and tooling changes
   across the aggregate, trie-remapping, and regexp investigations, including
   [shared inputs and fewer chores](research-experience.md#shared-inputs-and-fewer-chores).
 
+The [tools guide](../tools/README.md) has current operating commands.
 Loose questions and reading can stay in the [notebook](../notebook/ideas.md).

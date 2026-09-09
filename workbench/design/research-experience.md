@@ -1,8 +1,10 @@
 # Notes from the research loops
 
-The aggregate-maintenance spike is [closed](../spikes/aggregate-maintenance/CONCLUSIONS.md).
-These observations carry forward to the next question; they do not prescribe
-the size or shape of every investigation.
+Historical observations from the first research loops, 2026-09-07–08.
+Capabilities and limitations below describe those runs. For present-day use,
+start with the [Workbench guide](../README.md) and [tool commands](../tools/README.md).
+These notes explain why the helpers took their shape; they do not prescribe
+the size or shape of another investigation.
 
 2026-09-07, while exercising the [aggregate-delta question](../spikes/aggregate-maintenance/README.md).
 Ashton emphasised that the experience of researching matters as much as this
@@ -28,7 +30,8 @@ remain local to the study instead of establishing Engine interfaces.
   compiled out of the timed path.
 - **A durable explanation of a local run.** Source snapshots include uncommitted
   files. Commands, compiler flags, affinity, raw repetitions, and hashes travel
-  with results. Source changes during execution prevent a successful receipt.
+  with results. At this stage, live source changes prevented a successful receipt;
+  [captured workspaces](#shared-inputs-and-fewer-chores) later removed that restriction.
   Generated tables remain separate from the human interpretation.
 - **Failure is reviewable.** A deliberately nonexistent case request produced
   a failed receipt, preserved earlier logs, and reported available case names.
@@ -66,13 +69,13 @@ Separating them made the recorded result answer the actual higher-stratum
 question. The CPU numbers need similarly precise names: this cycle includes
 queries and maintenance, but excludes primary-row updates and beforeimages.
 
-## What should stay open
+## What was still missing after the first probe
 
-The current runner is a small local mechanism, not a fleet framework. Large
-datasets should remain referenced in the existing S3 bucket; source snapshots
-and artifact collection will need to scale beyond this small repository.
-Remote execution, cancellation/deadlines, and distributed resource accounting
-are still missing. Measurements used no cloud instances. At closeout, selected
+The runner was local; remote execution, cancellation/deadlines, and distributed
+resource accounting were missing. The later [worker command](../tools/workers.md)
+provides remote execution, cancellation, bounded lifetimes, and result collection.
+Large inputs still belong in the shared dataset store. These first measurements
+used no cloud instances. At closeout, selected
 run and validation bundles were retained under SixDB's prefix in the existing
 S3 bucket; see the storage changes below.
 
@@ -214,6 +217,8 @@ Keeping that contract next to the code makes the result useful without turning
 a convenient model into an Engine interface.
 
 ## Shared inputs and fewer chores
+
+2026-09-08, after the regexp investigation.
 
 After the regexp spike, Ashton asked what should become easier across studies.
 That session independently identified repeated input preparation, manual compact

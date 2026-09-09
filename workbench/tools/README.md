@@ -57,6 +57,18 @@ an intentionally broken inactive study. See the
 VS Code tasks. [check_ide.py](check_ide.py) screens every Git-visible C++ source
 and header with clangd, including new files and headers outside active targets.
 
+[check_docs.py](check_docs.py) offers a quick navigation sweep:
+`python3 workbench/tools/check_docs.py`. It reports missing inline Markdown link
+targets, heading fragments, and spike/dataset entries absent from their catalog.
+It includes non-ignored new files, skips sibling checkouts such as Calico, and
+makes no network requests. This is an on-demand hint, with no hook or build gate;
+it cannot decide whether a statement or conclusion is still current.
+
+For changes to shared tools, a separate Git worktree lets other tasks keep using
+the existing version while the change is exercised. Captured experiment sources
+serve a different purpose: they preserve what a run actually used. Both can
+reuse prepared inputs through `SIXDB_DATA_CACHE`; see the [dataset guide](../datasets/README.md).
+
 SixDB uses Calico's S3 bucket, `calico-fleet-artifacts`, and reuses its
 existing datasets in place. Its [fleet tooling](../../../calico/tools/fleet/README.md)
 is a reference for source snapshots, worker provisioning, remote recipes,

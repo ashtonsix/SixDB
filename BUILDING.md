@@ -13,7 +13,9 @@ enabled. Builds live under `build/clang/<preset>/`. Clang is selected before
 configuration and its version is checked; `-DCMAKE_CXX_COMPILER=...` can select
 another installation of that version. Use a fresh directory when changing
 compiler versions or target platforms. The initial pin uses an installed
-compiler; it does not yet pin the standard library, linker, or worker image.
+compiler; standard-library and linker package versions remain unpinned.
+The [worker configuration](workbench/tools/workers.md) selects base AMIs and
+records the packages installed during setup.
 
 Targets use ordinary CMake plus `sixdb_target(name)` for project settings.
 Each `.cpp` compiles independently; reusable implementation goes in compiled
@@ -23,8 +25,9 @@ can build just one executable or object. There are no database targets yet.
 For editor support, `python3 workbench/tools/dev.py --add NAME` activates a
 spike in the stable `build/clang/dev/compile_commands.json`, preserving
 other active spikes. The repository's `.clangd` reads this database;
-experiment runners attempt to refresh it automatically. See the [dev helper](workbench/tools/README.md)
-for removal and refresh commands. This configures targets without building them.
+some runners also attempt a refresh, but a successful experiment does not imply
+that the editor configuration is current. Run `python3 workbench/tools/dev.py`
+after changing sources or dependencies. This configures targets without building them.
 The [editor guide](workbench/tools/editors.md) covers VS Code over Remote SSH,
 cross-architecture headers, optional dependencies, and repeatable diagnostic scans.
 
@@ -33,8 +36,8 @@ that reuse compiled objects while allowing live checkout edits. An incomplete
 live editor configuration does not block the captured experiment.
 
 The [worker command](workbench/tools/workers.md) can run a build or experiment
-script on temporary EC2 capacity with the pinned toolchain, collect results
-in S3, and terminate the instance.
+script on temporary EC2 capacity with the pinned toolchain and collect results
+in S3. Compatible follow-up jobs can reuse its setup before the idle timeout.
 
 Floating-point settings disable fast-math and implicit contraction.
 `SIXDB_MARCH` selects the ISA; `SIXDB_TUNE` independently selects `generic`,
