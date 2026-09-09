@@ -13,7 +13,7 @@ import subprocess
 import tarfile
 import tempfile
 
-from evidence import compact_run, compact_files
+from evidence import compact_run, compact_files, git_root, verify_exports
 
 ROOT = Path(__file__).resolve().parents[2]
 BUCKET = "calico-fleet-artifacts"
@@ -182,6 +182,56 @@ def install(staging, destination):
     staging.rename(destination)
 
 
+def prepare_compact(source, staging, selected, regenerate):
+    if selected is None:
+        compact_run(source, staging)
+    else:
+        receipt = json.loads((source / 'run.json').read_text())
+        receipt['compact'] = {'files': selected, 'regenerate': regenerate or []}
+        compact_files(source, staging, receipt)
+    if regenerate is not None:
+        path = staging / 'provenance.json'
+        meta = json.loads(path.read_text())
+        meta['regenerate'] = regenerate
+        path.write_text(json.dumps(meta, indent=2, sort_keys=True) + '\n')
+
+
+def preview_export(staging, destination):
+    """Describe actual compact bytes and ignore rules; size is information, not a gate."""
+    members = files(staging)
+    names = [p.relative_to(staging).as_posix() for p in members]
+    root = git_root(destination)
+    ignored = set()
+    if root is not None:
+        paths = [(destination / name).relative_to(root).as_posix() for name in names + ['artifact.json']]
+        result = subprocess.run(['git', '-C', str(root), 'check-ignore', '--no-index', '-z', '--stdin'],
+                                input=('\0'.join(paths) + '\0').encode(), capture_output=True)
+        if result.returncode not in (0, 1):
+            raise RuntimeError(result.stderr.decode())
+        ignored = set(result.stdout.decode().rstrip('\0').split('\0')) if result.stdout else set()
+    print(f'Git export: {destination}')
+    lines = total_bytes = 0
+    for path, name in zip(members, names):
+        data = path.read_bytes()
+        count = None if b'\0' in data else len(data.splitlines())
+        total_bytes += len(data)
+        lines += count or 0
+        relative = (destination / name).relative_to(root).as_posix() if root else ''
+        warning = '  IGNORED by Git' if relative in ignored else ''
+        print(f'  {len(data):>9,} bytes {str(count) if count is not None else "binary":>7} lines  {name}{warning}')
+    print(f'  {len(members)} files, {total_bytes:,} bytes, {lines:,} text lines; plus artifact.json after upload')
+    for name in sorted(ignored):
+        print(f'  Ignored export: {name}')
+    return ignored
+
+
+def preview(source, destination, selected=None, regenerate=None):
+    with tempfile.TemporaryDirectory(prefix='sixdb-retention-preview-') as name:
+        staging = Path(name)
+        prepare_compact(source.resolve(), staging, selected, regenerate)
+        return preview_export(staging, destination.resolve())
+
+
 def retain(source, destination, selected=None, regenerate=None):
     source, destination = source.resolve(), destination.resolve()
     if destination.is_relative_to(source):
@@ -191,12 +241,9 @@ def retain(source, destination, selected=None, regenerate=None):
         temporary = Path(name)
         staging = temporary / "evidence"
         staging.mkdir()
-        if selected is None:
-            compact_run(source, staging)
-        else:
-            receipt = json.loads((source / 'run.json').read_text())
-            receipt['compact'] = {'files': selected, 'regenerate': regenerate or []}
-            compact_files(source, staging, receipt)
+        prepare_compact(source, staging, selected, regenerate)
+        if preview_export(staging, destination):
+            raise ValueError('Compact export contains Git-ignored files; rename the selected output or adjust its scoped ignore rule')
         reference = publish(source, temporary)
         (staging / "artifact.json").write_text(json.dumps(reference, indent=2) + "\n")
         install(staging, destination)
@@ -262,11 +309,18 @@ def fetch(reference_path, destination):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
-    retain_parser = commands.add_parser("retain", help="upload a completed run and write compact Git evidence")
-    retain_parser.add_argument("run", type=Path)
-    retain_parser.add_argument("evidence", type=Path)
-    retain_parser.add_argument('--file', action='append', dest='selected', help='Keep this file byte-for-byte; repeat as needed')
-    retain_parser.add_argument('--regenerate', help='Record a table-regeneration command; {evidence} denotes its directory')
+    for name, help_text in [('retain', 'upload a completed run and write compact Git evidence'),
+                            ('preview', 'show compact sizes and ignored files without uploading or installing')]:
+        selection_parser = commands.add_parser(name, help=help_text)
+        selection_parser.add_argument('run', type=Path)
+        selection_parser.add_argument('evidence', type=Path)
+        selection_parser.add_argument('--file', action='append', dest='selected', help='Keep this file byte-for-byte; repeat as needed')
+        selection_parser.add_argument('--regenerate', help='Record an offline table-regeneration command; {evidence} denotes its directory')
+    verify_parser = commands.add_parser('verify', help='verify compact evidence under a directory, including Git-only membership')
+    verify_parser.add_argument('evidence', type=Path)
+    tree = verify_parser.add_mutually_exclusive_group()
+    tree.add_argument('--staged', action='store_const', const=':', dest='tree', help='read only staged Git blobs')
+    tree.add_argument('--tree', help='read only blobs from this Git revision (for example HEAD)')
     put_parser = commands.add_parser("put", help="upload a validation/other bundle and write its reference")
     put_parser.add_argument("directory", type=Path)
     put_parser.add_argument("reference", type=Path)
@@ -274,8 +328,12 @@ def main():
     fetch_parser.add_argument("reference", type=Path)
     fetch_parser.add_argument("output", type=Path)
     args = parser.parse_args()
-    if args.command == "retain":
-        retain(args.run, args.evidence, args.selected, shlex.split(args.regenerate) if args.regenerate else None)
+    if args.command in ('retain', 'preview'):
+        action = retain if args.command == 'retain' else preview
+        action(args.run, args.evidence, args.selected, shlex.split(args.regenerate) if args.regenerate else None)
+    elif args.command == 'verify':
+        count = verify_exports(args.evidence, tree=args.tree)
+        print(f'Verified {count} compact exports ({args.tree or "worktree"})')
     elif args.command == "fetch":
         fetch(args.reference, args.output)
     else:

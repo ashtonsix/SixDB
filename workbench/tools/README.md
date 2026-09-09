@@ -27,6 +27,8 @@ reuse with an actual build. `input()` records a reusable prepared dependency;
 
 [artifacts.py](artifacts.py) retains a selected run with one command: upload
 and verify its full bundle, then write compact evidence into the spike.
+Use `preview` to inspect export sizes and ignored files before upload, and
+`verify STUDY --staged` to check the actual Git contents before committing.
 It also fetches and verifies bundles. See the [retention and recovery commands](artifacts.md).
 [evidence.py](evidence.py) supplies compact samples and their reader;
 [check_artifacts.py](check_artifacts.py) exercises retention failures and recovery offline.

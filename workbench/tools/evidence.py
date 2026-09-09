@@ -5,6 +5,7 @@ import hashlib
 import json
 from pathlib import Path
 import shutil
+import subprocess
 
 
 def digest(path):
@@ -112,12 +113,71 @@ def compact_files(source, destination, receipt):
     (destination / 'provenance.json').write_text(json.dumps(provenance, indent=2, sort_keys=True) + '\n')
 
 
-def verify_compact(directory):
-    directory = Path(directory)
-    meta = json.loads((directory / 'provenance.json').read_text())
-    for name, expected in meta.get('files_sha256', meta.get('compact_sha256', {})).items():
+def git_root(directory):
+    directory = Path(directory).resolve()
+    while not directory.is_dir():
+        directory = directory.parent
+    result = subprocess.run(['git', '-C', str(directory), 'rev-parse', '--show-toplevel'],
+                            capture_output=True, text=True)
+    return Path(result.stdout.strip()).resolve() if result.returncode == 0 else None
+
+
+def git_revision(root, tree):
+    if tree == ':':  # The index, including staged bytes rather than worktree bytes.
+        return ''
+    return subprocess.check_output(['git', '-C', str(root), 'rev-parse', '--verify',
+                                    tree + '^{tree}'], text=True).strip()
+
+
+def verify_compact(directory, *, tree=None):
+    """Verify local bytes, or Git blobs (tree=':' for the index, otherwise a ref)."""
+    directory = Path(directory).resolve()
+    if tree is None:
+        read = lambda name: (directory / name).read_bytes()
+    else:
+        root = git_root(directory)
+        if root is None:
+            raise ValueError('Git evidence verification requires a repository')
+        prefix = directory.relative_to(root).as_posix()
+        revision = git_revision(root, tree)
+
+        def read(name):
+            result = subprocess.run(['git', '-C', str(root), 'cat-file', 'blob',
+                                     f'{revision}:{prefix}/{name}'], capture_output=True)
+            if result.returncode:
+                raise ValueError(f'Missing Git evidence in {tree}: {prefix}/{name}')
+            return result.stdout
+
+    def safe_read(name):
         if Path(name).is_absolute() or '..' in Path(name).parts:
             raise ValueError('Invalid compact evidence path')
-        if digest(directory / name) != expected:
+        return read(name)
+
+    meta = json.loads(read('provenance.json'))
+    for name, expected in meta.get('files_sha256', meta.get('compact_sha256', {})).items():
+        if hashlib.sha256(safe_read(name)).hexdigest() != expected:
             raise ValueError(f'Compact evidence changed: {name}')
+    if meta.get('full_bundle'):
+        json.loads(safe_read(meta['full_bundle']))
     return meta
+
+
+def verify_exports(directory, *, tree=None):
+    """Find compact manifests under a directory in the same tree being verified."""
+    directory = Path(directory).resolve()
+    if tree is None:
+        manifests = sorted(directory.rglob('provenance.json'))
+    else:
+        root = git_root(directory)
+        if root is None:
+            raise ValueError('Git evidence verification requires a repository')
+        revision = git_revision(root, tree)
+        command = ['ls-files', '--cached', '-z'] if tree == ':' else ['ls-tree', '-rz', '--name-only', revision]
+        names = subprocess.check_output(['git', '-C', str(root), *command, '--',
+                                         directory.relative_to(root).as_posix()]).decode().split('\0')
+        manifests = [root / name for name in names if name.endswith('/provenance.json')]
+    if not manifests:
+        raise ValueError(f'No compact evidence manifests in {directory}')
+    for path in manifests:
+        verify_compact(path.parent, tree=tree)
+    return len(manifests)

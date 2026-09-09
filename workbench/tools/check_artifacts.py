@@ -2,6 +2,7 @@
 """Check source isolation, retention failures/retries, and verified restoration offline."""
 
 import io
+from contextlib import redirect_stdout
 import json
 from pathlib import Path
 import subprocess
@@ -12,7 +13,7 @@ from unittest.mock import patch
 
 import artifacts
 import datasets
-from evidence import digest, read_measurements, verify_compact
+from evidence import digest, read_measurements, verify_compact, verify_exports
 from experiment import source_files
 
 
@@ -161,6 +162,68 @@ class ArtifactsCheck(unittest.TestCase):
             (self.root / 'evidence/accounting.csv').write_text('corrupt')
             with self.assertRaisesRegex(ValueError, 'changed'):
                 verify_compact(self.root / 'evidence')
+
+    def test_preview_flags_ignored_export_before_upload(self):
+        subprocess.run(['git', 'init', '-q', str(self.root)], check=True)
+        (self.root / '.gitignore').write_text('*.stderr\n')
+        diagnostic = self.source / 'expected-error.stderr'
+        diagnostic.write_text('expected compiler error\n')
+        self.receipt['artifact_sha256'][diagnostic.name] = digest(diagnostic)
+        self.receipt['compact'] = {'files': [diagnostic.name], 'regenerate': []}
+        (self.source / 'run.json').write_text(json.dumps(self.receipt))
+        destination = self.root / 'evidence'
+        output = io.StringIO()
+        with patch.object(artifacts, 'aws') as aws, redirect_stdout(output):
+            ignored = artifacts.preview(self.source, destination)
+            self.assertEqual(ignored, {'evidence/expected-error.stderr'})
+            self.assertFalse(destination.exists())
+            with self.assertRaisesRegex(ValueError, 'Git-ignored'):
+                artifacts.retain(self.source, destination)
+            aws.assert_not_called()
+        self.assertIn('24 bytes', output.getvalue())
+        self.assertIn('IGNORED by Git', output.getvalue())
+        self.assertFalse(destination.exists())
+
+    def test_verify_index_and_tree_cannot_be_masked_by_local_files(self):
+        subprocess.run(['git', 'init', '-q', str(self.root)], check=True)
+        (self.root / '.gitignore').write_text('*.stderr\n')
+        evidence = self.root / 'evidence'
+        evidence.mkdir()
+        diagnostic = evidence / 'expected-error.stderr'
+        diagnostic.write_text('expected compiler error\n')
+        manifest = evidence / 'provenance.json'
+        def save_manifest():
+            manifest.write_text(json.dumps({'files_sha256': {diagnostic.name: digest(diagnostic)},
+                                            'full_bundle': 'artifact.json'}))
+        save_manifest()
+        (evidence / 'artifact.json').write_text('{}')
+        def git(*args):
+            return subprocess.check_output(['git', '-C', str(self.root), *args], text=True).strip()
+        git('add', 'evidence')
+        verify_compact(evidence)
+        with self.assertRaisesRegex(ValueError, 'Missing Git evidence.*expected-error.stderr'):
+            verify_exports(evidence, tree=':')
+        renamed = diagnostic.with_suffix('.txt')
+        diagnostic.rename(renamed)
+        diagnostic = renamed
+        save_manifest()
+        git('add', 'evidence')
+        tree = git('write-tree')
+        self.assertEqual(verify_exports(evidence, tree=':'), 1)
+        diagnostic.write_text('changed locally\n')
+        with self.assertRaisesRegex(ValueError, 'changed'):
+            verify_compact(evidence)
+        self.assertEqual(verify_exports(evidence, tree=':'), 1)
+        git('add', 'evidence')
+        with self.assertRaisesRegex(ValueError, 'changed'):
+            verify_exports(evidence, tree=':')
+        self.assertEqual(verify_exports(evidence, tree=tree), 1)
+        git('rm', '--cached', 'evidence/artifact.json')
+        # Restore just the matching content in the index, keeping the missing reference.
+        diagnostic.write_text('expected compiler error\n')
+        git('add', 'evidence/expected-error.txt')
+        with self.assertRaisesRegex(ValueError, 'Missing Git evidence.*artifact.json'):
+            verify_exports(evidence, tree=':')
 
 
 if __name__ == "__main__":

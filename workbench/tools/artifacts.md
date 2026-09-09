@@ -27,6 +27,24 @@ beside the evidence. The run is still local if upload or verification fails;
 rerun the same retention command to retry. Repeating a successful command with
 identical inputs is safe. An existing, different evidence directory is refused.
 
+To see the export before uploading, replace `retain` with `preview`. It reports
+each selected file's bytes and lines, the total, and any Git ignore rules that
+would omit a file. Preview writes neither evidence nor S3 objects. Retain shows
+the same preview and refuses ignored exports: rename an intentionally selected
+diagnostic to `.txt`, for example, or use a narrowly scoped ignore exception.
+There is no size threshold; choose the evidence that helps interpret the result.
+
+After staging, check the bytes that will actually be committed:
+
+```sh
+python3 workbench/tools/artifacts.py verify workbench/spikes/STUDY --staged
+```
+
+This discovers compact manifests under the directory, checks their members and
+bundle references in the index, and verifies hashes of the staged blobs. Local
+ignored or unstaged files cannot fill gaps. `--tree HEAD` checks a commit;
+omitting both options checks local files. This does not download the S3 bundles.
+
 ## Counts and other evidence
 
 The same command handles studies without Google Benchmark output. A runner may
@@ -45,6 +63,12 @@ compiler/configuration details, and the regeneration command. A scoped
 study chooses its counters, examples, and interpretation; there is no common
 results schema. `verify_compact()` checks files before an analyzer uses them.
 Google Benchmark extraction remains the default for existing timing studies.
+`regenerate` means an offline report over retained evidence, not a new experiment.
+Leave it empty when there is no analyzer; document the experiment runner separately.
+An explicit `--regenerate` also overrides a runner's default without changing its
+file selection. To reduce a historical export, preserve the measured source/run
+identity and S3 reference, and describe the new selection instead of presenting
+it as new measurement.
 
 ## Shared inputs and captured sources
 
@@ -100,6 +124,10 @@ Git holds code, questions, findings, small correctness fixtures, selected
 samples/counters, and compact provenance. Full logs, caches, compilation
 databases, source archives, binaries, profiles, traces, and broad raw sweeps
 belong in local output or S3. Existing datasets remain referenced in place.
+Keep a few complete assembly functions that demonstrate a boundary or spill;
+full object disassemblies belong in the bundle. Keep useful timing repetitions,
+not just medians. A follow-up that reuses frozen models can link their existing
+export while retaining its new comparisons, rather than duplicating old tables.
 Source capture explicitly excludes `build/` and spike `evidence/` directories,
 including tracked files, so evidence cannot recursively enter later snapshots.
 
@@ -111,3 +139,5 @@ garbage-collection policy remain open.
 
 `python3 workbench/tools/check_artifacts.py` checks failure/retry behavior,
 compact-input integrity, safe restoration, and source exclusions offline.
+It also checks ignored-export detection and verifies staged/committed evidence
+independently of local files.
