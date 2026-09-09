@@ -136,6 +136,8 @@ def get(name, **parameters):
     spec = json.loads((home / 'dataset.json').read_text())
     recipe = home / 'prepare.py'
     module_spec = importlib.util.spec_from_file_location('dataset_recipe', recipe)
+    if module_spec is None or module_spec.loader is None:
+        raise ValueError(f'Cannot load dataset recipe: {recipe}')
     module = importlib.util.module_from_spec(module_spec)
     module_spec.loader.exec_module(module)
     unknown = parameters.keys() - module.DEFAULTS.keys()

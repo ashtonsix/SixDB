@@ -10,7 +10,11 @@ def prepare(sources, output):
     import yaml
     with tarfile.open(sources['uap']) as archive:
         def read(name):
-            return archive.extractfile(f'uap-core-{REVISION}/' + name).read()
+            source = archive.extractfile(f'uap-core-{REVISION}/' + name)
+            if source is None:
+                raise ValueError(f'Expected a regular archive file: {name}')
+            with source:
+                return source.read()
         rules = yaml.safe_load(read('regexes.yaml'))
         with (output / 'rules.jsonl').open('w', encoding='utf-8', newline='\n') as f:
             for group, entries in rules.items():
