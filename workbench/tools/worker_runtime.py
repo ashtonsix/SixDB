@@ -72,7 +72,8 @@ def terminate_group(process):
 class Worker:
     def __init__(self, job, base):
         self.job, self.config, self.base = job, job['config'], base
-        self.results = base / 'results'
+        self.job_base = base / 'jobs' / job['id'] if job.get('format', 1) >= 2 else base
+        self.results = self.job_base / 'results'
         self.results.mkdir(parents=True, exist_ok=True)
         self.source = base / 'source'
         self.source.mkdir(exist_ok=True)
@@ -80,7 +81,7 @@ class Worker:
         self.stop = threading.Event()
         self.collection_seconds = min(120, self.config['deadline_seconds'] // 4)
         self.execution_end = job['created_at'] + self.config['deadline_seconds'] - self.collection_seconds
-        self.state = {'state': 'starting', 'job': job['id']}
+        self.state = {'state': 'starting', 'job': job['id'], 'worker': job.get('worker')}
         self.process = None
         self.capacity = self.config.get('actual_capacity', self.config['capacity'])
 
@@ -93,7 +94,7 @@ class Worker:
 
     def status(self, state, **fields):
         self.state = self.state | fields | {'state': state, 'updated_at': time.time()}
-        path = self.base / 'status.json'
+        path = self.job_base / 'status.json'
         path.write_text(json.dumps(self.state, indent=2) + '\n')
         print(json.dumps(self.state), flush=True)
         self.upload(path, 'status.json')
@@ -156,26 +157,36 @@ class Worker:
             self.aws('s3', 'cp', '--only-show-errors', self.job['uri'] + '/source.tar.gz', str(bundle))
             if digest(bundle) != self.job['source']['sha256']:
                 raise ValueError('source archive checksum mismatch')
-            extract(bundle, self.source)
+            if self.job.get('format', 1) >= 2:
+                refresh_source(bundle, self.source)
+            else:
+                extract(bundle, self.source)
             self.aws('s3', 'cp', '--only-show-errors', self.job['uri'] + '/source-manifest.json',
                      str(self.results / 'source-manifest.json'))
             # Existing Run helpers need a Git working tree. This synthetic commit
             # contains exactly the captured files; original HEAD remains in job.json.
-            for command in (['git', 'init', '-q'], ['git', 'add', '--force', '--all'],
-                ['git', '-c', 'user.name=SixDB snapshot', '-c', 'user.email=snapshot@sixdb.invalid',
-                 'commit', '-qm', 'Captured worker source ' + self.job['source']['digest']]):
-                subprocess.run(command, cwd=self.source, check=True, stdout=subprocess.DEVNULL)
+            subprocess.run(['git', 'init', '-q'], cwd=self.source, check=True)
+            names = [p.name for p in self.source.iterdir() if p.name not in {'build', '.git'}]
+            subprocess.run(['git', 'add', '--force', '--', *names], cwd=self.source, check=True)
+            subprocess.run(['git', '-c', 'user.name=SixDB snapshot', '-c', 'user.email=snapshot@sixdb.invalid',
+                            'commit', '-qm', 'Captured worker source ' + self.job['source']['digest']],
+                           cwd=self.source, check=True)
             monitor = threading.Thread(target=self.monitor, daemon=True)
             if self.capacity != 'on-demand' or self.config['sync_seconds']:
                 monitor.start()
             else:
                 monitor = None
-            if self.config['setup'] == 'toolchain':
+            setup_marker = self.base / 'setup-complete.json'
+            setup_id = self.job['source'].get('setup_sha256')
+            cached_setup = (self.job.get('worker', {}).get('reused') and setup_marker.exists()
+                            and json.loads(setup_marker.read_text()) == {'sha256': setup_id})
+            if self.config['setup'] == 'toolchain' and not cached_setup:
                 self.status('setting-up')
                 code = self.execute(['bash', 'workbench/tools/worker-setup.sh'], self.results / 'setup.log')
                 if code:
                     raise RuntimeError(f'toolchain setup exited {code}; see setup.log')
-            host = {}
+            setup_marker.write_text(json.dumps({'sha256': setup_id}) + '\n')
+            host = {'worker': self.job.get('worker'), 'setup_reused': bool(cached_setup)}
             try:
                 host['instance'] = metadata('dynamic/instance-identity/document')
             except Exception as error:
@@ -194,7 +205,9 @@ class Worker:
                 'SIXDB_DATA_CACHE': str(self.base / 'datasets'), 'PYTHONDONTWRITEBYTECODE': '1'} | self.config['env']
             if int(env['SIXDB_CPU']) not in allowed:
                 raise ValueError('SIXDB_CPU is outside this worker affinity mask')
-            env |= {'SIXDB_RESULTS': str(self.results), 'SIXDB_SOURCE': str(self.source),
+            env |= {'SIXDB_WORKER_ID': self.job.get('worker', {}).get('id', self.job['id']),
+                    'SIXDB_WORKER_REUSED': '1' if self.job.get('worker', {}).get('reused') else '0',
+                    'SIXDB_RESULTS': str(self.results), 'SIXDB_SOURCE': str(self.source),
                     'SIXDB_JOB': self.job['id'], 'SIXDB_RESULTS_S3': self.job['uri'] + '/live/',
                     'SIXDB_SOURCE_COMMIT': self.job['source_commit']}
             self.status('running')
@@ -266,6 +279,147 @@ class Worker:
         return 0 if result['state'] == 'complete' else 1
 
 
+def refresh_source(bundle, source):
+    """Fresh captured files at stable paths, with unchanged mtimes and build cache."""
+    with tempfile.TemporaryDirectory(dir=source.parent) as temporary:
+        incoming = Path(temporary) / 'source'
+        incoming.mkdir()
+        extract(bundle, incoming)
+        if (incoming / 'build').exists() or (incoming / '.git').exists():
+            raise ValueError('source archive includes reserved build or Git state')
+        for path in incoming.rglob('*'):
+            old = source / path.relative_to(incoming)
+            if path.is_file() and old.is_file() and not old.is_symlink() and path.read_bytes() == old.read_bytes():
+                os.utime(path, ns=(old.stat().st_atime_ns, old.stat().st_mtime_ns))
+        build = source / 'build'
+        if build.is_symlink():
+            raise ValueError('cannot reuse a symlinked build directory')
+        if build.exists():
+            build.rename(incoming / 'build')
+        shutil.rmtree(source)
+        incoming.rename(source)
+
+
+class Session:
+    """A sequential job loop with an idle-only S3 mailbox and OS shutdown backstops."""
+    def __init__(self, job, base):
+        import worker_pool
+        self.pool = worker_pool
+        self.first, self.base = job, base
+        self.config = job['config']
+        self.id = job['id']
+        self.key = worker_pool.state_key(self.id)
+        self.store = worker_pool.Store(self.config['bucket'], self.config['region'])
+        self.max_end = job['created_at'] + self.config['max_age_seconds']
+        self.info = metadata('dynamic/instance-identity/document')
+        self.state = {'worker_id': self.id, 'instance_id': self.info['instanceId'],
+                      'profile': job['profile'], 'job_id': job['id'], 'state': 'busy',
+                      'capacity': self.config['actual_capacity'], 'subnet_id': job['worker']['subnet_id'],
+                      'max_end': self.max_end, 'reuse_count': 0}
+
+    def deadline(self, job, active):
+        unit = 'sixdb-job-' + job['id']
+        if active:
+            seconds = max(1, int(min(self.max_end, job['created_at'] + job['config']['deadline_seconds']) - time.time()))
+            subprocess.run(['systemd-run', '--collect', '--unit=' + unit, '--on-active=' + str(seconds) + 's',
+                            '/sbin/shutdown', '-h', 'now'], check=True)
+        else:
+            subprocess.run(['systemctl', 'stop', unit + '.timer'], check=True)
+
+    def run_job(self, job, state):
+        worker = {'id': self.id, 'instance_id': self.info['instanceId'],
+                  'reused': state['reuse_count'] > 0, 'reuse_count': state['reuse_count'],
+                  'max_end': self.max_end}
+        job = job | {'worker': worker, 'config': job['config'] | {'actual_capacity': state['capacity']}}
+        directory = self.base / 'jobs' / job['id']
+        directory.mkdir(parents=True, exist_ok=False)
+        path = directory / 'job.json'
+        path.write_text(json.dumps(job, indent=2) + '\n')
+        self.deadline(job, True)
+        if state['reuse_count'] == 0:
+            subprocess.run(['systemctl', 'stop', 'sixdb-boot-deadline.timer'], check=True)
+        # New interpreter per job: imported collection helpers come from this source snapshot.
+        subprocess.run([sys.executable, str(Path(__file__).resolve()), '--execute', str(path), str(self.base)], check=False)
+        self.deadline(job, False)
+        status = directory / 'status.json'
+        result = json.loads(status.read_text()) if status.exists() else {}
+        return (result.get('state') in {'complete', 'failed'} and result.get('artifact')
+                and result.get('script_returncode') is not None)
+
+    def next_job(self):
+        while True:
+            state, etag = self.store.read(self.key)
+            if not state or state['state'] == 'retiring':
+                return None
+            if state['state'] == 'assigned':
+                self.state = state  # Attribute validation failures to this request.
+                uri = state['job_uri']
+                expected_prefix = f's3://{self.config["bucket"]}/sixdb/workers/{state["job_id"]}'
+                if uri != expected_prefix:
+                    raise ValueError('assignment URI does not match this worker bucket/job')
+                job, _ = self.store.read(f'sixdb/workers/{state["job_id"]}/job.json')
+                encoded = (json.dumps(job, indent=2, sort_keys=True) + '\n').encode()
+                if (hashlib.sha256(encoded).hexdigest() != state['job_sha256']
+                        or job['id'] != state['job_id'] or job['profile'] != self.first['profile']
+                        or self.pool.profile(job['config'], job['source']) != self.first['profile']):
+                    raise ValueError('assigned job identity/configuration changed')
+                busy = state | {'state': 'busy', 'reuse_count': state['reuse_count'] + 1}
+                if self.store.replace(self.key, busy, etag):
+                    self.state = busy
+                    return job
+                continue
+            if state['state'] != 'idle':
+                raise ValueError('unexpected worker mailbox state')
+            if time.time() >= min(state['idle_until'], self.max_end):
+                if self.store.replace(self.key, state | {'state': 'retiring'}, etag):
+                    return None
+                continue  # A concurrent assignment may have won just before expiry.
+            time.sleep(min(2, max(0, state['idle_until'] - time.time())))
+
+    def run(self):
+        try:
+            return self.loop()
+        except Exception as error:
+            # Publish supervisor failures too, including failures before a child
+            # can create results. Never replace a completed job's artifact receipt.
+            try:
+                state, etag = self.store.read(self.key)
+                if state and state.get('job_id') == self.state['job_id']:
+                    self.store.replace(self.key, state | {'state': 'retiring', 'error': str(error)}, etag)
+                key = f'sixdb/workers/{self.state["job_id"]}/status.json'
+                status, etag = self.store.read(key)
+                if not status or not status.get('artifact'):
+                    self.store.replace(key, {'state': 'failed', 'job': self.state['job_id'],
+                        'worker': {'id': self.id, 'instance_id': self.info['instanceId']},
+                        'error': f'Worker supervisor: {error}', 'updated_at': time.time()}, etag)
+            except Exception as publication_error:
+                print(f'Supervisor failure could not be published: {publication_error}', flush=True)
+            raise
+
+    def loop(self):
+        if not self.store.replace(self.key, self.state, None):
+            return 1  # For example, cancelled before boot completed.
+        job = self.first
+        while job is not None:
+            reusable = self.run_job(job, self.state)
+            state, etag = self.store.read(self.key)
+            if not state or state['state'] != 'busy' or state['job_id'] != job['id']:
+                return 1
+            idle_until = min(time.time() + job['config']['idle_seconds'], self.max_end)
+            state = state | {'state': 'idle' if reusable and idle_until > time.time() else 'retiring',
+                             'idle_until': idle_until}
+            if not self.store.replace(self.key, state, etag) or state['state'] == 'retiring':
+                return 0
+            job = self.next_job()
+        return 0
+
+
 if __name__ == '__main__':
+    if sys.argv[1] == '--execute':
+        job_path = Path(sys.argv[2])
+        sys.exit(Worker(json.loads(job_path.read_text()), Path(sys.argv[3])).run())
     job_path = Path(sys.argv[1])
-    sys.exit(Worker(json.loads(job_path.read_text()), job_path.parent).run())
+    job = json.loads(job_path.read_text())
+    if job.get('format', 1) >= 2:
+        sys.exit(Session(job, job_path.parent).run())
+    sys.exit(Worker(job, job_path.parent).run())

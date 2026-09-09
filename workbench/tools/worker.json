@@ -4,6 +4,8 @@
   "machine": "zen5",
   "capacity": "spot",
   "deadline_seconds": 3600,
+  "idle_seconds": 300,
+  "max_age_seconds": 14400,
   "disk_gb": 24,
   "setup": "toolchain",
   "sync_seconds": 0,

@@ -4,9 +4,11 @@ Development and experiment scripts, including benchmark-instance provisioning
 and S3 artifact storage.
 
 [worker.py](worker.py) runs a repository script on one temporary Spot or
-On-Demand EC2 worker, uploads its results, and terminates it. Start with the
+On-Demand EC2 worker, uploads its results, and keeps it ready for compatible
+follow-up jobs for five idle minutes before terminating it. Start with the
 [worker guide](workers.md) for one-command runs, machine/environment overrides,
-and detached recovery. [check_worker.py](check_worker.py) tests its lifecycle offline.
+and detached recovery. [check_worker.py](check_worker.py) tests its lifecycle;
+[check_worker_reuse.py](check_worker_reuse.py) exercises reuse and ownership races offline.
 
 [check_build.py](check_build.py) verifies incremental compilation and release
 packaging using a disposable fixture. Run it with Python 3 on Linux, with the

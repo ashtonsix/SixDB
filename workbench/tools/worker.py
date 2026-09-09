@@ -23,6 +23,7 @@ import uuid
 
 from experiment import source_files
 import artifacts
+import worker_pool as pool
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
@@ -31,7 +32,7 @@ CAPACITY_ERRORS = {'InsufficientInstanceCapacity', 'InsufficientFreeAddressesInS
                    'UnfulfillableCapacity', 'Unsupported', 'SpotMaxPriceTooLow'}
 FINAL = {'complete', 'failed', 'timeout', 'interrupted', 'upload-failed'}
 RESERVED = {'SIXDB_RESULTS', 'SIXDB_SOURCE', 'SIXDB_JOB', 'SIXDB_RESULTS_S3',
-            'SIXDB_SOURCE_COMMIT', 'AWS_REGION', 'AWS_DEFAULT_REGION'}
+            'SIXDB_SOURCE_COMMIT', 'SIXDB_WORKER_ID', 'SIXDB_WORKER_REUSED', 'AWS_REGION', 'AWS_DEFAULT_REGION'}
 
 
 class AwsError(RuntimeError):
@@ -98,7 +99,7 @@ def environment(values):
 
 def configuration(args, defaults):
     config = dict(defaults)
-    for key in ('machine', 'capacity', 'deadline_seconds', 'disk_gb', 'setup', 'sync_seconds'):
+    for key in ('machine', 'capacity', 'deadline_seconds', 'disk_gb', 'setup', 'sync_seconds', 'idle_seconds', 'max_age_seconds'):
         if getattr(args, key, None) is not None:
             config[key] = getattr(args, key)
     config.update(config['machines'][config['machine']])
@@ -106,6 +107,9 @@ def configuration(args, defaults):
     for key in ('instance_type', 'ami'):
         if getattr(args, key, None):
             config[key] = getattr(args, key)
+    config['fresh'] = getattr(args, 'fresh', False) or config.get('fresh', False)
+    config.setdefault('idle_seconds', 300)
+    config.setdefault('max_age_seconds', 14400)
     config['env'] = dict(config.get('env', {})) | environment(getattr(args, 'env', []))
     environment([f'{k}={v}' for k, v in config['env'].items()])
     config['env'] = {k: str(v) for k, v in config['env'].items()}
@@ -117,6 +121,10 @@ def configuration(args, defaults):
         raise ValueError('deadline must be 120..86400 seconds, including setup and upload')
     if config['disk_gb'] < 8 or config['sync_seconds'] < 0:
         raise ValueError('disk must be at least 8 GiB and sync interval nonnegative')
+    if not 0 <= config['idle_seconds'] <= 3600:
+        raise ValueError('idle window must be 0..3600 seconds')
+    if not config['deadline_seconds'] <= config['max_age_seconds'] <= 172800:
+        raise ValueError('maximum worker age must cover the job deadline and be at most 48 hours')
     return config
 
 
@@ -218,7 +226,10 @@ def snapshot(directory):
                 archive.addfile(info, io.BytesIO(data))
     runtime = sources['workbench/tools/worker_runtime.py']
     (directory / 'runtime.py').write_bytes(runtime)
+    (directory / 'worker_pool.py').write_bytes(sources['workbench/tools/worker_pool.py'])
     return {'sha256': artifacts.sha256(path), 'files': hashes,
+            'pool_sha256': hashes['workbench/tools/worker_pool.py'],
+            'setup_sha256': hashes['workbench/tools/worker-setup.sh'],
             'digest': hashlib.sha256(json.dumps(hashes, sort_keys=True).encode()).hexdigest(),
             'runtime_sha256': hashlib.sha256(runtime).hexdigest()}
 
@@ -229,11 +240,14 @@ def boot_script(job):
     encoded = base64.b64encode(json.dumps(job).encode()).decode()
     region = shlex.quote(config['region'])
     uri = shlex.quote(job['uri'] + '/runtime.py')
+    pool_uri = shlex.quote(job['uri'] + '/worker_pool.py')
+    max_age = config.get('max_age_seconds', config['deadline_seconds'])
     script = f'''#!/bin/bash
 set -euo pipefail
 mkdir -p /opt/sixdb
 exec > >(tee -a /opt/sixdb/bootstrap.log) 2>&1
-systemd-run --unit=sixdb-deadline --on-active={config['deadline_seconds']}s /sbin/shutdown -h now
+systemd-run --unit=sixdb-deadline --on-active={max_age}s /sbin/shutdown -h now
+systemd-run --unit=sixdb-boot-deadline --on-active={config['deadline_seconds']}s /sbin/shutdown -h now
 trap '/sbin/shutdown -h now' EXIT
 echo {shlex.quote(encoded)} | base64 -d > /opt/sixdb/job.json
 export DEBIAN_FRONTEND=noninteractive AWS_DEFAULT_REGION={region} AWS_REGION={region}
@@ -247,6 +261,8 @@ if ! command -v aws >/dev/null; then
 fi
 aws s3 cp --only-show-errors {uri} /opt/sixdb/runtime.py
 echo {shlex.quote(job['source']['runtime_sha256'] + '  /opt/sixdb/runtime.py')} | sha256sum -c -
+aws s3 cp --only-show-errors {pool_uri} /opt/sixdb/worker_pool.py
+echo {shlex.quote(job['source'].get('pool_sha256', '') + '  /opt/sixdb/worker_pool.py')} | sha256sum -c -
 python3 /opt/sixdb/runtime.py /opt/sixdb/job.json
 '''
     if len(script.encode()) > 16384:
@@ -258,6 +274,8 @@ def launch_request(job, subnet, capacity):
     config = job['config']
     tags = [{'Key': 'Project', 'Value': 'SixDB'}, {'Key': 'SixDBWorkerJob', 'Value': job['id']},
             {'Key': 'Name', 'Value': 'sixdb-' + job['id']}]
+    if job.get('format', 1) >= 2:
+        tags += [{'Key': 'SixDBWorkerSession', 'Value': job['id']}, {'Key': 'SixDBWorkerProfile', 'Value': job['profile']}]
     request: dict[str, Any] = dict(ImageId=config['ami'], InstanceType=config['instance_type'], MinCount=1, MaxCount=1,
         ClientToken=f"{job['id']}-{subnet['zone']}-{capacity}",
         IamInstanceProfile={'Name': config['instance_profile']},
@@ -267,7 +285,8 @@ def launch_request(job, subnet, capacity):
             'VolumeType': 'gp3', 'Encrypted': True, 'DeleteOnTermination': True}}],
         MetadataOptions={'HttpTokens': 'required', 'HttpEndpoint': 'enabled'},
         InstanceInitiatedShutdownBehavior='terminate',
-        UserData=boot_script(job | {'config': config | {'actual_capacity': capacity}}),
+        UserData=boot_script(job | {'config': config | {'actual_capacity': capacity},
+                                   'worker': {'id': job['id'], 'reused': False, 'subnet_id': subnet['id']}}),
         TagSpecifications=[{'ResourceType': kind, 'Tags': tags} for kind in ('instance', 'volume')])
     if config.get('threads_per_core'):
         request['CpuOptions'] = {'CoreCount': config['hardware']['VCpuInfo']['DefaultCores'],
@@ -323,8 +342,10 @@ def locate(value, config):
 
 
 def instances(job, aws):
-    reservations = aws.call('ec2', 'describe-instances', Filters=[
-        {'Name': 'tag:SixDBWorkerJob', 'Values': [job['id']]},
+    assignment = aws.get_json(job['config']['bucket'], job['prefix'] + '/assignment.json') if job.get('format', 1) >= 2 else None
+    filters = [{'Name': 'tag:SixDBWorkerSession', 'Values': [assignment['worker_id']]}] if assignment else [
+        {'Name': 'tag:SixDBWorkerJob', 'Values': [job['id']]}]
+    reservations = aws.call('ec2', 'describe-instances', Filters=filters + [
         {'Name': 'tag:Project', 'Values': ['SixDB']}])['Reservations']
     return [i for r in reservations for i in r['Instances']]
 
@@ -334,10 +355,57 @@ def status(job, aws):
 
 
 def cancel(job, aws):
-    workers = [i['InstanceId'] for i in instances(job, aws) if i['State']['Name'] not in {'terminated', 'shutting-down'}]
+    active = [i for i in instances(job, aws) if i['State']['Name'] not in {'terminated', 'shutting-down'}]
+    store = pool.Store(job['config']['bucket'], job['config']['region'])
+    workers = []
+    for instance in active:
+        tags = {tag['Key']: tag['Value'] for tag in instance.get('Tags', [])}
+        session = tags.get('SixDBWorkerSession')
+        if session:
+            key = pool.state_key(session)
+            state, etag = store.read(key)
+            if state is None:
+                # Close the boot-time race before the worker creates its first state.
+                state = {'state': 'starting', 'job_id': session}
+            if state.get('job_id') != job['id']:
+                continue  # A completed job cannot cancel a newer tenant.
+            if not store.replace(key, state | {'state': 'retiring'}, etag):
+                raise RuntimeError('Worker ownership changed during cancellation; inspect status and retry')
+        workers.append(instance['InstanceId'])
     if workers:
         aws.call('ec2', 'terminate-instances', InstanceIds=workers)
-    print('Termination requested: ' + (', '.join(workers) or 'no active worker'))
+    print('Termination requested: ' + (', '.join(workers) or 'no worker owned by this job'))
+
+
+def reuse(job, directory, aws):
+    if job['config']['fresh']:
+        return False
+    store = pool.Store(job['config']['bucket'], job['config']['region'])
+    response = aws.call('ec2', 'describe-instances', Filters=[
+        {'Name': 'tag:Project', 'Values': ['SixDB']},
+        {'Name': 'tag:SixDBWorkerProfile', 'Values': [job['profile']]},
+        {'Name': 'instance-state-name', 'Values': ['running']}])
+    for reservation in response['Reservations']:
+        for instance in reservation['Instances']:
+            tags = {t['Key']: t['Value'] for t in instance.get('Tags', [])}
+            worker_id = tags.get('SixDBWorkerSession')
+            if not worker_id:
+                continue
+            key = pool.state_key(worker_id)
+            state, etag = store.read(key)
+            if not state or not pool.can_claim(state, job):
+                continue
+            assignment = {'worker_id': worker_id, 'instance_id': instance['InstanceId'], 'reused': True}
+            # Durable routing exists before the claim, so wait/cancel can recover
+            # even if this controller disappears immediately after the write.
+            save(directory / 'assignment.json', assignment)
+            aws.upload(directory / 'assignment.json', job['uri'] + '/assignment.json')
+            claim = state | {'state': 'assigned', 'job_id': job['id'], 'job_uri': job['uri'],
+                             'job_sha256': artifacts.sha256(directory / 'job.json')}
+            if store.replace(key, claim, etag):
+                print(f"Reuse {worker_id} ({instance['InstanceId']}); prepared data and builds retained", flush=True)
+                return True
+    return False
 
 
 def fetch(job, directory, state, aws):
@@ -373,9 +441,10 @@ def wait(job, directory, aws, interval=10):
         if state and state['state'] in FINAL:
             save(directory / 'status.json', state)
             fetch(job, directory, state, aws)
-            # Completion includes a controller-side cleanup confirmation. Detached workers
-            # also shut down themselves; requesting termination here is idempotent.
-            cancel(job, aws)
+            # Old workers were job-scoped. Sessions own their idle/lifetime cleanup;
+            # a completed job must never terminate a worker serving a newer job.
+            if job.get('format', 1) < 2:
+                cancel(job, aws)
             return 0 if state['state'] == 'complete' else 1
         if not active:
             stopped_since = stopped_since or time.monotonic()
@@ -407,7 +476,10 @@ def main():
         cmd.add_argument('--instance-type')
         cmd.add_argument('--ami')
         cmd.add_argument('--capacity', choices=['spot', 'on-demand', 'spot-or-on-demand'])
-        cmd.add_argument('--deadline', type=int, dest='deadline_seconds', help='total worker lifetime in seconds')
+        cmd.add_argument('--deadline', type=int, dest='deadline_seconds', help='job deadline including setup and collection')
+        cmd.add_argument('--idle-seconds', type=int, help='keep worker ready after collection; default 300, zero shuts down')
+        cmd.add_argument('--max-age', type=int, dest='max_age_seconds', help='maximum instance lifetime; default 14400 seconds')
+        cmd.add_argument('--fresh', action='store_true', help='launch a fresh instance instead of reusing a compatible idle worker')
         cmd.add_argument('--disk-gb', type=int)
         cmd.add_argument('--setup', choices=['minimal', 'toolchain'])
         cmd.add_argument('--sync-seconds', type=int, help='optional live output sync; zero keeps uploads outside measurement')
@@ -449,22 +521,26 @@ def main():
         prefix = 'sixdb/workers/' + directory.name
         # Per-file hashes live separately: EC2 user-data has a small fixed size limit.
         save(directory / 'source-manifest.json', source.pop('files'))
-        job = {'format': 1, 'id': directory.name, 'created_at': time.time(),
+        job = {'format': 2, 'profile': pool.profile(config, source), 'id': directory.name, 'created_at': time.time(),
             'source': source, 'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
             'script': name, 'args': args.arg + arguments, 'config': config, 'prefix': prefix,
             'uri': f"s3://{config['bucket']}/{prefix}"}
         save(directory / 'job.json', job)
         boot_script(job)  # Validate before uploading or allocating compute.
-        for filename in ('source.tar.gz', 'source-manifest.json', 'runtime.py', 'job.json'):
+        for filename in ('source.tar.gz', 'source-manifest.json', 'runtime.py', 'worker_pool.py', 'job.json'):
             aws.upload(directory / filename, job['uri'] + '/' + filename)
         cpu = config['hardware']['VCpuInfo']
         vcpus = cpu['DefaultCores'] * config.get('threads_per_core', cpu['DefaultThreadsPerCore'])
         memory = config['hardware']['MemoryInfo']['SizeInMiB'] / 1024
         print(f"Job: {job['id']}\nWorker: {config['instance_type']}, {vcpus} vCPU, {memory:g} GiB; "
-              f"{config['deadline_seconds']}s lifetime\nS3: {job['uri']}\n"
+              f"{config['deadline_seconds']}s job deadline, {config['idle_seconds']}s idle window\nS3: {job['uri']}\n"
               f"Resume: python3 workbench/tools/worker.py wait {job['id']}", flush=True)
         try:
-            launch(job, directory, aws)
+            if not reuse(job, directory, aws):
+                # Replace a rejected reuse candidate's routing with this new session.
+                save(directory / 'assignment.json', {'worker_id': job['id'], 'reused': False})
+                aws.upload(directory / 'assignment.json', job['uri'] + '/assignment.json')
+                launch(job, directory, aws)
             if not args.detach:
                 return wait(job, directory, aws)
         except (KeyboardInterrupt, Exception) as error:
@@ -479,7 +555,11 @@ def main():
         for reservation in response['Reservations']:
             for item in reservation['Instances']:
                 tags = {t['Key']: t['Value'] for t in item['Tags']}
-                print(tags['SixDBWorkerJob'], item['InstanceId'], item['InstanceType'], item['State']['Name'])
+                session = tags.get('SixDBWorkerSession')
+                state, _ = pool.Store(base['bucket'], aws.region).read(pool.state_key(session)) if session else (None, None)
+                print(session or tags['SixDBWorkerJob'], item['InstanceId'], item['InstanceType'],
+                      (state or {}).get('state', item['State']['Name']),
+                      'job=' + (state or {}).get('job_id', tags['SixDBWorkerJob']))
         return 0
     directory, job = locate(args.job, base)
     aws = Aws(job['config']['region'])
@@ -490,7 +570,9 @@ def main():
     elif args.command == 'fetch':
         fetch(job, directory, status(job, aws), aws)
     elif args.command == 'status':
-        print(json.dumps({'worker': status(job, aws), 'instances': [
+        assignment = aws.get_json(job['config']['bucket'], job['prefix'] + '/assignment.json')
+        session, _ = pool.Store(job['config']['bucket'], aws.region).read(pool.state_key(assignment['worker_id'])) if assignment else (None, None)
+        print(json.dumps({'worker': status(job, aws), 'session': session, 'instances': [
             {'id': i['InstanceId'], 'state': i['State']['Name']} for i in instances(job, aws)]}, indent=2))
     else:
         result = subprocess.run(['aws', 's3', 'cp', job['uri'] + '/live/script.log', '-',

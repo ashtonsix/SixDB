@@ -1,0 +1,55 @@
+{
+  "format": 1,
+  "check": "Two serial jobs reuse one On-Demand Zen5 worker, UAP input and compiled TU",
+  "instance_id": "i-00c24c5490e8fc124",
+  "instance_type": "c8a.medium",
+  "idle_seconds_after_last_job": 30,
+  "checks": {
+    "same_instance": true,
+    "same_dataset_key_and_mtime": true,
+    "same_binary_mtime": true,
+    "second_ninja_reported_no_work": true,
+    "old_job_cancel_did_not_terminate_new_job": true,
+    "instance_terminated": true
+  },
+  "limits": "One Zen5 On-Demand pair; reuse on Spot and other architectures is not live-tested. Pre-script time excludes boot/bootstrap, script work and collection.",
+  "runs": [
+    {
+      "job": "20260909T184526Z-3bec2a48",
+      "source_digest": "3fd6bcb87d70bc83d651af7608872fcfd955480dc6e86367ae34600daf64446d",
+      "reused": false,
+      "setup_reused": false,
+      "pre_script_seconds": 27.118,
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 444199,
+        "files": 10,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/b4625de0880afb4f8149f750b657372ef43519373e38c69db964bfa5173ab815.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "b4625de0880afb4f8149f750b657372ef43519373e38c69db964bfa5173ab815",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/b4625de0880afb4f8149f750b657372ef43519373e38c69db964bfa5173ab815.tar.gz"
+      }
+    },
+    {
+      "job": "20260909T184709Z-0292b0ce",
+      "source_digest": "3fd6bcb87d70bc83d651af7608872fcfd955480dc6e86367ae34600daf64446d",
+      "reused": true,
+      "setup_reused": true,
+      "pre_script_seconds": 2.729,
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 440676,
+        "files": 9,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/0194eff248a6dec28985183c28853b764e13634203f8d3e94e3a6e236572fa6d.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "0194eff248a6dec28985183c28853b764e13634203f8d3e94e3a6e236572fa6d",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/0194eff248a6dec28985183c28853b764e13634203f8d3e94e3a6e236572fa6d.tar.gz"
+      }
+    }
+  ],
+  "termination_observed_utc": "2026-09-09T18:51:44.346638+00:00"
+}

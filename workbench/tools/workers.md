@@ -9,10 +9,11 @@ python3 workbench/tools/worker.py run workbench/spikes/your-study/cloud.sh \
 ```
 
 The second script is illustrative. A script receives the current source,
-including uncommitted and non-ignored new files, on one disposable EC2 instance.
-The command waits, downloads verified results to `build/workers/JOB/results/`,
-and requests termination. The worker also shuts itself down, so collection
-and cleanup continue if the controlling session disconnects. No commit, SSH key,
+including uncommitted and non-ignored new files, on one EC2 worker at a time.
+The command waits and downloads verified results to `build/workers/JOB/results/`.
+After collection the worker stays ready for another compatible job for five
+minutes, then shuts itself down. Collection and cleanup continue if the
+controlling session disconnects. No commit, SSH key,
 open inbound port, job file, or study framework is needed.
 
 The first submission creates a `sixdb-worker` IAM role/profile and a security
@@ -50,6 +51,7 @@ continue doing so. The worker supplies:
 | `SIXDB_BUILD_JOBS` | Defaults to `1`; build commands opt into using it |
 | `SIXDB_DATA_CACHE` | Prepared-data cache outside the collected results |
 | `SIXDB_JOB`, `SIXDB_SOURCE_COMMIT` | Worker job ID and original local HEAD |
+| `SIXDB_WORKER_ID`, `SIXDB_WORKER_REUSED` | Instance session ID and `0`/`1` reuse indicator |
 | `SIXDB_RESULTS_S3` | Job's mutable `live/` prefix, for optional script checkpoints |
 
 Arguments after `--` are passed literally. Repeat `--env NAME=VALUE` for settings.
@@ -61,11 +63,18 @@ Git, Python/PyYAML and a C++ standard library. Other dependencies belong in the
 script. `--setup minimal` installs only the bootstrap tools; it is useful for
 shell-only jobs or an explicitly selected prepared AMI. Package versions,
 compiler output, hardware, source hashes, and logs accompany the results.
+Compatible reuse skips completed toolchain setup. Packages installed by earlier
+scripts also persist; use `--fresh` when the experiment needs a new OS environment.
 
 The source archive excludes `build/` and spike evidence, using the same source
 selection as local experiments. A synthetic Git commit on the worker lets
 existing runners use Git normally. Its hash differs from local HEAD;
 `job.json` records the original commit and the actual captured source digest.
+Each job has separate results and a fresh source snapshot at a stable path.
+The refresh removes old source-side files, preserves unchanged source mtimes,
+and keeps `build/` for incremental builds. Datasets live in the separate shared
+cache. Neither cache is included in the captured source or automatically bundled
+with each job; scripts still put selected outputs under `SIXDB_RESULTS`.
 
 ## Configuration without a job schema
 
@@ -78,7 +87,10 @@ existing runners use Git normally. Its hash differs from local HEAD;
 | `--capacity spot` | Default; tries subnets offering that exact instance type |
 | `--capacity on-demand` | Uses On-Demand capacity |
 | `--capacity spot-or-on-demand` | Explicit fallback after Spot capacity failures; preserves instance type |
-| `--deadline SECONDS` | Default 3600, including boot/setup, script, and collection allowance |
+| `--deadline SECONDS` | Per-job deadline, default 3600; includes dispatch, initial boot/setup, script and collection |
+| `--idle-seconds N` | Default 300 after collection; zero ends the worker after this job |
+| `--max-age N` | Maximum instance age, default 14400 seconds; a new job must fit its remaining lifetime |
+| `--fresh` | Launch a new instance even if a compatible worker is idle |
 | `--disk-gb N` | Default 24 GiB encrypted gp3 root disk, deleted on termination |
 | `--sync-seconds N` | Default 0; opt into periodic live output uploads |
 
@@ -99,6 +111,42 @@ The subnet must have outbound access to package repositories and S3. AMI IDs
 are region-specific. `worker.py plan` resolves settings and hardware using
 read-only AWS calls before allocating anything.
 
+## Reuse between jobs
+
+Ordinary `run` first looks for an idle worker with matching hardware/topology,
+AMI, disk, network/profile, setup and worker-runtime versions. It respects the
+requested capacity and allowed subnets. Otherwise it launches normally. No
+session name or reservation step is required. For example:
+
+```sh
+python3 workbench/tools/worker.py run workbench/spikes/your-study/cloud.sh
+# Edit the study; a compatible worker can keep its toolchain, datasets and builds.
+python3 workbench/tools/worker.py run workbench/spikes/your-study/cloud.sh
+# A completely disposable run:
+python3 workbench/tools/worker.py run workbench/spikes/your-study/cloud.sh --fresh --idle-seconds 0
+```
+
+The worker's idle S3 mailbox accepts exactly one job using an
+[ETag-conditional write](https://docs.aws.amazon.com/AmazonS3/latest/userguide/conditional-writes.html).
+A competing submitter launches elsewhere after losing that claim; uncertain
+assignment responses stop dispatch rather than risk executing the same job twice.
+The mailbox is polled only while idle. The supervisor sleeps while a job runs;
+existing optional live-sync and Spot-interruption behavior is unchanged.
+
+The job's result is final after verified upload, independently of the worker's
+idle/busy state. Worker identity, reuse count and setup reuse appear in job/host
+receipts. Reuse preserves filesystem caches and package state; the benchmark
+still chooses its own warmup and cache-residence policy. `--fresh` selects a new
+instance, not a guarantee about every hardware cache condition.
+
+A collected nonzero script exit can leave a reusable worker, after its process
+group has been stopped. Setup failures, timeouts, interruptions and failed
+collection retire it. The local idle loop exits on expiry or mailbox failure;
+an OS timer also bounds the whole instance lifetime. Each job has its own OS
+shutdown timer, removed before the worker becomes idle. Near the maximum age,
+new jobs go to another instance. `--fresh` can itself leave an idle worker;
+combine it with `--idle-seconds 0` to disable retention for that run.
+
 ## Leave it running and come back
 
 ```sh
@@ -113,7 +161,10 @@ python3 workbench/tools/worker.py list
 
 `wait` resumes observation and fetches results; it never reruns the script.
 It can reconstruct a missing local job record from S3. Ctrl-C detaches the
-controller; `cancel` explicitly terminates only that job's tagged instance.
+controller; `cancel` explicitly terminates a worker only while it still belongs
+to that job, including its subsequent idle window. It cannot terminate a worker
+already claimed by another job. `status` includes the current session state;
+`list` shows session IDs, current jobs and idle/busy state.
 Capacity/transport retries preserve an EC2 client token where launch outcome
 is uncertain. A failed experiment is never automatically resubmitted.
 
@@ -130,7 +181,7 @@ CPU. Spot workers poll the interruption endpoint every five seconds and try
 to terminate the script and collect early when warned. Interruption can still
 lose output; use `--sync-seconds` or script checkpoints when partial progress
 matters. This trades extra background work for recovery. On-Demand with sync
-disabled has no interruption observer. The boot-time OS shutdown timer bounds
+disabled has no interruption observer. Boot-time and per-job OS shutdown timers bound
 a detached worker; an OS that never boots needs controller cleanup (`wait` or
 `cancel`). [EC2 shutdown behavior](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Using_ChangingInstanceInitiatedShutdownBehavior.html)
 and [Spot interruption behavior](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-interruptions.html)
@@ -154,9 +205,23 @@ single-PUT artifact helper, with its 5 GB limit.
 `python3 workbench/tools/check_worker.py` checks launch retries, job-scoped
 cleanup, literal arguments, real-script success/failure/timeout, archive safety,
 and upload failure without allocating cloud resources.
+`python3 workbench/tools/check_worker_reuse.py` checks exclusive claims, uncertain
+writes, expiry/cancellation races, clean source replacement, persistent caches
+and completion independent of worker termination.
+`worker-reuse-smoke.sh` exercises dataset and compiled-object reuse on a real worker.
 
 The [live validation references](worker-validation.json) retain an On-Demand
 Zen5 build, a Spot script failure with zone fallback, and a Granite Rapids
 build with shared-input recovery. All three instances were observed terminated.
 ARM boot/runtime and an actual AWS interruption have not been exercised here;
 the timeout/interruption paths also have local lifecycle checks.
+
+The [reuse validation](worker-reuse-validation.json) records two jobs on one
+On-Demand Zen5 worker. Both used the same UAP dataset key/directory timestamp
+and compiled binary timestamp; the second Ninja build had no work. Runtime
+pre-script work fell from 27.118 to 2.729 seconds, excluding initial boot,
+script work and collection. Cancelling the old job left the new job running.
+The worker then terminated after its 30-second test idle window. Live reuse is
+validated only on Zen5 On-Demand; compatibility and interruption paths also
+have offline checks. These timings are a lifecycle smoke check, not a benchmark
+of EC2 provisioning or dataset throughput.
