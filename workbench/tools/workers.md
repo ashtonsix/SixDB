@@ -126,6 +126,18 @@ python3 workbench/tools/worker.py run workbench/spikes/your-study/cloud.sh
 python3 workbench/tools/worker.py run workbench/spikes/your-study/cloud.sh --fresh --idle-seconds 0
 ```
 
+If a new launch narrowly misses a compatible worker's idle expiry, the console
+can offer a hint such as:
+
+```text
+BTW: a compatible worker's 5-minute idle window ended about 2 min ago. Try --idle-seconds 600 for longer edit/review loops.
+```
+
+This uses recent EC2/S3 records when available, during the new worker's boot.
+It stays quiet for explicit fresh/disposable runs, early cancellation, lifetime
+limits, and an idle setting already long enough. The bounded lookup is optional
+and leaves the submission and defaults alone if diagnostic data is unavailable.
+
 The worker's idle S3 mailbox accepts exactly one job using an
 [ETag-conditional write](https://docs.aws.amazon.com/AmazonS3/latest/userguide/conditional-writes.html).
 A competing submitter launches elsewhere after losing that claim; uncertain

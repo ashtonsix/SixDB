@@ -9,6 +9,7 @@ import gzip
 import hashlib
 import io
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -46,7 +47,7 @@ class Aws:
     def __init__(self, region):
         self.region = region
 
-    def call(self, service, operation, **parameters):
+    def call(self, service, operation, *, timeout=None, **parameters):
         # Structured JSON keeps script arguments and environment out of shell parsing.
         with tempfile.NamedTemporaryFile('w', suffix='.json') as request:
             json.dump(parameters, request)
@@ -54,7 +55,7 @@ class Aws:
             result = subprocess.run(['aws', service, operation, '--cli-input-json',
                 'file://' + request.name, '--region', self.region, '--output', 'json',
                 '--no-cli-pager', '--cli-connect-timeout', '10', '--cli-read-timeout', '30'],
-                text=True, capture_output=True)
+                text=True, capture_output=True, timeout=timeout)
         if result.returncode:
             raise AwsError(result.stderr.strip())
         return json.loads(result.stdout or '{}')
@@ -63,19 +64,22 @@ class Aws:
         subprocess.run(['aws', 's3', 'cp', '--only-show-errors', str(path), uri,
                         '--region', self.region, '--no-cli-pager'], check=True)
 
-    def get_bytes(self, bucket, key):
+    def get_object(self, bucket, key, *, timeout=None):
         with tempfile.TemporaryDirectory() as temp:
             target = Path(temp) / 'object'
             # get-object's output filename is positional in the CLI.
             result = subprocess.run(['aws', 's3api', 'get-object', '--bucket', bucket,
-                '--key', key, str(target), '--region', self.region, '--no-cli-pager'],
-                text=True, capture_output=True)
+                '--key', key, str(target), '--region', self.region, '--no-cli-pager', '--output', 'json'],
+                text=True, capture_output=True, timeout=timeout)
             if result.returncode:
                 error = AwsError(result.stderr.strip())
                 if error.code in {'NoSuchKey', '404', 'NotFound'}:
-                    return None
+                    return None, {}
                 raise error
-            return target.read_bytes()
+            return target.read_bytes(), json.loads(result.stdout)
+
+    def get_bytes(self, bucket, key):
+        return self.get_object(bucket, key)[0]
 
     def get_json(self, bucket, key):
         data = self.get_bytes(bucket, key)
@@ -412,6 +416,63 @@ def reuse(job, directory, aws):
     return False
 
 
+def idle_hint(job, aws):
+    """Best-effort advice after launch, while the new worker is already booting."""
+    config = job['config']
+    if config['fresh'] or not config['idle_seconds']:
+        return
+    # No history scan on successful reuse. Bound optional reads so advice cannot
+    # hold up a detached submission indefinitely when AWS is unavailable.
+    end = time.monotonic() + 8
+    def remaining():
+        return max(0.01, end - time.monotonic())
+    try:
+        response = aws.call('ec2', 'describe-instances', timeout=remaining(), Filters=[
+            {'Name': 'tag:Project', 'Values': ['SixDB']},
+            {'Name': 'tag:SixDBWorkerProfile', 'Values': [job['profile']]},
+            {'Name': 'instance-state-name', 'Values': ['shutting-down', 'terminated']}])
+        candidates = [i for r in response['Reservations'] for i in r['Instances']
+                      if i['State']['Name'] in {'shutting-down', 'terminated'}]
+        for instance in sorted(candidates, key=lambda i: i['LaunchTime'], reverse=True)[:3]:
+            if time.monotonic() >= end:
+                return
+            tags = {t['Key']: t['Value'] for t in instance.get('Tags', [])}
+            session = tags.get('SixDBWorkerSession')
+            if not session or session == job['id']:
+                continue
+            data, metadata = aws.get_object(config['bucket'], pool.state_key(session), timeout=remaining())
+            if data is None:
+                continue
+            state = json.loads(data)
+            now = time.time()
+            age = now - state.get('idle_until', 0)
+            if (state.get('state') != 'retiring' or state.get('error') or not 0 <= age <= 300
+                    or state.get('instance_id') != instance['InstanceId']
+                    or state['idle_until'] > job['created_at']):
+                continue
+            modified = datetime.fromisoformat(metadata['LastModified'].replace('Z', '+00:00')).timestamp()
+            # An early cancel/failure or maximum-age shutdown is not an idle miss.
+            if not 0 <= modified - state['idle_until'] <= 30 or state['idle_until'] >= state['max_end']:
+                continue
+            if not pool.can_claim(state | {'state': 'idle', 'idle_until': now + 1}, job, now):
+                continue
+            previous, _ = aws.get_object(config['bucket'], f"sixdb/workers/{state['job_id']}/job.json",
+                                         timeout=remaining())
+            if previous is None:
+                continue
+            idle_seconds = json.loads(previous)['config']['idle_seconds']
+            needed = idle_seconds + age + 1
+            suggested = math.ceil(needed / 300) * 300
+            if not idle_seconds or config['idle_seconds'] >= needed or suggested > 3600:
+                continue
+            ago = f'{age:.0f}s ago' if age < 90 else f'about {age / 60:.0f} min ago'
+            print(f"BTW: a compatible worker's {idle_seconds / 60:g}-minute idle window ended {ago}. "
+                  f"Try --idle-seconds {suggested} for longer edit/review loops.", flush=True)
+            return
+    except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError):
+        pass  # Optional advice must not turn a successful launch into a failed job.
+
+
 def fetch(job, directory, state, aws):
     # A final reference describes an immutable bundle; partial syncs are kept separate.
     if state and state.get('artifact'):
@@ -581,6 +642,7 @@ def main():
                 save(directory / 'assignment.json', {'worker_id': job['id'], 'reused': False})
                 aws.upload(directory / 'assignment.json', job['uri'] + '/assignment.json')
                 launch(job, directory, aws)
+                idle_hint(job, aws)
             if not args.detach:
                 return wait(job, directory, aws)
         except (KeyboardInterrupt, Exception) as error:

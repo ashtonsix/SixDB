@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Exercise reuse races and real cache/source handoff without cloud resources."""
 import copy
+from datetime import datetime, timezone
 import hashlib
 import io
 import json
@@ -10,7 +11,7 @@ import tarfile
 import tempfile
 import time
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from check_worker import job
 import check_worker
@@ -48,6 +49,80 @@ def idle(value):
     return {'state': 'idle', 'profile': value['profile'], 'capacity': 'on-demand', 'worker_id': 'warm',
             'instance_id': 'i-warm', 'subnet_id': 'subnet-a', 'max_end': time.time() + 10000,
             'idle_until': time.time() + 300, 'job_id': 'previous', 'reuse_count': 0}
+
+
+class IdleHintTests(unittest.TestCase):
+    def setUp(self):
+        self.value = reusable_job()
+        self.now = 1000
+        self.state = idle(self.value) | {'state': 'retiring', 'idle_until': 880, 'max_end': 10000}
+        self.modified = 881
+        self.previous_idle = 300
+        self.aws = Mock(spec=worker.Aws)
+        self.aws.call.return_value = {'Reservations': [{'Instances': [{
+            'InstanceId': 'i-warm', 'State': {'Name': 'terminated'}, 'LaunchTime': '2026-09-09T19:21:00Z',
+            'Tags': [{'Key': 'SixDBWorkerSession', 'Value': 'warm'}]}]}]}
+        def get_object(bucket, key, *, timeout):
+            self.assertGreater(timeout, 0)
+            self.assertLessEqual(timeout, 8)
+            if key == pool.state_key('warm'):
+                return json.dumps(self.state).encode(), {
+                    'LastModified': datetime.fromtimestamp(self.modified, timezone.utc).isoformat()}
+            self.assertEqual(key, 'sixdb/workers/previous/job.json')
+            return json.dumps({'config': {'idle_seconds': self.previous_idle}}).encode(), {}
+        self.aws.get_object.side_effect = get_object
+
+    def output(self):
+        output = io.StringIO()
+        with patch.object(worker.time, 'time', return_value=self.now), patch('sys.stdout', output):
+            worker.idle_hint(self.value, self.aws)
+        return output.getvalue()
+
+    def test_recent_expiry_suggests_a_longer_window_once(self):
+        output = self.output()
+        self.assertIn('5-minute idle window ended about 2 min ago', output)
+        self.assertIn('--idle-seconds 600', output)
+        self.assertEqual(output.count('BTW:'), 1)
+        self.assertEqual(self.value['config']['idle_seconds'], 300)
+        self.assertEqual(self.aws.get_object.call_count, 2)
+
+    def test_explicit_fresh_disposable_or_already_longer_choices_stay_quiet(self):
+        for config in [{'fresh': True}, {'idle_seconds': 0}]:
+            with self.subTest(config=config):
+                self.value['config'] |= config
+                self.assertEqual(self.output(), '')
+                self.aws.call.assert_not_called()
+                self.value = reusable_job()
+        self.value['config']['idle_seconds'] = 500  # Already covers the 420s gap.
+        self.assertEqual(self.output(), '')
+
+    def test_unrelated_shutdowns_and_incompatible_workers_do_not_nudge(self):
+        original = self.state.copy()
+        for change in [{'state': 'busy'}, {'idle_until': 1001}, {'idle_until': 600},
+                       {'profile': 'other'}, {'capacity': 'spot'}, {'subnet_id': 'elsewhere'},
+                       {'max_end': 1100}, {'max_end': 880}, {'error': 'supervisor failed'},
+                       {'instance_id': 'another-instance'}]:
+            with self.subTest(change=change):
+                self.state = original | change
+                self.assertEqual(self.output(), '')
+        self.state = original
+        self.modified = 870  # User cancelled before the idle deadline.
+        self.assertEqual(self.output(), '')
+        self.modified = 881
+        self.previous_idle = 0
+        self.assertEqual(self.output(), '')
+        self.previous_idle = 300
+        self.value['created_at'] = 850  # Expiry followed submission, not the other way round.
+        self.assertEqual(self.output(), '')
+
+    def test_missing_metadata_and_network_failures_cannot_fail_the_submission(self):
+        for error in [worker.AwsError('AccessDenied'), subprocess.TimeoutExpired('aws', 8), OSError('offline')]:
+            with self.subTest(error=error), patch.object(self.aws, 'get_object', side_effect=error):
+                self.assertEqual(self.output(), '')
+        with patch.object(self.aws, 'get_object', return_value=(None, {})):
+            self.assertEqual(self.output(), '')
+        self.aws.call.side_effect = subprocess.TimeoutExpired('aws', 8)
+        self.assertEqual(self.output(), '')
 
 
 class ReuseTests(unittest.TestCase):
