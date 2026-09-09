@@ -1,0 +1,96 @@
+{
+  "commands": [
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cpu",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "composition-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "assembly",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "composition-assembly",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "benchmark",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "composition-benchmark",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "config": {
+    "check_only": false,
+    "sanitize": false,
+    "synthetic": false,
+    "target": "neoverse-v2"
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=ikea-blocks",
+    "-DIKEA_PRIOR_DIR=/opt/sixdb/datasets/prepared/a61dc3bc8599d713c9caa6049cb7bc6c90c5c017520ac003123185a27c5e72cb",
+    "-DCMAKE_CXX_FLAGS=-mcpu=neoverse-v2",
+    "-DSIXDB_TUNE=neoverse-v2"
+  ],
+  "files_sha256": {
+    "checks.csv": "e39733804932abc7ef2328f7dd135756a7cc79114193fe90bdddde9f6a2670f4",
+    "composition-checks.txt": "b0c845a00e61031f4d257e4b01c8d6596038a914dc069bea8da56a9ff546334c",
+    "composition-timings.csv": "be933200579fd80b1d7e0e035e09d31472dae5536f2b519bf733ca4d7f47d31d",
+    "timings.csv": "a2647cd7b4707e25f7edfd01df79a3e927d941a18dfc5bcfec0797d75f3633aa"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "inputs/bench": {
+      "id": "845e7e5fc47be44022c2b6f6e8b2794c7428e66fd8d36a8228e606470c264f77",
+      "key": "2fed257f6d675598100985aa6848246cf3a98ef9dba1814139d626a6fadd5f78"
+    },
+    "inputs/prior": {
+      "id": "44d1e5c86e46b0201d2e501a890cfa468fb6c416853c1ba342f44eab6a899ff2",
+      "key": "a61dc3bc8599d713c9caa6049cb7bc6c90c5c017520ac003123185a27c5e72cb"
+    }
+  },
+  "platform": "Linux-7.0.0-1012-aws-aarch64-with-glibc2.39",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/ikea-blocks/report.py",
+    "{evidence}"
+  ],
+  "source_archive_sha256": "f572f2d1871cb9f008c1cd90492675786982549757b30957c8e04c63be5c6679",
+  "source_digest": "52f9cf508486777b30f181613316626d5d885a690c3f7112720f5ca8afc4c28b",
+  "source_unchanged": true,
+  "started_utc": "2026-09-09T12:08:27.979361+00:00",
+  "status": "complete"
+}

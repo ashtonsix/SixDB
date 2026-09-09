@@ -1,0 +1,33 @@
+A and B record the same graph:
+actual representation 202 child field.membership.child.tiles
+%0 = Repeat256() [source.tile_count]
+%1 = TileIndex(%0 ) [i in [0,tile_count)]
+%2 = Load(%1 ) [plain256-le-v1]
+%3 = Features(%2 ) [bec256-distance-enum-v1]
+%4 = Model(%3 ) [bec256-distance-enum-q12-20260909]
+%5 = Sum(%0 %4 ) [u64: acc0=0; acc_next=acc+value]
+result %5
+Execution rewrite, same source and model:
+actual representation 202 child field.membership.child.tiles
+%0 = Repeat256() [source.tile_count]
+%1 = TileIndex(%0 ) [i in [0,tile_count)]
+%3 = LoadFeatures(%1 ) [bec256-distance-enum-v1]
+%4 = Model(%3 ) [bec256-distance-enum-q12-20260909]
+%5 = Sum(%0 %4 ) [u64: acc0=0; acc_next=acc+value]
+result %5
+Different estimator, lowered without a prewritten pipeline table:
+actual representation 202 child field.membership.child.tiles
+%0 = Repeat256() [source.tile_count]
+%1 = TileIndex(%0 ) [i in [0,tile_count)]
+%2 = Load(%1 ) [plain256-le-v1]
+%3 = Features(%2 ) [bec256-distance-enum-transitions-v1]
+%4 = Model(%3 ) [bec256-distance-enum-transitions-q12-20260909]
+%5 = Sum(%0 %4 ) [u64: acc0=0; acc_next=acc+value]
+result %5
+stage [plain256-le-v1]
+stage [bec256-distance-enum-transitions-v1]
+stage [bec256-distance-enum-transitions-q12-20260909]
+stage [u64: acc0=0; acc_next=acc+value]
+feature_cases,198150
+analysis_cases,162
+status,pass
