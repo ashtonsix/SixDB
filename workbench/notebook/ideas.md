@@ -47,3 +47,29 @@ orders produce the intended result, and what that costs.
 
 The [Calico overview](calico.md) is a cross-cutting map of earlier work.
 Question-specific reading stays beside the question it informs.
+
+## Plans that keep improving
+
+Ashton's proposed Engine model retains query plans and equivalence graphs
+long-term, accumulating improvements rather than only caching an executable.
+For a large scan, periodic probes could change the plan used for remaining
+work during the query. The [Ikea composition discussion](../spikes/ikea-composition/sketches.md#clarification-analysis-and-execution-surfaces)
+draws out the interface consequence: deep inspection and substitution during
+analysis must coexist with a small bound call during execution. Semantic
+equivalence, applicability and conditional cost evidence have different
+validity rules. This is a design direction, not an implemented optimiser.
+
+The [Bec256 exercise](../spikes/ikea-blocks/README.md#hardware-findings-2026-09-09)
+adds a concrete constraint: native register handoff can coexist with inspectable
+composition, but dispatch and carrier allocation have observable costs. Its
+limited lowerer does not yet handle a value consumed twice; this is distinct
+from branching control flow. The [value-reuse sketches](../spikes/ikea-composition/value-reuse-sketches.md)
+keep that authoring and execution question open rather than turning the first
+successful codec measurements into a production interface.
+
+The [consolidated Ikea design](../spikes/ikea-composition/synthesis-1.md) carries
+forward a shared composition mechanism with optional named structure and
+explicit implementation/equivalence knowledge. Ashton's next packed-integer
+probe will bring reconstruction and bitset-metadata customers toward the open
+questions of progressive filtering and nested substitution, while preserving
+different actual representations across segments.

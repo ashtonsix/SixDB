@@ -13,6 +13,9 @@ Loose thoughts can stay in the [notebook](../notebook/ideas.md) indefinitely.
   codecs, native-width compute, size-prediction experiments and actual stage
   ABI/graph-lowering probes. Three-target measurements and remaining value-reuse
   limits follow the rejected initial implementation.
+- [Ikea composition and ergonomics](ikea-composition/README.md): an open
+  design investigation into reusable blocks, containers, transforms and kernels;
+  competing pseudocode, adversarial review, interface seams and authoring guides.
 - [Row filter signatures](row-filter-signatures/README.md): compact per-row
   evidence for conjunctive and factored Boolean filters, progressive refinement,
   8/16/32-bit planes, and block rollups. The spike concluded with a resident
