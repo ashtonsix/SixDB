@@ -105,8 +105,9 @@ including tracked files, so evidence cannot recursively enter later snapshots.
 
 This is a retention mechanism, not a requirement to upload every experiment.
 The current uploader handles bundles below S3's single-PUT limit (5 GB);
-larger datasets should stay referenced separately. Remote experiment execution
-and retention/garbage-collection policy remain open.
+larger datasets should stay referenced separately. The [worker command](workers.md)
+provides remote script execution and automatic collection. Retention and
+garbage-collection policy remain open.
 
 `python3 workbench/tools/check_artifacts.py` checks failure/retry behavior,
 compact-input integrity, safe restoration, and source exclusions offline.

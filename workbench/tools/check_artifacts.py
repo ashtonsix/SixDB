@@ -83,6 +83,18 @@ class ArtifactsCheck(unittest.TestCase):
         self.assertTrue((self.source / "run.json").exists())
         self.assertFalse((self.root / "evidence").exists())
 
+    def test_generic_worker_bundle_has_no_required_run_schema(self):
+        (self.source / 'run.json').write_text('an arbitrary script output')
+        with patch.object(artifacts, 'aws', self.fake_aws), tempfile.TemporaryDirectory() as temp:
+            reference = artifacts.publish(self.source, Path(temp), bucket='worker-bucket',
+                                          region='us-west-2', validate_run=False)
+            self.assertEqual(reference['kind'], 'files')
+            self.assertEqual(reference['bucket'], 'worker-bucket')
+            self.assertEqual(reference['region'], 'us-west-2')
+            restored = self.root / 'generic'
+            artifacts.restore_bundle(reference, restored)
+            self.assertEqual((restored / 'run.json').read_text(), 'an arbitrary script output')
+
     def test_changed_or_incomplete_run_is_rejected(self):
         (self.source / "source.tar.gz").unlink()
         with self.assertRaises(FileNotFoundError):

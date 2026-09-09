@@ -1,0 +1,15 @@
+{
+  "region": "us-east-1",
+  "bucket": "calico-fleet-artifacts",
+  "machine": "zen5",
+  "capacity": "spot",
+  "deadline_seconds": 3600,
+  "disk_gb": 24,
+  "setup": "toolchain",
+  "sync_seconds": 0,
+  "machines": {
+    "zen5": {"instance_type": "c8a.medium", "ami": "ami-025d99823a4caad37"},
+    "granite-rapids": {"instance_type": "c8i.large", "ami": "ami-025d99823a4caad37", "threads_per_core": 1},
+    "neoverse-v2": {"instance_type": "c8g.medium", "ami": "ami-0246d714afcc1d494"}
+  }
+}

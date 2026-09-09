@@ -51,8 +51,9 @@ def verify_run(directory):
             raise ValueError(f"run artifact missing or changed: {name}")
 
 
-def pack(directory, output):
-    verify_run(directory)
+def pack(directory, output, *, validate_run=True):
+    if validate_run:
+        verify_run(directory)
     members = files(directory)
     if not members:
         raise ValueError("empty bundle")
@@ -85,14 +86,56 @@ def download(reference, destination):
         raise ValueError("downloaded bundle does not match its recorded size/SHA-256")
 
 
-def publish(directory, temporary):
+def publish_inputs(directory):
+    """Record prepared dependencies without embedding them in each retained run."""
+    import datasets
+    inputs = json.loads((directory / 'run.json').read_text()).get('inputs', {})
+    references = {}
+    for mount, entry in inputs.items():
+        p = Path(mount)
+        if not p.parts or p.is_absolute() or '..' in p.parts:
+            raise ValueError('Invalid input mount')
+        path = directory / mount
+        if not (path / 'prepared.json').exists():
+            path = Path(entry['path'])
+        meta = datasets.verify(path)
+        if meta['id'] != entry['id'] or meta['key'] != entry['key']:
+            raise ValueError('Run input no longer matches its recorded identity')
+        references[mount] = datasets.publish(path)
+    return references
+
+
+def restore_inputs(directory):
+    """Resolve a run's prepared dependencies, also after a worker bundle is fetched."""
+    refs = directory / 'input-artifacts.json'
+    if not refs.exists():
+        return
+    import datasets
+    expected = json.loads((directory / 'run.json').read_text()).get('inputs', {})
+    references = json.loads(refs.read_text())
+    if references.keys() != expected.keys():
+        raise ValueError('Input references do not match the run')
+    for mount, ref in references.items():
+        p = Path(mount)
+        if not p.parts or p.is_absolute() or '..' in p.parts:
+            raise ValueError('Invalid restored input mount')
+        if any(ref[k] != expected[mount][k] for k in ('id', 'key')):
+            raise ValueError('Restored dependency has a different identity')
+        target = directory / p
+        if target.exists():
+            if datasets.verify(target)['id'] != ref['id']:
+                raise ValueError('Existing restored input differs')
+        else:
+            shutil.copytree(datasets.restore(ref), target)
+
+
+def publish(directory, temporary, *, bucket=BUCKET, region=REGION, validate_run=True):
     # Inputs are independent objects. Add a restoration manifest to the bundle
     # without rewriting the completed run or copying datasets into every run.
     receipt = directory / 'run.json'
-    if receipt.exists():
+    if validate_run and receipt.exists():
         inputs = json.loads(receipt.read_text()).get('inputs', {})
         if inputs:
-            import datasets
             staged = temporary / 'with-input-references'
             staged.mkdir()
             mounts = [Path(m) for m in inputs]
@@ -104,29 +147,23 @@ def publish(directory, temporary):
                     continue
                 (staged / name).parent.mkdir(parents=True, exist_ok=True)
                 os.link(path, staged / name)
-            references = {}
-            for mount, entry in inputs.items():
-                path = directory / mount
-                if not (path / 'prepared.json').exists():
-                    path = Path(entry['path'])
-                meta = datasets.verify(path)
-                if meta['id'] != entry['id'] or meta['key'] != entry['key']:
-                    raise ValueError('Run input no longer matches its recorded identity')
-                references[mount] = datasets.publish(path)
+            references = publish_inputs(directory)
             (staged / 'input-artifacts.json').write_text(json.dumps(references, indent=2, sort_keys=True) + '\n')
             directory = staged
     bundle = temporary / "bundle.tar.gz"
-    count = pack(directory, bundle)
+    count = pack(directory, bundle, validate_run=validate_run)
     checksum = sha256(bundle)
     key = f"sixdb/artifacts/sha256/{checksum}.tar.gz"
-    reference = {"format": 1, "uri": f"s3://{BUCKET}/{key}", "bucket": BUCKET,
-                 "region": REGION, "key": key, "sha256": checksum,
+    reference = {"format": 1, "uri": f"s3://{bucket}/{key}", "bucket": bucket,
+                 "region": region, "key": key, "sha256": checksum,
                  "bytes": bundle.stat().st_size, "files": count}
+    if not validate_run:
+        reference['kind'] = 'files'  # Generic script output has no required receipt schema.
     print(f"Upload: {reference['uri']}", flush=True)
     # A retry cannot replace an existing object. Always verify by downloading
     # the actual bytes, including after a timeout with an uncertain outcome.
-    result = aws("put-object", "--bucket", BUCKET, "--key", key, "--body", str(bundle),
-                 "--if-none-match", "*", "--content-type", "application/gzip")
+    result = aws("put-object", "--bucket", bucket, "--key", key, "--body", str(bundle),
+                 "--if-none-match", "*", "--content-type", "application/gzip", region=region)
     try:
         download(reference, temporary / "verified.tar.gz")
     except Exception as exc:
@@ -176,7 +213,10 @@ def unpack(bundle, destination):
             seen.add(member.name)
             path = destination.joinpath(*name.parts)
             path.parent.mkdir(parents=True, exist_ok=True)
-            with archive.extractfile(member) as source, path.open("xb") as target:
+            source = archive.extractfile(member)
+            if source is None:
+                raise ValueError(f'archive member has no file contents: {member.name}')
+            with source, path.open("xb") as target:
                 shutil.copyfileobj(source, target)
             path.chmod(member.mode & 0o777)
 
@@ -196,7 +236,8 @@ def restore_bundle(reference, destination):
         unpack(bundle, staging)
         if len(files(staging)) != reference["files"]:
             raise ValueError("bundle file count mismatch")
-        verify_run(staging)
+        if reference.get('kind') != 'files':
+            verify_run(staging)
         staging.rename(destination)
 
 
@@ -213,21 +254,7 @@ def fetch(reference_path, destination):
     with tempfile.TemporaryDirectory(dir=destination.parent) as temp:
         staging = Path(temp) / 'run'
         restore_bundle(reference, staging)
-        refs = staging / 'input-artifacts.json'
-        if refs.exists():
-            import datasets
-            expected = json.loads((staging / 'run.json').read_text()).get('inputs', {})
-            references = json.loads(refs.read_text())
-            if references.keys() != expected.keys():
-                raise ValueError('Input references do not match the run')
-            for mount, ref in references.items():
-                p = Path(mount)
-                if not p.parts or p.is_absolute() or '..' in p.parts:
-                    raise ValueError('Invalid restored input mount')
-                if any(ref[k] != expected[mount][k] for k in ('id', 'key')):
-                    raise ValueError('Restored dependency has a different identity')
-                prepared = datasets.restore(ref)
-                shutil.copytree(prepared, staging / p)
+        restore_inputs(staging)
         staging.rename(destination)
     print(f"Restored and verified: {destination}")
 

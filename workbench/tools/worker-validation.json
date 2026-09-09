@@ -1,0 +1,65 @@
+{
+  "format": 1,
+  "runs": [
+    {
+      "job": "20260908T225629Z-8261107f",
+      "check": "On-Demand Zen5: pinned compiler, CMake configure, compiled check, literal environment",
+      "instance_type": "c8a.medium",
+      "instance_id": "i-002168cfca321327a",
+      "capacity": "on-demand",
+      "zone": "us-east-1a",
+      "source_digest": "0385e27ea24b2f09f4bcb6ecb3665dc0a86d404e8071a1e05486d77031b8d42a",
+      "script_returncode": 0,
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 334540,
+        "files": 13,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/eb6117c10f087c2a6f16240550e02a02e7f9ddcaf53a1add699e0a00126c7df7.tar.gz",
+        "region": "us-east-1",
+        "sha256": "eb6117c10f087c2a6f16240550e02a02e7f9ddcaf53a1add699e0a00126c7df7",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/eb6117c10f087c2a6f16240550e02a02e7f9ddcaf53a1add699e0a00126c7df7.tar.gz"
+      }
+    },
+    {
+      "job": "20260908T230115Z-e4df29a3",
+      "check": "Spot Zen5: capacity fallback to another zone, exit 7 preserved, literal arguments, detached self-termination",
+      "instance_type": "c8a.medium",
+      "instance_id": "i-08e8e6fd16bbfd8ae",
+      "capacity": "spot",
+      "zone": "us-east-1b",
+      "source_digest": "99eb0022a7433d69fcb2c0ded477b2e6df9cc851b05329f7e42e114cce5a53b2",
+      "script_returncode": 7,
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 325382,
+        "files": 10,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/79109bd85580ae5b9f4700629618de00c39de580871b448b8fb58cd94bb62ecf.tar.gz",
+        "region": "us-east-1",
+        "sha256": "79109bd85580ae5b9f4700629618de00c39de580871b448b8fb58cd94bb62ecf",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/79109bd85580ae5b9f4700629618de00c39de580871b448b8fb58cd94bb62ecf.tar.gz"
+      }
+    },
+    {
+      "job": "20260908T230451Z-a3d0c642",
+      "check": "On-Demand Granite Rapids: SMT disabled, compiled check, nested Run with shared ua-parser inputs restored",
+      "instance_type": "c8i.large",
+      "instance_id": "i-01b53740868f559f9",
+      "capacity": "on-demand",
+      "zone": "us-east-1a",
+      "source_digest": "f7aa2ba42d4cfc3288ed4210243b132c9bb88f9fca00322e1b45f2baf9e8a706",
+      "script_returncode": 0,
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 659121,
+        "files": 19,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/6575791a2d616f66d4ae5aa9ba8494be0cf7be67821012c7c6698c754710c0bd.tar.gz",
+        "region": "us-east-1",
+        "sha256": "6575791a2d616f66d4ae5aa9ba8494be0cf7be67821012c7c6698c754710c0bd",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/6575791a2d616f66d4ae5aa9ba8494be0cf7be67821012c7c6698c754710c0bd.tar.gz"
+      }
+    }
+  ]
+}

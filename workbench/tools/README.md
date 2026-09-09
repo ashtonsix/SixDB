@@ -3,6 +3,11 @@
 Development and experiment scripts, including benchmark-instance provisioning
 and S3 artifact storage.
 
+[worker.py](worker.py) runs a repository script on one temporary Spot or
+On-Demand EC2 worker, uploads its results, and terminates it. Start with the
+[worker guide](workers.md) for one-command runs, machine/environment overrides,
+and detached recovery. [check_worker.py](check_worker.py) tests its lifecycle offline.
+
 [check_build.py](check_build.py) verifies incremental compilation and release
 packaging using a disposable fixture. Run it with Python 3 on Linux, with the
 pinned Clang, CMake, Ninja, matching LLVM objcopy/strip tools, and `readelf`.
@@ -11,8 +16,8 @@ It does not compile Calico or a database implementation.
 [experiment.py](experiment.py) supplies a small local-run receipt helper:
 source snapshots excluding evidence, logged commands, hashes, and success/failure recording.
 The [aggregate delta runner](../spikes/aggregate-maintenance/run.py) is an example.
-Study-specific execution and analysis remain in the study. Remote execution
-is not yet provided.
+Study-specific execution and analysis remain in the study. The worker command
+can run these scripts remotely and collect their output.
 
 Its optional `workspace` argument builds from captured sources while the live
 checkout remains editable. Stable workspace paths preserve incremental builds.
@@ -43,9 +48,10 @@ an intentionally broken inactive study. See the
 SixDB uses Calico's S3 bucket, `calico-fleet-artifacts`, and reuses its
 existing datasets in place. Its [fleet tooling](../../../calico/tools/fleet/README.md)
 is a reference for source snapshots, worker provisioning, remote recipes,
-collection, and cleanup. SixDB's implementation should be fresh and draw on
-those lessons. No SixDB provisioning command exists yet.
+collection, and cleanup. The SixDB worker implementation draws on those lessons
+with its own bootstrap, minimal scripts, and dedicated instance role/network group.
 
 Live bucket access and lifecycle rules were checked on 2026-09-07. Run bundles
 use the separate `sixdb/artifacts/sha256/` prefix in `us-east-1`; dataset
-references point to existing objects. Worker provisioning remains to develop.
+references point to existing objects. Worker submissions have separate
+`sixdb/workers/` prefixes; their final bundles use the same artifact store.

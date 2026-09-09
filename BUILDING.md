@@ -30,6 +30,10 @@ For recorded experiments, the runners use [captured build workspaces](workbench/
 that reuse compiled objects while allowing live checkout edits. An incomplete
 live editor configuration does not block the captured experiment.
 
+The [worker command](workbench/tools/workers.md) can run a build or experiment
+script on temporary EC2 capacity with the pinned toolchain, collect results
+in S3, and terminate the instance.
+
 Floating-point settings disable fast-math and implicit contraction.
 `SIXDB_MARCH` selects the ISA; `SIXDB_TUNE` independently selects `generic`,
 `granite-rapids`, `zen5`, or `neoverse-v2`. See [tuning flags](workbench/design/tuning.md)
