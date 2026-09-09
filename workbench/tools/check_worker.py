@@ -11,7 +11,7 @@ import tarfile
 import tempfile
 import time
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import artifacts
 import datasets
@@ -103,6 +103,68 @@ class LaunchTests(unittest.TestCase):
         self.assertEqual(aws.terminated, ['i-active'])
         self.assertIn({'Name': 'tag:SixDBWorkerJob', 'Values': ['test-worker']}, aws.filters)
         self.assertIn({'Name': 'tag:Project', 'Values': ['SixDB']}, aws.filters)
+
+
+class LogTests(unittest.TestCase):
+    def test_missing_log_explains_sync_and_completion_without_console_fallback(self):
+        value = job()
+        aws = Mock(spec=worker.Aws)
+        aws.get_bytes.return_value = None
+        for state, sync, expected in [('running', 0, 'Live sync is disabled'),
+                                      ('downloading', 15, 'every 15 seconds'),
+                                      ('failed', 0, 'script may not have started')]:
+            value['config']['sync_seconds'] = sync
+            output = io.StringIO()
+            with patch.object(worker, 'status', return_value={'state': state}), patch('sys.stdout', output):
+                worker.logs(value, aws)
+            self.assertIn(expected, output.getvalue())
+            self.assertIn('logs test-worker --console', output.getvalue())
+        aws.call.assert_not_called()
+
+    def test_uploaded_log_including_empty_log_is_shown_without_state_lookup(self):
+        aws = Mock(spec=worker.Aws)
+        for data in [b'', 'compiler finished ✓\n'.encode()]:
+            aws.get_bytes.return_value = data
+            output = io.StringIO()
+            with patch('sys.stdout', output), patch.object(worker, 'status') as status:
+                worker.logs(job(), aws)
+            self.assertEqual(output.getvalue(), data.decode())
+            status.assert_not_called()
+        aws.call.assert_not_called()
+
+    def test_console_is_already_decoded_and_missing_output_is_explained(self):
+        aws = Mock(spec=worker.Aws)
+        for data in ['[  OK  ] Started café service\n', 'YWJj', None]:
+            aws.call.return_value = {'Output': data}
+            output = io.StringIO()
+            with patch('sys.stdout', output), patch.object(worker, 'instances', return_value=[{'InstanceId': 'i-test'}]):
+                worker.logs(job(), aws, console=True)
+            self.assertIn(data or 'No EC2 console output', output.getvalue())
+        aws.get_bytes.assert_not_called()
+
+    def test_object_reads_distinguish_absence_from_permission_and_transport_errors(self):
+        aws = worker.Aws('us-east-1')
+        for code in ['NoSuchKey', '404', 'AccessDenied', 'TransportError']:
+            result = subprocess.CompletedProcess([], 1, '', f'An error occurred ({code}) when calling GetObject')
+            with patch.object(worker.subprocess, 'run', return_value=result):
+                if code in {'NoSuchKey', '404'}:
+                    self.assertIsNone(aws.get_bytes('bucket', 'missing'))
+                else:
+                    with self.assertRaises(worker.AwsError):
+                        worker.logs(job(), aws)
+
+        def download(argv, **kwargs):
+            Path(argv[7]).write_bytes('{"text": "café"}'.encode())
+            return subprocess.CompletedProcess(argv, 0, '{}', '')
+        with patch.object(worker.subprocess, 'run', side_effect=download):
+            self.assertEqual(aws.get_json('bucket', 'status'), {'text': 'café'})
+
+    def test_console_cli_option_reaches_log_reader(self):
+        with patch.object(worker.sys, 'argv', ['worker.py', 'logs', 'test-worker', '--console']), \
+                patch.object(worker, 'locate', return_value=(Path('unused'), job())), \
+                patch.object(worker, 'logs') as logs:
+            self.assertEqual(worker.main(), 0)
+        self.assertTrue(logs.call_args.kwargs['console'])
 
 
 class RuntimeTests(unittest.TestCase):

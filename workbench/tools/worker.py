@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run one repository script on disposable EC2 capacity and recover its results."""
+"""Run repository scripts on temporary EC2 workers and recover their results."""
 from __future__ import annotations
 
 import argparse
@@ -63,7 +63,7 @@ class Aws:
         subprocess.run(['aws', 's3', 'cp', '--only-show-errors', str(path), uri,
                         '--region', self.region, '--no-cli-pager'], check=True)
 
-    def get_json(self, bucket, key):
+    def get_bytes(self, bucket, key):
         with tempfile.TemporaryDirectory() as temp:
             target = Path(temp) / 'object'
             # get-object's output filename is positional in the CLI.
@@ -75,7 +75,11 @@ class Aws:
                 if error.code in {'NoSuchKey', '404', 'NotFound'}:
                     return None
                 raise error
-            return json.loads(target.read_text())
+            return target.read_bytes()
+
+    def get_json(self, bucket, key):
+        data = self.get_bytes(bucket, key)
+        return json.loads(data) if data is not None else None
 
 
 def save(path, value):
@@ -462,6 +466,39 @@ def wait(job, directory, aws, interval=10):
         time.sleep(interval)
 
 
+def logs(job, aws, *, console=False):
+    if console:
+        found = False
+        for item in instances(job, aws):
+            output = aws.call('ec2', 'get-console-output', InstanceId=item['InstanceId'], Latest=True)
+            if output.get('Output'):
+                print(f"EC2 console: {item['InstanceId']} (instance-wide boot diagnostics)")
+                # AWS CLI already decodes GetConsoleOutput; decoding again corrupts
+                # plain text and fails on Unicode in systemd/cloud-init output.
+                print(output['Output'], end='' if output['Output'].endswith('\n') else '\n')
+                found = True
+        if not found:
+            print('No EC2 console output is available yet.')
+        return
+
+    data = aws.get_bytes(job['config']['bucket'], job['prefix'] + '/live/script.log')
+    if data is not None:
+        print(data.decode('utf-8', errors='replace'), end='')
+        return
+    state = status(job, aws) or {}
+    print(f"No script log has been uploaded (job state: {state.get('state', 'not yet reported')}).")
+    if state.get('state') in FINAL:
+        print('The script may not have started, or collection may be incomplete. '
+              f"Inspect collected output with: python3 workbench/tools/worker.py fetch {job['id']}")
+    elif not job['config'].get('sync_seconds', 0):
+        print('Live sync is disabled; script logs are uploaded during collection. '
+              f"Resume collection with: python3 workbench/tools/worker.py wait {job['id']}")
+    else:
+        print(f"Live sync is enabled every {job['config']['sync_seconds']} seconds; "
+              'try again after the script starts and its first upload completes.')
+    print(f"For instance boot diagnostics: python3 workbench/tools/worker.py logs {job['id']} --console")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config', type=Path, default=HERE / 'worker.json', help='JSON settings overlay')
@@ -485,7 +522,10 @@ def main():
         cmd.add_argument('--sync-seconds', type=int, help='optional live output sync; zero keeps uploads outside measurement')
         cmd.add_argument('--env', action='append', default=[])
     for name in ('status', 'wait', 'fetch', 'cancel', 'logs'):
-        commands.add_parser(name).add_argument('job')
+        cmd = commands.add_parser(name)
+        cmd.add_argument('job')
+        if name == 'logs':
+            cmd.add_argument('--console', action='store_true', help='show instance boot diagnostics instead of script output')
     commands.add_parser('list', help='list SixDB worker instances')
     argv = sys.argv[1:]
     arguments = []
@@ -575,12 +615,7 @@ def main():
         print(json.dumps({'worker': status(job, aws), 'session': session, 'instances': [
             {'id': i['InstanceId'], 'state': i['State']['Name']} for i in instances(job, aws)]}, indent=2))
     else:
-        result = subprocess.run(['aws', 's3', 'cp', job['uri'] + '/live/script.log', '-',
-                                 '--region', aws.region, '--only-show-errors'])
-        if result.returncode:
-            for item in instances(job, aws):
-                output = aws.call('ec2', 'get-console-output', InstanceId=item['InstanceId'], Latest=True)
-                print(base64.b64decode(output.get('Output', '')).decode(errors='replace'))
+        logs(job, aws, console=args.console)
     return 0
 
 

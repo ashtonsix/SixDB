@@ -154,6 +154,7 @@ python3 workbench/tools/worker.py run workbench/tools/worker-smoke.sh --detach
 python3 workbench/tools/worker.py status JOB
 python3 workbench/tools/worker.py wait JOB
 python3 workbench/tools/worker.py logs JOB
+python3 workbench/tools/worker.py logs JOB --console
 python3 workbench/tools/worker.py fetch JOB
 python3 workbench/tools/worker.py cancel JOB
 python3 workbench/tools/worker.py list
@@ -173,8 +174,13 @@ Completion is published only after a full bundle is uploaded and downloaded
 for checksum verification. A script's nonzero exit remains a failure, with its
 logs and outputs available. Failed uploads or a vanished worker are reported
 as incomplete, with any live output recoverable separately. `logs` shows the
-last uploaded script log, or EC2 boot-console output before that is available.
-It is not a live terminal.
+last uploaded script log. With default sync settings, the log becomes available
+during collection; before then the command explains its absence and prints the
+resume command. With live sync enabled, retry after the next upload.
+`logs JOB --console` explicitly requests instance-wide boot diagnostics from
+[EC2 console output](https://docs.aws.amazon.com/cli/latest/reference/ec2/get-console-output.html).
+On a reused worker, that console can include earlier jobs. Neither command is
+a live terminal.
 
 Background S3 sync is off by default to avoid disturbing measurement on one
 CPU. Spot workers poll the interruption endpoint every five seconds and try
