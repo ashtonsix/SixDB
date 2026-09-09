@@ -1,0 +1,16 @@
+{
+  "script_sha256": "712afd0656a238463430826a0ac7ee8577bfba62bd15d0067732b892e1a155c6",
+  "sample_sha256": "60bf4811008a17766e60c6c1924a073d38882837945716514411784ee1130e69",
+  "frozen_models_sha256": "b99a255bec8597dae0456e398e616bbcc02a070d1f379528fadc507aa201c315",
+  "formula_checks": {
+    "cases": 6156,
+    "direct_formula_matches_population_minus_adjacent11": true,
+    "transition_boundary_identity": true,
+    "complement_run_count_difference_at_most_one": true
+  },
+  "correction": "The user intended pop(bits & ~(bits << 1)), not adjacent11",
+  "fixed_comparison": "Same source samples/splits and previously chosen population pieces, enum-zero gate, Q12 arithmetic and augmentation; no tuning after comparison",
+  "test_status": "Existing real and structure holdouts have already been inspected for the frozen models; these are comparison sets, not newly untouched test data",
+  "frozen_models": "Loaded exactly from the earlier retained fit, never refitted here",
+  "native_changes": "None; evaluating a feature correction before deciding whether another native candidate is useful"
+}

@@ -1,0 +1,11 @@
+{
+  "sample_sha256": "60bf4811008a17766e60c6c1924a073d38882837945716514411784ee1130e69",
+  "script_sha256": "de5f5b7cf53c1b5dfd3b4dbcb0b8db93c13f5e4822299e7f77e87c936cccbb34",
+  "development_seed": 12504551,
+  "holdout_seed": 200052765,
+  "development_cases": 8928,
+  "holdout_cases": 21956,
+  "augmentation": "0 or 1% of natural real training tile weight; only development structures",
+  "model_changes": "Predeclared extra low-enum piece with threshold none/0/16/32; same four population pieces otherwise",
+  "test_policy": "Retained real test split is never fitted; previously seen baseline test metrics are not selection input. Only the three frozen candidates are scored after selection; no further tuning followed these results."
+}

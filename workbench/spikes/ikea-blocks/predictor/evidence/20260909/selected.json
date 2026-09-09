@@ -1,0 +1,125 @@
+{
+  "model_id": "bec256-distance-enum-q12-20260909",
+  "model": {
+    "name": "distance_enum_piecewise",
+    "columns": [
+      0,
+      2
+    ],
+    "features": [
+      "distance",
+      "enum_bits"
+    ],
+    "minority_bin_upper_inclusive": [
+      8,
+      32,
+      96
+    ],
+    "coefficients_float": [
+      [
+        34.329246040047494,
+        -0.26692400203125405,
+        0.2198008502230044
+      ],
+      [
+        6.0907346196425145,
+        -0.029840874532278155,
+        0.2090758726351352
+      ],
+      [
+        3.452232123953706,
+        0.0066895338831885875,
+        0.196348516434896
+      ],
+      [
+        3.91194530782415,
+        0.005562853660396319,
+        0.19267545335973324
+      ]
+    ],
+    "training_samples_per_piece": [
+      35952,
+      31680,
+      31230,
+      15366
+    ],
+    "coefficients_q8": [
+      [
+        8788,
+        -68,
+        56
+      ],
+      [
+        1559,
+        -8,
+        54
+      ],
+      [
+        884,
+        2,
+        50
+      ],
+      [
+        1001,
+        1,
+        49
+      ]
+    ],
+    "coefficients_q12": [
+      [
+        140613,
+        -1093,
+        900
+      ],
+      [
+        24948,
+        -122,
+        856
+      ],
+      [
+        14140,
+        27,
+        804
+      ],
+      [
+        16023,
+        23,
+        789
+      ]
+    ],
+    "coefficients_q16": [
+      [
+        2249801,
+        -17493,
+        14405
+      ],
+      [
+        399162,
+        -1956,
+        13702
+      ],
+      [
+        226245,
+        438,
+        12868
+      ],
+      [
+        256373,
+        365,
+        12627
+      ]
+    ]
+  },
+  "fraction_bits": 12,
+  "selection": "Two-feature candidate retained for the cost/accuracy probe; Q12 has lower partial-tile validation MAE than Q8/Q16 for this candidate. This is not a target-timing decision.",
+  "packed_features": {
+    "distance": [
+      0,
+      7
+    ],
+    "enum_bits": [
+      16,
+      23
+    ]
+  }
+}
