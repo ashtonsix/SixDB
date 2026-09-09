@@ -35,8 +35,12 @@ commands, with shared inputs restored automatically.
 
 [datasets.py](datasets.py) resolves pinned source data and caches prepared
 variants independently of any one spike. Its [catalog and examples](../datasets/README.md)
-start with ua-parser and accident descriptions. [check_datasets.py](check_datasets.py)
+include text records and [Calico keyset corpora](../datasets/keyset-windows.md).
+[check_datasets.py](check_datasets.py)
 checks cache reuse, concurrent callers, preparation retry, and source hashes.
+[check_keyset_datasets.py](check_keyset_datasets.py) checks bitmap adapters;
+`--full` also reconstructs the installed original lists and checks Calico's
+historical window hashes (resolves pinned S3 sources on a cold cache).
 
 [dev.py](dev.py) maintains the stable dev compilation database for explicitly
 active spikes. It preserves existing selections, supports `--add`,

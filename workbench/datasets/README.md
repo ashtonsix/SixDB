@@ -1,8 +1,15 @@
 # Datasets
 
-Reusable source records and preparation recipes. Start with
-[ua-parser](uap-core/README.md) or [accident descriptions](accidents/README.md).
-These are available inputs, not a prescribed workload matrix.
+Reusable source records and preparation recipes:
+
+- [Ua-parser](uap-core/README.md): regex rules and fixture strings.
+- [Accident descriptions](accidents/README.md): text records.
+- [Real Roaring](real-roaring/README.md): bitmap collections with source-list lineage.
+- [MS MARCO keyset sample](msmarco-keyset/README.md): Boolean term postings.
+
+These are available inputs, not a prescribed workload matrix. The
+[keyset input notes](keyset-windows.md) cover window format, grouping for model
+training/evaluation, and use on small workers.
 
 From Linux (prefix with `orb -m ubuntu` from the Mac):
 
@@ -15,7 +22,8 @@ python3 workbench/tools/datasets.py get accidents --param blocks=8 --param block
 `get` prints a local directory. It reuses checked prepared data, restores a
 published variant when available, or prepares it once from pinned sources.
 An unavailable S3 mirror falls back to source preparation; AWS access is not
-required for these public datasets. Corrupt downloaded bytes remain an error.
+required for ua-parser or accidents. The retained Calico keyset sources use S3
+and require read access to the existing bucket. Corrupt downloaded bytes remain an error.
 Ua-parser does not fetch accidents. The first accident preparation can download
 a 1.15 GB CSV; existing checked downloads from the regexp spike are reused.
 Repeated calls skip parsing. Concurrent callers share a lock and atomically
