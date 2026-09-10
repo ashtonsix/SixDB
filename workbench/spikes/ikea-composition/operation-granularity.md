@@ -7,6 +7,11 @@ a selected framework, or a performance result. No kernels were rerun here.
 Integer code and the wider-body proposal were still under development when read.
 LocalPack and ScanPack are now accepted names.
 
+The [heterogeneous follow-up](#what-the-heterogeneous-probe-now-adds) below adds
+the completed metadata/bitset campaign. Its retained measurements and assembly
+audit were read here; this investigation did not rerun or independently audit
+the hardware executables.
+
 The new direction is to reduce combinations such as `A × B × C × D` to
 `A × B + C × D`, without demanding `A + B + C + D` everywhere. Fine-grained
 choices may remain curated inside inlined presets; freer continuation
@@ -41,6 +46,115 @@ bytes: different reader lowerings favour different measured hot/cold regimes.
 See [measurements](../ikea-integers/measurements.md#two-readers-over-the-continuous-wire).
 Wire legality, parent eligibility and contextual execution cost remain separate.
 This investigation does not infer a cache classifier from those results.
+
+## What the heterogeneous probe now adds
+
+The [heterogeneous composition](../ikea-heterogeneous/composition.md) keeps one
+authored range operation while substituting three metadata representations over
+the same actual BEC body owner. Packed cursors reconstruct sixteen entries from
+checkpoints and lengths; the range consumes consecutive body pairs, with an odd
+tail and possible checkpoint crossing. A separate query uses logical block
+ordinals. This supplies a concrete instance of unequal grains and two resources
+without forcing a decoded descriptor array into the authoring contract.
+
+**Consolidate the cursor and region sketches as independent choices.** The
+cursor locates work and retains unused metadata; the selected region determines
+where compilation stops. The same authored operation uses full inlining or a
+shared, independently compiled decode/intersection/count region. Sketch B's
+ergonomic question can therefore be pursued together with A's boundary choices.
+This example does not establish a generic visitation protocol, delayed fanout,
+suspension, or compatible native-value CPS signatures.
+
+**Price all live state at a cut, including the caller's state.** The retained
+[boundary audit](../ikea-heterogeneous/notes/boundaries.md) reports that every
+packed split reader saves and reloads its 64-byte metadata frame across pair
+calls. The call itself uses scalar/pointer arguments and a scalar result; no
+decoded bitset crosses it. Full inlining retains metadata in registers on x86,
+but V2 still spills it and adds pressure from BEC intermediates and constants.
+Eliminating payload materialisation at an interface is valuable without proving
+that the surrounding composition avoids stores. Neither inlining nor cursor
+syntax removes the lifetime question.
+
+**Keep the coarse split as a credible option, with a measured scope.** Across
+the three layouts, selected split callers plus shared regions use about half
+the function text of the fully inline readers. For packed metadata, reported
+full-range split/inline time costs are about 5–6% on Zen 5, 0–2.5% on Granite
+Rapids, and roughly neutral on V2. These are ordinary calls, not CPS results;
+the text count excludes tables and other binary sections, and build-time
+scaling was not measured. The [campaign](../ikea-heterogeneous/measurements.md)
+uses repeated small working sets and does not establish cache residence or cold
+access performance. It supports selective region sharing without selecting a
+universal overhead budget or carrier family. A different consumer may duplicate
+the decoder again, so the decode-to-native-consumer alternative stays open.
+
+**Treat a selected boundary as something the implementation must realise.** The
+first nominal-inline readers were compiler-outlined. Corrected captures force
+the intended inlining and audit the actual call sites before comparing costs.
+An authored expansion and a label such as inline are insufficient evidence of
+the selected execution. This is an obligation of the implementation/lowering
+choice, not additional context for each local codec author to absorb.
+
+**Parent locality must be re-established after substitution.** At capacity 256
+and a 64-byte-aligned metadata base, the source-prescribed Scan refill for
+positions 80–95 touches five lines even though each child meets the two-adjacent-
+line condition. The Local refill touches one. The [footprint witness](../ikea-heterogeneous/locality.md)
+changes the boundary question from whether a child is legal to whether the
+enclosing operation still meets its promised resource footprint. Required
+predecessor lengths, placement and the selected reader all matter. This is byte
+geometry, not measured misses; body and query resources have separate bounds.
+Packed directories halve metadata bytes yet cost 6–14% more in fully inline
+full-range reads here. Neither footprint nor compression ratio alone selects
+the representation.
+
+**Preserve the distinction between checked facts and supplied meaning.** The
+probe checks actual directory/body ownership, framing and readable extents.
+Construction supplies the intended population/body interpretation; the caller
+supplies the query's coordinate domain and immutability discipline. Retaining
+owners preserves lifetime without proving these other facts. Full-source
+validation still runs on each preparation of the original range operation and
+is excluded from its timings. The later algebra operation separates admission
+from binding, as described below.
+
+This narrows rather than closes the remaining comparison. Eager metadata16 is
+one reader implementation, not a public point-access requirement. A point path
+over the same bytes could test that distinction. A native decoded-value cut
+with another consumer could test reuse beyond the present fused consumer.
+Progressive filtering still needs explicit evidence/selection semantics and
+dependency closure: this contiguous read does not prove that inactive entries
+or their predecessor metadata may be skipped. Engine-visible nested discovery,
+replacement admission, and adoption of a new prepared revision remain open;
+three coexisting metadata owners are a useful physical example, not those
+interfaces implemented.
+
+### Masked algebra and closure
+
+The completed [algebra extension](../ikea-heterogeneous/operations/README.md)
+adds point readers and independently binds each input's metadata strategy. Six
+heavy physical-source/operator kernels share unary metadata resolvers, with two
+curated Local/Local inline controls. This is a concrete implementation of useful
+factorisation without erasing every primitive. The frame seam intentionally
+writes and retains 64 bytes per source; its costs differ from the original
+range reader's register frame saved across a consumer call.
+
+Admission, binding and invocation are now distinct: check and retain immutable
+sources once, bind compatible operands/output and execution choices, then supply
+the selection at invocation. Original slice ordinals align the two inputs and
+output. Excluding a body does not erase predecessor-length dependencies. The
+complete and selected-only writers expose different output obligations; the
+caller mask remains a candidate restriction, not an exact additional predicate.
+
+Native grain also crosses the source dimension: two BEC inputs can be the two
+operands at one ordinal. Reducing output grain on V2 cut selected-kernel text
+from 91,092 to 24,888 bytes and removed substantial spill pressure, but lost
+about 5–9% in the principal dense/mixed full-window cases. The
+[actual audit](../ikea-heterogeneous/notes/operations-boundaries.md) and
+[timings](../ikea-heterogeneous/operations/measurements.md) support retaining
+grain two in that scope. Code size and spills inform selection without deciding it.
+
+Ashton [closed the exercise](../ikea-heterogeneous/closing.md) on 2026-09-10:
+these probes are enough to begin implementation of the basic parts. General
+discovery/rewriting, progression and mutation mechanisms remain integration
+work; they do not require holding those parts behind another probe campaign.
 
 ## Several quantities are being called width or grain
 

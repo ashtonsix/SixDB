@@ -1,8 +1,9 @@
 # Choosing the next composition probe
 
 2026-09-10 discussion after [consolidating the integer spike](README.md).
-The user is considering three directions; none is selected. Performance and
-composition remain joint requirements, including the [unresolved narrow costs](measurements.md#continuous-wire-bulk-and-register-masks)
+The user selected the [heterogeneous exercise](../ikea-heterogeneous/README.md)
+after this comparison. The alternatives below record that decision context.
+Performance and composition remain joint requirements, including the [unresolved narrow costs](measurements.md#continuous-wire-bulk-and-register-masks)
 and [width-56 Zen encoder tradeoff](wide56/README.md#hardware-findings-2026-09-10).
 
 | Direction | Question it answers best | What it leaves open |

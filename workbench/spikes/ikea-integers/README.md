@@ -81,6 +81,7 @@ is offline and does not rerun benchmarks.
 
 [The next-probe discussion](next-probe.md) compares heterogeneous bitset metadata,
 PFoR-like reconstruction, and complete width/performance coverage. It records a
-recommendation, not a selected next experiment. Known performance gaps remain
-unfinished whichever probe follows. Reflection for block laws, filter and
+recommendation that led to the new [heterogeneous spike](../ikea-heterogeneous/README.md).
+Its `run.py --check-only` checks both live providers and their combined caller.
+Known performance gaps remain unfinished. Reflection for block laws, filter and
 aggregate maintenance, and MVCC write effects remain unimplemented.

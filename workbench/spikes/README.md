@@ -9,6 +9,9 @@ there is no required template. Several implementations or measurement campaigns
 can share the same home, which remains useful after adoption or abandonment.
 Loose thoughts can stay in the [notebook](../notebook/ideas.md) indefinitely.
 
+- [Heterogeneous bitsets and integer metadata](ikea-heterogeneous/README.md) (closed): actual
+  BEC bodies with replaceable packed metadata, dependent addresses and native
+  range/decode/consumer composition, whole-window analysis and masked Boolean algebra.
 - [Ikea packed integers](ikea-integers/README.md): locality and composition
   exercise with two 1–7-bit tail formats, native kernels, a 12-bit body/tail
   reconstruction, measured 56-bit bodies, and exact placement bounds through 64 bits.

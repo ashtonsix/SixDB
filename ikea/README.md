@@ -6,12 +6,16 @@ Successor to Calico's `frame`, `qhash`, `keyset`, and `kmath`. Those modules are
 sources of mechanisms and evidence; their original representations and
 constraints are subject to recalibration.
 
-The parts, composition interfaces, and internal layout will develop through
-[Workbench](../workbench/README.md).
+The basic-data-structure probes concluded on 2026-09-10 with enough evidence to
+begin implementing this approach in Ikea. Keep physical formats and placement
+separate from native compute; compose operations through curated inline/fused
+regions and useful reusable boundaries. Bind independent operands and establish
+their obligations before trusted hot execution. Logical identity, native grain,
+allowed effects and heuristic evidence remain explicit.
 
-The [composition and ergonomics spike](../workbench/spikes/ikea-composition/README.md)
-holds the [working design](../workbench/spikes/ikea-composition/synthesis-1.md):
-shared recordable compositions, native implementations, provisional boundaries
-and unresolved alternatives. The [packed-integer probe](../workbench/spikes/ikea-integers/README.md)
-exercises those ideas in several contexts; its evidence and limits stay with
-the study. No production interface is selected yet.
+The [closing assessment](../workbench/spikes/ikea-heterogeneous/closing.md) records
+the decisions, measured tradeoffs and unfinished work. The
+[composition design](../workbench/spikes/ikea-composition/synthesis-1.md) owns the
+authoring model. Concrete APIs should now develop with their data structures;
+the prototype classes are not a frozen production interface. Evidence and
+experiments remain in [Workbench](../workbench/README.md).

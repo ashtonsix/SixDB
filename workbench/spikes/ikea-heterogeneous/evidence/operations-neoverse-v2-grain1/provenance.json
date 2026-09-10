@@ -1,0 +1,120 @@
+{
+  "commands": [
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cpu",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cache-context",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "bitsets-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "integers-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "range-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "operations-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "algebra",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "report",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "assembly",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "symbols",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "config": {
+    "bench": [
+      "--",
+      "--pmu"
+    ],
+    "check_only": false,
+    "grain": 1,
+    "part": "algebra",
+    "quality": false,
+    "sanitize": false,
+    "synthetic": false,
+    "target": "neoverse-v2"
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=ikea-blocks;ikea-integers;ikea-heterogeneous",
+    "-DSIXDB_HETEROGENEOUS_OUTPUT_GRAIN=1",
+    "-DSIXDB_TUNE=neoverse-v2",
+    "-DCMAKE_CXX_FLAGS=-mcpu=neoverse-v2"
+  ],
+  "files_sha256": {
+    "algebra-selected.csv": "d1dd4737e4b269de2d624084b67d2292d074c0fd808a94d7626b4be8d523ed0d",
+    "algebra-summary.csv": "5ed7a580e6f88795599b381490ff0e3697d6870fcaecca3f8b0634207e0710de",
+    "algebra-summary.md": "355d50e52ab8a846d7a01ed363aeca353f81e02f2c56fbe0b1b131d9247ec20c",
+    "bitsets-checks.txt": "a1c57fa56260bf4aa5d7976b96f4f51c6d5eb3ca554018909c33ef5168471e52",
+    "cache-context.json": "b3aae3fb5fdcc1ca196075643afe8dff946cced0501de1f5cf8ce16253d67af0",
+    "compiler.txt": "0cf7e452648b3754289200426984662d1d8d0a21d56310d301a24e11399ceab8",
+    "cpu.txt": "62adae95562af0d83b37dbfe7304b3b383f92a3c82d9c0fdb4a455f61bc3eec5",
+    "integers-checks.txt": "0fe223f8f28faeb5395568b6a4f621075fd77ad48043bfbf3e1bd3208531dced",
+    "operations-checks.txt": "9567c02296ab008d141de1c1f312800cbf01f9d59da50c847f32070438c9c1e4",
+    "range-checks.txt": "df72acdc0a8eb4c76dc5eaf659a4b899551e8ae247bbdb3855b1f6b7bcf017d9"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "inputs/pairs": {
+      "id": "ecc032bb32b8c7d18bf07a5de9ab115776b8655ff21d9465ce80ac525d6c2f1e",
+      "key": "a832af3a2194a4245df699b6a66ecee02d21a093a976ed03d9d76205707acee5"
+    }
+  },
+  "platform": "Linux-7.0.0-1012-aws-aarch64-with-glibc2.39",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/ikea-heterogeneous/operations/report.py",
+    "{evidence}"
+  ],
+  "source_archive_sha256": "b763a5f692cd9d99550b93ed7227f974d06849e8df6adf2abc4e706a71f60136",
+  "source_digest": "ae202df881765c5b71cfc4329b19e7a87aba0d530f2553b259b9b6ac155bf4bf",
+  "source_unchanged": true,
+  "started_utc": "2026-09-10T01:51:56.420377+00:00",
+  "status": "complete"
+}

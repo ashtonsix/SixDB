@@ -1,0 +1,110 @@
+{
+  "commands": [
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cpu",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cache-context",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "bitsets-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "integers-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "combined-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "assembly",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "symbols",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "benchmark",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "report",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "config": {
+    "bench": [
+      "--",
+      "--pmu"
+    ],
+    "check_only": false,
+    "sanitize": false,
+    "synthetic": false,
+    "target": "granite-rapids"
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=ikea-blocks;ikea-integers;ikea-heterogeneous",
+    "-DSIXDB_MARCH=graniterapids",
+    "-DSIXDB_TUNE=granite-rapids"
+  ],
+  "files_sha256": {
+    "bitsets-checks.txt": "a1c57fa56260bf4aa5d7976b96f4f51c6d5eb3ca554018909c33ef5168471e52",
+    "cache-context.json": "6e45fb547648ef70e3edb000feb9ef1ad4e2af58e88bf6ee757aebc7fd522087",
+    "combined-checks.txt": "df72acdc0a8eb4c76dc5eaf659a4b899551e8ae247bbdb3855b1f6b7bcf017d9",
+    "compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "cpu.txt": "00d5796ea9ddae00b429b2d1d79f79eb707db96fb58c027a818b401bc33b7597",
+    "integers-checks.txt": "0fe223f8f28faeb5395568b6a4f621075fd77ad48043bfbf3e1bd3208531dced",
+    "summary.csv": "efbd39b79e01ae9e209cda681c74884739527a613a7d93bdb9b80cdfcd89d2e2",
+    "summary.md": "8bc8ff79ad4a195b6a0cbee3ad12e41c1039b34d6037cd7348a8a479edb777ae",
+    "timings.csv": "234239570f1cb5a20a646e49ac15992b47d0f5b8524e87696e867e410cfe5dae"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "inputs/windows": {
+      "id": "d1508be6791a608ef4805c788ef4ff8c6968c87a191b53c1aac5b94d886c56d9",
+      "key": "536c2f7c742270d974839b658fa20ef0c88342666d8dac5b7dc3021f6fddeaef"
+    }
+  },
+  "platform": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/ikea-heterogeneous/report.py",
+    "{evidence}"
+  ],
+  "source_archive_sha256": "904b1d13bbb9b42db899958f41f1512d8b75f3ed0a90e3709696cc7a356ed1e1",
+  "source_digest": "0c243dec0281bee9893b33009726a373e987da5e69db1e208ae800f3c46fc57e",
+  "source_unchanged": true,
+  "started_utc": "2026-09-10T00:39:05.517981+00:00",
+  "status": "complete"
+}

@@ -91,3 +91,24 @@ Internal native grains should meet directly where compatible, with adaptation
 pushed outward. Block reflection may also name semantic obligations such as
 sorted unique appends; dynamic evidence and mutation effects still need their
 own concrete contracts. These are steering questions, not selected interfaces.
+
+The [heterogeneous bitset/metadata exercise](../spikes/ikea-heterogeneous/README.md)
+now tests those boundaries with dependent addresses: a requested range can need
+predecessor lengths that are not themselves requested bitsets. Direct offsets
+and packed lengths share the same immutable BEC bodies, while native metadata
+frames outlive individual BEC pair calls. This makes region sharing, retained
+state and ownership obligations concrete without selecting a universal cursor.
+
+Its [masked algebra extension](../spikes/ikea-heterogeneous/operations/README.md)
+adds two independently configured sources: unary metadata strategies can bind
+outside a curated decoder/Boolean region without multiplying every layout pair.
+That cut has a real materialised-frame cost. Two BEC decoder inputs can also be
+the two operands at one ordinal, rather than two output ordinals; physical grain
+does not determine logical progress. Whole-window size prediction separately
+exercises how an enclosing layout's overhead changes a child's byte estimate
+into a useful, still fallible decision.
+
+Ashton [closed that exercise](../spikes/ikea-heterogeneous/closing.md) on
+2026-09-10: the probes now give Ikea enough direction for implementation of its
+basic parts. The closing assessment carries the concrete composition and
+obligation choices forward; further integration questions are not prerequisites.

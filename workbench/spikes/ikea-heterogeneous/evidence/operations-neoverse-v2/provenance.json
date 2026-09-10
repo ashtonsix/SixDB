@@ -1,0 +1,128 @@
+{
+  "commands": [
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cpu",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cache-context",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "bitsets-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "integers-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "range-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "operations-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "algebra",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "analyser",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "report",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "assembly",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "symbols",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "config": {
+    "bench": [
+      "--",
+      "--pmu"
+    ],
+    "check_only": false,
+    "grain": 2,
+    "part": "both",
+    "quality": false,
+    "sanitize": false,
+    "synthetic": false,
+    "target": "neoverse-v2"
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=ikea-blocks;ikea-integers;ikea-heterogeneous",
+    "-DSIXDB_HETEROGENEOUS_OUTPUT_GRAIN=2",
+    "-DSIXDB_TUNE=neoverse-v2",
+    "-DCMAKE_CXX_FLAGS=-mcpu=neoverse-v2"
+  ],
+  "files_sha256": {
+    "algebra-selected.csv": "be26e00d20eca0d01de2a4c0e954066df7f30e3c5cf19c97e35c9a54b276beb1",
+    "algebra-summary.csv": "0de3c52ab6b236815ec7263785185dc265911553ea8da6c8325e837091fd9b17",
+    "algebra-summary.md": "226ba0d4ca150ea4da849f21fb98c2d656199e5878a75c224ee100d544f4c97f",
+    "analyser-summary.csv": "fe1633eb89a995ab8d547f13f9aab2d485d6afcbc93a2c9879922d0f3c81eab3",
+    "analyser-summary.md": "85b047c0d3de95246d09682d04021e027363e4fc2abad84127ab2e0d7d9e98c9",
+    "analyser-timings.csv": "1328b62b8a31142bf3e2eb4f76d30e8d5e0cd4ce569dd6c5e13ea80f0db1c7aa",
+    "bitsets-checks.txt": "a1c57fa56260bf4aa5d7976b96f4f51c6d5eb3ca554018909c33ef5168471e52",
+    "cache-context.json": "b3aae3fb5fdcc1ca196075643afe8dff946cced0501de1f5cf8ce16253d67af0",
+    "compiler.txt": "0cf7e452648b3754289200426984662d1d8d0a21d56310d301a24e11399ceab8",
+    "cpu.txt": "62adae95562af0d83b37dbfe7304b3b383f92a3c82d9c0fdb4a455f61bc3eec5",
+    "integers-checks.txt": "0fe223f8f28faeb5395568b6a4f621075fd77ad48043bfbf3e1bd3208531dced",
+    "operations-checks.txt": "9567c02296ab008d141de1c1f312800cbf01f9d59da50c847f32070438c9c1e4",
+    "range-checks.txt": "df72acdc0a8eb4c76dc5eaf659a4b899551e8ae247bbdb3855b1f6b7bcf017d9"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "inputs/pairs": {
+      "id": "ecc032bb32b8c7d18bf07a5de9ab115776b8655ff21d9465ce80ac525d6c2f1e",
+      "key": "a832af3a2194a4245df699b6a66ecee02d21a093a976ed03d9d76205707acee5"
+    }
+  },
+  "platform": "Linux-7.0.0-1012-aws-aarch64-with-glibc2.39",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/ikea-heterogeneous/operations/report.py",
+    "{evidence}"
+  ],
+  "source_archive_sha256": "b3d119da4e7392ef44100a4e7ee5f5baa1b163653570d2891ef94650464e089c",
+  "source_digest": "5d1916b3ff06ebde573251fc5368d50e13b54a40a47df17177b526789e244a0d",
+  "source_unchanged": true,
+  "started_utc": "2026-09-10T01:46:58.728517+00:00",
+  "status": "complete"
+}

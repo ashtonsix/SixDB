@@ -25,6 +25,11 @@ and TEC (Tree Enumerative Code). BEC keeps both defining mechanisms while
 remaining short; `Bec256` distinguishes this format. The name was accepted on
 2026-09-09. It is not a new claim of algorithmic invention.
 
+The [heterogeneous follow-up](../ikea-heterogeneous/README.md) now reuses these
+native bodies with integer-packed metadata and dependent body addresses. Its
+`run.py --check-only` checks both providers and the combined caller; the reuse
+and admission contract stays in that study.
+
 ## The boundary is part of the primitive
 
 The [ABI experiment](abi/README.md) inspects independent producer, caller and

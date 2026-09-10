@@ -7,17 +7,29 @@ The [second sketches](sketches-2.md) and [first sketches](sketches.md) retain
 the earlier alternatives; they are not competing current baselines.
 [Reading](reading.md) records the orientation and questions for investigation.
 
+**Implementation direction, 2026-09-10:** Ashton closed the
+[heterogeneous exercise](../ikea-heterogeneous/closing.md), judging the basic
+data-structure probes sufficient for Ikea's approach to take concrete form.
+Carry shared operation authoring, explicit native bodies, independently admitted
+and bound inputs, and curated compilation regions into implementation. The
+closing assessment owns the demonstrated obligations and measured tradeoffs;
+unresolved integration mechanisms need not delay the basic parts.
+
 **Latest investigation, 2026-09-10:** [operation granularity and curated
 composition](operation-granularity.md) compares compilation boundaries, unequal
 native grains, multiple sources and block obligations across the integer,
 bitset, row-filter, aggregate and Xmem case studies. It investigates Ashton's
 `A × B + C × D` direction while leaving the concrete interface open.
+Its [heterogeneous follow-up](operation-granularity.md#what-the-heterogeneous-probe-now-adds)
+now combines cursor authoring with selected region cuts, and records measured
+retained-state costs and a parent-locality counterexample. General cursor and
+substitution interfaces remain open.
 
-**Current direction, 2026-09-09.** Recordable composition functions, optional
+**Earlier direction, 2026-09-09.** Recordable composition functions, optional
 named components and explicit implementation/rewrite knowledge form the working
 authoring model. Carrier allocation, deep child/dependency representation,
-progressive observations and integration boundaries remain open. Ashton is
-driving a [packed-integer probe](synthesis-1.md#next-probe-packed-integers), with
+progressive observations and integration boundaries remain open. Ashton selected
+the [packed-integer probe](synthesis-1.md#next-probe-packed-integers), with
 PFoR-like reconstruction and bitset metadata as intended customers and further
 progressive-filtering/nested-substitution work in view. The existing bitset
 probe supplies evidence, not a mandatory framework for that work.

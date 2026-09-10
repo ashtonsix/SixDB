@@ -1,5 +1,18 @@
 # Composition design after the first executable probe
 
+**Current implementation direction, 2026-09-10.** The integer and heterogeneous
+exercises have now supplied enough evidence to implement Ikea's basic parts.
+The [closing assessment](../ikea-heterogeneous/closing.md) consolidates the
+decisions: shared operation authoring, explicit native kernels, independently
+admitted and bound inputs, and curated compilation regions. Carry coordinate,
+dependency, lifetime and effect obligations into the interfaces; choose concrete
+carriers, grains and policies for each use. Exact production APIs and Engine
+integration remain work to do, not prerequisites for another basic-parts probe.
+
+The synthesis below records the first probe and its then-open questions. Its
+authoring model remains the working direction; the later evidence and closure
+supersede its forward-looking probe suggestions.
+
 2026-09-09. Discussion synthesis requested by Ashton after the completed
 [Ikea blocks probe](../ikea-blocks/README.md). This updates the
 [second sketches](sketches-2.md), using the [executable review](predictor-review.md)
@@ -16,10 +29,16 @@ about demonstrated mechanisms describe the first probe. The follow-up keeps
 its own findings and limitations; it does not settle general carrier allocation,
 progressive filtering, or Engine substitution.
 
-Ashton will drive the next probe: packed integers, then use in a PFoR-like
-structure and bitset metadata, providing a substrate for progressive filtering
-and nested substitution. The [probe connection](#next-probe-packed-integers)
-records how that direction challenges this baseline without fixing its formats.
+**Later consolidation, 2026-09-10:** the
+[granularity investigation](operation-granularity.md#what-the-heterogeneous-probe-now-adds)
+incorporates the heterogeneous metadata/bitset probe: cursor authoring and
+selected compiled regions coexist, while retained metadata and parent locality
+have concrete costs. The first-probe observations below remain historical;
+the follow-up does not settle Engine-visible nested substitution.
+
+Ashton subsequently selected packed integers and then heterogeneous bitset
+metadata. The [probe connection](#next-probe-packed-integers) below preserves
+the original motivation; PFoR-like reconstruction was not part of those probes.
 
 **We have support for a common composition mechanism and some concrete boundary
 choices. We do not yet have evidence that it handles the defining difficult
@@ -253,8 +272,9 @@ rewiring, or the scalability of the proposed CPS strategy.
 
 ## Promising next probes
 
-These are alternative questions to steer by, not a required sequence or an
-instruction to implement all integrations together.
+These are historical candidate questions from the first synthesis. They remain
+available when a concrete implementation needs them, not a required sequence
+or a reason to extend the completed basic-data-structure probes.
 
 **Straight-through value reuse: the tightest execution question.** The existing
 [two sketches](value-reuse-sketches.md) hold the work fixed and compare bounded
