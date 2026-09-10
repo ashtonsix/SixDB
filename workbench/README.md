@@ -4,6 +4,10 @@ A place for science and a Swiss army knife for anyone working on SixDB.
 Design develops here first, through investigation, experiments, and spikes.
 Successor to Calico's `workbench`.
 
+Its scope includes dataset preparation, model-fitting experiments, performance
+measurement and development tooling. Investigations can consume SixDB modules
+directly while keeping experimental alternatives and their evidence together.
+
 | To… | Start here |
 | --- | --- |
 | Capture or revisit an idea | [Notebook](notebook/ideas.md): loose thoughts, questions, and connections |
