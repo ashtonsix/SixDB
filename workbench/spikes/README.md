@@ -9,19 +9,9 @@ there is no required template. Several implementations or measurement campaigns
 can share the same home, which remains useful after adoption or abandonment.
 Loose thoughts can stay in the [notebook](../notebook/ideas.md) indefinitely.
 
-- [Heterogeneous bitsets and integer metadata](ikea-heterogeneous/README.md) (closed): actual
-  BEC bodies with replaceable packed metadata, dependent addresses and native
-  range/decode/consumer composition, whole-window analysis and masked Boolean algebra.
-- [Ikea packed integers](ikea-integers/README.md): locality and composition
-  exercise with two 1–7-bit tail formats, native kernels, a 12-bit body/tail
-  reconstruction, measured 56-bit bodies, and exact placement bounds through 64 bits.
-- [Ikea bitset primitives](ikea-blocks/README.md): fresh headless plain/Bec256
-  codecs, native-width compute, size-prediction experiments and actual stage
-  ABI/graph-lowering probes. Three-target measurements and remaining value-reuse
-  limits follow the rejected initial implementation.
-- [Ikea composition and ergonomics](ikea-composition/README.md): an open
-  design investigation into reusable blocks, containers, transforms and kernels;
-  competing pseudocode, adversarial review, interface seams and authoring guides.
+- [Ikea composition and ergonomics](ikea-composition/README.md): current
+  composition direction and its owned block probes; authoring responsibilities,
+  interface seams, measured tradeoffs and historical alternatives.
 - [Row filter signatures](row-filter-signatures/README.md): compact per-row
   evidence for conjunctive and factored Boolean filters, progressive refinement,
   8/16/32-bit planes, and block rollups. The spike concluded with a resident

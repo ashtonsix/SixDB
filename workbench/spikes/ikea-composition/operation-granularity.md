@@ -1,7 +1,7 @@
 # Operation granularity and curated composition
 
 2026-09-10. Independent investigation requested by Ashton, following the
-[first consolidation](synthesis-1.md) and the integer probe. This is a design
+[first consolidation](design.md) and the integer probe. This is a design
 comparison grounded in existing code and evidence, not a new implementation,
 a selected framework, or a performance result. No kernels were rerun here.
 Integer code and the wider-body proposal were still under development when read.
@@ -29,9 +29,9 @@ call or arbitrary runtime replacement at every exposed node.
 
 | Case study | Observed mechanism or result | Consequence for this investigation |
 | --- | --- | --- |
-| [Integer composition](../ikea-integers/composition/README.md), [authoring](../ikea-integers/composition/authoring.h), [transport](../ikea-integers/composition/transport.h) | A shared read joins body/tail, then filter and sum reuse sixteen decoded u16 values. Three parent placements share consumers. The scalar mask is packed by filter and expanded by sum, including in the inline executor. CPS costs 16–57% across the reported resident comparisons. | Native value reuse is possible; this does not make a boundary after each leaf economical. Try keeping predicate and consumer together before selecting a mask interchange. |
-| [Width-56 follow-up](../ikea-integers/wide56/README.md), [wider extension](../ikea-integers/wider-bodies.md) | Eight-value storage packets are independent of native computation. The measured width-56 sum consumes eight u64 lanes on AVX-512, four on AVX2, two on NEON directly. An optional 32-value encoder region improves encoding by 6–9% over the default on the tested AVX-512 targets without changing stored bytes; other wider codecs remain proposals. | An eight-value packet does not oblige a two-lane native implementation to assemble eight values at every call. Conversely, matching wider producers/consumers should not split merely to honour an intermediate get8/get16 API. |
-| [Bitset tiling](../ikea-blocks/tiling.h), [native two-stream decode](../ikea-blocks/native_avx512.h), [findings](../ikea-blocks/README.md) | Plain intersection/union use a native grain over multiple physical sizes. The two-stream decoder supplies one 512-position carrier from two independent 256-position compressed streams. The predictor keeps two independent feature records when widening its execution grain. | A native register can hold several semantic groups. Group boundaries and per-stream metadata survive widening. That differs from combining two logical operands of an intersection. |
+| [Integer composition](probes/ikea-integers/composition/README.md), [authoring](probes/ikea-integers/composition/authoring.h), [transport](probes/ikea-integers/composition/transport.h) | A shared read joins body/tail, then filter and sum reuse sixteen decoded u16 values. Three parent placements share consumers. The scalar mask is packed by filter and expanded by sum, including in the inline executor. CPS costs 16–57% across the reported resident comparisons. | Native value reuse is possible; this does not make a boundary after each leaf economical. Try keeping predicate and consumer together before selecting a mask interchange. |
+| [Width-56 follow-up](probes/ikea-integers/wide56/README.md), [wider extension](probes/ikea-integers/wider-bodies.md) | Eight-value storage packets are independent of native computation. The measured width-56 sum consumes eight u64 lanes on AVX-512, four on AVX2, two on NEON directly. An optional 32-value encoder region improves encoding by 6–9% over the default on the tested AVX-512 targets without changing stored bytes; other wider codecs remain proposals. | An eight-value packet does not oblige a two-lane native implementation to assemble eight values at every call. Conversely, matching wider producers/consumers should not split merely to honour an intermediate get8/get16 API. |
+| [Bitset tiling](probes/ikea-blocks/tiling.h), [native two-stream decode](probes/ikea-blocks/native_avx512.h), [findings](probes/ikea-blocks/README.md) | Plain intersection/union use a native grain over multiple physical sizes. The two-stream decoder supplies one 512-position carrier from two independent 256-position compressed streams. The predictor keeps two independent feature records when widening its execution grain. | A native register can hold several semantic groups. Group boundaries and per-stream metadata survive widening. That differs from combining two logical operands of an intersection. |
 | [Conjunctive row-filter findings](../row-filter-signatures/FINDINGS.md), [implementation](../row-filter-signatures/model.cpp) | Preparing and fusing same-plane conjunction masks removed avoidable work. Removing an artificial outer block handoff changed the comparison. Progressive byte planes skipped 34.9% of second-plane groups in one case yet lost to eager reading, 0.937 versus 0.684 ns/row. | Boolean-fragment and decision boundaries matter as much as SIMD lane count. Expose progression where useful; do not require progression bookkeeping for every resident comparison. |
 | [Aggregate closeout](../aggregate-maintenance/CONCLUSIONS.md), [dirty-buffer implementation](../aggregate-maintenance/dirty-buffer/probe.cpp) | The buffered experiment amortises reservations over 64 records and replays complete batches. Some hot cases benefit; dispersed cases lose. Reads/replay occur at quiescent boundaries and numeric values are bounded exact count/sum. | Reservation, compute, replay and visibility grains differ. Coarser execution can amortise machinery, but publication and numeric laws restrict regrouping. |
 | [Calico Xmem staging](../../../../calico/xmem/include/xmem/xmem.h), [QHash integration](../../../../calico/qhash/README.md) | `stage_many` batches range declarations under one handle lock. Its documented semantics retain input order and possible partial declaration on refusal. QHash's standalone claims miss writes to recycled bucket regions; its host adds coverage before flush. | Effect batching has a real boundary and obligations of its own. A coarse mutation region must preserve complete physical coverage, not just concatenate happy-path results. |
@@ -43,13 +43,13 @@ limitations, not adopted SixDB integration contracts.
 
 The integer reader comparison also supplies an execution choice over unchanged
 bytes: different reader lowerings favour different measured hot/cold regimes.
-See [measurements](../ikea-integers/measurements.md#two-readers-over-the-continuous-wire).
+See [measurements](probes/ikea-integers/measurements.md#two-readers-over-the-continuous-wire).
 Wire legality, parent eligibility and contextual execution cost remain separate.
 This investigation does not infer a cache classifier from those results.
 
 ## What the heterogeneous probe now adds
 
-The [heterogeneous composition](../ikea-heterogeneous/composition.md) keeps one
+The [heterogeneous composition](probes/ikea-heterogeneous/composition.md) keeps one
 authored range operation while substituting three metadata representations over
 the same actual BEC body owner. Packed cursors reconstruct sixteen entries from
 checkpoints and lengths; the range consumes consecutive body pairs, with an odd
@@ -66,7 +66,7 @@ This example does not establish a generic visitation protocol, delayed fanout,
 suspension, or compatible native-value CPS signatures.
 
 **Price all live state at a cut, including the caller's state.** The retained
-[boundary audit](../ikea-heterogeneous/notes/boundaries.md) reports that every
+[boundary audit](probes/ikea-heterogeneous/notes/boundaries.md) reports that every
 packed split reader saves and reloads its 64-byte metadata frame across pair
 calls. The call itself uses scalar/pointer arguments and a scalar result; no
 decoded bitset crosses it. Full inlining retains metadata in registers on x86,
@@ -81,7 +81,7 @@ the function text of the fully inline readers. For packed metadata, reported
 full-range split/inline time costs are about 5–6% on Zen 5, 0–2.5% on Granite
 Rapids, and roughly neutral on V2. These are ordinary calls, not CPS results;
 the text count excludes tables and other binary sections, and build-time
-scaling was not measured. The [campaign](../ikea-heterogeneous/measurements.md)
+scaling was not measured. The [campaign](probes/ikea-heterogeneous/measurements.md)
 uses repeated small working sets and does not establish cache residence or cold
 access performance. It supports selective region sharing without selecting a
 universal overhead budget or carrier family. A different consumer may duplicate
@@ -97,7 +97,7 @@ choice, not additional context for each local codec author to absorb.
 **Parent locality must be re-established after substitution.** At capacity 256
 and a 64-byte-aligned metadata base, the source-prescribed Scan refill for
 positions 80–95 touches five lines even though each child meets the two-adjacent-
-line condition. The Local refill touches one. The [footprint witness](../ikea-heterogeneous/locality.md)
+line condition. The Local refill touches one. The [footprint witness](probes/ikea-heterogeneous/locality.md)
 changes the boundary question from whether a child is legal to whether the
 enclosing operation still meets its promised resource footprint. Required
 predecessor lengths, placement and the selected reader all matter. This is byte
@@ -128,7 +128,7 @@ interfaces implemented.
 
 ### Masked algebra and closure
 
-The completed [algebra extension](../ikea-heterogeneous/operations/README.md)
+The completed [algebra extension](probes/ikea-heterogeneous/operations/README.md)
 adds point readers and independently binds each input's metadata strategy. Six
 heavy physical-source/operator kernels share unary metadata resolvers, with two
 curated Local/Local inline controls. This is a concrete implementation of useful
@@ -147,11 +147,11 @@ Native grain also crosses the source dimension: two BEC inputs can be the two
 operands at one ordinal. Reducing output grain on V2 cut selected-kernel text
 from 91,092 to 24,888 bytes and removed substantial spill pressure, but lost
 about 5–9% in the principal dense/mixed full-window cases. The
-[actual audit](../ikea-heterogeneous/notes/operations-boundaries.md) and
-[timings](../ikea-heterogeneous/operations/measurements.md) support retaining
+[actual audit](probes/ikea-heterogeneous/notes/operations-boundaries.md) and
+[timings](probes/ikea-heterogeneous/operations/measurements.md) support retaining
 grain two in that scope. Code size and spills inform selection without deciding it.
 
-Ashton [closed the exercise](../ikea-heterogeneous/closing.md) on 2026-09-10:
+Ashton [closed the exercise](probes/ikea-heterogeneous/closing.md) on 2026-09-10:
 these probes are enough to begin implementation of the basic parts. General
 discovery/rewriting, progression and mutation mechanisms remain integration
 work; they do not require holding those parts behind another probe campaign.
@@ -362,7 +362,7 @@ what count, cursor advancement or a mask means at the next edge.
 
 ### Multiple sources: union/intersection is not merely two callbacks
 
-The existing [plain bitset adapter](../ikea-blocks/tiling.h) explicitly requires
+The existing [plain bitset adapter](probes/ikea-blocks/tiling.h) explicitly requires
 matching ordered bit coordinates. Make that law survive any cursor or native
 port. Logical coordinate alignment, allocation alignment and native-grain
 compatibility are different facts.

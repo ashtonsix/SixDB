@@ -5,7 +5,7 @@
 not an implementation request, an interface selection or compiler evidence.
 They keep the body, authoring and execution questions together.
 
-Both alternatives remain open in the [working design](synthesis-1.md). Ashton
+Both alternatives remain open in the [working design](design.md). Ashton
 will drive the next probe through packed integers and their customers; the
 estimator example here is a replaceable way to expose these lifetimes, not
 work that must be implemented before the integer probe can proceed.

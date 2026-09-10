@@ -14,10 +14,10 @@ the [competing reuse sketches](value-reuse-sketches.md).
 
 ## What the exercise now demonstrates
 
-The [authoring code](../ikea-blocks/composition/authoring.h) records an explicit
-tile loop and reduction. [Native feature bodies](../ikea-blocks/composition/native_features.h)
+The [authoring code](probes/ikea-blocks/composition/authoring.h) records an explicit
+tile loop and reduction. [Native feature bodies](probes/ikea-blocks/composition/native_features.h)
 are shared by the inline executor and separately compiled CPS stage wrappers.
-The [driver](../ikea-blocks/composition/driver.cpp) owns repetition and the
+The [driver](probes/ikea-blocks/composition/driver.cpp) owns repetition and the
 accumulator; the body sees native bits. A prepared call erases binding metadata
 without requiring the intermediate bits to be materialised.
 
@@ -39,12 +39,12 @@ This is useful evidence for this signature, not a guarantee for arbitrary
 carriers, bodies or register pressure. No new runtime measurements were run
 by this reviewer. The earlier `20260909T114914.118055Z` native capture contains
 sanitizer instrumentation and must not supply release handoff-cost claims.
-The sibling's [runner](../ikea-blocks/composition/run.py) owns reproduction.
+The sibling's [runner](probes/ikea-blocks/composition/run.py) owns reproduction.
 
 ## Findings on the first executable version
 
 **Recording a composition does not yet make it bindable.** In the inspected
-[prepare.cpp](../ikea-blocks/composition/prepare.cpp), two static instruction
+[prepare.cpp](probes/ikea-blocks/composition/prepare.cpp), two static instruction
 arrays describe complete recipes. Preparation reconstructs the canonical
 graph, compares for equality, then tries its one Load + Features fusion.
 Everything else is rejected. Adding a legal composition consequently requires
@@ -72,7 +72,7 @@ does not demonstrate that the requested rewrite controlled execution.
 **Changing stride is a useful but narrow source substitution.** Contiguous
 and stride-48 segments reuse the same inner body and driver. `SourceChild`
 is still an opaque representation/path pair, and `Graph` contains one source.
-The [inline executor](../ikea-blocks/composition/inline_ops.h) ignores the source
+The [inline executor](probes/ikea-blocks/composition/inline_ops.h) ignores the source
 argument and consumes its one attached binding. An auxiliary source or a
 replaceable nested child is therefore a real extension boundary. Keeping
 different source identities alive does not by itself demonstrate Engine's
@@ -80,7 +80,7 @@ deep inspection or substitution of container compositions.
 
 ## Costs and ownership exposed by the code
 
-- The [common CPS signature](../ikea-blocks/composition/stage.h) keeps native
+- The [common CPS signature](probes/ikea-blocks/composition/stage.h) keeps native
   bits live through the scalar model and completion after their last consumer.
   The inspected stages avoid spills, but preserving dead operands restricts
   available registers. The outer driver also initialises otherwise unused
@@ -115,7 +115,7 @@ stops being local, and whether a competing interface improves that experience.
 
 ## Follow-up: node-driven linear lowering
 
-The revised [lower.cpp](../ikea-blocks/composition/lower.cpp) walks dependencies,
+The revised [lower.cpp](probes/ikea-blocks/composition/lower.cpp) walks dependencies,
 checks feature/carrier requirements and emits runtime-owned stage entries.
 The newly authored transition estimator and its fused form run through this
 lowerer without a whole-program table; reversing graph node storage exercises
@@ -125,12 +125,12 @@ central, and the vocabulary still admits one source, one loop and one scalar
 sum. This is a narrower result than general graph composition.
 
 Preparation now rejects inline recipes without an explicit selected compiled
-implementation. [contracts.h](../ikea-blocks/composition/contracts.h) separates
+implementation. [contracts.h](probes/ikea-blocks/composition/contracts.h) separates
 operation identities from native implementation headers. Those earlier
 criticisms are resolved. A/B's scope is now explicitly packaging and child
 discovery over a shared recorder, with deeper source substitution unresolved.
 
-The retained [release evidence](../ikea-blocks/composition/evidence/release-20260909)
+The retained [release evidence](probes/ikea-blocks/composition/evidence/release-20260909)
 shows the baseline native handoff described above. Its richer x86 transition
 model saves/restores RBX on the nontrivial path while extracting a packed
 field; there is no vector payload spill in the inspected code. That identifies

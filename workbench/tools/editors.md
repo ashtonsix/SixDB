@@ -26,15 +26,9 @@ Experiment ISA and sanitizer choices stay in the experiment's build directory.
 From macOS, prefix Linux commands with `orb -m ubuntu`; the dev helper resolves
 the mount to native Linux paths. Existing selections and cache settings are preserved.
 
-Configure optional dependencies through ordinary CMake cache variables, then
-refresh as usual. For example, the Ikea prior comparison needs its prepared,
-pinned headers (the existing helper reuses cached bytes):
-
-```sh
-prior=$(python3 workbench/spikes/ikea-blocks/prepare_prior.py)
-cmake --preset dev -DIKEA_PRIOR_DIR="$prior"
-python3 workbench/tools/dev.py --add ikea-blocks
-```
+Configure a study's optional dependencies through its documented CMake cache
+variables, then refresh the editor configuration. The study's own runner or
+build instructions describe any prepared inputs it requires.
 
 ## Architecture-specific headers
 

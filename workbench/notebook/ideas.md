@@ -59,7 +59,7 @@ analysis must coexist with a small bound call during execution. Semantic
 equivalence, applicability and conditional cost evidence have different
 validity rules. This is a design direction, not an implemented optimiser.
 
-The [Bec256 exercise](../spikes/ikea-blocks/README.md#hardware-findings-2026-09-09)
+The [Bec256 exercise](../spikes/ikea-composition/probes/ikea-blocks/README.md#hardware-findings-2026-09-09)
 adds a concrete constraint: native register handoff can coexist with inspectable
 composition, but dispatch and carrier allocation have observable costs. Its
 limited lowerer does not yet handle a value consumed twice; this is distinct
@@ -67,24 +67,24 @@ from branching control flow. The [value-reuse sketches](../spikes/ikea-compositi
 keep that authoring and execution question open rather than turning the first
 successful codec measurements into a production interface.
 
-The [consolidated Ikea design](../spikes/ikea-composition/synthesis-1.md) carries
+The [consolidated Ikea design](../spikes/ikea-composition/design.md) carries
 forward a shared composition mechanism with optional named structure and
 explicit implementation/equivalence knowledge. Ashton's next packed-integer
 probe brings reconstruction toward the open questions of progressive filtering
 and nested substitution, while preserving different actual representations
-across segments. Its [12-bit exercise](../spikes/ikea-integers/composition/README.md)
+across segments. Its [12-bit exercise](../spikes/ikea-composition/probes/ikea-integers/composition/README.md)
 reuses one decoded native value for both filtering and summation. A third parent
 placement using the same tail makes the separation between child format and
-parent placement concrete. The [locality audit](../spikes/ikea-integers/locality/README.md)
+parent placement concrete. The [locality audit](../spikes/ikea-composition/probes/ikea-integers/locality/README.md)
 adds a composition obligation: child-local reads do not imply a local parent
 read, and reachable tile residues belong to the placement contract. The probe's
-same-wire [reader comparison](../spikes/ikea-integers/measurements.md#two-readers-over-the-continuous-wire)
+same-wire [reader comparison](../spikes/ikea-composition/probes/ikea-integers/measurements.md#two-readers-over-the-continuous-wire)
 also favours different implementations for small resident data and large
 independent-read traces; locality legality does not rank execution choices. Its
 explicit carrier and fixed expansion mapping do not yet establish a general
 lowerer or progressive-filter interface.
 
-The [integer review on 2026-09-10](../spikes/ikea-integers/composition/README.md#direction-after-review-2026-09-10)
+The [integer review on 2026-09-10](../spikes/ikea-composition/probes/ikea-integers/composition/README.md#direction-after-review-2026-09-10)
 sharpens the factorisation target: useful inlined combinations inside coarser
 substitutable regions, rather than a continuation boundary at every operation.
 Internal native grains should meet directly where compatible, with adaptation
@@ -92,14 +92,14 @@ pushed outward. Block reflection may also name semantic obligations such as
 sorted unique appends; dynamic evidence and mutation effects still need their
 own concrete contracts. These are steering questions, not selected interfaces.
 
-The [heterogeneous bitset/metadata exercise](../spikes/ikea-heterogeneous/README.md)
+The [heterogeneous bitset/metadata exercise](../spikes/ikea-composition/probes/ikea-heterogeneous/README.md)
 now tests those boundaries with dependent addresses: a requested range can need
 predecessor lengths that are not themselves requested bitsets. Direct offsets
 and packed lengths share the same immutable BEC bodies, while native metadata
 frames outlive individual BEC pair calls. This makes region sharing, retained
 state and ownership obligations concrete without selecting a universal cursor.
 
-Its [masked algebra extension](../spikes/ikea-heterogeneous/operations/README.md)
+Its [masked algebra extension](../spikes/ikea-composition/probes/ikea-heterogeneous/operations/README.md)
 adds two independently configured sources: unary metadata strategies can bind
 outside a curated decoder/Boolean region without multiplying every layout pair.
 That cut has a real materialised-frame cost. Two BEC decoder inputs can also be
@@ -108,7 +108,7 @@ does not determine logical progress. Whole-window size prediction separately
 exercises how an enclosing layout's overhead changes a child's byte estimate
 into a useful, still fallible decision.
 
-Ashton [closed that exercise](../spikes/ikea-heterogeneous/closing.md) on
+Ashton [closed that exercise](../spikes/ikea-composition/probes/ikea-heterogeneous/closing.md) on
 2026-09-10: the probes now give Ikea enough direction for implementation of its
 basic parts. The closing assessment carries the concrete composition and
 obligation choices forward; further integration questions are not prerequisites.

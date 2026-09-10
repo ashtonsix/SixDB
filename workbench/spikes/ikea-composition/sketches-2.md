@@ -3,7 +3,7 @@
 2026-09-08. Three discussion alternatives following Ashton's clarifications.
 These explore an authoring seam; they do not select an architecture or claim
 compiler evidence. They supersede the [first sketches](sketches.md) as the
-initial comparison. The [consolidated working design](synthesis-1.md) now carries
+initial comparison. The [consolidated working design](design.md) now carries
 forward their common mechanism while retaining unresolved comparisons. These
 sketches preserve the earlier arguments. PyTorch's ordinary composition, explicit operator contracts
 and access for transformation inform the [reading](reading.md#pytorch-composition-and-transformation-surfaces).
