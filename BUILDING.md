@@ -19,7 +19,8 @@ compiler; standard-library and linker package versions remain unpinned.
 Targets use ordinary CMake plus `sixdb_target(name)` for project settings.
 Each `.cpp` compiles independently; reusable implementation goes in compiled
 libraries. [Spike builds](workbench/spikes/README.md) are opt-in and
-can build just one executable or object. There are no database targets yet.
+can build just one executable or object. [Ikea's hello example](ikea/README.md#starting-layout)
+is the first module target; database functionality is still to come.
 
 For editor support, start with `python3 workbench/tools/dev.py --add NAME`;
 see the [editor guide](workbench/tools/editors.md) for compilation-database setup

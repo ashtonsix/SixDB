@@ -1,8 +1,11 @@
 # Current composition design
 
 This is the maintained design direction from the completed basic-data-structure
-probes, consolidated through 2026-09-10. It is sufficient to start implementing
-Ikea's basic parts. Concrete APIs develop with their callers; the
+probes, consolidated through 2026-09-10. Those probes support implementing
+Ikea's basic parts. The [initial implementation sketch](../../../ikea/implementation.md)
+develops that scope with the [semantic and integration seams](semantics-and-integration.md)
+in mind; their open questions need not all be settled first. Concrete APIs
+develop with their callers; the
 [owned probes](README.md#evidence-by-question) supply evidence and limits, not
 class hierarchies or templates to copy wholesale.
 
@@ -163,9 +166,9 @@ not establish conversion or query-time payoff.
 | Block | Composable primitive with a defined physical layout; often tileable or hierarchically composable. |
 | Plane | Repeating pattern of blocks, uniform or ragged; repetition does not imply physical contiguity. |
 | Container | Contract exposing operations and getters/setters over possible physical realisations. |
-| Segment | Engine data-structure node, typically covering `2^16` key positions and bundling the containers at that depth. |
+| Segment | Engine data-structure node with at most `2^16` local positions, bundling record/summary containers. This bounds neither its logical key interval nor its byte size. |
 | Partition | Loom-owned storage unit holding contiguous bytes from multiple blocks. |
-| Record / tuple / struct | Related logical/physical groupings; distinctions remain to be worked through with row/column and variable-width callers. |
+| Record / tuple / struct | Related logical/physical groupings; distinctions remain to be worked through with row/column and variable-width callers. A record-slice is proposed as a view over selected records in a segment. |
 
 For code, use operation for requested work, kernel for a named computational
 contract, implementation/body for its realisation, stage for an occurrence in a
@@ -190,7 +193,11 @@ a required sequence of new probes:
   [value-reuse sketches](value-reuse-sketches.md) and
   [granularity alternatives](operation-granularity.md) retain useful comparisons.
 - Mutation, summary/MVCC effects and publication; Loom buffer acquisition,
-  prefetch scheduling, cancellation and suspension with live state.
+  prefetch scheduling, cancellation and suspension with live state. The
+  [new design proposal](semantics-and-integration.md) develops semantic ownership,
+  local effects and selected suspension boundaries, with alternatives and
+  counterexamples. Only the segment position bound is newly committed; the
+  proposed interfaces are not established by the earlier block probes.
 
 The [original brief](brief.md), [earlier sketches](sketches-2.md) and
 [probe reviews](predictor-review.md) preserve how the direction changed.

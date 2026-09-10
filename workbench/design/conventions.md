@@ -41,6 +41,9 @@ and evidence storage, and [AGENTS.md](../../AGENTS.md) for agent working default
 - Ordinary CMake targets and target-local dependencies, with `sixdb_target(name)`
   applying project settings. Prototypes are individually selected for
   configuration and excluded from the default build.
+- [Ikea's scaffold](../../ikea/README.md#starting-layout) starts with public
+  headers in `include/ikea/`, compiled implementation in `src/`, and the `ikea`
+  namespace. The broader header conventions below remain proposals.
 - Hidden symbol visibility, hidden inline visibility, and source-path remapping
   apply to project targets. Linux builds put functions/data in separate
   sections and discard unreferenced sections at link time. Public library

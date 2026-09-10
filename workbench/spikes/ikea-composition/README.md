@@ -7,9 +7,11 @@ evidence and maintenance.
 
 Start with the [current design](design.md) for the authoring model, vocabulary,
 interface responsibilities and open choices. The basic-data-structure probes
-are complete and support beginning implementation. This ownership move curates
-that existing direction; it does not promote the experimental classes into
-production interfaces.
+are complete. The [initial implementation sketch](../../../ikea/implementation.md)
+and [SeriesPack specification](../../../ikea/seriespack.md) now develop the first
+module scope. [Value semantics and execution integration](semantics-and-integration.md)
+inform its seams without requiring every open question to be settled first.
+The experimental classes remain evidence, not production interfaces.
 
 ## Evidence by question
 

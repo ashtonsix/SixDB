@@ -45,6 +45,13 @@ keeps this unresolved and links ReproBLAS as a possible reference. The broader
 question is which numeric contracts let several execution and maintenance
 orders produce the intended result, and what that costs.
 
+The [Ikea semantic/integration proposal](../spikes/ikea-composition/semantics-and-integration.md)
+connects this to binding: value domains, operation laws and physical encodings
+are different descriptions. An order transform can justify an encoded-domain
+comparison without justifying arithmetic there. Mutation composition likewise
+needs both physical byte coverage and semantic consequences under the selected
+numeric rules.
+
 The [Calico overview](calico.md) is a cross-cutting map of earlier work.
 Question-specific reading stays beside the question it informs.
 
@@ -112,3 +119,11 @@ Ashton [closed that exercise](../spikes/ikea-composition/probes/ikea-heterogeneo
 2026-09-10: the probes now give Ikea enough direction for implementation of its
 basic parts. The closing assessment carries the concrete composition and
 obligation choices forward; further integration questions are not prerequisites.
+
+The [integration proposal](../spikes/ikea-composition/semantics-and-integration.md)
+explores local effects, Engine-owned publication and Loom suspension with
+retained state, and records the committed maximum of `2^16` segment-local
+positions. These inform the [initial Ikea scope](../../ikea/implementation.md)
+without requiring every question to be settled first. [SeriesPack](../../ikea/seriespack.md)
+now selects a provisional packed-integer contract and a curated set of presets;
+TuplePack and StreamPack await their own spikes.
