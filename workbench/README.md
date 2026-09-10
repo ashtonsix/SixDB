@@ -16,17 +16,6 @@ Successor to Calico's `workbench`.
 | Keep selected evidence or recover a run | [Retention and recovery](tools/artifacts.md): compact Git evidence, full S3 bundles, and shared inputs |
 | Find current direction and conventions | [Design](design/README.md): cross-cutting notes |
 
-The [spike catalog](spikes/README.md) is the place to browse investigations.
-Each study's entry page connects its question to the relevant findings and
-follow-ups. The [Calico overview](notebook/calico.md) maps earlier work.
-
-A useful pattern is a short pointer when evidence moves on: “This note records
-the first probe; [the follow-up](spikes/aggregate-maintenance/dirty-buffer/README.md)
-tests the cheaper dirty-marking idea.” Older reasoning stays readable, and a
-new reader can follow what changed. Catalog entries can describe the question;
-the study holds its evolving answer.
-
-Shared helpers can be used independently as an investigation needs them. The
-[tools index](tools/README.md) has commands and runnable examples;
-[research-experience notes](design/research-experience.md) record how those
-affordances developed. Agent working defaults are in [AGENTS.md](../AGENTS.md).
+Each study's entry page points to its findings and follow-ups; the catalog
+describes the question. The [Calico overview](notebook/calico.md) maps earlier work.
+Use shared helpers as they help the investigation; a spike can start with one README.

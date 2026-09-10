@@ -1,81 +1,42 @@
 # Tools
 
-Development and experiment scripts, including benchmark-instance provisioning
-and S3 artifact storage.
+Use helpers independently as the study needs them. Commands below run from the
+repository root on Linux; prefix with `orb -m ubuntu` from the Mac.
 
-[worker.py](worker.py) runs a repository script on one temporary Spot or
-On-Demand EC2 worker, uploads its results, and keeps it ready for compatible
-follow-up jobs for five idle minutes before terminating it. Start with the
-[worker guide](workers.md) for one-command runs, machine/environment overrides,
-and detached recovery. [check_worker.py](check_worker.py) tests its lifecycle;
-[check_worker_reuse.py](check_worker_reuse.py) exercises reuse and ownership races offline.
+| Task | Tool and starting point |
+| --- | --- |
+| Run a script on EC2 | [worker.py](worker.py) · [worker guide](workers.md) |
+| Record a local experiment | [experiment.py](experiment.py) · [aggregate runner](../spikes/aggregate-maintenance/run.py) (timings), [regexp runner](../spikes/regexp-lowering/run.py) (counts) |
+| Keep or recover selected runs | [artifacts.py](artifacts.py), [evidence.py](evidence.py) · [retention guide](artifacts.md) |
+| Reuse input data | [datasets.py](datasets.py) · [catalog and examples](../datasets/README.md) |
+| Activate a spike for editing | [dev.py](dev.py) · [editor setup and diagnostics](editors.md) |
+| Check documentation navigation | `python3 workbench/tools/check_docs.py` · advisory local links, headings, and catalog hints |
 
-[check_build.py](check_build.py) verifies incremental compilation and release
-packaging using a disposable fixture. Run it with Python 3 on Linux, with the
-pinned Clang, CMake, Ninja, matching LLVM objcopy/strip tools, and `readelf`.
-It does not compile Calico or a database implementation.
+## Captured experiment runs
 
-[experiment.py](experiment.py) supplies a small local-run receipt helper:
-source snapshots excluding evidence, logged commands, hashes, and success/failure recording.
-The [aggregate delta runner](../spikes/aggregate-maintenance/run.py) is an example.
-Study-specific execution and analysis remain in the study. The worker command
-can run these scripts remotely and collect their output.
+`Run` in [experiment.py](experiment.py) records source snapshots, commands,
+hashes, and success/failure receipts. With `workspace=...`, build from
+`run.source_root` into `run.build_dir` while the live checkout remains editable.
+Stable paths and unchanged source mtimes preserve Ninja reuse; runs sharing a
+workspace serialize. A live editor refresh failure does not block captured runs.
+Snapshots exclude `build/` and spike evidence, including tracked files.
 
-Its optional `workspace` argument builds from captured sources while the live
-checkout remains editable. Stable workspace paths preserve incremental builds.
-[check_experiment.py](check_experiment.py) verifies source isolation and Ninja
-reuse with an actual build. `input()` records a reusable prepared dependency;
-`compact()` declares study-selected evidence for later retention.
+`run.input()` records a [prepared dependency](../datasets/README.md#using-inputs-in-a-spike);
+`run.compact()` selects files and an offline regeneration command for
+[retention](artifacts.md#counts-and-other-evidence). Execution and analysis stay
+in the study; the runners above are working examples.
 
-[artifacts.py](artifacts.py) retains a selected run with one command: upload
-and verify its full bundle, then write compact evidence into the spike.
-Use `preview` to inspect export sizes and ignored files before upload, and
-`verify STUDY --staged` to check the actual Git contents before committing.
-It also fetches and verifies bundles. See the [retention and recovery commands](artifacts.md).
-[evidence.py](evidence.py) supplies compact samples and their reader;
-[check_artifacts.py](check_artifacts.py) exercises retention failures and recovery offline.
-Retention also supports arbitrary compact files and recorded regeneration
-commands, with shared inputs restored automatically.
+## Changing a helper
 
-[datasets.py](datasets.py) resolves pinned source data and caches prepared
-variants independently of any one spike. Its [catalog and examples](../datasets/README.md)
-include text records and [Calico keyset corpora](../datasets/keyset-windows.md).
-[check_datasets.py](check_datasets.py)
-checks cache reuse, concurrent callers, preparation retry, and source hashes.
-[check_keyset_datasets.py](check_keyset_datasets.py) checks bitmap adapters;
-`--full` also reconstructs the installed original lists and checks Calico's
-historical window hashes (resolves pinned S3 sources on a cold cache).
+A separate Git worktree lets other tasks keep using the existing tooling while
+a change is exercised. `SIXDB_DATA_CACHE` can share prepared inputs across them.
+Run the check relevant to the change with `python3 workbench/tools/CHECK.py`:
 
-[dev.py](dev.py) maintains the stable dev compilation database for explicitly
-active spikes. It preserves existing selections, supports `--add`,
-`--remove`, and `--list`, and configures without building study targets.
-[check_dev.py](check_dev.py) checks that behavior with disposable targets and
-an intentionally broken inactive study. See the
-[first research-experience notes](../design/research-experience.md).
-
-[Editor setup](editors.md) describes the shared clangd/Pylance configuration and
-VS Code tasks. [check_ide.py](check_ide.py) screens every Git-visible C++ source
-and header with clangd, including new files and headers outside active targets.
-
-[check_docs.py](check_docs.py) offers a quick navigation sweep:
-`python3 workbench/tools/check_docs.py`. It reports missing inline Markdown link
-targets, heading fragments, and spike/dataset entries absent from their catalog.
-It includes non-ignored new files, skips sibling checkouts such as Calico, and
-makes no network requests. This is an on-demand hint, with no hook or build gate;
-it cannot decide whether a statement or conclusion is still current.
-
-For changes to shared tools, a separate Git worktree lets other tasks keep using
-the existing version while the change is exercised. Captured experiment sources
-serve a different purpose: they preserve what a run actually used. Both can
-reuse prepared inputs through `SIXDB_DATA_CACHE`; see the [dataset guide](../datasets/README.md).
-
-SixDB uses Calico's S3 bucket, `calico-fleet-artifacts`, and reuses its
-existing datasets in place. Its [fleet tooling](../../../calico/tools/fleet/README.md)
-is a reference for source snapshots, worker provisioning, remote recipes,
-collection, and cleanup. The SixDB worker implementation draws on those lessons
-with its own bootstrap, minimal scripts, and dedicated instance role/network group.
-
-Live bucket access and lifecycle rules were checked on 2026-09-07. Run bundles
-use the separate `sixdb/artifacts/sha256/` prefix in `us-east-1`; dataset
-references point to existing objects. Worker submissions have separate
-`sixdb/workers/` prefixes; their final bundles use the same artifact store.
+| Area | Check |
+| --- | --- |
+| Incremental builds and release packaging | [check_build.py](check_build.py), using the pinned Linux toolchain, LLVM objcopy/strip, and `readelf` |
+| Captured sources and incremental workspaces | [check_experiment.py](check_experiment.py), using the pinned Linux toolchain |
+| Evidence integrity and recovery | [check_artifacts.py](check_artifacts.py) |
+| Dataset caches and adapters | [check_datasets.py](check_datasets.py), [check_keyset_datasets.py](check_keyset_datasets.py); the latter's `--full` resolves S3 sources |
+| Editor configuration and diagnostics | [check_dev.py](check_dev.py), [check_ide.py](check_ide.py); see [prerequisites](editors.md) |
+| Worker lifecycle and ownership | [check_worker.py](check_worker.py), [check_worker_reuse.py](check_worker_reuse.py); both run offline |

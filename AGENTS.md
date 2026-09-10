@@ -12,8 +12,8 @@ the question. Explicit user direction takes precedence over these defaults.
   A spike result does not by itself establish a production interface or design.
 - Browse relevant existing spikes and [notebook entries](workbench/notebook/ideas.md)
   when choosing or changing direction; link findings to ideas they change or revive.
-- Keep module documents thin and steerable. Develop a question, its reading,
-  code, evidence, and findings together in its spike; one README can be enough.
+- Keep entry documents thin and steerable: replace stale advice, remove repetition,
+  and link to the owning guide or spike instead of accumulating detail here.
 - Draw on [Calico](workbench/notebook/calico.md) as prior work. Recalibrate its
   architectural bets and implement SixDB afresh rather than lifting implementation.
 

@@ -19,19 +19,10 @@ scope. This is a starting description, not an exhaustive list of constraints.
 | [shore](shore/README.md) | UI, shell, bindings, connectors, formats, and external utilities |
 | [workbench](workbench/README.md) | Science, design development, spikes, benchmarks, datasets, and tooling |
 
-Design develops in Workbench through experiments and spikes. Experiment priorities
-and architectural choices follow the signal; no implementation roadmap is fixed here.
-Agent working guidance lives in [AGENTS.md](AGENTS.md).
+Design develops through experiments; priorities and architecture follow the signal.
+The [Workbench guide](workbench/README.md) is the starting point for research,
+datasets, and experiment tools. [Calico](workbench/notebook/calico.md) is prior
+work to recalibrate, not an inherited specification.
 
-The [Workbench guide](workbench/README.md) links the research tools by task:
-[start a spike](workbench/spikes/README.md),
-[reuse a dataset](workbench/datasets/README.md), or
-[keep and recover results](workbench/tools/artifacts.md).
-
-One repository and a shared [CMake/Ninja build](BUILDING.md) support independent,
-incremental compilation of TUs, including opt-in spikes. There are no
-database implementation targets yet.
-
-[Calico references](workbench/notebook/calico.md) preserve useful starting
-points. Calico's architecture and specifications do not automatically become
-SixDB's constraints.
+See [Building](BUILDING.md) for the shared CMake/Ninja build and independent,
+incremental TU compilation, and [AGENTS.md](AGENTS.md) for agent working guidance.

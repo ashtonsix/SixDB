@@ -12,20 +12,19 @@ of search, file watching, and Python workspace analysis.
 Run `python3 workbench/tools/dev.py --add NAME` when starting a spike, or run
 `python3 workbench/tools/dev.py` after changing its CMake sources or dependencies.
 The VS Code task **SixDB: refresh editor configuration** runs the latter.
+clangd reads the resulting `build/clang/dev/compile_commands.json`.
 Only selected spikes are configured; neither command builds them. New TUs need
 to be listed in their CMake target to get its exact includes and definitions.
 Standalone prototypes still get C++23 from `.clangd`, but inferred flags cannot
 substitute for target-specific build configuration.
+Use `--remove NAME` to deactivate a study and `--list` to see active selections.
 
 Some study runners refresh this database as a convenience; others configure
 only their captured experiment. The explicit dev command works in either case.
 Experiment ISA and sanitizer choices stay in the experiment's build directory.
 
-From macOS, prefix Linux commands with `orb -m ubuntu`. The dev helper maps a
-home-directory bind-mount alias back to the native Linux home by filesystem
-identity, so launching it through the macOS mount does not change source paths
-in the editor's compilation database. Existing selections and cache settings
-are preserved.
+From macOS, prefix Linux commands with `orb -m ubuntu`; the dev helper resolves
+the mount to native Linux paths. Existing selections and cache settings are preserved.
 
 Configure optional dependencies through ordinary CMake cache variables, then
 refresh as usual. For example, the Ikea prior comparison needs its prepared,
@@ -36,9 +35,6 @@ prior=$(python3 workbench/spikes/ikea-blocks/prepare_prior.py)
 cmake --preset dev -DIKEA_PRIOR_DIR="$prior"
 python3 workbench/tools/dev.py --add ikea-blocks
 ```
-
-Keep ISA/optimization experiment variants in their separate build directories;
-the stable dev database describes local development.
 
 ## Architecture-specific headers
 

@@ -10,10 +10,8 @@ so experiments can isolate performance across cache-residence and resident-set
 size tiers. The workload controls footprint and access pattern; those tiers
 need to be established on the measured machine.
 
-The [worker command](../tools/workers.md) runs a study script on temporary EC2
-capacity. One vCPU and one build job are the starting defaults; larger memory
-or topology requirements stay explicit. Background result sync is off by
-default, and scripts retain control of measurement and CPU affinity.
+For cloud runs, the [worker guide](../tools/workers.md) covers machine selection
+and background activity that can affect measurement.
 
 Calico's [Google Benchmark pilot](../../../calico/qhash/bench/GOOGLE.md) and
 [affinity helper](../../../calico/tools/fleet/recipes/lib/microbench.sh) are
