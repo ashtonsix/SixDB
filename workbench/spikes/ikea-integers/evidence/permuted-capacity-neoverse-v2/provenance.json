@@ -1,0 +1,100 @@
+{
+  "commands": [
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cpu",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cache-context",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "assembly",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "benchmark",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "pairs-benchmark",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "config": {
+    "bench": [
+      "--",
+      "--suite",
+      "capacity",
+      "--min-power",
+      "10",
+      "--max-power",
+      "30",
+      "--power-step",
+      "10",
+      "--samples",
+      "1048576",
+      "--repetitions",
+      "3",
+      "--pmu"
+    ],
+    "check_only": false,
+    "kernels_only": true,
+    "sanitize": false,
+    "target": "neoverse-v2"
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=ikea-integers",
+    "-DIKEA_INTEGER_PRIOR_DIR=/opt/sixdb/datasets/prepared/0b8095ac84a6448549a618b26ca5d7e032694bedcd6ae19118cb3d57181de416",
+    "-DSIXDB_TUNE=neoverse-v2",
+    "-DCMAKE_CXX_FLAGS=-mcpu=neoverse-v2"
+  ],
+  "files_sha256": {
+    "cache-context.json": "fdf6cf544d801860422889f69f69e212eb639d947d6b21521a7e77d21668ebef",
+    "checks.csv": "0fe223f8f28faeb5395568b6a4f621075fd77ad48043bfbf3e1bd3208531dced",
+    "compiler.txt": "0cf7e452648b3754289200426984662d1d8d0a21d56310d301a24e11399ceab8",
+    "samples.csv": "42e92a2a526e206a85b280ebeab3360c59d33753ebccd94ba870ef017008585f",
+    "selection.json": "b70e020dcead49c1f467af125376ca7c95f49252e972cae984dd9ebca8a8bd53"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "inputs/prior": {
+      "id": "2d40a123d66f9b7af7e739cd2ca2867646bce42ba9a3feefbfbd0939bb1a4da1",
+      "key": "0b8095ac84a6448549a618b26ca5d7e032694bedcd6ae19118cb3d57181de416"
+    }
+  },
+  "platform": "Linux-7.0.0-1012-aws-aarch64-with-glibc2.39",
+  "regenerate": [],
+  "source_archive_sha256": "bb4b23466317b96784a142b2c88637e30f860970208e6c24813cb5efabfd500f",
+  "source_digest": "5c170f5a068742e23bbe20e903524bceda33d38434a26ea633293c886a5a8d42",
+  "source_unchanged": true,
+  "started_utc": "2026-09-09T18:55:07.403475+00:00",
+  "status": "complete"
+}

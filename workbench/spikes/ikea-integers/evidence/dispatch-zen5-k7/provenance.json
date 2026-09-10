@@ -1,0 +1,111 @@
+{
+  "commands": [
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cpu",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cache-context",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "assembly",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "benchmark",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "pairs-benchmark",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "config": {
+    "bench": [
+      "--",
+      "--suite",
+      "all",
+      "--layout",
+      "scan",
+      "--width",
+      "7",
+      "--min-power",
+      "10",
+      "--max-power",
+      "30",
+      "--power-step",
+      "20",
+      "--samples",
+      "1048576",
+      "--repetitions",
+      "5",
+      "--bulk-bytes",
+      "524288",
+      "--pmu"
+    ],
+    "check_only": false,
+    "kernels_only": true,
+    "sanitize": false,
+    "scan_reader": "constant-offsets",
+    "target": "zen5"
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=ikea-integers",
+    "-DIKEA_INTEGER_PRIOR_DIR=/opt/sixdb/datasets/prepared/0b8095ac84a6448549a618b26ca5d7e032694bedcd6ae19118cb3d57181de416",
+    "-DSIXDB_MARCH=znver5",
+    "-DSIXDB_TUNE=zen5",
+    "-DCMAKE_CXX_FLAGS=-DIP_SCAN_CONSTANT_OFFSETS=1"
+  ],
+  "files_sha256": {
+    "cache-context.json": "183eb54a634a96b9941856bf27425034d3d4da1fe569f770a978e96cddfdf417",
+    "checks.csv": "0fe223f8f28faeb5395568b6a4f621075fd77ad48043bfbf3e1bd3208531dced",
+    "compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "timings.csv": "49324b9b8265536b89cf084da8dca5c9607e02bdd5fe4b8635309f0b9bbe60bf"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "inputs/prior": {
+      "id": "2d40a123d66f9b7af7e739cd2ca2867646bce42ba9a3feefbfbd0939bb1a4da1",
+      "key": "0b8095ac84a6448549a618b26ca5d7e032694bedcd6ae19118cb3d57181de416"
+    }
+  },
+  "platform": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/ikea-integers/report.py",
+    "{evidence}"
+  ],
+  "source_archive_sha256": "2012c54d9cb67ee06e70a9f5800805cd8f4d7b434602c4fb66e106ed7f4ffc9b",
+  "source_digest": "d12164366f5b562b493bf4e691122b030cd97ad326d718aa6278a95405bb5786",
+  "source_unchanged": true,
+  "started_utc": "2026-09-09T19:30:52.707743+00:00",
+  "status": "complete"
+}

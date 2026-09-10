@@ -1,0 +1,100 @@
+{
+  "commands": [
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cpu",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cache-context",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "assembly",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "benchmark",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "pairs-benchmark",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "config": {
+    "bench": [
+      "--",
+      "--suite",
+      "capacity",
+      "--min-power",
+      "10",
+      "--max-power",
+      "30",
+      "--power-step",
+      "10",
+      "--samples",
+      "1048576",
+      "--repetitions",
+      "3",
+      "--pmu"
+    ],
+    "check_only": false,
+    "kernels_only": true,
+    "sanitize": false,
+    "target": "zen5"
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=ikea-integers",
+    "-DIKEA_INTEGER_PRIOR_DIR=/opt/sixdb/datasets/prepared/0b8095ac84a6448549a618b26ca5d7e032694bedcd6ae19118cb3d57181de416",
+    "-DSIXDB_MARCH=znver5",
+    "-DSIXDB_TUNE=zen5"
+  ],
+  "files_sha256": {
+    "cache-context.json": "183eb54a634a96b9941856bf27425034d3d4da1fe569f770a978e96cddfdf417",
+    "checks.csv": "0fe223f8f28faeb5395568b6a4f621075fd77ad48043bfbf3e1bd3208531dced",
+    "compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "samples.csv": "1fc0022a994ab290e628b7bad3262feb597fe5281c10b859889e92de25474888",
+    "selection.json": "7310e22e4c174f8ab7c5acca0459cdb36a165e29348508ec64316d06bfa7b7dd"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "inputs/prior": {
+      "id": "2d40a123d66f9b7af7e739cd2ca2867646bce42ba9a3feefbfbd0939bb1a4da1",
+      "key": "0b8095ac84a6448549a618b26ca5d7e032694bedcd6ae19118cb3d57181de416"
+    }
+  },
+  "platform": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39",
+  "regenerate": [],
+  "source_archive_sha256": "c548b0e5d49b5f5fc848d839e924ce49a5f7865e7f40fa825660b6e62925e775",
+  "source_digest": "5c170f5a068742e23bbe20e903524bceda33d38434a26ea633293c886a5a8d42",
+  "source_unchanged": true,
+  "started_utc": "2026-09-09T18:54:55.397609+00:00",
+  "status": "complete"
+}

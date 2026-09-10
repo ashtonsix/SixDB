@@ -1,0 +1,81 @@
+{
+  "commands": [
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cpu",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cache-context",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "comparator-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "assembly",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "config": {
+    "bench": [],
+    "check_only": true,
+    "encode_region32": false,
+    "sanitize": false,
+    "target": "avx2-qemu"
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=ikea-integers",
+    "-DIKEA_INTEGER_PRIOR_DIR=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/datasets/prepared/0b8095ac84a6448549a618b26ca5d7e032694bedcd6ae19118cb3d57181de416",
+    "-DCMAKE_SYSTEM_NAME=Linux",
+    "-DCMAKE_SYSTEM_PROCESSOR=x86_64",
+    "-DCMAKE_CXX_FLAGS=--target=x86_64-linux-gnu -march=x86-64-v3"
+  ],
+  "files_sha256": {
+    "cache-context.json": "49519b6e623ae8db49ef9afe97afaf5ae87269a318db7fed96838c1945156f74",
+    "checks.txt": "1ac00a821598dfe7c08b03666f6423ae30c4d48dd6b9f5e5afdfbe9ed8554698",
+    "comparators.txt": "3848d9d924681e9b02529d637aa4c8594e41ec7a00b07b36a4c6f70dbb9c74f7",
+    "compiler.txt": "dfb0aa39f1baf9eb2391a5b89e349f1570faa009cb0d02cfe112778cd10328fb",
+    "cpu.txt": "f989bcdf782a9088083f5a5a1c54f7d9ec4f9f48574f74897c4a5c244d08a484"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "inputs/prior": {
+      "id": "2d40a123d66f9b7af7e739cd2ca2867646bce42ba9a3feefbfbd0939bb1a4da1",
+      "key": "0b8095ac84a6448549a618b26ca5d7e032694bedcd6ae19118cb3d57181de416"
+    }
+  },
+  "platform": "Linux-7.0.14-orbstack-00380-ga7e0a2dc9535-aarch64-with-glibc2.42",
+  "regenerate": [],
+  "source_archive_sha256": "55a698a1b2596c8ff6ba6da4a87f46463a7f7cf2c720f305098fbde85d5ab627",
+  "source_digest": "83167cc2bdd5ce777a8afcbb34062bed4c4682ef69c282bfdba8d88e36df527d",
+  "source_unchanged": true,
+  "started_utc": "2026-09-09T23:23:24.662084+00:00",
+  "status": "complete"
+}

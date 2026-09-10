@@ -1,0 +1,100 @@
+{
+  "commands": [
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cpu",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cache-context",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "comparator-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "assembly",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "benchmark",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "report",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "config": {
+    "bench": [
+      "--",
+      "--pmu"
+    ],
+    "check_only": false,
+    "encode_region32": false,
+    "sanitize": false,
+    "target": "neoverse-v2"
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=ikea-integers",
+    "-DIKEA_INTEGER_PRIOR_DIR=/opt/sixdb/datasets/prepared/0b8095ac84a6448549a618b26ca5d7e032694bedcd6ae19118cb3d57181de416",
+    "-DSIXDB_TUNE=neoverse-v2",
+    "-DCMAKE_CXX_FLAGS=-mcpu=neoverse-v2"
+  ],
+  "files_sha256": {
+    "cache-context.json": "fdf6cf544d801860422889f69f69e212eb639d947d6b21521a7e77d21668ebef",
+    "checks.txt": "8c6192a261992699205e2380c82a43178c3cd3d7bba63c59342f3c5df19f3f53",
+    "comparators.txt": "3848d9d924681e9b02529d637aa4c8594e41ec7a00b07b36a4c6f70dbb9c74f7",
+    "compiler.txt": "0cf7e452648b3754289200426984662d1d8d0a21d56310d301a24e11399ceab8",
+    "cpu.txt": "62adae95562af0d83b37dbfe7304b3b383f92a3c82d9c0fdb4a455f61bc3eec5",
+    "summary.csv": "9c1c71999f1b84dc44eac1307754ff7a36f1aca322910499e4d6f41a7534820a",
+    "summary.md": "eb3a2a15d4348ef218b322a7cc11a369cca8063dc614d6b2a17c2e576b15eee1",
+    "timings.csv": "e5d512b4a9d8a0ccf17cd98941766bf994d665ac369338803da5c97ed96f2249"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "inputs/prior": {
+      "id": "2d40a123d66f9b7af7e739cd2ca2867646bce42ba9a3feefbfbd0939bb1a4da1",
+      "key": "0b8095ac84a6448549a618b26ca5d7e032694bedcd6ae19118cb3d57181de416"
+    }
+  },
+  "platform": "Linux-7.0.0-1012-aws-aarch64-with-glibc2.39",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/ikea-integers/wide56/report.py",
+    "{evidence}"
+  ],
+  "source_archive_sha256": "96ed6bd1fe7a33d33b6f9ecfc7a91826734c81c149dfce5d960c6ebb2b349814",
+  "source_digest": "87b97850e34563b7f538d3ded6ef368971c76ff4c9e78488b7f320a1362b3ad1",
+  "source_unchanged": true,
+  "started_utc": "2026-09-09T23:26:03.809383+00:00",
+  "status": "complete"
+}

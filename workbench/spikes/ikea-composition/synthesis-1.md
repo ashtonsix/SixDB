@@ -9,6 +9,13 @@ separation of responsibilities below are provisional choices to carry forward;
 the explicitly open comparisons remain open. Concrete C++ interfaces, carrier
 families and production schemas have not been selected.
 
+**Later evidence, 2026-09-09:** the [integer composition exercise](../ikea-integers/composition/README.md)
+now tests reuse of one decoded value by two consumers, separate tail format and
+parent placement, and explicit compiled-program admission. Statements below
+about demonstrated mechanisms describe the first probe. The follow-up keeps
+its own findings and limitations; it does not settle general carrier allocation,
+progressive filtering, or Engine substitution.
+
 Ashton will drive the next probe: packed integers, then use in a PFoR-like
 structure and bitset metadata, providing a substrate for progressive filtering
 and nested substitution. The [probe connection](#next-probe-packed-integers)

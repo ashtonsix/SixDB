@@ -1,0 +1,112 @@
+{
+  "commands": [
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cpu",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cache-context",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "assembly",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "composition-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "composition-assembly",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "benchmark",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "pairs-benchmark",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "composition-benchmark",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "config": {
+    "bench": [
+      "--",
+      "--suite",
+      "bulk",
+      "--repetitions",
+      "5",
+      "--bulk-bytes",
+      "524288",
+      "--provider",
+      "all",
+      "--pmu"
+    ],
+    "check_only": false,
+    "kernels_only": false,
+    "sanitize": false,
+    "target": "neoverse-v2"
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=ikea-integers",
+    "-DIKEA_INTEGER_PRIOR_DIR=/opt/sixdb/datasets/prepared/0b8095ac84a6448549a618b26ca5d7e032694bedcd6ae19118cb3d57181de416",
+    "-DSIXDB_TUNE=neoverse-v2",
+    "-DCMAKE_CXX_FLAGS=-mcpu=neoverse-v2"
+  ],
+  "files_sha256": {
+    "cache-context.json": "fdf6cf544d801860422889f69f69e212eb639d947d6b21521a7e77d21668ebef",
+    "checks.csv": "0fe223f8f28faeb5395568b6a4f621075fd77ad48043bfbf3e1bd3208531dced",
+    "compiler.txt": "0cf7e452648b3754289200426984662d1d8d0a21d56310d301a24e11399ceab8",
+    "composition-checks.txt": "b945239f2aae29aa6e528b2dd7041c0c84294ecc47175f7188169058c19479a0",
+    "composition-timings.csv": "01a62dcca4e7fc4907f4c5d43027e48822093805f26d4f552a9fef4111423559",
+    "pairs-timings.csv": "90429ec1a27534ff696a8a26110a239866a757b8ad09ea06a9c12406a129c988"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "inputs/prior": {
+      "id": "2d40a123d66f9b7af7e739cd2ca2867646bce42ba9a3feefbfbd0939bb1a4da1",
+      "key": "0b8095ac84a6448549a618b26ca5d7e032694bedcd6ae19118cb3d57181de416"
+    }
+  },
+  "platform": "Linux-7.0.0-1012-aws-aarch64-with-glibc2.39",
+  "regenerate": [],
+  "source_archive_sha256": "9e66e4c53e42ca76bedcb237ed28086d2602ee758f3d183727c2e04838019b94",
+  "source_digest": "4eb3d7c3ae05a11f25624c38fb1c84bf2a5b796cec37cc0af84158d8b0f6c86d",
+  "source_unchanged": true,
+  "started_utc": "2026-09-09T18:18:47.728361+00:00",
+  "status": "complete"
+}

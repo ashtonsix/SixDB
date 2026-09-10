@@ -1,0 +1,27 @@
+{
+  "commands": [
+    {
+      "name": "audit",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "config": {
+    "kind": "exact byte dependency audit, including continuous high-fragment-first wire"
+  },
+  "configure_flags": [],
+  "files_sha256": {
+    "audit-checks.json": "91498dbfc9d8f0910b1161c689918e24e0186caa12bcdd590437d66b5551ce25",
+    "cases.csv": "128fb1c387163268b37fdb43cd7f815132751f321ecbed17b2b17edd2414b653"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {},
+  "platform": "Linux-7.0.14-orbstack-00380-ga7e0a2dc9535-aarch64-with-glibc2.42",
+  "regenerate": [],
+  "source_archive_sha256": "bd35014d37784b596abcdeb8bca4c19348ca902ec4b1179f4a385b3e1bf4bb72",
+  "source_digest": "0242057131f036d9675302ead00151fc1c05a2e0017972debe29d984d40ace62",
+  "source_unchanged": true,
+  "started_utc": "2026-09-09T19:23:28.447172+00:00",
+  "status": "complete"
+}

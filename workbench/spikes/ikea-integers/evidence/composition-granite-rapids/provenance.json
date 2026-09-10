@@ -1,0 +1,112 @@
+{
+  "commands": [
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cpu",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cache-context",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "assembly",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "composition-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "composition-assembly",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "benchmark",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "pairs-benchmark",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "composition-benchmark",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "config": {
+    "bench": [
+      "--",
+      "--suite",
+      "bulk",
+      "--repetitions",
+      "5",
+      "--bulk-bytes",
+      "524288",
+      "--provider",
+      "all",
+      "--pmu"
+    ],
+    "check_only": false,
+    "kernels_only": false,
+    "sanitize": false,
+    "target": "granite-rapids"
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=ikea-integers",
+    "-DIKEA_INTEGER_PRIOR_DIR=/opt/sixdb/datasets/prepared/0b8095ac84a6448549a618b26ca5d7e032694bedcd6ae19118cb3d57181de416",
+    "-DSIXDB_MARCH=graniterapids",
+    "-DSIXDB_TUNE=granite-rapids"
+  ],
+  "files_sha256": {
+    "cache-context.json": "97c3fde4dd62964cf2ab6344f5daf210fe7f9b3ae2161c8f35ff6e5a4d138046",
+    "checks.csv": "0fe223f8f28faeb5395568b6a4f621075fd77ad48043bfbf3e1bd3208531dced",
+    "compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "composition-checks.txt": "b945239f2aae29aa6e528b2dd7041c0c84294ecc47175f7188169058c19479a0",
+    "composition-timings.csv": "a623d9a99df8c3cf63c9b2e93fd809f5a03d07ca51f579ef5fb51fc40f5c4873",
+    "pairs-timings.csv": "83ccc3be980531d4687ee441bc6b29c8dc466beddf6d28e72c2c57ee99a05c21"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "inputs/prior": {
+      "id": "2d40a123d66f9b7af7e739cd2ca2867646bce42ba9a3feefbfbd0939bb1a4da1",
+      "key": "0b8095ac84a6448549a618b26ca5d7e032694bedcd6ae19118cb3d57181de416"
+    }
+  },
+  "platform": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39",
+  "regenerate": [],
+  "source_archive_sha256": "5ad535be62ee7468216362f3576cc0004b69a76e1febc894e1c8a11a4aba4b23",
+  "source_digest": "4eb3d7c3ae05a11f25624c38fb1c84bf2a5b796cec37cc0af84158d8b0f6c86d",
+  "source_unchanged": true,
+  "started_utc": "2026-09-09T18:18:29.194438+00:00",
+  "status": "complete"
+}

@@ -7,6 +7,12 @@ The [second sketches](sketches-2.md) and [first sketches](sketches.md) retain
 the earlier alternatives; they are not competing current baselines.
 [Reading](reading.md) records the orientation and questions for investigation.
 
+**Latest investigation, 2026-09-10:** [operation granularity and curated
+composition](operation-granularity.md) compares compilation boundaries, unequal
+native grains, multiple sources and block obligations across the integer,
+bitset, row-filter, aggregate and Xmem case studies. It investigates Ashton's
+`A × B + C × D` direction while leaving the concrete interface open.
+
 **Current direction, 2026-09-09.** Recordable composition functions, optional
 named components and explicit implementation/rewrite knowledge form the working
 authoring model. Carrier allocation, deep child/dependency representation,
@@ -15,6 +21,11 @@ driving a [packed-integer probe](synthesis-1.md#next-probe-packed-integers), wit
 PFoR-like reconstruction and bitset metadata as intended customers and further
 progressive-filtering/nested-substitution work in view. The existing bitset
 probe supplies evidence, not a mandatory framework for that work.
+
+**Further evidence, 2026-09-09:** the [integer composition exercise](../ikea-integers/composition/README.md)
+uses one decoded value in two consumers and varies parent placement separately
+from the tail format. Its bounded result extends the evidence available after
+the first probe; the study records its limits and subsequent measurements.
 
 **Review remit, corrected 2026-09-09.** This task advises on the composition
 principles and authoring designs agreed with Ashton, and actively uses concrete
