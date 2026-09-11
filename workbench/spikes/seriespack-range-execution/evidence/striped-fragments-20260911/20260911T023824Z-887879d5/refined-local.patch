@@ -1,0 +1,97 @@
+--- before/native.cpp
++++ after/native.cpp
+@@ -18,6 +18,8 @@
+ 
+ namespace ikea::seriespack::detail {
+ namespace {
++
++#include "clipped_store.h"
+ 
+ // Target adapters retain actual ISA values. They are compile-time spelling
+ // reuse, never a runtime carrier or virtual operation interface.
+@@ -252,17 +254,20 @@
+ }
+ 
+ template<class Ops, unsigned W, geometry G, unsigned H, class U, unsigned Count, unsigned TailBegin = 0,
+-         class ByteVector>
++         bool Clipped = false, class ByteVector>
+ [[gnu::always_inline]] inline void finish_region(const std::uint8_t* payload,
+-    const std::uint8_t* head0, const std::uint8_t* head1, unsigned first, U* output, ByteVector tail) {
++    const std::uint8_t* head0, const std::uint8_t* head1, unsigned first, U* output, ByteVector tail,
++    unsigned skip = 0, unsigned count = Count) {
+     constexpr unsigned L = sizeof(U), Q = W / 8, R = W % 8;
+-    if constexpr (L == 1 && Q == 0 && H == 0) {
++    if constexpr (L == 1 && Q == 0 && H == 0 && !Clipped) {
+         range_regions::store_bytes<Count>(reinterpret_cast<std::uint8_t*>(output),
+             Ops::template byte_suffix<TailBegin>(tail));
+     } else {
+         constexpr unsigned N = std::min(8u, Ops::register_bytes / L);
+         static_for<Count / N>([&](auto part) {
+             constexpr unsigned offset = part * N;
++            if constexpr (Clipped)
++                if (skip >= offset + N || skip + count <= offset) return;
+             auto value = Ops::template expand<L, TailBegin + offset>(tail);
+             if constexpr (Q != 0) {
+                 const auto body = Ops::template load<Q, L, N>(
+@@ -275,7 +280,16 @@
+                     high = Ops::template join<L, 8>(high, Ops::template load<1, L, N>(head1 + first + offset));
+                 value = Ops::template join<L, W>(high, value);
+             }
+-            Ops::template store<L, L, N>(reinterpret_cast<std::uint8_t*>(output + offset), value);
++            if constexpr (Clipped) {
++                const unsigned active_begin = std::max(skip, offset);
++                const unsigned active_end = std::min(skip + count, offset + N);
++                if (active_begin < active_end)
++                    clipped_store::put<Ops, L, N>(reinterpret_cast<std::uint8_t*>(
++                        output + (active_begin - skip)), value,
++                        active_begin - offset, active_end - active_begin);
++            } else {
++                Ops::template store<L, L, N>(reinterpret_cast<std::uint8_t*>(output + offset), value);
++            }
+         });
+     }
+ }
+@@ -298,26 +312,26 @@
+     auto i = unsigned(rows.begin % T);
+     const unsigned end = i + unsigned(rows.size());
+     if constexpr (G == geometry::striped) {
+-        while (end - i >= 16) {
+-            if (i % 32 <= 16) {
++        // Each residual window stays in its 32-row group. Other children
++        // retain their independently resolved tile bases. A clipped window
++        // may read admitted neighbors, but writes only the requested objects.
++        for (;;) {
++            const unsigned lane = i % 32;
++            unsigned take;
++            if (end - i >= 16 && lane <= 16) {
++                take = 16;
+                 const auto tail = range_regions::striped<W>(payload, i);
+                 finish_region<Ops, W, G, H, U, 16>(payload, head0, head1, i, output, tail);
+-                i += 16;
+-                output += 16;
+             } else {
+-                const auto value = get_arithmetic<W, G>(payload, i);
+-                std::uint64_t high = 0;
+-                if constexpr (H != 0) high = head0[i];
+-                if constexpr (H == 16) high = (high << 8) | head1[i];
+-                *output++ = static_cast<U>(value | (high << W));
+-                ++i;
+-            }
+-        }
+-        if (end - i >= 8 && i % 32 <= 24) {
+-            const auto tail = range_regions::striped<W, 8>(payload, i);
+-            finish_region<Ops, W, G, H, U, 8>(payload, head0, head1, i, output, tail);
+-            i += 8;
+-            output += 8;
++                const unsigned window = i - lane + std::min(lane, 16u);
++                take = std::min({end - i, 16u, 32u - lane});
++                const auto tail = range_regions::striped<W>(payload, window);
++                finish_region<Ops, W, G, H, U, 16, 0, true>(
++                    payload, head0, head1, window, output, tail, i - window, take);
++            }
++            i += take;
++            if (i == end) return;
++            output += take;
+         }
+     } else {
+         constexpr unsigned N = Ops::template traits<W, G, sizeof(U)>::lanes;

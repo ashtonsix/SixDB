@@ -1,0 +1,904 @@
+{
+  "scope": "Separate external endpoints take every native input vector in registers; no source reads or decoder included.",
+  "limits": "No performance measurement, integrated caller lowering claim, or AVX512 execution check.",
+  "all_42_endpoints_no_calls_no_stack_staging_exact_output": true,
+  "profiles": {
+    "neon": {
+      "endpoints": [
+        {
+          "name": "neon_n8_w1_o4",
+          "count": 8,
+          "working_lane_bytes": 1,
+          "output_bytes": 4,
+          "instruction_count_including_return": 8,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 2,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "neon_n8_w2_o4",
+          "count": 8,
+          "working_lane_bytes": 2,
+          "output_bytes": 4,
+          "instruction_count_including_return": 6,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 1,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "neon_n8_w4_o4",
+          "count": 8,
+          "working_lane_bytes": 4,
+          "output_bytes": 4,
+          "instruction_count_including_return": 2,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "neon_n8_w1_o8",
+          "count": 8,
+          "working_lane_bytes": 1,
+          "output_bytes": 8,
+          "instruction_count_including_return": 15,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ],
+            [
+              32,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 4,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "neon_n8_w2_o8",
+          "count": 8,
+          "working_lane_bytes": 2,
+          "output_bytes": 8,
+          "instruction_count_including_return": 15,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ],
+            [
+              32,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 4,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "neon_n8_w4_o8",
+          "count": 8,
+          "working_lane_bytes": 4,
+          "output_bytes": 8,
+          "instruction_count_including_return": 9,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ],
+            [
+              32,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 1,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "neon_n8_w8_o8",
+          "count": 8,
+          "working_lane_bytes": 8,
+          "output_bytes": 8,
+          "instruction_count_including_return": 3,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ],
+            [
+              32,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "neon_n16_w1_o4",
+          "count": 16,
+          "working_lane_bytes": 1,
+          "output_bytes": 4,
+          "instruction_count_including_return": 15,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ],
+            [
+              32,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 4,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "neon_n16_w2_o4",
+          "count": 16,
+          "working_lane_bytes": 2,
+          "output_bytes": 4,
+          "instruction_count_including_return": 9,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ],
+            [
+              32,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 1,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "neon_n16_w4_o4",
+          "count": 16,
+          "working_lane_bytes": 4,
+          "output_bytes": 4,
+          "instruction_count_including_return": 3,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ],
+            [
+              32,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "neon_n16_w1_o8",
+          "count": 16,
+          "working_lane_bytes": 1,
+          "output_bytes": 8,
+          "instruction_count_including_return": 29,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ],
+            [
+              32,
+              32
+            ],
+            [
+              64,
+              32
+            ],
+            [
+              96,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 8,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "neon_n16_w2_o8",
+          "count": 16,
+          "working_lane_bytes": 2,
+          "output_bytes": 8,
+          "instruction_count_including_return": 21,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ],
+            [
+              32,
+              32
+            ],
+            [
+              64,
+              32
+            ],
+            [
+              96,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 4,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "neon_n16_w4_o8",
+          "count": 16,
+          "working_lane_bytes": 4,
+          "output_bytes": 8,
+          "instruction_count_including_return": 15,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ],
+            [
+              32,
+              32
+            ],
+            [
+              64,
+              32
+            ],
+            [
+              96,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 1,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "neon_n16_w8_o8",
+          "count": 16,
+          "working_lane_bytes": 8,
+          "output_bytes": 8,
+          "instruction_count_including_return": 5,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ],
+            [
+              32,
+              32
+            ],
+            [
+              64,
+              32
+            ],
+            [
+              96,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        }
+      ],
+      "assembly_sha256": "4955f1398cc3a05d713dedb4e05f991f97790fba96bf04d99fb91b8f9a78da81"
+    },
+    "avx2": {
+      "endpoints": [
+        {
+          "name": "avx2_n8_w1_o4",
+          "count": 8,
+          "working_lane_bytes": 1,
+          "output_bytes": 4,
+          "instruction_count_including_return": 4,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx2_n8_w2_o4",
+          "count": 8,
+          "working_lane_bytes": 2,
+          "output_bytes": 4,
+          "instruction_count_including_return": 4,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx2_n8_w4_o4",
+          "count": 8,
+          "working_lane_bytes": 4,
+          "output_bytes": 4,
+          "instruction_count_including_return": 3,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx2_n8_w1_o8",
+          "count": 8,
+          "working_lane_bytes": 1,
+          "output_bytes": 8,
+          "instruction_count_including_return": 7,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ],
+            [
+              32,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx2_n8_w2_o8",
+          "count": 8,
+          "working_lane_bytes": 2,
+          "output_bytes": 8,
+          "instruction_count_including_return": 7,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ],
+            [
+              32,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx2_n8_w4_o8",
+          "count": 8,
+          "working_lane_bytes": 4,
+          "output_bytes": 8,
+          "instruction_count_including_return": 7,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ],
+            [
+              32,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx2_n8_w8_o8",
+          "count": 8,
+          "working_lane_bytes": 8,
+          "output_bytes": 8,
+          "instruction_count_including_return": 4,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ],
+            [
+              32,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx2_n16_w1_o4",
+          "count": 16,
+          "working_lane_bytes": 1,
+          "output_bytes": 4,
+          "instruction_count_including_return": 7,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ],
+            [
+              32,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx2_n16_w2_o4",
+          "count": 16,
+          "working_lane_bytes": 2,
+          "output_bytes": 4,
+          "instruction_count_including_return": 7,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ],
+            [
+              32,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx2_n16_w4_o4",
+          "count": 16,
+          "working_lane_bytes": 4,
+          "output_bytes": 4,
+          "instruction_count_including_return": 4,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ],
+            [
+              32,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx2_n16_w1_o8",
+          "count": 16,
+          "working_lane_bytes": 1,
+          "output_bytes": 8,
+          "instruction_count_including_return": 13,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ],
+            [
+              32,
+              32
+            ],
+            [
+              64,
+              32
+            ],
+            [
+              96,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx2_n16_w2_o8",
+          "count": 16,
+          "working_lane_bytes": 2,
+          "output_bytes": 8,
+          "instruction_count_including_return": 13,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ],
+            [
+              32,
+              32
+            ],
+            [
+              64,
+              32
+            ],
+            [
+              96,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx2_n16_w4_o8",
+          "count": 16,
+          "working_lane_bytes": 4,
+          "output_bytes": 8,
+          "instruction_count_including_return": 12,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ],
+            [
+              32,
+              32
+            ],
+            [
+              64,
+              32
+            ],
+            [
+              96,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx2_n16_w8_o8",
+          "count": 16,
+          "working_lane_bytes": 8,
+          "output_bytes": 8,
+          "instruction_count_including_return": 6,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ],
+            [
+              32,
+              32
+            ],
+            [
+              64,
+              32
+            ],
+            [
+              96,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        }
+      ],
+      "assembly_sha256": "c952bd030954c3ba3fec585df0a1bdc7ca0c4a109b0b49270499f04805bbdd92"
+    },
+    "avx512": {
+      "endpoints": [
+        {
+          "name": "avx512_n8_w1_o4",
+          "count": 8,
+          "working_lane_bytes": 1,
+          "output_bytes": 4,
+          "instruction_count_including_return": 4,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx512_n8_w2_o4",
+          "count": 8,
+          "working_lane_bytes": 2,
+          "output_bytes": 4,
+          "instruction_count_including_return": 4,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx512_n8_w4_o4",
+          "count": 8,
+          "working_lane_bytes": 4,
+          "output_bytes": 4,
+          "instruction_count_including_return": 3,
+          "native_output_stores": [
+            [
+              0,
+              32
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx512_n8_w1_o8",
+          "count": 8,
+          "working_lane_bytes": 1,
+          "output_bytes": 8,
+          "instruction_count_including_return": 4,
+          "native_output_stores": [
+            [
+              0,
+              64
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx512_n8_w2_o8",
+          "count": 8,
+          "working_lane_bytes": 2,
+          "output_bytes": 8,
+          "instruction_count_including_return": 4,
+          "native_output_stores": [
+            [
+              0,
+              64
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx512_n8_w4_o8",
+          "count": 8,
+          "working_lane_bytes": 4,
+          "output_bytes": 8,
+          "instruction_count_including_return": 4,
+          "native_output_stores": [
+            [
+              0,
+              64
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx512_n8_w8_o8",
+          "count": 8,
+          "working_lane_bytes": 8,
+          "output_bytes": 8,
+          "instruction_count_including_return": 3,
+          "native_output_stores": [
+            [
+              0,
+              64
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx512_n16_w1_o4",
+          "count": 16,
+          "working_lane_bytes": 1,
+          "output_bytes": 4,
+          "instruction_count_including_return": 4,
+          "native_output_stores": [
+            [
+              0,
+              64
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx512_n16_w2_o4",
+          "count": 16,
+          "working_lane_bytes": 2,
+          "output_bytes": 4,
+          "instruction_count_including_return": 4,
+          "native_output_stores": [
+            [
+              0,
+              64
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx512_n16_w4_o4",
+          "count": 16,
+          "working_lane_bytes": 4,
+          "output_bytes": 4,
+          "instruction_count_including_return": 3,
+          "native_output_stores": [
+            [
+              0,
+              64
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx512_n16_w1_o8",
+          "count": 16,
+          "working_lane_bytes": 1,
+          "output_bytes": 8,
+          "instruction_count_including_return": 7,
+          "native_output_stores": [
+            [
+              0,
+              64
+            ],
+            [
+              64,
+              64
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx512_n16_w2_o8",
+          "count": 16,
+          "working_lane_bytes": 2,
+          "output_bytes": 8,
+          "instruction_count_including_return": 7,
+          "native_output_stores": [
+            [
+              0,
+              64
+            ],
+            [
+              64,
+              64
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx512_n16_w4_o8",
+          "count": 16,
+          "working_lane_bytes": 4,
+          "output_bytes": 8,
+          "instruction_count_including_return": 7,
+          "native_output_stores": [
+            [
+              0,
+              64
+            ],
+            [
+              64,
+              64
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        },
+        {
+          "name": "avx512_n16_w8_o8",
+          "count": 16,
+          "working_lane_bytes": 8,
+          "output_bytes": 8,
+          "instruction_count_including_return": 4,
+          "native_output_stores": [
+            [
+              0,
+              64
+            ],
+            [
+              64,
+              64
+            ]
+          ],
+          "read_only_table_constant_loads": 0,
+          "calls": [],
+          "stack_operands": [],
+          "output_extent_exact": true
+        }
+      ],
+      "assembly_sha256": "3b266bead577a0af889836d7c93c7e6f276284d87eac111bfe2386ec151c2333"
+    }
+  }
+}

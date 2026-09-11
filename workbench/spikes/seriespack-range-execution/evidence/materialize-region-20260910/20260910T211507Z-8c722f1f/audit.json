@@ -1,0 +1,48 @@
+{
+  "actual_invocations": [
+    "0-before-bulk",
+    "0-before-resident",
+    "0-before-runtime-series",
+    "1-after-bulk",
+    "1-after-resident",
+    "1-after-runtime-series",
+    "1-after-runtime-authored",
+    "2-after-bulk",
+    "2-after-resident",
+    "2-after-runtime-authored",
+    "2-after-runtime-series",
+    "3-before-bulk",
+    "3-before-resident",
+    "3-before-runtime-series"
+  ],
+  "all_native_guards": true,
+  "archived_file_inventory": {
+    "files": 128,
+    "full_audit": {
+      "artifact": "../../../../ikea-composition/archive/validation-20260911.json",
+      "member": "evidence/materialize-region-20260910/20260910T211507Z-8c722f1f/audit.json",
+      "sha256": "9f32f1ab6ff7aaa684cb9864a5a0c3f65c6c8ce1e31e5c5c5f4e3a162c453798"
+    },
+    "note": "Full file-hash inventory is in the verified archive; all other audit fields are retained here."
+  },
+  "baseline_relink_identical": true,
+  "cached_source_unchanged": true,
+  "capture": "e540ffe88abdbc550e081e38d731089f0b23c0cfc42cdae1a33fff9aa3c7367d",
+  "captured_files": 516,
+  "independent_runtime_query_checksums": true,
+  "job": "20260910T211507Z-8c722f1f",
+  "link_input_limit": "Remote original/system inputs rehashed by successful runner; returned binaries, source and overlay independently rehashed here.",
+  "link_inputs": 36,
+  "provider_order": {
+    "1": [
+      "series",
+      "authored"
+    ],
+    "2": [
+      "authored",
+      "series"
+    ]
+  },
+  "samples": 2292,
+  "status": "passed"
+}

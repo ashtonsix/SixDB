@@ -1,0 +1,20 @@
+{
+  "avx2": {
+    "7": {
+      "instruction_relocation_assembly_identical": true
+    },
+    "23": {
+      "instruction_relocation_assembly_identical": true
+    }
+  },
+  "avx512": {
+    "7": {
+      "instruction_relocation_assembly_identical": true
+    },
+    "23": {
+      "instruction_relocation_assembly_identical": true
+    }
+  },
+  "limits": "Matched full-feature x86 profile: AVX2-labelled crossing callback may use VBMI/VL. Pure AVX2 fallback passed QEMU guards but has no timing in this job.",
+  "crossing_read_admission": "Each actual tail dependency admits its complete32-byte residual plane. Body/head windows stay within their own64-row tile. Head-only projection never calls the tail reader."
+}

@@ -1,0 +1,16 @@
+{
+  "compiler": "Clang21.1.8, C++23; exact target-specific flags in checks.json and inline-boundary.json.",
+  "files_sha256": {
+    "artifact.json": "460c7141140da598de149fad87caf3762c01aee3ebb23fddf7d06b5005cb3804",
+    "callback-codegen.json": "833a7bd8da3f0511e536f059fdda69c391052b00af62d69b91dbe514d7c20a29",
+    "checks.json": "f54a513f97178d14475578cda2f43fd0c19021a3b6af37dfe99767288fd17864",
+    "inline-boundary.json": "a5141b6a6175cb64318a06212da3ab31f01c812b167746e555f5b8410f07ddfc",
+    "sink-checks.json": "678a8f3bee4bedbac7b9e7f0efbfee21733df8ee2befcde6a7558008fcdac8d4",
+    "sink-codegen.json": "401b9566871b8f768d47c383bb98fe2c91ab513d00905d006e5b7bcc18c50871"
+  },
+  "format": 1,
+  "full_bundle": "artifact.json",
+  "native_avx512_execution": "Compiled only in these local records; subsequent worker evidence must establish native execution.",
+  "recovery_manifest": "manifest.json",
+  "scope": "Ignored expression-consuming runtime materializer prototype; local semantic and code-generation evidence, no timing claim."
+}

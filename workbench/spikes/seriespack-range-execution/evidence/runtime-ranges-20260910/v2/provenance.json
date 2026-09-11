@@ -1,0 +1,791 @@
+{
+  "cases": 360,
+  "counters": [
+    "iterations",
+    "repetition_index",
+    "checksum",
+    "logical_values",
+    "encoded_bytes",
+    "placement_bytes",
+    "payload_stride",
+    "head0_stride",
+    "head1_stride",
+    "values_per_item",
+    "io_bytes_per_value",
+    "query_bytes",
+    "queries_per_iteration",
+    "sink_bytes_per_iteration",
+    "query_hash_lo",
+    "query_hash_hi",
+    "bulk_input_output_bytes"
+  ],
+  "files_sha256": {
+    "after-runtime-linked.asm": "6169790dfcd39170ab28f1f7f1c927476d698f80a57ace2f020dbe84b6a0dd70",
+    "audit.json": "265d8011630f72a8403da66cbf9ed3544e5d7575f1b91a10a838484a433c1bd8",
+    "before-runtime-linked.asm": "4558e5a07c1fc65d274f5c14b3068bf2fdf9becb3043b12416b94cc5e5536cd5",
+    "comparisons.csv": "09d10f097782841dff7641974db7f7da27dcdca521710d4fe67430d334792ec9",
+    "comparisons.json": "c8b01e29672158991c917d84c1dbc519c5bdcaf71f13d767c5484534d9f0e28b",
+    "linked-caller-audit.json": "12b270b2fedb26a96cd77bff9f8894090eb8a839ba938882b2303a72303fd773",
+    "query-models.json": "5ba1a11aeb70bf5ba49b59c3b00a69ab78565955cd6f263cd2641a8475dd6eff",
+    "summary.json": "d5af62a94514270e0c53559447e05c34c35ea0f6f4d61979c180765faf54ebe7"
+  },
+  "filter": null,
+  "format": 1,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "0-before-bulk": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:55:51+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-runtime-ranges/neoverse-v2/neon/before-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-228",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.819824,
+          0.427246
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "neon",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T204747Z-aadd1c29/results/scalar-range-abi/neon/0-before-bulk.json",
+      "sha256": "698669851bcd344916e396c135490e94787ae408abdc7f648370b41a6ee6c4ba"
+    },
+    "0-before-resident": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:55:44+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-runtime-ranges/neoverse-v2/neon/before-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-228",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.816406,
+          0.423828
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "neon",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T204747Z-aadd1c29/results/scalar-range-abi/neon/0-before-resident.json",
+      "sha256": "527c54a8412695a89199ab3f9cf55928917bcd602a9d38e99e7dc52dd401c939"
+    },
+    "0-before-runtime": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:55:39+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-runtime-ranges/neoverse-v2/neon/before-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-228",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.812988,
+          0.42041
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "neon",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T204747Z-aadd1c29/results/scalar-range-abi/neon/0-before-runtime.json",
+      "sha256": "c868c54cd7c3f85a6bf3c5adee0a0922f4ce4d178966211ecdb288760587b68a"
+    },
+    "1-after-bulk": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:56:04+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-runtime-ranges/neoverse-v2/neon/after-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-228",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.82959,
+          0.4375
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "neon",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T204747Z-aadd1c29/results/scalar-range-abi/neon/1-after-bulk.json",
+      "sha256": "b9f197dc46efb5bc77b91a569061b50891cfef27b9827f66cde21ffec8d1e62a"
+    },
+    "1-after-resident": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:55:58+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-runtime-ranges/neoverse-v2/neon/after-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-228",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.82666,
+          0.434082
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "neon",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T204747Z-aadd1c29/results/scalar-range-abi/neon/1-after-resident.json",
+      "sha256": "bdfdcf498b0403aebde60c6b0dcc06ba17bbda9d61bba1f4cc9abdd534254eb2"
+    },
+    "1-after-runtime": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:55:52+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-runtime-ranges/neoverse-v2/neon/after-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-228",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.823242,
+          0.430664
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "neon",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T204747Z-aadd1c29/results/scalar-range-abi/neon/1-after-runtime.json",
+      "sha256": "356af1a90988d27f98b0ca63172fbedba92196442aa5256b105c3178d018bb87"
+    },
+    "2-after-bulk": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:56:18+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-runtime-ranges/neoverse-v2/neon/after-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-228",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.838379,
+          0.447754
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "neon",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T204747Z-aadd1c29/results/scalar-range-abi/neon/2-after-bulk.json",
+      "sha256": "e632c7bc7400671f6d71393cd8472ac3d336376349765821aa76d4dc87fa6d09"
+    },
+    "2-after-resident": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:56:11+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-runtime-ranges/neoverse-v2/neon/after-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-228",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.835449,
+          0.444336
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "neon",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T204747Z-aadd1c29/results/scalar-range-abi/neon/2-after-resident.json",
+      "sha256": "c0d304ebf5cd89bd21c4f7788d6b2ceadb2c27fd832153af1ae1a281ff5e17cb"
+    },
+    "2-after-runtime": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:56:06+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-runtime-ranges/neoverse-v2/neon/after-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-228",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.82959,
+          0.4375
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "neon",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T204747Z-aadd1c29/results/scalar-range-abi/neon/2-after-runtime.json",
+      "sha256": "e2c888f895bb6875eec1a158dbc5de37af579037b91398f396538da61feb04e7"
+    },
+    "3-before-bulk": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:56:31+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-runtime-ranges/neoverse-v2/neon/before-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-228",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.847168,
+          0.45752
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "neon",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T204747Z-aadd1c29/results/scalar-range-abi/neon/3-before-bulk.json",
+      "sha256": "68baabf28e0bfbaea695801c42810fc1d83799a5dc223d02430a31b78da91ec7"
+    },
+    "3-before-resident": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:56:25+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-runtime-ranges/neoverse-v2/neon/before-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-228",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.841309,
+          0.451172
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "neon",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T204747Z-aadd1c29/results/scalar-range-abi/neon/3-before-resident.json",
+      "sha256": "558eb55f4a1c18d67e667246396d528a28db3ddc555f187407548d455aad0b81"
+    },
+    "3-before-runtime": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:56:19+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-runtime-ranges/neoverse-v2/neon/before-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-228",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.838379,
+          0.447754
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "neon",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T204747Z-aadd1c29/results/scalar-range-abi/neon/3-before-runtime.json",
+      "sha256": "aed984de0ec14e274df2080469010d183beddcfdbd732a098ea34f9a40b6f110"
+    }
+  },
+  "kind": "google-benchmark-summary",
+  "ordered_repetition_verification": {
+    "case_block_rows": 360,
+    "cpu_real_and_requested_counters_exact": true,
+    "individual_samples": 1080,
+    "labels_in_execution_order": [
+      "0-before-runtime",
+      "0-before-resident",
+      "0-before-bulk",
+      "1-after-runtime",
+      "1-after-resident",
+      "1-after-bulk",
+      "2-after-runtime",
+      "2-after-resident",
+      "2-after-bulk",
+      "3-before-runtime",
+      "3-before-resident",
+      "3-before-bulk"
+    ]
+  },
+  "units": "CPU/real times are ns per benchmark iteration. ns_per_item uses the reported item rate; an item means what the benchmark counts, not necessarily a value or byte.",
+  "archived_files": {
+    "cases.csv": {
+      "sha256": "c87c1aa61438e35f7e1dc2ffb1cdd767a407e3ee694609565cd66f19e978bdb7",
+      "artifact": "../../../../ikea-composition/archive/validation-20260911.json",
+      "member": "evidence/runtime-ranges-20260910/v2/cases.csv"
+    }
+  },
+  "selection_curation": {
+    "date": "2026-09-11",
+    "note": "Git selection and local navigation changed; measured source, job, and full-bundle identities are unchanged.",
+    "navigation_or_nested_manifest_edits": {},
+    "renamed_members": {}
+  }
+}

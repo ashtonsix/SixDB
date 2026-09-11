@@ -1,0 +1,67 @@
+{
+  "scope": "Ignored register-only typed materializing sink prototype; no hardware timings or production changes.",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)",
+  "execution": "Linux via orb -m ubuntu from canonical /home/ashtonsix/sixdb",
+  "source_sha256": {
+    "build/successor-materialize-bridge/typed_store.h": "b1d3b33ed35ecba844e9ac75b520c1ef2a700e822d5d3c2dfda9cdf805b282fb",
+    "build/successor-materialize-bridge/check.cpp": "a3eb785d9745132ecc0c45c236b4550e93fc7789a478b7ce2f5e06e844be9180",
+    "build/successor-materialize-bridge/endpoints.cpp": "420f1edde561601960e9ea67368fff3e8553cc2405143f332fda70f4664ad5e8",
+    "build/successor-materialize-bridge/audit.py": "99b96de031e3ab79ce0f24f1f3b96d428b2baf6cec660542a11cf8b0a149d639",
+    "ikea/include/ikea/seriespack/composition.h": "57936212057c1193bb12a90cff4bfc5681094b1e068b0903ec4d5c93a8eb81da",
+    "ikea/include/ikea/seriespack/detail/body_neon.h": "a6e06c9bd417c403611dd189f77e6a5b0f7c25b36f13617bc1c3ffd66d9cc1d9"
+  },
+  "profiles": {
+    "neon": {
+      "commands": [
+        "clang++-21 -std=c++23 -O3 -Wall -Wextra -Werror -Iikea/include -march=armv8-a+simd -mtune=neoverse-v2 build/successor-materialize-bridge/check.cpp -o build/successor-materialize-bridge/neon-check",
+        "clang++-21 -std=c++23 -O3 -Wall -Wextra -Werror -Iikea/include -march=armv8-a+simd -mtune=neoverse-v2 -c build/successor-materialize-bridge/endpoints.cpp -o build/successor-materialize-bridge/neon-endpoints.o",
+        "llvm-objdump-21 -d --no-show-raw-insn build/successor-materialize-bridge/neon-endpoints.o > build/successor-materialize-bridge/neon-endpoints.asm",
+        "build/successor-materialize-bridge/neon-check > build/successor-materialize-bridge/neon-check.json"
+      ],
+      "executed": true,
+      "result": {
+        "target": "neon",
+        "shapes": 14,
+        "patterns": 64,
+        "cases": 12928,
+        "guarded_output_placements": 1792,
+        "natural_alignment_placements": 10240,
+        "partial_mask_and_hole_types_rejected": true
+      }
+    },
+    "avx2": {
+      "commands": [
+        "clang++-21 --target=x86_64-linux-gnu --gcc-toolchain=/usr -std=c++23 -O3 -Wall -Wextra -Werror -Iikea/include -march=x86-64-v3 -mtune=znver5 build/successor-materialize-bridge/check.cpp -o build/successor-materialize-bridge/avx2-check",
+        "clang++-21 --target=x86_64-linux-gnu --gcc-toolchain=/usr -std=c++23 -O3 -Wall -Wextra -Werror -Iikea/include -march=x86-64-v3 -mtune=znver5 -c build/successor-materialize-bridge/endpoints.cpp -o build/successor-materialize-bridge/avx2-endpoints.o",
+        "llvm-objdump-21 -d --no-show-raw-insn --x86-asm-syntax=intel build/successor-materialize-bridge/avx2-endpoints.o > build/successor-materialize-bridge/avx2-endpoints.asm",
+        "qemu-x86_64 -cpu max -L /usr/x86_64-linux-gnu build/successor-materialize-bridge/avx2-check > build/successor-materialize-bridge/avx2-check.json"
+      ],
+      "executed": true,
+      "result": {
+        "target": "avx2",
+        "shapes": 14,
+        "patterns": 64,
+        "cases": 12928,
+        "guarded_output_placements": 1792,
+        "natural_alignment_placements": 10240,
+        "partial_mask_and_hole_types_rejected": true
+      }
+    },
+    "avx512": {
+      "commands": [
+        "clang++-21 --target=x86_64-linux-gnu --gcc-toolchain=/usr -std=c++23 -O3 -Wall -Wextra -Werror -Iikea/include -march=znver5 -mtune=znver5 -DBRIDGE_AVX512 build/successor-materialize-bridge/check.cpp -o build/successor-materialize-bridge/avx512-check",
+        "clang++-21 --target=x86_64-linux-gnu --gcc-toolchain=/usr -std=c++23 -O3 -Wall -Wextra -Werror -Iikea/include -march=znver5 -mtune=znver5 -c build/successor-materialize-bridge/endpoints.cpp -o build/successor-materialize-bridge/avx512-endpoints.o",
+        "llvm-objdump-21 -d --no-show-raw-insn --x86-asm-syntax=intel build/successor-materialize-bridge/avx512-endpoints.o > build/successor-materialize-bridge/avx512-endpoints.asm"
+      ],
+      "executed": false,
+      "result": "compiled only"
+    }
+  },
+  "codegen_audit": "codegen.json",
+  "limitations": [
+    "AVX512 checker not executed",
+    "Isolated register-input endpoints do not establish integrated reader/caller lowering",
+    "No timing measurements",
+    "Full contiguous selection only; no arbitrary range/partial selection source reads implemented here"
+  ]
+}

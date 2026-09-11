@@ -1,0 +1,305 @@
+{
+  "scope": "Actual noinline candidate callbacks independently compiled from candidate.cpp; static source describe and all expression traversal inline within that callback.",
+  "all_12_callbacks_have_no_calls_or_native_value_stack_staging": true,
+  "limits": [
+    "No timing measurement or comparison with ordinary callback code.",
+    "Callback size includes both output-type arms, scalar edges, all branches and native regions.",
+    "Callee-saved GPR push/pop is real callback stack traffic and is not omitted from the report.",
+    "AVX512 checker compiled but not executed."
+  ],
+  "profiles": {
+    "neon": {
+      "callbacks": [
+        {
+          "width": 7,
+          "heads": 0,
+          "geometry": "local",
+          "symbol_bytes": 1336,
+          "static_instructions_including_both_output_arms": 327,
+          "call_instructions": [],
+          "stack_pointer_references": [],
+          "callee_saved_gpr_pushes": [],
+          "callee_saved_gpr_pops": [],
+          "callee_saved_gpr_stack_bytes": 0,
+          "rbp_memory_uses": [],
+          "rbp_assignments": [],
+          "rbp_interpretation": "No RBP-addressed memory.",
+          "native_values_or_expression_aggregate_staged_on_stack": false
+        },
+        {
+          "width": 12,
+          "heads": 0,
+          "geometry": "striped",
+          "symbol_bytes": 796,
+          "static_instructions_including_both_output_arms": 193,
+          "call_instructions": [],
+          "stack_pointer_references": [],
+          "callee_saved_gpr_pushes": [],
+          "callee_saved_gpr_pops": [],
+          "callee_saved_gpr_stack_bytes": 0,
+          "rbp_memory_uses": [],
+          "rbp_assignments": [],
+          "rbp_interpretation": "No RBP-addressed memory.",
+          "native_values_or_expression_aggregate_staged_on_stack": false
+        },
+        {
+          "width": 23,
+          "heads": 16,
+          "geometry": "local",
+          "symbol_bytes": 1868,
+          "static_instructions_including_both_output_arms": 465,
+          "call_instructions": [],
+          "stack_pointer_references": [],
+          "callee_saved_gpr_pushes": [],
+          "callee_saved_gpr_pops": [],
+          "callee_saved_gpr_stack_bytes": 0,
+          "rbp_memory_uses": [],
+          "rbp_assignments": [],
+          "rbp_interpretation": "No RBP-addressed memory.",
+          "native_values_or_expression_aggregate_staged_on_stack": false
+        },
+        {
+          "width": 28,
+          "heads": 16,
+          "geometry": "striped",
+          "symbol_bytes": 1392,
+          "static_instructions_including_both_output_arms": 344,
+          "call_instructions": [],
+          "stack_pointer_references": [],
+          "callee_saved_gpr_pushes": [],
+          "callee_saved_gpr_pops": [],
+          "callee_saved_gpr_stack_bytes": 0,
+          "rbp_memory_uses": [],
+          "rbp_assignments": [],
+          "rbp_interpretation": "No RBP-addressed memory.",
+          "native_values_or_expression_aggregate_staged_on_stack": false
+        }
+      ],
+      "object_sha256": "e21193083a14e9aa38b9956d50637d558aa3d2b6795e3ff6a46685bf2d4d496e",
+      "assembly_sha256": "0eabcb9b39732e54bd56a358683459df0ee6eaf7a69547b8bfcd55f617d7be6c",
+      "outlined_prototype_decode_symbols": 0
+    },
+    "avx2": {
+      "callbacks": [
+        {
+          "width": 7,
+          "heads": 0,
+          "geometry": "local",
+          "symbol_bytes": 1215,
+          "static_instructions_including_both_output_arms": 275,
+          "call_instructions": [],
+          "stack_pointer_references": [],
+          "callee_saved_gpr_pushes": [
+            "push\trbp",
+            "push\tr15",
+            "push\tr14",
+            "push\tr13",
+            "push\tr12",
+            "push\trbx"
+          ],
+          "callee_saved_gpr_pops": [
+            "pop\trbx",
+            "pop\tr12",
+            "pop\tr13",
+            "pop\tr14",
+            "pop\tr15",
+            "pop\trbp"
+          ],
+          "callee_saved_gpr_stack_bytes": 48,
+          "rbp_memory_uses": [],
+          "rbp_assignments": [],
+          "rbp_interpretation": "No RBP-addressed memory.",
+          "native_values_or_expression_aggregate_staged_on_stack": false
+        },
+        {
+          "width": 12,
+          "heads": 0,
+          "geometry": "striped",
+          "symbol_bytes": 859,
+          "static_instructions_including_both_output_arms": 189,
+          "call_instructions": [],
+          "stack_pointer_references": [],
+          "callee_saved_gpr_pushes": [],
+          "callee_saved_gpr_pops": [],
+          "callee_saved_gpr_stack_bytes": 0,
+          "rbp_memory_uses": [],
+          "rbp_assignments": [],
+          "rbp_interpretation": "No RBP-addressed memory.",
+          "native_values_or_expression_aggregate_staged_on_stack": false
+        },
+        {
+          "width": 23,
+          "heads": 16,
+          "geometry": "local",
+          "symbol_bytes": 1746,
+          "static_instructions_including_both_output_arms": 392,
+          "call_instructions": [],
+          "stack_pointer_references": [],
+          "callee_saved_gpr_pushes": [
+            "push\trbp",
+            "push\tr15",
+            "push\tr14",
+            "push\tr13",
+            "push\tr12",
+            "push\trbx"
+          ],
+          "callee_saved_gpr_pops": [
+            "pop\trbx",
+            "pop\tr12",
+            "pop\tr13",
+            "pop\tr14",
+            "pop\tr15",
+            "pop\trbp"
+          ],
+          "callee_saved_gpr_stack_bytes": 48,
+          "rbp_memory_uses": [
+            "vmovq\txmm7, qword ptr [rbp + rbx]",
+            "lea\tr8, [rbp + rbx]",
+            "vmovq\txmm7, qword ptr [rbp + rbx]",
+            "lea\tr8, [rbp + rbx]"
+          ],
+          "rbp_assignments": [
+            "mov\trbp, qword ptr [rdi + 0x48]",
+            "mov\trbp, qword ptr [rdi + 0x48]"
+          ],
+          "rbp_interpretation": "Reviewed: RBP is a source head pointer or stride loaded from the view; it is not derived from RSP.",
+          "native_values_or_expression_aggregate_staged_on_stack": false
+        },
+        {
+          "width": 28,
+          "heads": 16,
+          "geometry": "striped",
+          "symbol_bytes": 1372,
+          "static_instructions_including_both_output_arms": 302,
+          "call_instructions": [],
+          "stack_pointer_references": [],
+          "callee_saved_gpr_pushes": [
+            "push\tr14",
+            "push\trbx"
+          ],
+          "callee_saved_gpr_pops": [
+            "pop\trbx",
+            "pop\tr14"
+          ],
+          "callee_saved_gpr_stack_bytes": 16,
+          "rbp_memory_uses": [],
+          "rbp_assignments": [],
+          "rbp_interpretation": "No RBP-addressed memory.",
+          "native_values_or_expression_aggregate_staged_on_stack": false
+        }
+      ],
+      "object_sha256": "83967da842b461fa16c3ff51ae4a5152c94f5ec0bfcfad8f1b25e585bd79bbdd",
+      "assembly_sha256": "7545c2ca2a89c15c2d41fdc4bb51016511e800e45c88db8b33d896529935fad4",
+      "outlined_prototype_decode_symbols": 0
+    },
+    "avx512": {
+      "callbacks": [
+        {
+          "width": 7,
+          "heads": 0,
+          "geometry": "local",
+          "symbol_bytes": 915,
+          "static_instructions_including_both_output_arms": 191,
+          "call_instructions": [],
+          "stack_pointer_references": [],
+          "callee_saved_gpr_pushes": [
+            "push\trbp",
+            "push\tr15",
+            "push\tr14",
+            "push\tr12",
+            "push\trbx"
+          ],
+          "callee_saved_gpr_pops": [
+            "pop\trbx",
+            "pop\tr12",
+            "pop\tr14",
+            "pop\tr15",
+            "pop\trbp"
+          ],
+          "callee_saved_gpr_stack_bytes": 40,
+          "rbp_memory_uses": [],
+          "rbp_assignments": [],
+          "rbp_interpretation": "No RBP-addressed memory.",
+          "native_values_or_expression_aggregate_staged_on_stack": false
+        },
+        {
+          "width": 12,
+          "heads": 0,
+          "geometry": "striped",
+          "symbol_bytes": 811,
+          "static_instructions_including_both_output_arms": 177,
+          "call_instructions": [],
+          "stack_pointer_references": [],
+          "callee_saved_gpr_pushes": [],
+          "callee_saved_gpr_pops": [],
+          "callee_saved_gpr_stack_bytes": 0,
+          "rbp_memory_uses": [],
+          "rbp_assignments": [],
+          "rbp_interpretation": "No RBP-addressed memory.",
+          "native_values_or_expression_aggregate_staged_on_stack": false
+        },
+        {
+          "width": 23,
+          "heads": 16,
+          "geometry": "local",
+          "symbol_bytes": 1425,
+          "static_instructions_including_both_output_arms": 305,
+          "call_instructions": [],
+          "stack_pointer_references": [],
+          "callee_saved_gpr_pushes": [
+            "push\trbp",
+            "push\tr15",
+            "push\tr14",
+            "push\tr13",
+            "push\tr12",
+            "push\trbx"
+          ],
+          "callee_saved_gpr_pops": [
+            "pop\trbx",
+            "pop\tr12",
+            "pop\tr13",
+            "pop\tr14",
+            "pop\tr15",
+            "pop\trbp"
+          ],
+          "callee_saved_gpr_stack_bytes": 48,
+          "rbp_memory_uses": [
+            "vmovq\txmm7, qword ptr [rbp + rax]",
+            "vmovq\txmm7, qword ptr [rbp + rax]"
+          ],
+          "rbp_assignments": [
+            "mov\trbp, qword ptr [rdi + 0x58]",
+            "mov\trbp, qword ptr [rdi + 0x58]"
+          ],
+          "rbp_interpretation": "Reviewed: RBP is a source head pointer or stride loaded from the view; it is not derived from RSP.",
+          "native_values_or_expression_aggregate_staged_on_stack": false
+        },
+        {
+          "width": 28,
+          "heads": 16,
+          "geometry": "striped",
+          "symbol_bytes": 1198,
+          "static_instructions_including_both_output_arms": 267,
+          "call_instructions": [],
+          "stack_pointer_references": [],
+          "callee_saved_gpr_pushes": [
+            "push\tr14",
+            "push\trbx"
+          ],
+          "callee_saved_gpr_pops": [
+            "pop\trbx",
+            "pop\tr14"
+          ],
+          "callee_saved_gpr_stack_bytes": 16,
+          "rbp_memory_uses": [],
+          "rbp_assignments": [],
+          "rbp_interpretation": "No RBP-addressed memory.",
+          "native_values_or_expression_aggregate_staged_on_stack": false
+        }
+      ],
+      "object_sha256": "b55c28e52b3fe18ceef6e6c42d7f398d09401eaae1935066caf3dd202f6b927a",
+      "assembly_sha256": "4a4945e5baa5e45ed15b1fe03149a0c4a05141ba443fd69bf8d708822e1adc1e",
+      "outlined_prototype_decode_symbols": 0
+    }
+  }
+}

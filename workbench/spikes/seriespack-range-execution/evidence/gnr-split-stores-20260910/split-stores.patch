@@ -1,0 +1,15 @@
+--- a/workbench/spikes/ikea-composition/validation/seriespack_range_regions.cpp
++++ b/workbench/spikes/ikea-composition/validation/seriespack_range_regions.cpp
+@@ -59,7 +59,11 @@
+         return sp::detail::avx512::decode_body_prefix<Q, 8, lanes>(p);
+     }
+     template<unsigned R> static auto join(vector high, vector low) { return sp::avx512::join<8, R>(high, low); }
+-    static void store(U* out, vector values) { _mm512_storeu_si512(out, values); }
++    static void store(U* out, vector values) {
++        _mm256_storeu_si256(reinterpret_cast<__m256i*>(out), _mm512_castsi512_si256(values));
++        asm volatile("" ::: "memory");
++        _mm256_storeu_si256(reinterpret_cast<__m256i*>(out + 4), _mm512_extracti64x4_epi64(values, 1));
++    }
+ };
+ #endif
+ #endif

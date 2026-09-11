@@ -1,0 +1,1255 @@
+{
+  "archived_files": {
+    "cases.csv": {
+      "artifact": "../../../../ikea-composition/archive/validation-20260911.json",
+      "member": "evidence/ordinary-materialize-20260910/20260910T234310Z-87cf647d/cases.csv",
+      "sha256": "e716b66f03f347198f14c228d53750e837b1da3bd197b3c251c251a4b9d6c4f9"
+    }
+  },
+  "cases": 5740,
+  "counters": [
+    "iterations",
+    "logical_values",
+    "encoded_bytes",
+    "placement_bytes",
+    "values_per_item",
+    "io_bytes_per_value",
+    "query_hash_lo",
+    "query_hash_hi",
+    "checksum"
+  ],
+  "files_sha256": {
+    "after-prior.csv": "f9a0a1de42a857f3be7b220fe4ddfea9de25ec6511649bf569ddcee5bd2b50f9",
+    "audit.json": "bea773337e50c0cfbb1963d903bd66145bbca07421c9ab7317931d749b9dbefd",
+    "before-prior.csv": "53d193220f394c7202020c535f2ada7d211aec9148a99a4f9eba7ca7be3db47d",
+    "code-maintenance.json": "44377423eeef0fb39ad8d31f41f6a926bce3c6791dc4ef70a985dd53e75c6509",
+    "code-size.json": "c9dcd44ecdfd124bd2a345617e91806f172570eb5701d1d01df77217beae8368",
+    "paired.csv": "c051381c06dc96300c6eaa099141d6e903fb12236d337418b3145d4cd681a858",
+    "summary.json": "fd7b98ba847b08cc6080b9349e1149f5aae6f2f4343499e07918e68d1905de8d",
+    "transition-shapes.json": "56bd3b8b348f982380368d9e6794135a394615e26f461c5690acd7b09fe79814"
+  },
+  "filter": null,
+  "format": 1,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "block-0-before-bulk": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T23:51:25+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/before-bench",
+        "host_name": "ip-172-31-27-242",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.807617,
+          0.41748
+        ],
+        "mhz_per_cpu": 4464,
+        "num_cpus": 2,
+        "ordinary_runtime_contract": "4096 independent runtime ranges; 256 queries per iteration; one bound callback; u32/u64 exact outputs; first+last uint64 checksum; full oracle and timed-pointer canaries outside timing",
+        "ordinary_transition_contract": "Local W1..7 or Striped W12; H0/8/16; u32/u64; origins0/1; six counts around complete-leaf transition; heads independently gapped; each case has its own 4096 runtime queries and full output oracle",
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T234310Z-87cf647d/results/ordinary-materialize/block-0-before-bulk.json",
+      "sha256": "a89916e3189f6d75e60d0f56f1f9f8a30cb7ebf52a889a74eceff27b9abea9d4"
+    },
+    "block-0-before-large-bulk": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "1048576",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T23:51:49+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/before-bench",
+        "host_name": "ip-172-31-27-242",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.821289,
+          0.431152
+        ],
+        "mhz_per_cpu": 4471,
+        "num_cpus": 2,
+        "ordinary_runtime_contract": "4096 independent runtime ranges; 256 queries per iteration; one bound callback; u32/u64 exact outputs; first+last uint64 checksum; full oracle and timed-pointer canaries outside timing",
+        "ordinary_transition_contract": "Local W1..7 or Striped W12; H0/8/16; u32/u64; origins0/1; six counts around complete-leaf transition; heads independently gapped; each case has its own 4096 runtime queries and full output oracle",
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T234310Z-87cf647d/results/ordinary-materialize/block-0-before-large-bulk.json",
+      "sha256": "3e796433416157798d80bedfd1b477ce37563c05327acc06938eca0d298e2154"
+    },
+    "block-0-before-resident": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T23:51:40+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/before-bench",
+        "host_name": "ip-172-31-27-242",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.817871,
+          0.427734
+        ],
+        "mhz_per_cpu": 4462,
+        "num_cpus": 2,
+        "ordinary_runtime_contract": "4096 independent runtime ranges; 256 queries per iteration; one bound callback; u32/u64 exact outputs; first+last uint64 checksum; full oracle and timed-pointer canaries outside timing",
+        "ordinary_transition_contract": "Local W1..7 or Striped W12; H0/8/16; u32/u64; origins0/1; six counts around complete-leaf transition; heads independently gapped; each case has its own 4096 runtime queries and full output oracle",
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T234310Z-87cf647d/results/ordinary-materialize/block-0-before-resident.json",
+      "sha256": "e0bfcbf3ef8fb590a5255e7a2b824051f97eb2ce9746bbad378174dad786879b"
+    },
+    "block-0-before-runtime": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T23:48:27+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/before-bench",
+        "host_name": "ip-172-31-27-242",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.996582,
+          0.637207,
+          0.28418
+        ],
+        "mhz_per_cpu": 4480,
+        "num_cpus": 2,
+        "ordinary_runtime_contract": "4096 independent runtime ranges; 256 queries per iteration; one bound callback; u32/u64 exact outputs; first+last uint64 checksum; full oracle and timed-pointer canaries outside timing",
+        "ordinary_transition_contract": "Local W1..7 or Striped W12; H0/8/16; u32/u64; origins0/1; six counts around complete-leaf transition; heads independently gapped; each case has its own 4096 runtime queries and full output oracle",
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T234310Z-87cf647d/results/ordinary-materialize/block-0-before-runtime.json",
+      "sha256": "05b8b2fb46ac7f666e228974900dc2d94f78f4d080a11bbcc8ca74225185e116"
+    },
+    "block-0-before-transition": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T23:48:36+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/before-bench",
+        "host_name": "ip-172-31-27-242",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.997559,
+          0.649902,
+          0.291992
+        ],
+        "mhz_per_cpu": 4451,
+        "num_cpus": 2,
+        "ordinary_runtime_contract": "4096 independent runtime ranges; 256 queries per iteration; one bound callback; u32/u64 exact outputs; first+last uint64 checksum; full oracle and timed-pointer canaries outside timing",
+        "ordinary_transition_contract": "Local W1..7 or Striped W12; H0/8/16; u32/u64; origins0/1; six counts around complete-leaf transition; heads independently gapped; each case has its own 4096 runtime queries and full output oracle",
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T234310Z-87cf647d/results/ordinary-materialize/block-0-before-transition.json",
+      "sha256": "5c1017faa91da39448fdeff4f7a8bf1aa4c80bfcb79d4bbb9f2b0a07e40157e5"
+    },
+    "block-1-after-bulk": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T23:55:00+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/after-bench",
+        "host_name": "ip-172-31-27-242",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.914062,
+          0.54834
+        ],
+        "mhz_per_cpu": 4489,
+        "num_cpus": 2,
+        "ordinary_runtime_contract": "4096 independent runtime ranges; 256 queries per iteration; one bound callback; u32/u64 exact outputs; first+last uint64 checksum; full oracle and timed-pointer canaries outside timing",
+        "ordinary_transition_contract": "Local W1..7 or Striped W12; H0/8/16; u32/u64; origins0/1; six counts around complete-leaf transition; heads independently gapped; each case has its own 4096 runtime queries and full output oracle",
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T234310Z-87cf647d/results/ordinary-materialize/block-1-after-bulk.json",
+      "sha256": "45e27d82669d9a537c8858d7734a35bcf0c0e69165901fb5313b7bbac88d0038"
+    },
+    "block-1-after-large-bulk": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "1048576",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T23:55:24+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/after-bench",
+        "host_name": "ip-172-31-27-242",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.921387,
+          0.560547
+        ],
+        "mhz_per_cpu": 4477,
+        "num_cpus": 2,
+        "ordinary_runtime_contract": "4096 independent runtime ranges; 256 queries per iteration; one bound callback; u32/u64 exact outputs; first+last uint64 checksum; full oracle and timed-pointer canaries outside timing",
+        "ordinary_transition_contract": "Local W1..7 or Striped W12; H0/8/16; u32/u64; origins0/1; six counts around complete-leaf transition; heads independently gapped; each case has its own 4096 runtime queries and full output oracle",
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T234310Z-87cf647d/results/ordinary-materialize/block-1-after-large-bulk.json",
+      "sha256": "24b2f01d05bc19c30a9082cb727515729b8aa75d89705c97865948c1eeb4335a"
+    },
+    "block-1-after-resident": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T23:55:15+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/after-bench",
+        "host_name": "ip-172-31-27-242",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.918457,
+          0.555664
+        ],
+        "mhz_per_cpu": 4478,
+        "num_cpus": 2,
+        "ordinary_runtime_contract": "4096 independent runtime ranges; 256 queries per iteration; one bound callback; u32/u64 exact outputs; first+last uint64 checksum; full oracle and timed-pointer canaries outside timing",
+        "ordinary_transition_contract": "Local W1..7 or Striped W12; H0/8/16; u32/u64; origins0/1; six counts around complete-leaf transition; heads independently gapped; each case has its own 4096 runtime queries and full output oracle",
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T234310Z-87cf647d/results/ordinary-materialize/block-1-after-resident.json",
+      "sha256": "6619cc2570b2dbc87274459247c92fbf0865ba6a4a3251e9c5da93922cb31b3c"
+    },
+    "block-1-after-runtime": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T23:51:54+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/after-bench",
+        "host_name": "ip-172-31-27-242",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.827637,
+          0.437988
+        ],
+        "mhz_per_cpu": 4475,
+        "num_cpus": 2,
+        "ordinary_runtime_contract": "4096 independent runtime ranges; 256 queries per iteration; one bound callback; u32/u64 exact outputs; first+last uint64 checksum; full oracle and timed-pointer canaries outside timing",
+        "ordinary_transition_contract": "Local W1..7 or Striped W12; H0/8/16; u32/u64; origins0/1; six counts around complete-leaf transition; heads independently gapped; each case has its own 4096 runtime queries and full output oracle",
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T234310Z-87cf647d/results/ordinary-materialize/block-1-after-runtime.json",
+      "sha256": "105a817d961927fdec7eb98524bf5891f93fafa805250b82bcb052515eca22ad"
+    },
+    "block-1-after-transition": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T23:52:04+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/after-bench",
+        "host_name": "ip-172-31-27-242",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.833496,
+          0.444824
+        ],
+        "mhz_per_cpu": 4481,
+        "num_cpus": 2,
+        "ordinary_runtime_contract": "4096 independent runtime ranges; 256 queries per iteration; one bound callback; u32/u64 exact outputs; first+last uint64 checksum; full oracle and timed-pointer canaries outside timing",
+        "ordinary_transition_contract": "Local W1..7 or Striped W12; H0/8/16; u32/u64; origins0/1; six counts around complete-leaf transition; heads independently gapped; each case has its own 4096 runtime queries and full output oracle",
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T234310Z-87cf647d/results/ordinary-materialize/block-1-after-transition.json",
+      "sha256": "7cde48a8e9b8365663d2dea633ffafde4b7de93450fd2e7490edd4c3ea8738bc"
+    },
+    "block-2-after-bulk": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T23:58:35+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/after-bench",
+        "host_name": "ip-172-31-27-242",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.965332,
+          0.650391
+        ],
+        "mhz_per_cpu": 4468,
+        "num_cpus": 2,
+        "ordinary_runtime_contract": "4096 independent runtime ranges; 256 queries per iteration; one bound callback; u32/u64 exact outputs; first+last uint64 checksum; full oracle and timed-pointer canaries outside timing",
+        "ordinary_transition_contract": "Local W1..7 or Striped W12; H0/8/16; u32/u64; origins0/1; six counts around complete-leaf transition; heads independently gapped; each case has its own 4096 runtime queries and full output oracle",
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T234310Z-87cf647d/results/ordinary-materialize/block-2-after-bulk.json",
+      "sha256": "b30b2a1ffb60518ffca53912dd925bdc2a8ec37a015e0b4a7dfa7224b006d589"
+    },
+    "block-2-after-large-bulk": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "1048576",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T23:58:59+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/after-bench",
+        "host_name": "ip-172-31-27-242",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1.05615,
+          0.984863,
+          0.665527
+        ],
+        "mhz_per_cpu": 4475,
+        "num_cpus": 2,
+        "ordinary_runtime_contract": "4096 independent runtime ranges; 256 queries per iteration; one bound callback; u32/u64 exact outputs; first+last uint64 checksum; full oracle and timed-pointer canaries outside timing",
+        "ordinary_transition_contract": "Local W1..7 or Striped W12; H0/8/16; u32/u64; origins0/1; six counts around complete-leaf transition; heads independently gapped; each case has its own 4096 runtime queries and full output oracle",
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T234310Z-87cf647d/results/ordinary-materialize/block-2-after-large-bulk.json",
+      "sha256": "6d228f6911b58801302cade43c3ef8bd8f9eef78a4a29927fcf4f8e4f7ad1aa1"
+    },
+    "block-2-after-resident": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T23:58:50+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/after-bench",
+        "host_name": "ip-172-31-27-242",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1.06689,
+          0.983887,
+          0.661621
+        ],
+        "mhz_per_cpu": 4480,
+        "num_cpus": 2,
+        "ordinary_runtime_contract": "4096 independent runtime ranges; 256 queries per iteration; one bound callback; u32/u64 exact outputs; first+last uint64 checksum; full oracle and timed-pointer canaries outside timing",
+        "ordinary_transition_contract": "Local W1..7 or Striped W12; H0/8/16; u32/u64; origins0/1; six counts around complete-leaf transition; heads independently gapped; each case has its own 4096 runtime queries and full output oracle",
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T234310Z-87cf647d/results/ordinary-materialize/block-2-after-resident.json",
+      "sha256": "8ca7f35abeb3f22ef8a0591b9f855e038425b163d54fc079541e6765dd451cfd"
+    },
+    "block-2-after-runtime": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T23:55:29+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/after-bench",
+        "host_name": "ip-172-31-27-242",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.922852,
+          0.562988
+        ],
+        "mhz_per_cpu": 4474,
+        "num_cpus": 2,
+        "ordinary_runtime_contract": "4096 independent runtime ranges; 256 queries per iteration; one bound callback; u32/u64 exact outputs; first+last uint64 checksum; full oracle and timed-pointer canaries outside timing",
+        "ordinary_transition_contract": "Local W1..7 or Striped W12; H0/8/16; u32/u64; origins0/1; six counts around complete-leaf transition; heads independently gapped; each case has its own 4096 runtime queries and full output oracle",
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T234310Z-87cf647d/results/ordinary-materialize/block-2-after-runtime.json",
+      "sha256": "f6a9f24284e33319ed9e02d9c7dcebc056b57c5c8ce54042ea35edaf4db12ab5"
+    },
+    "block-2-after-transition": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T23:55:39+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/after-bench",
+        "host_name": "ip-172-31-27-242",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.925781,
+          0.567871
+        ],
+        "mhz_per_cpu": 4473,
+        "num_cpus": 2,
+        "ordinary_runtime_contract": "4096 independent runtime ranges; 256 queries per iteration; one bound callback; u32/u64 exact outputs; first+last uint64 checksum; full oracle and timed-pointer canaries outside timing",
+        "ordinary_transition_contract": "Local W1..7 or Striped W12; H0/8/16; u32/u64; origins0/1; six counts around complete-leaf transition; heads independently gapped; each case has its own 4096 runtime queries and full output oracle",
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T234310Z-87cf647d/results/ordinary-materialize/block-2-after-transition.json",
+      "sha256": "e394d4fb1510cc5d780ad8290c0fcd8f15abdf1db957dee15143e54c4bba1a99"
+    },
+    "block-3-before-bulk": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-11T00:02:03+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/before-bench",
+        "host_name": "ip-172-31-27-242",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          1,
+          0.733887
+        ],
+        "mhz_per_cpu": 4479,
+        "num_cpus": 2,
+        "ordinary_runtime_contract": "4096 independent runtime ranges; 256 queries per iteration; one bound callback; u32/u64 exact outputs; first+last uint64 checksum; full oracle and timed-pointer canaries outside timing",
+        "ordinary_transition_contract": "Local W1..7 or Striped W12; H0/8/16; u32/u64; origins0/1; six counts around complete-leaf transition; heads independently gapped; each case has its own 4096 runtime queries and full output oracle",
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T234310Z-87cf647d/results/ordinary-materialize/block-3-before-bulk.json",
+      "sha256": "5f2f356cf367985491b06c5b8224d86e236c29a104afdb5516cd50471491e690"
+    },
+    "block-3-before-large-bulk": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "1048576",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-11T00:02:27+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/before-bench",
+        "host_name": "ip-172-31-27-242",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          1,
+          0.741211
+        ],
+        "mhz_per_cpu": 4460,
+        "num_cpus": 2,
+        "ordinary_runtime_contract": "4096 independent runtime ranges; 256 queries per iteration; one bound callback; u32/u64 exact outputs; first+last uint64 checksum; full oracle and timed-pointer canaries outside timing",
+        "ordinary_transition_contract": "Local W1..7 or Striped W12; H0/8/16; u32/u64; origins0/1; six counts around complete-leaf transition; heads independently gapped; each case has its own 4096 runtime queries and full output oracle",
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T234310Z-87cf647d/results/ordinary-materialize/block-3-before-large-bulk.json",
+      "sha256": "283d47726b4af6a8797fbd7054c34467ec4a3d5de0652cb7554f4b33d2cb0fa4"
+    },
+    "block-3-before-resident": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-11T00:02:17+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/before-bench",
+        "host_name": "ip-172-31-27-242",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          1,
+          0.738281
+        ],
+        "mhz_per_cpu": 4470,
+        "num_cpus": 2,
+        "ordinary_runtime_contract": "4096 independent runtime ranges; 256 queries per iteration; one bound callback; u32/u64 exact outputs; first+last uint64 checksum; full oracle and timed-pointer canaries outside timing",
+        "ordinary_transition_contract": "Local W1..7 or Striped W12; H0/8/16; u32/u64; origins0/1; six counts around complete-leaf transition; heads independently gapped; each case has its own 4096 runtime queries and full output oracle",
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T234310Z-87cf647d/results/ordinary-materialize/block-3-before-resident.json",
+      "sha256": "1bb6b5f906125325ce6d87bb0578fd5b292f67ffecb2bcc20e57f9cbf911bc68"
+    },
+    "block-3-before-runtime": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T23:59:04+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/before-bench",
+        "host_name": "ip-172-31-27-242",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1.05127,
+          0.985352,
+          0.66748
+        ],
+        "mhz_per_cpu": 4480,
+        "num_cpus": 2,
+        "ordinary_runtime_contract": "4096 independent runtime ranges; 256 queries per iteration; one bound callback; u32/u64 exact outputs; first+last uint64 checksum; full oracle and timed-pointer canaries outside timing",
+        "ordinary_transition_contract": "Local W1..7 or Striped W12; H0/8/16; u32/u64; origins0/1; six counts around complete-leaf transition; heads independently gapped; each case has its own 4096 runtime queries and full output oracle",
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T234310Z-87cf647d/results/ordinary-materialize/block-3-before-runtime.json",
+      "sha256": "869afdb7aae96e8fb8206d1313b5024dfff7ad675562da5f37e25d2f89f2cdbd"
+    },
+    "block-3-before-transition": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T23:59:14+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/before-bench",
+        "host_name": "ip-172-31-27-242",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1.04297,
+          0.986328,
+          0.671387
+        ],
+        "mhz_per_cpu": 4486,
+        "num_cpus": 2,
+        "ordinary_runtime_contract": "4096 independent runtime ranges; 256 queries per iteration; one bound callback; u32/u64 exact outputs; first+last uint64 checksum; full oracle and timed-pointer canaries outside timing",
+        "ordinary_transition_contract": "Local W1..7 or Striped W12; H0/8/16; u32/u64; origins0/1; six counts around complete-leaf transition; heads independently gapped; each case has its own 4096 runtime queries and full output oracle",
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T234310Z-87cf647d/results/ordinary-materialize/block-3-before-transition.json",
+      "sha256": "8a3a2c4396bb3903d5e943bae82015b32111d1256610430830d870036f0a8acb"
+    }
+  },
+  "interpretation": "Current-source ordinary before/after comparison; common benchmark and support objects; only native.cpp.o replaced. CPU0 sequential ABBA. All cases and both ordering edges retained; preflights excluded from timings.",
+  "kind": "google-benchmark-summary",
+  "prior_comparison": "before-prior.csv uses current live baseline samples; after-prior.csv uses the isolated, uninstalled candidate. Each selects the fastest available explicit Ikea family and fastest retained prior for the fixed16/u64/4KiB case. Predecessor is same-wire LocalPack/ScanPack; Calico can use another representation. Compare provenance before quoting current gaps.",
+  "selection_curation": {
+    "date": "2026-09-11",
+    "navigation_or_nested_manifest_edits": {},
+    "note": "Git selection and local navigation changed; measured source, job, and full-bundle identities are unchanged.",
+    "projected_audits": {
+      "audit.json": {
+        "artifact": "../../../../ikea-composition/archive/validation-20260911.json",
+        "member": "evidence/ordinary-materialize-20260910/20260910T234310Z-87cf647d/audit.json",
+        "original_sha256": "1545d9dfa96641ebdc64518fccead873ea2129facf0d6e06048d60c48f1d8751",
+        "removed_field": "files_sha256",
+        "retained_files": 731
+      }
+    },
+    "renamed_members": {}
+  },
+  "units": "CPU/real times are ns per benchmark iteration. ns_per_item uses the reported item rate; an item means what the benchmark counts, not necessarily a value or byte."
+}

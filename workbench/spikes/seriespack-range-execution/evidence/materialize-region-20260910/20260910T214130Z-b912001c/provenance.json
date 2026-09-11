@@ -1,0 +1,1020 @@
+{
+  "archived_files": {
+    "cases.csv": {
+      "artifact": "../../../../ikea-composition/archive/validation-20260911.json",
+      "member": "evidence/materialize-region-20260910/20260910T214130Z-b912001c/cases.csv",
+      "sha256": "c8fb488050ef4c8ba792a6cc27920dbb61a5af167b457438b9d67dd3680feab5"
+    }
+  },
+  "baseline_materializer_job": "20260910T212852Z-b2322870",
+  "cases": 900,
+  "counters": [
+    "iterations",
+    "logical_values",
+    "encoded_bytes",
+    "placement_bytes",
+    "values_per_item",
+    "io_bytes_per_value",
+    "query_hash_lo",
+    "query_hash_hi",
+    "checksum"
+  ],
+  "files_sha256": {
+    "audit.json": "3082e5b8af2c8a454cabcd05ae7203faad2476a9575e03733a44119284f18db6",
+    "context.csv": "eaad00cc0963563f32f35e5b061e4f2081f1ef2c74804402d771125c3db6c80e",
+    "frozen-recovery.csv": "57a8eb2b53c5035698c3d0eda3540830e37d94ccc4ce8a9286d8de4e5fba4bba",
+    "primary.csv": "2ce1d1bf87af5f07200418d51e76e1245a0aec71428c8278b7818acbe9cafec7",
+    "summary.json": "08e3d14b24bf471690d56f4d22c971993e422c0dd8636a5e645cabe7dd656152"
+  },
+  "filter": null,
+  "format": 1,
+  "frozen_candidate_control": "frozen-recovery.csv compares the pinned baseline candidate (ordinary columns) to this revision (candidate columns), retaining the identical timed caller object. Context table contains the unchanged ordinary/runtime/bulk controls.",
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "0-before-bulk": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T21:42:11+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T214130Z-b912001c/results/materialize-expression/before-bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.354004,
+          0.287109,
+          0.402832
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4464,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series and runtime/authored: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T214130Z-b912001c/results/materialize-expression/0-before-bulk.json",
+      "sha256": "83a36e240018996f35d8ed31091079f5ff39804556997a294497ad6353034bef"
+    },
+    "0-before-resident": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T21:42:13+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T214130Z-b912001c/results/materialize-expression/before-bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.354004,
+          0.287109,
+          0.402832
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4451,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series and runtime/authored: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T214130Z-b912001c/results/materialize-expression/0-before-resident.json",
+      "sha256": "d6ddfa35e1f9c9d29f3e065dff290e8572b63e1b03bec40b9995e92add33fc38"
+    },
+    "0-before-runtime-authored": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T21:42:34+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T214130Z-b912001c/results/materialize-expression/before-bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.575195,
+          0.345703,
+          0.419922
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4450,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series and runtime/authored: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T214130Z-b912001c/results/materialize-expression/0-before-runtime-authored.json",
+      "sha256": "c4de122129c2d73b8e26cc54c67811aff5b9a8cec771c9486405d718c613d1d5"
+    },
+    "0-before-runtime-series": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T21:42:23+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T214130Z-b912001c/results/materialize-expression/before-bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.453613,
+          0.311035,
+          0.409668
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4446,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series and runtime/authored: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T214130Z-b912001c/results/materialize-expression/0-before-runtime-series.json",
+      "sha256": "48c0d814ba5007ffe833d94392aff895b75b6b2079100dba65462f919ced309b"
+    },
+    "1-after-bulk": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T21:42:45+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T214130Z-b912001c/results/materialize-expression/after-bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.641113,
+          0.367676,
+          0.426758
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4441,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series and runtime/authored: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T214130Z-b912001c/results/materialize-expression/1-after-bulk.json",
+      "sha256": "e70dcfb89a717883c6b5639401a865744fe0574af9daeb3141cd6c5111573892"
+    },
+    "1-after-resident": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T21:42:47+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T214130Z-b912001c/results/materialize-expression/after-bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.641113,
+          0.367676,
+          0.426758
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4446,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series and runtime/authored: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T214130Z-b912001c/results/materialize-expression/1-after-resident.json",
+      "sha256": "9ba0f22d7d58cfeb46d2db62d6edeab5d2a2ecf7a8ad88d26c867b6244079ee1"
+    },
+    "1-after-runtime-authored": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T21:43:07+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T214130Z-b912001c/results/materialize-expression/after-bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.817383,
+          0.425781,
+          0.445801
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4463,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series and runtime/authored: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T214130Z-b912001c/results/materialize-expression/1-after-runtime-authored.json",
+      "sha256": "70b5d68a039c51d0218e24acb409f6a57d576c9f7382623fe0634753db13cc7e"
+    },
+    "1-after-runtime-series": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T21:42:56+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T214130Z-b912001c/results/materialize-expression/after-bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.696777,
+          0.38916,
+          0.433594
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4474,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series and runtime/authored: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T214130Z-b912001c/results/materialize-expression/1-after-runtime-series.json",
+      "sha256": "0945384785b29e3af85a02a0af5ac7c0d7f31710967ab853169584f504cbdbc0"
+    },
+    "2-after-bulk": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T21:43:18+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T214130Z-b912001c/results/materialize-expression/after-bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.919434,
+          0.461426,
+          0.45752
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4481,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series and runtime/authored: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T214130Z-b912001c/results/materialize-expression/2-after-bulk.json",
+      "sha256": "c14bf5f9b577dcc9cd0aaab34a6a4d58207d80a566bb3ff1165becf9f5f74db8"
+    },
+    "2-after-resident": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T21:43:20+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T214130Z-b912001c/results/materialize-expression/after-bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.92627,
+          0.470703,
+          0.460449
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4426,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series and runtime/authored: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T214130Z-b912001c/results/materialize-expression/2-after-resident.json",
+      "sha256": "ee33c421038a2462a4bb691b2612c64b3d93c249029bf71ddd530c1450a6c043"
+    },
+    "2-after-runtime-authored": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T21:43:30+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T214130Z-b912001c/results/materialize-expression/after-bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.938477,
+          0.488281,
+          0.466309
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4476,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series and runtime/authored: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T214130Z-b912001c/results/materialize-expression/2-after-runtime-authored.json",
+      "sha256": "eec6c67dc52f953cfb041f5dac7fa3e3cf0c4c8e47c6e9baa0570b747d1293d8"
+    },
+    "2-after-runtime-series": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T21:43:41+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T214130Z-b912001c/results/materialize-expression/after-bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.94873,
+          0.505859,
+          0.472168
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4448,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series and runtime/authored: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T214130Z-b912001c/results/materialize-expression/2-after-runtime-series.json",
+      "sha256": "a09a1e2d250438988d0008cb29238b836af6bc3ff89ab6dab205cae194abdb81"
+    },
+    "3-before-bulk": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T21:43:52+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T214130Z-b912001c/results/materialize-expression/before-bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.957031,
+          0.522461,
+          0.478027
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4468,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series and runtime/authored: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T214130Z-b912001c/results/materialize-expression/3-before-bulk.json",
+      "sha256": "b4dc2800004c280125acef702375fdc3458888dd89cf324cd0285c4778643fa7"
+    },
+    "3-before-resident": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T21:43:54+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T214130Z-b912001c/results/materialize-expression/before-bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.960938,
+          0.530762,
+          0.480957
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4456,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series and runtime/authored: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T214130Z-b912001c/results/materialize-expression/3-before-resident.json",
+      "sha256": "2d796d24aa4a5c54a057acdc15fa4dfcee97e1c005289d05c29bd84930ec7c6d"
+    },
+    "3-before-runtime-authored": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T21:44:04+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T214130Z-b912001c/results/materialize-expression/before-bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.967285,
+          0.546387,
+          0.486816
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4470,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series and runtime/authored: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T214130Z-b912001c/results/materialize-expression/3-before-runtime-authored.json",
+      "sha256": "5aed3c24b11f40b905b5692e59071015ebd1613d22ed460e525127547ba7568c"
+    },
+    "3-before-runtime-series": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T21:44:14+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/jobs/20260910T214130Z-b912001c/results/materialize-expression/before-bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.972656,
+          0.562012,
+          0.492676
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4505,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series and runtime/authored: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T214130Z-b912001c/results/materialize-expression/3-before-runtime-series.json",
+      "sha256": "d79ad8c10b55d8e2d412d696649c9e0c7db6ab5865160756b0af786054e6b88f"
+    }
+  },
+  "interpretation": "Primary comparison: same-binary series/authored, provider ABBA. Previous binary is a linked-context control.",
+  "kind": "google-benchmark-summary",
+  "revision": {
+    "after_header_sha256": "db906ecf4398a6533c33cd7c7c7ba0e3effe99bbca22e9733969625b66482a22",
+    "baseline_binary_sha256": "36fa2d822dcf492315a425b65a699a914860ad310898cd637ac7ef30dae9236b",
+    "before_header_sha256": "daeada46b094ac6c923e77b4985f750599c9cb040739266a387c069316ee833c",
+    "frozen_job": "20260910T212852Z-b2322870",
+    "source_delta": "Remove only one pragma disabling scalar-loop vectorization, interleaving and unrolling. Timed caller and selector objects reused."
+  },
+  "selection_curation": {
+    "date": "2026-09-11",
+    "navigation_or_nested_manifest_edits": {},
+    "note": "Git selection and local navigation changed; measured source, job, and full-bundle identities are unchanged.",
+    "projected_audits": {
+      "audit.json": {
+        "artifact": "../../../../ikea-composition/archive/validation-20260911.json",
+        "member": "evidence/materialize-region-20260910/20260910T214130Z-b912001c/audit.json",
+        "original_sha256": "0d714946ccbb4eb9e2931e3b0b858338770a8ea11991239f658e99075ba24791",
+        "removed_field": "files_sha256",
+        "retained_files": 125
+      }
+    },
+    "renamed_members": {}
+  },
+  "units": "CPU/real times are ns per benchmark iteration. ns_per_item uses the reported item rate; an item means what the benchmark counts, not necessarily a value or byte."
+}

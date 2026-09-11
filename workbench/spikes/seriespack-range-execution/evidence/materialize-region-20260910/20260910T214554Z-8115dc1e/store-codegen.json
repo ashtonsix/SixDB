@@ -1,0 +1,62 @@
+{
+  "avx2_instruction_relocation_assembly_identical": true,
+  "source_delta": "only typed materialization sink; fixed forced scalar runs",
+  "avx512_callbacks": [
+    {
+      "symbol": "0000000000000000 <void materialize_candidate::decode<prototype::avx512_adapter, ikea::seriespack::static_format<7u, (ikea::seriespack::geometry)0, 0u>>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)>:",
+      "native_output_stores": [
+        "      c0:      \tvmovdqu64\t%ymm5, (%rcx,%rbx,4)",
+        "     20e:      \tvmovdqu64\t%ymm5, (%rcx,%rbx,4)",
+        "     215:      \tvextracti64x4\t$0x1, %zmm5, 0x20(%rcx,%rbx,4)",
+        "     2d0:      \tvmovdqu64\t%ymm5, (%rcx,%rbx,8)",
+        "     2d7:      \tvextracti64x4\t$0x1, %zmm5, 0x20(%rcx,%rbx,8)",
+        "     423:      \tvmovdqu64\t%ymm6, (%rcx,%rbx,8)",
+        "     42a:      \tvextracti64x4\t$0x1, %zmm6, 0x20(%rcx,%rbx,8)",
+        "     43d:      \tvmovdqu64\t%ymm5, 0x40(%rcx,%rbx,8)",
+        "     445:      \tvextracti64x4\t$0x1, %zmm5, 0x60(%rcx,%rbx,8)"
+      ]
+    },
+    {
+      "symbol": "0000000000000000 <void materialize_candidate::decode<prototype::avx512_adapter, ikea::seriespack::static_format<23u, (ikea::seriespack::geometry)0, 16u>>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)>:",
+      "native_output_stores": [
+        "     105:      \tvmovdqu64\t%ymm6, (%rcx,%rax,4)",
+        "     2fc:      \tvmovdqu64\t%ymm7, (%rcx,%rax,4)",
+        "     303:      \tvextracti64x4\t$0x1, %zmm7, 0x20(%rcx,%rax,4)",
+        "     41c:      \tvmovdqu64\t%ymm5, (%rax,%rcx,8)",
+        "     423:      \tvextracti64x4\t$0x1, %zmm5, 0x20(%rax,%rcx,8)",
+        "     63e:      \tvmovdqu64\t%ymm5, (%rax,%rcx,8)",
+        "     645:      \tvextracti64x4\t$0x1, %zmm5, 0x20(%rax,%rcx,8)",
+        "     654:      \tvmovdqu64\t%ymm5, 0x40(%rax,%rcx,8)",
+        "     65c:      \tvextracti64x4\t$0x1, %zmm5, 0x60(%rax,%rcx,8)"
+      ]
+    },
+    {
+      "symbol": "0000000000000000 <void materialize_candidate::decode<prototype::avx512_adapter, ikea::seriespack::static_format<12u, (ikea::seriespack::geometry)1, 0u>>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)>:",
+      "native_output_stores": [
+        "      9a:      \tvmovdqu64\t%ymm1, (%rcx,%r9,4)",
+        "      a1:      \tvextracti64x4\t$0x1, %zmm1, 0x20(%rcx,%r9,4)",
+        "     14d:      \tvmovdqu64\t%ymm1, (%rcx,%r9,4)",
+        "     273:      \tvmovdqu64\t%ymm2, (%rcx,%r9,8)",
+        "     27a:      \tvextracti64x4\t$0x1, %zmm2, 0x20(%rcx,%r9,8)",
+        "     289:      \tvmovdqu64\t%ymm1, 0x40(%rcx,%r9,8)",
+        "     291:      \tvextracti64x4\t$0x1, %zmm1, 0x60(%rcx,%r9,8)",
+        "     33e:      \tvmovdqu64\t%ymm1, (%rcx,%r9,8)",
+        "     345:      \tvextracti64x4\t$0x1, %zmm1, 0x20(%rcx,%r9,8)"
+      ]
+    },
+    {
+      "symbol": "0000000000000000 <void materialize_candidate::decode<prototype::avx512_adapter, ikea::seriespack::static_format<28u, (ikea::seriespack::geometry)1, 16u>>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)>:",
+      "native_output_stores": [
+        "      e4:      \tvmovdqu64\t%ymm2, (%r14,%r9,4)",
+        "      eb:      \tvextracti64x4\t$0x1, %zmm2, 0x20(%r14,%r9,4)",
+        "     1dd:      \tvmovdqu64\t%ymm2, (%r14,%r9,4)",
+        "     381:      \tvmovdqu64\t%ymm1, (%r14,%r9,8)",
+        "     388:      \tvextracti64x4\t$0x1, %zmm1, 0x20(%r14,%r9,8)",
+        "     397:      \tvmovdqu64\t%ymm1, 0x40(%r14,%r9,8)",
+        "     39f:      \tvextracti64x4\t$0x1, %zmm1, 0x60(%r14,%r9,8)",
+        "     495:      \tvmovdqu64\t%ymm1, (%r14,%r9,8)",
+        "     49c:      \tvextracti64x4\t$0x1, %zmm1, 0x20(%r14,%r9,8)"
+      ]
+    }
+  ]
+}

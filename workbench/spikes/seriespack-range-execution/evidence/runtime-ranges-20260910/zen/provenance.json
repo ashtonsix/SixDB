@@ -1,0 +1,791 @@
+{
+  "cases": 628,
+  "counters": [
+    "iterations",
+    "repetition_index",
+    "checksum",
+    "logical_values",
+    "encoded_bytes",
+    "placement_bytes",
+    "payload_stride",
+    "head0_stride",
+    "head1_stride",
+    "values_per_item",
+    "io_bytes_per_value",
+    "query_bytes",
+    "queries_per_iteration",
+    "sink_bytes_per_iteration",
+    "query_hash_lo",
+    "query_hash_hi",
+    "bulk_input_output_bytes"
+  ],
+  "files_sha256": {
+    "after-runtime-linked.asm": "74bdfdd4b7ab62b01631d29a2a0d7e2b52e788daeadda3b9b0aa806b49bba15e",
+    "audit.json": "564878abebad263669b233d194bef24fadc0aa8bcd0bdeef992149fbd305cec5",
+    "before-runtime-linked.asm": "0e9755e9aba99ce10fab90a0e7564efec972d7bd623b35dc1b53319436adff75",
+    "comparisons.csv": "0c0e3d543c0c6854385840e39491fddc48f9e9000c9504586255ba53ab457e4c",
+    "comparisons.json": "e3a7fe04f715897b1018c4d79b7ebab14fd4023e8c3b5ea2ab9031b43ea0d0f7",
+    "linked-caller-audit.json": "b8beb1041126bcadd5d1264f0e25ae9d4c67eafc0eeb85cf43eb5798152b6a74",
+    "query-models.json": "4c52480da45398b1db86f7533b4dd0e5c0bae162786698cb24158e564321dc6f",
+    "summary.json": "0b098e84b839f3305bf05df9b6b8624c82f80707595bcc294bf95ef3af1322bc"
+  },
+  "filter": null,
+  "format": 1,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "0-before-bulk": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:42:10+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-range-abi/zen5/avx512/before-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.735352,
+          0.354492
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4495,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T203524Z-5809581c/results/scalar-range-abi/avx512/0-before-bulk.json",
+      "sha256": "8aaa9c778a77f601900d74f22b9f04a13760f3c1c3b454b8c85bcaaca92f7fe6"
+    },
+    "0-before-resident": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:42:00+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-range-abi/zen5/avx512/before-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.725586,
+          0.34668
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4472,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T203524Z-5809581c/results/scalar-range-abi/avx512/0-before-resident.json",
+      "sha256": "3aecd502cee59ffa891290b3d6760dd854386affa18188b5ba9d30eca4bd407a"
+    },
+    "0-before-runtime": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:41:49+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-range-abi/zen5/avx512/before-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.71582,
+          0.338867
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4475,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T203524Z-5809581c/results/scalar-range-abi/avx512/0-before-runtime.json",
+      "sha256": "aa577a40305b653ac5b7b3a0ccaa1ed7bd7fb275c7bb4dc6540a1be24028c013"
+    },
+    "1-after-bulk": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:42:32+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-range-abi/zen5/avx512/after-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.75293,
+          0.369629
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4465,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T203524Z-5809581c/results/scalar-range-abi/avx512/1-after-bulk.json",
+      "sha256": "4e4895ac2354fdf6dc95d049ca51edff3bcfaff864ee06cdefb295528b153361"
+    },
+    "1-after-resident": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:42:23+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-range-abi/zen5/avx512/after-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.744141,
+          0.362305
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4470,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T203524Z-5809581c/results/scalar-range-abi/avx512/1-after-resident.json",
+      "sha256": "4610ca1b7a65c9ba2d027cbcde7285fdd9b8363d6456a27987168157a943afb8"
+    },
+    "1-after-runtime": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:42:12+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-range-abi/zen5/avx512/after-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.735352,
+          0.354492
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4491,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T203524Z-5809581c/results/scalar-range-abi/avx512/1-after-runtime.json",
+      "sha256": "b5a638805de400e427a7a7d801c34e16bccf6a0853e03b19ffcf150e2acc7ba4"
+    },
+    "2-after-bulk": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:42:55+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-range-abi/zen5/avx512/after-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.773926,
+          0.386719
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4479,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T203524Z-5809581c/results/scalar-range-abi/avx512/2-after-bulk.json",
+      "sha256": "52a8eefa2e04e74c4844f0c84ba5fe7fa8b1b4666d7ef456da1dda255f7ac9e8"
+    },
+    "2-after-resident": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:42:45+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-range-abi/zen5/avx512/after-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.766113,
+          0.379883
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4485,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T203524Z-5809581c/results/scalar-range-abi/avx512/2-after-resident.json",
+      "sha256": "b0fdc341cf482b47dcd1fbd6e911b29f48187f82c6eae2545ed1e0595cc8ba6d"
+    },
+    "2-after-runtime": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:42:34+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-range-abi/zen5/avx512/after-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.757324,
+          0.373047
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4464,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T203524Z-5809581c/results/scalar-range-abi/avx512/2-after-runtime.json",
+      "sha256": "a6c2872eb317d3c7333106258129e112504569d003bbbe322e6243c75cf0097e"
+    },
+    "3-before-bulk": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:43:18+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-range-abi/zen5/avx512/before-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.793457,
+          0.403809
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4478,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T203524Z-5809581c/results/scalar-range-abi/avx512/3-before-bulk.json",
+      "sha256": "7573450ed66ac5383b0a660b95c8ac750b1b77d33e4b49c38abdb46f1ad72a14"
+    },
+    "3-before-resident": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:43:08+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-range-abi/zen5/avx512/before-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.785645,
+          0.396973
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4444,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T203524Z-5809581c/results/scalar-range-abi/avx512/3-before-resident.json",
+      "sha256": "3b30133752544af7c822dd17b10e962756f2ad5c6739dc485b18b54048001bf0"
+    },
+    "3-before-runtime": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:42:57+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/scalar-range-abi/zen5/avx512/before-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-30-110",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.773926,
+          0.386719
+        ],
+        "materialized_region_contract": "admitted-region/get16: count16/alignment16/u64 admitted, runtime source placement; raw-dense/get16 additionally admits dense payload; both retain original indices, one indirect call/query, same128B output and endpoint checksum; setup validation excluded",
+        "mhz_per_cpu": 4475,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "4096",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "runtime_range_contract": "runtime/series: independently constructed W7/W12 wire; 4096 runtime begin/end records; 256 queries/iteration; one bound indirect decode/query; exact u32/u64 output; checksum uint64(first)+uint64(last); moderate independent strides; all-record oracle and exact output canaries outside timing; stream restarted per repetition, carried between batches"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260910T203524Z-5809581c/results/scalar-range-abi/avx512/3-before-runtime.json",
+      "sha256": "f4486d3c553d5aae2eb3a344ca8bfec9418c7e475a18e285027645849e3eadf2"
+    }
+  },
+  "kind": "google-benchmark-summary",
+  "ordered_repetition_verification": {
+    "case_block_rows": 628,
+    "cpu_real_and_requested_counters_exact": true,
+    "individual_samples": 1884,
+    "labels_in_execution_order": [
+      "0-before-runtime",
+      "0-before-resident",
+      "0-before-bulk",
+      "1-after-runtime",
+      "1-after-resident",
+      "1-after-bulk",
+      "2-after-runtime",
+      "2-after-resident",
+      "2-after-bulk",
+      "3-before-runtime",
+      "3-before-resident",
+      "3-before-bulk"
+    ]
+  },
+  "units": "CPU/real times are ns per benchmark iteration. ns_per_item uses the reported item rate; an item means what the benchmark counts, not necessarily a value or byte.",
+  "archived_files": {
+    "cases.csv": {
+      "sha256": "5e2afde4ebedeb0042914e014f51890886683a99ac1fb1f0ce773d68542ee743",
+      "artifact": "../../../../ikea-composition/archive/validation-20260911.json",
+      "member": "evidence/runtime-ranges-20260910/zen/cases.csv"
+    }
+  },
+  "selection_curation": {
+    "date": "2026-09-11",
+    "note": "Git selection and local navigation changed; measured source, job, and full-bundle identities are unchanged.",
+    "navigation_or_nested_manifest_edits": {},
+    "renamed_members": {}
+  }
+}

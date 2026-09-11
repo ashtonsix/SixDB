@@ -1,0 +1,42 @@
+[
+  {
+    "variant": "before",
+    "function": "0000000000193d90 <void seriespack_runtime_ranges::run<unsigned int>(benchmark::State&, seriespack_runtime_ranges::shape, seriespack_runtime_ranges::regime, ikea::seriespack::execution_target)>:",
+    "start": "0x193f40",
+    "end": "0x193fc5",
+    "instructions": 28,
+    "indirect_calls": 1,
+    "runtime_begin_end_loads_and_last_element_index": "verified in retained extract",
+    "scope": "measured worker linked executable"
+  },
+  {
+    "variant": "before",
+    "function": "0000000000195af0 <void seriespack_runtime_ranges::run<unsigned long>(benchmark::State&, seriespack_runtime_ranges::shape, seriespack_runtime_ranges::regime, ikea::seriespack::execution_target)>:",
+    "start": "0x195ca0",
+    "end": "0x195d23",
+    "instructions": 27,
+    "indirect_calls": 1,
+    "runtime_begin_end_loads_and_last_element_index": "verified in retained extract",
+    "scope": "measured worker linked executable"
+  },
+  {
+    "variant": "after",
+    "function": "0000000000192780 <void seriespack_runtime_ranges::run<unsigned int>(benchmark::State&, seriespack_runtime_ranges::shape, seriespack_runtime_ranges::regime, ikea::seriespack::execution_target)>:",
+    "start": "0x192920",
+    "end": "0x19298d",
+    "instructions": 24,
+    "indirect_calls": 1,
+    "runtime_begin_end_loads_and_last_element_index": "verified in retained extract",
+    "scope": "measured worker linked executable"
+  },
+  {
+    "variant": "after",
+    "function": "0000000000194470 <void seriespack_runtime_ranges::run<unsigned long>(benchmark::State&, seriespack_runtime_ranges::shape, seriespack_runtime_ranges::regime, ikea::seriespack::execution_target)>:",
+    "start": "0x194610",
+    "end": "0x19467c",
+    "instructions": 23,
+    "indirect_calls": 1,
+    "runtime_begin_end_loads_and_last_element_index": "verified in retained extract",
+    "scope": "measured worker linked executable"
+  }
+]

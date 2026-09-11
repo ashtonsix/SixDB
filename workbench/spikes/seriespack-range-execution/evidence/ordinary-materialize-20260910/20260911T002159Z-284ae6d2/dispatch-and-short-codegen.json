@@ -1,0 +1,1392 @@
+[
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 88,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 7u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 7
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 247,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%r14",
+      "       2:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 7u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 7
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 46,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 7u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 15
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 305,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%r15",
+      "       2:      \tpushq\t%r14",
+      "       4:      \tpushq\t%r12",
+      "       6:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 7u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 15
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 31,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 7u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 23
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 350,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%r15",
+      "       2:      \tpushq\t%r14",
+      "       4:      \tpushq\t%r13",
+      "       6:      \tpushq\t%r12",
+      "       8:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 7u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 23
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 88,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 6u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 6
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 247,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%r14",
+      "       2:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 6u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 6
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 46,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 6u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 14
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 305,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%r15",
+      "       2:      \tpushq\t%r14",
+      "       4:      \tpushq\t%r12",
+      "       6:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 6u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 14
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 31,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 6u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 22
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 350,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%r15",
+      "       2:      \tpushq\t%r14",
+      "       4:      \tpushq\t%r13",
+      "       6:      \tpushq\t%r12",
+      "       8:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 6u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 22
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 88,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 5u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 5
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 247,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%r14",
+      "       2:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 5u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 5
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 46,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 5u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 13
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 305,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%r15",
+      "       2:      \tpushq\t%r14",
+      "       4:      \tpushq\t%r12",
+      "       6:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 5u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 13
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 31,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 5u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 21
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 350,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%r15",
+      "       2:      \tpushq\t%r14",
+      "       4:      \tpushq\t%r13",
+      "       6:      \tpushq\t%r12",
+      "       8:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 5u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 21
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 88,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 4u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 4
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 214,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 4u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 4
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 46,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 4u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 12
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 271,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%r15",
+      "       2:      \tpushq\t%r14",
+      "       4:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 4u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 12
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 31,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 4u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 20
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 318,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%r15",
+      "       2:      \tpushq\t%r14",
+      "       4:      \tpushq\t%r13",
+      "       6:      \tpushq\t%r12",
+      "       8:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 4u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 20
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 88,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 3u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 3
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 248,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 3u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 3
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 46,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 3u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 11
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 304,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r15",
+      "       3:      \tpushq\t%r14",
+      "       5:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 3u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 11
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 31,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 3u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 19
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 350,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r15",
+      "       3:      \tpushq\t%r14",
+      "       5:      \tpushq\t%r13",
+      "       7:      \tpushq\t%r12",
+      "       9:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 3u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 19
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 88,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 2u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 2
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 222,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 2u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 2
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 46,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 2u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 10
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 278,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%r15",
+      "       2:      \tpushq\t%r14",
+      "       4:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 2u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 10
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 31,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 2u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 18
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 326,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%r15",
+      "       2:      \tpushq\t%r14",
+      "       4:      \tpushq\t%r13",
+      "       6:      \tpushq\t%r12",
+      "       8:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 2u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 18
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 88,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 1u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 1
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 206,
+    "kind": "decode_materialized_short",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 1u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 1
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 46,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 1u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 9
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 266,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%r14",
+      "       2:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 1u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 9
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 31,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 1u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 17
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 310,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%r15",
+      "       2:      \tpushq\t%r14",
+      "       4:      \tpushq\t%r12",
+      "       6:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 1u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 17
+  },
+  {
+    "calls": [],
+    "geometry": "striped",
+    "head": 0,
+    "instructions": 65,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 12u, (ikea::seriespack::geometry)1, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 12
+  },
+  {
+    "calls": [],
+    "geometry": "striped",
+    "head": 0,
+    "instructions": 352,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%r14",
+      "       2:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 12u, (ikea::seriespack::geometry)1, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 12
+  },
+  {
+    "calls": [],
+    "geometry": "striped",
+    "head": 8,
+    "instructions": 31,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 12u, (ikea::seriespack::geometry)1, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 20
+  },
+  {
+    "calls": [],
+    "geometry": "striped",
+    "head": 8,
+    "instructions": 400,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r15",
+      "       3:      \tpushq\t%r14",
+      "       5:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 12u, (ikea::seriespack::geometry)1, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 20
+  },
+  {
+    "calls": [],
+    "geometry": "striped",
+    "head": 16,
+    "instructions": 31,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 12u, (ikea::seriespack::geometry)1, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 28
+  },
+  {
+    "calls": [],
+    "geometry": "striped",
+    "head": 16,
+    "instructions": 448,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r15",
+      "       3:      \tpushq\t%r14",
+      "       5:      \tpushq\t%r12",
+      "       7:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 12u, (ikea::seriespack::geometry)1, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx2",
+    "vector_stack": [],
+    "width": 28
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 88,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 7u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 7
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 243,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r15",
+      "       3:      \tpushq\t%r14",
+      "       5:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 7u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 7
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 46,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 7u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 15
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 299,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r15",
+      "       3:      \tpushq\t%r14",
+      "       5:      \tpushq\t%r12",
+      "       7:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 7u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 15
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 31,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 7u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 23
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 343,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r15",
+      "       3:      \tpushq\t%r14",
+      "       5:      \tpushq\t%r13",
+      "       7:      \tpushq\t%r12",
+      "       9:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 7u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 23
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 88,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 6
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 243,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r15",
+      "       3:      \tpushq\t%r14",
+      "       5:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 6
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 46,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 14
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 299,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r15",
+      "       3:      \tpushq\t%r14",
+      "       5:      \tpushq\t%r12",
+      "       7:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 14
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 31,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 22
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 343,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r15",
+      "       3:      \tpushq\t%r14",
+      "       5:      \tpushq\t%r13",
+      "       7:      \tpushq\t%r12",
+      "       9:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 22
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 88,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 5u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 5
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 243,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r15",
+      "       3:      \tpushq\t%r14",
+      "       5:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 5u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 5
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 46,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 5u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 13
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 299,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r15",
+      "       3:      \tpushq\t%r14",
+      "       5:      \tpushq\t%r12",
+      "       7:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 5u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 13
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 31,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 5u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 21
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 343,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r15",
+      "       3:      \tpushq\t%r14",
+      "       5:      \tpushq\t%r13",
+      "       7:      \tpushq\t%r12",
+      "       9:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 5u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 21
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 88,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 4u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 4
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 208,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r14",
+      "       3:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 4u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 4
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 46,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 4u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 12
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 267,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r15",
+      "       3:      \tpushq\t%r14",
+      "       5:      \tpushq\t%r12",
+      "       7:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 4u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 12
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 31,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 4u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 20
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 309,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r15",
+      "       3:      \tpushq\t%r14",
+      "       5:      \tpushq\t%r13",
+      "       7:      \tpushq\t%r12",
+      "       9:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 4u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 20
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 88,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 3u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 3
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 241,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r14",
+      "       3:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 3u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 3
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 46,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 3u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 11
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 298,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r15",
+      "       3:      \tpushq\t%r14",
+      "       5:      \tpushq\t%r12",
+      "       7:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 3u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 11
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 31,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 3u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 19
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 343,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r15",
+      "       3:      \tpushq\t%r14",
+      "       5:      \tpushq\t%r13",
+      "       7:      \tpushq\t%r12",
+      "       9:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 3u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 19
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 88,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 2u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 2
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 217,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r14",
+      "       3:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 2u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 2
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 46,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 2u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 10
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 274,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r15",
+      "       3:      \tpushq\t%r14",
+      "       5:      \tpushq\t%r12",
+      "       7:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 2u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 10
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 31,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 2u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 18
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 319,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r15",
+      "       3:      \tpushq\t%r14",
+      "       5:      \tpushq\t%r13",
+      "       7:      \tpushq\t%r12",
+      "       9:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 2u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 18
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 88,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 1u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 1
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 0,
+    "instructions": 199,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 1u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 1
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 46,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 1u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 9
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 8,
+    "instructions": 258,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%r15",
+      "       2:      \tpushq\t%r14",
+      "       4:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 1u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 9
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 31,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 1u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 17
+  },
+  {
+    "calls": [],
+    "geometry": "local",
+    "head": 16,
+    "instructions": 303,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%r15",
+      "       2:      \tpushq\t%r14",
+      "       4:      \tpushq\t%r13",
+      "       6:      \tpushq\t%r12",
+      "       8:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 1u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 17
+  },
+  {
+    "calls": [],
+    "geometry": "striped",
+    "head": 0,
+    "instructions": 65,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 12u, (ikea::seriespack::geometry)1, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 12
+  },
+  {
+    "calls": [],
+    "geometry": "striped",
+    "head": 0,
+    "instructions": 347,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r15",
+      "       3:      \tpushq\t%r14",
+      "       5:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 12u, (ikea::seriespack::geometry)1, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 12
+  },
+  {
+    "calls": [],
+    "geometry": "striped",
+    "head": 8,
+    "instructions": 31,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 12u, (ikea::seriespack::geometry)1, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 20
+  },
+  {
+    "calls": [],
+    "geometry": "striped",
+    "head": 8,
+    "instructions": 377,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r15",
+      "       3:      \tpushq\t%r14",
+      "       5:      \tpushq\t%r12",
+      "       7:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 12u, (ikea::seriespack::geometry)1, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 20
+  },
+  {
+    "calls": [],
+    "geometry": "striped",
+    "head": 16,
+    "instructions": 31,
+    "kind": "decode_bound",
+    "pushes": [],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_bound<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 12u, (ikea::seriespack::geometry)1, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 28
+  },
+  {
+    "calls": [],
+    "geometry": "striped",
+    "head": 16,
+    "instructions": 418,
+    "kind": "decode_materialized_short",
+    "pushes": [
+      "       0:      \tpushq\t%rbp",
+      "       1:      \tpushq\t%r15",
+      "       3:      \tpushq\t%r14",
+      "       5:      \tpushq\t%r13",
+      "       7:      \tpushq\t%r12",
+      "       9:      \tpushq\t%rbx"
+    ],
+    "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_short<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 12u, (ikea::seriespack::geometry)1, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)",
+    "target": "avx512",
+    "vector_stack": [],
+    "width": 28
+  }
+]

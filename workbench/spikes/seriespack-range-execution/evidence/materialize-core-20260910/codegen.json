@@ -1,0 +1,74 @@
+{
+  "format": 1,
+  "scope": "Refactor comparison compiled with same live headers/flags. Header selection includes already integrated callback and Local2/4 changes. Compares frozen old diagnostic source to new expression-consuming source; no new timings or linked placement equivalence claimed.",
+  "targets": {
+    "neon": {
+      "instruction_and_relocation_listing_equal": true,
+      "text_constants_and_relocations_byte_identical": true,
+      "sections": {
+        ".text": {
+          "bytes": 12120,
+          "sha256": "22bcf2d1b795cef67e64f58a63fe64736175c6e8d2cdffc60e9e1a57ed5d786d"
+        },
+        ".rela.text": {
+          "bytes": 16128,
+          "sha256": "1e38135df6224432b488f68bb45bcce7c732f3ebcac832692d44c8f618d1fa50"
+        },
+        ".rodata.cst16": {
+          "bytes": 5248,
+          "sha256": "03b6be4f73ed78c06cfd25a12323c5e3671422a7fd2f8bac71e595c1931e4284"
+        },
+        ".data.rel.ro": {
+          "bytes": 416,
+          "sha256": "4cc7e6272db6b1ad7581f76c63c694e926e20698e9b02223d5041a55960463f2"
+        },
+        ".rela.data.rel.ro": {
+          "bytes": 864,
+          "sha256": "667aaaa9e3119f3e75d31b71a302505040c17440162c4ac1ebd823df91aba3ba"
+        }
+      }
+    },
+    "x86": {
+      "instruction_and_relocation_listing_equal": true,
+      "text_constants_and_relocations_byte_identical": true,
+      "sections": {
+        ".text": {
+          "bytes": 13154,
+          "sha256": "be895463c6110835c89035956d0f863b1a9fc48c8939aef6431f1baddf1bffa7"
+        },
+        ".rela.text": {
+          "bytes": 4080,
+          "sha256": "e50435ecfabae9d4f25e3aa5e65d7335dc41ae0de94f43573312456e2cbea658"
+        },
+        ".rodata.cst32": {
+          "bytes": 64,
+          "sha256": "af33dc1ba56163498b38f839b46f4fcfc693f11b5431092dbe4d4f10a5f37898"
+        },
+        ".rodata.cst16": {
+          "bytes": 1440,
+          "sha256": "1bb3c09f5e9dce334405fb86c99451aec5d2e5dc3598b85c210f220af0dd9245"
+        },
+        ".rodata.cst8": {
+          "bytes": 624,
+          "sha256": "6362d2832912da7d126eb1295d27c8af62f5d707ec44038dd33533b74d27ddaa"
+        },
+        ".rodata.cst4": {
+          "bytes": 104,
+          "sha256": "03b2712bb21f0fca321a60ca3f82f72e071e094ad07780c75ac2e96b1d3473fe"
+        },
+        ".rodata._ZN4ikea10seriespack6detail6avx51211body_detail14decode_indicesILj7ELj8EEE": {
+          "bytes": 64,
+          "sha256": "118e747c2be28be146cfc5cec2ce6946dd8938494d4e967d430cf46333b58ce8"
+        },
+        ".data.rel.ro": {
+          "bytes": 832,
+          "sha256": "e0084b66cb4a03e2aba6cc7342eead6a91610ad915d66f9ae2c734f99b772ac7"
+        },
+        ".rela.data.rel.ro": {
+          "bytes": 1728,
+          "sha256": "054509c6679648aa5cbe1ae6cb4d92a0e04a1d86b5eb2580209e38f7cc08e02b"
+        }
+      }
+    }
+  }
+}

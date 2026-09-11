@@ -1,0 +1,157 @@
+
+build/successor-delivery/store-audited/candidate-native.o:	file format elf64-x86-64
+
+Disassembly of section .text._ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_boundaryINS2_10avx512_opsELj5ELNS0_8geometryE1ELj0EmEEvRKNS0_15basic_placementIKSt4byteEENS0_11index_rangeEPT3_:
+
+0000000000000000 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_boundaryINS2_10avx512_opsELj5ELNS0_8geometryE1ELj0EmEEvRKNS0_15basic_placementIKSt4byteEENS0_11index_rangeEPT3_>:
+       0:      	pushq	%rbx
+       1:      	movzbl	%dl, %eax
+       4:      	subl	%edx, %ecx
+       6:      	shrq	$0x8, %rdx
+       a:      	imulq	%rsi, %rdx
+       e:      	addq	%rdi, %rdx
+      11:      	leal	(%rax,%rcx), %esi
+      14:      	cmpl	$0x10, %ecx
+      17:      	jb	0x13c <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_boundaryINS2_10avx512_opsELj5ELNS0_8geometryE1ELj0EmEEvRKNS0_15basic_placementIKSt4byteEENS0_11index_rangeEPT3_+0x13c>
+      1d:      	vpbroadcastq	(%rip), %xmm0   # 0x26 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_boundaryINS2_10avx512_opsELj5ELNS0_8geometryE1ELj0EmEEvRKNS0_15basic_placementIKSt4byteEENS0_11index_rangeEPT3_+0x26>
+		0000000000000022:  R_X86_64_PC32	.LCPI2473_0-0x4
+      26:      	movl	$0xffffffff, %edi       # imm = 0xFFFFFFFF
+      2b:      	jmp	0x66 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_boundaryINS2_10avx512_opsELj5ELNS0_8geometryE1ELj0EmEEvRKNS0_15basic_placementIKSt4byteEENS0_11index_rangeEPT3_+0x66>
+      2d:      	nopl	(%rax)
+      30:      	addb	$-0x3, %r10b
+      34:      	shlxl	%r10d, %edi, %ebx
+      39:      	shrl	$0x3, %r11d
+      3d:      	andl	%ebx, %r11d
+      40:      	movzbl	0x20(%rcx,%r9), %ecx
+      46:      	bzhil	%r10d, %ecx, %ecx
+      4b:      	orl	%r11d, %ecx
+      4e:      	movl	%ecx, %ecx
+      50:      	movq	%rcx, (%r8)
+      53:      	addq	$0x8, %r8
+      57:      	incl	%eax
+      59:      	movl	%esi, %ecx
+      5b:      	subl	%eax, %ecx
+      5d:      	cmpl	$0xf, %ecx
+      60:      	jbe	0x13c <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_boundaryINS2_10avx512_opsELj5ELNS0_8geometryE1ELj0EmEEvRKNS0_15basic_placementIKSt4byteEENS0_11index_rangeEPT3_+0x13c>
+      66:      	movl	%eax, %ecx
+      68:      	andl	$0x1f, %ecx
+      6b:      	movl	%eax, %r9d
+      6e:      	shrl	$0x5, %r9d
+      72:      	leal	(%r9,%r9,4), %r10d
+      76:      	andl	$0x7, %r10d
+      7a:      	shll	$0x2, %r9d
+      7e:      	leal	(%r9,%r9,4), %r9d
+      82:      	andl	$-0x20, %r9d
+      86:      	addq	%rdx, %r9
+      89:      	cmpl	$0x10, %ecx
+      8c:      	ja	0xb0 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_boundaryINS2_10avx512_opsELj5ELNS0_8geometryE1ELj0EmEEvRKNS0_15basic_placementIKSt4byteEENS0_11index_rangeEPT3_+0xb0>
+      8e:      	vmovdqu	(%rcx,%r9), %xmm1
+      94:      	cmpl	$0x3, %r10d
+      98:      	ja	0xd0 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_boundaryINS2_10avx512_opsELj5ELNS0_8geometryE1ELj0EmEEvRKNS0_15basic_placementIKSt4byteEENS0_11index_rangeEPT3_+0xd0>
+      9a:      	vmovd	%r10d, %xmm2
+      9f:      	vpsrlw	%xmm2, %xmm1, %xmm1
+      a3:      	vpand	%xmm0, %xmm1, %xmm1
+      a7:      	jmp	0xfc <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_boundaryINS2_10avx512_opsELj5ELNS0_8geometryE1ELj0EmEEvRKNS0_15basic_placementIKSt4byteEENS0_11index_rangeEPT3_+0xfc>
+      a9:      	nopl	(%rax)
+      b0:      	movzbl	(%rcx,%r9), %r11d
+      b5:      	cmpl	$0x3, %r10d
+      b9:      	ja	0x30 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_boundaryINS2_10avx512_opsELj5ELNS0_8geometryE1ELj0EmEEvRKNS0_15basic_placementIKSt4byteEENS0_11index_rangeEPT3_+0x30>
+      bf:      	shrxl	%r10d, %r11d, %ecx
+      c4:      	andl	$0x1f, %ecx
+      c7:      	jmp	0x4e <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_boundaryINS2_10avx512_opsELj5ELNS0_8geometryE1ELj0EmEEvRKNS0_15basic_placementIKSt4byteEENS0_11index_rangeEPT3_+0x4e>
+      c9:      	nopl	(%rax)
+      d0:      	addb	$-0x3, %r10b
+      d4:      	shlxl	%r10d, %edi, %r10d
+      d9:      	vpsrlw	$0x3, %xmm1, %xmm2
+      de:      	vpbroadcastb	%r10d, %xmm1
+      e4:      	andb	$0x1f, %r10b
+      e8:      	vpbroadcastb	%r10d, %xmm3
+      ee:      	vpandn	0x20(%rcx,%r9), %xmm1, %xmm1
+      f5:      	vpternlogq	$0xf8, %xmm3, %xmm2, %xmm1 # xmm1 = xmm1 | (xmm2 & xmm3)
+      fc:      	vpmovzxbq	%xmm1, %zmm2    # zmm2 = xmm1[0],zero,zero,zero,zero,zero,zero,zero,xmm1[1],zero,zero,zero,zero,zero,zero,zero,xmm1[2],zero,zero,zero,zero,zero,zero,zero,xmm1[3],zero,zero,zero,zero,zero,zero,zero,xmm1[4],zero,zero,zero,zero,zero,zero,zero,xmm1[5],zero,zero,zero,zero,zero,zero,zero,xmm1[6],zero,zero,zero,zero,zero,zero,zero,xmm1[7],zero,zero,zero,zero,zero,zero,zero
+     102:      	vmovdqu	%ymm2, (%r8)
+     107:      	vextracti64x4	$0x1, %zmm2, 0x20(%r8)
+     10f:      	vpshufd	$0xee, %xmm1, %xmm1     # xmm1 = xmm1[2,3,2,3]
+     114:      	vpmovzxbq	%xmm1, %zmm1    # zmm1 = xmm1[0],zero,zero,zero,zero,zero,zero,zero,xmm1[1],zero,zero,zero,zero,zero,zero,zero,xmm1[2],zero,zero,zero,zero,zero,zero,zero,xmm1[3],zero,zero,zero,zero,zero,zero,zero,xmm1[4],zero,zero,zero,zero,zero,zero,zero,xmm1[5],zero,zero,zero,zero,zero,zero,zero,xmm1[6],zero,zero,zero,zero,zero,zero,zero,xmm1[7],zero,zero,zero,zero,zero,zero,zero
+     11a:      	vmovdqu	%ymm1, 0x40(%r8)
+     120:      	vextracti64x4	$0x1, %zmm1, 0x60(%r8)
+     128:      	addl	$0x10, %eax
+     12b:      	subq	$-0x80, %r8
+     12f:      	movl	%esi, %ecx
+     131:      	subl	%eax, %ecx
+     133:      	cmpl	$0xf, %ecx
+     136:      	ja	0x66 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_boundaryINS2_10avx512_opsELj5ELNS0_8geometryE1ELj0EmEEvRKNS0_15basic_placementIKSt4byteEENS0_11index_rangeEPT3_+0x66>
+     13c:      	cmpl	$0x8, %ecx
+     13f:      	jb	0x1dd <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_boundaryINS2_10avx512_opsELj5ELNS0_8geometryE1ELj0EmEEvRKNS0_15basic_placementIKSt4byteEENS0_11index_rangeEPT3_+0x1dd>
+     145:      	movl	%eax, %ecx
+     147:      	andl	$0x1f, %ecx
+     14a:      	cmpl	$0x18, %ecx
+     14d:      	ja	0x1dd <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_boundaryINS2_10avx512_opsELj5ELNS0_8geometryE1ELj0EmEEvRKNS0_15basic_placementIKSt4byteEENS0_11index_rangeEPT3_+0x1dd>
+     153:      	movl	%eax, %r9d
+     156:      	shrl	$0x5, %r9d
+     15a:      	leal	(%r9,%r9,4), %edi
+     15e:      	andl	$0x7, %edi
+     161:      	shll	$0x2, %r9d
+     165:      	leal	(%r9,%r9,4), %r9d
+     169:      	andl	$-0x20, %r9d
+     16d:      	addq	%rdx, %r9
+     170:      	vmovq	(%rcx,%r9), %xmm0
+     176:      	cmpl	$0x3, %edi
+     179:      	ja	0x18f <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_boundaryINS2_10avx512_opsELj5ELNS0_8geometryE1ELj0EmEEvRKNS0_15basic_placementIKSt4byteEENS0_11index_rangeEPT3_+0x18f>
+     17b:      	vmovd	%edi, %xmm1
+     17f:      	vpsrlw	%xmm1, %xmm0, %xmm0
+     183:      	vpandq	(%rip){1to2}, %xmm0, %xmm0 # 0x18d <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_boundaryINS2_10avx512_opsELj5ELNS0_8geometryE1ELj0EmEEvRKNS0_15basic_placementIKSt4byteEENS0_11index_rangeEPT3_+0x18d>
+		0000000000000189:  R_X86_64_PC32	.LCPI2473_0-0x4
+     18d:      	jmp	0x1c3 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_boundaryINS2_10avx512_opsELj5ELNS0_8geometryE1ELj0EmEEvRKNS0_15basic_placementIKSt4byteEENS0_11index_rangeEPT3_+0x1c3>
+     18f:      	vmovq	0x20(%rcx,%r9), %xmm1
+     196:      	addb	$-0x3, %dil
+     19a:      	movl	$0xffffffff, %ecx       # imm = 0xFFFFFFFF
+     19f:      	shlxl	%edi, %ecx, %ecx
+     1a4:      	vpsrlw	$0x3, %xmm0, %xmm2
+     1a9:      	vpbroadcastb	%ecx, %xmm0
+     1af:      	andb	$0x1f, %cl
+     1b2:      	vpbroadcastb	%ecx, %xmm3
+     1b8:      	vpandn	%xmm1, %xmm0, %xmm0
+     1bc:      	vpternlogq	$0xf8, %xmm3, %xmm2, %xmm0 # xmm0 = xmm0 | (xmm2 & xmm3)
+     1c3:      	vpmovzxbq	%xmm0, %zmm0    # zmm0 = xmm0[0],zero,zero,zero,zero,zero,zero,zero,xmm0[1],zero,zero,zero,zero,zero,zero,zero,xmm0[2],zero,zero,zero,zero,zero,zero,zero,xmm0[3],zero,zero,zero,zero,zero,zero,zero,xmm0[4],zero,zero,zero,zero,zero,zero,zero,xmm0[5],zero,zero,zero,zero,zero,zero,zero,xmm0[6],zero,zero,zero,zero,zero,zero,zero,xmm0[7],zero,zero,zero,zero,zero,zero,zero
+     1c9:      	vmovdqu	%ymm0, (%r8)
+     1ce:      	vextracti64x4	$0x1, %zmm0, 0x20(%r8)
+     1d6:      	addl	$0x8, %eax
+     1d9:      	addq	$0x40, %r8
+     1dd:      	cmpl	%esi, %eax
+     1df:      	jne	0x1e6 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_boundaryINS2_10avx512_opsELj5ELNS0_8geometryE1ELj0EmEEvRKNS0_15basic_placementIKSt4byteEENS0_11index_rangeEPT3_+0x1e6>
+     1e1:      	popq	%rbx
+     1e2:      	vzeroupper
+     1e5:      	retq
+     1e6:      	movl	$0xffffffff, %ecx       # imm = 0xFFFFFFFF
+     1eb:      	jmp	0x21d <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_boundaryINS2_10avx512_opsELj5ELNS0_8geometryE1ELj0EmEEvRKNS0_15basic_placementIKSt4byteEENS0_11index_rangeEPT3_+0x21d>
+     1ed:      	nopl	(%rax)
+     1f0:      	addb	$-0x3, %r9b
+     1f4:      	shlxl	%r9d, %ecx, %ebx
+     1f9:      	shrl	$0x3, %r11d
+     1fd:      	andl	%ebx, %r11d
+     200:      	movzbl	0x20(%rdi,%r10), %edi
+     206:      	bzhil	%r9d, %edi, %edi
+     20b:      	orl	%r11d, %edi
+     20e:      	movl	%edi, %edi
+     210:      	movq	%rdi, (%r8)
+     213:      	addq	$0x8, %r8
+     217:      	incl	%eax
+     219:      	cmpl	%eax, %esi
+     21b:      	je	0x1e1 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_boundaryINS2_10avx512_opsELj5ELNS0_8geometryE1ELj0EmEEvRKNS0_15basic_placementIKSt4byteEENS0_11index_rangeEPT3_+0x1e1>
+     21d:      	movl	%eax, %r10d
+     220:      	shrl	$0x5, %r10d
+     224:      	movl	%eax, %edi
+     226:      	andl	$0x1f, %edi
+     229:      	leal	(%r10,%r10,4), %r9d
+     22d:      	andl	$0x7, %r9d
+     231:      	shll	$0x2, %r10d
+     235:      	leal	(%r10,%r10,4), %r10d
+     239:      	andl	$-0x20, %r10d
+     23d:      	addq	%rdx, %r10
+     240:      	movzbl	(%rdi,%r10), %r11d
+     245:      	cmpl	$0x3, %r9d
+     249:      	ja	0x1f0 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_boundaryINS2_10avx512_opsELj5ELNS0_8geometryE1ELj0EmEEvRKNS0_15basic_placementIKSt4byteEENS0_11index_rangeEPT3_+0x1f0>
+     24b:      	shrxl	%r9d, %r11d, %edi
+     250:      	andl	$0x1f, %edi
+     253:      	jmp	0x20e <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_boundaryINS2_10avx512_opsELj5ELNS0_8geometryE1ELj0EmEEvRKNS0_15basic_placementIKSt4byteEENS0_11index_rangeEPT3_+0x20e>

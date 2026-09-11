@@ -1,0 +1,99 @@
+{
+  "after": {
+    "function_groups": {
+      "decode_bound": {
+        "bytes": 258890,
+        "symbols": 412
+      },
+      "decode_boundary": {
+        "bytes": 225286,
+        "symbols": 654
+      },
+      "decode_complete": {
+        "bytes": 653962,
+        "symbols": 750
+      },
+      "decode_edges": {
+        "bytes": 122266,
+        "symbols": 654
+      },
+      "other": {
+        "bytes": 1926671,
+        "symbols": 896
+      }
+    },
+    "object_bytes": 32129904,
+    "rodata_bytes": 143568,
+    "text_bytes": 3187075
+  },
+  "before": {
+    "function_groups": {
+      "decode_bound": {
+        "bytes": 58010,
+        "symbols": 412
+      },
+      "decode_boundary": {
+        "bytes": 250393,
+        "symbols": 750
+      },
+      "decode_complete": {
+        "bytes": 676463,
+        "symbols": 750
+      },
+      "decode_edges": {
+        "bytes": 140058,
+        "symbols": 750
+      },
+      "other": {
+        "bytes": 1926671,
+        "symbols": 896
+      }
+    },
+    "object_bytes": 29228544,
+    "rodata_bytes": 144496,
+    "text_bytes": 3051595
+  },
+  "compile": {
+    "candidate_native_seconds": 69.40998677200002,
+    "compiler_argv": [
+      "/usr/bin/clang++-21",
+      "-I/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/overlay/ikea/include",
+      "-DSIXDB_TUNE_GENERIC=0",
+      "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+      "-DSIXDB_TUNE_NEOVERSE_V2=0",
+      "-DSIXDB_TUNE_ZEN5=1",
+      "-I/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/before-source/ikea/include",
+      "-mavx512vbmi",
+      "-mavx512vbmi2",
+      "-mgfni",
+      "-O3",
+      "-g",
+      "-std=c++23",
+      "-fvisibility=hidden",
+      "-fvisibility-inlines-hidden",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-ffile-prefix-map=/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/before-source=.",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-march=x86-64-v4",
+      "-mtune=znver5",
+      "-c",
+      "/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/overlay/ikea/src/seriespack/native.cpp",
+      "-o",
+      "/opt/sixdb/jobs/20260910T234310Z-87cf647d/results/ordinary-materialize/candidate/native.cpp.o"
+    ],
+    "label": "Elapsed incremental candidate native.cpp compilation on the Zen worker; common objects reused. Baseline native compilation was not timed separately, so this is not a compile-time delta."
+  },
+  "scope": "Worker-built native objects; complete symbol families include unaffected widths. Symbol bytes sum to the native text size for these function-section builds. Neither candidate is installed.",
+  "source": {
+    "native_added_lines": 33,
+    "native_removed_lines": 2,
+    "new_private_header_lines": 571,
+    "new_private_headers": 4
+  }
+}

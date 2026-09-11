@@ -1,0 +1,45 @@
+{
+  "only_source_change": "Targeted always_inline annotation on prototype::decode author wrapper.",
+  "matched_flags": "clang++-21 -std=c++23 -O3 -Wall -Wextra -Werror -Iikea/include -march=armv8-a+simd -mtune=neoverse-v2 -DPROTOTYPE_NEON -c build/successor-materialize-executor/candidate.cpp -o build/successor-materialize-executor/neon-candidate.o",
+  "before": {
+    "header_sha256": "c1e5888f64e5231e0f55310015f25cce793921ed25e9169f342788a97230ca67",
+    "object_sha256": "d77500dcab5021d4c4ccc8a246f601304642fbc8bf4bd5a603121a133f929831",
+    "assembly_sha256": "8ed8b1080c81404418083ee8631d1023e1adc8625e6d0e3b714a63744042428f",
+    "outlined_expression_driver_symbols": 6,
+    "callbacks": {
+      "K7_H0_local": {
+        "stack_frame_bytes": 48,
+        "expression_aggregate_bytes": 32,
+        "aggregate_stores": [
+          "stp x0, x0, [sp]",
+          "stp x0, x0, [sp, #0x10]"
+        ],
+        "conditional_outlined_driver_calls": 2
+      },
+      "K23_H16_local": {
+        "stack_frame_bytes": 48,
+        "expression_aggregate_bytes": 32,
+        "conditional_outlined_driver_calls": 2
+      },
+      "K28_H16_striped": {
+        "stack_frame_bytes": 48,
+        "expression_aggregate_bytes": 32,
+        "conditional_outlined_driver_calls": 2
+      },
+      "K12_H0_striped": {
+        "stack_frame_bytes": 0,
+        "expression_aggregate_bytes": 0,
+        "conditional_outlined_driver_calls": 0
+      }
+    }
+  },
+  "after": {
+    "header_sha256": "96e1ace060a8178efde63856079a1a965217b2d82997c0f17a0a39660d3b673c",
+    "object_sha256": "e21193083a14e9aa38b9956d50637d558aa3d2b6795e3ff6a46685bf2d4d496e",
+    "assembly_sha256": "0eabcb9b39732e54bd56a358683459df0ee6eaf7a69547b8bfcd55f617d7be6c",
+    "root_after_object_byte_identical": true,
+    "outlined_expression_driver_symbols": 0,
+    "all_callbacks_no_calls_no_stack_use": true
+  },
+  "interpretation": "Observed avoidable expression-aggregate handoff at this deliberate callback boundary; no timing benefit or general recursive inline policy claimed."
+}

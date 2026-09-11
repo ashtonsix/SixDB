@@ -1,0 +1,59 @@
+{
+  "scope": "Reconstructed initial source; same recorded compiler arguments except source/output paths. Six headed u64 callback sizes/instruction counts match the initial record. No timing or full instruction/relocation equivalence claim.",
+  "source": {
+    "clipped_store.h": "1129e0ade148dcf6e21d8d7492b90189be50ca1e0d189a3087e864269cd13faa",
+    "native_dispatch.h": "f479277cc66ec6d376842d10532da7cc48813da0e8cb7eb10a33e1317a589094",
+    "native.cpp": "f08a9dbaae20fcbe83d6784ca32da079fcfa8df17525d3d97de18efd4a691bc1"
+  },
+  "object_sha256": "d643735c7e7ef749f820a6f4a06db1298c51a8257ff79d896b3629547e728a8b",
+  "selected": [
+    {
+      "target": "avx512",
+      "width": 12,
+      "bytes": 616,
+      "instructions": 134,
+      "assembly": "avx512-w12-h16-u64.asm",
+      "matches_initial_symbol_size_and_instruction_count": true
+    },
+    {
+      "target": "avx512",
+      "width": 5,
+      "bytes": 600,
+      "instructions": 138,
+      "assembly": "avx512-w5-h16-u64.asm",
+      "matches_initial_symbol_size_and_instruction_count": true
+    },
+    {
+      "target": "avx512",
+      "width": 6,
+      "bytes": 608,
+      "instructions": 138,
+      "assembly": "avx512-w6-h16-u64.asm",
+      "matches_initial_symbol_size_and_instruction_count": true
+    },
+    {
+      "target": "avx2",
+      "width": 12,
+      "bytes": 1032,
+      "instructions": 230,
+      "assembly": "avx2-w12-h16-u64.asm",
+      "matches_initial_symbol_size_and_instruction_count": true
+    },
+    {
+      "target": "avx2",
+      "width": 5,
+      "bytes": 991,
+      "instructions": 225,
+      "assembly": "avx2-w5-h16-u64.asm",
+      "matches_initial_symbol_size_and_instruction_count": true
+    },
+    {
+      "target": "avx2",
+      "width": 6,
+      "bytes": 992,
+      "instructions": 222,
+      "assembly": "avx2-w6-h16-u64.asm",
+      "matches_initial_symbol_size_and_instruction_count": true
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "status": "passed",
+  "job": "20260910T204425Z-5872e4fa",
+  "sources_equal_expected": true,
+  "baseline_bench_and_guard_relink_identical": true,
+  "all_four_native_guards_passed": true,
+  "codegen_40_expected_callbacks_only": true,
+  "samples": 7116,
+  "binaries": {
+    "after": {
+      "bench": {
+        "path": "after-bench",
+        "sha256": "dfa9ade404a812354bff8b7026b8dd5b29912f0dc0a4b0b8f1a794d95936e2bd"
+      },
+      "guard": {
+        "path": "after-guard",
+        "sha256": "96a04cd753d1edf419699a1165852e84c60ed7c556475fff319e17de8a0be859"
+      }
+    },
+    "before": {
+      "bench": {
+        "path": "before-bench",
+        "sha256": "83b2747d6e27656bd7af63a215202033644b4ac085178e7ed498cb3467c85ecd"
+      },
+      "guard": {
+        "path": "before-guard",
+        "sha256": "3350604ca8bae22d4460cb5653299591051dd7c7c5421f298bb109d2b857bd22"
+      }
+    }
+  },
+  "consumed_input_count": 28,
+  "consumed_input_limit": "remote cached/system link inputs rehashed by successful runner; local rehash limited to returned binaries/object/source",
+  "result_hashes": {
+    "0-before-bulk.json": "ef71e6c7cee6a522a051597d5791be3394c48d316e409188fcad50192c51d63a",
+    "0-before-bulk.txt": "3210e21a9d114f6dcad14796a72b3e601ea3aec4df9dc5d5364ccda65f609be1",
+    "0-before-resident.json": "4513ad145e58c237f92e34f14bd00b7b6c37681f9c488991fcecdaf66c38cf87",
+    "0-before-resident.txt": "4bfb292d5c8f5281adc0c6788dfb8797917dfa46eeda96ee830ab1c44112e073",
+    "1-after-bulk.json": "7c4de8ca87cccd0226fa19ca9f7e930d92bea87341e6a0955b4409b679481a98",
+    "1-after-bulk.txt": "aff5eaf6524107b169fc3e80eef56d4d81fb638487a0ee0004ecda131549824b",
+    "1-after-resident.json": "a53d2b45fb9f3771098852d3388e7afad69938072c9c789a7aeee57eda4995d0",
+    "1-after-resident.txt": "1553c0f5f9fee3255c496e901f7058d288964e8b41c2852756d10aa53e1181da",
+    "2-after-bulk.json": "c654f83d3270a4dcc6ab9c453505b3066b0eaf25932400e3e3be49972ba07c93",
+    "2-after-bulk.txt": "f93b020034a5259bcd423929d14cd94edd786081832c51fb8a930a8687f22f84",
+    "2-after-resident.json": "0b4364c1daf8b3ca2581b1a5e4e4183db06c13d92f1d89284099b7e236376717",
+    "2-after-resident.txt": "cb25f907d945a5132a3cd444461c20de8fe92472bceff3886248e48afdfcf393",
+    "3-before-bulk.json": "1c5fced00e44ec40951791c6709f166ddfa54c32d878e8d66a2b237269cb73a4",
+    "3-before-bulk.txt": "6ad7bca12829e3e1e0f96483165bc9d4d807f8ad8f58922e38e2cb9b63730223",
+    "3-before-resident.json": "b59cbc15d12d5a2626eff7292730163fd4fb6629a764f25bdaa96fbf602432c8",
+    "3-before-resident.txt": "e75b85e6d3b9711cda082a4e0df118fd36c5288301649edee3bc2ac8157a0d1a",
+    "after-bench": "dfa9ade404a812354bff8b7026b8dd5b29912f0dc0a4b0b8f1a794d95936e2bd",
+    "after-bulk-inventory.txt": "26f563591c5bd0ac75375e1753e618a615cb4175d5757ad8bf1a253738a6ccee",
+    "after-complete-inventory.txt": "8e00a36fded3071b236d38579ecc6e9bbfcf51e1e1e5acae75e56261151c20aa",
+    "after-guard": "96a04cd753d1edf419699a1165852e84c60ed7c556475fff319e17de8a0be859",
+    "after-guard-avx2.txt": "57dfbd84165799b534b9d8510476c81c469d04edf1211e83511a2ee90b2a51ef",
+    "after-guard-avx512.txt": "7c4294eec77b99b628ab2c2b72cd82a77f4efaf936531a78703a8cdf0ad27b89",
+    "after-region-assembly.txt": "fa635b3a245cf6de7b95d58c370bbe41930c4415970538f5cd1bae6aee2b4d7c",
+    "after-resident-inventory.txt": "8f6de3b18c0c35030d7acee68dfaabd4c03e46a37cff202ed1d9e4bd69a30cf2",
+    "baseline-relink-bench.txt": "97e1a5c8ada13ee27075105df9009abd79dad71bd0d586bdefef83ee3ca6610f",
+    "baseline-relink-guard.txt": "56e4f83fa253ac626ca7bac11ea8fb24deb1f4912b569c6c4b24346745300d20",
+    "before-bench": "83b2747d6e27656bd7af63a215202033644b4ac085178e7ed498cb3467c85ecd",
+    "before-bulk-inventory.txt": "26f563591c5bd0ac75375e1753e618a615cb4175d5757ad8bf1a253738a6ccee",
+    "before-complete-inventory.txt": "8e00a36fded3071b236d38579ecc6e9bbfcf51e1e1e5acae75e56261151c20aa",
+    "before-guard": "3350604ca8bae22d4460cb5653299591051dd7c7c5421f298bb109d2b857bd22",
+    "before-guard-avx2.txt": "57dfbd84165799b534b9d8510476c81c469d04edf1211e83511a2ee90b2a51ef",
+    "before-guard-avx512.txt": "7c4294eec77b99b628ab2c2b72cd82a77f4efaf936531a78703a8cdf0ad27b89",
+    "before-region-assembly.txt": "393eb9f750f10eeffb4e59c64ce9a3ba953ada78e04db11bff99ff6bb29f24b8",
+    "before-resident-inventory.txt": "8f6de3b18c0c35030d7acee68dfaabd4c03e46a37cff202ed1d9e4bd69a30cf2",
+    "bench-link-commands.txt": "032e2240aafe5fc28769e796e9b43671715f953769a2d2d18fd24bf63dbe6af3",
+    "cases.json": "459347d6b2e744194687b97bd59a4fd0f3507f576c9ab53f9315deb6eeeaf267",
+    "code-comparison.json": "dc50969ad4a3d5a14b6ff4a6798a33004a9ae1e395d0435fad4b70b8470edad5",
+    "compile-region.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "consumed-link-inputs.json": "1047e79e90be0c001eaac5a0f77e7afccf7e1e8df9d69e78decababf67311501",
+    "guard-link-commands.txt": "beb19206c29921216beb5366c84c281a97bf7f6bb7a260f38960f7d3436dbad5",
+    "link-commands.json": "d7443b0fd66fa8867aa4da1894d847f81ba8cd3c2b2db519b6e82a1b4274a042",
+    "manifest.json": "1238209849709a2ce7c84eb890c4ac35793ef999cb42d7a73741c684c83d3fe7",
+    "receipt.json": "278d2dd044b000588c7a868c63c4a1c79dcc62ca4b77264027c9cdef43dceea4",
+    "relinked-before-bench": "83b2747d6e27656bd7af63a215202033644b4ac085178e7ed498cb3467c85ecd",
+    "relinked-before-guard": "3350604ca8bae22d4460cb5653299591051dd7c7c5421f298bb109d2b857bd22",
+    "source-after.json": "5bef679e4f6030ea9f77152394ac883ef8644320937512e1590202480ba575e0",
+    "source-before.json": "5bef679e4f6030ea9f77152394ac883ef8644320937512e1590202480ba575e0",
+    "split-link-bench.txt": "0ba7a6c3a976a51eef485e2750df043d73c422351235fad8a1fdf9c3396809a0",
+    "split-link-guard.txt": "0f7cbcb5f38565a32790c0ed6a7a654bc42c5471fca5fe22cb1105f33b1d4ee5",
+    "split-region.o": "a7aa8cead4b0cd93fbb89fe2ec69b88db070bf072af8b5bcbfe67d8e3194ed28",
+    "split-stores.patch": "14dd50631325b2fc21fa24031664b9c7bd63c8c388b9d50c7d05a28bc49bb172",
+    "overlay/seriespack_range_regions.cpp": "57d65402c49a9a0cd014a148e6396e3cea86516a11a3812baf6c413e4891031d",
+    "overlay/seriespack_range_regions.h": "4c4510b37702c805c99115c510513057733da0e208f606ce6c601dd6bc02f15e"
+  }
+}

@@ -1,0 +1,695 @@
+{
+  "scope": "Local Clang21.1.8 O3 full-x86 code-generation-only comparison; original source and private headers copied from separated candidate. Only the complete call is moved after prefix and suffix. No correctness or hardware timing claim.",
+  "source_sha256": {
+    "build/successor-ordinary-edges-first/native-avx512-command.json": "871191b1d6d988a072947ac0a607f059adfd5b6501ce0c5a93e3acb1409e2276",
+    "build/successor-ordinary-edges-first/overlay/ikea/src/seriespack/native.cpp": "7fcb5bb9a411b76d5a005a1feb0303fbde70a8ea7eed5af4ae88336ad802a7c5"
+  },
+  "successor-ordinary-edges-first": {
+    "mixed_direct_calls": 0,
+    "mixed_functions": [
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 528,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 7u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 635,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 7u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 725,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 7u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 528,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 6u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 635,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 6u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 725,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 6u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 528,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 5u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 635,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 5u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 725,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 5u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 463,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 4u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 570,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 4u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 660,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 4u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 528,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 3u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 635,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 3u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 725,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 3u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 480,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 2u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 586,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 2u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 676,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 2u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 451,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 1u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 563,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 1u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 648,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 1u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 737,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 12u, (ikea::seriespack::geometry)1, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 826,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 12u, (ikea::seriespack::geometry)1, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 922,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 12u, (ikea::seriespack::geometry)1, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 508,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 7u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 618,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 7u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 707,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 7u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 508,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 618,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 707,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 508,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 5u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 618,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 5u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 707,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 5u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 444,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 4u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 555,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 4u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 642,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 4u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 509,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 3u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 620,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 3u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 707,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 3u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 461,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 2u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 572,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 2u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 656,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 2u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 433,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 1u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 544,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 1u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 630,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 1u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 717,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 12u, (ikea::seriespack::geometry)1, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 780,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 12u, (ikea::seriespack::geometry)1, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 0,
+        "complete_relocations": 2,
+        "instructions": 860,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 12u, (ikea::seriespack::geometry)1, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      }
+    ],
+    "mixed_instruction_total": 29763,
+    "rodata_bytes": 149152,
+    "text_bytes": 3208652
+  },
+  "successor-ordinary-separated": {
+    "mixed_direct_calls": 96,
+    "mixed_functions": [
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 525,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 7u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 635,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 7u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 725,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 7u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 525,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 6u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 635,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 6u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 725,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 6u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 525,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 5u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 635,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 5u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 725,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 5u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 464,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 4u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 570,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 4u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 661,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 4u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 528,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 3u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 635,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 3u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 725,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 3u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 477,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 2u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 587,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 2u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 677,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 2u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 450,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 1u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 564,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 1u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 648,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 1u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 738,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 12u, (ikea::seriespack::geometry)1, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 825,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 12u, (ikea::seriespack::geometry)1, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 919,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx2_ops, 12u, (ikea::seriespack::geometry)1, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 507,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 7u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 615,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 7u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 707,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 7u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 507,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 615,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 707,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 507,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 5u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 615,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 5u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 707,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 5u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 445,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 4u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 553,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 4u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 642,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 4u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 507,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 3u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 615,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 3u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 706,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 3u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 459,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 2u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 569,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 2u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 659,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 2u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 428,
+        "pushes": 5,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 1u, (ikea::seriespack::geometry)0, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 544,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 1u, (ikea::seriespack::geometry)0, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 630,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 1u, (ikea::seriespack::geometry)0, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 717,
+        "pushes": 7,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 12u, (ikea::seriespack::geometry)1, 0u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 780,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 12u, (ikea::seriespack::geometry)1, 8u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      },
+      {
+        "calls": 2,
+        "complete_relocations": 2,
+        "instructions": 861,
+        "pushes": 6,
+        "symbol": "void ikea::seriespack::detail::(anonymous namespace)::decode_materialized_mixed<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 12u, (ikea::seriespack::geometry)1, 16u>(ikea::seriespack::basic_view<std::byte const> const&, ikea::seriespack::index_range, void*, ikea::seriespack::element_width)"
+      }
+    ],
+    "mixed_instruction_total": 29725,
+    "rodata_bytes": 149152,
+    "text_bytes": 3207622
+  }
+}

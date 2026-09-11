@@ -1,0 +1,29 @@
+{
+  "baseline_relink_identical": true,
+  "binary_hashes": {
+    "base": "0f7321100fe97abd79732ddf476ea9ec6217689d8018e68f727d885f21be6e73",
+    "candidate": "cbef868fa4ebed67ff91774e6602ba0a4d103d1394d5137a9167a627e5ed6783"
+  },
+  "candidate_compile_seconds": 68.59622195500003,
+  "cases": 928,
+  "members": {
+    "base": {
+      "native.cpp.o": "a3c8241facd03ae7ad642e1b51a7b49937f07b60c8cf3a657f223f0c6de6ac31",
+      "operations.cpp.o": "1bad40f5527a87d392edd96062667e614dc161d9d20ef2ee02469ea970ad650d",
+      "view.cpp.o": "392756587a9ab9597dd711cefb39b26904d34e52c3afe9a35cecc6687b76f80f"
+    },
+    "candidate": {
+      "native.cpp.o": "4b24593a002df6b9dcaa4c765d45b1ae6af226b03cf1815c5f26a84b3faeec58",
+      "operations.cpp.o": "1bad40f5527a87d392edd96062667e614dc161d9d20ef2ee02469ea970ad650d",
+      "view.cpp.o": "392756587a9ab9597dd711cefb39b26904d34e52c3afe9a35cecc6687b76f80f"
+    }
+  },
+  "original_sources": 601,
+  "passed": true,
+  "reconstructed_caller_objects": 12,
+  "samples": 11136,
+  "source": {
+    "base": "1b93ca5a3c29c0830394970a66dde88d2a6c4c1cba98e9e47f29a4b25febe61c",
+    "candidate": "052c1196289f3789925d049bea4f379f828646ab20ece2d2a39c2e06525842cd"
+  }
+}

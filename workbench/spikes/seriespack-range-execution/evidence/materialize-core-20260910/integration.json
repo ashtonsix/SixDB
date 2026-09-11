@@ -1,0 +1,25 @@
+{
+  "format": 1,
+  "source_sha256": {
+    "ikea/include/ikea/seriespack/composition.h": "57936212057c1193bb12a90cff4bfc5681094b1e068b0903ec4d5c93a8eb81da",
+    "ikea/test/seriespack/composition.cpp": "a6250320adc71da34453be661be1369b6418c6a30f892f19fb2da6eaa29dfb4d",
+    "workbench/spikes/ikea-composition/validation/seriespack_range_regions.cpp": "bec4ffc7b41d16b579a217deb9636a0a4d4a6ace6e8614abd2036421163b6ae9"
+  },
+  "checks": {
+    "materialize-semantic.log": {
+      "output": "SeriesPack composition contracts passed",
+      "sha256": "eb328cf29f27a96c020fd3324d76c30733748bd6a2c7ef5b9201844b96d9c44b"
+    },
+    "materialize-neon.log": {
+      "output": "Admitted regions target4: 20 descriptions, 400 protected placements, 6744 original-coordinate queries passed",
+      "sha256": "0899571fddee024d5b916ff1643b6be1e9a56eca764853f39f2242f027647d64"
+    },
+    "materialize-avx2.log": {
+      "output": "Admitted regions target2: 20 descriptions, 400 protected placements, 6744 original-coordinate queries passed",
+      "sha256": "57dfbd84165799b534b9d8510476c81c469d04edf1211e83511a2ee90b2a51ef"
+    }
+  },
+  "codegen": "codegen.json",
+  "scope": "Expression-consuming materialize authoring operation and diagnostic refactor. Ordinary dynamic driver not yet rerouted. Full-store private sink admits active_all only.",
+  "validation_limits": "NEON executed locally, AVX2 under QEMU. Full-feature x86 endpoint code inspected only. No new measured hardware performance."
+}

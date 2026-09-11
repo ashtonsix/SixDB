@@ -1,0 +1,213 @@
+{
+  "abba_order_verified": [
+    "0-before-runtime",
+    "0-before-resident",
+    "0-before-bulk",
+    "1-after-runtime",
+    "1-after-resident",
+    "1-after-bulk",
+    "2-after-runtime",
+    "2-after-resident",
+    "2-after-bulk",
+    "3-before-runtime",
+    "3-before-resident",
+    "3-before-bulk"
+  ],
+  "all_command_return_codes": 0,
+  "all_commands_pinned_cpu": 0,
+  "before_manifest_capture_archive_match": true,
+  "candidate_delta_exact": {
+    "ikea/include/ikea/seriespack/operations.h": {
+      "before": "687ccbf758a13e927daa6aba703a6ea6db7b6d5953881fb84729665c0d5caf64",
+      "candidate": "01c7352f820050282e077297f6849061de448a1126105af77f5aeccad3516770"
+    },
+    "ikea/src/seriespack/native.cpp": {
+      "before": "1abf641b246af9c075e8234a9e1b3390c412a8410af9353d84d5c52cd57350da",
+      "candidate": "e5922e2ef425cba6539069bedda9c24f7c076a2ed2de0e86beed403f3c8e73a0"
+    },
+    "ikea/src/seriespack/physical.cpp": {
+      "before": "4acdd3fa869f1cade98f0d47cf4cf29f6e619b57c8c9edacb831005b6ce2678e",
+      "candidate": "71cec80cad1af901b797e722275e059812f74f51ed0e35a7df0ef792fe09d88f"
+    }
+  },
+  "capture_digest": "2feb899a298657d5b59aa580dfedf371e61ee21200b6f53442198fdacf713cba",
+  "cases": {
+    "bulk": 16,
+    "resident": 73,
+    "runtime": 68
+  },
+  "checks": {
+    "after-materialized-avx2": "Admitted regions target2: 20 descriptions, 400 protected placements, 6744 original-coordinate queries passed",
+    "after-materialized-avx512": "Admitted regions target3: 20 descriptions, 400 protected placements, 6744 original-coordinate queries passed",
+    "after-operations": "",
+    "after-physical_operations": "SeriesPack public wire (scalar): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed\nSeriesPack public wire (avx2): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed\nSeriesPack public wire (avx512): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed",
+    "after-range_bounds": "SeriesPack range bounds (scalar): 206 descriptions, 3737352 exact guarded ranges passed\nSeriesPack range bounds (avx2): 206 descriptions, 3737352 exact guarded ranges passed\nSeriesPack range bounds (avx512): 206 descriptions, 3737352 exact guarded ranges passed",
+    "after-runtime-check-avx2": "Runtime range checks (avx2): 34 cases, 279552 guarded/oracle queries passed",
+    "after-runtime-check-avx512": "Runtime range checks (avx512): 34 cases, 279552 guarded/oracle queries passed",
+    "after-runtime-check-scalar": "Runtime range checks (scalar): 34 cases, 279552 guarded/oracle queries passed",
+    "before-materialized-avx2": "Admitted regions target2: 20 descriptions, 400 protected placements, 6744 original-coordinate queries passed",
+    "before-materialized-avx512": "Admitted regions target3: 20 descriptions, 400 protected placements, 6744 original-coordinate queries passed",
+    "before-operations": "",
+    "before-physical_operations": "SeriesPack public wire (scalar): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed\nSeriesPack public wire (avx2): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed\nSeriesPack public wire (avx512): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed",
+    "before-range_bounds": "SeriesPack range bounds (scalar): 206 descriptions, 3737352 exact guarded ranges passed\nSeriesPack range bounds (avx2): 206 descriptions, 3737352 exact guarded ranges passed\nSeriesPack range bounds (avx512): 206 descriptions, 3737352 exact guarded ranges passed",
+    "before-runtime-check-avx2": "Runtime range checks (avx2): 34 cases, 279552 guarded/oracle queries passed",
+    "before-runtime-check-avx512": "Runtime range checks (avx512): 34 cases, 279552 guarded/oracle queries passed",
+    "before-runtime-check-scalar": "Runtime range checks (scalar): 34 cases, 279552 guarded/oracle queries passed"
+  },
+  "configuration": {
+    "flags": [
+      "-mavx512vbmi",
+      "-mavx512vbmi2",
+      "-mgfni"
+    ],
+    "march": "x86-64-v4",
+    "profile": "avx512",
+    "tune": "granite-rapids"
+  },
+  "exact_inventory_query_hash_bytes_timed_checksum_and_repetitions": true,
+  "fresh_objects": {
+    "after": 35,
+    "before": 35
+  },
+  "job": "20260910T205354Z-b34bc457",
+  "machine": "gnr",
+  "receipt_sha256": "3db96238b5c780d3ae520b55db610c68ef535b6fde9c07b9d5ddf18f85acee13",
+  "required_fresh_objects": [
+    "ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/native.cpp.o",
+    "ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/physical.cpp.o",
+    "ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/view.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_bench.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_points.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_composition_bench.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_casing_bench.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_predecessor.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/diagnostics/runtime_ranges/bench.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_runtime_ranges_check.dir/diagnostics/runtime_ranges/check.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_range_regions.dir/seriespack_range_regions.cpp.o"
+  ],
+  "result_file_hashes": {
+    "bootstrap.log": "1cad7473cb394211563a3facbe9ab8f86d92b416da88b9966515b92b9c8cdc6b",
+    "host.json": "e82f17fc7f748c77811ee04236905807495f16dc2a0db51c2de29ac5f840134e",
+    "job.json": "c9e11ac3ab941fd2731713ce3322c2738bb2446a2b52c70fcbafe06c45d0ba67",
+    "scalar-range-abi/avx512/0-before-bulk.json": "6421d6b36af4df6a43ac25c8fc1f84ed01a91ee6d7bf6bbb4b79a4193bd42399",
+    "scalar-range-abi/avx512/0-before-bulk.txt": "62ec593d59503e78d432118b2c6a22fe0f8f89bd8409b506670290d06f37f5fa",
+    "scalar-range-abi/avx512/0-before-resident.json": "ea1268bf27b1737fedaad134ab0ee63ac0a3e55684dfcde498055fea2ad62f7b",
+    "scalar-range-abi/avx512/0-before-resident.txt": "3aad65d4eba95773f85fcd5528e426cdddfa7cde648b55551b648776ee19e920",
+    "scalar-range-abi/avx512/0-before-runtime.json": "6ceded76127278e4bbd72b6178253e0b4ddcefc780fa22b9f5771bec0f480395",
+    "scalar-range-abi/avx512/0-before-runtime.txt": "312b3ee96130307c0ee3edf05648e74547d1f9177a8aa2e009ccb074cebc2b51",
+    "scalar-range-abi/avx512/1-after-bulk.json": "db94124d455e95bc86206de05d03754b529b2c70814478cb6c89388f2e8ad7d1",
+    "scalar-range-abi/avx512/1-after-bulk.txt": "75a0ec163b02947c2f59efa70e2fbdb2d45dd8f5f6ec8f4b02258b11dc57e757",
+    "scalar-range-abi/avx512/1-after-resident.json": "db49d195014277b838f677521333f0d6a33a24b45ca7d1b957f826de67fbc7f1",
+    "scalar-range-abi/avx512/1-after-resident.txt": "0091b0a8c475a6340927267566c37dc690f29051be38297046ad766dddcfddf3",
+    "scalar-range-abi/avx512/1-after-runtime.json": "42c8170ea57e23225c38580779ba893994e304dd1cd0ff430d4a803e08221ad6",
+    "scalar-range-abi/avx512/1-after-runtime.txt": "46ce46eba904f39a486bdfa72b889b40b88f01829f9b3923c664ef9bce26d381",
+    "scalar-range-abi/avx512/2-after-bulk.json": "d2a5797cee91d29b035c09946baf42a30e8a1903e8c047f3dc5b855487ce92a0",
+    "scalar-range-abi/avx512/2-after-bulk.txt": "0d2d0673b3145ac086017e5f246d28ed3697f9ab4e3e013017249fb5119629e4",
+    "scalar-range-abi/avx512/2-after-resident.json": "e0ca8f6ccac966269dba05aeb501d970311dcdd08d71e5790ddca91dfd5515c5",
+    "scalar-range-abi/avx512/2-after-resident.txt": "22c4c8bb27fd4c0635cc7c953c81a5992b1125b0f1439a86a7baa9702192c4d6",
+    "scalar-range-abi/avx512/2-after-runtime.json": "c3129e772a74c03b24289a633b597420738b58d797b837574112ec4ceab916f2",
+    "scalar-range-abi/avx512/2-after-runtime.txt": "cf3c10d134855cdeee7e33fe4233be4d070f14b02397968219549bc4c92c97aa",
+    "scalar-range-abi/avx512/3-before-bulk.json": "2e9b5ade4d94da62ebcfc92e66604b403242608f132dfe17ade2605a2878920a",
+    "scalar-range-abi/avx512/3-before-bulk.txt": "f29d92b206c39b6c6170a55a417b186376c3220be0b3c87d90944dd074abfea7",
+    "scalar-range-abi/avx512/3-before-resident.json": "a45ffd9404b8f0cb229410bb5aea3baf67f6af3b481591cea1985c9d82bad9d0",
+    "scalar-range-abi/avx512/3-before-resident.txt": "f026aa9d5ea1c8cd5563852883949e5f2c951a307c5119b39df44e1d24fc8091",
+    "scalar-range-abi/avx512/3-before-runtime.json": "96798172e6c03129414a3a5751cc976a995095e85512f46df1d0f1f34bf41562",
+    "scalar-range-abi/avx512/3-before-runtime.txt": "3b964a86cbee90fd5a71262406bdd6c952e65ff7e673bccd8504dbe6e1a8fd3c",
+    "scalar-range-abi/avx512/after-assembly.txt": "8b519405eea277839eecae1ea4261fe92f6019c70a3adc7c6b36f7fce989d413",
+    "scalar-range-abi/avx512/after-bench": "1af5f445c9323238b55b1d9768e52f0cf5808ba1bab177a4aad1f29a48ead765",
+    "scalar-range-abi/avx512/after-build.txt": "107fcd975614e163a8b65aea8b315fb6cdfef25de8db6fa1d217922fdc3d3953",
+    "scalar-range-abi/avx512/after-bulk-inventory.txt": "6408a3acecba32de7f6662f10a2472bd810a0562ec92422494dde7b0cd6ae0ce",
+    "scalar-range-abi/avx512/after-compile-commands.json": "44438b5bfb67fc0fa304323f688f94ecd985f38c23306acb860deec758525436",
+    "scalar-range-abi/avx512/after-complete-inventory.txt": "a7433fd4ccbfaafe769b09f7cfd1aa883be812a7819538c010187df13175a628",
+    "scalar-range-abi/avx512/after-configure.txt": "15c32908938f14f3f10f7b6ab7653d2d5cd0a9e8bc0be4194c18215f4e712014",
+    "scalar-range-abi/avx512/after-materialized-avx2.txt": "57dfbd84165799b534b9d8510476c81c469d04edf1211e83511a2ee90b2a51ef",
+    "scalar-range-abi/avx512/after-materialized-avx512.txt": "7c4294eec77b99b628ab2c2b72cd82a77f4efaf936531a78703a8cdf0ad27b89",
+    "scalar-range-abi/avx512/after-ninja-log": "8c41dd53aeebfc34a27cd94f4ddc7ac53490f4f99afc2108250c696888cb3cc6",
+    "scalar-range-abi/avx512/after-operations.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "scalar-range-abi/avx512/after-physical_operations.txt": "f6107b387b0deacf8e1334a037c86fb4d3ce4146481a41be11a352815d7bf13c",
+    "scalar-range-abi/avx512/after-range_bounds.txt": "319ebcc5f982fb5a9bc194a0c3677ce02ec3f77566055ffa9ea07c22b266134c",
+    "scalar-range-abi/avx512/after-resident-inventory.txt": "56bb0a4ea4bbcdd25d27c8a7a2f342549dc429d961787912c94b26e5f8ab36e7",
+    "scalar-range-abi/avx512/after-runtime-check-avx2.txt": "b3c8170c148e0a0df23848f737b378ce65b8232e870dd3bc7e0dc70ee25231c5",
+    "scalar-range-abi/avx512/after-runtime-check-avx512.txt": "ebff336d27268c4217d24491bb35a2d256c6ac5fe52c120a31021a2b512713ac",
+    "scalar-range-abi/avx512/after-runtime-check-scalar.txt": "55149b320a262786dfa437f535c26d64211f021e77fb0d251ecbaacd81ede91f",
+    "scalar-range-abi/avx512/after-runtime-inventory.txt": "e5f851b27e6a7847753a03501927eba2e00eca056431bd18c9e21ff27ae102a4",
+    "scalar-range-abi/avx512/after-size.txt": "ac773d5bb79f48591322b8a93dc4e2739438263d5b27db5b9d3573504fa62c65",
+    "scalar-range-abi/avx512/before-assembly.txt": "22486f5e589d0bd268f60f475856ac7c55cde46c9f55d523d4d54db805a704ce",
+    "scalar-range-abi/avx512/before-bench": "4860bcb05c2f040b7302c81b39f9b7e76e45f4970de99c3e5ac7cfdc28e25cff",
+    "scalar-range-abi/avx512/before-build.txt": "107fcd975614e163a8b65aea8b315fb6cdfef25de8db6fa1d217922fdc3d3953",
+    "scalar-range-abi/avx512/before-bulk-inventory.txt": "6408a3acecba32de7f6662f10a2472bd810a0562ec92422494dde7b0cd6ae0ce",
+    "scalar-range-abi/avx512/before-compile-commands.json": "b8fa247cbd93250b5d7102fff0d6658b71a57488f8c1ad0ebda53d8166455611",
+    "scalar-range-abi/avx512/before-complete-inventory.txt": "a7433fd4ccbfaafe769b09f7cfd1aa883be812a7819538c010187df13175a628",
+    "scalar-range-abi/avx512/before-configure.txt": "f53225c07cd7099f2f13ad8b546321fdf7c53ca2f6aa552f0288e3aa1845d6da",
+    "scalar-range-abi/avx512/before-materialized-avx2.txt": "57dfbd84165799b534b9d8510476c81c469d04edf1211e83511a2ee90b2a51ef",
+    "scalar-range-abi/avx512/before-materialized-avx512.txt": "7c4294eec77b99b628ab2c2b72cd82a77f4efaf936531a78703a8cdf0ad27b89",
+    "scalar-range-abi/avx512/before-ninja-log": "db1e794942f9b0b52c39f92bb1c9346064378e654bd40b4cc949af3ee32628f7",
+    "scalar-range-abi/avx512/before-operations.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "scalar-range-abi/avx512/before-physical_operations.txt": "f6107b387b0deacf8e1334a037c86fb4d3ce4146481a41be11a352815d7bf13c",
+    "scalar-range-abi/avx512/before-range_bounds.txt": "319ebcc5f982fb5a9bc194a0c3677ce02ec3f77566055ffa9ea07c22b266134c",
+    "scalar-range-abi/avx512/before-resident-inventory.txt": "56bb0a4ea4bbcdd25d27c8a7a2f342549dc429d961787912c94b26e5f8ab36e7",
+    "scalar-range-abi/avx512/before-runtime-check-avx2.txt": "b3c8170c148e0a0df23848f737b378ce65b8232e870dd3bc7e0dc70ee25231c5",
+    "scalar-range-abi/avx512/before-runtime-check-avx512.txt": "ebff336d27268c4217d24491bb35a2d256c6ac5fe52c120a31021a2b512713ac",
+    "scalar-range-abi/avx512/before-runtime-check-scalar.txt": "55149b320a262786dfa437f535c26d64211f021e77fb0d251ecbaacd81ede91f",
+    "scalar-range-abi/avx512/before-runtime-inventory.txt": "e5f851b27e6a7847753a03501927eba2e00eca056431bd18c9e21ff27ae102a4",
+    "scalar-range-abi/avx512/before-size.txt": "6476f8eaf9fe75fef99d14a7c305a028ceb3230a828157d12553a4fc43740ed4",
+    "scalar-range-abi/avx512/cases.json": "55c2656fc9a8d392d32dcc4c703ceeb4bd3c6ac0a3bc02f198d34ebb86c19df8",
+    "scalar-range-abi/avx512/compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "scalar-range-abi/avx512/plan.json": "3775878b496bcaa5e38f2ac449c8c8afb11896826e13cd7f136426d4d1434e3e",
+    "scalar-range-abi/avx512/receipt.json": "3db96238b5c780d3ae520b55db610c68ef535b6fde9c07b9d5ddf18f85acee13",
+    "scalar-range-abi/avx512/source-after.json": "ae6c25975bc44c6319f6aec07c96f5075fd8c10b4942da79905953416cc067de",
+    "scalar-range-abi/avx512/source-before.json": "e031358fd5008fb5875984bd884a5a35de75cfffdf9ddd37d0010f859ed9c705",
+    "script.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "script.resources": "3555686c8717609c79bed24c083ab152c0c237cf68fdd269bf694334207af2bb",
+    "source-manifest.json": "e031358fd5008fb5875984bd884a5a35de75cfffdf9ddd37d0010f859ed9c705",
+    "source.tar.gz": "de3731c69c490974b030da834e6b59d8fd9ba042afd26ad998310052ddc1cd6f",
+    "worker-result.json": "376d0a8ceae45d9149d75afcd96477c543effbe3d9966fcbc0cf20e2d9d70100"
+  },
+  "result_uri": "s3://calico-fleet-artifacts/sixdb/workers/20260910T205354Z-b34bc457",
+  "sample_count": 1884,
+  "source_archive_sha256": "de3731c69c490974b030da834e6b59d8fd9ba042afd26ad998310052ddc1cd6f",
+  "source_files": 490,
+  "source_manifest_sha256": "e031358fd5008fb5875984bd884a5a35de75cfffdf9ddd37d0010f859ed9c705",
+  "source_tree_stability": "Runner hashes both trees after measurements before marking complete; source-before/after name variants, not temporal snapshots. Raw library archives not returned; fresh build logs and executable hashes establish matched artifacts.",
+  "status": "passed",
+  "summary": {
+    "bulk": {
+      "both_edges_agree": 11,
+      "cases": 16,
+      "improved": 13,
+      "ratio_range": [
+        0.9603609377827567,
+        1.0087011668321966
+      ],
+      "separated_improvements": 4,
+      "separated_losses": 0
+    },
+    "resident": {
+      "both_edges_agree": 51,
+      "cases": 73,
+      "improved": 45,
+      "ratio_range": [
+        0.35779385353482474,
+        1.046432617509796
+      ],
+      "separated_improvements": 21,
+      "separated_losses": 4
+    },
+    "runtime": {
+      "both_edges_agree": 68,
+      "cases": 68,
+      "improved": 68,
+      "ratio_range": [
+        0.3887485767027012,
+        0.9413683093660267
+      ],
+      "separated_improvements": 68,
+      "separated_losses": 0
+    }
+  },
+  "variant_binaries": {
+    "after": "1af5f445c9323238b55b1d9768e52f0cf5808ba1bab177a4aad1f29a48ead765",
+    "before": "4860bcb05c2f040b7302c81b39f9b7e76e45f4970de99c3e5ac7cfdc28e25cff"
+  },
+  "worker_reused": true
+}

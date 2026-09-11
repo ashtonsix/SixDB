@@ -1,0 +1,91 @@
+{
+  "scope": "Current targeted-inline expression region and actual callback guards; no production changes or timings.",
+  "compiler": "Clang 21.1.8",
+  "execution": "Canonical Linux /home/ashtonsix/sixdb through orb -m ubuntu",
+  "required_ignored_inputs": [
+    "build/successor-materialize-executor/check.cpp",
+    "build/successor-materialize-executor/candidate.cpp",
+    "build/successor-materialize-executor/candidate.h",
+    "build/successor-materialize-executor/region_executor.h",
+    "build/successor-materialize-bridge/typed_store.h",
+    "build/successor-runtime-ranges/fixture.h"
+  ],
+  "key_source_sha256": {
+    "build/successor-materialize-executor/check.cpp": "38c30a3707f9b33b8a60fb57044a1b9c2567905ab73ab00692b7707db0b4bf95",
+    "build/successor-materialize-executor/candidate.cpp": "e2298ba673047e3d420186b23c471f49e99049e6d6ece35a5b78973928a74e56",
+    "build/successor-materialize-executor/candidate.h": "a3654ef5c256a36ad6fc181e7335cb8ee398e4110386dac3304b1f503f71f464",
+    "build/successor-materialize-executor/region_executor.h": "96e1ace060a8178efde63856079a1a965217b2d82997c0f17a0a39660d3b673c",
+    "build/successor-materialize-bridge/typed_store.h": "b1d3b33ed35ecba844e9ac75b520c1ef2a700e822d5d3c2dfda9cdf805b282fb",
+    "build/successor-runtime-ranges/fixture.h": "f0b3af8de511ba43f954db23b936017b3a231695e435274cec99474253c2a805",
+    "ikea/include/ikea/seriespack/composition.h": "57936212057c1193bb12a90cff4bfc5681094b1e068b0903ec4d5c93a8eb81da",
+    "ikea/include/ikea/seriespack/operations.h": "01c7352f820050282e077297f6849061de448a1126105af77f5aeccad3516770",
+    "ikea/src/seriespack/view.cpp": "6c8aaff96221c96fb5f135f83bf12d0a73ff89227b8b2cf443dc37d332773252"
+  },
+  "profiles": {
+    "neon": {
+      "commands": [
+        "clang++-21 -std=c++23 -O3 -Wall -Wextra -Werror -Iikea/include -march=armv8-a+simd -mtune=neoverse-v2 -c ikea/src/seriespack/view.cpp -o build/successor-materialize-executor/neon-view.o",
+        "clang++-21 -std=c++23 -O3 -Wall -Wextra -Werror -Iikea/include -march=armv8-a+simd -mtune=neoverse-v2 -DPROTOTYPE_NEON -c build/successor-materialize-executor/candidate.cpp -o build/successor-materialize-executor/checked-neon-candidate.o",
+        "clang++-21 -std=c++23 -O3 -Wall -Wextra -Werror -Iikea/include -march=armv8-a+simd -mtune=neoverse-v2 build/successor-materialize-executor/check.cpp build/successor-materialize-executor/neon-view.o build/successor-materialize-executor/checked-neon-candidate.o -o build/successor-materialize-executor/neon-check",
+        "build/successor-materialize-executor/neon-check > build/successor-materialize-executor/neon-check.json"
+      ],
+      "arguments": [],
+      "executed": true,
+      "stdout": {
+        "target": "neon",
+        "queries": 581604,
+        "exact_guarded_outputs": 581604,
+        "guarded_source_placements": 770,
+        "runtime_fixture_queries": 3072,
+        "protected_projected_dependency_queries": 143856,
+        "protected_tail_dependency_queries": 36,
+        "candidate_callback_queries": 146928
+      }
+    },
+    "avx2": {
+      "commands": [
+        "clang++-21 --target=x86_64-linux-gnu --gcc-toolchain=/usr -std=c++23 -O3 -Wall -Wextra -Werror -Iikea/include -march=x86-64-v3 -mtune=znver5 -c ikea/src/seriespack/view.cpp -o build/successor-materialize-executor/avx2-view.o",
+        "clang++-21 --target=x86_64-linux-gnu --gcc-toolchain=/usr -std=c++23 -O3 -Wall -Wextra -Werror -Iikea/include -march=x86-64-v3 -mtune=znver5 -DPROTOTYPE_AVX2 -c build/successor-materialize-executor/candidate.cpp -o build/successor-materialize-executor/checked-avx2-candidate.o",
+        "clang++-21 --target=x86_64-linux-gnu --gcc-toolchain=/usr -std=c++23 -O3 -Wall -Wextra -Werror -Iikea/include -march=x86-64-v3 -mtune=znver5 build/successor-materialize-executor/check.cpp build/successor-materialize-executor/avx2-view.o build/successor-materialize-executor/checked-avx2-candidate.o -o build/successor-materialize-executor/avx2-check",
+        "qemu-x86_64 -cpu max -L /usr/x86_64-linux-gnu build/successor-materialize-executor/avx2-check > build/successor-materialize-executor/avx2-check.json"
+      ],
+      "arguments": [],
+      "executed": true,
+      "stdout": {
+        "target": "avx2",
+        "queries": 581604,
+        "exact_guarded_outputs": 581604,
+        "guarded_source_placements": 770,
+        "runtime_fixture_queries": 3072,
+        "protected_projected_dependency_queries": 143856,
+        "protected_tail_dependency_queries": 36,
+        "candidate_callback_queries": 146928
+      }
+    },
+    "avx512": {
+      "commands": [
+        "clang++-21 --target=x86_64-linux-gnu --gcc-toolchain=/usr -std=c++23 -O3 -Wall -Wextra -Werror -Iikea/include -march=znver5 -mtune=znver5 -c ikea/src/seriespack/view.cpp -o build/successor-materialize-executor/avx512-view.o",
+        "clang++-21 --target=x86_64-linux-gnu --gcc-toolchain=/usr -std=c++23 -O3 -Wall -Wextra -Werror -Iikea/include -march=znver5 -mtune=znver5 -DPROTOTYPE_AVX512 -c build/successor-materialize-executor/candidate.cpp -o build/successor-materialize-executor/checked-avx512-candidate.o",
+        "clang++-21 --target=x86_64-linux-gnu --gcc-toolchain=/usr -std=c++23 -O3 -Wall -Wextra -Werror -Iikea/include -march=znver5 -mtune=znver5 -DEXECUTOR_AVX512 build/successor-materialize-executor/check.cpp build/successor-materialize-executor/avx512-view.o build/successor-materialize-executor/checked-avx512-candidate.o -o build/successor-materialize-executor/avx512-check"
+      ],
+      "arguments": [],
+      "executed": false,
+      "stdout": null
+    }
+  },
+  "sink_checker_receipt": "build/successor-materialize-bridge/validation.json",
+  "callback_codegen": "callback-codegen.json",
+  "targeted_inline_evidence": "neon-inline-boundary.json",
+  "worker_requirements": [
+    "Preserve sibling bridge/executor/runtime-ranges paths.",
+    "Compile each target candidate.cpp separately with its PROTOTYPE macro.",
+    "Executor AVX512 checker needs EXECUTOR_AVX512; standalone sink AVX512 checker needs BRIDGE_AVX512.",
+    "Link checker with candidate object and view object; no operations/native library is needed by the guard executable.",
+    "Run native AVX2 and native AVX512 sink plus expression/callback guards sequentially before timing."
+  ],
+  "limits": [
+    "AVX512 compiled, not executed locally.",
+    "Four physical descriptions, two output types and all-selected contiguous ranges only.",
+    "Guard results establish observed correctness and byte access boundaries, not competitive timing."
+  ]
+}

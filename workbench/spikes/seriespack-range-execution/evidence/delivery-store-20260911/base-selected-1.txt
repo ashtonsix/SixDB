@@ -1,0 +1,173 @@
+
+build/successor-delivery/store-audited/base-native.o:	file format elf64-x86-64
+
+Disassembly of section .text._ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_:
+
+0000000000000000 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_>:
+       0:      	pushq	%r15
+       2:      	pushq	%r14
+       4:      	pushq	%r13
+       6:      	pushq	%r12
+       8:      	pushq	%rbx
+       9:      	movabsq	$0x1ffffffffffffffc, %r10 # imm = 0x1FFFFFFFFFFFFFFC
+      13:      	movq	(%rdi), %r8
+      16:      	movq	0x10(%rdi), %rdi
+      1a:      	movq	%rdi, %r9
+      1d:      	imulq	%rsi, %r9
+      21:      	leaq	(%r8,%r9), %rax
+      25:      	leaq	0x2(%r10), %r11
+      29:      	andq	%rdx, %r11
+      2c:      	xorq	$0x2, %r11
+      30:      	movq	%rdi, %rbx
+      33:      	xorq	$0x1, %rbx
+      37:      	orq	%r11, %rbx
+      3a:      	jne	0x99 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0x99>
+      3c:      	movzwl	(%rax), %esi
+      3f:      	vmovd	%esi, %xmm0
+      43:      	vpshufb	(%rip), %xmm0, %xmm0    # 0x4c <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0x4c>
+		0000000000000048:  R_X86_64_PC32	.LCPI2299_2-0x4
+      4c:      	vpbroadcastq	(%rip), %xmm1   # 0x55 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0x55>
+		0000000000000051:  R_X86_64_PC32	.LCPI2299_0-0x4
+      55:      	vpand	%xmm1, %xmm0, %xmm0
+      59:      	vpcmpeqb	%xmm1, %xmm0, %xmm0
+      5d:      	vpandd	(%rip){1to4}, %xmm0, %xmm0 # 0x67 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0x67>
+		0000000000000063:  R_X86_64_PC32	.LCPI2299_4-0x4
+      67:      	vpmovzxbq	%xmm0, %zmm1    # zmm1 = xmm0[0],zero,zero,zero,zero,zero,zero,zero,xmm0[1],zero,zero,zero,zero,zero,zero,zero,xmm0[2],zero,zero,zero,zero,zero,zero,zero,xmm0[3],zero,zero,zero,zero,zero,zero,zero,xmm0[4],zero,zero,zero,zero,zero,zero,zero,xmm0[5],zero,zero,zero,zero,zero,zero,zero,xmm0[6],zero,zero,zero,zero,zero,zero,zero,xmm0[7],zero,zero,zero,zero,zero,zero,zero
+      6d:      	vmovdqu64	%zmm1, (%rcx)
+      73:      	vpshufd	$0xee, %xmm0, %xmm0     # xmm0 = xmm0[2,3,2,3]
+      78:      	vpmovzxbq	%xmm0, %zmm0    # zmm0 = xmm0[0],zero,zero,zero,zero,zero,zero,zero,xmm0[1],zero,zero,zero,zero,zero,zero,zero,xmm0[2],zero,zero,zero,zero,zero,zero,zero,xmm0[3],zero,zero,zero,zero,zero,zero,zero,xmm0[4],zero,zero,zero,zero,zero,zero,zero,xmm0[5],zero,zero,zero,zero,zero,zero,zero,xmm0[6],zero,zero,zero,zero,zero,zero,zero,xmm0[7],zero,zero,zero,zero,zero,zero,zero
+      7e:      	vmovdqu64	%zmm0, 0x40(%rcx)
+      85:      	addq	$-0x2, %rdx
+      89:      	je	0x2e5 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0x2e5>
+      8f:      	subq	$-0x80, %rcx
+      93:      	addq	$0x2, %rax
+      97:      	jmp	0xa8 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0xa8>
+      99:      	cmpq	$0x1, %rdi
+      9d:      	jne	0xba <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0xba>
+      9f:      	testq	%rdx, %rdx
+      a2:      	je	0x2e5 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0x2e5>
+      a8:      	movl	%edx, %esi
+      aa:      	andl	$0x3, %esi
+      ad:      	cmpq	$0x4, %rdx
+      b1:      	jae	0xda <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0xda>
+      b3:      	xorl	%edi, %edi
+      b5:      	jmp	0x17a <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0x17a>
+      ba:      	testq	%rdx, %rdx
+      bd:      	je	0x2e5 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0x2e5>
+      c3:      	movl	%edx, %eax
+      c5:      	andl	$0x3, %eax
+      c8:      	cmpq	$0x4, %rdx
+      cc:      	jae	0x1ca <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0x1ca>
+      d2:      	xorl	%r10d, %r10d
+      d5:      	jmp	0x28e <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0x28e>
+      da:      	andq	$-0x4, %rdx
+      de:      	leaq	0xc0(%rcx), %r8
+      e5:      	xorl	%edi, %edi
+      e7:      	vpxor	%xmm0, %xmm0, %xmm0
+      eb:      	vpbroadcastq	(%rip), %xmm1   # 0xf4 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0xf4>
+		00000000000000f0:  R_X86_64_PC32	.LCPI2299_0-0x4
+      f4:      	nopw	%cs:(%rax,%rax)
+     100:      	vpinsrb	$0x7, (%rax,%rdi), %xmm0, %xmm2
+     107:      	vgf2p8affineqb	$0x0, %xmm2, %xmm1, %xmm2
+     10d:      	vpmovzxbq	%xmm2, %zmm2    # zmm2 = xmm2[0],zero,zero,zero,zero,zero,zero,zero,xmm2[1],zero,zero,zero,zero,zero,zero,zero,xmm2[2],zero,zero,zero,zero,zero,zero,zero,xmm2[3],zero,zero,zero,zero,zero,zero,zero,xmm2[4],zero,zero,zero,zero,zero,zero,zero,xmm2[5],zero,zero,zero,zero,zero,zero,zero,xmm2[6],zero,zero,zero,zero,zero,zero,zero,xmm2[7],zero,zero,zero,zero,zero,zero,zero
+     113:      	vmovdqu64	%zmm2, -0xc0(%r8)
+     11a:      	vpinsrb	$0x7, 0x1(%rax,%rdi), %xmm0, %xmm2
+     122:      	vgf2p8affineqb	$0x0, %xmm2, %xmm1, %xmm2
+     128:      	vpmovzxbq	%xmm2, %zmm2    # zmm2 = xmm2[0],zero,zero,zero,zero,zero,zero,zero,xmm2[1],zero,zero,zero,zero,zero,zero,zero,xmm2[2],zero,zero,zero,zero,zero,zero,zero,xmm2[3],zero,zero,zero,zero,zero,zero,zero,xmm2[4],zero,zero,zero,zero,zero,zero,zero,xmm2[5],zero,zero,zero,zero,zero,zero,zero,xmm2[6],zero,zero,zero,zero,zero,zero,zero,xmm2[7],zero,zero,zero,zero,zero,zero,zero
+     12e:      	vmovdqu64	%zmm2, -0x80(%r8)
+     135:      	vpinsrb	$0x7, 0x2(%rax,%rdi), %xmm0, %xmm2
+     13d:      	vgf2p8affineqb	$0x0, %xmm2, %xmm1, %xmm2
+     143:      	vpmovzxbq	%xmm2, %zmm2    # zmm2 = xmm2[0],zero,zero,zero,zero,zero,zero,zero,xmm2[1],zero,zero,zero,zero,zero,zero,zero,xmm2[2],zero,zero,zero,zero,zero,zero,zero,xmm2[3],zero,zero,zero,zero,zero,zero,zero,xmm2[4],zero,zero,zero,zero,zero,zero,zero,xmm2[5],zero,zero,zero,zero,zero,zero,zero,xmm2[6],zero,zero,zero,zero,zero,zero,zero,xmm2[7],zero,zero,zero,zero,zero,zero,zero
+     149:      	vmovdqu64	%zmm2, -0x40(%r8)
+     150:      	vpinsrb	$0x7, 0x3(%rax,%rdi), %xmm0, %xmm2
+     158:      	vgf2p8affineqb	$0x0, %xmm2, %xmm1, %xmm2
+     15e:      	vpmovzxbq	%xmm2, %zmm2    # zmm2 = xmm2[0],zero,zero,zero,zero,zero,zero,zero,xmm2[1],zero,zero,zero,zero,zero,zero,zero,xmm2[2],zero,zero,zero,zero,zero,zero,zero,xmm2[3],zero,zero,zero,zero,zero,zero,zero,xmm2[4],zero,zero,zero,zero,zero,zero,zero,xmm2[5],zero,zero,zero,zero,zero,zero,zero,xmm2[6],zero,zero,zero,zero,zero,zero,zero,xmm2[7],zero,zero,zero,zero,zero,zero,zero
+     164:      	vmovdqu64	%zmm2, (%r8)
+     16a:      	addq	$0x4, %rdi
+     16e:      	addq	$0x100, %r8             # imm = 0x100
+     175:      	cmpq	%rdi, %rdx
+     178:      	jne	0x100 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0x100>
+     17a:      	testq	%rsi, %rsi
+     17d:      	je	0x2e5 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0x2e5>
+     183:      	addq	%rdi, %rax
+     186:      	shlq	$0x6, %rdi
+     18a:      	addq	%rdi, %rcx
+     18d:      	xorl	%edx, %edx
+     18f:      	vpxor	%xmm0, %xmm0, %xmm0
+     193:      	vpbroadcastq	(%rip), %xmm1   # 0x19c <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0x19c>
+		0000000000000198:  R_X86_64_PC32	.LCPI2299_0-0x4
+     19c:      	nopl	(%rax)
+     1a0:      	vpinsrb	$0x7, (%rax,%rdx), %xmm0, %xmm2
+     1a7:      	vgf2p8affineqb	$0x0, %xmm2, %xmm1, %xmm2
+     1ad:      	vpmovzxbq	%xmm2, %zmm2    # zmm2 = xmm2[0],zero,zero,zero,zero,zero,zero,zero,xmm2[1],zero,zero,zero,zero,zero,zero,zero,xmm2[2],zero,zero,zero,zero,zero,zero,zero,xmm2[3],zero,zero,zero,zero,zero,zero,zero,xmm2[4],zero,zero,zero,zero,zero,zero,zero,xmm2[5],zero,zero,zero,zero,zero,zero,zero,xmm2[6],zero,zero,zero,zero,zero,zero,zero,xmm2[7],zero,zero,zero,zero,zero,zero,zero
+     1b3:      	vmovdqu64	%zmm2, (%rcx)
+     1b9:      	incq	%rdx
+     1bc:      	addq	$0x40, %rcx
+     1c0:      	cmpq	%rdx, %rsi
+     1c3:      	jne	0x1a0 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0x1a0>
+     1c5:      	jmp	0x2e5 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0x2e5>
+     1ca:      	andq	%r10, %rdx
+     1cd:      	leaq	0x3(%rsi), %r11
+     1d1:      	imulq	%rdi, %r11
+     1d5:      	leaq	(,%rdi,4), %rbx
+     1dd:      	leaq	0xc0(%rcx), %r14
+     1e4:      	leaq	0x2(%rsi), %r15
+     1e8:      	imulq	%rdi, %r15
+     1ec:      	leaq	0x1(%rsi), %r12
+     1f0:      	imulq	%rdi, %r12
+     1f4:      	xorl	%r10d, %r10d
+     1f7:      	vpxor	%xmm0, %xmm0, %xmm0
+     1fb:      	vpbroadcastq	(%rip), %xmm1   # 0x204 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0x204>
+		0000000000000200:  R_X86_64_PC32	.LCPI2299_0-0x4
+     204:      	movq	%r8, %r13
+     207:      	nopw	(%rax,%rax)
+     210:      	vpinsrb	$0x7, (%r13,%r9), %xmm0, %xmm2
+     218:      	vgf2p8affineqb	$0x0, %xmm2, %xmm1, %xmm2
+     21e:      	vpmovzxbq	%xmm2, %zmm2    # zmm2 = xmm2[0],zero,zero,zero,zero,zero,zero,zero,xmm2[1],zero,zero,zero,zero,zero,zero,zero,xmm2[2],zero,zero,zero,zero,zero,zero,zero,xmm2[3],zero,zero,zero,zero,zero,zero,zero,xmm2[4],zero,zero,zero,zero,zero,zero,zero,xmm2[5],zero,zero,zero,zero,zero,zero,zero,xmm2[6],zero,zero,zero,zero,zero,zero,zero,xmm2[7],zero,zero,zero,zero,zero,zero,zero
+     224:      	vmovdqu64	%zmm2, -0xc0(%r14)
+     22b:      	vpinsrb	$0x7, (%r13,%r12), %xmm0, %xmm2
+     233:      	vgf2p8affineqb	$0x0, %xmm2, %xmm1, %xmm2
+     239:      	vpmovzxbq	%xmm2, %zmm2    # zmm2 = xmm2[0],zero,zero,zero,zero,zero,zero,zero,xmm2[1],zero,zero,zero,zero,zero,zero,zero,xmm2[2],zero,zero,zero,zero,zero,zero,zero,xmm2[3],zero,zero,zero,zero,zero,zero,zero,xmm2[4],zero,zero,zero,zero,zero,zero,zero,xmm2[5],zero,zero,zero,zero,zero,zero,zero,xmm2[6],zero,zero,zero,zero,zero,zero,zero,xmm2[7],zero,zero,zero,zero,zero,zero,zero
+     23f:      	vmovdqu64	%zmm2, -0x80(%r14)
+     246:      	vpinsrb	$0x7, (%r13,%r15), %xmm0, %xmm2
+     24e:      	vgf2p8affineqb	$0x0, %xmm2, %xmm1, %xmm2
+     254:      	vpmovzxbq	%xmm2, %zmm2    # zmm2 = xmm2[0],zero,zero,zero,zero,zero,zero,zero,xmm2[1],zero,zero,zero,zero,zero,zero,zero,xmm2[2],zero,zero,zero,zero,zero,zero,zero,xmm2[3],zero,zero,zero,zero,zero,zero,zero,xmm2[4],zero,zero,zero,zero,zero,zero,zero,xmm2[5],zero,zero,zero,zero,zero,zero,zero,xmm2[6],zero,zero,zero,zero,zero,zero,zero,xmm2[7],zero,zero,zero,zero,zero,zero,zero
+     25a:      	vmovdqu64	%zmm2, -0x40(%r14)
+     261:      	vpinsrb	$0x7, (%r13,%r11), %xmm0, %xmm2
+     269:      	vgf2p8affineqb	$0x0, %xmm2, %xmm1, %xmm2
+     26f:      	vpmovzxbq	%xmm2, %zmm2    # zmm2 = xmm2[0],zero,zero,zero,zero,zero,zero,zero,xmm2[1],zero,zero,zero,zero,zero,zero,zero,xmm2[2],zero,zero,zero,zero,zero,zero,zero,xmm2[3],zero,zero,zero,zero,zero,zero,zero,xmm2[4],zero,zero,zero,zero,zero,zero,zero,xmm2[5],zero,zero,zero,zero,zero,zero,zero,xmm2[6],zero,zero,zero,zero,zero,zero,zero,xmm2[7],zero,zero,zero,zero,zero,zero,zero
+     275:      	vmovdqu64	%zmm2, (%r14)
+     27b:      	addq	$0x4, %r10
+     27f:      	addq	%rbx, %r13
+     282:      	addq	$0x100, %r14            # imm = 0x100
+     289:      	cmpq	%r10, %rdx
+     28c:      	jne	0x210 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0x210>
+     28e:      	testq	%rax, %rax
+     291:      	je	0x2e5 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0x2e5>
+     293:      	movq	%r10, %rdx
+     296:      	shlq	$0x6, %rdx
+     29a:      	addq	%rdx, %rcx
+     29d:      	addq	%r10, %rsi
+     2a0:      	imulq	%rdi, %rsi
+     2a4:      	addq	%rsi, %r8
+     2a7:      	shll	$0x6, %eax
+     2aa:      	xorl	%edx, %edx
+     2ac:      	vpxor	%xmm0, %xmm0, %xmm0
+     2b0:      	vpbroadcastq	(%rip), %xmm1   # 0x2b9 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0x2b9>
+		00000000000002b5:  R_X86_64_PC32	.LCPI2299_0-0x4
+     2b9:      	nopl	(%rax)
+     2c0:      	vpinsrb	$0x7, (%r8), %xmm0, %xmm2
+     2c6:      	vgf2p8affineqb	$0x0, %xmm2, %xmm1, %xmm2
+     2cc:      	vpmovzxbq	%xmm2, %zmm2    # zmm2 = xmm2[0],zero,zero,zero,zero,zero,zero,zero,xmm2[1],zero,zero,zero,zero,zero,zero,zero,xmm2[2],zero,zero,zero,zero,zero,zero,zero,xmm2[3],zero,zero,zero,zero,zero,zero,zero,xmm2[4],zero,zero,zero,zero,zero,zero,zero,xmm2[5],zero,zero,zero,zero,zero,zero,zero,xmm2[6],zero,zero,zero,zero,zero,zero,zero,xmm2[7],zero,zero,zero,zero,zero,zero,zero
+     2d2:      	vmovdqu64	%zmm2, (%rcx,%rdx)
+     2d9:      	addq	$0x40, %rdx
+     2dd:      	addq	%rdi, %r8
+     2e0:      	cmpq	%rdx, %rax
+     2e3:      	jne	0x2c0 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj1ELNS0_8geometryE0ELj0EmEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0x2c0>
+     2e5:      	popq	%rbx
+     2e6:      	popq	%r12
+     2e8:      	popq	%r13
+     2ea:      	popq	%r14
+     2ec:      	popq	%r15
+     2ee:      	vzeroupper
+     2f1:      	retq

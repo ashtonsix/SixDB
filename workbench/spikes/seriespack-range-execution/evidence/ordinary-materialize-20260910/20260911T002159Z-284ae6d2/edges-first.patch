@@ -1,0 +1,13 @@
+--- a/ikea/src/seriespack/native.cpp
++++ b/ikea/src/seriespack/native.cpp
+@@ -504,9 +504,9 @@
+             auto* destination = static_cast<U*>(output);
+             if (prefix != 0)
+                 materialized_ranges::decode<Ops, Format>(expression, {rows.begin, first}, destination);
+-            decode_complete<Ops, W, G, H>(source.placement(), first / T, tiles, destination + prefix);
+             if (end != rows.end)
+                 materialized_ranges::decode<Ops, Format>(expression, {end, rows.end}, destination + (end - rows.begin));
++            decode_complete<Ops, W, G, H>(source.placement(), first / T, tiles, destination + prefix);
+         } else __builtin_unreachable();
+     });
+ }

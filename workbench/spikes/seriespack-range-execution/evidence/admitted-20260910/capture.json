@@ -1,0 +1,147 @@
+{
+  "format": 1,
+  "records": {
+    "v2": {
+      "job": "20260910T194924Z-a6550ee4",
+      "source": {
+        "sha256": "22e58915a32032283e54666524fa05567940203e217cfc3a3dc755e701bd3b03",
+        "pool_sha256": "b0c2f84df06c0b7e1b1d66b0869a42095ea9b9b1aeb002545fff40a67c046bb0",
+        "setup_sha256": "62576c70b9f5acb09dc05c23ccb8f1f268ab995175a8b11fba175261fad0543e",
+        "digest": "9cc60a39699f70c6e30c30eca897ec90400c30ff40985671cfbb2a7d619edc38",
+        "runtime_sha256": "a2666954a6d1e7fcaa5e2e4c19021230510dcffd6987dcafff18cbccac1ae1d5"
+      },
+      "profile": {
+        "flags": [],
+        "march": "armv8-a",
+        "profile": "neon",
+        "target": "neoverse-v2",
+        "targets": [
+          "neon"
+        ]
+      },
+      "library_identity": {
+        "actual_sha256": "79b3e1e7c5540dc1d8f0de6ea2348b23e30314a587ff77b9e6e76423328f93c8",
+        "baseline": "fresh coherent-source build",
+        "historical_sha256": "79b3e1e7c5540dc1d8f0de6ea2348b23e30314a587ff77b9e6e76423328f93c8",
+        "matches_historical_binary": true
+      },
+      "validation": {
+        "large": {
+          "cases": 16,
+          "iteration_rows": 48,
+          "repetitions": 3,
+          "requested_encoded_bytes": 1073741824,
+          "scope": "resident footprint and broad query stream; no per-query cache-miss assertion"
+        },
+        "large_inventory": 16,
+        "small": {
+          "cases": 95,
+          "iteration_rows": 475,
+          "repetitions": 5,
+          "requested_encoded_bytes": 4096,
+          "scope": "resident footprint and broad query stream; no per-query cache-miss assertion"
+        },
+        "small_inventory": 95
+      },
+      "admitted_checks": {
+        "neon": "Admitted regions target4: 20 descriptions, 400 protected placements, 6744 original-coordinate queries passed"
+      },
+      "source_and_output_hashes_verified": true,
+      "captured_source_files": 481,
+      "unchanged_library_objects": 6,
+      "benchmark_sha256": "1fe48dcf88f42b27176e67d2fdde1f1b8e50b2bcb79ed5d56f6d282a49e96ebe",
+      "receipt_sha256": "62e46eb6d7fc41dc54a7065078aaddda6cdba180e8c9a5fc4cb41ea49c0aee4b",
+      "machine": {
+        "Architecture": "aarch64",
+        "Model name": "Neoverse-V2",
+        "CPU(s)": "2",
+        "Thread(s) per core": "1",
+        "L1d cache": "128 KiB (2 instances)",
+        "L2 cache": "4 MiB (2 instances)",
+        "L3 cache": "36 MiB (1 instance)"
+      },
+      "instance_type": "c8g.large",
+      "allowed_cpus": [
+        0,
+        1
+      ],
+      "affinity_cpu": "0",
+      "artifact": "v2/artifact.json"
+    },
+    "gnr": {
+      "job": "20260910T195010Z-93f8c211",
+      "source": {
+        "sha256": "22e58915a32032283e54666524fa05567940203e217cfc3a3dc755e701bd3b03",
+        "pool_sha256": "b0c2f84df06c0b7e1b1d66b0869a42095ea9b9b1aeb002545fff40a67c046bb0",
+        "setup_sha256": "62576c70b9f5acb09dc05c23ccb8f1f268ab995175a8b11fba175261fad0543e",
+        "digest": "9cc60a39699f70c6e30c30eca897ec90400c30ff40985671cfbb2a7d619edc38",
+        "runtime_sha256": "a2666954a6d1e7fcaa5e2e4c19021230510dcffd6987dcafff18cbccac1ae1d5"
+      },
+      "profile": {
+        "flags": [
+          "-mavx512vbmi",
+          "-mavx512vbmi2",
+          "-mgfni"
+        ],
+        "march": "x86-64-v4",
+        "profile": "avx512",
+        "target": "granite-rapids",
+        "targets": [
+          "avx2",
+          "avx512"
+        ]
+      },
+      "library_identity": {
+        "actual_sha256": "6539860725f988f080ffade80986a95e6191d1573f9be45dba490c94fee98d06",
+        "baseline": "fresh coherent-source build",
+        "historical_sha256": "6539860725f988f080ffade80986a95e6191d1573f9be45dba490c94fee98d06",
+        "matches_historical_binary": true
+      },
+      "validation": {
+        "large": {
+          "cases": 26,
+          "iteration_rows": 78,
+          "repetitions": 3,
+          "requested_encoded_bytes": 1073741824,
+          "scope": "resident footprint and broad query stream; no per-query cache-miss assertion"
+        },
+        "large_inventory": 26,
+        "small": {
+          "cases": 155,
+          "iteration_rows": 775,
+          "repetitions": 5,
+          "requested_encoded_bytes": 4096,
+          "scope": "resident footprint and broad query stream; no per-query cache-miss assertion"
+        },
+        "small_inventory": 155
+      },
+      "admitted_checks": {
+        "avx2": "Admitted regions target2: 20 descriptions, 400 protected placements, 6744 original-coordinate queries passed",
+        "avx512": "Admitted regions target3: 20 descriptions, 400 protected placements, 6744 original-coordinate queries passed"
+      },
+      "source_and_output_hashes_verified": true,
+      "captured_source_files": 481,
+      "unchanged_library_objects": 6,
+      "benchmark_sha256": "9d5c875bbc0cbdc2ca534bacbdc54591f9b422a41461d5f38e53220304daa730",
+      "receipt_sha256": "3f6a4fcea78f6990ceadb7a0f4d14801c58a33815270097cac5563c3b4033f52",
+      "machine": {
+        "Architecture": "x86_64",
+        "Model name": "Intel(R) Xeon(R) 6975P-C",
+        "CPU(s)": "1",
+        "Thread(s) per core": "1",
+        "L1d cache": "48 KiB (1 instance)",
+        "L2 cache": "2 MiB (1 instance)",
+        "L3 cache": "480 MiB (1 instance)"
+      },
+      "instance_type": "c8i.large",
+      "allowed_cpus": [
+        0
+      ],
+      "affinity_cpu": "0",
+      "artifact": "gnr/artifact.json"
+    }
+  },
+  "comparability": "Each host fixes production/library/caller/control source within its small and large experiment. Admitted regions assert count16, origin alignment16 and u64 output. Raw additionally asserts density. Sources predate selected-kernel and scalar-callback integrations.",
+  "units": "cases.csv retains repetitions in ns/benchmark iteration and ns/item; each resident iteration has256 queries, each item is onequery.",
+  "limits": "Sequential provider cases with calibrated durations may traverse different prefix lengths. Resident allocation and independent address coverage do not measure cache misses or establish cold DRAM latency."
+}

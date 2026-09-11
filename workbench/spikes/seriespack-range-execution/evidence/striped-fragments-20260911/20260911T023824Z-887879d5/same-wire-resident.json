@@ -1,0 +1,50 @@
+[
+  {
+    "variant": "before",
+    "case": "striped/k5/h0/u64/get16",
+    "ordinary": "resident/series/avx2/striped/k5/h0/u64/get16",
+    "ordinary_ns": 6.041229339383626,
+    "same_wire_prior_ns": 1.8031794284165898,
+    "ratio": 3.350320685883466
+  },
+  {
+    "variant": "after",
+    "case": "striped/k5/h0/u64/get16",
+    "ordinary": "resident/series/avx2/striped/k5/h0/u64/get16",
+    "ordinary_ns": 5.514210413313517,
+    "same_wire_prior_ns": 1.7933383029642522,
+    "ratio": 3.07482999955945
+  },
+  {
+    "variant": "before",
+    "case": "striped/k6/h0/u64/get16",
+    "ordinary": "resident/series/avx512/striped/k6/h0/u64/get16",
+    "ordinary_ns": 5.616401037211293,
+    "same_wire_prior_ns": 5.553839395188569,
+    "ratio": 1.0112645752912703
+  },
+  {
+    "variant": "after",
+    "case": "striped/k6/h0/u64/get16",
+    "ordinary": "resident/series/avx512/striped/k6/h0/u64/get16",
+    "ordinary_ns": 4.899159572619876,
+    "same_wire_prior_ns": 5.480747375004664,
+    "ratio": 0.8938853111462206
+  },
+  {
+    "variant": "before",
+    "case": "local/k7/h0/u64/get16",
+    "ordinary": "resident/series/avx2/local/k7/h0/u64/get16",
+    "ordinary_ns": 2.702782222962215,
+    "same_wire_prior_ns": 1.5969203270754657,
+    "ratio": 1.6924965993212568
+  },
+  {
+    "variant": "after",
+    "case": "local/k7/h0/u64/get16",
+    "ordinary": "resident/series/avx512/local/k7/h0/u64/get16",
+    "ordinary_ns": 2.7120128946705524,
+    "same_wire_prior_ns": 1.599008010755775,
+    "ratio": 1.6960596047225012
+  }
+]

@@ -1,0 +1,402 @@
+{
+  "question": "Separate physical materialization, runtime placement, and dynamic range ABI/driver work; no timing acceptance inferred from instruction counts.",
+  "source": [
+    {
+      "path": "workbench/spikes/ikea-composition/validation/diagnostics/materialize_region/check.cpp",
+      "sha256": "c4cdb3015ec34be801a3011f5f6659e701753fb50c3d1fa7987dabae3a64f87c"
+    },
+    {
+      "path": "workbench/spikes/ikea-composition/validation/seriespack_range_regions.h",
+      "sha256": "4c4510b37702c805c99115c510513057733da0e208f606ce6c601dd6bc02f15e"
+    },
+    {
+      "path": "workbench/spikes/ikea-composition/validation/seriespack_range_regions.cpp",
+      "sha256": "d82e6d35882c40db962af6a642f06c285932719e9cc744fcc4c661e3e85d14b3"
+    }
+  ],
+  "production": [
+    {
+      "path": "ikea/src/seriespack/native.cpp",
+      "sha256": "1abf641b246af9c075e8234a9e1b3390c412a8410af9353d84d5c52cd57350da"
+    },
+    {
+      "path": "ikea/include/ikea/seriespack/detail/range_regions.h",
+      "sha256": "94fe987663b61ff3df3e32700438ba12b20b3061083798bec02a7c739f499612"
+    },
+    {
+      "path": "ikea/include/ikea/seriespack/native_neon.h",
+      "sha256": "24ca61295359664381426fcc0e4e9c08bb4b9204ebb34d8a44eb58ca4abdaef2"
+    },
+    {
+      "path": "ikea/include/ikea/seriespack/native_avx2.h",
+      "sha256": "3e78b77bcea0a0229f18b8dd2fbf27a01696b00931703db1610750445501f9f9"
+    },
+    {
+      "path": "ikea/include/ikea/seriespack/native_avx512.h",
+      "sha256": "62562fc9199c6d81bf5d3f7794866822b296bcf91a6acf761a9cdf325d8d3d3a"
+    }
+  ],
+  "v2_context": [
+    {
+      "path": "build/workspaces/seriespack-coherent-20260910/build/workers/20260910T174905Z-4b181dfd/results/seriespack/neon/samples.json",
+      "sha256": "dfc86e832e987974f7f7502da3e0e4f2565dbe451b8b5f77005eb82e66671d81"
+    },
+    {
+      "path": "build/workspaces/seriespack-coherent-20260910/build/workers/20260910T174905Z-4b181dfd/results/seriespack/neon/ikea_seriespack_bench.asm",
+      "sha256": "7f50d2df7b4af4924f9b915d723a2fe17a1380c0893083f3ea0771ea74d4accb"
+    },
+    {
+      "path": "build/workspaces/seriespack-coherent-20260910/build/workers/20260910T174905Z-4b181dfd/results/seriespack/neon/ikea_seriespack_bench",
+      "sha256": "dab08e1be64ce269f975ab8ebca2bb6df1cbf910c539395dfa7a97207749e022"
+    },
+    {
+      "path": "build/workspaces/seriespack-coherent-20260910/build/workers/20260910T174905Z-4b181dfd/results/seriespack/neon/compile_commands.json",
+      "sha256": "b22daa9194cfb2f81580cc2ccb1f1ad1cbef10adb0f8ce3e852c63a89876ddb2"
+    }
+  ],
+  "actual_v2_executed_paths": {
+    "bound_caller": {
+      "source": {
+        "path": "build/seriespack-v2-range-followup/caller-run.asm",
+        "sha256": "0cf8ae633319a736be622b383b0c5437d9050f83d3d1e9e6ae65d807a7922266"
+      },
+      "inclusive_address_ranges": [
+        [
+          "141c8",
+          "14218",
+          1
+        ]
+      ],
+      "executed_instructions": 21,
+      "executed_nops": 0
+    },
+    "prior_caller": {
+      "source": {
+        "path": "build/seriespack-v2-range-followup/caller-run.asm",
+        "sha256": "0cf8ae633319a736be622b383b0c5437d9050f83d3d1e9e6ae65d807a7922266"
+      },
+      "inclusive_address_ranges": [
+        [
+          "14388",
+          "143c8",
+          1
+        ]
+      ],
+      "executed_instructions": 17,
+      "executed_nops": 0
+    },
+    "striped5_bound_entry": {
+      "source": {
+        "path": "build/seriespack-v2-range-followup/series-5-striped-decode_bound.asm",
+        "sha256": "b15af9b0af3384cbdd1849513e2776f4751c2d11b764f8374084a0a7063ed8e1"
+      },
+      "inclusive_address_ranges": [
+        [
+          "1b4730",
+          "1b474c",
+          1
+        ],
+        [
+          "1b4790",
+          "1b4794",
+          1
+        ],
+        [
+          "1b4808",
+          "1b480c",
+          1
+        ],
+        [
+          "1b4814",
+          "1b4840",
+          1
+        ]
+      ],
+      "executed_instructions": 24,
+      "executed_nops": 0
+    },
+    "striped5_boundary_one": {
+      "source": {
+        "path": "build/seriespack-v2-range-followup/series-5-striped-decode_boundary.asm",
+        "sha256": "a46bcc0f2f3e930bd7a05d9e65158f7bf031ea814881853eac3be71e1874334f"
+      },
+      "inclusive_address_ranges": [
+        [
+          "1b5f40",
+          "1b5fa4",
+          1
+        ],
+        [
+          "1b5fdc",
+          "1b601c",
+          1
+        ],
+        [
+          "1b6080",
+          "1b60c8",
+          1
+        ],
+        [
+          "1b6118",
+          "1b611c",
+          1
+        ],
+        [
+          "1b6214",
+          "1b6214",
+          1
+        ]
+      ],
+      "executed_instructions": 65,
+      "executed_nops": 0
+    },
+    "striped5_boundary_two": {
+      "source": {
+        "path": "build/seriespack-v2-range-followup/series-5-striped-decode_boundary.asm",
+        "sha256": "a46bcc0f2f3e930bd7a05d9e65158f7bf031ea814881853eac3be71e1874334f"
+      },
+      "inclusive_address_ranges": [
+        [
+          "1b5f40",
+          "1b5fa4",
+          1
+        ],
+        [
+          "1b5fdc",
+          "1b6008",
+          1
+        ],
+        [
+          "1b6060",
+          "1b607c",
+          1
+        ],
+        [
+          "1b6080",
+          "1b60c8",
+          1
+        ],
+        [
+          "1b6118",
+          "1b611c",
+          1
+        ],
+        [
+          "1b6214",
+          "1b6214",
+          1
+        ]
+      ],
+      "executed_instructions": 68,
+      "executed_nops": 0
+    },
+    "striped5_prior_one": {
+      "source": {
+        "path": "build/seriespack-v2-range-followup/prior-5-striped.asm",
+        "sha256": "a465b8aac42de673db5808d16a027a9b383f95df7d03e623121db7fdf2985432"
+      },
+      "inclusive_address_ranges": [
+        [
+          "6c4d0",
+          "6c524",
+          1
+        ],
+        [
+          "6c544",
+          "6c5b4",
+          1
+        ]
+      ],
+      "executed_instructions": 51,
+      "executed_nops": 0
+    },
+    "striped5_prior_two": {
+      "source": {
+        "path": "build/seriespack-v2-range-followup/prior-5-striped.asm",
+        "sha256": "a465b8aac42de673db5808d16a027a9b383f95df7d03e623121db7fdf2985432"
+      },
+      "inclusive_address_ranges": [
+        [
+          "6c4d0",
+          "6c50c",
+          1
+        ],
+        [
+          "6c528",
+          "6c540",
+          1
+        ],
+        [
+          "6c544",
+          "6c5b4",
+          1
+        ]
+      ],
+      "executed_instructions": 52,
+      "executed_nops": 0
+    },
+    "local56_prior": {
+      "source": {
+        "path": "build/seriespack-v2-range-followup/prior-local56.asm",
+        "sha256": "9a43168b87064176d6d39c5823e75e0d239d432988fcfe887374c44833fda4ca"
+      },
+      "inclusive_address_ranges": [
+        [
+          "6a730",
+          "6a7a8",
+          1
+        ]
+      ],
+      "executed_instructions": 31,
+      "executed_nops": 0
+    },
+    "local56_bound_entry": {
+      "source": {
+        "path": "build/seriespack-v2-range-followup/series-56-local-decode_bound.asm",
+        "sha256": "eb554ce7add50df86067452ad0ef1e6f3f79c947ef8fd72bb2494258dc5f31f6"
+      },
+      "inclusive_address_ranges": [
+        [
+          "14bfe0",
+          "14c010",
+          1
+        ]
+      ],
+      "executed_instructions": 13,
+      "executed_nops": 0
+    },
+    "local56_complete": {
+      "source": {
+        "path": "build/seriespack-v2-range-followup/series-56-local-decode_complete.asm",
+        "sha256": "44967eca736b67cfad5c7911b1685c6c5ea9a894de1a135951194809da46623d"
+      },
+      "inclusive_address_ranges": [
+        [
+          "14c060",
+          "14c09c",
+          1
+        ],
+        [
+          "14c0a0",
+          "14c0d0",
+          2
+        ],
+        [
+          "14c0d4",
+          "14c0d4",
+          1
+        ],
+        [
+          "14c134",
+          "14c134",
+          1
+        ]
+      ],
+      "executed_instructions": 44,
+      "executed_nops": 2
+    }
+  },
+  "diagnostic_assembly": {
+    "neon": {
+      "source": {
+        "path": "build/seriespack-v2-range-followup/regions-neon.asm",
+        "sha256": "07f7e7fa0d705b027f843a48cddb00c3c73236f1779da385cf6838bef82ffa6b"
+      },
+      "callback_count": 40,
+      "callbacks_with_stack_references": 0,
+      "callbacks_with_internal_calls": 0
+    },
+    "avx2": {
+      "source": {
+        "path": "build/seriespack-v2-range-followup/regions-avx2.asm",
+        "sha256": "6b6d4daf49cf0f23c52e59b6ddfb62a6af11807c24b898fb5b625d74d3debda1"
+      },
+      "callback_count": 40,
+      "callbacks_with_stack_references": 0,
+      "callbacks_with_internal_calls": 0
+    },
+    "avx512": {
+      "source": {
+        "path": "build/seriespack-v2-range-followup/regions-avx512.asm",
+        "sha256": "baa97af2d64bf39e7669c46bbc6e1e43be37ddc9472a3356e0dada9b0003355a"
+      },
+      "callback_count": 80,
+      "callbacks_with_stack_references": 0,
+      "callbacks_with_internal_calls": 0
+    }
+  },
+  "diagnostic_compile": {
+    "compiler": "Clang21.1.8",
+    "common": [
+      "-std=c++23",
+      "-O3",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Iikea/include"
+    ],
+    "neon": [
+      "-march=armv8-a",
+      "-mtune=neoverse-v2"
+    ],
+    "avx2": [
+      "--target=x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-mavx2"
+    ],
+    "avx512": [
+      "--target=x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-mavx512bw",
+      "-mavx512vbmi",
+      "-mavx512vl"
+    ]
+  },
+  "validation": {
+    "descriptions": 20,
+    "protected_placements_per_target": 400,
+    "queries_per_target": 6744,
+    "neon": "pass",
+    "neon_asan_ubsan": "pass",
+    "avx2_qemu": "pass",
+    "avx512": "compiled and linked; not executed locally"
+  },
+  "objects": [
+    {
+      "path": "build/seriespack-v2-range-followup/regions-neon.o",
+      "sha256": "a09b33300d12b7c5ae644337ba82342160f9a8effcc02d56c597ba579441020a"
+    },
+    {
+      "path": "build/seriespack-v2-range-followup/regions-avx2.o",
+      "sha256": "a5463b98aa34696226ab7d688a857b2833938a2440f24ea9fc4ed3716d71a55c"
+    },
+    {
+      "path": "build/seriespack-v2-range-followup/regions-avx512.o",
+      "sha256": "2a521f9487cb6a4b8ba005b7da16c24600c94579325b4a1c89d92c8aecfcac34"
+    }
+  ],
+  "final_build_commands_and_results": {
+    "path": "build/seriespack-v2-range-followup/final-build-calls.json",
+    "sha256": "36d5246c487947a841a264eaa5b886bb2b6c04035f0fed3fb4b60a5500c4ae87"
+  },
+  "check_binaries": [
+    {
+      "path": "build/seriespack-v2-range-followup/check-neon",
+      "sha256": "a6a9c3feede9f7413f83b7db4da356485cbaa3090de5e984735a4874aa729c5b"
+    },
+    {
+      "path": "build/seriespack-v2-range-followup/check-avx2",
+      "sha256": "25bb07dab081a1e91cee7de137a047cb52850896d5f57b4112039e8fbe29bcbf"
+    },
+    {
+      "path": "build/seriespack-v2-range-followup/check-avx512",
+      "sha256": "2cbe0d5ac60ccc80da7531543f01f2d4a219d9de6576c075256d5e4479f3e3a2"
+    },
+    {
+      "path": "build/seriespack-v2-range-followup/check-neon-sanitized",
+      "sha256": "01a3ea0b8c40520af0ddf143358c5905edd1460ad53987c08590ae8d3b684fe4"
+    }
+  ],
+  "scope": "No hardware timing or production modifications. AVX512-profile object includes both compiled AVX2 and AVX512 callbacks. Counts are executed instructions on specified paths, not cycles; local object counts require final linked/hardware comparison."
+}

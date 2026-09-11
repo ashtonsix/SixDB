@@ -1,0 +1,1874 @@
+{
+  "runtime/series/avx2/local/k23/h16/u32/headgapped/mixed": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 4,
+      "logical_values": 1280,
+      "payload_stride": 7,
+      "placement_bytes": 8450,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 4254984960,
+      "query_hash_lo": 2488869866,
+      "sink_bytes_per_iteration": 13056,
+      "values_per_item": 12.75
+    },
+    "cycle_checksum": 35944595611,
+    "patterns": [
+      [
+        0,
+        16
+      ],
+      [
+        1,
+        16
+      ],
+      [
+        1,
+        17
+      ],
+      [
+        7,
+        2
+      ]
+    ]
+  },
+  "runtime/series/avx2/local/k23/h16/u32/headgapped/o1-n16": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 4,
+      "logical_values": 1280,
+      "payload_stride": 7,
+      "placement_bytes": 8450,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 503056603,
+      "query_hash_lo": 327234659,
+      "sink_bytes_per_iteration": 16384,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 36296696858,
+    "patterns": [
+      [
+        1,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx2/local/k23/h16/u32/headgapped/o1-n17": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 4,
+      "logical_values": 1280,
+      "payload_stride": 7,
+      "placement_bytes": 8450,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 281996142,
+      "query_hash_lo": 946201962,
+      "sink_bytes_per_iteration": 17408,
+      "values_per_item": 17.0
+    },
+    "cycle_checksum": 36414725551,
+    "patterns": [
+      [
+        1,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx2/local/k23/h16/u32/independentlygapped/mixed": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 4,
+      "logical_values": 1280,
+      "payload_stride": 18,
+      "placement_bytes": 10199,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 4254984960,
+      "query_hash_lo": 2488869866,
+      "sink_bytes_per_iteration": 13056,
+      "values_per_item": 12.75
+    },
+    "cycle_checksum": 35944595611,
+    "patterns": [
+      [
+        0,
+        16
+      ],
+      [
+        1,
+        16
+      ],
+      [
+        1,
+        17
+      ],
+      [
+        7,
+        2
+      ]
+    ]
+  },
+  "runtime/series/avx2/local/k23/h16/u32/independentlygapped/o1-n16": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 4,
+      "logical_values": 1280,
+      "payload_stride": 18,
+      "placement_bytes": 10199,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 503056603,
+      "query_hash_lo": 327234659,
+      "sink_bytes_per_iteration": 16384,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 36296696858,
+    "patterns": [
+      [
+        1,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx2/local/k23/h16/u32/independentlygapped/o1-n17": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 4,
+      "logical_values": 1280,
+      "payload_stride": 18,
+      "placement_bytes": 10199,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 281996142,
+      "query_hash_lo": 946201962,
+      "sink_bytes_per_iteration": 17408,
+      "values_per_item": 17.0
+    },
+    "cycle_checksum": 36414725551,
+    "patterns": [
+      [
+        1,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx2/local/k23/h16/u64/headgapped/mixed": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 8,
+      "logical_values": 1280,
+      "payload_stride": 7,
+      "placement_bytes": 8450,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 4254984960,
+      "query_hash_lo": 2488869866,
+      "sink_bytes_per_iteration": 26112,
+      "values_per_item": 12.75
+    },
+    "cycle_checksum": 35944595611,
+    "patterns": [
+      [
+        0,
+        16
+      ],
+      [
+        1,
+        16
+      ],
+      [
+        1,
+        17
+      ],
+      [
+        7,
+        2
+      ]
+    ]
+  },
+  "runtime/series/avx2/local/k23/h16/u64/headgapped/o1-n16": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 8,
+      "logical_values": 1280,
+      "payload_stride": 7,
+      "placement_bytes": 8450,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 503056603,
+      "query_hash_lo": 327234659,
+      "sink_bytes_per_iteration": 32768,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 36296696858,
+    "patterns": [
+      [
+        1,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx2/local/k23/h16/u64/headgapped/o1-n17": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 8,
+      "logical_values": 1280,
+      "payload_stride": 7,
+      "placement_bytes": 8450,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 281996142,
+      "query_hash_lo": 946201962,
+      "sink_bytes_per_iteration": 34816,
+      "values_per_item": 17.0
+    },
+    "cycle_checksum": 36414725551,
+    "patterns": [
+      [
+        1,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx2/local/k23/h16/u64/independentlygapped/mixed": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 8,
+      "logical_values": 1280,
+      "payload_stride": 18,
+      "placement_bytes": 10199,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 4254984960,
+      "query_hash_lo": 2488869866,
+      "sink_bytes_per_iteration": 26112,
+      "values_per_item": 12.75
+    },
+    "cycle_checksum": 35944595611,
+    "patterns": [
+      [
+        0,
+        16
+      ],
+      [
+        1,
+        16
+      ],
+      [
+        1,
+        17
+      ],
+      [
+        7,
+        2
+      ]
+    ]
+  },
+  "runtime/series/avx2/local/k23/h16/u64/independentlygapped/o1-n16": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 8,
+      "logical_values": 1280,
+      "payload_stride": 18,
+      "placement_bytes": 10199,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 503056603,
+      "query_hash_lo": 327234659,
+      "sink_bytes_per_iteration": 32768,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 36296696858,
+    "patterns": [
+      [
+        1,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx2/local/k23/h16/u64/independentlygapped/o1-n17": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 8,
+      "logical_values": 1280,
+      "payload_stride": 18,
+      "placement_bytes": 10199,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 281996142,
+      "query_hash_lo": 946201962,
+      "sink_bytes_per_iteration": 34816,
+      "values_per_item": 17.0
+    },
+    "cycle_checksum": 36414725551,
+    "patterns": [
+      [
+        1,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx2/local/k7/h0/u32/dense/mixed": {
+    "counters": {
+      "encoded_bytes": 4032,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 4,
+      "logical_values": 4608,
+      "payload_stride": 7,
+      "placement_bytes": 4032,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 1870290604,
+      "query_hash_lo": 924299960,
+      "sink_bytes_per_iteration": 13056,
+      "values_per_item": 12.75
+    },
+    "cycle_checksum": 520174,
+    "patterns": [
+      [
+        0,
+        16
+      ],
+      [
+        1,
+        16
+      ],
+      [
+        1,
+        17
+      ],
+      [
+        7,
+        2
+      ]
+    ]
+  },
+  "runtime/series/avx2/local/k7/h0/u32/dense/o1-n16": {
+    "counters": {
+      "encoded_bytes": 4032,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 4,
+      "logical_values": 4608,
+      "payload_stride": 7,
+      "placement_bytes": 4032,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 193074696,
+      "query_hash_lo": 2845980241,
+      "sink_bytes_per_iteration": 16384,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 519913,
+    "patterns": [
+      [
+        1,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx2/local/k7/h0/u32/dense/o1-n17": {
+    "counters": {
+      "encoded_bytes": 4032,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 4,
+      "logical_values": 4608,
+      "payload_stride": 7,
+      "placement_bytes": 4032,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 1154450614,
+      "query_hash_lo": 3061537504,
+      "sink_bytes_per_iteration": 17408,
+      "values_per_item": 17.0
+    },
+    "cycle_checksum": 512347,
+    "patterns": [
+      [
+        1,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx2/local/k7/h0/u64/dense/mixed": {
+    "counters": {
+      "encoded_bytes": 4032,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 8,
+      "logical_values": 4608,
+      "payload_stride": 7,
+      "placement_bytes": 4032,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 1870290604,
+      "query_hash_lo": 924299960,
+      "sink_bytes_per_iteration": 26112,
+      "values_per_item": 12.75
+    },
+    "cycle_checksum": 520174,
+    "patterns": [
+      [
+        0,
+        16
+      ],
+      [
+        1,
+        16
+      ],
+      [
+        1,
+        17
+      ],
+      [
+        7,
+        2
+      ]
+    ]
+  },
+  "runtime/series/avx2/local/k7/h0/u64/dense/o1-n16": {
+    "counters": {
+      "encoded_bytes": 4032,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 8,
+      "logical_values": 4608,
+      "payload_stride": 7,
+      "placement_bytes": 4032,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 193074696,
+      "query_hash_lo": 2845980241,
+      "sink_bytes_per_iteration": 32768,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 519913,
+    "patterns": [
+      [
+        1,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx2/local/k7/h0/u64/dense/o1-n17": {
+    "counters": {
+      "encoded_bytes": 4032,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 8,
+      "logical_values": 4608,
+      "payload_stride": 7,
+      "placement_bytes": 4032,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 1154450614,
+      "query_hash_lo": 3061537504,
+      "sink_bytes_per_iteration": 34816,
+      "values_per_item": 17.0
+    },
+    "cycle_checksum": 512347,
+    "patterns": [
+      [
+        1,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx2/striped/k12/h0/u32/dense/mixed": {
+    "counters": {
+      "encoded_bytes": 3840,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 4,
+      "logical_values": 2560,
+      "payload_stride": 96,
+      "placement_bytes": 3840,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 1729870439,
+      "query_hash_lo": 2515838178,
+      "sink_bytes_per_iteration": 16896,
+      "values_per_item": 16.5
+    },
+    "cycle_checksum": 16670159,
+    "patterns": [
+      [
+        16,
+        16
+      ],
+      [
+        17,
+        16
+      ],
+      [
+        17,
+        17
+      ],
+      [
+        63,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx2/striped/k12/h0/u32/dense/o16-n16": {
+    "counters": {
+      "encoded_bytes": 3840,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 4,
+      "logical_values": 2560,
+      "payload_stride": 96,
+      "placement_bytes": 3840,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 3849897158,
+      "query_hash_lo": 2052840726,
+      "sink_bytes_per_iteration": 16384,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 18141590,
+    "patterns": [
+      [
+        16,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx2/striped/k12/h0/u32/dense/o17-n16": {
+    "counters": {
+      "encoded_bytes": 3840,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 4,
+      "logical_values": 2560,
+      "payload_stride": 96,
+      "placement_bytes": 3840,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 1225674283,
+      "query_hash_lo": 2630721668,
+      "sink_bytes_per_iteration": 16384,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 16577249,
+    "patterns": [
+      [
+        17,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx2/striped/k12/h0/u32/dense/o17-n17": {
+    "counters": {
+      "encoded_bytes": 3840,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 4,
+      "logical_values": 2560,
+      "payload_stride": 96,
+      "placement_bytes": 3840,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 3896901579,
+      "query_hash_lo": 1245135651,
+      "sink_bytes_per_iteration": 17408,
+      "values_per_item": 17.0
+    },
+    "cycle_checksum": 15329772,
+    "patterns": [
+      [
+        17,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx2/striped/k12/h0/u64/dense/mixed": {
+    "counters": {
+      "encoded_bytes": 3840,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 8,
+      "logical_values": 2560,
+      "payload_stride": 96,
+      "placement_bytes": 3840,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 1729870439,
+      "query_hash_lo": 2515838178,
+      "sink_bytes_per_iteration": 33792,
+      "values_per_item": 16.5
+    },
+    "cycle_checksum": 16670159,
+    "patterns": [
+      [
+        16,
+        16
+      ],
+      [
+        17,
+        16
+      ],
+      [
+        17,
+        17
+      ],
+      [
+        63,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx2/striped/k12/h0/u64/dense/o16-n16": {
+    "counters": {
+      "encoded_bytes": 3840,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 8,
+      "logical_values": 2560,
+      "payload_stride": 96,
+      "placement_bytes": 3840,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 3849897158,
+      "query_hash_lo": 2052840726,
+      "sink_bytes_per_iteration": 32768,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 18141590,
+    "patterns": [
+      [
+        16,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx2/striped/k12/h0/u64/dense/o17-n16": {
+    "counters": {
+      "encoded_bytes": 3840,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 8,
+      "logical_values": 2560,
+      "payload_stride": 96,
+      "placement_bytes": 3840,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 1225674283,
+      "query_hash_lo": 2630721668,
+      "sink_bytes_per_iteration": 32768,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 16577249,
+    "patterns": [
+      [
+        17,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx2/striped/k12/h0/u64/dense/o17-n17": {
+    "counters": {
+      "encoded_bytes": 3840,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 8,
+      "logical_values": 2560,
+      "payload_stride": 96,
+      "placement_bytes": 3840,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 3896901579,
+      "query_hash_lo": 1245135651,
+      "sink_bytes_per_iteration": 34816,
+      "values_per_item": 17.0
+    },
+    "cycle_checksum": 15329772,
+    "patterns": [
+      [
+        17,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx2/striped/k28/h16/u32/independentlygapped/mixed": {
+    "counters": {
+      "encoded_bytes": 3584,
+      "head0_stride": 77,
+      "head1_stride": 81,
+      "io_bytes_per_value": 4,
+      "logical_values": 1024,
+      "payload_stride": 128,
+      "placement_bytes": 4514,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 914666772,
+      "query_hash_lo": 1545195236,
+      "sink_bytes_per_iteration": 16896,
+      "values_per_item": 16.5
+    },
+    "cycle_checksum": 929268430663,
+    "patterns": [
+      [
+        16,
+        16
+      ],
+      [
+        17,
+        16
+      ],
+      [
+        17,
+        17
+      ],
+      [
+        63,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx2/striped/k28/h16/u32/independentlygapped/o16-n16": {
+    "counters": {
+      "encoded_bytes": 3584,
+      "head0_stride": 77,
+      "head1_stride": 81,
+      "io_bytes_per_value": 4,
+      "logical_values": 1024,
+      "payload_stride": 128,
+      "placement_bytes": 4514,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 822293787,
+      "query_hash_lo": 2611001490,
+      "sink_bytes_per_iteration": 16384,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 883715462814,
+    "patterns": [
+      [
+        16,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx2/striped/k28/h16/u32/independentlygapped/o17-n16": {
+    "counters": {
+      "encoded_bytes": 3584,
+      "head0_stride": 77,
+      "head1_stride": 81,
+      "io_bytes_per_value": 4,
+      "logical_values": 1024,
+      "payload_stride": 128,
+      "placement_bytes": 4514,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 1476931007,
+      "query_hash_lo": 2773929304,
+      "sink_bytes_per_iteration": 16384,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 921191373059,
+    "patterns": [
+      [
+        17,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx2/striped/k28/h16/u32/independentlygapped/o17-n17": {
+    "counters": {
+      "encoded_bytes": 3584,
+      "head0_stride": 77,
+      "head1_stride": 81,
+      "io_bytes_per_value": 4,
+      "logical_values": 1024,
+      "payload_stride": 128,
+      "placement_bytes": 4514,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 3351196990,
+      "query_hash_lo": 2808239026,
+      "sink_bytes_per_iteration": 17408,
+      "values_per_item": 17.0
+    },
+    "cycle_checksum": 973041540159,
+    "patterns": [
+      [
+        17,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx2/striped/k28/h16/u64/independentlygapped/mixed": {
+    "counters": {
+      "encoded_bytes": 3584,
+      "head0_stride": 77,
+      "head1_stride": 81,
+      "io_bytes_per_value": 8,
+      "logical_values": 1024,
+      "payload_stride": 128,
+      "placement_bytes": 4514,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 914666772,
+      "query_hash_lo": 1545195236,
+      "sink_bytes_per_iteration": 33792,
+      "values_per_item": 16.5
+    },
+    "cycle_checksum": 929268430663,
+    "patterns": [
+      [
+        16,
+        16
+      ],
+      [
+        17,
+        16
+      ],
+      [
+        17,
+        17
+      ],
+      [
+        63,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx2/striped/k28/h16/u64/independentlygapped/o16-n16": {
+    "counters": {
+      "encoded_bytes": 3584,
+      "head0_stride": 77,
+      "head1_stride": 81,
+      "io_bytes_per_value": 8,
+      "logical_values": 1024,
+      "payload_stride": 128,
+      "placement_bytes": 4514,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 822293787,
+      "query_hash_lo": 2611001490,
+      "sink_bytes_per_iteration": 32768,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 883715462814,
+    "patterns": [
+      [
+        16,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx2/striped/k28/h16/u64/independentlygapped/o17-n16": {
+    "counters": {
+      "encoded_bytes": 3584,
+      "head0_stride": 77,
+      "head1_stride": 81,
+      "io_bytes_per_value": 8,
+      "logical_values": 1024,
+      "payload_stride": 128,
+      "placement_bytes": 4514,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 1476931007,
+      "query_hash_lo": 2773929304,
+      "sink_bytes_per_iteration": 32768,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 921191373059,
+    "patterns": [
+      [
+        17,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx2/striped/k28/h16/u64/independentlygapped/o17-n17": {
+    "counters": {
+      "encoded_bytes": 3584,
+      "head0_stride": 77,
+      "head1_stride": 81,
+      "io_bytes_per_value": 8,
+      "logical_values": 1024,
+      "payload_stride": 128,
+      "placement_bytes": 4514,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 3351196990,
+      "query_hash_lo": 2808239026,
+      "sink_bytes_per_iteration": 34816,
+      "values_per_item": 17.0
+    },
+    "cycle_checksum": 973041540159,
+    "patterns": [
+      [
+        17,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx512/local/k23/h16/u32/headgapped/mixed": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 4,
+      "logical_values": 1280,
+      "payload_stride": 7,
+      "placement_bytes": 8450,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 4254984960,
+      "query_hash_lo": 2488869866,
+      "sink_bytes_per_iteration": 13056,
+      "values_per_item": 12.75
+    },
+    "cycle_checksum": 35944595611,
+    "patterns": [
+      [
+        0,
+        16
+      ],
+      [
+        1,
+        16
+      ],
+      [
+        1,
+        17
+      ],
+      [
+        7,
+        2
+      ]
+    ]
+  },
+  "runtime/series/avx512/local/k23/h16/u32/headgapped/o1-n16": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 4,
+      "logical_values": 1280,
+      "payload_stride": 7,
+      "placement_bytes": 8450,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 503056603,
+      "query_hash_lo": 327234659,
+      "sink_bytes_per_iteration": 16384,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 36296696858,
+    "patterns": [
+      [
+        1,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx512/local/k23/h16/u32/headgapped/o1-n17": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 4,
+      "logical_values": 1280,
+      "payload_stride": 7,
+      "placement_bytes": 8450,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 281996142,
+      "query_hash_lo": 946201962,
+      "sink_bytes_per_iteration": 17408,
+      "values_per_item": 17.0
+    },
+    "cycle_checksum": 36414725551,
+    "patterns": [
+      [
+        1,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx512/local/k23/h16/u32/independentlygapped/mixed": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 4,
+      "logical_values": 1280,
+      "payload_stride": 18,
+      "placement_bytes": 10199,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 4254984960,
+      "query_hash_lo": 2488869866,
+      "sink_bytes_per_iteration": 13056,
+      "values_per_item": 12.75
+    },
+    "cycle_checksum": 35944595611,
+    "patterns": [
+      [
+        0,
+        16
+      ],
+      [
+        1,
+        16
+      ],
+      [
+        1,
+        17
+      ],
+      [
+        7,
+        2
+      ]
+    ]
+  },
+  "runtime/series/avx512/local/k23/h16/u32/independentlygapped/o1-n16": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 4,
+      "logical_values": 1280,
+      "payload_stride": 18,
+      "placement_bytes": 10199,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 503056603,
+      "query_hash_lo": 327234659,
+      "sink_bytes_per_iteration": 16384,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 36296696858,
+    "patterns": [
+      [
+        1,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx512/local/k23/h16/u32/independentlygapped/o1-n17": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 4,
+      "logical_values": 1280,
+      "payload_stride": 18,
+      "placement_bytes": 10199,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 281996142,
+      "query_hash_lo": 946201962,
+      "sink_bytes_per_iteration": 17408,
+      "values_per_item": 17.0
+    },
+    "cycle_checksum": 36414725551,
+    "patterns": [
+      [
+        1,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx512/local/k23/h16/u64/headgapped/mixed": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 8,
+      "logical_values": 1280,
+      "payload_stride": 7,
+      "placement_bytes": 8450,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 4254984960,
+      "query_hash_lo": 2488869866,
+      "sink_bytes_per_iteration": 26112,
+      "values_per_item": 12.75
+    },
+    "cycle_checksum": 35944595611,
+    "patterns": [
+      [
+        0,
+        16
+      ],
+      [
+        1,
+        16
+      ],
+      [
+        1,
+        17
+      ],
+      [
+        7,
+        2
+      ]
+    ]
+  },
+  "runtime/series/avx512/local/k23/h16/u64/headgapped/o1-n16": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 8,
+      "logical_values": 1280,
+      "payload_stride": 7,
+      "placement_bytes": 8450,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 503056603,
+      "query_hash_lo": 327234659,
+      "sink_bytes_per_iteration": 32768,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 36296696858,
+    "patterns": [
+      [
+        1,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx512/local/k23/h16/u64/headgapped/o1-n17": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 8,
+      "logical_values": 1280,
+      "payload_stride": 7,
+      "placement_bytes": 8450,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 281996142,
+      "query_hash_lo": 946201962,
+      "sink_bytes_per_iteration": 34816,
+      "values_per_item": 17.0
+    },
+    "cycle_checksum": 36414725551,
+    "patterns": [
+      [
+        1,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx512/local/k23/h16/u64/independentlygapped/mixed": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 8,
+      "logical_values": 1280,
+      "payload_stride": 18,
+      "placement_bytes": 10199,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 4254984960,
+      "query_hash_lo": 2488869866,
+      "sink_bytes_per_iteration": 26112,
+      "values_per_item": 12.75
+    },
+    "cycle_checksum": 35944595611,
+    "patterns": [
+      [
+        0,
+        16
+      ],
+      [
+        1,
+        16
+      ],
+      [
+        1,
+        17
+      ],
+      [
+        7,
+        2
+      ]
+    ]
+  },
+  "runtime/series/avx512/local/k23/h16/u64/independentlygapped/o1-n16": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 8,
+      "logical_values": 1280,
+      "payload_stride": 18,
+      "placement_bytes": 10199,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 503056603,
+      "query_hash_lo": 327234659,
+      "sink_bytes_per_iteration": 32768,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 36296696858,
+    "patterns": [
+      [
+        1,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx512/local/k23/h16/u64/independentlygapped/o1-n17": {
+    "counters": {
+      "encoded_bytes": 3680,
+      "head0_stride": 21,
+      "head1_stride": 25,
+      "io_bytes_per_value": 8,
+      "logical_values": 1280,
+      "payload_stride": 18,
+      "placement_bytes": 10199,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 281996142,
+      "query_hash_lo": 946201962,
+      "sink_bytes_per_iteration": 34816,
+      "values_per_item": 17.0
+    },
+    "cycle_checksum": 36414725551,
+    "patterns": [
+      [
+        1,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx512/local/k7/h0/u32/dense/mixed": {
+    "counters": {
+      "encoded_bytes": 4032,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 4,
+      "logical_values": 4608,
+      "payload_stride": 7,
+      "placement_bytes": 4032,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 1870290604,
+      "query_hash_lo": 924299960,
+      "sink_bytes_per_iteration": 13056,
+      "values_per_item": 12.75
+    },
+    "cycle_checksum": 520174,
+    "patterns": [
+      [
+        0,
+        16
+      ],
+      [
+        1,
+        16
+      ],
+      [
+        1,
+        17
+      ],
+      [
+        7,
+        2
+      ]
+    ]
+  },
+  "runtime/series/avx512/local/k7/h0/u32/dense/o1-n16": {
+    "counters": {
+      "encoded_bytes": 4032,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 4,
+      "logical_values": 4608,
+      "payload_stride": 7,
+      "placement_bytes": 4032,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 193074696,
+      "query_hash_lo": 2845980241,
+      "sink_bytes_per_iteration": 16384,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 519913,
+    "patterns": [
+      [
+        1,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx512/local/k7/h0/u32/dense/o1-n17": {
+    "counters": {
+      "encoded_bytes": 4032,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 4,
+      "logical_values": 4608,
+      "payload_stride": 7,
+      "placement_bytes": 4032,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 1154450614,
+      "query_hash_lo": 3061537504,
+      "sink_bytes_per_iteration": 17408,
+      "values_per_item": 17.0
+    },
+    "cycle_checksum": 512347,
+    "patterns": [
+      [
+        1,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx512/local/k7/h0/u64/dense/mixed": {
+    "counters": {
+      "encoded_bytes": 4032,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 8,
+      "logical_values": 4608,
+      "payload_stride": 7,
+      "placement_bytes": 4032,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 1870290604,
+      "query_hash_lo": 924299960,
+      "sink_bytes_per_iteration": 26112,
+      "values_per_item": 12.75
+    },
+    "cycle_checksum": 520174,
+    "patterns": [
+      [
+        0,
+        16
+      ],
+      [
+        1,
+        16
+      ],
+      [
+        1,
+        17
+      ],
+      [
+        7,
+        2
+      ]
+    ]
+  },
+  "runtime/series/avx512/local/k7/h0/u64/dense/o1-n16": {
+    "counters": {
+      "encoded_bytes": 4032,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 8,
+      "logical_values": 4608,
+      "payload_stride": 7,
+      "placement_bytes": 4032,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 193074696,
+      "query_hash_lo": 2845980241,
+      "sink_bytes_per_iteration": 32768,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 519913,
+    "patterns": [
+      [
+        1,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx512/local/k7/h0/u64/dense/o1-n17": {
+    "counters": {
+      "encoded_bytes": 4032,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 8,
+      "logical_values": 4608,
+      "payload_stride": 7,
+      "placement_bytes": 4032,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 1154450614,
+      "query_hash_lo": 3061537504,
+      "sink_bytes_per_iteration": 34816,
+      "values_per_item": 17.0
+    },
+    "cycle_checksum": 512347,
+    "patterns": [
+      [
+        1,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx512/striped/k12/h0/u32/dense/mixed": {
+    "counters": {
+      "encoded_bytes": 3840,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 4,
+      "logical_values": 2560,
+      "payload_stride": 96,
+      "placement_bytes": 3840,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 1729870439,
+      "query_hash_lo": 2515838178,
+      "sink_bytes_per_iteration": 16896,
+      "values_per_item": 16.5
+    },
+    "cycle_checksum": 16670159,
+    "patterns": [
+      [
+        16,
+        16
+      ],
+      [
+        17,
+        16
+      ],
+      [
+        17,
+        17
+      ],
+      [
+        63,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx512/striped/k12/h0/u32/dense/o16-n16": {
+    "counters": {
+      "encoded_bytes": 3840,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 4,
+      "logical_values": 2560,
+      "payload_stride": 96,
+      "placement_bytes": 3840,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 3849897158,
+      "query_hash_lo": 2052840726,
+      "sink_bytes_per_iteration": 16384,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 18141590,
+    "patterns": [
+      [
+        16,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx512/striped/k12/h0/u32/dense/o17-n16": {
+    "counters": {
+      "encoded_bytes": 3840,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 4,
+      "logical_values": 2560,
+      "payload_stride": 96,
+      "placement_bytes": 3840,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 1225674283,
+      "query_hash_lo": 2630721668,
+      "sink_bytes_per_iteration": 16384,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 16577249,
+    "patterns": [
+      [
+        17,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx512/striped/k12/h0/u32/dense/o17-n17": {
+    "counters": {
+      "encoded_bytes": 3840,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 4,
+      "logical_values": 2560,
+      "payload_stride": 96,
+      "placement_bytes": 3840,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 3896901579,
+      "query_hash_lo": 1245135651,
+      "sink_bytes_per_iteration": 17408,
+      "values_per_item": 17.0
+    },
+    "cycle_checksum": 15329772,
+    "patterns": [
+      [
+        17,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx512/striped/k12/h0/u64/dense/mixed": {
+    "counters": {
+      "encoded_bytes": 3840,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 8,
+      "logical_values": 2560,
+      "payload_stride": 96,
+      "placement_bytes": 3840,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 1729870439,
+      "query_hash_lo": 2515838178,
+      "sink_bytes_per_iteration": 33792,
+      "values_per_item": 16.5
+    },
+    "cycle_checksum": 16670159,
+    "patterns": [
+      [
+        16,
+        16
+      ],
+      [
+        17,
+        16
+      ],
+      [
+        17,
+        17
+      ],
+      [
+        63,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx512/striped/k12/h0/u64/dense/o16-n16": {
+    "counters": {
+      "encoded_bytes": 3840,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 8,
+      "logical_values": 2560,
+      "payload_stride": 96,
+      "placement_bytes": 3840,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 3849897158,
+      "query_hash_lo": 2052840726,
+      "sink_bytes_per_iteration": 32768,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 18141590,
+    "patterns": [
+      [
+        16,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx512/striped/k12/h0/u64/dense/o17-n16": {
+    "counters": {
+      "encoded_bytes": 3840,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 8,
+      "logical_values": 2560,
+      "payload_stride": 96,
+      "placement_bytes": 3840,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 1225674283,
+      "query_hash_lo": 2630721668,
+      "sink_bytes_per_iteration": 32768,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 16577249,
+    "patterns": [
+      [
+        17,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx512/striped/k12/h0/u64/dense/o17-n17": {
+    "counters": {
+      "encoded_bytes": 3840,
+      "head0_stride": 0,
+      "head1_stride": 0,
+      "io_bytes_per_value": 8,
+      "logical_values": 2560,
+      "payload_stride": 96,
+      "placement_bytes": 3840,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 3896901579,
+      "query_hash_lo": 1245135651,
+      "sink_bytes_per_iteration": 34816,
+      "values_per_item": 17.0
+    },
+    "cycle_checksum": 15329772,
+    "patterns": [
+      [
+        17,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx512/striped/k28/h16/u32/independentlygapped/mixed": {
+    "counters": {
+      "encoded_bytes": 3584,
+      "head0_stride": 77,
+      "head1_stride": 81,
+      "io_bytes_per_value": 4,
+      "logical_values": 1024,
+      "payload_stride": 128,
+      "placement_bytes": 4514,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 914666772,
+      "query_hash_lo": 1545195236,
+      "sink_bytes_per_iteration": 16896,
+      "values_per_item": 16.5
+    },
+    "cycle_checksum": 929268430663,
+    "patterns": [
+      [
+        16,
+        16
+      ],
+      [
+        17,
+        16
+      ],
+      [
+        17,
+        17
+      ],
+      [
+        63,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx512/striped/k28/h16/u32/independentlygapped/o16-n16": {
+    "counters": {
+      "encoded_bytes": 3584,
+      "head0_stride": 77,
+      "head1_stride": 81,
+      "io_bytes_per_value": 4,
+      "logical_values": 1024,
+      "payload_stride": 128,
+      "placement_bytes": 4514,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 822293787,
+      "query_hash_lo": 2611001490,
+      "sink_bytes_per_iteration": 16384,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 883715462814,
+    "patterns": [
+      [
+        16,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx512/striped/k28/h16/u32/independentlygapped/o17-n16": {
+    "counters": {
+      "encoded_bytes": 3584,
+      "head0_stride": 77,
+      "head1_stride": 81,
+      "io_bytes_per_value": 4,
+      "logical_values": 1024,
+      "payload_stride": 128,
+      "placement_bytes": 4514,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 1476931007,
+      "query_hash_lo": 2773929304,
+      "sink_bytes_per_iteration": 16384,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 921191373059,
+    "patterns": [
+      [
+        17,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx512/striped/k28/h16/u32/independentlygapped/o17-n17": {
+    "counters": {
+      "encoded_bytes": 3584,
+      "head0_stride": 77,
+      "head1_stride": 81,
+      "io_bytes_per_value": 4,
+      "logical_values": 1024,
+      "payload_stride": 128,
+      "placement_bytes": 4514,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 3351196990,
+      "query_hash_lo": 2808239026,
+      "sink_bytes_per_iteration": 17408,
+      "values_per_item": 17.0
+    },
+    "cycle_checksum": 973041540159,
+    "patterns": [
+      [
+        17,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx512/striped/k28/h16/u64/independentlygapped/mixed": {
+    "counters": {
+      "encoded_bytes": 3584,
+      "head0_stride": 77,
+      "head1_stride": 81,
+      "io_bytes_per_value": 8,
+      "logical_values": 1024,
+      "payload_stride": 128,
+      "placement_bytes": 4514,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 914666772,
+      "query_hash_lo": 1545195236,
+      "sink_bytes_per_iteration": 33792,
+      "values_per_item": 16.5
+    },
+    "cycle_checksum": 929268430663,
+    "patterns": [
+      [
+        16,
+        16
+      ],
+      [
+        17,
+        16
+      ],
+      [
+        17,
+        17
+      ],
+      [
+        63,
+        17
+      ]
+    ]
+  },
+  "runtime/series/avx512/striped/k28/h16/u64/independentlygapped/o16-n16": {
+    "counters": {
+      "encoded_bytes": 3584,
+      "head0_stride": 77,
+      "head1_stride": 81,
+      "io_bytes_per_value": 8,
+      "logical_values": 1024,
+      "payload_stride": 128,
+      "placement_bytes": 4514,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 822293787,
+      "query_hash_lo": 2611001490,
+      "sink_bytes_per_iteration": 32768,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 883715462814,
+    "patterns": [
+      [
+        16,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx512/striped/k28/h16/u64/independentlygapped/o17-n16": {
+    "counters": {
+      "encoded_bytes": 3584,
+      "head0_stride": 77,
+      "head1_stride": 81,
+      "io_bytes_per_value": 8,
+      "logical_values": 1024,
+      "payload_stride": 128,
+      "placement_bytes": 4514,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 1476931007,
+      "query_hash_lo": 2773929304,
+      "sink_bytes_per_iteration": 32768,
+      "values_per_item": 16.0
+    },
+    "cycle_checksum": 921191373059,
+    "patterns": [
+      [
+        17,
+        16
+      ]
+    ]
+  },
+  "runtime/series/avx512/striped/k28/h16/u64/independentlygapped/o17-n17": {
+    "counters": {
+      "encoded_bytes": 3584,
+      "head0_stride": 77,
+      "head1_stride": 81,
+      "io_bytes_per_value": 8,
+      "logical_values": 1024,
+      "payload_stride": 128,
+      "placement_bytes": 4514,
+      "queries_per_iteration": 256,
+      "query_bytes": 65536,
+      "query_hash_hi": 3351196990,
+      "query_hash_lo": 2808239026,
+      "sink_bytes_per_iteration": 34816,
+      "values_per_item": 17.0
+    },
+    "cycle_checksum": 973041540159,
+    "patterns": [
+      [
+        17,
+        17
+      ]
+    ]
+  }
+}
