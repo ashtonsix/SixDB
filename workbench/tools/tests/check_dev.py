@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Exercise active-spike compilation databases in a disposable project."""
+"""Exercise spike/benchmark compilation databases in a disposable project."""
 
 import json
 import shutil
@@ -10,7 +10,7 @@ from pathlib import Path
 
 from dev import checkout_root
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 
 
 def main():
@@ -29,15 +29,18 @@ def main():
         for file in ["CMakeLists.txt", "CMakePresets.json"]:
             shutil.copy2(ROOT / file, root / file)
         shutil.copytree(ROOT / "cmake", root / "cmake")
-        for module in ["ikea", "orbital", "loom", "engine", "shore"]:
+        # Stub module bodies without maintaining a second module inventory.
+        for module in sorted(p.parent.name for p in ROOT.glob('*/CMakeLists.txt')
+                             if p.parent.name != 'workbench'):
             (root / module).mkdir()
             (root / module / "CMakeLists.txt").write_text("# empty fixture module\n")
         (root / "workbench/tools").mkdir(parents=True)
         (root / "workbench/spikes").mkdir()
-        for file in ["workbench/CMakeLists.txt", "workbench/spikes/CMakeLists.txt", "workbench/tools/dev.py"]:
+        (root / "workbench/benchmarks").mkdir()
+        for file in ["workbench/CMakeLists.txt", "workbench/spikes/CMakeLists.txt", "workbench/benchmarks/CMakeLists.txt", "workbench/tools/dev.py"]:
             shutil.copy2(ROOT / file, root / file)
-        for name in ["first", "second"]:
-            path = root / "workbench/spikes" / name
+        for kind, name in [("spikes", "first"), ("spikes", "second"), ("benchmarks", "recurring")]:
+            path = root / "workbench" / kind / name
             (path / "include").mkdir(parents=True)
             (path / "include/fixture.h").write_text("inline constexpr int fixture_value = 7;\n")
             (path / "probe.cpp").write_text('#include "fixture.h"\nint probe() { return fixture_value; }\n')
@@ -62,7 +65,7 @@ def main():
             for row in data:
                 study = Path(row["file"]).parent.name
                 assert f"-DFIXTURE_{study}=1" in row["command"]
-                assert str(root / "workbench/spikes" / study / "include") in row["command"]
+                assert str(Path(row["file"]).parent / "include") in row["command"]
                 assert "-std=c++23" in row["command"] and "SIXDB_TUNE_GENERIC=1" in row["command"]
                 result[study] = row
             return result
@@ -73,13 +76,24 @@ def main():
         dev("--add", "second")
         assert set(entries()) == {"first", "second"} and entries()["first"] == first
         assert dev("--list").splitlines() == ["first", "second"]
+        dev("--add-benchmark", "recurring")
+        assert set(entries()) == {"first", "second", "recurring"}
+        assert dev("--list").splitlines() == ["first", "second", "benchmark:recurring"]
+        dev("--remove", "first")
+        assert set(entries()) == {"second", "recurring"}
+        dev("--add", "first")
+        assert set(entries()) == {"first", "second", "recurring"}
+        dev()
+        assert set(entries()) == {"first", "second", "recurring"}
+        dev("--remove-benchmark", "recurring")
+        assert set(entries()) == {"first", "second"}
         dev("--remove", "first")
         assert set(entries()) == {"second"}
         dev("--remove", "second")
         assert entries() == {}
         # The real configure steps must not have built either source target.
         assert not list((root / "build/clang/dev/workbench/spikes").rglob("*.o"))
-        print("PASS: additive activation, removal, target include paths/definitions, C++23/tuning flags, "
+        print("PASS: independent spike/benchmark activation, removal, target include paths/definitions, C++23/tuning flags, "
               "inactive broken-study isolation, empty-database cleanup, and configure-only operation.")
 
 

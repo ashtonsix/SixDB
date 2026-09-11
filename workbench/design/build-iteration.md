@@ -77,7 +77,7 @@ owning module or study, rather than in a central implementation inventory.
   information. Visibility and section garbage collection reduce exposed names
   and unreferenced code; no bespoke obfuscator is introduced.
 
-The [build check](../tools/check_build.py) uses a disposable multi-TU fixture to
+The [build check](../tools/tests/check_build.py) uses a disposable multi-TU fixture to
 check selection, shared objects, compile-only targets, source/header/flag
 invalidation, and symbol stripping. This checks scaffold behavior, not
 iteration speed on a substantive SixDB implementation.

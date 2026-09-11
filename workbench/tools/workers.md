@@ -5,8 +5,15 @@ From the repository root on Linux (prefix with `orb -m ubuntu` on the Mac):
 ```sh
 python3 workbench/tools/worker.py run workbench/tools/worker-smoke.sh
 python3 workbench/tools/worker.py run workbench/spikes/your-study/cloud.sh \
-  --machine zen5 --capacity on-demand --env CASE=small -- --repetitions 3
+  --machine zen5 --env CASE=small -- --repetitions 3
 ```
+
+These examples use Spot, the repository default for rerunnable research jobs.
+If the selected type has no Spot capacity and starting now matters, add
+`--capacity spot-or-on-demand` to try Spot first, then fall back to on-demand.
+Use `--capacity on-demand` directly when an interruption would lose expensive
+work or the measurement needs different observer conditions. Capacity changes
+do not change the requested hardware type.
 
 The second script is illustrative. A script receives the current source,
 including uncommitted and non-ignored new files, on one EC2 worker at a time.
@@ -166,7 +173,9 @@ CPU. Spot workers poll the interruption endpoint every five seconds and try
 to terminate the script and collect early when warned. Interruption can still
 lose output; use `--sync-seconds` or script checkpoints when partial progress
 matters. This trades extra background work for recovery. On-Demand with sync
-disabled has no interruption observer. Boot-time and per-job OS shutdown timers bound
+disabled has no interruption observer. That difference alone does not establish
+a timing bias; retain the capacity/observer context with the result. Boot-time
+and per-job OS shutdown timers bound
 a detached worker; an OS that never boots needs controller cleanup (`wait` or
 `cancel`). [EC2 shutdown behavior](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Using_ChangingInstanceInitiatedShutdownBehavior.html)
 and [Spot interruption behavior](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-interruptions.html)

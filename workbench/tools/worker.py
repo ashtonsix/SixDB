@@ -332,6 +332,9 @@ def launch(job, directory, aws):
                         time.sleep(5)
                         continue
                     raise
+    if job['config']['capacity'] == 'spot':
+        raise RuntimeError('no Spot capacity for the selected type in the offered zones; try later, '
+                           'or use --capacity spot-or-on-demand to allow launch fallback')
     raise RuntimeError('no capacity for the selected type; change capacity/type explicitly or try later')
 
 
@@ -411,7 +414,7 @@ def reuse(job, directory, aws):
             claim = state | {'state': 'assigned', 'job_id': job['id'], 'job_uri': job['uri'],
                              'job_sha256': artifacts.sha256(directory / 'job.json')}
             if store.replace(key, claim, etag):
-                print(f"Reuse {worker_id} ({instance['InstanceId']}); prepared data and builds retained", flush=True)
+                print(f"Reuse {worker_id} ({instance['InstanceId']}, {state['capacity']}); prepared data and builds retained", flush=True)
                 return True
     return False
 
@@ -573,7 +576,8 @@ def main():
         cmd.add_argument('--machine', choices=['zen5', 'granite-rapids', 'neoverse-v2'])
         cmd.add_argument('--instance-type')
         cmd.add_argument('--ami')
-        cmd.add_argument('--capacity', choices=['spot', 'on-demand', 'spot-or-on-demand'])
+        cmd.add_argument('--capacity', choices=['spot', 'on-demand', 'spot-or-on-demand'],
+                         help='default: spot; spot-or-on-demand explicitly allows launch fallback')
         cmd.add_argument('--deadline', type=int, dest='deadline_seconds', help='job deadline including setup and collection')
         cmd.add_argument('--idle-seconds', type=int, help='keep worker ready after collection; default 300, zero shuts down')
         cmd.add_argument('--max-age', type=int, dest='max_age_seconds', help='maximum instance lifetime; default 14400 seconds')
@@ -634,7 +638,7 @@ def main():
         vcpus = cpu['DefaultCores'] * config.get('threads_per_core', cpu['DefaultThreadsPerCore'])
         memory = config['hardware']['MemoryInfo']['SizeInMiB'] / 1024
         print(f"Job: {job['id']}\nWorker: {config['instance_type']}, {vcpus} vCPU, {memory:g} GiB; "
-              f"{config['deadline_seconds']}s job deadline, {config['idle_seconds']}s idle window\nS3: {job['uri']}\n"
+              f"capacity={config['capacity']}; {config['deadline_seconds']}s job deadline, {config['idle_seconds']}s idle window\nS3: {job['uri']}\n"
               f"Resume: python3 workbench/tools/worker.py wait {job['id']}", flush=True)
         try:
             if not reuse(job, directory, aws):

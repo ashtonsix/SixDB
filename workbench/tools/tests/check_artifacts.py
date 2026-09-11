@@ -96,6 +96,66 @@ class ArtifactsCheck(unittest.TestCase):
             artifacts.restore_bundle(reference, restored)
             self.assertEqual((restored / 'run.json').read_text(), 'an arbitrary script output')
 
+    def test_selected_fetch_avoids_unrelated_expansion_and_input_restoration(self):
+        binary = self.source / 'bin/probe'
+        binary.parent.mkdir()
+        binary.write_bytes(b'kept executable\n')
+        binary.chmod(0o755)
+        (self.source / 'full.asm').write_bytes(b'expanded disassembly\n' * 100_000)
+        reference_path = self.root / 'artifact.json'
+        with patch.object(artifacts, 'aws', self.fake_aws), patch.object(artifacts, 'ROOT', self.root), \
+                patch.object(artifacts, 'restore_inputs') as inputs, tempfile.TemporaryDirectory() as temp:
+            reference = artifacts.publish(self.source, Path(temp), validate_run=False)
+            reference_path.write_text(json.dumps(reference))
+            restored = self.root / 'build/selected'
+            output = io.StringIO()
+            with redirect_stdout(output):
+                artifacts.fetch(reference_path, restored, selected=['bin/probe', 'summary.csv'])
+            self.assertEqual({str(p.relative_to(restored)) for p in artifacts.files(restored)},
+                             {'bin/probe', 'summary.csv'})
+            self.assertEqual((restored / 'bin/probe').read_bytes(), binary.read_bytes())
+            self.assertEqual((restored / 'bin/probe').stat().st_mode & 0o777, 0o755)
+            inputs.assert_not_called()
+            self.assertIn('Partial recovery', output.getvalue())
+            self.assertIn('input dataset restoration were not requested', output.getvalue())
+            self.assertFalse(any(restored.parent.glob('.fetch-*')))
+            self.objects[reference['key']] = b'corrupt archive'
+            with self.assertRaisesRegex(ValueError, 'SHA-256'):
+                artifacts.fetch(reference_path, self.root / 'build/corrupt', selected=['summary.csv'])
+            self.assertFalse((self.root / 'build/corrupt').exists())
+
+    def test_selected_fetch_requires_requested_members_and_full_archive_count(self):
+        with patch.object(artifacts, 'aws', self.fake_aws), tempfile.TemporaryDirectory() as temp:
+            reference = artifacts.publish(self.source, Path(temp))
+            destination = self.root / 'selected'
+            for selected, error in [(['missing.txt'], 'missing from bundle'),
+                                    (['../escape'], 'relative file paths'),
+                                    (['summary.csv', './summary.csv'], 'distinct files')]:
+                with self.subTest(selected=selected), self.assertRaisesRegex(ValueError, error):
+                    artifacts.restore_bundle(reference, destination, selected=selected)
+                self.assertFalse(destination.exists())
+            with self.assertRaisesRegex(ValueError, 'file count mismatch'):
+                artifacts.restore_bundle(dict(reference, files=1), destination, selected=['summary.csv'])
+            self.assertFalse(destination.exists())
+
+    def test_selected_fetch_still_rejects_unsafe_unselected_members(self):
+        bundle = self.root / 'unsafe.tar.gz'
+        with tarfile.open(bundle, 'w:gz') as archive:
+            info = tarfile.TarInfo('selected.txt')
+            info.size = 4
+            archive.addfile(info, io.BytesIO(b'kept'))
+            info = tarfile.TarInfo('unused-link')
+            info.type = tarfile.SYMTYPE
+            info.linkname = '../escape'
+            archive.addfile(info)
+        reference = dict(bucket='fixture', region='fixture', key='unsafe',
+                         files=2, bytes=bundle.stat().st_size, sha256=digest(bundle))
+        self.objects['unsafe'] = bundle.read_bytes()
+        destination = self.root / 'selected'
+        with patch.object(artifacts, 'aws', self.fake_aws), self.assertRaisesRegex(ValueError, 'unsafe'):
+            artifacts.restore_bundle(reference, destination, selected=['selected.txt'])
+        self.assertFalse(destination.exists())
+
     def test_changed_or_incomplete_run_is_rejected(self):
         (self.source / "source.tar.gz").unlink()
         with self.assertRaises(FileNotFoundError):

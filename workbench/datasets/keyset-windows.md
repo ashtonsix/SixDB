@@ -79,6 +79,6 @@ Do not copy source archives or whole caches into result bundles. Trial feature
 tables and fitted models belong in the spike's ignored output/selected evidence;
 the shared catalog does not fix features, labels, or splits for every study.
 
-Run `python3 workbench/tools/check_keyset_datasets.py` for offline adapter checks.
+Run `python3 workbench/datasets/check_keyset.py` for offline adapter checks.
 Add `--full` to reconstruct the pinned original lists and check historical
 compatibility; this resolves the catalogs and can download on a cold cache.

@@ -73,6 +73,18 @@ class LaunchTests(unittest.TestCase):
             self.assertEqual({r['InstanceType'] for r in aws.requests}, {'c8a.medium'})
             self.assertEqual(len(aws.requests), 4)
 
+    def test_spot_exhaustion_suggests_explicit_fallback_without_using_it(self):
+        value = job()
+        value['config']['capacity'] = 'spot'
+        aws = Mock(spec=worker.Aws)
+        aws.call.side_effect = worker.AwsError(
+            'An error occurred (InsufficientInstanceCapacity) when calling RunInstances')
+        with tempfile.TemporaryDirectory() as temp:
+            with self.assertRaisesRegex(RuntimeError, '--capacity spot-or-on-demand'):
+                worker.launch(value, Path(temp), aws)
+        self.assertEqual(aws.call.call_count, len(value['config']['subnets']))
+        self.assertTrue(all('InstanceMarketOptions' in call.kwargs for call in aws.call.call_args_list))
+
     def test_uncertain_launch_and_permission_errors_do_not_try_new_capacity(self):
         class Fake:
             def __init__(self, message):

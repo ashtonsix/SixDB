@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Refresh the stable dev compilation database for explicitly active spikes."""
+"""Refresh the stable dev compilation database for active spikes and recurring benchmark suites."""
 
 from __future__ import annotations
 
@@ -26,21 +26,22 @@ ROOT = checkout_root(Path(__file__).resolve().parents[2], Path.home())
 BUILD = ROOT / "build/clang/dev"
 
 
-def active_spikes():
+def active_selection(variable):
     cache = BUILD / "CMakeCache.txt"
     if not cache.exists():
         return set()
-    match = re.search(r"^SIXDB_SPIKES:[^=]+=(.*)$", cache.read_text(), re.MULTILINE)
+    match = re.search(rf"^{variable}:[^=]+=(.*)$", cache.read_text(), re.MULTILINE)
     return set(filter(None, match[1].split(";"))) if match else set()
 
 
-def refresh(selected):
+def refresh(selected, benchmarks):
     # File API distinguishes a genuinely empty configuration from a stale
     # compile_commands.json left by CMake after its last source target disappears.
     query = BUILD / ".cmake/api/v1/query/client-sixdb-dev"
     query.mkdir(parents=True, exist_ok=True)
     (query / "codemodel-v2").touch()
-    command = ["cmake", "--preset", "dev", "-DSIXDB_SPIKES=" + ";".join(sorted(selected))]
+    command = ["cmake", "--preset", "dev", "-DSIXDB_SPIKES=" + ";".join(sorted(selected)),
+               "-DSIXDB_BENCHMARKS=" + ";".join(sorted(benchmarks))]
     result = subprocess.run(command, cwd=ROOT)
     if result.returncode:
         return result.returncode
@@ -60,6 +61,7 @@ def refresh(selected):
     if not database.exists():
         raise RuntimeError("CMake configured source targets but did not export their compilation database")
     print("Active spikes: " + (", ".join(sorted(selected)) or "(none)"))
+    print("Active benchmarks: " + (", ".join(sorted(benchmarks)) or "(none)"))
     print(f"Editor compilation database: {database}")
     return 0
 
@@ -68,29 +70,39 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--add", action="append", default=[], help="Activate a spike; repeat as needed")
     parser.add_argument("--remove", action="append", default=[], help="Deactivate a spike; repeat as needed")
+    parser.add_argument("--add-benchmark", action="append", default=[], help="Activate a recurring benchmark suite")
+    parser.add_argument("--remove-benchmark", action="append", default=[], help="Deactivate a benchmark suite")
     parser.add_argument("--list", action="store_true", help="List current selection without configuring")
     args = parser.parse_args()
-    if args.list and (args.add or args.remove):
+    changes = [("spike", args.add, args.remove),
+               ("benchmark", args.add_benchmark, args.remove_benchmark)]
+    if args.list and any(add or remove for _, add, remove in changes):
         parser.error("--list cannot be combined with changes")
-    if set(args.add) & set(args.remove):
-        parser.error("a spike cannot be added and removed together")
-    for name in args.add + args.remove:
-        if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]*", name):
-            parser.error(f"invalid spike name: {name}")
+    for kind, add, remove in changes:
+        if set(add) & set(remove):
+            parser.error(f"a {kind} cannot be added and removed together")
+        for name in add + remove:
+            if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]*", name):
+                parser.error(f"invalid {kind} name: {name}")
     BUILD.parent.mkdir(parents=True, exist_ok=True)
     with (BUILD.parent / ".dev-configure.lock").open("a") as lock:
         # Concurrent workbench runs merge their selections under one lock.
         fcntl.flock(lock, fcntl.LOCK_EX)
-        selected = active_spikes()
+        selected = active_selection("SIXDB_SPIKES")
+        benchmarks = active_selection("SIXDB_BENCHMARKS")
         if args.list:
-            print("\n".join(sorted(selected)))
+            print("\n".join([*sorted(selected), *("benchmark:" + b for b in sorted(benchmarks))]))
             return 0
-        selected.difference_update(args.remove)
-        selected.update(args.add)
-        for name in selected:
-            if not (ROOT / "workbench/spikes" / name / "CMakeLists.txt").is_file():
-                parser.error(f"active spike {name!r} has no CMakeLists.txt; remove it with --remove {name}")
-        return refresh(selected)
+        for directory, names, add, remove in [
+                ("spikes", selected, args.add, args.remove),
+                ("benchmarks", benchmarks, args.add_benchmark, args.remove_benchmark)]:
+            names.difference_update(remove)
+            names.update(add)
+            for name in names:
+                if not (ROOT / "workbench" / directory / name / "CMakeLists.txt").is_file():
+                    parser.error(f"{directory}/{name} has no CMakeLists.txt; remove it from the active selection")
+        return refresh(selected, benchmarks)
+
 
 
 if __name__ == "__main__":

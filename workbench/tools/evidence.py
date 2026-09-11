@@ -3,8 +3,11 @@
 import csv
 import hashlib
 import json
+import math
 from pathlib import Path
+import re
 import shutil
+import statistics
 import subprocess
 
 
@@ -181,3 +184,105 @@ def verify_exports(directory, *, tree=None):
     for path in manifests:
         verify_compact(path.parent, tree=tree)
     return len(manifests)
+
+
+def summarize(inputs, destination, *, counters=(), pattern=None, artifact=None):
+    """Summarize ordinary Google Benchmark JSON; interpretation stays with the study."""
+    selected = re.compile(pattern) if pattern else None
+    groups, sources = {}, {}
+    units = {'ns': 1, 'us': 1000, 'ms': 1_000_000, 's': 1_000_000_000}
+    seen_counters = set()
+    for label, path in inputs:
+        path = Path(path)
+        if not label or label in sources:
+            raise ValueError('choose distinct input labels, such as zen5=path/to/samples.json')
+        raw = path.read_bytes()
+        data = json.loads(raw)
+        sources[label] = {'path': str(path.resolve()), 'sha256': hashlib.sha256(raw).hexdigest(),
+                          'context': data.get('context', {})}
+        count = 0
+        for row in data['benchmarks']:
+            name = row.get('run_name', row.get('name', ''))
+            if row.get('run_type', 'iteration') != 'iteration' or (selected and not selected.search(name)):
+                continue
+            if row.get('error_occurred'):
+                raise ValueError(f'{label}/{name}: benchmark error: {row.get("error_message", "unspecified")}')
+            if not name or row.get('iterations', 0) <= 0 or row.get('time_unit') not in units:
+                raise ValueError(f'{label}/{name}: missing case, iterations or supported time unit')
+            scale = units[row['time_unit']]
+            sample = {'cpu_ns': row['cpu_time'] * scale, 'real_ns': row['real_time'] * scale}
+            if any(not math.isfinite(v) or v < 0 for v in sample.values()):
+                raise ValueError(f'{label}/{name}: invalid timing')
+            if 'items_per_second' in row:
+                rate = row['items_per_second']
+                if not math.isfinite(rate) or rate <= 0:
+                    raise ValueError(f'{label}/{name}: invalid item rate')
+                sample['ns_per_item'] = 1e9 / rate
+            sample['counters'] = {key: row[key] for key in counters if key in row}
+            seen_counters.update(sample['counters'])
+            groups.setdefault((label, name, row.get('threads', 1)), []).append(sample)
+            count += 1
+        if not count:
+            raise ValueError(f'{label}: no selected iteration rows')
+    if not groups:
+        raise ValueError('choose at least one benchmark input')
+    if set(counters) - seen_counters:
+        raise ValueError('requested counters absent: ' + ', '.join(sorted(set(counters) - seen_counters)))
+    rows = []
+    for (label, name, threads), samples in sorted(groups.items()):
+        row = {'input': label, 'case': name, 'threads': threads, 'repetitions': len(samples)}
+        for metric in ('cpu_ns', 'real_ns', 'ns_per_item'):
+            values = [sample.get(metric) for sample in samples]
+            row[metric] = json.dumps(values, separators=(',', ':')) if any(v is not None for v in values) else ''
+            row['median_' + metric] = statistics.median(values) if all(v is not None for v in values) else ''
+        for key in counters:
+            values = [sample['counters'].get(key) for sample in samples]
+            row['counter:' + key] = ('' if all(v is None for v in values) else
+                                     json.dumps(values[0] if all(v == values[0] for v in values) else values,
+                                                separators=(',', ':'), allow_nan=False))
+        rows.append(row)
+    destination = Path(destination)
+    reference = Path(artifact).read_bytes() if artifact else None
+    if reference is not None:
+        json.loads(reference)
+    destination.mkdir(parents=True, exist_ok=False)
+    with (destination / 'cases.csv').open('w', newline='') as out:
+        writer = csv.DictWriter(out, fieldnames=list(rows[0]), lineterminator='\n')
+        writer.writeheader()
+        writer.writerows(rows)
+    metadata = {'format': 1, 'kind': 'google-benchmark-summary', 'inputs': sources,
+                'filter': pattern, 'counters': list(counters), 'cases': len(rows),
+                'units': 'CPU/real times are ns per benchmark iteration. ns_per_item uses the reported item rate; an item means what the benchmark counts, not necessarily a value or byte.',
+                'files_sha256': {'cases.csv': digest(destination / 'cases.csv')}}
+    if reference is not None:
+        (destination / 'artifact.json').write_bytes(reference)
+        metadata['full_bundle'] = 'artifact.json'
+    (destination / 'provenance.json').write_text(json.dumps(metadata, indent=2, sort_keys=True) + '\n')
+    return metadata
+
+
+def main():
+    import argparse
+    parser = argparse.ArgumentParser(description='Produce compact tables from selected Google Benchmark JSON.')
+    commands = parser.add_subparsers(dest='command', required=True)
+    summary = commands.add_parser('summarize', help='one row per case, with repetitions, medians and selected counters')
+    summary.add_argument('inputs', nargs='+', metavar='[LABEL=]JSON')
+    summary.add_argument('--output', type=Path, required=True, help='new output directory')
+    summary.add_argument('--filter', help='optional case-name regular expression')
+    summary.add_argument('--counter', action='append', default=[], help='retain this counter; repeat as needed')
+    summary.add_argument('--artifact', type=Path, help='attach an existing recovery reference; no upload')
+    args = parser.parse_args()
+    inputs = []
+    for index, value in enumerate(args.inputs, 1):
+        label, separator, path = value.partition('=')
+        inputs.append((label, Path(path)) if separator else (f'input{index}', Path(value)))
+    try:
+        result = summarize(inputs, args.output, counters=args.counter, pattern=args.filter, artifact=args.artifact)
+    except (ValueError, KeyError, OSError, re.error) as error:
+        parser.exit(1, f'{error}\n')
+    print(f'{result["cases"]} cases: {args.output / "cases.csv"}')
+    print('Timings and selected counters only; interpret comparisons in the study.')
+
+
+if __name__ == '__main__':
+    main()

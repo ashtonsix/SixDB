@@ -57,7 +57,7 @@ implementations as experiments establish useful values. They must preserve
 the algorithm's results and serialization contracts. No cache sizes, unroll
 counts, or SIMD widths are prescribed by these flags.
 
-The [build check](../tools/check_build.py) compiles probes with Clang 21.1.8 for
+The [build check](../tools/tests/check_build.py) compiles probes with Clang 21.1.8 for
 x86-64 and AArch64. It checks the flag values and verifies that changing tuning
 at a fixed ISA leaves compiler feature macros unchanged, while explicit ISA
 changes enable AVX-512/SVE2 independently. Cross-compiled probes are not run;

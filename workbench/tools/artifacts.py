@@ -250,14 +250,23 @@ def retain(source, destination, selected=None, regenerate=None):
     print(f"Retained: {destination}")
 
 
-def unpack(bundle, destination):
+def unpack(bundle, destination, *, selected=None):
+    if selected is not None:
+        names = [PurePosixPath(name) for name in selected]
+        if not names or any(not name.parts or name.is_absolute() or '..' in name.parts for name in names):
+            raise ValueError('select relative file paths within the bundle')
+        selected = {name.as_posix() for name in names}
+        if len(selected) != len(names):
+            raise ValueError('select distinct files')
     with tarfile.open(bundle) as archive:
         seen = set()
         for member in archive:
             name = PurePosixPath(member.name)
-            if not member.isfile() or name.is_absolute() or ".." in name.parts or member.name in seen:
+            if not member.isfile() or not name.parts or name.is_absolute() or ".." in name.parts or name.as_posix() in seen:
                 raise ValueError(f"unsafe archive member: {member.name}")
-            seen.add(member.name)
+            seen.add(name.as_posix())
+            if selected is not None and name.as_posix() not in selected:
+                continue
             path = destination.joinpath(*name.parts)
             path.parent.mkdir(parents=True, exist_ok=True)
             source = archive.extractfile(member)
@@ -266,10 +275,13 @@ def unpack(bundle, destination):
             with source, path.open("xb") as target:
                 shutil.copyfileobj(source, target)
             path.chmod(member.mode & 0o777)
+    if selected is not None and selected - seen:
+        raise ValueError(f"selected files missing from bundle: {', '.join(sorted(selected - seen))}")
+    return len(seen)
 
 
-def restore_bundle(reference, destination):
-    """Restore the verified bytes; prepared-input resolution is a separate step."""
+def restore_bundle(reference, destination, *, selected=None):
+    """Restore verified bytes; a selection omits whole-run validation and dependencies."""
     destination = destination.resolve()
     if destination.exists():
         raise ValueError("fetch destination already exists")
@@ -280,30 +292,36 @@ def restore_bundle(reference, destination):
         download(reference, bundle)
         staging = temporary / "run"
         staging.mkdir()
-        unpack(bundle, staging)
-        if len(files(staging)) != reference["files"]:
+        count = unpack(bundle, staging, selected=selected)
+        if count != reference["files"]:
             raise ValueError("bundle file count mismatch")
-        if reference.get('kind') != 'files':
+        if selected is None and reference.get('kind') != 'files':
             verify_run(staging)
         staging.rename(destination)
 
 
-def fetch(reference_path, destination):
+def fetch(reference_path, destination, *, selected=None):
     if reference_path.is_dir():
         reference_path = reference_path / "artifact.json"
     reference = json.loads(reference_path.read_text())
     destination = destination.resolve()
     if not destination.is_relative_to(ROOT / 'build'):
-        raise ValueError('fetch into ignored build/ output')
+        raise ValueError("fetch needs a new directory under this checkout's build/, "
+                         'for example build/recovered/NAME; SIXDB_DATA_CACHE is for prepared inputs')
     if destination.exists():
         raise ValueError('fetch destination already exists')
     destination.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(dir=destination.parent) as temp:
         staging = Path(temp) / 'run'
-        restore_bundle(reference, staging)
-        restore_inputs(staging)
+        restore_bundle(reference, staging, selected=selected)
+        if selected is None:
+            restore_inputs(staging)
         staging.rename(destination)
-    print(f"Restored and verified: {destination}")
+    if selected is None:
+        print(f"Restored and verified: {destination}")
+    else:
+        print(f"Partial recovery: {len(selected)} selected files from verified bundle: {destination}")
+        print('Whole-run validation and input dataset restoration were not requested.')
 
 
 def main():
@@ -326,7 +344,10 @@ def main():
     put_parser.add_argument("reference", type=Path)
     fetch_parser = commands.add_parser("fetch", help="download and verify a reference or evidence directory")
     fetch_parser.add_argument("reference", type=Path)
-    fetch_parser.add_argument("output", type=Path)
+    fetch_parser.add_argument("output", type=Path,
+                              help="new directory under this checkout's build/, e.g. build/recovered/NAME")
+    fetch_parser.add_argument('--file', action='append', dest='selected',
+                              help='Restore only this exact bundle file; repeat as needed (no input dataset restoration)')
     args = parser.parse_args()
     if args.command in ('retain', 'preview'):
         action = retain if args.command == 'retain' else preview
@@ -335,7 +356,7 @@ def main():
         count = verify_exports(args.evidence, tree=args.tree)
         print(f'Verified {count} compact exports ({args.tree or "worktree"})')
     elif args.command == "fetch":
-        fetch(args.reference, args.output)
+        fetch(args.reference, args.output, selected=args.selected)
     else:
         if args.reference.resolve().is_relative_to(args.directory.resolve()):
             parser.error("keep the reference outside its input bundle")

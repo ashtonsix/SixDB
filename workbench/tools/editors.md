@@ -4,7 +4,7 @@ Open the Linux checkout through VS Code Remote SSH (`orb` in this workspace).
 The repository recommends clangd and the Python extensions. Install clangd 21
 alongside the [pinned compiler](../../BUILDING.md). Workspace settings select
 `clangd-21`, prevent duplicate C/C++ IntelliSense, and keep CMake Tools from
-reconfiguring the deliberately opt-in spike selection. Build outputs stay out
+reconfiguring the explicit study/benchmark selection. Build outputs stay out
 of search, file watching, and Python workspace analysis.
 
 ## Compilation commands
@@ -13,7 +13,8 @@ Run `python3 workbench/tools/dev.py --add NAME` when starting a spike, or run
 `python3 workbench/tools/dev.py` after changing its CMake sources or dependencies.
 The VS Code task **SixDB: refresh editor configuration** runs the latter.
 clangd reads the resulting `build/clang/dev/compile_commands.json`.
-Only selected spikes are configured; neither command builds them. New TUs need
+For recurring suites use `--add-benchmark NAME` / `--remove-benchmark NAME`.
+Both selections are preserved on refresh; configuring does not build targets. New TUs need
 to be listed in their CMake target to get its exact includes and definitions.
 Standalone prototypes still get C++23 from `.clangd`, but inferred flags cannot
 substitute for target-specific build configuration.
@@ -32,9 +33,9 @@ build instructions describe any prepared inputs it requires.
 
 ## Architecture-specific headers
 
-`.clangd` recognizes `*_avx2.h`, `*_avx512.h`, and `*_neon.h` anywhere in the
-repository, also with `.hpp` extensions. These names select x86-64-v3, Zen 5,
-and ARMv8-A editor targets respectively. This lets clangd parse and complete
+`.clangd` selects x86-64-v3 for `*_avx2.h`, Zen 5 for `*_avx512.h` and combined
+`*_x86.h` headers, and ARMv8-A for `*_neon.h` (also with `.hpp` extensions).
+This lets clangd parse and complete
 intrinsics even when the header targets the other development architecture.
 Normal TUs retain their CMake flags; these editor overrides do not alter builds.
 An additional ISA naming convention can be added as a path-scoped fragment.

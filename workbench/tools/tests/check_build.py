@@ -8,7 +8,7 @@ import shutil
 import subprocess
 import tempfile
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 
 
 def run(*args, success=True):
@@ -101,7 +101,7 @@ def main():
         source.mkdir()
         shutil.copy2(ROOT / "CMakeLists.txt", source)
         shutil.copytree(ROOT / "cmake", source / "cmake")
-        for module in ("ikea", "orbital", "loom", "engine", "shore", "workbench"):
+        for module in sorted(p.parent.name for p in ROOT.glob('*/CMakeLists.txt')):
             (source / module).mkdir()
             (source / module / "CMakeLists.txt").write_text("")
         (source / "workbench/CMakeLists.txt").write_text("add_subdirectory(spikes)\n")

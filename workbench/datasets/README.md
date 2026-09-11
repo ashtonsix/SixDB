@@ -34,7 +34,15 @@ The helper keys preparation by source hashes, recipe bytes, and parameters;
 `prepared.json` records those and the output hashes. Output bytes and
 preparation metadata both contribute to the prepared identity. Source downloads and
 prepared variants have separate caches under ignored `build/datasets/`.
-Set `SIXDB_DATA_CACHE` to share a cache across checkouts or use another volume.
+When using multiple worktrees, point them at one cache, for example:
+
+```sh
+export SIXDB_DATA_CACHE="$HOME/sixdb/build/datasets"
+```
+
+The same setting can move new preparations to another volume. Reuse a checked
+cache while iterating; an inactive variant can be recovered from its available
+pinned inputs and recipe, or a published reference kept outside the cache.
 Recipe changes create new variants; old recorded inputs retain their identity.
 Git keeps recipes, provenance notes, and selected S3 references. Large source
 bytes remain at their existing locations; use existing Calico S3 objects where

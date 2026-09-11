@@ -10,7 +10,7 @@ If:
 CompileFlags:
   Add: [-std=c++23]
 ---
-# Headers named *_avx2.h, *_avx512.h or *_neon.h (also .hpp) declare their editor ISA.
+# ISA header suffixes select editor targets; *_x86.h includes both x86 families.
 # An ISA-specific header can be opened on the other development architecture.
 # Override only its editor target; ordinary TUs keep their CMake build flags.
 # Clang also needs the selected target's C++/libc development headers installed.
@@ -21,7 +21,7 @@ CompileFlags:
   Add: [--target=x86_64-linux-gnu, -march=x86-64-v3]
 ---
 If:
-  PathMatch: .*_avx512\.(h|hpp)
+  PathMatch: .*_(avx512|x86)\.(h|hpp)
 CompileFlags:
   Remove: [-march=*, -mcpu=*, -mtune=*, --target=*, -target]
   Add: [--target=x86_64-linux-gnu, -march=znver5]

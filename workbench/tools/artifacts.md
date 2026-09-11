@@ -3,9 +3,11 @@
 Git holds code, questions, findings, small correctness fixtures, selected
 samples/counters, and compact provenance. Full logs, caches, binaries, source
 archives, profiles, traces, and broad raw sweeps belong in ignored output or S3.
-Keep useful repetitions rather than just medians, and a few assembly functions
-that explain a finding rather than full disassemblies. Link existing evidence
-when a follow-up reuses it. Retain the runs worth returning to, not every run.
+Keep useful repetitions in compact evidence. For code-generation studies,
+retain the measured binary and its source/flags in the bundle, with selected
+assembly explaining a finding. Full disassembly expands cheaply from that binary;
+duplicating it for every check executable and archive can dominate disk use.
+Link existing evidence when a follow-up reuses it. Retain the runs worth returning to.
 
 Commands run from the repository root on Linux, with Python 3.10+ and AWS CLI v2
 using existing credentials. Prefix with `orb -m ubuntu` from the Mac. Bundles
@@ -74,6 +76,10 @@ For validation logs or another generic bundle, use
 
 ## Recover a run
 
+Choose a new directory under this checkout's `build/`, such as
+`build/recovered/NAME`. The CLI does not restore bundles into `SIXDB_DATA_CACHE`;
+that cache is for prepared inputs.
+
 ```sh
 python3 workbench/tools/artifacts.py fetch \
   workbench/spikes/aggregate-maintenance/evidence/NAME \
@@ -82,17 +88,35 @@ python3 workbench/tools/artifacts.py fetch \
 
 Fetch also accepts a standalone reference file. It verifies the bundle hash,
 rejects unsafe archive members, and checks the restored run's original receipt.
-`source.tar.gz` contains the measured files, which may differ from recorded Git
-HEAD. Unpack into a separate ignored build directory and use the recorded
-compiler/flags; the source archive does not contain toolchain/dependency binaries.
-[Captured execution](README.md#captured-experiment-runs) describes source isolation.
+For a code-generation question, recover just the binary and needed context:
+
+```sh
+python3 workbench/tools/artifacts.py fetch path/to/artifact.json \
+  build/recovered/diagnostic --file relative/path/to/binary --file host.json
+```
+
+Repeat `--file` for exact member paths. This still downloads and hash-verifies the
+compressed bundle, but expands only those files and leaves input datasets alone.
+It reports a partial recovery, not a complete experiment or whole-run validation.
+Use the full fetch above when replaying a run with its dependencies.
+`source.tar.gz` holds the measured files, which may differ from Git HEAD; use the
+recorded compiler/flags when rebuilding in a separate ignored directory (see
+[captured execution](README.md#captured-experiment-runs)). Toolchain binaries are not embedded.
 
 Runs using `run.input()` reference [prepared datasets](../datasets/README.md).
-Retention publishes each input once; fetch verifies and restores dependencies
+Retention publishes each input once; a full fetch verifies and restores dependencies
 under the recovered run. Keep input objects as long as retained runs reference
 them. Older runners' embedded input directories remain supported.
 
-## Storage limits
+## Local copies and storage limits
+
+After verified retention, an inactive expanded run can be removed while keeping
+its compact evidence and `artifact.json` outside that directory. For a partial
+eviction, record removed paths, verified hashes and the recovery reference (for
+example, `local-evictions.json`). Sources, live builds and unretained results
+need different treatment: ignored `build/` directories can contain prototypes
+as well as caches. Inactive package/editor downloads and compiler intermediates
+are usually easier first targets.
 
 Content-addressed keys and conditional writes avoid overwriting existing objects.
 The uploader uses single PUTs, limited to 5 GB; reference larger datasets separately.

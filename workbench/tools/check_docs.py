@@ -80,7 +80,8 @@ def inspect(root):
                 if unquote(href.fragment) not in heading_ids[target]:
                     hints.append(f'{location}: heading not found for {match[1]}')
 
-    for directory, marker in [('workbench/spikes', 'README.md'), ('workbench/datasets', 'dataset.json')]:
+    for directory, marker in [('workbench/spikes', 'README.md'), ('workbench/benchmarks', 'README.md'),
+                              ('workbench/datasets', 'dataset.json')]:
         parent = root / directory
         catalog = parent / 'README.md'
         for entry in sorted(p.parent for p in files if p.name == marker and p.parent.parent == parent):
