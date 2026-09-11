@@ -26,28 +26,19 @@ place. Current old values may still be needed for summary deltas. Private-copy
 mutation is another owner policy and may win in some situations. Version retention
 and visibility/isolation are separate obligations.
 
-```mermaid
-flowchart TD
-    A["Owner: pending input + plan + mapping generation"] --> Q["Acquire lease; reserve effects; admit operation"]
-    Q --> R["Ready driver invokes bounded work"]
-    R --> M["Local mutation + summary contribution + byte coverage"]
-    M --> F["Return at a complete work frontier"]
-    F --> W["Rotate or wait: retain lease, input, cursor, summary, effects"]
-    W --> V["Owner validates reply/generation and cancellation"]
-    V --> R
-    V --> C["Dirty cancellation: owner resolves commit or rollback"]
-    F --> S["Seal data + effects + summary validity"]
-    S --> P["Owner coordinates publication"]
-```
+![Owner retains mutation state across waits and coordinates publication after bounded Ikea calls](images/mutation-lifetime.svg)
+
+*Teaching flow for in-place mutation. Ikea returns at a complete work frontier;
+suspension and coordinated publication remain owner responsibilities.*
 
 ## Bind once, invoke bounded work
 
 The example moves the only readable buffer lease into a stable-address work
-object. This models caller-owned exclusion. The work object holds the named view,
-prepared operation, erased endpoint, input, journal, summary state and next row.
-One step invokes a complete 64-row range and returns. Its kernels do not allocate,
-wait, format errors or call the scheduler. Chunk size is an owner scheduling
-choice, independent of the physical tile and native instruction grain.
+object. This models caller-owned exclusion and keeps the named view alive for
+its borrowed operation. One step invokes a complete 64-row range and returns.
+Its kernels do not allocate, wait, format errors or call the scheduler. Chunk
+size is an owner scheduling choice, independent of the physical tile and native
+instruction grain.
 
 Before invocation, the owner supplies writable/readable extents, stable placement,
 input/selection/effect disjointness, sufficient effect capacity, exclusion and a
@@ -63,9 +54,10 @@ impossible or definitely-true evidence, nor does it implement planner probes.
 
 Explicit suspension happens after returning to the driver, at a frontier where
 all local writes and effects for completed work are recorded. Retain the lease,
-source-view identities, mapping/version generation, input and selection, next
-coordinates, native partial summaries when unfinished, journal and plan. Do not
-retain a pointer into a terminated CPS stage's stack.
+source-view identities, prepared bindings and erased endpoints, mapping/version
+generation, input and selection, next coordinates, native partial summaries when
+unfinished, journal and plan. Do not retain a pointer into a terminated CPS
+stage's stack.
 
 A prefetch hint identifies an access and its geometry; it is not a lease or a
 readiness guarantee. The owner decides when to submit hints, interleave other work

@@ -1,0 +1,469 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="804" viewBox="0 0 1280 804" role="img" aria-labelledby="title description">
+<title id="title">SeriesPack striped residuals, R = 1 through 7</title>
+<desc id="description">Each colored cell names a value bit from a 32-row group. Each grid row is one byte lane of a 32-byte stripe. Columns are stored-byte bits zero through seven. The exact v1 maps are generated from tail_bit&lt;R&gt;.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8" fill="#586579"/></marker></defs>
+<rect width="1280" height="100%" fill="white"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#233047" font-size="21">
+<text x="32" y="42" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">Striped residuals</text>
+<text x="1248" y="42" font-size="22" font-weight="normal" fill="#586579" text-anchor="end">k_tail = R = (K − H) mod 8</text>
+<text x="32" y="80" font-size="22" font-weight="normal" fill="#586579" text-anchor="start">One byte lane shown · each row is a 32-byte stripe · stored bits run 0 → 7</text>
+<text x="32" y="124" font-size="25" font-weight="bold" fill="#233047" text-anchor="start">R = 1</text>
+<text x="32" y="156" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">256 rows · 32 bytes</text>
+<text x="80.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">0</text>
+<text x="112.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">1</text>
+<text x="144.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">2</text>
+<text x="176.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">3</text>
+<text x="208.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">4</text>
+<text x="240.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">5</text>
+<text x="272.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">6</text>
+<text x="304.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">7</text>
+<text x="52" y="227" font-size="18" font-weight="normal" fill="#233047" text-anchor="end" font-family="DejaVu Sans Mono, monospace">S0</text>
+<rect x="64" y="204" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="80.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A0</text>
+<rect x="96" y="204" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="112.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B0</text>
+<rect x="128" y="204" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="144.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C0</text>
+<rect x="160" y="204" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="176.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D0</text>
+<rect x="192" y="204" width="32" height="32" rx="0" fill="#f4aecb" stroke="white" stroke-width="1.5"/>
+<text x="208.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">E0</text>
+<rect x="224" y="204" width="32" height="32" rx="0" fill="#97e2df" stroke="white" stroke-width="1.5"/>
+<text x="240.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">F0</text>
+<rect x="256" y="204" width="32" height="32" rx="0" fill="#ffbd87" stroke="white" stroke-width="1.5"/>
+<text x="272.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">G0</text>
+<rect x="288" y="204" width="32" height="32" rx="0" fill="#a7b5ed" stroke="white" stroke-width="1.5"/>
+<text x="304.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">H0</text>
+<text x="344" y="124" font-size="25" font-weight="bold" fill="#233047" text-anchor="start">R = 2</text>
+<text x="344" y="156" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">128 rows · 32 bytes</text>
+<text x="392.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">0</text>
+<text x="424.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">1</text>
+<text x="456.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">2</text>
+<text x="488.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">3</text>
+<text x="520.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">4</text>
+<text x="552.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">5</text>
+<text x="584.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">6</text>
+<text x="616.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">7</text>
+<text x="364" y="227" font-size="18" font-weight="normal" fill="#233047" text-anchor="end" font-family="DejaVu Sans Mono, monospace">S0</text>
+<rect x="376" y="204" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="392.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A0</text>
+<rect x="408" y="204" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="424.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A1</text>
+<rect x="440" y="204" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="456.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B0</text>
+<rect x="472" y="204" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="488.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B1</text>
+<rect x="504" y="204" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="520.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C0</text>
+<rect x="536" y="204" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="552.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C1</text>
+<rect x="568" y="204" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="584.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D0</text>
+<rect x="600" y="204" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="616.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D1</text>
+<text x="656" y="124" font-size="25" font-weight="bold" fill="#233047" text-anchor="start">R = 3</text>
+<text x="656" y="156" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">256 rows · 96 bytes</text>
+<text x="704.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">0</text>
+<text x="736.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">1</text>
+<text x="768.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">2</text>
+<text x="800.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">3</text>
+<text x="832.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">4</text>
+<text x="864.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">5</text>
+<text x="896.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">6</text>
+<text x="928.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">7</text>
+<text x="676" y="227" font-size="18" font-weight="normal" fill="#233047" text-anchor="end" font-family="DejaVu Sans Mono, monospace">S0</text>
+<rect x="688" y="204" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="704.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A0</text>
+<rect x="720" y="204" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="736.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A1</text>
+<rect x="752" y="204" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="768.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A2</text>
+<rect x="784" y="204" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="800.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B0</text>
+<rect x="816" y="204" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="832.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B1</text>
+<rect x="848" y="204" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="864.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B2</text>
+<rect x="880" y="204" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="896.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C0</text>
+<rect x="912" y="204" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="928.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C1</text>
+<text x="676" y="263" font-size="18" font-weight="normal" fill="#233047" text-anchor="end" font-family="DejaVu Sans Mono, monospace">S1</text>
+<rect x="688" y="240" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="704.0" y="263" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D0</text>
+<rect x="720" y="240" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="736.0" y="263" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D1</text>
+<rect x="752" y="240" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="768.0" y="263" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D2</text>
+<rect x="784" y="240" width="32" height="32" rx="0" fill="#f4aecb" stroke="white" stroke-width="1.5"/>
+<text x="800.0" y="263" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">E0</text>
+<rect x="816" y="240" width="32" height="32" rx="0" fill="#f4aecb" stroke="white" stroke-width="1.5"/>
+<text x="832.0" y="263" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">E1</text>
+<rect x="848" y="240" width="32" height="32" rx="0" fill="#f4aecb" stroke="white" stroke-width="1.5"/>
+<text x="864.0" y="263" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">E2</text>
+<rect x="880" y="240" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="896.0" y="263" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C2</text>
+<rect x="912" y="240" width="32" height="32" rx="0" fill="#97e2df" stroke="white" stroke-width="1.5"/>
+<text x="928.0" y="263" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">F2</text>
+<text x="676" y="299" font-size="18" font-weight="normal" fill="#233047" text-anchor="end" font-family="DejaVu Sans Mono, monospace">S2</text>
+<rect x="688" y="276" width="32" height="32" rx="0" fill="#ffbd87" stroke="white" stroke-width="1.5"/>
+<text x="704.0" y="299" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">G0</text>
+<rect x="720" y="276" width="32" height="32" rx="0" fill="#ffbd87" stroke="white" stroke-width="1.5"/>
+<text x="736.0" y="299" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">G1</text>
+<rect x="752" y="276" width="32" height="32" rx="0" fill="#ffbd87" stroke="white" stroke-width="1.5"/>
+<text x="768.0" y="299" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">G2</text>
+<rect x="784" y="276" width="32" height="32" rx="0" fill="#a7b5ed" stroke="white" stroke-width="1.5"/>
+<text x="800.0" y="299" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">H0</text>
+<rect x="816" y="276" width="32" height="32" rx="0" fill="#a7b5ed" stroke="white" stroke-width="1.5"/>
+<text x="832.0" y="299" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">H1</text>
+<rect x="848" y="276" width="32" height="32" rx="0" fill="#a7b5ed" stroke="white" stroke-width="1.5"/>
+<text x="864.0" y="299" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">H2</text>
+<rect x="880" y="276" width="32" height="32" rx="0" fill="#97e2df" stroke="white" stroke-width="1.5"/>
+<text x="896.0" y="299" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">F0</text>
+<rect x="912" y="276" width="32" height="32" rx="0" fill="#97e2df" stroke="white" stroke-width="1.5"/>
+<text x="928.0" y="299" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">F1</text>
+<text x="968" y="124" font-size="25" font-weight="bold" fill="#233047" text-anchor="start">R = 4</text>
+<text x="968" y="156" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">64 rows · 32 bytes</text>
+<text x="1016.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">0</text>
+<text x="1048.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">1</text>
+<text x="1080.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">2</text>
+<text x="1112.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">3</text>
+<text x="1144.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">4</text>
+<text x="1176.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">5</text>
+<text x="1208.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">6</text>
+<text x="1240.0" y="188" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">7</text>
+<text x="988" y="227" font-size="18" font-weight="normal" fill="#233047" text-anchor="end" font-family="DejaVu Sans Mono, monospace">S0</text>
+<rect x="1000" y="204" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="1016.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A0</text>
+<rect x="1032" y="204" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="1048.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A1</text>
+<rect x="1064" y="204" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="1080.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A2</text>
+<rect x="1096" y="204" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="1112.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A3</text>
+<rect x="1128" y="204" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="1144.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B0</text>
+<rect x="1160" y="204" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="1176.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B1</text>
+<rect x="1192" y="204" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="1208.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B2</text>
+<rect x="1224" y="204" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="1240.0" y="227" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B3</text>
+<path d="M32,336 H1248" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
+<text x="32" y="380" font-size="25" font-weight="bold" fill="#233047" text-anchor="start">R = 5</text>
+<text x="32" y="412" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">256 rows · 160 bytes</text>
+<text x="80.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">0</text>
+<text x="112.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">1</text>
+<text x="144.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">2</text>
+<text x="176.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">3</text>
+<text x="208.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">4</text>
+<text x="240.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">5</text>
+<text x="272.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">6</text>
+<text x="304.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">7</text>
+<text x="52" y="483" font-size="18" font-weight="normal" fill="#233047" text-anchor="end" font-family="DejaVu Sans Mono, monospace">S0</text>
+<rect x="64" y="460" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="80.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A0</text>
+<rect x="96" y="460" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="112.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A1</text>
+<rect x="128" y="460" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="144.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A2</text>
+<rect x="160" y="460" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="176.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A3</text>
+<rect x="192" y="460" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="208.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A4</text>
+<rect x="224" y="460" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="240.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B2</text>
+<rect x="256" y="460" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="272.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B3</text>
+<rect x="288" y="460" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="304.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B4</text>
+<text x="52" y="519" font-size="18" font-weight="normal" fill="#233047" text-anchor="end" font-family="DejaVu Sans Mono, monospace">S1</text>
+<rect x="64" y="496" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="80.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B0</text>
+<rect x="96" y="496" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="112.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B1</text>
+<rect x="128" y="496" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="144.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C0</text>
+<rect x="160" y="496" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="176.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C1</text>
+<rect x="192" y="496" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="208.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C2</text>
+<rect x="224" y="496" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="240.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C3</text>
+<rect x="256" y="496" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="272.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C4</text>
+<rect x="288" y="496" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="304.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D4</text>
+<text x="52" y="555" font-size="18" font-weight="normal" fill="#233047" text-anchor="end" font-family="DejaVu Sans Mono, monospace">S2</text>
+<rect x="64" y="532" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="80.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D0</text>
+<rect x="96" y="532" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="112.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D1</text>
+<rect x="128" y="532" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="144.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D2</text>
+<rect x="160" y="532" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="176.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D3</text>
+<rect x="192" y="532" width="32" height="32" rx="0" fill="#f4aecb" stroke="white" stroke-width="1.5"/>
+<text x="208.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">E1</text>
+<rect x="224" y="532" width="32" height="32" rx="0" fill="#f4aecb" stroke="white" stroke-width="1.5"/>
+<text x="240.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">E2</text>
+<rect x="256" y="532" width="32" height="32" rx="0" fill="#f4aecb" stroke="white" stroke-width="1.5"/>
+<text x="272.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">E3</text>
+<rect x="288" y="532" width="32" height="32" rx="0" fill="#f4aecb" stroke="white" stroke-width="1.5"/>
+<text x="304.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">E4</text>
+<text x="52" y="591" font-size="18" font-weight="normal" fill="#233047" text-anchor="end" font-family="DejaVu Sans Mono, monospace">S3</text>
+<rect x="64" y="568" width="32" height="32" rx="0" fill="#f4aecb" stroke="white" stroke-width="1.5"/>
+<text x="80.0" y="591" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">E0</text>
+<rect x="96" y="568" width="32" height="32" rx="0" fill="#97e2df" stroke="white" stroke-width="1.5"/>
+<text x="112.0" y="591" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">F0</text>
+<rect x="128" y="568" width="32" height="32" rx="0" fill="#97e2df" stroke="white" stroke-width="1.5"/>
+<text x="144.0" y="591" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">F1</text>
+<rect x="160" y="568" width="32" height="32" rx="0" fill="#97e2df" stroke="white" stroke-width="1.5"/>
+<text x="176.0" y="591" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">F2</text>
+<rect x="192" y="568" width="32" height="32" rx="0" fill="#97e2df" stroke="white" stroke-width="1.5"/>
+<text x="208.0" y="591" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">F3</text>
+<rect x="224" y="568" width="32" height="32" rx="0" fill="#97e2df" stroke="white" stroke-width="1.5"/>
+<text x="240.0" y="591" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">F4</text>
+<rect x="256" y="568" width="32" height="32" rx="0" fill="#ffbd87" stroke="white" stroke-width="1.5"/>
+<text x="272.0" y="591" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">G3</text>
+<rect x="288" y="568" width="32" height="32" rx="0" fill="#ffbd87" stroke="white" stroke-width="1.5"/>
+<text x="304.0" y="591" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">G4</text>
+<text x="52" y="627" font-size="18" font-weight="normal" fill="#233047" text-anchor="end" font-family="DejaVu Sans Mono, monospace">S4</text>
+<rect x="64" y="604" width="32" height="32" rx="0" fill="#ffbd87" stroke="white" stroke-width="1.5"/>
+<text x="80.0" y="627" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">G0</text>
+<rect x="96" y="604" width="32" height="32" rx="0" fill="#ffbd87" stroke="white" stroke-width="1.5"/>
+<text x="112.0" y="627" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">G1</text>
+<rect x="128" y="604" width="32" height="32" rx="0" fill="#ffbd87" stroke="white" stroke-width="1.5"/>
+<text x="144.0" y="627" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">G2</text>
+<rect x="160" y="604" width="32" height="32" rx="0" fill="#a7b5ed" stroke="white" stroke-width="1.5"/>
+<text x="176.0" y="627" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">H0</text>
+<rect x="192" y="604" width="32" height="32" rx="0" fill="#a7b5ed" stroke="white" stroke-width="1.5"/>
+<text x="208.0" y="627" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">H1</text>
+<rect x="224" y="604" width="32" height="32" rx="0" fill="#a7b5ed" stroke="white" stroke-width="1.5"/>
+<text x="240.0" y="627" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">H2</text>
+<rect x="256" y="604" width="32" height="32" rx="0" fill="#a7b5ed" stroke="white" stroke-width="1.5"/>
+<text x="272.0" y="627" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">H3</text>
+<rect x="288" y="604" width="32" height="32" rx="0" fill="#a7b5ed" stroke="white" stroke-width="1.5"/>
+<text x="304.0" y="627" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">H4</text>
+<text x="344" y="380" font-size="25" font-weight="bold" fill="#233047" text-anchor="start">R = 6</text>
+<text x="344" y="412" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">128 rows · 96 bytes</text>
+<text x="392.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">0</text>
+<text x="424.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">1</text>
+<text x="456.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">2</text>
+<text x="488.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">3</text>
+<text x="520.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">4</text>
+<text x="552.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">5</text>
+<text x="584.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">6</text>
+<text x="616.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">7</text>
+<text x="364" y="483" font-size="18" font-weight="normal" fill="#233047" text-anchor="end" font-family="DejaVu Sans Mono, monospace">S0</text>
+<rect x="376" y="460" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="392.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A0</text>
+<rect x="408" y="460" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="424.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A1</text>
+<rect x="440" y="460" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="456.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A2</text>
+<rect x="472" y="460" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="488.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A3</text>
+<rect x="504" y="460" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="520.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A4</text>
+<rect x="536" y="460" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="552.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A5</text>
+<rect x="568" y="460" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="584.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B4</text>
+<rect x="600" y="460" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="616.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B5</text>
+<text x="364" y="519" font-size="18" font-weight="normal" fill="#233047" text-anchor="end" font-family="DejaVu Sans Mono, monospace">S1</text>
+<rect x="376" y="496" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="392.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B0</text>
+<rect x="408" y="496" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="424.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B1</text>
+<rect x="440" y="496" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="456.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B2</text>
+<rect x="472" y="496" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="488.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B3</text>
+<rect x="504" y="496" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="520.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C0</text>
+<rect x="536" y="496" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="552.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C1</text>
+<rect x="568" y="496" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="584.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C2</text>
+<rect x="600" y="496" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="616.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C3</text>
+<text x="364" y="555" font-size="18" font-weight="normal" fill="#233047" text-anchor="end" font-family="DejaVu Sans Mono, monospace">S2</text>
+<rect x="376" y="532" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="392.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D0</text>
+<rect x="408" y="532" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="424.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D1</text>
+<rect x="440" y="532" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="456.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D2</text>
+<rect x="472" y="532" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="488.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D3</text>
+<rect x="504" y="532" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="520.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D4</text>
+<rect x="536" y="532" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="552.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D5</text>
+<rect x="568" y="532" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="584.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C4</text>
+<rect x="600" y="532" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="616.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C5</text>
+<text x="656" y="380" font-size="25" font-weight="bold" fill="#233047" text-anchor="start">R = 7</text>
+<text x="656" y="412" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">256 rows · 224 bytes</text>
+<text x="704.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">0</text>
+<text x="736.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">1</text>
+<text x="768.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">2</text>
+<text x="800.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">3</text>
+<text x="832.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">4</text>
+<text x="864.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">5</text>
+<text x="896.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">6</text>
+<text x="928.0" y="444" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">7</text>
+<text x="676" y="483" font-size="18" font-weight="normal" fill="#233047" text-anchor="end" font-family="DejaVu Sans Mono, monospace">S0</text>
+<rect x="688" y="460" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="704.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A0</text>
+<rect x="720" y="460" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="736.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A1</text>
+<rect x="752" y="460" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="768.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A2</text>
+<rect x="784" y="460" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="800.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A3</text>
+<rect x="816" y="460" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="832.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A4</text>
+<rect x="848" y="460" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="864.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A5</text>
+<rect x="880" y="460" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="896.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A6</text>
+<rect x="912" y="460" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="928.0" y="483" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B6</text>
+<text x="676" y="519" font-size="18" font-weight="normal" fill="#233047" text-anchor="end" font-family="DejaVu Sans Mono, monospace">S1</text>
+<rect x="688" y="496" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="704.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B0</text>
+<rect x="720" y="496" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="736.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B1</text>
+<rect x="752" y="496" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="768.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B2</text>
+<rect x="784" y="496" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="800.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B3</text>
+<rect x="816" y="496" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="832.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B4</text>
+<rect x="848" y="496" width="32" height="32" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="864.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B5</text>
+<rect x="880" y="496" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="896.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C5</text>
+<rect x="912" y="496" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="928.0" y="519" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C6</text>
+<text x="676" y="555" font-size="18" font-weight="normal" fill="#233047" text-anchor="end" font-family="DejaVu Sans Mono, monospace">S2</text>
+<rect x="688" y="532" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="704.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C0</text>
+<rect x="720" y="532" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="736.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C1</text>
+<rect x="752" y="532" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="768.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C2</text>
+<rect x="784" y="532" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="800.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C3</text>
+<rect x="816" y="532" width="32" height="32" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="832.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C4</text>
+<rect x="848" y="532" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="864.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D4</text>
+<rect x="880" y="532" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="896.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D5</text>
+<rect x="912" y="532" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="928.0" y="555" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D6</text>
+<text x="676" y="591" font-size="18" font-weight="normal" fill="#233047" text-anchor="end" font-family="DejaVu Sans Mono, monospace">S3</text>
+<rect x="688" y="568" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="704.0" y="591" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D0</text>
+<rect x="720" y="568" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="736.0" y="591" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D1</text>
+<rect x="752" y="568" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="768.0" y="591" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D2</text>
+<rect x="784" y="568" width="32" height="32" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="800.0" y="591" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D3</text>
+<rect x="816" y="568" width="32" height="32" rx="0" fill="#f4aecb" stroke="white" stroke-width="1.5"/>
+<text x="832.0" y="591" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">E3</text>
+<rect x="848" y="568" width="32" height="32" rx="0" fill="#f4aecb" stroke="white" stroke-width="1.5"/>
+<text x="864.0" y="591" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">E4</text>
+<rect x="880" y="568" width="32" height="32" rx="0" fill="#f4aecb" stroke="white" stroke-width="1.5"/>
+<text x="896.0" y="591" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">E5</text>
+<rect x="912" y="568" width="32" height="32" rx="0" fill="#f4aecb" stroke="white" stroke-width="1.5"/>
+<text x="928.0" y="591" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">E6</text>
+<text x="676" y="627" font-size="18" font-weight="normal" fill="#233047" text-anchor="end" font-family="DejaVu Sans Mono, monospace">S4</text>
+<rect x="688" y="604" width="32" height="32" rx="0" fill="#f4aecb" stroke="white" stroke-width="1.5"/>
+<text x="704.0" y="627" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">E0</text>
+<rect x="720" y="604" width="32" height="32" rx="0" fill="#f4aecb" stroke="white" stroke-width="1.5"/>
+<text x="736.0" y="627" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">E1</text>
+<rect x="752" y="604" width="32" height="32" rx="0" fill="#f4aecb" stroke="white" stroke-width="1.5"/>
+<text x="768.0" y="627" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">E2</text>
+<rect x="784" y="604" width="32" height="32" rx="0" fill="#97e2df" stroke="white" stroke-width="1.5"/>
+<text x="800.0" y="627" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">F2</text>
+<rect x="816" y="604" width="32" height="32" rx="0" fill="#97e2df" stroke="white" stroke-width="1.5"/>
+<text x="832.0" y="627" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">F3</text>
+<rect x="848" y="604" width="32" height="32" rx="0" fill="#97e2df" stroke="white" stroke-width="1.5"/>
+<text x="864.0" y="627" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">F4</text>
+<rect x="880" y="604" width="32" height="32" rx="0" fill="#97e2df" stroke="white" stroke-width="1.5"/>
+<text x="896.0" y="627" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">F5</text>
+<rect x="912" y="604" width="32" height="32" rx="0" fill="#97e2df" stroke="white" stroke-width="1.5"/>
+<text x="928.0" y="627" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">F6</text>
+<text x="676" y="663" font-size="18" font-weight="normal" fill="#233047" text-anchor="end" font-family="DejaVu Sans Mono, monospace">S5</text>
+<rect x="688" y="640" width="32" height="32" rx="0" fill="#97e2df" stroke="white" stroke-width="1.5"/>
+<text x="704.0" y="663" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">F0</text>
+<rect x="720" y="640" width="32" height="32" rx="0" fill="#97e2df" stroke="white" stroke-width="1.5"/>
+<text x="736.0" y="663" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">F1</text>
+<rect x="752" y="640" width="32" height="32" rx="0" fill="#ffbd87" stroke="white" stroke-width="1.5"/>
+<text x="768.0" y="663" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">G1</text>
+<rect x="784" y="640" width="32" height="32" rx="0" fill="#ffbd87" stroke="white" stroke-width="1.5"/>
+<text x="800.0" y="663" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">G2</text>
+<rect x="816" y="640" width="32" height="32" rx="0" fill="#ffbd87" stroke="white" stroke-width="1.5"/>
+<text x="832.0" y="663" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">G3</text>
+<rect x="848" y="640" width="32" height="32" rx="0" fill="#ffbd87" stroke="white" stroke-width="1.5"/>
+<text x="864.0" y="663" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">G4</text>
+<rect x="880" y="640" width="32" height="32" rx="0" fill="#ffbd87" stroke="white" stroke-width="1.5"/>
+<text x="896.0" y="663" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">G5</text>
+<rect x="912" y="640" width="32" height="32" rx="0" fill="#ffbd87" stroke="white" stroke-width="1.5"/>
+<text x="928.0" y="663" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">G6</text>
+<text x="676" y="699" font-size="18" font-weight="normal" fill="#233047" text-anchor="end" font-family="DejaVu Sans Mono, monospace">S6</text>
+<rect x="688" y="676" width="32" height="32" rx="0" fill="#ffbd87" stroke="white" stroke-width="1.5"/>
+<text x="704.0" y="699" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">G0</text>
+<rect x="720" y="676" width="32" height="32" rx="0" fill="#a7b5ed" stroke="white" stroke-width="1.5"/>
+<text x="736.0" y="699" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">H0</text>
+<rect x="752" y="676" width="32" height="32" rx="0" fill="#a7b5ed" stroke="white" stroke-width="1.5"/>
+<text x="768.0" y="699" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">H1</text>
+<rect x="784" y="676" width="32" height="32" rx="0" fill="#a7b5ed" stroke="white" stroke-width="1.5"/>
+<text x="800.0" y="699" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">H2</text>
+<rect x="816" y="676" width="32" height="32" rx="0" fill="#a7b5ed" stroke="white" stroke-width="1.5"/>
+<text x="832.0" y="699" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">H3</text>
+<rect x="848" y="676" width="32" height="32" rx="0" fill="#a7b5ed" stroke="white" stroke-width="1.5"/>
+<text x="864.0" y="699" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">H4</text>
+<rect x="880" y="676" width="32" height="32" rx="0" fill="#a7b5ed" stroke="white" stroke-width="1.5"/>
+<text x="896.0" y="699" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">H5</text>
+<rect x="912" y="676" width="32" height="32" rx="0" fill="#a7b5ed" stroke="white" stroke-width="1.5"/>
+<text x="928.0" y="699" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">H6</text>
+<text x="968" y="380" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Read a cell</text>
+<rect x="968" y="404" width="32" height="32" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="984" y="427" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A0</text>
+<text x="1016" y="427" font-size="20" font-weight="normal" fill="#233047" text-anchor="start">group A, bit 0</text>
+<text x="968" y="476" font-size="19" font-weight="normal" fill="#586579" text-anchor="start">Original row groups</text>
+<rect x="968" y="496" width="26" height="26" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="981" y="516" font-size="18" font-weight="normal" fill="#233047" text-anchor="middle">A</text>
+<text x="1006" y="516" font-size="18" font-weight="normal" fill="#586579" text-anchor="start">0–31</text>
+<rect x="968" y="536" width="26" height="26" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="981" y="556" font-size="18" font-weight="normal" fill="#233047" text-anchor="middle">B</text>
+<text x="1006" y="556" font-size="18" font-weight="normal" fill="#586579" text-anchor="start">32–63</text>
+<rect x="968" y="576" width="26" height="26" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="981" y="596" font-size="18" font-weight="normal" fill="#233047" text-anchor="middle">C</text>
+<text x="1006" y="596" font-size="18" font-weight="normal" fill="#586579" text-anchor="start">64–95</text>
+<rect x="968" y="616" width="26" height="26" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="981" y="636" font-size="18" font-weight="normal" fill="#233047" text-anchor="middle">D</text>
+<text x="1006" y="636" font-size="18" font-weight="normal" fill="#586579" text-anchor="start">96–127</text>
+<rect x="1112" y="496" width="26" height="26" rx="0" fill="#f4aecb" stroke="white" stroke-width="1.5"/>
+<text x="1125" y="516" font-size="18" font-weight="normal" fill="#233047" text-anchor="middle">E</text>
+<text x="1150" y="516" font-size="18" font-weight="normal" fill="#586579" text-anchor="start">128–159</text>
+<rect x="1112" y="536" width="26" height="26" rx="0" fill="#97e2df" stroke="white" stroke-width="1.5"/>
+<text x="1125" y="556" font-size="18" font-weight="normal" fill="#233047" text-anchor="middle">F</text>
+<text x="1150" y="556" font-size="18" font-weight="normal" fill="#586579" text-anchor="start">160–191</text>
+<rect x="1112" y="576" width="26" height="26" rx="0" fill="#ffbd87" stroke="white" stroke-width="1.5"/>
+<text x="1125" y="596" font-size="18" font-weight="normal" fill="#233047" text-anchor="middle">G</text>
+<text x="1150" y="596" font-size="18" font-weight="normal" fill="#586579" text-anchor="start">192–223</text>
+<rect x="1112" y="616" width="26" height="26" rx="0" fill="#a7b5ed" stroke="white" stroke-width="1.5"/>
+<text x="1125" y="636" font-size="18" font-weight="normal" fill="#233047" text-anchor="middle">H</text>
+<text x="1150" y="636" font-size="18" font-weight="normal" fill="#586579" text-anchor="start">224–255</text>
+<path d="M32,736 H1248" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
+<text x="32" y="772" font-size="21" font-weight="normal" fill="#586579" text-anchor="start">For lane l, A…H mean rows l, 32+l, …, 224+l. Byte offset = 32s+l. Sizes shown are tail-only.</text>
+</g></svg>

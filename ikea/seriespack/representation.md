@@ -1,11 +1,59 @@
-# Presets and recoverable representation
+# Physical representation
 
-The public starting collection is deliberately small. Presets are construction
-policy, and may change after measurement; they are not persisted format IDs or
-claims that one layout always wins. The parameter H is zero, eight or sixteen
-bits, no greater than K, and defaults to zero for every preset. Head separation
-is independent of the remaining-payload policy: `preset_format<20, preset::bulk_x86, 8>`
-combines an eight-bit head with the x86 bulk choice for its 12-bit payload.
+A value has **K** logical bits. **H** head bits separate its highest one or two
+bytes into row-ordered planes; H is 0 (no head), 8 or 16 and cannot exceed K.
+The remaining **payload** has K−H bits. Its **body** holds the upper whole bytes,
+and its **residual** holds the lowest `k_tail = R = (K−H) % 8` bits of every value.
+R=0 means there are no residual bits. A 20-bit value with an eight-bit head has a 12-bit payload:
+one body byte and four residual bits. Here “tail” means residual bits, not a
+partially occupied final tile.
+
+Local and striped formats arrange these payload pieces into physical tiles.
+The owner supplies each present plane's origin and tile stride in bytes, so
+payload and heads can occupy separate buffers or interleave with other fields.
+Neither placement nor the byte law selects an ISA or an execution style.
+
+## Byte-layout tour
+
+Local uses eight-row tiles. For payload width 11, values 8..15 have body byte 1
+and residuals 0..7. Transposing their low three bits produces residual bytes
+`aa cc f0` after the eight body bytes. In residual byte b, bit j holds bit b of
+original tile row j; body bytes are little-endian per row.
+
+![Left: Local11 values 8 through 15 become eight 01 body bytes and residual bitplanes aa, cc, f0. Right: a 64-row K20/H8 tile occupies 64 body bytes, 32 stripe bytes and 64 head bytes, followed by a preserved 32-byte gap.](images/local-and-placement.svg)
+
+The right pane follows [ordinary.cpp](../examples/seriespack/ordinary.cpp).
+Interleaving the planes and reserving a sibling gap are owner placement choices
+within the same physical format.
+
+## Striped residuals
+
+A stripe contains 32 bytes. At lane j, its byte carries residual bits from rows
+j, j+32, and so on within the physical tile. The figure shows one lane; the same
+mapping repeats independently at byte offsets 0..31 of each stripe. Its labels
+identify the source row group and residual bit, including the deliberately
+nonlinear R=3 and R=6 mappings.
+
+![One byte lane of each tail-only striped format for residual widths 1 through 7, mapping source row groups and bits into packed stripe bytes.](images/striped-tiles.svg)
+
+For a tail-only payload, K−H=R with R=1..7 and there are no body bytes. Each tile holds
+`G = 8/gcd(R,8)` groups of 32 rows in `S = R/gcd(R,8)` stripes: **32G rows and
+32S payload bytes**. For example, R=3 holds 256 rows in three stripes, or 96 bytes.
+Any separated head planes add their own storage. Mixed payloads such as the
+12-bit example retain this residual mapping while placing body bytes alongside
+the stripes; their offsets are part of the versioned law below.
+
+Allocate the full occupied storage for the last tile even when only some rows
+are logical values. Construction zeroes unused final-tile positions in owned
+fields and preserves unowned stride gaps.
+
+## Preset policy
+
+Presets are a small set of construction policies that can change after
+measurement. They do not identify persisted formats or promise that one layout
+always wins. Head separation is independent of the payload policy and defaults
+to zero: `preset_format<20, preset::bulk_x86, 8>` requests the physical tour's
+eight-bit head and x86 bulk choice for its 12-bit payload.
 
 | Preset | Striped remaining widths K−H | Intended starting point |
 | --- | --- | --- |
@@ -38,36 +86,7 @@ and validation, but does not expose 206 named recipes. Borderline choices:
   remains the simpler basis. Measurements decide whether larger grouping helps.
 - CPS is an execution choice, never a different container or physical format.
 
-## Byte-layout tour
-
-For Local payload width 11, each eight-row tile holds eight high payload bytes
-followed by three residual bitplane bytes. Values 8..15 have high byte 1; their
-low three bits are 0..7:
-
-```text
-logical values:  8  9 10 11 12 13 14 15
-payload bytes:  01 01 01 01 01 01 01 01 | aa cc f0
-                 row-ordered high bits  | low-bit planes 0, 1, 2
-```
-
-Within each residual byte, bit j belongs to original tile row j. The body is
-little-endian per row; its residual bits are the low bits of the logical value.
-Head separation removes the highest one or two bytes into their own row-ordered
-planes, independent of this remaining-payload law.
-
-The [ordinary example](../examples/seriespack/ordinary.cpp) interleaves a Striped12 payload
-and eight-bit head for a 20-bit value in a single partition:
-
-| Within each 64-row tile's 192-byte placement stride | Occupancy |
-| --- | --- |
-| 0..95 | 12-bit striped payload |
-| 96..159 | Highest byte for each original row |
-| 160..191 | Gap, preserved for an owner/sibling |
-
-Both planes have stride 192; their origins differ by 96 bytes. This is a placement
-choice, not a different descriptor family or an execution policy.
-
-## Descriptor v1
+## Recovery and descriptor v1
 
 [representation.h](../include/ikea/seriespack/representation.h) supplies a 40-byte,
 little-endian descriptor and checked parsing. It records the resolved physical
@@ -83,10 +102,11 @@ choice, not a preset name. Unknown versions, tags and reserved fields fail close
 | 8..15 | Logical count, unsigned little-endian u64 |
 | 16..39 | Payload, head0, head1 tile strides, three little-endian u64 values; absent planes have stride zero |
 
-Engine retains each plane's partition/object identity and offset alongside the
-descriptor, and retains expression-node identities, transform semantics and
-edges for compound containers. Neither raw pointers nor the in-process recorder's
-source addresses are a persistence format. Different segments in one collection
+The owner must retain each plane's partition/object identity and offset alongside
+the descriptor, plus expression-node identities, transform semantics and edges for
+compound containers. Their persistence schema belongs to Engine's integration
+design. Neither raw pointers nor the in-process recorder's source addresses
+are a persistence format. Different segments in one collection
 may retain different descriptors indefinitely. Recovery resolves their actual
 descriptions and owner mappings; it must never rerun a current preset to guess
 old bytes.
@@ -100,19 +120,14 @@ possible composition.
 
 Version 1's byte law is executable in [wire.h](../include/ikea/seriespack/detail/wire.h)
 and [point.h](../include/ikea/seriespack/detail/point.h), with independent prior-wire
-tests. Local holds eight positions per tile: high payload bytes in row order,
-then R bitplanes, each byte holding that residual bit for eight rows. Striped
-uses 32-byte lanes and its versioned `tail_bit`, `body_offset` and `stripe_offset`
-maps; its physical tile is 32×(8/gcd(R,8)) rows. Head planes hold successive
-leading bytes in original row order. Native byte bodies are little-endian.
-Construction zeroes final-tile slack in each owned field. Any future change to
-these laws needs a new physical version, regardless of unchanged preset names.
+tests. The layouts above, including head order, body endianness and slack policy,
+belong to that law. Changes need a new physical version, regardless of unchanged
+preset names.
 
-For exact striped recovery, let R be payload width modulo eight, g = floor(row/32)
-and lane = row modulo 32 within a physical tile. Residual bit b is stored at
+For exact striped recovery, let g = floor(row/32) and lane = row modulo 32
+within a physical tile. Residual bit b is stored at
 `stripe_offset(floor(tail_bit<R>(g,b)/8)) + lane`, at bit
 `tail_bit<R>(g,b) modulo 8`. Body bytes use `body_offset(row)` and little-endian
 row values shifted right by R. The executable mapping includes the intentionally
 nonlinear R=3 and R=6 cases; the [frozen independent fixture](../test/seriespack/reference/README.md)
-retains the same law with different implementation. Those mappings, head order,
-body endianness and slack policy belong to v1, not to a mutable preset heuristic.
+retains the same law with different implementation.

@@ -1,21 +1,24 @@
 # Using SeriesPack
 
-Build and run [ordinary.cpp](../examples/seriespack/ordinary.cpp) with `ikea_example_seriespack_ordinary`.
-It constructs a 20-bit array with a separated head, replaces a point and a range, reads it,
-checks failures and serializes its physical description.
+SeriesPack stores fixed-width unsigned values in caller-owned bytes. Choose a
+representation, attach its storage, and prepare bindings for repeated reads or
+mutations. [ordinary.cpp](../examples/seriespack/ordinary.cpp) demonstrates this
+with a 20-bit array: construction, point/range replacement, reads, failures and
+physical-description serialization. Build and run it with `ikea_example_seriespack_ordinary`.
 
 ## Choose and place the representation
 
 Include `<ikea/seriespack.h>` and link `ikea::seriespack`.
 `preset_format<20, preset::bulk_x86, 8>` selects eight separated head bits and a
-striped 12-bit payload. [Three presets](representation.md) cover uniform Local storage and
-width-selected bulk storage tuned for x86 or ARM. Head separation is the independent
-H argument; it defaults to zero for every preset. `format<K, geometry, H>` selects the physical law explicitly.
+striped 12-bit payload. The [physical tour](representation.md#byte-layout-tour)
+shows those bytes; the [preset catalogue](representation.md#preset-policy) explains
+the available starting choices. Head separation is the independent H argument and
+defaults to zero. `format<K, geometry, H>` selects the physical law explicitly.
 
 SeriesPack borrows storage; the owner acquires and places bytes. For each present
 plane, supply a byte span and a **tile stride in bytes**. Planes are payload,
-highest byte, and next-highest byte. A Local tile has eight positions; a striped
-tile has its format's `tile_rows`. Allocate full occupied final-tile storage,
+highest byte, and next-highest byte. Use the format's `tile_rows` to size placement.
+Allocate full occupied final-tile storage,
 even for an incomplete logical tile. `describe_preset<F>` can suggest tight or
 cacheline strides; it does not allocate.
 
@@ -33,7 +36,7 @@ auto read = sp::bind_decoder<std::uint32_t>(*storage);
 `attach` inspects metadata, not bytes. It checks full occupied extents, stride,
 64-byte payload alignment, arithmetic overflow and occupied-field overlap.
 Disjoint fields may interleave inside overlapping span envelopes; gaps remain
-owned by their siblings. See the [physical tour](representation.md) for an example.
+owned by their siblings, as in the physical tour's shared-partition example.
 
 The named view, prepared mutation and byte owner remain alive at stable addresses
 while the erased operations borrow them. Copying a view copies a borrow. Replacing

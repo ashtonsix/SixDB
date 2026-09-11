@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="552" viewBox="0 0 1280 552" role="img" aria-labelledby="title description">
+<title id="title">Shared native bodies, inline or CPS execution</title>
+<desc id="description">The rank_signed and selected_rank_sum bodies from pipeline.cpp are reused in inline and CPS execution. Native values travel with original coordinates and activity. CPS completion returns to the owning driver; scheduler suspension is outside the stages.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8" fill="#586579"/></marker></defs>
+<rect width="1280" height="100%" fill="white"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#233047" font-size="21">
+<text x="32" y="42" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">Shared native bodies, different invocation</text>
+<text x="32" y="80" font-size="22" font-weight="normal" fill="#586579" text-anchor="start">pipeline.cpp · raw 8-bit patterns → signed-order ranks → selected sum of ranks</text>
+<text x="32" y="180" font-size="18" font-weight="bold" fill="#586579" text-anchor="start">INLINE</text>
+<g data-layout="card">
+<rect x="200" y="120" width="352" height="104" rx="8" fill="#eef5fc" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="224" y="160" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">rank_signed</text>
+<text x="224" y="196" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Native rank transform</text>
+</g>
+<g data-layout="card">
+<rect x="624" y="120" width="352" height="104" rx="8" fill="#edf8f6" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="648" y="160" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">selected_rank_sum</text>
+<text x="648" y="196" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Cutoff and rank accumulation</text>
+</g>
+<path d="M128,172 H192" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M552,172 H616" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M976,172 H1032" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="32" y="384" font-size="18" font-weight="bold" fill="#586579" text-anchor="start">CPS</text>
+<g data-layout="card">
+<rect x="200" y="324" width="352" height="104" rx="8" fill="#eef5fc" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="224" y="364" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">rank_signed</text>
+<text x="224" y="400" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">stage wrapper</text>
+</g>
+<g data-layout="card">
+<rect x="624" y="324" width="352" height="104" rx="8" fill="#edf8f6" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="648" y="364" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">selected_rank_sum</text>
+<text x="648" y="400" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">stage wrapper</text>
+</g>
+<path d="M128,376 H192" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M552,376 H616" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M976,376 H1032" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="1050" y="180" font-size="22" font-weight="normal" fill="#233047" text-anchor="start">return to caller</text>
+<path d="M32,248 H1248" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
+<text x="200" y="292" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Same authored bodies inside the wrappers</text>
+<text x="1050" y="368" font-size="22" font-weight="normal" fill="#233047" text-anchor="start">completion</text>
+<text x="1050" y="398" font-size="22" font-weight="normal" fill="#233047" text-anchor="start">returns to driver</text>
+<path d="M32,460 H1248" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
+<text x="32" y="496" font-size="21" font-weight="normal" fill="#586579" text-anchor="start">Native values travel with original row coordinates and activity.</text>
+<text x="32" y="526" font-size="21" font-weight="normal" fill="#586579" text-anchor="start">The owner may suspend after return to the driver.</text>
+</g></svg>

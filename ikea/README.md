@@ -9,19 +9,25 @@ SeriesPack is the first implemented component, not the extent of Ikea's scope.
 
 | Component | Purpose and current status |
 | --- | --- |
-| [SeriesPack](seriespack/usage.md) | Headless packed unsigned arrays, 1–64 bits wide; implemented reads, mutation and composition |
+| [SeriesPack](seriespack/usage.md) | Packed unsigned arrays, 1–64 bits wide; implemented reads, mutation and composition |
 | TuplePack | Reserved stub; format and operations need a probe |
 | StreamPack | Reserved stub; format and operations need a probe |
 
-Engine owns database semantics, schema, segment definitions and representation
-selection. Loom owns buffer acquisition and scheduling; Orbital provides machine
-services. Ikea operations expose the contributions and lifetime requirements those
-owners need, while kernel bodies concentrate on their computation. These boundaries
-also let standalone data structures use blocks without adopting record semantics.
+Preparing an operation brings together a logical expression, its physical placement
+and an execution recipe under the container's contract. Ordinary calls then reuse
+that binding. A nested child can change layout or owner without changing its
+parent's logical contract; execution style remains a separate choice.
 
-The current executable guides use SeriesPack to demonstrate the composition and
-integration model. Future components should earn their own contracts through use;
-they need not imitate SeriesPack's array interface.
+![Logical expression, physical placement and execution recipe meet at operation preparation, followed by repeated ordinary calls. A segment inset illustrates different representations under one collection contract.](images/architecture.svg)
+
+The segment inset illustrates the intended owner integration. Engine is responsible
+for database semantics and representation selection; Loom for buffer acquisition
+and scheduling; Orbital for machine services. Their production protocols remain
+open. Ikea's [integration guide](integration.md) explains the contributions and
+lifetimes exposed by implemented operations and exercised by teaching adapters.
+
+The guides use SeriesPack as a concrete example. Future components can have their
+own contracts without adopting its array interface.
 
 | Reader | Start here | Executable |
 | --- | --- | --- |
@@ -34,21 +40,6 @@ they need not imitate SeriesPack's array interface.
 [Capabilities and deliberate limits](capabilities.md) describe the current implementation.
 [Campaign evidence](../workbench/spikes/ikea-composition/ikea2-campaign/README.md)
 has its own home, including prior implementations and experimental alternatives.
-
-Logical composition, physical placement and execution can change independently:
-
-```mermaid
-flowchart LR
-    S["Engine semantics and container contract"] --> L["Logical tree: fields, joins, transforms"]
-    L --> B["Admitted operation binding"]
-    P["Physical placement: tiles, heads, strides, owners"] --> B
-    E["Execution: fused, inline, CPS; ISA and grain"] --> B
-    B --> R["Ordinary read or mutation call"]
-```
-
-A nested child can change its layout and owner while its parent keeps the same
-logical contract. Different segments in the same collection can keep different
-representations. Neither choice forces a different execution style.
 
 ## Build and run
 

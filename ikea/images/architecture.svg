@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="664" viewBox="0 0 1280 664" role="img" aria-labelledby="title description">
+<title id="title">Ikea: independent choices and prepared operations</title>
+<desc id="description">Under a fixed logical container contract, admissible logical expressions, physical placement and execution recipes are prepared once. Ordinary read and mutation calls reuse that binding. The integration model allows different segments to keep different representations.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8" fill="#586579"/></marker></defs>
+<rect width="1280" height="100%" fill="white"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#233047" font-size="21">
+<text x="32" y="42" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">Ikea · independent choices, ordinary calls</text>
+<text x="32" y="80" font-size="22" font-weight="normal" fill="#586579" text-anchor="start">SeriesPack example</text>
+<text x="900" y="80" font-size="18" font-weight="bold" fill="#586579" text-anchor="start">REPEATED EXECUTION</text>
+<rect x="32" y="104" width="808" height="56" rx="6" fill="#f0f4f8" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="436" y="140" font-size="25" font-weight="bold" fill="#233047" text-anchor="middle">Admissible choices under one logical contract</text>
+<g data-layout="card">
+<rect x="32" y="208" width="248" height="132" rx="8" fill="#edf8f6" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="56" y="248" font-size="22" font-weight="bold" fill="#233047" text-anchor="start">Logical expression</text>
+<text x="56" y="284" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Fields and bit joins</text>
+<text x="56" y="312" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Nested substitution</text>
+</g>
+<g data-layout="card">
+<rect x="312" y="208" width="248" height="132" rx="8" fill="#eef5fc" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="336" y="248" font-size="22" font-weight="bold" fill="#233047" text-anchor="start">Physical placement</text>
+<text x="336" y="284" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Geometry and planes</text>
+<text x="336" y="312" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Strides and owners</text>
+</g>
+<g data-layout="card">
+<rect x="592" y="208" width="248" height="132" rx="8" fill="#f3effc" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="616" y="248" font-size="22" font-weight="bold" fill="#233047" text-anchor="start">Execution recipe</text>
+<text x="616" y="284" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Fused · inline · CPS</text>
+<text x="616" y="312" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">ISA, carrier and grain</text>
+</g>
+<path d="M156,160 V200" fill="none" stroke="#d9e0e9" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M436,160 V200" fill="none" stroke="#d9e0e9" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M716,160 V200" fill="none" stroke="#d9e0e9" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M156,340 V376 H716 V340" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M436,340 V400" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<g data-layout="card">
+<rect x="288" y="408" width="296" height="104" rx="8" fill="#f6f8fb" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="312" y="448" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Admit + bind once</text>
+<text x="312" y="484" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Selected realization</text>
+</g>
+<path d="M868,104 V512" fill="none" stroke="#d9e0e9" stroke-width="1.8" stroke-dasharray="6 5"/>
+<g data-layout="card">
+<rect x="900" y="208" width="348" height="132" rx="8" fill="#f6f8fb" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="924" y="248" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Read or mutate</text>
+<text x="924" y="284" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Ordinary operation call</text>
+<text x="924" y="312" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Borrowed data and local outputs</text>
+</g>
+<path d="M584,460 H884 V274 H892" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="728" y="442" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">prepared operation</text>
+<path d="M1248,274 H1264 V372 H932 V348" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="1072" y="402" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">Reuse the admitted binding</text>
+<text x="1072" y="429" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">while its mapping remains valid</text>
+<rect x="32" y="552" width="1216" height="80" rx="6" fill="#fafbfc" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="56" y="584" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">Integration model</text>
+<text x="56" y="612" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Same field contract across segments</text>
+<rect x="432" y="570" width="384" height="44" rx="4" fill="#eef5fc" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="624" y="599" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">Segment A: field X · Local</text>
+<rect x="840" y="570" width="384" height="44" rx="4" fill="#edf8f6" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="1032" y="599" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">Segment B: field X · striped</text>
+</g></svg>

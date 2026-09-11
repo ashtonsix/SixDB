@@ -6,9 +6,15 @@ They use only Ikea headers and the standard library.
 
 ## Replace a nested child
 
-The composition example describes a 12-bit value with an eight-bit head and a
-four-bit residual. It replaces the residual with a complete nested value
-expression whose storage uses a different physical tile:
+The composition example replaces a four-bit residual with a complete nested
+value expression, preserving the surrounding 12-bit contract.
+
+![Nested substitution preserves the head source and replaces the residual storage](images/substitution.svg)
+
+*Head bits 4–11 keep their source. Residual bits 0–3 are supplied by a
+Striped64 child. Reads, writes and effects follow the selected leaves.*
+
+The caller constructs or migrates the selected storage; this example initializes it.
 
 ```cpp
 const auto original = cp::describe(*parent);
@@ -17,12 +23,10 @@ const auto expression = cp::with_payload(
 const auto writer = cp::prepare_mutation(expression, count);
 ```
 
-The head still belongs to the original view. The residual now belongs to the
-child view. `with_tail` and `with_payload` preserve logical widths at compilation;
+`with_tail` and `with_payload` preserve logical widths at compilation;
 admission checks actual leaf extents and writable overlap. Descriptions own their
 small nodes and borrow named source views. Keep every used source alive.
 
-Initialization, filtered reading and issued-byte effects all follow the new tree.
 Retired fields do not participate in admission, preservation reads or writes.
 The exhaustive [substitution test](../test/seriespack/mutation/substitution.cpp) makes retired
 bytes inaccessible and replaces multiple owners, including a nested value node.
@@ -64,10 +68,18 @@ including preserved neighbors. Coverage hooks must be infallible after admission
 
 ## Share inline and CPS execution
 
-The same `rank_signed` and `selected_rank_sum` bodies are called directly and
-wrapped by `Plan::stage<&body>`. A stage receives borrowed bindings, original row,
-activity, native vectors and its ordinal. It returns updated values/activity and
-a stop flag. A stop jumps to completion; it is not a scheduler suspension.
+The pipeline example calls the same `rank_signed` and `selected_rank_sum` bodies
+directly and through `Plan::stage<&body>` wrappers.
+
+![Shared signed-rank bodies executed inline or through CPS wrappers](images/execution.svg)
+
+*Both executions carry native values, original row coordinates and activity.
+The consumer sums selected ranks; explicit suspension belongs after return to
+the driver.*
+
+A stage receives borrowed bindings, original row, activity, native vectors and
+its ordinal. It returns updated values/activity and a stop flag. A stop jumps to
+completion; it is not a scheduler suspension.
 
 `chain<K>` carries 16 values. `packet_chain<K,N>` carries 16/32/64 when its native
 carrier fits at most eight vector arguments. Native vectors are flattened at the

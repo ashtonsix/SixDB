@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="768" viewBox="0 0 1280 768" role="img" aria-labelledby="title description">
+<title id="title">Retained-lease mutation: local work and owner progress</title>
+<desc id="description">The owner acquires a lease, admits and reserves the operation, invokes bounded work and receives a completed work frontier. Ikea&#x27;s invocation performs local writes, contributions and issued-byte coverage. The owner either retains live state and validates before resuming or seals data, effects and summary validity and coordinates visibility. Dirty cancellation requires owner resolution.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8" fill="#586579"/></marker></defs>
+<rect width="1280" height="100%" fill="white"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#233047" font-size="21">
+<text x="32" y="42" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">Retained-lease teaching adapter</text>
+<text x="32" y="80" font-size="22" font-weight="normal" fill="#586579" text-anchor="start">Owner progress surrounds complete Ikea invocations</text>
+<text x="32" y="128" font-size="18" font-weight="bold" fill="#586579" text-anchor="start">OWNER</text>
+<g data-layout="card">
+<rect x="32" y="152" width="268" height="132" rx="8" fill="#f6f8fb" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="56" y="192" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Acquire + prepare</text>
+<text x="56" y="228" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Lease · admission</text>
+<text x="56" y="256" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Effect capacity reserved</text>
+</g>
+<g data-layout="card">
+<rect x="348" y="152" width="268" height="132" rx="8" fill="#f6f8fb" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="372" y="192" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Invoke</text>
+<text x="372" y="228" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Bounded local</text>
+<text x="372" y="256" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">work unit</text>
+</g>
+<g data-layout="card">
+<rect x="664" y="152" width="268" height="132" rx="8" fill="#f6f8fb" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="688" y="192" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Returned frontier</text>
+<text x="688" y="228" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Completed work</text>
+<text x="688" y="256" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">and effects recorded</text>
+</g>
+<path d="M300,218 H340" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<g data-layout="card">
+<rect x="980" y="152" width="268" height="132" rx="8" fill="#f6f8fb" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="1004" y="192" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Seal + coordinate</text>
+<text x="1004" y="228" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Data + summary validity</text>
+<text x="1004" y="256" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Effects + publication</text>
+</g>
+<path d="M798,152 V112 H1114 V144" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="956" y="100" font-size="19" font-weight="normal" fill="#586579" text-anchor="middle">operation complete</text>
+<g data-layout="card">
+<rect x="348" y="332" width="584" height="104" rx="8" fill="#eef5fc" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="372" y="372" font-size="18" font-weight="bold" fill="#233047" text-anchor="start">IKEA INVOCATION</text>
+<text x="372" y="408" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Local writes · contributions · byte coverage</text>
+</g>
+<path d="M482,284 V324" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M798,332 V292" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="32" y="372" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Native kernels</text>
+<text x="32" y="408" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">No scheduler boundary</text>
+<text x="32" y="436" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">inside the work unit</text>
+<g data-layout="card">
+<rect x="664" y="500" width="584" height="160" rx="8" fill="#f3effc" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="688" y="540" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Retain across wait or rotation</text>
+<text x="688" y="576" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Lease · views/binding · mapping generation</text>
+<text x="688" y="604" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Input/selection · plan · next row</text>
+<text x="688" y="632" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Unfinished summary · effects</text>
+</g>
+<path d="M932,248 H956 V476 H956 V492" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="980" y="476" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">after return</text>
+<path d="M664,580 H324 V308 H372 V292" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="32" y="560" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Validate mapping/generation</text>
+<text x="32" y="588" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">and cancellation, then resume</text>
+<text x="32" y="704" font-size="21" font-weight="normal" fill="#586579" text-anchor="start">Cancellation after writes needs owner resolution.</text>
+<text x="32" y="736" font-size="21" font-weight="normal" fill="#586579" text-anchor="start">Rejected calls leave their data, summary and effects unchanged; earlier chunks remain.</text>
+</g></svg>

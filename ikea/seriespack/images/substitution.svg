@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="624" viewBox="0 0 1280 624" role="img" aria-labelledby="title description">
+<title id="title">Substitute a nested child while preserving the parent contract</title>
+<desc id="description">A 12-bit value keeps its eight-bit head from the parent source while its four-bit residual is replaced by a complete child expression backed by Striped64. The parent head still tiles eight rows at a time. The retired residual is not used by reads, writes or effects.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8" fill="#586579"/></marker></defs>
+<rect width="1280" height="100%" fill="white"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#233047" font-size="21">
+<text x="32" y="42" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">A different child, the same 12-bit contract</text>
+<path d="M640,88 V592" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
+<text x="32" y="96" font-size="18" font-weight="bold" fill="#586579" text-anchor="start">BEFORE</text>
+<text x="672" y="96" font-size="18" font-weight="bold" fill="#586579" text-anchor="start">AFTER SUBSTITUTION</text>
+<rect x="104" y="120" width="288" height="80" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<rect x="392" y="120" width="144" height="80" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="248" y="152" font-size="24" font-weight="bold" fill="#233047" text-anchor="middle">8-bit head</text>
+<text x="248" y="180" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">bits 4…11</text>
+<text x="464" y="152" font-size="22" font-weight="bold" fill="#233047" text-anchor="middle">4-bit tail</text>
+<text x="464" y="180" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">bits 0…3</text>
+<rect x="744" y="120" width="288" height="80" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<rect x="1032" y="120" width="144" height="80" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="888" y="152" font-size="24" font-weight="bold" fill="#233047" text-anchor="middle">8-bit head</text>
+<text x="888" y="180" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">bits 4…11</text>
+<text x="1104" y="152" font-size="22" font-weight="bold" fill="#233047" text-anchor="middle">4-bit tail</text>
+<text x="1104" y="180" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">bits 0…3</text>
+<g data-layout="card">
+<rect x="32" y="248" width="272" height="132" rx="8" fill="#eef5fc" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="56" y="288" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Parent head</text>
+<text x="56" y="324" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Original source</text>
+<text x="56" y="352" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">8-row tiles</text>
+</g>
+<g data-layout="card">
+<rect x="336" y="248" width="272" height="132" rx="8" fill="#fff8e8" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="360" y="288" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Parent residual</text>
+<text x="360" y="324" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Original source</text>
+<text x="360" y="352" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Local8</text>
+</g>
+<path d="M248,200 V224 H168 V240" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M464,200 V224 H472 V240" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<g data-layout="card">
+<rect x="672" y="248" width="272" height="132" rx="8" fill="#eef5fc" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="696" y="288" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Parent head</text>
+<text x="696" y="324" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Same source</text>
+<text x="696" y="352" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">8-row tiles</text>
+</g>
+<g data-layout="card">
+<rect x="976" y="248" width="272" height="132" rx="8" fill="#fff8e8" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="1000" y="288" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Child expression</text>
+<text x="1000" y="324" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">New source · Striped64</text>
+<text x="1000" y="352" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Complete 4-bit value</text>
+</g>
+<path d="M888,200 V224 H808 V240" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M1104,200 V224 H1112 V240" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="32" y="428" font-size="22" font-weight="bold" fill="#233047" text-anchor="start">Storage over 64 original rows</text>
+<text x="672" y="428" font-size="22" font-weight="bold" fill="#233047" text-anchor="start">Storage over the same 64 rows</text>
+<text x="32" y="475" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">head</text>
+<text x="32" y="531" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">tail</text>
+<rect x="100" y="450" width="60" height="36" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="130" y="475" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="164" y="450" width="60" height="36" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="194" y="475" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="228" y="450" width="60" height="36" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="258" y="475" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="292" y="450" width="60" height="36" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="322" y="475" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="356" y="450" width="60" height="36" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="386" y="475" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="420" y="450" width="60" height="36" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="450" y="475" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="484" y="450" width="60" height="36" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="514" y="475" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="548" y="450" width="60" height="36" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="578" y="475" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="100" y="506" width="60" height="36" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="130" y="531" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="164" y="506" width="60" height="36" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="194" y="531" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="228" y="506" width="60" height="36" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="258" y="531" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="292" y="506" width="60" height="36" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="322" y="531" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="356" y="506" width="60" height="36" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="386" y="531" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="420" y="506" width="60" height="36" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="450" y="531" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="484" y="506" width="60" height="36" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="514" y="531" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="548" y="506" width="60" height="36" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="578" y="531" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<text x="672" y="475" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">head</text>
+<text x="672" y="531" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">tail</text>
+<rect x="740" y="450" width="60" height="36" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="770" y="475" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="804" y="450" width="60" height="36" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="834" y="475" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="868" y="450" width="60" height="36" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="898" y="475" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="932" y="450" width="60" height="36" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="962" y="475" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="996" y="450" width="60" height="36" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="1026" y="475" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="1060" y="450" width="60" height="36" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="1090" y="475" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="1124" y="450" width="60" height="36" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="1154" y="475" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="1188" y="450" width="60" height="36" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="1218" y="475" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="740" y="506" width="508" height="36" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="994" y="531" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">64 rows · one child tile</text>
+<text x="32" y="592" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Numbers in tiles are row counts, not byte sizes.</text>
+<text x="672" y="592" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Retired residual: no reads, writes or effects.</text>
+</g></svg>

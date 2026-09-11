@@ -18,7 +18,7 @@ int main() {
     assert(parent && child);
 
     // A complete nested value expression replaces the parent's residual child.
-    // Its physical tiling changes from Local8 to Striped256; heads keep theirs.
+    // Its physical tiling changes from Local8 to Striped64; heads keep theirs.
     const auto original = cp::describe(*parent);
     const auto expression =
         cp::with_payload(original, cp::with_tail(original.payload, cp::describe(*child)));
