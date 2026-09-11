@@ -1,0 +1,1984 @@
+{
+  "zen5": {
+    "placements": {
+      "object_sha256": "6c1be6c96c7ff6ad5c1dce70c2eb258d9def4bcc0017a1497624b2840f8e8c22",
+      "library_sha256": "4e079e8e78ecf6e46154af4730a4f8adcc95be38e3d72e1b701f169b484afecc",
+      "placement_scope": "Raw operation section only; captured public decoder core remains fixed in .text",
+      "variants": {
+        "0": {
+          "binary_sha256": "3fd6db5f0fe414227e50560b1c216024d3a6f5fee686d8a6aa8c63662768b6d6",
+          "rodata_sha256": "cffa3e72762a7dfb4a258fe69d5496b29800d55dad00e8344a4f59c73ec1ad4e",
+          "functions": {
+            "void (anonymous namespace)::operation<0u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4504576,
+              "entry_mod64": 0,
+              "size": 56,
+              "fixed_public_core": false,
+              "normalized_sha256": "acffde2464d2597f657fad8e3f006fab220e49a3328a49ba94f870ddc3271431",
+              "instructions": 13,
+              "calls": 1,
+              "stack_references": 7,
+              "back_edges": []
+            },
+            "void (anonymous namespace)::operation<1u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4504640,
+              "entry_mod64": 0,
+              "size": 699,
+              "fixed_public_core": false,
+              "normalized_sha256": "d3ee6bf4ffc5ceb7ff49a8dcf390bfb8d082cf7bc011a8824224a6b14a6edc30",
+              "instructions": 157,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 106,
+                  "target_offset": 64,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 239,
+                  "target_offset": 192,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 593,
+                  "target_offset": 288,
+                  "target_mod64": 32
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<2u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4505344,
+              "entry_mod64": 0,
+              "size": 811,
+              "fixed_public_core": false,
+              "normalized_sha256": "06f1f09ac3ffadd2f2caf6aa608295a3a92168dc25fe8c05d1bdc8cb09f8c19a",
+              "instructions": 178,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 106,
+                  "target_offset": 64,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 234,
+                  "target_offset": 192,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 351,
+                  "target_offset": 304,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 705,
+                  "target_offset": 400,
+                  "target_mod64": 16
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<3u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4506160,
+              "entry_mod64": 48,
+              "size": 923,
+              "fixed_public_core": false,
+              "normalized_sha256": "348648c070acb9a9216d731a65544f345c27e69789e7390aa63bccda22d7efaf",
+              "instructions": 190,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 218,
+                  "target_offset": 80,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 346,
+                  "target_offset": 304,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 463,
+                  "target_offset": 416,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 817,
+                  "target_offset": 512,
+                  "target_mod64": 48
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<4u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4507088,
+              "entry_mod64": 16,
+              "size": 1035,
+              "fixed_public_core": false,
+              "normalized_sha256": "4834d2dce0bc3853f28fa73a1fea6d88ad6cbf35da7afdd68372b1db2e552e97",
+              "instructions": 205,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 339,
+                  "target_offset": 80,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 458,
+                  "target_offset": 416,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 575,
+                  "target_offset": 528,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 929,
+                  "target_offset": 624,
+                  "target_mod64": 0
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<5u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4508128,
+              "entry_mod64": 32,
+              "size": 233,
+              "fixed_public_core": false,
+              "normalized_sha256": "d36c5a523440b2475ec0b6b3fe7a831e8116c9f64de5f0422b96e68dbb914382",
+              "instructions": 35,
+              "calls": 0,
+              "stack_references": 0,
+              "back_edges": [
+                {
+                  "source_offset": 223,
+                  "target_offset": 64,
+                  "target_mod64": 32
+                }
+              ]
+            },
+            "void ikea::seriespack::detail::(anonymous namespace)::decode_complete<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 0u, unsigned char>(ikea::seriespack::basic_placement<std::byte const> const&, unsigned long, unsigned long, unsigned char*)": {
+              "address": 2311040,
+              "entry_mod64": 0,
+              "size": 1414,
+              "fixed_public_core": true,
+              "normalized_sha256": "78b042d50e12d2b3f79ee9fd84400e1351a8ca9c4cbf38a7a85230483d20e1e6",
+              "instructions": 289,
+              "calls": 0,
+              "stack_references": 0,
+              "back_edges": [
+                {
+                  "source_offset": 511,
+                  "target_offset": 256,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 614,
+                  "target_offset": 576,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 735,
+                  "target_offset": 688,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 1081,
+                  "target_offset": 784,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 1305,
+                  "target_offset": 1136,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 1403,
+                  "target_offset": 1360,
+                  "target_mod64": 16
+                }
+              ]
+            }
+          }
+        },
+        "16": {
+          "binary_sha256": "096de07d0c4dc1e7bacebb34b622e80f56082bad00287b459df4d5d71b9b9271",
+          "rodata_sha256": "cffa3e72762a7dfb4a258fe69d5496b29800d55dad00e8344a4f59c73ec1ad4e",
+          "functions": {
+            "void (anonymous namespace)::operation<0u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4504592,
+              "entry_mod64": 16,
+              "size": 56,
+              "fixed_public_core": false,
+              "normalized_sha256": "acffde2464d2597f657fad8e3f006fab220e49a3328a49ba94f870ddc3271431",
+              "instructions": 13,
+              "calls": 1,
+              "stack_references": 7,
+              "back_edges": []
+            },
+            "void (anonymous namespace)::operation<1u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4504656,
+              "entry_mod64": 16,
+              "size": 699,
+              "fixed_public_core": false,
+              "normalized_sha256": "d3ee6bf4ffc5ceb7ff49a8dcf390bfb8d082cf7bc011a8824224a6b14a6edc30",
+              "instructions": 157,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 106,
+                  "target_offset": 64,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 239,
+                  "target_offset": 192,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 593,
+                  "target_offset": 288,
+                  "target_mod64": 48
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<2u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4505360,
+              "entry_mod64": 16,
+              "size": 811,
+              "fixed_public_core": false,
+              "normalized_sha256": "06f1f09ac3ffadd2f2caf6aa608295a3a92168dc25fe8c05d1bdc8cb09f8c19a",
+              "instructions": 178,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 106,
+                  "target_offset": 64,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 234,
+                  "target_offset": 192,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 351,
+                  "target_offset": 304,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 705,
+                  "target_offset": 400,
+                  "target_mod64": 32
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<3u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4506176,
+              "entry_mod64": 0,
+              "size": 923,
+              "fixed_public_core": false,
+              "normalized_sha256": "348648c070acb9a9216d731a65544f345c27e69789e7390aa63bccda22d7efaf",
+              "instructions": 190,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 218,
+                  "target_offset": 80,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 346,
+                  "target_offset": 304,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 463,
+                  "target_offset": 416,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 817,
+                  "target_offset": 512,
+                  "target_mod64": 0
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<4u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4507104,
+              "entry_mod64": 32,
+              "size": 1035,
+              "fixed_public_core": false,
+              "normalized_sha256": "4834d2dce0bc3853f28fa73a1fea6d88ad6cbf35da7afdd68372b1db2e552e97",
+              "instructions": 205,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 339,
+                  "target_offset": 80,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 458,
+                  "target_offset": 416,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 575,
+                  "target_offset": 528,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 929,
+                  "target_offset": 624,
+                  "target_mod64": 16
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<5u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4508144,
+              "entry_mod64": 48,
+              "size": 233,
+              "fixed_public_core": false,
+              "normalized_sha256": "d36c5a523440b2475ec0b6b3fe7a831e8116c9f64de5f0422b96e68dbb914382",
+              "instructions": 35,
+              "calls": 0,
+              "stack_references": 0,
+              "back_edges": [
+                {
+                  "source_offset": 223,
+                  "target_offset": 64,
+                  "target_mod64": 48
+                }
+              ]
+            },
+            "void ikea::seriespack::detail::(anonymous namespace)::decode_complete<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 0u, unsigned char>(ikea::seriespack::basic_placement<std::byte const> const&, unsigned long, unsigned long, unsigned char*)": {
+              "address": 2311040,
+              "entry_mod64": 0,
+              "size": 1414,
+              "fixed_public_core": true,
+              "normalized_sha256": "78b042d50e12d2b3f79ee9fd84400e1351a8ca9c4cbf38a7a85230483d20e1e6",
+              "instructions": 289,
+              "calls": 0,
+              "stack_references": 0,
+              "back_edges": [
+                {
+                  "source_offset": 511,
+                  "target_offset": 256,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 614,
+                  "target_offset": 576,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 735,
+                  "target_offset": 688,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 1081,
+                  "target_offset": 784,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 1305,
+                  "target_offset": 1136,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 1403,
+                  "target_offset": 1360,
+                  "target_mod64": 16
+                }
+              ]
+            }
+          }
+        },
+        "32": {
+          "binary_sha256": "c76ae34ee958d427a39090e55cce5df0cc887c49087e2ddcecd1f591acc9d12e",
+          "rodata_sha256": "cffa3e72762a7dfb4a258fe69d5496b29800d55dad00e8344a4f59c73ec1ad4e",
+          "functions": {
+            "void (anonymous namespace)::operation<0u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4504608,
+              "entry_mod64": 32,
+              "size": 56,
+              "fixed_public_core": false,
+              "normalized_sha256": "acffde2464d2597f657fad8e3f006fab220e49a3328a49ba94f870ddc3271431",
+              "instructions": 13,
+              "calls": 1,
+              "stack_references": 7,
+              "back_edges": []
+            },
+            "void (anonymous namespace)::operation<1u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4504672,
+              "entry_mod64": 32,
+              "size": 699,
+              "fixed_public_core": false,
+              "normalized_sha256": "d3ee6bf4ffc5ceb7ff49a8dcf390bfb8d082cf7bc011a8824224a6b14a6edc30",
+              "instructions": 157,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 106,
+                  "target_offset": 64,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 239,
+                  "target_offset": 192,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 593,
+                  "target_offset": 288,
+                  "target_mod64": 0
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<2u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4505376,
+              "entry_mod64": 32,
+              "size": 811,
+              "fixed_public_core": false,
+              "normalized_sha256": "06f1f09ac3ffadd2f2caf6aa608295a3a92168dc25fe8c05d1bdc8cb09f8c19a",
+              "instructions": 178,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 106,
+                  "target_offset": 64,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 234,
+                  "target_offset": 192,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 351,
+                  "target_offset": 304,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 705,
+                  "target_offset": 400,
+                  "target_mod64": 48
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<3u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4506192,
+              "entry_mod64": 16,
+              "size": 923,
+              "fixed_public_core": false,
+              "normalized_sha256": "348648c070acb9a9216d731a65544f345c27e69789e7390aa63bccda22d7efaf",
+              "instructions": 190,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 218,
+                  "target_offset": 80,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 346,
+                  "target_offset": 304,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 463,
+                  "target_offset": 416,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 817,
+                  "target_offset": 512,
+                  "target_mod64": 16
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<4u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4507120,
+              "entry_mod64": 48,
+              "size": 1035,
+              "fixed_public_core": false,
+              "normalized_sha256": "4834d2dce0bc3853f28fa73a1fea6d88ad6cbf35da7afdd68372b1db2e552e97",
+              "instructions": 205,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 339,
+                  "target_offset": 80,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 458,
+                  "target_offset": 416,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 575,
+                  "target_offset": 528,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 929,
+                  "target_offset": 624,
+                  "target_mod64": 32
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<5u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4508160,
+              "entry_mod64": 0,
+              "size": 233,
+              "fixed_public_core": false,
+              "normalized_sha256": "d36c5a523440b2475ec0b6b3fe7a831e8116c9f64de5f0422b96e68dbb914382",
+              "instructions": 35,
+              "calls": 0,
+              "stack_references": 0,
+              "back_edges": [
+                {
+                  "source_offset": 223,
+                  "target_offset": 64,
+                  "target_mod64": 0
+                }
+              ]
+            },
+            "void ikea::seriespack::detail::(anonymous namespace)::decode_complete<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 0u, unsigned char>(ikea::seriespack::basic_placement<std::byte const> const&, unsigned long, unsigned long, unsigned char*)": {
+              "address": 2311040,
+              "entry_mod64": 0,
+              "size": 1414,
+              "fixed_public_core": true,
+              "normalized_sha256": "78b042d50e12d2b3f79ee9fd84400e1351a8ca9c4cbf38a7a85230483d20e1e6",
+              "instructions": 289,
+              "calls": 0,
+              "stack_references": 0,
+              "back_edges": [
+                {
+                  "source_offset": 511,
+                  "target_offset": 256,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 614,
+                  "target_offset": 576,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 735,
+                  "target_offset": 688,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 1081,
+                  "target_offset": 784,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 1305,
+                  "target_offset": 1136,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 1403,
+                  "target_offset": 1360,
+                  "target_mod64": 16
+                }
+              ]
+            }
+          }
+        },
+        "48": {
+          "binary_sha256": "2fba25f2f1d71774bae25eddc4c4a57d251468d650aae08e7abdfcd117779d7b",
+          "rodata_sha256": "cffa3e72762a7dfb4a258fe69d5496b29800d55dad00e8344a4f59c73ec1ad4e",
+          "functions": {
+            "void (anonymous namespace)::operation<0u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4504624,
+              "entry_mod64": 48,
+              "size": 56,
+              "fixed_public_core": false,
+              "normalized_sha256": "acffde2464d2597f657fad8e3f006fab220e49a3328a49ba94f870ddc3271431",
+              "instructions": 13,
+              "calls": 1,
+              "stack_references": 7,
+              "back_edges": []
+            },
+            "void (anonymous namespace)::operation<1u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4504688,
+              "entry_mod64": 48,
+              "size": 699,
+              "fixed_public_core": false,
+              "normalized_sha256": "d3ee6bf4ffc5ceb7ff49a8dcf390bfb8d082cf7bc011a8824224a6b14a6edc30",
+              "instructions": 157,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 106,
+                  "target_offset": 64,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 239,
+                  "target_offset": 192,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 593,
+                  "target_offset": 288,
+                  "target_mod64": 16
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<2u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4505392,
+              "entry_mod64": 48,
+              "size": 811,
+              "fixed_public_core": false,
+              "normalized_sha256": "06f1f09ac3ffadd2f2caf6aa608295a3a92168dc25fe8c05d1bdc8cb09f8c19a",
+              "instructions": 178,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 106,
+                  "target_offset": 64,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 234,
+                  "target_offset": 192,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 351,
+                  "target_offset": 304,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 705,
+                  "target_offset": 400,
+                  "target_mod64": 0
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<3u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4506208,
+              "entry_mod64": 32,
+              "size": 923,
+              "fixed_public_core": false,
+              "normalized_sha256": "348648c070acb9a9216d731a65544f345c27e69789e7390aa63bccda22d7efaf",
+              "instructions": 190,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 218,
+                  "target_offset": 80,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 346,
+                  "target_offset": 304,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 463,
+                  "target_offset": 416,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 817,
+                  "target_offset": 512,
+                  "target_mod64": 32
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<4u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4507136,
+              "entry_mod64": 0,
+              "size": 1035,
+              "fixed_public_core": false,
+              "normalized_sha256": "4834d2dce0bc3853f28fa73a1fea6d88ad6cbf35da7afdd68372b1db2e552e97",
+              "instructions": 205,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 339,
+                  "target_offset": 80,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 458,
+                  "target_offset": 416,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 575,
+                  "target_offset": 528,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 929,
+                  "target_offset": 624,
+                  "target_mod64": 48
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<5u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 4508176,
+              "entry_mod64": 16,
+              "size": 233,
+              "fixed_public_core": false,
+              "normalized_sha256": "d36c5a523440b2475ec0b6b3fe7a831e8116c9f64de5f0422b96e68dbb914382",
+              "instructions": 35,
+              "calls": 0,
+              "stack_references": 0,
+              "back_edges": [
+                {
+                  "source_offset": 223,
+                  "target_offset": 64,
+                  "target_mod64": 16
+                }
+              ]
+            },
+            "void ikea::seriespack::detail::(anonymous namespace)::decode_complete<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 0u, unsigned char>(ikea::seriespack::basic_placement<std::byte const> const&, unsigned long, unsigned long, unsigned char*)": {
+              "address": 2311040,
+              "entry_mod64": 0,
+              "size": 1414,
+              "fixed_public_core": true,
+              "normalized_sha256": "78b042d50e12d2b3f79ee9fd84400e1351a8ca9c4cbf38a7a85230483d20e1e6",
+              "instructions": 289,
+              "calls": 0,
+              "stack_references": 0,
+              "back_edges": [
+                {
+                  "source_offset": 511,
+                  "target_offset": 256,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 614,
+                  "target_offset": 576,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 735,
+                  "target_offset": 688,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 1081,
+                  "target_offset": 784,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 1305,
+                  "target_offset": 1136,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 1403,
+                  "target_offset": 1360,
+                  "target_mod64": 16
+                }
+              ]
+            }
+          }
+        }
+      },
+      "identical_code_and_constants": true
+    },
+    "first_loops_pad0": {
+      "void (anonymous namespace)::operation<1u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+        "loop_mod64": 0,
+        "instruction_count": 9,
+        "gfni_instructions": 1,
+        "stack_references": 0,
+        "calls": 0,
+        "assembly": [
+          "vmovdqu8\t(%r8), %zmm2 {%k1} {z}",
+          "addq\t$-0x8, %r9",
+          "addq\t$0x30, %r8",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, (%rsi,%rax,8)",
+          "addq\t$0x8, %rax",
+          "cmpq\t$0x7, %r9",
+          "ja\t0x44bc80 <void (anonymous namespace)::operation<1u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)+0x40>"
+        ]
+      },
+      "void (anonymous namespace)::operation<2u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+        "loop_mod64": 0,
+        "instruction_count": 9,
+        "gfni_instructions": 1,
+        "stack_references": 0,
+        "calls": 0,
+        "assembly": [
+          "vmovdqu8\t(%r9), %zmm2 {%k1} {z}",
+          "addq\t$0x30, %r9",
+          "addq\t$-0x8, %r8",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, (%rsi,%rax,8)",
+          "addq\t$0x8, %rax",
+          "cmpq\t$0x7, %r8",
+          "ja\t0x44bf40 <void (anonymous namespace)::operation<2u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)+0x40>"
+        ]
+      },
+      "void (anonymous namespace)::operation<3u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+        "loop_mod64": 0,
+        "instruction_count": 21,
+        "gfni_instructions": 4,
+        "stack_references": 0,
+        "calls": 0,
+        "assembly": [
+          "vmovdqu8\t(%r9), %zmm2 {%k1} {z}",
+          "vmovdqu8\t0x30(%r9), %zmm3 {%k1} {z}",
+          "vmovdqu8\t0x60(%r9), %zmm4 {%k1} {z}",
+          "addq\t$-0x20, %r8",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, (%rsi,%rax,8)",
+          "vpermb\t%zmm3, %zmm0, %zmm2",
+          "vmovdqu8\t0x90(%r9), %zmm3 {%k1} {z}",
+          "addq\t$0xc0, %r9",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x40(%rsi,%rax,8)",
+          "vpermb\t%zmm4, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x80(%rsi,%rax,8)",
+          "vpermb\t%zmm3, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0xc0(%rsi,%rax,8)",
+          "addq\t$0x20, %rax",
+          "cmpq\t$0x1f, %r8",
+          "ja\t0x44c280 <void (anonymous namespace)::operation<3u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)+0x50>"
+        ]
+      },
+      "void (anonymous namespace)::operation<4u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+        "loop_mod64": 32,
+        "instruction_count": 37,
+        "gfni_instructions": 8,
+        "stack_references": 0,
+        "calls": 0,
+        "assembly": [
+          "vmovdqu8\t(%r9), %zmm2 {%k1} {z}",
+          "vmovdqu8\t0x30(%r9), %zmm3 {%k1} {z}",
+          "vmovdqu8\t0x60(%r9), %zmm4 {%k1} {z}",
+          "addq\t$-0x40, %r8",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, (%rsi,%rax,8)",
+          "vpermb\t%zmm3, %zmm0, %zmm2",
+          "vmovdqu8\t0x90(%r9), %zmm3 {%k1} {z}",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x40(%rsi,%rax,8)",
+          "vpermb\t%zmm4, %zmm0, %zmm2",
+          "vmovdqu8\t0xc0(%r9), %zmm4 {%k1} {z}",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x80(%rsi,%rax,8)",
+          "vpermb\t%zmm3, %zmm0, %zmm2",
+          "vmovdqu8\t0xf0(%r9), %zmm3 {%k1} {z}",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0xc0(%rsi,%rax,8)",
+          "vpermb\t%zmm4, %zmm0, %zmm2",
+          "vmovdqu8\t0x120(%r9), %zmm4 {%k1} {z}",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x100(%rsi,%rax,8)",
+          "vpermb\t%zmm3, %zmm0, %zmm2",
+          "vmovdqu8\t0x150(%r9), %zmm3 {%k1} {z}",
+          "addq\t$0x180, %r9",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x140(%rsi,%rax,8)",
+          "vpermb\t%zmm4, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x180(%rsi,%rax,8)",
+          "vpermb\t%zmm3, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x1c0(%rsi,%rax,8)",
+          "addq\t$0x40, %rax",
+          "cmpq\t$0x3f, %r8",
+          "ja\t0x44c620 <void (anonymous namespace)::operation<4u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)+0x50>"
+        ]
+      },
+      "void (anonymous namespace)::operation<5u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+        "loop_mod64": 32,
+        "instruction_count": 24,
+        "gfni_instructions": 4,
+        "stack_references": 0,
+        "calls": 0,
+        "assembly": [
+          "vmovdqu8\t(%rdi), %zmm3 {%k1} {z}",
+          "vmovdqu8\t0x30(%rdi), %zmm4 {%k1} {z}",
+          "vmovdqu8\t0x60(%rdi), %zmm5 {%k1} {z}",
+          "vpermb\t%zmm3, %zmm0, %zmm3",
+          "vpandq\t%zmm1, %zmm3, %zmm3",
+          "vgf2p8affineqb\t$0x0, %zmm3, %zmm2, %zmm3",
+          "vmovdqu64\t%zmm3, (%rsi,%rax)",
+          "vpermb\t%zmm4, %zmm0, %zmm3",
+          "vmovdqu8\t0x90(%rdi), %zmm4 {%k1} {z}",
+          "addq\t$0xc0, %rdi",
+          "vpandq\t%zmm1, %zmm3, %zmm3",
+          "vgf2p8affineqb\t$0x0, %zmm3, %zmm2, %zmm3",
+          "vmovdqu64\t%zmm3, 0x40(%rsi,%rax)",
+          "vpermb\t%zmm5, %zmm0, %zmm3",
+          "vpandq\t%zmm1, %zmm3, %zmm3",
+          "vgf2p8affineqb\t$0x0, %zmm3, %zmm2, %zmm3",
+          "vmovdqu64\t%zmm3, 0x80(%rsi,%rax)",
+          "vpermb\t%zmm4, %zmm0, %zmm3",
+          "vpandq\t%zmm1, %zmm3, %zmm3",
+          "vgf2p8affineqb\t$0x0, %zmm3, %zmm2, %zmm3",
+          "vmovdqu64\t%zmm3, 0xc0(%rsi,%rax)",
+          "addq\t$0x100, %rax",
+          "cmpq\t%rax, %rdx",
+          "jne\t0x44ca20 <void (anonymous namespace)::operation<5u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)+0x40>"
+        ]
+      },
+      "void ikea::seriespack::detail::(anonymous namespace)::decode_complete<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 0u, unsigned char>(ikea::seriespack::basic_placement<std::byte const> const&, unsigned long, unsigned long, unsigned char*)": {
+        "loop_mod64": 0,
+        "instruction_count": 36,
+        "gfni_instructions": 8,
+        "stack_references": 0,
+        "calls": 0,
+        "assembly": [
+          "vmovdqu8\t(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, (%rcx,%rsi,8)",
+          "vmovdqu8\t0x30(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x40(%rcx,%rsi,8)",
+          "vmovdqu8\t0x60(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x80(%rcx,%rsi,8)",
+          "vmovdqu8\t0x90(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0xc0(%rcx,%rsi,8)",
+          "vmovdqu8\t0xc0(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x100(%rcx,%rsi,8)",
+          "vmovdqu8\t0xf0(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x140(%rcx,%rsi,8)",
+          "vmovdqu8\t0x120(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x180(%rcx,%rsi,8)",
+          "vmovdqu8\t0x150(%r9), %zmm2 {%k1} {z}",
+          "addq\t$0x180, %r9",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x1c0(%rcx,%rsi,8)",
+          "addq\t$0x40, %rsi",
+          "addq\t$-0x8, %r8",
+          "jne\t0x234480 <void ikea::seriespack::detail::(anonymous namespace)::decode_complete<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 0u, unsigned char>(ikea::seriespack::basic_placement<std::byte const> const&, unsigned long, unsigned long, unsigned char*)+0x100>"
+        ]
+      }
+    },
+    "guard_checker_sha256": "f3cb360f294b2e09b5f6c04ce80efbfa6ffe685620ef02fceb0f8078033205fd"
+  },
+  "gnr": {
+    "placements": {
+      "object_sha256": "fd3811572b734e08e36c46a09ab6b4c44d7b9d13fab154b6166703cb2ba1d031",
+      "library_sha256": "6539860725f988f080ffade80986a95e6191d1573f9be45dba490c94fee98d06",
+      "placement_scope": "Raw operation section only; captured public decoder core remains fixed in .text",
+      "variants": {
+        "0": {
+          "binary_sha256": "374aad59ddad65114daf1c6af29690a29d0dc438d660c698693ada76dd1b516e",
+          "rodata_sha256": "9faee4b6eb34bb7aa5e0cdc2437e5349ac816e8db8d63e22e0f3d231ddf1e995",
+          "functions": {
+            "void (anonymous namespace)::operation<0u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3936832,
+              "entry_mod64": 0,
+              "size": 56,
+              "fixed_public_core": false,
+              "normalized_sha256": "ea8a23bf039812928713dfe7af73599d88dafbf4aa0e0874162a7016d7cf9789",
+              "instructions": 13,
+              "calls": 1,
+              "stack_references": 7,
+              "back_edges": []
+            },
+            "void (anonymous namespace)::operation<1u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3936896,
+              "entry_mod64": 0,
+              "size": 551,
+              "fixed_public_core": false,
+              "normalized_sha256": "245d0fc479cd9287babd181e91b67f5888ed3675601f306ee61322ca762a29e3",
+              "instructions": 125,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 106,
+                  "target_offset": 64,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 239,
+                  "target_offset": 192,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 445,
+                  "target_offset": 288,
+                  "target_mod64": 32
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<2u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3937456,
+              "entry_mod64": 48,
+              "size": 663,
+              "fixed_public_core": false,
+              "normalized_sha256": "be9ce19feda0703da6d7676dfff130b1d0c194fb7f734727b6f68a20c15cff3a",
+              "instructions": 146,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 106,
+                  "target_offset": 64,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 234,
+                  "target_offset": 192,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 351,
+                  "target_offset": 304,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 557,
+                  "target_offset": 400,
+                  "target_mod64": 0
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<3u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3938128,
+              "entry_mod64": 16,
+              "size": 775,
+              "fixed_public_core": false,
+              "normalized_sha256": "79c85f82969638ed4578cff9397551897df87d523fab341187dad61d84d6fa09",
+              "instructions": 158,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 218,
+                  "target_offset": 80,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 346,
+                  "target_offset": 304,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 463,
+                  "target_offset": 416,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 669,
+                  "target_offset": 512,
+                  "target_mod64": 16
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<4u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3938912,
+              "entry_mod64": 32,
+              "size": 887,
+              "fixed_public_core": false,
+              "normalized_sha256": "ef47dd4fcf8f47616663fb556e716937e8259d3999c78a3d89c4272d472efd6e",
+              "instructions": 173,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 339,
+                  "target_offset": 80,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 458,
+                  "target_offset": 416,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 575,
+                  "target_offset": 528,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 781,
+                  "target_offset": 624,
+                  "target_mod64": 16
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<5u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3939808,
+              "entry_mod64": 32,
+              "size": 233,
+              "fixed_public_core": false,
+              "normalized_sha256": "292b5d957435414cda53d519b1b77ec4dd398414e4b368d7d001bc19fe13e078",
+              "instructions": 35,
+              "calls": 0,
+              "stack_references": 0,
+              "back_edges": [
+                {
+                  "source_offset": 223,
+                  "target_offset": 64,
+                  "target_mod64": 32
+                }
+              ]
+            },
+            "void ikea::seriespack::detail::(anonymous namespace)::decode_complete<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 0u, unsigned char>(ikea::seriespack::basic_placement<std::byte const> const&, unsigned long, unsigned long, unsigned char*)": {
+              "address": 2021232,
+              "entry_mod64": 48,
+              "size": 1142,
+              "fixed_public_core": true,
+              "normalized_sha256": "68ca69d12edb389ab655a8c5b8e0efb3152d1cac98cace482856300671458dbe",
+              "instructions": 241,
+              "calls": 0,
+              "stack_references": 0,
+              "back_edges": [
+                {
+                  "source_offset": 390,
+                  "target_offset": 256,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 486,
+                  "target_offset": 448,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 607,
+                  "target_offset": 560,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 809,
+                  "target_offset": 656,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 1033,
+                  "target_offset": 864,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 1131,
+                  "target_offset": 1088,
+                  "target_mod64": 48
+                }
+              ]
+            }
+          }
+        },
+        "16": {
+          "binary_sha256": "06940555c128ca4a04aeff0726f2771667a46803e03731ec199d888f356decd6",
+          "rodata_sha256": "9faee4b6eb34bb7aa5e0cdc2437e5349ac816e8db8d63e22e0f3d231ddf1e995",
+          "functions": {
+            "void (anonymous namespace)::operation<0u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3936848,
+              "entry_mod64": 16,
+              "size": 56,
+              "fixed_public_core": false,
+              "normalized_sha256": "ea8a23bf039812928713dfe7af73599d88dafbf4aa0e0874162a7016d7cf9789",
+              "instructions": 13,
+              "calls": 1,
+              "stack_references": 7,
+              "back_edges": []
+            },
+            "void (anonymous namespace)::operation<1u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3936912,
+              "entry_mod64": 16,
+              "size": 551,
+              "fixed_public_core": false,
+              "normalized_sha256": "245d0fc479cd9287babd181e91b67f5888ed3675601f306ee61322ca762a29e3",
+              "instructions": 125,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 106,
+                  "target_offset": 64,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 239,
+                  "target_offset": 192,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 445,
+                  "target_offset": 288,
+                  "target_mod64": 48
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<2u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3937472,
+              "entry_mod64": 0,
+              "size": 663,
+              "fixed_public_core": false,
+              "normalized_sha256": "be9ce19feda0703da6d7676dfff130b1d0c194fb7f734727b6f68a20c15cff3a",
+              "instructions": 146,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 106,
+                  "target_offset": 64,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 234,
+                  "target_offset": 192,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 351,
+                  "target_offset": 304,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 557,
+                  "target_offset": 400,
+                  "target_mod64": 16
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<3u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3938144,
+              "entry_mod64": 32,
+              "size": 775,
+              "fixed_public_core": false,
+              "normalized_sha256": "79c85f82969638ed4578cff9397551897df87d523fab341187dad61d84d6fa09",
+              "instructions": 158,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 218,
+                  "target_offset": 80,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 346,
+                  "target_offset": 304,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 463,
+                  "target_offset": 416,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 669,
+                  "target_offset": 512,
+                  "target_mod64": 32
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<4u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3938928,
+              "entry_mod64": 48,
+              "size": 887,
+              "fixed_public_core": false,
+              "normalized_sha256": "ef47dd4fcf8f47616663fb556e716937e8259d3999c78a3d89c4272d472efd6e",
+              "instructions": 173,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 339,
+                  "target_offset": 80,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 458,
+                  "target_offset": 416,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 575,
+                  "target_offset": 528,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 781,
+                  "target_offset": 624,
+                  "target_mod64": 32
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<5u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3939824,
+              "entry_mod64": 48,
+              "size": 233,
+              "fixed_public_core": false,
+              "normalized_sha256": "292b5d957435414cda53d519b1b77ec4dd398414e4b368d7d001bc19fe13e078",
+              "instructions": 35,
+              "calls": 0,
+              "stack_references": 0,
+              "back_edges": [
+                {
+                  "source_offset": 223,
+                  "target_offset": 64,
+                  "target_mod64": 48
+                }
+              ]
+            },
+            "void ikea::seriespack::detail::(anonymous namespace)::decode_complete<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 0u, unsigned char>(ikea::seriespack::basic_placement<std::byte const> const&, unsigned long, unsigned long, unsigned char*)": {
+              "address": 2021232,
+              "entry_mod64": 48,
+              "size": 1142,
+              "fixed_public_core": true,
+              "normalized_sha256": "68ca69d12edb389ab655a8c5b8e0efb3152d1cac98cace482856300671458dbe",
+              "instructions": 241,
+              "calls": 0,
+              "stack_references": 0,
+              "back_edges": [
+                {
+                  "source_offset": 390,
+                  "target_offset": 256,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 486,
+                  "target_offset": 448,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 607,
+                  "target_offset": 560,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 809,
+                  "target_offset": 656,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 1033,
+                  "target_offset": 864,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 1131,
+                  "target_offset": 1088,
+                  "target_mod64": 48
+                }
+              ]
+            }
+          }
+        },
+        "32": {
+          "binary_sha256": "97900b61a1937b776b45cb18a11dea380516975f8fee7ba2cb9eef1233e264b5",
+          "rodata_sha256": "9faee4b6eb34bb7aa5e0cdc2437e5349ac816e8db8d63e22e0f3d231ddf1e995",
+          "functions": {
+            "void (anonymous namespace)::operation<0u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3936864,
+              "entry_mod64": 32,
+              "size": 56,
+              "fixed_public_core": false,
+              "normalized_sha256": "ea8a23bf039812928713dfe7af73599d88dafbf4aa0e0874162a7016d7cf9789",
+              "instructions": 13,
+              "calls": 1,
+              "stack_references": 7,
+              "back_edges": []
+            },
+            "void (anonymous namespace)::operation<1u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3936928,
+              "entry_mod64": 32,
+              "size": 551,
+              "fixed_public_core": false,
+              "normalized_sha256": "245d0fc479cd9287babd181e91b67f5888ed3675601f306ee61322ca762a29e3",
+              "instructions": 125,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 106,
+                  "target_offset": 64,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 239,
+                  "target_offset": 192,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 445,
+                  "target_offset": 288,
+                  "target_mod64": 0
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<2u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3937488,
+              "entry_mod64": 16,
+              "size": 663,
+              "fixed_public_core": false,
+              "normalized_sha256": "be9ce19feda0703da6d7676dfff130b1d0c194fb7f734727b6f68a20c15cff3a",
+              "instructions": 146,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 106,
+                  "target_offset": 64,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 234,
+                  "target_offset": 192,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 351,
+                  "target_offset": 304,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 557,
+                  "target_offset": 400,
+                  "target_mod64": 32
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<3u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3938160,
+              "entry_mod64": 48,
+              "size": 775,
+              "fixed_public_core": false,
+              "normalized_sha256": "79c85f82969638ed4578cff9397551897df87d523fab341187dad61d84d6fa09",
+              "instructions": 158,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 218,
+                  "target_offset": 80,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 346,
+                  "target_offset": 304,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 463,
+                  "target_offset": 416,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 669,
+                  "target_offset": 512,
+                  "target_mod64": 48
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<4u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3938944,
+              "entry_mod64": 0,
+              "size": 887,
+              "fixed_public_core": false,
+              "normalized_sha256": "ef47dd4fcf8f47616663fb556e716937e8259d3999c78a3d89c4272d472efd6e",
+              "instructions": 173,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 339,
+                  "target_offset": 80,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 458,
+                  "target_offset": 416,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 575,
+                  "target_offset": 528,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 781,
+                  "target_offset": 624,
+                  "target_mod64": 48
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<5u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3939840,
+              "entry_mod64": 0,
+              "size": 233,
+              "fixed_public_core": false,
+              "normalized_sha256": "292b5d957435414cda53d519b1b77ec4dd398414e4b368d7d001bc19fe13e078",
+              "instructions": 35,
+              "calls": 0,
+              "stack_references": 0,
+              "back_edges": [
+                {
+                  "source_offset": 223,
+                  "target_offset": 64,
+                  "target_mod64": 0
+                }
+              ]
+            },
+            "void ikea::seriespack::detail::(anonymous namespace)::decode_complete<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 0u, unsigned char>(ikea::seriespack::basic_placement<std::byte const> const&, unsigned long, unsigned long, unsigned char*)": {
+              "address": 2021232,
+              "entry_mod64": 48,
+              "size": 1142,
+              "fixed_public_core": true,
+              "normalized_sha256": "68ca69d12edb389ab655a8c5b8e0efb3152d1cac98cace482856300671458dbe",
+              "instructions": 241,
+              "calls": 0,
+              "stack_references": 0,
+              "back_edges": [
+                {
+                  "source_offset": 390,
+                  "target_offset": 256,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 486,
+                  "target_offset": 448,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 607,
+                  "target_offset": 560,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 809,
+                  "target_offset": 656,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 1033,
+                  "target_offset": 864,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 1131,
+                  "target_offset": 1088,
+                  "target_mod64": 48
+                }
+              ]
+            }
+          }
+        },
+        "48": {
+          "binary_sha256": "7533eb0cf4e7b2dac315d3f847285816691a554e45abbaca51f93258bbb61db2",
+          "rodata_sha256": "9faee4b6eb34bb7aa5e0cdc2437e5349ac816e8db8d63e22e0f3d231ddf1e995",
+          "functions": {
+            "void (anonymous namespace)::operation<0u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3936880,
+              "entry_mod64": 48,
+              "size": 56,
+              "fixed_public_core": false,
+              "normalized_sha256": "ea8a23bf039812928713dfe7af73599d88dafbf4aa0e0874162a7016d7cf9789",
+              "instructions": 13,
+              "calls": 1,
+              "stack_references": 7,
+              "back_edges": []
+            },
+            "void (anonymous namespace)::operation<1u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3936944,
+              "entry_mod64": 48,
+              "size": 551,
+              "fixed_public_core": false,
+              "normalized_sha256": "245d0fc479cd9287babd181e91b67f5888ed3675601f306ee61322ca762a29e3",
+              "instructions": 125,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 106,
+                  "target_offset": 64,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 239,
+                  "target_offset": 192,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 445,
+                  "target_offset": 288,
+                  "target_mod64": 16
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<2u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3937504,
+              "entry_mod64": 32,
+              "size": 663,
+              "fixed_public_core": false,
+              "normalized_sha256": "be9ce19feda0703da6d7676dfff130b1d0c194fb7f734727b6f68a20c15cff3a",
+              "instructions": 146,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 106,
+                  "target_offset": 64,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 234,
+                  "target_offset": 192,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 351,
+                  "target_offset": 304,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 557,
+                  "target_offset": 400,
+                  "target_mod64": 48
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<3u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3938176,
+              "entry_mod64": 0,
+              "size": 775,
+              "fixed_public_core": false,
+              "normalized_sha256": "79c85f82969638ed4578cff9397551897df87d523fab341187dad61d84d6fa09",
+              "instructions": 158,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 218,
+                  "target_offset": 80,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 346,
+                  "target_offset": 304,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 463,
+                  "target_offset": 416,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 669,
+                  "target_offset": 512,
+                  "target_mod64": 0
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<4u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3938960,
+              "entry_mod64": 16,
+              "size": 887,
+              "fixed_public_core": false,
+              "normalized_sha256": "ef47dd4fcf8f47616663fb556e716937e8259d3999c78a3d89c4272d472efd6e",
+              "instructions": 173,
+              "calls": 1,
+              "stack_references": 1,
+              "back_edges": [
+                {
+                  "source_offset": 339,
+                  "target_offset": 80,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 458,
+                  "target_offset": 416,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 575,
+                  "target_offset": 528,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 781,
+                  "target_offset": 624,
+                  "target_mod64": 0
+                }
+              ]
+            },
+            "void (anonymous namespace)::operation<5u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+              "address": 3939856,
+              "entry_mod64": 16,
+              "size": 233,
+              "fixed_public_core": false,
+              "normalized_sha256": "292b5d957435414cda53d519b1b77ec4dd398414e4b368d7d001bc19fe13e078",
+              "instructions": 35,
+              "calls": 0,
+              "stack_references": 0,
+              "back_edges": [
+                {
+                  "source_offset": 223,
+                  "target_offset": 64,
+                  "target_mod64": 16
+                }
+              ]
+            },
+            "void ikea::seriespack::detail::(anonymous namespace)::decode_complete<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 0u, unsigned char>(ikea::seriespack::basic_placement<std::byte const> const&, unsigned long, unsigned long, unsigned char*)": {
+              "address": 2021232,
+              "entry_mod64": 48,
+              "size": 1142,
+              "fixed_public_core": true,
+              "normalized_sha256": "68ca69d12edb389ab655a8c5b8e0efb3152d1cac98cace482856300671458dbe",
+              "instructions": 241,
+              "calls": 0,
+              "stack_references": 0,
+              "back_edges": [
+                {
+                  "source_offset": 390,
+                  "target_offset": 256,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 486,
+                  "target_offset": 448,
+                  "target_mod64": 48
+                },
+                {
+                  "source_offset": 607,
+                  "target_offset": 560,
+                  "target_mod64": 32
+                },
+                {
+                  "source_offset": 809,
+                  "target_offset": 656,
+                  "target_mod64": 0
+                },
+                {
+                  "source_offset": 1033,
+                  "target_offset": 864,
+                  "target_mod64": 16
+                },
+                {
+                  "source_offset": 1131,
+                  "target_offset": 1088,
+                  "target_mod64": 48
+                }
+              ]
+            }
+          }
+        }
+      },
+      "identical_code_and_constants": true
+    },
+    "first_loops_pad0": {
+      "void (anonymous namespace)::operation<1u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+        "loop_mod64": 0,
+        "instruction_count": 9,
+        "gfni_instructions": 1,
+        "stack_references": 0,
+        "calls": 0,
+        "assembly": [
+          "vmovdqu8\t(%r8), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, (%rsi,%rax,8)",
+          "addq\t$0x8, %rax",
+          "addq\t$-0x8, %r9",
+          "addq\t$0x30, %r8",
+          "cmpq\t$0x7, %r9",
+          "ja\t0x3c12c0 <void (anonymous namespace)::operation<1u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)+0x40>"
+        ]
+      },
+      "void (anonymous namespace)::operation<2u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+        "loop_mod64": 48,
+        "instruction_count": 9,
+        "gfni_instructions": 1,
+        "stack_references": 0,
+        "calls": 0,
+        "assembly": [
+          "vmovdqu8\t(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, (%rsi,%rax,8)",
+          "addq\t$0x8, %rax",
+          "addq\t$0x30, %r9",
+          "addq\t$-0x8, %r8",
+          "cmpq\t$0x7, %r8",
+          "ja\t0x3c14f0 <void (anonymous namespace)::operation<2u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)+0x40>"
+        ]
+      },
+      "void (anonymous namespace)::operation<3u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+        "loop_mod64": 32,
+        "instruction_count": 21,
+        "gfni_instructions": 4,
+        "stack_references": 0,
+        "calls": 0,
+        "assembly": [
+          "vmovdqu8\t(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, (%rsi,%rax,8)",
+          "vmovdqu8\t0x30(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x40(%rsi,%rax,8)",
+          "vmovdqu8\t0x60(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x80(%rsi,%rax,8)",
+          "vmovdqu8\t0x90(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0xc0(%rsi,%rax,8)",
+          "addq\t$0x20, %rax",
+          "addq\t$0xc0, %r9",
+          "addq\t$-0x20, %r8",
+          "cmpq\t$0x1f, %r8",
+          "ja\t0x3c17a0 <void (anonymous namespace)::operation<3u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)+0x50>"
+        ]
+      },
+      "void (anonymous namespace)::operation<4u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+        "loop_mod64": 48,
+        "instruction_count": 37,
+        "gfni_instructions": 8,
+        "stack_references": 0,
+        "calls": 0,
+        "assembly": [
+          "vmovdqu8\t(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, (%rsi,%rax,8)",
+          "vmovdqu8\t0x30(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x40(%rsi,%rax,8)",
+          "vmovdqu8\t0x60(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x80(%rsi,%rax,8)",
+          "vmovdqu8\t0x90(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0xc0(%rsi,%rax,8)",
+          "vmovdqu8\t0xc0(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x100(%rsi,%rax,8)",
+          "vmovdqu8\t0xf0(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x140(%rsi,%rax,8)",
+          "vmovdqu8\t0x120(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x180(%rsi,%rax,8)",
+          "vmovdqu8\t0x150(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x1c0(%rsi,%rax,8)",
+          "addq\t$0x40, %rax",
+          "addq\t$0x180, %r9",
+          "addq\t$-0x40, %r8",
+          "cmpq\t$0x3f, %r8",
+          "ja\t0x3c1ab0 <void (anonymous namespace)::operation<4u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)+0x50>"
+        ]
+      },
+      "void (anonymous namespace)::operation<5u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)": {
+        "loop_mod64": 32,
+        "instruction_count": 24,
+        "gfni_instructions": 4,
+        "stack_references": 0,
+        "calls": 0,
+        "assembly": [
+          "vmovdqu8\t(%rdi), %zmm3 {%k1} {z}",
+          "vpermb\t%zmm3, %zmm0, %zmm3",
+          "vpandq\t%zmm1, %zmm3, %zmm3",
+          "vgf2p8affineqb\t$0x0, %zmm3, %zmm2, %zmm3",
+          "vmovdqu64\t%zmm3, (%rsi,%rax)",
+          "vmovdqu8\t0x30(%rdi), %zmm3 {%k1} {z}",
+          "vpermb\t%zmm3, %zmm0, %zmm3",
+          "vpandq\t%zmm1, %zmm3, %zmm3",
+          "vgf2p8affineqb\t$0x0, %zmm3, %zmm2, %zmm3",
+          "vmovdqu64\t%zmm3, 0x40(%rsi,%rax)",
+          "vmovdqu8\t0x60(%rdi), %zmm3 {%k1} {z}",
+          "vpermb\t%zmm3, %zmm0, %zmm3",
+          "vpandq\t%zmm1, %zmm3, %zmm3",
+          "vgf2p8affineqb\t$0x0, %zmm3, %zmm2, %zmm3",
+          "vmovdqu64\t%zmm3, 0x80(%rsi,%rax)",
+          "vmovdqu8\t0x90(%rdi), %zmm3 {%k1} {z}",
+          "vpermb\t%zmm3, %zmm0, %zmm3",
+          "vpandq\t%zmm1, %zmm3, %zmm3",
+          "vgf2p8affineqb\t$0x0, %zmm3, %zmm2, %zmm3",
+          "vmovdqu64\t%zmm3, 0xc0(%rsi,%rax)",
+          "addq\t$0xc0, %rdi",
+          "addq\t$0x100, %rax",
+          "cmpq\t%rax, %rdx",
+          "jne\t0x3c1e20 <void (anonymous namespace)::operation<5u>(unsigned char const*, unsigned char*, unsigned long, ikea::seriespack::bound_reader const&)+0x40>"
+        ]
+      },
+      "void ikea::seriespack::detail::(anonymous namespace)::decode_complete<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 0u, unsigned char>(ikea::seriespack::basic_placement<std::byte const> const&, unsigned long, unsigned long, unsigned char*)": {
+        "loop_mod64": 48,
+        "instruction_count": 20,
+        "gfni_instructions": 4,
+        "stack_references": 0,
+        "calls": 0,
+        "assembly": [
+          "vmovdqu8\t(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, (%rcx,%rsi,8)",
+          "vmovdqu8\t0x30(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x40(%rcx,%rsi,8)",
+          "vmovdqu8\t0x60(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0x80(%rcx,%rsi,8)",
+          "vmovdqu8\t0x90(%r9), %zmm2 {%k1} {z}",
+          "vpermb\t%zmm2, %zmm0, %zmm2",
+          "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2",
+          "vmovdqu64\t%zmm2, 0xc0(%rcx,%rsi,8)",
+          "addq\t$0x20, %rsi",
+          "addq\t$0xc0, %r9",
+          "addq\t$-0x4, %r8",
+          "jne\t0x1ed870 <void ikea::seriespack::detail::(anonymous namespace)::decode_complete<ikea::seriespack::detail::(anonymous namespace)::avx512_ops, 6u, (ikea::seriespack::geometry)0, 0u, unsigned char>(ikea::seriespack::basic_placement<std::byte const> const&, unsigned long, unsigned long, unsigned char*)+0x100>"
+        ]
+      }
+    },
+    "guard_checker_sha256": "a62c9183b8da39692658d62c353fa0c7df9fd4efb0922ac8adfcb596d4a6d4ad"
+  }
+}

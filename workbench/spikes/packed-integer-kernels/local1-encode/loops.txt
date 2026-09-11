@@ -1,0 +1,53 @@
+zen5 before: native object public encode_typed<avx512_ops,1,local8,u8>, hot loop only
+      60:      	vpsllq	$0x7, (%rbx,%rax,8), %zmm0
+      68:      	addq	$-0x8, %rcx
+      6c:      	vpmovb2m	%zmm0, %k0
+      72:      	kmovq	%k0, (%r14,%rax)
+      78:      	addq	$0x8, %rax
+      7c:      	cmpq	$0x7, %rcx
+      80:      	ja	0x60 <_ZN4ikea10seriespack6detail12_GLOBAL__N_112encode_typedINS2_10avx512_opsELj1ELNS0_8geometryE0EhEEvRKNS0_10basic_viewISt4byteEEPKT2_+0x60>
+
+zen5 candidate: native object public encode_typed<avx512_ops,1,local8,u8>, hot loop only
+      60:      	vpsllq	$0x7, (%rbx,%rax,8), %zmm0
+      68:      	addq	$-0x20, %rcx
+      6c:      	vpmovb2m	%zmm0, %k0
+      72:      	kmovq	%k0, (%r15,%rax)
+      78:      	vpsllq	$0x7, 0x40(%rbx,%rax,8), %zmm0
+      81:      	vpmovb2m	%zmm0, %k0
+      87:      	kmovq	%k0, 0x8(%r15,%rax)
+      8e:      	vpsllq	$0x7, 0x80(%rbx,%rax,8), %zmm0
+      97:      	vpmovb2m	%zmm0, %k0
+      9d:      	kmovq	%k0, 0x10(%r15,%rax)
+      a4:      	vpsllq	$0x7, 0xc0(%rbx,%rax,8), %zmm0
+      ad:      	vpmovb2m	%zmm0, %k0
+      b3:      	kmovq	%k0, 0x18(%r15,%rax)
+      ba:      	addq	$0x20, %rax
+      be:      	cmpq	$0x1f, %rcx
+      c2:      	ja	0x60 <_ZN4ikea10seriespack6detail12_GLOBAL__N_112encode_typedINS2_10avx512_opsELj1ELNS0_8geometryE0EhEEvRKNS0_10basic_viewISt4byteEEPKT2_+0x60>
+
+gnr before: native object public encode_typed<avx512_ops,1,local8,u8>, hot loop only
+      60:      	vpsllq	$0x7, (%rbx,%rax,8), %zmm0
+      68:      	vpmovb2m	%zmm0, %k0
+      6e:      	kmovq	%k0, (%r14,%rax)
+      74:      	addq	$0x8, %rax
+      78:      	addq	$-0x8, %rcx
+      7c:      	cmpq	$0x7, %rcx
+      80:      	ja	0x60 <_ZN4ikea10seriespack6detail12_GLOBAL__N_112encode_typedINS2_10avx512_opsELj1ELNS0_8geometryE0EhEEvRKNS0_10basic_viewISt4byteEEPKT2_+0x60>
+
+gnr candidate: native object public encode_typed<avx512_ops,1,local8,u8>, hot loop only
+      60:      	vpsllq	$0x7, (%rbx,%rax,8), %zmm0
+      68:      	vpmovb2m	%zmm0, %k0
+      6e:      	kmovq	%k0, (%r14,%rax)
+      74:      	vpsllq	$0x7, 0x40(%rbx,%rax,8), %zmm0
+      7d:      	vpmovb2m	%zmm0, %k0
+      83:      	kmovq	%k0, 0x8(%r14,%rax)
+      8a:      	vpsllq	$0x7, 0x80(%rbx,%rax,8), %zmm0
+      93:      	vpmovb2m	%zmm0, %k0
+      99:      	kmovq	%k0, 0x10(%r14,%rax)
+      a0:      	vpsllq	$0x7, 0xc0(%rbx,%rax,8), %zmm0
+      a9:      	vpmovb2m	%zmm0, %k0
+      af:      	kmovq	%k0, 0x18(%r14,%rax)
+      b6:      	addq	$0x20, %rax
+      ba:      	addq	$-0x20, %rcx
+      be:      	cmpq	$0x1f, %rcx
+      c2:      	ja	0x60 <_ZN4ikea10seriespack6detail12_GLOBAL__N_112encode_typedINS2_10avx512_opsELj1ELNS0_8geometryE0EhEEvRKNS0_10basic_viewISt4byteEEPKT2_+0x60>

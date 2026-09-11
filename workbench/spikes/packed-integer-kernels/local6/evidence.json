@@ -1,0 +1,883 @@
+{
+  "before_zen": {
+    "worker_path": "build/workspaces/seriespack-x86-candidate-20260910T152954Z/build/workers/20260910T153037Z-875c63ff",
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 122173746,
+      "files": 66,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/5ccfbb9ea906f7fde976deba5b8184312df01bda465819fa5cdfff0fa7da3049.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "5ccfbb9ea906f7fde976deba5b8184312df01bda465819fa5cdfff0fa7da3049",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/5ccfbb9ea906f7fde976deba5b8184312df01bda465819fa5cdfff0fa7da3049.tar.gz"
+    },
+    "binary_sha256": "f6f04c70b27ed97d322c8a03399adbc138c49c1d5844b2ee04bf785813a1cb10",
+    "source_manifest_sha256": "ed5746f21a329a944d55ea9106a92b4dca305ad88d164e01ef21c7977da336d3",
+    "source_sha256": {
+      "ikea/src/seriespack/native.cpp": "0f55c34c7e2ccc1cba0161c2fac5c2e82008a30ff4a948279701a66138024ce1",
+      "ikea/include/ikea/seriespack/native_avx512.h": "6340d3d66db8be4d537966fa4bdc5f1ce138459926aa3e09b7e2ca9b8918473e",
+      "ikea/include/ikea/seriespack/native_avx2.h": "0da89e010af637c9c0ea80af471635027e664b80f0cc4d77f1f7e965a8dbf677",
+      "workbench/spikes/ikea-composition/probes/ikea-integers/local.h": "2837915d5375d37842e3ad9b32e74019a35e1cc24f08fe0255d98037a18c343f",
+      "workbench/spikes/ikea-composition/validation/seriespack_predecessor.cpp": "cb669d8d4295aa79930448f2b7d0d62bfcef9d6f3f7fe37bf2fc4c509aa14a2c"
+    },
+    "samples_sha256": "a620eb03cd50e65d95c3949b528d6e6a66acd76b297f494ca34364583af6d330",
+    "measurements": [
+      {
+        "name": "bulk/predecessor/local/k6/h0/u8/decode_median",
+        "family_index": 185,
+        "per_family_instance_index": 0,
+        "run_name": "bulk/predecessor/local/k6/h0/u8/decode",
+        "run_type": "aggregate",
+        "repetitions": 3,
+        "threads": 1,
+        "aggregate_name": "median",
+        "aggregate_unit": "time",
+        "iterations": 3,
+        "real_time": 43.48905003329363,
+        "cpu_time": 43.48887777153004,
+        "time_unit": "ns",
+        "bulk_input_output_bytes": 16384.0,
+        "checksum": 0.0,
+        "encoded_bytes": 6144.0,
+        "io_bytes_per_value": 1.0,
+        "items_per_second": 188370002165.5396,
+        "logical_values": 8192.0,
+        "query_bytes": 0.0,
+        "values_per_item": 1.0
+      },
+      {
+        "name": "bulk/series/avx512/local/k6/h0/u8/decode_median",
+        "family_index": 199,
+        "per_family_instance_index": 0,
+        "run_name": "bulk/series/avx512/local/k6/h0/u8/decode",
+        "run_type": "aggregate",
+        "repetitions": 3,
+        "threads": 1,
+        "aggregate_name": "median",
+        "aggregate_unit": "time",
+        "iterations": 3,
+        "real_time": 48.773611477183756,
+        "cpu_time": 48.758885666845885,
+        "time_unit": "ns",
+        "bulk_input_output_bytes": 16384.0,
+        "checksum": 0.0,
+        "encoded_bytes": 6144.0,
+        "io_bytes_per_value": 1.0,
+        "items_per_second": 168010402370.00815,
+        "logical_values": 8192.0,
+        "query_bytes": 0.0,
+        "values_per_item": 1.0
+      }
+    ],
+    "compile_commands": [
+      {
+        "directory": "/opt/sixdb/source/build/validation/seriespack/zen5/avx512/Release",
+        "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_ZEN5=1 -I/opt/sixdb/source/ikea/include -mavx512vbmi -mavx512vbmi2 -mgfni -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=x86-64-v4 -mtune=znver5 -o ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/native.cpp.o -c /opt/sixdb/source/ikea/src/seriespack/native.cpp",
+        "file": "/opt/sixdb/source/ikea/src/seriespack/native.cpp",
+        "output": "ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/native.cpp.o"
+      },
+      {
+        "directory": "/opt/sixdb/source/build/validation/seriespack/zen5/avx512/Release",
+        "command": "/usr/bin/clang++-21 -DBENCHMARK_STATIC_DEFINE -DSERIESPACK_HAS_PRIOR=1 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_ZEN5=1 -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/build/validation/seriespack/zen5/avx512/Release/_deps/googlebenchmark-src/include -mavx512vbmi -mavx512vbmi2 -mgfni -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=x86-64-v4 -mtune=znver5 -o workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_predecessor.cpp.o -c /opt/sixdb/source/workbench/spikes/ikea-composition/validation/seriespack_predecessor.cpp",
+        "file": "/opt/sixdb/source/workbench/spikes/ikea-composition/validation/seriespack_predecessor.cpp",
+        "output": "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_predecessor.cpp.o"
+      }
+    ],
+    "functions": {
+      "_ZN22seriespack_measurement12_GLOBAL__N_16decodeILj6ELb0EEEvPKhPhm": {
+        "entry": "0x189d90",
+        "bytes": 233,
+        "primary_loop": {
+          "start": "0x189dd0",
+          "start_mod64": 16,
+          "instructions": [
+            {
+              "pc": "0x189dd0",
+              "ins": "vmovdqu8\t(%rdi), %zmm3 {%k1} {z}"
+            },
+            {
+              "pc": "0x189dd6",
+              "ins": "vmovdqu8\t0x30(%rdi), %zmm4 {%k1} {z}"
+            },
+            {
+              "pc": "0x189de0",
+              "ins": "vmovdqu8\t0x60(%rdi), %zmm5 {%k1} {z}"
+            },
+            {
+              "pc": "0x189dea",
+              "ins": "vpermb\t%zmm3, %zmm0, %zmm3"
+            },
+            {
+              "pc": "0x189df0",
+              "ins": "vpandq\t%zmm1, %zmm3, %zmm3"
+            },
+            {
+              "pc": "0x189df6",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm3, %zmm2, %zmm3"
+            },
+            {
+              "pc": "0x189dfd",
+              "ins": "vmovdqu64\t%zmm3, (%rsi,%rax)"
+            },
+            {
+              "pc": "0x189e04",
+              "ins": "vpermb\t%zmm4, %zmm0, %zmm3"
+            },
+            {
+              "pc": "0x189e0a",
+              "ins": "vmovdqu8\t0x90(%rdi), %zmm4 {%k1} {z}"
+            },
+            {
+              "pc": "0x189e14",
+              "ins": "addq\t$0xc0, %rdi"
+            },
+            {
+              "pc": "0x189e1b",
+              "ins": "vpandq\t%zmm1, %zmm3, %zmm3"
+            },
+            {
+              "pc": "0x189e21",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm3, %zmm2, %zmm3"
+            },
+            {
+              "pc": "0x189e28",
+              "ins": "vmovdqu64\t%zmm3, 0x40(%rsi,%rax)"
+            },
+            {
+              "pc": "0x189e30",
+              "ins": "vpermb\t%zmm5, %zmm0, %zmm3"
+            },
+            {
+              "pc": "0x189e36",
+              "ins": "vpandq\t%zmm1, %zmm3, %zmm3"
+            },
+            {
+              "pc": "0x189e3c",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm3, %zmm2, %zmm3"
+            },
+            {
+              "pc": "0x189e43",
+              "ins": "vmovdqu64\t%zmm3, 0x80(%rsi,%rax)"
+            },
+            {
+              "pc": "0x189e4b",
+              "ins": "vpermb\t%zmm4, %zmm0, %zmm3"
+            },
+            {
+              "pc": "0x189e51",
+              "ins": "vpandq\t%zmm1, %zmm3, %zmm3"
+            },
+            {
+              "pc": "0x189e57",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm3, %zmm2, %zmm3"
+            },
+            {
+              "pc": "0x189e5e",
+              "ins": "vmovdqu64\t%zmm3, 0xc0(%rsi,%rax)"
+            },
+            {
+              "pc": "0x189e66",
+              "ins": "addq\t$0x100, %rax            # imm = 0x100"
+            },
+            {
+              "pc": "0x189e6c",
+              "ins": "cmpq\t%rax, %rdx"
+            },
+            {
+              "pc": "0x189e6f",
+              "ins": "jne\t0x189dd0 <_ZN22seriespack_measurement12_GLOBAL__N_16decodeILj6ELb0EEEvPKhPhm+0x40>"
+            }
+          ]
+        }
+      },
+      "_ZN4ikea10seriespack6detail12_GLOBAL__N_112decode_boundINS2_10avx512_opsELj6ELNS0_8geometryE0ELj0EEEvRKNS0_10basic_viewIKSt4byteEENS0_11index_rangeENS0_13output_valuesE": {
+        "entry": "0x472820",
+        "bytes": 3943,
+        "primary_loop": {
+          "start": "0x472940",
+          "start_mod64": 0,
+          "instructions": [
+            {
+              "pc": "0x472940",
+              "ins": "vmovdqu8\t(%r15), %zmm2 {%k1} {z}"
+            },
+            {
+              "pc": "0x472946",
+              "ins": "addq\t$-0x8, %r12"
+            },
+            {
+              "pc": "0x47294a",
+              "ins": "addq\t$0x30, %r15"
+            },
+            {
+              "pc": "0x47294e",
+              "ins": "vpermb\t%zmm2, %zmm0, %zmm2"
+            },
+            {
+              "pc": "0x472954",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2"
+            },
+            {
+              "pc": "0x47295b",
+              "ins": "vmovdqu64\t%zmm2, (%r10,%r8,8)"
+            },
+            {
+              "pc": "0x472962",
+              "ins": "addq\t$0x8, %r8"
+            },
+            {
+              "pc": "0x472966",
+              "ins": "cmpq\t$0x7, %r12"
+            },
+            {
+              "pc": "0x47296a",
+              "ins": "ja\t0x472940 <_ZN4ikea10seriespack6detail12_GLOBAL__N_112decode_boundINS2_10avx512_opsELj6ELNS0_8geometryE0ELj0EEEvRKNS0_10basic_viewIKSt4byteEENS0_11index_rangeENS0_13output_valuesE+0x120>"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "coherent_zen": {
+    "worker_path": "build/workspaces/seriespack-coherent-20260910/build/workers/20260910T174905Z-be042d57",
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 77304472,
+      "files": 113,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/26a163433e14832d7396a73cade1850e4bbba26fd024c7cf3271279a5927b5fd.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "26a163433e14832d7396a73cade1850e4bbba26fd024c7cf3271279a5927b5fd",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/26a163433e14832d7396a73cade1850e4bbba26fd024c7cf3271279a5927b5fd.tar.gz"
+    },
+    "binary_sha256": "b5dd1816fc8c2b522cb369e7b49075d788647a4b939884c2c19b0ac3d3e885f3",
+    "source_manifest_sha256": "0e7d703b1f328127b7043819950a13053a4301aa695809c7ff6e2a30685138cf",
+    "source_sha256": {
+      "ikea/src/seriespack/native.cpp": "1abf641b246af9c075e8234a9e1b3390c412a8410af9353d84d5c52cd57350da",
+      "ikea/include/ikea/seriespack/native_avx512.h": "62562fc9199c6d81bf5d3f7794866822b296bcf91a6acf761a9cdf325d8d3d3a",
+      "ikea/include/ikea/seriespack/native_avx2.h": "3e78b77bcea0a0229f18b8dd2fbf27a01696b00931703db1610750445501f9f9",
+      "workbench/spikes/ikea-composition/probes/ikea-integers/local.h": "2837915d5375d37842e3ad9b32e74019a35e1cc24f08fe0255d98037a18c343f",
+      "workbench/spikes/ikea-composition/validation/seriespack_predecessor.cpp": "38078e526aad7fe5c7ced606cf384540e8e8b37dc11a33c16566a8a32f59e1dc"
+    },
+    "samples_sha256": "1dd28d2114249f017b541b0cac2920e1e6b89f8dbb16f236088eeda8ee1b22d3",
+    "measurements": [
+      {
+        "name": "bulk/predecessor/local/k6/h0/u8/decode_median",
+        "family_index": 285,
+        "per_family_instance_index": 0,
+        "run_name": "bulk/predecessor/local/k6/h0/u8/decode",
+        "run_type": "aggregate",
+        "repetitions": 3,
+        "threads": 1,
+        "aggregate_name": "median",
+        "aggregate_unit": "time",
+        "iterations": 3,
+        "real_time": 38.90077982479369,
+        "cpu_time": 38.9868181005198,
+        "time_unit": "ns",
+        "bulk_input_output_bytes": 16384.0,
+        "checksum": 0.0,
+        "encoded_bytes": 6144.0,
+        "io_bytes_per_value": 1.0,
+        "items_per_second": 210122302848.069,
+        "logical_values": 8192.0,
+        "query_bytes": 0.0,
+        "values_per_item": 1.0
+      },
+      {
+        "name": "bulk/series/avx512/local/k6/h0/u8/decode_median",
+        "family_index": 305,
+        "per_family_instance_index": 0,
+        "run_name": "bulk/series/avx512/local/k6/h0/u8/decode",
+        "run_type": "aggregate",
+        "repetitions": 3,
+        "threads": 1,
+        "aggregate_name": "median",
+        "aggregate_unit": "time",
+        "iterations": 3,
+        "real_time": 94.85659542987638,
+        "cpu_time": 95.06335461292565,
+        "time_unit": "ns",
+        "bulk_input_output_bytes": 16384.0,
+        "checksum": 0.0,
+        "encoded_bytes": 6144.0,
+        "io_bytes_per_value": 1.0,
+        "items_per_second": 86174110237.91225,
+        "logical_values": 8192.0,
+        "query_bytes": 0.0,
+        "values_per_item": 1.0
+      }
+    ],
+    "compile_commands": [
+      {
+        "directory": "/opt/sixdb/source/build/validation/seriespack/zen5/avx512/Release",
+        "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_ZEN5=1 -I/opt/sixdb/source/ikea/include -mavx512vbmi -mavx512vbmi2 -mgfni -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=x86-64-v4 -mtune=znver5 -o ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/native.cpp.o -c /opt/sixdb/source/ikea/src/seriespack/native.cpp",
+        "file": "/opt/sixdb/source/ikea/src/seriespack/native.cpp",
+        "output": "ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/native.cpp.o"
+      },
+      {
+        "directory": "/opt/sixdb/source/build/validation/seriespack/zen5/avx512/Release",
+        "command": "/usr/bin/clang++-21 -DBENCHMARK_STATIC_DEFINE -DSERIESPACK_HAS_PRIOR=1 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_ZEN5=1 -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/build/validation/seriespack/zen5/avx512/Release/_deps/googlebenchmark-src/include -mavx512vbmi -mavx512vbmi2 -mgfni -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=x86-64-v4 -mtune=znver5 -o workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_predecessor.cpp.o -c /opt/sixdb/source/workbench/spikes/ikea-composition/validation/seriespack_predecessor.cpp",
+        "file": "/opt/sixdb/source/workbench/spikes/ikea-composition/validation/seriespack_predecessor.cpp",
+        "output": "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_predecessor.cpp.o"
+      }
+    ],
+    "functions": {
+      "_ZN22seriespack_measurement12_GLOBAL__N_16decodeILj6ELb0EEEvPKhPhm": {
+        "entry": "0x1c9390",
+        "bytes": 233,
+        "primary_loop": {
+          "start": "0x1c93d0",
+          "start_mod64": 16,
+          "instructions": [
+            {
+              "pc": "0x1c93d0",
+              "ins": "vmovdqu8\t(%rdi), %zmm3 {%k1} {z}"
+            },
+            {
+              "pc": "0x1c93d6",
+              "ins": "vmovdqu8\t0x30(%rdi), %zmm4 {%k1} {z}"
+            },
+            {
+              "pc": "0x1c93e0",
+              "ins": "vmovdqu8\t0x60(%rdi), %zmm5 {%k1} {z}"
+            },
+            {
+              "pc": "0x1c93ea",
+              "ins": "vpermb\t%zmm3, %zmm0, %zmm3"
+            },
+            {
+              "pc": "0x1c93f0",
+              "ins": "vpandq\t%zmm1, %zmm3, %zmm3"
+            },
+            {
+              "pc": "0x1c93f6",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm3, %zmm2, %zmm3"
+            },
+            {
+              "pc": "0x1c93fd",
+              "ins": "vmovdqu64\t%zmm3, (%rsi,%rax)"
+            },
+            {
+              "pc": "0x1c9404",
+              "ins": "vpermb\t%zmm4, %zmm0, %zmm3"
+            },
+            {
+              "pc": "0x1c940a",
+              "ins": "vmovdqu8\t0x90(%rdi), %zmm4 {%k1} {z}"
+            },
+            {
+              "pc": "0x1c9414",
+              "ins": "addq\t$0xc0, %rdi"
+            },
+            {
+              "pc": "0x1c941b",
+              "ins": "vpandq\t%zmm1, %zmm3, %zmm3"
+            },
+            {
+              "pc": "0x1c9421",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm3, %zmm2, %zmm3"
+            },
+            {
+              "pc": "0x1c9428",
+              "ins": "vmovdqu64\t%zmm3, 0x40(%rsi,%rax)"
+            },
+            {
+              "pc": "0x1c9430",
+              "ins": "vpermb\t%zmm5, %zmm0, %zmm3"
+            },
+            {
+              "pc": "0x1c9436",
+              "ins": "vpandq\t%zmm1, %zmm3, %zmm3"
+            },
+            {
+              "pc": "0x1c943c",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm3, %zmm2, %zmm3"
+            },
+            {
+              "pc": "0x1c9443",
+              "ins": "vmovdqu64\t%zmm3, 0x80(%rsi,%rax)"
+            },
+            {
+              "pc": "0x1c944b",
+              "ins": "vpermb\t%zmm4, %zmm0, %zmm3"
+            },
+            {
+              "pc": "0x1c9451",
+              "ins": "vpandq\t%zmm1, %zmm3, %zmm3"
+            },
+            {
+              "pc": "0x1c9457",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm3, %zmm2, %zmm3"
+            },
+            {
+              "pc": "0x1c945e",
+              "ins": "vmovdqu64\t%zmm3, 0xc0(%rsi,%rax)"
+            },
+            {
+              "pc": "0x1c9466",
+              "ins": "addq\t$0x100, %rax            # imm = 0x100"
+            },
+            {
+              "pc": "0x1c946c",
+              "ins": "cmpq\t%rax, %rdx"
+            },
+            {
+              "pc": "0x1c946f",
+              "ins": "jne\t0x1c93d0 <_ZN22seriespack_measurement12_GLOBAL__N_16decodeILj6ELb0EEEvPKhPhm+0x40>"
+            }
+          ]
+        }
+      },
+      "_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj6ELNS0_8geometryE0ELj0EhEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_": {
+        "entry": "0x3f74e0",
+        "bytes": 1414,
+        "primary_loop": {
+          "start": "0x3f75e0",
+          "start_mod64": 32,
+          "instructions": [
+            {
+              "pc": "0x3f75e0",
+              "ins": "vmovdqu8\t(%r9), %zmm2 {%k1} {z}"
+            },
+            {
+              "pc": "0x3f75e6",
+              "ins": "vpermb\t%zmm2, %zmm0, %zmm2"
+            },
+            {
+              "pc": "0x3f75ec",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2"
+            },
+            {
+              "pc": "0x3f75f3",
+              "ins": "vmovdqu64\t%zmm2, (%rcx,%rsi,8)"
+            },
+            {
+              "pc": "0x3f75fa",
+              "ins": "vmovdqu8\t0x30(%r9), %zmm2 {%k1} {z}"
+            },
+            {
+              "pc": "0x3f7604",
+              "ins": "vpermb\t%zmm2, %zmm0, %zmm2"
+            },
+            {
+              "pc": "0x3f760a",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2"
+            },
+            {
+              "pc": "0x3f7611",
+              "ins": "vmovdqu64\t%zmm2, 0x40(%rcx,%rsi,8)"
+            },
+            {
+              "pc": "0x3f7619",
+              "ins": "vmovdqu8\t0x60(%r9), %zmm2 {%k1} {z}"
+            },
+            {
+              "pc": "0x3f7623",
+              "ins": "vpermb\t%zmm2, %zmm0, %zmm2"
+            },
+            {
+              "pc": "0x3f7629",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2"
+            },
+            {
+              "pc": "0x3f7630",
+              "ins": "vmovdqu64\t%zmm2, 0x80(%rcx,%rsi,8)"
+            },
+            {
+              "pc": "0x3f7638",
+              "ins": "vmovdqu8\t0x90(%r9), %zmm2 {%k1} {z}"
+            },
+            {
+              "pc": "0x3f7642",
+              "ins": "vpermb\t%zmm2, %zmm0, %zmm2"
+            },
+            {
+              "pc": "0x3f7648",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2"
+            },
+            {
+              "pc": "0x3f764f",
+              "ins": "vmovdqu64\t%zmm2, 0xc0(%rcx,%rsi,8)"
+            },
+            {
+              "pc": "0x3f7657",
+              "ins": "vmovdqu8\t0xc0(%r9), %zmm2 {%k1} {z}"
+            },
+            {
+              "pc": "0x3f765e",
+              "ins": "vpermb\t%zmm2, %zmm0, %zmm2"
+            },
+            {
+              "pc": "0x3f7664",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2"
+            },
+            {
+              "pc": "0x3f766b",
+              "ins": "vmovdqu64\t%zmm2, 0x100(%rcx,%rsi,8)"
+            },
+            {
+              "pc": "0x3f7673",
+              "ins": "vmovdqu8\t0xf0(%r9), %zmm2 {%k1} {z}"
+            },
+            {
+              "pc": "0x3f767d",
+              "ins": "vpermb\t%zmm2, %zmm0, %zmm2"
+            },
+            {
+              "pc": "0x3f7683",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2"
+            },
+            {
+              "pc": "0x3f768a",
+              "ins": "vmovdqu64\t%zmm2, 0x140(%rcx,%rsi,8)"
+            },
+            {
+              "pc": "0x3f7692",
+              "ins": "vmovdqu8\t0x120(%r9), %zmm2 {%k1} {z}"
+            },
+            {
+              "pc": "0x3f769c",
+              "ins": "vpermb\t%zmm2, %zmm0, %zmm2"
+            },
+            {
+              "pc": "0x3f76a2",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2"
+            },
+            {
+              "pc": "0x3f76a9",
+              "ins": "vmovdqu64\t%zmm2, 0x180(%rcx,%rsi,8)"
+            },
+            {
+              "pc": "0x3f76b1",
+              "ins": "vmovdqu8\t0x150(%r9), %zmm2 {%k1} {z}"
+            },
+            {
+              "pc": "0x3f76bb",
+              "ins": "addq\t$0x180, %r9             # imm = 0x180"
+            },
+            {
+              "pc": "0x3f76c2",
+              "ins": "vpermb\t%zmm2, %zmm0, %zmm2"
+            },
+            {
+              "pc": "0x3f76c8",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2"
+            },
+            {
+              "pc": "0x3f76cf",
+              "ins": "vmovdqu64\t%zmm2, 0x1c0(%rcx,%rsi,8)"
+            },
+            {
+              "pc": "0x3f76d7",
+              "ins": "addq\t$0x40, %rsi"
+            },
+            {
+              "pc": "0x3f76db",
+              "ins": "addq\t$-0x8, %r8"
+            },
+            {
+              "pc": "0x3f76df",
+              "ins": "jne\t0x3f75e0 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj6ELNS0_8geometryE0ELj0EhEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0x100>"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "coherent_gnr": {
+    "worker_path": "build/workspaces/seriespack-coherent-20260910/build/workers/20260910T174905Z-0dd982b3",
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 68462976,
+      "files": 113,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/f6721c625291ec0c58134a8870ce4db87a97ad01319db8edde7b7121b17d2fd1.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "f6721c625291ec0c58134a8870ce4db87a97ad01319db8edde7b7121b17d2fd1",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/f6721c625291ec0c58134a8870ce4db87a97ad01319db8edde7b7121b17d2fd1.tar.gz"
+    },
+    "binary_sha256": "c3ecb305cedb3c3b820242a60f21f6f432e71f4bfb7657fec688f4e10e5cb645",
+    "source_manifest_sha256": "0e7d703b1f328127b7043819950a13053a4301aa695809c7ff6e2a30685138cf",
+    "source_sha256": {
+      "ikea/src/seriespack/native.cpp": "1abf641b246af9c075e8234a9e1b3390c412a8410af9353d84d5c52cd57350da",
+      "ikea/include/ikea/seriespack/native_avx512.h": "62562fc9199c6d81bf5d3f7794866822b296bcf91a6acf761a9cdf325d8d3d3a",
+      "ikea/include/ikea/seriespack/native_avx2.h": "3e78b77bcea0a0229f18b8dd2fbf27a01696b00931703db1610750445501f9f9",
+      "workbench/spikes/ikea-composition/probes/ikea-integers/local.h": "2837915d5375d37842e3ad9b32e74019a35e1cc24f08fe0255d98037a18c343f",
+      "workbench/spikes/ikea-composition/validation/seriespack_predecessor.cpp": "38078e526aad7fe5c7ced606cf384540e8e8b37dc11a33c16566a8a32f59e1dc"
+    },
+    "samples_sha256": "7fc683b16ff24e3b8a5e4918ca40a085cecc49f1701b47efbf80c4c1f82f27c1",
+    "measurements": [
+      {
+        "name": "bulk/predecessor/local/k6/h0/u8/decode_median",
+        "family_index": 285,
+        "per_family_instance_index": 0,
+        "run_name": "bulk/predecessor/local/k6/h0/u8/decode",
+        "run_type": "aggregate",
+        "repetitions": 3,
+        "threads": 1,
+        "aggregate_name": "median",
+        "aggregate_unit": "time",
+        "iterations": 3,
+        "real_time": 88.60813023701014,
+        "cpu_time": 88.59870824054705,
+        "time_unit": "ns",
+        "bulk_input_output_bytes": 16384.0,
+        "checksum": 0.0,
+        "encoded_bytes": 6144.0,
+        "io_bytes_per_value": 1.0,
+        "items_per_second": 92461844677.89955,
+        "logical_values": 8192.0,
+        "query_bytes": 0.0,
+        "values_per_item": 1.0
+      },
+      {
+        "name": "bulk/series/avx512/local/k6/h0/u8/decode_median",
+        "family_index": 305,
+        "per_family_instance_index": 0,
+        "run_name": "bulk/series/avx512/local/k6/h0/u8/decode",
+        "run_type": "aggregate",
+        "repetitions": 3,
+        "threads": 1,
+        "aggregate_name": "median",
+        "aggregate_unit": "time",
+        "iterations": 3,
+        "real_time": 80.34776818471268,
+        "cpu_time": 80.24612340804227,
+        "time_unit": "ns",
+        "bulk_input_output_bytes": 16384.0,
+        "checksum": 0.0,
+        "encoded_bytes": 6144.0,
+        "io_bytes_per_value": 1.0,
+        "items_per_second": 102085928292.69305,
+        "logical_values": 8192.0,
+        "query_bytes": 0.0,
+        "values_per_item": 1.0
+      }
+    ],
+    "compile_commands": [
+      {
+        "directory": "/opt/sixdb/source/build/validation/seriespack/granite-rapids/avx512/Release",
+        "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=1 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/ikea/include -mavx512vbmi -mavx512vbmi2 -mgfni -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=x86-64-v4 -mtune=graniterapids -o ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/native.cpp.o -c /opt/sixdb/source/ikea/src/seriespack/native.cpp",
+        "file": "/opt/sixdb/source/ikea/src/seriespack/native.cpp",
+        "output": "ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/native.cpp.o"
+      },
+      {
+        "directory": "/opt/sixdb/source/build/validation/seriespack/granite-rapids/avx512/Release",
+        "command": "/usr/bin/clang++-21 -DBENCHMARK_STATIC_DEFINE -DSERIESPACK_HAS_PRIOR=1 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=1 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/build/validation/seriespack/granite-rapids/avx512/Release/_deps/googlebenchmark-src/include -mavx512vbmi -mavx512vbmi2 -mgfni -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=x86-64-v4 -mtune=graniterapids -o workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_predecessor.cpp.o -c /opt/sixdb/source/workbench/spikes/ikea-composition/validation/seriespack_predecessor.cpp",
+        "file": "/opt/sixdb/source/workbench/spikes/ikea-composition/validation/seriespack_predecessor.cpp",
+        "output": "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_predecessor.cpp.o"
+      }
+    ],
+    "functions": {
+      "_ZN22seriespack_measurement12_GLOBAL__N_16decodeILj6ELb0EEEvPKhPhm": {
+        "entry": "0x15ee10",
+        "primary_loop": {
+          "start": "0x15ee50",
+          "start_mod64": 16,
+          "instructions": [
+            {
+              "pc": "0x15ee50",
+              "ins": "vmovdqu8\t(%rdi), %zmm3 {%k1} {z}"
+            },
+            {
+              "pc": "0x15ee56",
+              "ins": "vpermb\t%zmm3, %zmm0, %zmm3"
+            },
+            {
+              "pc": "0x15ee5c",
+              "ins": "vpandq\t%zmm1, %zmm3, %zmm3"
+            },
+            {
+              "pc": "0x15ee62",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm3, %zmm2, %zmm3"
+            },
+            {
+              "pc": "0x15ee69",
+              "ins": "vmovdqu64\t%zmm3, (%rsi,%rax)"
+            },
+            {
+              "pc": "0x15ee70",
+              "ins": "vmovdqu8\t0x30(%rdi), %zmm3 {%k1} {z}"
+            },
+            {
+              "pc": "0x15ee7a",
+              "ins": "vpermb\t%zmm3, %zmm0, %zmm3"
+            },
+            {
+              "pc": "0x15ee80",
+              "ins": "vpandq\t%zmm1, %zmm3, %zmm3"
+            },
+            {
+              "pc": "0x15ee86",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm3, %zmm2, %zmm3"
+            },
+            {
+              "pc": "0x15ee8d",
+              "ins": "vmovdqu64\t%zmm3, 0x40(%rsi,%rax)"
+            },
+            {
+              "pc": "0x15ee95",
+              "ins": "vmovdqu8\t0x60(%rdi), %zmm3 {%k1} {z}"
+            },
+            {
+              "pc": "0x15ee9f",
+              "ins": "vpermb\t%zmm3, %zmm0, %zmm3"
+            },
+            {
+              "pc": "0x15eea5",
+              "ins": "vpandq\t%zmm1, %zmm3, %zmm3"
+            },
+            {
+              "pc": "0x15eeab",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm3, %zmm2, %zmm3"
+            },
+            {
+              "pc": "0x15eeb2",
+              "ins": "vmovdqu64\t%zmm3, 0x80(%rsi,%rax)"
+            },
+            {
+              "pc": "0x15eeba",
+              "ins": "vmovdqu8\t0x90(%rdi), %zmm3 {%k1} {z}"
+            },
+            {
+              "pc": "0x15eec4",
+              "ins": "vpermb\t%zmm3, %zmm0, %zmm3"
+            },
+            {
+              "pc": "0x15eeca",
+              "ins": "vpandq\t%zmm1, %zmm3, %zmm3"
+            },
+            {
+              "pc": "0x15eed0",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm3, %zmm2, %zmm3"
+            },
+            {
+              "pc": "0x15eed7",
+              "ins": "vmovdqu64\t%zmm3, 0xc0(%rsi,%rax)"
+            },
+            {
+              "pc": "0x15eedf",
+              "ins": "addq\t$0xc0, %rdi"
+            },
+            {
+              "pc": "0x15eee6",
+              "ins": "addq\t$0x100, %rax            # imm = 0x100"
+            },
+            {
+              "pc": "0x15eeec",
+              "ins": "cmpq\t%rax, %rdx"
+            },
+            {
+              "pc": "0x15eeef",
+              "ins": "jne\t0x15ee50 <_ZN22seriespack_measurement12_GLOBAL__N_16decodeILj6ELb0EEEvPKhPhm+0x40>"
+            }
+          ]
+        }
+      },
+      "_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj6ELNS0_8geometryE0ELj0EhEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_": {
+        "entry": "0x346c90",
+        "primary_loop": {
+          "start": "0x346d90",
+          "start_mod64": 16,
+          "instructions": [
+            {
+              "pc": "0x346d90",
+              "ins": "vmovdqu8\t(%r9), %zmm2 {%k1} {z}"
+            },
+            {
+              "pc": "0x346d96",
+              "ins": "vpermb\t%zmm2, %zmm0, %zmm2"
+            },
+            {
+              "pc": "0x346d9c",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2"
+            },
+            {
+              "pc": "0x346da3",
+              "ins": "vmovdqu64\t%zmm2, (%rcx,%rsi,8)"
+            },
+            {
+              "pc": "0x346daa",
+              "ins": "vmovdqu8\t0x30(%r9), %zmm2 {%k1} {z}"
+            },
+            {
+              "pc": "0x346db4",
+              "ins": "vpermb\t%zmm2, %zmm0, %zmm2"
+            },
+            {
+              "pc": "0x346dba",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2"
+            },
+            {
+              "pc": "0x346dc1",
+              "ins": "vmovdqu64\t%zmm2, 0x40(%rcx,%rsi,8)"
+            },
+            {
+              "pc": "0x346dc9",
+              "ins": "vmovdqu8\t0x60(%r9), %zmm2 {%k1} {z}"
+            },
+            {
+              "pc": "0x346dd3",
+              "ins": "vpermb\t%zmm2, %zmm0, %zmm2"
+            },
+            {
+              "pc": "0x346dd9",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2"
+            },
+            {
+              "pc": "0x346de0",
+              "ins": "vmovdqu64\t%zmm2, 0x80(%rcx,%rsi,8)"
+            },
+            {
+              "pc": "0x346de8",
+              "ins": "vmovdqu8\t0x90(%r9), %zmm2 {%k1} {z}"
+            },
+            {
+              "pc": "0x346df2",
+              "ins": "vpermb\t%zmm2, %zmm0, %zmm2"
+            },
+            {
+              "pc": "0x346df8",
+              "ins": "vgf2p8affineqb\t$0x0, %zmm2, %zmm1, %zmm2"
+            },
+            {
+              "pc": "0x346dff",
+              "ins": "vmovdqu64\t%zmm2, 0xc0(%rcx,%rsi,8)"
+            },
+            {
+              "pc": "0x346e07",
+              "ins": "addq\t$0x20, %rsi"
+            },
+            {
+              "pc": "0x346e0b",
+              "ins": "addq\t$0xc0, %r9"
+            },
+            {
+              "pc": "0x346e12",
+              "ins": "addq\t$-0x4, %r8"
+            },
+            {
+              "pc": "0x346e16",
+              "ins": "jne\t0x346d90 <_ZN4ikea10seriespack6detail12_GLOBAL__N_115decode_completeINS2_10avx512_opsELj6ELNS0_8geometryE0ELj0EhEEvRKNS0_15basic_placementIKSt4byteEEmmPT3_+0x100>"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "linked_constant_identity": {
+    "before": {
+      "permutation": "303005040302010030300b0a09080706303011100f0e0d0c303017161514131230301d1c1b1a19183030232221201f1e303029282726252430302f2e2d2c2b2a",
+      "affine_first8": "0102040810204080"
+    },
+    "after": {
+      "permutation": "303005040302010030300b0a09080706303011100f0e0d0c303017161514131230301d1c1b1a19183030232221201f1e303029282726252430302f2e2d2c2b2a",
+      "affine_first8": "0102040810204080"
+    }
+  },
+  "interpretation": "Zen changed from one 64-value native region per loop to eight after enclosing range factoring; GNR selects four. Leaf accesses, permutation and GFNI constant did not change. The isolated experiment tests grain and placement; no causal performance conclusion or production selection yet."
+}

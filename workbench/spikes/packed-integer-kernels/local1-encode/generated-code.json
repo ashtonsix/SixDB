@@ -1,0 +1,80 @@
+{
+  "compiler": "clang 21.1.8",
+  "scope": "cross compile only; exact coherent baseline object versus overlay native object; all .text/.rodata sections compared byte for byte",
+  "targets": {
+    "zen5": {
+      "sections": {
+        "before_text_rodata_sections": 3896,
+        "candidate_text_rodata_sections": 3896,
+        "changed": [
+          {
+            "name": ".text._ZN4ikea10seriespack6detail12_GLOBAL__N_112encode_typedINS2_10avx512_opsELj1ELNS0_8geometryE0EhEEvRKNS0_10basic_viewISt4byteEEPKT2_",
+            "before_bytes": 2379,
+            "candidate_bytes": 2491
+          }
+        ]
+      },
+      "objects": {
+        "before": {
+          "sha256": "9e1bc6e3a4a4cac84cad053a925c20a85082d9fb380df19e6a9f9fcb3ac20e04",
+          "size": [
+            "3408489",
+            "1344",
+            "0",
+            "3409833",
+            "3407a9",
+            "build/seriespack-local1-encode-public/native-before-zen5.o"
+          ]
+        },
+        "candidate": {
+          "sha256": "0efbc01573a22f51d50f8de620962f0cbebf33a439b59a2afc841a5c03a594c3",
+          "size": [
+            "3408601",
+            "1344",
+            "0",
+            "3409945",
+            "340819",
+            "build/seriespack-local1-encode-public/native-candidate-zen5.o"
+          ]
+        }
+      }
+    },
+    "gnr": {
+      "sections": {
+        "before_text_rodata_sections": 3896,
+        "candidate_text_rodata_sections": 3896,
+        "changed": [
+          {
+            "name": ".text._ZN4ikea10seriespack6detail12_GLOBAL__N_112encode_typedINS2_10avx512_opsELj1ELNS0_8geometryE0EhEEvRKNS0_10basic_viewISt4byteEEPKT2_",
+            "before_bytes": 1893,
+            "candidate_bytes": 2005
+          }
+        ]
+      },
+      "objects": {
+        "before": {
+          "sha256": "3182dc2d9624d4a13484e704792ea5d991f8b4ce1b14ca17c9b037be05e7abdf",
+          "size": [
+            "2973831",
+            "1344",
+            "0",
+            "2975175",
+            "2d65c7",
+            "build/seriespack-local1-encode-public/native-before-gnr.o"
+          ]
+        },
+        "candidate": {
+          "sha256": "9fdfe78d958dc60793756e51869a1ae8f6b878388270b5848e18bb9f01763f62",
+          "size": [
+            "2973943",
+            "1344",
+            "0",
+            "2975287",
+            "2d6637",
+            "build/seriespack-local1-encode-public/native-candidate-gnr.o"
+          ]
+        }
+      }
+    }
+  }
+}

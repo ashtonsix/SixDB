@@ -1,0 +1,234 @@
+{
+  "cases": 28,
+  "counters": [
+    "logical_values",
+    "values_per_batch",
+    "encoded_bytes"
+  ],
+  "files_sha256": {
+    "cases.csv": "01e4836da7a1ae563d89ae2f8754ed0093fd4dfa6d3a8d04accd4e04d915fd6b"
+  },
+  "filter": null,
+  "format": 1,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "before1": {
+      "context": {
+        "access_contract": "exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "codec_contract": "trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:29:56+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T182929Z-2a1cbcac/results/replay/binary-sources/before/before-bench",
+        "host_name": "ip-172-31-28-114",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.265625,
+          0.250977,
+          0.350586
+        ],
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "requested_encoded_resident_bytes": "134217728"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-neon-all-head-replay-20260910/build/workers/20260910T182929Z-2a1cbcac/results/replay/01-before.json",
+      "sha256": "4a9545fcfb9f7b42c56b3fc367bc7e129ff8d6e603c287266387c52db93794df"
+    },
+    "before2": {
+      "context": {
+        "access_contract": "exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "codec_contract": "trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:30:03+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T182929Z-2a1cbcac/results/replay/binary-sources/before/before-bench",
+        "host_name": "ip-172-31-28-114",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.378906,
+          0.276367,
+          0.358398
+        ],
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "requested_encoded_resident_bytes": "134217728"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-neon-all-head-replay-20260910/build/workers/20260910T182929Z-2a1cbcac/results/replay/04-before.json",
+      "sha256": "738db2878512c850cc477f3e5f227dc86958660fe8824dfe7a1b8a727ef420a9"
+    },
+    "candidate1": {
+      "context": {
+        "access_contract": "exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "codec_contract": "trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:29:58+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T182929Z-2a1cbcac/results/replay/binary-sources/candidate/candidate-bench",
+        "host_name": "ip-172-31-28-114",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.265625,
+          0.250977,
+          0.350586
+        ],
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "requested_encoded_resident_bytes": "134217728"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-neon-all-head-replay-20260910/build/workers/20260910T182929Z-2a1cbcac/results/replay/02-candidate.json",
+      "sha256": "883ff6bac0c92002d64e6ee00a0711dcd9e2b38487013ac5238effb98cfca680"
+    },
+    "candidate2": {
+      "context": {
+        "access_contract": "exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency",
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "codec_contract": "trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:30:01+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T182929Z-2a1cbcac/results/replay/binary-sources/candidate/candidate-bench",
+        "host_name": "ip-172-31-28-114",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.324707,
+          0.263672,
+          0.354492
+        ],
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "requested_encoded_resident_bytes": "134217728"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-neon-all-head-replay-20260910/build/workers/20260910T182929Z-2a1cbcac/results/replay/03-candidate.json",
+      "sha256": "3060406a8a720d029afa4d158873da79fe17e1d0da220882cf146a9665ab44f3"
+    }
+  },
+  "kind": "google-benchmark-summary",
+  "units": "CPU/real times are ns per benchmark iteration. ns_per_item uses the reported item rate; an item means what the benchmark counts, not necessarily a value or byte."
+}

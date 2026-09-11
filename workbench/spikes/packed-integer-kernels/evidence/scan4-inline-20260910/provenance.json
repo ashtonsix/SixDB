@@ -1,0 +1,356 @@
+{
+  "cases": 252,
+  "counters": [],
+  "files_sha256": {
+    "cases.csv": "96d35b3cb20938a4289e87ddc4e22dff59985aeee225da11f7a3d82434269c8d"
+  },
+  "filter": null,
+  "format": 1,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "01-before": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:05:16+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T200445Z-b69bf135/results/scan4-inline/replay/binary-sources/before/before-bench",
+        "host_name": "ip-172-31-22-190",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.306152,
+          0.298828,
+          0.276855
+        ],
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "neon",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T200445Z-b69bf135/results/scan4-inline/replay/01-before.json",
+      "sha256": "1599115c75a302537b39cce863fcef30ed3eb3001c98c3e1da302bbfb09f2171"
+    },
+    "02-candidate": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:05:31+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T200445Z-b69bf135/results/scan4-inline/replay/binary-sources/candidate/candidate-bench",
+        "host_name": "ip-172-31-22-190",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.460449,
+          0.333984,
+          0.288574
+        ],
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "neon",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T200445Z-b69bf135/results/scan4-inline/replay/02-candidate.json",
+      "sha256": "4b92600b712efcedbead5830d634a0b35749ba4028f81fca36279b8a74057137"
+    },
+    "03-inline": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:05:47+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T200445Z-b69bf135/results/scan4-inline/replay/binary-sources/inline/inline-bench",
+        "host_name": "ip-172-31-22-190",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.580566,
+          0.367188,
+          0.300293
+        ],
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "neon",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T200445Z-b69bf135/results/scan4-inline/replay/03-inline.json",
+      "sha256": "69ad0d3994923acfdd12f61aaea279988bd1ff1bdcab46af61849778e2d5df4e"
+    },
+    "04-inline": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:06:02+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T200445Z-b69bf135/results/scan4-inline/replay/binary-sources/inline/inline-bench",
+        "host_name": "ip-172-31-22-190",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.674316,
+          0.398926,
+          0.312012
+        ],
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "neon",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T200445Z-b69bf135/results/scan4-inline/replay/04-inline.json",
+      "sha256": "cd270abd89cab40a802deb8b453a56cd48a2b285e525254320430f0617ba064d"
+    },
+    "05-candidate": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:06:18+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T200445Z-b69bf135/results/scan4-inline/replay/binary-sources/candidate/candidate-bench",
+        "host_name": "ip-172-31-22-190",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.747559,
+          0.429199,
+          0.32373
+        ],
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "neon",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T200445Z-b69bf135/results/scan4-inline/replay/05-candidate.json",
+      "sha256": "8b2dd3329d089c66d74f8409cde8727da535d0947442395b0c72bae99915a898"
+    },
+    "06-before": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T20:06:33+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T200445Z-b69bf135/results/scan4-inline/replay/binary-sources/before/before-bench",
+        "host_name": "ip-172-31-22-190",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.804199,
+          0.458008,
+          0.335449
+        ],
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "neon",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260910T200445Z-b69bf135/results/scan4-inline/replay/06-before.json",
+      "sha256": "669785bae3583439fbcc61158c33df689ce1a1c3ce88b64ce107497ea1f4cc5c"
+    }
+  },
+  "kind": "google-benchmark-summary",
+  "units": "CPU/real times are ns per benchmark iteration. ns_per_item uses the reported item rate; an item means what the benchmark counts, not necessarily a value or byte."
+}

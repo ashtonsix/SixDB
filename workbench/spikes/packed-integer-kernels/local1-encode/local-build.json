@@ -1,0 +1,50 @@
+{
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)",
+  "profile": [
+    "-march=x86-64-v4",
+    "-mavx512vbmi",
+    "-mavx512vbmi2",
+    "-mgfni"
+  ],
+  "optimization": "normal O3; no optimizer-disabled guard workaround",
+  "guard_source_sha256": "4dccc14463084255ee2a35b3838bf2e2dfc1cb3db20fb795e1d32382b1a72bcf",
+  "heads_source_sha256": "d35e1b6665a18184905bad938d5218d1eed5ad10396dda91999ea55822758d3e",
+  "objects_and_binaries": {
+    "check-before-zen5": {
+      "sha256": "eb6791fecbf9829f8aed57364b3fc0719545541279734ce7433c68b58bbecd98",
+      "bytes": 35399104,
+      "status": "cross compiled and linked; not executed"
+    },
+    "check-candidate-zen5": {
+      "sha256": "72db6a807f53b97fc5f68628dee948e0e45dae0a5740c4b2f422899c0046e52c",
+      "bytes": 35404488,
+      "status": "cross compiled and linked; not executed"
+    },
+    "check-before-gnr": {
+      "sha256": "a420e6e35ffa364dd34d8a5a2cff8c296c752202583ccaaa32aa31389259c16f",
+      "bytes": 33820304,
+      "status": "cross compiled and linked; not executed"
+    },
+    "check-candidate-gnr": {
+      "sha256": "88ad71bd2b77b643f7425b4d154c147f59966d2b81c77155b3d53a808c400af5",
+      "bytes": 33825536,
+      "status": "cross compiled and linked; not executed"
+    },
+    "heads-before-zen5": {
+      "sha256": "791de151f9ebbebd446cd231f3d7b3487e07849109eb79038dc920a31c586b27",
+      "bytes": 35132496,
+      "status": "cross compiled and linked; not executed"
+    },
+    "heads-candidate-zen5": {
+      "sha256": "3a49b2c9bd57bf240e010cc4aa88f4518b42074c8e10010fed92bb0b8265d9ba",
+      "bytes": 35147456,
+      "status": "cross compiled and linked; not executed"
+    },
+    "heads-bench.o": {
+      "sha256": "d4f6a0af37759ee01a4ce77081384ec18f525b9be162d21f79ad8e2bebbf3f16",
+      "bytes": 13888,
+      "status": "cross compiled and linked; not executed"
+    }
+  },
+  "scope": "local cross compilation; worker repeats exact coherent flags and normal hardware prerequisites"
+}

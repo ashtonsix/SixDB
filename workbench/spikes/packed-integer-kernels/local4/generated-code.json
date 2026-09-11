@@ -1,0 +1,1715 @@
+{
+  "bench-zen5": {
+    "binary_sha256": "6b57b61128d502663635e08af0629cc1377bb6b347c280755bc23d8b5d25c342",
+    "section_sizes": {
+      ".note.gnu.property": 32,
+      ".interp": 28,
+      ".gnu.hash": 36,
+      ".dynsym": 672,
+      ".dynstr": 614,
+      ".gnu.version": 56,
+      ".gnu.version_r": 224,
+      ".rela.dyn": 1032,
+      ".rela.plt": 456,
+      ".init": 27,
+      ".plt": 320,
+      ".plt.got": 8,
+      ".text": 27855,
+      ".fini": 13,
+      ".rodata": 932,
+      ".eh_frame_hdr": 188,
+      ".eh_frame": 2208,
+      ".gcc_except_table": 700,
+      ".note.package": 120,
+      ".init_array": 8,
+      ".fini_array": 8,
+      ".data.rel.ro": 256,
+      ".dynamic": 528,
+      ".got": 56,
+      ".got.plt": 176,
+      ".data": 24,
+      ".bss": 16,
+      ".comment": 122
+    },
+    "constant_sections": {
+      ".rodata": {
+        "bytes": 932,
+        "sha256": "e60a391a3cd376f29fd215aabf00016c3566c15d6bf3c7bb843c73fd879f2de8",
+        "hex": null
+      }
+    },
+    "interpretation": "Backward loops and static instruction counts are retained for inspection. Only actual paired hardware timing can establish benefit. Tables are per object/binary, not assigned to individual functions.",
+    "functions": {
+      "void (anonymous namespace)::operation<0u, unsigned char>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 16,
+        "size_bytes": 613,
+        "first_backward_loop": {
+          "start_offset": 64,
+          "start_mod64": 16,
+          "backward_branch_offset": 175,
+          "instruction_count": 26,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "stack_references": 0,
+          "calls": 0,
+          "assembly": [
+            "vmovdqu\t(%rsi,%rax,8), %ymm3",
+            "addq\t$-0x4, %rcx",
+            "vpsrlq\t$0x7, %ymm3, %ymm4",
+            "vpxor\t%ymm3, %ymm4, %ymm4",
+            "vpand\t%ymm0, %ymm4, %ymm4",
+            "vpsllq\t$0x7, %ymm4, %ymm5",
+            "vpor\t%ymm4, %ymm5, %ymm4",
+            "vpxor\t%ymm3, %ymm4, %ymm3",
+            "vpsrlq\t$0xe, %ymm3, %ymm4",
+            "vpxor\t%ymm3, %ymm4, %ymm4",
+            "vpand\t%ymm1, %ymm4, %ymm4",
+            "vpsllq\t$0xe, %ymm4, %ymm5",
+            "vpor\t%ymm4, %ymm5, %ymm4",
+            "vpxor\t%ymm3, %ymm4, %ymm3",
+            "vpsrlq\t$0x1c, %ymm3, %ymm4",
+            "vpxor\t%ymm3, %ymm4, %ymm4",
+            "vpand\t%ymm2, %ymm4, %ymm4",
+            "vpsllq\t$0x1c, %ymm4, %ymm5",
+            "vpor\t%ymm4, %ymm5, %ymm4",
+            "vpxor\t%ymm3, %ymm4, %ymm3",
+            "vpshufd\t$0xe8, %ymm3, %ymm3",
+            "vpermq\t$0xe8, %ymm3, %ymm3",
+            "vmovdqu\t%xmm3, (%rbx,%rax,4)",
+            "addq\t$0x4, %rax",
+            "cmpq\t$0x3, %rcx",
+            "ja\t0x3890 <void (anonymous namespace)::operation<0u, unsigned char>(void const*, unsigned char*, unsigned long)+0x40>"
+          ]
+        },
+        "all_function_calls_count": 1
+      },
+      "void (anonymous namespace)::operation<1u, unsigned char>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 0,
+        "size_bytes": 613,
+        "first_backward_loop": {
+          "start_offset": 80,
+          "start_mod64": 16,
+          "backward_branch_offset": 182,
+          "instruction_count": 24,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "stack_references": 0,
+          "calls": 0,
+          "assembly": [
+            "vmovdqu\t(%rsi,%rax,8), %ymm4",
+            "addq\t$-0x4, %rcx",
+            "vpsrlq\t$0x7, %ymm4, %ymm5",
+            "vpxor\t%ymm4, %ymm5, %ymm5",
+            "vpand\t%ymm0, %ymm5, %ymm5",
+            "vpsllq\t$0x7, %ymm5, %ymm6",
+            "vpor\t%ymm5, %ymm6, %ymm5",
+            "vpxor\t%ymm4, %ymm5, %ymm4",
+            "vpsrlq\t$0xe, %ymm4, %ymm5",
+            "vpxor\t%ymm4, %ymm5, %ymm5",
+            "vpand\t%ymm1, %ymm5, %ymm5",
+            "vpsllq\t$0xe, %ymm5, %ymm6",
+            "vpor\t%ymm5, %ymm6, %ymm5",
+            "vpxor\t%ymm4, %ymm5, %ymm4",
+            "vpand\t%ymm2, %ymm4, %ymm5",
+            "vpsrlq\t$0x1c, %ymm4, %ymm4",
+            "vpand\t%ymm3, %ymm4, %ymm4",
+            "vpor\t%ymm5, %ymm4, %ymm4",
+            "vpshufd\t$0xe8, %ymm4, %ymm4",
+            "vpermq\t$0xe8, %ymm4, %ymm4",
+            "vmovdqu\t%xmm4, (%rbx,%rax,4)",
+            "addq\t$0x4, %rax",
+            "cmpq\t$0x3, %rcx",
+            "ja\t0x3b10 <void (anonymous namespace)::operation<1u, unsigned char>(void const*, unsigned char*, unsigned long)+0x50>"
+          ]
+        },
+        "all_function_calls_count": 1
+      },
+      "void (anonymous namespace)::operation<2u, unsigned char>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 48,
+        "size_bytes": 885,
+        "first_backward_loop": {
+          "start_offset": 64,
+          "start_mod64": 48,
+          "backward_branch_offset": 276,
+          "instruction_count": 48,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 1
+      },
+      "void (anonymous namespace)::operation<3u, unsigned char>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 48,
+        "size_bytes": 853,
+        "first_backward_loop": {
+          "start_offset": 64,
+          "start_mod64": 48,
+          "backward_branch_offset": 258,
+          "instruction_count": 44,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 1
+      },
+      "(anonymous namespace)::predecessor(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 16,
+        "size_bytes": 288,
+        "first_backward_loop": {
+          "start_offset": 64,
+          "start_mod64": 16,
+          "backward_branch_offset": 254,
+          "instruction_count": 43,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "stack_references": 0,
+          "calls": 0,
+          "assembly": [
+            "vmovdqu\t-0x20(%rdi,%rax,8), %ymm3",
+            "vpsrlq\t$0x7, %ymm3, %ymm4",
+            "vpxor\t%ymm3, %ymm4, %ymm4",
+            "vpand\t%ymm0, %ymm4, %ymm4",
+            "vpsllq\t$0x7, %ymm4, %ymm5",
+            "vpor\t%ymm4, %ymm5, %ymm4",
+            "vpxor\t%ymm3, %ymm4, %ymm3",
+            "vpsrlq\t$0xe, %ymm3, %ymm4",
+            "vpxor\t%ymm3, %ymm4, %ymm4",
+            "vpand\t%ymm1, %ymm4, %ymm4",
+            "vpsllq\t$0xe, %ymm4, %ymm5",
+            "vpor\t%ymm4, %ymm5, %ymm4",
+            "vpxor\t%ymm3, %ymm4, %ymm3",
+            "vpsrlq\t$0x1c, %ymm3, %ymm4",
+            "vpandn\t%ymm3, %ymm2, %ymm3",
+            "vpand\t%ymm2, %ymm4, %ymm4",
+            "vpor\t%ymm3, %ymm4, %ymm3",
+            "vextracti128\t$0x1, %ymm3, %xmm4",
+            "vshufps\t$0x88, %xmm4, %xmm3, %xmm3",
+            "vmovups\t%xmm3, -0x10(%rsi,%rax,4)",
+            "vmovdqu\t(%rdi,%rax,8), %ymm3",
+            "vpsrlq\t$0x7, %ymm3, %ymm4",
+            "vpxor\t%ymm3, %ymm4, %ymm4",
+            "vpand\t%ymm0, %ymm4, %ymm4",
+            "vpsllq\t$0x7, %ymm4, %ymm5",
+            "vpor\t%ymm4, %ymm5, %ymm4",
+            "vpxor\t%ymm3, %ymm4, %ymm3",
+            "vpsrlq\t$0xe, %ymm3, %ymm4",
+            "vpxor\t%ymm3, %ymm4, %ymm4",
+            "vpand\t%ymm1, %ymm4, %ymm4",
+            "vpsllq\t$0xe, %ymm4, %ymm5",
+            "vpor\t%ymm4, %ymm5, %ymm4",
+            "vpxor\t%ymm3, %ymm4, %ymm3",
+            "vpsrlq\t$0x1c, %ymm3, %ymm4",
+            "vpandn\t%ymm3, %ymm2, %ymm3",
+            "vpand\t%ymm2, %ymm4, %ymm4",
+            "vpor\t%ymm3, %ymm4, %ymm3",
+            "vextracti128\t$0x1, %ymm3, %xmm4",
+            "vshufps\t$0x88, %xmm4, %xmm3, %xmm3",
+            "vmovups\t%xmm3, (%rsi,%rax,4)",
+            "addq\t$0x8, %rax",
+            "cmpq\t$0x24, %rax",
+            "jne\t0x4450 <(anonymous namespace)::predecessor(void const*, unsigned char*, unsigned long)+0x40>"
+          ]
+        },
+        "all_function_calls_count": 0
+      },
+      "void (anonymous namespace)::operation<0u, unsigned short>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 16,
+        "size_bytes": 995,
+        "first_backward_loop": {
+          "start_offset": 80,
+          "start_mod64": 32,
+          "backward_branch_offset": 209,
+          "instruction_count": 30,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 1
+      },
+      "void (anonymous namespace)::operation<1u, unsigned short>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 0,
+        "size_bytes": 829,
+        "first_backward_loop": {
+          "start_offset": 96,
+          "start_mod64": 32,
+          "backward_branch_offset": 216,
+          "instruction_count": 28,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 1
+      },
+      "void (anonymous namespace)::operation<2u, unsigned short>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 0,
+        "size_bytes": 1133,
+        "first_backward_loop": {
+          "start_offset": 80,
+          "start_mod64": 16,
+          "backward_branch_offset": 324,
+          "instruction_count": 55,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 1
+      },
+      "void (anonymous namespace)::operation<3u, unsigned short>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 48,
+        "size_bytes": 1133,
+        "first_backward_loop": {
+          "start_offset": 80,
+          "start_mod64": 0,
+          "backward_branch_offset": 306,
+          "instruction_count": 51,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 1
+      },
+      "void (anonymous namespace)::operation<0u, unsigned int>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 32,
+        "size_bytes": 905,
+        "first_backward_loop": {
+          "start_offset": 96,
+          "start_mod64": 0,
+          "backward_branch_offset": 273,
+          "instruction_count": 38,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 1
+      },
+      "void (anonymous namespace)::operation<1u, unsigned int>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 48,
+        "size_bytes": 929,
+        "first_backward_loop": {
+          "start_offset": 112,
+          "start_mod64": 32,
+          "backward_branch_offset": 285,
+          "instruction_count": 36,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 1
+      },
+      "void (anonymous namespace)::operation<2u, unsigned int>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 32,
+        "size_bytes": 1377,
+        "first_backward_loop": {
+          "start_offset": 112,
+          "start_mod64": 16,
+          "backward_branch_offset": 471,
+          "instruction_count": 71,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 1
+      },
+      "void (anonymous namespace)::operation<3u, unsigned int>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 16,
+        "size_bytes": 1377,
+        "first_backward_loop": {
+          "start_offset": 112,
+          "start_mod64": 0,
+          "backward_branch_offset": 451,
+          "instruction_count": 67,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 1
+      },
+      "void (anonymous namespace)::operation<0u, unsigned long>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 0,
+        "size_bytes": 1130,
+        "first_backward_loop": {
+          "start_offset": 96,
+          "start_mod64": 32,
+          "backward_branch_offset": 349,
+          "instruction_count": 50,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 2
+      },
+      "void (anonymous namespace)::operation<1u, unsigned long>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 48,
+        "size_bytes": 1151,
+        "first_backward_loop": {
+          "start_offset": 112,
+          "start_mod64": 32,
+          "backward_branch_offset": 361,
+          "instruction_count": 48,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 2
+      },
+      "void (anonymous namespace)::operation<2u, unsigned long>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 48,
+        "size_bytes": 1743,
+        "first_backward_loop": {
+          "start_offset": 96,
+          "start_mod64": 16,
+          "backward_branch_offset": 609,
+          "instruction_count": 95,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 2
+      },
+      "void (anonymous namespace)::operation<3u, unsigned long>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 0,
+        "size_bytes": 1727,
+        "first_backward_loop": {
+          "start_offset": 96,
+          "start_mod64": 32,
+          "backward_branch_offset": 587,
+          "instruction_count": 91,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 2
+      }
+    }
+  },
+  "bench-gnr": {
+    "binary_sha256": "8f0332d6a683d193e2a9c5590d4197c8c0d27e4609e7c152279711b19aa4f6f6",
+    "section_sizes": {
+      ".note.gnu.property": 32,
+      ".interp": 28,
+      ".gnu.hash": 36,
+      ".dynsym": 672,
+      ".dynstr": 614,
+      ".gnu.version": 56,
+      ".gnu.version_r": 224,
+      ".rela.dyn": 1032,
+      ".rela.plt": 456,
+      ".init": 27,
+      ".plt": 320,
+      ".plt.got": 8,
+      ".text": 25352,
+      ".fini": 13,
+      ".rodata": 972,
+      ".eh_frame_hdr": 188,
+      ".eh_frame": 2224,
+      ".gcc_except_table": 700,
+      ".note.package": 120,
+      ".init_array": 8,
+      ".fini_array": 8,
+      ".data.rel.ro": 256,
+      ".dynamic": 528,
+      ".got": 56,
+      ".got.plt": 176,
+      ".data": 24,
+      ".bss": 16,
+      ".comment": 122
+    },
+    "constant_sections": {
+      ".rodata": {
+        "bytes": 972,
+        "sha256": "a161119d1d496e68bb6fb2a58a3f166b4db400dcbdfdb746985fdd3cbd9dc610",
+        "hex": null
+      }
+    },
+    "interpretation": "Backward loops and static instruction counts are retained for inspection. Only actual paired hardware timing can establish benefit. Tables are per object/binary, not assigned to individual functions.",
+    "functions": {
+      "void (anonymous namespace)::operation<0u, unsigned char>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 16,
+        "size_bytes": 629,
+        "first_backward_loop": {
+          "start_offset": 80,
+          "start_mod64": 32,
+          "backward_branch_offset": 185,
+          "instruction_count": 25,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "stack_references": 0,
+          "calls": 0,
+          "assembly": [
+            "vmovdqu\t(%rsi,%rcx,8), %ymm4",
+            "vpsrlq\t$0x7, %ymm4, %ymm5",
+            "vpxor\t%ymm4, %ymm5, %ymm5",
+            "vpand\t%ymm0, %ymm5, %ymm5",
+            "vpsllq\t$0x7, %ymm5, %ymm6",
+            "vpor\t%ymm5, %ymm6, %ymm5",
+            "vpxor\t%ymm4, %ymm5, %ymm4",
+            "vpsrlq\t$0xe, %ymm4, %ymm5",
+            "vpxor\t%ymm4, %ymm5, %ymm5",
+            "vpand\t%ymm1, %ymm5, %ymm5",
+            "vpsllq\t$0xe, %ymm5, %ymm6",
+            "vpor\t%ymm5, %ymm6, %ymm5",
+            "vpxor\t%ymm4, %ymm5, %ymm4",
+            "vpsrlq\t$0x1c, %ymm4, %ymm5",
+            "vpxor\t%ymm4, %ymm5, %ymm5",
+            "vpand\t%ymm2, %ymm5, %ymm5",
+            "vpsllq\t$0x1c, %ymm5, %ymm6",
+            "vpor\t%ymm5, %ymm6, %ymm5",
+            "vpxor\t%ymm4, %ymm5, %ymm4",
+            "vpermd\t%ymm4, %ymm3, %ymm4",
+            "vmovdqu\t%xmm4, (%rbx,%rcx,4)",
+            "addq\t$0x4, %rcx",
+            "addq\t$-0x4, %rax",
+            "cmpq\t$0x3, %rax",
+            "ja\t0x3760 <void (anonymous namespace)::operation<0u, unsigned char>(void const*, unsigned char*, unsigned long)+0x50>"
+          ]
+        },
+        "all_function_calls_count": 1
+      },
+      "void (anonymous namespace)::operation<1u, unsigned char>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 16,
+        "size_bytes": 645,
+        "first_backward_loop": {
+          "start_offset": 96,
+          "start_mod64": 48,
+          "backward_branch_offset": 192,
+          "instruction_count": 23,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "stack_references": 0,
+          "calls": 0,
+          "assembly": [
+            "vmovdqu\t(%rsi,%rcx,8), %ymm5",
+            "vpsrlq\t$0x7, %ymm5, %ymm6",
+            "vpxor\t%ymm5, %ymm6, %ymm6",
+            "vpand\t%ymm0, %ymm6, %ymm6",
+            "vpsllq\t$0x7, %ymm6, %ymm7",
+            "vpor\t%ymm6, %ymm7, %ymm6",
+            "vpxor\t%ymm5, %ymm6, %ymm5",
+            "vpsrlq\t$0xe, %ymm5, %ymm6",
+            "vpxor\t%ymm5, %ymm6, %ymm6",
+            "vpand\t%ymm1, %ymm6, %ymm6",
+            "vpsllq\t$0xe, %ymm6, %ymm7",
+            "vpor\t%ymm6, %ymm7, %ymm6",
+            "vpxor\t%ymm5, %ymm6, %ymm5",
+            "vpand\t%ymm2, %ymm5, %ymm6",
+            "vpsrlq\t$0x1c, %ymm5, %ymm5",
+            "vpand\t%ymm3, %ymm5, %ymm5",
+            "vpor\t%ymm6, %ymm5, %ymm5",
+            "vpermd\t%ymm5, %ymm4, %ymm5",
+            "vmovdqu\t%xmm5, (%rbx,%rcx,4)",
+            "addq\t$0x4, %rcx",
+            "addq\t$-0x4, %rax",
+            "cmpq\t$0x3, %rax",
+            "ja\t0x39f0 <void (anonymous namespace)::operation<1u, unsigned char>(void const*, unsigned char*, unsigned long)+0x60>"
+          ]
+        },
+        "all_function_calls_count": 1
+      },
+      "void (anonymous namespace)::operation<2u, unsigned char>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 32,
+        "size_bytes": 900,
+        "first_backward_loop": {
+          "start_offset": 80,
+          "start_mod64": 48,
+          "backward_branch_offset": 280,
+          "instruction_count": 46,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 1
+      },
+      "void (anonymous namespace)::operation<3u, unsigned char>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 48,
+        "size_bytes": 884,
+        "first_backward_loop": {
+          "start_offset": 80,
+          "start_mod64": 0,
+          "backward_branch_offset": 262,
+          "instruction_count": 42,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 1
+      },
+      "(anonymous namespace)::predecessor(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 48,
+        "size_bytes": 202,
+        "first_backward_loop": {
+          "start_offset": 80,
+          "start_mod64": 0,
+          "backward_branch_offset": 172,
+          "instruction_count": 22,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "stack_references": 0,
+          "calls": 0,
+          "assembly": [
+            "vmovdqu\t(%rdi,%rax,8), %ymm5",
+            "vpsrlq\t$0x7, %ymm5, %ymm6",
+            "vpxor\t%ymm5, %ymm6, %ymm6",
+            "vpand\t%ymm0, %ymm6, %ymm6",
+            "vpsllq\t$0x7, %ymm6, %ymm7",
+            "vpor\t%ymm6, %ymm7, %ymm6",
+            "vpxor\t%ymm5, %ymm6, %ymm5",
+            "vpsrlq\t$0xe, %ymm5, %ymm6",
+            "vpxor\t%ymm5, %ymm6, %ymm6",
+            "vpand\t%ymm1, %ymm6, %ymm6",
+            "vpsllq\t$0xe, %ymm6, %ymm7",
+            "vpor\t%ymm6, %ymm7, %ymm6",
+            "vpxor\t%ymm5, %ymm6, %ymm5",
+            "vpsrlq\t$0x1c, %ymm5, %ymm6",
+            "vpand\t%ymm2, %ymm6, %ymm6",
+            "vpand\t%ymm3, %ymm5, %ymm5",
+            "vpor\t%ymm5, %ymm6, %ymm5",
+            "vpermd\t%ymm5, %ymm4, %ymm5",
+            "vmovdqu\t%xmm5, (%rsi,%rax,4)",
+            "addq\t$0x4, %rax",
+            "cmpq\t$0x20, %rax",
+            "jne\t0x4380 <(anonymous namespace)::predecessor(void const*, unsigned char*, unsigned long)+0x50>"
+          ]
+        },
+        "all_function_calls_count": 0
+      },
+      "void (anonymous namespace)::operation<0u, unsigned short>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 32,
+        "size_bytes": 797,
+        "first_backward_loop": {
+          "start_offset": 96,
+          "start_mod64": 0,
+          "backward_branch_offset": 219,
+          "instruction_count": 29,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 1
+      },
+      "void (anonymous namespace)::operation<1u, unsigned short>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 0,
+        "size_bytes": 829,
+        "first_backward_loop": {
+          "start_offset": 96,
+          "start_mod64": 32,
+          "backward_branch_offset": 210,
+          "instruction_count": 27,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 1
+      },
+      "void (anonymous namespace)::operation<2u, unsigned short>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 0,
+        "size_bytes": 1149,
+        "first_backward_loop": {
+          "start_offset": 96,
+          "start_mod64": 32,
+          "backward_branch_offset": 328,
+          "instruction_count": 53,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 1
+      },
+      "void (anonymous namespace)::operation<3u, unsigned short>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 0,
+        "size_bytes": 1133,
+        "first_backward_loop": {
+          "start_offset": 96,
+          "start_mod64": 32,
+          "backward_branch_offset": 310,
+          "instruction_count": 49,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 1
+      },
+      "void (anonymous namespace)::operation<0u, unsigned int>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 48,
+        "size_bytes": 921,
+        "first_backward_loop": {
+          "start_offset": 112,
+          "start_mod64": 32,
+          "backward_branch_offset": 290,
+          "instruction_count": 37,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 1
+      },
+      "void (anonymous namespace)::operation<1u, unsigned int>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 16,
+        "size_bytes": 688,
+        "first_backward_loop": {
+          "start_offset": 128,
+          "start_mod64": 16,
+          "backward_branch_offset": 303,
+          "instruction_count": 35,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 1
+      },
+      "void (anonymous namespace)::operation<2u, unsigned int>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 0,
+        "size_bytes": 1104,
+        "first_backward_loop": {
+          "start_offset": 112,
+          "start_mod64": 48,
+          "backward_branch_offset": 466,
+          "instruction_count": 69,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 1
+      },
+      "void (anonymous namespace)::operation<3u, unsigned int>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 16,
+        "size_bytes": 1104,
+        "first_backward_loop": {
+          "start_offset": 112,
+          "start_mod64": 0,
+          "backward_branch_offset": 444,
+          "instruction_count": 65,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 1
+      },
+      "void (anonymous namespace)::operation<0u, unsigned long>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 32,
+        "size_bytes": 840,
+        "first_backward_loop": {
+          "start_offset": 112,
+          "start_mod64": 16,
+          "backward_branch_offset": 366,
+          "instruction_count": 49,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 2
+      },
+      "void (anonymous namespace)::operation<1u, unsigned long>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 48,
+        "size_bytes": 840,
+        "first_backward_loop": {
+          "start_offset": 112,
+          "start_mod64": 32,
+          "backward_branch_offset": 363,
+          "instruction_count": 47,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 2
+      },
+      "void (anonymous namespace)::operation<2u, unsigned long>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 0,
+        "size_bytes": 1432,
+        "first_backward_loop": {
+          "start_offset": 112,
+          "start_mod64": 48,
+          "backward_branch_offset": 618,
+          "instruction_count": 93,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 2
+      },
+      "void (anonymous namespace)::operation<3u, unsigned long>(void const*, unsigned char*, unsigned long)": {
+        "entry_mod64": 32,
+        "size_bytes": 1432,
+        "first_backward_loop": {
+          "start_offset": 112,
+          "start_mod64": 16,
+          "backward_branch_offset": 601,
+          "instruction_count": 90,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 2
+      }
+    }
+  },
+  "witness-current-zen5.o": {
+    "binary_sha256": "9b282f028bae30e6ddea09e7a172f4e4ef4ad513325c48cc3c73b5d6d624a7a5",
+    "section_sizes": {
+      ".text": 2906,
+      ".rodata.cst8": 120,
+      ".rodata": 2,
+      ".rodata.cst16": 64,
+      ".rodata.cst32": 192,
+      ".comment": 86,
+      ".eh_frame": 152,
+      ".llvm_addrsig": 0
+    },
+    "constant_sections": {
+      ".rodata.cst8": {
+        "bytes": 120,
+        "sha256": "46f10158dcdecbcba094a95d5e43d2b7fd2c743a6cc2fed92c3828ef6cac9b0a",
+        "hex": "aa00aa00aa00aa00cccc0000cccc0000f0f0f0f0000000000f0f0f0fffffffffaa00aa00aa00aa00cccc0000cccc0000f0f0f0f000000000aa00aa00aa00aa00cccc0000cccc0000f0f0f0f00000000000020406080a0c0eaa00aa00aa00aa00cccc0000cccc0000f0f0f0f00000000000020406080a0c0e"
+      },
+      ".rodata": {
+        "bytes": 2,
+        "sha256": "ea5dbf9596d187e9500f23e9a680109475341cf4e81f7e043f7d97152c10772f",
+        "hex": "ff00"
+      },
+      ".rodata.cst16": {
+        "bytes": 64,
+        "sha256": "565108d925511d09a912c1c0323b51d07784cd26593ff5b5a52e350c89cb72a0",
+        "hex": "00020406080a0c0e000000000000000000020406080a0c0e00000000000000000004080c80808080808080808080808000088080808080808080808080808080"
+      },
+      ".rodata.cst32": {
+        "bytes": 192,
+        "sha256": "6bd9e5c420e87d71a38365e7d49eddc2fd1463ffa31a9d1d48d6f8868ee0a87e",
+        "hex": "00020406080a0c0e000000000000000000020406080a0c0e000000000000000000000000040000000000000000000000010000000500000000000000000000000004080c8080808080808080808080800004080c80808080808080808080808000020406080a0c0e000000000000000000020406080a0c0e000000000000000000000000040000000000000000000000010000000500000000000000000000000008808080808080808080808080808000088080808080808080808080808080"
+      }
+    },
+    "interpretation": "Backward loops and static instruction counts are retained for inspection. Only actual paired hardware timing can establish benefit. Tables are per object/binary, not assigned to individual functions.",
+    "functions": {
+      "local4_u8": {
+        "entry_mod64": 0,
+        "size_bytes": 476,
+        "first_backward_loop": {
+          "start_offset": 64,
+          "start_mod64": 0,
+          "backward_branch_offset": 175,
+          "instruction_count": 26,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "stack_references": 0,
+          "calls": 0,
+          "assembly": [
+            "vmovdqu\t(%rdi,%rcx,8), %ymm3",
+            "addq\t$-0x4, %rdx",
+            "vpsrlq\t$0x7, %ymm3, %ymm4",
+            "vpxor\t%ymm3, %ymm4, %ymm4",
+            "vpand\t%ymm0, %ymm4, %ymm4",
+            "vpsllq\t$0x7, %ymm4, %ymm5",
+            "vpor\t%ymm4, %ymm5, %ymm4",
+            "vpxor\t%ymm3, %ymm4, %ymm3",
+            "vpsrlq\t$0xe, %ymm3, %ymm4",
+            "vpxor\t%ymm3, %ymm4, %ymm4",
+            "vpand\t%ymm1, %ymm4, %ymm4",
+            "vpsllq\t$0xe, %ymm4, %ymm5",
+            "vpor\t%ymm4, %ymm5, %ymm4",
+            "vpxor\t%ymm3, %ymm4, %ymm3",
+            "vpsrlq\t$0x1c, %ymm3, %ymm4",
+            "vpxor\t%ymm3, %ymm4, %ymm4",
+            "vpand\t%ymm2, %ymm4, %ymm4",
+            "vpsllq\t$0x1c, %ymm4, %ymm5",
+            "vpor\t%ymm4, %ymm5, %ymm4",
+            "vpxor\t%ymm3, %ymm4, %ymm3",
+            "vpshufd\t$0xe8, %ymm3, %ymm3",
+            "vpermq\t$0xe8, %ymm3, %ymm3",
+            "vmovdqu\t%xmm3, (%rsi,%rcx,4)",
+            "addq\t$0x4, %rcx",
+            "cmpq\t$0x3, %rdx",
+            "ja\t0x40 <local4_u8+0x40>"
+          ]
+        },
+        "all_function_calls_count": 0
+      },
+      "local4_u16": {
+        "entry_mod64": 32,
+        "size_bytes": 842,
+        "first_backward_loop": {
+          "start_offset": 80,
+          "start_mod64": 48,
+          "backward_branch_offset": 209,
+          "instruction_count": 30,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 0
+      },
+      "local4_u32": {
+        "entry_mod64": 48,
+        "size_bytes": 704,
+        "first_backward_loop": {
+          "start_offset": 80,
+          "start_mod64": 0,
+          "backward_branch_offset": 257,
+          "instruction_count": 38,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 0
+      },
+      "local4_u64": {
+        "entry_mod64": 48,
+        "size_bytes": 874,
+        "first_backward_loop": {
+          "start_offset": 80,
+          "start_mod64": 0,
+          "backward_branch_offset": 333,
+          "instruction_count": 50,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 0
+      }
+    }
+  },
+  "witness-projected-zen5.o": {
+    "binary_sha256": "023944cc4f5b94f49e9c93bcf348272040f0bd072c4258154d1aece19ad5717c",
+    "section_sizes": {
+      ".text": 2922,
+      ".rodata.cst8": 144,
+      ".rodata": 2,
+      ".rodata.cst16": 64,
+      ".rodata.cst32": 192,
+      ".comment": 86,
+      ".eh_frame": 152,
+      ".llvm_addrsig": 0
+    },
+    "constant_sections": {
+      ".rodata.cst8": {
+        "bytes": 144,
+        "sha256": "f11cb90231fa021a8d97173f2f6268383b12896596bbd978312e290cad4e0b2b",
+        "hex": "aa00aa00aa00aa00cccc0000cccc00000f0f0f0ffffffffff0f0f0f000000000aa00aa00aa00aa00cccc0000cccc00000f0f0f0ffffffffff0f0f0f000000000aa00aa00aa00aa00cccc0000cccc00000f0f0f0ffffffffff0f0f0f00000000000020406080a0c0eaa00aa00aa00aa00cccc0000cccc00000f0f0f0ffffffffff0f0f0f00000000000020406080a0c0e"
+      },
+      ".rodata": {
+        "bytes": 2,
+        "sha256": "ea5dbf9596d187e9500f23e9a680109475341cf4e81f7e043f7d97152c10772f",
+        "hex": "ff00"
+      },
+      ".rodata.cst16": {
+        "bytes": 64,
+        "sha256": "565108d925511d09a912c1c0323b51d07784cd26593ff5b5a52e350c89cb72a0",
+        "hex": "00020406080a0c0e000000000000000000020406080a0c0e00000000000000000004080c80808080808080808080808000088080808080808080808080808080"
+      },
+      ".rodata.cst32": {
+        "bytes": 192,
+        "sha256": "6bd9e5c420e87d71a38365e7d49eddc2fd1463ffa31a9d1d48d6f8868ee0a87e",
+        "hex": "00020406080a0c0e000000000000000000020406080a0c0e000000000000000000000000040000000000000000000000010000000500000000000000000000000004080c8080808080808080808080800004080c80808080808080808080808000020406080a0c0e000000000000000000020406080a0c0e000000000000000000000000040000000000000000000000010000000500000000000000000000000008808080808080808080808080808000088080808080808080808080808080"
+      }
+    },
+    "interpretation": "Backward loops and static instruction counts are retained for inspection. Only actual paired hardware timing can establish benefit. Tables are per object/binary, not assigned to individual functions.",
+    "functions": {
+      "local4_u8": {
+        "entry_mod64": 0,
+        "size_bytes": 476,
+        "first_backward_loop": {
+          "start_offset": 64,
+          "start_mod64": 0,
+          "backward_branch_offset": 166,
+          "instruction_count": 24,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "stack_references": 0,
+          "calls": 0,
+          "assembly": [
+            "vmovdqu\t(%rdi,%rcx,8), %ymm4",
+            "addq\t$-0x4, %rdx",
+            "vpsrlq\t$0x7, %ymm4, %ymm5",
+            "vpxor\t%ymm4, %ymm5, %ymm5",
+            "vpand\t%ymm0, %ymm5, %ymm5",
+            "vpsllq\t$0x7, %ymm5, %ymm6",
+            "vpor\t%ymm5, %ymm6, %ymm5",
+            "vpxor\t%ymm4, %ymm5, %ymm4",
+            "vpsrlq\t$0xe, %ymm4, %ymm5",
+            "vpxor\t%ymm4, %ymm5, %ymm5",
+            "vpand\t%ymm1, %ymm5, %ymm5",
+            "vpsllq\t$0xe, %ymm5, %ymm6",
+            "vpor\t%ymm5, %ymm6, %ymm5",
+            "vpxor\t%ymm4, %ymm5, %ymm4",
+            "vpand\t%ymm2, %ymm4, %ymm5",
+            "vpsrlq\t$0x1c, %ymm4, %ymm4",
+            "vpand\t%ymm3, %ymm4, %ymm4",
+            "vpor\t%ymm5, %ymm4, %ymm4",
+            "vpshufd\t$0xe8, %ymm4, %ymm4",
+            "vpermq\t$0xe8, %ymm4, %ymm4",
+            "vmovdqu\t%xmm4, (%rsi,%rcx,4)",
+            "addq\t$0x4, %rcx",
+            "cmpq\t$0x3, %rdx",
+            "ja\t0x40 <local4_u8+0x40>"
+          ]
+        },
+        "all_function_calls_count": 0
+      },
+      "local4_u16": {
+        "entry_mod64": 32,
+        "size_bytes": 842,
+        "first_backward_loop": {
+          "start_offset": 80,
+          "start_mod64": 48,
+          "backward_branch_offset": 200,
+          "instruction_count": 28,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 0
+      },
+      "local4_u32": {
+        "entry_mod64": 48,
+        "size_bytes": 704,
+        "first_backward_loop": {
+          "start_offset": 96,
+          "start_mod64": 16,
+          "backward_branch_offset": 269,
+          "instruction_count": 36,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 0
+      },
+      "local4_u64": {
+        "entry_mod64": 48,
+        "size_bytes": 890,
+        "first_backward_loop": {
+          "start_offset": 96,
+          "start_mod64": 16,
+          "backward_branch_offset": 345,
+          "instruction_count": 48,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 0
+      }
+    }
+  },
+  "witness-current-gnr.o": {
+    "binary_sha256": "6a9bff6af6784b39d12b3f4cbebaf59319d1060dbf42b557f2a58531240742b1",
+    "section_sizes": {
+      ".text": 2421,
+      ".rodata.cst8": 120,
+      ".rodata.cst32": 320,
+      ".rodata.cst16": 128,
+      ".rodata": 2,
+      ".comment": 86,
+      ".eh_frame": 120,
+      ".llvm_addrsig": 0
+    },
+    "constant_sections": {
+      ".rodata.cst8": {
+        "bytes": 120,
+        "sha256": "46f10158dcdecbcba094a95d5e43d2b7fd2c743a6cc2fed92c3828ef6cac9b0a",
+        "hex": "aa00aa00aa00aa00cccc0000cccc0000f0f0f0f0000000000f0f0f0fffffffffaa00aa00aa00aa00cccc0000cccc0000f0f0f0f000000000aa00aa00aa00aa00cccc0000cccc0000f0f0f0f00000000000020406080a0c0eaa00aa00aa00aa00cccc0000cccc0000f0f0f0f00000000000020406080a0c0e"
+      },
+      ".rodata.cst32": {
+        "bytes": 320,
+        "sha256": "14aa950456d27b104a3f98c0a72e09094a87a9e9b5dd5590cc6345f847e25179",
+        "hex": null
+      },
+      ".rodata.cst16": {
+        "bytes": 128,
+        "sha256": "bbc2d054668786e60d0ebfb291641cb6febd915ce67b91dea24503ed12dc6684",
+        "hex": "0000000002000000040000000600000000020406080a0c0e00000000000000000000000002000000040000000600000000020406080a0c0e0000000000000000000000000200000004000000060000000004080c8080808080808080808080800000000002000000040000000600000000088080808080808080808080808080"
+      },
+      ".rodata": {
+        "bytes": 2,
+        "sha256": "ea5dbf9596d187e9500f23e9a680109475341cf4e81f7e043f7d97152c10772f",
+        "hex": "ff00"
+      }
+    },
+    "interpretation": "Backward loops and static instruction counts are retained for inspection. Only actual paired hardware timing can establish benefit. Tables are per object/binary, not assigned to individual functions.",
+    "functions": {
+      "local4_u8": {
+        "entry_mod64": 0,
+        "size_bytes": 508,
+        "first_backward_loop": {
+          "start_offset": 64,
+          "start_mod64": 0,
+          "backward_branch_offset": 169,
+          "instruction_count": 25,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "stack_references": 0,
+          "calls": 0,
+          "assembly": [
+            "vmovdqu\t(%rdi,%rdx,8), %ymm4",
+            "vpsrlq\t$0x7, %ymm4, %ymm5",
+            "vpxor\t%ymm4, %ymm5, %ymm5",
+            "vpand\t%ymm0, %ymm5, %ymm5",
+            "vpsllq\t$0x7, %ymm5, %ymm6",
+            "vpor\t%ymm5, %ymm6, %ymm5",
+            "vpxor\t%ymm4, %ymm5, %ymm4",
+            "vpsrlq\t$0xe, %ymm4, %ymm5",
+            "vpxor\t%ymm4, %ymm5, %ymm5",
+            "vpand\t%ymm1, %ymm5, %ymm5",
+            "vpsllq\t$0xe, %ymm5, %ymm6",
+            "vpor\t%ymm5, %ymm6, %ymm5",
+            "vpxor\t%ymm4, %ymm5, %ymm4",
+            "vpsrlq\t$0x1c, %ymm4, %ymm5",
+            "vpxor\t%ymm4, %ymm5, %ymm5",
+            "vpand\t%ymm2, %ymm5, %ymm5",
+            "vpsllq\t$0x1c, %ymm5, %ymm6",
+            "vpor\t%ymm5, %ymm6, %ymm5",
+            "vpxor\t%ymm4, %ymm5, %ymm4",
+            "vpermd\t%ymm4, %ymm3, %ymm4",
+            "vmovdqu\t%xmm4, (%rsi,%rdx,4)",
+            "addq\t$0x4, %rdx",
+            "addq\t$-0x4, %rcx",
+            "cmpq\t$0x3, %rcx",
+            "ja\t0x40 <local4_u8+0x40>"
+          ]
+        },
+        "all_function_calls_count": 0
+      },
+      "local4_u16": {
+        "entry_mod64": 0,
+        "size_bytes": 604,
+        "first_backward_loop": {
+          "start_offset": 80,
+          "start_mod64": 16,
+          "backward_branch_offset": 203,
+          "instruction_count": 29,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 0
+      },
+      "local4_u32": {
+        "entry_mod64": 32,
+        "size_bytes": 720,
+        "first_backward_loop": {
+          "start_offset": 96,
+          "start_mod64": 0,
+          "backward_branch_offset": 274,
+          "instruction_count": 37,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 0
+      },
+      "local4_u64": {
+        "entry_mod64": 48,
+        "size_bytes": 581,
+        "first_backward_loop": {
+          "start_offset": 96,
+          "start_mod64": 16,
+          "backward_branch_offset": 350,
+          "instruction_count": 49,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 0
+      }
+    }
+  },
+  "witness-projected-gnr.o": {
+    "binary_sha256": "a8e8f66d02c01ab7899ce82c0272e87a36cfd5917d85b4639ba4520550ec2e94",
+    "section_sizes": {
+      ".text": 2405,
+      ".rodata.cst8": 144,
+      ".rodata.cst32": 320,
+      ".rodata.cst16": 128,
+      ".rodata": 2,
+      ".comment": 86,
+      ".eh_frame": 120,
+      ".llvm_addrsig": 0
+    },
+    "constant_sections": {
+      ".rodata.cst8": {
+        "bytes": 144,
+        "sha256": "f11cb90231fa021a8d97173f2f6268383b12896596bbd978312e290cad4e0b2b",
+        "hex": "aa00aa00aa00aa00cccc0000cccc00000f0f0f0ffffffffff0f0f0f000000000aa00aa00aa00aa00cccc0000cccc00000f0f0f0ffffffffff0f0f0f000000000aa00aa00aa00aa00cccc0000cccc00000f0f0f0ffffffffff0f0f0f00000000000020406080a0c0eaa00aa00aa00aa00cccc0000cccc00000f0f0f0ffffffffff0f0f0f00000000000020406080a0c0e"
+      },
+      ".rodata.cst32": {
+        "bytes": 320,
+        "sha256": "14aa950456d27b104a3f98c0a72e09094a87a9e9b5dd5590cc6345f847e25179",
+        "hex": null
+      },
+      ".rodata.cst16": {
+        "bytes": 128,
+        "sha256": "bbc2d054668786e60d0ebfb291641cb6febd915ce67b91dea24503ed12dc6684",
+        "hex": "0000000002000000040000000600000000020406080a0c0e00000000000000000000000002000000040000000600000000020406080a0c0e0000000000000000000000000200000004000000060000000004080c8080808080808080808080800000000002000000040000000600000000088080808080808080808080808080"
+      },
+      ".rodata": {
+        "bytes": 2,
+        "sha256": "ea5dbf9596d187e9500f23e9a680109475341cf4e81f7e043f7d97152c10772f",
+        "hex": "ff00"
+      }
+    },
+    "interpretation": "Backward loops and static instruction counts are retained for inspection. Only actual paired hardware timing can establish benefit. Tables are per object/binary, not assigned to individual functions.",
+    "functions": {
+      "local4_u8": {
+        "entry_mod64": 0,
+        "size_bytes": 508,
+        "first_backward_loop": {
+          "start_offset": 80,
+          "start_mod64": 16,
+          "backward_branch_offset": 176,
+          "instruction_count": 23,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "stack_references": 0,
+          "calls": 0,
+          "assembly": [
+            "vmovdqu\t(%rdi,%rdx,8), %ymm5",
+            "vpsrlq\t$0x7, %ymm5, %ymm6",
+            "vpxor\t%ymm5, %ymm6, %ymm6",
+            "vpand\t%ymm0, %ymm6, %ymm6",
+            "vpsllq\t$0x7, %ymm6, %ymm7",
+            "vpor\t%ymm6, %ymm7, %ymm6",
+            "vpxor\t%ymm5, %ymm6, %ymm5",
+            "vpsrlq\t$0xe, %ymm5, %ymm6",
+            "vpxor\t%ymm5, %ymm6, %ymm6",
+            "vpand\t%ymm1, %ymm6, %ymm6",
+            "vpsllq\t$0xe, %ymm6, %ymm7",
+            "vpor\t%ymm6, %ymm7, %ymm6",
+            "vpxor\t%ymm5, %ymm6, %ymm5",
+            "vpand\t%ymm2, %ymm5, %ymm6",
+            "vpsrlq\t$0x1c, %ymm5, %ymm5",
+            "vpand\t%ymm3, %ymm5, %ymm5",
+            "vpor\t%ymm6, %ymm5, %ymm5",
+            "vpermd\t%ymm5, %ymm4, %ymm5",
+            "vmovdqu\t%xmm5, (%rsi,%rdx,4)",
+            "addq\t$0x4, %rdx",
+            "addq\t$-0x4, %rcx",
+            "cmpq\t$0x3, %rcx",
+            "ja\t0x50 <local4_u8+0x50>"
+          ]
+        },
+        "all_function_calls_count": 0
+      },
+      "local4_u16": {
+        "entry_mod64": 0,
+        "size_bytes": 620,
+        "first_backward_loop": {
+          "start_offset": 96,
+          "start_mod64": 32,
+          "backward_branch_offset": 210,
+          "instruction_count": 27,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 0
+      },
+      "local4_u32": {
+        "entry_mod64": 48,
+        "size_bytes": 704,
+        "first_backward_loop": {
+          "start_offset": 96,
+          "start_mod64": 16,
+          "backward_branch_offset": 271,
+          "instruction_count": 35,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 0
+      },
+      "local4_u64": {
+        "entry_mod64": 48,
+        "size_bytes": 565,
+        "first_backward_loop": {
+          "start_offset": 96,
+          "start_mod64": 16,
+          "backward_branch_offset": 347,
+          "instruction_count": 47,
+          "vector_registers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "stack_references": 0,
+          "calls": 0
+        },
+        "all_function_calls_count": 0
+      }
+    }
+  }
+}

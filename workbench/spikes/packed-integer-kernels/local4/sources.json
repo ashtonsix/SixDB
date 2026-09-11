@@ -1,0 +1,43 @@
+{
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)",
+  "common_flags": [
+    "--target=x86_64-linux-gnu",
+    "--gcc-toolchain=/usr",
+    "-std=c++23",
+    "-O3",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-march=x86-64-v3"
+  ],
+  "tunes": [
+    "znver5",
+    "graniterapids"
+  ],
+  "dependency_method": "clang++-21 -MM bench.cpp and overlay payload_x86.cpp plus all diagnostic files except this manifest. Generated overlay is recorded in local-checks.json. System headers come from the pinned toolchain.",
+  "files": {
+    "ikea/include/ikea/seriespack/detail/body_avx2.h": "7fb591bfb96546a31561c08ceab7d3d4d6b8afca4e2d73f8f0f7fa06127dab0c",
+    "ikea/include/ikea/seriespack/detail/body_avx512.h": "a36c8b8fe9edd68a2833e969352f4d07a9fa5763d329c4d532876d606aa28dae",
+    "ikea/include/ikea/seriespack/detail/physical.h": "cc46daf3580ad494682830c49e30a03e6c5444498c94754501a21e08875eb256",
+    "ikea/include/ikea/seriespack/layout.h": "84948934ecbe65bd07a06123c87300043a281c65b2a2d76f7a91beaf4000a123",
+    "ikea/include/ikea/seriespack/native_avx2.h": "3e78b77bcea0a0229f18b8dd2fbf27a01696b00931703db1610750445501f9f9",
+    "ikea/include/ikea/seriespack/native_avx512.h": "62562fc9199c6d81bf5d3f7794866822b296bcf91a6acf761a9cdf325d8d3d3a",
+    "ikea/test/seriespack/payload_x86.cpp": "4b5a3f23abd43b9c480e561681c83d5c55a7f0840f76a8f8e35ab4a55737f975",
+    "workbench/spikes/ikea-composition/probes/ikea-integers/bytes.h": "a6346d6f2987846de8d0f86b00433a0a2ace658a4c9d87cbd829bed206234fe3",
+    "workbench/spikes/ikea-composition/probes/ikea-integers/formats.h": "ffbb010e60835ded3376bc8f0650ba2dcba959143c436a2468fed54180b7ab6c",
+    "workbench/spikes/ikea-composition/probes/ikea-integers/local.h": "2837915d5375d37842e3ad9b32e74019a35e1cc24f08fe0255d98037a18c343f",
+    "workbench/spikes/ikea-composition/probes/ikea-integers/local_neon.h": "7275e9e4d3beb792ae2a43ad2c73673eda92a428a5183de587864a9f37c1ceeb",
+    "workbench/spikes/ikea-composition/probes/ikea-integers/native_bytes.h": "484b61c115e9ff243240a80a2248a364a83cbe6c3213d5ea148842662907405a",
+    "workbench/spikes/ikea-composition/validation/diagnostics/local4_projection/README.md": "ed22adbae375a86fd251104fabe4a55135d38739e9c7c71d18e2245f4307fc37",
+    "workbench/spikes/ikea-composition/validation/diagnostics/local4_projection/array.h": "a98d238e025125a4f5716feacce16962a4c3e83d928ba3370895fcd3f6a0bf94",
+    "workbench/spikes/ikea-composition/validation/diagnostics/local4_projection/audit.py": "2662d327d13af8678367f047f49b1c5cce900c80073e60e60088a9fb480dd123",
+    "workbench/spikes/ikea-composition/validation/diagnostics/local4_projection/bench.cpp": "09ee451bbee380b3bcae28a1af6e5fcf334abac113127d97c8359a68bd7d495e",
+    "workbench/spikes/ikea-composition/validation/diagnostics/local4_projection/check.cpp": "4fad6c4fac22ab937e6b2ab1472f34e3dce15794ada83273047571bec3a71d66",
+    "workbench/spikes/ikea-composition/validation/diagnostics/local4_projection/generated-code.json": "5b006fbea576efafb1ce3aaf545cb4329104c7ef797ba3cd9a2e703836a43932",
+    "workbench/spikes/ikea-composition/validation/diagnostics/local4_projection/local-checks.json": "661f7ca9886f6582c0f46f8a9e352c6eeffcd6ed6129111f3fba6ae69bf8a871",
+    "workbench/spikes/ikea-composition/validation/diagnostics/local4_projection/old-loop-evidence.json": "33e9cef823e509409596b0e65d11fceb8926a28202af8397cbce1b8ef2304cab",
+    "workbench/spikes/ikea-composition/validation/diagnostics/local4_projection/prepare_overlay.py": "486ad0e39ac54f4acde7ae5970bd43f086bbfa1194ff21378dacd2ae23a9bf9d",
+    "workbench/spikes/ikea-composition/validation/diagnostics/local4_projection/projected.h": "231aece22a0302845c1336658c4312a6ba432a77722ac4cc2053e04fd6011e2e",
+    "workbench/spikes/ikea-composition/validation/diagnostics/local4_projection/witness.cpp": "1dd84b0a7bc67be33ddb9678ba20c152b05a957ee9511e13d862022ca223bca7"
+  }
+}

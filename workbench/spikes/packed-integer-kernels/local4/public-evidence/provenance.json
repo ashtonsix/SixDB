@@ -1,0 +1,1385 @@
+{
+  "cases": 480,
+  "counters": [
+    "logical_values",
+    "encoded_bytes",
+    "bulk_input_output_bytes"
+  ],
+  "files_sha256": {
+    "cases.csv": "376919f6e57568a1dc71920d3b01756ef067cc2f1640f9decc17a8f45bc43c28"
+  },
+  "filter": null,
+  "format": 1,
+  "inputs": {
+    "gnr-n256-01-before": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "256",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 503316480,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:43:22+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-7aeddafb/results/local4-public/before-bench",
+        "host_name": "ip-172-31-23-69",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.624023,
+          0.496094,
+          0.699707
+        ],
+        "mhz_per_cpu": 3900,
+        "num_cpus": 1,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-7aeddafb/results/local4-public/n256-01-before.json",
+      "sha256": "55155691d4759d97fdba05e95ececdac721a67efb6a310fb901dddf7ac6217c7"
+    },
+    "gnr-n256-02-candidate": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "256",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 503316480,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:43:29+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-7aeddafb/results/local4-public/candidate-bench",
+        "host_name": "ip-172-31-23-69",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.682129,
+          0.513184,
+          0.703613
+        ],
+        "mhz_per_cpu": 3900,
+        "num_cpus": 1,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-7aeddafb/results/local4-public/n256-02-candidate.json",
+      "sha256": "1fe84aade3686b819768be6c13f89758758315ea87b712fd4075700a5043254f"
+    },
+    "gnr-n256-03-candidate": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "256",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 503316480,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:43:37+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-7aeddafb/results/local4-public/candidate-bench",
+        "host_name": "ip-172-31-23-69",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.708008,
+          0.521484,
+          0.705566
+        ],
+        "mhz_per_cpu": 3900,
+        "num_cpus": 1,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-7aeddafb/results/local4-public/n256-03-candidate.json",
+      "sha256": "0e334912d1398c7944618c438d6b2a34f7b4deac918ab55b3b639c85f4f26860"
+    },
+    "gnr-n256-04-before": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "256",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 503316480,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:43:44+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-7aeddafb/results/local4-public/before-bench",
+        "host_name": "ip-172-31-23-69",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.731445,
+          0.529785,
+          0.70752
+        ],
+        "mhz_per_cpu": 3900,
+        "num_cpus": 1,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-7aeddafb/results/local4-public/n256-04-before.json",
+      "sha256": "3f2063641b654f2dc29a20ff88207fca2426bac3deefac0acbf543dd55d415f9"
+    },
+    "gnr-n65536-01-before": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "65536",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 503316480,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:44:21+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-7aeddafb/results/local4-public/before-bench",
+        "host_name": "ip-172-31-23-69",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.864258,
+          0.590332,
+          0.723145
+        ],
+        "mhz_per_cpu": 3900,
+        "num_cpus": 1,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-7aeddafb/results/local4-public/n65536-01-before.json",
+      "sha256": "fc4bec00d3dd96d06cd9169a983fb732b2dd3ab20e18779d22d092364b2d0b0d"
+    },
+    "gnr-n65536-02-candidate": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "65536",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 503316480,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:44:29+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-7aeddafb/results/local4-public/candidate-bench",
+        "host_name": "ip-172-31-23-69",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.875488,
+          0.597168,
+          0.725098
+        ],
+        "mhz_per_cpu": 3900,
+        "num_cpus": 1,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-7aeddafb/results/local4-public/n65536-02-candidate.json",
+      "sha256": "b27f5cb287375005705008e6fce45df30c0ba331a8e083b7143d7093bf52bfec"
+    },
+    "gnr-n65536-03-candidate": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "65536",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 503316480,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:44:36+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-7aeddafb/results/local4-public/candidate-bench",
+        "host_name": "ip-172-31-23-69",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.89502,
+          0.61084,
+          0.729004
+        ],
+        "mhz_per_cpu": 3900,
+        "num_cpus": 1,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-7aeddafb/results/local4-public/n65536-03-candidate.json",
+      "sha256": "0e3408bb719605741376c623e44131828bdebf31e0608f66fa5788d13ec464a8"
+    },
+    "gnr-n65536-04-before": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "65536",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 503316480,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:44:43+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-7aeddafb/results/local4-public/before-bench",
+        "host_name": "ip-172-31-23-69",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.903809,
+          0.617676,
+          0.730469
+        ],
+        "mhz_per_cpu": 3901,
+        "num_cpus": 1,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-7aeddafb/results/local4-public/n65536-04-before.json",
+      "sha256": "eac98cb8e19d270a97a5c8d682c00bed0e73d5f0607893cf33a0994d0adab74a"
+    },
+    "gnr-n8192-01-before": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 503316480,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:43:51+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-7aeddafb/results/local4-public/before-bench",
+        "host_name": "ip-172-31-23-69",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.773438,
+          0.54541,
+          0.711426
+        ],
+        "mhz_per_cpu": 3900,
+        "num_cpus": 1,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-7aeddafb/results/local4-public/n8192-01-before.json",
+      "sha256": "7f8328b38c29cd4fa906d27761cdafe5e4ba9bc427ba5ce18ad88167d1a286b0"
+    },
+    "gnr-n8192-02-candidate": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 503316480,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:43:59+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-7aeddafb/results/local4-public/candidate-bench",
+        "host_name": "ip-172-31-23-69",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.791992,
+          0.553223,
+          0.713379
+        ],
+        "mhz_per_cpu": 3900,
+        "num_cpus": 1,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-7aeddafb/results/local4-public/n8192-02-candidate.json",
+      "sha256": "5813b528a1bc29d37108e98336e116c9694442f5e1ff4163823cbb05b3de8bc2"
+    },
+    "gnr-n8192-03-candidate": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 503316480,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:44:06+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-7aeddafb/results/local4-public/candidate-bench",
+        "host_name": "ip-172-31-23-69",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.824707,
+          0.568359,
+          0.717285
+        ],
+        "mhz_per_cpu": 3900,
+        "num_cpus": 1,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-7aeddafb/results/local4-public/n8192-03-candidate.json",
+      "sha256": "cf45df7e4984afc5a3f5607221b52d64a80b66e27ebc2cd789ff08af566c99a0"
+    },
+    "gnr-n8192-04-before": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 503316480,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:44:14+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-7aeddafb/results/local4-public/before-bench",
+        "host_name": "ip-172-31-23-69",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.838867,
+          0.575684,
+          0.719238
+        ],
+        "mhz_per_cpu": 3900,
+        "num_cpus": 1,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-7aeddafb/results/local4-public/n8192-04-before.json",
+      "sha256": "f2a9f3aa30cb19458001e04094bf36a0097e69bb3adf68d2ad506969926d2273"
+    },
+    "zen-n256-01-before": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "256",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:43:21+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-c16d4535/results/local4-public/before-bench",
+        "host_name": "ip-172-31-22-156",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.624023,
+          0.541016,
+          0.674316
+        ],
+        "mhz_per_cpu": 4218,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-c16d4535/results/local4-public/n256-01-before.json",
+      "sha256": "60bfca8b2fab404275ba6a7e603bf8454959891cb9fb059ccd2778d2d205745f"
+    },
+    "zen-n256-02-candidate": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "256",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:43:28+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-c16d4535/results/local4-public/candidate-bench",
+        "host_name": "ip-172-31-22-156",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.654297,
+          0.548828,
+          0.67627
+        ],
+        "mhz_per_cpu": 4184,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-c16d4535/results/local4-public/n256-02-candidate.json",
+      "sha256": "c30c1166e56b4e177b003a74509f1cfefc91ae9ded4bcda7e3c7935eb29b34a1"
+    },
+    "zen-n256-03-candidate": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "256",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:43:36+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-c16d4535/results/local4-public/candidate-bench",
+        "host_name": "ip-172-31-22-156",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.708008,
+          0.564453,
+          0.680176
+        ],
+        "mhz_per_cpu": 4073,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-c16d4535/results/local4-public/n256-03-candidate.json",
+      "sha256": "56a6e1d4739346f5d8763e7cc03cd67cde86fcd4582012d088bab2c700046fa9"
+    },
+    "zen-n256-04-before": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "256",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:43:43+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-c16d4535/results/local4-public/before-bench",
+        "host_name": "ip-172-31-22-156",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.731445,
+          0.571777,
+          0.682129
+        ],
+        "mhz_per_cpu": 4201,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-c16d4535/results/local4-public/n256-04-before.json",
+      "sha256": "394dfab629f7ef5180a911488637ae1759f22a7955bf7dcc20ebd4919e252d0c"
+    },
+    "zen-n65536-01-before": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "65536",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:44:20+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-c16d4535/results/local4-public/before-bench",
+        "host_name": "ip-172-31-22-156",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.864258,
+          0.627441,
+          0.697754
+        ],
+        "mhz_per_cpu": 4298,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-c16d4535/results/local4-public/n65536-01-before.json",
+      "sha256": "29397230ff86cbab0d24cdde368e7d285df1446dc8b3bfda3bb0cd20a49a00f4"
+    },
+    "zen-n65536-02-candidate": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "65536",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:44:28+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-c16d4535/results/local4-public/candidate-bench",
+        "host_name": "ip-172-31-22-156",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.875488,
+          0.633789,
+          0.699707
+        ],
+        "mhz_per_cpu": 4197,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-c16d4535/results/local4-public/n65536-02-candidate.json",
+      "sha256": "b1e9d362332d0a8847d4bd29bf406c5e1e0771c2475a9800a02fcc4da9e9b662"
+    },
+    "zen-n65536-03-candidate": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "65536",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:44:35+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-c16d4535/results/local4-public/candidate-bench",
+        "host_name": "ip-172-31-22-156",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.89502,
+          0.646484,
+          0.703613
+        ],
+        "mhz_per_cpu": 4057,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-c16d4535/results/local4-public/n65536-03-candidate.json",
+      "sha256": "0abd9474e474ea8fdd776fa16e2339fa760394fd7636cfeda07a955877aa3a5a"
+    },
+    "zen-n65536-04-before": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "65536",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:44:42+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-c16d4535/results/local4-public/before-bench",
+        "host_name": "ip-172-31-22-156",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.903809,
+          0.652832,
+          0.705566
+        ],
+        "mhz_per_cpu": 4052,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-c16d4535/results/local4-public/n65536-04-before.json",
+      "sha256": "8a131fc61655974a57000ff77df8595ec5c904626820a6bc7dfe6b5dfd6d1569"
+    },
+    "zen-n8192-01-before": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:43:51+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-c16d4535/results/local4-public/before-bench",
+        "host_name": "ip-172-31-22-156",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.773438,
+          0.586426,
+          0.686035
+        ],
+        "mhz_per_cpu": 3998,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-c16d4535/results/local4-public/n8192-01-before.json",
+      "sha256": "8d9787bec9c1db06051158b46859ad66028ce168115cf20844fcd65257f0bc0b"
+    },
+    "zen-n8192-02-candidate": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:43:58+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-c16d4535/results/local4-public/candidate-bench",
+        "host_name": "ip-172-31-22-156",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.791992,
+          0.59375,
+          0.687988
+        ],
+        "mhz_per_cpu": 4272,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-c16d4535/results/local4-public/n8192-02-candidate.json",
+      "sha256": "09762b3fecf87d925356180ac392d5c012745f284099f15a0037ea15709c2171"
+    },
+    "zen-n8192-03-candidate": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:44:05+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-c16d4535/results/local4-public/candidate-bench",
+        "host_name": "ip-172-31-22-156",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.824707,
+          0.607422,
+          0.691895
+        ],
+        "mhz_per_cpu": 4344,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-c16d4535/results/local4-public/n8192-03-candidate.json",
+      "sha256": "a6ff9b1e3e71abae115b512a41ab13b6b194227bfba4f7c769fbe9d09d8a2d00"
+    },
+    "zen-n8192-04-before": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx2",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:44:13+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T184217Z-c16d4535/results/local4-public/before-bench",
+        "host_name": "ip-172-31-22-156",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.838867,
+          0.614258,
+          0.693848
+        ],
+        "mhz_per_cpu": 4217,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx2",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-local4-public-20260910/build/workers/20260910T184217Z-c16d4535/results/local4-public/n8192-04-before.json",
+      "sha256": "f39c05f19eda6eb0558c048e8d3360d115a43db640bb3f32a725540e24d8358c"
+    }
+  },
+  "kind": "google-benchmark-summary",
+  "units": "CPU/real times are ns per benchmark iteration. ns_per_item uses the reported item rate; an item means what the benchmark counts, not necessarily a value or byte."
+}

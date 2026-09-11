@@ -1,0 +1,32 @@
+{
+  "format": 1,
+  "scope": "AVX2-only shared-buffer raw encoder, before actual public operation selection",
+  "units": "ns/value; ratios greater than one are slower",
+  "runs": {
+    "zen": {
+      "job": "20260910T183509Z-9ccb25e1",
+      "artifact": "zen-hardware.artifact.json",
+      "samples_path": "results/local4-projection/samples.jsonl",
+      "samples_sha256": "279736e22553826a42851fb3089f8ab2a5bfc3f82f7b30e5489a125c5efddb31",
+      "check": "Local4 projection: 19971 independent bit-oracle/basis/guard/stride/partial cases passed",
+      "source_manifest_sha256": "cfa29fe91062c48072e84519b534cc31a9f3c42f5cada48020a22399546ecaee",
+      "binaries_sha256": [
+        "8767010ca4514e13f484b3b96b58f44c9b1052ae73675e34f7913e57532a8afb  /opt/sixdb/jobs/20260910T183509Z-9ccb25e1/results/local4-projection/check",
+        "5fc7c2550ce7025af2360897cd29b5316518652ecbe128583de4be10d8a50e93  /opt/sixdb/jobs/20260910T183509Z-9ccb25e1/results/local4-projection/bench"
+      ]
+    },
+    "gnr": {
+      "job": "20260910T183752Z-f6937889",
+      "artifact": "gnr-hardware.artifact.json",
+      "samples_path": "results/local4-projection/samples.jsonl",
+      "samples_sha256": "f00bbe943478ec16ccf8e5f4b83ffb6189884d0a0cc1d174e26839a09350504e",
+      "check": "Local4 projection: 19971 independent bit-oracle/basis/guard/stride/partial cases passed",
+      "source_manifest_sha256": "cfa29fe91062c48072e84519b534cc31a9f3c42f5cada48020a22399546ecaee",
+      "binaries_sha256": [
+        "ea9f66d8b7cfb87957667f88f590b7434af54b49344898162b0fde0287250db0  /opt/sixdb/jobs/20260910T183752Z-f6937889/results/local4-projection/check",
+        "e511904026374f2a398ef8815560d88c4d61a112b039eeee10090a10edeecacc  /opt/sixdb/jobs/20260910T183752Z-f6937889/results/local4-projection/bench"
+      ]
+    }
+  },
+  "hardware_csv_sha256": "8c426fb4b75fc5c9eea331380ede4447b2eef96f783ca9f676b94864ea1aeda0"
+}

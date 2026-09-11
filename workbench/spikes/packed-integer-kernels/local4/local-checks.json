@@ -1,0 +1,130 @@
+{
+  "emulator": "qemu-x86_64 version 10.1.0 (Debian 1:10.1.0+ds-5ubuntu2.6)",
+  "interpretation": "Supplemental AVX2 correctness only; no local timing. Normal O3 hardware guards and same-fixture whole-operation measurements remain required.",
+  "guard_checker": {
+    "compile": [
+      "clang++-21",
+      "--target=x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-march=x86-64-v3",
+      "-mtune=znver5",
+      "-Iikea/include",
+      "-Iworkbench/spikes/ikea-composition/probes/ikea-integers",
+      "workbench/spikes/ikea-composition/validation/diagnostics/local4_projection/check.cpp",
+      "-o",
+      "build/seriespack-local4-projection/check-retained"
+    ],
+    "run": [
+      "qemu-x86_64",
+      "-cpu",
+      "max",
+      "-L",
+      "/usr/x86_64-linux-gnu",
+      "build/seriespack-local4-projection/check-retained"
+    ],
+    "binary_sha256": "83c33560a0429d40722033d5715f74f5f3cb37df7a9e075b5404aa1bd660f6f4",
+    "passed_cases": 19971,
+    "optimized": true
+  },
+  "benchmark_fixture_zen5": {
+    "compile": [
+      "clang++-21",
+      "--target=x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-march=x86-64-v3",
+      "-mtune=znver5",
+      "-Iikea/include",
+      "-Iworkbench/spikes/ikea-composition/probes/ikea-integers",
+      "workbench/spikes/ikea-composition/validation/diagnostics/local4_projection/bench.cpp",
+      "-o",
+      "build/seriespack-local4-projection/bench-retained-zen5"
+    ],
+    "run": [
+      "qemu-x86_64",
+      "-cpu",
+      "max",
+      "-L",
+      "/usr/x86_64-linux-gnu",
+      "build/seriespack-local4-projection/bench-retained-zen5",
+      "--check-only"
+    ],
+    "binary_sha256": "6b57b61128d502663635e08af0629cc1377bb6b347c280755bc23d8b5d25c342",
+    "passed_cases": 51,
+    "optimized": true
+  },
+  "benchmark_fixture_gnr": {
+    "compile": [
+      "clang++-21",
+      "--target=x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-march=x86-64-v3",
+      "-mtune=graniterapids",
+      "-Iikea/include",
+      "-Iworkbench/spikes/ikea-composition/probes/ikea-integers",
+      "workbench/spikes/ikea-composition/validation/diagnostics/local4_projection/bench.cpp",
+      "-o",
+      "build/seriespack-local4-projection/bench-retained-gnr"
+    ],
+    "run": [
+      "qemu-x86_64",
+      "-cpu",
+      "max",
+      "-L",
+      "/usr/x86_64-linux-gnu",
+      "build/seriespack-local4-projection/bench-retained-gnr",
+      "--check-only"
+    ],
+    "binary_sha256": "8f0332d6a683d193e2a9c5590d4197c8c0d27e4609e7c152279711b19aa4f6f6",
+    "passed_cases": 51,
+    "optimized": true
+  },
+  "overlay_production_payload_checker": {
+    "compile": [
+      "clang++-21",
+      "--target=x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-march=x86-64-v3",
+      "-mtune=znver5",
+      "-Ibuild/seriespack-local4-projection/overlay",
+      "-Iikea/include",
+      "ikea/test/seriespack/payload_x86.cpp",
+      "-o",
+      "build/seriespack-local4-projection/overlay-payload-check"
+    ],
+    "run": [
+      "qemu-x86_64",
+      "-cpu",
+      "max",
+      "-L",
+      "/usr/x86_64-linux-gnu",
+      "build/seriespack-local4-projection/overlay-payload-check"
+    ],
+    "binary_sha256": "ab7fa1c4b6a0b28e6661973d6a2288f0028db3da9b69d5f6dcef8c21b380342c",
+    "passed_cases": 89496,
+    "optimized": true
+  },
+  "overlay_payload_configurations": 308,
+  "overlay_baseline_sha256": "3e78b77bcea0a0229f18b8dd2fbf27a01696b00931703db1610750445501f9f9",
+  "overlay_candidate_sha256": "17c6665559b319460d28c83f41731cfc83c7f6d117a3bd32fa84308b42fe80de",
+  "overlay_patch_sha256": "b23d250cb2aa58be341cd554bacf36f19921ee708d22ab5127237e12e056df94"
+}

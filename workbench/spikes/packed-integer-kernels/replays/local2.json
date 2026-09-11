@@ -1,0 +1,90 @@
+{
+  "format": 1,
+  "question": "Local2 u8 dense encoder coalescing only: exact coherent before/candidate binaries, shared-buffer physical arms at three extents and public encode/decode controls. ABBA process order; no newly compiled production kernels.",
+  "variants": {
+    "before": {
+      "artifact": {
+        "format": 1,
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/eabcd356a059ec584880bbd60ffa6b21cae72f0e88744092c28c13af2676e5c1.tar.gz",
+        "bucket": "calico-fleet-artifacts",
+        "region": "us-east-1",
+        "key": "sixdb/artifacts/sha256/eabcd356a059ec584880bbd60ffa6b21cae72f0e88744092c28c13af2676e5c1.tar.gz",
+        "sha256": "eabcd356a059ec584880bbd60ffa6b21cae72f0e88744092c28c13af2676e5c1",
+        "bytes": 14131465,
+        "files": 505
+      },
+      "binary": "before-bench",
+      "source_receipt": "local-capture.json",
+      "source_digest": "c446989a687d9b746dadaace0dd8eaf34e4bddfc448f90870e6a4f3445638b2d",
+      "files_sha256": {
+        "before-bench": "f3cdffaa4ad5e2164fcde97c9105b02d202d40ca846d2c0ee8770625f7591d5e",
+        "local-capture.json": "c446989a687d9b746dadaace0dd8eaf34e4bddfc448f90870e6a4f3445638b2d",
+        "checks.json": "20c35172812b070d5061e0c50859fbf7ab735b746c4ab8997f73dcb96dff79a3",
+        "size-summary.json": "1db3b265ba1081c81c874108d4642f7289708e6a2f96f3805964f5d8bcf4c85d",
+        "compile-candidate.json": "c76d487c450c4caf481c7b169314af92812608aff00bc730da53c973a29bba46",
+        "before-link.json": "f7900511689dc24aa004f9f07d0e3d25eea600617e67d4f74210a176858e5ea4",
+        "before-link-hashes.json": "f7686a96d26a250d237bc4c950b9d3516ae838c43718b6869a31055264212bd4",
+        "w2-encode-only.patch": "8b93614663cc0895ce795a480713aeb1a50862ad3ce04d6066bd5d1f542ad667",
+        "source-provenance.json": "ea74d5b565be4769fe88065801f3d2dd87ec96327b72cf5f9dddd48af1efed03"
+      }
+    },
+    "candidate": {
+      "artifact": {
+        "format": 1,
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/eabcd356a059ec584880bbd60ffa6b21cae72f0e88744092c28c13af2676e5c1.tar.gz",
+        "bucket": "calico-fleet-artifacts",
+        "region": "us-east-1",
+        "key": "sixdb/artifacts/sha256/eabcd356a059ec584880bbd60ffa6b21cae72f0e88744092c28c13af2676e5c1.tar.gz",
+        "sha256": "eabcd356a059ec584880bbd60ffa6b21cae72f0e88744092c28c13af2676e5c1",
+        "bytes": 14131465,
+        "files": 505
+      },
+      "binary": "candidate-bench",
+      "source_receipt": "local-capture.json",
+      "source_digest": "c446989a687d9b746dadaace0dd8eaf34e4bddfc448f90870e6a4f3445638b2d",
+      "files_sha256": {
+        "candidate-bench": "24f65cfb20af4efb5b0a0cb587b8bcb54cb42f9d6a942003c4f78349d197e4e0",
+        "local-capture.json": "c446989a687d9b746dadaace0dd8eaf34e4bddfc448f90870e6a4f3445638b2d",
+        "checks.json": "20c35172812b070d5061e0c50859fbf7ab735b746c4ab8997f73dcb96dff79a3",
+        "size-summary.json": "1db3b265ba1081c81c874108d4642f7289708e6a2f96f3805964f5d8bcf4c85d",
+        "compile-candidate.json": "c76d487c450c4caf481c7b169314af92812608aff00bc730da53c973a29bba46",
+        "candidate-link.json": "cfe682f49d58299c83a436914771a87bbdcc803df6779344763fccedfe05c70a",
+        "candidate-link-hashes.json": "dd013dcb5564d839f3be09d9d5fe5357226bbb3714543b6c8d548ea9b8c675ed",
+        "w2-encode-only.patch": "8b93614663cc0895ce795a480713aeb1a50862ad3ce04d6066bd5d1f542ad667",
+        "source-provenance.json": "ea74d5b565be4769fe88065801f3d2dd87ec96327b72cf5f9dddd48af1efed03"
+      }
+    }
+  },
+  "order": [
+    "before",
+    "candidate",
+    "candidate",
+    "before"
+  ],
+  "filter": "(^local2_grain/)|(^bulk/series/neon/local/k(1|2|3)/h0/u8/(encode|decode)$)",
+  "min_time": 0.05,
+  "repetitions": 5,
+  "expected_cases": [
+    "local2_grain/bound/256",
+    "local2_grain/bound/8192",
+    "local2_grain/bound/65536",
+    "local2_grain/native/256",
+    "local2_grain/native/8192",
+    "local2_grain/native/65536",
+    "local2_grain/coalesced64/256",
+    "local2_grain/coalesced64/8192",
+    "local2_grain/coalesced64/65536",
+    "local2_grain/predecessor64/256",
+    "local2_grain/predecessor64/8192",
+    "local2_grain/predecessor64/65536",
+    "local2_grain/predecessor256/256",
+    "local2_grain/predecessor256/8192",
+    "local2_grain/predecessor256/65536",
+    "bulk/series/neon/local/k1/h0/u8/encode",
+    "bulk/series/neon/local/k1/h0/u8/decode",
+    "bulk/series/neon/local/k2/h0/u8/encode",
+    "bulk/series/neon/local/k2/h0/u8/decode",
+    "bulk/series/neon/local/k3/h0/u8/encode",
+    "bulk/series/neon/local/k3/h0/u8/decode"
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "format": 1,
+  "question": "Scan4/u8 dense Region256 encode+decode only; exact coherent before/candidate binaries, shared-buffer actual bound/native/predecessor256 arms at three extents, unchanged Scan6 and ordinary Local4 controls. Local2/all-head candidates absent.",
+  "variants": {
+    "before": {
+      "artifact": {
+        "format": 1,
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/aea2e3c3b025f7c0069c9a5bc1e034f07902faf5be9e9af95bde9d093745b785.tar.gz",
+        "bucket": "calico-fleet-artifacts",
+        "region": "us-east-1",
+        "key": "sixdb/artifacts/sha256/aea2e3c3b025f7c0069c9a5bc1e034f07902faf5be9e9af95bde9d093745b785.tar.gz",
+        "sha256": "aea2e3c3b025f7c0069c9a5bc1e034f07902faf5be9e9af95bde9d093745b785",
+        "bytes": 14163992,
+        "files": 506
+      },
+      "binary": "before-bench",
+      "source_receipt": "local-capture.json",
+      "source_digest": "d43b5d2f03e189f5eca594f472fb59579cacf64fd66e2234671437b792e1071a",
+      "files_sha256": {
+        "before-bench": "3a71c8cbbb36c0574e792393c1c5cb48f54bb23b2fc00c7a1dcfa1d0a65d9c54",
+        "local-capture.json": "d43b5d2f03e189f5eca594f472fb59579cacf64fd66e2234671437b792e1071a",
+        "checks.json": "edaaa4ae871acd8767c26d94516e7b8f112d1e99dfe3a16f3ac862e7c3c7d5d5",
+        "code-comparison.json": "0e40e36561a6360fd6dcd687f6b04a74acfda88f1902d3dc5fed7c4b9dec2537",
+        "compile-candidate.json": "645272a954773902cd51ddfc105e32e65cfef21a71827958a5dc793b56301ead",
+        "before-link.json": "75e9f7299a0ebccd053add0f33999632e4d41a419c09fbc59fc66ef2211004cb",
+        "before-link-hashes.json": "6773683b990107a6f411f6ac8403283a430e93829eaba357bf2727ec2f7a3acd",
+        "scan4-only.patch": "d272245cbdb88b083187a5b0eba1664d7eb97e3c0ea543939e328d648ff03ac6",
+        "source-provenance.json": "b878240275479e0d61268545908fa745cd6573508ee476351cbed31840b6b2d7"
+      }
+    },
+    "candidate": {
+      "artifact": {
+        "format": 1,
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/aea2e3c3b025f7c0069c9a5bc1e034f07902faf5be9e9af95bde9d093745b785.tar.gz",
+        "bucket": "calico-fleet-artifacts",
+        "region": "us-east-1",
+        "key": "sixdb/artifacts/sha256/aea2e3c3b025f7c0069c9a5bc1e034f07902faf5be9e9af95bde9d093745b785.tar.gz",
+        "sha256": "aea2e3c3b025f7c0069c9a5bc1e034f07902faf5be9e9af95bde9d093745b785",
+        "bytes": 14163992,
+        "files": 506
+      },
+      "binary": "candidate-bench",
+      "source_receipt": "local-capture.json",
+      "source_digest": "d43b5d2f03e189f5eca594f472fb59579cacf64fd66e2234671437b792e1071a",
+      "files_sha256": {
+        "candidate-bench": "c4094a04b477b08f83e38a7812a8cea4dae0da545b12c0afe0e89f311cd19449",
+        "local-capture.json": "d43b5d2f03e189f5eca594f472fb59579cacf64fd66e2234671437b792e1071a",
+        "checks.json": "edaaa4ae871acd8767c26d94516e7b8f112d1e99dfe3a16f3ac862e7c3c7d5d5",
+        "code-comparison.json": "0e40e36561a6360fd6dcd687f6b04a74acfda88f1902d3dc5fed7c4b9dec2537",
+        "compile-candidate.json": "645272a954773902cd51ddfc105e32e65cfef21a71827958a5dc793b56301ead",
+        "candidate-link.json": "ef9ec924d140fea82054649ac1c7efa005e1490e2f4c0b9aeaf66f42f1acfbd8",
+        "candidate-link-hashes.json": "3c090ed89f05fc404782d18519aac31e0041d59d68213575c0d88dfacef893ac",
+        "scan4-only.patch": "d272245cbdb88b083187a5b0eba1664d7eb97e3c0ea543939e328d648ff03ac6",
+        "source-provenance.json": "b878240275479e0d61268545908fa745cd6573508ee476351cbed31840b6b2d7"
+      }
+    }
+  },
+  "order": [
+    "before",
+    "candidate",
+    "candidate",
+    "before"
+  ],
+  "filter": "(^scan_grain/k[46]/(bound|native|predecessor256)/(encode|decode)/)|(^bulk/series/neon/(striped/k[46]|local/k4)/h0/u8/(encode|decode)$)",
+  "min_time": 0.05,
+  "repetitions": 5,
+  "expected_cases": [
+    "scan_grain/k4/bound/decode/256",
+    "scan_grain/k4/bound/decode/8192",
+    "scan_grain/k4/bound/decode/65536",
+    "scan_grain/k4/bound/encode/256",
+    "scan_grain/k4/bound/encode/8192",
+    "scan_grain/k4/bound/encode/65536",
+    "scan_grain/k4/native/decode/256",
+    "scan_grain/k4/native/decode/8192",
+    "scan_grain/k4/native/decode/65536",
+    "scan_grain/k4/native/encode/256",
+    "scan_grain/k4/native/encode/8192",
+    "scan_grain/k4/native/encode/65536",
+    "scan_grain/k4/predecessor256/decode/256",
+    "scan_grain/k4/predecessor256/decode/8192",
+    "scan_grain/k4/predecessor256/decode/65536",
+    "scan_grain/k4/predecessor256/encode/256",
+    "scan_grain/k4/predecessor256/encode/8192",
+    "scan_grain/k4/predecessor256/encode/65536",
+    "scan_grain/k6/bound/decode/256",
+    "scan_grain/k6/bound/decode/8192",
+    "scan_grain/k6/bound/decode/65536",
+    "scan_grain/k6/bound/encode/256",
+    "scan_grain/k6/bound/encode/8192",
+    "scan_grain/k6/bound/encode/65536",
+    "scan_grain/k6/native/decode/256",
+    "scan_grain/k6/native/decode/8192",
+    "scan_grain/k6/native/decode/65536",
+    "scan_grain/k6/native/encode/256",
+    "scan_grain/k6/native/encode/8192",
+    "scan_grain/k6/native/encode/65536",
+    "scan_grain/k6/predecessor256/decode/256",
+    "scan_grain/k6/predecessor256/decode/8192",
+    "scan_grain/k6/predecessor256/decode/65536",
+    "scan_grain/k6/predecessor256/encode/256",
+    "scan_grain/k6/predecessor256/encode/8192",
+    "scan_grain/k6/predecessor256/encode/65536",
+    "bulk/series/neon/local/k4/h0/u8/encode",
+    "bulk/series/neon/local/k4/h0/u8/decode",
+    "bulk/series/neon/striped/k4/h0/u8/encode",
+    "bulk/series/neon/striped/k4/h0/u8/decode",
+    "bulk/series/neon/striped/k6/h0/u8/encode",
+    "bulk/series/neon/striped/k6/h0/u8/decode"
+  ]
+}

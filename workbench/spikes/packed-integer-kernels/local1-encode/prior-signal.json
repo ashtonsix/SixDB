@@ -1,0 +1,42 @@
+{
+  "status": "motivation only; no candidate public hardware execution yet",
+  "coherent_wave": "build/workspaces/seriespack-coherent-20260910/build/workers",
+  "coherent_public_ns_per_8192": {
+    "zen5": {
+      "worker": "20260910T174905Z-be042d57",
+      "series": 38.0809293,
+      "predecessor": 24.551963
+    },
+    "granite-rapids": {
+      "worker": "20260910T174905Z-0dd982b3",
+      "series": 77.4264808,
+      "predecessor": 66.7888289
+    }
+  },
+  "shared_buffer_source": "workbench/spikes/ikea-composition/validation/seriespack_local_diagnostic.cpp",
+  "shared_buffer_samples": "build/workspaces/seriespack-local-diagnostic-20260910/build/workers/20260910T161756Z-8dbb8b31/results/local-diagnostic/samples.jsonl",
+  "shared_buffer_scope": "Zen full profile; Local1/u8 encode; medians of eight rotations; same buffers; not the new paired public endpoint",
+  "shared_buffer_ns_per_value": [
+    {
+      "values": 256,
+      "bound": 0.0419935975,
+      "native": 0.009656385,
+      "native_region4": 0.0079447845,
+      "predecessor": 0.0061704735
+    },
+    {
+      "values": 8192,
+      "bound": 0.0044812565,
+      "native": 0.0036868025,
+      "native_region4": 0.002711836,
+      "predecessor": 0.0026997185
+    },
+    {
+      "values": 65536,
+      "bound": 0.0061181105,
+      "native": 0.0056969975,
+      "native_region4": 0.0055431575,
+      "predecessor": 0.005638978
+    }
+  ]
+}

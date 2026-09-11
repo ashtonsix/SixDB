@@ -1,0 +1,77 @@
+{
+  "cases": 96,
+  "counters": [
+    "values_per_batch",
+    "source_bytes",
+    "encoded_bytes",
+    "input_page_offset",
+    "output_page_offset"
+  ],
+  "files_sha256": {
+    "cases.csv": "a94d70917dead0271564966b8eb867b03753f2fbfc65eaba088f4d062a81830e"
+  },
+  "filter": null,
+  "format": 1,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "scan": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "neon",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:16:43+00:00",
+        "executable": "/opt/sixdb/jobs/20260910T181505Z-494adcba/results/neon_scan_grain/grain-bench",
+        "host_name": "ip-172-31-28-114",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.663574,
+          0.430664,
+          0.491699
+        ],
+        "mhz_per_cpu": 2000,
+        "num_cpus": 2,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "neon",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-neon-scan-grain-20260910/build/workers/20260910T181505Z-494adcba/results/neon_scan_grain/samples.json",
+      "sha256": "79cb4afb7e6401eb43ac17085eeb5eb0d81c490177f2dc6cee2659a835193052"
+    }
+  },
+  "kind": "google-benchmark-summary",
+  "units": "CPU/real times are ns per benchmark iteration. ns_per_item uses the reported item rate; an item means what the benchmark counts, not necessarily a value or byte."
+}

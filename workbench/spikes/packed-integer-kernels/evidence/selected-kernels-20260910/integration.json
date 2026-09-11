@@ -1,0 +1,46 @@
+{
+  "format": 1,
+  "scope": "Integration of exact measured Local4 projected32 and Local2 coalescing headers after source organisation; correctness only, no new performance claim",
+  "source_sha256": {
+    "ikea/include/ikea/seriespack/native_avx2.h": "17c6665559b319460d28c83f41731cfc83c7f6d117a3bd32fa84308b42fe80de",
+    "ikea/include/ikea/seriespack/native_neon.h": "2f1e2f697902796221ab757ed8f59b49ea3d46676c60af5c599ad02ed7aa5c3f",
+    "ikea/src/seriespack/native.cpp": "8ca2b721c20047d612f0212a5d6c199aba27c0d3a8921f4c080ccbbefd3e2d38",
+    "ikea/src/seriespack/operations.cpp": "1aea42b569c88abcd52b685084f5b33099976daf2d4f1315dd603795c3d76c11"
+  },
+  "performance_evidence": {
+    "local4": "../../diagnostics/local4_projection/public-evidence/capture.json",
+    "local2": "../../diagnostics/local2_coalescing/evidence/v2-20260910/"
+  },
+  "checks": {
+    "neon-payload": {
+      "output": "NEON payload: 400 width/geometry/lane families, 513320 cases passed",
+      "log_sha256": "f3e58c7e7c6c2a65dc4a8b2965c822b3b88a5a6d2e9afe36199e1e416bc02903"
+    },
+    "neon-physical": {
+      "output": "SeriesPack public wire (scalar): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed\nSeriesPack public wire (neon): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed",
+      "log_sha256": "b8989600e0b4ca9fadf742eb1f92be06572e6eeb6a80db87f915ea2cdf8e8cc4"
+    },
+    "neon-range": {
+      "output": "SeriesPack range bounds (scalar): 206 descriptions, 3737352 exact guarded ranges passed\nSeriesPack range bounds (neon): 206 descriptions, 3737352 exact guarded ranges passed",
+      "log_sha256": "812ab3636ac259f35db374e2799767603205b67ad1557ab2c6fe4f4b2dc5167b"
+    },
+    "avx2-payload": {
+      "output": "SeriesPack x86 payloads: 308 configurations, 89496 cases passed (W=0..64, selected stripes, u8/u16/u32/u64 input, native fragments, guards, dense runs).",
+      "log_sha256": "9bfcf4e0850d98ada167b3e38ae6e8036cc66882095d67c56008b45090ffaeaa"
+    }
+  },
+  "compiler": "Clang 21.1.8",
+  "commands": [
+    "cmake --build --preset dev --target ikea_seriespack_payload_check ikea_seriespack_physical_operations_check ikea_seriespack_range_bounds_check -j 2",
+    "build/clang/dev/ikea/ikea_seriespack_payload_check",
+    "build/clang/dev/ikea/ikea_seriespack_physical_operations_check --all-available",
+    "build/clang/dev/ikea/ikea_seriespack_range_bounds_check --all-available",
+    "clang++-21 --target=x86_64-linux-gnu --gcc-toolchain=/usr -std=c++23 -O3 -Wall -Wextra -Werror -march=x86-64-v3 -mtune=znver5 -Iikea/include ikea/test/seriespack/payload_x86.cpp -o build/successor-kernel-evidence/integrated-avx2-payload-check",
+    "qemu-x86_64 -cpu max -L /usr/x86_64-linux-gnu build/successor-kernel-evidence/integrated-avx2-payload-check"
+  ],
+  "limitations": [
+    "NEON checks executed in the local Linux VM; x86 payload checks executed under QEMU.",
+    "Prior hardware pairs remain the performance evidence; no new timing of reorganised sources is asserted.",
+    "Scan4 candidate is deferred because its public 256-value encoder regresses; outlining is a hypothesis for a separate controlled variant."
+  ]
+}

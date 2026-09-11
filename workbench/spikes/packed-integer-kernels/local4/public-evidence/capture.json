@@ -1,0 +1,55 @@
+{
+  "format": 1,
+  "status": "selected for integrated validation",
+  "scope": "AVX2-only projected32 Local4 writer; ordinary public endpoints, no grain change",
+  "runs": {
+    "zen": {
+      "job": "20260910T184217Z-c16d4535",
+      "artifact": "zen.artifact.json",
+      "receipt": {
+        "format": 1,
+        "status": "passed",
+        "tune": "zen5",
+        "scope": "AVX2-only Local4 projected writer, current grain; unchanged public drivers and baseline library",
+        "library_sha256": "3dff85c3e2557325b57c0279736059702f7d18c6f3facdb8eafafc0939aeac69",
+        "binaries": {
+          "before-bench": "b69de4ca75384fcb9508619a3aa29a5808f65e5ede3a7f4974d61c33552016ac",
+          "candidate-bench": "11063bb5dd5256ee177d62fb125bce024df10a752f8a1b017ec02a7d76488db0",
+          "native-candidate.o": "67ba929f7c73f128b81522f285e95bf0f311bd789ea5217670f4e50a63734a69",
+          "public-check": "90ef247459629c6467664159e028622b0706a563441d90a7a3497a493ea1a561",
+          "range-check": "3528c59ac16cdf089f9b348d5eaa94988ff9d8026317cd7ba3855943663d8fc5"
+        }
+      },
+      "commands_sha256": "e4621ff367310bcb482d6fb105573ffa2a64fca72dd74b960256897eaef50d4e",
+      "source_manifest_sha256": "703a9b767ebfdf22dac287768aaed9afeae350365e7b1c28af6b78d271aa1f28",
+      "checks": {
+        "public-check": "SeriesPack public wire (scalar): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed",
+        "range-check": "SeriesPack range bounds (avx2): 206 descriptions, 3737352 exact guarded ranges passed"
+      }
+    },
+    "gnr": {
+      "job": "20260910T184217Z-7aeddafb",
+      "artifact": "gnr.artifact.json",
+      "receipt": {
+        "format": 1,
+        "status": "passed",
+        "tune": "granite-rapids",
+        "scope": "AVX2-only Local4 projected writer, current grain; unchanged public drivers and baseline library",
+        "library_sha256": "822247a1a102ae06bc130d963c9f3923e60dc85354081f3699227309789c9034",
+        "binaries": {
+          "before-bench": "59d6db8e025dd1a54b108bc4d6577dcce67de8c998a0e5aa07709a073bc1bfbc",
+          "candidate-bench": "f20768ba43fa58337c27ed27150a1b7ead620bd2af21b72f2e349ddd12497c5e",
+          "native-candidate.o": "88dd76d5d5934d70b97a5ccd6a4b8d7e47cd04bf4ce90f13990c0628b240ac36",
+          "public-check": "280e27119d60a6f4075c4a6d6c779204fd32d13b46ab6c3d086b2229affe4bcf",
+          "range-check": "5accf64819b0552b92f66f247fbc9d91490761d7dfa7e7807ac0e4098e26eb8b"
+        }
+      },
+      "commands_sha256": "e9034a36d7711b323843d91725cae9039f94c5897890aeff4f65d4bc9994c7bd",
+      "source_manifest_sha256": "703a9b767ebfdf22dac287768aaed9afeae350365e7b1c28af6b78d271aa1f28",
+      "checks": {
+        "public-check": "SeriesPack public wire (scalar): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed",
+        "range-check": "SeriesPack range bounds (avx2): 206 descriptions, 3737352 exact guarded ranges passed"
+      }
+    }
+  }
+}
