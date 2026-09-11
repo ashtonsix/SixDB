@@ -1,6 +1,7 @@
 # SeriesPack lengths inside a BEC count consumer
 
-This bounded adapter replaces the six-bit length child in the closed
+This historical adapter used the first Ikea implementation to replace the
+six-bit length child in the closed
 [heterogeneous probe](../ikea-composition/probes/ikea-heterogeneous/README.md). It keeps the
 same scan128 wire, population packets, checkpoints, dense BEC body allocation,
 64-readable-byte body suffix, query bitset and authored `count_range` operation.
@@ -32,9 +33,11 @@ their timings must not be subtracted to infer a separable boundary cost.
 
 ## Checks and measurements
 
-Select `SIXDB_SPIKES=bec-packed-metadata` and build `ikea_bec_metadata_check` and
-`ikea_bec_metadata_bench`. Use the pinned Linux toolchain and the repository's
-[build conventions](../../../BUILDING.md). The check covers independent
+The live launcher was retired at the Ikea switchover. Recover the
+[predecessor checkout](../ikea-composition/seriespack-predecessor/README.md) to use
+its `SIXDB_SPIKES=bec-packed-metadata` selector, runner and checks. The retained
+adapter and benchmark sources explain the experiment; they do not target the
+replacement API. Its check covered independent
 wire/metadata/count oracles, logical tails, checkpoint/physical-tile crossings,
 query access under ASan, source admission and owner/view copies and moves.
 
@@ -44,13 +47,6 @@ with eight windows each join structural, random-half and a 129-block structural
 tail workload. Six requested ranges cover full traversal, a nonzero first,
 checkpoint crossings at 15 and 127, and the last block. Three standalone
 refill positions include the final logical group.
-
-```sh
-python3 workbench/tools/worker.py run \
-  workbench/spikes/bec-packed-metadata/cloud.sh \
-  --machine zen5 --instance-type c8a.large \
-  --sync-seconds 0 --deadline 1800 -- --target zen5
-```
 
 The x86 profile is x86-64-v4 plus VBMI, VBMI2, GFNI, VPOPCNTDQ and BITALG, tuned for
 the named CPU. Compiled BEC providers need this feature ceiling; an AVX2

@@ -1,14 +1,11 @@
-# Current composition design
+# Ikea composition design
 
-This is the maintained design direction from the completed basic-data-structure
-probes and subsequent SeriesPack work, consolidated through 2026-09-11. Those
-probes support implementing Ikea's basic parts. The [SeriesPack introduction](../../../ikea/seriespack.md)
-explains the implemented component; its [extension guide](../../../ikea/seriespack/extending.md)
-maps current implementation work. The [semantic and integration seams](semantics-and-integration.md)
-remain open without blocking that work. Concrete APIs
-develop with their callers; the
-[owned probes](README.md#evidence-by-question) supply evidence and limits, not
-class hierarchies or templates to copy wholesale.
+These principles and open questions come from the basic-data-structure probes
+and both SeriesPack investigations. Linked measurements describe their captured
+implementations. [Ikea's guides](../../../ikea/README.md) own current public and
+authoring contracts; the [replacement campaign](ikea2-campaign/README.md) records
+its evidence. The [semantic and integration proposal](semantics-and-integration.md)
+keeps broader owner questions separate from implemented behavior.
 
 ## Organising principles
 

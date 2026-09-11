@@ -9,6 +9,3 @@ endif()
 if(NOT TARGET ikea_heterogeneous)
   add_subdirectory(probes/ikea-heterogeneous)
 endif()
-
-# Measurements and verification of the production module.
-add_subdirectory(validation)

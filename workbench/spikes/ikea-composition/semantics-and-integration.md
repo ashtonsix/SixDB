@@ -1,7 +1,7 @@
 # Value semantics and execution integration
 
 2026-09-10. Design proposal following the basic block probes. These questions
-inform [SeriesPack](../../../ikea/seriespack.md); as Ashton
+inform [SeriesPack](../../../ikea/seriespack/usage.md); as Ashton
 subsequently clarified, they need not all be settled before starting. The
 segment size bound below
 is a user commitment; the ownership and interface sketches are proposals.

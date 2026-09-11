@@ -11,5 +11,5 @@ code growth and suffix losses. [Carrier probes](carriers/README.md) isolate the
 cost of keeping reductions in different register forms.
 
 The [completed composition review](evidence/delivery-composition-20260911/review.md)
-places those probes in the current implementation. Ordinary arbitrary-range
+places those probes in the [first implementation](../seriespack-predecessor/README.md). Ordinary arbitrary-range
 traversal and stores now have [their own study](../../seriespack-range-execution/README.md).

@@ -67,6 +67,14 @@ class ResultsTests(unittest.TestCase):
         self.assertLess(results.date_key(''), results.date_key('20260910'))
         self.assertEqual(results.friendly('seriespack-range-execution'), 'SeriesPack range execution')
 
+    def test_study_ownership_after_module_replacement(self):
+        self.assertEqual(results.study_for('workbench/benchmarks/seriespack'), 'SeriesPack')
+        self.assertEqual(results.study_for('workbench/benchmarks/another'), 'Another')
+        self.assertEqual(results.study_for('workbench/spikes/ikea-composition/seriespack-predecessor'),
+                         'SeriesPack predecessor')
+        self.assertEqual(results.study_for('workbench/spikes/ikea-composition/ikea2-campaign'),
+                         results.study_for('ikea2/bench'))
+
     def test_context_projection(self):
         context = results.scientific_context({
             'config': {'machine': 'zen5', 'env': {'SECRET': 'private'}, 'subnets': ['private']},
@@ -75,6 +83,20 @@ class ResultsTests(unittest.TestCase):
         }, {'tune': 'zen5', 'env': 'private'})
         self.assertNotIn('private', json.dumps(context))
         self.assertEqual(context['recorded']['source']['digest'], 'hash')
+
+    def test_current_and_historical_profile_names(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp).resolve()
+            evidence = root / 'workbench/benchmarks/seriespack/evidence/20260911'
+            evidence.mkdir(parents=True)
+            with patch.object(results, 'ROOT', root):
+                for name in ['IKEA_PROFILE', 'IKEA2_PROFILE']:
+                    (evidence / 'provenance.json').write_text(json.dumps({
+                        'config': {'env': {name: 'avx2', 'OTHER_SETTING': 'not display evidence'}}}))
+                    run = results.load_run(evidence, [])
+                    self.assertEqual(run['profile'], 'avx2')
+                    self.assertEqual(run['study'], 'SeriesPack')
+                    self.assertNotIn('OTHER_SETTING', json.dumps(run))
 
     def test_generator_original_bytes_unknown_schema_and_hash_mismatch(self):
         with tempfile.TemporaryDirectory() as tmp:

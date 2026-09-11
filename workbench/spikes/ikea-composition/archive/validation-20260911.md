@@ -31,6 +31,6 @@ artifact references beside each study's evidence recover measured sources,
 objects and binaries; historical paths and hashes inside those records remain
 unchanged. Removed members are also identified in their retained provenance.
 The latest baseline's full table has its own
-[analysis artifact](../../../benchmarks/seriespack/evidence/delivery-baseline-20260911/full-analysis-artifact.json).
+[analysis artifact](../seriespack-predecessor/evidence/delivery-baseline-20260911/full-analysis-artifact.json).
 The final store campaign arrived after this archive and retains its own
 [verified artifact](../../seriespack-range-execution/evidence/delivery-store-20260911/artifact.json).

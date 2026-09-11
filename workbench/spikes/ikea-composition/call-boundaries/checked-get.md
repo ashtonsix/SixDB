@@ -13,7 +13,7 @@ residual; semantic equivalence alone is insufficient to promise equal cost.
 
 ## Matched hardware evidence
 
-The [current baseline](../../../benchmarks/seriespack/findings/baseline-20260911.md) supplies the original
+The [predecessor baseline](../seriespack-predecessor/findings/baseline-20260911.md) supplies the original
 strongest-profile programs. Each host compiles only operations.cpp, replaces
 that member of the three-object production archive, and links the same
 benchmark and checker objects. The independently audited original benchmark
@@ -27,7 +27,7 @@ per block on CPU 0. Each case has six samples per variant; the table reports
 median CPU ns/query. Every checked improvement has separated sample ranges
 and agrees at both ordering edges. These are whole-call measurements: subtracting
 the bound time would not isolate a binder cost. The
-[complete paired table](../../../benchmarks/seriespack/evidence/delivery-baseline-20260911/checked-point.csv)
+[complete paired table](../seriespack-predecessor/evidence/delivery-baseline-20260911/checked-point.csv)
 retains all 432 timings and every bound control.
 
 | Actual gapped layout | Zen base → candidate | GNR base → candidate | V2 base → candidate |

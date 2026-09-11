@@ -143,6 +143,7 @@ def comparisons(tables, measured):
 
 def friendly(value):
     names = {'ikea2': 'Ikea2', 'ikea-composition': 'Ikea composition', 'seriespack': 'SeriesPack',
+             'ikea2-campaign': 'Ikea2 replacement campaign', 'seriespack-predecessor': 'SeriesPack predecessor',
              'bec-packed-metadata': 'BEC packed metadata'}
     return names.get(value, value.replace('-', ' ').capitalize()).replace('Seriespack', 'SeriesPack')
 
@@ -151,6 +152,16 @@ def date_key(value):
     """Compare folder dates and recorded timestamps without inventing time precision."""
     digits = re.sub(r'[^0-9]', '', str(value))
     return digits[:14].ljust(14, '0')
+
+
+def study_for(path):
+    parts = Path(path).parts
+    for study in ('ikea2-campaign', 'seriespack-predecessor'):
+        if study in parts:
+            return friendly(study)
+    if parts[:2] == ('ikea2', 'bench'):
+        return friendly('ikea2-campaign')
+    return friendly(parts[2] if len(parts) > 2 and parts[0] == 'workbench' else parts[0])
 
 
 def scientific_context(meta, facts):
@@ -184,8 +195,7 @@ def scientific_context(meta, facts):
 def load_run(directory, files):
     relative = directory.relative_to(ROOT).as_posix()
     before, _, suffix = relative.partition('/evidence/')
-    study = 'ikea2' if before.startswith('ikea2/') else (
-        before.split('/')[2] if before.startswith('workbench/spikes/') else 'seriespack')
+    study = study_for(before)
     owner = directory
     while not (owner / 'provenance.json').is_file() and owner != ROOT and 'evidence' in owner.parts:
         owner = owner.parent
@@ -201,7 +211,8 @@ def load_run(directory, files):
         machine = 'Zen 5' if '/zen' in relative else 'Granite Rapids' if '/gnr' in relative else 'Neoverse V2' if '/v2' in relative else 'Not recorded'
     machine = {'zen5': 'Zen 5', 'granite-rapids': 'Granite Rapids', 'neoverse-v2': 'Neoverse V2'}.get(machine, machine)
     raw_config = meta.get('config') or {}
-    profile = ((raw_config.get('env') or {}).get('IKEA2_PROFILE') or facts.get('profile') or
+    environment = raw_config.get('env') or {}
+    profile = (environment.get('IKEA_PROFILE') or environment.get('IKEA2_PROFILE') or facts.get('profile') or
                meta.get('profile') or config.get('profile') or '')
     context['configuration']['profile'] = profile
     tables, exposed = [], []
@@ -238,7 +249,7 @@ def load_run(directory, files):
     date = (meta.get('benchmark_context', {}).get('date') or meta.get('started_utc') or
             next(iter(re.findall(r'20\d{6}', relative)), ''))
     label = suffix or directory.name
-    return {'id': relative, 'study': friendly(study), 'label': label, 'machine': machine,
+    return {'id': relative, 'study': study, 'label': label, 'machine': machine,
             'profile': profile, 'date': date, 'context': context, 'notes': notes,
             'files': exposed, 'measurements': measured, 'comparisons': paired, 'build': build,
             'integrity': integrity, 'artifact': read_json(directory / 'artifact.json') or read_json(owner / 'artifact.json')}
@@ -279,7 +290,7 @@ def generate(output, includes):
                     'tables': len(run['files']), 'build': bool(run['build']), 'integrity': run['integrity']['status']})
             except (OSError, ValueError, TypeError, KeyError) as error:
                 catalog['errors'].append({'path': str(directory.relative_to(ROOT)), 'error': str(error)})
-        catalog['runs'].sort(key=lambda r: (date_key(r['date']), r['study'] == 'Ikea2', r['id']), reverse=True)
+        catalog['runs'].sort(key=lambda r: (date_key(r['date']), r['id']), reverse=True)
         (stage / 'catalog.json').write_text(json.dumps(catalog, indent=2) + '\n')
         template = (APP / 'index.html').read_text().replace('<link rel="stylesheet" href="style.css">',
                     '<style>' + (APP / 'style.css').read_text() + '</style>')

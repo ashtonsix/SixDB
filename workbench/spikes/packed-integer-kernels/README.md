@@ -13,7 +13,7 @@ and [NEON scan grain](neon-scan/README.md). The
 [local region diagnostic](local-regions.cpp) is an additional mechanism probe.
 
 Each result applies to its captured kernel and caller. The
-[current baseline](../../benchmarks/seriespack/findings/baseline-20260911.md)
+[predecessor baseline](../ikea-composition/seriespack-predecessor/findings/baseline-20260911.md)
 identifies retained corrections and remaining costs. Small replay specifications
 in `replays/` use the [shared helper](../../tools/replay.py); selected evidence
 keeps countercases and code costs alongside wins.

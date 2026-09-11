@@ -1,7 +1,7 @@
 # SeriesPack caller and composition measurements
 
-These are observations about the current implementation, not a universal cost
-model. [Workload contracts](../../../benchmarks/seriespack/measurements.md) distinguish the compared operations.
+These measurements concern the first Ikea implementation; they are not a
+universal cost model. [Workload contracts](../seriespack-predecessor/workloads.md) distinguish the compared operations.
 The early seam source, also reused by the isolated follow-ups below, carries
 global bulk-only `codec_contract`/`access_contract` strings. Read the individual
 case labels and workload contracts for the actual composition/caller operation;

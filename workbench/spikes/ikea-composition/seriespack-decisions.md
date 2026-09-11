@@ -2,7 +2,7 @@
 
 Recorded at the initial implementation handoff, 2026-09-10. The table and
 opportunities below preserve the evidence available then, including work that
-has since been implemented. They are historical rationale, not current status. The [implementation measurements](../../benchmarks/seriespack/measurements.md)
+has since been implemented. They are historical rationale, not current status. The [implementation measurements](seriespack-predecessor/workloads.md)
 track its controls, target profiles and performance investigations; semantic
 coverage does not establish competitive performance.
 Reconsider them when a real consumer supplies stronger evidence; there is no

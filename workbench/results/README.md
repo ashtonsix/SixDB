@@ -20,7 +20,7 @@ not an additional cross-run baseline. For a curated set, generate a smaller site
 
 ```sh
 python3 workbench/tools/results.py --output build/results-review \
-  --include ikea2/bench/evidence/20260911-test-reuse-zen5
+  --include workbench/spikes/ikea-composition/ikea2-campaign/evidence/20260911-candidate-zen5
 ```
 
 Repeat `--include` for several directories. Review the selection before sharing
@@ -29,11 +29,12 @@ with an evaluator; the viewer carries research notes and artifact references.
 ## How evidence reaches the UI
 
 The generator discovers Git-visible CSV and build records beneath `evidence/`
-in Workbench and `ikea2/bench`. New runs appear without editing an index. It reads
-compact files locally; it neither downloads S3 artifacts nor launches workloads.
+in Workbench; historical `ikea2/bench` exports are also recognised. New runs appear
+without editing an index. It reads compact files locally; it neither downloads
+S3 artifacts nor launches workloads.
 
 Adapters currently understand the shared `evidence.py` case tables, Google
-Benchmark CSV, Ikea2 samples and recorded controls, and retained before/after
+Benchmark CSV, SeriesPack samples and recorded controls, and retained before/after
 and store comparisons. Other schemas remain searchable, downloadable original
 tables. A new useful shape can get a small adapter in
 [results.py](../tools/results.py); no universal result schema is required.

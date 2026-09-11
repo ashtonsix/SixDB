@@ -10,24 +10,24 @@ If:
 CompileFlags:
   Add: [-std=c++23]
 ---
-# ISA header suffixes select editor targets; *_x86.h includes both x86 families.
+# ISA suffixes and native-kernel directories select editor targets.
 # An ISA-specific header can be opened on the other development architecture.
 # Override only its editor target; ordinary TUs keep their CMake build flags.
 # Clang also needs the selected target's C++/libc development headers installed.
 If:
-  PathMatch: .*_avx2\.(h|hpp)
+  PathMatch: (.*_avx2\.(h|hpp)|.*/native/avx2/.*\.(h|hpp))
 CompileFlags:
   Remove: [-march=*, -mcpu=*, -mtune=*, --target=*, -target]
   Add: [--target=x86_64-linux-gnu, -march=x86-64-v3]
 ---
 If:
-  PathMatch: .*_(avx512|x86)\.(h|hpp)
+  PathMatch: (.*_(avx512|x86)\.(h|hpp)|.*/native/avx512/.*\.(h|hpp))
 CompileFlags:
   Remove: [-march=*, -mcpu=*, -mtune=*, --target=*, -target]
   Add: [--target=x86_64-linux-gnu, -march=znver5]
 ---
 If:
-  PathMatch: .*_neon\.(h|hpp)
+  PathMatch: (.*_neon\.(h|hpp)|.*/native/neon/.*\.(h|hpp))
 CompileFlags:
   Remove: [-march=*, -mcpu=*, -mtune=*, --target=*, -target]
   Add: [--target=aarch64-linux-gnu, -march=armv8-a]

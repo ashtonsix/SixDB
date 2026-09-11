@@ -1,6 +1,10 @@
-# SeriesPack delivery reconciliation
+# Predecessor SeriesPack delivery assessment
 
-The current unsigned SeriesPack implementation is a usable composition
+This is the September 11 assessment of the retired implementation. Its
+[source and baseline evidence](seriespack-predecessor/README.md) remain recoverable;
+[Ikea](../../../ikea/README.md) describes the replacement.
+
+The first unsigned SeriesPack implementation is a usable composition
 component with complete physical and public-operation coverage across the
 promised feature profiles. Its cost is not uniformly superior: short ordinary
 materialization, some headed construction, ARM narrow geometry and several
@@ -11,7 +15,7 @@ ordinary-store follow-up are complete. This closes the initial delivery
 assessment with the significant limitations below; it is not a claim of
 performance dominance or a candidate-promotion decision.
 
-## What is delivered
+## What was delivered
 
 The component supplies unsigned widths 1–64 and 206 legal descriptions,
 versioned actual formats, empty/partial/large lengths, independent payload/head
@@ -34,12 +38,12 @@ current seven-profile findings below.
 
 The unchanged current baseline includes the retained Local4 AVX2 transpose,
 Local2 NEON coalescing, and scalar trusted decoder/encoder argument corrections.
-The [complete current reconciliation](../../benchmarks/seriespack/findings/baseline-20260911.md) now covers
+The [complete current reconciliation](seriespack-predecessor/findings/baseline-20260911.md) now covers
 all seven profiles on Zen/GNR/V2:21305 cases and 63915 repetitions, all 206 bulk
 descriptions and 76 unheaded access descriptions per profile. Source, compiled
 objects, library members, binaries, actual feature applicability and required
 checks are audited. All three examples and the additional scalar-x86 aggregate
-pass. The [compact baseline evidence](../../benchmarks/seriespack/evidence/delivery-baseline-20260911/summary.md)
+pass. The [compact baseline evidence](seriespack-predecessor/evidence/delivery-baseline-20260911/summary.md)
 links recoverable measured programs, keeps decision witnesses and identifies
 the complete repetition table in the verified full analysis bundle.
 
@@ -113,7 +117,7 @@ or a new mandatory optimization framework.
 
 Production library text is approximately 1.93 MB for V2 NEON and 2.58–4.45 MB
 across the x86 host/profile builds; actual rodata and benchmark/prior sections
-are [separately recorded](../../benchmarks/seriespack/evidence/delivery-baseline-20260911/code-costs.csv).
+are [separately recorded](seriespack-predecessor/evidence/delivery-baseline-20260911/code-costs.csv).
 These are meaningful maintenance costs. The build receipts record actual
 build-and-check and benchmark scopes, not a claimed compile-speed delta.
 Small source helpers can still instantiate broad code; compact dispatchers

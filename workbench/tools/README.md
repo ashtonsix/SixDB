@@ -33,7 +33,7 @@ live edits:
 ```sh
 python3 workbench/tools/capture.py create build/captures/base
 python3 workbench/tools/capture.py create build/captures/variant \
-  --base build/captures/base --replace ikea/examples/seriespack_query.cpp
+  --base build/captures/base --replace ikea/examples/seriespack/ordinary.cpp
 ```
 
 `--replace PATH` takes that live file; `PATH=INPUT` can map an ignored prototype

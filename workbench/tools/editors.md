@@ -35,6 +35,8 @@ build instructions describe any prepared inputs it requires.
 
 `.clangd` selects x86-64-v3 for `*_avx2.h`, Zen 5 for `*_avx512.h` and combined
 `*_x86.h` headers, and ARMv8-A for `*_neon.h` (also with `.hpp` extensions).
+The same targets apply to headers beneath `native/avx2/`, `native/avx512/`
+and `native/neon/`, as used by SeriesPack.
 This lets clangd parse and complete
 intrinsics even when the header targets the other development architecture.
 Normal TUs retain their CMake flags; these editor overrides do not alter builds.
