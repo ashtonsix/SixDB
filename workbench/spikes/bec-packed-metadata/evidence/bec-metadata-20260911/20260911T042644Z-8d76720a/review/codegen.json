@@ -1,0 +1,74 @@
+{
+  "archive_sha256": "e6734302e0f4ab4df8ef1caa7f47ff7dc63478adc383f77cbd8453b401cfdff1",
+  "source_lines": {
+    "adapter.cpp": 43,
+    "adapter.h": 96,
+    "bench.cpp": 154,
+    "check.cpp": 98
+  },
+  "symbols": [
+    {
+      "bytes": 304,
+      "calls": 0,
+      "instructions": 66,
+      "name": "void bec_metadata::refill_stored<(bec_metadata::Reader)0>(bec_metadata::Source const&, unsigned int, unsigned int*)",
+      "vector_stack": 0
+    },
+    {
+      "bytes": 284,
+      "calls": 0,
+      "instructions": 60,
+      "name": "void bec_metadata::refill_stored<(bec_metadata::Reader)1>(bec_metadata::Source const&, unsigned int, unsigned int*)",
+      "vector_stack": 0
+    },
+    {
+      "bytes": 297,
+      "calls": 2,
+      "instructions": 71,
+      "name": "void bec_metadata::refill_stored<(bec_metadata::Reader)2>(bec_metadata::Source const&, unsigned int, unsigned int*)",
+      "vector_stack": 1
+    },
+    {
+      "bytes": 4046,
+      "calls": 0,
+      "instructions": 740,
+      "name": "unsigned long bec_metadata::count<(bec_metadata::Reader)0, (ikea::heterogeneous::Execution)0>(bec_metadata::Source const&, unsigned int, unsigned int)",
+      "vector_stack": 0
+    },
+    {
+      "bytes": 1258,
+      "calls": 2,
+      "instructions": 302,
+      "name": "unsigned long bec_metadata::count<(bec_metadata::Reader)0, (ikea::heterogeneous::Execution)1>(bec_metadata::Source const&, unsigned int, unsigned int)",
+      "vector_stack": 2
+    },
+    {
+      "bytes": 4002,
+      "calls": 0,
+      "instructions": 729,
+      "name": "unsigned long bec_metadata::count<(bec_metadata::Reader)1, (ikea::heterogeneous::Execution)0>(bec_metadata::Source const&, unsigned int, unsigned int)",
+      "vector_stack": 0
+    },
+    {
+      "bytes": 1213,
+      "calls": 2,
+      "instructions": 285,
+      "name": "unsigned long bec_metadata::count<(bec_metadata::Reader)1, (ikea::heterogeneous::Execution)1>(bec_metadata::Source const&, unsigned int, unsigned int)",
+      "vector_stack": 2
+    },
+    {
+      "bytes": 3957,
+      "calls": 6,
+      "instructions": 733,
+      "name": "unsigned long bec_metadata::count<(bec_metadata::Reader)2, (ikea::heterogeneous::Execution)0>(bec_metadata::Source const&, unsigned int, unsigned int)",
+      "vector_stack": 5
+    },
+    {
+      "bytes": 1262,
+      "calls": 8,
+      "instructions": 285,
+      "name": "unsigned long bec_metadata::count<(bec_metadata::Reader)2, (ikea::heterogeneous::Execution)1>(bec_metadata::Source const&, unsigned int, unsigned int)",
+      "vector_stack": 7
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "job": "20260911T031537Z-36661e37",
+  "status": "failed",
+  "source_digest": "1dba8b2234718ede2112e2a4d1ccf1b3836631726e217047f279d497ba19f74e",
+  "commands": [
+    {
+      "name": "compiler",
+      "returncode": 0
+    },
+    {
+      "name": "cpu",
+      "returncode": 0
+    },
+    {
+      "name": "configure",
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "returncode": 1
+    }
+  ],
+  "timings_ran": false,
+  "cause": "Runner omitted AVX512BITALG required by the existing BEC encoder. V2 changes only runner feature list and README; all five affected x86 TUs cross-compiled before retry.",
+  "build_stdout_sha256": "8dbc557d13b67177736651ad95d57b3b1f69a768dfd6f0c828b3694b06830f94"
+}

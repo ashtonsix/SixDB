@@ -1,0 +1,41 @@
+{
+  "local": {
+    "commands": [
+      {
+        "directory": "/home/ashtonsix/sixdb/build/successor-bec-metadata/local",
+        "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_ZEN5=0 -I/home/ashtonsix/sixdb/workbench/spikes/ikea-composition/probes/ikea-blocks -I/home/ashtonsix/sixdb/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/home/ashtonsix/sixdb=. -ffunction-sections -fdata-sections -mtune=generic -o workbench/spikes/ikea-composition/validation/bec-metadata/CMakeFiles/ikea_bec_metadata_adapter.dir/adapter.cpp.o -c /home/ashtonsix/sixdb/workbench/spikes/ikea-composition/validation/bec-metadata/adapter.cpp",
+        "file": "/home/ashtonsix/sixdb/workbench/spikes/ikea-composition/validation/bec-metadata/adapter.cpp",
+        "output": "workbench/spikes/ikea-composition/validation/bec-metadata/CMakeFiles/ikea_bec_metadata_adapter.dir/adapter.cpp.o",
+        "source_sha256": "5201ae9ac5ff9fc7fa7261c31d09de82ac5febec6fe4ad915a81792626c96d96"
+      },
+      {
+        "directory": "/home/ashtonsix/sixdb/build/successor-bec-metadata/local",
+        "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_ZEN5=0 -I/home/ashtonsix/sixdb/workbench/spikes/ikea-composition/probes/ikea-blocks -I/home/ashtonsix/sixdb/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/home/ashtonsix/sixdb=. -ffunction-sections -fdata-sections -mtune=generic -o workbench/spikes/ikea-composition/validation/bec-metadata/CMakeFiles/ikea_bec_metadata_check.dir/check.cpp.o -c /home/ashtonsix/sixdb/workbench/spikes/ikea-composition/validation/bec-metadata/check.cpp",
+        "file": "/home/ashtonsix/sixdb/workbench/spikes/ikea-composition/validation/bec-metadata/check.cpp",
+        "output": "workbench/spikes/ikea-composition/validation/bec-metadata/CMakeFiles/ikea_bec_metadata_check.dir/check.cpp.o",
+        "source_sha256": "81999ea7dfae55bed4968ebde32455438d0481cc57f53a2856c7272f71d232cf"
+      }
+    ],
+    "check": "passed 254370 compound ranges, 17040 metadata entries, logical-tail, query-access, admission and owner-move checks\n"
+  },
+  "sanitize": {
+    "commands": [
+      {
+        "directory": "/home/ashtonsix/sixdb/build/successor-bec-metadata/sanitize",
+        "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_ZEN5=0 -I/home/ashtonsix/sixdb/workbench/spikes/ikea-composition/probes/ikea-blocks -I/home/ashtonsix/sixdb/ikea/include -fsanitize=address,undefined -fno-omit-frame-pointer -O2 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/home/ashtonsix/sixdb=. -ffunction-sections -fdata-sections -mtune=generic -o workbench/spikes/ikea-composition/validation/bec-metadata/CMakeFiles/ikea_bec_metadata_adapter.dir/adapter.cpp.o -c /home/ashtonsix/sixdb/workbench/spikes/ikea-composition/validation/bec-metadata/adapter.cpp",
+        "file": "/home/ashtonsix/sixdb/workbench/spikes/ikea-composition/validation/bec-metadata/adapter.cpp",
+        "output": "workbench/spikes/ikea-composition/validation/bec-metadata/CMakeFiles/ikea_bec_metadata_adapter.dir/adapter.cpp.o",
+        "source_sha256": "5201ae9ac5ff9fc7fa7261c31d09de82ac5febec6fe4ad915a81792626c96d96"
+      },
+      {
+        "directory": "/home/ashtonsix/sixdb/build/successor-bec-metadata/sanitize",
+        "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_ZEN5=0 -I/home/ashtonsix/sixdb/workbench/spikes/ikea-composition/probes/ikea-blocks -I/home/ashtonsix/sixdb/ikea/include -fsanitize=address,undefined -fno-omit-frame-pointer -O2 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/home/ashtonsix/sixdb=. -ffunction-sections -fdata-sections -mtune=generic -o workbench/spikes/ikea-composition/validation/bec-metadata/CMakeFiles/ikea_bec_metadata_check.dir/check.cpp.o -c /home/ashtonsix/sixdb/workbench/spikes/ikea-composition/validation/bec-metadata/check.cpp",
+        "file": "/home/ashtonsix/sixdb/workbench/spikes/ikea-composition/validation/bec-metadata/check.cpp",
+        "output": "workbench/spikes/ikea-composition/validation/bec-metadata/CMakeFiles/ikea_bec_metadata_check.dir/check.cpp.o",
+        "source_sha256": "81999ea7dfae55bed4968ebde32455438d0481cc57f53a2856c7272f71d232cf"
+      }
+    ],
+    "check": "passed 254370 compound ranges, 17040 metadata entries, logical-tail, query-access, admission and owner-move checks\n"
+  },
+  "scope": "Commands from retained local build databases; source hashes matched the measured capture after checks. No claim of a prebuild hash receipt."
+}

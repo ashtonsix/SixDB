@@ -1,0 +1,47 @@
+{
+  "details": {
+    "sampling": "up to8 whole windows per archive without replacement; all256 cells retained",
+    "source_id": "6fa273f2d0d7a198e1f71bac604cf90046be22c9ea88f727a223075e18e15aa1",
+    "windows": {
+      "census-income": 8,
+      "census-income_srt": 8,
+      "census1881": 8,
+      "census1881_srt": 8,
+      "dimension_003": 8,
+      "dimension_008": 8,
+      "dimension_033": 8,
+      "uscensus2000": 8,
+      "weather_sept_85": 8,
+      "weather_sept_85_srt": 8,
+      "wikileaks-noquotes": 8,
+      "wikileaks-noquotes_srt": 8
+    }
+  },
+  "files_sha256": {
+    "census-income.windows": "190aead19e81cda9a42f848b29706a2fe113f5268330cc16ab79805d7afeb2a0",
+    "census-income_srt.windows": "8247f8c0b1a57863804f9735a0156ae1f532dbf9de848c93e4ee1016f2be28dc",
+    "census1881.windows": "3563888c876487fdaa1fbdde69abe200c555f1cc61ec9a6a8b85fc4f13e0ec29",
+    "census1881_srt.windows": "c8cc625a2427bfb3603ba70d3ef8a54078a007c803567f48493eab45339994ab",
+    "dimension_003.windows": "527302c99db516bad2c5f322d84bc904e51d7d8b53ab1d71b61d398a500026bd",
+    "dimension_008.windows": "24487f5b33e6efddddb9bdaf2d7cd38022d6e7569a90e21fcf0b4d5d49e36dc2",
+    "dimension_033.windows": "a723adb7d6762bd59ceaee924d0b3c704b7e30802c3903bcb17514165012e253",
+    "lineage.json": "3e1b39e1a63641f79b14b1d9c17471fbc46397b15d4786884375c2610bc87150",
+    "uscensus2000.windows": "4b3c66b445199a1239bcdc363a84fb217205515336be956ce0f22755cb381339",
+    "weather_sept_85.windows": "a74982e69c6d79284133889471538922db0b21b0d0af339129169872b54133a4",
+    "weather_sept_85_srt.windows": "a0e39410faf947c08d0eabf9c2f6f4ab022b99c70134bdef41549a9260da0cf0",
+    "wikileaks-noquotes.windows": "1fa9651ee853da959f7a35a7b0a74fae83288791757d9ed1712cde71beb70bae",
+    "wikileaks-noquotes_srt.windows": "54d9d4f12a9d97b988a79cde708e63a2268e16e23e483c308d1745b36b301b4e"
+  },
+  "format": 2,
+  "id": "d1508be6791a608ef4805c788ef4ff8c6968c87a191b53c1aac5b94d886c56d9",
+  "key": "536c2f7c742270d974839b658fa20ef0c88342666d8dac5b7dc3021f6fddeaef",
+  "request": {
+    "format": 2,
+    "inputs": {
+      "real-roaring": "6fa273f2d0d7a198e1f71bac604cf90046be22c9ea88f727a223075e18e15aa1"
+    },
+    "name": "ikea-heterogeneous-windows",
+    "parameters": {},
+    "recipe_sha256": "59c811c9eacd7954d74d86adeb4073c2ee95e1c29ccc4d4ad4d93a82b3e071ce"
+  }
+}
