@@ -1,0 +1,301 @@
+{
+  "status": "isolated candidate; no production changes; paired hardware timing pending",
+  "validation": {
+    "avx2_optimized_fixture_cases": 288,
+    "avx2_qemu_supplemental_guard_cases": 145152,
+    "supplemental_extra_flags": [
+      "-fno-vectorize",
+      "-fno-slp-vectorize"
+    ],
+    "avx2_optimized_guard": "compiled; hardware execution required",
+    "avx512_optimized_guard": "compiled; hardware execution required",
+    "masked_load_reproducer": "QEMU exit255/SIGSEGV; hardware execution required; inactive guard-page lanes are excluded by the explicit mask",
+    "qemu_version": "10.1.0 (Debian 1:10.1.0+ds-5ubuntu2.6)"
+  },
+  "prior": {
+    "planes_sha256": "19272a6e7999ad121512ae84c1a55ea62a53466a9d656d71224f53618beadde5",
+    "prepared_key": "0b8095ac84a6448549a618b26ca5d7e032694bedcd6ae19118cb3d57181de416",
+    "K17_K23_head_layout": "two independent leading8-bit planes, not one16-bit plane",
+    "K17_K23_full_feature_memory_head_narrows_per256": 64,
+    "whole_array_schedule": "Calico completes each256-value cell; Series payload and head passes traverse entire arrays"
+  },
+  "codegen": {
+    "avx2": {
+      "binary_sha256": "52e7b676acc86605ce1b593540f8a1f83b90e7b1120ebfa5ca7094504d471f29",
+      "K17_H16_T256_u64_heads_only": {
+        "void (anonymous namespace)::operation<head_encode_experiment::avx2, 1u, 16u, 256u, unsigned long, 0u, false>(void const*, unsigned char*, unsigned char*, unsigned char*, unsigned long)": {
+          "address_mod64": 48,
+          "size": 1738,
+          "first_backward_loop": {
+            "start_offset": 96,
+            "start_mod64": 16,
+            "backward_branch_offset": 233,
+            "instructions": 27,
+            "vector_registers": [
+              0,
+              1,
+              2
+            ],
+            "stack_references": 0,
+            "calls": 0,
+            "memory_narrowing_stores": 0
+          },
+          "all_function_calls": [
+            "callq\t0x2080 <memset@plt>"
+          ]
+        },
+        "void (anonymous namespace)::operation<head_encode_experiment::avx2, 1u, 16u, 256u, unsigned long, 1u, false>(void const*, unsigned char*, unsigned char*, unsigned char*, unsigned long)": {
+          "address_mod64": 0,
+          "size": 1214,
+          "first_backward_loop": {
+            "start_offset": 96,
+            "start_mod64": 32,
+            "backward_branch_offset": 224,
+            "instructions": 25,
+            "vector_registers": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "stack_references": 0,
+            "calls": 0,
+            "memory_narrowing_stores": 0
+          },
+          "all_function_calls": [
+            "callq\t0x2080 <memset@plt>"
+          ]
+        },
+        "void (anonymous namespace)::operation<head_encode_experiment::avx2, 1u, 16u, 256u, unsigned long, 2u, false>(void const*, unsigned char*, unsigned char*, unsigned char*, unsigned long)": {
+          "address_mod64": 0,
+          "size": 1155,
+          "first_backward_loop": {
+            "start_offset": 64,
+            "start_mod64": 0,
+            "backward_branch_offset": 196,
+            "instructions": 26,
+            "vector_registers": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "stack_references": 0,
+            "calls": 0,
+            "memory_narrowing_stores": 0
+          },
+          "all_function_calls": [
+            "callq\t0x2080 <memset@plt>"
+          ]
+        },
+        "void (anonymous namespace)::operation<head_encode_experiment::avx2, 1u, 16u, 256u, unsigned long, 3u, false>(void const*, unsigned char*, unsigned char*, unsigned char*, unsigned long)": {
+          "address_mod64": 16,
+          "size": 5067,
+          "first_backward_loop": {
+            "start_offset": 64,
+            "start_mod64": 16,
+            "backward_branch_offset": 4146,
+            "instructions": 707,
+            "vector_registers": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "stack_references": 0,
+            "calls": 0,
+            "memory_narrowing_stores": 0
+          },
+          "all_function_calls": [
+            "callq\t0x2080 <memset@plt>"
+          ]
+        }
+      }
+    },
+    "zen5": {
+      "binary_sha256": "7adafa646e4fd1e3769134a0b464a2a97c0a8600abffe622e83f0e1e24978da8",
+      "K17_H16_T256_u64_heads_only": {
+        "void (anonymous namespace)::operation<head_encode_experiment::avx2, 1u, 16u, 256u, unsigned long, 0u, false>(void const*, unsigned char*, unsigned char*, unsigned char*, unsigned long)": {
+          "address_mod64": 48,
+          "size": 1430,
+          "first_backward_loop": {
+            "start_offset": 80,
+            "start_mod64": 0,
+            "backward_branch_offset": 225,
+            "instructions": 19,
+            "vector_registers": [
+              0
+            ],
+            "stack_references": 0,
+            "calls": 0,
+            "memory_narrowing_stores": 8
+          },
+          "all_function_calls": [
+            "callq\t0x4080 <memset@plt>"
+          ]
+        },
+        "void (anonymous namespace)::operation<head_encode_experiment::avx2, 1u, 16u, 256u, unsigned long, 1u, false>(void const*, unsigned char*, unsigned char*, unsigned char*, unsigned long)": {
+          "address_mod64": 16,
+          "size": 1260,
+          "first_backward_loop": {
+            "start_offset": 80,
+            "start_mod64": 32,
+            "backward_branch_offset": 350,
+            "instructions": 43,
+            "vector_registers": [
+              0,
+              1
+            ],
+            "stack_references": 0,
+            "calls": 0,
+            "memory_narrowing_stores": 16
+          },
+          "all_function_calls": [
+            "callq\t0x4080 <memset@plt>"
+          ]
+        },
+        "void (anonymous namespace)::operation<head_encode_experiment::avx2, 1u, 16u, 256u, unsigned long, 2u, false>(void const*, unsigned char*, unsigned char*, unsigned char*, unsigned long)": {
+          "address_mod64": 0,
+          "size": 930,
+          "first_backward_loop": {
+            "start_offset": 48,
+            "start_mod64": 48,
+            "backward_branch_offset": 113,
+            "instructions": 12,
+            "vector_registers": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "stack_references": 0,
+            "calls": 0,
+            "memory_narrowing_stores": 1
+          },
+          "all_function_calls": [
+            "callq\t0x4080 <memset@plt>"
+          ]
+        },
+        "void (anonymous namespace)::operation<head_encode_experiment::avx2, 1u, 16u, 256u, unsigned long, 3u, false>(void const*, unsigned char*, unsigned char*, unsigned char*, unsigned long)": {
+          "address_mod64": 48,
+          "size": 3140,
+          "first_backward_loop": {
+            "start_offset": 48,
+            "start_mod64": 32,
+            "backward_branch_offset": 2280,
+            "instructions": 323,
+            "vector_registers": [
+              0,
+              1
+            ],
+            "stack_references": 0,
+            "calls": 0,
+            "memory_narrowing_stores": 128
+          },
+          "all_function_calls": [
+            "callq\t0x4080 <memset@plt>"
+          ]
+        },
+        "void (anonymous namespace)::operation<head_encode_experiment::avx512, 1u, 16u, 256u, unsigned long, 0u, false>(void const*, unsigned char*, unsigned char*, unsigned char*, unsigned long)": {
+          "address_mod64": 0,
+          "size": 2166,
+          "first_backward_loop": {
+            "start_offset": 64,
+            "start_mod64": 0,
+            "backward_branch_offset": 615,
+            "instructions": 67,
+            "vector_registers": [
+              0
+            ],
+            "stack_references": 0,
+            "calls": 0,
+            "memory_narrowing_stores": 32
+          },
+          "all_function_calls": [
+            "callq\t0x4080 <memset@plt>"
+          ]
+        },
+        "void (anonymous namespace)::operation<head_encode_experiment::avx512, 1u, 16u, 256u, unsigned long, 1u, false>(void const*, unsigned char*, unsigned char*, unsigned char*, unsigned long)": {
+          "address_mod64": 0,
+          "size": 1292,
+          "first_backward_loop": {
+            "start_offset": 80,
+            "start_mod64": 16,
+            "backward_branch_offset": 392,
+            "instructions": 43,
+            "vector_registers": [
+              0,
+              1
+            ],
+            "stack_references": 0,
+            "calls": 0,
+            "memory_narrowing_stores": 16
+          },
+          "all_function_calls": [
+            "callq\t0x4080 <memset@plt>"
+          ]
+        },
+        "void (anonymous namespace)::operation<head_encode_experiment::avx512, 1u, 16u, 256u, unsigned long, 2u, false>(void const*, unsigned char*, unsigned char*, unsigned char*, unsigned long)": {
+          "address_mod64": 16,
+          "size": 978,
+          "first_backward_loop": {
+            "start_offset": 48,
+            "start_mod64": 0,
+            "backward_branch_offset": 159,
+            "instructions": 18,
+            "vector_registers": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "stack_references": 0,
+            "calls": 0,
+            "memory_narrowing_stores": 2
+          },
+          "all_function_calls": [
+            "callq\t0x4080 <memset@plt>"
+          ]
+        },
+        "void (anonymous namespace)::operation<head_encode_experiment::avx512, 1u, 16u, 256u, unsigned long, 3u, false>(void const*, unsigned char*, unsigned char*, unsigned char*, unsigned long)": {
+          "address_mod64": 48,
+          "size": 2122,
+          "first_backward_loop": {
+            "start_offset": 48,
+            "start_mod64": 32,
+            "backward_branch_offset": 1271,
+            "instructions": 163,
+            "vector_registers": [
+              0,
+              1
+            ],
+            "stack_references": 0,
+            "calls": 0,
+            "memory_narrowing_stores": 64
+          },
+          "all_function_calls": [
+            "callq\t0x4080 <memset@plt>"
+          ]
+        }
+      }
+    }
+  },
+  "source_sha256": {
+    "audit.py": "d03e42d47560c5713bae173e4f67ead2e96983cb65f2f84f738c3bdbba0035b6",
+    "bench.cpp": "ffe6edaf0642bb176ae50f71eb35b98bf83b1bf297cc6e29b5fa9eb560b59500",
+    "check.cpp": "56f094709785d665d0d191d176bdc57f6ab705549f797dea9ccfd70f6b6bfdd8",
+    "heads.h": "3802521c8782cebc8b31aaa599e7aa4ca3d9a9ba6f00457da13c01f0dab2ad6e",
+    "masked_load_check.cpp": "874f280e61d073ff50b282fd90f613db170fe1336b644e29ef755b42b03e2876",
+    "prior_audit.cpp": "6a07a8ca6cf26e99e580666afebf36174c5aa959b252434f7c4263a1cffb3700"
+  },
+  "production_dependency_sha256": {
+    "ikea/include/ikea/seriespack/native_avx2.h": "3e78b77bcea0a0229f18b8dd2fbf27a01696b00931703db1610750445501f9f9",
+    "ikea/include/ikea/seriespack/native_avx512.h": "62562fc9199c6d81bf5d3f7794866822b296bcf91a6acf761a9cdf325d8d3d3a",
+    "ikea/include/ikea/seriespack/detail/body_avx2.h": "7fb591bfb96546a31561c08ceab7d3d4d6b8afca4e2d73f8f0f7fa06127dab0c",
+    "ikea/include/ikea/seriespack/detail/body_avx512.h": "a36c8b8fe9edd68a2833e969352f4d07a9fa5763d329c4d532876d606aa28dae",
+    "ikea/include/ikea/seriespack/detail/physical.h": "cc46daf3580ad494682830c49e30a03e6c5444498c94754501a21e08875eb256"
+  }
+}

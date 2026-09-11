@@ -1,0 +1,32 @@
+{
+  "format": 1,
+  "scope": "same-buffer per-placement medians, ten rotations; isolated dense heads; no bound endpoint or cold claim",
+  "job": "20260910T171659Z-d701c1b2",
+  "artifact": "zen.artifact.json",
+  "rows": 924,
+  "summary_sha256": "9d90d4bff2bc4d2f6f3a34f81f36d40c0eb5e9d0710a85f715527bd9a585afdd",
+  "results_csv_sha256": "0fd6ab127f523b68beab16e712b2b15434b17b0d52d3cb1d7ad70372315740f2",
+  "sample_files": {
+    "results/headed-local/avx2/pad0-samples.jsonl": "d7b9ab9bec7c01ca33affaf0b422511a3ccb43990374aa7be355eb2f02598176",
+    "results/headed-local/avx2/pad16-samples.jsonl": "7b474ee79f0c64066a0df5602ed5e30736650b2204f2acce9bffc7cbe7784310",
+    "results/headed-local/avx2/pad32-samples.jsonl": "d1468a4c1c1d6d246ddfe1b83987a525b32080a080049b0c872282a3ebeeb090",
+    "results/headed-local/avx2/pad48-samples.jsonl": "7bd48468f7bf7e0c34904561994643d67d414675c2661915c7d207283b39be49",
+    "results/headed-local/avx512/pad0-samples.jsonl": "d4f857afeebefb7efacd38dca4029b799ae675cd65522b28f90d387f636e439f",
+    "results/headed-local/avx512/pad16-samples.jsonl": "c2bc2113f9117901ddf3ae526b5739089a073291b95252e8ec922370c5b4989f",
+    "results/headed-local/avx512/pad32-samples.jsonl": "a86c0660aa7b4df21e4178712a28621406e17b7ac61b334ab0c611b679438a9d",
+    "results/headed-local/avx512/pad48-samples.jsonl": "3e287c70a30756d04371f035151b426b8c527befa796e71a4d969cadecc4f28f"
+  },
+  "checks": {
+    "avx2_guard_oracle": 114240,
+    "avx2_fixture_per_pad": 66,
+    "avx512_guard_oracle": 285600,
+    "avx512_fixture_per_pad": 165,
+    "pads": [
+      0,
+      16,
+      32,
+      48
+    ]
+  },
+  "status": "Zen evidence only; no production adoption; GNR pending"
+}

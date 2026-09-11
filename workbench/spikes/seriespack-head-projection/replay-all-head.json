@@ -1,0 +1,70 @@
+{
+  "format": 1,
+  "question": "Isolated zero-shift head reuse: exact before/candidate executables; unchanged shifted head controls; two process orders. These binaries predate the coherent range candidate.",
+  "variants": {
+    "before": {
+      "artifact": {
+        "format": 1,
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/121a49b1e5231e7feb471218e4764b5b43b6eb78f39e4b5d5a759e5e84c27287.tar.gz",
+        "bucket": "calico-fleet-artifacts",
+        "region": "us-east-1",
+        "key": "sixdb/artifacts/sha256/121a49b1e5231e7feb471218e4764b5b43b6eb78f39e4b5d5a759e5e84c27287.tar.gz",
+        "sha256": "121a49b1e5231e7feb471218e4764b5b43b6eb78f39e4b5d5a759e5e84c27287",
+        "bytes": 7652670,
+        "files": 69
+      },
+      "binary": "before-bench",
+      "source_receipt": "local-capture.json",
+      "source_digest": "066364cba53a5eeaef9d7cc52e82f2620df4ceb1b7b4098f5c8b390d324ae04d",
+      "files_sha256": {
+        "before-bench": "8cf1ac0f3874207424a81d68bf544e035edc91ee3bf53f969fa262b5e0515b94",
+        "local-capture.json": "066364cba53a5eeaef9d7cc52e82f2620df4ceb1b7b4098f5c8b390d324ae04d",
+        "checks.json": "e42ed7ff0b42c1caf5326204000a3fe658086ba82b0764d98de7487a5a3d9bed",
+        "sizes.json": "a3b8710f0a17a0fa63f6e50bfd5bf3cdedcc093b873c316c3f04209850fd4279",
+        "compile-candidate.json": "9fa285bad6f4c37da81310e4ecb75567433b52493da20037ec372c5d790fe1c2",
+        "link-before.json": "386fe6630e13948c7aa59fa5f5c0cf9472a4f3191e3a0381a115adfe6d64b9dc"
+      }
+    },
+    "candidate": {
+      "artifact": {
+        "format": 1,
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/121a49b1e5231e7feb471218e4764b5b43b6eb78f39e4b5d5a759e5e84c27287.tar.gz",
+        "bucket": "calico-fleet-artifacts",
+        "region": "us-east-1",
+        "key": "sixdb/artifacts/sha256/121a49b1e5231e7feb471218e4764b5b43b6eb78f39e4b5d5a759e5e84c27287.tar.gz",
+        "sha256": "121a49b1e5231e7feb471218e4764b5b43b6eb78f39e4b5d5a759e5e84c27287",
+        "bytes": 7652670,
+        "files": 69
+      },
+      "binary": "candidate-bench",
+      "source_receipt": "local-capture.json",
+      "source_digest": "066364cba53a5eeaef9d7cc52e82f2620df4ceb1b7b4098f5c8b390d324ae04d",
+      "files_sha256": {
+        "candidate-bench": "926cec28e10b26a7c993e767050bda111cee14f03bb08617cd50c74c7bda3a43",
+        "local-capture.json": "066364cba53a5eeaef9d7cc52e82f2620df4ceb1b7b4098f5c8b390d324ae04d",
+        "checks.json": "e42ed7ff0b42c1caf5326204000a3fe658086ba82b0764d98de7487a5a3d9bed",
+        "sizes.json": "a3b8710f0a17a0fa63f6e50bfd5bf3cdedcc093b873c316c3f04209850fd4279",
+        "compile-candidate.json": "9fa285bad6f4c37da81310e4ecb75567433b52493da20037ec372c5d790fe1c2",
+        "link-candidate.json": "5e22ef5897d0f35126b1922e36997197f3f3477b630fc5d58897d61170b35c12"
+      }
+    }
+  },
+  "order": [
+    "before",
+    "candidate",
+    "candidate",
+    "before"
+  ],
+  "filter": "(^byte_grain/bound_head8/)|(^bulk/series/neon/local/(k8/h8|k16/h16|k16/h8|k24/h16)/u64/encode$)",
+  "min_time": 0.05,
+  "repetitions": 5,
+  "expected_cases": [
+    "bulk/series/neon/local/k16/h16/u64/encode",
+    "bulk/series/neon/local/k16/h8/u64/encode",
+    "bulk/series/neon/local/k24/h16/u64/encode",
+    "bulk/series/neon/local/k8/h8/u64/encode",
+    "byte_grain/bound_head8/256",
+    "byte_grain/bound_head8/65536",
+    "byte_grain/bound_head8/8192"
+  ]
+}

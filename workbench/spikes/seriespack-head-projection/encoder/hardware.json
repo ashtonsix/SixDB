@@ -1,0 +1,43 @@
+{
+  "format": 1,
+  "scope": "Shared-buffer heads-only and payload+heads diagnostic; H16/u64 focus, no public selection yet",
+  "runs": {
+    "zen": {
+      "job": "20260910T184701Z-75f0befa",
+      "artifact": "zen-hardware.artifact.json",
+      "profiles": {
+        "avx2": {
+          "samples_path": "results/head-encode/avx2/samples.jsonl",
+          "samples_sha256": "9aacc730a203f9cc8eed99c3ad9d6b4e09a454001d1842f171ef4c4804682e61",
+          "checks": "head encode: 145152 independent byte-oracle/guard/stride/partial cases passed",
+          "masked_dword_check": "masked dword guard: one active readable lane, seven inactive inaccessible lanes passed"
+        },
+        "avx512": {
+          "samples_path": "results/head-encode/avx512/samples.jsonl",
+          "samples_sha256": "c21625af00152832034f7b9bff7c8de0a83f3d7fdd6b7d381a6522fa757755b1",
+          "checks": "head encode: 290304 independent byte-oracle/guard/stride/partial cases passed",
+          "masked_dword_check": "masked dword guard: one active readable lane, seven inactive inaccessible lanes passed"
+        }
+      }
+    },
+    "gnr": {
+      "job": "20260910T184701Z-5f0b7950",
+      "artifact": "gnr-hardware.artifact.json",
+      "profiles": {
+        "avx2": {
+          "samples_path": "results/head-encode/avx2/samples.jsonl",
+          "samples_sha256": "79b1e087a5b60b2703c81492096a1db5b53a7dbae0e8b059883bb130eb18a7a4",
+          "checks": "head encode: 145152 independent byte-oracle/guard/stride/partial cases passed",
+          "masked_dword_check": "masked dword guard: one active readable lane, seven inactive inaccessible lanes passed"
+        },
+        "avx512": {
+          "samples_path": "results/head-encode/avx512/samples.jsonl",
+          "samples_sha256": "71e15549ad6b03b666e3f3c9c9bd84c7f72f61174eda7c04d8f39899fe78de53",
+          "checks": "head encode: 290304 independent byte-oracle/guard/stride/partial cases passed",
+          "masked_dword_check": "masked dword guard: one active readable lane, seven inactive inaccessible lanes passed"
+        }
+      }
+    }
+  },
+  "hardware_csv_sha256": "66b085ec9d5ff705419dc5183747243bc25f91e6a000eea39d10b5f3dbf98a58"
+}

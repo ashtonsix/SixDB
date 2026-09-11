@@ -1,0 +1,182 @@
+{
+  "status": "isolated candidate; hardware timing pending; production headers unchanged",
+  "checks": {
+    "avx2_guard_oracle": 114240,
+    "avx2_fixture_per_placement": 66,
+    "placements": [
+      0,
+      16,
+      32,
+      48
+    ],
+    "full_feature_guard_oracle": "compiled; execution requires hardware",
+    "full_feature_fixture": "compiled; execution requires hardware"
+  },
+  "assembly": {
+    "avx2": {
+      "object_sha256": "e551068bc8aaf2c83044b306ef4a9f3ac0751789c57bafbe406b34a4e79e5b73",
+      "functions": 22,
+      "total_function_bytes": 6916,
+      "helper_calls": 0,
+      "stack_references": 0,
+      "identical_code_constant_offsets_and_bytes_across_placements": true,
+      "k10_h8_u16": {
+        "void (anonymous namespace)::operation<2u, 8u, unsigned short, 0u>(unsigned char const*, unsigned char const*, unsigned char const*, void*, unsigned long)": {
+          "address": 39680,
+          "entry_mod64": 0,
+          "size": 143,
+          "normalized_sha256": "299120f2225d04b4feb0a0ab586aec71bb3dbe73e7fd0f78cbec132abf7dc6f8",
+          "instructions": 34,
+          "calls": 0,
+          "stack_references": 0,
+          "back_edges": [
+            {
+              "source_offset": 140,
+              "target_offset": 32,
+              "target_mod64": 32
+            }
+          ]
+        },
+        "void (anonymous namespace)::operation<2u, 8u, unsigned short, 1u>(unsigned char const*, unsigned char const*, unsigned char const*, void*, unsigned long)": {
+          "address": 39824,
+          "entry_mod64": 16,
+          "size": 338,
+          "normalized_sha256": "ce58d3f7f6f8ea27ce036d08f3480acdeabf905ace4eb92e3aaf860916c243c9",
+          "instructions": 73,
+          "calls": 0,
+          "stack_references": 0,
+          "back_edges": [
+            {
+              "source_offset": 187,
+              "target_offset": 48,
+              "target_mod64": 0
+            },
+            {
+              "source_offset": 332,
+              "target_offset": 224,
+              "target_mod64": 48
+            }
+          ]
+        }
+      }
+    },
+    "zen5": {
+      "object_sha256": "64cc5267009924162f304d2d7df8765d70d9b3d953c99f2b84474f19104c37ac",
+      "functions": 55,
+      "total_function_bytes": 12739,
+      "helper_calls": 0,
+      "stack_references": 0,
+      "identical_code_constant_offsets_and_bytes_across_placements": true,
+      "k10_h8_u16": {
+        "void (anonymous namespace)::operation<2u, 8u, unsigned short, 0u>(unsigned char const*, unsigned char const*, unsigned char const*, void*, unsigned long)": {
+          "address": 39744,
+          "entry_mod64": 0,
+          "size": 89,
+          "normalized_sha256": "44484b25a2c4bc01b197d6cb76bd938055a8dc497d7f0e6d165f274d1eae66d2",
+          "instructions": 20,
+          "calls": 0,
+          "stack_references": 0,
+          "back_edges": [
+            {
+              "source_offset": 86,
+              "target_offset": 32,
+              "target_mod64": 32
+            }
+          ]
+        },
+        "void (anonymous namespace)::operation<2u, 8u, unsigned short, 1u>(unsigned char const*, unsigned char const*, unsigned char const*, void*, unsigned long)": {
+          "address": 39840,
+          "entry_mod64": 32,
+          "size": 220,
+          "normalized_sha256": "695acd2fd29a6a0c45e7c81edef8e5148e1e2a957713502ee1a006fd00f669b9",
+          "instructions": 46,
+          "calls": 0,
+          "stack_references": 0,
+          "back_edges": [
+            {
+              "source_offset": 122,
+              "target_offset": 32,
+              "target_mod64": 0
+            },
+            {
+              "source_offset": 214,
+              "target_offset": 160,
+              "target_mod64": 0
+            }
+          ]
+        },
+        "void (anonymous namespace)::operation<2u, 8u, unsigned short, 2u>(unsigned char const*, unsigned char const*, unsigned char const*, void*, unsigned long)": {
+          "address": 40064,
+          "entry_mod64": 0,
+          "size": 89,
+          "normalized_sha256": "44484b25a2c4bc01b197d6cb76bd938055a8dc497d7f0e6d165f274d1eae66d2",
+          "instructions": 20,
+          "calls": 0,
+          "stack_references": 0,
+          "back_edges": [
+            {
+              "source_offset": 86,
+              "target_offset": 32,
+              "target_mod64": 32
+            }
+          ]
+        },
+        "void (anonymous namespace)::operation<2u, 8u, unsigned short, 3u>(unsigned char const*, unsigned char const*, unsigned char const*, void*, unsigned long)": {
+          "address": 40160,
+          "entry_mod64": 32,
+          "size": 188,
+          "normalized_sha256": "ff5b98cb2b249919842f4143a09607fa41b497e72b303417608e4e0aa40d32d7",
+          "instructions": 40,
+          "calls": 0,
+          "stack_references": 0,
+          "back_edges": [
+            {
+              "source_offset": 99,
+              "target_offset": 32,
+              "target_mod64": 0
+            },
+            {
+              "source_offset": 182,
+              "target_offset": 128,
+              "target_mod64": 32
+            }
+          ]
+        },
+        "void (anonymous namespace)::operation<2u, 8u, unsigned short, 4u>(unsigned char const*, unsigned char const*, unsigned char const*, void*, unsigned long)": {
+          "address": 40352,
+          "entry_mod64": 32,
+          "size": 252,
+          "normalized_sha256": "35913801d91aa819ff68a8e8d24086fecba87df5b42db20cb68a3e76528b27d3",
+          "instructions": 48,
+          "calls": 0,
+          "stack_references": 0,
+          "back_edges": [
+            {
+              "source_offset": 158,
+              "target_offset": 48,
+              "target_mod64": 16
+            },
+            {
+              "source_offset": 246,
+              "target_offset": 192,
+              "target_mod64": 32
+            }
+          ]
+        }
+      }
+    }
+  },
+  "source_sha256": {
+    "bench.cpp": "add374813dd4abd9a20834d6e547540d94fad4bf0655ee895a1ed96ee7e1fe28",
+    "build_variants.py": "cbb4304226a549612d97657a085dcc2202a9fcc0c4426e10bf12db8f2fdc685b",
+    "check.cpp": "5a8c2da872a8aad021f8dec8912f735da3108e9954c09170b0e5f686d39f8884",
+    "region.h": "34d486c02aff79207767bb09a7a70ef6999f36d30ab0259b4baacb62a66e29e5"
+  },
+  "production_dependency_sha256": {
+    "ikea/include/ikea/seriespack/native_avx2.h": "3e78b77bcea0a0229f18b8dd2fbf27a01696b00931703db1610750445501f9f9",
+    "ikea/include/ikea/seriespack/native_avx512.h": "62562fc9199c6d81bf5d3f7794866822b296bcf91a6acf761a9cdf325d8d3d3a",
+    "ikea/include/ikea/seriespack/detail/body_avx2.h": "7fb591bfb96546a31561c08ceab7d3d4d6b8afca4e2d73f8f0f7fa06127dab0c",
+    "ikea/include/ikea/seriespack/detail/body_avx512.h": "a36c8b8fe9edd68a2833e969352f4d07a9fa5763d329c4d532876d606aa28dae",
+    "ikea/include/ikea/seriespack/detail/physical.h": "41129fd803584a6e663c39f98306f558c3a8a215164160a511244c01697f32fa"
+  }
+}
