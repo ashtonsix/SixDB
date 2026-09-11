@@ -66,64 +66,34 @@ analysis must coexist with a small bound call during execution. Semantic
 equivalence, applicability and conditional cost evidence have different
 validity rules. This is a design direction, not an implemented optimiser.
 
-The [Bec256 exercise](../spikes/ikea-composition/probes/ikea-blocks/README.md#hardware-findings-2026-09-09)
-adds a concrete constraint: native register handoff can coexist with inspectable
-composition, but dispatch and carrier allocation have observable costs. Its
-limited lowerer does not yet handle a value consumed twice; this is distinct
-from branching control flow. The [value-reuse sketches](../spikes/ikea-composition/value-reuse-sketches.md)
-keep that authoring and execution question open rather than turning the first
-successful codec measurements into a production interface.
+The [composition design](../spikes/ikea-composition/design.md) and
+[integration proposal](../spikes/ikea-composition/semantics-and-integration.md)
+make three reusable questions concrete: where useful compiled regions should
+begin/end; how semantic laws, borrowed resources and mutation effects survive
+substitution; and which evidence remains valid when a retained plan changes.
+Their probes and chronology live with the investigation.
 
-The [consolidated Ikea design](../spikes/ikea-composition/design.md) carries
-forward a shared composition mechanism with optional named structure and
-explicit implementation/equivalence knowledge. Ashton's next packed-integer
-probe brings reconstruction toward the open questions of progressive filtering
-and nested substitution, while preserving different actual representations
-across segments. Its [12-bit exercise](../spikes/ikea-composition/probes/ikea-integers/composition/README.md)
-reuses one decoded native value for both filtering and summation. A third parent
-placement using the same tail makes the separation between child format and
-parent placement concrete. The [locality audit](../spikes/ikea-composition/probes/ikea-integers/locality/README.md)
-adds a composition obligation: child-local reads do not imply a local parent
-read, and reachable tile residues belong to the placement contract. The probe's
-same-wire [reader comparison](../spikes/ikea-composition/probes/ikea-integers/measurements.md#two-readers-over-the-continuous-wire)
-also favours different implementations for small resident data and large
-independent-read traces; locality legality does not rank execution choices. Its
-explicit carrier and fixed expansion mapping do not yet establish a general
-lowerer or progressive-filter interface.
+The [SeriesPack findings](../spikes/ikea-composition/native-regions/findings.md)
+add a useful separation: physical tile size, execution grain, working lanes and
+result representation can vary independently. An authored and direct body can
+match while both lose to materialization. Revisit these choices when a new
+consumer changes the useful work, rather than deriving them from storage geometry.
 
-The [integer review on 2026-09-10](../spikes/ikea-composition/probes/ikea-integers/composition/README.md#direction-after-review-2026-09-10)
-sharpens the factorisation target: useful inlined combinations inside coarser
-substitutable regions, rather than a continuation boundary at every operation.
-Internal native grains should meet directly where compatible, with adaptation
-pushed outward. Block reflection may also name semantic obligations such as
-sorted unique appends; dynamic evidence and mutation effects still need their
-own concrete contracts. These are steering questions, not selected interfaces.
+The [checked-point layout experiment](../spikes/executable-placement/evidence/checked-point-layout-20260911/summary.md)
+adds an executable-context qualification: relinking moved the cost of unchanged
+kernel and caller instructions, and restoring code placement recovered much of
+that movement. A retained plan's semantic equivalences and its empirical cost
+evidence can therefore need different invalidation rules.
 
-The [heterogeneous bitset/metadata exercise](../spikes/ikea-composition/probes/ikea-heterogeneous/README.md)
-now tests those boundaries with dependent addresses: a requested range can need
-predecessor lengths that are not themselves requested bitsets. Direct offsets
-and packed lengths share the same immutable BEC bodies, while native metadata
-frames outlive individual BEC pair calls. This makes region sharing, retained
-state and ownership obligations concrete without selecting a universal cursor.
 
-Its [masked algebra extension](../spikes/ikea-composition/probes/ikea-heterogeneous/operations/README.md)
-adds two independently configured sources: unary metadata strategies can bind
-outside a curated decoder/Boolean region without multiplying every layout pair.
-That cut has a real materialised-frame cost. Two BEC decoder inputs can also be
-the two operands at one ordinal, rather than two output ordinals; physical grain
-does not determine logical progress. Whole-window size prediction separately
-exercises how an enclosing layout's overhead changes a child's byte estimate
-into a useful, still fallible decision.
+## Retain enough to change one link input
 
-Ashton [closed that exercise](../spikes/ikea-composition/probes/ikea-heterogeneous/closing.md) on
-2026-09-10: the probes now give Ikea enough direction for implementation of its
-basic parts. The closing assessment carries the concrete composition and
-obligation choices forward; further integration questions are not prerequisites.
-
-The [integration proposal](../spikes/ikea-composition/semantics-and-integration.md)
-explores local effects, Engine-owned publication and Loom suspension with
-retained state, and records the committed maximum of `2^16` segment-local
-positions. These inform the [initial Ikea scope](../../ikea/implementation.md)
-without requiring every question to be settled first. [SeriesPack](../../ikea/seriespack.md)
-now selects a provisional packed-integer contract and a curated set of presets;
-TuplePack and StreamPack await their own spikes.
+Two SeriesPack tasks independently spent time reconstructing unchanged callers
+and Google Benchmark archives after an idle worker expired. Source and binary
+hashes let the [layout follow-up](../spikes/executable-placement/layout-recovery.md)
+recover byte-identical baseline relinks, but retaining selected link inputs
+could have avoided that work. An opt-in helper could collect one executable's
+objects, archives, response files and link command into its existing artifact
+bundle. Its useful boundary is reproducible relinking of that executable;
+physical source transforms and measurement interpretation remain with the study.
+This is a tooling opportunity, not a reason to retain every build directory.

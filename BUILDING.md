@@ -19,8 +19,10 @@ compiler; standard-library and linker package versions remain unpinned.
 Targets use ordinary CMake plus `sixdb_target(name)` for project settings.
 Each `.cpp` compiles independently; reusable implementation goes in compiled
 libraries. [Spike builds](workbench/spikes/README.md) are opt-in and
-can build just one executable or object. [Ikea's hello example](ikea/README.md#starting-layout)
-is the first module target; database functionality is still to come.
+can build just one executable or object. [Ikea's examples](ikea/README.md#build-and-run)
+exercise the first module; database functionality is still to come.
+[Recurring benchmark suites](workbench/benchmarks/README.md) use
+`-DSIXDB_BENCHMARKS=NAME`, independently of spike selection.
 
 For editor support, start with `python3 workbench/tools/dev.py --add NAME`;
 see the [editor guide](workbench/tools/editors.md) for compilation-database setup
@@ -40,6 +42,6 @@ target. Build it with the release preset to produce a stripped executable in
 Packaging requires `llvm-objcopy-21` and `llvm-strip-21`. Project symbols are
 hidden by default; future shared-library APIs will need explicit exports.
 
-Run `python3 workbench/tools/check_build.py` to check incremental compilation
-in a disposable fixture. `-DSIXDB_TIME_TRACE=ON` enables Clang time traces when
-investigating compilation cost.
+Run `python3 workbench/tools/check.py build` to check incremental compilation
+in a disposable fixture. For expensive TUs, use the optional [compile probe](workbench/tools/compilation.md)
+for isolated timing, memory and Clang traces.

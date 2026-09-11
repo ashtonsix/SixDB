@@ -16,7 +16,8 @@ directly while keeping experimental alternatives and their evidence together.
 | Run while continuing to edit | [Run helpers](tools/README.md): captured sources, incremental workspaces, and receipts; existing runners are examples |
 | Run a script on a cloud machine | [Workers](tools/workers.md): configurable Spot/On-Demand capacity, S3 results, and cleanup |
 | Reuse or prepare input data | [Datasets](datasets/README.md): catalog, cached recipes, and spike-local adapters |
-| Choose measurement machinery | [Benchmarks](benchmarks/README.md): CPU affinity, sequential repetitions, and non-timing studies |
+| Run a recurring component/system workload | [Benchmarks](benchmarks/README.md): suites, CPU affinity and measurement conventions |
+| Browse performance evidence | [Results explorer](results/README.md): generated comparisons, repetitions and original tables |
 | Keep selected evidence or recover a run | [Retention and recovery](tools/artifacts.md): compact Git evidence, full S3 bundles, and shared inputs |
 | Find current direction and conventions | [Design](design/README.md): cross-cutting notes |
 

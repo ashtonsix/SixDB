@@ -12,6 +12,16 @@ Loose thoughts can stay in the [notebook](../notebook/ideas.md) indefinitely.
 - [Ikea composition and ergonomics](ikea-composition/README.md): current
   composition direction and its owned block probes; authoring responsibilities,
   interface seams, measured tradeoffs and historical alternatives.
+- [Packed integer kernels](packed-integer-kernels/README.md): physical grain,
+  coalescing and projection costs by width and ISA.
+- [SeriesPack range execution](seriespack-range-execution/README.md): arbitrary
+  ranges, clipping, admission, stores and alignment.
+- [SeriesPack head projection](seriespack-head-projection/README.md): combining
+  independent planes under dense, gapped and small placements.
+- [BEC packed metadata](bec-packed-metadata/README.md): a concrete consumer of
+  packed lengths, with specialized, native and materialized controls.
+- [Executable placement](executable-placement/README.md): relinking exact inputs
+  to distinguish changed code from short-call placement effects.
 - [Row filter signatures](row-filter-signatures/README.md): compact per-row
   evidence for conjunctive and factored Boolean filters, progressive refinement,
   8/16/32-bit planes, and block rollups. The spike concluded with a resident

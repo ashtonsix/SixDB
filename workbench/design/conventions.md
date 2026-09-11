@@ -41,7 +41,7 @@ and evidence storage, and [AGENTS.md](../../AGENTS.md) for agent working default
 - Ordinary CMake targets and target-local dependencies, with `sixdb_target(name)`
   applying project settings. Prototypes are individually selected for
   configuration and excluded from the default build.
-- [Ikea's scaffold](../../ikea/README.md#starting-layout) starts with public
+- [Ikea's scaffold](../../ikea/README.md#build-and-run) starts with public
   headers in `include/ikea/`, compiled implementation in `src/`, and the `ikea`
   namespace. The broader header conventions below remain proposals.
 - Hidden symbol visibility, hidden inline visibility, and source-path remapping
@@ -100,6 +100,14 @@ The first source-level flags are the four `SIXDB_TUNE_*` booleans described
 above, supplied by CMake. ISA feature availability uses compiler macros.
 Other feature flags and a generated configuration header can be introduced
 when needed.
+
+## Documentation and comments
+
+Use concise `///` comments for non-obvious caller contracts and ordinary comments
+for implementation invariants and reasons. Skip signature narration and repeated
+shared obligations; many declarations need no comment. Guides teach through
+examples, specifications own exact semantics, and measurements stay with evidence.
+Replace stale explanations rather than accumulating advice.
 
 ## References
 
