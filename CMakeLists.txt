@@ -32,3 +32,6 @@ include(cmake/Targets.cmake)
 foreach(module ikea orbital loom engine shore workbench)
   add_subdirectory(${module})
 endforeach()
+
+# Experimental replacement; existing module consumers keep using ikea.
+add_subdirectory(ikea2 EXCLUDE_FROM_ALL)
