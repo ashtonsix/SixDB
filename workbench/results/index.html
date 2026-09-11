@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SixDB results</title>
+  <meta name="description" content="Explore retained SixDB performance measurements, comparisons and source context.">
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+<header class="app-header">
+  <a class="brand" href="#"><span class="brand-mark" aria-hidden="true">Ⅵ</span><strong>SixDB</strong><span class="brand-divider">/</span> Results</a>
+  <div class="header-right"><span id="snapshot" class="secondary">Loading evidence…</span><button id="export" disabled>↓ Export this run</button></div>
+</header>
+<div class="workspace">
+  <aside class="sidebar" aria-label="Choose evidence">
+    <div class="sidebar-controls">
+      <label for="study">Investigation</label><select id="study"><option value="">All investigations</option></select>
+      <label class="visually-hidden" for="run-search">Find a run</label><input id="run-search" type="search" placeholder="Find a run or machine">
+      <div id="run-count" class="secondary"></div>
+    </div>
+    <nav id="runs" aria-label="Retained runs"></nav>
+    <div class="sidebar-foot">Generated from retained evidence.<br>Measurements stay with their studies.</div>
+  </aside>
+  <main id="main">
+    <div id="status" role="status">Loading retained results…</div>
+    <div id="run-view" hidden>
+      <div id="breadcrumbs" class="eyebrow"></div>
+      <div class="run-heading"><h1 id="run-title"></h1><span id="integrity" class="integrity"></span></div>
+      <div id="conditions" class="conditions"></div>
+      <div class="tabs" role="tablist" aria-label="Result views">
+        <button id="tab-comparisons" role="tab" data-tab="comparisons" aria-controls="panel">Comparisons <span></span></button>
+        <button id="tab-measurements" role="tab" data-tab="measurements" aria-controls="panel">Measurements <span></span></button>
+        <button id="tab-build" role="tab" data-tab="build" aria-controls="panel">Build cost</button>
+        <button id="tab-tables" role="tab" data-tab="tables" aria-controls="panel">Tables <span></span></button>
+        <button id="tab-context" role="tab" data-tab="context" aria-controls="panel">Context &amp; recovery</button>
+      </div>
+      <section id="panel" role="tabpanel" aria-labelledby="tab-comparisons">
+        <div id="controls" class="controls">
+          <label class="search-label">Find cases<input type="search" id="case-search" placeholder="width, operation, implementation…"></label>
+          <label id="family-label">Family<select id="family"><option value="">All families</option></select></label>
+          <label id="sort-label">Order<select id="sort"><option value="case">Case name</option><option value="slower">Largest ratios first</option><option value="faster">Smallest ratios first</option><option value="cost">Highest measured cost</option></select></label>
+          <label id="unit-label" hidden>Metric<select id="unit"></select></label>
+          <label id="baseline-label">Compare with<select id="baseline"><option value="">Recorded controls</option></select></label>
+          <label id="table-label" hidden>Retained table<select id="table"></select></label>
+        </div>
+        <div id="view-note" class="view-note"></div>
+        <div id="content"></div>
+        <div id="pagination" class="pagination"></div>
+      </section>
+    </div>
+  </main>
+</div>
+<dialog id="detail" aria-labelledby="detail-title">
+  <div class="dialog-header"><h2 id="detail-title">Case details</h2><button id="close-detail" aria-label="Close case details">×</button></div>
+  <div id="detail-content"></div>
+</dialog>
+<noscript>This explorer needs JavaScript. Original evidence remains in the SixDB repository.</noscript>
+</body>
+</html>
