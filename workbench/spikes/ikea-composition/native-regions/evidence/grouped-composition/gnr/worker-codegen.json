@@ -1,0 +1,691 @@
+{
+  "worker_job": "20260910T202148Z-94f35804",
+  "worker_assembly_sha256": "999394bb94d114162d1cec4cd5da65dcc5013a4b9cb526b96080d07f1b5a7afd",
+  "worker_executable_sha256": "7aa0e9dcead74eafd7e21f54eb72697f4a45ef8b0c36660c16ac2f08006ff1f2",
+  "worker_reported_object_sha256": "3da91b303e71bdaa67bd5ee955a8bdac4b970237e0299d903c64111bc90cbbb8",
+  "local_composition_object_sha256": "bca8063cea1910da347e4b40bbf2e3c0b63cf56c6903f51c62eacf3dcec51530",
+  "local_grouped_header_sha256": "c224d3c4520a0396d683498d1dd8d63d7630ddeba83546e4a63c37fdae8fa588",
+  "loops": [
+    {
+      "label": "k12-all-group_scalar",
+      "symbol": "_ZN22seriespack_measurement12_GLOBAL__N_111run_groupedIN4ikea10seriespack13static_formatILj12ELNS3_8geometryE0ELj0EEELb0ELb0EEEvRN9benchmark5StateE",
+      "logical_group_values": 32,
+      "packets_per_group": 4,
+      "scalar_lane_bits": 16,
+      "worker_object_inner_begin": "0x840",
+      "worker_object_inner_end": "0x926",
+      "worker_loop_bytes": 235,
+      "local_loop_bytes": 235,
+      "all_backedges": [
+        [
+          "0x840",
+          "0x913"
+        ],
+        [
+          "0x840",
+          "0x926"
+        ],
+        [
+          "0x810",
+          "0x944"
+        ]
+      ],
+      "timed_constant_loads": [
+        "vbroadcasti128 0x508bee(%rip), %ymm6",
+        "vpbroadcastq 0x509485(%rip), %ymm7",
+        "vpbroadcastd 0x50d877(%rip), %zmm8"
+      ],
+      "hot_rip_loads": [],
+      "worker_instruction_count": 43,
+      "local_instruction_count": 43,
+      "matches_local_after_address_and_relocation_normalization": false,
+      "group_decrements": [
+        "886:      \taddq\t$-0x20, %rdx"
+      ],
+      "stack_operands": [],
+      "calls": [],
+      "opcodes": {
+        "vpsrld": 1,
+        "vpandq": 1,
+        "vpaddd": 5,
+        "vextracti64x4": 1,
+        "vextracti128": 1,
+        "vpshufd": 2,
+        "vmovd": 5,
+        "addq": 3,
+        "je": 1,
+        "vmovq": 4,
+        "vpunpcklqdq": 3,
+        "vinserti128": 3,
+        "vpmovzxbw": 2,
+        "vpshufb": 2,
+        "vgf2p8affineqb": 2,
+        "vpsllw": 1,
+        "vporq": 1,
+        "cmpq": 1,
+        "ja": 1,
+        "vpcmpnleuw": 1,
+        "vmovdqu16": 1,
+        "jmp": 1
+      },
+      "zen_loop_bytes": 235,
+      "matches_zen_instructions": false,
+      "matches_zen_opcode_counts": true,
+      "observed_decode_signature": {
+        "body_8byte_loads": 4,
+        "tail_4byte_loads": 4,
+        "widen_32u16": 2,
+        "ymm_gfni": 2
+      },
+      "zen_timed_constant_loads": [
+        "vbroadcasti128 0x5feec6(%rip), %ymm6",
+        "vpbroadcastq 0x5ffaad(%rip), %ymm7",
+        "vbroadcasti32x4 0x5feec3(%rip), %zmm8"
+      ]
+    },
+    {
+      "label": "k12-all-group_carrier",
+      "symbol": "_ZN22seriespack_measurement12_GLOBAL__N_111run_groupedIN4ikea10seriespack13static_formatILj12ELNS3_8geometryE0ELj0EEELb1ELb0EEEvRN9benchmark5StateE",
+      "logical_group_values": 32,
+      "packets_per_group": 4,
+      "scalar_lane_bits": 16,
+      "worker_object_inner_begin": "0x870",
+      "worker_object_inner_end": "0x93f",
+      "worker_loop_bytes": 212,
+      "local_loop_bytes": 212,
+      "all_backedges": [
+        [
+          "0x870",
+          "0x92c"
+        ],
+        [
+          "0x870",
+          "0x93f"
+        ],
+        [
+          "0x840",
+          "0x985"
+        ]
+      ],
+      "timed_constant_loads": [
+        "vbroadcasti128 0x507c10(%rip), %ymm7",
+        "vpbroadcastq 0x5084a7(%rip), %ymm8",
+        "vpbroadcastd 0x50c899(%rip), %zmm9",
+        "vpbroadcastq 0x50849b(%rip), %zmm10"
+      ],
+      "hot_rip_loads": [],
+      "worker_instruction_count": 37,
+      "local_instruction_count": 37,
+      "matches_local_after_address_and_relocation_normalization": false,
+      "group_decrements": [
+        "89f:      \taddq\t$-0x20, %rdx"
+      ],
+      "stack_operands": [],
+      "calls": [],
+      "opcodes": {
+        "vpsrld": 1,
+        "vpandq": 2,
+        "vpaddd": 1,
+        "vpsrlq": 1,
+        "vpaddq": 2,
+        "addq": 2,
+        "je": 1,
+        "vmovq": 4,
+        "vpunpcklqdq": 3,
+        "vinserti128": 3,
+        "vpmovzxbw": 2,
+        "vmovd": 4,
+        "vpshufb": 2,
+        "vgf2p8affineqb": 2,
+        "vpsllw": 1,
+        "vporq": 1,
+        "cmpq": 1,
+        "ja": 1,
+        "vpcmpnleuw": 1,
+        "vmovdqu16": 1,
+        "jmp": 1
+      },
+      "zen_loop_bytes": 212,
+      "matches_zen_instructions": false,
+      "matches_zen_opcode_counts": true,
+      "observed_decode_signature": {
+        "body_8byte_loads": 4,
+        "tail_4byte_loads": 4,
+        "widen_32u16": 2,
+        "ymm_gfni": 2
+      },
+      "zen_timed_constant_loads": [
+        "vbroadcasti128 0x5fdc0b(%rip), %ymm7",
+        "vpbroadcastq 0x5fe7f2(%rip), %ymm8",
+        "vbroadcasti32x4 0x5fdc08(%rip), %zmm9",
+        "vpbroadcastq 0x5fe7e6(%rip), %zmm10"
+      ]
+    },
+    {
+      "label": "k12-pre-group_scalar",
+      "symbol": "_ZN22seriespack_measurement12_GLOBAL__N_111run_groupedIN4ikea10seriespack13static_formatILj12ELNS3_8geometryE0ELj0EEELb0ELb1EEEvRN9benchmark5StateE",
+      "logical_group_values": 32,
+      "packets_per_group": 4,
+      "scalar_lane_bits": 16,
+      "worker_object_inner_begin": "0x870",
+      "worker_object_inner_end": "0x959",
+      "worker_loop_bytes": 238,
+      "local_loop_bytes": 238,
+      "all_backedges": [
+        [
+          "0x870",
+          "0x94c"
+        ],
+        [
+          "0x870",
+          "0x959"
+        ],
+        [
+          "0x840",
+          "0x974"
+        ]
+      ],
+      "timed_constant_loads": [
+        "vbroadcasti128 0x506163(%rip), %ymm6",
+        "vpbroadcastq 0x5069fa(%rip), %ymm7",
+        "vpbroadcastd 0x50ade4(%rip), %zmm8"
+      ],
+      "hot_rip_loads": [],
+      "worker_instruction_count": 44,
+      "local_instruction_count": 44,
+      "matches_local_after_address_and_relocation_normalization": false,
+      "group_decrements": [
+        "8bc:      \taddq\t$-0x20, %rdx"
+      ],
+      "stack_operands": [],
+      "calls": [],
+      "opcodes": {
+        "vmovdqu16": 1,
+        "vpsrld": 1,
+        "vpandd": 1,
+        "vpaddd": 5,
+        "vextracti64x4": 1,
+        "vextracti128": 1,
+        "vpshufd": 2,
+        "vmovd": 5,
+        "addq": 3,
+        "je": 1,
+        "vmovq": 4,
+        "vpunpcklqdq": 3,
+        "vinserti128": 3,
+        "vpmovzxbw": 2,
+        "vpshufb": 2,
+        "vgf2p8affineqb": 2,
+        "vpsllw": 1,
+        "vporq": 1,
+        "kmovq": 1,
+        "cmpq": 1,
+        "ja": 1,
+        "vpcmpnleuw": 1,
+        "jmp": 1
+      },
+      "zen_loop_bytes": 238,
+      "matches_zen_instructions": false,
+      "matches_zen_opcode_counts": true,
+      "observed_decode_signature": {
+        "body_8byte_loads": 4,
+        "tail_4byte_loads": 4,
+        "widen_32u16": 2,
+        "ymm_gfni": 2
+      },
+      "zen_timed_constant_loads": [
+        "vbroadcasti128 0x5fbf6b(%rip), %ymm6",
+        "vpbroadcastq 0x5fcb52(%rip), %ymm7",
+        "vpbroadcastd 0x600fa4(%rip), %zmm8"
+      ]
+    },
+    {
+      "label": "k12-pre-group_carrier",
+      "symbol": "_ZN22seriespack_measurement12_GLOBAL__N_111run_groupedIN4ikea10seriespack13static_formatILj12ELNS3_8geometryE0ELj0EEELb1ELb1EEEvRN9benchmark5StateE",
+      "logical_group_values": 32,
+      "packets_per_group": 4,
+      "scalar_lane_bits": 16,
+      "worker_object_inner_begin": "0x8d0",
+      "worker_object_inner_end": "0x9a2",
+      "worker_loop_bytes": 215,
+      "local_loop_bytes": 215,
+      "all_backedges": [
+        [
+          "0x8d0",
+          "0x995"
+        ],
+        [
+          "0x8d0",
+          "0x9a2"
+        ],
+        [
+          "0x8a0",
+          "0x9e5"
+        ]
+      ],
+      "timed_constant_loads": [
+        "vbroadcasti128 0x505125(%rip), %ymm7",
+        "vpbroadcastq 0x5059bc(%rip), %ymm8",
+        "vpbroadcastd 0x509daa(%rip), %zmm9",
+        "vpbroadcastq 0x5059b0(%rip), %zmm10"
+      ],
+      "hot_rip_loads": [],
+      "worker_instruction_count": 38,
+      "local_instruction_count": 38,
+      "matches_local_after_address_and_relocation_normalization": false,
+      "group_decrements": [
+        "905:      \taddq\t$-0x20, %rdx"
+      ],
+      "stack_operands": [],
+      "calls": [],
+      "opcodes": {
+        "vmovdqu16": 1,
+        "vpsrld": 1,
+        "vpandd": 1,
+        "vpaddd": 1,
+        "vpandq": 1,
+        "vpsrlq": 1,
+        "vpaddq": 2,
+        "addq": 2,
+        "je": 1,
+        "vmovq": 4,
+        "vpunpcklqdq": 3,
+        "vinserti128": 3,
+        "vpmovzxbw": 2,
+        "vmovd": 4,
+        "vpshufb": 2,
+        "vgf2p8affineqb": 2,
+        "vpsllw": 1,
+        "vporq": 1,
+        "kmovq": 1,
+        "cmpq": 1,
+        "ja": 1,
+        "vpcmpnleuw": 1,
+        "jmp": 1
+      },
+      "zen_loop_bytes": 215,
+      "matches_zen_instructions": false,
+      "matches_zen_opcode_counts": true,
+      "observed_decode_signature": {
+        "body_8byte_loads": 4,
+        "tail_4byte_loads": 4,
+        "widen_32u16": 2,
+        "ymm_gfni": 2
+      },
+      "zen_timed_constant_loads": [
+        "vbroadcasti128 0x5facf1(%rip), %ymm7",
+        "vpbroadcastq 0x5fb8d8(%rip), %ymm8",
+        "vpbroadcastd 0x5ffd2a(%rip), %zmm9",
+        "vpbroadcastq 0x5fb8cc(%rip), %zmm10"
+      ]
+    },
+    {
+      "label": "k31-all-group_scalar",
+      "symbol": "_ZN22seriespack_measurement12_GLOBAL__N_111run_groupedIN4ikea10seriespack13static_formatILj31ELNS3_8geometryE0ELj0EEELb0ELb0EEEvRN9benchmark5StateE",
+      "logical_group_values": 16,
+      "packets_per_group": 2,
+      "scalar_lane_bits": 32,
+      "worker_object_inner_begin": "0x820",
+      "worker_object_inner_end": "0x8fd",
+      "worker_loop_bytes": 226,
+      "local_loop_bytes": 226,
+      "all_backedges": [
+        [
+          "0x820",
+          "0x8ea"
+        ],
+        [
+          "0x820",
+          "0x8fd"
+        ],
+        [
+          "0x7f0",
+          "0x924"
+        ]
+      ],
+      "timed_constant_loads": [
+        "vbroadcasti64x4 0x504a6a(%rip), %zmm4",
+        "vmovdqa 0x503e62(%rip), %xmm5",
+        "vpbroadcastq 0x5046e9(%rip), %xmm6",
+        "vpbroadcastq 0x504707(%rip), %zmm7"
+      ],
+      "hot_rip_loads": [],
+      "worker_instruction_count": 43,
+      "local_instruction_count": 43,
+      "matches_local_after_address_and_relocation_normalization": false,
+      "group_decrements": [
+        "85e:      \taddq\t$-0x10, %rdx"
+      ],
+      "stack_operands": [],
+      "calls": [],
+      "opcodes": {
+        "vpandd": 1,
+        "vpsrlq": 1,
+        "vpaddq": 4,
+        "vextracti64x4": 1,
+        "vextracti128": 1,
+        "vpshufd": 1,
+        "vmovq": 3,
+        "addq": 3,
+        "je": 1,
+        "movl": 4,
+        "shlq": 2,
+        "orq": 2,
+        "vmovdqu": 2,
+        "vinserti128": 2,
+        "vinserti64x4": 1,
+        "vpshufb": 3,
+        "vgf2p8affineqb": 2,
+        "vpunpcklqdq": 1,
+        "vpmovzxbd": 1,
+        "vpslld": 1,
+        "vpord": 1,
+        "cmpq": 1,
+        "ja": 1,
+        "vpcmpnleud": 1,
+        "vmovdqa32": 1,
+        "jmp": 1
+      },
+      "zen_loop_bytes": 226,
+      "matches_zen_instructions": false,
+      "matches_zen_opcode_counts": true,
+      "observed_decode_signature": {
+        "body_first_16byte_loads": 2,
+        "body_second_overlapping_16byte_loads": 2,
+        "tail_overlapping_4byte_loads": 4,
+        "widen_16u32": 1,
+        "xmm_gfni": 2
+      },
+      "zen_timed_constant_loads": [
+        "vbroadcasti64x4 0x5fa62e(%rip), %zmm4",
+        "vmovdqa 0x5f9776(%rip), %xmm5",
+        "vpbroadcastq 0x5fa33d(%rip), %xmm6",
+        "vbroadcasti32x4 0x5f9773(%rip), %zmm7"
+      ]
+    },
+    {
+      "label": "k31-all-group_carrier",
+      "symbol": "_ZN22seriespack_measurement12_GLOBAL__N_111run_groupedIN4ikea10seriespack13static_formatILj31ELNS3_8geometryE0ELj0EEELb1ELb0EEEvRN9benchmark5StateE",
+      "logical_group_values": 16,
+      "packets_per_group": 2,
+      "scalar_lane_bits": 32,
+      "worker_object_inner_begin": "0x910",
+      "worker_object_inner_end": "0x9b8",
+      "worker_loop_bytes": 174,
+      "local_loop_bytes": 174,
+      "all_backedges": [
+        [
+          "0x840",
+          "0x8db"
+        ],
+        [
+          "0x910",
+          "0x9b8"
+        ],
+        [
+          "0x810",
+          "0x9f3"
+        ]
+      ],
+      "timed_constant_loads": [
+        "vbroadcasti64x4 0x503ab7(%rip), %zmm5",
+        "vmovdqa 0x502eaf(%rip), %xmm6",
+        "vpbroadcastq 0x503736(%rip), %xmm7",
+        "vpbroadcastq 0x50374c(%rip), %zmm8"
+      ],
+      "hot_rip_loads": [],
+      "worker_instruction_count": 33,
+      "local_instruction_count": 33,
+      "matches_local_after_address_and_relocation_normalization": false,
+      "group_decrements": [
+        "9b4:      \taddq\t$-0x10, %rcx"
+      ],
+      "stack_operands": [],
+      "calls": [],
+      "opcodes": {
+        "vmovdqu": 2,
+        "vinserti128": 2,
+        "vinserti64x4": 1,
+        "vpshufb": 3,
+        "movl": 4,
+        "shlq": 2,
+        "orq": 2,
+        "vmovq": 2,
+        "vgf2p8affineqb": 2,
+        "vpunpcklqdq": 1,
+        "vpmovzxbd": 1,
+        "vpslld": 1,
+        "vpord": 1,
+        "vpcmpnleud": 1,
+        "vmovdqa32": 1,
+        "vpandq": 1,
+        "vpsrlq": 1,
+        "vpaddq": 2,
+        "addq": 2,
+        "jne": 1
+      },
+      "zen_loop_bytes": 174,
+      "matches_zen_instructions": false,
+      "matches_zen_opcode_counts": true,
+      "observed_decode_signature": {
+        "body_first_16byte_loads": 2,
+        "body_second_overlapping_16byte_loads": 2,
+        "tail_overlapping_4byte_loads": 4,
+        "widen_16u32": 1,
+        "xmm_gfni": 2
+      },
+      "zen_timed_constant_loads": [
+        "vbroadcasti64x4 0x5f93e3(%rip), %zmm5",
+        "vmovdqa 0x5f852b(%rip), %xmm6",
+        "vpbroadcastq 0x5f90f2(%rip), %xmm7",
+        "vbroadcasti64x4 0x5f93c8(%rip), %zmm8",
+        "vpbroadcastq 0x5f9106(%rip), %zmm9"
+      ]
+    },
+    {
+      "label": "k31-pre-group_scalar",
+      "symbol": "_ZN22seriespack_measurement12_GLOBAL__N_111run_groupedIN4ikea10seriespack13static_formatILj31ELNS3_8geometryE0ELj0EEELb0ELb1EEEvRN9benchmark5StateE",
+      "logical_group_values": 16,
+      "packets_per_group": 2,
+      "scalar_lane_bits": 32,
+      "worker_object_inner_begin": "0x850",
+      "worker_object_inner_end": "0x932",
+      "worker_loop_bytes": 231,
+      "local_loop_bytes": 231,
+      "all_backedges": [
+        [
+          "0x850",
+          "0x925"
+        ],
+        [
+          "0x850",
+          "0x932"
+        ],
+        [
+          "0x820",
+          "0x954"
+        ]
+      ],
+      "timed_constant_loads": [
+        "vbroadcasti64x4 0x5023d1(%rip), %zmm4",
+        "vmovdqa 0x5017c9(%rip), %xmm5",
+        "vpbroadcastq 0x502050(%rip), %xmm6",
+        "vpbroadcastq 0x502066(%rip), %zmm7"
+      ],
+      "hot_rip_loads": [],
+      "worker_instruction_count": 44,
+      "local_instruction_count": 44,
+      "matches_local_after_address_and_relocation_normalization": false,
+      "group_decrements": [
+        "894:      \taddq\t$-0x10, %rdx"
+      ],
+      "stack_operands": [],
+      "calls": [],
+      "opcodes": {
+        "vmovdqa32": 1,
+        "vpandq": 1,
+        "vpsrlq": 1,
+        "vpaddq": 4,
+        "vextracti64x4": 1,
+        "vextracti128": 1,
+        "vpshufd": 1,
+        "vmovq": 3,
+        "addq": 3,
+        "je": 1,
+        "movl": 4,
+        "shlq": 2,
+        "orq": 2,
+        "vmovdqu": 2,
+        "vinserti128": 2,
+        "vinserti64x4": 1,
+        "vpshufb": 3,
+        "vgf2p8affineqb": 2,
+        "vpunpcklqdq": 1,
+        "vpmovzxbd": 1,
+        "vpslld": 1,
+        "vpord": 1,
+        "kmovq": 1,
+        "cmpq": 1,
+        "ja": 1,
+        "vpcmpnleud": 1,
+        "jmp": 1
+      },
+      "zen_loop_bytes": 231,
+      "matches_zen_instructions": false,
+      "matches_zen_opcode_counts": true,
+      "observed_decode_signature": {
+        "body_first_16byte_loads": 2,
+        "body_second_overlapping_16byte_loads": 2,
+        "tail_overlapping_4byte_loads": 4,
+        "widen_16u32": 1,
+        "xmm_gfni": 2
+      },
+      "zen_timed_constant_loads": [
+        "vbroadcasti64x4 0x5f7908(%rip), %zmm4",
+        "vmovdqa 0x5f6a50(%rip), %xmm5",
+        "vpbroadcastq 0x5f7617(%rip), %xmm6",
+        "vpbroadcastq 0x5f7635(%rip), %zmm7"
+      ]
+    },
+    {
+      "label": "k31-pre-group_carrier",
+      "symbol": "_ZN22seriespack_measurement12_GLOBAL__N_111run_groupedIN4ikea10seriespack13static_formatILj31ELNS3_8geometryE0ELj0EEELb1ELb1EEEvRN9benchmark5StateE",
+      "logical_group_values": 16,
+      "packets_per_group": 2,
+      "scalar_lane_bits": 32,
+      "worker_object_inner_begin": "0x860",
+      "worker_object_inner_end": "0x91f",
+      "worker_loop_bytes": 196,
+      "local_loop_bytes": 196,
+      "all_backedges": [
+        [
+          "0x860",
+          "0x912"
+        ],
+        [
+          "0x860",
+          "0x91f"
+        ],
+        [
+          "0x830",
+          "0x965"
+        ]
+      ],
+      "timed_constant_loads": [
+        "vbroadcasti64x4 0x5013ee(%rip), %zmm5",
+        "vmovdqa 0x5007e6(%rip), %xmm6",
+        "vpbroadcastq 0x50106d(%rip), %xmm7",
+        "vpbroadcastq 0x501083(%rip), %zmm8"
+      ],
+      "hot_rip_loads": [],
+      "worker_instruction_count": 37,
+      "local_instruction_count": 37,
+      "matches_local_after_address_and_relocation_normalization": false,
+      "group_decrements": [
+        "882:      \taddq\t$-0x10, %rdx"
+      ],
+      "stack_operands": [],
+      "calls": [],
+      "opcodes": {
+        "vmovdqa32": 1,
+        "vpandq": 1,
+        "vpsrlq": 1,
+        "vpaddq": 2,
+        "addq": 2,
+        "je": 1,
+        "movl": 4,
+        "shlq": 2,
+        "orq": 2,
+        "vmovdqu": 2,
+        "vinserti128": 2,
+        "vinserti64x4": 1,
+        "vpshufb": 3,
+        "vmovq": 2,
+        "vgf2p8affineqb": 2,
+        "vpunpcklqdq": 1,
+        "vpmovzxbd": 1,
+        "vpslld": 1,
+        "vpord": 1,
+        "kmovq": 1,
+        "cmpq": 1,
+        "ja": 1,
+        "vpcmpnleud": 1,
+        "jmp": 1
+      },
+      "zen_loop_bytes": 196,
+      "matches_zen_instructions": false,
+      "matches_zen_opcode_counts": true,
+      "observed_decode_signature": {
+        "body_first_16byte_loads": 2,
+        "body_second_overlapping_16byte_loads": 2,
+        "tail_overlapping_4byte_loads": 4,
+        "widen_16u32": 1,
+        "xmm_gfni": 2
+      },
+      "zen_timed_constant_loads": [
+        "vbroadcasti64x4 0x5f6717(%rip), %zmm5",
+        "vmovdqa 0x5f585f(%rip), %xmm6",
+        "vpbroadcastq 0x5f6426(%rip), %xmm7",
+        "vpbroadcastq 0x5f6444(%rip), %zmm8"
+      ]
+    }
+  ],
+  "method": "Read linked executable to resolve timing boundaries, then verify each selected loop against retained composition.asm at object-relative offsets. Compare with retained Zen worker loops; prepared local index supplies symbol identities. No rebuild or execution.",
+  "limits": "Independent isolated endpoints and substitution codegen witnesses remain local-only; they were not compiled into the worker benchmark. No mechanism is inferred from timing.",
+  "checker_sha256": "4c063d4f2f4a9ccb309fb359398c312db71293c208b610b18203ddbdb5c8bc3f",
+  "worker_compile_command": "/usr/bin/clang++-21 -DBENCHMARK_STATIC_DEFINE -DSERIESPACK_HAS_PRIOR=1 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=1 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/build/validation/seriespack/granite-rapids/avx512/Release/_deps/googlebenchmark-src/include -mavx512vbmi -mavx512vbmi2 -mgfni -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=x86-64-v4 -mtune=graniterapids -o workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_composition_bench.cpp.o -c /opt/sixdb/source/workbench/spikes/ikea-composition/validation/seriespack_composition_bench.cpp",
+  "zen_worker_job": "20260910T200444Z-c1ee1d8a",
+  "zen_report_sha256": "14dcbed149752f98546260ce6152f26f8bcb5c60b43facb4dc9b00cb729f37b7",
+  "zen_checker_sha256": "4929cef1fe65b974b4f7df313fa53236ac4c96c9828e26eaa72c8aca29d6ed74",
+  "k31_all_carrier_above_domain_path": {
+    "GNR": {
+      "logical_values_per_iteration": 16,
+      "groups_per_iteration": 1,
+      "loop_bytes": 161,
+      "instruction_count": 31,
+      "decrement": "$-0x10, %rcx",
+      "stack_operands": 0,
+      "calls": 0
+    },
+    "Zen": {
+      "logical_values_per_iteration": 32,
+      "groups_per_iteration": 2,
+      "loop_bytes": 313,
+      "instruction_count": 59,
+      "decrement": "$-0x20, %rcx",
+      "stack_operands": 0,
+      "calls": 0
+    }
+  },
+  "guard_check_log": "PASS: grouped composition 2688 cutoff/mask/source cases; per-packet guards, independent strides, origins and modulo carriers",
+  "summary": {
+    "grouped_timed_loops": 8,
+    "all_match_zen_opcodes_and_inner_byte_count": true,
+    "any_exact_zen_instruction_sequence_match": false,
+    "calls": 0,
+    "stack_operands": 0,
+    "K12_group_values": 32,
+    "K31_group_values": 16,
+    "isolated_witnesses": "local-only"
+  }
+}

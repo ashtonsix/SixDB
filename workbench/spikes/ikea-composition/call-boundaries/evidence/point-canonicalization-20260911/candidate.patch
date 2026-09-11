@@ -1,0 +1,17 @@
+--- a/ikea/src/seriespack/operations.cpp
++++ b/ikea/src/seriespack/operations.cpp
+@@ -234,8 +234,12 @@
+ 
+ template<unsigned W, geometry G, unsigned H>
+ bound_reader::point_function point_function(point_reader strategy) {
+-    return strategy == point_reader::arithmetic ? point<W, G, H, point_reader::arithmetic>
+-                                               : point<W, G, H, point_reader::constant_offsets>;
++    constexpr unsigned R = W % 8;
++    if constexpr (G != geometry::striped || (R != 3 && R != 5 && R != 6 && R != 7))
++        return point<W, G, H, point_reader::constant_offsets>;
++    else
++        return strategy == point_reader::arithmetic ? point<W, G, H, point_reader::arithmetic>
++                                                   : point<W, G, H, point_reader::constant_offsets>;
+ }
+ 
+ template<unsigned W, geometry G, unsigned H>

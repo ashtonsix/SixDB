@@ -1,0 +1,935 @@
+{
+  "worker_assembly_sha256": "99be9e07b24803ae9f91363e28d6a51100177e360fffec9f1e322f24867726a2",
+  "worker_executable_sha256": "287c12abd953d37321c14ae017210b80b7fe15204e3dffd47cbfe481139de335",
+  "local_composition_object_sha256": "828fecb546b96d542661d393f69931b3830bf382a257e558ae47c91aafbe0785",
+  "worker_object_reported_sha256": "8b2934bdffa39b92f62b7670c6c83c09c97d005f4c14c522d910fda6b0cfbc23",
+  "loops": [
+    {
+      "key": "avx2-k12-all-old",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_111run_carrierINS0_11avx2_targetEN4ikea10seriespack13static_formatILj12ELNS4_8geometryE0ELj0EEELb0EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_carrier<seriespack_measurement::(anonymous namespace)::avx2_target, ikea::seriespack::static_format<12u, (ikea::seriespack::geometry)0, 0u>, false>(benchmark::State&)",
+      "worker_object_inner_start": "0x810",
+      "worker_object_inner_backedge": "0x884",
+      "worker_loop_bytes": 118,
+      "local_loop_bytes": 118,
+      "sum_registers": [
+        "v4"
+      ],
+      "local_sum_registers": [
+        "v4"
+      ],
+      "native_add_count": 2,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": true,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {}
+    },
+    {
+      "key": "avx2-k12-all-u4a1",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_11avx2_targetEN4ikea10seriespack13static_formatILj12ELNS4_8geometryE0ELj0EEELb0ELj1EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx2_target, ikea::seriespack::static_format<12u, (ikea::seriespack::geometry)0, 0u>, false, 1u>(benchmark::State&)",
+      "worker_object_inner_start": "0x6b0",
+      "worker_object_inner_backedge": "0x8d6",
+      "worker_loop_bytes": 555,
+      "local_loop_bytes": 555,
+      "sum_registers": [
+        "v2"
+      ],
+      "local_sum_registers": [
+        "v2"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {
+        "%r15": "%r12"
+      }
+    },
+    {
+      "key": "avx2-k12-all-u4a2",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_11avx2_targetEN4ikea10seriespack13static_formatILj12ELNS4_8geometryE0ELj0EEELb0ELj2EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx2_target, ikea::seriespack::static_format<12u, (ikea::seriespack::geometry)0, 0u>, false, 2u>(benchmark::State&)",
+      "worker_object_inner_start": "0x6b0",
+      "worker_object_inner_backedge": "0x8d9",
+      "worker_loop_bytes": 558,
+      "local_loop_bytes": 558,
+      "sum_registers": [
+        "v2",
+        "v3"
+      ],
+      "local_sum_registers": [
+        "v2",
+        "v3"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {
+        "%r15": "%r12"
+      }
+    },
+    {
+      "key": "avx2-k12-all-u4a4",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_11avx2_targetEN4ikea10seriespack13static_formatILj12ELNS4_8geometryE0ELj0EEELb0ELj4EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx2_target, ikea::seriespack::static_format<12u, (ikea::seriespack::geometry)0, 0u>, false, 4u>(benchmark::State&)",
+      "worker_object_inner_start": "0x6e0",
+      "worker_object_inner_backedge": "0x90d",
+      "worker_loop_bytes": 562,
+      "local_loop_bytes": 562,
+      "sum_registers": [
+        "v1",
+        "v3",
+        "v4",
+        "v5"
+      ],
+      "local_sum_registers": [
+        "v1",
+        "v3",
+        "v4",
+        "v5"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {
+        "%r15": "%r12"
+      }
+    },
+    {
+      "key": "avx2-k12-pre-old",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_111run_carrierINS0_11avx2_targetEN4ikea10seriespack13static_formatILj12ELNS4_8geometryE0ELj0EEELb1EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_carrier<seriespack_measurement::(anonymous namespace)::avx2_target, ikea::seriespack::static_format<12u, (ikea::seriespack::geometry)0, 0u>, true>(benchmark::State&)",
+      "worker_object_inner_start": "0x7f0",
+      "worker_object_inner_backedge": "0x86a",
+      "worker_loop_bytes": 124,
+      "local_loop_bytes": 124,
+      "sum_registers": [
+        "v6"
+      ],
+      "local_sum_registers": [
+        "v6"
+      ],
+      "native_add_count": 2,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": true,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {}
+    },
+    {
+      "key": "avx2-k12-pre-u4a1",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_11avx2_targetEN4ikea10seriespack13static_formatILj12ELNS4_8geometryE0ELj0EEELb1ELj1EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx2_target, ikea::seriespack::static_format<12u, (ikea::seriespack::geometry)0, 0u>, true, 1u>(benchmark::State&)",
+      "worker_object_inner_start": "0x690",
+      "worker_object_inner_backedge": "0x8b4",
+      "worker_loop_bytes": 553,
+      "local_loop_bytes": 553,
+      "sum_registers": [
+        "v2"
+      ],
+      "local_sum_registers": [
+        "v2"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {
+        "%r15": "%r13"
+      }
+    },
+    {
+      "key": "avx2-k12-pre-u4a2",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_11avx2_targetEN4ikea10seriespack13static_formatILj12ELNS4_8geometryE0ELj0EEELb1ELj2EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx2_target, ikea::seriespack::static_format<12u, (ikea::seriespack::geometry)0, 0u>, true, 2u>(benchmark::State&)",
+      "worker_object_inner_start": "0x690",
+      "worker_object_inner_backedge": "0x8b7",
+      "worker_loop_bytes": 556,
+      "local_loop_bytes": 556,
+      "sum_registers": [
+        "v2",
+        "v3"
+      ],
+      "local_sum_registers": [
+        "v2",
+        "v3"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {
+        "%r15": "%r13"
+      }
+    },
+    {
+      "key": "avx2-k12-pre-u4a4",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_11avx2_targetEN4ikea10seriespack13static_formatILj12ELNS4_8geometryE0ELj0EEELb1ELj4EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx2_target, ikea::seriespack::static_format<12u, (ikea::seriespack::geometry)0, 0u>, true, 4u>(benchmark::State&)",
+      "worker_object_inner_start": "0x6c0",
+      "worker_object_inner_backedge": "0x8ea",
+      "worker_loop_bytes": 559,
+      "local_loop_bytes": 559,
+      "sum_registers": [
+        "v1",
+        "v3",
+        "v4",
+        "v5"
+      ],
+      "local_sum_registers": [
+        "v1",
+        "v3",
+        "v4",
+        "v5"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {
+        "%r15": "%r13"
+      }
+    },
+    {
+      "key": "avx2-k31-all-old",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_111run_carrierINS0_11avx2_targetEN4ikea10seriespack13static_formatILj31ELNS4_8geometryE0ELj0EEELb0EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_carrier<seriespack_measurement::(anonymous namespace)::avx2_target, ikea::seriespack::static_format<31u, (ikea::seriespack::geometry)0, 0u>, false>(benchmark::State&)",
+      "worker_object_inner_start": "0x6b0",
+      "worker_object_inner_backedge": "0x72f",
+      "worker_loop_bytes": 133,
+      "local_loop_bytes": 133,
+      "sum_registers": [
+        "v3"
+      ],
+      "local_sum_registers": [
+        "v3"
+      ],
+      "native_add_count": 2,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": true,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {}
+    },
+    {
+      "key": "avx2-k31-all-u4a1",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_11avx2_targetEN4ikea10seriespack13static_formatILj31ELNS4_8geometryE0ELj0EEELb0ELj1EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx2_target, ikea::seriespack::static_format<31u, (ikea::seriespack::geometry)0, 0u>, false, 1u>(benchmark::State&)",
+      "worker_object_inner_start": "0x707",
+      "worker_object_inner_backedge": "0x950",
+      "worker_loop_bytes": 590,
+      "local_loop_bytes": 590,
+      "sum_registers": [
+        "v1"
+      ],
+      "local_sum_registers": [
+        "v1"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {
+        "%r13": "%r12"
+      }
+    },
+    {
+      "key": "avx2-k31-all-u4a2",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_11avx2_targetEN4ikea10seriespack13static_formatILj31ELNS4_8geometryE0ELj0EEELb0ELj2EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx2_target, ikea::seriespack::static_format<31u, (ikea::seriespack::geometry)0, 0u>, false, 2u>(benchmark::State&)",
+      "worker_object_inner_start": "0x707",
+      "worker_object_inner_backedge": "0x950",
+      "worker_loop_bytes": 590,
+      "local_loop_bytes": 590,
+      "sum_registers": [
+        "v1",
+        "v2"
+      ],
+      "local_sum_registers": [
+        "v1",
+        "v2"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {
+        "%r13": "%r12"
+      }
+    },
+    {
+      "key": "avx2-k31-all-u4a4",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_11avx2_targetEN4ikea10seriespack13static_formatILj31ELNS4_8geometryE0ELj0EEELb0ELj4EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx2_target, ikea::seriespack::static_format<31u, (ikea::seriespack::geometry)0, 0u>, false, 4u>(benchmark::State&)",
+      "worker_object_inner_start": "0x727",
+      "worker_object_inner_backedge": "0x970",
+      "worker_loop_bytes": 590,
+      "local_loop_bytes": 590,
+      "sum_registers": [
+        "v0",
+        "v2",
+        "v3",
+        "v4"
+      ],
+      "local_sum_registers": [
+        "v0",
+        "v2",
+        "v3",
+        "v4"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {
+        "%r13": "%r12"
+      }
+    },
+    {
+      "key": "avx2-k31-pre-old",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_111run_carrierINS0_11avx2_targetEN4ikea10seriespack13static_formatILj31ELNS4_8geometryE0ELj0EEELb1EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_carrier<seriespack_measurement::(anonymous namespace)::avx2_target, ikea::seriespack::static_format<31u, (ikea::seriespack::geometry)0, 0u>, true>(benchmark::State&)",
+      "worker_object_inner_start": "0x6f0",
+      "worker_object_inner_backedge": "0x76c",
+      "worker_loop_bytes": 126,
+      "local_loop_bytes": 126,
+      "sum_registers": [
+        "v5"
+      ],
+      "local_sum_registers": [
+        "v5"
+      ],
+      "native_add_count": 2,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": true,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {}
+    },
+    {
+      "key": "avx2-k31-pre-u4a1",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_11avx2_targetEN4ikea10seriespack13static_formatILj31ELNS4_8geometryE0ELj0EEELb1ELj1EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx2_target, ikea::seriespack::static_format<31u, (ikea::seriespack::geometry)0, 0u>, true, 1u>(benchmark::State&)",
+      "worker_object_inner_start": "0x710",
+      "worker_object_inner_backedge": "0x974",
+      "worker_loop_bytes": 617,
+      "local_loop_bytes": 617,
+      "sum_registers": [
+        "v3"
+      ],
+      "local_sum_registers": [
+        "v3"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {
+        "%rbp": "%r13"
+      }
+    },
+    {
+      "key": "avx2-k31-pre-u4a2",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_11avx2_targetEN4ikea10seriespack13static_formatILj31ELNS4_8geometryE0ELj0EEELb1ELj2EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx2_target, ikea::seriespack::static_format<31u, (ikea::seriespack::geometry)0, 0u>, true, 2u>(benchmark::State&)",
+      "worker_object_inner_start": "0x710",
+      "worker_object_inner_backedge": "0x974",
+      "worker_loop_bytes": 617,
+      "local_loop_bytes": 617,
+      "sum_registers": [
+        "v3",
+        "v4"
+      ],
+      "local_sum_registers": [
+        "v3",
+        "v4"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {
+        "%rbp": "%r13"
+      }
+    },
+    {
+      "key": "avx2-k31-pre-u4a4",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_11avx2_targetEN4ikea10seriespack13static_formatILj31ELNS4_8geometryE0ELj0EEELb1ELj4EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx2_target, ikea::seriespack::static_format<31u, (ikea::seriespack::geometry)0, 0u>, true, 4u>(benchmark::State&)",
+      "worker_object_inner_start": "0x720",
+      "worker_object_inner_backedge": "0x987",
+      "worker_loop_bytes": 620,
+      "local_loop_bytes": 620,
+      "sum_registers": [
+        "v3",
+        "v4",
+        "v5",
+        "v6"
+      ],
+      "local_sum_registers": [
+        "v3",
+        "v4",
+        "v5",
+        "v6"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {
+        "%rbp": "%r13"
+      }
+    },
+    {
+      "key": "avx512-k12-all-old",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_111run_carrierINS0_13avx512_targetEN4ikea10seriespack13static_formatILj12ELNS4_8geometryE0ELj0EEELb0EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_carrier<seriespack_measurement::(anonymous namespace)::avx512_target, ikea::seriespack::static_format<12u, (ikea::seriespack::geometry)0, 0u>, false>(benchmark::State&)",
+      "worker_object_inner_start": "0x520",
+      "worker_object_inner_backedge": "0x5a7",
+      "worker_loop_bytes": 140,
+      "local_loop_bytes": 140,
+      "sum_registers": [
+        "v0"
+      ],
+      "local_sum_registers": [
+        "v0"
+      ],
+      "native_add_count": 2,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": true,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {}
+    },
+    {
+      "key": "avx512-k12-all-u4a1",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_13avx512_targetEN4ikea10seriespack13static_formatILj12ELNS4_8geometryE0ELj0EEELb0ELj1EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx512_target, ikea::seriespack::static_format<12u, (ikea::seriespack::geometry)0, 0u>, false, 1u>(benchmark::State&)",
+      "worker_object_inner_start": "0x6e0",
+      "worker_object_inner_backedge": "0x90e",
+      "worker_loop_bytes": 563,
+      "local_loop_bytes": 563,
+      "sum_registers": [
+        "v1"
+      ],
+      "local_sum_registers": [
+        "v1"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {
+        "%r15": "%r12"
+      }
+    },
+    {
+      "key": "avx512-k12-all-u4a2",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_13avx512_targetEN4ikea10seriespack13static_formatILj12ELNS4_8geometryE0ELj0EEELb0ELj2EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx512_target, ikea::seriespack::static_format<12u, (ikea::seriespack::geometry)0, 0u>, false, 2u>(benchmark::State&)",
+      "worker_object_inner_start": "0x700",
+      "worker_object_inner_backedge": "0x92e",
+      "worker_loop_bytes": 563,
+      "local_loop_bytes": 563,
+      "sum_registers": [
+        "v1",
+        "v2"
+      ],
+      "local_sum_registers": [
+        "v1",
+        "v2"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {
+        "%r15": "%r12"
+      }
+    },
+    {
+      "key": "avx512-k12-all-u4a4",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_13avx512_targetEN4ikea10seriespack13static_formatILj12ELNS4_8geometryE0ELj0EEELb0ELj4EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx512_target, ikea::seriespack::static_format<12u, (ikea::seriespack::geometry)0, 0u>, false, 4u>(benchmark::State&)",
+      "worker_object_inner_start": "0x710",
+      "worker_object_inner_backedge": "0x93e",
+      "worker_loop_bytes": 563,
+      "local_loop_bytes": 563,
+      "sum_registers": [
+        "v0",
+        "v2",
+        "v3",
+        "v4"
+      ],
+      "local_sum_registers": [
+        "v0",
+        "v2",
+        "v3",
+        "v4"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {
+        "%r13": "%r12"
+      }
+    },
+    {
+      "key": "avx512-k12-pre-old",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_111run_carrierINS0_13avx512_targetEN4ikea10seriespack13static_formatILj12ELNS4_8geometryE0ELj0EEELb1EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_carrier<seriespack_measurement::(anonymous namespace)::avx512_target, ikea::seriespack::static_format<12u, (ikea::seriespack::geometry)0, 0u>, true>(benchmark::State&)",
+      "worker_object_inner_start": "0x510",
+      "worker_object_inner_backedge": "0x597",
+      "worker_loop_bytes": 140,
+      "local_loop_bytes": 140,
+      "sum_registers": [
+        "v0"
+      ],
+      "local_sum_registers": [
+        "v0"
+      ],
+      "native_add_count": 2,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": true,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {}
+    },
+    {
+      "key": "avx512-k12-pre-u4a1",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_13avx512_targetEN4ikea10seriespack13static_formatILj12ELNS4_8geometryE0ELj0EEELb1ELj1EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx512_target, ikea::seriespack::static_format<12u, (ikea::seriespack::geometry)0, 0u>, true, 1u>(benchmark::State&)",
+      "worker_object_inner_start": "0x6d0",
+      "worker_object_inner_backedge": "0x8fe",
+      "worker_loop_bytes": 563,
+      "local_loop_bytes": 563,
+      "sum_registers": [
+        "v1"
+      ],
+      "local_sum_registers": [
+        "v1"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {
+        "%r15": "%r13"
+      }
+    },
+    {
+      "key": "avx512-k12-pre-u4a2",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_13avx512_targetEN4ikea10seriespack13static_formatILj12ELNS4_8geometryE0ELj0EEELb1ELj2EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx512_target, ikea::seriespack::static_format<12u, (ikea::seriespack::geometry)0, 0u>, true, 2u>(benchmark::State&)",
+      "worker_object_inner_start": "0x6e0",
+      "worker_object_inner_backedge": "0x90e",
+      "worker_loop_bytes": 563,
+      "local_loop_bytes": 563,
+      "sum_registers": [
+        "v1",
+        "v2"
+      ],
+      "local_sum_registers": [
+        "v1",
+        "v2"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {
+        "%r15": "%r13"
+      }
+    },
+    {
+      "key": "avx512-k12-pre-u4a4",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_13avx512_targetEN4ikea10seriespack13static_formatILj12ELNS4_8geometryE0ELj0EEELb1ELj4EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx512_target, ikea::seriespack::static_format<12u, (ikea::seriespack::geometry)0, 0u>, true, 4u>(benchmark::State&)",
+      "worker_object_inner_start": "0x700",
+      "worker_object_inner_backedge": "0x92e",
+      "worker_loop_bytes": 563,
+      "local_loop_bytes": 563,
+      "sum_registers": [
+        "v0",
+        "v2",
+        "v3",
+        "v4"
+      ],
+      "local_sum_registers": [
+        "v0",
+        "v2",
+        "v3",
+        "v4"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {
+        "%rbp": "%r13"
+      }
+    },
+    {
+      "key": "avx512-k31-all-old",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_111run_carrierINS0_13avx512_targetEN4ikea10seriespack13static_formatILj31ELNS4_8geometryE0ELj0EEELb0EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_carrier<seriespack_measurement::(anonymous namespace)::avx512_target, ikea::seriespack::static_format<31u, (ikea::seriespack::geometry)0, 0u>, false>(benchmark::State&)",
+      "worker_object_inner_start": "0x570",
+      "worker_object_inner_backedge": "0x600",
+      "worker_loop_bytes": 149,
+      "local_loop_bytes": 149,
+      "sum_registers": [
+        "v0"
+      ],
+      "local_sum_registers": [
+        "v0"
+      ],
+      "native_add_count": 2,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": true,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {}
+    },
+    {
+      "key": "avx512-k31-all-u4a1",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_13avx512_targetEN4ikea10seriespack13static_formatILj31ELNS4_8geometryE0ELj0EEELb0ELj1EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx512_target, ikea::seriespack::static_format<31u, (ikea::seriespack::geometry)0, 0u>, false, 1u>(benchmark::State&)",
+      "worker_object_inner_start": "0x750",
+      "worker_object_inner_backedge": "0x9a5",
+      "worker_loop_bytes": 602,
+      "local_loop_bytes": 602,
+      "sum_registers": [
+        "v1"
+      ],
+      "local_sum_registers": [
+        "v1"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [
+        "1eb2e0:      \tkmovw\t0x30(%rsp), %k6",
+        "1eb341:      \tkmovw\t0x2e(%rsp), %k7"
+      ],
+      "local_stack_accesses": [
+        "870:      \tkmovw\t0x30(%rsp), %k6",
+        "8d1:      \tkmovw\t0x2e(%rsp), %k7"
+      ],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {
+        "%r13": "%r12"
+      }
+    },
+    {
+      "key": "avx512-k31-all-u4a2",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_13avx512_targetEN4ikea10seriespack13static_formatILj31ELNS4_8geometryE0ELj0EEELb0ELj2EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx512_target, ikea::seriespack::static_format<31u, (ikea::seriespack::geometry)0, 0u>, false, 2u>(benchmark::State&)",
+      "worker_object_inner_start": "0x770",
+      "worker_object_inner_backedge": "0x9c5",
+      "worker_loop_bytes": 602,
+      "local_loop_bytes": 602,
+      "sum_registers": [
+        "v1",
+        "v2"
+      ],
+      "local_sum_registers": [
+        "v1",
+        "v2"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [
+        "1ec610:      \tkmovw\t0x30(%rsp), %k6",
+        "1ec671:      \tkmovw\t0x2e(%rsp), %k7"
+      ],
+      "local_stack_accesses": [
+        "880:      \tkmovw\t0x30(%rsp), %k6",
+        "8e1:      \tkmovw\t0x2e(%rsp), %k7"
+      ],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {
+        "%r13": "%r12"
+      }
+    },
+    {
+      "key": "avx512-k31-all-u4a4",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_13avx512_targetEN4ikea10seriespack13static_formatILj31ELNS4_8geometryE0ELj0EEELb0ELj4EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx512_target, ikea::seriespack::static_format<31u, (ikea::seriespack::geometry)0, 0u>, false, 4u>(benchmark::State&)",
+      "worker_object_inner_start": "0x780",
+      "worker_object_inner_backedge": "0x9d5",
+      "worker_loop_bytes": 602,
+      "local_loop_bytes": 602,
+      "sum_registers": [
+        "v0",
+        "v2",
+        "v3",
+        "v4"
+      ],
+      "local_sum_registers": [
+        "v0",
+        "v2",
+        "v3",
+        "v4"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [
+        "1ed960:      \tkmovw\t0x30(%rsp), %k6",
+        "1ed9c1:      \tkmovw\t0x2e(%rsp), %k7"
+      ],
+      "local_stack_accesses": [
+        "8a0:      \tkmovw\t0x30(%rsp), %k6",
+        "901:      \tkmovw\t0x2e(%rsp), %k7"
+      ],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {
+        "%r13": "%r12"
+      }
+    },
+    {
+      "key": "avx512-k31-pre-old",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_111run_carrierINS0_13avx512_targetEN4ikea10seriespack13static_formatILj31ELNS4_8geometryE0ELj0EEELb1EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_carrier<seriespack_measurement::(anonymous namespace)::avx512_target, ikea::seriespack::static_format<31u, (ikea::seriespack::geometry)0, 0u>, true>(benchmark::State&)",
+      "worker_object_inner_start": "0x560",
+      "worker_object_inner_backedge": "0x5f0",
+      "worker_loop_bytes": 149,
+      "local_loop_bytes": 149,
+      "sum_registers": [
+        "v0"
+      ],
+      "local_sum_registers": [
+        "v0"
+      ],
+      "native_add_count": 2,
+      "stack_accesses": [],
+      "local_stack_accesses": [],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": true,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [],
+      "worker_to_local_changed_gprs": {}
+    },
+    {
+      "key": "avx512-k31-pre-u4a1",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_13avx512_targetEN4ikea10seriespack13static_formatILj31ELNS4_8geometryE0ELj0EEELb1ELj1EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx512_target, ikea::seriespack::static_format<31u, (ikea::seriespack::geometry)0, 0u>, true, 1u>(benchmark::State&)",
+      "worker_object_inner_start": "0x730",
+      "worker_object_inner_backedge": "0x985",
+      "worker_loop_bytes": 602,
+      "local_loop_bytes": 602,
+      "sum_registers": [
+        "v1"
+      ],
+      "local_sum_registers": [
+        "v1"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [
+        "1f1f50:      \tkmovw\t0x28(%rsp), %k6",
+        "1f1fb1:      \tkmovw\t0x26(%rsp), %k7"
+      ],
+      "local_stack_accesses": [
+        "850:      \tkmovw\t0x30(%rsp), %k6",
+        "8b1:      \tkmovw\t0x2e(%rsp), %k7"
+      ],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [
+        {
+          "worker": "0x28(%rsp), %k6",
+          "local": "0x30(%rsp), %k6"
+        },
+        {
+          "worker": "0x26(%rsp), %k7",
+          "local": "0x2e(%rsp), %k7"
+        }
+      ],
+      "worker_to_local_changed_gprs": {
+        "%rbp": "%r13"
+      }
+    },
+    {
+      "key": "avx512-k31-pre-u4a2",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_13avx512_targetEN4ikea10seriespack13static_formatILj31ELNS4_8geometryE0ELj0EEELb1ELj2EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx512_target, ikea::seriespack::static_format<31u, (ikea::seriespack::geometry)0, 0u>, true, 2u>(benchmark::State&)",
+      "worker_object_inner_start": "0x740",
+      "worker_object_inner_backedge": "0x995",
+      "worker_loop_bytes": 602,
+      "local_loop_bytes": 602,
+      "sum_registers": [
+        "v1",
+        "v2"
+      ],
+      "local_sum_registers": [
+        "v1",
+        "v2"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [
+        "1f3220:      \tkmovw\t0x28(%rsp), %k6",
+        "1f3281:      \tkmovw\t0x26(%rsp), %k7"
+      ],
+      "local_stack_accesses": [
+        "870:      \tkmovw\t0x30(%rsp), %k6",
+        "8d1:      \tkmovw\t0x2e(%rsp), %k7"
+      ],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [
+        {
+          "worker": "0x28(%rsp), %k6",
+          "local": "0x30(%rsp), %k6"
+        },
+        {
+          "worker": "0x26(%rsp), %k7",
+          "local": "0x2e(%rsp), %k7"
+        }
+      ],
+      "worker_to_local_changed_gprs": {
+        "%rbp": "%r13"
+      }
+    },
+    {
+      "key": "avx512-k31-pre-u4a4",
+      "mangled": "_ZN22seriespack_measurement12_GLOBAL__N_117run_multi_carrierINS0_13avx512_targetEN4ikea10seriespack13static_formatILj31ELNS4_8geometryE0ELj0EEELb1ELj4EEEvRN9benchmark5StateE",
+      "function": "void seriespack_measurement::(anonymous namespace)::run_multi_carrier<seriespack_measurement::(anonymous namespace)::avx512_target, ikea::seriespack::static_format<31u, (ikea::seriespack::geometry)0, 0u>, true, 4u>(benchmark::State&)",
+      "worker_object_inner_start": "0x760",
+      "worker_object_inner_backedge": "0x9b5",
+      "worker_loop_bytes": 602,
+      "local_loop_bytes": 602,
+      "sum_registers": [
+        "v0",
+        "v2",
+        "v3",
+        "v4"
+      ],
+      "local_sum_registers": [
+        "v0",
+        "v2",
+        "v3",
+        "v4"
+      ],
+      "native_add_count": 8,
+      "stack_accesses": [
+        "1f4510:      \tkmovw\t0x28(%rsp), %k6",
+        "1f4571:      \tkmovw\t0x26(%rsp), %k7"
+      ],
+      "local_stack_accesses": [
+        "890:      \tkmovw\t0x30(%rsp), %k6",
+        "8f1:      \tkmovw\t0x2e(%rsp), %k7"
+      ],
+      "calls": [],
+      "identical_to_local_after_address_and_relocation_normalization": false,
+      "local_difference_is_only_gpr_renaming_and_fixed_mask_stack_offsets": true,
+      "fixed_mask_stack_offset_changes": [
+        {
+          "worker": "0x28(%rsp), %k6",
+          "local": "0x30(%rsp), %k6"
+        },
+        {
+          "worker": "0x26(%rsp), %k7",
+          "local": "0x2e(%rsp), %k7"
+        }
+      ],
+      "worker_to_local_changed_gprs": {
+        "%rbp": "%r13"
+      }
+    }
+  ],
+  "method": "Read-only objdump of retained executable bounds timed regions using named start/finish calls; inner loop is checked against retained composition.asm at corresponding object offsets. No compile, timing, or source edit.",
+  "summary": {
+    "loops": 32,
+    "requested_chains_preserved": true,
+    "loop_byte_counts_equal_to_local": true,
+    "opcodes_and_vector_mask_operands_equal_after_address_gpr_and_fixed_mask_slot_normalization": true,
+    "stack_cases": [
+      "avx512-k31-all-u4a1",
+      "avx512-k31-all-u4a2",
+      "avx512-k31-all-u4a4",
+      "avx512-k31-pre-u4a1",
+      "avx512-k31-pre-u4a2",
+      "avx512-k31-pre-u4a4"
+    ],
+    "local_endpoint_witnesses": "Remain local-only: worker compiled the benchmark TU, not the separately generated codegen.cpp endpoints."
+  }
+}

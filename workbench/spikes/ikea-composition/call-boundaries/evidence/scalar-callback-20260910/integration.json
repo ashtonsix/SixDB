@@ -1,0 +1,53 @@
+{
+  "format": 1,
+  "scope": "Exact measured scalar callback integration after source organisation; ordinary facade and checked validation preserved; exposeddecode_function changes",
+  "source": {
+    "matches_measured_candidate_after_private_include_relocation": true,
+    "sha256": {
+      "ikea/include/ikea/seriespack/operations.h": "01c7352f820050282e077297f6849061de448a1126105af77f5aeccad3516770",
+      "ikea/src/seriespack/operations.cpp": "3f8cf6b4f42e39c8b0d9d2a098b8376722819e6f2cfe554c2b5fc8ba3e27b029",
+      "ikea/src/seriespack/native.cpp": "487aab4f9b422b8aa4bed2bb62b02446bb43d0928afa3ea18021daf7a7f8ceca"
+    }
+  },
+  "local_checks": {
+    "operations.log": {
+      "output": "",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit_code": 0
+    },
+    "physical.log": {
+      "output": "SeriesPack public wire (scalar): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed",
+      "log_sha256": "728355f46b493ba86e234d27ebcbef102576555f5a3b85a5dd63cbff0adeab57",
+      "exit_code": 0
+    },
+    "physical-neon.log": {
+      "output": "SeriesPack public wire (neon): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed",
+      "log_sha256": "aa517a46853009a02aef752b5753b38672d7a7407c58b7f76c23554f2a1c91b3",
+      "exit_code": 0
+    },
+    "ranges.log": {
+      "output": "SeriesPack range bounds (neon): 206 descriptions, 3737352 exact guarded ranges passed",
+      "log_sha256": "d9e378384e7acb17ba2be627d41a60c7731862311f04c8ae39b15ece6408197d",
+      "exit_code": 0
+    },
+    "ranges-scalar.log": {
+      "output": "SeriesPack range bounds (scalar): 206 descriptions, 3737352 exact guarded ranges passed",
+      "log_sha256": "31a7047f01ac3334f2e49491690165cc4f4c5ab6fa7ed26e442b947609c9364a",
+      "exit_code": 0
+    }
+  },
+  "compiler": "Clang21.1.8 pinnedLinux",
+  "commands": [
+    "cmake --build --preset dev --target ikea_seriespack_operations_check ikea_seriespack_physical_operations_check ikea_seriespack_range_bounds_check -j2",
+    "build/clang/dev/ikea/ikea_seriespack_operations_check",
+    "build/clang/dev/ikea/ikea_seriespack_physical_operations_check",
+    "build/clang/dev/ikea/ikea_seriespack_physical_operations_check --target neon",
+    "build/clang/dev/ikea/ikea_seriespack_range_bounds_check",
+    "build/clang/dev/ikea/ikea_seriespack_range_bounds_check --target scalar"
+  ],
+  "measured_pair": {
+    "zen_job": "20260910T195053Z-b698ee08",
+    "capture_digest": "822f7773841dd5186863b68ccce38ed11c2060199ccaf2703a3cdc3a982f9d4d"
+  },
+  "limits": "Live build also includes separately validated Local2/Local4 integrations. Frozenhardwarepair isolates callbacksourcechange; localchecks arecorrectness, notnewhardwaretimings."
+}

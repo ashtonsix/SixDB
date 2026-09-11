@@ -150,6 +150,10 @@ Ikea's native register handoff or BytePack-style CPS calling convention.
 
 ### Other targeted sources
 
+- **Iceberg hashing, section 3:** [paper](https://arxiv.org/html/2109.04548v3#S3).
+  Packed fingerprint and slot-index arrays motivated a SeriesPack consumer shape.
+  They do not prescribe its wire format or make a fingerprint match full-key equality.
+
 - **Highway:** [official quick reference](https://google.github.io/highway/en/master/quick_reference.html),
   particularly dispatch, namespaces and headers. It separates target
   implementations and permits custom target selection; it also recommends

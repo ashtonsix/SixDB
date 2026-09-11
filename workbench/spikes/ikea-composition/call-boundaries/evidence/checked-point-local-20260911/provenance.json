@@ -1,0 +1,37 @@
+{
+  "commands": [],
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "config": {
+    "candidate_source_sha256": "ecd994488db86f7f391485ff23387037f99c0ceca3677ca45acfa8a3f147b86a",
+    "no_runtime_measurement": true,
+    "production_installed": false,
+    "scope": "Post-study assembly of checked-get ARM generic O2 code-cost and semantic review; timestamp is receipt assembly, not benchmark start"
+  },
+  "configure_flags": [],
+  "files_sha256": {
+    "after-get-assembly.txt": "87e716bbe8f9095256864abe92d041c0064cff7be67de51b343225ba3a1e21bd",
+    "before-get-assembly.txt": "9c960aa1f5b24fc1f1368844969b7db76d95c51691ef824dbf7521af30dfc658",
+    "candidate.patch": "c1f2102ba5cd2e2b35b198c3c201f2cc3368289c5e88758e7500bb210027634d",
+    "checks.json": "17e200a0f466208fc598e25f16f98647718ddcef847ec80b2b6dde17e426dc4d",
+    "compile.json": "5f1648dd17787a4bb880d338e7593cecad20b073d9c04e027420780658732534",
+    "cost-summary.json": "0258090f9534d5e631e9f1e12ac3541e74f1bd20618d4bb0359381045fadfe8f",
+    "instruction-comparison.json": "03de859e81cfb8729aab2ca7666a2e5123abda186df64b52831b0d4dfe4576f4",
+    "review.md": "ed73cd81739513d5d5dd881fd5b91c075ed7c57387c88ef3e88df332050f56ac",
+    "source-hashes.json": "3e9f870b088bbda326f022cb71664f7cf2afbb09926d8f7af7b2915a9e3153a7"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "git_head": "aac633b2457967c64d77610646567fefb63c2c74",
+  "inputs": {},
+  "platform": {
+    "machine": "aarch64",
+    "release": "7.0.14-orbstack-00380-ga7e0a2dc9535",
+    "system": "Linux"
+  },
+  "regenerate": [],
+  "source_archive_sha256": "e97a7c666daaa9a1aeca96f77a64697d4aa192ec353b16d1958aa0ece615468f",
+  "source_digest": "9d9177e2e6333a15fb8a6e20dca19a4da4db5963ea52994a3ee344548fbbe08f",
+  "source_unchanged": true,
+  "started_utc": "2026-09-11T06:35:08.179898+00:00",
+  "status": "complete"
+}

@@ -1,0 +1,52 @@
+{
+  "job": "20260910T211922Z-d92891c6",
+  "source_digest": "3c7cdd61be10c2efc11bd6dfa6d95c6fdf9983c17ab0e8c892d27489608adb11",
+  "source_archive_sha256": "f95e53056a1e859228aed2172d8225e925a6a0900293de693102622846649bbb",
+  "entire_source_archive_verified_against_manifest": true,
+  "source_files": 566,
+  "source_identity_matches_other_target": true,
+  "cpu": 0,
+  "tune": "zen",
+  "feature_profile": "x86-64-v4 + AVX512VBMI + AVX512VBMI2 + GFNI",
+  "cases": 384,
+  "repetitions": 3,
+  "minimum_seconds": 0.1,
+  "scope": "Dense8192-value headless localK9..32 arrays; all/75% active selection; current bound decoder plus sufficient-width materialized consumer; no new arbitrary-range materializer or short-store policy.",
+  "checks": {
+    "cases": 384,
+    "repetitions": 3,
+    "matched_width_mask_groups": 48,
+    "work_counters_match_across_families_and_plans": true,
+    "expected_names_verified_against_actual_inventory": true
+  },
+  "grouped_guards": "PASS: grouped composition 32256 cutoff/mask/source cases; per-packet guards, independent strides, origins and modulo carriers",
+  "deferred_guards": "PASS: 224490 deferred-sum checks; lane bytes 1/2/4/8, domains/cutoffs/masks, inherited state and generic selected_sum, owned result, u32 crossing and u64 wrap",
+  "identities": {
+    "/opt/sixdb/jobs/20260910T211922Z-d92891c6/results/seriespack/avx512/libikea_seriespack.a": "9d2390cb027b128905ddfeea66964197f456e676501c03a3bd1314b31bac6d0b",
+    "/opt/sixdb/jobs/20260910T211922Z-d92891c6/results/seriespack/avx512/composition.o": "b6bf5c7f73e13d661e0608a39f225ff19bc71810d997d258bf01059acecbd232",
+    "ikea/src/seriespack/native.cpp": "487aab4f9b422b8aa4bed2bb62b02446bb43d0928afa3ea18021daf7a7f8ceca",
+    "ikea/src/seriespack/operations.cpp": "3f8cf6b4f42e39c8b0d9d2a098b8376722819e6f2cfe554c2b5fc8ba3e27b029",
+    "ikea/src/seriespack/view.cpp": "6c8aaff96221c96fb5f135f83bf12d0a73ff89227b8b2cf443dc37d332773252",
+    "ikea/include/ikea/seriespack/operations.h": "01c7352f820050282e077297f6849061de448a1126105af77f5aeccad3516770",
+    "ikea/include/ikea/seriespack/composition.h": "57936212057c1193bb12a90cff4bfc5681094b1e068b0903ec4d5c93a8eb81da",
+    "ikea/include/ikea/seriespack/composition_x86.h": "a15f88e3edadd1b965d636f47ded810b40210c67058a06a4e7e96c3272800abb",
+    "ikea/include/ikea/seriespack/native_avx2.h": "17c6665559b319460d28c83f41731cfc83c7f6d117a3bd32fa84308b42fe80de",
+    "ikea/include/ikea/seriespack/native_avx512.h": "62562fc9199c6d81bf5d3f7794866822b296bcf91a6acf761a9cdf325d8d3d3a"
+  },
+  "grouped_vs_fastest_materialized_overlapping_sample_ranges": [
+    {
+      "width": 18,
+      "mask": "all"
+    },
+    {
+      "width": 25,
+      "mask": "all"
+    }
+  ],
+  "limits": [
+    "Alternative plans in one linked binary per target; no independent additive cost model.",
+    "AVX2/AVX512 labels identify implementation families within one full-feature binary.",
+    "Three samples and their extrema are not confidence intervals.",
+    "Placement, partial ranges, arbitrary masks and additional ISA profiles are not timing coverage in this run."
+  ]
+}

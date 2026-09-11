@@ -197,7 +197,7 @@ not performance measurements. The retained Neoverse run precedes the added
 ```sh
 orb -m ubuntu python3 workbench/spikes/ikea-composition/probes/ikea-blocks/run.py --sanitize --check-only
 orb -m ubuntu python3 workbench/tools/worker.py run \
-  workbench/spikes/ikea-composition/probes/ikea-blocks/cloud.sh --machine zen5 --capacity on-demand \
+  workbench/spikes/ikea-composition/probes/ikea-blocks/cloud.sh --machine zen5 \
   --detach -- --target zen5
 ```
 

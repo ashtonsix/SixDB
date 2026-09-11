@@ -133,7 +133,7 @@ python3 workbench/spikes/ikea-composition/probes/ikea-heterogeneous/operations/r
 python3 workbench/spikes/ikea-composition/probes/ikea-heterogeneous/operations/report_check.py \
   workbench/spikes/ikea-composition/probes/ikea-heterogeneous/evidence/operations-zen5
 python3 workbench/tools/worker.py run workbench/spikes/ikea-composition/probes/ikea-heterogeneous/operations/cloud.sh \
-  --machine zen5 --capacity on-demand --idle-seconds 0 -- --target zen5 -- --pmu
+  --machine zen5 --idle-seconds 0 -- --target zen5 -- --pmu
 ```
 
 `--grain 1` or `--grain 2` controls adjacent output pairing for BEC-containing

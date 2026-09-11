@@ -1,0 +1,11 @@
+# Checked point selection without constructing a general reader
+
+Workbench-only, one-function candidate against the unchanged production source. It does not include the separate callback canonicalization candidate. No performance result or installation is claimed by this local review.
+
+The checked `get` currently validates the index, constructs a full scalar bound_reader (including a decode endpoint and a copied view), then calls its point endpoint. The candidate retains the same logical bound check and calls the existing arithmetic point selector directly with the same description and source. Attachment validity and storage lifetime remain caller obligations; no validation, result-domain or error contract is weakened. Scalar availability cannot fail after admission, and the default arithmetic strategy is unchanged. Explicit custom bound endpoints and requested strategy metadata are untouched.
+
+Current local ARM generic -O2 output changes only the checked-get instruction body among 1,387 common operations-object functions. It falls from 128 to 96 instruction bytes and from a 256-byte to a 32-byte stack frame. The additional 96-byte view copy and general reader construction disappear. There are still two calls: point-function selection, then the point endpoint. This is a mechanism observation, not a timing subtraction or a claim of an optimal checked caller.
+
+Both archive variants pass existing operation checks and the public-wire checks on scalar and NEON. Each native/public pass covers 206 descriptions, 5,532 placements, 83,787 range checks, 49,140 mutation checks and 206 append scenarios; checked get is compared at every valid point and rejected at n. Caller/check objects and other archive members are common. Linked executable text falls 32 bytes; rodata is unchanged. Instruction comparison excludes referenced constant contents and final linked placement.
+
+Exact patches, source/object/archive/binary identities, commands, outputs, selected disassembly and cost accounting are adjacent. The hardware task is preparing the small actual checked-point discriminator against the frozen current baseline. That measurement must decide the ordinary-operation performance claim; it does not replace the broader primitive coverage assessment or explain bound get16 losses.

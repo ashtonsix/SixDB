@@ -1,0 +1,184 @@
+{
+  "scope": "Current ARM local dev flags; same existing caller/check objects, same library members except operations.cpp.o; semantic checks and linked sizes only, no timing",
+  "archive_members": [
+    {
+      "member": "view.cpp.o",
+      "before": "faef424b5c6101e716b27002d2f4cfaaca07bfd31dcddb5142dfbcca548fc98f",
+      "after": "faef424b5c6101e716b27002d2f4cfaaca07bfd31dcddb5142dfbcca548fc98f"
+    },
+    {
+      "member": "operations.cpp.o",
+      "before": "7cc23eae7addbf8223d1160dcd343ad8b191d0f3d7a3305108db431a3e313941",
+      "after": "68e95fcdbd6c806709fe20f95d313a2e4405f04dee354cfe2302cb057d606315"
+    },
+    {
+      "member": "native.cpp.o",
+      "before": "7c5c4573b2c8e27ea6b72a5f2eafe0e057ad033f4a3e13be4279ffeb15274c6d",
+      "after": "7c5c4573b2c8e27ea6b72a5f2eafe0e057ad033f4a3e13be4279ffeb15274c6d"
+    }
+  ],
+  "before_archive_sha256": "9734c5a63cc0925b474585a887c80317f2b40b99ca6bf315b5dfd8680c6c44af",
+  "after_archive_sha256": "2ad30c77720438fb36579b6c9e0592af88696abebe2f3378d0e82bf3d372a208",
+  "before_source_sha256": "d379a3673e9c959fbbe09c8affed095e445c8691b8493191498553ef31d3df61",
+  "after_source_sha256": "774e8579503632c67df0f6b9e17cc2245bb46710c024ac9e8636ddd453239a2d",
+  "checks": [
+    {
+      "variant": "before",
+      "program": "ikea_seriespack_operations_check",
+      "link_command": [
+        "/usr/bin/clang++-21",
+        "-O2",
+        "-g",
+        "-fno-fast-math",
+        "-Wl,--gc-sections",
+        "-Xlinker",
+        "--dependency-file=/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/before-ikea_seriespack_operations_check.d",
+        "ikea/CMakeFiles/ikea_seriespack_operations_check.dir/test/seriespack/operations.cpp.o",
+        "-o",
+        "/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/before-ikea_seriespack_operations_check",
+        "/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/before.a"
+      ],
+      "link_cwd": "/home/ashtonsix/sixdb/build/clang/dev",
+      "command": [
+        "/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/before-ikea_seriespack_operations_check"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "",
+      "binary_sha256": "d144a9e6eab7f452d762c193f0f6d1802446a910a9c1347a3223827a2e85a6f4",
+      "size_output": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n1813301\t   2128\t      8\t1815437\t 1bb38d\t/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/before-ikea_seriespack_operations_check\n"
+    },
+    {
+      "variant": "after",
+      "program": "ikea_seriespack_operations_check",
+      "link_command": [
+        "/usr/bin/clang++-21",
+        "-O2",
+        "-g",
+        "-fno-fast-math",
+        "-Wl,--gc-sections",
+        "-Xlinker",
+        "--dependency-file=/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/after-ikea_seriespack_operations_check.d",
+        "ikea/CMakeFiles/ikea_seriespack_operations_check.dir/test/seriespack/operations.cpp.o",
+        "-o",
+        "/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/after-ikea_seriespack_operations_check",
+        "/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/after.a"
+      ],
+      "link_cwd": "/home/ashtonsix/sixdb/build/clang/dev",
+      "command": [
+        "/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/after-ikea_seriespack_operations_check"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "",
+      "binary_sha256": "f4eaee123b3c80f436f221777e2fac30abfa8bed91b1f5260065f17e187bc283",
+      "size_output": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n1772485\t   2128\t      8\t1774621\t 1b141d\t/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/after-ikea_seriespack_operations_check\n"
+    },
+    {
+      "variant": "before",
+      "program": "ikea_seriespack_static_point_check",
+      "link_command": [
+        "/usr/bin/clang++-21",
+        "-O2",
+        "-g",
+        "-fno-fast-math",
+        "-Wl,--gc-sections",
+        "-Xlinker",
+        "--dependency-file=/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/before-ikea_seriespack_static_point_check.d",
+        "ikea/CMakeFiles/ikea_seriespack_static_point_check.dir/test/seriespack/static_point.cpp.o",
+        "-o",
+        "/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/before-ikea_seriespack_static_point_check",
+        "/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/before.a"
+      ],
+      "link_cwd": "/home/ashtonsix/sixdb/build/clang/dev",
+      "command": [
+        "/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/before-ikea_seriespack_static_point_check"
+      ],
+      "returncode": 0,
+      "stdout": "SeriesPack static point: 206 descriptions, 2060 placements, 443664 reads, 85716 writes passed\n",
+      "stderr": "",
+      "binary_sha256": "c3f190a49d90a43f12a999844fa6d558aee769f3a3475222f24457326c771d8d",
+      "size_output": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n1545546\t    800\t     48\t1546394\t 17989a\t/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/before-ikea_seriespack_static_point_check\n"
+    },
+    {
+      "variant": "after",
+      "program": "ikea_seriespack_static_point_check",
+      "link_command": [
+        "/usr/bin/clang++-21",
+        "-O2",
+        "-g",
+        "-fno-fast-math",
+        "-Wl,--gc-sections",
+        "-Xlinker",
+        "--dependency-file=/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/after-ikea_seriespack_static_point_check.d",
+        "ikea/CMakeFiles/ikea_seriespack_static_point_check.dir/test/seriespack/static_point.cpp.o",
+        "-o",
+        "/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/after-ikea_seriespack_static_point_check",
+        "/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/after.a"
+      ],
+      "link_cwd": "/home/ashtonsix/sixdb/build/clang/dev",
+      "command": [
+        "/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/after-ikea_seriespack_static_point_check"
+      ],
+      "returncode": 0,
+      "stdout": "SeriesPack static point: 206 descriptions, 2060 placements, 443664 reads, 85716 writes passed\n",
+      "stderr": "",
+      "binary_sha256": "53604ae378f6aabf4bdf87db9cd4aea0bafae26fefc415b1769ccfe3695ae77d",
+      "size_output": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n1545546\t    800\t     48\t1546394\t 17989a\t/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/after-ikea_seriespack_static_point_check\n"
+    },
+    {
+      "variant": "before",
+      "program": "ikea_seriespack_physical_operations_check",
+      "link_command": [
+        "/usr/bin/clang++-21",
+        "-O2",
+        "-g",
+        "-fno-fast-math",
+        "-Wl,--gc-sections",
+        "-Xlinker",
+        "--dependency-file=/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/before-ikea_seriespack_physical_operations_check.d",
+        "ikea/CMakeFiles/ikea_seriespack_physical_operations_check.dir/test/seriespack/physical_operations.cpp.o",
+        "-o",
+        "/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/before-ikea_seriespack_physical_operations_check",
+        "/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/before.a"
+      ],
+      "link_cwd": "/home/ashtonsix/sixdb/build/clang/dev",
+      "command": [
+        "/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/before-ikea_seriespack_physical_operations_check",
+        "--all-available"
+      ],
+      "returncode": 0,
+      "stdout": "SeriesPack public wire (scalar): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed\nSeriesPack public wire (neon): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed\n",
+      "stderr": "",
+      "binary_sha256": "025a168869cb237d8dc1233665ecd0cdbe330fdd2200f2d77937688f001ac915",
+      "size_output": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n1791842\t   2168\t     56\t1794066\t 1b6012\t/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/before-ikea_seriespack_physical_operations_check\n"
+    },
+    {
+      "variant": "after",
+      "program": "ikea_seriespack_physical_operations_check",
+      "link_command": [
+        "/usr/bin/clang++-21",
+        "-O2",
+        "-g",
+        "-fno-fast-math",
+        "-Wl,--gc-sections",
+        "-Xlinker",
+        "--dependency-file=/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/after-ikea_seriespack_physical_operations_check.d",
+        "ikea/CMakeFiles/ikea_seriespack_physical_operations_check.dir/test/seriespack/physical_operations.cpp.o",
+        "-o",
+        "/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/after-ikea_seriespack_physical_operations_check",
+        "/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/after.a"
+      ],
+      "link_cwd": "/home/ashtonsix/sixdb/build/clang/dev",
+      "command": [
+        "/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/after-ikea_seriespack_physical_operations_check",
+        "--all-available"
+      ],
+      "returncode": 0,
+      "stdout": "SeriesPack public wire (scalar): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed\nSeriesPack public wire (neon): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed\n",
+      "stderr": "",
+      "binary_sha256": "c4d57094f4f42c944780655a1d25812c60481fd433aa5ab97dde8c43d1a26f26",
+      "size_output": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n1751026\t   2168\t     56\t1753250\t 1ac0a2\t/home/ashtonsix/sixdb/build/maintenance/seriespack-delivery-contracts/point-canonicalization/after-ikea_seriespack_physical_operations_check\n"
+    }
+  ]
+}

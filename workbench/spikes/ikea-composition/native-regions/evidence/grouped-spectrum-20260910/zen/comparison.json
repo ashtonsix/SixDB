@@ -1,0 +1,2508 @@
+{
+  "source_samples": "build/workers/20260910T211922Z-d92891c6/results/seriespack/avx512/samples.json",
+  "cases": 384,
+  "groups": [
+    {
+      "width": 9,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.24784046431447812,
+          "min_ns_per_value": 0.24501093426466514,
+          "max_ns_per_value": 0.255817112742639
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.17804373282330985,
+          "min_ns_per_value": 0.17735295242359617,
+          "max_ns_per_value": 0.1855305729533312
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.09653006633972712,
+          "min_ns_per_value": 0.09605558454841405,
+          "max_ns_per_value": 0.09870671080271569
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.23811218732881978,
+          "min_ns_per_value": 0.23458463764141832,
+          "max_ns_per_value": 0.24190146125016565
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.17488706901507337,
+          "min_ns_per_value": 0.1672499149428667,
+          "max_ns_per_value": 0.17540229057521864
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.09486850161425338,
+          "min_ns_per_value": 0.0939623680537265,
+          "max_ns_per_value": 0.09511862941857344
+        },
+        "avx512/grouped32-authored": {
+          "median_ns_per_value": 0.08602961060261521,
+          "min_ns_per_value": 0.08557255390662706,
+          "max_ns_per_value": 0.08751794523315516
+        },
+        "avx512/grouped32-authored-u64-carrier": {
+          "median_ns_per_value": 0.0681857988807331,
+          "min_ns_per_value": 0.06559945489986742,
+          "max_ns_per_value": 0.0693954856146016
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped32-authored-u64-carrier",
+      "winner": "avx512/grouped32-authored-u64-carrier",
+      "grouped_over_materialized": 0.7187401268124238,
+      "grouped_over_tile": 0.3898847368461314
+    },
+    {
+      "width": 9,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.25472086651332165,
+          "min_ns_per_value": 0.24795154052184046,
+          "max_ns_per_value": 0.2585262804774847
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.1836950934567751,
+          "min_ns_per_value": 0.17988445594966912,
+          "max_ns_per_value": 0.18625577881312896
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.10790799353844975,
+          "min_ns_per_value": 0.10510767425041725,
+          "max_ns_per_value": 0.10925844009469923
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.24682130865483154,
+          "min_ns_per_value": 0.24443560457824845,
+          "max_ns_per_value": 0.24750153893898777
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.17211249052497724,
+          "min_ns_per_value": 0.17017111675035787,
+          "max_ns_per_value": 0.17330161678297903
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.10817033156064015,
+          "min_ns_per_value": 0.10793613251729933,
+          "max_ns_per_value": 0.11053816352257022
+        },
+        "avx512/grouped32-authored": {
+          "median_ns_per_value": 0.08466772100818107,
+          "min_ns_per_value": 0.08347273766791076,
+          "max_ns_per_value": 0.08843650287869591
+        },
+        "avx512/grouped32-authored-u64-carrier": {
+          "median_ns_per_value": 0.06736782237495778,
+          "min_ns_per_value": 0.06678619451132341,
+          "max_ns_per_value": 0.06950521156485116
+        }
+      },
+      "best_materialized": "avx2/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped32-authored-u64-carrier",
+      "winner": "avx512/grouped32-authored-u64-carrier",
+      "grouped_over_materialized": 0.6243079883693073,
+      "grouped_over_tile": 0.39141739317973123
+    },
+    {
+      "width": 10,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.251175958425114,
+          "min_ns_per_value": 0.24803694733901355,
+          "max_ns_per_value": 0.2544464555781304
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.19141383963979008,
+          "min_ns_per_value": 0.19023887916707258,
+          "max_ns_per_value": 0.1937766263372077
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.09703000948661013,
+          "min_ns_per_value": 0.09410310605727192,
+          "max_ns_per_value": 0.0970920220367148
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.24653711161962985,
+          "min_ns_per_value": 0.2424327308252268,
+          "max_ns_per_value": 0.24783082773654935
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.17057586218199397,
+          "min_ns_per_value": 0.16985373064071096,
+          "max_ns_per_value": 0.17404360246693432
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.09718627338019463,
+          "min_ns_per_value": 0.09395247866505803,
+          "max_ns_per_value": 0.09860678054713744
+        },
+        "avx512/grouped32-authored": {
+          "median_ns_per_value": 0.08923952659538077,
+          "min_ns_per_value": 0.08714188786768165,
+          "max_ns_per_value": 0.08976659647995298
+        },
+        "avx512/grouped32-authored-u64-carrier": {
+          "median_ns_per_value": 0.06804064092812281,
+          "min_ns_per_value": 0.06750443708457596,
+          "max_ns_per_value": 0.06817134526411141
+        }
+      },
+      "best_materialized": "avx2/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped32-authored-u64-carrier",
+      "winner": "avx512/grouped32-authored-u64-carrier",
+      "grouped_over_materialized": 0.7012329617211078,
+      "grouped_over_tile": 0.39888786172763196
+    },
+    {
+      "width": 10,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.258647874970752,
+          "min_ns_per_value": 0.25268997350307987,
+          "max_ns_per_value": 0.26386646911718403
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.1972056717478558,
+          "min_ns_per_value": 0.19230345333410973,
+          "max_ns_per_value": 0.19997438084560262
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.11172317503269656,
+          "min_ns_per_value": 0.10733995116000274,
+          "max_ns_per_value": 0.11268792039988339
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.25856431299577953,
+          "min_ns_per_value": 0.25436148356099997,
+          "max_ns_per_value": 0.25970967016755864
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.17753430562994013,
+          "min_ns_per_value": 0.17207630397943913,
+          "max_ns_per_value": 0.1793830944675878
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.10722024070989201,
+          "min_ns_per_value": 0.10666389783408359,
+          "max_ns_per_value": 0.10779920171590285
+        },
+        "avx512/grouped32-authored": {
+          "median_ns_per_value": 0.08975187439851073,
+          "min_ns_per_value": 0.08672800131218526,
+          "max_ns_per_value": 0.09069617735426669
+        },
+        "avx512/grouped32-authored-u64-carrier": {
+          "median_ns_per_value": 0.06932401233542508,
+          "min_ns_per_value": 0.06830757323948719,
+          "max_ns_per_value": 0.06991724728265543
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped32-authored-u64-carrier",
+      "winner": "avx512/grouped32-authored-u64-carrier",
+      "grouped_over_materialized": 0.6465571414169501,
+      "grouped_over_tile": 0.3904823470001732
+    },
+    {
+      "width": 11,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.2548890389560878,
+          "min_ns_per_value": 0.2521362557428546,
+          "max_ns_per_value": 0.2637766090823402
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.19698708880024232,
+          "min_ns_per_value": 0.19256004745371605,
+          "max_ns_per_value": 0.19958104987952943
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.09789077846429978,
+          "min_ns_per_value": 0.09637449352582704,
+          "max_ns_per_value": 0.09923925118467794
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.25399695764061025,
+          "min_ns_per_value": 0.25103519389465867,
+          "max_ns_per_value": 0.25943390044122544
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.17556135751741392,
+          "min_ns_per_value": 0.17463074917827298,
+          "max_ns_per_value": 0.1781684854484803
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.09769104449087836,
+          "min_ns_per_value": 0.09585960274930576,
+          "max_ns_per_value": 0.09818123177337362
+        },
+        "avx512/grouped32-authored": {
+          "median_ns_per_value": 0.09043823702598794,
+          "min_ns_per_value": 0.0892769782726646,
+          "max_ns_per_value": 0.09310447793940248
+        },
+        "avx512/grouped32-authored-u64-carrier": {
+          "median_ns_per_value": 0.06821860014223871,
+          "min_ns_per_value": 0.06628812474508831,
+          "max_ns_per_value": 0.06830479547639677
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped32-authored-u64-carrier",
+      "winner": "avx512/grouped32-authored-u64-carrier",
+      "grouped_over_materialized": 0.6983096608063029,
+      "grouped_over_tile": 0.3885741207912004
+    },
+    {
+      "width": 11,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.26171647484128,
+          "min_ns_per_value": 0.25567871203484444,
+          "max_ns_per_value": 0.2649276729969237
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.19447152188641073,
+          "min_ns_per_value": 0.19063252497259023,
+          "max_ns_per_value": 0.19941007187185372
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.11094560831885107,
+          "min_ns_per_value": 0.10946626430825518,
+          "max_ns_per_value": 0.11301267855478164
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.24888181188664177,
+          "min_ns_per_value": 0.24746805172823652,
+          "max_ns_per_value": 0.25313283855042423
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.17536919983022453,
+          "min_ns_per_value": 0.17303587672128173,
+          "max_ns_per_value": 0.18682203796623711
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.1084392374837172,
+          "min_ns_per_value": 0.10597775688004099,
+          "max_ns_per_value": 0.10877134842305258
+        },
+        "avx512/grouped32-authored": {
+          "median_ns_per_value": 0.0934753318625593,
+          "min_ns_per_value": 0.09207623942309628,
+          "max_ns_per_value": 0.09428055179458665
+        },
+        "avx512/grouped32-authored-u64-carrier": {
+          "median_ns_per_value": 0.07066092642143991,
+          "min_ns_per_value": 0.06923750363923932,
+          "max_ns_per_value": 0.0708875092287858
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped32-authored-u64-carrier",
+      "winner": "avx512/grouped32-authored-u64-carrier",
+      "grouped_over_materialized": 0.6516176991013061,
+      "grouped_over_tile": 0.40292666266281063
+    },
+    {
+      "width": 12,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.2610436612928064,
+          "min_ns_per_value": 0.2552732984652025,
+          "max_ns_per_value": 0.26117770466938856
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.09655700264990726,
+          "min_ns_per_value": 0.09584938562375801,
+          "max_ns_per_value": 0.0966886287512437
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.18325824522327702,
+          "min_ns_per_value": 0.18273742435165158,
+          "max_ns_per_value": 0.18403964158197028
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.24771129470192563,
+          "min_ns_per_value": 0.24666112211655836,
+          "max_ns_per_value": 0.2505340531306069
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.0951915336793842,
+          "min_ns_per_value": 0.09431327410602201,
+          "max_ns_per_value": 0.09538245458371691
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.17394058128508025,
+          "min_ns_per_value": 0.17214114154521035,
+          "max_ns_per_value": 0.175083069622062
+        },
+        "avx512/grouped32-authored": {
+          "median_ns_per_value": 0.08657839048041181,
+          "min_ns_per_value": 0.08437895710193695,
+          "max_ns_per_value": 0.08685774082583723
+        },
+        "avx512/grouped32-authored-u64-carrier": {
+          "median_ns_per_value": 0.06700110672091565,
+          "min_ns_per_value": 0.06692970853159126,
+          "max_ns_per_value": 0.0681881470831228
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped32-authored-u64-carrier",
+      "winner": "avx512/grouped32-authored-u64-carrier",
+      "grouped_over_materialized": 0.7038557330800334,
+      "grouped_over_tile": 0.3851953708899251
+    },
+    {
+      "width": 12,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.25172682672361657,
+          "min_ns_per_value": 0.2500135433202412,
+          "max_ns_per_value": 0.2534037589422756
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.10862053388459919,
+          "min_ns_per_value": 0.10690211199941872,
+          "max_ns_per_value": 0.10902648088657796
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.18231486931017096,
+          "min_ns_per_value": 0.18192881722478865,
+          "max_ns_per_value": 0.18517024790805944
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.2465895261347767,
+          "min_ns_per_value": 0.24315748048825664,
+          "max_ns_per_value": 0.25084809490250926
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.10460886596534634,
+          "min_ns_per_value": 0.10420217315605011,
+          "max_ns_per_value": 0.10605848131947039
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.16944666642983014,
+          "min_ns_per_value": 0.16361938950681773,
+          "max_ns_per_value": 0.1702163539462314
+        },
+        "avx512/grouped32-authored": {
+          "median_ns_per_value": 0.08723942276028335,
+          "min_ns_per_value": 0.0861283216223688,
+          "max_ns_per_value": 0.0873049013269024
+        },
+        "avx512/grouped32-authored-u64-carrier": {
+          "median_ns_per_value": 0.06566405275969364,
+          "min_ns_per_value": 0.0649836094313079,
+          "max_ns_per_value": 0.06756456522879065
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped32-authored-u64-carrier",
+      "winner": "avx512/grouped32-authored-u64-carrier",
+      "grouped_over_materialized": 0.6277102055713528,
+      "grouped_over_tile": 0.38752047557622443
+    },
+    {
+      "width": 13,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.2537270809981969,
+          "min_ns_per_value": 0.252806025554125,
+          "max_ns_per_value": 0.2540092355351174
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.19212541314249015,
+          "min_ns_per_value": 0.18964610422641562,
+          "max_ns_per_value": 0.1959354958425282
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.09465042330375753,
+          "min_ns_per_value": 0.09217790801241305,
+          "max_ns_per_value": 0.09512886762144779
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.2511953244601902,
+          "min_ns_per_value": 0.24456032618456924,
+          "max_ns_per_value": 0.2566496840336031
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.17894363931854923,
+          "min_ns_per_value": 0.17868000370100784,
+          "max_ns_per_value": 0.1842423146019684
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.09407530408314417,
+          "min_ns_per_value": 0.09379744485253073,
+          "max_ns_per_value": 0.09638102895713474
+        },
+        "avx512/grouped32-authored": {
+          "median_ns_per_value": 0.09025933767147468,
+          "min_ns_per_value": 0.08885617614344118,
+          "max_ns_per_value": 0.09178019579733007
+        },
+        "avx512/grouped32-authored-u64-carrier": {
+          "median_ns_per_value": 0.06932710875658067,
+          "min_ns_per_value": 0.06864669180856438,
+          "max_ns_per_value": 0.07003191979415045
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped32-authored-u64-carrier",
+      "winner": "avx512/grouped32-authored-u64-carrier",
+      "grouped_over_materialized": 0.7369320719421653,
+      "grouped_over_tile": 0.3874242695666146
+    },
+    {
+      "width": 13,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.25345175857349866,
+          "min_ns_per_value": 0.2465416031112535,
+          "max_ns_per_value": 0.255886392738678
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.19328336351574674,
+          "min_ns_per_value": 0.19242478863955156,
+          "max_ns_per_value": 0.19512597449966682
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.1099216996396144,
+          "min_ns_per_value": 0.10509803580780998,
+          "max_ns_per_value": 0.11129048720570708
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.2590223625511498,
+          "min_ns_per_value": 0.2531535818367274,
+          "max_ns_per_value": 0.26132477031277523
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.17851709574782731,
+          "min_ns_per_value": 0.17384842528619782,
+          "max_ns_per_value": 0.1800845353920856
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.10911819101293846,
+          "min_ns_per_value": 0.10892074669087226,
+          "max_ns_per_value": 0.11008323716196555
+        },
+        "avx512/grouped32-authored": {
+          "median_ns_per_value": 0.09572178772894169,
+          "min_ns_per_value": 0.09353899854875175,
+          "max_ns_per_value": 0.09602719877948929
+        },
+        "avx512/grouped32-authored-u64-carrier": {
+          "median_ns_per_value": 0.06991896406941496,
+          "min_ns_per_value": 0.068871441635074,
+          "max_ns_per_value": 0.06999330797244493
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped32-authored-u64-carrier",
+      "winner": "avx512/grouped32-authored-u64-carrier",
+      "grouped_over_materialized": 0.6407635923979391,
+      "grouped_over_tile": 0.39166536838680294
+    },
+    {
+      "width": 14,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.25767534799207764,
+          "min_ns_per_value": 0.2516087658584674,
+          "max_ns_per_value": 0.2613517175262149
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.1905431290377823,
+          "min_ns_per_value": 0.18895295615188426,
+          "max_ns_per_value": 0.1955563379071562
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.09571437658058667,
+          "min_ns_per_value": 0.09393585096750688,
+          "max_ns_per_value": 0.09712467330964808
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.24725105785903892,
+          "min_ns_per_value": 0.2469972641413197,
+          "max_ns_per_value": 0.24956840670268285
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.18496608727994376,
+          "min_ns_per_value": 0.1733417564580633,
+          "max_ns_per_value": 0.18570471203713557
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.09453865737427376,
+          "min_ns_per_value": 0.09198825166029004,
+          "max_ns_per_value": 0.09600327528968605
+        },
+        "avx512/grouped32-authored": {
+          "median_ns_per_value": 0.09245124802148565,
+          "min_ns_per_value": 0.09227973411221355,
+          "max_ns_per_value": 0.09432797688420995
+        },
+        "avx512/grouped32-authored-u64-carrier": {
+          "median_ns_per_value": 0.06966062665200193,
+          "min_ns_per_value": 0.0691974275260798,
+          "max_ns_per_value": 0.0718985340141163
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped32-authored-u64-carrier",
+      "winner": "avx512/grouped32-authored-u64-carrier",
+      "grouped_over_materialized": 0.7368480639218201,
+      "grouped_over_tile": 0.3766129655247098
+    },
+    {
+      "width": 14,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.25746775551803686,
+          "min_ns_per_value": 0.2486413763207724,
+          "max_ns_per_value": 0.2602588068578104
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.19945978262493524,
+          "min_ns_per_value": 0.1897828995963362,
+          "max_ns_per_value": 0.20180982473935133
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.11079618351828507,
+          "min_ns_per_value": 0.11069747863798125,
+          "max_ns_per_value": 0.11198539959269406
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.243980003344965,
+          "min_ns_per_value": 0.24276167973383736,
+          "max_ns_per_value": 0.24947497126133228
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.17638284830643974,
+          "min_ns_per_value": 0.17477035582835423,
+          "max_ns_per_value": 0.18392867667667037
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.10583591562100794,
+          "min_ns_per_value": 0.10490375545862102,
+          "max_ns_per_value": 0.11070062658791255
+        },
+        "avx512/grouped32-authored": {
+          "median_ns_per_value": 0.09398449435164816,
+          "min_ns_per_value": 0.0922184769769525,
+          "max_ns_per_value": 0.09421137786426936
+        },
+        "avx512/grouped32-authored-u64-carrier": {
+          "median_ns_per_value": 0.06852340433882152,
+          "min_ns_per_value": 0.06788445973016617,
+          "max_ns_per_value": 0.07208686422733207
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped32-authored-u64-carrier",
+      "winner": "avx512/grouped32-authored-u64-carrier",
+      "grouped_over_materialized": 0.647449440360111,
+      "grouped_over_tile": 0.38849244695137247
+    },
+    {
+      "width": 15,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.2641304128641221,
+          "min_ns_per_value": 0.2567932733671808,
+          "max_ns_per_value": 0.26443493032805293
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.19259895357216747,
+          "min_ns_per_value": 0.18793863434585686,
+          "max_ns_per_value": 0.19563427561849744
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.09337868690223716,
+          "min_ns_per_value": 0.09188128628263577,
+          "max_ns_per_value": 0.09959814094838793
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.25107534302043977,
+          "min_ns_per_value": 0.25030798552417627,
+          "max_ns_per_value": 0.2533339862711732
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.180338104601612,
+          "min_ns_per_value": 0.1777043832046157,
+          "max_ns_per_value": 0.1828739795274613
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.09512555937557449,
+          "min_ns_per_value": 0.09311745902833408,
+          "max_ns_per_value": 0.09714554885155519
+        },
+        "avx512/grouped32-authored": {
+          "median_ns_per_value": 0.09188132140511696,
+          "min_ns_per_value": 0.09082217410449285,
+          "max_ns_per_value": 0.09463492061616477
+        },
+        "avx512/grouped32-authored-u64-carrier": {
+          "median_ns_per_value": 0.06798391894218131,
+          "min_ns_per_value": 0.06797937265528817,
+          "max_ns_per_value": 0.06883786918820863
+        }
+      },
+      "best_materialized": "avx2/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped32-authored-u64-carrier",
+      "winner": "avx512/grouped32-authored-u64-carrier",
+      "grouped_over_materialized": 0.7280453516481452,
+      "grouped_over_tile": 0.37698033420261207
+    },
+    {
+      "width": 15,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.2616715994670398,
+          "min_ns_per_value": 0.2590946191997104,
+          "max_ns_per_value": 0.26617793658551603
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.1949044521185055,
+          "min_ns_per_value": 0.18846112558173062,
+          "max_ns_per_value": 0.19809194154714316
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.10905435321958437,
+          "min_ns_per_value": 0.10885850132985225,
+          "max_ns_per_value": 0.11066760282456803
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.2541331560543684,
+          "min_ns_per_value": 0.2454756760443743,
+          "max_ns_per_value": 0.2562396971589559
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.17895555854298265,
+          "min_ns_per_value": 0.17439204221743734,
+          "max_ns_per_value": 0.1853658041662977
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.10884492981935327,
+          "min_ns_per_value": 0.1057986633025739,
+          "max_ns_per_value": 0.1106637749225939
+        },
+        "avx512/grouped32-authored": {
+          "median_ns_per_value": 0.09246488160619218,
+          "min_ns_per_value": 0.09144845528127418,
+          "max_ns_per_value": 0.09515519767199421
+        },
+        "avx512/grouped32-authored-u64-carrier": {
+          "median_ns_per_value": 0.06967036738048936,
+          "min_ns_per_value": 0.06899941870201211,
+          "max_ns_per_value": 0.07234518483900847
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped32-authored-u64-carrier",
+      "winner": "avx512/grouped32-authored-u64-carrier",
+      "grouped_over_materialized": 0.6400883118407005,
+      "grouped_over_tile": 0.3893165875803489
+    },
+    {
+      "width": 16,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.13731109117284074,
+          "min_ns_per_value": 0.13667724180715524,
+          "max_ns_per_value": 0.13901940194032053
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.12396904418945139,
+          "min_ns_per_value": 0.12336867919922075,
+          "max_ns_per_value": 0.12510284423828102
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.04835464827072867,
+          "min_ns_per_value": 0.04660978369157292,
+          "max_ns_per_value": 0.04899238936228464
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.15432037860654366,
+          "min_ns_per_value": 0.14911692802765916,
+          "max_ns_per_value": 0.1546678101656901
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.12337723058227523,
+          "min_ns_per_value": 0.12072356196412123,
+          "max_ns_per_value": 0.12409536686742782
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.04802655136173029,
+          "min_ns_per_value": 0.0478216749167541,
+          "max_ns_per_value": 0.048835435186347996
+        },
+        "avx512/grouped32-authored": {
+          "median_ns_per_value": 0.04966719761920486,
+          "min_ns_per_value": 0.04905009315574806,
+          "max_ns_per_value": 0.04997177946100809
+        },
+        "avx512/grouped32-authored-u64-carrier": {
+          "median_ns_per_value": 0.032974380285606696,
+          "min_ns_per_value": 0.03276805239758944,
+          "max_ns_per_value": 0.033950519803603814
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped32-authored-u64-carrier",
+      "winner": "avx512/grouped32-authored-u64-carrier",
+      "grouped_over_materialized": 0.6865864683318103,
+      "grouped_over_tile": 0.2672647143235836
+    },
+    {
+      "width": 16,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.151120891734774,
+          "min_ns_per_value": 0.14934587949868305,
+          "max_ns_per_value": 0.1532567171516278
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.1260492690476953,
+          "min_ns_per_value": 0.11922573323202805,
+          "max_ns_per_value": 0.12630882696694612
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.06233174110289716,
+          "min_ns_per_value": 0.06026602252281095,
+          "max_ns_per_value": 0.06256778133689953
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.1536265163587027,
+          "min_ns_per_value": 0.1533696307470306,
+          "max_ns_per_value": 0.1558482563479938
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.12716975726253096,
+          "min_ns_per_value": 0.12616740863168324,
+          "max_ns_per_value": 0.12765497815696145
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.061883501296858504,
+          "min_ns_per_value": 0.05975758293510709,
+          "max_ns_per_value": 0.06244003003395013
+        },
+        "avx512/grouped32-authored": {
+          "median_ns_per_value": 0.049098365295830705,
+          "min_ns_per_value": 0.047629315974351445,
+          "max_ns_per_value": 0.05071544096171937
+        },
+        "avx512/grouped32-authored-u64-carrier": {
+          "median_ns_per_value": 0.033684688617276734,
+          "min_ns_per_value": 0.03330010020615487,
+          "max_ns_per_value": 0.03462623355150862
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx2/authored-u64-carrier",
+      "best_grouped": "avx512/grouped32-authored-u64-carrier",
+      "winner": "avx512/grouped32-authored-u64-carrier",
+      "grouped_over_materialized": 0.5443242206947771,
+      "grouped_over_tile": 0.2672343034732785
+    },
+    {
+      "width": 17,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.18756624273338482,
+          "min_ns_per_value": 0.18649652144824347,
+          "max_ns_per_value": 0.19054828043163324
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.1458772463989865,
+          "min_ns_per_value": 0.14584021904871822,
+          "max_ns_per_value": 0.1486627464398156
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.09668797243838846,
+          "min_ns_per_value": 0.0963187033575995,
+          "max_ns_per_value": 0.09823542805325845
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.20673992836966565,
+          "min_ns_per_value": 0.2041476507514308,
+          "max_ns_per_value": 0.20755849662900028
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.14858461727884648,
+          "min_ns_per_value": 0.1468000277083756,
+          "max_ns_per_value": 0.15099712864065212
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.09638030865077875,
+          "min_ns_per_value": 0.09545540586197986,
+          "max_ns_per_value": 0.0968700795275553
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.1194025549095585,
+          "min_ns_per_value": 0.11783827480497912,
+          "max_ns_per_value": 0.12299327948787034
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.08750581702118637,
+          "min_ns_per_value": 0.08727097781268357,
+          "max_ns_per_value": 0.0898005551072919
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx2/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.9079221497230526,
+      "grouped_over_tile": 0.5998592596260738
+    },
+    {
+      "width": 17,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.20079657287663483,
+          "min_ns_per_value": 0.1942175582794339,
+          "max_ns_per_value": 0.20471675036196013
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.15657814338363604,
+          "min_ns_per_value": 0.15395831005042374,
+          "max_ns_per_value": 0.15662954021248163
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.10856323119906651,
+          "min_ns_per_value": 0.1061670436559459,
+          "max_ns_per_value": 0.10939465173223704
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.21041822718851588,
+          "min_ns_per_value": 0.20536988875265266,
+          "max_ns_per_value": 0.21049761237791587
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.149601063404016,
+          "min_ns_per_value": 0.14542081444550853,
+          "max_ns_per_value": 0.1505141116322935
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.10915474557823698,
+          "min_ns_per_value": 0.1045114562675929,
+          "max_ns_per_value": 0.11075246057065707
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.1208941412774624,
+          "min_ns_per_value": 0.11898745378343134,
+          "max_ns_per_value": 0.12418214111390785
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.08552386125420544,
+          "min_ns_per_value": 0.08540830052882774,
+          "max_ns_per_value": 0.08724744109615254
+        }
+      },
+      "best_materialized": "avx2/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.7877792537086978,
+      "grouped_over_tile": 0.5716795008551362
+    },
+    {
+      "width": 18,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.1995309001883029,
+          "min_ns_per_value": 0.18770694330233156,
+          "max_ns_per_value": 0.2013385608548976
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.15202224080423615,
+          "min_ns_per_value": 0.15107119379158987,
+          "max_ns_per_value": 0.15216419900797093
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.09584965673091343,
+          "min_ns_per_value": 0.09457841927521703,
+          "max_ns_per_value": 0.09793021927904963
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.2260677755802519,
+          "min_ns_per_value": 0.22493796393368637,
+          "max_ns_per_value": 0.22834402928143116
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.15916810439092793,
+          "min_ns_per_value": 0.1566287118769159,
+          "max_ns_per_value": 0.1591682404907716
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.09505742617658247,
+          "min_ns_per_value": 0.0947465988734385,
+          "max_ns_per_value": 0.09583316690291722
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.1301342678199914,
+          "min_ns_per_value": 0.1269938789715534,
+          "max_ns_per_value": 0.13394917335906653
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.09393976283773506,
+          "min_ns_per_value": 0.09335028295499778,
+          "max_ns_per_value": 0.09579964956350472
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx2/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.9882422301570506,
+      "grouped_over_tile": 0.6179343386912989
+    },
+    {
+      "width": 18,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.21604904461479968,
+          "min_ns_per_value": 0.211866462784705,
+          "max_ns_per_value": 0.21946978958929958
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.16260412348960887,
+          "min_ns_per_value": 0.15841957600814396,
+          "max_ns_per_value": 0.16302378350663804
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.11096625557161333,
+          "min_ns_per_value": 0.11055580394975001,
+          "max_ns_per_value": 0.11189493922007923
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.22257525650685078,
+          "min_ns_per_value": 0.2215561666369818,
+          "max_ns_per_value": 0.22565339841814938
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.15517184967550818,
+          "min_ns_per_value": 0.15072629690680622,
+          "max_ns_per_value": 0.1568508904592415
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.10934290900579001,
+          "min_ns_per_value": 0.10903167695422089,
+          "max_ns_per_value": 0.1116107359010015
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.13586104738431515,
+          "min_ns_per_value": 0.1347398981369503,
+          "max_ns_per_value": 0.13610195882400394
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.09291527848619317,
+          "min_ns_per_value": 0.09092458304502893,
+          "max_ns_per_value": 0.09296627758923973
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.849760440169678,
+      "grouped_over_tile": 0.5987895270984749
+    },
+    {
+      "width": 19,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.197302665909658,
+          "min_ns_per_value": 0.19645635707988685,
+          "max_ns_per_value": 0.20068835980342117
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.15255612007407232,
+          "min_ns_per_value": 0.15143563198709234,
+          "max_ns_per_value": 0.15497457730931327
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.09806565253963466,
+          "min_ns_per_value": 0.09790790362579567,
+          "max_ns_per_value": 0.09850657026735671
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.22224509146282959,
+          "min_ns_per_value": 0.22135916387527427,
+          "max_ns_per_value": 0.22453261973687175
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.15463273784057824,
+          "min_ns_per_value": 0.15386793184569744,
+          "max_ns_per_value": 0.15590872612768272
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.09792683177247256,
+          "min_ns_per_value": 0.09754299967395164,
+          "max_ns_per_value": 0.0994978867203739
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.13749464166998765,
+          "min_ns_per_value": 0.1361995951429789,
+          "max_ns_per_value": 0.13756749336805638
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.09253953112576148,
+          "min_ns_per_value": 0.09172098975696602,
+          "max_ns_per_value": 0.0964144321369048
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx2/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.9449864705188444,
+      "grouped_over_tile": 0.6065933708908544
+    },
+    {
+      "width": 19,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.21766478027189937,
+          "min_ns_per_value": 0.21733988163433457,
+          "max_ns_per_value": 0.22129850852413108
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.16762139061811604,
+          "min_ns_per_value": 0.164341986364656,
+          "max_ns_per_value": 0.17168084010265133
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.11044014863618742,
+          "min_ns_per_value": 0.10888578805252933,
+          "max_ns_per_value": 0.11313164279684168
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.21802075218303613,
+          "min_ns_per_value": 0.2119654748957827,
+          "max_ns_per_value": 0.21812466586173562
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.1574368895232355,
+          "min_ns_per_value": 0.15428120624776315,
+          "max_ns_per_value": 0.16410732656343188
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.11024839220969448,
+          "min_ns_per_value": 0.10488782457406372,
+          "max_ns_per_value": 0.11295733726696175
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.13762410252808685,
+          "min_ns_per_value": 0.13660776414288447,
+          "max_ns_per_value": 0.13821261096230567
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.09354102495635165,
+          "min_ns_per_value": 0.09281422711734409,
+          "max_ns_per_value": 0.0948269748248712
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.8484570439669985,
+      "grouped_over_tile": 0.5941493460625459
+    },
+    {
+      "width": 20,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.19532034860903344,
+          "min_ns_per_value": 0.18735859196410218,
+          "max_ns_per_value": 0.20172740443577203
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.14398470878179678,
+          "min_ns_per_value": 0.1399525983096672,
+          "max_ns_per_value": 0.14932667904111563
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.09495642439282984,
+          "min_ns_per_value": 0.09418352723011843,
+          "max_ns_per_value": 0.0950191431989297
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.20992832384274862,
+          "min_ns_per_value": 0.20839842723768529,
+          "max_ns_per_value": 0.21237025933530645
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.1560909310659547,
+          "min_ns_per_value": 0.15210161709564202,
+          "max_ns_per_value": 0.15677502960787945
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.09707164696402247,
+          "min_ns_per_value": 0.09330946949932668,
+          "max_ns_per_value": 0.0979080419977323
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.13119936481614228,
+          "min_ns_per_value": 0.13093097654809388,
+          "max_ns_per_value": 0.13203324224604532
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.08617660976358217,
+          "min_ns_per_value": 0.0850844300127451,
+          "max_ns_per_value": 0.08726833858811549
+        }
+      },
+      "best_materialized": "avx2/materialized",
+      "best_tile": "avx2/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.9075384874126471,
+      "grouped_over_tile": 0.5985122343385746
+    },
+    {
+      "width": 20,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.2100283029403762,
+          "min_ns_per_value": 0.20476791832032892,
+          "max_ns_per_value": 0.21168926730550322
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.16268480752918227,
+          "min_ns_per_value": 0.15675236119796973,
+          "max_ns_per_value": 0.16368549170770338
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.10962361433536312,
+          "min_ns_per_value": 0.1095283346347307,
+          "max_ns_per_value": 0.10986709304193586
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.20868678875074062,
+          "min_ns_per_value": 0.20320289813364742,
+          "max_ns_per_value": 0.2094199765828082
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.15215366582887335,
+          "min_ns_per_value": 0.15165363981374033,
+          "max_ns_per_value": 0.15705910853931107
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.10964790533291355,
+          "min_ns_per_value": 0.10468952090552534,
+          "max_ns_per_value": 0.1103507911979163
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.1283211117604929,
+          "min_ns_per_value": 0.1259563755086665,
+          "max_ns_per_value": 0.13071365967832566
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.08834163164256179,
+          "min_ns_per_value": 0.08778569227043596,
+          "max_ns_per_value": 0.09038336511845622
+        }
+      },
+      "best_materialized": "avx2/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.8058631543775322,
+      "grouped_over_tile": 0.5806079739276165
+    },
+    {
+      "width": 21,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.1972212638432788,
+          "min_ns_per_value": 0.18885115392993052,
+          "max_ns_per_value": 0.19939390310721836
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.15631246315624456,
+          "min_ns_per_value": 0.15187900480681762,
+          "max_ns_per_value": 0.157009577562138
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.098798393837429,
+          "min_ns_per_value": 0.0980580381678875,
+          "max_ns_per_value": 0.10070287256764368
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.2134148200276572,
+          "min_ns_per_value": 0.21101436623574682,
+          "max_ns_per_value": 0.21532677575630574
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.1635726367909911,
+          "min_ns_per_value": 0.1578759978229284,
+          "max_ns_per_value": 0.1649077896210244
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.09648025440127764,
+          "min_ns_per_value": 0.09595186991684627,
+          "max_ns_per_value": 0.09924436591550917
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.13389862815763326,
+          "min_ns_per_value": 0.13372333054368987,
+          "max_ns_per_value": 0.13478746374886605
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.09337154318500752,
+          "min_ns_per_value": 0.09067415751981059,
+          "max_ns_per_value": 0.09413778656391035
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx2/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.9677787829689953,
+      "grouped_over_tile": 0.5973390816039829
+    },
+    {
+      "width": 21,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.20993499137784788,
+          "min_ns_per_value": 0.20738591844172097,
+          "max_ns_per_value": 0.2148863684459677
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.16737861804794535,
+          "min_ns_per_value": 0.1643436792912199,
+          "max_ns_per_value": 0.16836560385847985
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.11304289139978733,
+          "min_ns_per_value": 0.11253045825063863,
+          "max_ns_per_value": 0.11476868068625566
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.2259012357042984,
+          "min_ns_per_value": 0.2224942621393272,
+          "max_ns_per_value": 0.2264989176716707
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.16134786797328693,
+          "min_ns_per_value": 0.15791486418977466,
+          "max_ns_per_value": 0.16195759977616342
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.1128397143085982,
+          "min_ns_per_value": 0.11155321951042346,
+          "max_ns_per_value": 0.11315473929507025
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.139175236156728,
+          "min_ns_per_value": 0.13377395823480187,
+          "max_ns_per_value": 0.13981598502753198
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.09183741826928994,
+          "min_ns_per_value": 0.08723049304106449,
+          "max_ns_per_value": 0.09337373962856206
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.8138749626583562,
+      "grouped_over_tile": 0.5691889172312753
+    },
+    {
+      "width": 22,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.20000248978324192,
+          "min_ns_per_value": 0.1988860241643195,
+          "max_ns_per_value": 0.20069580290926978
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.15555972945491997,
+          "min_ns_per_value": 0.1522826848633618,
+          "max_ns_per_value": 0.1580934218685151
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.09758248205970367,
+          "min_ns_per_value": 0.09669353414450557,
+          "max_ns_per_value": 0.09910430923192369
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.22287527963464812,
+          "min_ns_per_value": 0.2185391414658108,
+          "max_ns_per_value": 0.22686355317750762
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.15761781370096134,
+          "min_ns_per_value": 0.15470907361141856,
+          "max_ns_per_value": 0.1606160301100258
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.09790014961541495,
+          "min_ns_per_value": 0.09545570053259976,
+          "max_ns_per_value": 0.09953535310829113
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.13452486297791405,
+          "min_ns_per_value": 0.13409629321234617,
+          "max_ns_per_value": 0.1373627746632014
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.09243323175025853,
+          "min_ns_per_value": 0.09223374348317433,
+          "max_ns_per_value": 0.0925045250093504
+        }
+      },
+      "best_materialized": "avx2/materialized",
+      "best_tile": "avx2/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.947231816605211,
+      "grouped_over_tile": 0.5941976890429408
+    },
+    {
+      "width": 22,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.21130911179173195,
+          "min_ns_per_value": 0.2093579055749694,
+          "max_ns_per_value": 0.21797994766201492
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.16542505893155066,
+          "min_ns_per_value": 0.16037312169591078,
+          "max_ns_per_value": 0.1656208160896795
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.1102206670263895,
+          "min_ns_per_value": 0.1099335215527712,
+          "max_ns_per_value": 0.11027450620895901
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.2202210513570761,
+          "min_ns_per_value": 0.21994691755705498,
+          "max_ns_per_value": 0.22098036812772276
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.16267538621609723,
+          "min_ns_per_value": 0.15348836597825377,
+          "max_ns_per_value": 0.16361166177930506
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.10997812993895001,
+          "min_ns_per_value": 0.10835185080647138,
+          "max_ns_per_value": 0.11367824912590367
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.13347459361113728,
+          "min_ns_per_value": 0.1304758586600652,
+          "max_ns_per_value": 0.1340767149316346
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.09334973886111289,
+          "min_ns_per_value": 0.08998701805522677,
+          "max_ns_per_value": 0.09370944744812425
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.8488027475365538,
+      "grouped_over_tile": 0.5738405854288707
+    },
+    {
+      "width": 23,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.20069704075331168,
+          "min_ns_per_value": 0.19196567993669533,
+          "max_ns_per_value": 0.2040839037435437
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.15693587149379196,
+          "min_ns_per_value": 0.15162321743448398,
+          "max_ns_per_value": 0.1570965644676739
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.09834310341678393,
+          "min_ns_per_value": 0.09729259738782091,
+          "max_ns_per_value": 0.09947291464806728
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.22377946729963288,
+          "min_ns_per_value": 0.2186775450896181,
+          "max_ns_per_value": 0.2267429545998473
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.15728023450909462,
+          "min_ns_per_value": 0.155719049901056,
+          "max_ns_per_value": 0.16049486472090424
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.09902405655145917,
+          "min_ns_per_value": 0.09609786453929274,
+          "max_ns_per_value": 0.10183854330429724
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.1342436253550709,
+          "min_ns_per_value": 0.1310016656892618,
+          "max_ns_per_value": 0.1391082438351907
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.09315987385729338,
+          "min_ns_per_value": 0.09238655149031062,
+          "max_ns_per_value": 0.09319021989371894
+        }
+      },
+      "best_materialized": "avx2/materialized",
+      "best_tile": "avx2/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.9472944275764441,
+      "grouped_over_tile": 0.5936174627926196
+    },
+    {
+      "width": 23,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.2145519209493043,
+          "min_ns_per_value": 0.21252744273446247,
+          "max_ns_per_value": 0.21862173837387638
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.16676863797785751,
+          "min_ns_per_value": 0.1654673644750037,
+          "max_ns_per_value": 0.17005450752926726
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.11122475085954102,
+          "min_ns_per_value": 0.10887606469618645,
+          "max_ns_per_value": 0.11307191718424685
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.21528986717982204,
+          "min_ns_per_value": 0.21174760356491654,
+          "max_ns_per_value": 0.2180939955009628
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.15963303098343362,
+          "min_ns_per_value": 0.1589682495729834,
+          "max_ns_per_value": 0.16367198982720269
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.11273741987192464,
+          "min_ns_per_value": 0.1122539047482265,
+          "max_ns_per_value": 0.11488040664450204
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.13440290021405502,
+          "min_ns_per_value": 0.1306272183279047,
+          "max_ns_per_value": 0.13525042304533236
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.08995884448518453,
+          "min_ns_per_value": 0.08805946173106621,
+          "max_ns_per_value": 0.0908514298062829
+        }
+      },
+      "best_materialized": "avx2/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.8088023914640015,
+      "grouped_over_tile": 0.5635352779495885
+    },
+    {
+      "width": 24,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.13770629958461716,
+          "min_ns_per_value": 0.1371915689042424,
+          "max_ns_per_value": 0.14323530953327215
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.1324407118207768,
+          "min_ns_per_value": 0.1293605437820974,
+          "max_ns_per_value": 0.13329522611095337
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.07393420931244842,
+          "min_ns_per_value": 0.07348034368045758,
+          "max_ns_per_value": 0.07510688268832903
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.1570748047370249,
+          "min_ns_per_value": 0.15622251094069683,
+          "max_ns_per_value": 0.1592965976680391
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.12895152825977213,
+          "min_ns_per_value": 0.12704649264335255,
+          "max_ns_per_value": 0.12966052562437533
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.07459878849430986,
+          "min_ns_per_value": 0.07443721989445741,
+          "max_ns_per_value": 0.07642595696340179
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.08579180757388839,
+          "min_ns_per_value": 0.08370346427110081,
+          "max_ns_per_value": 0.08844982884414263
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.06271321956479632,
+          "min_ns_per_value": 0.06260487027277821,
+          "max_ns_per_value": 0.06272862639956822
+        }
+      },
+      "best_materialized": "avx2/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.8482300703287186,
+      "grouped_over_tile": 0.48633172798433916
+    },
+    {
+      "width": 24,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.1544732787543177,
+          "min_ns_per_value": 0.15033401224589524,
+          "max_ns_per_value": 0.1550498128308111
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.13146318582449304,
+          "min_ns_per_value": 0.13037125330308505,
+          "max_ns_per_value": 0.13269607317403434
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.0857954795296491,
+          "min_ns_per_value": 0.08562889583792678,
+          "max_ns_per_value": 0.08793112081452141
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.1560985081828365,
+          "min_ns_per_value": 0.1526805288350807,
+          "max_ns_per_value": 0.15708633186389145
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.12437791330880572,
+          "min_ns_per_value": 0.12399122451335416,
+          "max_ns_per_value": 0.1257819451422069
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.08883845286388271,
+          "min_ns_per_value": 0.08735874493959579,
+          "max_ns_per_value": 0.09280083010536659
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.09195712388508834,
+          "min_ns_per_value": 0.08969111174443249,
+          "max_ns_per_value": 0.09259105468686007
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.06572367793405495,
+          "min_ns_per_value": 0.06473736512869184,
+          "max_ns_per_value": 0.06628593975513537
+        }
+      },
+      "best_materialized": "avx2/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.7660505925762935,
+      "grouped_over_tile": 0.5284192039054079
+    },
+    {
+      "width": 25,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.19572668966525056,
+          "min_ns_per_value": 0.19332068071585679,
+          "max_ns_per_value": 0.19703070989258492
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.1533870865327429,
+          "min_ns_per_value": 0.15337849855708546,
+          "max_ns_per_value": 0.15629878668750885
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.10916893999399148,
+          "min_ns_per_value": 0.10779357811534426,
+          "max_ns_per_value": 0.11087249348602268
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.21307073454048608,
+          "min_ns_per_value": 0.21197125015314927,
+          "max_ns_per_value": 0.22095425000666963
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.14889181816901356,
+          "min_ns_per_value": 0.14830758843767608,
+          "max_ns_per_value": 0.15344135511735701
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.09698747126508621,
+          "min_ns_per_value": 0.09417609038532865,
+          "max_ns_per_value": 0.09876110169060323
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.1295345103442796,
+          "min_ns_per_value": 0.12583137570682237,
+          "max_ns_per_value": 0.13429026103359518
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.09688813534938559,
+          "min_ns_per_value": 0.0958495671024774,
+          "max_ns_per_value": 0.09793766694293372
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.9989757861051031,
+      "grouped_over_tile": 0.6507284049644935
+    },
+    {
+      "width": 25,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.21204207825253096,
+          "min_ns_per_value": 0.20936860205922997,
+          "max_ns_per_value": 0.21310406300104845
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.16513606060907185,
+          "min_ns_per_value": 0.16376728989881972,
+          "max_ns_per_value": 0.17038228529992894
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.12323317679260916,
+          "min_ns_per_value": 0.12177346134696643,
+          "max_ns_per_value": 0.12509425387186712
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.2180020598993513,
+          "min_ns_per_value": 0.21232762441290434,
+          "max_ns_per_value": 0.22072183161739534
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.15184744883933857,
+          "min_ns_per_value": 0.1478663794279195,
+          "max_ns_per_value": 0.1540391211350015
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.10939081877493836,
+          "min_ns_per_value": 0.10586432355689929,
+          "max_ns_per_value": 0.11228718546311121
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.1302930378336873,
+          "min_ns_per_value": 0.12754389835868443,
+          "max_ns_per_value": 0.13317287923447296
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.1012040864324769,
+          "min_ns_per_value": 0.10099280685649997,
+          "max_ns_per_value": 0.10177731775406414
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.9251606996442278,
+      "grouped_over_tile": 0.6664852600820141
+    },
+    {
+      "width": 26,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.20891571616425203,
+          "min_ns_per_value": 0.20741463580650965,
+          "max_ns_per_value": 0.21324620415220422
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.163163484243511,
+          "min_ns_per_value": 0.15992204707086446,
+          "max_ns_per_value": 0.16452613307273692
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.1115518975234879,
+          "min_ns_per_value": 0.11072318822039703,
+          "max_ns_per_value": 0.11162445922890733
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.23280423237452108,
+          "min_ns_per_value": 0.23222027549061222,
+          "max_ns_per_value": 0.2347996091638468
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.16090809170892936,
+          "min_ns_per_value": 0.1598154081198448,
+          "max_ns_per_value": 0.16105288787138733
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.11211207558482969,
+          "min_ns_per_value": 0.10999311599396705,
+          "max_ns_per_value": 0.11230407656366961
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.1406443347948952,
+          "min_ns_per_value": 0.137874375581566,
+          "max_ns_per_value": 0.1416902464434575
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.09718640425223345,
+          "min_ns_per_value": 0.09551668534986085,
+          "max_ns_per_value": 0.09727374050758615
+        }
+      },
+      "best_materialized": "avx2/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.8712214351330984,
+      "grouped_over_tile": 0.6039870538520608
+    },
+    {
+      "width": 26,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.21963858035551775,
+          "min_ns_per_value": 0.21655887203857055,
+          "max_ns_per_value": 0.2250153096373715
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.17752242771425233,
+          "min_ns_per_value": 0.17664303410449958,
+          "max_ns_per_value": 0.17764634102520105
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.12650614333780516,
+          "min_ns_per_value": 0.12531409696027154,
+          "max_ns_per_value": 0.12710030949216247
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.22649800728265865,
+          "min_ns_per_value": 0.22445762529351332,
+          "max_ns_per_value": 0.22811643805856455
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.15711962345757374,
+          "min_ns_per_value": 0.15297757802877512,
+          "max_ns_per_value": 0.1594405727682349
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.11960312988281221,
+          "min_ns_per_value": 0.11587222900389521,
+          "max_ns_per_value": 0.12305383300782388
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.14042761543653665,
+          "min_ns_per_value": 0.1371506352346064,
+          "max_ns_per_value": 0.14216520768118862
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.09911512564931504,
+          "min_ns_per_value": 0.09664939662473895,
+          "max_ns_per_value": 0.10016479603430885
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.828700099624722,
+      "grouped_over_tile": 0.6308258858326415
+    },
+    {
+      "width": 27,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.2047909003907965,
+          "min_ns_per_value": 0.2037630898239347,
+          "max_ns_per_value": 0.20659757703380177
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.16335402712409863,
+          "min_ns_per_value": 0.1589698179268548,
+          "max_ns_per_value": 0.16340210055127508
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.11187834352455439,
+          "min_ns_per_value": 0.10724184000648039,
+          "max_ns_per_value": 0.1139714142806129
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.2275004951235829,
+          "min_ns_per_value": 0.2217236686706908,
+          "max_ns_per_value": 0.229135512829238
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.16386506714355875,
+          "min_ns_per_value": 0.15977149916286013,
+          "max_ns_per_value": 0.16700542540695149
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.12124102537501488,
+          "min_ns_per_value": 0.12021648855473291,
+          "max_ns_per_value": 0.1230130258011307
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.13896684266891962,
+          "min_ns_per_value": 0.1372979495666404,
+          "max_ns_per_value": 0.13957832808434334
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.09654494761748039,
+          "min_ns_per_value": 0.09580755943565793,
+          "max_ns_per_value": 0.097788637060369
+        }
+      },
+      "best_materialized": "avx2/materialized",
+      "best_tile": "avx2/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.862945808598706,
+      "grouped_over_tile": 0.5910166361808518
+    },
+    {
+      "width": 27,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.22000561041704422,
+          "min_ns_per_value": 0.21843926643841952,
+          "max_ns_per_value": 0.2230007144182604
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.18213082726029586,
+          "min_ns_per_value": 0.1818543689875625,
+          "max_ns_per_value": 0.18700629652290598
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.12432071533202693,
+          "min_ns_per_value": 0.1232773620605393,
+          "max_ns_per_value": 0.12437102172851468
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.230500010450197,
+          "min_ns_per_value": 0.22972376690807225,
+          "max_ns_per_value": 0.23124768476317525
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.16140425418280557,
+          "min_ns_per_value": 0.15888661560227368,
+          "max_ns_per_value": 0.16216577763672205
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.13545621833760485,
+          "min_ns_per_value": 0.13144357582998134,
+          "max_ns_per_value": 0.13684183404451322
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.1424734065233157,
+          "min_ns_per_value": 0.14190110323365654,
+          "max_ns_per_value": 0.14328687825054534
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.10244791362197768,
+          "min_ns_per_value": 0.09955094184520409,
+          "max_ns_per_value": 0.10291124238148366
+        }
+      },
+      "best_materialized": "avx2/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.8240614876480326,
+      "grouped_over_tile": 0.6347287073731386
+    },
+    {
+      "width": 28,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.20692845341567137,
+          "min_ns_per_value": 0.20548878746137303,
+          "max_ns_per_value": 0.21167543483956197
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.16353966614005197,
+          "min_ns_per_value": 0.16302439770534183,
+          "max_ns_per_value": 0.16362285616792574
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.11106537468522595,
+          "min_ns_per_value": 0.11034444870176639,
+          "max_ns_per_value": 0.11221274437914183
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.21587784364171642,
+          "min_ns_per_value": 0.20962890457722763,
+          "max_ns_per_value": 0.22149322277746766
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.14433367630766367,
+          "min_ns_per_value": 0.14403537325925458,
+          "max_ns_per_value": 0.15082073651798508
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.10183330713568428,
+          "min_ns_per_value": 0.09857555452496156,
+          "max_ns_per_value": 0.10199448324587802
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.13690057572439873,
+          "min_ns_per_value": 0.1348084104385348,
+          "max_ns_per_value": 0.13793287852352876
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.09516261995862466,
+          "min_ns_per_value": 0.09484029906013107,
+          "max_ns_per_value": 0.0968346476016565
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.9344940534223101,
+      "grouped_over_tile": 0.6593237447633129
+    },
+    {
+      "width": 28,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.2210567337253722,
+          "min_ns_per_value": 0.21892151291769818,
+          "max_ns_per_value": 0.22330200522129193
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.17587343834562466,
+          "min_ns_per_value": 0.1742007807693883,
+          "max_ns_per_value": 0.1788308405238932
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.1290815422397213,
+          "min_ns_per_value": 0.12499093106510564,
+          "max_ns_per_value": 0.129662895268358
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.21942554054764063,
+          "min_ns_per_value": 0.21879176839736847,
+          "max_ns_per_value": 0.22369374522087432
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.15316476264313394,
+          "min_ns_per_value": 0.1462248023723141,
+          "max_ns_per_value": 0.15355586366477933
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.1138138421998413,
+          "min_ns_per_value": 0.11347305084345645,
+          "max_ns_per_value": 0.1142336534071539
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.13792672956686997,
+          "min_ns_per_value": 0.1323331869866541,
+          "max_ns_per_value": 0.13816739005323056
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.0958838417259092,
+          "min_ns_per_value": 0.09489810911348269,
+          "max_ns_per_value": 0.10114760228827116
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.8424620404041057,
+      "grouped_over_tile": 0.626017630108001
+    },
+    {
+      "width": 29,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.20385852039218177,
+          "min_ns_per_value": 0.20326651302883597,
+          "max_ns_per_value": 0.2083705277512534
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.15629358659671594,
+          "min_ns_per_value": 0.1559835915527179,
+          "max_ns_per_value": 0.15941157336514966
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.11377864679804146,
+          "min_ns_per_value": 0.11076437969836089,
+          "max_ns_per_value": 0.11396594137943858
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.2351589732209214,
+          "min_ns_per_value": 0.2289539619516513,
+          "max_ns_per_value": 0.2372759692895427
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.1647817432482668,
+          "min_ns_per_value": 0.1631327280784556,
+          "max_ns_per_value": 0.16743490879980014
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.11828883561160096,
+          "min_ns_per_value": 0.11766072160687543,
+          "max_ns_per_value": 0.1202377946994731
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.14166437549205557,
+          "min_ns_per_value": 0.14053690029530796,
+          "max_ns_per_value": 0.14458207712514523
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.09925574405262863,
+          "min_ns_per_value": 0.09797795427850356,
+          "max_ns_per_value": 0.09996416749746974
+        }
+      },
+      "best_materialized": "avx2/materialized",
+      "best_tile": "avx2/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.8723582750004826,
+      "grouped_over_tile": 0.6350596093794818
+    },
+    {
+      "width": 29,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.21222475105721153,
+          "min_ns_per_value": 0.2111730274709821,
+          "max_ns_per_value": 0.21403656165941531
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.1770640626801763,
+          "min_ns_per_value": 0.17438490720210084,
+          "max_ns_per_value": 0.18289114547785773
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.1266385852050772,
+          "min_ns_per_value": 0.12228419433594172,
+          "max_ns_per_value": 0.12673094116210856
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.22772552964381654,
+          "min_ns_per_value": 0.22116436683250096,
+          "max_ns_per_value": 0.22865405907380795
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.16250835066437244,
+          "min_ns_per_value": 0.15825634697485338,
+          "max_ns_per_value": 0.1634486862248039
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.12785786883667782,
+          "min_ns_per_value": 0.12700256871354604,
+          "max_ns_per_value": 0.13269153938222233
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.14504807941081016,
+          "min_ns_per_value": 0.13872506503094326,
+          "max_ns_per_value": 0.14675663969748606
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.10441758542675401,
+          "min_ns_per_value": 0.10042219108306108,
+          "max_ns_per_value": 0.10470396384134917
+        }
+      },
+      "best_materialized": "avx2/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.8245321539060253,
+      "grouped_over_tile": 0.6425367373422369
+    },
+    {
+      "width": 30,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.20143540508871743,
+          "min_ns_per_value": 0.1996639507108036,
+          "max_ns_per_value": 0.20531865361811918
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.15595966885712473,
+          "min_ns_per_value": 0.15406214092353263,
+          "max_ns_per_value": 0.1575355873963517
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.11442985896919504,
+          "min_ns_per_value": 0.11031827066712568,
+          "max_ns_per_value": 0.11524931818897285
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.22288190739050506,
+          "min_ns_per_value": 0.21959012094273314,
+          "max_ns_per_value": 0.23283336723228396
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.1675552231812309,
+          "min_ns_per_value": 0.1587155771617791,
+          "max_ns_per_value": 0.16797882681948015
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.11585364114307752,
+          "min_ns_per_value": 0.11311754089148711,
+          "max_ns_per_value": 0.12037195568123554
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.1360365819933726,
+          "min_ns_per_value": 0.1347907009878175,
+          "max_ns_per_value": 0.13639069788726754
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.09450709668543897,
+          "min_ns_per_value": 0.09202467382753307,
+          "max_ns_per_value": 0.09553340811929384
+        }
+      },
+      "best_materialized": "avx2/materialized",
+      "best_tile": "avx2/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.8258954221981576,
+      "grouped_over_tile": 0.6059713859229676
+    },
+    {
+      "width": 30,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.21625355006134875,
+          "min_ns_per_value": 0.21555746299470804,
+          "max_ns_per_value": 0.21779124264363736
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.18097077394954345,
+          "min_ns_per_value": 0.1748882036147127,
+          "max_ns_per_value": 0.1851839804667098
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.12463022031875153,
+          "min_ns_per_value": 0.1244540007746681,
+          "max_ns_per_value": 0.12758259445364645
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.23248948979939713,
+          "min_ns_per_value": 0.23063980563834388,
+          "max_ns_per_value": 0.23456387564485787
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.1647514216284955,
+          "min_ns_per_value": 0.16425606279320826,
+          "max_ns_per_value": 0.1656179427546202
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.1327180002681806,
+          "min_ns_per_value": 0.13167802300825335,
+          "max_ns_per_value": 0.13378842563898363
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.13193216661851914,
+          "min_ns_per_value": 0.13168859212369594,
+          "max_ns_per_value": 0.13521383092544112
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.1002829069369823,
+          "min_ns_per_value": 0.09930016637670191,
+          "max_ns_per_value": 0.10234787487509803
+        }
+      },
+      "best_materialized": "avx2/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.8046435822748362,
+      "grouped_over_tile": 0.6086922100321186
+    },
+    {
+      "width": 31,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.21031110230230027,
+          "min_ns_per_value": 0.2070226354660163,
+          "max_ns_per_value": 0.2109291150941362
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.11237713277741143,
+          "min_ns_per_value": 0.11125560907169064,
+          "max_ns_per_value": 0.11406434703945244
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.1725038278424241,
+          "min_ns_per_value": 0.1690172238480742,
+          "max_ns_per_value": 0.1726104939996285
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.21800763828898945,
+          "min_ns_per_value": 0.21518720672210817,
+          "max_ns_per_value": 0.22088710509359744
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.11837923526280755,
+          "min_ns_per_value": 0.11381868950858963,
+          "max_ns_per_value": 0.11919939965595225
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.15569782052824063,
+          "min_ns_per_value": 0.1555825810700069,
+          "max_ns_per_value": 0.1568076505842166
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.13130004261283199,
+          "min_ns_per_value": 0.1304775180005225,
+          "max_ns_per_value": 0.13426431435210803
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.09794755248174127,
+          "min_ns_per_value": 0.09516583680467143,
+          "max_ns_per_value": 0.09806785399873992
+        }
+      },
+      "best_materialized": "avx2/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.8715968281175919,
+      "grouped_over_tile": 0.6290874987808543
+    },
+    {
+      "width": 31,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.21657736804857383,
+          "min_ns_per_value": 0.21493710995053272,
+          "max_ns_per_value": 0.2206753344171863
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.12557220054528967,
+          "min_ns_per_value": 0.12501272149969506,
+          "max_ns_per_value": 0.12567907947811333
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.18009852377012173,
+          "min_ns_per_value": 0.17781332355477467,
+          "max_ns_per_value": 0.18459657044692898
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.22801526636486652,
+          "min_ns_per_value": 0.2208981605288277,
+          "max_ns_per_value": 0.23075623694635206
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.12946857666014389,
+          "min_ns_per_value": 0.12503024536134055,
+          "max_ns_per_value": 0.13075619506836
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.15980405119921878,
+          "min_ns_per_value": 0.15717721067434984,
+          "max_ns_per_value": 0.162734388833591
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.13349731849007462,
+          "min_ns_per_value": 0.1331955602659684,
+          "max_ns_per_value": 0.13542312776918164
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.10115828480080949,
+          "min_ns_per_value": 0.10032979723950079,
+          "max_ns_per_value": 0.10156276502173177
+        }
+      },
+      "best_materialized": "avx2/materialized",
+      "best_tile": "avx512/authored-u64-carrier",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.8055786580273003,
+      "grouped_over_tile": 0.6330145202307863
+    },
+    {
+      "width": 32,
+      "mask": "all",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.09229297919910645,
+          "min_ns_per_value": 0.08956996129387833,
+          "max_ns_per_value": 0.09343596140675157
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.11943027514737872,
+          "min_ns_per_value": 0.11840457170115602,
+          "max_ns_per_value": 0.1224249789681755
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.06696031151278904,
+          "min_ns_per_value": 0.06612512015217292,
+          "max_ns_per_value": 0.06851231563951544
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.12249901770129208,
+          "min_ns_per_value": 0.12229877238827348,
+          "max_ns_per_value": 0.12856055585467935
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.11958718145345248,
+          "min_ns_per_value": 0.11935280915493135,
+          "max_ns_per_value": 0.12461434362852915
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.06661219332164646,
+          "min_ns_per_value": 0.06563966901227639,
+          "max_ns_per_value": 0.06881171444650769
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.06317823173306827,
+          "min_ns_per_value": 0.06220996008277626,
+          "max_ns_per_value": 0.06415428139701614
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.05656913386992593,
+          "min_ns_per_value": 0.05656879294359047,
+          "max_ns_per_value": 0.05695594448150495
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx2/authored",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.8492309147782271,
+      "grouped_over_tile": 0.6129299797321269
+    },
+    {
+      "width": 32,
+      "mask": "prefilter75",
+      "plans": {
+        "avx2/authored": {
+          "median_ns_per_value": 0.10528120607579114,
+          "min_ns_per_value": 0.10518469095272695,
+          "max_ns_per_value": 0.10596873049868492
+        },
+        "avx2/authored-u64-carrier": {
+          "median_ns_per_value": 0.12383239013672061,
+          "min_ns_per_value": 0.12115066406250333,
+          "max_ns_per_value": 0.12396526611327917
+        },
+        "avx2/materialized": {
+          "median_ns_per_value": 0.08000129487024898,
+          "min_ns_per_value": 0.07780576874334681,
+          "max_ns_per_value": 0.08034698248697983
+        },
+        "avx512/authored": {
+          "median_ns_per_value": 0.12684093872070493,
+          "min_ns_per_value": 0.12386391601561589,
+          "max_ns_per_value": 0.12854555786132038
+        },
+        "avx512/authored-u64-carrier": {
+          "median_ns_per_value": 0.1234789761992161,
+          "min_ns_per_value": 0.12284983905368314,
+          "max_ns_per_value": 0.1260637722352827
+        },
+        "avx512/materialized": {
+          "median_ns_per_value": 0.0791084471203008,
+          "min_ns_per_value": 0.07789945060390481,
+          "max_ns_per_value": 0.08068490914668894
+        },
+        "avx512/grouped16-authored": {
+          "median_ns_per_value": 0.06265004407737329,
+          "min_ns_per_value": 0.06179626517466986,
+          "max_ns_per_value": 0.06396406103823714
+        },
+        "avx512/grouped16-authored-u64-carrier": {
+          "median_ns_per_value": 0.05814265738956798,
+          "min_ns_per_value": 0.056743073015362765,
+          "max_ns_per_value": 0.05822406504259613
+        }
+      },
+      "best_materialized": "avx512/materialized",
+      "best_tile": "avx2/authored",
+      "best_grouped": "avx512/grouped16-authored-u64-carrier",
+      "winner": "avx512/grouped16-authored-u64-carrier",
+      "grouped_over_materialized": 0.7349740704826379,
+      "grouped_over_tile": 0.5522605558651326
+    }
+  ],
+  "limits": [
+    "Dense8192-value complete groups, all/75% selection; three sequential repetitions per case.",
+    "AVX2/AVX512 labels are implementation families within one full-feature binary.",
+    "Within-run alternatives; no attribution of time differences to individual hardware mechanisms.",
+    "New runtime materializer and short-output policy are separate experiments, not this baseline."
+  ]
+}

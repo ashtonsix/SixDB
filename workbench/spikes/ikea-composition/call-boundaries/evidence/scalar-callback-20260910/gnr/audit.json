@@ -1,0 +1,134 @@
+{
+  "status": "passed",
+  "job": "20260910T200721Z-c468c2ed",
+  "capture_digest": "822f7773841dd5186863b68ccce38ed11c2060199ccaf2703a3cdc3a982f9d4d",
+  "source_files": 486,
+  "production_delta": {
+    "ikea/include/ikea/seriespack/operations.h": {
+      "before": "687ccbf758a13e927daa6aba703a6ea6db7b6d5953881fb84729665c0d5caf64",
+      "after": "01c7352f820050282e077297f6849061de448a1126105af77f5aeccad3516770"
+    },
+    "ikea/src/seriespack/native.cpp": {
+      "before": "1abf641b246af9c075e8234a9e1b3390c412a8410af9353d84d5c52cd57350da",
+      "after": "e5922e2ef425cba6539069bedda9c24f7c076a2ed2de0e86beed403f3c8e73a0"
+    },
+    "ikea/src/seriespack/physical.cpp": {
+      "before": "4acdd3fa869f1cade98f0d47cf4cf29f6e619b57c8c9edacb831005b6ce2678e",
+      "after": "71cec80cad1af901b797e722275e059812f74f51ed0e35a7df0ef792fe09d88f"
+    }
+  },
+  "before_capture_manifest_tar_match": true,
+  "candidate_differs_exactly_three_production_sources": true,
+  "binaries": {
+    "after": {
+      "path": "/opt/sixdb/source/build/scalar-range-abi/granite-rapids/avx512/after-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+      "sha256": "83b2747d6e27656bd7af63a215202033644b4ac085178e7ed498cb3467c85ecd"
+    },
+    "before": {
+      "path": "/opt/sixdb/source/build/scalar-range-abi/granite-rapids/avx512/before-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+      "sha256": "1c782152cf0d9e2f87848fa42eb33fc5a78960ed9694c0529d53f7ef092869cc"
+    }
+  },
+  "fresh_object_counts": {
+    "before": 33,
+    "after": 33
+  },
+  "required_fresh_callback_caller_objects": [
+    "ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/native.cpp.o",
+    "ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/physical.cpp.o",
+    "ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/view.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_bench.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_composition_bench.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_casing_bench.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_points.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_predecessor.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_range_regions.dir/seriespack_range_regions.cpp.o"
+  ],
+  "all_callbacks_callers_logged_fresh": true,
+  "all_checks_own_variant_build": true,
+  "all_commands_return_zero": true,
+  "inventories_exactly_match_complete_registration": true,
+  "samples": 7116,
+  "case_counts": {
+    "bulk": 218,
+    "resident": 375
+  },
+  "receipt_sha256": "071ba8b4af56b548fc0c16e5c088b330334e235f89ce0861967e8cef3c2ef7cf",
+  "result_file_hashes": {
+    "0-before-bulk.json": "95d1b213a185e3b3f0dcc0da7ba60d6acaa78339329219e9d1f87b4bb1c6bd80",
+    "0-before-bulk.txt": "674572947cf593c3939d98909843573c3c0a9251d4c3200467cb1a07f73b5921",
+    "0-before-resident.json": "d471935545cb7548843bf8fd9e4663b717addc93cd3aed31da54f9f5a6932091",
+    "0-before-resident.txt": "bd0d9a91772b0646eb06e3f2d1bdfa980945874852fca4c853e38f5f63ac6c0d",
+    "1-after-bulk.json": "83f54103768cc3d6f52ed66cba4f3fb33c80fb656d030432bf075558f5ab970f",
+    "1-after-bulk.txt": "349993f0ffd8fcf0545f3ebddeb337959ab46780f2f352bd96de314c728f7998",
+    "1-after-resident.json": "e0a21a67d9f17452df8a924eae266a969cfd2f12fb7061ca7c157af318fc915b",
+    "1-after-resident.txt": "b7dc5b3cc6fd5f3921dddfbb23fc7bce9007ce23520bfa037fb090faefe64b9a",
+    "2-after-bulk.json": "5ba9a84c77849a79f7b268824875e1eca4aa691b89ba49a70a801644e35570fe",
+    "2-after-bulk.txt": "a921ef124d5269cd25afd6a27e7f93569490c3d84107a3dc20e7d14ce0f4535a",
+    "2-after-resident.json": "0380afd93f037805f8b2dd845b2c13cf7705d1f3d075b16d323ff82a1af7c7af",
+    "2-after-resident.txt": "9ac6e65458e4f7c06c53080c8ffcd98a82d0aca6384d8aaf9eac4005c3450ded",
+    "3-before-bulk.json": "5d3fa73ca9b35526dae70392c095739f4b7c4d71070aad3ca553df83293e9adc",
+    "3-before-bulk.txt": "dc54b8521ce2ca712e9a55d86b25b76dcf3a75fa5751aafabd3b378f210c7eb7",
+    "3-before-resident.json": "900d48db99daad9e671da51948c3cd0310ef68d1971c9e0f05ee82c53e1bec08",
+    "3-before-resident.txt": "5851f9e8d4f87a2ad3767f26f315ee8a71313d73829fa7af5654fce0d707fa33",
+    "after-assembly.txt": "aefbb8da61459b51820c93ee5b42da4067577664c3286ea8d593659a6250b5dd",
+    "after-bench": "83b2747d6e27656bd7af63a215202033644b4ac085178e7ed498cb3467c85ecd",
+    "after-build.txt": "aa9a4493d6044fe00332d2848528fb61e56d31ebf6b9f3d1b260111764bcd04c",
+    "after-bulk-inventory.txt": "26f563591c5bd0ac75375e1753e618a615cb4175d5757ad8bf1a253738a6ccee",
+    "after-compile-commands.json": "74be810b7ce71c64b0a3a3a5f9496af962418a5f8dac9fd29f0488534957f3fd",
+    "after-complete-inventory.txt": "8e00a36fded3071b236d38579ecc6e9bbfcf51e1e1e5acae75e56261151c20aa",
+    "after-configure.txt": "28e2b63369ec27e151895c52a29cc57b98cfb0cc44701a5f474f57dd9073ffa7",
+    "after-materialized-avx2.txt": "57dfbd84165799b534b9d8510476c81c469d04edf1211e83511a2ee90b2a51ef",
+    "after-materialized-avx512.txt": "7c4294eec77b99b628ab2c2b72cd82a77f4efaf936531a78703a8cdf0ad27b89",
+    "after-ninja-log": "920b95152d05847d2ac60e9555536282bdba15697e398e904b13cd3e02862341",
+    "after-operations.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "after-physical_operations.txt": "f6107b387b0deacf8e1334a037c86fb4d3ce4146481a41be11a352815d7bf13c",
+    "after-range_bounds.txt": "319ebcc5f982fb5a9bc194a0c3677ce02ec3f77566055ffa9ea07c22b266134c",
+    "after-resident-inventory.txt": "8f6de3b18c0c35030d7acee68dfaabd4c03e46a37cff202ed1d9e4bd69a30cf2",
+    "after-size.txt": "1abd114a5c0ac0dacbb39bc21baa74fbce614483da8ecbf31f4b737e982b4e72",
+    "before-assembly.txt": "b330f39cf0bf61a286da1c00b2fc9dbdf974e15806fbedcd05a8756dd3c477e1",
+    "before-bench": "1c782152cf0d9e2f87848fa42eb33fc5a78960ed9694c0529d53f7ef092869cc",
+    "before-build.txt": "aa9a4493d6044fe00332d2848528fb61e56d31ebf6b9f3d1b260111764bcd04c",
+    "before-bulk-inventory.txt": "26f563591c5bd0ac75375e1753e618a615cb4175d5757ad8bf1a253738a6ccee",
+    "before-compile-commands.json": "2660bb69e2b4cd814129bb9f4553219c4ad9a3740b647fde15611997c1a54c03",
+    "before-complete-inventory.txt": "8e00a36fded3071b236d38579ecc6e9bbfcf51e1e1e5acae75e56261151c20aa",
+    "before-configure.txt": "d21e0f8bef5b21dbbff14cb7d4a2c900d3404b3838cb859487cb23ccb812638d",
+    "before-materialized-avx2.txt": "57dfbd84165799b534b9d8510476c81c469d04edf1211e83511a2ee90b2a51ef",
+    "before-materialized-avx512.txt": "7c4294eec77b99b628ab2c2b72cd82a77f4efaf936531a78703a8cdf0ad27b89",
+    "before-ninja-log": "892d94e2d685121ebe7a9515a5ae5f3ebd187362ff353eb9825a57e993ab8075",
+    "before-operations.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "before-physical_operations.txt": "f6107b387b0deacf8e1334a037c86fb4d3ce4146481a41be11a352815d7bf13c",
+    "before-range_bounds.txt": "319ebcc5f982fb5a9bc194a0c3677ce02ec3f77566055ffa9ea07c22b266134c",
+    "before-resident-inventory.txt": "8f6de3b18c0c35030d7acee68dfaabd4c03e46a37cff202ed1d9e4bd69a30cf2",
+    "before-size.txt": "3dd4914345e281de214d9a020bdc8e82779d683cf52e954965067069c0415e50",
+    "cases.json": "459347d6b2e744194687b97bd59a4fd0f3507f576c9ab53f9315deb6eeeaf267",
+    "compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "plan.json": "a1fd6c74f14c85e1bb7a3c4543323c3b535169e2c09e0266fa120e27e0719948",
+    "receipt.json": "071ba8b4af56b548fc0c16e5c088b330334e235f89ce0861967e8cef3c2ef7cf",
+    "source-after.json": "5bef679e4f6030ea9f77152394ac883ef8644320937512e1590202480ba575e0",
+    "source-before.json": "782a6b182b51bb8fd81e7f841eb920fd04b3abdb8c9ee99ee2bf8c98f8dfc59e"
+  },
+  "source_stability_limit": "source-before/after identify variants, rehashed by wrapper at completion; no raw libraries returned for independent rehash",
+  "config": {
+    "flags": [
+      "-mavx512vbmi",
+      "-mavx512vbmi2",
+      "-mgfni"
+    ],
+    "march": "x86-64-v4",
+    "profile": "avx512",
+    "tune": "granite-rapids"
+  },
+  "guard_outputs": {
+    "before-operations": "",
+    "before-physical_operations": "SeriesPack public wire (scalar): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed\nSeriesPack public wire (avx2): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed\nSeriesPack public wire (avx512): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed\n",
+    "before-range_bounds": "SeriesPack range bounds (scalar): 206 descriptions, 3737352 exact guarded ranges passed\nSeriesPack range bounds (avx2): 206 descriptions, 3737352 exact guarded ranges passed\nSeriesPack range bounds (avx512): 206 descriptions, 3737352 exact guarded ranges passed\n",
+    "before-materialized-avx2": "Admitted regions target2: 20 descriptions, 400 protected placements, 6744 original-coordinate queries passed\n",
+    "before-materialized-avx512": "Admitted regions target3: 20 descriptions, 400 protected placements, 6744 original-coordinate queries passed\n",
+    "after-operations": "",
+    "after-physical_operations": "SeriesPack public wire (scalar): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed\nSeriesPack public wire (avx2): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed\nSeriesPack public wire (avx512): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed\n",
+    "after-range_bounds": "SeriesPack range bounds (scalar): 206 descriptions, 3737352 exact guarded ranges passed\nSeriesPack range bounds (avx2): 206 descriptions, 3737352 exact guarded ranges passed\nSeriesPack range bounds (avx512): 206 descriptions, 3737352 exact guarded ranges passed\n",
+    "after-materialized-avx2": "Admitted regions target2: 20 descriptions, 400 protected placements, 6744 original-coordinate queries passed\n",
+    "after-materialized-avx512": "Admitted regions target3: 20 descriptions, 400 protected placements, 6744 original-coordinate queries passed\n"
+  }
+}

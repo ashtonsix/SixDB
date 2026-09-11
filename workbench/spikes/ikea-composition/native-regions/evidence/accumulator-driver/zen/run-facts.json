@@ -1,0 +1,22 @@
+{
+  "job": "20260910T183752Z-b4812362",
+  "source_digest": "3e10e1faeb7a0255d112499b94e192e43425460cfc8fba19cbca98cf3bd7888f",
+  "expected_sources": {
+    "workbench/spikes/ikea-composition/validation/seriespack_composition_bench.cpp": "fd688fc385cdfe756f321468dc24c5be9c4c2d6d157f93e4f401fc890cd59f1b",
+    "workbench/spikes/ikea-composition/validation/diagnostics/reduction_carrier/check.cpp": "75b1dcb3a7b279dd9a1d31f970c708f1fa4b7daf891dac34b2108ebc34d4cdb9",
+    "ikea/src/seriespack/native.cpp": "1abf641b246af9c075e8234a9e1b3390c412a8410af9353d84d5c52cd57350da",
+    "ikea/src/seriespack/physical.cpp": "4acdd3fa869f1cade98f0d47cf4cf29f6e619b57c8c9edacb831005b6ce2678e"
+  },
+  "production_library_sha256": "4e079e8e78ecf6e46154af4730a4f8adcc95be38e3d72e1b701f169b484afecc",
+  "cases": 56,
+  "groups": 8,
+  "repetitions": 5,
+  "minimum_seconds": 0.2,
+  "cpu": 0,
+  "compiler": "Clang 21.1.8",
+  "profile": "x86-64-v4 + AVX512VBMI + AVX512VBMI2 + GFNI",
+  "tune": "znver5",
+  "checks": "PASS: original carrier checks and K12/K31 unroll4-acc1/acc2/acc4 cutoff+modulo-bank checks",
+  "units": "CPU ns/original value, 8192 positions per operation; all compared groups share predicate and selected extent.",
+  "scope": "Only Local12/31. Original authored, direct, materialized and one-tile carrier controls plus fixed four-tile unrolling with 1/2/4 carriers. Hardware timings do not establish one accumulator count as universally best; these changes are not promoted into the production module."
+}

@@ -1,0 +1,45 @@
+{
+  "scope": "Local ARM generic O2, separate checked-point overlay; no performance measurement",
+  "symbol_deltas": [
+    {
+      "name": "ikea::seriespack::get(ikea::seriespack::basic_view<std::byte const>, unsigned long)",
+      "before": 128,
+      "after": 96,
+      "delta": -32
+    }
+  ],
+  "linked": [
+    {
+      "variant": "before",
+      "program": "ikea_seriespack_operations_check",
+      "text": 1632632,
+      "rodata": 11600,
+      "eh_frame": 133496,
+      "eh_frame_hdr": 28084
+    },
+    {
+      "variant": "after",
+      "program": "ikea_seriespack_operations_check",
+      "text": 1632600,
+      "rodata": 11600,
+      "eh_frame": 133488,
+      "eh_frame_hdr": 28084
+    },
+    {
+      "variant": "before",
+      "program": "ikea_seriespack_physical_operations_check",
+      "text": 1617816,
+      "rodata": 4632,
+      "eh_frame": 134104,
+      "eh_frame_hdr": 28116
+    },
+    {
+      "variant": "after",
+      "program": "ikea_seriespack_physical_operations_check",
+      "text": 1617784,
+      "rodata": 4632,
+      "eh_frame": 134096,
+      "eh_frame_hdr": 28116
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "job": "20260910T180439Z-48fa4114",
+  "source_digest": "95d879280aa283e48992cd2b2518b14f1e1d5f8cf86ada6608e0ec3621436f17",
+  "physical_base": "db9238fea0ea2294b974c34a63447571ec068c2aedf0310f29ec5564c5da8d00",
+  "overlay_sha256": {
+    "workbench/spikes/ikea-composition/validation/seriespack_composition_bench.cpp": "0c519dc7c3b05e53b2ea484b229e9294f7e98f050461f24db2956a24c40f57f9",
+    "workbench/spikes/ikea-composition/validation/diagnostics/reduction_carrier/carrier.h": "4f53099b220d4f741fc9215798215d9a778a837e6244ae8a41e0fe5abb58b777",
+    "workbench/spikes/ikea-composition/validation/diagnostics/reduction_carrier/check.cpp": "348f9aa7fff6e8e74acbb062c516cbb516bbab82a268c51ffbc7b011b5c81512",
+    "workbench/spikes/ikea-composition/validation/diagnostics/reduction_carrier/README.md": "b8c23763a5b3075c87babd995c36f634212702da8ad5d627feb2c39f7bcc00d8"
+  },
+  "library_sha256": "79b3e1e7c5540dc1d8f0de6ea2348b23e30314a587ff77b9e6e76423328f93c8",
+  "sample_sha256": "138e4a26efbe19c634a250b425e3eb9c70fb4db517f0a3bc21cfcbb3c4d1d0a2",
+  "csv_sha256": "46d19b2b5ce3bc9b0af8b12d46b09b697a73159b3508c81e88204aa328e8b312",
+  "cases": 64,
+  "repetitions": 5,
+  "minimum_seconds": 0.2,
+  "cpu": 0,
+  "profile": "armv8-a NEON",
+  "tune": "neoverse-v2",
+  "compiler": "Clang 21.1.8",
+  "checks": "Standalone carrier cutoff/overflow checks and benchmark fixture oracles pass. The unchanged physical library passed its preceding coherent aggregate checks.",
+  "units": "CPU ns/original value. Ratios greater than 1 are slower. Five sequential repetitions, 8192 original positions per operation.",
+  "limits": "Single worker and code closure; no significance inference. The scalar-return, direct, materialized and carrier plans share meaning. This does not establish public carrier ABI, cross-ISA ranking or a preferred plan for every width/mask.",
+  "context": {
+    "date": "2026-09-10T18:05:14+00:00",
+    "host_name": "ip-172-31-28-114",
+    "executable": "build/validation/seriespack/neoverse-v2/neon/Release/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+    "num_cpus": 2,
+    "mhz_per_cpu": 2000,
+    "cpu_scaling_enabled": false,
+    "aslr_enabled": true,
+    "caches": [
+      {
+        "type": "Data",
+        "level": 1,
+        "size": 65536,
+        "num_sharing": 1
+      },
+      {
+        "type": "Instruction",
+        "level": 1,
+        "size": 65536,
+        "num_sharing": 1
+      },
+      {
+        "type": "Unified",
+        "level": 2,
+        "size": 2097152,
+        "num_sharing": 1
+      },
+      {
+        "type": "Unified",
+        "level": 3,
+        "size": 37748736,
+        "num_sharing": 2
+      }
+    ],
+    "load_avg": [
+      0.603027,
+      0.770996,
+      0.589355
+    ],
+    "library_version": "v1.9.4",
+    "library_build_type": "release",
+    "json_schema_version": 1,
+    "affinity_cpu": "0",
+    "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+    "bulk_values": "8192",
+    "calico_target": "neon",
+    "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+    "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+    "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+    "predecessor_target": "neon",
+    "requested_encoded_resident_bytes": "134217728",
+    "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+  }
+}

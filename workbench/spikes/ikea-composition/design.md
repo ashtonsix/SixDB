@@ -1,10 +1,11 @@
 # Current composition design
 
 This is the maintained design direction from the completed basic-data-structure
-probes, consolidated through 2026-09-10. Those probes support implementing
-Ikea's basic parts. The [initial implementation sketch](../../../ikea/implementation.md)
-develops that scope with the [semantic and integration seams](semantics-and-integration.md)
-in mind; their open questions need not all be settled first. Concrete APIs
+probes and subsequent SeriesPack work, consolidated through 2026-09-11. Those
+probes support implementing Ikea's basic parts. The [SeriesPack introduction](../../../ikea/seriespack.md)
+explains the implemented component; its [extension guide](../../../ikea/seriespack/extending.md)
+maps current implementation work. The [semantic and integration seams](semantics-and-integration.md)
+remain open without blocking that work. Concrete APIs
 develop with their callers; the
 [owned probes](README.md#evidence-by-question) supply evidence and limits, not
 class hierarchies or templates to copy wholesale.
@@ -94,7 +95,7 @@ These are starting responsibilities, not a mandatory registration framework.
 | --- | --- | --- |
 | Compose existing operations | Write one recordable function; optional named packaging delegates to it. Keep semantic descriptions independent of native headers. | [Shared authoring](probes/ikea-blocks/composition/README.md); arbitrary C++ tracing is not implied. |
 | Add a native kernel | Supply an explicit target body, operand/result meaning, applicability, admitted accesses and effects. Associate compatible wrappers with the same logical work. | [ABI controls](probes/ikea-blocks/abi/README.md); exact wrapper/carrier families remain contextual. |
-| Attach data and select execution | Admit a source once, retain its owner and validity facts, then bind an operation and invoke it cheaply. Bind each operand's representation and reader independently. | [Masked algebra](probes/ikea-heterogeneous/operations/README.md) implements this split; the original range probe still revalidates on preparation. |
+| Attach data and select execution | Admit a source once, keep its owner and validity facts live in the enclosing invocation, then bind an operation and invoke it cheaply. Bind each operand's representation and reader independently. | [Masked algebra](probes/ikea-heterogeneous/operations/README.md) implements this split; SeriesPack views/endpoints borrow storage and do not themselves retain an owner. The original range probe still revalidates on preparation. |
 | Substitute a reader or region | Preserve results, coordinates, effects and required observations. Establish extra implementation requirements in the binding or an explicit adapter. | Packed metadata readers vary over unchanged bytes; general nested discovery and rewrite admission remain open. |
 | Choose a compilation boundary | Keep useful combinations inline inside curated regions; share independently compiled work where the tradeoff pays. Do not equate semantic nodes with calls. | [Granularity investigation](operation-granularity.md); majority-CPS build economics across many recipes remain unmeasured. |
 | Add a physical child or transform | Expose its physical description, placement and dependencies separately from operation expansion. Re-establish enclosing guarantees after replacement. | [Body/tail composition](probes/ikea-integers/composition/README.md), [parent locality witness](probes/ikea-heterogeneous/locality.md); deeper transformed and variable-width compositions remain open. |
@@ -136,6 +137,99 @@ stack pressure but lost throughput in the affected dense/mixed cases. The
 [grain comparison](probes/ikea-heterogeneous/operations/measurements.md#native-grain-the-smaller-kernel-loses-throughput-here)
 supports the local default, not a universal grain or a rule based on spill count.
 
+SeriesPack makes further choices concrete: physical packet size, native working
+width, output-store width and reduction finalization need not move together.
+[Grouping and deferred sums](native-regions/spectrum.md) improve
+the same authored consumer without changing its representation; selected
+[short output stores](../seriespack-range-execution/stores.md) remove large
+losses while keeping the native working values. An admitted read window can
+also exceed the selected logical output, provided a
+[partial sink](native-regions/partial-materialization.md) preserves original
+coordinates and exact writes. These are contextual implementation choices,
+not reasons to specialize the semantic operation or introduce a second graph.
+
+The [BEC length-child substitution](../bec-packed-metadata/findings.md) puts a
+current SeriesPack native region inside an existing metadata/body consumer.
+Admission retains the owner, child placement and true logical length; the
+enclosing cursor supplies required checkpoint predecessors and retains native
+metadata lanes across body operations. On Zen this broadly preserves the specialized
+provider's whole-count performance and modestly improves on ordinary
+materialization, with larger gains at the partial logical tail. The much larger
+isolated refill gain reinforces measuring the enclosing operation. This is
+evidence for composing a known-geometry child; schema-driven discovery and
+arbitrary nested rewrites remain open.
+
+The [shared head-projection experiment](../seriespack-head-projection/findings.md) raises
+the corresponding output question. Its shared pass improves dense encodes but
+regresses some independently strided head placements. Producing an owned group
+once while each child sink maps that group through its own placement is a
+promising response; it has not been measured. Sharing computation need not
+require all consumers to adopt the same contiguous traversal region.
+
+Driver boundaries also have to preserve facts already established about the
+work. The [ordinary-reader integration](../seriespack-range-execution/integration.md)
+improves many shifted reads but shows how combining edge traversal and complete
+runs can add register preservation and return-side work to previously cheap
+calls, even without vector spills. Separating those paths recovers much of the
+complete-request loss; tiny suffixes remain costly, and generated Local edge
+code still tests larger regions that the caller has already excluded. Making
+those facts useful to shared expression evaluation remains an implementation
+question. Compare ordinary calls and code/build cost when selecting a boundary;
+a fast body or a diagnostic with stronger admissions does not settle it.
+
+## Performance and maintenance
+
+Repeatedly good inner kernels becoming expensive ordinary operations directs
+attention to the shared boundary and traversal. Prefer a simple driver for a
+whole admitted family, removing general machinery that its hot calls do not
+need. Establish useful facts at admission or binding and preserve them through
+shared native bodies and expression evaluation. This should reduce the context
+a kernel author must manage while preserving arbitrary legal ranges, independent
+child placement, exact output and effect obligations. The
+[ordinary-reader experiments](../seriespack-range-execution/integration.md)
+show why more dispatch paths and good isolated bodies are insufficient.
+
+The retained [decode](call-boundaries/decoder.md) and
+[encode](call-boundaries/encoder.md) callback changes demonstrate
+a useful separation: checked facades keep capacity and validation obligations,
+while trusted endpoints receive only the arguments their work consumes. Removing
+unused capacity from those boundaries eliminates caller aggregate copies across
+whole operation families without changing the wire or the ordinary facade.
+The measured effect varies by caller and machine; that evidence supports the
+simplification without assigning every timing change to an additive ABI cost.
+
+The [checked-point layout comparison](../executable-placement/evidence/checked-point-layout-20260911/summary.md)
+also shows that unchanged kernel and timed caller instructions can have different
+costs after relinking. Restoring their earlier placement removes much of one
+control regression while preserving the simpler checked call's benefit. Cost
+evidence therefore belongs to the selected executable and caller context;
+semantic equivalence can remain valid when a cost observation needs revisiting.
+
+Assess primitive cost together with useful compound consumers and maintenance
+cost. A modest residual primitive gap can be acceptable when native composition
+recovers more than it costs. Ashton's example of roughly 40% is an illustration,
+not a universal cutoff, a performance target or evidence of that recovery.
+Compare equivalent compound work with the strongest practical alternative,
+including materialization where useful; count traversal, masks, joins, output
+and required effects. The [current all-profile composition review](native-regions/evidence/delivery-composition-20260911/review.md)
+finds 48 wins and 96 losses for basic tile-authored compare-and-sum against
+reused-scratch materialization. Selecting the fastest registered native
+grain/carrier alternative gives 110 wins and 34 losses; it is measured selection,
+not an automatic planner or a complete search. Zen Local12 still loses 1.791×
+with its best registered AVX512 alternative. The authored function boundary
+adds no material penalty in these cases, but that does not establish a good
+execution strategy. Keep materialization available, and preserve independent
+choices of physical geometry, execution grain and result finalization. Recovery
+for other consumers remains a hypothesis until measured.
+
+Avoidable boundary or traversal overhead remains worth removing, especially
+when the change simplifies the implementation. Large unexplained gaps warrant
+bounded investigations with a concrete question about the shared mechanism.
+Record the remaining gap and what a probe establishes; when there is no
+compelling shared fix, redirect work toward useful consumers instead of making
+primitive parity a prerequisite for development. Keep source, generated code
+and build costs alongside runtime evidence when selecting what to retain.
+
 ## Obligations at the seams
 
 | Fact | Responsibility and consequence |
@@ -144,7 +238,7 @@ supports the local default, not a universal grain or a rule based on spill count
 | Selection and logical coordinates | The mask names original positions on all operands. A sparse selection does not compact them or permit omission of required predecessor metadata. A coarse candidate bit is not exact row truth. |
 | Access and placement | Logical encoded bytes, an implementation's readable window and its physical footprint differ. Legal children do not automatically meet the enclosing locality promise. |
 | Output and effects | Complete masked output and selected-only writes have different postconditions. Clearing and retained state belong to the driver that promises them. Logical return length is not complete physical write coverage. |
-| Lifetime | Bindings retain admitted owners. Values needed by another immediate consumer or across another producer must remain valid; suspension or delayed use may require explicit storage. |
+| Lifetime | The enclosing invocation keeps admitted owners live; a binding may borrow them. SeriesPack expressions additionally borrow named view objects. Values needed by another immediate consumer or across another producer must remain valid; suspension or delayed use may require explicit storage. |
 | Observation and equivalence | Substitution must preserve required progress/evidence as well as final values. A different estimator, including sampled versus full evaluation, is not an equality rewrite merely because it serves the same policy question. |
 
 The [masked operation contract](probes/ikea-heterogeneous/operations/README.md#selection-identity-and-output-obligations)

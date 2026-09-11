@@ -1,0 +1,18 @@
+{
+  "job": "20260910T183151Z-9b5add59",
+  "source_digest": "4d5482dc7f2a9e04e52d38c5e5d0812a38a5af638e1a313ea3a2be25f234d84e",
+  "same_manifest_as_zen": "20260910T182929Z-75d7e42e",
+  "physical_base": "db9238fea0ea2294b974c34a63447571ec068c2aedf0310f29ec5564c5da8d00",
+  "production_library_sha256": "6539860725f988f080ffade80986a95e6191d1573f9be45dba490c94fee98d06",
+  "cases": 136,
+  "groups": 32,
+  "repetitions": 5,
+  "minimum_seconds": 0.2,
+  "cpu": 0,
+  "compiler": "Clang 21.1.8",
+  "profile": "x86-64-v4 + AVX512VBMI + AVX512VBMI2 + GFNI",
+  "tune": "graniterapids",
+  "checks": "Benchmark oracles and standalone cutoff/overflow check pass. Production library unchanged from the preceding coherent aggregate pass.",
+  "units": "ns_per_item is CPU ns/original value; one composition processes 8192 original positions.",
+  "limits": "AVX2 and AVX-512 are implementation families within the full-feature build, not different instruction ceilings. Single code closure, no significance inference, no carrier ABI promotion. Interpret the compared plans in seam-findings.md."
+}

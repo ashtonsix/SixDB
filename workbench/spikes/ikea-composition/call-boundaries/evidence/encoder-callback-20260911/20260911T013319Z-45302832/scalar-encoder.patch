@@ -1,0 +1,55 @@
+--- before/ikea/include/ikea/seriespack/operations.h
++++ after/ikea/include/ikea/seriespack/operations.h
+@@ -172,7 +172,7 @@
+ /// Trusted full construction over borrowed storage; initializes final-tile slack.
+ class bound_encoder {
+ public:
+-    using encode_function = void (*)(const mutable_view&, input_values, effect_output*);
++    using encode_function = void (*)(const mutable_view&, const void*, element_width, effect_output*);
+     /// Unchecked construction; the endpoint must implement the actual destination description.
+     static bound_encoder assume_valid(mutable_view destination, execution_target target,
+                                       encode_function encode) {
+@@ -182,7 +182,7 @@
+     /// and isolation of shared writes. Optional effects need sufficient disjoint slots.
+     /// See encode_effect_capacity; no checks are repeated here.
+     void encode(input_values input, effect_output* effects = nullptr) const {
+-        encode_(destination_, input, effects);
++        encode_(destination_, input.data, input.width, effects);
+     }
+     execution_target target() const { return target_; }
+     const mutable_view& destination() const { return destination_; }
+--- before/ikea/src/seriespack/operations.cpp
++++ after/ikea/src/seriespack/operations.cpp
+@@ -300,11 +300,11 @@
+ }
+ 
+ template<unsigned W, geometry G>
+-void encode_bound_scalar(const mutable_view& destination, input_values input,
+-                         effect_output* effects) {
++void encode_bound_scalar(const mutable_view& destination, const void* input,
++                         element_width width, effect_output* effects) {
+     if (destination.size() == 0) return;
+-    with_element(input.width, [&]<class UInt> {
+-        scalar_encode<W, G>(destination, static_cast<const UInt*>(input.data));
++    with_element(width, [&]<class UInt> {
++        scalar_encode<W, G>(destination, static_cast<const UInt*>(input));
+     });
+     collect_encode_effects(destination, effects);
+ }
+--- before/ikea/src/seriespack/native.cpp
++++ after/ikea/src/seriespack/native.cpp
+@@ -652,10 +652,11 @@
+ }
+ 
+ template<class Ops, unsigned W, geometry G>
+-void encode_bound(const mutable_view& destination, input_values input, effect_output* effects) {
++void encode_bound(const mutable_view& destination, const void* input,
++                  element_width width, effect_output* effects) {
+     if (destination.size() == 0) return;
+-    with_element(input.width, [&]<class U> {
+-        encode_typed<Ops, W, G>(destination, static_cast<const U*>(input.data));
++    with_element(width, [&]<class U> {
++        encode_typed<Ops, W, G>(destination, static_cast<const U*>(input));
+     });
+     encode_effects(destination, effects);
+ }

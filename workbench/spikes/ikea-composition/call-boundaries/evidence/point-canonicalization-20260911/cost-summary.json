@@ -1,0 +1,66 @@
+{
+  "scope": "ARM generic -O2 local build; no runtime evidence. Source patch changes only private callback selection; requested strategy metadata preserved.",
+  "before_function_text": 648720,
+  "after_function_text": 615880,
+  "function_text_delta_categories": {
+    "bind_reader": -12076,
+    "select_point_function": -5120,
+    "point": -15644
+  },
+  "linked": [
+    {
+      "variant": "before",
+      "program": "ikea_seriespack_operations_check",
+      "executable_text": 1632632,
+      "rodata": 11600,
+      "eh_frame": 133496,
+      "eh_frame_hdr": 28084,
+      "whole_file_bytes": 24159704
+    },
+    {
+      "variant": "after",
+      "program": "ikea_seriespack_operations_check",
+      "executable_text": 1599792,
+      "rodata": 11600,
+      "eh_frame": 127792,
+      "eh_frame_hdr": 25812,
+      "whole_file_bytes": 23773232
+    },
+    {
+      "variant": "before",
+      "program": "ikea_seriespack_static_point_check",
+      "executable_text": 1454268,
+      "rodata": 6472,
+      "eh_frame": 58308,
+      "eh_frame_hdr": 10244,
+      "whole_file_bytes": 28301064
+    },
+    {
+      "variant": "after",
+      "program": "ikea_seriespack_static_point_check",
+      "executable_text": 1454268,
+      "rodata": 6472,
+      "eh_frame": 58308,
+      "eh_frame_hdr": 10244,
+      "whole_file_bytes": 27970832
+    },
+    {
+      "variant": "before",
+      "program": "ikea_seriespack_physical_operations_check",
+      "executable_text": 1617816,
+      "rodata": 4632,
+      "eh_frame": 134104,
+      "eh_frame_hdr": 28116,
+      "whole_file_bytes": 23887536
+    },
+    {
+      "variant": "after",
+      "program": "ikea_seriespack_physical_operations_check",
+      "executable_text": 1584976,
+      "rodata": 4632,
+      "eh_frame": 128400,
+      "eh_frame_hdr": 25844,
+      "whole_file_bytes": 23435528
+    }
+  ]
+}

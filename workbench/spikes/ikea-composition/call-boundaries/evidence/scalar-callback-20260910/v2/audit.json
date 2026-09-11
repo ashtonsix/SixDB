@@ -1,0 +1,126 @@
+{
+  "status": "passed",
+  "job": "20260910T200835Z-0865bb57",
+  "capture_digest": "822f7773841dd5186863b68ccce38ed11c2060199ccaf2703a3cdc3a982f9d4d",
+  "source_files": 486,
+  "production_delta": {
+    "ikea/include/ikea/seriespack/operations.h": {
+      "before": "687ccbf758a13e927daa6aba703a6ea6db7b6d5953881fb84729665c0d5caf64",
+      "after": "01c7352f820050282e077297f6849061de448a1126105af77f5aeccad3516770"
+    },
+    "ikea/src/seriespack/native.cpp": {
+      "before": "1abf641b246af9c075e8234a9e1b3390c412a8410af9353d84d5c52cd57350da",
+      "after": "e5922e2ef425cba6539069bedda9c24f7c076a2ed2de0e86beed403f3c8e73a0"
+    },
+    "ikea/src/seriespack/physical.cpp": {
+      "before": "4acdd3fa869f1cade98f0d47cf4cf29f6e619b57c8c9edacb831005b6ce2678e",
+      "after": "71cec80cad1af901b797e722275e059812f74f51ed0e35a7df0ef792fe09d88f"
+    }
+  },
+  "before_capture_manifest_tar_match": true,
+  "candidate_differs_exactly_three_production_sources": true,
+  "binaries": {
+    "after": {
+      "path": "/opt/sixdb/source/build/scalar-range-abi/neoverse-v2/neon/after-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+      "sha256": "5011e6047fa367a7701583f52203a95aab6099ef6e5f25338707361d98af944c"
+    },
+    "before": {
+      "path": "/opt/sixdb/source/build/scalar-range-abi/neoverse-v2/neon/before-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+      "sha256": "278e85b466368d86f786ff4f60ccacf657c99c751037b133c13d4ed3f6608a4a"
+    }
+  },
+  "fresh_object_counts": {
+    "before": 33,
+    "after": 33
+  },
+  "required_fresh_callback_caller_objects": [
+    "ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/native.cpp.o",
+    "ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/physical.cpp.o",
+    "ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/view.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_bench.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_composition_bench.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_casing_bench.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_points.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_predecessor.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_range_regions.dir/seriespack_range_regions.cpp.o"
+  ],
+  "all_callbacks_callers_logged_fresh": true,
+  "all_checks_own_variant_build": true,
+  "all_commands_return_zero": true,
+  "inventories_exactly_match_complete_registration": true,
+  "samples": 4716,
+  "case_counts": {
+    "bulk": 134,
+    "resident": 259
+  },
+  "receipt_sha256": "0abff34d86436ff7b0e5599e0896923115e051574fe981582836279529e51ba7",
+  "result_file_hashes": {
+    "0-before-bulk.json": "affedeb2d400d8a79ac894d5f23b67c585baa1e31f6585686913d845c63676e5",
+    "0-before-bulk.txt": "70794cd553dad2bf4f033a23893d53a071636339497e5cfee3cc9610ac6958f1",
+    "0-before-resident.json": "ce4f15b46957e480c226c89b0bd9a31063ea29d6c072315f6d159a45d153146d",
+    "0-before-resident.txt": "6abe76e6367bcdf9944bead88ecfbc1327a5110b67fccb1af5632220f033d739",
+    "1-after-bulk.json": "ad00edc697b4bb89149ac24e347be60cfb21ab9f8db820dc1e115e826beb2887",
+    "1-after-bulk.txt": "8a754c0dd0c5b2830eadb8f4e022533a444b2b99c8262d2cd239e281f4f27da7",
+    "1-after-resident.json": "3e66d107b3d7df1699be0e8d6b48fe7506e047f31eaf295f372b74e6b2485a65",
+    "1-after-resident.txt": "3b23aa52a13ad70e87bae06bd742d9bb0a6f3e52a92c2e5317b689dcbbdda21f",
+    "2-after-bulk.json": "099182731254ae9fc670a842b3bc8e644b5069b2aa1b283909eb47528b605c0a",
+    "2-after-bulk.txt": "1f3eea1ba0f330d743482deac870027778be90182dbfbefdd11370ddbf0eb04e",
+    "2-after-resident.json": "6386db860bac6e542a47ac4f9b69c038ab4111d108d381d8d985125a07a4aa77",
+    "2-after-resident.txt": "be5f3cf8ab43c13dc2e621eedeb38c4816df571606bcbeae00e3a9d6a598e098",
+    "3-before-bulk.json": "9b9408a47cf2c57d7a50086a7203478f306c83274d8d9cf2434c3de8ecc9533c",
+    "3-before-bulk.txt": "adaccf90ca1a0e7551606e5731ee99073d78e14710331bd9d9f41b5d875a5e8f",
+    "3-before-resident.json": "897051c7d5dcf02779e002eb2adf8d84100f9f3197804c5bba948cdc0c776596",
+    "3-before-resident.txt": "a2a81ad805a44e51796ecedc4b07ab054e3a2d12dab78831db3e788498db9379",
+    "after-assembly.txt": "17b8cba3763f61e84b411f4b50190fe90fc8282a4b7835a25ea7fd954c62bd60",
+    "after-bench": "5011e6047fa367a7701583f52203a95aab6099ef6e5f25338707361d98af944c",
+    "after-build.txt": "aa9a4493d6044fe00332d2848528fb61e56d31ebf6b9f3d1b260111764bcd04c",
+    "after-bulk-inventory.txt": "d7cf62d314ba2a973a93777dda67ba6362fc5848d3914a7856be23004ad14c6a",
+    "after-compile-commands.json": "1e3b1f504bb886c121f5c71d348a8ef916e3d3d31843cde0d1dc024c3956c27a",
+    "after-complete-inventory.txt": "efcf23ef07a77f42a8f0adf886355902a3e6f247c4b56e291499b899037ea612",
+    "after-configure.txt": "29f68a2fba5d183dcebf8d3d199425374f86413f236f0656fcc78224f67b8640",
+    "after-materialized-neon.txt": "0899571fddee024d5b916ff1643b6be1e9a56eca764853f39f2242f027647d64",
+    "after-ninja-log": "0d284cafd641ecb3b65cc8347c57e4cadac3ca8a4a4f271641f5eeedaab95a98",
+    "after-operations.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "after-physical_operations.txt": "b8989600e0b4ca9fadf742eb1f92be06572e6eeb6a80db87f915ea2cdf8e8cc4",
+    "after-range_bounds.txt": "812ab3636ac259f35db374e2799767603205b67ad1557ab2c6fe4f4b2dc5167b",
+    "after-resident-inventory.txt": "5a8d8ff89a367eea5373f31a3eeeefb23adb52da6c14fac588cc3d3591132d78",
+    "after-size.txt": "c9d70ad3e73741e400f38a2bdaaa449be53d2ea2bcecc7da04d6668b005b7422",
+    "before-assembly.txt": "fca162f9bf737b42c9d1843d4b2fb5677ce2b1bc42859c1f9db5f464e6aef5ab",
+    "before-bench": "278e85b466368d86f786ff4f60ccacf657c99c751037b133c13d4ed3f6608a4a",
+    "before-build.txt": "aa9a4493d6044fe00332d2848528fb61e56d31ebf6b9f3d1b260111764bcd04c",
+    "before-bulk-inventory.txt": "d7cf62d314ba2a973a93777dda67ba6362fc5848d3914a7856be23004ad14c6a",
+    "before-compile-commands.json": "b17c64a74cbd7eb815939776168c7dc0a149c29071d01009989887de75240dcd",
+    "before-complete-inventory.txt": "efcf23ef07a77f42a8f0adf886355902a3e6f247c4b56e291499b899037ea612",
+    "before-configure.txt": "05a287728940c558c21edbfab5fa5564047d9f713bf1acfdb80d08655b39fe18",
+    "before-materialized-neon.txt": "0899571fddee024d5b916ff1643b6be1e9a56eca764853f39f2242f027647d64",
+    "before-ninja-log": "471deeb3c8f202ac5f9401c06940d8454eac0e1e359e7cf1fc18b218ae81ccda",
+    "before-operations.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "before-physical_operations.txt": "b8989600e0b4ca9fadf742eb1f92be06572e6eeb6a80db87f915ea2cdf8e8cc4",
+    "before-range_bounds.txt": "812ab3636ac259f35db374e2799767603205b67ad1557ab2c6fe4f4b2dc5167b",
+    "before-resident-inventory.txt": "5a8d8ff89a367eea5373f31a3eeeefb23adb52da6c14fac588cc3d3591132d78",
+    "before-size.txt": "3d10e96ace22f5bda0a1143385d02d13124bab91202cb3a66e02270bd4f1f48e",
+    "cases.json": "739dafbc9b06384698c1cf9b1a3287bcf68d9abbd4a4b08cad0f30da88ee2b60",
+    "compiler.txt": "0cf7e452648b3754289200426984662d1d8d0a21d56310d301a24e11399ceab8",
+    "plan.json": "4d62f87b2c4308de5554484be118f6976c51c5ffaf660d0ad49fc50137b08019",
+    "receipt.json": "0abff34d86436ff7b0e5599e0896923115e051574fe981582836279529e51ba7",
+    "source-after.json": "5bef679e4f6030ea9f77152394ac883ef8644320937512e1590202480ba575e0",
+    "source-before.json": "782a6b182b51bb8fd81e7f841eb920fd04b3abdb8c9ee99ee2bf8c98f8dfc59e"
+  },
+  "source_stability_limit": "source-before/after identify variants, rehashed by wrapper at completion; no raw libraries returned for independent rehash",
+  "config": {
+    "flags": [],
+    "march": "armv8-a",
+    "profile": "neon",
+    "tune": "neoverse-v2"
+  },
+  "guard_outputs": {
+    "before-operations": "",
+    "before-physical_operations": "SeriesPack public wire (scalar): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed\nSeriesPack public wire (neon): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed\n",
+    "before-range_bounds": "SeriesPack range bounds (scalar): 206 descriptions, 3737352 exact guarded ranges passed\nSeriesPack range bounds (neon): 206 descriptions, 3737352 exact guarded ranges passed\n",
+    "before-materialized-neon": "Admitted regions target4: 20 descriptions, 400 protected placements, 6744 original-coordinate queries passed\n",
+    "after-operations": "",
+    "after-physical_operations": "SeriesPack public wire (scalar): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed\nSeriesPack public wire (neon): 206 descriptions, 5532 placements, 83787 range-read checks, 49140 mutation checks, 206 append scenarios passed\n",
+    "after-range_bounds": "SeriesPack range bounds (scalar): 206 descriptions, 3737352 exact guarded ranges passed\nSeriesPack range bounds (neon): 206 descriptions, 3737352 exact guarded ranges passed\n",
+    "after-materialized-neon": "Admitted regions target4: 20 descriptions, 400 protected placements, 6744 original-coordinate queries passed\n"
+  }
+}

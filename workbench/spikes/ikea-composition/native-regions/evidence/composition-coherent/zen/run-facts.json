@@ -1,0 +1,31 @@
+{
+  "job": "20260910T182929Z-75d7e42e",
+  "source_digest": "4d5482dc7f2a9e04e52d38c5e5d0812a38a5af638e1a313ea3a2be25f234d84e",
+  "physical_base": "db9238fea0ea2294b974c34a63447571ec068c2aedf0310f29ec5564c5da8d00",
+  "overlay_sha256": {
+    "workbench/spikes/ikea-composition/validation/seriespack_composition_bench.cpp": "0c519dc7c3b05e53b2ea484b229e9294f7e98f050461f24db2956a24c40f57f9",
+    "workbench/spikes/ikea-composition/validation/diagnostics/reduction_carrier/carrier.h": "4f53099b220d4f741fc9215798215d9a778a837e6244ae8a41e0fe5abb58b777",
+    "workbench/spikes/ikea-composition/validation/diagnostics/reduction_carrier/check.cpp": "348f9aa7fff6e8e74acbb062c516cbb516bbab82a268c51ffbc7b011b5c81512",
+    "workbench/spikes/ikea-composition/validation/diagnostics/reduction_carrier/README.md": "b8c23763a5b3075c87babd995c36f634212702da8ad5d627feb2c39f7bcc00d8"
+  },
+  "production_library_sha256": "4e079e8e78ecf6e46154af4730a4f8adcc95be38e3d72e1b701f169b484afecc",
+  "cases": 136,
+  "groups": 32,
+  "repetitions": 5,
+  "minimum_seconds": 0.2,
+  "cpu": 0,
+  "compiler": "Clang 21.1.8",
+  "profile": "x86-64-v4 + AVX512VBMI + AVX512VBMI2 + GFNI",
+  "tune": "znver5",
+  "checks": "Benchmark oracles and standalone cutoff/overflow check pass. Production library unchanged from the preceding coherent aggregate pass.",
+  "units": "ns_per_item is CPU ns/original value; one composition processes 8192 original positions.",
+  "limits": "AVX2 and AVX-512 are implementation families within the full-feature build, not different instruction ceilings. Single code closure, no significance inference, no carrier ABI promotion. Interpret the compared plans in seam-findings.md.",
+  "comparison_with_v2": {
+    "source_digest": "95d879280aa283e48992cd2b2518b14f1e1d5f8cf86ada6608e0ec3621436f17",
+    "changed_paths": [
+      "workbench/spikes/ikea-composition/validation/large-access-cloud.sh",
+      "workbench/spikes/ikea-composition/validation/replay-large-v2-pilot.json"
+    ],
+    "meaning": "Only these two unrelated large-access driver inputs differ. Physical and composition build sources match."
+  }
+}

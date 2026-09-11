@@ -1,0 +1,12 @@
+--- a/ikea/src/seriespack/operations.cpp
++++ b/ikea/src/seriespack/operations.cpp
+@@ -384,8 +384,7 @@
+ 
+ std::expected<std::uint64_t, error> get(const_view source, std::size_t index) {
+     if (index >= source.size()) return std::unexpected(error::invalid_range);
+-    auto reader = bind_reader(source, execution_target::scalar);
+-    return reader->get(index);
++    return detail::select_point_function(source.layout(), point_reader::arithmetic)(source, index);
+ }
+ 
+ std::expected<bound_encoder, error> bind_encoder(mutable_view destination,

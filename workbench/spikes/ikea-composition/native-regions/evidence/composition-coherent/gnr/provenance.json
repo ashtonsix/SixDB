@@ -1,0 +1,80 @@
+{
+  "cases": 136,
+  "counters": [
+    "logical_values",
+    "active_values",
+    "selected_values"
+  ],
+  "files_sha256": {
+    "cases.csv": "327977f32271959f1b434eab9b172fa4b45d0b9e589d92819e657c45ee25104e",
+    "run-facts.json": "5f3aba71a6516abbeac156428a84bb1b4ed9b5b36f078143f528dab9bab9f9b8"
+  },
+  "filter": "^composition/",
+  "format": 1,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "current": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 503316480,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-10T18:32:30+00:00",
+        "executable": "build/validation/seriespack/granite-rapids/avx512/Release/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+        "host_name": "ip-172-31-23-69",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.456543,
+          0.766602,
+          0.906738
+        ],
+        "mhz_per_cpu": 3900,
+        "num_cpus": 1,
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "134217728",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-coherent-composition-20260910/build/workers/20260910T183151Z-9b5add59/results/composition/avx512/samples.json",
+      "sha256": "e7f6171d7aa53100674fa3b61b7ada1cffcb0541955b4794f62186ddb2f39031"
+    }
+  },
+  "kind": "google-benchmark-summary",
+  "units": "CPU/real times are ns per benchmark iteration. ns_per_item uses the reported item rate; an item means what the benchmark counts, not necessarily a value or byte.",
+  "selection_curation": {
+    "date": "2026-09-11",
+    "retained_context": "run-facts.json preserves the previously ignored, unchanged authored source/check summary; measured identities and full bundle are unchanged."
+  }
+}

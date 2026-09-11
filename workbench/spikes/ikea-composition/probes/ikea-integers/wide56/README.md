@@ -245,7 +245,7 @@ python3 workbench/spikes/ikea-composition/probes/ikea-integers/wide56/run.py --s
 python3 workbench/spikes/ikea-composition/probes/ikea-integers/wide56/run.py --target avx2-qemu --check-only
 python3 workbench/spikes/ikea-composition/probes/ikea-integers/wide56/run.py -- --quick
 python3 workbench/spikes/ikea-composition/probes/ikea-integers/wide56/run.py --target zen5 --encode-region32 -- --suite bulk --pmu
-python3 workbench/tools/worker.py run workbench/spikes/ikea-composition/probes/ikea-integers/wide56/cloud.sh --machine zen5 --capacity on-demand -- zen5 --pmu
+python3 workbench/tools/worker.py run workbench/spikes/ikea-composition/probes/ikea-integers/wide56/cloud.sh --machine zen5 -- zen5 --pmu
 ```
 
 The short worker recipes have distinct argument conventions:

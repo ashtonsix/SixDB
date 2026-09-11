@@ -1,0 +1,22 @@
+{
+  "job": "20260910T204008Z-8553e4e4",
+  "source_digest": "4551057fafab8333f4258cd5528925b79274375b412850fbb3fbac4955cdfa61",
+  "machine": "Granite Rapids",
+  "compiler": "Clang21.1.8",
+  "cpu": 0,
+  "checks": {
+    "grouped_full_features": 32256,
+    "grouped_without_gfni_or_vbmi2": 32256,
+    "deferred_result": 224490
+  },
+  "checked_scope": "Headless local widths9..32; independent guarded packet sources, strides, original origins, substituted body/tail, cutoff and mask edges, logical slack rejection; native deferred sums lane bytes1/2/4/8, stateful base preservation, owned results, u32 crossing and u64 wrap.",
+  "integrated_header_sha256": "a15f88e3edadd1b965d636f47ded810b40210c67058a06a4e7e96c3272800abb",
+  "test_promotion": "Production test bodies match worker inputs; grouped disabled-ISA exit becomes0 for aggregate checks; deferred body gains a disabled-ISA compile guard. Local ARM CMake builds both disabled-ISA paths.",
+  "codegen": "52 exact text-byte and instruction/relocation matches under two tunings; all constant-data sections match. No curation timing.",
+  "limits": [
+    "Historical measured wins cover onlyK12/K31 with dense8192-value complete groups and all/75% selection.",
+    "Broader supported width families have correctness coverage, not a demonstrated performance advantage.",
+    "Current improved ordinary materializer remains a required comparison for performance selection.",
+    "No change to default bound dispatch, immediate scalar reduction or CPS/suspension ABI."
+  ]
+}

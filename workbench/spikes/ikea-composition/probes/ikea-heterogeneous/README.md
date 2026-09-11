@@ -69,7 +69,7 @@ python3 workbench/spikes/ikea-composition/probes/ikea-heterogeneous/run.py --san
 python3 workbench/spikes/ikea-composition/probes/ikea-heterogeneous/run.py --synthetic -- --quick
 # Full hardware campaign; use the same name for machine and target:
 python3 workbench/tools/worker.py run workbench/spikes/ikea-composition/probes/ikea-heterogeneous/cloud.sh \
-  --machine zen5 --capacity on-demand --idle-seconds 0 -- --target zen5 -- --pmu
+  --machine zen5 --idle-seconds 0 -- --target zen5 -- --pmu
 ```
 
 Other measured targets are `granite-rapids` and `neoverse-v2`. The full runner

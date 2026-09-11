@@ -1,0 +1,112 @@
+{
+  "status": "passed",
+  "job": "20260910T195053Z-b698ee08",
+  "capture_digest": "822f7773841dd5186863b68ccce38ed11c2060199ccaf2703a3cdc3a982f9d4d",
+  "source_files": 486,
+  "production_delta": {
+    "ikea/include/ikea/seriespack/operations.h": {
+      "before": "687ccbf758a13e927daa6aba703a6ea6db7b6d5953881fb84729665c0d5caf64",
+      "after": "01c7352f820050282e077297f6849061de448a1126105af77f5aeccad3516770"
+    },
+    "ikea/src/seriespack/native.cpp": {
+      "before": "1abf641b246af9c075e8234a9e1b3390c412a8410af9353d84d5c52cd57350da",
+      "after": "e5922e2ef425cba6539069bedda9c24f7c076a2ed2de0e86beed403f3c8e73a0"
+    },
+    "ikea/src/seriespack/physical.cpp": {
+      "before": "4acdd3fa869f1cade98f0d47cf4cf29f6e619b57c8c9edacb831005b6ce2678e",
+      "after": "71cec80cad1af901b797e722275e059812f74f51ed0e35a7df0ef792fe09d88f"
+    }
+  },
+  "before_capture_manifest_tar_match": true,
+  "candidate_differs_exactly_three_production_sources": true,
+  "binaries": {
+    "after": {
+      "path": "/opt/sixdb/source/build/scalar-range-abi/zen5/avx512/after-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+      "sha256": "982a3bd09706149b54b1268eea46e58789ef6768d0e3ed642e5290f4766cce05"
+    },
+    "before": {
+      "path": "/opt/sixdb/source/build/scalar-range-abi/zen5/avx512/before-build/workbench/spikes/ikea-composition/validation/ikea_seriespack_bench",
+      "sha256": "eeb0f6fe9ef49c80974412d38285e1e384549c189cbb8c6c9739e237cf836f5e"
+    }
+  },
+  "fresh_object_counts": {
+    "before": 33,
+    "after": 33
+  },
+  "required_fresh_callback_caller_objects": [
+    "ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/native.cpp.o",
+    "ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/physical.cpp.o",
+    "ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/view.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_bench.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_composition_bench.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_casing_bench.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_points.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_bench.dir/seriespack_predecessor.cpp.o",
+    "workbench/spikes/ikea-composition/validation/CMakeFiles/ikea_seriespack_range_regions.dir/seriespack_range_regions.cpp.o"
+  ],
+  "all_callbacks_callers_logged_fresh": true,
+  "all_checks_own_variant_build": true,
+  "all_commands_return_zero": true,
+  "inventories_exactly_match_complete_registration": true,
+  "samples": 7116,
+  "case_counts": {
+    "bulk": 218,
+    "resident": 375
+  },
+  "receipt_sha256": "3b376df3af5a19f4521f88677c4d5aa332d8b5fa3e26e5c10fa59482501c7f7e",
+  "result_file_hashes": {
+    "0-before-bulk.json": "68b36e1f132b7a2587e7d8e447db638b30cf2f8599951a5b5277d13e4dff9ecb",
+    "0-before-bulk.txt": "37424b1c8970ccd06f9eff4cf3a54b1bd89a16e8ffb6950510a8c1851e87c5da",
+    "0-before-resident.json": "4e1339a55d676c345981aa5a6d608a6dac2a7449daa21e27b72c97240f0b78c4",
+    "0-before-resident.txt": "d4999330927718ae8a17932e617d51ccd231df88c0ec731a594e6f00c427dc02",
+    "1-after-bulk.json": "1c7390b3aa6c2e938905edf5f45d5b7802813416c0f694a7e15403b40816b4a4",
+    "1-after-bulk.txt": "952e2d79139de23a677481bdd6ed6448e7b02103699fc60a74918200245b1363",
+    "1-after-resident.json": "b2fec22a715deb972f9d143cdd93c0455a1e11b5b912a60fd0a1c74ca33257fa",
+    "1-after-resident.txt": "81d4ab6cd634c58ee5cadb4e01afafb5c451b609115de6e8b84f680cd6303a61",
+    "2-after-bulk.json": "4489516c6d2181651c1e414cb83648f46115ee84c39bed32f3e312423ac4813f",
+    "2-after-bulk.txt": "d8df644a683258a17ad5267ab931c87d8cd0b0567f1d88233cef27808b6dc716",
+    "2-after-resident.json": "5d5dd8bea5122c8a8e753e6e838ecabd3e374d5ca587e2c58671e07a533a3e40",
+    "2-after-resident.txt": "e26b24851850e447078ee1ae12fc5a76b6c7e87b9a0c2ec591329fef75e80248",
+    "3-before-bulk.json": "5b789e82452a963e092a480f4fab07992fd62bd48f79356f75b1144798473f0d",
+    "3-before-bulk.txt": "a73ffba8587914d3de723aa1ea565c504d35d311c6d1d2486596c5b7bb52f896",
+    "3-before-resident.json": "4d72a8e3384dc7e26cbce9e53ad1c5cadae8a02720fc0b860c8e8e0cfb67ce75",
+    "3-before-resident.txt": "f0f47a4160c2b81c6097fa489e9f86ca43e1c545fdf17179a8782c5a2fe362bc",
+    "after-assembly.txt": "2d84c38f5bd1776b9109182dca5d6fcb98952f6d8ad72a59267f7879e7545605",
+    "after-bench": "982a3bd09706149b54b1268eea46e58789ef6768d0e3ed642e5290f4766cce05",
+    "after-build.txt": "aa9a4493d6044fe00332d2848528fb61e56d31ebf6b9f3d1b260111764bcd04c",
+    "after-bulk-inventory.txt": "26f563591c5bd0ac75375e1753e618a615cb4175d5757ad8bf1a253738a6ccee",
+    "after-compile-commands.json": "86da38cdc70a5fccd2432a44630d8b67233119080b513d2aa43f3040a60851f4",
+    "after-complete-inventory.txt": "8e00a36fded3071b236d38579ecc6e9bbfcf51e1e1e5acae75e56261151c20aa",
+    "after-configure.txt": "2c277345f5b2b075c805485acc5e088c83779058be884188c9929fff60746d08",
+    "after-materialized-avx2.txt": "57dfbd84165799b534b9d8510476c81c469d04edf1211e83511a2ee90b2a51ef",
+    "after-materialized-avx512.txt": "7c4294eec77b99b628ab2c2b72cd82a77f4efaf936531a78703a8cdf0ad27b89",
+    "after-ninja-log": "88bfd2f58725b5d5a7bf85d312dade27182420f189d515a2b51dd01b9bf39b7d",
+    "after-operations.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "after-physical_operations.txt": "f6107b387b0deacf8e1334a037c86fb4d3ce4146481a41be11a352815d7bf13c",
+    "after-range_bounds.txt": "319ebcc5f982fb5a9bc194a0c3677ce02ec3f77566055ffa9ea07c22b266134c",
+    "after-resident-inventory.txt": "8f6de3b18c0c35030d7acee68dfaabd4c03e46a37cff202ed1d9e4bd69a30cf2",
+    "after-size.txt": "b284d4d090826bc5eee9cdd33b782f774aba8cdbda75ea799ce4f360eaa2d16e",
+    "before-assembly.txt": "bee4f4d1a93f16cd95e2bc3e112e1cddcb1135cccbe0de01c3499a744c3c99eb",
+    "before-bench": "eeb0f6fe9ef49c80974412d38285e1e384549c189cbb8c6c9739e237cf836f5e",
+    "before-build.txt": "aa9a4493d6044fe00332d2848528fb61e56d31ebf6b9f3d1b260111764bcd04c",
+    "before-bulk-inventory.txt": "26f563591c5bd0ac75375e1753e618a615cb4175d5757ad8bf1a253738a6ccee",
+    "before-compile-commands.json": "c9062b496badc6fdd86391f225da3971c14be8ffcbaa103552ac11d4bbf6b318",
+    "before-complete-inventory.txt": "8e00a36fded3071b236d38579ecc6e9bbfcf51e1e1e5acae75e56261151c20aa",
+    "before-configure.txt": "1e99ff74f4c13b4c9537c9edf724abfea3bd60519ece31e2242ea27a5bc16e6b",
+    "before-materialized-avx2.txt": "57dfbd84165799b534b9d8510476c81c469d04edf1211e83511a2ee90b2a51ef",
+    "before-materialized-avx512.txt": "7c4294eec77b99b628ab2c2b72cd82a77f4efaf936531a78703a8cdf0ad27b89",
+    "before-ninja-log": "79fffe38d06a91cd49f5563ee3b38b9269fb78cf745394174343134e558ba9fe",
+    "before-operations.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "before-physical_operations.txt": "f6107b387b0deacf8e1334a037c86fb4d3ce4146481a41be11a352815d7bf13c",
+    "before-range_bounds.txt": "319ebcc5f982fb5a9bc194a0c3677ce02ec3f77566055ffa9ea07c22b266134c",
+    "before-resident-inventory.txt": "8f6de3b18c0c35030d7acee68dfaabd4c03e46a37cff202ed1d9e4bd69a30cf2",
+    "before-size.txt": "05cbee80a472b5f74582c9b59ffda1836b58122bc35340fae5b00ae186e9aeed",
+    "cases.json": "459347d6b2e744194687b97bd59a4fd0f3507f576c9ab53f9315deb6eeeaf267",
+    "compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "plan.json": "d3999d3204565455e3490c0f642aea5f72a13da2774b40968fc1d62db0586893",
+    "receipt.json": "3b376df3af5a19f4521f88677c4d5aa332d8b5fa3e26e5c10fa59482501c7f7e",
+    "source-after.json": "5bef679e4f6030ea9f77152394ac883ef8644320937512e1590202480ba575e0",
+    "source-before.json": "782a6b182b51bb8fd81e7f841eb920fd04b3abdb8c9ee99ee2bf8c98f8dfc59e"
+  },
+  "source_stability_limit": "The wrapper rehashes both source trees after measurement before marking complete; returned source-before/source-after files identify the two variants, not temporal before/after snapshots. No raw library archives were copied; fresh compilation commands and object build logs identify matched builds."
+}

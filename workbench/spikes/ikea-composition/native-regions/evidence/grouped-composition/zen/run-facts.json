@@ -1,0 +1,50 @@
+{
+  "job": "20260910T200444Z-c1ee1d8a",
+  "source_digest": "ce8b62ceb69e04f5fef3064e835c9bf87339b5db2f112ec5e5996fccd6994c64",
+  "physical_base": "db9238fea0ea2294b974c34a63447571ec068c2aedf0310f29ec5564c5da8d00",
+  "source_checks": {
+    "ikea_files_matching_physical_base": 40,
+    "selected_composition_sha256": {
+      "workbench/spikes/ikea-composition/validation/diagnostics/reduction_carrier/carrier.h": "4f53099b220d4f741fc9215798215d9a778a837e6244ae8a41e0fe5abb58b777",
+      "workbench/spikes/ikea-composition/validation/grouped.h": "c224d3c4520a0396d683498d1dd8d63d7630ddeba83546e4a63c37fdae8fa588",
+      "workbench/spikes/ikea-composition/validation/grouped_check.cpp": "64b592bf95423ae086346fc5928dbf9cb8863eeb6abff64a65c250585eb223b6",
+      "workbench/spikes/ikea-composition/validation/grouped_driver.inc": "a76e526caeb84f2621504f47aac047c50d117f70ec5d8e850ac2d344bcf3af11",
+      "workbench/spikes/ikea-composition/validation/seriespack_composition_bench.cpp": "dd822d0222b6ca77246eb3370953e35698c35da266ba6efda5150e1e989168fc"
+    }
+  },
+  "production_library_sha256": "4e079e8e78ecf6e46154af4730a4f8adcc95be38e3d72e1b701f169b484afecc",
+  "cases": 40,
+  "matched_groups": 8,
+  "repetitions": 5,
+  "minimum_seconds": 0.2,
+  "cpu": 0,
+  "compiler": "Clang 21.1.8",
+  "profile": "x86-64-v4 + AVX512VBMI + AVX512VBMI2 + GFNI",
+  "tune": "znver5",
+  "checks": {
+    "grouped": "PASS: grouped composition 2688 cutoff/mask/source cases; per-packet guards, independent strides, origins and modulo carriers",
+    "carrier": "PASS: reduction carrier runtime cutoffs and modulo-overflow witnesses",
+    "matched_work": "All compared plans/repetitions agree in logical, active, selected and encoded extents within each target/width/mask group."
+  },
+  "units": "CPU ns/original value; each complete composition processes 8,192 original positions.",
+  "timed_placement": "Dense source with complete groups; independent strides and child substitution are guarded correctness witnesses, not timed placement comparisons.",
+  "result_scope": "K12 group 32 x u16 and K31 group 16 x u32, AVX-512 family; scalar and deferred sum alternatives separate.",
+  "limits": [
+    "AVX2 and AVX512 labels are implementation families within one full-feature build, not distinct instruction ceilings.",
+    "Same logical selected_sum and physical codec bodies; read/working grain and reduction representation change.",
+    "One target and one executable placement; no general granularity, result ABI or suspension policy selected.",
+    "Array extents do not establish cache residency; five repetitions do not establish statistical significance."
+  ],
+  "source_archive": {
+    "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260910T200444Z-c1ee1d8a/source.tar.gz",
+    "sha256": "28dd0e7188f1acfc1880bbd6a005cddd799ef02ebd74914cf62f7d165205d672",
+    "bytes": 931070,
+    "files": 475,
+    "verification": "Downloaded archive matches submitted SHA-256; every regular member matches the retained source manifest."
+  },
+  "worker_codegen": {
+    "report": "worker-codegen.json",
+    "sha256": "14dcbed149752f98546260ce6152f26f8bcb5c60b43facb4dc9b00cb729f37b7",
+    "scope": "All eight actual timed grouped loops match local instructions and byte counts after address/relocation normalization; no calls or stack/value/carrier spills. Separate endpoint/substitution witnesses remain local-only."
+  }
+}

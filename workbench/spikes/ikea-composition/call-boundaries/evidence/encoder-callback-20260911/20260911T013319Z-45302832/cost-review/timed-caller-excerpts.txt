@@ -1,0 +1,85 @@
+before seriespack_bench-caller-0, 0x2500 <= offset < 0x255f
+    2500:      	movl	0x8(%r13), %ecx
+    2504:      	movl	$0x40, %eax
+    2509:      	decl	%ecx
+    250b:      	cmpl	$0x3, %ecx
+    250e:      	ja	0x2516 <_ZN12_GLOBAL__N_13runERN9benchmark5StateENS_13configurationENS_9operationE+0x2516>
+    2510:      	movl	%ecx, %eax
+    2512:      	movl	(%r15,%rax,4), %eax
+    2516:      	movq	0x88(%r13), %rcx
+    251d:      	movq	0x18(%r13), %rdx
+    2521:      	movq	%r14, %rdi
+    2524:      	xorl	%esi, %esi
+    2526:      	movq	%rcx, 0x2340(%rsp)
+    252e:      	movq	%rdx, 0x2348(%rsp)
+    2536:      	movl	%eax, 0x2350(%rsp)
+    253d:      	movq	0x2350(%rsp), %rax
+    2545:      	movq	%rax, 0x10(%rsp)
+    254a:      	vmovdqu	0x2340(%rsp), %xmm0
+    2553:      	vmovdqu	%xmm0, (%rsp)
+    2558:      	callq	*0x1f8(%r13)
+
+after seriespack_bench-caller-0, 0x2540 <= offset < 0x256c
+    2540:      	movl	0x8(%r12), %eax
+    2545:      	movl	$0x40, %edx
+    254a:      	decl	%eax
+    254c:      	cmpl	$0x3, %eax
+    254f:      	ja	0x2557 <_ZN12_GLOBAL__N_13runERN9benchmark5StateENS_13configurationENS_9operationE+0x2557>
+    2551:      	movl	%eax, %eax
+    2553:      	movl	(%r15,%rax,4), %edx
+    2557:      	movq	0x88(%r12), %rsi
+    255f:      	movq	%r14, %rdi
+    2562:      	xorl	%ecx, %ecx
+    2564:      	callq	*0x1f8(%r12)
+
+before seriespack_casing_bench-caller-2, 0x240 <= offset < 0x270
+     240:      	movq	0x2d0(%rsp), %rax
+     248:      	movq	0x10(%r15), %rcx
+     24c:      	movq	%r14, %rdi
+     24f:      	xorl	%esi, %esi
+     251:      	movq	%rcx, 0x10(%rsp)
+     256:      	vmovupd	(%r15), %xmm0
+     25b:      	vmovupd	%xmm0, (%rsp)
+     260:      	callq	*%rax
+     262:      	testq	%rbx, %rbx
+     265:      	jle	0x8f5 <_ZN22seriespack_measurement12_GLOBAL__N_13runILNS0_9operationE6ELb0EEEvRN9benchmark5StateENS0_13configurationE+0x8f5>
+     26b:      	decq	%rbx
+     26e:      	jne	0x240 <_ZN22seriespack_measurement12_GLOBAL__N_13runILNS0_9operationE6ELb0EEEvRN9benchmark5StateENS0_13configurationE+0x240>
+
+after seriespack_casing_bench-caller-2, 0x230 <= offset < 0x259
+     230:      	movl	0x370(%rsp), %edx
+     237:      	movq	0x360(%rsp), %rsi
+     23f:      	movq	%r14, %rdi
+     242:      	xorl	%ecx, %ecx
+     244:      	callq	*0x2d0(%rsp)
+     24b:      	testq	%rbx, %rbx
+     24e:      	jle	0x8de <_ZN22seriespack_measurement12_GLOBAL__N_13runILNS0_9operationE6ELb0EEEvRN9benchmark5StateENS0_13configurationE+0x8de>
+     254:      	decq	%rbx
+     257:      	jne	0x230 <_ZN22seriespack_measurement12_GLOBAL__N_13runILNS0_9operationE6ELb0EEEvRN9benchmark5StateENS0_13configurationE+0x230>
+
+before seriespack_casing_bench-caller-3, 0x260 <= offset < 0x29f
+     260:      	movq	$0x0, 0x3e0(%rsp)
+     26c:      	movq	0x2d0(%rsp), %rax
+     274:      	movq	0x10(%r12), %rcx
+     279:      	movq	%r15, %rdi
+     27c:      	movq	%r14, %rsi
+     27f:      	movq	%rcx, 0x10(%rsp)
+     284:      	vmovupd	(%r12), %xmm0
+     28a:      	vmovupd	%xmm0, (%rsp)
+     28f:      	callq	*%rax
+     291:      	testq	%rbx, %rbx
+     294:      	jle	0x924 <_ZN22seriespack_measurement12_GLOBAL__N_13runILNS0_9operationE6ELb1EEEvRN9benchmark5StateENS0_13configurationE+0x924>
+     29a:      	decq	%rbx
+     29d:      	jne	0x260 <_ZN22seriespack_measurement12_GLOBAL__N_13runILNS0_9operationE6ELb1EEEvRN9benchmark5StateENS0_13configurationE+0x260>
+
+after seriespack_casing_bench-caller-3, 0x240 <= offset < 0x276
+     240:      	movq	$0x0, 0x3e0(%rsp)
+     24c:      	movl	0x370(%rsp), %edx
+     253:      	movq	0x360(%rsp), %rsi
+     25b:      	movq	%r15, %rdi
+     25e:      	movq	%r14, %rcx
+     261:      	callq	*0x2d0(%rsp)
+     268:      	testq	%rbx, %rbx
+     26b:      	jle	0x8fb <_ZN22seriespack_measurement12_GLOBAL__N_13runILNS0_9operationE6ELb1EEEvRN9benchmark5StateENS0_13configurationE+0x8fb>
+     271:      	decq	%rbx
+     274:      	jne	0x240 <_ZN22seriespack_measurement12_GLOBAL__N_13runILNS0_9operationE6ELb1EEEvRN9benchmark5StateENS0_13configurationE+0x240>

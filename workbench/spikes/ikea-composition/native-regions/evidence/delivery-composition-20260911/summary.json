@@ -1,0 +1,227 @@
+[
+  {
+    "profile": "gnr-avx2",
+    "target": "avx2",
+    "cases": 16,
+    "authored_counts": {
+      "separated slower": 9,
+      "separated faster": 7
+    },
+    "authored_ratio_range": [
+      0.5399280002700566,
+      1.704346056548946
+    ],
+    "direct_ratio_range": [
+      0.7561529434487624,
+      1.003801768490996
+    ],
+    "fastest_measured_native_counts": {
+      "separated slower": 1,
+      "separated faster": 15
+    },
+    "fastest_measured_native_ratio_range": [
+      0.4035547948873588,
+      1.0551893645489474
+    ]
+  },
+  {
+    "profile": "gnr-avx512",
+    "target": "avx2",
+    "cases": 16,
+    "authored_counts": {
+      "separated slower": 11,
+      "separated faster": 5
+    },
+    "authored_ratio_range": [
+      0.7412029383268798,
+      1.5834568677439864
+    ],
+    "direct_ratio_range": [
+      0.9530469741526857,
+      1.0102239793328665
+    ],
+    "fastest_measured_native_counts": {
+      "separated slower": 2,
+      "separated faster": 14
+    },
+    "fastest_measured_native_ratio_range": [
+      0.2777314071453253,
+      1.1567708448597993
+    ]
+  },
+  {
+    "profile": "gnr-avx512",
+    "target": "avx512",
+    "cases": 16,
+    "authored_counts": {
+      "separated slower": 10,
+      "separated faster": 6
+    },
+    "authored_ratio_range": [
+      0.48169552153546247,
+      1.7976601241893326
+    ],
+    "direct_ratio_range": [
+      0.9909606676406928,
+      1.0062585049758745
+    ],
+    "fastest_measured_native_counts": {
+      "separated slower": 2,
+      "separated faster": 14
+    },
+    "fastest_measured_native_ratio_range": [
+      0.2050105107748613,
+      1.3239161209211843
+    ]
+  },
+  {
+    "profile": "gnr-avx512bw",
+    "target": "avx2",
+    "cases": 16,
+    "authored_counts": {
+      "separated slower": 13,
+      "separated faster": 3
+    },
+    "authored_ratio_range": [
+      0.7385892896116716,
+      1.8667163072176742
+    ],
+    "direct_ratio_range": [
+      0.9812732980836179,
+      1.010374527992498
+    ],
+    "fastest_measured_native_counts": {
+      "separated slower": 4,
+      "separated faster": 12
+    },
+    "fastest_measured_native_ratio_range": [
+      0.45962235271127055,
+      1.1492948498143338
+    ]
+  },
+  {
+    "profile": "v2-neon",
+    "target": "neon",
+    "cases": 16,
+    "authored_counts": {
+      "separated faster": 15,
+      "separated slower": 1
+    },
+    "authored_ratio_range": [
+      0.2866475900241684,
+      1.0175153012410356
+    ],
+    "direct_ratio_range": [
+      0.993001904682082,
+      1.0011715071228708
+    ],
+    "fastest_measured_native_counts": {
+      "separated faster": 15,
+      "separated slower": 1
+    },
+    "fastest_measured_native_ratio_range": [
+      0.2808149178776937,
+      1.0086306920028139
+    ]
+  },
+  {
+    "profile": "zen-avx2",
+    "target": "avx2",
+    "cases": 16,
+    "authored_counts": {
+      "separated slower": 10,
+      "separated faster": 6
+    },
+    "authored_ratio_range": [
+      0.5554724949053077,
+      1.5836967912522146
+    ],
+    "direct_ratio_range": [
+      0.6709288491323795,
+      1.002836330971051
+    ],
+    "fastest_measured_native_counts": {
+      "separated slower": 2,
+      "separated faster": 14
+    },
+    "fastest_measured_native_ratio_range": [
+      0.4349446734358717,
+      1.1086059807418627
+    ]
+  },
+  {
+    "profile": "zen-avx512",
+    "target": "avx2",
+    "cases": 16,
+    "authored_counts": {
+      "separated slower": 15,
+      "separated faster": 1
+    },
+    "authored_ratio_range": [
+      0.9533485965669376,
+      2.7579941450139893
+    ],
+    "direct_ratio_range": [
+      0.9564722088029666,
+      1.0026390843331598
+    ],
+    "fastest_measured_native_counts": {
+      "separated slower": 8,
+      "separated faster": 8
+    },
+    "fastest_measured_native_ratio_range": [
+      0.5419135709344899,
+      1.9253724767779328
+    ]
+  },
+  {
+    "profile": "zen-avx512",
+    "target": "avx512",
+    "cases": 16,
+    "authored_counts": {
+      "separated slower": 12,
+      "separated faster": 4
+    },
+    "authored_ratio_range": [
+      0.6411323457950273,
+      3.719444089071711
+    ],
+    "direct_ratio_range": [
+      0.706805059189171,
+      1.0011986465165854
+    ],
+    "fastest_measured_native_counts": {
+      "separated slower": 4,
+      "separated faster": 12
+    },
+    "fastest_measured_native_ratio_range": [
+      0.3450112266939027,
+      1.7905803227774497
+    ]
+  },
+  {
+    "profile": "zen-avx512bw",
+    "target": "avx2",
+    "cases": 16,
+    "authored_counts": {
+      "separated slower": 15,
+      "separated faster": 1
+    },
+    "authored_ratio_range": [
+      0.9573874427468039,
+      3.9263505968340238
+    ],
+    "direct_ratio_range": [
+      0.9240198750888557,
+      1.0011650310320435
+    ],
+    "fastest_measured_native_counts": {
+      "separated slower": 10,
+      "separated faster": 6
+    },
+    "fastest_measured_native_ratio_range": [
+      0.8421000754305098,
+      1.6711610985816936
+    ]
+  }
+]

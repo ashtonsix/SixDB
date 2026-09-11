@@ -1,0 +1,142 @@
+{
+  "scope": "AVX2/QEMU semantic and code-generation probe; no hardware timing",
+  "sources": {
+    "build/workspaces/seriespack-partial-materialize-contract/check.cpp": "8884e176c47c22cb4c660052182c4023ae43901caa4b7f40ebece16d2f9987c2",
+    "build/workspaces/seriespack-partial-materialize-contract/partial.h": "4a82e0d0cdea07f198b59f6ff0140ce73c372843fc1fc8bbc13f1323096b07d5",
+    "build/successor-materialize-scalar-runs/region_executor.h": "daeada46b094ac6c923e77b4985f750599c9cb040739266a387c069316ee833c",
+    "build/successor-materialize-bridge/typed_store.h": "b1d3b33ed35ecba844e9ac75b520c1ef2a700e822d5d3c2dfda9cdf805b282fb",
+    "ikea/include/ikea/seriespack/composition.h": "57936212057c1193bb12a90cff4bfc5681094b1e068b0903ec4d5c93a8eb81da",
+    "ikea/include/ikea/seriespack/layout.h": "84948934ecbe65bd07a06123c87300043a281c65b2a2d76f7a91beaf4000a123",
+    "ikea/include/ikea/seriespack/operations.h": "01c7352f820050282e077297f6849061de448a1126105af77f5aeccad3516770",
+    "ikea/include/ikea/seriespack/view.h": "224f2175d6ba6fdf350bd244d4f4837d255c43258aafc0a8afc306c947c6cf6f",
+    "ikea/include/ikea/seriespack/detail/range_regions.h": "94fe987663b61ff3df3e32700438ba12b20b3061083798bec02a7c739f499612",
+    "ikea/include/ikea/seriespack/detail/physical.h": "cc46daf3580ad494682830c49e30a03e6c5444498c94754501a21e08875eb256",
+    "ikea/include/ikea/seriespack/native_avx2.h": "17c6665559b319460d28c83f41731cfc83c7f6d117a3bd32fa84308b42fe80de",
+    "ikea/include/ikea/seriespack/detail/body_avx2.h": "7fb591bfb96546a31561c08ceab7d3d4d6b8afca4e2d73f8f0f7fa06127dab0c",
+    "build/workspaces/seriespack-partial-materialize-contract/fixture.h": "03dbc0a491b37fe1d26a2864bba4e9f346af513ea1f4353dd1307b68f62cd74a",
+    "build/successor-materialize-scalar-runs/candidate.h": "a3654ef5c256a36ad6fc181e7335cb8ee398e4110386dac3304b1f503f71f464",
+    "build/successor-runtime-ranges/fixture.h": "f0b3af8de511ba43f954db23b936017b3a231695e435274cec99474253c2a805",
+    "ikea/include/ikea/seriespack.h": "f21bd7af93ea8f9914745cf9353b66629da23931a46e18e95b5fb9132e02292b",
+    "ikea/include/ikea/seriespack/point.h": "59f117fa30da487d785bba451069e409c7403d9ca75474cb5e54614d70ab2d7c",
+    "ikea/src/seriespack/view.cpp": "6c8aaff96221c96fb5f135f83bf12d0a73ff89227b8b2cf443dc37d332773252"
+  },
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "emulator": "qemu-x86_64 version 10.1.0 (Debian 1:10.1.0+ds-5ubuntu2.6)\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\n",
+  "commands": [
+    [
+      "clang++-21",
+      "--target=x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Iikea/include",
+      "-march=x86-64-v3",
+      "-mtune=znver5",
+      "-c",
+      "ikea/src/seriespack/view.cpp",
+      "-o",
+      "build/workspaces/seriespack-partial-materialize-contract/view.o"
+    ],
+    [
+      "clang++-21",
+      "--target=x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Iikea/include",
+      "-march=x86-64-v3",
+      "-mtune=znver5",
+      "-MMD",
+      "-MF",
+      "build/workspaces/seriespack-partial-materialize-contract/check.d",
+      "build/workspaces/seriespack-partial-materialize-contract/check.cpp",
+      "build/workspaces/seriespack-partial-materialize-contract/view.o",
+      "-o",
+      "build/workspaces/seriespack-partial-materialize-contract/check"
+    ],
+    [
+      "qemu-x86_64",
+      "-cpu",
+      "max",
+      "-L",
+      "/usr/x86_64-linux-gnu",
+      "build/workspaces/seriespack-partial-materialize-contract/check"
+    ]
+  ],
+  "binary_sha256": "9311545d77c59ed22f07707c118521c8d090c7502fb1db4fdf495ce6f2295f3b",
+  "same_source_relink_identical": true,
+  "checks": {
+    "target": "avx2-qemu",
+    "guarded_queries": 798976,
+    "source_placements": 516,
+    "projected_queries": 262528,
+    "tail_only_queries": 11392,
+    "closed_prefilter_queries": 408
+  },
+  "callbacks": {
+    "partial_local7_u32": {
+      "instruction_count": 164,
+      "calls": [],
+      "vector_stack_accesses": [],
+      "scalar_stack_accesses": [],
+      "push_pop": [
+        "1bd9:      \tpushq\t%rbp",
+        "1bda:      \tpushq\t%r15",
+        "1bdc:      \tpushq\t%r14",
+        "1bde:      \tpushq\t%r13",
+        "1be0:      \tpushq\t%r12",
+        "1be2:      \tpushq\t%rbx",
+        "1e4c:      \tpopq\t%rbx",
+        "1e4d:      \tpopq\t%r12",
+        "1e4f:      \tpopq\t%r13",
+        "1e51:      \tpopq\t%r14",
+        "1e53:      \tpopq\t%r15",
+        "1e55:      \tpopq\t%rbp"
+      ]
+    },
+    "partial_stripe28_u64": {
+      "instruction_count": 211,
+      "calls": [],
+      "vector_stack_accesses": [],
+      "scalar_stack_accesses": [
+        "1e6a:      \tmovq\t%rcx, -0x20(%rsp)",
+        "1e6f:      \tmovq\t%rdi, -0x8(%rsp)",
+        "1ee3:      \tmovq\t%rcx, -0x10(%rsp)",
+        "1f4a:      \tmovq\t%rcx, -0x18(%rsp)",
+        "1ff7:      \tmovq\t-0x8(%rsp), %r15",
+        "2037:      \tmovq\t-0x10(%rsp), %rdi",
+        "20cb:      \tmovq\t-0x20(%rsp), %rdi",
+        "212e:      \tmovq\t-0x18(%rsp), %rcx",
+        "2153:      \tmovq\t-0x18(%rsp), %rcx",
+        "216f:      \tmovq\t-0x20(%rsp), %rcx"
+      ],
+      "push_pop": [
+        "1e60:      \tpushq\t%rbp",
+        "1e61:      \tpushq\t%r15",
+        "1e63:      \tpushq\t%r14",
+        "1e65:      \tpushq\t%r13",
+        "1e67:      \tpushq\t%r12",
+        "1e69:      \tpushq\t%rbx",
+        "21b3:      \tpopq\t%rbx",
+        "21b4:      \tpopq\t%r12",
+        "21b6:      \tpopq\t%r13",
+        "21b8:      \tpopq\t%r14",
+        "21ba:      \tpopq\t%r15",
+        "21bc:      \tpopq\t%rbp"
+      ]
+    }
+  },
+  "limitations": [
+    "four selected source descriptions; u32/u64 outputs; eight-row AVX2 regions",
+    "existing frozen physical reader and independent wire/guard utilities reused",
+    "scalar control spills exist; mask construction and store policy are not performance proposals",
+    "no SIMD value staging in the two inspected full callbacks; no general register-pressure claim",
+    "no new public admission API, production traversal, CPS or suspension contract"
+  ]
+}
