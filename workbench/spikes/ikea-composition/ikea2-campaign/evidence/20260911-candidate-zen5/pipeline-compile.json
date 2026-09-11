@@ -1,0 +1,36 @@
+{
+  "status": "complete",
+  "limits": "Forced serial compiler invocations, without linking. OS caches are not cleared. RSS is a process maximum, not concurrent aggregate memory. TU hashes do not cover headers: use a captured checkout for source identity. Redirected outputs can affect debug paths/object bytes; these are diagnostic objects, not the measured runtime binaries. Missing OOM evidence does not exclude OOM. A driver child killed by OOM may not match the recorded compiler PID. This helper does not execute Ninja or modify its log.",
+  "serial_compile_wall_seconds": 2.3071130790000325,
+  "serial_compile_user_seconds": 2.244389,
+  "serial_compile_system_seconds": 0.061016999999999995,
+  "max_process_rss_kib": 209640,
+  "compiles": [
+    {
+      "source": "/opt/sixdb/source/ikea2/bench/catalog_inline.cpp",
+      "wall_seconds": 1.5596079969999437,
+      "user_seconds": 1.526028,
+      "system_seconds": 0.032003,
+      "max_process_rss_kib": 209640,
+      "returncode": 0,
+      "status": "complete",
+      "object": {
+        "bytes": 698448,
+        "sha256": "e3882387012bf028dc03d3ecc8c9a2a6df831a2e83c064ae9d227772ed0bab45"
+      }
+    },
+    {
+      "source": "/opt/sixdb/source/ikea2/bench/catalog_cps.cpp",
+      "wall_seconds": 0.7475050820000888,
+      "user_seconds": 0.7183609999999999,
+      "system_seconds": 0.029013999999999998,
+      "max_process_rss_kib": 181740,
+      "returncode": 0,
+      "status": "complete",
+      "object": {
+        "bytes": 358624,
+        "sha256": "7dbc6d82472ee950c1bf4893a9ae4d3039db2cf9ea894dfbb71aa2c9feb30b7d"
+      }
+    }
+  ]
+}

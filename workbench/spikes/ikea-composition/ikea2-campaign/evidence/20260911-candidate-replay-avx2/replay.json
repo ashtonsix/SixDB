@@ -1,0 +1,89 @@
+{
+  "format": 1,
+  "scope": "archived binaries; executable fixture checks, no compilation",
+  "started_utc": "2026-09-11T14:06:33Z",
+  "host": {
+    "name": "ip-172-31-29-84",
+    "platform": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39"
+  },
+  "cpu": 0,
+  "spec_sha256": "087f43d2db63153baf4ca17b697507a603316e92f0339c7bf413eb3a81c7cf4a",
+  "variants": {
+    "candidate": {
+      "binary": "binary-sources/candidate/ikea2_compare",
+      "sha256": "0b4366e9ac9633df00ced652a127a0e415b8bb6c6722d0aed53202205f39fe5c",
+      "source_digest": "b7be48ac4314bfe5313ccf1dc2290aec52fa3e21b51bc4f72fcc3f0163a99d85"
+    }
+  },
+  "trials": [
+    {
+      "name": "01-candidate",
+      "variant": "candidate",
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "/usr/bin/time",
+        "-q",
+        "-o",
+        "/opt/sixdb/jobs/20260911T140609Z-6297e9ad/results/replay/01-candidate.resources.json",
+        "-f",
+        "{\"wall_seconds\":%e,\"user_seconds\":%U,\"system_seconds\":%S,\"max_rss_kib\":%M}",
+        "/opt/sixdb/jobs/20260911T140609Z-6297e9ad/results/replay/binary-sources/candidate/ikea2_compare",
+        "--benchmark_filter=^(decode/local/k28/ikea|decode/local/k28/ikea2|get16-ends/striped/k3/ikea2-region|get16-ends/striped/k3/prior|overwrite/striped/k12/all/control-coverage|overwrite/striped/k12/all/ikea2-coverage)$",
+        "--benchmark_min_time=0.1s",
+        "--benchmark_repetitions=7",
+        "--benchmark_enable_random_interleaving=false",
+        "--benchmark_out_format=json",
+        "--benchmark_out=/opt/sixdb/jobs/20260911T140609Z-6297e9ad/results/replay/01-candidate.json"
+      ],
+      "cwd": "/opt/sixdb/source",
+      "returncode": 0,
+      "seconds": 6.2253894440000295,
+      "resources": {
+        "wall_seconds": 6.22,
+        "user_seconds": 6.22,
+        "system_seconds": 0.0,
+        "max_rss_kib": 9184
+      },
+      "samples": "01-candidate.json",
+      "samples_sha256": "09b0a8a65c33b2dc02b774eb8961722b937739cf91a3c5cae63b8c8c5e3e1969",
+      "cases": 6
+    },
+    {
+      "name": "02-candidate",
+      "variant": "candidate",
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "/usr/bin/time",
+        "-q",
+        "-o",
+        "/opt/sixdb/jobs/20260911T140609Z-6297e9ad/results/replay/02-candidate.resources.json",
+        "-f",
+        "{\"wall_seconds\":%e,\"user_seconds\":%U,\"system_seconds\":%S,\"max_rss_kib\":%M}",
+        "/opt/sixdb/jobs/20260911T140609Z-6297e9ad/results/replay/binary-sources/candidate/ikea2_compare",
+        "--benchmark_filter=^(decode/local/k28/ikea|decode/local/k28/ikea2|get16-ends/striped/k3/ikea2-region|get16-ends/striped/k3/prior|overwrite/striped/k12/all/control-coverage|overwrite/striped/k12/all/ikea2-coverage)$",
+        "--benchmark_min_time=0.1s",
+        "--benchmark_repetitions=7",
+        "--benchmark_enable_random_interleaving=false",
+        "--benchmark_out_format=json",
+        "--benchmark_out=/opt/sixdb/jobs/20260911T140609Z-6297e9ad/results/replay/02-candidate.json"
+      ],
+      "cwd": "/opt/sixdb/source",
+      "returncode": 0,
+      "seconds": 6.191297603000066,
+      "resources": {
+        "wall_seconds": 6.19,
+        "user_seconds": 6.18,
+        "system_seconds": 0.0,
+        "max_rss_kib": 9220
+      },
+      "samples": "02-candidate.json",
+      "samples_sha256": "b6f592e28ec72f31e9343a56c48b5fe9ac46d249ad809077f06ba5acf3c6a67d",
+      "cases": 6
+    }
+  ],
+  "status": "complete"
+}

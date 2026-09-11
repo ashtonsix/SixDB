@@ -1,0 +1,54 @@
+{
+  "format": 1,
+  "question": "Repeat final neon sweep exceptions above 1.4x with the exact retained binary; distinguish repeatable costs from short-run variation. Cases are selected after the broad sweep, not a fresh coverage survey.",
+  "variants": {
+    "candidate": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 48652432,
+        "files": 49,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/0ed9899c4da933478b1f7acfd12471127cc037e383a566c1386a3d763bbfadd3.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "0ed9899c4da933478b1f7acfd12471127cc037e383a566c1386a3d763bbfadd3",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/0ed9899c4da933478b1f7acfd12471127cc037e383a566c1386a3d763bbfadd3.tar.gz"
+      },
+      "binary": "ikea2_compare",
+      "source_digest": "b7be48ac4314bfe5313ccf1dc2290aec52fa3e21b51bc4f72fcc3f0163a99d85",
+      "files_sha256": {
+        "ikea2_compare": "6a7bb756c6e7aa03fce69e0df1cd590faf2a5519ffc83ffa53f18f5474627c11",
+        "job.json": "7e295bf7a5feeeeaacdbc7abca9bfc56a88b46a1eba5781695ab2174032eb245",
+        "source-manifest.json": "3a622d3222f9f5e867567ce33c0eff71275225bf896b5d8b01ade228d6920608",
+        "host.json": "42e3e40f4e87ce5654947236a2cd019199a86cefd7914fc75b5a17e4f14c40ec"
+      }
+    }
+  },
+  "order": [
+    "candidate",
+    "candidate"
+  ],
+  "filter": "^(decode/striped/k5/ikea2|decode/striped/k5/prior|decode/striped/k7/ikea2|decode/striped/k7/prior|get16-ends/striped/k7/ikea2-range|get16-ends/striped/k7/prior|overwrite-all/local/k28/ikea|overwrite-all/local/k28/ikea2|overwrite-all/local/k36/ikea|overwrite-all/local/k36/ikea2|overwrite-all/striped/k10/ikea|overwrite-all/striped/k10/ikea2|overwrite-all/striped/k4/ikea2|overwrite-all/striped/k4/prior|overwrite/striped/k12/all/control-coverage|overwrite/striped/k12/all/ikea2-coverage|placed/k63h16/substituted/all/sum-materialized|placed/k63h16/substituted/all/sum-native)$",
+  "min_time": 0.1,
+  "repetitions": 7,
+  "expected_cases": [
+    "decode/striped/k5/ikea2",
+    "decode/striped/k5/prior",
+    "decode/striped/k7/ikea2",
+    "decode/striped/k7/prior",
+    "get16-ends/striped/k7/ikea2-range",
+    "get16-ends/striped/k7/prior",
+    "overwrite-all/local/k28/ikea",
+    "overwrite-all/local/k28/ikea2",
+    "overwrite-all/local/k36/ikea",
+    "overwrite-all/local/k36/ikea2",
+    "overwrite-all/striped/k10/ikea",
+    "overwrite-all/striped/k10/ikea2",
+    "overwrite-all/striped/k4/ikea2",
+    "overwrite-all/striped/k4/prior",
+    "overwrite/striped/k12/all/control-coverage",
+    "overwrite/striped/k12/all/ikea2-coverage",
+    "placed/k63h16/substituted/all/sum-materialized",
+    "placed/k63h16/substituted/all/sum-native"
+  ]
+}

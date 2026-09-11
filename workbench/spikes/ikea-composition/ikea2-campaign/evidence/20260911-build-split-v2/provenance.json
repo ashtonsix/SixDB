@@ -1,0 +1,126 @@
+{
+  "job": "20260911T112946Z-8b4be555",
+  "source": {
+    "digest": "cb1cd022c57eae80cc972a3456bea099feaec05e335924a9503e22f740b35dbe",
+    "pool_sha256": "b0c2f84df06c0b7e1b1d66b0869a42095ea9b9b1aeb002545fff40a67c046bb0",
+    "runtime_sha256": "a2666954a6d1e7fcaa5e2e4c19021230510dcffd6987dcafff18cbccac1ae1d5",
+    "setup_sha256": "62576c70b9f5acb09dc05c23ccb8f1f268ab995175a8b11fba175261fad0543e",
+    "sha256": "8ec81e4bdafc502ea707f1bb4c18e6316c12bebbc1b709ee38c5d27dd4e37843"
+  },
+  "script": "ikea2/bench/run.sh",
+  "config": {
+    "ami": "ami-0246d714afcc1d494",
+    "architecture": "arm64",
+    "bucket": "calico-fleet-artifacts",
+    "capacity": "spot",
+    "deadline_seconds": 2400,
+    "disk_gb": 24,
+    "env": {
+      "IKEA2_PROFILE": "neon",
+      "SIXDB_BUILD_JOBS": "2"
+    },
+    "fresh": false,
+    "hardware": {
+      "MemoryInfo": {
+        "SizeInMiB": 16384
+      },
+      "ProcessorInfo": {
+        "Manufacturer": "AWS",
+        "SupportedArchitectures": [
+          "arm64"
+        ],
+        "SustainedClockSpeedInGhz": 2.8
+      },
+      "VCpuInfo": {
+        "DefaultCores": 2,
+        "DefaultThreadsPerCore": 1,
+        "DefaultVCpus": 2,
+        "ValidCores": [
+          1,
+          2
+        ],
+        "ValidThreadsPerCore": [
+          1
+        ]
+      }
+    },
+    "idle_seconds": 1200,
+    "image_name": "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-20260904",
+    "instance_profile": "sixdb-worker",
+    "instance_type": "r8g.large",
+    "machine": "neoverse-v2",
+    "max_age_seconds": 14400,
+    "region": "us-east-1",
+    "root_device": "/dev/sda1",
+    "security_group_id": "sg-079dafaf1d39f43b0",
+    "setup": "toolchain",
+    "subnets": [
+      {
+        "id": "subnet-75288838",
+        "zone": "us-east-1a"
+      },
+      {
+        "id": "subnet-c29a879e",
+        "zone": "us-east-1b"
+      },
+      {
+        "id": "subnet-800010e7",
+        "zone": "us-east-1c"
+      },
+      {
+        "id": "subnet-d1aeb1ff",
+        "zone": "us-east-1d"
+      },
+      {
+        "id": "subnet-0912d807",
+        "zone": "us-east-1f"
+      }
+    ],
+    "sync_seconds": 0,
+    "vpc_id": "vpc-5e2d0124",
+    "actual_capacity": "spot"
+  },
+  "benchmark_context": {
+    "date": "2026-09-11T11:34:41+00:00",
+    "host_name": "ip-172-31-17-227",
+    "executable": "build/ikea2/neon-neoverse-v2/ikea2/ikea2_bench",
+    "num_cpus": 2,
+    "mhz_per_cpu": 2000,
+    "cpu_scaling_enabled": false,
+    "aslr_enabled": true,
+    "caches": [
+      {
+        "type": "Data",
+        "level": 1,
+        "size": 65536,
+        "num_sharing": 1
+      },
+      {
+        "type": "Instruction",
+        "level": 1,
+        "size": 65536,
+        "num_sharing": 1
+      },
+      {
+        "type": "Unified",
+        "level": 2,
+        "size": 2097152,
+        "num_sharing": 1
+      },
+      {
+        "type": "Unified",
+        "level": 3,
+        "size": 37748736,
+        "num_sharing": 2
+      }
+    ],
+    "load_avg": [
+      1.28857,
+      1.0332,
+      0.834961
+    ],
+    "library_version": "v1.9.4",
+    "library_build_type": "release",
+    "json_schema_version": 1
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "format": 1,
+  "scope": "archived binaries; executable fixture checks, no compilation",
+  "started_utc": "2026-09-11T14:06:35Z",
+  "host": {
+    "name": "ip-172-31-40-13",
+    "platform": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39"
+  },
+  "cpu": 0,
+  "spec_sha256": "96088f9077765db9cb76a79698d07844bacb1ae5f947f532635aac6e837db021",
+  "variants": {
+    "candidate": {
+      "binary": "binary-sources/candidate/ikea2_compare",
+      "sha256": "bbb9004cc584ff5f5a94e7eb5438ea679aaa9f54545ea3d1864b6498df266abf",
+      "source_digest": "b7be48ac4314bfe5313ccf1dc2290aec52fa3e21b51bc4f72fcc3f0163a99d85"
+    }
+  },
+  "trials": [
+    {
+      "name": "01-candidate",
+      "variant": "candidate",
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "/usr/bin/time",
+        "-q",
+        "-o",
+        "/opt/sixdb/jobs/20260911T140609Z-3526ecee/results/replay/01-candidate.resources.json",
+        "-f",
+        "{\"wall_seconds\":%e,\"user_seconds\":%U,\"system_seconds\":%S,\"max_rss_kib\":%M}",
+        "/opt/sixdb/jobs/20260911T140609Z-3526ecee/results/replay/binary-sources/candidate/ikea2_compare",
+        "--benchmark_filter=^(overwrite/local/k7/all/control-coverage|overwrite/local/k7/all/ikea2-coverage|overwrite/local/k7/all/ikea2-raw|overwrite/local/k7/all/prior|placed/k20h8/interleaved/partial/mutation-bound|placed/k20h8/interleaved/partial/mutation-materialized|placed/k20h8/separated/partial/mutation-bound|placed/k20h8/separated/partial/mutation-materialized)$",
+        "--benchmark_min_time=0.1s",
+        "--benchmark_repetitions=7",
+        "--benchmark_enable_random_interleaving=false",
+        "--benchmark_out_format=json",
+        "--benchmark_out=/opt/sixdb/jobs/20260911T140609Z-3526ecee/results/replay/01-candidate.json"
+      ],
+      "cwd": "/opt/sixdb/source",
+      "returncode": 0,
+      "seconds": 8.222398274999705,
+      "resources": {
+        "wall_seconds": 8.22,
+        "user_seconds": 8.21,
+        "system_seconds": 0.0,
+        "max_rss_kib": 9320
+      },
+      "samples": "01-candidate.json",
+      "samples_sha256": "6b093e17d11c4bc0953aeaf98a910944d24f2b4f51b9b9b5aafa175bec738ec7",
+      "cases": 8
+    },
+    {
+      "name": "02-candidate",
+      "variant": "candidate",
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "/usr/bin/time",
+        "-q",
+        "-o",
+        "/opt/sixdb/jobs/20260911T140609Z-3526ecee/results/replay/02-candidate.resources.json",
+        "-f",
+        "{\"wall_seconds\":%e,\"user_seconds\":%U,\"system_seconds\":%S,\"max_rss_kib\":%M}",
+        "/opt/sixdb/jobs/20260911T140609Z-3526ecee/results/replay/binary-sources/candidate/ikea2_compare",
+        "--benchmark_filter=^(overwrite/local/k7/all/control-coverage|overwrite/local/k7/all/ikea2-coverage|overwrite/local/k7/all/ikea2-raw|overwrite/local/k7/all/prior|placed/k20h8/interleaved/partial/mutation-bound|placed/k20h8/interleaved/partial/mutation-materialized|placed/k20h8/separated/partial/mutation-bound|placed/k20h8/separated/partial/mutation-materialized)$",
+        "--benchmark_min_time=0.1s",
+        "--benchmark_repetitions=7",
+        "--benchmark_enable_random_interleaving=false",
+        "--benchmark_out_format=json",
+        "--benchmark_out=/opt/sixdb/jobs/20260911T140609Z-3526ecee/results/replay/02-candidate.json"
+      ],
+      "cwd": "/opt/sixdb/source",
+      "returncode": 0,
+      "seconds": 8.307852784999795,
+      "resources": {
+        "wall_seconds": 8.3,
+        "user_seconds": 8.3,
+        "system_seconds": 0.0,
+        "max_rss_kib": 9256
+      },
+      "samples": "02-candidate.json",
+      "samples_sha256": "0de38789bfcd9557650698872ada5815aa5eb387f6b34d108a4b1152608a11bd",
+      "cases": 8
+    }
+  ],
+  "status": "complete"
+}

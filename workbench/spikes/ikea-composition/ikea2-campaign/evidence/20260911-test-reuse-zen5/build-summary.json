@@ -1,0 +1,60 @@
+{
+  "limits": "Completed edges from this invocation only. Failed edges have no duration; overlapping edge durations are not wall time. GNU time RSS is a process maximum, not aggregate concurrent memory.",
+  "build_state": "existing build directory; inspect completed_edges for what rebuilt",
+  "completed_edges": [
+    {
+      "output": "ikea2/CMakeFiles/ikea2_check.dir/test/mutation_17_24.cpp.o",
+      "seconds": 30.553
+    },
+    {
+      "output": "ikea2/CMakeFiles/ikea2_check.dir/test/mutation_9_16.cpp.o",
+      "seconds": 24.423
+    },
+    {
+      "output": "ikea2/CMakeFiles/ikea2_check.dir/test/mutation_1_8.cpp.o",
+      "seconds": 19.572
+    },
+    {
+      "output": "ikea2/CMakeFiles/ikea2_check.dir/test/mutation_25_32.cpp.o",
+      "seconds": 18.691
+    },
+    {
+      "output": "ikea2/CMakeFiles/ikea2_check.dir/test/mutation_33_40.cpp.o",
+      "seconds": 13.727
+    },
+    {
+      "output": "ikea2/CMakeFiles/ikea2_check.dir/test/mutation_49_56.cpp.o",
+      "seconds": 12.652
+    },
+    {
+      "output": "ikea2/CMakeFiles/ikea2_check.dir/test/mutation_41_48.cpp.o",
+      "seconds": 12.596
+    },
+    {
+      "output": "ikea2/CMakeFiles/ikea2_check.dir/test/mutation_57_64.cpp.o",
+      "seconds": 12.478
+    },
+    {
+      "output": "ikea2/CMakeFiles/ikea2_check.dir/test/mutation_dense.cpp.o",
+      "seconds": 4.795
+    },
+    {
+      "output": "ikea2/ikea2_check",
+      "seconds": 0.283
+    }
+  ],
+  "configure": {
+    "elapsed_seconds": "0.04",
+    "user_seconds": "0.03",
+    "system_seconds": "0.01",
+    "max_process_rss_kib": "24132",
+    "exit_status": "0"
+  },
+  "build": {
+    "elapsed_seconds": "75.48",
+    "user_seconds": "148.04",
+    "system_seconds": "1.57",
+    "max_process_rss_kib": "1411268",
+    "exit_status": "0"
+  }
+}

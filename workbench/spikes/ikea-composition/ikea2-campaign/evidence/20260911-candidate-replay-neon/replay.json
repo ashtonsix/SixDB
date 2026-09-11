@@ -1,0 +1,89 @@
+{
+  "format": 1,
+  "scope": "archived binaries; executable fixture checks, no compilation",
+  "started_utc": "2026-09-11T14:06:34Z",
+  "host": {
+    "name": "ip-172-31-21-161",
+    "platform": "Linux-7.0.0-1012-aws-aarch64-with-glibc2.39"
+  },
+  "cpu": 0,
+  "spec_sha256": "8223c9bed409779795a2f7ba7bc295c05837490112c9c7ae6a079d04f81c3716",
+  "variants": {
+    "candidate": {
+      "binary": "binary-sources/candidate/ikea2_compare",
+      "sha256": "6a7bb756c6e7aa03fce69e0df1cd590faf2a5519ffc83ffa53f18f5474627c11",
+      "source_digest": "b7be48ac4314bfe5313ccf1dc2290aec52fa3e21b51bc4f72fcc3f0163a99d85"
+    }
+  },
+  "trials": [
+    {
+      "name": "01-candidate",
+      "variant": "candidate",
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "/usr/bin/time",
+        "-q",
+        "-o",
+        "/opt/sixdb/jobs/20260911T140609Z-bbd192d9/results/replay/01-candidate.resources.json",
+        "-f",
+        "{\"wall_seconds\":%e,\"user_seconds\":%U,\"system_seconds\":%S,\"max_rss_kib\":%M}",
+        "/opt/sixdb/jobs/20260911T140609Z-bbd192d9/results/replay/binary-sources/candidate/ikea2_compare",
+        "--benchmark_filter=^(decode/striped/k5/ikea2|decode/striped/k5/prior|decode/striped/k7/ikea2|decode/striped/k7/prior|get16-ends/striped/k7/ikea2-range|get16-ends/striped/k7/prior|overwrite-all/local/k28/ikea|overwrite-all/local/k28/ikea2|overwrite-all/local/k36/ikea|overwrite-all/local/k36/ikea2|overwrite-all/striped/k10/ikea|overwrite-all/striped/k10/ikea2|overwrite-all/striped/k4/ikea2|overwrite-all/striped/k4/prior|overwrite/striped/k12/all/control-coverage|overwrite/striped/k12/all/ikea2-coverage|placed/k63h16/substituted/all/sum-materialized|placed/k63h16/substituted/all/sum-native)$",
+        "--benchmark_min_time=0.1s",
+        "--benchmark_repetitions=7",
+        "--benchmark_enable_random_interleaving=false",
+        "--benchmark_out_format=json",
+        "--benchmark_out=/opt/sixdb/jobs/20260911T140609Z-bbd192d9/results/replay/01-candidate.json"
+      ],
+      "cwd": "/opt/sixdb/source",
+      "returncode": 0,
+      "seconds": 18.054939460999776,
+      "resources": {
+        "wall_seconds": 18.05,
+        "user_seconds": 18.04,
+        "system_seconds": 0.0,
+        "max_rss_kib": 8048
+      },
+      "samples": "01-candidate.json",
+      "samples_sha256": "517fc4a1225b46c4a7aefaa0ca33a246c6fad16aa5f7f4e6d8a90ddd99f45ece",
+      "cases": 18
+    },
+    {
+      "name": "02-candidate",
+      "variant": "candidate",
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "/usr/bin/time",
+        "-q",
+        "-o",
+        "/opt/sixdb/jobs/20260911T140609Z-bbd192d9/results/replay/02-candidate.resources.json",
+        "-f",
+        "{\"wall_seconds\":%e,\"user_seconds\":%U,\"system_seconds\":%S,\"max_rss_kib\":%M}",
+        "/opt/sixdb/jobs/20260911T140609Z-bbd192d9/results/replay/binary-sources/candidate/ikea2_compare",
+        "--benchmark_filter=^(decode/striped/k5/ikea2|decode/striped/k5/prior|decode/striped/k7/ikea2|decode/striped/k7/prior|get16-ends/striped/k7/ikea2-range|get16-ends/striped/k7/prior|overwrite-all/local/k28/ikea|overwrite-all/local/k28/ikea2|overwrite-all/local/k36/ikea|overwrite-all/local/k36/ikea2|overwrite-all/striped/k10/ikea|overwrite-all/striped/k10/ikea2|overwrite-all/striped/k4/ikea2|overwrite-all/striped/k4/prior|overwrite/striped/k12/all/control-coverage|overwrite/striped/k12/all/ikea2-coverage|placed/k63h16/substituted/all/sum-materialized|placed/k63h16/substituted/all/sum-native)$",
+        "--benchmark_min_time=0.1s",
+        "--benchmark_repetitions=7",
+        "--benchmark_enable_random_interleaving=false",
+        "--benchmark_out_format=json",
+        "--benchmark_out=/opt/sixdb/jobs/20260911T140609Z-bbd192d9/results/replay/02-candidate.json"
+      ],
+      "cwd": "/opt/sixdb/source",
+      "returncode": 0,
+      "seconds": 18.065190837000046,
+      "resources": {
+        "wall_seconds": 18.06,
+        "user_seconds": 18.05,
+        "system_seconds": 0.01,
+        "max_rss_kib": 8044
+      },
+      "samples": "02-candidate.json",
+      "samples_sha256": "d4da3c9ecd55aeb8d3e0d47db4ed82a11179fe27c1ba1ea4eea2d41d05730895",
+      "cases": 18
+    }
+  ],
+  "status": "complete"
+}

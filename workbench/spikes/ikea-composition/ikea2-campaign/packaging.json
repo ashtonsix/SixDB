@@ -1,0 +1,45 @@
+{
+  "format": 1,
+  "measured_source_digest": "b7be48ac4314bfe5313ccf1dc2290aec52fa3e21b51bc4f72fcc3f0163a99d85",
+  "packaged_source_digest": "efd70d2ecd22a9721787bf4f3699a4dd504084299ad44543aefd15377f926d1d",
+  "packaged_capture": "build/captures/ikea2-ready-20260911",
+  "unchanged_non_markdown_candidate_files": 92,
+  "post_measurement_changes": [
+    {
+      "path": "ikea2/examples/ordinary.cpp",
+      "measured_sha256": "6d38426f0f8369716ee86d319d0884bc14f10b367d4538681dd408d7692d5d03",
+      "packaged_sha256": "3ed3d7b503a7376ceda23a66dd265725f39d32eac80c696e5948a418cff8296b"
+    },
+    {
+      "path": "ikea2/include/ikea2/seriespack/presets.h",
+      "measured_sha256": "6f5de0ef587ba41c22c886c47ce3927e91aaecbe480adcb030146f32c09cb56c",
+      "packaged_sha256": "5b40a58311ae523f6ec0f0b576428556052967bb6bd0618de12b21cbbb35c27c"
+    },
+    {
+      "path": "ikea2/test/format/descriptor.cpp",
+      "measured_sha256": "cfbbe7ff414ab23e76363d554babf0403f3630106e7cf4c448908c17f2c07129",
+      "packaged_sha256": "7a137ea365940fa7280db64419b76a87efb8b58c58c2f44ff99d3a9348ad7c90"
+    }
+  ],
+  "change_scope": "Preset names/H policy, matching example spelling and descriptor static assertions. All physical kernels, operation bodies and benchmark workloads are unchanged. Documentation is separate from measured runtime evidence.",
+  "validation": [
+    {
+      "command": "cmake --build build/ikea2/neon --target ikea2_validate -j2",
+      "status": "passed",
+      "scope": "76 headless and 206 placed/mutation formats, reference hashes, ownership checks and four examples"
+    },
+    {
+      "command": "python3 ikea2/test/headers.py build/ikea2/neon",
+      "status": "passed",
+      "scope": "21 independently compiled public/author headers"
+    },
+    {
+      "command": "clang++-21 --target=x86_64-linux-gnu --gcc-toolchain=/usr -std=c++23 -O3 -march=x86-64-v3 -mtune=znver5 -Iikea2/include -fsyntax-only ikea2/examples/ordinary.cpp ikea2/test/format/descriptor.cpp",
+      "status": "passed"
+    },
+    {
+      "command": "clang++-21 --target=x86_64-linux-gnu --gcc-toolchain=/usr -std=c++23 -O3 -march=x86-64-v4 -mtune=znver5 -mavx512vbmi -mavx512vbmi2 -mgfni -Iikea2/include -fsyntax-only ikea2/examples/ordinary.cpp ikea2/test/format/descriptor.cpp",
+      "status": "passed"
+    }
+  ]
+}

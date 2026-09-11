@@ -1,0 +1,42 @@
+{
+  "format": 1,
+  "question": "Repeat final avx2 sweep exceptions above 1.4x with the exact retained binary; distinguish repeatable costs from short-run variation. Cases are selected after the broad sweep, not a fresh coverage survey.",
+  "variants": {
+    "candidate": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 47915808,
+        "files": 49,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/94db10778dfc83db0035d04859a965d52a0d455a0cfd745cf9f48a822aa74eb5.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "94db10778dfc83db0035d04859a965d52a0d455a0cfd745cf9f48a822aa74eb5",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/94db10778dfc83db0035d04859a965d52a0d455a0cfd745cf9f48a822aa74eb5.tar.gz"
+      },
+      "binary": "ikea2_compare",
+      "source_digest": "b7be48ac4314bfe5313ccf1dc2290aec52fa3e21b51bc4f72fcc3f0163a99d85",
+      "files_sha256": {
+        "ikea2_compare": "0b4366e9ac9633df00ced652a127a0e415b8bb6c6722d0aed53202205f39fe5c",
+        "job.json": "391dedb1825b632fc0f0eb58c8e39ea3fce69efd4247912d41cc6e0cdee64365",
+        "source-manifest.json": "3a622d3222f9f5e867567ce33c0eff71275225bf896b5d8b01ade228d6920608",
+        "host.json": "29e8cf240fa1c01ae87b93549cf648b0fadad92e91200932ad830360a8525145"
+      }
+    }
+  },
+  "order": [
+    "candidate",
+    "candidate"
+  ],
+  "filter": "^(decode/local/k28/ikea|decode/local/k28/ikea2|get16-ends/striped/k3/ikea2-region|get16-ends/striped/k3/prior|overwrite/striped/k12/all/control-coverage|overwrite/striped/k12/all/ikea2-coverage)$",
+  "min_time": 0.1,
+  "repetitions": 7,
+  "expected_cases": [
+    "decode/local/k28/ikea",
+    "decode/local/k28/ikea2",
+    "get16-ends/striped/k3/ikea2-region",
+    "get16-ends/striped/k3/prior",
+    "overwrite/striped/k12/all/control-coverage",
+    "overwrite/striped/k12/all/ikea2-coverage"
+  ]
+}

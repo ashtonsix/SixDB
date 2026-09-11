@@ -1,0 +1,28 @@
+{
+  "limits": "Completed edges from this invocation only. Failed edges have no duration; overlapping edge durations are not wall time. GNU time RSS is a process maximum, not aggregate concurrent memory.",
+  "build_state": "existing build directory; inspect completed_edges for what rebuilt",
+  "completed_edges": [
+    {
+      "output": "ikea2/CMakeFiles/ikea2_bench_cases.dir/bench/ordinary.cpp.o",
+      "seconds": 10.754
+    },
+    {
+      "output": "ikea2/ikea2_compare",
+      "seconds": 0.441
+    }
+  ],
+  "configure": {
+    "elapsed_seconds": "0.07",
+    "user_seconds": "0.05",
+    "system_seconds": "0.02",
+    "max_process_rss_kib": "24032",
+    "exit_status": "0"
+  },
+  "build": {
+    "elapsed_seconds": "11.20",
+    "user_seconds": "10.83",
+    "system_seconds": "0.36",
+    "max_process_rss_kib": "597840",
+    "exit_status": "0"
+  }
+}

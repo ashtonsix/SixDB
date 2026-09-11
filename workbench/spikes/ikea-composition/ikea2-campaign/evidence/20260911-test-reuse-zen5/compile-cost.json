@@ -1,0 +1,49 @@
+{
+  "status": "complete",
+  "limits": "Forced serial compiler invocations, without linking. OS caches are not cleared. RSS is a process maximum, not concurrent aggregate memory. TU hashes do not cover headers: use a captured checkout for source identity. Redirected outputs can affect debug paths/object bytes; these are diagnostic objects, not the measured runtime binaries. Missing OOM evidence does not exclude OOM. A driver child killed by OOM may not match the recorded compiler PID. This helper does not execute Ninja or modify its log.",
+  "serial_compile_wall_seconds": 70.36316530600004,
+  "serial_compile_user_seconds": 69.74112,
+  "serial_compile_system_seconds": 0.6149739999999999,
+  "max_process_rss_kib": 1411764,
+  "compiles": [
+    {
+      "source": "/opt/sixdb/source/ikea2/test/mutation_1_8.cpp",
+      "wall_seconds": 18.418510000000083,
+      "user_seconds": 18.269141,
+      "system_seconds": 0.14599099999999998,
+      "max_process_rss_kib": 883852,
+      "returncode": 0,
+      "status": "complete",
+      "object": {
+        "bytes": 6398248,
+        "sha256": "433fef92c9985c6727132b1f88e71c896cbd1a88c8180b45bacbe6aa5460127c"
+      }
+    },
+    {
+      "source": "/opt/sixdb/source/ikea2/test/mutation_9_16.cpp",
+      "wall_seconds": 23.14084883299995,
+      "user_seconds": 22.922647,
+      "system_seconds": 0.216997,
+      "max_process_rss_kib": 1090212,
+      "returncode": 0,
+      "status": "complete",
+      "object": {
+        "bytes": 8721616,
+        "sha256": "ca143249e2e855f95c092ec03352ef1af762c23182f93939c25647359b90a9b2"
+      }
+    },
+    {
+      "source": "/opt/sixdb/source/ikea2/test/mutation_17_24.cpp",
+      "wall_seconds": 28.80380647300001,
+      "user_seconds": 28.549332,
+      "system_seconds": 0.251986,
+      "max_process_rss_kib": 1411764,
+      "returncode": 0,
+      "status": "complete",
+      "object": {
+        "bytes": 10895040,
+        "sha256": "173b605725df13e4b1c556b1682a573b0f1498a4a737391913b33d7eb2602f33"
+      }
+    }
+  ]
+}

@@ -1,0 +1,277 @@
+{
+  "method": "One warm rebuild per touched file; no source-byte change. Wall time includes relinks; RSS is max single process, not concurrent total. Not a paired pre-refactor comparison.",
+  "jobs": 2,
+  "targets": [
+    "ikea2_check",
+    "ikea2_integration_check",
+    "ikea2_examples",
+    "ikea2_bench"
+  ],
+  "baseline_hashes": {
+    "ikea2_check": "7f42f37254d6fdfeb6a86ec7a47055e6a95f7759dfe4197a91e8aeb08d88afec",
+    "ikea2_integration_check": "c468a7ec7a504a4ed1c14c6081e958c3af51f50210876c48bb08972eb2e3714c",
+    "ikea2_bench": "141041266c475f4469b699eb00ffe6908c352f98a1884f0c1fc943ff58b8cbc0",
+    "libikea2_seriespack.a": "d0659c5cc2d14caac089252870e2e02eb07c10cbf51072ecc6870e59faf45a7c"
+  },
+  "scenarios": [
+    {
+      "limits": "Completed edges from this invocation only. Failed edges have no duration; overlapping edge durations are not wall time. GNU time RSS is a process maximum, not aggregate concurrent memory.",
+      "build_state": "Warm maintained targets; touch None",
+      "completed_edges": [],
+      "build": {
+        "elapsed_seconds": "0.00",
+        "user_seconds": "0.00",
+        "system_seconds": "0.00",
+        "max_process_rss_kib": "18328",
+        "exit_status": "0"
+      },
+      "scenario": "unchanged",
+      "source": null,
+      "returncode": 0,
+      "artifact_hashes": {
+        "ikea2_check": "7f42f37254d6fdfeb6a86ec7a47055e6a95f7759dfe4197a91e8aeb08d88afec",
+        "ikea2_integration_check": "c468a7ec7a504a4ed1c14c6081e958c3af51f50210876c48bb08972eb2e3714c",
+        "ikea2_bench": "141041266c475f4469b699eb00ffe6908c352f98a1884f0c1fc943ff58b8cbc0",
+        "libikea2_seriespack.a": "d0659c5cc2d14caac089252870e2e02eb07c10cbf51072ecc6870e59faf45a7c"
+      },
+      "artifacts_unchanged": true
+    },
+    {
+      "limits": "Completed edges from this invocation only. Failed edges have no duration; overlapping edge durations are not wall time. GNU time RSS is a process maximum, not aggregate concurrent memory.",
+      "build_state": "Warm maintained targets; touch src/admission.cpp",
+      "completed_edges": [
+        {
+          "output": "ikea2/ikea2_check",
+          "seconds": 0.334
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_seriespack.dir/src/admission.cpp.o",
+          "seconds": 0.229
+        },
+        {
+          "output": "ikea2/ikea2_bench",
+          "seconds": 0.109
+        },
+        {
+          "output": "ikea2/ikea2_integration_check",
+          "seconds": 0.04
+        },
+        {
+          "output": "ikea2/ikea2_ordinary_check",
+          "seconds": 0.04
+        },
+        {
+          "output": "ikea2/ikea2_example_integration",
+          "seconds": 0.04
+        },
+        {
+          "output": "ikea2/ikea2_example_composition",
+          "seconds": 0.038
+        },
+        {
+          "output": "ikea2/ikea2_example_pipeline",
+          "seconds": 0.037
+        },
+        {
+          "output": "ikea2/libikea2_seriespack.a",
+          "seconds": 0.016
+        }
+      ],
+      "build": {
+        "elapsed_seconds": "0.58",
+        "user_seconds": "0.68",
+        "system_seconds": "0.20",
+        "max_process_rss_kib": "334636",
+        "exit_status": "0"
+      },
+      "scenario": "admission-rule",
+      "source": "src/admission.cpp",
+      "returncode": 0,
+      "artifact_hashes": {
+        "ikea2_check": "7f42f37254d6fdfeb6a86ec7a47055e6a95f7759dfe4197a91e8aeb08d88afec",
+        "ikea2_integration_check": "c468a7ec7a504a4ed1c14c6081e958c3af51f50210876c48bb08972eb2e3714c",
+        "ikea2_bench": "141041266c475f4469b699eb00ffe6908c352f98a1884f0c1fc943ff58b8cbc0",
+        "libikea2_seriespack.a": "d0659c5cc2d14caac089252870e2e02eb07c10cbf51072ecc6870e59faf45a7c"
+      },
+      "artifacts_unchanged": true
+    },
+    {
+      "limits": "Completed edges from this invocation only. Failed edges have no duration; overlapping edge durations are not wall time. GNU time RSS is a process maximum, not aggregate concurrent memory.",
+      "build_state": "Warm maintained targets; touch include/ikea2/seriespack/detail/native/avx512/write.h",
+      "completed_edges": [
+        {
+          "output": "ikea2/CMakeFiles/ikea2_check.dir/test/mutation/widths_17_24.cpp.o",
+          "seconds": 31.727
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_check.dir/test/mutation/widths_1_8.cpp.o",
+          "seconds": 30.984
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_check.dir/test/mutation/widths_9_16.cpp.o",
+          "seconds": 30.63
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_bench_cases.dir/bench/placed_wide.cpp.o",
+          "seconds": 20.141
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_check.dir/test/mutation/widths_25_32.cpp.o",
+          "seconds": 18.72
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_bench_cases.dir/bench/placed_mid.cpp.o",
+          "seconds": 14.119
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_check.dir/test/mutation/widths_33_40.cpp.o",
+          "seconds": 13.492
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_check.dir/test/mutation/widths_41_48.cpp.o",
+          "seconds": 12.399
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_check.dir/test/mutation/widths_49_56.cpp.o",
+          "seconds": 12.346
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_check.dir/test/mutation/widths_57_64.cpp.o",
+          "seconds": 12.309
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_bench_cases.dir/bench/placed_low.cpp.o",
+          "seconds": 8.882
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_bench_cases.dir/bench/ordinary.cpp.o",
+          "seconds": 7.262
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_check.dir/test/mutation/substitution.cpp.o",
+          "seconds": 6.757
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_bench_cases.dir/bench/pipeline_packets.cpp.o",
+          "seconds": 5.87
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_check.dir/test/mutation/dense.cpp.o",
+          "seconds": 4.813
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_check.dir/test/mutation/construction.cpp.o",
+          "seconds": 4.682
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_check.dir/test/execution/chain.cpp.o",
+          "seconds": 3.615
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_bench_cases.dir/bench/stress_chain.cpp.o",
+          "seconds": 3.145
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_example_integration.dir/examples/integration.cpp.o",
+          "seconds": 2.822
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_ordinary_check.dir/examples/ordinary.cpp.o",
+          "seconds": 2.625
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_integration_check.dir/test/integration/ownership.cpp.o",
+          "seconds": 1.705
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_example_composition.dir/examples/composition.cpp.o",
+          "seconds": 0.89
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_example_pipeline.dir/examples/pipeline.cpp.o",
+          "seconds": 0.534
+        },
+        {
+          "output": "ikea2/CMakeFiles/ikea2_check.dir/test/mutation/verify.cpp.o",
+          "seconds": 0.418
+        },
+        {
+          "output": "ikea2/ikea2_check",
+          "seconds": 0.335
+        },
+        {
+          "output": "ikea2/ikea2_bench",
+          "seconds": 0.103
+        },
+        {
+          "output": "ikea2/ikea2_integration_check",
+          "seconds": 0.041
+        },
+        {
+          "output": "ikea2/ikea2_ordinary_check",
+          "seconds": 0.04
+        },
+        {
+          "output": "ikea2/ikea2_example_integration",
+          "seconds": 0.04
+        },
+        {
+          "output": "ikea2/ikea2_example_composition",
+          "seconds": 0.038
+        },
+        {
+          "output": "ikea2/ikea2_example_pipeline",
+          "seconds": 0.036
+        }
+      ],
+      "build": {
+        "elapsed_seconds": "131.02",
+        "user_seconds": "247.63",
+        "system_seconds": "3.10",
+        "max_process_rss_kib": "1743372",
+        "exit_status": "0"
+      },
+      "scenario": "native-write",
+      "source": "include/ikea2/seriespack/detail/native/avx512/write.h",
+      "returncode": 0,
+      "artifact_hashes": {
+        "ikea2_check": "7f42f37254d6fdfeb6a86ec7a47055e6a95f7759dfe4197a91e8aeb08d88afec",
+        "ikea2_integration_check": "c468a7ec7a504a4ed1c14c6081e958c3af51f50210876c48bb08972eb2e3714c",
+        "ikea2_bench": "141041266c475f4469b699eb00ffe6908c352f98a1884f0c1fc943ff58b8cbc0",
+        "libikea2_seriespack.a": "d0659c5cc2d14caac089252870e2e02eb07c10cbf51072ecc6870e59faf45a7c"
+      },
+      "artifacts_unchanged": true
+    },
+    {
+      "limits": "Completed edges from this invocation only. Failed edges have no duration; overlapping edge durations are not wall time. GNU time RSS is a process maximum, not aggregate concurrent memory.",
+      "build_state": "Warm maintained targets; touch examples/integration.cpp",
+      "completed_edges": [
+        {
+          "output": "ikea2/CMakeFiles/ikea2_example_integration.dir/examples/integration.cpp.o",
+          "seconds": 2.636
+        },
+        {
+          "output": "ikea2/ikea2_example_integration",
+          "seconds": 0.038
+        }
+      ],
+      "build": {
+        "elapsed_seconds": "2.68",
+        "user_seconds": "2.60",
+        "system_seconds": "0.07",
+        "max_process_rss_kib": "331432",
+        "exit_status": "0"
+      },
+      "scenario": "integration-adapter",
+      "source": "examples/integration.cpp",
+      "returncode": 0,
+      "artifact_hashes": {
+        "ikea2_check": "7f42f37254d6fdfeb6a86ec7a47055e6a95f7759dfe4197a91e8aeb08d88afec",
+        "ikea2_integration_check": "c468a7ec7a504a4ed1c14c6081e958c3af51f50210876c48bb08972eb2e3714c",
+        "ikea2_bench": "141041266c475f4469b699eb00ffe6908c352f98a1884f0c1fc943ff58b8cbc0",
+        "libikea2_seriespack.a": "d0659c5cc2d14caac089252870e2e02eb07c10cbf51072ecc6870e59faf45a7c"
+      },
+      "artifacts_unchanged": true
+    }
+  ]
+}

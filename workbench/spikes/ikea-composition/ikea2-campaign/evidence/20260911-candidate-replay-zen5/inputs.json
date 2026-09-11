@@ -1,0 +1,44 @@
+{
+  "format": 1,
+  "question": "Repeat final zen5 sweep exceptions above 1.4x with the exact retained binary; distinguish repeatable costs from short-run variation. Cases are selected after the broad sweep, not a fresh coverage survey.",
+  "variants": {
+    "candidate": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 51864652,
+        "files": 74,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/c7a00f7a6d08282be383f2c0c974dde054c07ffc229c3e231743cfe234c480f4.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "c7a00f7a6d08282be383f2c0c974dde054c07ffc229c3e231743cfe234c480f4",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/c7a00f7a6d08282be383f2c0c974dde054c07ffc229c3e231743cfe234c480f4.tar.gz"
+      },
+      "binary": "ikea2_compare",
+      "source_digest": "b7be48ac4314bfe5313ccf1dc2290aec52fa3e21b51bc4f72fcc3f0163a99d85",
+      "files_sha256": {
+        "ikea2_compare": "bbb9004cc584ff5f5a94e7eb5438ea679aaa9f54545ea3d1864b6498df266abf",
+        "job.json": "5da1b450de7202f8f20bfe9526705ea4886d530a7d67382b71dc31368e656779",
+        "source-manifest.json": "3a622d3222f9f5e867567ce33c0eff71275225bf896b5d8b01ade228d6920608",
+        "host.json": "4aff6929cbc9bce6978ea72415d83a6651c9db23a83bec1e871d5a11b5262f09"
+      }
+    }
+  },
+  "order": [
+    "candidate",
+    "candidate"
+  ],
+  "filter": "^(overwrite/local/k7/all/control-coverage|overwrite/local/k7/all/ikea2-coverage|overwrite/local/k7/all/ikea2-raw|overwrite/local/k7/all/prior|placed/k20h8/interleaved/partial/mutation-bound|placed/k20h8/interleaved/partial/mutation-materialized|placed/k20h8/separated/partial/mutation-bound|placed/k20h8/separated/partial/mutation-materialized)$",
+  "min_time": 0.1,
+  "repetitions": 7,
+  "expected_cases": [
+    "overwrite/local/k7/all/control-coverage",
+    "overwrite/local/k7/all/ikea2-coverage",
+    "overwrite/local/k7/all/ikea2-raw",
+    "overwrite/local/k7/all/prior",
+    "placed/k20h8/interleaved/partial/mutation-bound",
+    "placed/k20h8/interleaved/partial/mutation-materialized",
+    "placed/k20h8/separated/partial/mutation-bound",
+    "placed/k20h8/separated/partial/mutation-materialized"
+  ]
+}

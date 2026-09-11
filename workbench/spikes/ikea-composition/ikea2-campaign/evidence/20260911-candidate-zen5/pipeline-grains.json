@@ -1,0 +1,42 @@
+[
+  {
+    "recipe": "source0-map0-filter0-sink0",
+    "inline_case": "pipeline-packet/n64/source0-map0-filter0-sink0/inline",
+    "cps_case": "pipeline-packet/n32/source0-map0-filter0-sink0/cps",
+    "inline_ns": 1662.6368710659888,
+    "cps_ns": 1902.9717916367001,
+    "ratio": 1.1445504576213459
+  },
+  {
+    "recipe": "source0-map1-filter1-sink1",
+    "inline_case": "pipeline-packet/n64/source0-map1-filter1-sink1/inline",
+    "cps_case": "pipeline-packet/n64/source0-map1-filter1-sink1/cps",
+    "inline_ns": 2660.9682117530215,
+    "cps_ns": 3217.3714504988575,
+    "ratio": 1.2090980404381766
+  },
+  {
+    "recipe": "source1-map0-filter0-sink1",
+    "inline_case": "pipeline-packet/n64/source1-map0-filter0-sink1/inline",
+    "cps_case": "pipeline-packet/n64/source1-map0-filter0-sink1/cps",
+    "inline_ns": 2377.160437815679,
+    "cps_ns": 2929.9294938914622,
+    "ratio": 1.2325333398967848
+  },
+  {
+    "recipe": "source1-map0-filter0-sink1-empty",
+    "inline_case": "pipeline-packet/n64/source1-map0-filter0-sink1-empty/inline",
+    "cps_case": "pipeline-packet/n64/source1-map0-filter0-sink1-empty/cps",
+    "inline_ns": 643.287495416163,
+    "cps_ns": 892.854150356579,
+    "ratio": 1.3879550849639375
+  },
+  {
+    "recipe": "source1-map2-filter2-sink0",
+    "inline_case": "pipeline-packet/n64/source1-map2-filter2-sink0/inline",
+    "cps_case": "pipeline-packet/n64/source1-map2-filter2-sink0/cps",
+    "inline_ns": 1744.9718174607453,
+    "cps_ns": 2122.675123824744,
+    "ratio": 1.2164523819723496
+  }
+]

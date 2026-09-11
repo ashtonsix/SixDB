@@ -1,0 +1,49 @@
+{
+  "status": "complete",
+  "limits": "Forced serial compiler invocations, without linking. OS caches are not cleared. RSS is a process maximum, not concurrent aggregate memory. TU hashes do not cover headers: use a captured checkout for source identity. Redirected outputs can affect debug paths/object bytes; these are diagnostic objects, not the measured runtime binaries. Missing OOM evidence does not exclude OOM. A driver child killed by OOM may not match the recorded compiler PID. This helper does not execute Ninja or modify its log.",
+  "serial_compile_wall_seconds": 119.30820414499976,
+  "serial_compile_user_seconds": 117.517493,
+  "serial_compile_system_seconds": 1.784976,
+  "max_process_rss_kib": 2093736,
+  "compiles": [
+    {
+      "source": "/opt/sixdb/source/ikea2/test/mutation_1_8.cpp",
+      "wall_seconds": 29.436459702999855,
+      "user_seconds": 28.973886,
+      "system_seconds": 0.45999799999999996,
+      "max_process_rss_kib": 1104000,
+      "returncode": 0,
+      "status": "complete",
+      "object": {
+        "bytes": 7026424,
+        "sha256": "8dff4f95a2ca4c4ef84494db59e3973692d3f94275fd99455eee17bd3d98e15e"
+      }
+    },
+    {
+      "source": "/opt/sixdb/source/ikea2/test/mutation_9_16.cpp",
+      "wall_seconds": 39.656113987000026,
+      "user_seconds": 39.093765,
+      "system_seconds": 0.5609959999999999,
+      "max_process_rss_kib": 1537276,
+      "returncode": 0,
+      "status": "complete",
+      "object": {
+        "bytes": 10064384,
+        "sha256": "b74cd1d5430a66de43a6cc4607c8aee36cbd88ab864d75380db9da4aa7a59882"
+      }
+    },
+    {
+      "source": "/opt/sixdb/source/ikea2/test/mutation_17_24.cpp",
+      "wall_seconds": 50.21563045499988,
+      "user_seconds": 49.449842,
+      "system_seconds": 0.7639819999999999,
+      "max_process_rss_kib": 2093736,
+      "returncode": 0,
+      "status": "complete",
+      "object": {
+        "bytes": 12759408,
+        "sha256": "f63aa0534c85ca9ada7accb92aaa77faa3c504157c841d1063e9502ec3f010ff"
+      }
+    }
+  ]
+}
