@@ -1,0 +1,744 @@
+{
+  "format": 1,
+  "date": "2026-09-10",
+  "status": "original checkpoint before point/range recovery",
+  "units": "ns per query; get16 materializes16 u64 values",
+  "scope": "All records from the representative resident matrix, including all controls and both x86 endpoint families. Profile avx512 permits full features; avx2 endpoint rows in that profile are not AVX2-only results. Allocation footprints do not establish cache misses.",
+  "runs": {
+    "v2-4k": {
+      "job": "20260910T160639Z-cb2f1a67",
+      "artifact": "v2-4k.artifact.json",
+      "samples_path": "results/seriespack/neon/samples.json",
+      "samples_sha256": "3584909b33c44d68aa0cafb72c12e77f6e7f47760b9a7d154269a2ea9d3602dd",
+      "receipt_path": "results/seriespack/validation.json",
+      "receipt_sha256": "748e7c6c8c12ed1a0ab49d85e7826107253f3d479a4fd11241054d335888e310",
+      "source_manifest_sha256": "4b7ae2f3018c06df93f23acf8e3b65a6fd73dfda808da318464ad214f98f3873",
+      "selected_source_files": {
+        "ikea/src/seriespack/native.cpp": "869f0504a0e0febaba99347fc01058779d903aaeb136356960919f8353aaa0df",
+        "ikea/src/seriespack/physical.cpp": "ef7a7054662cc6b9ead995e723c45b1dac0be88b5b48500da82ba56eaf9bc301",
+        "ikea/include/ikea/seriespack/detail/physical.h": "186233567d575517b7e3f8cc2a0e39402afb31f87687ca6743c29e08bf3a1a8e",
+        "ikea/include/ikea/seriespack/native_neon.h": "5e9f7380e069944bb6415907abc86b2486387c8330f048f477147956233faa1e",
+        "ikea/include/ikea/seriespack/native_avx2.h": "0da89e010af637c9c0ea80af471635027e664b80f0cc4d77f1f7e965a8dbf677",
+        "ikea/include/ikea/seriespack/native_avx512.h": "6340d3d66db8be4d537966fa4bdc5f1ce138459926aa3e09b7e2ca9b8918473e",
+        "workbench/spikes/ikea-composition/validation/seriespack_bench.cpp": "8232f966c00404f41f4755cb1c5971c51c07796ac664b15ef94b808a517f1744",
+        "workbench/spikes/ikea-composition/validation/seriespack_predecessor.cpp": "38078e526aad7fe5c7ced606cf384540e8e8b37dc11a33c16566a8a32f59e1dc",
+        "workbench/spikes/ikea-composition/validation/seriespack_prior.cpp": "854c9dca6ec1048b35b0a0d0ef296800d84ace706441d4302e9d5c9d13953a90",
+        "workbench/spikes/ikea-composition/validation/seriespack_points.cpp": "4ac6e4125d41012256d8ab709ebf9dbaad5d488f6d9e1821f2885dfdea5da123"
+      },
+      "profile": "neon",
+      "march": "armv8-a",
+      "extra_flags": [],
+      "tune": "neoverse-v2",
+      "cpu": 0,
+      "arguments": {
+        "benchmark_filter": "^resident/.*/k(1|5|7|12|31|56|64)/",
+        "build_type": null,
+        "check_target": "ikea_seriespack_check",
+        "measure": true,
+        "min_time": 0.03,
+        "plan": false,
+        "profile": [
+          "neon"
+        ],
+        "repetitions": 3,
+        "tune": "neoverse-v2"
+      },
+      "enabled_feature_macros": [
+        "__ARM_FEATURE_CLZ",
+        "__ARM_FEATURE_DIRECTED_ROUNDING",
+        "__ARM_FEATURE_DIV",
+        "__ARM_FEATURE_FMA",
+        "__ARM_FEATURE_IDIV",
+        "__ARM_FEATURE_LDREX",
+        "__ARM_FEATURE_NUMERIC_MAXMIN",
+        "__ARM_FEATURE_UNALIGNED",
+        "__ARM_NEON",
+        "__ARM_NEON_FP",
+        "__ARM_NEON_SVE_BRIDGE",
+        "__FP_FAST_FMA",
+        "__FP_FAST_FMAF"
+      ],
+      "caches": [
+        {
+          "level": 1,
+          "num_sharing": 1,
+          "size": 65536,
+          "type": "Data"
+        },
+        {
+          "level": 1,
+          "num_sharing": 1,
+          "size": 65536,
+          "type": "Instruction"
+        },
+        {
+          "level": 2,
+          "num_sharing": 1,
+          "size": 2097152,
+          "type": "Unified"
+        },
+        {
+          "level": 3,
+          "num_sharing": 2,
+          "size": 37748736,
+          "type": "Unified"
+        }
+      ],
+      "requested_encoded_bytes": 4096,
+      "binaries": [
+        {
+          "name": "libikea_seriespack.a",
+          "sha256": "2807a57ed803d4f6fd1d7fe9b5fdcc8edc1335179d0721ecff9088103b773f71",
+          "bytes": 30781356,
+          "text_data_bss": [
+            2386236,
+            1344,
+            0
+          ]
+        },
+        {
+          "name": "ikea_seriespack_bench",
+          "sha256": "f580499373ed8c219f9b3c23396d310556c7c39c8f666d8421d27960e4326b6d",
+          "bytes": 38895128,
+          "text_data_bss": [
+            3828304,
+            13552,
+            712
+          ]
+        },
+        {
+          "name": "libikea_seriespack_prior.a",
+          "sha256": "0aa269380a2cdcbebb4260466b109b3b92fd3c0800216241b8226b276424d10d",
+          "bytes": 3512878,
+          "text_data_bss": [
+            658341,
+            6816,
+            0
+          ]
+        }
+      ],
+      "cases": 118
+    },
+    "v2-128m": {
+      "job": "20260910T163014Z-0eb5b0af",
+      "artifact": "v2-128m.artifact.json",
+      "samples_path": "results/seriespack/neon/samples.json",
+      "samples_sha256": "4e787df73e8f32d6df7b1db37387e8a15adc377505ab36a04fae8f8c223afbdc",
+      "receipt_path": "results/seriespack/validation.json",
+      "receipt_sha256": "4873e81215ce9a5012bbc10ff2556e8d8eca07efa6298182858423261d67bd96",
+      "source_manifest_sha256": "4b7ae2f3018c06df93f23acf8e3b65a6fd73dfda808da318464ad214f98f3873",
+      "selected_source_files": {
+        "ikea/src/seriespack/native.cpp": "869f0504a0e0febaba99347fc01058779d903aaeb136356960919f8353aaa0df",
+        "ikea/src/seriespack/physical.cpp": "ef7a7054662cc6b9ead995e723c45b1dac0be88b5b48500da82ba56eaf9bc301",
+        "ikea/include/ikea/seriespack/detail/physical.h": "186233567d575517b7e3f8cc2a0e39402afb31f87687ca6743c29e08bf3a1a8e",
+        "ikea/include/ikea/seriespack/native_neon.h": "5e9f7380e069944bb6415907abc86b2486387c8330f048f477147956233faa1e",
+        "ikea/include/ikea/seriespack/native_avx2.h": "0da89e010af637c9c0ea80af471635027e664b80f0cc4d77f1f7e965a8dbf677",
+        "ikea/include/ikea/seriespack/native_avx512.h": "6340d3d66db8be4d537966fa4bdc5f1ce138459926aa3e09b7e2ca9b8918473e",
+        "workbench/spikes/ikea-composition/validation/seriespack_bench.cpp": "8232f966c00404f41f4755cb1c5971c51c07796ac664b15ef94b808a517f1744",
+        "workbench/spikes/ikea-composition/validation/seriespack_predecessor.cpp": "38078e526aad7fe5c7ced606cf384540e8e8b37dc11a33c16566a8a32f59e1dc",
+        "workbench/spikes/ikea-composition/validation/seriespack_prior.cpp": "854c9dca6ec1048b35b0a0d0ef296800d84ace706441d4302e9d5c9d13953a90",
+        "workbench/spikes/ikea-composition/validation/seriespack_points.cpp": "4ac6e4125d41012256d8ab709ebf9dbaad5d488f6d9e1821f2885dfdea5da123"
+      },
+      "profile": "neon",
+      "march": "armv8-a",
+      "extra_flags": [],
+      "tune": "neoverse-v2",
+      "cpu": 0,
+      "arguments": {
+        "benchmark_filter": "^resident/.*/k(1|5|7|12|31|56|64)/",
+        "build_type": null,
+        "check_target": "ikea_seriespack_check",
+        "measure": true,
+        "min_time": 0.03,
+        "plan": false,
+        "profile": [
+          "neon"
+        ],
+        "repetitions": 3,
+        "tune": "neoverse-v2"
+      },
+      "enabled_feature_macros": [
+        "__ARM_FEATURE_CLZ",
+        "__ARM_FEATURE_DIRECTED_ROUNDING",
+        "__ARM_FEATURE_DIV",
+        "__ARM_FEATURE_FMA",
+        "__ARM_FEATURE_IDIV",
+        "__ARM_FEATURE_LDREX",
+        "__ARM_FEATURE_NUMERIC_MAXMIN",
+        "__ARM_FEATURE_UNALIGNED",
+        "__ARM_NEON",
+        "__ARM_NEON_FP",
+        "__ARM_NEON_SVE_BRIDGE",
+        "__FP_FAST_FMA",
+        "__FP_FAST_FMAF"
+      ],
+      "caches": [
+        {
+          "level": 1,
+          "num_sharing": 1,
+          "size": 65536,
+          "type": "Data"
+        },
+        {
+          "level": 1,
+          "num_sharing": 1,
+          "size": 65536,
+          "type": "Instruction"
+        },
+        {
+          "level": 2,
+          "num_sharing": 1,
+          "size": 2097152,
+          "type": "Unified"
+        },
+        {
+          "level": 3,
+          "num_sharing": 2,
+          "size": 37748736,
+          "type": "Unified"
+        }
+      ],
+      "requested_encoded_bytes": 134217728,
+      "binaries": [
+        {
+          "name": "libikea_seriespack.a",
+          "sha256": "2807a57ed803d4f6fd1d7fe9b5fdcc8edc1335179d0721ecff9088103b773f71",
+          "bytes": 30781356,
+          "text_data_bss": [
+            2386236,
+            1344,
+            0
+          ]
+        },
+        {
+          "name": "ikea_seriespack_bench",
+          "sha256": "f580499373ed8c219f9b3c23396d310556c7c39c8f666d8421d27960e4326b6d",
+          "bytes": 38895128,
+          "text_data_bss": [
+            3828304,
+            13552,
+            712
+          ]
+        },
+        {
+          "name": "libikea_seriespack_prior.a",
+          "sha256": "0aa269380a2cdcbebb4260466b109b3b92fd3c0800216241b8226b276424d10d",
+          "bytes": 3512878,
+          "text_data_bss": [
+            658341,
+            6816,
+            0
+          ]
+        }
+      ],
+      "cases": 118
+    },
+    "gnr-4k": {
+      "job": "20260910T161827Z-0c25ffde",
+      "artifact": "gnr-4k.artifact.json",
+      "samples_path": "results/seriespack/avx512/samples.json",
+      "samples_sha256": "431cca5d96a10600cef48103b0203ec23248314ccd95d5eb4a9a2ec1a71c10e6",
+      "receipt_path": "results/seriespack/validation.json",
+      "receipt_sha256": "4a8fcf3e8fc687a4aa530e1a2cf3f59dfe6d44edf82eac4bab5d1c17e0c139f8",
+      "source_manifest_sha256": "48efaceb2de8705c47b3e6fdae20c455044df16a788825a33e8ee00553fd4d36",
+      "selected_source_files": {
+        "ikea/src/seriespack/native.cpp": "0f55c34c7e2ccc1cba0161c2fac5c2e82008a30ff4a948279701a66138024ce1",
+        "ikea/src/seriespack/physical.cpp": "ef7a7054662cc6b9ead995e723c45b1dac0be88b5b48500da82ba56eaf9bc301",
+        "ikea/include/ikea/seriespack/detail/physical.h": "186233567d575517b7e3f8cc2a0e39402afb31f87687ca6743c29e08bf3a1a8e",
+        "ikea/include/ikea/seriespack/native_neon.h": "a9f69be454b907ff96b9a02d2434be3e1781b2cd6b07c05f9736ca8220e67d91",
+        "ikea/include/ikea/seriespack/native_avx2.h": "0da89e010af637c9c0ea80af471635027e664b80f0cc4d77f1f7e965a8dbf677",
+        "ikea/include/ikea/seriespack/native_avx512.h": "6340d3d66db8be4d537966fa4bdc5f1ce138459926aa3e09b7e2ca9b8918473e",
+        "workbench/spikes/ikea-composition/validation/seriespack_bench.cpp": "8232f966c00404f41f4755cb1c5971c51c07796ac664b15ef94b808a517f1744",
+        "workbench/spikes/ikea-composition/validation/seriespack_predecessor.cpp": "38078e526aad7fe5c7ced606cf384540e8e8b37dc11a33c16566a8a32f59e1dc",
+        "workbench/spikes/ikea-composition/validation/seriespack_prior.cpp": "854c9dca6ec1048b35b0a0d0ef296800d84ace706441d4302e9d5c9d13953a90",
+        "workbench/spikes/ikea-composition/validation/seriespack_points.cpp": "4ac6e4125d41012256d8ab709ebf9dbaad5d488f6d9e1821f2885dfdea5da123"
+      },
+      "profile": "avx512",
+      "march": "x86-64-v4",
+      "extra_flags": [
+        "-mavx512vbmi",
+        "-mavx512vbmi2",
+        "-mgfni"
+      ],
+      "tune": "granite-rapids",
+      "cpu": 0,
+      "arguments": {
+        "benchmark_filter": "^resident/.*/k(1|5|7|12|31|56|64)/",
+        "build_type": null,
+        "check_target": "ikea_seriespack_check",
+        "measure": true,
+        "min_time": 0.03,
+        "plan": false,
+        "profile": [
+          "avx512"
+        ],
+        "repetitions": 3,
+        "tune": "granite-rapids"
+      },
+      "enabled_feature_macros": [
+        "__AVX2__",
+        "__AVX512BW__",
+        "__AVX512CD__",
+        "__AVX512DQ__",
+        "__AVX512F__",
+        "__AVX512VBMI2__",
+        "__AVX512VBMI__",
+        "__AVX512VL__",
+        "__AVX__",
+        "__BMI2__",
+        "__BMI__",
+        "__FMA__",
+        "__GFNI__",
+        "__SSE2_MATH__",
+        "__SSE2__",
+        "__SSE3__",
+        "__SSE4_1__",
+        "__SSE4_2__",
+        "__SSE_MATH__",
+        "__SSE__",
+        "__SSSE3__"
+      ],
+      "caches": [
+        {
+          "level": 1,
+          "num_sharing": 1,
+          "size": 49152,
+          "type": "Data"
+        },
+        {
+          "level": 1,
+          "num_sharing": 1,
+          "size": 65536,
+          "type": "Instruction"
+        },
+        {
+          "level": 2,
+          "num_sharing": 1,
+          "size": 2097152,
+          "type": "Unified"
+        },
+        {
+          "level": 3,
+          "num_sharing": 1,
+          "size": 503316480,
+          "type": "Unified"
+        }
+      ],
+      "requested_encoded_bytes": 4096,
+      "binaries": [
+        {
+          "name": "libikea_seriespack.a",
+          "sha256": "99cfd8fabcc1b895e12203ad3c17c6d752d2dfdecddabaac5a1d6b505f1a1430",
+          "bytes": 44225426,
+          "text_data_bss": [
+            5430656,
+            2016,
+            0
+          ]
+        },
+        {
+          "name": "ikea_seriespack_bench",
+          "sha256": "199c8cd12c36b5b6efe2aef1618b42002b50df3fb3473ed2b50da216a22c058d",
+          "bytes": 51660888,
+          "text_data_bss": [
+            7551074,
+            14008,
+            688
+          ]
+        },
+        {
+          "name": "libikea_seriespack_prior.a",
+          "sha256": "115ab07c36722e693d6dfc6fe81881ca7b979f720e1db3e1e2e17f6f1b41b134",
+          "bytes": 2319424,
+          "text_data_bss": [
+            461138,
+            6816,
+            0
+          ]
+        }
+      ],
+      "cases": 151
+    },
+    "gnr-128m": {
+      "job": "20260910T162456Z-188eaecf",
+      "artifact": "gnr-128m.artifact.json",
+      "samples_path": "results/seriespack/avx512/samples.json",
+      "samples_sha256": "ac8c9de5a86626d4a1f72de5a9eb15ad06f63d76045d57edf1ba8f6070ec7dc1",
+      "receipt_path": "results/seriespack/validation.json",
+      "receipt_sha256": "91d69a0564f26794ebe54b9972288b1afac9da5e5ee35a186cbb1733d601ebfd",
+      "source_manifest_sha256": "48efaceb2de8705c47b3e6fdae20c455044df16a788825a33e8ee00553fd4d36",
+      "selected_source_files": {
+        "ikea/src/seriespack/native.cpp": "0f55c34c7e2ccc1cba0161c2fac5c2e82008a30ff4a948279701a66138024ce1",
+        "ikea/src/seriespack/physical.cpp": "ef7a7054662cc6b9ead995e723c45b1dac0be88b5b48500da82ba56eaf9bc301",
+        "ikea/include/ikea/seriespack/detail/physical.h": "186233567d575517b7e3f8cc2a0e39402afb31f87687ca6743c29e08bf3a1a8e",
+        "ikea/include/ikea/seriespack/native_neon.h": "a9f69be454b907ff96b9a02d2434be3e1781b2cd6b07c05f9736ca8220e67d91",
+        "ikea/include/ikea/seriespack/native_avx2.h": "0da89e010af637c9c0ea80af471635027e664b80f0cc4d77f1f7e965a8dbf677",
+        "ikea/include/ikea/seriespack/native_avx512.h": "6340d3d66db8be4d537966fa4bdc5f1ce138459926aa3e09b7e2ca9b8918473e",
+        "workbench/spikes/ikea-composition/validation/seriespack_bench.cpp": "8232f966c00404f41f4755cb1c5971c51c07796ac664b15ef94b808a517f1744",
+        "workbench/spikes/ikea-composition/validation/seriespack_predecessor.cpp": "38078e526aad7fe5c7ced606cf384540e8e8b37dc11a33c16566a8a32f59e1dc",
+        "workbench/spikes/ikea-composition/validation/seriespack_prior.cpp": "854c9dca6ec1048b35b0a0d0ef296800d84ace706441d4302e9d5c9d13953a90",
+        "workbench/spikes/ikea-composition/validation/seriespack_points.cpp": "4ac6e4125d41012256d8ab709ebf9dbaad5d488f6d9e1821f2885dfdea5da123"
+      },
+      "profile": "avx512",
+      "march": "x86-64-v4",
+      "extra_flags": [
+        "-mavx512vbmi",
+        "-mavx512vbmi2",
+        "-mgfni"
+      ],
+      "tune": "granite-rapids",
+      "cpu": 0,
+      "arguments": {
+        "benchmark_filter": "^resident/.*/k(1|5|7|12|31|56|64)/",
+        "build_type": null,
+        "check_target": "ikea_seriespack_check",
+        "measure": true,
+        "min_time": 0.03,
+        "plan": false,
+        "profile": [
+          "avx512"
+        ],
+        "repetitions": 3,
+        "tune": "granite-rapids"
+      },
+      "enabled_feature_macros": [
+        "__AVX2__",
+        "__AVX512BW__",
+        "__AVX512CD__",
+        "__AVX512DQ__",
+        "__AVX512F__",
+        "__AVX512VBMI2__",
+        "__AVX512VBMI__",
+        "__AVX512VL__",
+        "__AVX__",
+        "__BMI2__",
+        "__BMI__",
+        "__FMA__",
+        "__GFNI__",
+        "__SSE2_MATH__",
+        "__SSE2__",
+        "__SSE3__",
+        "__SSE4_1__",
+        "__SSE4_2__",
+        "__SSE_MATH__",
+        "__SSE__",
+        "__SSSE3__"
+      ],
+      "caches": [
+        {
+          "level": 1,
+          "num_sharing": 1,
+          "size": 49152,
+          "type": "Data"
+        },
+        {
+          "level": 1,
+          "num_sharing": 1,
+          "size": 65536,
+          "type": "Instruction"
+        },
+        {
+          "level": 2,
+          "num_sharing": 1,
+          "size": 2097152,
+          "type": "Unified"
+        },
+        {
+          "level": 3,
+          "num_sharing": 1,
+          "size": 503316480,
+          "type": "Unified"
+        }
+      ],
+      "requested_encoded_bytes": 134217728,
+      "binaries": [
+        {
+          "name": "libikea_seriespack.a",
+          "sha256": "99cfd8fabcc1b895e12203ad3c17c6d752d2dfdecddabaac5a1d6b505f1a1430",
+          "bytes": 44225426,
+          "text_data_bss": [
+            5430656,
+            2016,
+            0
+          ]
+        },
+        {
+          "name": "ikea_seriespack_bench",
+          "sha256": "199c8cd12c36b5b6efe2aef1618b42002b50df3fb3473ed2b50da216a22c058d",
+          "bytes": 51660888,
+          "text_data_bss": [
+            7551074,
+            14008,
+            688
+          ]
+        },
+        {
+          "name": "libikea_seriespack_prior.a",
+          "sha256": "115ab07c36722e693d6dfc6fe81881ca7b979f720e1db3e1e2e17f6f1b41b134",
+          "bytes": 2319424,
+          "text_data_bss": [
+            461138,
+            6816,
+            0
+          ]
+        }
+      ],
+      "cases": 151
+    },
+    "zen5-4k": {
+      "job": "20260910T164134Z-f02ab9b2",
+      "artifact": "zen5-4k.artifact.json",
+      "samples_path": "results/seriespack/avx512/samples.json",
+      "samples_sha256": "7764840e8039d99149152f82e23fd79859db4a15a6b4a908b9b5903444e769b3",
+      "receipt_path": "results/seriespack/validation.json",
+      "receipt_sha256": "255043e84af6282bae9de74159af0b2537c6ee0f28ae0254b8e131aed1f58c3b",
+      "source_manifest_sha256": "48efaceb2de8705c47b3e6fdae20c455044df16a788825a33e8ee00553fd4d36",
+      "selected_source_files": {
+        "ikea/src/seriespack/native.cpp": "0f55c34c7e2ccc1cba0161c2fac5c2e82008a30ff4a948279701a66138024ce1",
+        "ikea/src/seriespack/physical.cpp": "ef7a7054662cc6b9ead995e723c45b1dac0be88b5b48500da82ba56eaf9bc301",
+        "ikea/include/ikea/seriespack/detail/physical.h": "186233567d575517b7e3f8cc2a0e39402afb31f87687ca6743c29e08bf3a1a8e",
+        "ikea/include/ikea/seriespack/native_neon.h": "a9f69be454b907ff96b9a02d2434be3e1781b2cd6b07c05f9736ca8220e67d91",
+        "ikea/include/ikea/seriespack/native_avx2.h": "0da89e010af637c9c0ea80af471635027e664b80f0cc4d77f1f7e965a8dbf677",
+        "ikea/include/ikea/seriespack/native_avx512.h": "6340d3d66db8be4d537966fa4bdc5f1ce138459926aa3e09b7e2ca9b8918473e",
+        "workbench/spikes/ikea-composition/validation/seriespack_bench.cpp": "8232f966c00404f41f4755cb1c5971c51c07796ac664b15ef94b808a517f1744",
+        "workbench/spikes/ikea-composition/validation/seriespack_predecessor.cpp": "38078e526aad7fe5c7ced606cf384540e8e8b37dc11a33c16566a8a32f59e1dc",
+        "workbench/spikes/ikea-composition/validation/seriespack_prior.cpp": "854c9dca6ec1048b35b0a0d0ef296800d84ace706441d4302e9d5c9d13953a90",
+        "workbench/spikes/ikea-composition/validation/seriespack_points.cpp": "4ac6e4125d41012256d8ab709ebf9dbaad5d488f6d9e1821f2885dfdea5da123"
+      },
+      "profile": "avx512",
+      "march": "x86-64-v4",
+      "extra_flags": [
+        "-mavx512vbmi",
+        "-mavx512vbmi2",
+        "-mgfni"
+      ],
+      "tune": "zen5",
+      "cpu": 0,
+      "arguments": {
+        "benchmark_filter": "^resident/.*/k(1|5|7|12|31|56|64)/",
+        "build_type": null,
+        "check_target": "ikea_seriespack_check",
+        "measure": true,
+        "min_time": 0.03,
+        "plan": false,
+        "profile": [
+          "avx512"
+        ],
+        "repetitions": 3,
+        "tune": "zen5"
+      },
+      "enabled_feature_macros": [
+        "__AVX2__",
+        "__AVX512BW__",
+        "__AVX512CD__",
+        "__AVX512DQ__",
+        "__AVX512F__",
+        "__AVX512VBMI2__",
+        "__AVX512VBMI__",
+        "__AVX512VL__",
+        "__AVX__",
+        "__BMI2__",
+        "__BMI__",
+        "__FMA__",
+        "__GFNI__",
+        "__SSE2_MATH__",
+        "__SSE2__",
+        "__SSE3__",
+        "__SSE4_1__",
+        "__SSE4_2__",
+        "__SSE_MATH__",
+        "__SSE__",
+        "__SSSE3__"
+      ],
+      "caches": [
+        {
+          "level": 1,
+          "num_sharing": 1,
+          "size": 49152,
+          "type": "Data"
+        },
+        {
+          "level": 1,
+          "num_sharing": 1,
+          "size": 32768,
+          "type": "Instruction"
+        },
+        {
+          "level": 2,
+          "num_sharing": 1,
+          "size": 1048576,
+          "type": "Unified"
+        },
+        {
+          "level": 3,
+          "num_sharing": 2,
+          "size": 8388608,
+          "type": "Unified"
+        }
+      ],
+      "requested_encoded_bytes": 4096,
+      "binaries": [
+        {
+          "name": "libikea_seriespack.a",
+          "sha256": "c269f5c148f9e3107c3ae53a2289a6691d2c2740c5103a2b3b717a616a76d259",
+          "bytes": 45830226,
+          "text_data_bss": [
+            5999422,
+            2016,
+            0
+          ]
+        },
+        {
+          "name": "ikea_seriespack_bench",
+          "sha256": "4f82548899d270dbcf328e485609bf6c4b5f4fbb012a0e73f4f9c5918df39c9b",
+          "bytes": 55074504,
+          "text_data_bss": [
+            8939898,
+            14008,
+            688
+          ]
+        },
+        {
+          "name": "libikea_seriespack_prior.a",
+          "sha256": "e37722c98e5cd4cc737e7d55203fe7f45e8dabe8b12bece906627d32b85e9fd7",
+          "bytes": 2972688,
+          "text_data_bss": [
+            852859,
+            6816,
+            0
+          ]
+        }
+      ],
+      "cases": 151
+    },
+    "zen5-128m": {
+      "job": "20260910T164443Z-47e118d4",
+      "artifact": "zen5-128m.artifact.json",
+      "samples_path": "results/seriespack/avx512/samples.json",
+      "samples_sha256": "d2427d7fcf636df82b417a8692eb0e6170cc6fcd06d8d736a7e13486fbc7d3f2",
+      "receipt_path": "results/seriespack/validation.json",
+      "receipt_sha256": "06b534905a5d7eab934a94173c2a565ea29917b9cac1427d432c0c9bd4c63ae0",
+      "source_manifest_sha256": "48efaceb2de8705c47b3e6fdae20c455044df16a788825a33e8ee00553fd4d36",
+      "selected_source_files": {
+        "ikea/src/seriespack/native.cpp": "0f55c34c7e2ccc1cba0161c2fac5c2e82008a30ff4a948279701a66138024ce1",
+        "ikea/src/seriespack/physical.cpp": "ef7a7054662cc6b9ead995e723c45b1dac0be88b5b48500da82ba56eaf9bc301",
+        "ikea/include/ikea/seriespack/detail/physical.h": "186233567d575517b7e3f8cc2a0e39402afb31f87687ca6743c29e08bf3a1a8e",
+        "ikea/include/ikea/seriespack/native_neon.h": "a9f69be454b907ff96b9a02d2434be3e1781b2cd6b07c05f9736ca8220e67d91",
+        "ikea/include/ikea/seriespack/native_avx2.h": "0da89e010af637c9c0ea80af471635027e664b80f0cc4d77f1f7e965a8dbf677",
+        "ikea/include/ikea/seriespack/native_avx512.h": "6340d3d66db8be4d537966fa4bdc5f1ce138459926aa3e09b7e2ca9b8918473e",
+        "workbench/spikes/ikea-composition/validation/seriespack_bench.cpp": "8232f966c00404f41f4755cb1c5971c51c07796ac664b15ef94b808a517f1744",
+        "workbench/spikes/ikea-composition/validation/seriespack_predecessor.cpp": "38078e526aad7fe5c7ced606cf384540e8e8b37dc11a33c16566a8a32f59e1dc",
+        "workbench/spikes/ikea-composition/validation/seriespack_prior.cpp": "854c9dca6ec1048b35b0a0d0ef296800d84ace706441d4302e9d5c9d13953a90",
+        "workbench/spikes/ikea-composition/validation/seriespack_points.cpp": "4ac6e4125d41012256d8ab709ebf9dbaad5d488f6d9e1821f2885dfdea5da123"
+      },
+      "profile": "avx512",
+      "march": "x86-64-v4",
+      "extra_flags": [
+        "-mavx512vbmi",
+        "-mavx512vbmi2",
+        "-mgfni"
+      ],
+      "tune": "zen5",
+      "cpu": 0,
+      "arguments": {
+        "benchmark_filter": "^resident/.*/k(1|5|7|12|31|56|64)/",
+        "build_type": null,
+        "check_target": "ikea_seriespack_check",
+        "measure": true,
+        "min_time": 0.03,
+        "plan": false,
+        "profile": [
+          "avx512"
+        ],
+        "repetitions": 3,
+        "tune": "zen5"
+      },
+      "enabled_feature_macros": [
+        "__AVX2__",
+        "__AVX512BW__",
+        "__AVX512CD__",
+        "__AVX512DQ__",
+        "__AVX512F__",
+        "__AVX512VBMI2__",
+        "__AVX512VBMI__",
+        "__AVX512VL__",
+        "__AVX__",
+        "__BMI2__",
+        "__BMI__",
+        "__FMA__",
+        "__GFNI__",
+        "__SSE2_MATH__",
+        "__SSE2__",
+        "__SSE3__",
+        "__SSE4_1__",
+        "__SSE4_2__",
+        "__SSE_MATH__",
+        "__SSE__",
+        "__SSSE3__"
+      ],
+      "caches": [
+        {
+          "level": 1,
+          "num_sharing": 1,
+          "size": 49152,
+          "type": "Data"
+        },
+        {
+          "level": 1,
+          "num_sharing": 1,
+          "size": 32768,
+          "type": "Instruction"
+        },
+        {
+          "level": 2,
+          "num_sharing": 1,
+          "size": 1048576,
+          "type": "Unified"
+        },
+        {
+          "level": 3,
+          "num_sharing": 2,
+          "size": 8388608,
+          "type": "Unified"
+        }
+      ],
+      "requested_encoded_bytes": 134217728,
+      "binaries": [
+        {
+          "name": "libikea_seriespack.a",
+          "sha256": "c269f5c148f9e3107c3ae53a2289a6691d2c2740c5103a2b3b717a616a76d259",
+          "bytes": 45830226,
+          "text_data_bss": [
+            5999422,
+            2016,
+            0
+          ]
+        },
+        {
+          "name": "ikea_seriespack_bench",
+          "sha256": "4f82548899d270dbcf328e485609bf6c4b5f4fbb012a0e73f4f9c5918df39c9b",
+          "bytes": 55074504,
+          "text_data_bss": [
+            8939898,
+            14008,
+            688
+          ]
+        },
+        {
+          "name": "libikea_seriespack_prior.a",
+          "sha256": "e37722c98e5cd4cc737e7d55203fe7f45e8dabe8b12bece906627d32b85e9fd7",
+          "bytes": 2972688,
+          "text_data_bss": [
+            852859,
+            6816,
+            0
+          ]
+        }
+      ],
+      "cases": 151
+    }
+  },
+  "rows": 840,
+  "cases_csv_sha256": "2d798404c32a73dc71417c61f960100403a1a16c51b50ad20c7d205e46eabf1f",
+  "summarizer_sha256": "3f88605a917a29381f32edd12e9a0170e867bd03cde35453688fcc1477468981"
+}

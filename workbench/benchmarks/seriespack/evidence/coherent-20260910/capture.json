@@ -1,0 +1,1227 @@
+{
+  "format": 1,
+  "runs": {
+    "gnr": {
+      "artifact": "gnr.artifact.json",
+      "job": "20260910T174905Z-0dd982b3",
+      "profiles": {
+        "avx2": {
+          "binaries": [
+            {
+              "bytes": 412728,
+              "name": "ikea_seriespack_body_check",
+              "retained": false,
+              "sha256": "9610e529aa2bf6fc19b191cfdd14858b34e3ba2589b7226927ece1096afc564d"
+            },
+            {
+              "bytes": 283720,
+              "name": "ikea_seriespack_composition_check",
+              "retained": false,
+              "sha256": "9e87a3e559a2a4477076af232b80ea5dad63fbad3d8240220d82ec085b032cf9"
+            },
+            {
+              "bytes": 741224,
+              "name": "ikea_seriespack_layout_view_check",
+              "retained": false,
+              "sha256": "3e75ce28dc491803ec2a57427980bacb1153bda0ae39146151c3cf4d123c188c"
+            },
+            {
+              "bytes": 11700664,
+              "name": "ikea_seriespack_native_composition_check",
+              "retained": false,
+              "sha256": "00b32f9c55c55dc818db044a3abb1ae324ba729fbb72974b067757ecb77da203"
+            },
+            {
+              "bytes": 22921864,
+              "name": "ikea_seriespack_operations_check",
+              "retained": false,
+              "sha256": "df1949675371d0e92cdd699b9408b14a5c1f965915dbbc1cd15a4765a889cfc9"
+            },
+            {
+              "bytes": 20173904,
+              "name": "ikea_seriespack_payload_check",
+              "retained": false,
+              "sha256": "33544b77ae38648a6cfd6e1d99db7ec9918a663c081f394df3dee038ff548193"
+            },
+            {
+              "bytes": 8673952,
+              "name": "ikea_seriespack_physical_check",
+              "retained": false,
+              "sha256": "b15ee0c216f44984c83ece1a2d8fc4f17c9a202b94bca5b5cf36d312b1b97c09"
+            },
+            {
+              "bytes": 22619440,
+              "name": "ikea_seriespack_physical_operations_check",
+              "retained": false,
+              "sha256": "2dc429f13c025db73e2843dc152f113dbd0f680499e53abe93b7da19648b76f7"
+            },
+            {
+              "bytes": 21749936,
+              "name": "ikea_seriespack_range_bounds_check",
+              "retained": false,
+              "sha256": "0b34f9bfff2052df1dd21d1ffae416b3fd29af14bf79f9cec187707eb61cbac5"
+            },
+            {
+              "bytes": 31366920,
+              "name": "ikea_seriespack_static_point_check",
+              "retained": false,
+              "sha256": "571d0526054a3d775f82349a5959d15d1e822f404397bfcc611bc06727022a3f"
+            },
+            {
+              "bytes": 26169854,
+              "name": "libikea_seriespack.a",
+              "retained": true,
+              "sha256": "822247a1a102ae06bc130d963c9f3923e60dc85354081f3699227309789c9034"
+            },
+            {
+              "bytes": 34601816,
+              "name": "ikea_seriespack_bench",
+              "retained": true,
+              "sha256": "59d6db8e025dd1a54b108bc4d6577dcce67de8c998a0e5aa07709a073bc1bfbc"
+            },
+            {
+              "bytes": 3038318,
+              "name": "libikea_seriespack_prior.a",
+              "retained": true,
+              "sha256": "ba4fde16ed407b9a23d5deac35da2a89f4b03617691c02aac6f2a30634b86297"
+            }
+          ],
+          "check_scope": "aggregate",
+          "commands": [
+            {
+              "name": "compiler",
+              "resources": {
+                "max_rss_kib": 77816,
+                "system_seconds": 0.0,
+                "user_seconds": 0.0,
+                "wall_seconds": 0.01
+              },
+              "returncode": 0
+            },
+            {
+              "name": "macros",
+              "resources": {
+                "max_rss_kib": 82220,
+                "system_seconds": 0.0,
+                "user_seconds": 0.01,
+                "wall_seconds": 0.01
+              },
+              "returncode": 0
+            },
+            {
+              "name": "configure",
+              "resources": {
+                "max_rss_kib": 157908,
+                "system_seconds": 0.67,
+                "user_seconds": 2.59,
+                "wall_seconds": 3.61
+              },
+              "returncode": 0
+            },
+            {
+              "name": "build-and-check",
+              "resources": {
+                "max_rss_kib": 2529932,
+                "system_seconds": 3.79,
+                "user_seconds": 344.81,
+                "wall_seconds": 351.56
+              },
+              "returncode": 0
+            },
+            {
+              "name": "build-benchmark",
+              "resources": {
+                "max_rss_kib": 692460,
+                "system_seconds": 1.3,
+                "user_seconds": 60.66,
+                "wall_seconds": 63.89
+              },
+              "returncode": 0
+            },
+            {
+              "name": "benchmark",
+              "resources": {
+                "max_rss_kib": 11616,
+                "system_seconds": 0.05,
+                "user_seconds": 300.22,
+                "wall_seconds": 300.43
+              },
+              "returncode": 0
+            }
+          ],
+          "correctness_passed": true,
+          "enabled_feature_macros": [
+            "__AVX2__",
+            "__AVX__",
+            "__BMI2__",
+            "__BMI__",
+            "__FMA__",
+            "__SSE2_MATH__",
+            "__SSE2__",
+            "__SSE3__",
+            "__SSE4_1__",
+            "__SSE4_2__",
+            "__SSE_MATH__",
+            "__SSE__",
+            "__SSSE3__"
+          ],
+          "extra_flags": [],
+          "march": "x86-64-v3",
+          "samples_path": "results/seriespack/avx2/samples.json",
+          "samples_sha256": "c155d868169f66138e2a14d8722c1af4485070e3b7be9bf7c63160fe05f01490"
+        },
+        "avx512": {
+          "binaries": [
+            {
+              "bytes": 850032,
+              "name": "ikea_seriespack_body_check",
+              "retained": false,
+              "sha256": "6f7e51617b13388d9808bc7f86911b8249470b9437275511d244b7ba7abf06c4"
+            },
+            {
+              "bytes": 278816,
+              "name": "ikea_seriespack_composition_check",
+              "retained": false,
+              "sha256": "a52dacb710c1df2b03ac87955146e530b571114d9d106e2ca0a5c1198d4e7d9a"
+            },
+            {
+              "bytes": 741232,
+              "name": "ikea_seriespack_layout_view_check",
+              "retained": false,
+              "sha256": "ab9e5bf37ae6770d992bd2c9a91a0350a65b98881a7cd20fdd81ecc4eb5dfc58"
+            },
+            {
+              "bytes": 8878856,
+              "name": "ikea_seriespack_native_composition_check",
+              "retained": false,
+              "sha256": "38e911bb7d40c8e1109b650029bc21ba132c839128e9844903e17414e36adee0"
+            },
+            {
+              "bytes": 34275752,
+              "name": "ikea_seriespack_operations_check",
+              "retained": false,
+              "sha256": "bbcc1dd89d8efdd4071b6b39e7d4e8c36ae21b06b35937f05b454ac97ed4a2ef"
+            },
+            {
+              "bytes": 37103992,
+              "name": "ikea_seriespack_payload_check",
+              "retained": false,
+              "sha256": "f8047d7801d5eae218a98e90b099f5afedcd0c2b813b89adbff97ac7e34b4cc4"
+            },
+            {
+              "bytes": 8609544,
+              "name": "ikea_seriespack_physical_check",
+              "retained": false,
+              "sha256": "80a19c68d354a0a441dfd2be59eb7d65a046f6e06b70e275c6b1be514134e987"
+            },
+            {
+              "bytes": 33973320,
+              "name": "ikea_seriespack_physical_operations_check",
+              "retained": false,
+              "sha256": "f6e2ca5a36cec056cab89bce4f9e200b8276788412cef0b427878c2acaafa796"
+            },
+            {
+              "bytes": 33049040,
+              "name": "ikea_seriespack_range_bounds_check",
+              "retained": false,
+              "sha256": "c3e6996082728a09b0c02d3f310d649e70d5ab8e56eefa8656eb716f24db6f52"
+            },
+            {
+              "bytes": 41853664,
+              "name": "ikea_seriespack_static_point_check",
+              "retained": false,
+              "sha256": "97f92ef159897ef5139de8f82367aba2b633e06557d928f959ef932ac9ac984f"
+            },
+            {
+              "bytes": 39300394,
+              "name": "libikea_seriespack.a",
+              "retained": true,
+              "sha256": "6539860725f988f080ffade80986a95e6191d1573f9be45dba490c94fee98d06"
+            },
+            {
+              "bytes": 47300272,
+              "name": "ikea_seriespack_bench",
+              "retained": true,
+              "sha256": "c3ecb305cedb3c3b820242a60f21f6f432e71f4bfb7657fec688f4e10e5cb645"
+            },
+            {
+              "bytes": 2319424,
+              "name": "libikea_seriespack_prior.a",
+              "retained": true,
+              "sha256": "115ab07c36722e693d6dfc6fe81881ca7b979f720e1db3e1e2e17f6f1b41b134"
+            }
+          ],
+          "check_scope": "aggregate",
+          "commands": [
+            {
+              "name": "compiler",
+              "resources": {
+                "max_rss_kib": 77840,
+                "system_seconds": 0.0,
+                "user_seconds": 0.0,
+                "wall_seconds": 0.01
+              },
+              "returncode": 0
+            },
+            {
+              "name": "macros",
+              "resources": {
+                "max_rss_kib": 82396,
+                "system_seconds": 0.0,
+                "user_seconds": 0.0,
+                "wall_seconds": 0.01
+              },
+              "returncode": 0
+            },
+            {
+              "name": "configure",
+              "resources": {
+                "max_rss_kib": 157916,
+                "system_seconds": 0.68,
+                "user_seconds": 2.6,
+                "wall_seconds": 3.43
+              },
+              "returncode": 0
+            },
+            {
+              "name": "build-and-check",
+              "resources": {
+                "max_rss_kib": 2563080,
+                "system_seconds": 4.69,
+                "user_seconds": 446.31,
+                "wall_seconds": 451.85
+              },
+              "returncode": 0
+            },
+            {
+              "name": "build-benchmark",
+              "resources": {
+                "max_rss_kib": 407664,
+                "system_seconds": 1.23,
+                "user_seconds": 51.22,
+                "wall_seconds": 52.58
+              },
+              "returncode": 0
+            },
+            {
+              "name": "benchmark",
+              "resources": {
+                "max_rss_kib": 14016,
+                "system_seconds": 0.05,
+                "user_seconds": 410.76,
+                "wall_seconds": 411.0
+              },
+              "returncode": 0
+            }
+          ],
+          "correctness_passed": true,
+          "enabled_feature_macros": [
+            "__AVX2__",
+            "__AVX512BW__",
+            "__AVX512CD__",
+            "__AVX512DQ__",
+            "__AVX512F__",
+            "__AVX512VBMI2__",
+            "__AVX512VBMI__",
+            "__AVX512VL__",
+            "__AVX__",
+            "__BMI2__",
+            "__BMI__",
+            "__FMA__",
+            "__GFNI__",
+            "__SSE2_MATH__",
+            "__SSE2__",
+            "__SSE3__",
+            "__SSE4_1__",
+            "__SSE4_2__",
+            "__SSE_MATH__",
+            "__SSE__",
+            "__SSSE3__"
+          ],
+          "extra_flags": [
+            "-mavx512vbmi",
+            "-mavx512vbmi2",
+            "-mgfni"
+          ],
+          "march": "x86-64-v4",
+          "samples_path": "results/seriespack/avx512/samples.json",
+          "samples_sha256": "7fc683b16ff24e3b8a5e4918ca40a085cecc49f1701b47efbf80c4c1f82f27c1"
+        },
+        "avx512bw": {
+          "binaries": [
+            {
+              "bytes": 724232,
+              "name": "ikea_seriespack_body_check",
+              "retained": false,
+              "sha256": "fabfcb12fbe17ff3fa0a9f55602e688bc9a02093ce2d80e7ac653260bfe76156"
+            },
+            {
+              "bytes": 278816,
+              "name": "ikea_seriespack_composition_check",
+              "retained": false,
+              "sha256": "522eab3f402b033a7a25a94384a7f58276e195a75c9d788fbcc6cfd50f523bb9"
+            },
+            {
+              "bytes": 741232,
+              "name": "ikea_seriespack_layout_view_check",
+              "retained": false,
+              "sha256": "49ffcefe03f3016fe93d6e6c859d92d5cc4ff365d0869d7043f3050bbefce590"
+            },
+            {
+              "bytes": 11363032,
+              "name": "ikea_seriespack_native_composition_check",
+              "retained": false,
+              "sha256": "b3312c5e8e35827cbaf60a21547f964968eaec2b761468039fc95c1ea4acfb29"
+            },
+            {
+              "bytes": 22738608,
+              "name": "ikea_seriespack_operations_check",
+              "retained": false,
+              "sha256": "602dba3ba50a274caa7e982b69cabc7eb606d8fc18af0fb84dcedd5e599f2cb9"
+            },
+            {
+              "bytes": 20061816,
+              "name": "ikea_seriespack_payload_check",
+              "retained": false,
+              "sha256": "d89ad8bf89ef830be31f8976d8a209481964b0ff5e34e764d27c22c133905e6c"
+            },
+            {
+              "bytes": 8604024,
+              "name": "ikea_seriespack_physical_check",
+              "retained": false,
+              "sha256": "e474cdc7b9a1b0043d64bd6744b0055c0aa074cdf25d0e8c40aa0775bdaebeb5"
+            },
+            {
+              "bytes": 22436168,
+              "name": "ikea_seriespack_physical_operations_check",
+              "retained": false,
+              "sha256": "e0dc10833f928479ea24886fca9b79b573069503305555d6ea81024794916141"
+            },
+            {
+              "bytes": 21579816,
+              "name": "ikea_seriespack_range_bounds_check",
+              "retained": false,
+              "sha256": "88d6bd28f80e3d7c910f38550a7eafff7dcfe3df7261334a4d30fa257713c4e4"
+            },
+            {
+              "bytes": 31180952,
+              "name": "ikea_seriespack_static_point_check",
+              "retained": false,
+              "sha256": "509629b39a3755617b4c2e43a7a4055d1706b65c48cf7d95669f4478d5ec0898"
+            },
+            {
+              "bytes": 26006594,
+              "name": "libikea_seriespack.a",
+              "retained": true,
+              "sha256": "58cab87229dc6543ee53c343f96db486f3f9e34c5a4dae23761a168481aef9cb"
+            },
+            {
+              "bytes": 34624864,
+              "name": "ikea_seriespack_bench",
+              "retained": true,
+              "sha256": "6b274ba0fc817d60ca80b1fb809d85f030e6f236b6e27a29cc42b63223f7bdfc"
+            },
+            {
+              "bytes": 2857990,
+              "name": "libikea_seriespack_prior.a",
+              "retained": true,
+              "sha256": "8dfae72b002f2d70cc44215d5e3bc56cf302da04d9c00823d2e47ecdabeddb88"
+            }
+          ],
+          "check_scope": "aggregate",
+          "commands": [
+            {
+              "name": "compiler",
+              "resources": {
+                "max_rss_kib": 77852,
+                "system_seconds": 0.0,
+                "user_seconds": 0.0,
+                "wall_seconds": 0.01
+              },
+              "returncode": 0
+            },
+            {
+              "name": "macros",
+              "resources": {
+                "max_rss_kib": 82248,
+                "system_seconds": 0.0,
+                "user_seconds": 0.0,
+                "wall_seconds": 0.08
+              },
+              "returncode": 0
+            },
+            {
+              "name": "configure",
+              "resources": {
+                "max_rss_kib": 157936,
+                "system_seconds": 0.7,
+                "user_seconds": 2.56,
+                "wall_seconds": 4.64
+              },
+              "returncode": 0
+            },
+            {
+              "name": "build-and-check",
+              "resources": {
+                "max_rss_kib": 2563268,
+                "system_seconds": 3.94,
+                "user_seconds": 345.3,
+                "wall_seconds": 350.04
+              },
+              "returncode": 0
+            },
+            {
+              "name": "build-benchmark",
+              "resources": {
+                "max_rss_kib": 694488,
+                "system_seconds": 1.3,
+                "user_seconds": 59.61,
+                "wall_seconds": 61.17
+              },
+              "returncode": 0
+            },
+            {
+              "name": "benchmark",
+              "resources": {
+                "max_rss_kib": 11752,
+                "system_seconds": 0.04,
+                "user_seconds": 301.9,
+                "wall_seconds": 303.6
+              },
+              "returncode": 0
+            }
+          ],
+          "correctness_passed": true,
+          "enabled_feature_macros": [
+            "__AVX2__",
+            "__AVX512BW__",
+            "__AVX512CD__",
+            "__AVX512DQ__",
+            "__AVX512F__",
+            "__AVX512VL__",
+            "__AVX__",
+            "__BMI2__",
+            "__BMI__",
+            "__FMA__",
+            "__SSE2_MATH__",
+            "__SSE2__",
+            "__SSE3__",
+            "__SSE4_1__",
+            "__SSE4_2__",
+            "__SSE_MATH__",
+            "__SSE__",
+            "__SSSE3__"
+          ],
+          "extra_flags": [],
+          "march": "x86-64-v4",
+          "samples_path": "results/seriespack/avx512bw/samples.json",
+          "samples_sha256": "a101a4550024af034c8c319818295d9747791b4d3360e9974746514dd903a2ea"
+        }
+      },
+      "source_manifest_path": "results/source-manifest.json",
+      "source_manifest_sha256": "0e7d703b1f328127b7043819950a13053a4301aa695809c7ff6e2a30685138cf",
+      "validation_path": "results/seriespack/validation.json",
+      "validation_sha256": "c2235190d94c1cf24c4840cbc836d76dedf4b32b4c46f482fb50792bc0bd164a"
+    },
+    "v2": {
+      "artifact": "v2.artifact.json",
+      "job": "20260910T174905Z-4b181dfd",
+      "profiles": {
+        "neon": {
+          "binaries": [
+            {
+              "bytes": 877840,
+              "name": "ikea_seriespack_body_check",
+              "retained": false,
+              "sha256": "6c22559ee8ba6ec4c7fab784591706b9546845c0cd632207925c2156b1cd1493"
+            },
+            {
+              "bytes": 326384,
+              "name": "ikea_seriespack_composition_check",
+              "retained": false,
+              "sha256": "a844df4f21c2070d07739bf0019d431d84efce3a3e265a76aee041e28aaa8a32"
+            },
+            {
+              "bytes": 755840,
+              "name": "ikea_seriespack_layout_view_check",
+              "retained": false,
+              "sha256": "5602dcb881df775a34221a95c393b3681a35f7c0364ff7ff69f78ae8d9e134b8"
+            },
+            {
+              "bytes": 11545776,
+              "name": "ikea_seriespack_native_composition_check",
+              "retained": false,
+              "sha256": "9f2131a3d30cde5baada9a9731784591620f16bfe4a8b288dd2599c107d78832"
+            },
+            {
+              "bytes": 25459208,
+              "name": "ikea_seriespack_operations_check",
+              "retained": false,
+              "sha256": "7ce06f0ae008af7837de5934696d8ecb0e34d48686e2081e4ecc62558c20b1da"
+            },
+            {
+              "bytes": 18482328,
+              "name": "ikea_seriespack_payload_check",
+              "retained": false,
+              "sha256": "f0d15f1fefaed0516959dcdab67e1be8d2f6f99e2ccd44b37893e5d950570c14"
+            },
+            {
+              "bytes": 8812616,
+              "name": "ikea_seriespack_physical_check",
+              "retained": false,
+              "sha256": "39c491a80d6e171731fcdfa3271bd99c55bf9f53adc192eebf327de1ea93504c"
+            },
+            {
+              "bytes": 25141184,
+              "name": "ikea_seriespack_physical_operations_check",
+              "retained": false,
+              "sha256": "76928a0a8357301e9d870f1c4dd62db60f285c27cf237ae2e6a8af2d518c033b"
+            },
+            {
+              "bytes": 24428096,
+              "name": "ikea_seriespack_range_bounds_check",
+              "retained": false,
+              "sha256": "8605891dc1dd24cef96581555666fdf70cb7cfa7f20ae82c2d880abb845a089f"
+            },
+            {
+              "bytes": 32045800,
+              "name": "ikea_seriespack_static_point_check",
+              "retained": false,
+              "sha256": "31a8019a45004960495b19a9a064752ae8e001e13d71ac709fdc2b993804d080"
+            },
+            {
+              "bytes": 29210010,
+              "name": "libikea_seriespack.a",
+              "retained": true,
+              "sha256": "79b3e1e7c5540dc1d8f0de6ea2348b23e30314a587ff77b9e6e76423328f93c8"
+            },
+            {
+              "bytes": 37199800,
+              "name": "ikea_seriespack_bench",
+              "retained": true,
+              "sha256": "dab08e1be64ce269f975ab8ebca2bb6df1cbf910c539395dfa7a97207749e022"
+            },
+            {
+              "bytes": 3512878,
+              "name": "libikea_seriespack_prior.a",
+              "retained": true,
+              "sha256": "0aa269380a2cdcbebb4260466b109b3b92fd3c0800216241b8226b276424d10d"
+            }
+          ],
+          "check_scope": "aggregate",
+          "commands": [
+            {
+              "name": "compiler",
+              "resources": {
+                "max_rss_kib": 71280,
+                "system_seconds": 0.0,
+                "user_seconds": 0.0,
+                "wall_seconds": 0.01
+              },
+              "returncode": 0
+            },
+            {
+              "name": "macros",
+              "resources": {
+                "max_rss_kib": 77044,
+                "system_seconds": 0.0,
+                "user_seconds": 0.0,
+                "wall_seconds": 0.01
+              },
+              "returncode": 0
+            },
+            {
+              "name": "configure",
+              "resources": {
+                "max_rss_kib": 152528,
+                "system_seconds": 0.99,
+                "user_seconds": 3.04,
+                "wall_seconds": 4.09
+              },
+              "returncode": 0
+            },
+            {
+              "name": "build-and-check",
+              "resources": {
+                "max_rss_kib": 2005732,
+                "system_seconds": 4.24,
+                "user_seconds": 359.66,
+                "wall_seconds": 364.01
+              },
+              "returncode": 0
+            },
+            {
+              "name": "build-benchmark",
+              "resources": {
+                "max_rss_kib": 614212,
+                "system_seconds": 1.74,
+                "user_seconds": 70.01,
+                "wall_seconds": 71.94
+              },
+              "returncode": 0
+            },
+            {
+              "name": "benchmark",
+              "resources": {
+                "max_rss_kib": 10036,
+                "system_seconds": 0.03,
+                "user_seconds": 299.26,
+                "wall_seconds": 299.3
+              },
+              "returncode": 0
+            }
+          ],
+          "correctness_passed": true,
+          "enabled_feature_macros": [
+            "__ARM_FEATURE_CLZ",
+            "__ARM_FEATURE_DIRECTED_ROUNDING",
+            "__ARM_FEATURE_DIV",
+            "__ARM_FEATURE_FMA",
+            "__ARM_FEATURE_IDIV",
+            "__ARM_FEATURE_LDREX",
+            "__ARM_FEATURE_NUMERIC_MAXMIN",
+            "__ARM_FEATURE_UNALIGNED",
+            "__ARM_NEON",
+            "__ARM_NEON_FP",
+            "__ARM_NEON_SVE_BRIDGE",
+            "__FP_FAST_FMA",
+            "__FP_FAST_FMAF"
+          ],
+          "extra_flags": [],
+          "march": "armv8-a",
+          "samples_path": "results/seriespack/neon/samples.json",
+          "samples_sha256": "dfc86e832e987974f7f7502da3e0e4f2565dbe451b8b5f77005eb82e66671d81"
+        }
+      },
+      "source_manifest_path": "results/source-manifest.json",
+      "source_manifest_sha256": "0e7d703b1f328127b7043819950a13053a4301aa695809c7ff6e2a30685138cf",
+      "validation_path": "results/seriespack/validation.json",
+      "validation_sha256": "46437aebe67ad0a316306135d1808b0707d687a533f449fe0bced020761384a9"
+    },
+    "zen": {
+      "artifact": "zen.artifact.json",
+      "job": "20260910T174905Z-be042d57",
+      "profiles": {
+        "avx2": {
+          "binaries": [
+            {
+              "bytes": 464080,
+              "name": "ikea_seriespack_body_check",
+              "retained": false,
+              "sha256": "00da4e7497ee7699d4da51dbe6d836fd7a5d27625dc090fa86ce6f508174f767"
+            },
+            {
+              "bytes": 284256,
+              "name": "ikea_seriespack_composition_check",
+              "retained": false,
+              "sha256": "f4fb5d0e42f1f96d49ca9e7d05e50a47a6126862e4cd2826b5a6f9d2382a7c1e"
+            },
+            {
+              "bytes": 752728,
+              "name": "ikea_seriespack_layout_view_check",
+              "retained": false,
+              "sha256": "279869d9835a441a6f737468ce7d85143b442f1d27ab57c014513342dc45661c"
+            },
+            {
+              "bytes": 12294624,
+              "name": "ikea_seriespack_native_composition_check",
+              "retained": false,
+              "sha256": "06540e8efab4bec5e25b351781ee5e187e8f30221657eecacdeedc92b09479b6"
+            },
+            {
+              "bytes": 24727704,
+              "name": "ikea_seriespack_operations_check",
+              "retained": false,
+              "sha256": "f5b4d9d8a5042fec892d1f2262c8e34bff17b0edc8d4541ae3f151054b325bf6"
+            },
+            {
+              "bytes": 20644680,
+              "name": "ikea_seriespack_payload_check",
+              "retained": false,
+              "sha256": "52cf520dbec2c07d6cda490af241e0be5078020ca98a10eb15412f2f49877253"
+            },
+            {
+              "bytes": 9117104,
+              "name": "ikea_seriespack_physical_check",
+              "retained": false,
+              "sha256": "26c436d9ddc42ce38b7f01a7ea45078a371ce719a284290e06ae9d3f0ce08858"
+            },
+            {
+              "bytes": 24427472,
+              "name": "ikea_seriespack_physical_operations_check",
+              "retained": false,
+              "sha256": "01824b36e62925a84e9eadfbe1b411a9405bd07640efe7b98f41cb2432a2831e"
+            },
+            {
+              "bytes": 23441600,
+              "name": "ikea_seriespack_range_bounds_check",
+              "retained": false,
+              "sha256": "2fdb733173aee1b2e0302b8757c20f7936d2c9e4e9e57be5994ef511fc360fb4"
+            },
+            {
+              "bytes": 33148968,
+              "name": "ikea_seriespack_static_point_check",
+              "retained": false,
+              "sha256": "d33e90238a2dbbd69508e5930173277eedf3a51683e2a7b04860e3ba247738d7"
+            },
+            {
+              "bytes": 27686798,
+              "name": "libikea_seriespack.a",
+              "retained": true,
+              "sha256": "3dff85c3e2557325b57c0279736059702f7d18c6f3facdb8eafafc0939aeac69"
+            },
+            {
+              "bytes": 37137688,
+              "name": "ikea_seriespack_bench",
+              "retained": true,
+              "sha256": "b69de4ca75384fcb9508619a3aa29a5808f65e5ede3a7f4974d61c33552016ac"
+            },
+            {
+              "bytes": 3400646,
+              "name": "libikea_seriespack_prior.a",
+              "retained": true,
+              "sha256": "ac33135a4a70f42f73f660940c0856db234f132dbdb805e235e23038e732a3b1"
+            }
+          ],
+          "check_scope": "aggregate",
+          "commands": [
+            {
+              "name": "compiler",
+              "resources": {
+                "max_rss_kib": 77756,
+                "system_seconds": 0.0,
+                "user_seconds": 0.0,
+                "wall_seconds": 0.0
+              },
+              "returncode": 0
+            },
+            {
+              "name": "macros",
+              "resources": {
+                "max_rss_kib": 82212,
+                "system_seconds": 0.0,
+                "user_seconds": 0.0,
+                "wall_seconds": 0.0
+              },
+              "returncode": 0
+            },
+            {
+              "name": "configure",
+              "resources": {
+                "max_rss_kib": 157936,
+                "system_seconds": 0.55,
+                "user_seconds": 2.09,
+                "wall_seconds": 3.11
+              },
+              "returncode": 0
+            },
+            {
+              "name": "build-and-check",
+              "resources": {
+                "max_rss_kib": 2312812,
+                "system_seconds": 2.46,
+                "user_seconds": 281.98,
+                "wall_seconds": 284.8
+              },
+              "returncode": 0
+            },
+            {
+              "name": "build-benchmark",
+              "resources": {
+                "max_rss_kib": 691908,
+                "system_seconds": 0.96,
+                "user_seconds": 52.83,
+                "wall_seconds": 54.54
+              },
+              "returncode": 0
+            },
+            {
+              "name": "benchmark",
+              "resources": {
+                "max_rss_kib": 12092,
+                "system_seconds": 0.02,
+                "user_seconds": 301.2,
+                "wall_seconds": 300.57
+              },
+              "returncode": 0
+            }
+          ],
+          "correctness_passed": true,
+          "enabled_feature_macros": [
+            "__AVX2__",
+            "__AVX__",
+            "__BMI2__",
+            "__BMI__",
+            "__FMA__",
+            "__SSE2_MATH__",
+            "__SSE2__",
+            "__SSE3__",
+            "__SSE4_1__",
+            "__SSE4_2__",
+            "__SSE_MATH__",
+            "__SSE__",
+            "__SSSE3__"
+          ],
+          "extra_flags": [],
+          "march": "x86-64-v3",
+          "samples_path": "results/seriespack/avx2/samples.json",
+          "samples_sha256": "14b66a1bb8917d6589c929a0b9ac27cfc0c86dcae13b2acc26930322ead16761"
+        },
+        "avx512": {
+          "binaries": [
+            {
+              "bytes": 1001600,
+              "name": "ikea_seriespack_body_check",
+              "retained": false,
+              "sha256": "faeaa868928d7d4c1a46e3f5cbc14ea9fd3e34220b8164e4ff31d80c1cb64cde"
+            },
+            {
+              "bytes": 283808,
+              "name": "ikea_seriespack_composition_check",
+              "retained": false,
+              "sha256": "25713cd5b7371afaba2c0a43e0d6c2431234b8caf79d0a7c22012c50e92caa19"
+            },
+            {
+              "bytes": 753576,
+              "name": "ikea_seriespack_layout_view_check",
+              "retained": false,
+              "sha256": "56d532a325497c09434c05eb3fb8c196fdd42e55c35076aba6b76a8dd0546314"
+            },
+            {
+              "bytes": 9249872,
+              "name": "ikea_seriespack_native_composition_check",
+              "retained": false,
+              "sha256": "82f9e734ad2788d0136fb9e345accee325627b6cc6bf98a2297ae246d30d7c42"
+            },
+            {
+              "bytes": 35848288,
+              "name": "ikea_seriespack_operations_check",
+              "retained": false,
+              "sha256": "c8644d1f93bcf8a91136e28015dc621944a1dacfc7184b6815eaed88c46cb807"
+            },
+            {
+              "bytes": 36958136,
+              "name": "ikea_seriespack_payload_check",
+              "retained": false,
+              "sha256": "2be0e84cd2fc8dd74e79ba7558b660d07b96319b7993dac0f475e06db34438d2"
+            },
+            {
+              "bytes": 8895080,
+              "name": "ikea_seriespack_physical_check",
+              "retained": false,
+              "sha256": "3df08e4e57cff5639f9d33a3c98fc6bcafacfe19e963f9efcac76443f80a6f8f"
+            },
+            {
+              "bytes": 35552088,
+              "name": "ikea_seriespack_physical_operations_check",
+              "retained": false,
+              "sha256": "c5e56e912c11fe51face085d5cc64ffe4d7bb43f73cf7edad2c06793c4b367ae"
+            },
+            {
+              "bytes": 34511576,
+              "name": "ikea_seriespack_range_bounds_check",
+              "retained": false,
+              "sha256": "d148b6263b12a19469bc3237f422cc05ae93c2f0b3641e8359a18d4a9d5a79df"
+            },
+            {
+              "bytes": 43271168,
+              "name": "ikea_seriespack_static_point_check",
+              "retained": false,
+              "sha256": "3b6eb2b8007eb323777f11870eef5aa9e7a1c9ffe085243059dd3e3eb28953b4"
+            },
+            {
+              "bytes": 40513442,
+              "name": "libikea_seriespack.a",
+              "retained": true,
+              "sha256": "4e079e8e78ecf6e46154af4730a4f8adcc95be38e3d72e1b701f169b484afecc"
+            },
+            {
+              "bytes": 50385448,
+              "name": "ikea_seriespack_bench",
+              "retained": true,
+              "sha256": "b5dd1816fc8c2b522cb369e7b49075d788647a4b939884c2c19b0ac3d3e885f3"
+            },
+            {
+              "bytes": 2972688,
+              "name": "libikea_seriespack_prior.a",
+              "retained": true,
+              "sha256": "e37722c98e5cd4cc737e7d55203fe7f45e8dabe8b12bece906627d32b85e9fd7"
+            }
+          ],
+          "check_scope": "aggregate",
+          "commands": [
+            {
+              "name": "compiler",
+              "resources": {
+                "max_rss_kib": 77840,
+                "system_seconds": 0.0,
+                "user_seconds": 0.0,
+                "wall_seconds": 0.0
+              },
+              "returncode": 0
+            },
+            {
+              "name": "macros",
+              "resources": {
+                "max_rss_kib": 82400,
+                "system_seconds": 0.0,
+                "user_seconds": 0.0,
+                "wall_seconds": 0.01
+              },
+              "returncode": 0
+            },
+            {
+              "name": "configure",
+              "resources": {
+                "max_rss_kib": 157964,
+                "system_seconds": 0.62,
+                "user_seconds": 2.19,
+                "wall_seconds": 3.18
+              },
+              "returncode": 0
+            },
+            {
+              "name": "build-and-check",
+              "resources": {
+                "max_rss_kib": 2478428,
+                "system_seconds": 3.31,
+                "user_seconds": 384.31,
+                "wall_seconds": 386.9
+              },
+              "returncode": 0
+            },
+            {
+              "name": "build-benchmark",
+              "resources": {
+                "max_rss_kib": 416100,
+                "system_seconds": 0.92,
+                "user_seconds": 48.35,
+                "wall_seconds": 49.19
+              },
+              "returncode": 0
+            },
+            {
+              "name": "benchmark",
+              "resources": {
+                "max_rss_kib": 15368,
+                "system_seconds": 0.03,
+                "user_seconds": 401.91,
+                "wall_seconds": 401.07
+              },
+              "returncode": 0
+            }
+          ],
+          "correctness_passed": true,
+          "enabled_feature_macros": [
+            "__AVX2__",
+            "__AVX512BW__",
+            "__AVX512CD__",
+            "__AVX512DQ__",
+            "__AVX512F__",
+            "__AVX512VBMI2__",
+            "__AVX512VBMI__",
+            "__AVX512VL__",
+            "__AVX__",
+            "__BMI2__",
+            "__BMI__",
+            "__FMA__",
+            "__GFNI__",
+            "__SSE2_MATH__",
+            "__SSE2__",
+            "__SSE3__",
+            "__SSE4_1__",
+            "__SSE4_2__",
+            "__SSE_MATH__",
+            "__SSE__",
+            "__SSSE3__"
+          ],
+          "extra_flags": [
+            "-mavx512vbmi",
+            "-mavx512vbmi2",
+            "-mgfni"
+          ],
+          "march": "x86-64-v4",
+          "samples_path": "results/seriespack/avx512/samples.json",
+          "samples_sha256": "1dd28d2114249f017b541b0cac2920e1e6b89f8dbb16f236088eeda8ee1b22d3"
+        },
+        "avx512bw": {
+          "binaries": [
+            {
+              "bytes": 857896,
+              "name": "ikea_seriespack_body_check",
+              "retained": false,
+              "sha256": "8c5b7493b1dd9aa870be8fb3aed9f75bf77632e0951bdc5a85bbaea23a8d61fd"
+            },
+            {
+              "bytes": 283808,
+              "name": "ikea_seriespack_composition_check",
+              "retained": false,
+              "sha256": "b84350a19b1704f40a23d7dac16223e3149c7f7e9ae5d04805b8bbf305b0ab2a"
+            },
+            {
+              "bytes": 753576,
+              "name": "ikea_seriespack_layout_view_check",
+              "retained": false,
+              "sha256": "aef98a53be2414a011a456f6de22ee689478f1614cf6a8f00a8c2dbfac4f2061"
+            },
+            {
+              "bytes": 11773288,
+              "name": "ikea_seriespack_native_composition_check",
+              "retained": false,
+              "sha256": "102e092502fea120ee5150563559e392d83eeabc08597f7e7afb235fc606f4ff"
+            },
+            {
+              "bytes": 24084616,
+              "name": "ikea_seriespack_operations_check",
+              "retained": false,
+              "sha256": "cff56560af240b0a6e88e0a1525901e36b4efecd2bc325de4aec9109ac3312af"
+            },
+            {
+              "bytes": 20250624,
+              "name": "ikea_seriespack_payload_check",
+              "retained": false,
+              "sha256": "b1cabdd3d47e872bbb209756c61f868b2cbd9c9c3ec4afa91be59c9044bd1cc1"
+            },
+            {
+              "bytes": 8887200,
+              "name": "ikea_seriespack_physical_check",
+              "retained": false,
+              "sha256": "6cfb9601b2fba351cb8ae0df7b9bb8b18bdabd002c519aa111f6e8f53ff37f60"
+            },
+            {
+              "bytes": 23784312,
+              "name": "ikea_seriespack_physical_operations_check",
+              "retained": false,
+              "sha256": "1cf72fea391b7d5489f452e9bdc4fcbcf6841213fed18e8ee9928a83e56f3d55"
+            },
+            {
+              "bytes": 22824016,
+              "name": "ikea_seriespack_range_bounds_check",
+              "retained": false,
+              "sha256": "acb8dabf28ec26c63d4b13e4dcf49e657a8a6ca080e3e11a31a5fa6b20fbfdf5"
+            },
+            {
+              "bytes": 32449760,
+              "name": "ikea_seriespack_static_point_check",
+              "retained": false,
+              "sha256": "6ea7117e7f0ffd64fb3bf8e5a39232e437ffbd529850def9d7665349cbc33319"
+            },
+            {
+              "bytes": 27084602,
+              "name": "libikea_seriespack.a",
+              "retained": true,
+              "sha256": "e1f76bfc2206406efb73b94eb19298663d7267054c58bd304fca0d612e85727f"
+            },
+            {
+              "bytes": 37321600,
+              "name": "ikea_seriespack_bench",
+              "retained": true,
+              "sha256": "25f7a90b0fe479dc0c117b706f5e5bfdb047b8eb544feb455cdfef82b8c018b1"
+            },
+            {
+              "bytes": 3406310,
+              "name": "libikea_seriespack_prior.a",
+              "retained": true,
+              "sha256": "bc9a5d5833031db21c89bbe401712cf7a29bf0bfb0b75c4b058890384bb57d04"
+            }
+          ],
+          "check_scope": "aggregate",
+          "commands": [
+            {
+              "name": "compiler",
+              "resources": {
+                "max_rss_kib": 77872,
+                "system_seconds": 0.0,
+                "user_seconds": 0.0,
+                "wall_seconds": 0.0
+              },
+              "returncode": 0
+            },
+            {
+              "name": "macros",
+              "resources": {
+                "max_rss_kib": 82312,
+                "system_seconds": 0.0,
+                "user_seconds": 0.0,
+                "wall_seconds": 0.01
+              },
+              "returncode": 0
+            },
+            {
+              "name": "configure",
+              "resources": {
+                "max_rss_kib": 157932,
+                "system_seconds": 0.6,
+                "user_seconds": 2.22,
+                "wall_seconds": 3.03
+              },
+              "returncode": 0
+            },
+            {
+              "name": "build-and-check",
+              "resources": {
+                "max_rss_kib": 2478424,
+                "system_seconds": 2.75,
+                "user_seconds": 294.83,
+                "wall_seconds": 297.05
+              },
+              "returncode": 0
+            },
+            {
+              "name": "build-benchmark",
+              "resources": {
+                "max_rss_kib": 696188,
+                "system_seconds": 1.0,
+                "user_seconds": 56.12,
+                "wall_seconds": 57.04
+              },
+              "returncode": 0
+            },
+            {
+              "name": "benchmark",
+              "resources": {
+                "max_rss_kib": 12648,
+                "system_seconds": 0.01,
+                "user_seconds": 300.65,
+                "wall_seconds": 300.01
+              },
+              "returncode": 0
+            }
+          ],
+          "correctness_passed": true,
+          "enabled_feature_macros": [
+            "__AVX2__",
+            "__AVX512BW__",
+            "__AVX512CD__",
+            "__AVX512DQ__",
+            "__AVX512F__",
+            "__AVX512VL__",
+            "__AVX__",
+            "__BMI2__",
+            "__BMI__",
+            "__FMA__",
+            "__SSE2_MATH__",
+            "__SSE2__",
+            "__SSE3__",
+            "__SSE4_1__",
+            "__SSE4_2__",
+            "__SSE_MATH__",
+            "__SSE__",
+            "__SSSE3__"
+          ],
+          "extra_flags": [],
+          "march": "x86-64-v4",
+          "samples_path": "results/seriespack/avx512bw/samples.json",
+          "samples_sha256": "77dd20e9b3b65618b14e421e51aefb7b0e27cf2dfe553cb877a50607d69828ab"
+        }
+      },
+      "source_manifest_path": "results/source-manifest.json",
+      "source_manifest_sha256": "0e7d703b1f328127b7043819950a13053a4301aa695809c7ff6e2a30685138cf",
+      "validation_path": "results/seriespack/validation.json",
+      "validation_sha256": "8fbbdf63604f718d5a0e9503f3c7c3ef90c8edcd56fe3e7d00ae97ce6d093f4c"
+    }
+  },
+  "source_digest": "db9238fea0ea2294b974c34a63447571ec068c2aedf0310f29ec5564c5da8d00",
+  "source_note": "Same 464-file capture for all machines; exact source manifests and sources archived with each worker bundle.",
+  "status": "coherent checkpoint; correctness passed; remaining performance gaps open"
+}

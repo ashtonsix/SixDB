@@ -1,5 +1,9 @@
 #pragma once
 
-// Headless packed-integer arrays. The proposed contract is in ikea/seriespack.md;
-// this namespace is a scaffold, with no packing API implemented yet.
-namespace ikea::seriespack {}
+/// \file
+/// Headless unsigned arrays with caller-owned storage. Native and composition
+/// facilities require their separate headers; see ikea/seriespack.md.
+#include <ikea/seriespack/layout.h>
+#include <ikea/seriespack/view.h>
+#include <ikea/seriespack/operations.h>
+#include <ikea/seriespack/point.h>

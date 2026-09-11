@@ -1,0 +1,459 @@
+{
+  "capture_digest": "18eeb92b846f1fa9b54b3d30f235494374e4a8d2dad52cd44298b1f69e22eeea",
+  "jobs": {
+    "gnr": {
+      "checked_pair_cases": 12,
+      "checked_pair_common_object_references": 12,
+      "job": "20260911T062351Z-0ab01b16",
+      "profiles": {
+        "avx2": {
+          "applicability": {
+            "allowed_unavailable_messages": [
+              "SKIP: grouped composition requires AVX-512 BW/VBMI",
+              "deferred sum: native checks skipped (AVX512 BW/VBMI is not enabled)"
+            ],
+            "baseline_scalar": false,
+            "deferred_sum_applicable": false,
+            "observed_unavailable_messages": [
+              "SKIP: grouped composition requires AVX-512 BW/VBMI",
+              "deferred sum: native checks skipped (AVX512 BW/VBMI is not enabled)"
+            ],
+            "required_targets": [
+              "scalar",
+              "avx2"
+            ]
+          },
+          "cases": 2727,
+          "compiled_external_sources": 19,
+          "compiled_local_sources": 28,
+          "observed_build_scopes": [
+            {
+              "elapsed_seconds": 355.598032022,
+              "name": "build-and-check",
+              "resources": {
+                "max_rss_kib": 2529824,
+                "system_seconds": 3.97,
+                "user_seconds": 350.29,
+                "wall_seconds": 355.59
+              }
+            },
+            {
+              "elapsed_seconds": 1.919101003000037,
+              "name": "build-examples",
+              "resources": {
+                "max_rss_kib": 162808,
+                "system_seconds": 0.3,
+                "user_seconds": 1.58,
+                "wall_seconds": 1.91
+              }
+            },
+            {
+              "elapsed_seconds": 69.788959068,
+              "name": "build-benchmark",
+              "resources": {
+                "max_rss_kib": 692172,
+                "system_seconds": 1.48,
+                "user_seconds": 67.94,
+                "wall_seconds": 69.78
+              }
+            }
+          ],
+          "production_archive_members": {
+            "native.cpp.o": "3c1daf02b6ce7513ba3bfd39a3e7aa52dd1b2b96643fe25279d3cb66457701a3",
+            "operations.cpp.o": "4000923373a22b28e1380ee7bca700ed641b32ef0e8e6c8ea7d2999fdcd20242",
+            "view.cpp.o": "317ad1d5f30148a382fa2d95d16a10a383fc7956648b5396b1e657456e80302a"
+          },
+          "samples_sha256": "b90b038d7b11e22426aace713c6b82671edebed812439ca9ac7a72a73e57772d"
+        },
+        "avx512": {
+          "applicability": {
+            "allowed_unavailable_messages": [],
+            "baseline_scalar": false,
+            "deferred_sum_applicable": true,
+            "observed_unavailable_messages": [],
+            "required_targets": [
+              "scalar",
+              "avx2",
+              "avx512"
+            ]
+          },
+          "cases": 3837,
+          "compiled_external_sources": 19,
+          "compiled_local_sources": 28,
+          "observed_build_scopes": [
+            {
+              "elapsed_seconds": 460.1180147030002,
+              "name": "build-and-check",
+              "resources": {
+                "max_rss_kib": 2563188,
+                "system_seconds": 4.75,
+                "user_seconds": 454.38,
+                "wall_seconds": 460.11
+              }
+            },
+            {
+              "elapsed_seconds": 2.1276254209997205,
+              "name": "build-examples",
+              "resources": {
+                "max_rss_kib": 226260,
+                "system_seconds": 0.41,
+                "user_seconds": 1.7,
+                "wall_seconds": 2.12
+              }
+            },
+            {
+              "elapsed_seconds": 61.220009203000245,
+              "name": "build-benchmark",
+              "resources": {
+                "max_rss_kib": 497740,
+                "system_seconds": 1.46,
+                "user_seconds": 59.58,
+                "wall_seconds": 61.21
+              }
+            }
+          ],
+          "production_archive_members": {
+            "native.cpp.o": "a3c8241facd03ae7ad642e1b51a7b49937f07b60c8cf3a657f223f0c6de6ac31",
+            "operations.cpp.o": "1bad40f5527a87d392edd96062667e614dc161d9d20ef2ee02469ea970ad650d",
+            "view.cpp.o": "392756587a9ab9597dd711cefb39b26904d34e52c3afe9a35cecc6687b76f80f"
+          },
+          "samples_sha256": "c35948c034fdc6a11adfdf42e96aead1d075f00d7c7660e90870308181c99005"
+        },
+        "avx512bw": {
+          "applicability": {
+            "allowed_unavailable_messages": [
+              "SKIP: grouped composition requires AVX-512 BW/VBMI",
+              "deferred sum: native checks skipped (AVX512 BW/VBMI is not enabled)"
+            ],
+            "baseline_scalar": false,
+            "deferred_sum_applicable": false,
+            "observed_unavailable_messages": [
+              "SKIP: grouped composition requires AVX-512 BW/VBMI",
+              "deferred sum: native checks skipped (AVX512 BW/VBMI is not enabled)"
+            ],
+            "required_targets": [
+              "scalar",
+              "avx2"
+            ]
+          },
+          "cases": 2727,
+          "compiled_external_sources": 19,
+          "compiled_local_sources": 28,
+          "observed_build_scopes": [
+            {
+              "elapsed_seconds": 354.039109069,
+              "name": "build-and-check",
+              "resources": {
+                "max_rss_kib": 2563216,
+                "system_seconds": 3.88,
+                "user_seconds": 349.43,
+                "wall_seconds": 354.03
+              }
+            },
+            {
+              "elapsed_seconds": 1.9301034349998645,
+              "name": "build-examples",
+              "resources": {
+                "max_rss_kib": 164348,
+                "system_seconds": 0.32,
+                "user_seconds": 1.59,
+                "wall_seconds": 1.92
+              }
+            },
+            {
+              "elapsed_seconds": 68.88682518899986,
+              "name": "build-benchmark",
+              "resources": {
+                "max_rss_kib": 696136,
+                "system_seconds": 1.53,
+                "user_seconds": 67.17,
+                "wall_seconds": 68.88
+              }
+            }
+          ],
+          "production_archive_members": {
+            "native.cpp.o": "921bcee43448fa18f6ea96b2ecc505c77cbc50f25aad4d6aed69f5330edeef98",
+            "operations.cpp.o": "4adc167095a3bf34e90cfc9492c2703ff2521d35acb6f096b108333d799a0891",
+            "view.cpp.o": "ae27478187b411a7c0bab919dfda9c5cf3467f74a170bcc4eba84389988c8e93"
+          },
+          "samples_sha256": "c709bb2ca47f03130540297678fb6b698c131a2b26c213bb99cc9ff3a9a38b02"
+        }
+      }
+    },
+    "v2": {
+      "checked_pair_cases": 12,
+      "checked_pair_common_object_references": 12,
+      "job": "20260911T062438Z-2d2cfcb9",
+      "profiles": {
+        "neon": {
+          "applicability": {
+            "allowed_unavailable_messages": [
+              "SKIP: grouped composition requires AVX-512 BW/VBMI",
+              "deferred sum: native checks skipped (AVX512 BW/VBMI is not enabled)"
+            ],
+            "baseline_scalar": false,
+            "deferred_sum_applicable": false,
+            "observed_unavailable_messages": [
+              "SKIP: grouped composition requires AVX-512 BW/VBMI",
+              "deferred sum: native checks skipped (AVX512 BW/VBMI is not enabled)"
+            ],
+            "required_targets": [
+              "scalar",
+              "neon"
+            ]
+          },
+          "cases": 2723,
+          "compiled_external_sources": 19,
+          "compiled_local_sources": 28,
+          "observed_build_scopes": [
+            {
+              "elapsed_seconds": 351.491150079,
+              "name": "build-and-check",
+              "resources": {
+                "max_rss_kib": 2005704,
+                "system_seconds": 4.38,
+                "user_seconds": 346.98,
+                "wall_seconds": 351.48
+              }
+            },
+            {
+              "elapsed_seconds": 2.2203073169999925,
+              "name": "build-examples",
+              "resources": {
+                "max_rss_kib": 149016,
+                "system_seconds": 0.3,
+                "user_seconds": 1.91,
+                "wall_seconds": 2.21
+              }
+            },
+            {
+              "elapsed_seconds": 78.65919240599999,
+              "name": "build-benchmark",
+              "resources": {
+                "max_rss_kib": 614136,
+                "system_seconds": 1.96,
+                "user_seconds": 76.61,
+                "wall_seconds": 78.65
+              }
+            }
+          ],
+          "production_archive_members": {
+            "native.cpp.o": "45a1048488332bdbd9140c8ea3f7e08a77abd668f88e68ee79d6930e67b0e02d",
+            "operations.cpp.o": "87a55b901e3b9629253dcf4830d46b6685543b8c2a9cdcd672b877f735415598",
+            "view.cpp.o": "a8313d5c1f78d6893c2a2450ebec53738dadf518082eb8c4664b2bbb9e29b7b1"
+          },
+          "samples_sha256": "7d2d2ffa8616391e12578a2a912cbf56d8c17305c8b47e0c99214f7638fb35f6"
+        }
+      }
+    },
+    "zen": {
+      "checked_pair_cases": 12,
+      "checked_pair_common_object_references": 12,
+      "job": "20260911T062300Z-0d34c994",
+      "large_source": {
+        "calico_line_map_applicable": false,
+        "cases": 24,
+        "hardware_miss_claim": false,
+        "max": 1054832384.0,
+        "same_wire_useful_64b_line_footprint_min": 928398016.0,
+        "samples": 72
+      },
+      "profiles": {
+        "avx2": {
+          "applicability": {
+            "allowed_unavailable_messages": [
+              "SKIP: grouped composition requires AVX-512 BW/VBMI",
+              "deferred sum: native checks skipped (AVX512 BW/VBMI is not enabled)"
+            ],
+            "baseline_scalar": false,
+            "deferred_sum_applicable": false,
+            "observed_unavailable_messages": [
+              "SKIP: grouped composition requires AVX-512 BW/VBMI",
+              "deferred sum: native checks skipped (AVX512 BW/VBMI is not enabled)"
+            ],
+            "required_targets": [
+              "scalar",
+              "avx2"
+            ]
+          },
+          "cases": 2727,
+          "compiled_external_sources": 19,
+          "compiled_local_sources": 28,
+          "observed_build_scopes": [
+            {
+              "elapsed_seconds": 268.55123441600006,
+              "name": "build-and-check",
+              "resources": {
+                "max_rss_kib": 2312920,
+                "system_seconds": 2.51,
+                "user_seconds": 265.58,
+                "wall_seconds": 268.55
+              }
+            },
+            {
+              "elapsed_seconds": 1.4116917019999846,
+              "name": "build-examples",
+              "resources": {
+                "max_rss_kib": 162604,
+                "system_seconds": 0.2,
+                "user_seconds": 1.18,
+                "wall_seconds": 1.41
+              }
+            },
+            {
+              "elapsed_seconds": 54.56279522700004,
+              "name": "build-benchmark",
+              "resources": {
+                "max_rss_kib": 690752,
+                "system_seconds": 0.99,
+                "user_seconds": 53.41,
+                "wall_seconds": 54.56
+              }
+            }
+          ],
+          "production_archive_members": {
+            "native.cpp.o": "6ab0a2a9312dba37417f4afa3cad155552fa5c436102204401f2785a3d6eb4c7",
+            "operations.cpp.o": "2ab7a7419496676b79efb9e6b4cc0153fbed1081c2e5a6fb24cbab1579b5abed",
+            "view.cpp.o": "13aaba776dd6a050345972e9c507f192b218495a0bcd5c06f2c074da47a8d599"
+          },
+          "samples_sha256": "ee390b0cf61bbe67d90c9a4f55fd5215353922089e5b03f26e90479c939464e3"
+        },
+        "avx512": {
+          "applicability": {
+            "allowed_unavailable_messages": [],
+            "baseline_scalar": false,
+            "deferred_sum_applicable": true,
+            "observed_unavailable_messages": [],
+            "required_targets": [
+              "scalar",
+              "avx2",
+              "avx512"
+            ]
+          },
+          "cases": 3837,
+          "compiled_external_sources": 19,
+          "compiled_local_sources": 28,
+          "observed_build_scopes": [
+            {
+              "elapsed_seconds": 350.0510702029999,
+              "name": "build-and-check",
+              "resources": {
+                "max_rss_kib": 2478596,
+                "system_seconds": 3.19,
+                "user_seconds": 346.71,
+                "wall_seconds": 350.05
+              }
+            },
+            {
+              "elapsed_seconds": 1.5650251700001263,
+              "name": "build-examples",
+              "resources": {
+                "max_rss_kib": 226648,
+                "system_seconds": 0.26,
+                "user_seconds": 1.29,
+                "wall_seconds": 1.56
+              }
+            },
+            {
+              "elapsed_seconds": 50.59712029599996,
+              "name": "build-benchmark",
+              "resources": {
+                "max_rss_kib": 509920,
+                "system_seconds": 1.03,
+                "user_seconds": 49.53,
+                "wall_seconds": 50.59
+              }
+            }
+          ],
+          "production_archive_members": {
+            "native.cpp.o": "e9a4fabd11667f270479e71e868bd0ccafc94019a8f9c9f8ddd7edba252c4942",
+            "operations.cpp.o": "da9ed1a806abfb42c07b64464ff1f77cdb9eb16599697acae491a44e8c4cac2c",
+            "view.cpp.o": "00c218ef151f9f9c8710223d791ea6bbe2abaa9b389cdd85f71d0f4fff82c796"
+          },
+          "samples_sha256": "ed610871e038430c9bd3b86d1e9c004d464c2a518056d93c919d9da3029db037"
+        },
+        "avx512bw": {
+          "applicability": {
+            "allowed_unavailable_messages": [
+              "SKIP: grouped composition requires AVX-512 BW/VBMI",
+              "deferred sum: native checks skipped (AVX512 BW/VBMI is not enabled)"
+            ],
+            "baseline_scalar": false,
+            "deferred_sum_applicable": false,
+            "observed_unavailable_messages": [
+              "SKIP: grouped composition requires AVX-512 BW/VBMI",
+              "deferred sum: native checks skipped (AVX512 BW/VBMI is not enabled)"
+            ],
+            "required_targets": [
+              "scalar",
+              "avx2"
+            ]
+          },
+          "cases": 2727,
+          "compiled_external_sources": 19,
+          "compiled_local_sources": 28,
+          "observed_build_scopes": [
+            {
+              "elapsed_seconds": 266.10336214899996,
+              "name": "build-and-check",
+              "resources": {
+                "max_rss_kib": 2478488,
+                "system_seconds": 2.59,
+                "user_seconds": 263.44,
+                "wall_seconds": 266.1
+              }
+            },
+            {
+              "elapsed_seconds": 1.396526707000021,
+              "name": "build-examples",
+              "resources": {
+                "max_rss_kib": 164992,
+                "system_seconds": 0.21,
+                "user_seconds": 1.17,
+                "wall_seconds": 1.39
+              }
+            },
+            {
+              "elapsed_seconds": 55.351262747999954,
+              "name": "build-benchmark",
+              "resources": {
+                "max_rss_kib": 697280,
+                "system_seconds": 1.04,
+                "user_seconds": 54.26,
+                "wall_seconds": 55.35
+              }
+            }
+          ],
+          "production_archive_members": {
+            "native.cpp.o": "7b82294299bf2ceb10681b7d1316b288036070f3306a89c77b47b6ceb2d373a8",
+            "operations.cpp.o": "7bbbdeb4ba199a40e375763da77d60392cf09ca801c9356766216f26349aa4eb",
+            "view.cpp.o": "f9a4398bab2f1cdb23e0a841faa698a03829746d7d6a41b2af3033e0c4a8616a"
+          },
+          "samples_sha256": "045d29012414cc41cd4806d1dca7c4767a85b0dfb115b0f11b3becc22c707503"
+        }
+      },
+      "scalar_baseline": {
+        "allowed_unavailable_messages": [
+          "SKIP: grouped composition requires AVX-512 BW/VBMI",
+          "SeriesPack x86 bodies: native checks skipped (AVX2 is not enabled).",
+          "SeriesPack x86 payloads: native checks skipped (AVX2 is not enabled).",
+          "deferred sum: native checks skipped (AVX512 BW/VBMI is not enabled)",
+          "native composition: no enabled native target"
+        ],
+        "baseline_scalar": true,
+        "deferred_sum_applicable": false,
+        "observed_unavailable_messages": [
+          "SKIP: grouped composition requires AVX-512 BW/VBMI",
+          "SeriesPack x86 bodies: native checks skipped (AVX2 is not enabled).",
+          "SeriesPack x86 payloads: native checks skipped (AVX2 is not enabled).",
+          "deferred sum: native checks skipped (AVX512 BW/VBMI is not enabled)",
+          "native composition: no enabled native target"
+        ],
+        "required_targets": [
+          "scalar"
+        ]
+      }
+    }
+  },
+  "source_files": 601
+}

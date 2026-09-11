@@ -1,0 +1,83 @@
+{
+  "cases": 24,
+  "counters": [
+    "logical_values",
+    "encoded_bytes",
+    "query_bytes",
+    "audited_queries",
+    "logical_line_audit_applicable",
+    "useful_source_distinct_64b_lines",
+    "query_cursor_begin",
+    "query_cursor_end",
+    "nonce_begin",
+    "nonce_end"
+  ],
+  "files_sha256": {
+    "cases.csv": "dc252f0abc797f7b5ca18056b332e50a59875344ec2ede54ed3312f9c68d826d"
+  },
+  "filter": null,
+  "format": 1,
+  "inputs": {
+    "zen-large": {
+      "context": {
+        "affinity_cpu": "0",
+        "aslr_enabled": true,
+        "bulk_codec_contract": "bulk/*: trusted bound array calls; full cell extent; no effects or validation charged; Calico shape specialized per width",
+        "bulk_values": "8192",
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 2,
+            "size": 8388608,
+            "type": "Unified"
+          }
+        ],
+        "calico_target": "avx512",
+        "casing_contract": "casing/*: case selects placement, extent, source carrier and checked/bound/effects operation; no allocation timed",
+        "composition_contract": "composition/*: immediate authored/direct or materialize-then-consume; identical predicate and reduction; case selects plan and active mask",
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-11T07:06:27+00:00",
+        "dependent_access_contract": "dependent: index0/nonce0 per fixture; mix(index+decoded_value+seed+(++nonce)*0x9e3779b97f4a7c15) modulo count; both states persist across batches and fixture reuse; unsigned nonce wraps; calibrated providers may cover different prefix lengths",
+        "executable": "/opt/sixdb/source/build/validation/seriespack/zen5/avx512/Release/workbench/benchmarks/seriespack/ikea_seriespack_bench",
+        "host_name": "ip-172-31-23-122",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1.04053,
+          1.02344,
+          0.989258
+        ],
+        "mhz_per_cpu": 4493,
+        "num_cpus": 2,
+        "ordinary_runtime_contract": "4096 independent runtime ranges; 256 queries per iteration; one bound callback; u32/u64 exact outputs; first+last uint64 checksum; full oracle and timed-pointer canaries outside timing",
+        "predecessor_contract": "LocalPack/ScanPack k1..7 u8 and wide56 u64; direct native bodies; same wire; width-valid input; count multiple256; ordinary compiler flags",
+        "predecessor_target": "avx512",
+        "requested_encoded_resident_bytes": "1073741824",
+        "resident_access_contract": "resident/*: exact dense arrays; heads separate; random indices carry across batches; resident size does not assert cache residency"
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workspaces/seriespack-delivery-current-20260911/build/workers/20260911T062300Z-0d34c994/results/large-source/samples.json",
+      "sha256": "bad6b1ef04cc8619ad7d56c0905ab3897988d1ab238cb5bb0fe9baef2b224a1f"
+    }
+  },
+  "kind": "google-benchmark-summary",
+  "units": "CPU/real times are ns per benchmark iteration. ns_per_item uses the reported item rate; an item means what the benchmark counts, not necessarily a value or byte."
+}

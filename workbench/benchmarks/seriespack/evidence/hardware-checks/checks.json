@@ -1,0 +1,432 @@
+{
+  "format": 1,
+  "scope": "Initial x86 runtime failure, focused diagnostic, corrected all-profile hardware checks; no throughput conclusions",
+  "fixed_checkpoint_overlays": [
+    "ikea/src/seriespack/native.cpp",
+    "ikea/test/seriespack/physical_operations.cpp",
+    "ikea/test/seriespack/operations.cpp",
+    "workbench/spikes/ikea-composition/validation/run.py",
+    "workbench/spikes/ikea-composition/validation/README.md"
+  ],
+  "excluded_from_fixed_checkpoint": "In-progress native_neon.h optimization; x86 preprocessor excludes this header",
+  "diagnostic": "bound construction: k=9 h=8 geometry=0 n=8 target=0 resolved=2 input=8 plane=head0 offset=0 got=80 expected=00",
+  "runs": [
+    {
+      "label": "zen5-initial",
+      "job": "20260910T142322Z-76ff0873",
+      "source_digest": "1aa514a9ff6626afa45f03bbea0ec2f69c07a20c3fd8897b0eacc8219896251e",
+      "original_head": "aac633b2457967c64d77610646567fefb63c2c74",
+      "artifact": "zen5-initial.artifact.json",
+      "instance_type": "c8a.large",
+      "worker": {
+        "id": "20260910T142322Z-76ff0873",
+        "instance_id": "i-03ba0159d015b3d8f",
+        "reused": false,
+        "reuse_count": 0,
+        "max_end": 1789064614.0847976
+      },
+      "setup_reused": false,
+      "cpu": 0,
+      "build_jobs": 1,
+      "build_type": "RelWithDebInfo",
+      "check_target": "ikea_seriespack_check",
+      "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)",
+      "source_files_sha256": {
+        "ikea/src/seriespack/native.cpp": "8e77aebb876c68cb421c2f5b12f8ee1bd45562dec33c1e00fa994703ae863582",
+        "ikea/test/seriespack/physical_operations.cpp": "91ff5cde3ea3b70eaafa517df8c638bfcc091de68a16d570de13b2110b121fba",
+        "ikea/test/seriespack/operations.cpp": "b54ae19c6ab3c43895d37490cd9a238fabe8b69ba8278e126f39328490623f4a",
+        "workbench/spikes/ikea-composition/validation/run.py": "9297474512ea2012494a727a24baf947f72e226fd715538f133b8a9d4a188775"
+      },
+      "profiles": [
+        {
+          "name": "avx2",
+          "status": "failed",
+          "correctness_passed": false,
+          "build_directory_existed": false,
+          "march": "x86-64-v3",
+          "extra_flags": [],
+          "check_target": "ikea_seriespack_check",
+          "error": "build-and-check exited 1; see avx2/build-and-check.txt",
+          "build-and-check": {
+            "returncode": 1,
+            "resources": {
+              "max_rss_kib": 1249612,
+              "system_seconds": 1.67,
+              "user_seconds": 247.14,
+              "wall_seconds": 248.99
+            }
+          }
+        },
+        {
+          "name": "avx512bw",
+          "status": "failed",
+          "correctness_passed": false,
+          "build_directory_existed": false,
+          "march": "x86-64-v4",
+          "extra_flags": [],
+          "check_target": "ikea_seriespack_check",
+          "error": "build-and-check exited 1; see avx512bw/build-and-check.txt",
+          "build-and-check": {
+            "returncode": 1,
+            "resources": {
+              "max_rss_kib": 1254860,
+              "system_seconds": 1.69,
+              "user_seconds": 245.86,
+              "wall_seconds": 247.9
+            }
+          }
+        },
+        {
+          "name": "avx512",
+          "status": "failed",
+          "correctness_passed": false,
+          "build_directory_existed": false,
+          "march": "x86-64-v4",
+          "extra_flags": [
+            "-mavx512vbmi",
+            "-mavx512vbmi2",
+            "-mgfni"
+          ],
+          "check_target": "ikea_seriespack_check",
+          "error": "build-and-check exited 1; see avx512/build-and-check.txt",
+          "build-and-check": {
+            "returncode": 1,
+            "resources": {
+              "max_rss_kib": 2140760,
+              "system_seconds": 2.31,
+              "user_seconds": 327.19,
+              "wall_seconds": 330.02
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "granite-rapids-initial",
+      "job": "20260910T142421Z-9ab61ceb",
+      "source_digest": "1aa514a9ff6626afa45f03bbea0ec2f69c07a20c3fd8897b0eacc8219896251e",
+      "original_head": "aac633b2457967c64d77610646567fefb63c2c74",
+      "artifact": "granite-rapids-initial.artifact.json",
+      "instance_type": "c8i.large",
+      "worker": {
+        "id": "20260910T142421Z-9ab61ceb",
+        "instance_id": "i-0d2b520fd6a778ed2",
+        "reused": false,
+        "reuse_count": 0,
+        "max_end": 1789064678.0768108
+      },
+      "setup_reused": false,
+      "cpu": 0,
+      "build_jobs": 1,
+      "build_type": "RelWithDebInfo",
+      "check_target": "ikea_seriespack_check",
+      "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)",
+      "source_files_sha256": {
+        "ikea/src/seriespack/native.cpp": "8e77aebb876c68cb421c2f5b12f8ee1bd45562dec33c1e00fa994703ae863582",
+        "ikea/test/seriespack/physical_operations.cpp": "91ff5cde3ea3b70eaafa517df8c638bfcc091de68a16d570de13b2110b121fba",
+        "ikea/test/seriespack/operations.cpp": "b54ae19c6ab3c43895d37490cd9a238fabe8b69ba8278e126f39328490623f4a",
+        "workbench/spikes/ikea-composition/validation/run.py": "9297474512ea2012494a727a24baf947f72e226fd715538f133b8a9d4a188775"
+      },
+      "profiles": [
+        {
+          "name": "avx2",
+          "status": "failed",
+          "correctness_passed": false,
+          "build_directory_existed": false,
+          "march": "x86-64-v3",
+          "extra_flags": [],
+          "check_target": "ikea_seriespack_check",
+          "error": "build-and-check exited 1; see avx2/build-and-check.txt",
+          "build-and-check": {
+            "returncode": 1,
+            "resources": {
+              "max_rss_kib": 1183688,
+              "system_seconds": 2.51,
+              "user_seconds": 303.84,
+              "wall_seconds": 307.18
+            }
+          }
+        },
+        {
+          "name": "avx512bw",
+          "status": "failed",
+          "correctness_passed": false,
+          "build_directory_existed": false,
+          "march": "x86-64-v4",
+          "extra_flags": [],
+          "check_target": "ikea_seriespack_check",
+          "error": "build-and-check exited 1; see avx512bw/build-and-check.txt",
+          "build-and-check": {
+            "returncode": 1,
+            "resources": {
+              "max_rss_kib": 1193024,
+              "system_seconds": 2.53,
+              "user_seconds": 306.55,
+              "wall_seconds": 311.51
+            }
+          }
+        },
+        {
+          "name": "avx512",
+          "status": "failed",
+          "correctness_passed": false,
+          "build_directory_existed": false,
+          "march": "x86-64-v4",
+          "extra_flags": [
+            "-mavx512vbmi",
+            "-mavx512vbmi2",
+            "-mgfni"
+          ],
+          "check_target": "ikea_seriespack_check",
+          "error": "build-and-check exited 1; see avx512/build-and-check.txt",
+          "build-and-check": {
+            "returncode": 1,
+            "resources": {
+              "max_rss_kib": 2046060,
+              "system_seconds": 3.29,
+              "user_seconds": 399.4,
+              "wall_seconds": 403.99
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "zen5-diagnostic",
+      "job": "20260910T144418Z-22d09407",
+      "source_digest": "5a314ba5985eced26b8d02702a7a2086568c21b5d2edbec3dece2ad190273d9a",
+      "original_head": "aac633b2457967c64d77610646567fefb63c2c74",
+      "artifact": "zen5-diagnostic.artifact.json",
+      "instance_type": "c8a.large",
+      "worker": {
+        "id": "20260910T142322Z-76ff0873",
+        "instance_id": "i-03ba0159d015b3d8f",
+        "reused": true,
+        "reuse_count": 1,
+        "max_end": 1789064614.0847976
+      },
+      "setup_reused": true,
+      "cpu": 0,
+      "build_jobs": 1,
+      "build_type": "RelWithDebInfo",
+      "check_target": "ikea_seriespack_operations_check",
+      "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)",
+      "source_files_sha256": {
+        "ikea/src/seriespack/native.cpp": "8e77aebb876c68cb421c2f5b12f8ee1bd45562dec33c1e00fa994703ae863582",
+        "ikea/test/seriespack/physical_operations.cpp": "91ff5cde3ea3b70eaafa517df8c638bfcc091de68a16d570de13b2110b121fba",
+        "ikea/test/seriespack/operations.cpp": "6a1410b3ef549dcc50bc46d97ca5b34cc8a0b6db4d794fcecca6d4d8f4e30031",
+        "workbench/spikes/ikea-composition/validation/run.py": "9d9271340cb0ff642ffa92ca20d576e6a73fa06edc44ee7ff036067ca1a6cf18"
+      },
+      "profiles": [
+        {
+          "name": "avx2",
+          "status": "failed",
+          "correctness_passed": false,
+          "build_directory_existed": true,
+          "march": "x86-64-v3",
+          "extra_flags": [],
+          "check_target": "ikea_seriespack_operations_check",
+          "error": "check exited 134; see avx2/check.txt",
+          "build-check-target": {
+            "returncode": 0,
+            "resources": {
+              "max_rss_kib": 193188,
+              "system_seconds": 0.09,
+              "user_seconds": 1.7,
+              "wall_seconds": 1.82
+            }
+          },
+          "check": {
+            "returncode": 134,
+            "resources": {
+              "max_rss_kib": 5132,
+              "system_seconds": 0.0,
+              "user_seconds": 0.0,
+              "wall_seconds": 0.06
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "zen5-corrected",
+      "job": "20260910T145002Z-19e72591",
+      "source_digest": "72b9451448a42908fd3ebd4d49d2107fad8a1f5f99b4f481d1bd4af717ecb741",
+      "original_head": "aac633b2457967c64d77610646567fefb63c2c74",
+      "artifact": "zen5-corrected.artifact.json",
+      "instance_type": "c8a.large",
+      "worker": {
+        "id": "20260910T142322Z-76ff0873",
+        "instance_id": "i-03ba0159d015b3d8f",
+        "reused": true,
+        "reuse_count": 2,
+        "max_end": 1789064614.0847976
+      },
+      "setup_reused": true,
+      "cpu": 0,
+      "build_jobs": 1,
+      "build_type": "RelWithDebInfo",
+      "check_target": "ikea_seriespack_check",
+      "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)",
+      "source_files_sha256": {
+        "ikea/src/seriespack/native.cpp": "bd30aa048346723564fc4acc22535a38bcae5f596ca3199081ac059455673b78",
+        "ikea/test/seriespack/physical_operations.cpp": "266b57a2efcd44ee2aabb654c8bd35565b0a75827ae000185200a1a00dbc3e15",
+        "ikea/test/seriespack/operations.cpp": "6a1410b3ef549dcc50bc46d97ca5b34cc8a0b6db4d794fcecca6d4d8f4e30031",
+        "workbench/spikes/ikea-composition/validation/run.py": "8a0127d82abfbe5164822f16950a8813ed848a6048cb396b15fd74994e63760a"
+      },
+      "profiles": [
+        {
+          "name": "avx2",
+          "status": "passed",
+          "correctness_passed": true,
+          "build_directory_existed": true,
+          "march": "x86-64-v3",
+          "extra_flags": [],
+          "check_target": "ikea_seriespack_check",
+          "error": null,
+          "build-and-check": {
+            "returncode": 0,
+            "resources": {
+              "max_rss_kib": 1135764,
+              "system_seconds": 0.54,
+              "user_seconds": 42.0,
+              "wall_seconds": 42.85
+            }
+          }
+        },
+        {
+          "name": "avx512bw",
+          "status": "passed",
+          "correctness_passed": true,
+          "build_directory_existed": true,
+          "march": "x86-64-v4",
+          "extra_flags": [],
+          "check_target": "ikea_seriespack_check",
+          "error": null,
+          "build-and-check": {
+            "returncode": 0,
+            "resources": {
+              "max_rss_kib": 1136980,
+              "system_seconds": 0.63,
+              "user_seconds": 44.69,
+              "wall_seconds": 45.67
+            }
+          }
+        },
+        {
+          "name": "avx512",
+          "status": "passed",
+          "correctness_passed": true,
+          "build_directory_existed": true,
+          "march": "x86-64-v4",
+          "extra_flags": [
+            "-mavx512vbmi",
+            "-mavx512vbmi2",
+            "-mgfni"
+          ],
+          "check_target": "ikea_seriespack_check",
+          "error": null,
+          "build-and-check": {
+            "returncode": 0,
+            "resources": {
+              "max_rss_kib": 1991552,
+              "system_seconds": 1.0,
+              "user_seconds": 76.76,
+              "wall_seconds": 78.15
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "granite-rapids-corrected",
+      "job": "20260910T145022Z-6351600b",
+      "source_digest": "72b9451448a42908fd3ebd4d49d2107fad8a1f5f99b4f481d1bd4af717ecb741",
+      "original_head": "aac633b2457967c64d77610646567fefb63c2c74",
+      "artifact": "granite-rapids-corrected.artifact.json",
+      "instance_type": "c8i.large",
+      "worker": {
+        "id": "20260910T142421Z-9ab61ceb",
+        "instance_id": "i-0d2b520fd6a778ed2",
+        "reused": true,
+        "reuse_count": 1,
+        "max_end": 1789064678.0768108
+      },
+      "setup_reused": true,
+      "cpu": 0,
+      "build_jobs": 1,
+      "build_type": "RelWithDebInfo",
+      "check_target": "ikea_seriespack_check",
+      "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)",
+      "source_files_sha256": {
+        "ikea/src/seriespack/native.cpp": "bd30aa048346723564fc4acc22535a38bcae5f596ca3199081ac059455673b78",
+        "ikea/test/seriespack/physical_operations.cpp": "266b57a2efcd44ee2aabb654c8bd35565b0a75827ae000185200a1a00dbc3e15",
+        "ikea/test/seriespack/operations.cpp": "6a1410b3ef549dcc50bc46d97ca5b34cc8a0b6db4d794fcecca6d4d8f4e30031",
+        "workbench/spikes/ikea-composition/validation/run.py": "8a0127d82abfbe5164822f16950a8813ed848a6048cb396b15fd74994e63760a"
+      },
+      "profiles": [
+        {
+          "name": "avx2",
+          "status": "passed",
+          "correctness_passed": true,
+          "build_directory_existed": true,
+          "march": "x86-64-v3",
+          "extra_flags": [],
+          "check_target": "ikea_seriespack_check",
+          "error": null,
+          "build-and-check": {
+            "returncode": 0,
+            "resources": {
+              "max_rss_kib": 1057500,
+              "system_seconds": 0.87,
+              "user_seconds": 50.45,
+              "wall_seconds": 52.55
+            }
+          }
+        },
+        {
+          "name": "avx512bw",
+          "status": "passed",
+          "correctness_passed": true,
+          "build_directory_existed": true,
+          "march": "x86-64-v4",
+          "extra_flags": [],
+          "check_target": "ikea_seriespack_check",
+          "error": null,
+          "build-and-check": {
+            "returncode": 0,
+            "resources": {
+              "max_rss_kib": 1060992,
+              "system_seconds": 0.93,
+              "user_seconds": 52.08,
+              "wall_seconds": 54.84
+            }
+          }
+        },
+        {
+          "name": "avx512",
+          "status": "passed",
+          "correctness_passed": true,
+          "build_directory_existed": true,
+          "march": "x86-64-v4",
+          "extra_flags": [
+            "-mavx512vbmi",
+            "-mavx512vbmi2",
+            "-mgfni"
+          ],
+          "check_target": "ikea_seriespack_check",
+          "error": null,
+          "build-and-check": {
+            "returncode": 0,
+            "resources": {
+              "max_rss_kib": 1835776,
+              "system_seconds": 1.45,
+              "user_seconds": 89.15,
+              "wall_seconds": 93.0
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

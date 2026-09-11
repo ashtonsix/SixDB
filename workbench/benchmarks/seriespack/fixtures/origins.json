@@ -1,0 +1,23 @@
+{
+  "runtime_bench.cpp": {
+    "source": "build/successor-head16-current/runner/runtime_bench.cpp",
+    "source_sha256": "d84e201927cb0f649f1061fda10f062fab2867cb99e7d075f55934f25a4936ee"
+  },
+  "runtime_fixture.h": {
+    "source": "build/successor-head16-current/runner/runtime_fixture.h",
+    "source_sha256": "f0b3af8de511ba43f954db23b936017b3a231695e435274cec99474253c2a805"
+  },
+  "boundary_bench.cpp": {
+    "source": "build/successor-striped-fragments/boundary_bench.cpp",
+    "source_sha256": "db1698c0704d256c5ae604e3e60e0c6b0a38843f8cb76cb92d7051bc3a76c1e4"
+  },
+  "head_placement_bench.cpp": {
+    "source": "build/successor-head16-current/head_placement_bench.cpp",
+    "source_sha256": "cdb4445c89f021a756dc0e64eae3aa88c80de5990734d1de880dfbe0af49570c"
+  },
+  "wire_fixture.h": {
+    "source": "ikea/test/seriespack/physical_operations.cpp",
+    "source_sha256": "46ba26020ee50b111e9993e569e1bb18f6605ebe0a98dbb06fc149edc717a0fa",
+    "derivation": "exact prefix before struct effects, then close anonymous namespace"
+  }
+}

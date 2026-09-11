@@ -1,0 +1,34 @@
+{
+  "point_get16_source_identical": true,
+  "verified_walk_header_identical": true,
+  "header_sha256": "9cd6adf01190cd5933f8ccba86a7b04c561cc9d7904c5bdcbbd26785e51acb4f",
+  "before_main_sha256": "2f1b55dac92e625010727e8856543fd4ea2c722cb635cefb7bcb8bcf3fb0d98d",
+  "after_main_sha256": "40752acd1c2848dcee549f9dcf19298284b8b31be28189d356ca8e172e051e3e",
+  "format": 1,
+  "scope": "Carry verifiedWeylnoncewalk into canonicalbenchmark, preservingpoint/get16 source",
+  "replay": {
+    "queries_per_trace": 65536,
+    "traces": 134,
+    "bounds_equal_provider_partitioning_noncecontinuity_andwrap": "passed"
+  },
+  "functional_smoke": {
+    "cases": 12,
+    "repetitions": 2,
+    "iterations_per_repetition": 1,
+    "status": "passed"
+  },
+  "checks_sha256": {
+    "check.cpp": "471ae656316e88ede3ca893d759e66d31beb9eab31445e95ce0a588934119b36",
+    "check.log": "a4c51305982ab04bc54eddbabb0b218d01a19722e8170252bd29377b7e7f04c5",
+    "coverage.csv": "5dba4bb25513f3ae8a171d021fa658df70e9e8f01c2500cc961c2be805be7606",
+    "smoke.json": "95dd1a39fc5da2dd69a4acc1a5f5482b95248a8f025bb96dd06a14c91846f9c1",
+    "build.log": "87c900a06e9be2077a27cf38319d824fb89d6e75b8be2b734228d87239944a2c"
+  },
+  "historical_full_coverage_receipt_sha256": "1b63a3d890b46c80d38bd9d9bd1800a3920baa24d6f5f019dcd8f36e897ec417",
+  "scope_limits": "Sameheaderasall64width4,194,304querycoveragecheck. Shorterrepeatverifiesintegrationandreplayonly; doesnotreestablishstatisticalcoverageorperformancemeasurement.",
+  "full_validation_artifact": "artifact.json",
+  "compact_validation_sha256": {
+    "coverage-summary.csv": "1d19514b4bfb7f053d1ee24ab462cf028d37cfe9b2ab14117f9290eeaf978a5f",
+    "summary-check.txt": "be833ecf7b32fb36485de89ecaa1ccb9f10d3f1d53ccd9a369ed11956073d15f"
+  }
+}

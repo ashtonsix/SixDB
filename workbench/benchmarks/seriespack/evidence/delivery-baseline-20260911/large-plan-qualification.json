@@ -1,0 +1,23 @@
+{
+  "scope": "Qualification of frozen run.py large-source/plan.json nominal fields; no measured source changed",
+  "nominal_fields": [
+    "encoded_bytes",
+    "query_array_bytes"
+  ],
+  "requested_encoded_bytes": 1073741824,
+  "actual_extents": [
+    {
+      "width": 1,
+      "logical_values": 8589934592,
+      "actual_encoded_bytes": 1073741824,
+      "actual_query_array_bytes": 536870912
+    },
+    {
+      "width": 56,
+      "logical_values": 153391616,
+      "actual_encoded_bytes": 1073741312,
+      "actual_query_array_bytes": 536870656
+    }
+  ],
+  "authority": "each sample logical_values/encoded_bytes/query_bytes counters are actual, as constructed by fixture; width56 rounds logical count down to a multiple of256"
+}
