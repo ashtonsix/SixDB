@@ -1,0 +1,33 @@
+unsigned long ikea::seriespack::(anonymous namespace)::point<5u, (ikea::seriespack::geometry)1, 0u, (ikea::seriespack::point_reader)0>(ikea::seriespack::basic_view<std::byte const> const&, unsigned long)
+ldr	x9, [x0, #0x18]
+ldr	x10, [x0, #0x28]
+ubfx	w11, w1, #5, #3
+lsr	x8, x1, #8
+add	w11, w11, w11, lsl #2
+lsl	w11, w11, #2
+and	x11, x11, #0xe0
+madd	x10, x10, x8, x9
+and	x8, x1, #0x1f
+lsr	w9, w1, #5
+add	w9, w9, w9, lsl #2
+add	x10, x10, x11
+and	w9, w9, #0x7
+ldrb	w11, [x10, x8]
+subs	w12, w9, #0x3
+b.hi	0xb0f30 <unsigned long ikea::seriespack::(anonymous namespace)::point<5u, (ikea::seriespack::geometry)1, 0u, (ikea::seriespack::point_reader)0>(ikea::seriespack::basic_view<std::byte const> const&, unsigned long)+0x50>
+lsr	w8, w11, w9
+and	w8, w8, #0x1f
+mov	w0, w8
+ret
+add	x8, x10, x8
+mov	w9, #-0x1               // =-1
+ldrb	w8, [x8, #0x20]
+lsl	w9, w9, w12
+and	w11, w9, w11, lsr #3
+bic	w8, w8, w9
+orr	w8, w8, w11
+mov	w0, w8
+ret
+nop
+nop
+nop

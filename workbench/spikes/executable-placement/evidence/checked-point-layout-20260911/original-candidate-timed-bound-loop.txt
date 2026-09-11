@@ -1,0 +1,27 @@
+91580: cbnz	w20, 0x915e8 <void checked_point_probe::run<false>(benchmark::State&, ikea::seriespack::description)+0x428>
+91584: cbz	x19, 0x915e8 <void checked_point_probe::run<false>(benchmark::State&, ikea::seriespack::description)+0x428>
+91588: mov	x20, xzr
+9158c: add	x21, sp, #0x180
+91590: add	x22, sp, #0xb8
+91594: nop
+91598: nop
+9159c: nop
+915a0: mov	w23, #0x100             // =256
+915a4: ldr	x1, [x21, x20, lsl #3]
+915a8: ldr	x8, [x26, #0x110]
+915ac: add	x0, sp, #0x8, lsl #12   // =0x8000
+915b0: add	x0, x0, #0x228
+915b4: blr	x8
+915b8: add	x8, x20, #0x1
+915bc: cmp	x8, #0x1, lsl #12       // =0x1000
+915c0: ldr	x8, [sp, #0xb8]
+915c4: csinc	x20, xzr, x20, eq
+915c8: subs	x23, x23, #0x1
+915cc: add	x8, x8, x0
+915d0: str	x8, [sp, #0xb8]
+915d4: b.ne	0x915a4 <void checked_point_probe::run<false>(benchmark::State&, ikea::seriespack::description)+0x3e4>
+915d8: cmp	x19, #0x0
+915dc: b.le	0x91da8 <void checked_point_probe::run<false>(benchmark::State&, ikea::seriespack::description)+0xbe8>
+915e0: subs	x19, x19, #0x1
+915e4: b.ne	0x915a0 <void checked_point_probe::run<false>(benchmark::State&, ikea::seriespack::description)+0x3e0>
+915e8: mov	x0, x24

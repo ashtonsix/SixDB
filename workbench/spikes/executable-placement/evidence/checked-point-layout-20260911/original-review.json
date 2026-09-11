@@ -1,0 +1,121 @@
+{
+  "scope": "V2 worker O3 armv8-a operations instruction+relocation comparison; no hardware attribution",
+  "common_operations_functions": 1244,
+  "changed_operations_functions": [
+    "ikea::seriespack::get(ikea::seriespack::basic_view<std::byte const>, unsigned long)"
+  ],
+  "added": [],
+  "removed": [],
+  "selected": [
+    {
+      "name": "ikea::seriespack::get(ikea::seriespack::basic_view<std::byte const>, unsigned long)",
+      "base": {
+        "address": "0x96e70",
+        "mod64": 48,
+        "mod128": 112,
+        "instruction_lines": 36
+      },
+      "candidate": {
+        "address": "0x96e70",
+        "mod64": 48,
+        "mod128": 112,
+        "instruction_lines": 24
+      }
+    },
+    {
+      "name": "unsigned long ikea::seriespack::(anonymous namespace)::point<5u, (ikea::seriespack::geometry)1, 0u, (ikea::seriespack::point_reader)0>(ikea::seriespack::basic_view<std::byte const> const&, unsigned long)",
+      "base": {
+        "address": "0xb0ee0",
+        "mod64": 32,
+        "mod128": 96,
+        "instruction_lines": 32
+      },
+      "candidate": {
+        "address": "0xb0ea0",
+        "mod64": 32,
+        "mod128": 32,
+        "instruction_lines": 32
+      }
+    },
+    {
+      "name": "void checked_point_probe::run<false>(benchmark::State&, ikea::seriespack::description)",
+      "base": {
+        "address": "0x911c0",
+        "mod64": 0,
+        "mod128": 64,
+        "instruction_lines": 924
+      },
+      "candidate": {
+        "address": "0x911c0",
+        "mod64": 0,
+        "mod128": 64,
+        "instruction_lines": 924
+      }
+    },
+    {
+      "name": "void checked_point_probe::run<true>(benchmark::State&, ikea::seriespack::description)",
+      "base": {
+        "address": "0x902e0",
+        "mod64": 32,
+        "mod128": 96,
+        "instruction_lines": 952
+      },
+      "candidate": {
+        "address": "0x902e0",
+        "mod64": 32,
+        "mod128": 96,
+        "instruction_lines": 952
+      }
+    }
+  ],
+  "objects": {
+    "base": "87a55b901e3b9629253dcf4830d46b6685543b8c2a9cdcd672b877f735415598",
+    "candidate": "3ab73ea5e29bf0a783439b301afd96f577a0151b91de83eac94ee345c6639b6e"
+  },
+  "timed_bound_loop": {
+    "base": {
+      "begin": "0x91580",
+      "end_exclusive": "0x915ec",
+      "instructions": 27,
+      "bytes": "54030035330300b4f4031faaf5030691f6e302911f2003d51f2003d51f2003d517208052a17a74f8488b40f9e023409100a0089100013fd6880600911f0540f1e85f40f9f407949af70600f10801008be85f00f981feff547f0200f16d3e0054730600f1e1fdff54e00318aa",
+      "sha256": "e4cbf9ebc38c11abee652563a2601a7a4ff28202d3cb425d7cdbbd3480950c09"
+    },
+    "candidate": {
+      "begin": "0x91580",
+      "end_exclusive": "0x915ec",
+      "instructions": 27,
+      "bytes": "54030035330300b4f4031faaf5030691f6e302911f2003d51f2003d51f2003d517208052a17a74f8488b40f9e023409100a0089100013fd6880600911f0540f1e85f40f9f407949af70600f10801008be85f00f981feff547f0200f16d3e0054730600f1e1fdff54e00318aa",
+      "sha256": "e4cbf9ebc38c11abee652563a2601a7a4ff28202d3cb425d7cdbbd3480950c09"
+    }
+  },
+  "striped5_arithmetic_point": {
+    "base": {
+      "begin": "0xb0ee0",
+      "bytes_count": 116,
+      "sha256": "3edc101502e03c64d8a8f7aa4f16109b00fdadf534c68c733f7fc2ef845e59eb",
+      "bytes": "090c40f90a1440f92b1c055328fc48d36b090b0b6b751e536b097b924a25089b28104092297c05532909090b4a010b8b290900124b6968382c0d0071a80000546825c91a08110012e003082ac0035fd64801088b09008012088140392921cc1a2b0d4b0a0801290a08010b2ae003082ac0035fd6"
+    },
+    "candidate": {
+      "begin": "0xb0ea0",
+      "bytes_count": 116,
+      "sha256": "3edc101502e03c64d8a8f7aa4f16109b00fdadf534c68c733f7fc2ef845e59eb",
+      "bytes": "090c40f90a1440f92b1c055328fc48d36b090b0b6b751e536b097b924a25089b28104092297c05532909090b4a010b8b290900124b6968382c0d0071a80000546825c91a08110012e003082ac0035fd64801088b09008012088140392921cc1a2b0d4b0a0801290a08010b2ae003082ac0035fd6"
+    }
+  },
+  "rodata": {
+    "base": {
+      "address": "0x344b70",
+      "size": 22851,
+      "sha256": "5d17bfe29c0fefd4e49cbc67e4003def8c6b0d45e5fc4e4ee3034387003e4c1c"
+    },
+    "candidate": {
+      "address": "0x344b30",
+      "size": 22851,
+      "sha256": "5d17bfe29c0fefd4e49cbc67e4003def8c6b0d45e5fc4e4ee3034387003e4c1c"
+    }
+  },
+  "binary_sha256": {
+    "base": "0d20cb71e25b4a114b602fc6a0b6c4d31c98c3b60b6fada9d4fbdf711d67123f",
+    "candidate": "0fdf8c27baaa8d9d7f8a95a746cb4d3c147b077909f3f69f61bb643910a57888"
+  }
+}

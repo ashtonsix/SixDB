@@ -1,0 +1,68 @@
+{
+  "format": 1,
+  "question": "Zen K10/H8/u16 decode: exact old/new binaries in forward and reverse order",
+  "variants": {
+    "old": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 120083211,
+        "files": 65,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/d9e94fa2b52c457f480eec6aeb23482d37a8fe432872d13ac9b5de906d897f23.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "d9e94fa2b52c457f480eec6aeb23482d37a8fe432872d13ac9b5de906d897f23",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/d9e94fa2b52c457f480eec6aeb23482d37a8fe432872d13ac9b5de906d897f23.tar.gz"
+      },
+      "binary": "seriespack/avx512/ikea_seriespack_bench",
+      "source_digest": "72b9451448a42908fd3ebd4d49d2107fad8a1f5f99b4f481d1bd4af717ecb741",
+      "files_sha256": {
+        "seriespack/avx512/ikea_seriespack_bench": "746e1b26beec0b79842da1704654b5c53a2baa30c2554da3b6f97f2f18587bc3",
+        "job.json": "66e42357b133417a8904703911a9e8df08d121beaf0984bd8ddca247b5cdb01b",
+        "source-manifest.json": "5c430a201ba83e2f993901b49a39f2048e8b8fb28c0de8dab20128f8f0de40ba",
+        "host.json": "3abc582702c574d93029ed2f65c1fd1deaf0f9d1d470b2968f0109699e110632",
+        "seriespack/validation.json": "9949e5f72629310935913adcbe01e598c911322164abce7e2fe4372bd8e977d3",
+        "seriespack/avx512/compile_commands.json": "46b231fd27bc73b5891b051d45b10518bf80c4908eafe8ee00484205ebca9143"
+      }
+    },
+    "candidate": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 122173746,
+        "files": 66,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/5ccfbb9ea906f7fde976deba5b8184312df01bda465819fa5cdfff0fa7da3049.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "5ccfbb9ea906f7fde976deba5b8184312df01bda465819fa5cdfff0fa7da3049",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/5ccfbb9ea906f7fde976deba5b8184312df01bda465819fa5cdfff0fa7da3049.tar.gz"
+      },
+      "binary": "seriespack/avx512/ikea_seriespack_bench",
+      "source_digest": "91d7e86fe9f9056436e23519dbc4d4f4582cf7ec17141e8549ee9e24ece891ed",
+      "files_sha256": {
+        "seriespack/avx512/ikea_seriespack_bench": "f6f04c70b27ed97d322c8a03399adbc138c49c1d5844b2ee04bf785813a1cb10",
+        "job.json": "855a196b64b65e54dfaa8efe2b02e13f987c3699007538e9f50be8bb41b5687c",
+        "source-manifest.json": "ed5746f21a329a944d55ea9106a92b4dca305ad88d164e01ef21c7977da336d3",
+        "host.json": "fa576e096d6bb9d10e6032b87d6d462db2b52183da74524389178e2c907034ad",
+        "seriespack/validation.json": "75949ce0b278fcfb46f7a2498950dfd24e188121ddf10d08d0d6343eed394a60",
+        "seriespack/avx512/compile_commands.json": "95c6d2a5ac7015a8b8a01d89ed7acc9cf84195f7ac4508e36aec0032190fa26b"
+      }
+    }
+  },
+  "order": [
+    "old",
+    "candidate",
+    "candidate",
+    "old"
+  ],
+  "filter": "^bulk/series/(avx2|avx512)/local/k10/h8/u16/decode$",
+  "min_time": 0.2,
+  "repetitions": 5,
+  "environment": {
+    "SERIESPACK_BULK_VALUES": "8192"
+  },
+  "expected_cases": [
+    "bulk/series/avx2/local/k10/h8/u16/decode",
+    "bulk/series/avx512/local/k10/h8/u16/decode"
+  ]
+}

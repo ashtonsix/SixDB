@@ -1,0 +1,218 @@
+{
+  "scope": "Current frozen V2 baseline authored compare-and-sum vs reused scratch materialization; no candidate change; benchmark-only result carriers remain separate",
+  "source": "build/successor-delivery/summary-v2/baseline/cases.csv",
+  "rows": [
+    {
+      "case": "composition/neon/local/k12/h0/u16/all",
+      "authored_ns_per_value": 0.2042293925398094,
+      "materialized_ns_per_value": 0.42600595254762835,
+      "authored_over_materialized": 0.47940502079481184,
+      "observation": "separated faster",
+      "registered_variant_over_materialized": {
+        "authored": 0.47940502079481184,
+        "authored-u64-carrier": 0.42303906056813984,
+        "direct": 0.47884405157764426,
+        "materialized": 1.0
+      }
+    },
+    {
+      "case": "composition/neon/local/k12/h0/u16/prefilter75",
+      "authored_ns_per_value": 0.20909375951551268,
+      "materialized_ns_per_value": 0.6379709364973756,
+      "authored_over_materialized": 0.3277480956475716,
+      "observation": "separated faster",
+      "registered_variant_over_materialized": {
+        "authored": 0.3277480956475716,
+        "authored-u64-carrier": 0.28861695493028455,
+        "direct": 0.32772678586120435,
+        "materialized": 1.0
+      }
+    },
+    {
+      "case": "composition/neon/local/k31/h0/u32/all",
+      "authored_ns_per_value": 0.33949396165733986,
+      "materialized_ns_per_value": 0.46583499331497835,
+      "authored_over_materialized": 0.728785871669774,
+      "observation": "separated faster",
+      "registered_variant_over_materialized": {
+        "authored": 0.728785871669774,
+        "authored-u64-carrier": 0.6364511237651943,
+        "direct": 0.7286016949193229,
+        "materialized": 1.0
+      }
+    },
+    {
+      "case": "composition/neon/local/k31/h0/u32/prefilter75",
+      "authored_ns_per_value": 0.3749830204294656,
+      "materialized_ns_per_value": 0.7158231236097586,
+      "authored_over_materialized": 0.5238487107520335,
+      "observation": "separated faster",
+      "registered_variant_over_materialized": {
+        "authored": 0.5238487107520335,
+        "authored-u64-carrier": 0.4659264615382056,
+        "direct": 0.5240118432543072,
+        "materialized": 1.0
+      }
+    },
+    {
+      "case": "composition/neon/local/k5/h0/u8/all",
+      "authored_ns_per_value": 0.2549545610639451,
+      "materialized_ns_per_value": 0.445057120110532,
+      "authored_over_materialized": 0.5728580659503345,
+      "observation": "separated faster",
+      "registered_variant_over_materialized": {
+        "authored": 0.5728580659503345,
+        "authored-u64-carrier": 0.487266240888331,
+        "direct": 0.5736548261467963,
+        "materialized": 1.0
+      }
+    },
+    {
+      "case": "composition/neon/local/k5/h0/u8/prefilter75",
+      "authored_ns_per_value": 0.25514757951030653,
+      "materialized_ns_per_value": 0.6254827925844763,
+      "authored_over_materialized": 0.40792102122593066,
+      "observation": "separated faster",
+      "registered_variant_over_materialized": {
+        "authored": 0.40792102122593066,
+        "authored-u64-carrier": 0.34664926903271576,
+        "direct": 0.40822907949953585,
+        "materialized": 1.0
+      }
+    },
+    {
+      "case": "composition/neon/local/k56/h0/u64/all",
+      "authored_ns_per_value": 0.275401605355583,
+      "materialized_ns_per_value": 0.4136530716226385,
+      "authored_over_materialized": 0.6657791861070053,
+      "observation": "separated faster",
+      "registered_variant_over_materialized": {
+        "authored": 0.6657791861070053,
+        "authored-u64-carrier": 0.6563942920064341,
+        "direct": 0.6659511317348759,
+        "materialized": 1.0
+      }
+    },
+    {
+      "case": "composition/neon/local/k56/h0/u64/prefilter75",
+      "authored_ns_per_value": 0.30608123610154797,
+      "materialized_ns_per_value": 0.6583114002849351,
+      "authored_over_materialized": 0.4649490134441963,
+      "observation": "separated faster",
+      "registered_variant_over_materialized": {
+        "authored": 0.4649490134441963,
+        "authored-u64-carrier": 0.4291299653935418,
+        "direct": 0.4644369164801505,
+        "materialized": 1.0
+      }
+    },
+    {
+      "case": "composition/neon/local/k60/h8/u64/all",
+      "authored_ns_per_value": 0.7143116893379379,
+      "materialized_ns_per_value": 0.7020156733433998,
+      "authored_over_materialized": 1.0175153012410356,
+      "observation": "separated slower",
+      "registered_variant_over_materialized": {
+        "authored": 1.0175153012410356,
+        "authored-u64-carrier": 1.0086306920028139,
+        "direct": 1.0171665581440228,
+        "materialized": 1.0
+      }
+    },
+    {
+      "case": "composition/neon/local/k60/h8/u64/prefilter75",
+      "authored_ns_per_value": 0.7391616380285901,
+      "materialized_ns_per_value": 0.9671492127405722,
+      "authored_over_materialized": 0.7642684585701696,
+      "observation": "separated faster",
+      "registered_variant_over_materialized": {
+        "authored": 0.7642684585701696,
+        "authored-u64-carrier": 0.7618261523626092,
+        "direct": 0.7649061288638708,
+        "materialized": 1.0
+      }
+    },
+    {
+      "case": "composition/neon/local/k64/h0/u64/all",
+      "authored_ns_per_value": 0.28752158143018797,
+      "materialized_ns_per_value": 0.36920505371088047,
+      "authored_over_materialized": 0.778758520611536,
+      "observation": "separated faster",
+      "registered_variant_over_materialized": {
+        "authored": 0.778758520611536,
+        "authored-u64-carrier": 0.7290007961355406,
+        "direct": 0.7842467541498443,
+        "materialized": 1.0
+      }
+    },
+    {
+      "case": "composition/neon/local/k64/h0/u64/prefilter75",
+      "authored_ns_per_value": 0.24651075549281656,
+      "materialized_ns_per_value": 0.6098916815797824,
+      "authored_over_materialized": 0.4041877647097725,
+      "observation": "separated faster",
+      "registered_variant_over_materialized": {
+        "authored": 0.4041877647097725,
+        "authored-u64-carrier": 0.44208418742328837,
+        "direct": 0.40440650038676806,
+        "materialized": 1.0
+      }
+    },
+    {
+      "case": "composition/neon/local/k7/h0/u8/all",
+      "authored_ns_per_value": 0.25515881313627986,
+      "materialized_ns_per_value": 0.4450499900335018,
+      "authored_over_materialized": 0.573326185485528,
+      "observation": "separated faster",
+      "registered_variant_over_materialized": {
+        "authored": 0.573326185485528,
+        "authored-u64-carrier": 0.48720566890028366,
+        "direct": 0.573208667927131,
+        "materialized": 1.0
+      }
+    },
+    {
+      "case": "composition/neon/local/k7/h0/u8/prefilter75",
+      "authored_ns_per_value": 0.2551099334729905,
+      "materialized_ns_per_value": 0.6264957825434969,
+      "authored_over_materialized": 0.40720135806385654,
+      "observation": "separated faster",
+      "registered_variant_over_materialized": {
+        "authored": 0.40720135806385654,
+        "authored-u64-carrier": 0.346210072453544,
+        "direct": 0.4070114530592372,
+        "materialized": 1.0
+      }
+    },
+    {
+      "case": "composition/neon/striped/k12/h0/u16/all",
+      "authored_ns_per_value": 0.13141329446773292,
+      "materialized_ns_per_value": 0.3198525836676172,
+      "authored_over_materialized": 0.4108558166417512,
+      "observation": "separated faster",
+      "registered_variant_over_materialized": {
+        "authored": 0.4108558166417512,
+        "authored-u64-carrier": 0.3916304086207032,
+        "direct": 0.41092148673361684,
+        "materialized": 1.0
+      }
+    },
+    {
+      "case": "composition/neon/striped/k12/h0/u16/prefilter75",
+      "authored_ns_per_value": 0.15146862783586934,
+      "materialized_ns_per_value": 0.5284140983815647,
+      "authored_over_materialized": 0.2866475900241684,
+      "observation": "separated faster",
+      "registered_variant_over_materialized": {
+        "authored": 0.2866475900241684,
+        "authored-u64-carrier": 0.2808149178776937,
+        "direct": 0.2866063465307325,
+        "materialized": 1.0
+      }
+    }
+  ],
+  "worker_job": "20260911T062438Z-2d2cfcb9",
+  "source_digest": "18eeb92b846f1fa9b54b3d30f235494374e4a8d2dad52cd44298b1f69e22eeea",
+  "normalized_table_sha256": "1185b1f4f3344a418ee0e69df4a8efaac6f66ea325e0986717c9ac03bebd30df",
+  "raw_samples_sha256": "7d2d2ffa8616391e12578a2a912cbf56d8c17305c8b47e0c99214f7638fb35f6"
+}
