@@ -111,31 +111,31 @@ template<unsigned K,sp::geometry G,consumer_kind Kind,bool Masked> void consumer
 
 template<unsigned K,sp::geometry G> void register_bulk() {
     const auto suffix=std::string(G==sp::geometry::local?"local/":"striped/")+"k"+std::to_string(K);
-    benchmark::RegisterBenchmark(("decode/"+suffix+"/ikea").c_str(),bulk<K,G,reader_kind::current>);
-    benchmark::RegisterBenchmark(("decode/"+suffix+"/ikea2").c_str(),bulk<K,G,reader_kind::range>);
+    benchmark::RegisterBenchmark(("decode/"+suffix+"/predecessor").c_str(),bulk<K,G,reader_kind::current>);
+    benchmark::RegisterBenchmark(("decode/"+suffix+"/current").c_str(),bulk<K,G,reader_kind::range>);
     if constexpr(K<=7 || K==56) {
         benchmark::RegisterBenchmark(("decode/"+suffix+"/prior").c_str(),bulk<K,G,reader_kind::prior>);
         benchmark::RegisterBenchmark(("point/"+suffix+"/prior").c_str(),point<K,G,reader_kind::prior>);
-        benchmark::RegisterBenchmark(("point/"+suffix+"/ikea").c_str(),point<K,G,reader_kind::current>);
-        benchmark::RegisterBenchmark(("point/"+suffix+"/ikea2").c_str(),point<K,G,reader_kind::range>);
+        benchmark::RegisterBenchmark(("point/"+suffix+"/predecessor").c_str(),point<K,G,reader_kind::current>);
+        benchmark::RegisterBenchmark(("point/"+suffix+"/current").c_str(),point<K,G,reader_kind::range>);
     }
 }
 template<unsigned K,sp::geometry G,bool Ends=false> void register_access() {
     const auto name=std::string(Ends?"get16-ends/":"get16/")+(G==sp::geometry::local?"local":"striped")+"/k"+std::to_string(K);
     benchmark::RegisterBenchmark((name+"/prior").c_str(),access<K,G,reader_kind::prior,Ends>);
-    benchmark::RegisterBenchmark((name+"/ikea").c_str(),access<K,G,reader_kind::current,Ends>);
-    benchmark::RegisterBenchmark((name+"/ikea2-range").c_str(),access<K,G,reader_kind::range,Ends>);
-    benchmark::RegisterBenchmark((name+"/ikea2-region").c_str(),access<K,G,reader_kind::region,Ends>);
+    benchmark::RegisterBenchmark((name+"/predecessor").c_str(),access<K,G,reader_kind::current,Ends>);
+    benchmark::RegisterBenchmark((name+"/current-range").c_str(),access<K,G,reader_kind::range,Ends>);
+    benchmark::RegisterBenchmark((name+"/current-region").c_str(),access<K,G,reader_kind::region,Ends>);
 }
 template<unsigned K,sp::geometry G,bool Masked> void register_consumer() {
     const auto name=std::string("sum/")+(G==sp::geometry::local?"local":"striped")+"/k"+std::to_string(K)+(Masked?"/prefilter75":"/all");
-    benchmark::RegisterBenchmark((name+"/ikea2-native").c_str(),consumer<K,G,consumer_kind::composed,Masked>);
-    benchmark::RegisterBenchmark((name+"/ikea2-native16").c_str(),consumer<K,G,consumer_kind::composed16,Masked>);
-    benchmark::RegisterBenchmark((name+"/ikea2-materialized").c_str(),consumer<K,G,consumer_kind::next_materialized,Masked>);
-    benchmark::RegisterBenchmark((name+"/ikea-materialized").c_str(),consumer<K,G,consumer_kind::current_materialized,Masked>);
+    benchmark::RegisterBenchmark((name+"/current-native").c_str(),consumer<K,G,consumer_kind::composed,Masked>);
+    benchmark::RegisterBenchmark((name+"/current-native16").c_str(),consumer<K,G,consumer_kind::composed16,Masked>);
+    benchmark::RegisterBenchmark((name+"/current-materialized").c_str(),consumer<K,G,consumer_kind::next_materialized,Masked>);
+    benchmark::RegisterBenchmark((name+"/predecessor-materialized").c_str(),consumer<K,G,consumer_kind::current_materialized,Masked>);
 #if defined(__AVX512BW__) && defined(__AVX512VBMI__)
     if constexpr(G==sp::geometry::local && K>=9 && K<=32)
-        benchmark::RegisterBenchmark((name+"/ikea-grouped-deferred").c_str(),consumer<K,G,consumer_kind::current_grouped,Masked>);
+        benchmark::RegisterBenchmark((name+"/predecessor-grouped-deferred").c_str(),consumer<K,G,consumer_kind::current_grouped,Masked>);
 #endif
 }
 void register_ordinary();

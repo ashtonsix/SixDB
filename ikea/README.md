@@ -1,63 +1,73 @@
 # Ikea
 
-Ikea supplies the data containers and computational parts used to build SixDB.
-A column, hash table or index can use these parts without bringing along a query
-planner, scheduler or storage engine. Engine composes them into database work;
-they are also useful in standalone data structures and experiments.
+Ikea supplies composable data containers, codecs and computational kernels for
+SixDB. These parts serve column- and row-oriented records, indexes, strings and
+standalone structures such as hash tables and sketches. A block's physical layout
+can be reused in several containers, with kernels suited to each context.
 
-The central idea is to make useful operations composable. Reading packed values,
-comparing them and accumulating a result can share one execution region, where
-intermediate values can remain in registers. Ordinary calls that read or write
-arrays are useful too. The choice of execution should preserve the meaning of
-the data and allow its costs to be measured against alternatives.
+SeriesPack is the first implemented component, not the extent of Ikea's scope.
 
-**SeriesPack is the first implemented component.** It stores fixed-width unsigned
-integers in packed arrays and supports point reads and updates as well as bulk
-processing of the same bytes. A caller chooses what those integers mean: they
-might be column values, dictionary IDs, fingerprints or compact metadata.
-TuplePack and StreamPack currently reserve names for future work.
+| Component | Purpose and current status |
+| --- | --- |
+| [SeriesPack](seriespack/usage.md) | Headless packed unsigned arrays, 1–64 bits wide; implemented reads, mutation and composition |
+| TuplePack | Reserved stub; format and operations need a probe |
+| StreamPack | Reserved stub; format and operations need a probe |
 
-[Start with SeriesPack](seriespack.md). That introduction follows one small array
-from ordinary C++ use through its encoded bytes, scalar/SIMD reads and composition.
-It is the main reading path for a new Ikea contributor.
+Engine owns database semantics, schema, segment definitions and representation
+selection. Loom owns buffer acquisition and scheduling; Orbital provides machine
+services. Ikea operations expose the contributions and lifetime requirements those
+owners need, while kernel bodies concentrate on their computation. These boundaries
+also let standalone data structures use blocks without adopting record semantics.
 
-## The boundary with the rest of SixDB
+The current executable guides use SeriesPack to demonstrate the composition and
+integration model. Future components should earn their own contracts through use;
+they need not imitate SeriesPack's array interface.
 
-SeriesPack operates on storage supplied by its caller. The surrounding structure
-owns record membership, synchronization and the lifetime of those bytes. In
-SixDB, Engine supplies database meaning and visibility, Loom arranges work and
-buffer residency, and Orbital supplies the underlying machine services. A packed
-array operation does not acquire a buffer, perform I/O or publish a transaction.
+| Reader | Start here | Executable |
+| --- | --- | --- |
+| SeriesPack caller | [Using SeriesPack](seriespack/usage.md): storage, construction, reads, selected writes and failures | [ordinary.cpp](examples/seriespack/ordinary.cpp) |
+| Kernel or composition author | [Extending SeriesPack](seriespack/extending.md): nested substitution, native bodies, inline/CPS | [composition.cpp](examples/seriespack/composition.cpp), [pipeline.cpp](examples/seriespack/pipeline.cpp) |
+| Engine/Loom/Orbital adapter author | [Integrating with owners](integration.md): leases, live state, effects and publication | [integration.cpp](examples/seriespack/integration.cpp) |
+| Looking up a contract | [Semantic and execution reference](seriespack/reference.md), [physical formats](seriespack/representation.md) | [Tests](test/seriespack/README.md) |
+| Changing the implementation | [Source and compilation boundaries](source.md), [benchmarks](../workbench/benchmarks/seriespack/README.md) | `ikea_validate`, `ikea_seriespack_bench` |
 
-This division lets point updates and analytical operations reuse a representation
-while leaving database coordination outside the small computational parts.
-Calico's `frame`, `qhash`, `keyset` and `kmath` are prior work; SixDB implementations
-are developed afresh from their lessons and new experiments.
+[Capabilities and deliberate limits](capabilities.md) describe the current implementation.
+[Campaign evidence](../workbench/spikes/ikea-composition/ikea2-campaign/README.md)
+has its own home, including prior implementations and experimental alternatives.
+
+Logical composition, physical placement and execution can change independently:
+
+```mermaid
+flowchart LR
+    S["Engine semantics and container contract"] --> L["Logical tree: fields, joins, transforms"]
+    L --> B["Admitted operation binding"]
+    P["Physical placement: tiles, heads, strides, owners"] --> B
+    E["Execution: fused, inline, CPS; ISA and grain"] --> B
+    B --> R["Ordinary read or mutation call"]
+```
+
+A nested child can change its layout and owner while its parent keeps the same
+logical contract. Different segments in the same collection can keep different
+representations. Neither choice forces a different execution style.
 
 ## Build and run
 
-From the repository root on Linux (prefix with `orb -m ubuntu` from this Mac):
+From the repository root on Linux, use the [pinned toolchain](../BUILDING.md).
+Prefix commands with `orb -m ubuntu` from the macOS workspace. For AVX2:
 
 ```sh
-cmake --preset dev
-cmake --build --preset dev --target ikea_examples
-./build/clang/dev/ikea/ikea_hello
+cmake -S . -B build/ikea/avx2 -G Ninja -DCMAKE_BUILD_TYPE=Release \
+  -DSIXDB_MARCH=x86-64-v3 -DSIXDB_TUNE=zen5
+cmake --build build/ikea/avx2 --target ikea_validate -j2
 ```
 
-The examples are independent programs in `build/clang/dev/ikea/`:
+For ARM, use a separate directory with `-DSIXDB_MARCH=armv8-a+simd` and
+`-DSIXDB_TUNE=neoverse-v2`. AVX-512 uses `x86-64-v4` plus the optional measured
+VBMI/VBMI2/GFNI flags described in the [benchmark guide](../workbench/benchmarks/seriespack/README.md).
+Run a binary only on a compatible CPU. `ikea_validate` runs correctness checks,
+reference-fixture verification and all four examples; it does not time benchmarks.
 
-| Source | Program | What to try |
-| --- | --- | --- |
-| [Basics](examples/seriespack_basics.cpp) | `ikea_hello` | Construct an array, update selected positions and inspect write coverage |
-| [Query](examples/seriespack_query.cpp) | `ikea_seriespack_query` | Compare materialized and native consumption, including a partial final tile |
-| [Two arrays](examples/seriespack_join.cpp) | `ikea_seriespack_join` | Filter a tag array and sum matching counters in another placement |
-
-The query and two-array programs use native operations when the build enables a
-supported ISA; their scalar paths also run on a baseline build. Consumers link
-`ikea::seriespack`; no Workbench spike selection is required.
-[Building SixDB](../BUILDING.md) owns toolchain settings.
-
-After the introduction, [extending SeriesPack](seriespack/extending.md) shows how
-to add a computation and find the relevant implementation and checks.
-[Recurring benchmarks](../workbench/benchmarks/seriespack/README.md) provide the
-performance entry point; their linked investigations retain the evidence.
+Consumers link `ikea::seriespack`. `<ikea/seriespack.h>` is the ordinary umbrella;
+read-only callers can include `<ikea/seriespack/read.h>`. Supported authoring
+headers live under `seriespack/author/`. `seriespack/detail/` is implementation,
+even where inline bodies must remain visible to the compiler.

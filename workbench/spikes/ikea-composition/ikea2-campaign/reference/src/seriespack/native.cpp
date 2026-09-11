@@ -1,22 +1,22 @@
 #include "native_dispatch.h"
-#include <ikea/seriespack/detail/physical.h>
-#include <ikea/seriespack/detail/range_regions.h>
+#include <ikea_predecessor/seriespack/detail/physical.h>
+#include <ikea_predecessor/seriespack/detail/range_regions.h>
 
 #if defined(__aarch64__)
-#include <ikea/seriespack/native_neon.h>
+#include <ikea_predecessor/seriespack/native_neon.h>
 #endif
 #if defined(__AVX2__)
-#include <ikea/seriespack/native_avx2.h>
+#include <ikea_predecessor/seriespack/native_avx2.h>
 #endif
 #if defined(__AVX512BW__) && defined(__AVX512VBMI__)
-#include <ikea/seriespack/native_avx512.h>
+#include <ikea_predecessor/seriespack/native_avx512.h>
 #endif
 
 #include <algorithm>
 #include <array>
 #include <cstring>
 
-namespace ikea::seriespack::detail {
+namespace ikea_predecessor::seriespack::detail {
 namespace {
 
 // Target adapters retain actual ISA values. They are compile-time spelling
@@ -750,4 +750,4 @@ void native_encode(mutable_view& destination, [[maybe_unused]] input_values inpu
     }
 }
 
-} // namespace ikea::seriespack::detail
+} // namespace ikea_predecessor::seriespack::detail

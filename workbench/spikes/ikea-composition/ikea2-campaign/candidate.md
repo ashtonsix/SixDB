@@ -1,7 +1,12 @@
 # Ikea2 replacement candidate — 11 September 2026
 
+This is the pre-switchover assessment and measurement account. The implementation
+now lives in [Ikea](../../../../ikea/README.md); [retirement and recovery](../seriespack-predecessor/README.md)
+own the source checkpoints and transition. Historical case names and source
+identities below describe the measured candidate, before its namespace change.
+
 Ikea2 is ready to evaluate as the replacement candidate described by its
-[capabilities and limits](../../../../ikea2/capabilities.md). Ordinary construction,
+[capabilities and limits](../../../../ikea/capabilities.md). Ordinary construction,
 point/range mutation, whole-operation writable composition, physical recovery
 descriptions, shared-body CPS and owner interoperation now have coherent caller
 surfaces and executable guides. This account closes the campaign snapshot; it
@@ -156,7 +161,7 @@ the candidate.
 
 ## Source boundaries and edit cost
 
-[Source responsibilities](../../../../ikea2/source.md) separate ordinary headers,
+[Source responsibilities](../../../../ikea/source.md) separate ordinary headers,
 authoring headers, internal bodies and three compiled TUs. Journals, cold alias
 analysis, erased endpoints and typed adapters no longer occupy one prepared
 mutation header. Construction and admission share physical-field descriptions;
@@ -207,54 +212,9 @@ checklist. The next engineer can construct and mutate data, substitute a child,
 share a native body across inline/CPS, diagnose an admission failure and validate
 the change using the candidate documents and targets, without this conversation.
 
-## Old Ikea at switchover
+## Switchover
 
-The following recommendation incorporates the Scaffold SixDB project's review
-of repository organization and retention. It has not been executed.
-
-Preserve the retiring authored implementation, tests, examples, documentation
-and recurring workload definitions in a meaningful, scoped Git checkpoint before
-removing their active paths. Much of that source is currently untracked. Exclude
-generated output and unrelated dirty work, and record the full preservation
-commit here. If a source capsule is chosen instead, verify that it contains the
-shared build/runner dependencies needed for recovery; an archive of `ikea/` alone
-is insufficient. Avoid additional complete archive trees when one recoverable
-historical state serves the purpose.
-
-Keep the small independent wire fixture with the active tests. Keep one frozen
-predecessor comparator here in Git: its roughly 292 KB of source is a useful
-optional named control and does not warrant a mandatory cloud recovery step.
-Large binaries, logs, traces and raw sweeps remain in retained artifacts. Exact
-original source/binary identities remain authoritative for historical timings.
-
-Before the namespace change, give the comparator a unique header prefix and
-namespace, private include exposure and explicit targets. Record original and
-transformed hashes. Move the required `probe_controls.cpp` adapter into campaign
-ownership, with explicit dependencies on its retained probe sources: currently
-`ikea2/CMakeLists.txt` compiles it from the old recurring suite. Include ordering
-or a global namespace macro would not provide reliable isolation. Smoke-check
-the transformed comparator; symbol changes can perturb code placement, so it
-must not be presented as the identical binary underlying old measurements.
-
-Use `workbench/benchmarks/seriespack` as the lasting entry for the candidate's
-maintained suite, through `SIXDB_BENCHMARKS=seriespack` and the existing editor
-selection. Move the maintained sources/runner/analysis there, or retain a thin
-delegating entry only where source coupling warrants it. Keep one suite and one
-runner. Preserve the old suite's resident-footprint, dependent-point and Calico
-workload definitions; the candidate's current cases do not establish all that
-coverage. A proposed home for its retired compact findings is
-`ikea-composition/seriespack-predecessor/`, linked to the preservation checkpoint.
-
-Historical studies keep their question-based homes and unchanged measurement
-identities. Closed overlays and relink scripts may remain in the recoverable
-snapshot; active launch routes must require an explicit predecessor checkout or
-point to recovery. Never silently rebind them to the new Ikea. Shared results
-discovery should retain legacy `IKEA2_PROFILE` metadata support while recognizing
-the new runner; Scaffold offered to own that shared-tooling adjustment.
-
-The active-name change then removes old Ikea and moves the candidate to `ikea/`,
-`ikea::` and `<ikea/...>`, updating targets, ordinary consumers, module links and
-the benchmark entry coherently. Keep the historical name `ikea2-campaign`.
-Validate active configuration, supported headers/examples/oracle, benchmark
-listing/quick cases, comparator isolation and navigation. These are switchover
-checks; they do not require repeating the entire performance campaign.
+The [retirement and recovery note](../seriespack-predecessor/README.md) owns the
+authored-source checkpoints, retained references and historical workload routing.
+The final active-name change preserves the measured kernel bodies; original
+campaign artifacts remain authoritative for original performance numbers.

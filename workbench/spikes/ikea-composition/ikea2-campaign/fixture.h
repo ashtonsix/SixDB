@@ -1,9 +1,9 @@
 #pragma once
-#include <ikea2/seriespack/author/expression.h>
-#include <ikea2/seriespack/read.h>
-#include <ikea/seriespack.h>
-#include <ikea/seriespack/composition_x86.h>
-#include <ikea/seriespack/detail/physical.h>
+#include <ikea/seriespack/author/expression.h>
+#include <ikea/seriespack/read.h>
+#include <ikea_predecessor/seriespack.h>
+#include <ikea_predecessor/seriespack/composition_x86.h>
+#include <ikea_predecessor/seriespack/detail/physical.h>
 #include "probe_controls.h"
 #include <benchmark/benchmark.h>
 #include <cstdlib>
@@ -12,8 +12,8 @@
 #include <string>
 #include <vector>
 
-namespace sp=ikea2::seriespack;
-namespace old=ikea::seriespack;
+namespace sp=ikea::seriespack;
+namespace old=ikea_predecessor::seriespack;
 struct free_bytes {void operator()(std::uint8_t* p)const{std::free(p);}};
 
 template<unsigned K,sp::geometry G> struct comparison_fixture {

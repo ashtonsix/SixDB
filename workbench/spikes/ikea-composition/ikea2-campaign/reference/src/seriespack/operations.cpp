@@ -1,5 +1,5 @@
-#include <ikea/seriespack/operations.h>
-#include <ikea/seriespack/detail/physical.h>
+#include <ikea_predecessor/seriespack/operations.h>
+#include <ikea_predecessor/seriespack/detail/physical.h>
 #include "native_dispatch.h"
 
 #include <algorithm>
@@ -8,7 +8,7 @@
 #include <cstring>
 #include <limits>
 
-namespace ikea::seriespack {
+namespace ikea_predecessor::seriespack {
 namespace {
 
 using status = std::expected<void, error>;
@@ -486,4 +486,4 @@ std::expected<void, error> set(mutable_view destination, std::size_t index,
     return {};
 }
 
-} // namespace ikea::seriespack
+} // namespace ikea_predecessor::seriespack

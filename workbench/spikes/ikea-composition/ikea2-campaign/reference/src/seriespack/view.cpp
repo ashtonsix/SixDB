@@ -1,4 +1,4 @@
-#include <ikea/seriespack/view.h>
+#include <ikea_predecessor/seriespack/view.h>
 
 #include <algorithm>
 #include <array>
@@ -6,7 +6,7 @@
 #include <limits>
 #include <numeric>
 
-namespace ikea::seriespack {
+namespace ikea_predecessor::seriespack {
 namespace {
 
 struct occupied_stream {
@@ -112,4 +112,4 @@ validate_placement(description layout, std::size_t n,
     return {};
 }
 
-} // namespace ikea::seriespack
+} // namespace ikea_predecessor::seriespack

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <ikea/seriespack/operations.h>
+#include <ikea_predecessor/seriespack/operations.h>
 
-namespace ikea::seriespack::detail {
+namespace ikea_predecessor::seriespack::detail {
 
 // Reports compiled implementations, not runtime CPU probing. The process is
 // running on the ISA selected by the build. Automatic/scalar selection belongs
@@ -20,4 +20,4 @@ void encode_effects(const mutable_view& destination, effect_output* effects);
 // the outer operation. No validation, allocation or effect callbacks occur here.
 void native_encode(mutable_view& destination, input_values input, execution_target target);
 
-} // namespace ikea::seriespack::detail
+} // namespace ikea_predecessor::seriespack::detail

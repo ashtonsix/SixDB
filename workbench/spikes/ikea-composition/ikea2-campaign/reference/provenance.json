@@ -4,113 +4,136 @@
   "files": [
     {
       "source": "ikea/include/ikea/seriespack/composition.h",
-      "retained": "include/ikea/seriespack/composition.h",
-      "sha256": "cc2396e602ec65b7f50569739c80475651b18ecfe4f521b6f4aad2b9a6642913"
+      "retained": "include/ikea_predecessor/seriespack/composition.h",
+      "sha256": "cc2396e602ec65b7f50569739c80475651b18ecfe4f521b6f4aad2b9a6642913",
+      "retained_sha256": "c8fd30ee65dc138ea636ca7c771da0d8913913ff8ca515acece5f154fa64fa71"
     },
     {
       "source": "ikea/include/ikea/seriespack/composition_neon.h",
-      "retained": "include/ikea/seriespack/composition_neon.h",
-      "sha256": "a160d7cc0d41744428a0154c16bf86372dc74daf5d19d07ba56118146cc940a9"
+      "retained": "include/ikea_predecessor/seriespack/composition_neon.h",
+      "sha256": "a160d7cc0d41744428a0154c16bf86372dc74daf5d19d07ba56118146cc940a9",
+      "retained_sha256": "cbc562dd3315a57ecd9e5bf281e7506bd54f53e0546f29f38ed94b41e6edcc3d"
     },
     {
       "source": "ikea/include/ikea/seriespack/composition_x86.h",
-      "retained": "include/ikea/seriespack/composition_x86.h",
-      "sha256": "effd3ade468f80bce73a6ad6c5fa57aa03980d2315b196c5ead742fc503c7189"
+      "retained": "include/ikea_predecessor/seriespack/composition_x86.h",
+      "sha256": "effd3ade468f80bce73a6ad6c5fa57aa03980d2315b196c5ead742fc503c7189",
+      "retained_sha256": "ef9f3dcd44630f36a83025282134f0586832b7a2d10489ff73c2e8dbbb2bc3a9"
     },
     {
       "source": "ikea/include/ikea/seriespack/detail/body_avx2.h",
-      "retained": "include/ikea/seriespack/detail/body_avx2.h",
-      "sha256": "7fb591bfb96546a31561c08ceab7d3d4d6b8afca4e2d73f8f0f7fa06127dab0c"
+      "retained": "include/ikea_predecessor/seriespack/detail/body_avx2.h",
+      "sha256": "7fb591bfb96546a31561c08ceab7d3d4d6b8afca4e2d73f8f0f7fa06127dab0c",
+      "retained_sha256": "d2d2e0865a2a461665020d1ed024ab6b95e5ccbe2f01921cfb58b425090e3c4f"
     },
     {
       "source": "ikea/include/ikea/seriespack/detail/body_avx512.h",
-      "retained": "include/ikea/seriespack/detail/body_avx512.h",
-      "sha256": "a36c8b8fe9edd68a2833e969352f4d07a9fa5763d329c4d532876d606aa28dae"
+      "retained": "include/ikea_predecessor/seriespack/detail/body_avx512.h",
+      "sha256": "a36c8b8fe9edd68a2833e969352f4d07a9fa5763d329c4d532876d606aa28dae",
+      "retained_sha256": "862b792a59dedbc2d97b57bb6b04f06208b692e81e42b382de4a53863e73cfe1"
     },
     {
       "source": "ikea/include/ikea/seriespack/detail/body_neon.h",
-      "retained": "include/ikea/seriespack/detail/body_neon.h",
-      "sha256": "a6e06c9bd417c403611dd189f77e6a5b0f7c25b36f13617bc1c3ffd66d9cc1d9"
+      "retained": "include/ikea_predecessor/seriespack/detail/body_neon.h",
+      "sha256": "a6e06c9bd417c403611dd189f77e6a5b0f7c25b36f13617bc1c3ffd66d9cc1d9",
+      "retained_sha256": "742a550dd40712dfb5cb65a9bc1668a4ad5b0bf5599279c7a6015ffa25efc73f"
     },
     {
       "source": "ikea/include/ikea/seriespack/detail/physical.h",
-      "retained": "include/ikea/seriespack/detail/physical.h",
-      "sha256": "cc46daf3580ad494682830c49e30a03e6c5444498c94754501a21e08875eb256"
+      "retained": "include/ikea_predecessor/seriespack/detail/physical.h",
+      "sha256": "cc46daf3580ad494682830c49e30a03e6c5444498c94754501a21e08875eb256",
+      "retained_sha256": "d83a25d63b66f2755b9051257e90dfe9a7624248a27d6037bb6ae1d2e3d057c2"
     },
     {
       "source": "ikea/include/ikea/seriespack/detail/range_regions.h",
-      "retained": "include/ikea/seriespack/detail/range_regions.h",
-      "sha256": "94fe987663b61ff3df3e32700438ba12b20b3061083798bec02a7c739f499612"
+      "retained": "include/ikea_predecessor/seriespack/detail/range_regions.h",
+      "sha256": "94fe987663b61ff3df3e32700438ba12b20b3061083798bec02a7c739f499612",
+      "retained_sha256": "7c06d9f9a2d75e1d5608efec67b05b8e70bd0789769a6d42729141c5fa88ef91"
     },
     {
       "source": "ikea/include/ikea/seriespack/layout.h",
-      "retained": "include/ikea/seriespack/layout.h",
-      "sha256": "6cd8403482d33d32c03bce7c87ff1ba7c5ec10e5ea1ddb76e9a187503de089bd"
+      "retained": "include/ikea_predecessor/seriespack/layout.h",
+      "sha256": "6cd8403482d33d32c03bce7c87ff1ba7c5ec10e5ea1ddb76e9a187503de089bd",
+      "retained_sha256": "a7664a71c8c87e35343ca4329b228ed5dd712cc7a1fff86c2b59e98e818c974c"
     },
     {
       "source": "ikea/include/ikea/seriespack/native_avx2.h",
-      "retained": "include/ikea/seriespack/native_avx2.h",
-      "sha256": "cdd2989729b7d4d16612a0409b132968f8de5ce28343ba4f9280bf8d39322eb3"
+      "retained": "include/ikea_predecessor/seriespack/native_avx2.h",
+      "sha256": "cdd2989729b7d4d16612a0409b132968f8de5ce28343ba4f9280bf8d39322eb3",
+      "retained_sha256": "60f404826c46dc39cb063cd37916a1d48439daa564dc8aa2578ebacdc090a984"
     },
     {
       "source": "ikea/include/ikea/seriespack/native_avx512.h",
-      "retained": "include/ikea/seriespack/native_avx512.h",
-      "sha256": "959430a13183370ecd555a978f06dec6bfff72ff6e9df65afe7b0283e3bf972e"
+      "retained": "include/ikea_predecessor/seriespack/native_avx512.h",
+      "sha256": "959430a13183370ecd555a978f06dec6bfff72ff6e9df65afe7b0283e3bf972e",
+      "retained_sha256": "e94d26fece3683f757a5ea9fc719baddf4d7b7039b9c8ebf36c87fcd24b186c2"
     },
     {
       "source": "ikea/include/ikea/seriespack/native_neon.h",
-      "retained": "include/ikea/seriespack/native_neon.h",
-      "sha256": "798b60072f7ccb7c61fcb5b57435bd28dcc6b58b7a4a1bb95c5a8d6cc3c23f30"
+      "retained": "include/ikea_predecessor/seriespack/native_neon.h",
+      "sha256": "798b60072f7ccb7c61fcb5b57435bd28dcc6b58b7a4a1bb95c5a8d6cc3c23f30",
+      "retained_sha256": "85fd48eae498609a46f72050f845721eb58992dff674285360445171688504fb"
     },
     {
       "source": "ikea/include/ikea/seriespack/operations.h",
-      "retained": "include/ikea/seriespack/operations.h",
-      "sha256": "37766278ab5923ddd7d6f7fd65a7fb9de1b8cd14fdea227e017c9968149e8591"
+      "retained": "include/ikea_predecessor/seriespack/operations.h",
+      "sha256": "37766278ab5923ddd7d6f7fd65a7fb9de1b8cd14fdea227e017c9968149e8591",
+      "retained_sha256": "33c499ee76317b3d1e31b1dc6d1e7b5175955733dbb5da24c3f034c11e4662e5"
     },
     {
       "source": "ikea/include/ikea/seriespack/point.h",
-      "retained": "include/ikea/seriespack/point.h",
-      "sha256": "a79a061f1abcdbed5221deb48b3871a19e7b9cbd4d7d46a4d8e8748910b8927c"
+      "retained": "include/ikea_predecessor/seriespack/point.h",
+      "sha256": "a79a061f1abcdbed5221deb48b3871a19e7b9cbd4d7d46a4d8e8748910b8927c",
+      "retained_sha256": "a337c17cbde8942b69e2b0a62b6c64cc97680faa227e73109529de71f70956f5"
     },
     {
       "source": "ikea/include/ikea/seriespack/view.h",
-      "retained": "include/ikea/seriespack/view.h",
-      "sha256": "c70f52335bb3fe3aac61584094d3af62802bfc7fbb3211a9362aafbfb09c12fa"
+      "retained": "include/ikea_predecessor/seriespack/view.h",
+      "sha256": "c70f52335bb3fe3aac61584094d3af62802bfc7fbb3211a9362aafbfb09c12fa",
+      "retained_sha256": "69a12a2fe4cbfb6c7a8bce9f69c387d8d37fe5f74d1cb8d177b94af2e1019550"
     },
     {
       "source": "ikea/include/ikea/seriespack.h",
-      "retained": "include/ikea/seriespack.h",
-      "sha256": "ef4c3262afb7caf1459308ab88eadc6311e881891618b05e9e8137cd14eebea4"
+      "retained": "include/ikea_predecessor/seriespack.h",
+      "sha256": "ef4c3262afb7caf1459308ab88eadc6311e881891618b05e9e8137cd14eebea4",
+      "retained_sha256": "abba590b1cd0a9f918ff1112aa112198e43c0db9bc148dad349ba53598cc1481"
     },
     {
       "source": "ikea/include/ikea/streampack.h",
-      "retained": "include/ikea/streampack.h",
-      "sha256": "b3f116b8de1a2411a9574471247497ea25a3f82c8bc9b8317f7d31678ddad328"
+      "retained": "include/ikea_predecessor/streampack.h",
+      "sha256": "b3f116b8de1a2411a9574471247497ea25a3f82c8bc9b8317f7d31678ddad328",
+      "retained_sha256": "db9167674837b57b5fd40298261ff049cafaa53859cc7bc5301adc5040265e2b"
     },
     {
       "source": "ikea/include/ikea/tuplepack.h",
-      "retained": "include/ikea/tuplepack.h",
-      "sha256": "d9d5132be86297738154bfe233aa1a18ade63fcfa1dd0ebe376174c8a8ff25b3"
+      "retained": "include/ikea_predecessor/tuplepack.h",
+      "sha256": "d9d5132be86297738154bfe233aa1a18ade63fcfa1dd0ebe376174c8a8ff25b3",
+      "retained_sha256": "911c7807b2172a0db4b68105fc0dc6cf453cc58a23b31397c324942db7dea667"
     },
     {
       "source": "ikea/src/seriespack/native.cpp",
       "retained": "src/seriespack/native.cpp",
-      "sha256": "1b93ca5a3c29c0830394970a66dde88d2a6c4c1cba98e9e47f29a4b25febe61c"
+      "sha256": "1b93ca5a3c29c0830394970a66dde88d2a6c4c1cba98e9e47f29a4b25febe61c",
+      "retained_sha256": "17afcfcaa984bea3c4acf4d5eb78558c5eed2d61159b0ec3f872fc80e7292327"
     },
     {
       "source": "ikea/src/seriespack/native_dispatch.h",
       "retained": "src/seriespack/native_dispatch.h",
-      "sha256": "f479277cc66ec6d376842d10532da7cc48813da0e8cb7eb10a33e1317a589094"
+      "sha256": "f479277cc66ec6d376842d10532da7cc48813da0e8cb7eb10a33e1317a589094",
+      "retained_sha256": "401c59d64620cea367763ebbfb294213e7eee2b3c743e2f9bb30c8f4fef60a33"
     },
     {
       "source": "ikea/src/seriespack/operations.cpp",
       "retained": "src/seriespack/operations.cpp",
-      "sha256": "d379a3673e9c959fbbe09c8affed095e445c8691b8493191498553ef31d3df61"
+      "sha256": "d379a3673e9c959fbbe09c8affed095e445c8691b8493191498553ef31d3df61",
+      "retained_sha256": "45ca7ca5cb902bf86dc2d4044cec4a206895728800d3e8b54bded5284fa877ac"
     },
     {
       "source": "ikea/src/seriespack/view.cpp",
       "retained": "src/seriespack/view.cpp",
-      "sha256": "6c8aaff96221c96fb5f135f83bf12d0a73ff89227b8b2cf443dc37d332773252"
+      "sha256": "6c8aaff96221c96fb5f135f83bf12d0a73ff89227b8b2cf443dc37d332773252",
+      "retained_sha256": "5e8f933b69a20ace16741fbd02c32c04676fdccb790be14edb91989dbab840a1"
     }
-  ]
+  ],
+  "transformation": "Whole identifier/include component ikea renamed to ikea_predecessor; original sha256 values remain unchanged. Rebuilt binaries are new measurement identities."
 }

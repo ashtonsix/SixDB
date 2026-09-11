@@ -1,5 +1,5 @@
 #include "fixture.h"
-#include <ikea2/seriespack/detail/mutation/physical.h>
+#include <ikea/seriespack/detail/mutation/physical.h>
 
 enum class mutation_kind {raw,coverage,maintenance,current,prior,materialized_maintenance,control_coverage};
 template<unsigned K,sp::geometry G,mutation_kind Kind,bool Masked>
@@ -73,20 +73,20 @@ template<unsigned K,sp::geometry G,mutation_kind Kind,bool Masked> void mutation
 }
 template<unsigned K,sp::geometry G,bool Masked> void register_mutation() {
     const auto name=std::string("overwrite/")+(G==sp::geometry::local?"local/":"striped/")+"k"+std::to_string(K)+(Masked?"/prefilter75":"/all");
-    benchmark::RegisterBenchmark((name+"/ikea2-raw").c_str(),mutation<K,G,mutation_kind::raw,Masked>);
-    benchmark::RegisterBenchmark((name+"/ikea2-coverage").c_str(),mutation<K,G,mutation_kind::coverage,Masked>);
-    benchmark::RegisterBenchmark((name+"/ikea2-sum-coverage").c_str(),mutation<K,G,mutation_kind::maintenance,Masked>);
-    benchmark::RegisterBenchmark((name+"/ikea-materialized-sum-coverage").c_str(),mutation<K,G,mutation_kind::materialized_maintenance,Masked>);
+    benchmark::RegisterBenchmark((name+"/current-raw").c_str(),mutation<K,G,mutation_kind::raw,Masked>);
+    benchmark::RegisterBenchmark((name+"/current-coverage").c_str(),mutation<K,G,mutation_kind::coverage,Masked>);
+    benchmark::RegisterBenchmark((name+"/current-sum-coverage").c_str(),mutation<K,G,mutation_kind::maintenance,Masked>);
+    benchmark::RegisterBenchmark((name+"/predecessor-materialized-sum-coverage").c_str(),mutation<K,G,mutation_kind::materialized_maintenance,Masked>);
     if constexpr(!Masked){
         benchmark::RegisterBenchmark((name+"/control-coverage").c_str(),mutation<K,G,mutation_kind::control_coverage,false>);
-        benchmark::RegisterBenchmark((name+"/ikea").c_str(),mutation<K,G,mutation_kind::current,false>);
+        benchmark::RegisterBenchmark((name+"/predecessor").c_str(),mutation<K,G,mutation_kind::current,false>);
         if constexpr(K<=7 || K==56)benchmark::RegisterBenchmark((name+"/prior").c_str(),mutation<K,G,mutation_kind::prior,false>);
     }
 }
 template<unsigned K,sp::geometry G> void register_overwrite_all() {
     const auto name=std::string("overwrite-all/")+(G==sp::geometry::local?"local/":"striped/")+"k"+std::to_string(K);
-    benchmark::RegisterBenchmark((name+"/ikea2").c_str(),mutation<K,G,mutation_kind::raw,false>);
-    benchmark::RegisterBenchmark((name+"/ikea").c_str(),mutation<K,G,mutation_kind::current,false>);
+    benchmark::RegisterBenchmark((name+"/current").c_str(),mutation<K,G,mutation_kind::raw,false>);
+    benchmark::RegisterBenchmark((name+"/predecessor").c_str(),mutation<K,G,mutation_kind::current,false>);
     if constexpr(K<=7 || K==56)benchmark::RegisterBenchmark((name+"/prior").c_str(),mutation<K,G,mutation_kind::prior,false>);
 }
 void register_mutations() {
