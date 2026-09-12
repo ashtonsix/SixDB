@@ -1,0 +1,31 @@
+{
+  "note": "Selected raw build witnesses. The captured AVX-512 preparation-only timing is contaminated by the preceding profile edit and excluded from comparisons.",
+  "profiles": {
+    "neon": {
+      "build.resources": {
+        "sha256": "7f43d142b8ef7de51590645d40ff860571f782fd9751c79dfcbfaf705c7dc729",
+        "text": "\tCommand being timed: \"cmake --build build/benchmarks/tuplepack/neon --target ikea_tuplepack_wire_check ikea_tuplepack_operations_check ikea_tuplepack_execution_check ikea_tuplepack_ownership_check ikea_tuplepack_packets_check ikea_example_tuplepack_packets ikea_tuplepack_bench -j 1\"\n\tUser time (seconds): 125.43\n\tSystem time (seconds): 3.32\n\tPercent of CPU this job got: 99%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 2:09.16\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 1225588\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 9\n\tMinor (reclaiming a frame) page faults: 1647997\n\tVoluntary context switches: 523\n\tInvoluntary context switches: 6285\n\tSwaps: 0\n\tFile system inputs: 6096\n\tFile system outputs: 122504\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 0\n"
+      },
+      "size.txt": {
+        "sha256": "a0dc96020d201f6f1b98f3cdaf835374ee18ceb3e44e6e586449c80007f7393a",
+        "text": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   1751\t      0\t      0\t   1751\t    6d7\tdescription.cpp.o (ex /opt/sixdb/jobs/20260912T175208Z-d521f122/results/module/neon/libikea_tuplepack.a)\n    660\t      0\t      0\t    660\t    294\tconstruction.cpp.o (ex /opt/sixdb/jobs/20260912T175208Z-d521f122/results/module/neon/libikea_tuplepack.a)\n   9384\t      0\t      0\t   9384\t   24a8\tprepare.cpp.o (ex /opt/sixdb/jobs/20260912T175208Z-d521f122/results/module/neon/libikea_tuplepack.a)\n  15192\t     96\t      0\t  15288\t   3bb8\tkernels.cpp.o (ex /opt/sixdb/jobs/20260912T175208Z-d521f122/results/module/neon/libikea_tuplepack.a)\n   4328\t      0\t      0\t   4328\t   10e8\troutes.cpp.o (ex /opt/sixdb/jobs/20260912T175208Z-d521f122/results/module/neon/libikea_tuplepack.a)\n   5456\t      0\t      0\t   5456\t   1550\tpacket_prepare.cpp.o (ex /opt/sixdb/jobs/20260912T175208Z-d521f122/results/module/neon/libikea_tuplepack.a)\n 151576\t      0\t      0\t 151576\t  25018\tpacket.cpp.o (ex /opt/sixdb/jobs/20260912T175208Z-d521f122/results/module/neon/libikea_tuplepack.a)\n1065410\t   6840\t    704\t1072954\t 105f3a\t/opt/sixdb/jobs/20260912T175208Z-d521f122/results/module/neon/ikea_tuplepack_bench\n"
+      },
+      "edit-preparation.resources": {
+        "sha256": "80751daec03888bf9b349ce823663f70c1ce5b7cc040fa1c90f944f83d99a0a0",
+        "text": "\tCommand being timed: \"cmake --build build/benchmarks/tuplepack/neon --target ikea_tuplepack -j1\"\n\tUser time (seconds): 0.39\n\tSystem time (seconds): 0.04\n\tPercent of CPU this job got: 95%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.45\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 124516\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 33\n\tMinor (reclaiming a frame) page faults: 16308\n\tVoluntary context switches: 53\n\tInvoluntary context switches: 50\n\tSwaps: 0\n\tFile system inputs: 5848\n\tFile system outputs: 5888\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 0\n"
+      },
+      "edit-preparation.txt": {
+        "sha256": "acf9f4f31da9afb600b018d8c85f4e55b3f203ff8b04dbab17c959ef4d4071f4",
+        "text": "[1/2] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/packet_prepare.cpp.o\n[2/2] Linking CXX static library ikea/libikea_tuplepack.a\n"
+      },
+      "edit-kernel.resources": {
+        "sha256": "65c729becdc18702d89392ab5c8ca3dba44d77ade915c10faf3b2fe85c2b1240",
+        "text": "\tCommand being timed: \"cmake --build build/benchmarks/tuplepack/neon --target ikea_tuplepack -j1\"\n\tUser time (seconds): 11.37\n\tSystem time (seconds): 0.23\n\tPercent of CPU this job got: 99%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:11.63\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 367500\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 116193\n\tVoluntary context switches: 42\n\tInvoluntary context switches: 508\n\tSwaps: 0\n\tFile system inputs: 56\n\tFile system outputs: 10280\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 0\n"
+      },
+      "edit-caller.resources": {
+        "sha256": "daae2f9dd501bec6aa85e60b0801820b4b6b991d36458ed6fbc41987e6c7ee33",
+        "text": "\tCommand being timed: \"cmake --build build/benchmarks/tuplepack/neon --target ikea_example_tuplepack_packets -j1\"\n\tUser time (seconds): 3.76\n\tSystem time (seconds): 0.12\n\tPercent of CPU this job got: 99%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:03.89\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 273480\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 61663\n\tVoluntary context switches: 21\n\tInvoluntary context switches: 192\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 3736\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 0\n"
+      }
+    }
+  }
+}

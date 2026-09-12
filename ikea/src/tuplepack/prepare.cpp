@@ -1,4 +1,4 @@
-#include <ikea/tuplepack/detail/plan.h>
+#include <ikea/tuplepack/detail/packet_plan.h>
 #include <algorithm>
 #include <bit>
 
@@ -115,6 +115,13 @@ shuffle compile_shuffle(const shuffle_description& description, bool left) {
     finish(result);
     return result;
 }
+std::expected<scalar_read<64>, error> prepare_read_codes(const layout& f, std::span<const byte> m) {
+    return read<64>(f, m);
+}
+std::expected<scalar_write<64>, error> prepare_write_codes(const layout& f,
+                                                           std::span<const byte> m) {
+    return write<64>(f, m);
+}
 std::expected<scalar_read<8>, error> prepare_read8(const layout& f, std::span<const byte> m) {
     return read<8>(f, m);
 }
@@ -173,8 +180,8 @@ std::expected<write64, error> prepare_write64(const layout& f, std::span<const b
     for (unsigned i = 0; i < p.round_count; ++i)
         finish(p.rounds[i]);
     p.dense = p.count == p.read.bytes;
-    for (unsigned i = 0; i < p.read.bytes; ++i)
-        p.needs_old |= p.preserve[i] != 0;
+    for (unsigned i = 0; i < p.count; ++i)
+        p.needs_old |= p.stores[i].mask != 255;
     return p;
 }
 } // namespace ikea::tuplepack::detail

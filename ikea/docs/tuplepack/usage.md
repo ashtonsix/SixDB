@@ -50,6 +50,7 @@ descriptions indefinitely.
 `constructor::make(format)` prepares complete rank-ordered initialization.
 `construction_input` has 128 byte slots; only defined codes are consumed. Bind
 it with `bind_constructor`, then call `initialize(first, inputs, effects)`.
+Each input initializes one original row; construction has no `Rows` parameter.
 The command validates every selected code before zeroing any destination unit.
 It initializes spare bits to zero and preserves bytes outside each unit.
 
@@ -66,7 +67,7 @@ auto result = read->get(0);
 third byte code 0 and fourth byte code 2. All unused slots are zero. Duplicate
 read ranks are allowed. `reader<64>` returns a 64-byte array for ordinary buffered
 use; native authors can keep the same result in registers. A short map is padded
-with holes. A map cannot exceed its reader's 8/64-slot capacity.
+with holes.
 
 `writer<8>` accepts the scalar packet and `writer<64>` the byte array. Bind with
 `bind_writer`, then use `set(row, input, effects)` or
@@ -80,6 +81,37 @@ need not be a multiple of 64. Inactive rows produce zero read output and issue n
 payload accesses or mutations. Zero output is not evidence of absence. Selection
 storage and all input slots remain stable through admission and execution.
 
+## Choose rows per packet
+
+`reader<64, Rows>` and `writer<64, Rows>` support `Rows` of 1, 2, 4, 8, 16, 32
+or 64. The default is one row; the scalar `reader<8>` and `writer<8>` are
+one-row operations. A 64-byte packet contains `64/Rows` byte slots for each row,
+in row order. The supplied map describes those slots and applies to every row.
+Physical tuple size and stride are independent of this materialized shape.
+
+Choose a shape around the projected codes and the rows the consumer needs. A
+scan selecting four codes can use `Rows=16` even from 64-byte tuples. Choosing
+`Rows=2` for the same map leaves 28 unused slots per row, but may suit a caller
+that only needs two rows. Transfer cost also depends on which physical bytes
+contain those codes; the decoded packet size alone does not predict it.
+
+For example, `reader<64, 64>` can extract one code from each of 64 one-byte
+tuples. `reader<64, 32>` can extract two codes from each of 32 such tuples,
+expanding 32 physical bytes into 64 code bytes. The executable
+[packet example](../../examples/tuplepack/packets.cpp) uses the latter shape
+for a masked read–transform–write, sharing bodies between inline and CPS execution.
+
+Bind these plans with the same `bind_reader` and `bind_writer` functions.
+`get(first, active)` and `set(first, input, effects, active)` interpret bit `r`
+as original row `first+r`; the default mask selects the full packet. Pass an
+explicit mask for a short tail. Inactive rows issue no payload accesses, their
+read slots are zero, and their write slots are ignored even if out of width.
+
+For `read` and `replace`, each span element is a packet and advances `Rows`
+original rows. The final packet may be partial; unused read slots are zero and
+unused write slots are ignored. Surplus packets are an error. `size()`, selection
+origins and maintenance coordinates remain measured in original rows.
+
 ## Effects and failure
 
 Provide preallocated `ikea::source_write_journal` storage. Construction requires
@@ -88,6 +120,9 @@ selected replacement row before coalescing. Effects identify the actual named
 view and plane-zero byte spans relative to its storage, including the unit offset.
 They describe issued writes, including preserved neighboring bits; unchanged
 values can still generate effects. Owner isolation must protect those bytes.
+For a multi-row call, reserve that bound for every active row, summed across
+composed children. A full tightly packed store can issue one contiguous span;
+the capacity bound remains conservative.
 
 Checked range, value and capacity errors leave the **whole call's** data,
 maintenance and effect output unchanged. Earlier completed calls remain completed.
@@ -105,7 +140,8 @@ inside that admitted boundary. Nothing here acquires storage or publishes data.
 Use the [pinned Linux toolchain](../../../BUILDING.md). Configure the desired ISA,
 then build `ikea_validate` for both Ikea modules, or just
 `ikea_tuplepack_wire_check`, `ikea_tuplepack_operations_check`,
-`ikea_tuplepack_execution_check`, `ikea_tuplepack_ownership_check` and the examples.
+`ikea_tuplepack_execution_check`, `ikea_tuplepack_packets_check`,
+`ikea_tuplepack_ownership_check` and the examples.
 `python3 ikea/test/headers.py BUILD` checks header independence.
 The [routine benchmark suite](../../../workbench/benchmarks/tuplepack/README.md)
 distinguishes bodies, ordinary calls and matched effects controls.

@@ -1,6 +1,6 @@
 #include <ikea/tuplepack.h>
 #include <ikea/tuplepack/author/execution.h>
-#include <ikea/tuplepack/author/batch.h>
+#include <ikea/tuplepack/author/execution.h>
 #include <benchmark/benchmark.h>
 #include <cassert>
 #include <string>
@@ -196,14 +196,16 @@ void scan(benchmark::State& state, unsigned stride) {
         map[i] = (5 * i + 3) % 16;
     }
     auto format = *layout::make(16, codes);
-    auto plan = *batch_reader<4>::make(format, map);
+    auto plan = *reader<64, 4>::make(format, map);
     const std::size_t rows = state.range(0);
     std::vector<byte> data(rows * stride, 0x5a);
     auto source = *const_view::bind(format, data, rows, stride);
+    auto bound = *bind_reader(plan, source);
+    auto read = native_reader(bound);
     for (auto _ : state) {
         std::uint64_t result = 0;
         for (std::size_t row = 0; row < rows; row += 4)
-            result += sum(plan.read_unchecked(source, row));
+            result += sum(read.get_unchecked(row));
         benchmark::DoNotOptimize(result);
         benchmark::ClobberMemory();
     }
@@ -271,8 +273,10 @@ void pipeline_bench(benchmark::State& state, bool cps) {
 #endif
 } // namespace
 void register_tuple_composition();
+void register_tuple_packets();
 int main(int argc, char** argv) {
     register_tuple_composition();
+    register_tuple_packets();
     for (bool write : {false, true})
         for (unsigned boundary = 0; boundary < 3; ++boundary) {
             const std::string suffix =

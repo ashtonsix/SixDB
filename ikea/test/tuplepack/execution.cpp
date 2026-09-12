@@ -1,4 +1,4 @@
-#include <ikea/tuplepack/author/batch.h>
+#include <ikea/tuplepack/author/execution.h>
 #include <ikea/tuplepack/author/composition.h>
 #include <ikea/tuplepack/author/routes.h>
 #include <array>
@@ -64,7 +64,7 @@ template <unsigned Rows> void batch_check(std::mt19937& random) {
             std::array<byte, 64 / Rows> map;
             for (unsigned i = 0; i < map.size(); ++i)
                 map[i] = i % 7 == 0 ? hole : byte((spread ? 11 * i + 3 : i) % extent);
-            const auto batch = *batch_reader<Rows>::make(format, map);
+            const auto batch = *reader<64, Rows>::make(format, map);
             for (unsigned stride : {extent, 96u}) {
                 std::vector<byte> storage((Rows - 1) * stride + extent);
                 for (auto& b : storage)
@@ -85,9 +85,14 @@ template <unsigned Rows> void batch_check(std::mt19937& random) {
                                             << bit;
                                 }
                         }
-                    native::store_packet(actual.data(), batch.gather_unchecked(pointers, mask));
+                    native::store_packet(
+                        actual.data(),
+                        native::read_body<Rows>(
+                            batch.controls(), [&](unsigned r) { return pointers[r]; }, mask));
                     assert(actual == wanted);
-                    native::store_packet(actual.data(), batch.read_unchecked(view, 0, mask));
+                    native::store_packet(
+                        actual.data(),
+                        native_reader(*bind_reader(batch, view)).get_unchecked(0, mask));
                     assert(actual == wanted);
                 }
             }

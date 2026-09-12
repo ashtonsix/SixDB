@@ -8,7 +8,7 @@ can be reused in several containers, with kernels suited to each context.
 | Component | Purpose |
 | --- | --- |
 | [SeriesPack](docs/seriespack/usage.md) | Packed unsigned arrays, 1–64 bits wide; reads, mutation and composition |
-| [TuplePack](docs/tuplepack/usage.md) | Byte-contained codes in fixed-layout units; manual layouts, point/range mutation and native composition |
+| [TuplePack](docs/tuplepack/usage.md) | Byte-contained codes in fixed-layout units; manual layouts, point/packet/range reads and mutation, native composition |
 | StreamPack | Reserved; no operations available |
 
 Preparing an operation brings together a logical expression, its physical placement
@@ -27,8 +27,8 @@ the shared facilities available to authors.
 | Reader | Start here | Executable |
 | --- | --- | --- |
 | SeriesPack caller | [Using SeriesPack](docs/seriespack/usage.md): storage, construction, reads, selected writes and failures | [ordinary.cpp](examples/seriespack/ordinary.cpp) |
-| TuplePack caller | [Using TuplePack](docs/tuplepack/usage.md): manual descriptions, placement, ordered projections and mutation | [ordinary.cpp](examples/tuplepack/ordinary.cpp) |
-| TuplePack composition author | [Composing TuplePack](docs/tuplepack/extending.md): child substitution, independent observations, native/CPS execution | [composition.cpp](examples/tuplepack/composition.cpp) |
+| TuplePack caller | [Using TuplePack](docs/tuplepack/usage.md): manual descriptions, placement, ordered projections, packet shapes and mutation | [ordinary.cpp](examples/tuplepack/ordinary.cpp) |
+| TuplePack composition author | [Composing TuplePack](docs/tuplepack/extending.md): child substitution, independent observations, native/CPS execution | [composition.cpp](examples/tuplepack/composition.cpp), [packets.cpp](examples/tuplepack/packets.cpp) |
 | Kernel or composition author | [Extending SeriesPack](docs/seriespack/extending.md): nested substitution, native bodies, inline/CPS | [composition.cpp](examples/seriespack/composition.cpp), [pipeline.cpp](examples/seriespack/pipeline.cpp) |
 | Engine/Loom/Orbital adapter author | [Integrating with owners](docs/integration.md): leases, live state, effects and publication | [SeriesPack adapter](examples/seriespack/integration.cpp), [TuplePack adapter](examples/tuplepack/integration.cpp) |
 | Looking up a contract | [SeriesPack reference](docs/seriespack/reference.md), [physical formats](docs/seriespack/representation.md), [TuplePack reference](docs/tuplepack/reference.md) | [SeriesPack tests](test/seriespack/README.md), [TuplePack tests](test/tuplepack/README.md) |

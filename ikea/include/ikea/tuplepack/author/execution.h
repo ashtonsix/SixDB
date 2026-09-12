@@ -1,12 +1,15 @@
 #pragma once
 #include <ikea/tuplepack/author/native.h>
+#include <ikea/tuplepack/detail/native/packet.h>
+#include <ikea/tuplepack/detail/native/selection.h>
 #include <ikea/tuplepack/write.h>
 #include <ikea/detail/native_chain.h>
 
 namespace ikea::tuplepack {
 /// Erases a complete range, retaining its concrete traversal and maintenance
 /// type. The named source operation outlives this handle; no ownership transfers.
-template <class Input, class Maintenance = no_maintenance> class erased_mutation {
+template <class Input, class Maintenance = no_maintenance, unsigned Rows = 1>
+class erased_mutation {
     const void* operation_;
     std::size_t count_;
     using function = std::expected<void, error> (*)(const void*, std::size_t,
@@ -15,6 +18,7 @@ template <class Input, class Maintenance = no_maintenance> class erased_mutation
     function call_;
 
   public:
+    static constexpr unsigned rows = Rows;
     template <class Operation>
     explicit erased_mutation(const Operation& operation)
         : operation_(&operation), count_(operation.size()),
@@ -22,7 +26,10 @@ template <class Input, class Maintenance = no_maintenance> class erased_mutation
                    source_write_journal& effects, selection selected, Maintenance& maintenance) {
               return static_cast<const Operation*>(p)->replace(first, input, effects, selected,
                                                                maintenance);
-          }) {}
+          }) {
+        static_assert(detail::operation_rows<Operation> == Rows,
+                      "Erasure must preserve the original-row packet shape");
+    }
     template <class Operation> erased_mutation(const Operation&&) = delete;
     std::size_t size() const noexcept {
         return count_;
@@ -37,29 +44,52 @@ template <class Input, class Maintenance = no_maintenance> class erased_mutation
 #if defined(__aarch64__) || defined(__AVX2__)
 /// Native reader shares the exact decoded packet with inline authors. Unlike
 /// buffered access it does not materialize a 64-byte output array at this seam.
-template <class Byte> class native_reader {
-    const reader<64>* plan_;
+template <class Byte, unsigned Rows = 1> class native_reader {
+    const reader<64, Rows>* plan_;
     const basic_view<Byte>* source_;
 
   public:
-    explicit native_reader(const read_operation<64, Byte>& operation)
+    static constexpr unsigned rows = Rows;
+    explicit native_reader(const read_operation<64, Byte, Rows>& operation)
         : plan_(&operation.plan()), source_(&operation.source()) {}
     std::size_t size() const noexcept {
         return source_->size();
     }
-    [[gnu::always_inline]] native::packet get_unchecked(std::size_t row) const {
-        return native::read_body(plan_->controls(), source_->row_unchecked(row));
+    const auto& plan() const noexcept {
+        return *plan_;
+    }
+    const auto& source() const noexcept {
+        return *source_;
+    }
+    [[nodiscard]] std::expected<void, error>
+    admit(std::size_t first, std::uint64_t active = detail::all_rows<Rows>) const {
+        if (!detail::valid_window<Rows>(size(), first, active))
+            return std::unexpected(error::range);
+        return {};
+    }
+    [[gnu::always_inline]] native::packet
+    get_unchecked(std::size_t first, std::uint64_t active = detail::all_rows<Rows>) const {
+        if (!active)
+            return native::native_detail::join(
+                native::native_detail::zero16(), native::native_detail::zero16(),
+                native::native_detail::zero16(), native::native_detail::zero16());
+        if constexpr (Rows == 1)
+            return native::read_body(plan_->controls(), source_->row_unchecked(first));
+        else
+            return native::read_body<Rows>(
+                plan_->controls(), [&](unsigned r) { return source_->row_unchecked(first + r); },
+                active, source_->stride());
     }
 };
-/// Native mutation leaf for the same compound driver. Admission uses a native
-/// width mask. Sparse general writes currently bridge to byte-coalesced stores;
-/// small transactional maps should normally bind the scalar-eight interface.
-class native_writer {
-    mutation_operation<64> operation_;
+/// Register-valued mutation operation and composition leaf. The shared shell
+/// admits widths/rows/effects, then native traversal handles the complete packet.
+template <unsigned Rows = 1>
+class native_writer : public detail::mutation_commands<native_writer<Rows>, native::packet, Rows> {
+    mutation_operation<64, Rows> operation_;
 
   public:
     using input_type = native::packet;
-    explicit native_writer(mutation_operation<64> operation) : operation_(operation) {}
+    explicit native_writer(mutation_operation<64, Rows> operation) : operation_(operation) {}
     std::size_t size() const noexcept {
         return operation_.size();
     }
@@ -78,15 +108,28 @@ class native_writer {
     template <class Visit> void visit_fields(Visit&& visit) const {
         operation_.visit_fields(visit);
     }
-    [[gnu::always_inline]] bool accepts(input_type input) const noexcept {
-        return !native::nonzero(
-            native::bit_and(input, native::load_packet(plan().controls().invalid.data())));
+    [[gnu::always_inline]] bool
+    accepts(input_type input, std::uint64_t active = detail::all_rows<Rows>) const noexcept {
+        if (!active)
+            return true;
+        auto invalid =
+            native::bit_and(input, native::load_packet(plan().controls().invalid.data()));
+        if (active != detail::all_rows<Rows>)
+            invalid = native::bit_and(invalid, native::row_mask<Rows>(active));
+        return !native::nonzero(invalid);
     }
     template <class Coverage>
-    [[gnu::always_inline]] void set_unchecked(std::size_t row, input_type input,
-                                              Coverage& effects) const {
-        detail::emit(destination(), row, plan().controls(), effects);
-        native::write_body(plan().controls(), destination().row_unchecked(row), input);
+    [[gnu::always_inline]] void set_unchecked(std::size_t row, input_type input, Coverage& effects,
+                                              std::uint64_t active = detail::all_rows<Rows>) const {
+        if (!active)
+            return;
+        detail::emit_window<Rows>(destination(), row, plan().controls(), effects, active);
+        if constexpr (Rows == 1)
+            native::write_body(plan().controls(), destination().row_unchecked(row), input);
+        else
+            native::write_body<Rows>(
+                plan().controls(), [&](unsigned r) { return destination().row_unchecked(row + r); },
+                input, active, destination().stride());
     }
 };
 namespace native {

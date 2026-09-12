@@ -6,17 +6,17 @@ This reference specifies their bounds, recovery format and execution requirement
 | Surface | Contract |
 | --- | --- |
 | `layout` | Owned 1–64-byte unit, 1–128 ordered code descriptors; widths 1–8, byte-contained, disjoint physical bits |
-| `reader<8/64>` | Owned prepared map/control; read duplicates allowed; holes and unused slots zero |
-| `writer<8/64>` | Owned prepared map/control; duplicate destinations rejected; selected unsigned widths checked; all other bits preserved |
-| `constructor` | Complete rank-ordered input across up to two packets; zero spare bits, no old-data read |
+| `reader<N, Rows=1>` | Owned prepared map/control; N=8 supports one row; N=64 supports power-of-two Rows through 64, with 64/Rows slots per row; read duplicates allowed; holes and unused slots zero |
+| `writer<N, Rows=1>` | Same shapes as reader; duplicate destinations rejected; selected unsigned widths checked; all other bits preserved |
+| `constructor` | One 128-slot rank-ordered input per original row; defined codes consumed, spare bits zeroed, no dependence on prior contents |
 | `view` / `const_view` | Borrowed storage with original row count, byte stride and unit offset; exact last-row extent |
 | Bound read/write/construction | Borrow named plans/views; checked ordinary calls and explicit trusted calls; no allocation/suspension/publication |
 | Mutation groups | Recursive static composition; all children preflight before mutation; reject overlapping destination bits across actual placements |
 | Observation | Separate dependency projection and semantic law; independent before/after demand; explicit row identity and complete-group after image |
 | Native execution | Scalar uint64 packet; NEON four-vector HVA, AVX2 regcall pair, AVX-512/VBMI vector; masks outside the payload |
-| Native batching | 16 bytes × 4 rows and 32 bytes × 2 rows; sparse active masks and exact tails; compact-window specialization plus general legal-map fallback |
+| Packet operations | Read and write use the same row-major shape, active original-row mask and short-tail rules; native adapters retain register payloads |
 | Route preparation | Checked restricted bit wiring; byte permutation/rotation normalization or bounded general lowering into caller-supplied controls |
-| Erasure/CPS | Whole-range mutation erasure retains traversal; shared straight-through native chain supports early completion |
+| Erasure/CPS | Whole-range mutation erasure retains traversal and Rows in its type; shared straight-through native chain supports early completion |
 
 ## Recovery description
 
@@ -43,6 +43,12 @@ bit masks. Chunk reads and bounded word updates can include unselected bytes;
 full native read-modify-write can read whole units. View binding admits the full
 unit. Journals translate issued stores to the view's storage-relative offsets.
 
+For packet operations, `get/set(first, ..., active)` names original rows
+`first+r` using bit `r`; bits beyond `Rows` or active rows beyond the view reject.
+An empty mask may begin at the view's end. Ranges advance `Rows` per packet and
+permit a short final packet. All range/value/effect admission precedes any store,
+effect or observation. Capacity is bounded per active row, including all children.
+
 Mutation groups allow disjoint codes to share a physical byte and preserve each
 other sequentially. Binding checks actual repeating placements for overlapping
 destination bits, including aliases across rows/strides. It does not reject
@@ -64,10 +70,21 @@ ISA. An x86 build without AVX2 uses the scalar/buffered surface; optimized nativ
 AVX-512 requires VBMI. Native calls must use matching carrier types and calling
 conventions.
 
-General sparse 64-byte native writes bridge to byte-coalesced stores. Scalar
-eight-byte maps suit small transactional projections. Batch maps spanning too
-many source chunks use the general reader. Mutation ranges traverse rows within
-one bound operation using the point kernels.
+Scalar eight-byte maps suit small transactional projections. Native packet
+bodies choose transfers from physical byte extent and placement independently of
+the projected slot count. Full tight windows coalesce across rows; small tuples
+with short physical transfers can use a route over complete units. Their
+`read_bytes()` envelope includes those complete units, with no stride padding.
+Sparse masks retain active-row-only access. Scattered
+projections drawing up to eight physical bytes use word assembly; larger scattered
+projections reuse point bodies. Sparse native stores extract selected bytes
+from registers. These choices do not require a materialized payload array.
+
+Raw multi-row native bodies accept an address callback, active mask and optional
+stride hint. Only active addresses are requested. A nonzero hint promises those
+addresses belong to one allocation with that byte stride; omit it for arbitrary
+addresses. Ordinary bindings supply this proof from their view. Prepared controls
+must match the template's Rows. The one-row raw body uses a direct pointer.
 
 The restricted route algebra only carries input bits or zeros. Conflicting OR,
 arithmetic and predicates need caller-authored bodies. A normalized route requires

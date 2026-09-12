@@ -1,0 +1,63 @@
+{
+  "cases": 32,
+  "counters": [
+    "items_per_iteration"
+  ],
+  "files_sha256": {
+    "cases.csv": "382cb3df33ca4ceebad8f0f79d6b83ad27070a0af8318fc20d085f9eeb6f74ff"
+  },
+  "filter": "^shape/(2|4)/(compact|spread)/",
+  "format": 1,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "neon": {
+      "context": {
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-12T16:00:13+00:00",
+        "executable": "/opt/sixdb/jobs/20260912T155800Z-d0df69c2/results/neon/tuple_packet_bench",
+        "host_name": "ip-172-31-26-47",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.897461,
+          0.338867,
+          0.125
+        ],
+        "mhz_per_cpu": 2000,
+        "num_cpus": 1
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260912T155800Z-d0df69c2/results/neon/samples.json",
+      "sha256": "7d192feaa5ed521a27b0e003ea75e0b534ae7845b4dae934a0b96890af4e5358"
+    }
+  },
+  "kind": "google-benchmark-summary",
+  "units": "CPU/real times are ns per benchmark iteration. ns_per_item uses the reported item rate; an item means what the benchmark counts, not necessarily a value or byte."
+}

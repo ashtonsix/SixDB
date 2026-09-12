@@ -25,3 +25,9 @@ target_link_libraries(tuple_runtime_bench PRIVATE tuple_runtime benchmark::bench
 file(READ "${CMAKE_CURRENT_SOURCE_DIR}/runtime/point-subset.tsv" TUPLE_SMALL_CASES)
 configure_file(runtime/point_cases.h.in "${CMAKE_CURRENT_BINARY_DIR}/point_cases.h" @ONLY)
 target_include_directories(tuple_runtime_bench PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
+
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64|x86_64|AMD64")
+  add_executable(tuple_packet_crossover batching/crossover.cpp)
+  sixdb_target(tuple_packet_crossover)
+  target_link_libraries(tuple_packet_crossover PRIVATE ikea::tuplepack benchmark::benchmark)
+endif()

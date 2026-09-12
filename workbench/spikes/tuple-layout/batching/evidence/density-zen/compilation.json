@@ -1,0 +1,57 @@
+{
+  "note": "Incremental build probes from the rejected density-policy capture. Source bodies and header dependency structure are unchanged; only a cold placement predicate differs from the retained implementation. Each profile library was brought current before its preparation-only edit.",
+  "profiles": {
+    "avx2": {
+      "edit-preparation.resources": {
+        "sha256": "33244d4814782da3d2a9b9b6f4d07c03d1df5cbb459e8c2991a4e8b214d61e24",
+        "text": "\tCommand being timed: \"cmake --build build/benchmarks/tuplepack/avx2 --target ikea_tuplepack -j1\"\n\tUser time (seconds): 0.26\n\tSystem time (seconds): 0.02\n\tPercent of CPU this job got: 99%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.28\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 131560\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 16187\n\tVoluntary context switches: 24\n\tInvoluntary context switches: 46\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 6176\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 0\n"
+      },
+      "edit-preparation.txt": {
+        "sha256": "acf9f4f31da9afb600b018d8c85f4e55b3f203ff8b04dbab17c959ef4d4071f4",
+        "text": "[1/2] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/packet_prepare.cpp.o\n[2/2] Linking CXX static library ikea/libikea_tuplepack.a\n"
+      },
+      "edit-kernel.resources": {
+        "sha256": "65f2b1bc77e2a504ceaab751c0c5151df8ad0e41465adb6a94a464d65a18c402",
+        "text": "\tCommand being timed: \"cmake --build build/benchmarks/tuplepack/avx2 --target ikea_tuplepack -j1\"\n\tUser time (seconds): 6.56\n\tSystem time (seconds): 0.12\n\tPercent of CPU this job got: 99%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:06.71\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 401884\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 124644\n\tVoluntary context switches: 39\n\tInvoluntary context switches: 348\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 10792\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 0\n"
+      },
+      "edit-kernel.txt": {
+        "sha256": "296ea2820ee5d5b4215ffc4d7bda5ed4f8e14e223b54efefe7a5c2e38a5f17c2",
+        "text": "[1/4] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/kernels.cpp.o\n[2/4] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/routes.cpp.o\n[3/4] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/packet.cpp.o\n[4/4] Linking CXX static library ikea/libikea_tuplepack.a\n"
+      },
+      "edit-caller.resources": {
+        "sha256": "347e73e4cc5303556b02581667ce6c2761a468ed9c273cdd27854199cb22bb64",
+        "text": "\tCommand being timed: \"cmake --build build/benchmarks/tuplepack/avx2 --target ikea_example_tuplepack_packets -j1\"\n\tUser time (seconds): 1.99\n\tSystem time (seconds): 0.06\n\tPercent of CPU this job got: 99%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:02.06\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 275472\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 62604\n\tVoluntary context switches: 21\n\tInvoluntary context switches: 126\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 3888\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 0\n"
+      },
+      "edit-caller.txt": {
+        "sha256": "01063c017814884f77993466bd60236505fd7bac1a2f09248c22fbd4c6bcb2ba",
+        "text": "[1/2] Building CXX object ikea/CMakeFiles/ikea_example_tuplepack_packets.dir/examples/tuplepack/packets.cpp.o\n[2/2] Linking CXX executable ikea/ikea_example_tuplepack_packets\n"
+      }
+    },
+    "avx512": {
+      "edit-preparation.resources": {
+        "sha256": "ba70e881aa069fe6593ae02520d01f25dd4f338a0b1c7be2b4f8939e207432f1",
+        "text": "\tCommand being timed: \"cmake --build build/benchmarks/tuplepack/avx512 --target ikea_tuplepack -j1\"\n\tUser time (seconds): 0.27\n\tSystem time (seconds): 0.02\n\tPercent of CPU this job got: 99%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.29\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 131228\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 16025\n\tVoluntary context switches: 24\n\tInvoluntary context switches: 58\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 5888\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 0\n"
+      },
+      "edit-preparation.txt": {
+        "sha256": "acf9f4f31da9afb600b018d8c85f4e55b3f203ff8b04dbab17c959ef4d4071f4",
+        "text": "[1/2] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/packet_prepare.cpp.o\n[2/2] Linking CXX static library ikea/libikea_tuplepack.a\n"
+      },
+      "edit-kernel.resources": {
+        "sha256": "af711eed7bd2694354e590149f64ca2027041b47513a000662fadda825d91abe",
+        "text": "\tCommand being timed: \"cmake --build build/benchmarks/tuplepack/avx512 --target ikea_tuplepack -j1\"\n\tUser time (seconds): 6.32\n\tSystem time (seconds): 0.11\n\tPercent of CPU this job got: 99%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:06.45\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 387396\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 115901\n\tVoluntary context switches: 39\n\tInvoluntary context switches: 334\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 10304\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 0\n"
+      },
+      "edit-kernel.txt": {
+        "sha256": "296ea2820ee5d5b4215ffc4d7bda5ed4f8e14e223b54efefe7a5c2e38a5f17c2",
+        "text": "[1/4] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/kernels.cpp.o\n[2/4] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/routes.cpp.o\n[3/4] Building CXX object ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/packet.cpp.o\n[4/4] Linking CXX static library ikea/libikea_tuplepack.a\n"
+      },
+      "edit-caller.resources": {
+        "sha256": "beb40fd7f1c90be77c5804110c79f4ae8edc0b5fd08512cb4128d407952d6a2f",
+        "text": "\tCommand being timed: \"cmake --build build/benchmarks/tuplepack/avx512 --target ikea_example_tuplepack_packets -j1\"\n\tUser time (seconds): 2.20\n\tSystem time (seconds): 0.07\n\tPercent of CPU this job got: 99%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:02.28\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 269708\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 61430\n\tVoluntary context switches: 21\n\tInvoluntary context switches: 152\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 3800\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 0\n"
+      },
+      "edit-caller.txt": {
+        "sha256": "01063c017814884f77993466bd60236505fd7bac1a2f09248c22fbd4c6bcb2ba",
+        "text": "[1/2] Building CXX object ikea/CMakeFiles/ikea_example_tuplepack_packets.dir/examples/tuplepack/packets.cpp.o\n[2/2] Linking CXX executable ikea/ikea_example_tuplepack_packets\n"
+      }
+    }
+  }
+}

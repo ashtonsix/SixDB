@@ -162,3 +162,7 @@ not establish results for this code schema or for server CPUs. SixDB's
 [SeriesPack](../../../ikea/README.md) demonstrates composition and owner contracts;
 it also taught us to measure complete ordinary operations early, rather than
 infer their quality from inner kernels.
+
+The [readiness review](readiness-review.md) checks the module against this proposal;
+[packet experiments](batching/README.md) investigate multi-row mutation, physical
+transfer grain and the crossover between tiny, small and large tuples.

@@ -9,10 +9,10 @@ with source-qualified mutation effects.
 | Values | Unsigned arrays, widths 1–64 bits | Units of 1–64 bytes containing 1–128 byte-contained codes, widths 1–8 bits |
 | Representation choice | `compact`, `bulk_x86`, `bulk_arm` presets; explicit formats | Manually specified code offsets, shifts and widths |
 | Placement | Tiled payload and optional head planes; independent strides and interleaving | Unit offset and row stride; multiple units per record or separate planes |
-| Reads | Checked point/range reads; scalar and native evaluation | Ordered 8/64-slot projections; native 16×4 and 32×2 row batches |
-| Mutation | Construction, point/range replacement and selected writes | Construction, point/range replacement and selected writes |
+| Reads | Checked point/range reads; scalar and native evaluation | Ordered scalar projections; 64-byte packets covering 1/2/4/8/16/32/64 rows |
+| Mutation | Construction, point/range replacement and selected writes | Construction, point/packet/range replacement and selected writes; buffered and native |
 | Composition | Recursive bit-window joins and child substitution | Recursive mutation groups, child substitution and bit-route normalization |
-| Maintenance | Optional modulo-u64 replacement delta; authored contribution laws | Separate observation projection; old/new/coordinate-only callbacks |
+| Maintenance | Optional modulo-u64 replacement delta; authored contribution laws | Separate observation projection; old/new/coordinate-only callbacks over rows or packets |
 | Execution | NEON, AVX2, AVX-512; inline and straight-through CPS | NEON, AVX2, AVX-512/VBMI; inline and straight-through CPS |
 
 Use the [SeriesPack reference](seriespack/reference.md) or
@@ -30,10 +30,11 @@ overlapping whole fields across leaves; a read transform needs an explicit
 assignment operation before it can participate in mutation.
 
 TuplePack requires a supplied layout and operation map. Use its scalar eight-slot
-interface for small transactional projections. Sparse native writes use a
-byte-coalesced fallback, and batch maps outside compact source windows use the
-general reader. Their performance depends on the map; see the
-[measured cases and remaining gaps](../../workbench/spikes/tuple-layout/module-evidence/README.md).
+interface for small transactional projections. Packet shape is independent of
+physical tuple size: a one-byte tuple can contribute one code to a 64-row packet,
+or several codes to a packet with fewer rows. Performance depends on physical
+placement, map and active mask; the [benchmark guide](../../workbench/benchmarks/tuplepack/README.md)
+links the measured cases and their limits.
 
 Native ISA selection is a build choice. CPS uses a compiler-specific calling
 convention and bounded straight-through tables; suspension occurs after return

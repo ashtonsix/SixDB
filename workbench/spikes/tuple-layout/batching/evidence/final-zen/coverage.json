@@ -1,0 +1,166 @@
+{
+  "metric": "Median CPU ns per original row; packet / repeated prepared point",
+  "profiles": {
+    "avx2": {
+      "source_sha256": "b961b48bc29c22648a284cef9574115e7a112d33818b89b7752786b2f38f9c27",
+      "cases": 3220,
+      "pairs": 1366,
+      "by_rows": {
+        "2": {
+          "pairs": 360,
+          "above_1_4": 12,
+          "median_ratio": 0.8224163621617657,
+          "max_ratio": 1.4975441944153365
+        },
+        "4": {
+          "pairs": 360,
+          "above_1_4": 0,
+          "median_ratio": 0.4812659468058576,
+          "max_ratio": 0.9824027415239116
+        },
+        "8": {
+          "pairs": 322,
+          "above_1_4": 0,
+          "median_ratio": 0.293870615485412,
+          "max_ratio": 0.6592190091530222
+        },
+        "16": {
+          "pairs": 260,
+          "above_1_4": 0,
+          "median_ratio": 0.23610822382407104,
+          "max_ratio": 0.4954189123157747
+        },
+        "64": {
+          "pairs": 64,
+          "above_1_4": 0,
+          "median_ratio": 0.2197810951149994,
+          "max_ratio": 0.3523247677715415
+        }
+      },
+      "exceptions": [
+        {
+          "case": "cross/2/unit2/draw1/stride64/compact/update",
+          "rows": 2,
+          "packet_ns": 3.5091839741264956,
+          "point_ns": 2.343292429841467,
+          "ratio": 1.4975441944153365
+        },
+        {
+          "case": "cross/2/unit1/draw1/stride1/compact/update",
+          "rows": 2,
+          "packet_ns": 3.4966546270366554,
+          "point_ns": 2.3429732079650747,
+          "ratio": 1.492400602426683
+        },
+        {
+          "case": "cross/2/unit1/draw1/stride64/compact/update",
+          "rows": 2,
+          "packet_ns": 3.4935510070505402,
+          "point_ns": 2.3457922843015253,
+          "ratio": 1.4892840386721484
+        },
+        {
+          "case": "cross/2/unit24/draw2/stride24/spread/update",
+          "rows": 2,
+          "packet_ns": 6.683526875152449,
+          "point_ns": 4.487871899031458,
+          "ratio": 1.4892419002857105
+        },
+        {
+          "case": "cross/2/unit24/draw2/stride64/spread/update",
+          "rows": 2,
+          "packet_ns": 6.6611561889361,
+          "point_ns": 4.476674664082612,
+          "ratio": 1.487969684815402
+        },
+        {
+          "case": "cross/2/unit2/draw1/stride3/compact/update",
+          "rows": 2,
+          "packet_ns": 3.481822022105595,
+          "point_ns": 2.3436386993648917,
+          "ratio": 1.4856479469506723
+        },
+        {
+          "case": "cross/2/unit24/draw2/stride25/spread/update",
+          "rows": 2,
+          "packet_ns": 6.651380677264799,
+          "point_ns": 4.501977305319328,
+          "ratio": 1.4774354080829852
+        },
+        {
+          "case": "cross/2/unit2/draw1/stride2/compact/update",
+          "rows": 2,
+          "packet_ns": 3.460510515992031,
+          "point_ns": 2.344508860681574,
+          "ratio": 1.4760065845884769
+        },
+        {
+          "case": "cross/2/unit1/draw1/stride2/compact/update",
+          "rows": 2,
+          "packet_ns": 3.4572096118037594,
+          "point_ns": 2.344770526200365,
+          "ratio": 1.4744340962891882
+        },
+        {
+          "case": "cross/2/unit6/draw2/stride64/spread/update",
+          "rows": 2,
+          "packet_ns": 5.168462940856369,
+          "point_ns": 3.5871197623298223,
+          "ratio": 1.4408392480042176
+        },
+        {
+          "case": "cross/2/unit6/draw2/stride7/spread/update",
+          "rows": 2,
+          "packet_ns": 5.176965583818632,
+          "point_ns": 3.6779436196164483,
+          "ratio": 1.4075706751476815
+        },
+        {
+          "case": "cross/2/unit6/draw2/stride6/spread/update",
+          "rows": 2,
+          "packet_ns": 5.163220776673939,
+          "point_ns": 3.679143328760752,
+          "ratio": 1.4033758174931092
+        }
+      ]
+    },
+    "avx512": {
+      "source_sha256": "0023ad5f1bcaf820890cf801a5c3e63f1f3ac39c664a265c416d3ad04a0f10cf",
+      "cases": 3220,
+      "pairs": 1366,
+      "by_rows": {
+        "2": {
+          "pairs": 360,
+          "above_1_4": 0,
+          "median_ratio": 0.32344671224721977,
+          "max_ratio": 0.8970274153466913
+        },
+        "4": {
+          "pairs": 360,
+          "above_1_4": 0,
+          "median_ratio": 0.3452261067911261,
+          "max_ratio": 0.9040072616719586
+        },
+        "8": {
+          "pairs": 322,
+          "above_1_4": 0,
+          "median_ratio": 0.23016113829612977,
+          "max_ratio": 0.6458076582963822
+        },
+        "16": {
+          "pairs": 260,
+          "above_1_4": 0,
+          "median_ratio": 0.23489365181115462,
+          "max_ratio": 0.4862916806558237
+        },
+        "64": {
+          "pairs": 64,
+          "above_1_4": 0,
+          "median_ratio": 0.2257635460751868,
+          "max_ratio": 0.30944743295654703
+        }
+      },
+      "exceptions": []
+    }
+  }
+}

@@ -1,0 +1,209 @@
+{
+  "cases": 2832,
+  "counters": [
+    "items_per_iteration",
+    "physical_bytes",
+    "drawn_bytes",
+    "hull_bytes",
+    "window_bytes",
+    "stride"
+  ],
+  "files_sha256": {
+    "cases.csv": "b0399acb3d189d00fc0b2e648fb1b826bd0ad39c7f7375ecbaf7fe82366293a2"
+  },
+  "filter": "^cross/(2|4)/unit(12|16|24|32)/draw(2|4|8)/",
+  "format": 1,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "density-crossover-avx2": {
+      "context": {
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 4194304,
+            "type": "Unified"
+          }
+        ],
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-12T18:26:23+00:00",
+        "executable": "/opt/sixdb/jobs/20260912T182356Z-fd3774fd/results/crossover/avx2/tuple_packet_crossover",
+        "host_name": "ip-172-31-27-11",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.937012,
+          0.384277,
+          0.14502
+        ],
+        "mhz_per_cpu": 4508,
+        "num_cpus": 1
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260912T182356Z-fd3774fd/results/crossover/avx2/samples.json",
+      "sha256": "6e4ee191f69190a31a03438a2da137c136dd07b12f086bc606cd6472ee8430f9"
+    },
+    "density-crossover-avx512": {
+      "context": {
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 4194304,
+            "type": "Unified"
+          }
+        ],
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-12T18:27:50+00:00",
+        "executable": "/opt/sixdb/jobs/20260912T182356Z-fd3774fd/results/crossover/avx512/tuple_packet_crossover",
+        "host_name": "ip-172-31-27-11",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.98877,
+          0.547852,
+          0.228027
+        ],
+        "mhz_per_cpu": 4507,
+        "num_cpus": 1
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260912T182356Z-fd3774fd/results/crossover/avx512/samples.json",
+      "sha256": "923f54af2e66f027c4317d1bc1c3f1cd7b4496a46bf502d85d5e0dc4a9079ae2"
+    },
+    "retained-crossover-avx2": {
+      "context": {
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 4194304,
+            "type": "Unified"
+          }
+        ],
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-12T17:54:32+00:00",
+        "executable": "/opt/sixdb/jobs/20260912T175207Z-f08937c6/results/crossover/avx2/tuple_packet_crossover",
+        "host_name": "ip-172-31-23-45",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1.03711,
+          0.475098,
+          0.183594
+        ],
+        "mhz_per_cpu": 4521,
+        "num_cpus": 1
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260912T175207Z-f08937c6/results/crossover/avx2/samples.json",
+      "sha256": "b961b48bc29c22648a284cef9574115e7a112d33818b89b7752786b2f38f9c27"
+    },
+    "retained-crossover-avx512": {
+      "context": {
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 4194304,
+            "type": "Unified"
+          }
+        ],
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-12T17:57:57+00:00",
+        "executable": "/opt/sixdb/jobs/20260912T175207Z-f08937c6/results/crossover/avx512/tuple_packet_crossover",
+        "host_name": "ip-172-31-23-45",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1.03564,
+          0.757324,
+          0.359375
+        ],
+        "mhz_per_cpu": 4515,
+        "num_cpus": 1
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260912T175207Z-f08937c6/results/crossover/avx512/samples.json",
+      "sha256": "0023ad5f1bcaf820890cf801a5c3e63f1f3ac39c664a265c416d3ad04a0f10cf"
+    }
+  },
+  "kind": "google-benchmark-summary",
+  "units": "CPU/real times are ns per benchmark iteration. ns_per_item uses the reported item rate; an item means what the benchmark counts, not necessarily a value or byte."
+}

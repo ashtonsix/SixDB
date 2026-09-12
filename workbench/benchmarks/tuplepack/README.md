@@ -22,6 +22,10 @@ profile uses `znver5`, including VBMI. The [run helper](run.sh) accepts
 `TUPLE_PROFILES='avx2 avx512'` or `neon`, builds profiles sequentially, runs checks,
 and retains binaries, compilation commands, build RSS/time and timing JSON.
 It works with `worker.py` or locally with `SIXDB_RESULTS` and `SIXDB_CPU` set.
+The routine set includes three shape/placement combinations (64/8 rows over one-byte tuples,
+and four rows over scattered large tuples, with full/sparse masks).
+Set `TUPLEPACK_BROAD=1` to register every packet shape with tight, strided,
+compact and scattered placement. Use `--benchmark_filter` to select families.
 
 | Family | What is timed | Interpretation |
 | --- | --- | --- |
@@ -31,6 +35,8 @@ It works with `worker.py` or locally with `SIXDB_RESULTS` and `SIXDB_CPU` set.
 | `scan/packet4/{16,64}` | Four-row native projection, sequential scans of 1,024/65,536/1,048,576 rows | Same information, different placement; no PMU/cache-tier claim from allocation size alone |
 | `pipeline/decode_repack/{inline,cps}` | Same decoded 64-code packet, byte-code reduction and repack body | Two useful shared bodies; effects/publication excluded on both paths |
 | `composition/128/{body,ordinary}` | Two native packets update disjoint nibble codes sharing 64 physical bytes | Ordinary includes both packets' width admission and qualified effects; body is the two underlying native writes |
+| `packets/<Rows>/<layout>/<all,half>/sum` | Native read and reduction over 1,024 original rows | Shape, physical extent and stride vary independently; time is normalized by original rows, including inactive rows |
+| `packets/<Rows>/<layout>/<all,half>/update/{body,ordinary,cps}` | Shared native decode/toggle/write bodies | Body excludes admission/effects; ordinary and CPS include identical width checks and qualified journals; maintenance/publication excluded |
 
 Time is per benchmark iteration; `items_per_iteration` gives rows/operations for
 normalization. `point` controls use runtime masks/shifts rather than a fully
@@ -45,6 +51,11 @@ has a concrete counterexample to adding isolated operation costs. Prepared-map
 working sets, contention, large sparse native writes and real compound consumers
 remain reasons to extend selectable coverage when a new use warrants it.
 
+Packet instantiations are sharded by projection size to bound compiler memory;
+this does not change their execution boundaries.
+
 The initial implementation evidence is retained under
 [tuple-layout/module-evidence](../../spikes/tuple-layout/module-evidence/README.md).
 It distinguishes the early boundary failures from the final measured sources.
+The [packet experiment](../../spikes/tuple-layout/batching/README.md) retains
+the transfer-grain investigation and comparisons with repeated point operations.

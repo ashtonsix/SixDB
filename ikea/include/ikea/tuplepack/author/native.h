@@ -1,5 +1,7 @@
 #pragma once
-#include <ikea/tuplepack/detail/plan.h>
+#include <bit>
+#include <utility>
+#include <ikea/tuplepack/detail/packet_plan.h>
 #include <ikea/tuplepack/detail/native/types.h>
 #include <ikea/tuplepack/detail/native/memory.h>
 #include <ikea/tuplepack/detail/native/neon/shuffle.h>
@@ -82,37 +84,82 @@ template <bool Left>
     return !_mm256_testz_si256(value, value);
 #endif
 }
+namespace native_detail {
+/// Encoded physical bytes remain in registers through sparse stores. Bit masks
+/// describe issued bytes; they never authorize writing an inactive neighbor.
+template <unsigned W>
+[[gnu::always_inline]] inline void store_selected_word(byte* row, packet encoded,
+                                                       std::uint64_t written) {
+    const auto part = split<W / 2>(encoded);
+#if defined(__aarch64__)
+    const auto word = vgetq_lane_u64(vreinterpretq_u64_u8(part), W % 2);
+#elif defined(__AVX2__)
+    const auto word = std::uint64_t(_mm_extract_epi64(part, W % 2));
+#endif
+    unsigned mask = (written >> (8 * W)) & 255;
+    while (mask) {
+        const unsigned offset = std::countr_zero(mask);
+        row[8 * W + offset] = byte(word >> (8 * offset));
+        mask &= mask - 1;
+    }
+}
+[[gnu::always_inline]] inline void store_selected(byte* row, packet encoded,
+                                                  std::uint64_t written) {
+#if defined(__AVX512VBMI__)
+    _mm512_mask_storeu_epi8(row, written, encoded);
+#else
+    store_selected_word<0>(row, encoded, written);
+    store_selected_word<1>(row, encoded, written);
+    store_selected_word<2>(row, encoded, written);
+    store_selected_word<3>(row, encoded, written);
+    store_selected_word<4>(row, encoded, written);
+    store_selected_word<5>(row, encoded, written);
+    store_selected_word<6>(row, encoded, written);
+    store_selected_word<7>(row, encoded, written);
+#endif
+}
+template <class Plan>
+[[gnu::always_inline]] inline packet encode(const Plan& p, const byte* row, packet input) {
+    auto encoded = join(zero16(), zero16(), zero16(), zero16());
+    if (p.needs_old)
+        encoded = bit_and(load_unit(row, p.read.bytes), load_packet(p.preserve.data()));
+    for (unsigned i = 0; i < p.round_count; ++i)
+        encoded = bit_or(encoded, transform<true>(input, p.rounds[i]));
+    return encoded;
+}
+} // namespace native_detail
 [[gnu::always_inline]] inline void write_body(const detail::write64& p, byte* row, packet input) {
+    if (!p.count)
+        return;
+    using namespace native_detail;
+    auto encoded = encode(p, row, input);
     if (!p.dense) {
-        std::array<byte, 64> values;
-        store_packet(values.data(), input);
-        detail::write_body<64>(p, row, values);
+        store_selected(row, encoded, p.writes);
         return;
     }
-    using namespace native_detail;
-    const auto z = zero16();
-    auto updated = join(z, z, z, z);
-    if (p.needs_old) {
-        updated = join(row_part<0>(row, p.read.bytes), row_part<1>(row, p.read.bytes),
-                       row_part<2>(row, p.read.bytes), row_part<3>(row, p.read.bytes));
-        updated = bit_and(updated, load_packet(p.preserve.data()));
-    }
-    for (unsigned i = 0; i < p.round_count; ++i)
-        updated = bit_or(updated, transform<true>(input, p.rounds[i]));
 #if defined(__AVX512VBMI__)
     const auto mask =
         p.read.bytes == 64 ? ~std::uint64_t(0) : (std::uint64_t(1) << p.read.bytes) - 1;
-    _mm512_mask_storeu_epi8(row, mask, updated);
+    _mm512_mask_storeu_epi8(row, mask, encoded);
 #else
-    store_part<0>(row, p.read.bytes, updated);
-    store_part<1>(row, p.read.bytes, updated);
-    store_part<2>(row, p.read.bytes, updated);
-    store_part<3>(row, p.read.bytes, updated);
+    store_part<0>(row, p.read.bytes, encoded);
+    store_part<1>(row, p.read.bytes, encoded);
+    store_part<2>(row, p.read.bytes, encoded);
+    store_part<3>(row, p.read.bytes, encoded);
 #endif
 }
 /// Trusted in-register endpoints. Input widths, extents, isolation and effects
 /// are admitted by the operation shell. No allocation, checks or suspension.
 IKEA_TUPLE_CC packet read(const detail::read64&, const byte* row);
 IKEA_TUPLE_CC void write(const detail::write64&, byte* row, packet input);
+/// Packet-shaped compiled endpoints. Rows must match preparation (2..64,
+/// powers of two). Bit r selects first+r; inactive rows issue no payload access.
+IKEA_TUPLE_CC packet read(const detail::packet_read&, unsigned rows, const byte* first,
+                          std::size_t stride, std::uint64_t active);
+IKEA_TUPLE_CC void write(const detail::packet_write&, unsigned rows, byte* first,
+                         std::size_t stride, packet input, std::uint64_t active);
 } // namespace ikea::tuplepack::native
 #endif
+
+#include <ikea/tuplepack/detail/native/packet.h>
+#include <ikea/tuplepack/detail/native/selection.h>

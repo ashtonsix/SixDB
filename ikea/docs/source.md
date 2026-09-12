@@ -75,17 +75,21 @@ Ordinary `tuplepack/{description,view,plan,read,write,construction,selection}.h`
 separates placement, prepared controls and commands. `author/composition.h` owns
 recursive groups; `author/maintenance.h` owns independent observations;
 `author/execution.h` owns whole-operation erasure/native adapters and the module's
-pipeline carrier. `author/routes.h` and `author/batch.h` expose the supported
-normalization and multi-row shapes. `detail/plan.h` and `detail/native/` are internal.
+pipeline carrier. `author/routes.h` exposes route normalization. Row shapes belong
+to the ordinary reader/writer plans and carry through native adapters and groups.
+`detail/mutation.h` shares checked mutation admission and driving;
+`detail/window.h` owns row masks, tails and maintenance brackets. Physical
+traversal remains specialized. `detail/{plan,packet_plan}.h` and
+`detail/native/` are internal.
 
-`src/tuplepack/{description,prepare,construction,kernels,routes}.cpp` compile cold
-work and named kernel endpoints independently. The physical native functions
+`src/tuplepack/{description,prepare,packet_prepare,construction,kernels,packet,routes}.cpp`
+compile cold work and named kernel endpoints independently. The physical native functions
 share inline bodies with authors. Scalar point functions retain a small set of
 count specializations and a bounded word writer; arbitrary distant maps retain
 the complete byte-coalesced path. Prepared controls contain only one ISA's data.
 
 The [TuplePack tests](../test/tuplepack/README.md) are organized by wire, operations,
-execution and ownership. Its [benchmarks](../../workbench/benchmarks/tuplepack/README.md)
+packet shapes, execution and ownership. Its [benchmarks](../../workbench/benchmarks/tuplepack/README.md)
 separate primitive controls, ordinary calls, scans and CPS consumers. A change to
 shared effects, overlap or pipeline mechanics must run both modules' affected checks.
 

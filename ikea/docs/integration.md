@@ -74,8 +74,9 @@ SeriesPack's `sum_change` accumulates modulo-u64 replacement deltas. TuplePack's
 [observation](tuplepack/extending.md) takes a separate read projection and a
 maintenance law. The projection can include untouched dependencies: updating A
 and B may require observing A, B and C to maintain a shared row signature.
-The law requests old values, new values, both or neither, and receives the original
-row coordinate on every invocation. After-values include all child mutations.
+The law requests old values, new values, both or neither. Row callbacks receive
+the original row coordinate; packet callbacks receive the first original row and
+active mask. After-values include all child mutations within that window.
 
 Maintenance callbacks can accumulate private contributions for publication or
 write persistent summaries using separately admitted resources and byte coverage.

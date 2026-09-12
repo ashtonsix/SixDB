@@ -1,20 +1,11 @@
 #pragma once
 #include <ikea/effects.h>
 #include <ikea/tuplepack/read.h>
+#include <ikea/tuplepack/detail/mutation.h>
 #include <bit>
 #include <limits>
 
 namespace ikea::tuplepack {
-struct no_maintenance {
-    struct state {};
-    state before(std::size_t) const noexcept {
-        return {};
-    }
-    void after(std::size_t, state) const noexcept {}
-    bool covers(std::size_t, std::size_t) const noexcept {
-        return true;
-    }
-};
 namespace detail {
 /// Runs describe actual issued stores, not semantic bit ownership. Never emit
 /// a zero length or shift by 64 when the whole unit is written.
@@ -27,33 +18,55 @@ template <class Plan, class Coverage>
         coverage.before(destination, byte_write{0, base + span.offset, span.size});
     }
 }
+template <unsigned Rows, class Plan, class Coverage>
+[[gnu::always_inline]] inline void emit_window(const view& destination, std::size_t first,
+                                               const Plan& p, Coverage& effects,
+                                               std::uint64_t active) {
+    if constexpr (Rows > 1) {
+        // Full tight windows issue one contiguous span, even for 64 one-byte
+        // tuples. Semantic maintenance still names each original row explicitly.
+        if (active == all_rows<Rows> && p.runs == 1 &&
+            p.footprint[0].size == destination.stride()) {
+            const auto base =
+                destination.offset() + first * destination.stride() + p.footprint[0].offset;
+            effects.before(destination, byte_write{0, base, Rows * destination.stride()});
+            return;
+        }
+        for (unsigned r = 0; r < Rows; ++r)
+            if (active & (std::uint64_t(1) << r))
+                emit(destination, first + r, p, effects);
+    } else if (active)
+        emit(destination, first, p, effects);
+}
 } // namespace detail
 
 /// Borrowed whole mutation operation. Placement is admitted once at binding.
 /// Calls do not acquire leases, allocate, suspend or publish. The owner keeps
 /// input/selection/plans/effect storage disjoint from mutable outputs and secures
 /// exclusion for issued bytes, including preserved neighboring bits.
-template <unsigned N> class mutation_operation {
-    const writer<N>* plan_;
+template <unsigned N, unsigned Rows = 1>
+class mutation_operation
+    : public detail::mutation_commands<mutation_operation<N, Rows>, packet<N>, Rows> {
+    const writer<N, Rows>* plan_;
     const view* destination_;
-    mutation_operation(const writer<N>& plan, const view& destination)
+    mutation_operation(const writer<N, Rows>& plan, const view& destination)
         : plan_(&plan), destination_(&destination) {}
 
   public:
     static constexpr unsigned slots = N;
     using input_type = packet<N>;
-    [[nodiscard]] static std::expected<mutation_operation, error> bind(const writer<N>& plan,
+    [[nodiscard]] static std::expected<mutation_operation, error> bind(const writer<N, Rows>& plan,
                                                                        const view& destination) {
         if (plan.unit_bytes() != destination.unit_bytes())
             return std::unexpected(error::description);
         return mutation_operation(plan, destination);
     }
-    static auto bind(const writer<N>&&, const view&) = delete;
-    static auto bind(const writer<N>&, const view&&) = delete;
+    static auto bind(const writer<N, Rows>&&, const view&) = delete;
+    static auto bind(const writer<N, Rows>&, const view&&) = delete;
     std::size_t size() const noexcept {
         return destination_->size();
     }
-    const writer<N>& plan() const noexcept {
+    const writer<N, Rows>& plan() const noexcept {
         return *plan_;
     }
     const view& destination() const noexcept {
@@ -69,88 +82,33 @@ template <unsigned N> class mutation_operation {
         for (unsigned i = 0; i < p.count; ++i)
             visit(*destination_, p.stores[i].offset, p.stores[i].mask);
     }
-    bool accepts(const input_type& input) const noexcept {
-        return plan_->accepts(input);
+    bool accepts(const input_type& input,
+                 std::uint64_t active = detail::all_rows<Rows>) const noexcept {
+        return plan_->accepts(input, active);
     }
     /// Conservative slots needed per selected row; a journal can coalesce them.
     unsigned effect_capacity() const noexcept {
         return plan_->effect_capacity();
     }
-    [[nodiscard]] std::expected<void, error> admit(std::size_t first,
-                                                   std::span<const packet<N>> input,
-                                                   selection selected, std::size_t capacity) const {
-        if (first > size() || input.size() > size() - first ||
-            !selected.covers(first, input.size()))
-            return std::unexpected(error::range);
-        for (std::size_t i = 0; i < input.size(); ++i) {
-            if (!selected.contains(first + i))
-                continue;
-            if (!plan_->accepts(input[i]))
-                return std::unexpected(error::value);
-            if (capacity < effect_capacity())
-                return std::unexpected(error::capacity);
-            capacity -= effect_capacity();
-        }
-        return {};
-    }
     /// Trusted local group: coverage capacity and input widths were admitted.
     /// Hooks must be no-fail/no-suspend and may only use pre-admitted resources.
     template <class Coverage>
-    [[gnu::always_inline]] void set_unchecked(std::size_t row, const packet<N>& input,
-                                              Coverage& coverage) const {
-        detail::emit(*destination_, row, plan_->controls(), coverage);
-        plan_->set_unchecked(destination_->row_unchecked(row), input);
-    }
-    /// Checked point. Error leaves this call's bytes, effects and maintenance
-    /// unchanged. Maintenance.after sees the complete update, never an input
-    /// projection mistaken for the full row; maintenance owns its dependencies.
-    template <class Maintenance = no_maintenance>
-    [[nodiscard]] std::expected<void, error> set(std::size_t row, const packet<N>& input,
-                                                 source_write_journal& effects,
-                                                 Maintenance&& maintenance = {}) const {
-        // Point calls deliberately do not enter the range traversal or create
-        // a one-element span/selection frame. The concrete writer still owns
-        // its specialized body; this shell only admits and brackets one row.
-        if (row >= size() || !maintenance.covers(row, 1))
-            return std::unexpected(error::range);
-        if (!plan_->accepts(input))
-            return std::unexpected(error::value);
-        if (effects.used > effects.storage.size() || effects.remaining() < effect_capacity())
-            return std::unexpected(error::capacity);
-        auto before = maintenance.before(row);
-        set_unchecked(row, input, effects);
-        maintenance.after(row, std::move(before));
-        return {};
-    }
-    template <class Maintenance = no_maintenance>
-    [[nodiscard]] std::expected<void, error>
-    replace(std::size_t first, std::span<const packet<N>> input, source_write_journal& effects,
-            selection selected = selection::all(), Maintenance&& maintenance = {}) const {
-        if (effects.used > effects.storage.size())
-            return std::unexpected(error::capacity);
-        if (auto valid = admit(first, input, selected, effects.remaining()); !valid)
-            return valid;
-        if (!maintenance.covers(first, input.size()))
-            return std::unexpected(error::range);
-        replace_unchecked(first, input, selected, effects, maintenance);
-        return {};
-    }
-    template <class Coverage, class Maintenance = no_maintenance>
-    void replace_unchecked(std::size_t first, std::span<const packet<N>> input, selection selected,
-                           Coverage& effects, Maintenance&& maintenance = {}) const {
-        for (std::size_t i = 0; i < input.size(); ++i) {
-            const auto row = first + i;
-            if (!selected.contains(row))
-                continue;
-            auto before = maintenance.before(row);
-            set_unchecked(row, input[i], effects);
-            maintenance.after(row, std::move(before));
-        }
+    [[gnu::always_inline]] void set_unchecked(std::size_t first, const packet<N>& input,
+                                              Coverage& effects,
+                                              std::uint64_t active = detail::all_rows<Rows>) const {
+        if (!active)
+            return;
+        detail::emit_window<Rows>(*destination_, first, plan_->controls(), effects, active);
+        plan_->set_unchecked(destination_->row_unchecked(first), destination_->stride(), input,
+                             active);
     }
 };
-template <unsigned N> auto bind_writer(const writer<N>& plan, const view& destination) {
-    return mutation_operation<N>::bind(plan, destination);
+template <unsigned N, unsigned Rows>
+auto bind_writer(const writer<N, Rows>& plan, const view& destination) {
+    return mutation_operation<N, Rows>::bind(plan, destination);
 }
-template <unsigned N> auto bind_writer(const writer<N>&&, const view&) = delete;
-template <unsigned N> auto bind_writer(const writer<N>&, const view&&) = delete;
+template <unsigned N, unsigned Rows>
+auto bind_writer(const writer<N, Rows>&&, const view&) = delete;
+template <unsigned N, unsigned Rows>
+auto bind_writer(const writer<N, Rows>&, const view&&) = delete;
 } // namespace ikea::tuplepack

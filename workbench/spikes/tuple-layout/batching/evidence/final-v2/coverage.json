@@ -1,0 +1,282 @@
+{
+  "metric": "Median CPU ns per original row; packet / repeated prepared point",
+  "profiles": {
+    "neon": {
+      "source_sha256": "95a9a612ef766022881c144ccd0e2853b2354ec8b335390b9465dda1dcfbfddc",
+      "cases": 3220,
+      "pairs": 1366,
+      "by_rows": {
+        "2": {
+          "pairs": 360,
+          "above_1_4": 34,
+          "median_ratio": 0.7576195686611709,
+          "max_ratio": 1.6687209189835999
+        },
+        "4": {
+          "pairs": 360,
+          "above_1_4": 0,
+          "median_ratio": 0.48006175502513004,
+          "max_ratio": 1.0013555026192256
+        },
+        "8": {
+          "pairs": 322,
+          "above_1_4": 0,
+          "median_ratio": 0.3614653933340277,
+          "max_ratio": 0.7206600430419645
+        },
+        "16": {
+          "pairs": 260,
+          "above_1_4": 0,
+          "median_ratio": 0.2802055712564846,
+          "max_ratio": 0.5906795978067209
+        },
+        "64": {
+          "pairs": 64,
+          "above_1_4": 0,
+          "median_ratio": 0.16845611443333403,
+          "max_ratio": 0.4562203829414763
+        }
+      },
+      "exceptions": [
+        {
+          "case": "cross/2/unit1/draw1/stride1/compact/update",
+          "rows": 2,
+          "packet_ns": 5.562078519442182,
+          "point_ns": 3.3331388467461562,
+          "ratio": 1.6687209189835999
+        },
+        {
+          "case": "cross/2/unit24/draw1/stride24/compact/update",
+          "rows": 2,
+          "packet_ns": 5.476916116770582,
+          "point_ns": 3.3524701315024665,
+          "ratio": 1.6336957234324436
+        },
+        {
+          "case": "cross/2/unit24/draw2/stride64/spread/update",
+          "rows": 2,
+          "packet_ns": 11.490638526710182,
+          "point_ns": 7.1688940493765445,
+          "ratio": 1.6028467498008965
+        },
+        {
+          "case": "cross/2/unit24/draw2/stride25/spread/update",
+          "rows": 2,
+          "packet_ns": 11.47170840992625,
+          "point_ns": 7.1671176504327825,
+          "ratio": 1.6006027763802004
+        },
+        {
+          "case": "cross/2/unit12/draw1/stride12/compact/update",
+          "rows": 2,
+          "packet_ns": 5.362370406582881,
+          "point_ns": 3.3503317965109054,
+          "ratio": 1.6005490596983107
+        },
+        {
+          "case": "cross/2/unit24/draw2/stride24/spread/update",
+          "rows": 2,
+          "packet_ns": 11.468591616332493,
+          "point_ns": 7.168368183009897,
+          "ratio": 1.5998887506245518
+        },
+        {
+          "case": "cross/2/unit12/draw1/stride64/compact/update",
+          "rows": 2,
+          "packet_ns": 5.342854728182069,
+          "point_ns": 3.445559525867367,
+          "ratio": 1.550649375833113
+        },
+        {
+          "case": "cross/2/unit3/draw1/stride4/compact/update",
+          "rows": 2,
+          "packet_ns": 4.9121695423578435,
+          "point_ns": 3.345551618235432,
+          "ratio": 1.4682689442253185
+        },
+        {
+          "case": "cross/2/unit12/draw1/stride13/compact/update",
+          "rows": 2,
+          "packet_ns": 4.87102520715073,
+          "point_ns": 3.3561296825225524,
+          "ratio": 1.4513817009268675
+        },
+        {
+          "case": "cross/2/unit3/draw1/stride3/compact/update",
+          "rows": 2,
+          "packet_ns": 4.841934057954935,
+          "point_ns": 3.3367541659029656,
+          "ratio": 1.4510910355437139
+        },
+        {
+          "case": "cross/2/unit4/draw1/stride4/compact/update",
+          "rows": 2,
+          "packet_ns": 4.8436001589078845,
+          "point_ns": 3.3386536241745057,
+          "ratio": 1.4507645009462407
+        },
+        {
+          "case": "cross/2/unit2/draw1/stride3/compact/update",
+          "rows": 2,
+          "packet_ns": 4.841582667988137,
+          "point_ns": 3.3375891903235178,
+          "ratio": 1.450622707559415
+        },
+        {
+          "case": "cross/2/unit2/draw1/stride2/compact/update",
+          "rows": 2,
+          "packet_ns": 4.843973204398494,
+          "point_ns": 3.339276236406437,
+          "ratio": 1.450605718564732
+        },
+        {
+          "case": "cross/2/unit1/draw1/stride2/compact/update",
+          "rows": 2,
+          "packet_ns": 4.841519639371908,
+          "point_ns": 3.33978883328241,
+          "ratio": 1.4496484302013692
+        },
+        {
+          "case": "cross/2/unit8/draw1/stride8/compact/update",
+          "rows": 2,
+          "packet_ns": 4.8463267131026,
+          "point_ns": 3.34387093505263,
+          "ratio": 1.4493163184919167
+        },
+        {
+          "case": "cross/2/unit4/draw1/stride5/compact/update",
+          "rows": 2,
+          "packet_ns": 4.84124526599034,
+          "point_ns": 3.3404413229344754,
+          "ratio": 1.4492831329656328
+        },
+        {
+          "case": "cross/2/unit6/draw1/stride6/compact/update",
+          "rows": 2,
+          "packet_ns": 4.840961506438952,
+          "point_ns": 3.3415361399757715,
+          "ratio": 1.4487233726204896
+        },
+        {
+          "case": "cross/2/unit6/draw1/stride7/compact/update",
+          "rows": 2,
+          "packet_ns": 4.844064228429152,
+          "point_ns": 3.345266656479331,
+          "ratio": 1.448035306556759
+        },
+        {
+          "case": "cross/2/unit8/draw1/stride9/compact/update",
+          "rows": 2,
+          "packet_ns": 4.841862994616612,
+          "point_ns": 3.346878103988652,
+          "ratio": 1.4466804120670864
+        },
+        {
+          "case": "cross/2/unit16/draw1/stride16/compact/update",
+          "rows": 2,
+          "packet_ns": 4.841342345910446,
+          "point_ns": 3.3473726239444526,
+          "ratio": 1.4463111490126068
+        },
+        {
+          "case": "cross/2/unit24/draw1/stride25/compact/update",
+          "rows": 2,
+          "packet_ns": 4.848817951031842,
+          "point_ns": 3.3672633961509244,
+          "ratio": 1.4399877231387552
+        },
+        {
+          "case": "cross/2/unit32/draw1/stride32/compact/update",
+          "rows": 2,
+          "packet_ns": 4.842835381045247,
+          "point_ns": 3.3655869558545635,
+          "ratio": 1.4389274276871542
+        },
+        {
+          "case": "cross/2/unit16/draw1/stride17/compact/update",
+          "rows": 2,
+          "packet_ns": 4.841112035458265,
+          "point_ns": 3.3675038985679566,
+          "ratio": 1.437596564481177
+        },
+        {
+          "case": "cross/2/unit32/draw1/stride33/compact/update",
+          "rows": 2,
+          "packet_ns": 4.841104076230994,
+          "point_ns": 3.374626053914313,
+          "ratio": 1.4345601553735639
+        },
+        {
+          "case": "cross/2/unit32/draw1/stride64/compact/update",
+          "rows": 2,
+          "packet_ns": 4.850294803483466,
+          "point_ns": 3.4445723169585927,
+          "ratio": 1.4080978296214333
+        },
+        {
+          "case": "cross/2/unit3/draw1/stride64/compact/update",
+          "rows": 2,
+          "packet_ns": 4.848588533364336,
+          "point_ns": 3.4434272775758465,
+          "ratio": 1.408070547892539
+        },
+        {
+          "case": "cross/2/unit6/draw1/stride64/compact/update",
+          "rows": 2,
+          "packet_ns": 4.844759901760703,
+          "point_ns": 3.4421479524360303,
+          "ratio": 1.4074815983235223
+        },
+        {
+          "case": "cross/2/unit2/draw1/stride64/compact/update",
+          "rows": 2,
+          "packet_ns": 4.844265697183699,
+          "point_ns": 3.4418828909190746,
+          "ratio": 1.4074464038171128
+        },
+        {
+          "case": "cross/2/unit64/draw1/stride64/compact/update",
+          "rows": 2,
+          "packet_ns": 4.852985758407466,
+          "point_ns": 3.4494929632503,
+          "ratio": 1.4068693022741285
+        },
+        {
+          "case": "cross/2/unit8/draw1/stride64/compact/update",
+          "rows": 2,
+          "packet_ns": 4.84415125566966,
+          "point_ns": 3.4437298631680604,
+          "ratio": 1.4066583176223006
+        },
+        {
+          "case": "cross/2/unit16/draw1/stride64/compact/update",
+          "rows": 2,
+          "packet_ns": 4.843665186879065,
+          "point_ns": 3.4444814828725874,
+          "ratio": 1.406210255727548
+        },
+        {
+          "case": "cross/2/unit24/draw1/stride64/compact/update",
+          "rows": 2,
+          "packet_ns": 4.84547906970301,
+          "point_ns": 3.446020256878063,
+          "ratio": 1.4061087017790175
+        },
+        {
+          "case": "cross/2/unit1/draw1/stride64/compact/update",
+          "rows": 2,
+          "packet_ns": 4.842150380217584,
+          "point_ns": 3.4443984020870073,
+          "ratio": 1.4058043858351752
+        },
+        {
+          "case": "cross/2/unit4/draw1/stride64/compact/update",
+          "rows": 2,
+          "packet_ns": 4.844366904217018,
+          "point_ns": 3.4483054535859954,
+          "ratio": 1.4048543464092533
+        }
+      ]
+    }
+  }
+}

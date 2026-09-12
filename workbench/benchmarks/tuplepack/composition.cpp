@@ -8,7 +8,7 @@
 using namespace ikea::tuplepack;
 #if defined(__aarch64__) || defined(__AVX2__)
 namespace {
-using operation = composition::mutation_group<native_writer, native_writer>;
+using operation = composition::mutation_group<native_writer<>, native_writer<>>;
 [[gnu::noinline]] IKEA_TUPLE_CC bool checked_pair(const operation& op, std::size_t row,
                                                   native::packet low, native::packet high,
                                                   ikea::source_write_journal& effects) {

@@ -1,0 +1,209 @@
+{
+  "cases": 576,
+  "counters": [
+    "items_per_iteration",
+    "physical_bytes",
+    "drawn_bytes",
+    "hull_bytes",
+    "window_bytes",
+    "stride"
+  ],
+  "files_sha256": {
+    "cases.csv": "0ba9f5a218ac3e06369fbb9335cbea21308d257b1bad254ff045867640c6b5a2"
+  },
+  "filter": "^packets/(4/spread|8/one_byte|64/one_byte)/|^cross/(8/unit[^/]+/draw(2|4)/|16/unit3/draw2/).*/(packet|window)$",
+  "format": 1,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "crossover-avx2": {
+      "context": {
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 4194304,
+            "type": "Unified"
+          }
+        ],
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-12T17:00:59+00:00",
+        "executable": "/opt/sixdb/jobs/20260912T165930Z-62c2d267/results/crossover/avx2/tuple_packet_crossover",
+        "host_name": "ip-172-31-18-65",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.758789,
+          0.556152,
+          0.461914
+        ],
+        "mhz_per_cpu": 4528,
+        "num_cpus": 1
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260912T165930Z-62c2d267/results/crossover/avx2/samples.json",
+      "sha256": "c97392982db24a349846c44da7bc639e3eaf1a7efa1c4d238eee8b10f5edffdb"
+    },
+    "crossover-avx512": {
+      "context": {
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 4194304,
+            "type": "Unified"
+          }
+        ],
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-12T17:03:42+00:00",
+        "executable": "/opt/sixdb/jobs/20260912T165930Z-62c2d267/results/crossover/avx512/tuple_packet_crossover",
+        "host_name": "ip-172-31-18-65",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.987793,
+          0.750977,
+          0.556641
+        ],
+        "mhz_per_cpu": 4529,
+        "num_cpus": 1
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260912T165930Z-62c2d267/results/crossover/avx512/samples.json",
+      "sha256": "3340307a5c01972e6d8780b40a9c54237ae05b431ee25c4ede7193af09c42866"
+    },
+    "module-avx2": {
+      "context": {
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 4194304,
+            "type": "Unified"
+          }
+        ],
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-12T17:06:40+00:00",
+        "executable": "/opt/sixdb/jobs/20260912T165930Z-62c2d267/results/module/avx2/ikea_tuplepack_bench",
+        "host_name": "ip-172-31-18-65",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.870117,
+          0.643066
+        ],
+        "mhz_per_cpu": 4535,
+        "num_cpus": 1
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260912T165930Z-62c2d267/results/module/avx2/samples.json",
+      "sha256": "6e14d1d0546493877588d6831207b45d21dd4d9799edc48cb3216058817fa3e7"
+    },
+    "module-avx512": {
+      "context": {
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 4194304,
+            "type": "Unified"
+          }
+        ],
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-12T17:08:23+00:00",
+        "executable": "/opt/sixdb/jobs/20260912T165930Z-62c2d267/results/module/avx512/ikea_tuplepack_bench",
+        "host_name": "ip-172-31-18-65",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1,
+          0.912109,
+          0.682129
+        ],
+        "mhz_per_cpu": 4533,
+        "num_cpus": 1
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260912T165930Z-62c2d267/results/module/avx512/samples.json",
+      "sha256": "0d8a390d6bbb47c4143d12f9c89b0c3d582df84f04725632da6899c510b72a60"
+    }
+  },
+  "kind": "google-benchmark-summary",
+  "units": "CPU/real times are ns per benchmark iteration. ns_per_item uses the reported item rate; an item means what the benchmark counts, not necessarily a value or byte."
+}

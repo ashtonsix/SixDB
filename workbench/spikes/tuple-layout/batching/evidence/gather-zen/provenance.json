@@ -1,0 +1,110 @@
+{
+  "cases": 64,
+  "counters": [
+    "items_per_iteration"
+  ],
+  "files_sha256": {
+    "cases.csv": "14a67f6a4512794161f62233c264557bf6960bfd96bfed2a7e1ec49d90880764"
+  },
+  "filter": "^shape/(2|4)/(compact|spread)/",
+  "format": 1,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "avx2": {
+      "context": {
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 4194304,
+            "type": "Unified"
+          }
+        ],
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-12T15:59:51+00:00",
+        "executable": "/opt/sixdb/jobs/20260912T155800Z-7b34b520/results/avx2/tuple_packet_bench",
+        "host_name": "ip-172-31-19-95",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1.00586,
+          0.381836,
+          0.140137
+        ],
+        "mhz_per_cpu": 4530,
+        "num_cpus": 1
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260912T155800Z-7b34b520/results/avx2/samples.json",
+      "sha256": "5b66e8c7f8b49b690e0a1473a64e0726274529654e086e25bed7e1fe42f5d968"
+    },
+    "avx512": {
+      "context": {
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 4194304,
+            "type": "Unified"
+          }
+        ],
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-12T16:00:32+00:00",
+        "executable": "/opt/sixdb/jobs/20260912T155800Z-7b34b520/results/avx512/tuple_packet_bench",
+        "host_name": "ip-172-31-19-95",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1.00195,
+          0.460938,
+          0.179199
+        ],
+        "mhz_per_cpu": 4534,
+        "num_cpus": 1
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260912T155800Z-7b34b520/results/avx512/samples.json",
+      "sha256": "984f2f630075610da972929fa0948498e212d5a28918c54e4ad77840a2043b8e"
+    }
+  },
+  "kind": "google-benchmark-summary",
+  "units": "CPU/real times are ns per benchmark iteration. ns_per_item uses the reported item rate; an item means what the benchmark counts, not necessarily a value or byte."
+}

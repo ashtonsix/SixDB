@@ -11,11 +11,13 @@ bytes or retain a historical version by itself.
 `composition::bind_group(children...)` composes whole mutation commands. Groups
 can themselves be children. Preparation checks actual destination fields for
 overlap, and invocation checks every input packet and the summed effect capacity
-before making changes. `erased_mutation<Input, Maintenance>` erases one
-whole range; the chosen concrete traversal remains inside its function.
+before making changes. All children share their original-row packet shape.
+`erased_mutation<Input, Maintenance, Rows>` erases one whole range; the chosen
+concrete traversal remains inside its function. Rows defaults to one and remains
+part of the erased contract even when two shapes have identical input C++ types.
 
-Bound constructors can also be group leaves. This admits every unit's input and
-capacity before initializing any part of a larger record. Their destination
+Bound constructors can also be leaves of one-row groups. This admits every unit's
+input and capacity before initializing any part of a larger record. Their destination
 footprint includes all unit bits, including zeroed spare bits. A before-observation
 must not read uninitialized construction storage; use a new-only law or private
 caller contributions for that case.
@@ -25,8 +27,17 @@ An observation projection is independent of the mutation tree.
 provide another projection with `size()` and `get_unchecked(row)`. `observation`
 uses its law's `needs_before` and `needs_after` independently. The law's `observe`
 receives the original row followed by whichever values it requested. No-value
-invalidation still runs. Old observations precede all child stores; new
-observations follow all child stores, including multiple packets sharing bytes.
+invalidation still runs. Within each mutation window, old observations precede
+all child stores and new observations follow them, including children sharing
+physical bytes. A range repeats this bracket per window; whole-call admission
+precedes every window, but observations are not a whole-range snapshot.
+
+A packet projection supplies `rows` and `get_unchecked(first, active)`.
+Its law uses `observe_batch(first, active, ...)`, with the requested before/after
+packets following those arguments. Its shape must match the mutation's Rows.
+All old values precede all child stores; all new values follow them. Point
+observers also work with packet mutations: the shell retains each active row's
+demanded before-state until the complete packet has been written.
 
 The projection may alias mutable leaves and read untouched dependencies. Its
 view extents and owner leases must be admitted together with mutation resources.
@@ -45,18 +56,27 @@ avoid the default SysV aggregate return through memory. Inline `read_body` and
 `write_body` use the same controls. Their inputs and effects are already admitted;
 kernel bodies do not acquire buffers, publish or suspend.
 
-`native_reader` and `native_writer` adapt ordinary plans to these bodies.
-`native_writer` is a mutation-group leaf, so the same whole-call admission,
-effects and observation shell can enclose a register-valued operation. `word<I>`
+`native_reader` and `native_writer` infer Rows from ordinary bound operations.
+The reader separates checked `admit(first, active)` from register-valued
+`get_unchecked`; a retained extent proof can cover many calls. The writer offers
+checked `set/replace`, explicit trusted entries, and is a mutation-group leaf.
+The same whole-call admission, effects and observation shell therefore encloses
+register-valued operations. `word<I>`
 extracts a compile-time 64-bit piece into a GPR for caller-owned struct assembly.
 Callers perform wider signed/float semantics explicitly; Ikea does not infer
 those from byte code ranks.
 
-Batch readers select a useful native execution grain without changing storage:
-`batch_reader<4>` returns 16 projected bytes per row and `<2>` returns 32. Their
-active mask is a row mask, and inactive pointers may be null. The returned zero
-bytes do not replace that mask. Authored consumers can use ISA instructions
-directly on the packet.
+`reader<64, Rows>` and `writer<64, Rows>` select a native execution grain without
+changing storage: 64×1, 32×2, 16×4, 8×8, 4×16, 2×32 or 1×64 projected bytes×rows.
+The active mask names original rows. `native::row_mask<Rows>(active)` expands it
+into a byte mask when a transform needs one. Returned zero bytes do not replace
+the row mask. The [packet example](../../examples/tuplepack/packets.cpp) builds a
+native update over one-byte tuples with sparse rows and a final tail.
+
+Keep shared hot bodies inlinable through their wrappers. An outlined helper
+lambda capturing a native carrier can introduce aggregate ABI transfers even
+when the leaf kernel itself is always-inline. Inspect the finished consumer and
+explicit compiled endpoint when changing dispatch or traversal boundaries.
 
 ## Normalize wiring before execution
 
@@ -94,13 +114,16 @@ after returning to the owner, with explicit retained state, not inside a kernel.
 ## Change the right source boundary
 
 Code-map admission and ISA-control preparation live in compiled
-`src/tuplepack/prepare.cpp`; description recovery in `description.cpp`; scalar
-point and compiled native endpoints in `kernels.cpp`; cold route lowering in
-`routes.cpp`. Native instruction bodies and exact bounded memory helpers live
+`src/tuplepack/prepare.cpp` and `packet_prepare.cpp`; description recovery in
+`description.cpp`; scalar point/native endpoints in `kernels.cpp`; packet
+endpoints in `packet.cpp`; cold route lowering in `routes.cpp`.
+Native instruction bodies and exact bounded memory helpers live
 under `tuplepack/detail/native/`; `author/` exposes the supported composition
-surface. Operation shells own range/capacity admission and logical maintenance.
+surface. `detail/mutation.h` shares whole-call admission between buffered/native
+leaves and recursive groups; `detail/window.h` owns original-row windows and
+maintenance brackets. Specialized traversal stays with the physical body.
 
-Use the independent wire, operation, execution and owner tests for changes to
+Use the independent wire, operation, packet, execution and owner tests for changes to
 their respective contracts. Then measure the ordinary endpoint and representative
 consumer, not only the inner kernel. Retain a specialization when its supported
 use and measured benefit justify the extra code/control footprint.

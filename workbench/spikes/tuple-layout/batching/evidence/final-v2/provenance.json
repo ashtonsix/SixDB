@@ -1,0 +1,115 @@
+{
+  "cases": 1133,
+  "counters": [
+    "items_per_iteration",
+    "physical_bytes",
+    "drawn_bytes",
+    "hull_bytes",
+    "window_bytes",
+    "stride"
+  ],
+  "files_sha256": {
+    "cases.csv": "42db9e565fa542d0ed2715f58a01fe76f4fbad6a6657b44de098c3db70715e1f"
+  },
+  "filter": "^(point|wide|scan|pipeline|composition)/|^packets/(4/spread|8/one_byte|64/one_byte)/|^cross/(8/unit[^/]+/draw(2|4)/|16/unit3/draw2/|2/unit[^/]+/draw1/|(2|4)/unit(24|32|64)/draw(2|4|8)/)",
+  "format": 1,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "crossover-neon": {
+      "context": {
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-12T17:55:20+00:00",
+        "executable": "/opt/sixdb/jobs/20260912T175208Z-d521f122/results/crossover/neon/tuple_packet_crossover",
+        "host_name": "ip-172-31-20-56",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1.00586,
+          0.498535,
+          0.197754
+        ],
+        "mhz_per_cpu": 2000,
+        "num_cpus": 1
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260912T175208Z-d521f122/results/crossover/neon/samples.json",
+      "sha256": "95a9a612ef766022881c144ccd0e2853b2354ec8b335390b9465dda1dcfbfddc"
+    },
+    "module-neon": {
+      "context": {
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-12T18:00:04+00:00",
+        "executable": "/opt/sixdb/jobs/20260912T175208Z-d521f122/results/module/neon/ikea_tuplepack_bench",
+        "host_name": "ip-172-31-20-56",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1.03906,
+          0.830566,
+          0.426758
+        ],
+        "mhz_per_cpu": 2000,
+        "num_cpus": 1
+      },
+      "path": "/home/ashtonsix/sixdb/build/workers/20260912T175208Z-d521f122/results/module/neon/samples.json",
+      "sha256": "cb2c1929b72cc294e906cfbab5c39fd3a941f8941d0e8d7e5589dd4a9b2f2459"
+    }
+  },
+  "kind": "google-benchmark-summary",
+  "units": "CPU/real times are ns per benchmark iteration. ns_per_item uses the reported item rate; an item means what the benchmark counts, not necessarily a value or byte."
+}

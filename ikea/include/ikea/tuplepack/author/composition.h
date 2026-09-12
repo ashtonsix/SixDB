@@ -46,9 +46,13 @@ template <std::size_t I = 0, std::size_t J = 1, class Tuple> bool conflicting(co
 /// source bindings; aliases observe shared writes. The owner preserves reader
 /// editions. Semantic struct assembly belongs to the caller.
 template <class... Read> class projection {
+    static constexpr unsigned Rows = ikea::tuplepack::detail::common_rows<Read...>;
+    static_assert(((ikea::tuplepack::detail::operation_rows<Read> == Rows) && ...),
+                  "Projection children must use the same original-row packet shape");
     std::tuple<Read...> children_;
 
   public:
+    static constexpr unsigned rows = Rows;
     explicit projection(Read... children) : children_(std::move(children)...) {}
     std::size_t size() const noexcept {
         std::size_t count = ~std::size_t(0);
@@ -56,9 +60,19 @@ template <class... Read> class projection {
                    children_);
         return count;
     }
-    auto get_unchecked(std::size_t row) const {
+    [[gnu::always_inline]] auto
+    get_unchecked(std::size_t row,
+                  std::uint64_t active = ikea::tuplepack::detail::all_rows<Rows>) const {
         return std::apply(
-            [&](const auto&... child) { return std::tuple(child.get_unchecked(row)...); },
+            [&](const auto&... child) __attribute__((always_inline)) {
+                auto read = [&](const auto& c) __attribute__((always_inline)) {
+                    if constexpr (requires { c.get_unchecked(row, active); })
+                        return c.get_unchecked(row, active);
+                    else
+                        return c.get_unchecked(row);
+                };
+                return std::tuple(read(child)...);
+            },
             children_);
     }
 };
@@ -67,7 +81,14 @@ template <class... Read> class projection {
 /// are admitted before any old observation, effect or store. Completed after
 /// observations include every child update, including disjoint codes sharing
 /// physical bytes. No dynamic per-child dispatch is introduced by this shell.
-template <class... Operation> class mutation_group {
+template <class... Operation>
+class mutation_group
+    : public ikea::tuplepack::detail::mutation_commands<
+          mutation_group<Operation...>, std::tuple<typename Operation::input_type...>,
+          ikea::tuplepack::detail::common_rows<Operation...>> {
+    static constexpr unsigned Rows = ikea::tuplepack::detail::common_rows<Operation...>;
+    static_assert(((ikea::tuplepack::detail::operation_rows<Operation> == Rows) && ...),
+                  "Mutation children must use the same original-row packet shape");
     std::tuple<Operation...> children_;
     explicit mutation_group(Operation... children) : children_(std::move(children)...) {}
 
@@ -96,81 +117,29 @@ template <class... Operation> class mutation_group {
     template <class Visit> void visit_fields(Visit&& visit) const {
         std::apply([&](const auto&... child) { (child.visit_fields(visit), ...); }, children_);
     }
-    bool accepts(const input_type& input) const noexcept {
-        return [&]<std::size_t... I>(std::index_sequence<I...>) {
-            return (std::get<I>(children_).accepts(std::get<I>(input)) && ...);
+    bool accepts(const input_type& input,
+                 std::uint64_t active = ikea::tuplepack::detail::all_rows<Rows>) const noexcept {
+        return [&]<std::size_t... I>(std::index_sequence<I...>) __attribute__((always_inline)) {
+            return (ikea::tuplepack::detail::accepts(std::get<I>(children_), std::get<I>(input),
+                                                     active) &&
+                    ...);
         }(std::index_sequence_for<Operation...>{});
     }
     template <class Coverage>
-    [[gnu::always_inline]] void set_unchecked(std::size_t row, const input_type& input,
-                                              Coverage& effects) const {
-        assign_unchecked<0>(row, input, effects);
-    }
-    [[nodiscard]] std::expected<void, error> admit(std::size_t first,
-                                                   std::span<const input_type> input,
-                                                   selection selected, std::size_t capacity) const {
-        if (first > size() || input.size() > size() - first ||
-            !selected.covers(first, input.size()))
-            return std::unexpected(error::range);
-        for (std::size_t row = 0; row < input.size(); ++row) {
-            if (!selected.contains(first + row))
-                continue;
-            if (capacity < effect_capacity())
-                return std::unexpected(error::capacity);
-            capacity -= effect_capacity();
-            if (!accepts(input[row]))
-                return std::unexpected(error::value);
-        }
-        return {};
-    }
-    template <class Coverage, class Maintenance = no_maintenance>
-    void replace_unchecked(std::size_t first, std::span<const input_type> input, selection selected,
-                           Coverage& effects, Maintenance&& maintenance = {}) const {
-        for (std::size_t i = 0; i < input.size(); ++i) {
-            const auto row = first + i;
-            if (!selected.contains(row))
-                continue;
-            auto before = maintenance.before(row);
-            set_unchecked(row, input[i], effects);
-            maintenance.after(row, std::move(before));
-        }
-    }
-    template <class Maintenance = no_maintenance>
-    [[nodiscard]] std::expected<void, error>
-    replace(std::size_t first, std::span<const input_type> input, source_write_journal& effects,
-            selection selected = selection::all(), Maintenance&& maintenance = {}) const {
-        if (effects.used > effects.storage.size())
-            return std::unexpected(error::capacity);
-        if (auto valid = admit(first, input, selected, effects.remaining()); !valid)
-            return valid;
-        if (!maintenance.covers(first, input.size()))
-            return std::unexpected(error::range);
-        replace_unchecked(first, input, selected, effects, maintenance);
-        return {};
-    }
-    template <class Maintenance = no_maintenance>
-    [[nodiscard, gnu::always_inline]] std::expected<void, error>
-    set(std::size_t row, const input_type& input, source_write_journal& effects,
-        Maintenance&& maintenance = {}) const {
-        if (row >= size() || !maintenance.covers(row, 1))
-            return std::unexpected(error::range);
-        if (!accepts(input))
-            return std::unexpected(error::value);
-        if (effects.used > effects.storage.size() || effects.remaining() < effect_capacity())
-            return std::unexpected(error::capacity);
-        auto before = maintenance.before(row);
-        set_unchecked(row, input, effects);
-        maintenance.after(row, std::move(before));
-        return {};
+    [[gnu::always_inline]] void
+    set_unchecked(std::size_t row, const input_type& input, Coverage& effects,
+                  std::uint64_t active = ikea::tuplepack::detail::all_rows<Rows>) const {
+        assign_unchecked<0>(row, input, effects, active);
     }
 
   private:
     template <std::size_t I, class Coverage>
     [[gnu::always_inline]] void assign_unchecked(std::size_t row, const input_type& input,
-                                                 Coverage& effects) const {
+                                                 Coverage& effects, std::uint64_t active) const {
         if constexpr (I < sizeof...(Operation)) {
-            std::get<I>(children_).set_unchecked(row, std::get<I>(input), effects);
-            assign_unchecked<I + 1>(row, input, effects);
+            ikea::tuplepack::detail::assign(std::get<I>(children_), row, std::get<I>(input),
+                                            effects, active);
+            assign_unchecked<I + 1>(row, input, effects, active);
         }
     }
 };
