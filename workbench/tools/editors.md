@@ -13,6 +13,8 @@ Run `python3 workbench/tools/dev.py --add NAME` when starting a spike, or run
 `python3 workbench/tools/dev.py` after changing its CMake sources or dependencies.
 The VS Code task **SixDB: refresh editor configuration** runs the latter.
 clangd reads the resulting `build/clang/dev/compile_commands.json`.
+Ikea headers use its generated `ikea/` subset so matching filenames in spikes
+cannot supply unrelated include paths or definitions. Both views use CMake's flags.
 For recurring suites use `--add-benchmark NAME` / `--remove-benchmark NAME`.
 Both selections are preserved on refresh; configuring does not build targets. New TUs need
 to be listed in their CMake target to get its exact includes and definitions.

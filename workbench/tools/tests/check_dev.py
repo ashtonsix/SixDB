@@ -93,8 +93,43 @@ def main():
         assert entries() == {}
         # The real configure steps must not have built either source target.
         assert not list((root / "build/clang/dev/workbench/spikes").rglob("*.o"))
+        # Reproduce a header borrowing an unrelated spike's same-named TU.
+        ikea = root / 'ikea'
+        (ikea / 'include/ikea/tuplepack/author').mkdir(parents=True)
+        (ikea / 'src').mkdir()
+        (ikea / 'include/ikea/value.h').write_text('inline constexpr int value = 7;\n')
+        header = ikea / 'include/ikea/tuplepack/author/native.h'
+        header.write_text('#include <ikea/value.h>\ninline int read() { return value; }\n')
+        (ikea / 'src/anchor.cpp').write_text('#include <ikea/tuplepack/author/native.h>\n')
+        (ikea / 'CMakeLists.txt').write_text(
+            'add_library(ikea_fixture STATIC src/anchor.cpp)\n'
+            'sixdb_target(ikea_fixture)\n'
+            'target_include_directories(ikea_fixture PUBLIC include)\n')
+        spike = root / 'workbench/spikes/ikea-composition'
+        (spike / 'probes/ikea-blocks').mkdir(parents=True)
+        (spike / 'probes/ikea-blocks/native.cpp').write_text('int unrelated;\n')
+        (spike / 'CMakeLists.txt').write_text(
+            'add_library(unrelated STATIC probes/ikea-blocks/native.cpp)\nsixdb_target(unrelated)\n')
+        dev('--add', 'ikea-composition')
+        (root / '.clangd').write_text('CompileFlags:\n  CompilationDatabase: build/clang/dev\n')
+
+        def check_header():
+            return subprocess.run(['clangd-21', '--check=' + str(header), '--tweaks='],
+                                  cwd=root, capture_output=True, text=True)
+
+        wrong = check_header()
+        assert wrong.returncode and "'ikea/value.h' file not found" in wrong.stderr, wrong.stderr
+        shutil.copy2(ROOT / '.clangd', root / '.clangd')
+        right = check_header()
+        assert right.returncode == 0, right.stderr
+        assert 'Compile command inferred from ' + str(ikea / 'src/anchor.cpp') in right.stderr
+        # Removing the module must also empty its view, not retain stale flags.
+        (ikea / 'CMakeLists.txt').write_text('# empty fixture module\n')
+        dev()
+        assert json.loads((root / 'build/clang/dev/ikea/compile_commands.json').read_text()) == []
         print("PASS: independent spike/benchmark activation, removal, target include paths/definitions, C++23/tuning flags, "
-              "inactive broken-study isolation, empty-database cleanup, and configure-only operation.")
+              "inactive broken-study isolation, empty-database cleanup, configure-only operation, "
+              "and Ikea header isolation from same-named spike sources.")
 
 
 if __name__ == "__main__":

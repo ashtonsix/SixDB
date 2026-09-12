@@ -15,8 +15,8 @@ allocates cloud workers.
 
 `build`, `dev`, `experiment`, `compile_probe` and `replay` use the pinned Linux toolchain in
 disposable fixtures. `build` also uses LLVM objcopy/strip and `readelf`;
-`replay` uses taskset and GNU time. The others use offline inputs and fake
-cloud clients. `--list` derives its descriptions from the scripts themselves.
+`dev` uses clangd-21; `replay` uses taskset and GNU time. The others use offline
+inputs and fake cloud clients. `--list` derives descriptions from the scripts themselves.
 `results` also needs Node for the viewer's data-handling checks; it can run on
 macOS directly as well as Linux, and does not launch a browser.
 

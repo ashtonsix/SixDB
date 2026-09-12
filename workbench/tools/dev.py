@@ -60,6 +60,15 @@ def refresh(selected, benchmarks):
         temporary.replace(database)
     if not database.exists():
         raise RuntimeError("CMake configured source targets but did not export their compilation database")
+    # clangd's header inference prefers matching basenames, regardless of target
+    # ownership. Give Ikea headers only Ikea commands to choose from.
+    commands = json.loads(database.read_text())
+    ikea_database = BUILD / "ikea/compile_commands.json"
+    ikea_database.parent.mkdir(parents=True, exist_ok=True)
+    temporary = ikea_database.with_suffix(".tmp")
+    temporary.write_text(json.dumps([row for row in commands
+        if Path(row['file']).is_relative_to(ROOT / 'ikea')], indent=2) + "\n")
+    temporary.replace(ikea_database)
     print("Active spikes: " + (", ".join(sorted(selected)) or "(none)"))
     print("Active benchmarks: " + (", ".join(sorted(benchmarks)) or "(none)"))
     print(f"Editor compilation database: {database}")

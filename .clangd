@@ -3,6 +3,12 @@
 CompileFlags:
   CompilationDatabase: build/clang/dev
 ---
+# Header-name matching can otherwise borrow an unrelated spike's flags.
+If:
+  PathMatch: ikea/include/.*
+CompileFlags:
+  CompilationDatabase: build/clang/dev/ikea
+---
 # Headers without a compile command still need the project's language version.
 If:
   PathMatch: .*\.(h|hh|hpp|hxx|cc|cpp|cxx)
