@@ -112,7 +112,11 @@ class Run:
         return directory
 
     def compact(self, files: list[str], regenerate: list[str]):
-        """Optional retention recipe; file meanings remain the study's choice."""
+        """Select offline comparison inputs; the full run stays recoverable in S3.
+
+        Prefer an explicit list to a glob of everything emitted. Keep competitors
+        and repetitions together; artifacts.md shows selection before retention.
+        """
         self.receipt['compact'] = {'files': files, 'regenerate': regenerate}
         self.save()
 

@@ -2,6 +2,8 @@
 """Retain selected runs in Git with full, verified bundles in SixDB's S3 prefix."""
 
 import argparse
+from collections import Counter, defaultdict
+import csv
 import gzip
 import hashlib
 import json
@@ -198,7 +200,7 @@ def prepare_compact(source, staging, selected, regenerate):
 
 def preview_export(staging, destination):
     """Describe actual compact bytes and ignore rules; size is information, not a gate."""
-    members = files(staging)
+    members = sorted(files(staging), key=lambda p: (-p.stat().st_size, p.as_posix()))
     names = [p.relative_to(staging).as_posix() for p in members]
     root = git_root(destination)
     ignored = set()
@@ -211,18 +213,54 @@ def preview_export(staging, destination):
         ignored = set(result.stdout.decode().rstrip('\0').split('\0')) if result.stdout else set()
     print(f'Git export: {destination}')
     lines = total_bytes = 0
+    by_name = Counter()
+    copies = defaultdict(list)
     for path, name in zip(members, names):
         data = path.read_bytes()
         count = None if b'\0' in data else len(data.splitlines())
         total_bytes += len(data)
         lines += count or 0
+        by_name[path.name] += len(data)
+        copies[hashlib.sha256(data).hexdigest()].append(name)
         relative = (destination / name).relative_to(root).as_posix() if root else ''
         warning = '  IGNORED by Git' if relative in ignored else ''
         print(f'  {len(data):>9,} bytes {str(count) if count is not None else "binary":>7} lines  {name}{warning}')
+        if path.suffix == '.csv':
+            coverage = csv_coverage(path)
+            if coverage:
+                print(f'    {coverage}')
     print(f'  {len(members)} files, {total_bytes:,} bytes, {lines:,} text lines; plus artifact.json after upload')
+    if len(by_name) < len(members):
+        print('  Across directories: ' + '; '.join(f'{name} {size:,} bytes'
+                                                 for name, size in by_name.most_common(4)))
+    for group in copies.values():
+        if len(group) > 1:
+            print('  Identical bytes: ' + ' = '.join(group))
+    print('  Keep inputs for the findings and complete comparisons; full diagnostics can stay in the bundle.')
+    print('  Selection examples: workbench/tools/artifacts.md')
     for name in sorted(ignored):
         print(f'  Ignored export: {name}')
     return ignored
+
+
+def csv_coverage(path):
+    """Describe named CSV rows without interpreting their units or choosing winners."""
+    try:
+        with path.open(newline='', encoding='utf-8-sig') as handle:
+            reader = csv.DictReader(handle)
+            key = next((k for k in ('name', 'case') if k in (reader.fieldnames or [])), None)
+            if key is None:
+                return None
+            counts = Counter(row[key] for row in reader if row.get(key))
+    except (UnicodeError, csv.Error):
+        return None  # Preview remains useful for arbitrary non-benchmark CSVs.
+    families = Counter()
+    for name, count in counts.items():
+        families[name.split('/', 1)[0]] += count
+    detail = '; '.join(f'{name} {count:,}' for name, count in families.most_common(4))
+    if len(families) > 4:
+        detail += f'; {len(families) - 4} more prefixes'
+    return f'{len(counts):,} distinct names, {sum(counts.values()):,} named rows by first path component: {detail}'
 
 
 def preview(source, destination, selected=None, regenerate=None):

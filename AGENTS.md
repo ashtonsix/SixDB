@@ -35,6 +35,7 @@ the question. Explicit user direction takes precedence over these defaults.
 - Follow the [measurement conventions](workbench/benchmarks/README.md), including
   CPU pinning and sequential cases/repetitions. State what was measured and its
   limits; distinguish timings, logical counters, and modeled costs.
-- Keep compact evidence and its interpretation in Git; bulky inputs, logs, binaries,
-  and raw sweeps belong in ignored output or S3. Use the [retention and recovery tools](workbench/tools/artifacts.md)
-  for selected runs, and reuse existing dataset objects. Retaining every run is unnecessary.
+- Retain evidence for findings and reusable comparisons, rather than every successful
+  run. Compact formatting alone does not make a sweep worth keeping in Git.
+  The [retention guide](workbench/tools/artifacts.md) covers selection and recovery;
+  broad output belongs in ignored storage or S3, and shared inputs stay referenced.

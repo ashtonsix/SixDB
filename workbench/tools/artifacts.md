@@ -1,126 +1,120 @@
 # Keeping and recovering experiment evidence
 
-Git holds code, questions, findings, small correctness fixtures, selected
-samples/counters, and compact provenance. Full logs, caches, binaries, source
-archives, profiles, traces, and broad raw sweeps belong in ignored output or S3.
-Keep useful repetitions in compact evidence. For code-generation studies,
-retain the measured binary and its source/flags in the bundle, with selected
-assembly explaining a finding. Full disassembly expands cheaply from that binary;
-duplicating it for every check executable and archive can dominate disk use.
-Link existing evidence when a follow-up reuses it. Retain the runs worth returning to.
+Git should explain what we learned and let us revisit useful comparisons.
+Retain authored code, findings, small fixtures, selected measurements and their
+provenance. Compact CSV or JSON is a representation, not a reason to keep a run.
+The full bundle can preserve the experimental record without becoming source.
 
-Commands run from the repository root on Linux, with Python 3.10+ and AWS CLI v2
-using existing credentials. Prefix with `orb -m ubuntu` from the Mac. Bundles
-use `s3://calico-fleet-artifacts/sixdb/artifacts/sha256/` in `us-east-1`;
-existing Calico datasets stay referenced in place.
+## Choose what earns a place
 
-## Retain a run
+| Evidence | A useful default |
+| --- | --- |
+| Measurements behind a finding or recurring comparison | Keep the relevant case families, competitors, repetitions, counters and context together |
+| A negative result, counterexample or before/after observation | Keep its distinct evidence; a later successful run may not replace it |
+| A superseded broad sweep or routine successful check | Leave it local, or retain an S3 reference if recovery has value |
+| Physical-control dumps, full disassembly, logs, binaries and source snapshots | Keep in the full bundle; select small witnesses that explain a finding |
+| An existing dataset or unchanged evidence used again | Reference its existing home |
 
-Use the directory printed by the study's runner:
+Select by the question, not by which cases win. For example, a layout-ranking
+claim needs costs for every candidate considered, including rejected candidates
+and actual workload weights. A preparation-cost comparison needs setup timings
+as well as steady-state timings. A smaller table that loses these inputs changes
+the claim. Some complete sweeps are worth retaining.
 
-```sh
-python3 workbench/tools/artifacts.py retain \
-  build/experiments/aggregate-maintenance/RUN \
-  workbench/spikes/aggregate-maintenance/evidence/NAME
+Give the selection a short explanation beside the finding or in the runner;
+no separate retention report is needed. Revisit it when a study closes or its
+question changes. Link old evidence instead of copying it into each follow-up.
+
+## Make selection repeatable
+
+A runner can name its offline inputs with `run.compact(files, regenerate_command)`.
+Use an explicit list of useful outputs; a glob of every CSV and JSON will grow
+as diagnostics accumulate. There is no required results schema.
+
+For ordinary Google Benchmark data, the existing summary helper selects whole
+name families and preserves repetitions in each case row. For example, inside a
+runner that emitted `baseline.json` and `candidate.json`, before `run.finish()`:
+
+```python
+run.step("comparison", ["python3", str(run.source_root / "workbench/tools/evidence.py"),
+    "summarize", f"baseline={run.output / 'baseline.json'}",
+    f"candidate={run.output / 'candidate.json'}", "--filter", "^(read|update)/",
+    "--counter", "encoded_bytes", "--output", str(run.output / "comparison")])
+run.compact(["comparison/cases.csv", "comparison/provenance.json"], [])
 ```
 
-Retention checks the completed run's hashes, packages its full directory
-(including binaries and measured source), uploads, downloads, and verifies it.
-Only then does it write the compact export. The timing-study default includes:
+Here both implementations and all repetitions for those families survive. The
+selected counter is illustrative: keep what the comparison actually uses.
+`[]` means there is no offline report command; otherwise record one using
+`{evidence}` for the exported directory. The [aggregate runner](../spikes/aggregate-maintenance/run.py)
+also illustrates raw iteration records with separate logical accounting.
 
-- `samples.csv`: individual repetitions and counters, without duplicated framework rows.
-- `accounting.csv`, `summary.csv`, `summary.md`: counters and readable results.
-- `provenance.json`: source identity, compiler/configuration, machine context, and input hashes.
-- `artifact.json`: full bundle's S3 location, SHA-256, size, and file count.
+## Retain a selected run
 
-The analyzer can regenerate tables from this directory without S3. Failed
-retention leaves the local run intact; repeat the command to retry. Identical
-exports are safe to repeat; an existing different export is refused.
-
-Replace `retain` with `preview` to see selected files, bytes, lines, and ignore
-rules without writing or uploading. Retain also previews and refuses ignored
-exports. Rename a selected diagnostic to `.txt` or use a scoped ignore exception.
-Selection is the study's choice; there is no export-size threshold.
-
-After staging, verify what Git will actually keep:
-
-```sh
-python3 workbench/tools/artifacts.py verify workbench/spikes/STUDY --staged
-```
-
-This checks manifests, members, and hashes against staged blobs; ignored or
-unstaged files cannot fill gaps. Use `--tree HEAD` for a commit, or neither
-option for local files. Verification does not download bundles.
-
-## Counts and other evidence
-
-A runner can call `run.compact(files, regenerate_command)` or select files
-at retention. There is no required results schema:
+Commands run from the repository root on Linux with Python 3.10+ and AWS CLI v2;
+prefix with `orb -m ubuntu` from the Mac. Use the directory printed by the runner:
 
 ```sh
 python3 workbench/tools/artifacts.py retain build/experiments/STUDY/RUN \
-  workbench/spikes/STUDY/evidence/NAME --file counts.csv --file summary.md \
-  --regenerate 'python3 workbench/spikes/STUDY/analyze.py {evidence}'
+  workbench/spikes/STUDY/evidence/NAME
 ```
 
-Selected bytes, hashes, source identity, and available compiler/configuration
-are preserved. Scoped `.gitattributes` protects hashed line endings.
-`verify_compact()` checks inputs before analysis. `--regenerate` records an
-**offline report**, not another experiment; omit it if there is no analyzer.
-It can also override the runner's command without changing file selection.
-When reducing a historical export, preserve its measured source/run identity
-and S3 reference; a new selection is not a new measurement.
+The runner's recipe supplies the selection. Without one, the legacy timing
+format retains all iteration rows plus accounting and summaries. Override the
+file list when useful with repeated `--file PATH`, and the offline report with
+`--regenerate 'python3 path/to/report.py {evidence}'`.
 
-For validation logs or another generic bundle, use
-`artifacts.py put DIRECTORY REFERENCE.json`. It also accepts failed runs.
+Retention automatically previews largest files, named CSV rows and their path
+prefixes, repeated filenames across directories, identical bytes and ignore
+rules. These describe contents, not scientific adequacy or compressed Git size.
+Replace `retain` with `preview` to inspect without uploading or writing. Neither
+uses a size threshold. Ignored export members are refused; choose a `.txt` name
+for a selected diagnostic or a scoped ignore exception.
 
-## Recover a run
+Retention checks the completed run, uploads its full bundle, downloads and
+hash-verifies it, then writes the selected bytes with `provenance.json` and an
+`artifact.json` recovery reference. Failed retention leaves the source intact;
+identical exports are safe to retry. Scoped `.gitattributes` protects hashed
+line endings. For a generic or failed run, `artifacts.py put DIRECTORY REF.json`
+keeps a bundle and reference without making an offline evidence export.
 
-Choose a new directory under this checkout's `build/`, such as
-`build/recovered/NAME`. The CLI does not restore bundles into `SIXDB_DATA_CACHE`;
-that cache is for prepared inputs.
+To check what a commit actually retains, use
+`artifacts.py verify workbench/spikes/STUDY --staged` or `--tree HEAD`.
+This checks manifests and hashes against Git blobs, not remote availability.
+Study analyzers can call `verify_compact()` before reading their inputs.
+
+## Recover or reduce retained evidence
 
 ```sh
-python3 workbench/tools/artifacts.py fetch \
-  workbench/spikes/aggregate-maintenance/evidence/NAME \
+python3 workbench/tools/artifacts.py fetch path/to/evidence-or-artifact.json \
   build/recovered/NAME
 ```
 
-Fetch also accepts a standalone reference file. It verifies the bundle hash,
-rejects unsafe archive members, and checks the restored run's original receipt.
-For a code-generation question, recover just the binary and needed context:
+Fetch verifies the bundle hash, safe archive members and the original run receipt.
+Repeat `--file EXACT/MEMBER` to expand only selected files; the compressed bundle
+is still downloaded and verified, but whole-run and input-dependency restoration
+are omitted. Full fetch restores shared prepared inputs used by `run.input()`.
+Recover into `build/`, not the prepared-data cache. The measured source is in
+`source.tar.gz`; toolchain binaries are not embedded.
 
-```sh
-python3 workbench/tools/artifacts.py fetch path/to/artifact.json \
-  build/recovered/diagnostic --file relative/path/to/binary --file host.json
-```
+When moving existing evidence out of Git, first verify recovery of the exact
+members and hashes. Preserve the original measured identity and S3 reference.
+Keep advertised offline reports usable, or replace their commands with a tested
+recovery path: fetching raw files alone may not recreate the compact provenance
+an analyzer expects. Keep selection logic beside the study; changing selection
+is not another experiment. Curation before committing avoids later history
+rewrites, which need coordination with other users of the branch.
 
-Repeat `--file` for exact member paths. This still downloads and hash-verifies the
-compressed bundle, but expands only those files and leaves input datasets alone.
-It reports a partial recovery, not a complete experiment or whole-run validation.
-Use the full fetch above when replaying a run with its dependencies.
-`source.tar.gz` holds the measured files, which may differ from Git HEAD; use the
-recorded compiler/flags when rebuilding in a separate ignored directory (see
-[captured execution](README.md#captured-experiment-runs)). Toolchain binaries are not embedded.
+After verified retention, inactive expanded copies can be removed. Ignored
+`build/` can also contain unretained prototypes, so treat it as working space,
+not indiscriminate cache. For partial eviction, record removed paths, hashes and
+the recovery reference outside the removed files.
 
-Runs using `run.input()` reference [prepared datasets](../datasets/README.md).
-Retention publishes each input once; a full fetch verifies and restores dependencies
-under the recovered run. Keep input objects as long as retained runs reference
-them. Older runners' embedded input directories remain supported.
-
-## Local copies and storage limits
-
-After verified retention, an inactive expanded run can be removed while keeping
-its compact evidence and `artifact.json` outside that directory. For a partial
-eviction, record removed paths, verified hashes and the recovery reference (for
-example, `local-evictions.json`). Sources, live builds and unretained results
-need different treatment: ignored `build/` directories can contain prototypes
-as well as caches. Inactive package/editor downloads and compiler intermediates
-are usually easier first targets.
-
-Content-addressed keys and conditional writes avoid overwriting existing objects.
-The uploader uses single PUTs, limited to 5 GB; reference larger datasets separately.
-No expiry applied under bucket rules checked on 2026-09-07; retention and garbage
-collection policy remain open. This is not Object Lock or a separate backup.
-[Workers](workers.md) collect automatically because their machines are temporary;
-local retention remains a choice.
+Bundles use content-addressed, conditionally written objects under
+`s3://calico-fleet-artifacts/sixdb/artifacts/sha256/` in `us-east-1`; single PUTs
+are limited to 5 GB. [Datasets](../datasets/README.md) keep their existing objects,
+including Calico inputs. No expiry applied under bucket rules checked on
+2026-09-07; garbage collection remains open. This is not Object Lock or a
+separate backup. [Workers](workers.md) collect automatically because their
+machines are temporary; that does not make every collected job worth retaining
+in Git.

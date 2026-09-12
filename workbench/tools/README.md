@@ -45,9 +45,10 @@ spike evidence and Python bytecode caches.
 For an authored runner, `experiment.Run(..., workspace=...)` records sources,
 commands and receipts while preserving incremental builds at stable paths.
 Build from `run.source_root` into `run.build_dir`; runs sharing that workspace
-serialize. `run.input()` records a prepared dataset; `run.compact()` selects
-evidence and its offline regeneration command. The runners above are complete
-examples; execution and analysis stay with the study.
+serialize. `run.input()` records a prepared dataset; `run.compact()` names the
+[selected comparison inputs](artifacts.md#make-selection-repeatable) and offline
+report. The runners above are complete examples; execution and analysis stay
+with the study.
 
 ## Changing a helper
 
