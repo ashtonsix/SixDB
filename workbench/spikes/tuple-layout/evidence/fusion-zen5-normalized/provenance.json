@@ -1,0 +1,154 @@
+{
+  "archived_files": {
+    "avx2/description.json": {
+      "artifact": "artifact.json",
+      "member": "avx2/description.json",
+      "sha256": "505a52da3c78021da15123a304f7c2af3b1abb5d34a3d413d738511e97db222c"
+    },
+    "avx2/samples.csv": {
+      "artifact": "artifact.json",
+      "member": "avx2/samples.csv",
+      "sha256": "75dacc8febe128c32e7e384a593a46b5a5b7985bc67f3e2fca772de81c5dfbbe"
+    },
+    "avx512/description.json": {
+      "artifact": "artifact.json",
+      "member": "avx512/description.json",
+      "sha256": "f21b5c1a4cae11031a7e24f5909398f8d9a4ef7e2fbf63b6e26d983814f4382d"
+    },
+    "avx512/samples.csv": {
+      "artifact": "artifact.json",
+      "member": "avx512/samples.csv",
+      "sha256": "1aea9f53e5ba94950e5beb4351793e70365fd2c762d21cb2e885f7628f3a6994"
+    }
+  },
+  "commands": [
+    {
+      "name": "git-head",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hardware",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/commands",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/size",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/describe",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/benchmark",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/commands",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/size",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/describe",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/benchmark",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "config": {
+    "allowed_cpus": [
+      0
+    ],
+    "cpu": 0,
+    "filter": "^fusion/",
+    "jobs": 1,
+    "min_time": "0.015s",
+    "output": "/opt/sixdb/jobs/20260911T225819Z-e12b493b/results/tuple-runtime",
+    "profiles": [
+      "avx2",
+      "avx512"
+    ],
+    "repetitions": 3,
+    "tune": "zen5",
+    "workspace": "/opt/sixdb/source/build/workspaces/tuple-runtime"
+  },
+  "configure_flags": [],
+  "files_sha256": {
+    "avx2/checks.txt": "cbddaafd6e63942c5f1fa468f435e6e40683fbdb6b5ac7801c0d80f8e65722e0",
+    "avx2/context.json": "1bad31514463f1ee1e197e4225ae591e0e3e33ff84d38debbdf9f64c677cf822",
+    "avx2/sizes.txt": "4e68fef700263c1c94687d87218b5395cfb043a2b089633bf1702438c7d50b7a",
+    "avx512/checks.txt": "cbddaafd6e63942c5f1fa468f435e6e40683fbdb6b5ac7801c0d80f8e65722e0",
+    "avx512/context.json": "b7dc909d3106232616f7ac1721a5580bde3b192cafba61617243c4723d9c1e60",
+    "avx512/sizes.txt": "060942939acf35665ecfc0fc918b7b688084305a677cd3fd7a0839ed0ca61fdd",
+    "hardware.txt": "cc5577ce9dcf1a0cd948ce2e4a25df34d4bb8066974dff8b3222fbdee51101ca"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "git_head": "a117a012fb99d03aed0e5b68570bed8deb59a630",
+  "inputs": {},
+  "platform": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39",
+  "regenerate": [],
+  "selection_curation": {
+    "date": "2026-09-12",
+    "note": "Git selection changed; measured source, run and full-bundle identities are unchanged. See ../README.md for recovery."
+  },
+  "source_archive_sha256": "689788f46d8a59d4baf81137c65a9db2d5cf9a81ea2fd7bfe6b6c61ece4fcffb",
+  "source_digest": "672432e0cf61e828c799328a190dc254ea08bcbd1718c0e3712a2bbc8d77b121",
+  "source_unchanged": true,
+  "started_utc": "2026-09-11T22:59:57.636046+00:00",
+  "status": "complete"
+}

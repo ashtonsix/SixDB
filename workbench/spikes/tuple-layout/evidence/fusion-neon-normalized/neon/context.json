@@ -1,0 +1,187 @@
+{
+  "benchmark_context": {
+    "aslr_enabled": true,
+    "caches": [
+      {
+        "level": 1,
+        "num_sharing": 1,
+        "size": 131072,
+        "type": "Data"
+      },
+      {
+        "level": 1,
+        "num_sharing": 1,
+        "size": 196608,
+        "type": "Instruction"
+      },
+      {
+        "level": 2,
+        "num_sharing": 4,
+        "size": 12582912,
+        "type": "Unified"
+      },
+      {
+        "level": 3,
+        "num_sharing": 10,
+        "size": 67108864,
+        "type": "Unified"
+      }
+    ],
+    "cpu_scaling_enabled": false,
+    "date": "2026-09-11T23:58:21+01:00",
+    "executable": "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/fusion-neon-normalized/neon/bin/tuple_runtime_bench",
+    "host_name": "ubuntu",
+    "json_schema_version": 1,
+    "library_build_type": "release",
+    "library_version": "v1.9.4",
+    "load_avg": [
+      0.414551,
+      0.29248,
+      0.22168
+    ],
+    "mhz_per_cpu": 2000,
+    "num_cpus": 10
+  },
+  "binary_sha256": {
+    "libtuple_runtime.a": "02afadae2c7f8c8a2ec2b98e88d0fc24a380d423015809305ecfdd88e6ff652e",
+    "tuple_runtime_bench": "e8c4a9ac7d040a9ea1ed1e44f5d1f369b6e020c41befd4c17f618b9048894517",
+    "tuple_runtime_check": "d26a3c6ba7529b5e268b8a52270278003c2329f15ff455396ea597695875c719"
+  },
+  "build_context_sha256": {
+    ".ninja_log": "64d6d0a86d3028ce5a87ca923fb397f20d29fc0bb10bc81f392936f600b06318",
+    "CMakeCache.txt": "a84ffdf8f647702de9b711da350f88250ced72c91f372bcb6ff792d0ea5699d3",
+    "build.ninja": "9146e4877a8be07d4c7ab5d014451cadd764d49844c4f1f1e571513c644f7c54",
+    "commands.stdout": "2b903f7e79d04639990dd97043d3dd3f9bfbf05b80f0709c8c41eb2e52ad7e54",
+    "compile_commands.json": "8f69b2b37fd55a4a07a76a86862280f989b81475ad863ef0bb6802db8b19bc66",
+    "rules.ninja": "69883c877480ef0063a9b137d5bc849875714e6c0cbcf401b7faa57788c5dbcd"
+  },
+  "commands": [
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        "/home/ashtonsix/sixdb/build/workspaces/tuple-runtime/source",
+        "-B",
+        "/home/ashtonsix/sixdb/build/workspaces/tuple-runtime/build/neon-generic",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_CXX_COMPILER=clang++-21",
+        "-DSIXDB_SPIKES=tuple-layout",
+        "-DSIXDB_BENCHMARKS=",
+        "-DSIXDB_MARCH=armv8-a+simd",
+        "-DSIXDB_TUNE=generic",
+        "-DCMAKE_CXX_FLAGS="
+      ],
+      "cwd": "/home/ashtonsix/sixdb",
+      "name": "neon/configure",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.10660924692638218
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "/home/ashtonsix/sixdb/build/workspaces/tuple-runtime/build/neon-generic",
+        "--target",
+        "tuple_runtime_check",
+        "tuple_runtime_bench",
+        "-j",
+        "1"
+      ],
+      "cwd": "/home/ashtonsix/sixdb",
+      "name": "neon/build",
+      "required": true,
+      "returncode": 0,
+      "seconds": 7.649322276934981
+    },
+    {
+      "argv": [
+        "ninja",
+        "-C",
+        "/home/ashtonsix/sixdb/build/workspaces/tuple-runtime/build/neon-generic",
+        "-t",
+        "commands",
+        "tuple_runtime_check",
+        "tuple_runtime_bench"
+      ],
+      "cwd": "/home/ashtonsix/sixdb",
+      "name": "neon/commands",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.003440435975790024
+    },
+    {
+      "argv": [
+        "llvm-size-21",
+        "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/fusion-neon-normalized/neon/bin/tuple_runtime_check",
+        "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/fusion-neon-normalized/neon/bin/tuple_runtime_bench",
+        "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/fusion-neon-normalized/neon/bin/libtuple_runtime.a"
+      ],
+      "cwd": "/home/ashtonsix/sixdb",
+      "name": "neon/size",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.009109396953135729
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "2",
+        "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/fusion-neon-normalized/neon/bin/tuple_runtime_check"
+      ],
+      "cwd": "/home/ashtonsix/sixdb",
+      "name": "neon/check",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.041845654137432575
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "2",
+        "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/fusion-neon-normalized/neon/bin/tuple_runtime_bench",
+        "--describe",
+        "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/fusion-neon-normalized/neon/description.json"
+      ],
+      "cwd": "/home/ashtonsix/sixdb",
+      "name": "neon/describe",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.003386600175872445
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "2",
+        "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/fusion-neon-normalized/neon/bin/tuple_runtime_bench",
+        "--benchmark_filter=^fusion/",
+        "--benchmark_min_time=0.015s",
+        "--benchmark_repetitions=3",
+        "--benchmark_enable_random_interleaving=false",
+        "--benchmark_report_aggregates_only=false",
+        "--benchmark_color=false",
+        "--benchmark_out_format=json",
+        "--benchmark_out=/home/ashtonsix/sixdb/build/experiments/tuple-runtime/fusion-neon-normalized/neon/benchmark.json"
+      ],
+      "cwd": "/home/ashtonsix/sixdb",
+      "name": "neon/benchmark",
+      "required": true,
+      "returncode": 0,
+      "seconds": 40.6149480950553
+    }
+  ],
+  "cpu": 2,
+  "description_sha256": "49eedb4c03f7801c1423d2feb4cbe2f23c2092e793e938c1cf41e7f510065b8b",
+  "existing_build_directory": true,
+  "individual_repetitions": 723,
+  "march": "armv8-a+simd",
+  "profile": "neon",
+  "source_digest": "672432e0cf61e828c799328a190dc254ea08bcbd1718c0e3712a2bbc8d77b121",
+  "timing_units": "Google Benchmark time per iteration; item/preparation/reuse counters are study-owned",
+  "tune": "generic"
+}

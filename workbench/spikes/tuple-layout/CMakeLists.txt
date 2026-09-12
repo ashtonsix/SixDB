@@ -1,0 +1,27 @@
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64")
+  add_library(tuple_layout_edge STATIC edge.cpp)
+  sixdb_target(tuple_layout_edge)
+  add_executable(tuple_layout_check check.cpp)
+  sixdb_target(tuple_layout_check)
+  target_link_libraries(tuple_layout_check PRIVATE tuple_layout_edge)
+
+  include("${PROJECT_SOURCE_DIR}/cmake/GoogleBenchmark.cmake")
+  add_executable(tuple_layout_bench bench.cpp)
+  sixdb_target(tuple_layout_bench)
+  target_link_libraries(tuple_layout_bench PRIVATE tuple_layout_edge benchmark::benchmark)
+endif()
+
+add_library(tuple_runtime STATIC runtime/model.cpp runtime/native.cpp runtime/composition.cpp runtime/fusion.cpp)
+sixdb_target(tuple_runtime)
+add_executable(tuple_runtime_check runtime/check.cpp runtime/composition_check.cpp)
+sixdb_target(tuple_runtime_check)
+target_link_libraries(tuple_runtime_check PRIVATE tuple_runtime)
+
+include("${PROJECT_SOURCE_DIR}/cmake/GoogleBenchmark.cmake")
+add_executable(tuple_runtime_bench runtime/bench.cpp runtime/fusion_bench.cpp runtime/scan.cpp runtime/point.cpp)
+sixdb_target(tuple_runtime_bench)
+target_link_libraries(tuple_runtime_bench PRIVATE tuple_runtime benchmark::benchmark)
+
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/runtime/point-subset.tsv" TUPLE_SMALL_CASES)
+configure_file(runtime/point_cases.h.in "${CMAKE_CURRENT_BINARY_DIR}/point_cases.h" @ONLY)
+target_include_directories(tuple_runtime_bench PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")

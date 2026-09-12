@@ -1,0 +1,107 @@
+{
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "source_sha256": "4f948cbff1868268baa168340e352da6175a6029f1816b3d49bb5f2e7ce61fb4",
+  "commands": [
+    [
+      "clang++-21",
+      "-std=c++23",
+      "-O3",
+      "-Werror",
+      "-S",
+      "--target=x86_64-linux-gnu",
+      "-mavx2",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/tuple-layout/abi.cpp",
+      "-o",
+      "build/tuple-layout/abi/avx2.s"
+    ],
+    [
+      "clang++-21",
+      "-std=c++23",
+      "-O3",
+      "-Werror",
+      "-S",
+      "-emit-llvm",
+      "--target=x86_64-linux-gnu",
+      "-mavx2",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/tuple-layout/abi.cpp",
+      "-o",
+      "build/tuple-layout/abi/avx2.ll"
+    ],
+    [
+      "clang++-21",
+      "-std=c++23",
+      "-O3",
+      "-Werror",
+      "-S",
+      "--target=x86_64-linux-gnu",
+      "-mavx512f",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/tuple-layout/abi.cpp",
+      "-o",
+      "build/tuple-layout/abi/avx512.s"
+    ],
+    [
+      "clang++-21",
+      "-std=c++23",
+      "-O3",
+      "-Werror",
+      "-S",
+      "-emit-llvm",
+      "--target=x86_64-linux-gnu",
+      "-mavx512f",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/tuple-layout/abi.cpp",
+      "-o",
+      "build/tuple-layout/abi/avx512.ll"
+    ],
+    [
+      "clang++-21",
+      "-std=c++23",
+      "-O3",
+      "-Werror",
+      "-S",
+      "--target=aarch64-linux-gnu",
+      "-march=armv8-a+simd",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/tuple-layout/abi.cpp",
+      "-o",
+      "build/tuple-layout/abi/neon.s"
+    ],
+    [
+      "clang++-21",
+      "-std=c++23",
+      "-O3",
+      "-Werror",
+      "-S",
+      "-emit-llvm",
+      "--target=aarch64-linux-gnu",
+      "-march=armv8-a+simd",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/tuple-layout/abi.cpp",
+      "-o",
+      "build/tuple-layout/abi/neon.ll"
+    ]
+  ],
+  "signatures": {
+    "avx2": [
+      "define dso_local i64 @scalar8(ptr noundef readonly captures(none) %0) local_unnamed_addr #0 {",
+      "define dso_local void @sysv_pair(ptr dead_on_unwind noalias writable writeonly sret(%struct.pair32) align 32 captures(none) initializes((0, 64)) %0, ptr noundef readonly captures(none) %1) local_unnamed_addr #3 {",
+      "define dso_local <32 x i8> @sysv_single32(ptr noundef readonly captures(none) %0) local_unnamed_addr #4 {",
+      "define dso_local x86_regcallcc %struct.pair32 @__regcall3__regcall_pair(ptr noundef readonly captures(none) %0) local_unnamed_addr #4 {",
+      "define dso_local void @flattened_handoff(ptr noundef readonly captures(none) %0) local_unnamed_addr #5 {",
+      "define dso_local void @consume_sysv(ptr noundef readonly captures(none) %0, ptr noundef %1) local_unnamed_addr #5 {",
+      "define dso_local void @consume_regcall(ptr noundef readonly captures(none) %0, ptr noundef %1) local_unnamed_addr #5 {"
+    ],
+    "avx512": [
+      "define dso_local i64 @scalar8(ptr noundef readonly captures(none) %0) local_unnamed_addr #0 {",
+      "define dso_local void @sysv_pair(ptr dead_on_unwind noalias writable writeonly sret(%struct.pair32) align 32 captures(none) initializes((0, 64)) %0, ptr noundef readonly captures(none) %1) local_unnamed_addr #3 {",
+      "define dso_local <32 x i8> @sysv_single32(ptr noundef readonly captures(none) %0) local_unnamed_addr #4 {",
+      "define dso_local x86_regcallcc %struct.pair32 @__regcall3__regcall_pair(ptr noundef readonly captures(none) %0) local_unnamed_addr #4 {",
+      "define dso_local void @flattened_handoff(ptr noundef readonly captures(none) %0) local_unnamed_addr #5 {",
+      "define dso_local void @consume_sysv(ptr noundef readonly captures(none) %0, ptr noundef %1) local_unnamed_addr #5 {",
+      "define dso_local void @consume_regcall(ptr noundef readonly captures(none) %0, ptr noundef %1) local_unnamed_addr #5 {",
+      "define dso_local <64 x i8> @sysv_single64(ptr noundef readonly captures(none) %0) local_unnamed_addr #7 {"
+    ],
+    "neon": [
+      "define dso_local i64 @scalar8(ptr noundef readonly captures(none) %0) local_unnamed_addr #0 {",
+      "define dso_local %struct.quad16 @aapcs_quad(ptr noundef readonly captures(none) %0) local_unnamed_addr #0 {",
+      "define dso_local void @consume_aapcs(ptr noundef readonly captures(none) %0, ptr noundef %1) local_unnamed_addr #1 {"
+    ]
+  }
+}

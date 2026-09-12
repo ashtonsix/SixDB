@@ -1,0 +1,187 @@
+{
+  "benchmark_context": {
+    "aslr_enabled": true,
+    "caches": [
+      {
+        "level": 1,
+        "num_sharing": 1,
+        "size": 131072,
+        "type": "Data"
+      },
+      {
+        "level": 1,
+        "num_sharing": 1,
+        "size": 196608,
+        "type": "Instruction"
+      },
+      {
+        "level": 2,
+        "num_sharing": 4,
+        "size": 12582912,
+        "type": "Unified"
+      },
+      {
+        "level": 3,
+        "num_sharing": 10,
+        "size": 67108864,
+        "type": "Unified"
+      }
+    ],
+    "cpu_scaling_enabled": false,
+    "date": "2026-09-11T23:28:04+01:00",
+    "executable": "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/compound-neon-check/neon/bin/tuple_runtime_bench",
+    "host_name": "ubuntu",
+    "json_schema_version": 1,
+    "library_build_type": "release",
+    "library_version": "v1.9.4",
+    "load_avg": [
+      0.210449,
+      0.26709,
+      0.227539
+    ],
+    "mhz_per_cpu": 2000,
+    "num_cpus": 10
+  },
+  "binary_sha256": {
+    "libtuple_runtime.a": "c90f1f4037806fca53b13e580255c6645d8e201176ed8beef0214dcbe827d81d",
+    "tuple_runtime_bench": "23e3af912f8b825bf04617b2c1d9b5a2c576f9013d9184a555a9127c2915ab17",
+    "tuple_runtime_check": "b3c815432b1aeaed37acbed6743e0700afd38e89f40de5e68d2a7de86f0c8a8a"
+  },
+  "build_context_sha256": {
+    ".ninja_log": "7ff17af6d4366473da9378013c03c3c276f5215870e425cd68ee953d18d7b119",
+    "CMakeCache.txt": "8d7e46a2d30734e6bac8ee890476dd0b60b5be4e1723a6496caa8bee20603431",
+    "build.ninja": "1bac835cc6dc5e51f1d1542372ba83b996706c0ac4135d508da899679cc321c9",
+    "commands.stdout": "afb6ebe545612c1e686c718a4f4b2e377df0306987fef460aa328434645a5933",
+    "compile_commands.json": "c4f679f8eb6e97a4af5eba6b7f9ee5840d73cce5aa561940dd840d7b445d5d36",
+    "rules.ninja": "dc3a461accfc68604d9876e9b2e6e063faf98c78027cc27a736d646e7b7eb6d0"
+  },
+  "commands": [
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        "/home/ashtonsix/sixdb/build/workspaces/tuple-runtime-runner-smoke/source",
+        "-B",
+        "/home/ashtonsix/sixdb/build/workspaces/tuple-runtime-runner-smoke/build/neon-generic",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_CXX_COMPILER=clang++-21",
+        "-DSIXDB_SPIKES=tuple-layout",
+        "-DSIXDB_BENCHMARKS=",
+        "-DSIXDB_MARCH=armv8-a+simd",
+        "-DSIXDB_TUNE=generic",
+        "-DCMAKE_CXX_FLAGS="
+      ],
+      "cwd": "/home/ashtonsix/sixdb",
+      "name": "neon/configure",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.1402164890896529
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "/home/ashtonsix/sixdb/build/workspaces/tuple-runtime-runner-smoke/build/neon-generic",
+        "--target",
+        "tuple_runtime_check",
+        "tuple_runtime_bench",
+        "-j",
+        "1"
+      ],
+      "cwd": "/home/ashtonsix/sixdb",
+      "name": "neon/build",
+      "required": true,
+      "returncode": 0,
+      "seconds": 2.1955292399507016
+    },
+    {
+      "argv": [
+        "ninja",
+        "-C",
+        "/home/ashtonsix/sixdb/build/workspaces/tuple-runtime-runner-smoke/build/neon-generic",
+        "-t",
+        "commands",
+        "tuple_runtime_check",
+        "tuple_runtime_bench"
+      ],
+      "cwd": "/home/ashtonsix/sixdb",
+      "name": "neon/commands",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.003235623938962817
+    },
+    {
+      "argv": [
+        "llvm-size-21",
+        "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/compound-neon-check/neon/bin/tuple_runtime_check",
+        "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/compound-neon-check/neon/bin/tuple_runtime_bench",
+        "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/compound-neon-check/neon/bin/libtuple_runtime.a"
+      ],
+      "cwd": "/home/ashtonsix/sixdb",
+      "name": "neon/size",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.01072411797940731
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "2",
+        "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/compound-neon-check/neon/bin/tuple_runtime_check"
+      ],
+      "cwd": "/home/ashtonsix/sixdb",
+      "name": "neon/check",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.03227425483055413
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "2",
+        "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/compound-neon-check/neon/bin/tuple_runtime_bench",
+        "--describe",
+        "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/compound-neon-check/neon/description.json"
+      ],
+      "cwd": "/home/ashtonsix/sixdb",
+      "name": "neon/describe",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.0030479880515486
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "2",
+        "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/compound-neon-check/neon/bin/tuple_runtime_bench",
+        "--benchmark_filter=^runtime/tiny_",
+        "--benchmark_min_time=1x",
+        "--benchmark_repetitions=1",
+        "--benchmark_enable_random_interleaving=false",
+        "--benchmark_report_aggregates_only=false",
+        "--benchmark_color=false",
+        "--benchmark_out_format=json",
+        "--benchmark_out=/home/ashtonsix/sixdb/build/experiments/tuple-runtime/compound-neon-check/neon/benchmark.json"
+      ],
+      "cwd": "/home/ashtonsix/sixdb",
+      "name": "neon/benchmark",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.01663612714037299
+    }
+  ],
+  "cpu": 2,
+  "description_sha256": "fb1fbff66d8cad07d84a4c66fb1460e23bbef35ca3e7a163882b63897cc3cb77",
+  "existing_build_directory": true,
+  "individual_repetitions": 32,
+  "march": "armv8-a+simd",
+  "profile": "neon",
+  "source_digest": "6663f3972c235c59369c0a8cecd207b707a145372c1b3f15bd587e70622f25fe",
+  "timing_units": "Google Benchmark time per iteration; item/preparation/reuse counters are study-owned",
+  "tune": "generic"
+}

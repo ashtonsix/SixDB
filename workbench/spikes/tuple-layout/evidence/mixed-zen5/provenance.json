@@ -1,0 +1,158 @@
+{
+  "archived_files": {
+    "avx2/description.json": {
+      "artifact": "artifact.json",
+      "member": "avx2/description.json",
+      "sha256": "255c386d21d1c6ce36e78b523a5314126dcfe78ab6fc72ec0ddfbd909d7fef31"
+    },
+    "avx512/description.json": {
+      "artifact": "artifact.json",
+      "member": "avx512/description.json",
+      "sha256": "4f274f31479be04376fb0cde7b9ae18128b1f8d209bcf7c322b759a41a8f8b15"
+    }
+  },
+  "commands": [
+    {
+      "name": "git-head",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hardware",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/commands",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/size",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/extra-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/describe",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/benchmark",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/commands",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/size",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/extra-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/describe",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/benchmark",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "config": {
+    "allowed_cpus": [
+      0
+    ],
+    "cpu": 0,
+    "filter": "^(mixture|small)/",
+    "jobs": 1,
+    "min_time": "0.02s",
+    "output": "/opt/sixdb/jobs/20260911T231353Z-a8aad6b4/results/tuple-runtime",
+    "profiles": [
+      "avx2",
+      "avx512"
+    ],
+    "repetitions": 3,
+    "tune": "zen5",
+    "workspace": "/opt/sixdb/source/build/workspaces/tuple-runtime"
+  },
+  "configure_flags": [],
+  "files_sha256": {
+    "avx2/checks.txt": "6f4ba98049ac212c6d954cb6da85fcbc76941a034e25dbe82ee361a7f2896b29",
+    "avx2/context.json": "c054b342b776a32a80b3f41c8f749dc0d6573f1055d9a8299535ddcf8cb03bbd",
+    "avx2/extra-checks.txt": "8d5e7390d1524484505eb2bae6c5ae42eb2d5daecd47cae3b8e1c51679c6fcbf",
+    "avx2/samples.csv": "78f7cb993eb3aa4e8d554848dd0aba56b0b373c3a00c4e867bf52ae2cbf88ed5",
+    "avx2/sizes.txt": "cb702686f17d32eb86936b88d8fb4c6adc53ce37e655594b44bb2f6c6b624ce3",
+    "avx512/checks.txt": "6f4ba98049ac212c6d954cb6da85fcbc76941a034e25dbe82ee361a7f2896b29",
+    "avx512/context.json": "ff4a8b3cc27027ee2e496605cf7f538bc1554418f9f059df7c310139a11f4fb8",
+    "avx512/extra-checks.txt": "8d5e7390d1524484505eb2bae6c5ae42eb2d5daecd47cae3b8e1c51679c6fcbf",
+    "avx512/samples.csv": "2298c204d6befc1774a1b1421224b636c6cc6aa13ddcc4494432eeb63a121576",
+    "avx512/sizes.txt": "fc0ebd989a8de84cebd9d9ae85c014c15f19bdd4929b888ca29be7651c05e31b",
+    "hardware.txt": "cc5577ce9dcf1a0cd948ce2e4a25df34d4bb8066974dff8b3222fbdee51101ca"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "git_head": "a3901857df34b0c4d9f7970859cc642aa2fe5e1a",
+  "inputs": {},
+  "platform": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39",
+  "regenerate": [],
+  "selection_curation": {
+    "date": "2026-09-12",
+    "note": "Git selection changed; measured source, run and full-bundle identities are unchanged. See ../README.md for recovery."
+  },
+  "source_archive_sha256": "0d5c660a93cac2e0357bb75f79a04d7dda6aaeceba25092901c7c122aebdb638",
+  "source_digest": "be7fbb8726904617535101bc6e94bf6841087e0189477be951b4739d4d7a6a89",
+  "source_unchanged": true,
+  "started_utc": "2026-09-11T23:14:18.847863+00:00",
+  "status": "complete"
+}

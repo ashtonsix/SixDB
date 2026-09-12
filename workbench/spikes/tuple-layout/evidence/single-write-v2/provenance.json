@@ -1,0 +1,111 @@
+{
+  "archived_files": {
+    "neon/description.json": {
+      "artifact": "artifact.json",
+      "member": "neon/description.json",
+      "sha256": "e1eb0c4a7a3bdab6466654d9f6b08dc461d79a9e295eb082f7e29e65d4251119"
+    },
+    "neon/samples.csv": {
+      "artifact": "artifact.json",
+      "member": "neon/samples.csv",
+      "sha256": "61442f61b051bfa9b1bd9d0c8b423f4e70a4cbbab8a5130d4ff705d76c5f7cf4"
+    }
+  },
+  "commands": [
+    {
+      "name": "git-head",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hardware",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neon/configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neon/build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neon/commands",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neon/size",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neon/check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neon/extra-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neon/describe",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neon/benchmark",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "config": {
+    "allowed_cpus": [
+      0
+    ],
+    "cpu": 0,
+    "filter": "^small/.*W_A/",
+    "jobs": 1,
+    "min_time": "0.03s",
+    "output": "/opt/sixdb/jobs/20260911T231751Z-0b6bc786/results/tuple-runtime",
+    "profiles": [
+      "neon"
+    ],
+    "repetitions": 5,
+    "tune": "neoverse-v2",
+    "workspace": "/opt/sixdb/source/build/workspaces/tuple-runtime"
+  },
+  "configure_flags": [],
+  "files_sha256": {
+    "hardware.txt": "62adae95562af0d83b37dbfe7304b3b383f92a3c82d9c0fdb4a455f61bc3eec5",
+    "neon/checks.txt": "6f4ba98049ac212c6d954cb6da85fcbc76941a034e25dbe82ee361a7f2896b29",
+    "neon/context.json": "47dbce75de16902f4ffad4f56c35bb06b96c2ff3b9a25ec6d511e94ce04d8efe",
+    "neon/extra-checks.txt": "bcb3160e6b2395e3919a9ae60043010f805d1e70bfa88a23a23982362068b7c6",
+    "neon/sizes.txt": "1740e0acf3ff70ea53c7b35e5b5609b0aa5be7349e2f3966cc4546dbbd0f4305"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "git_head": "a8e7310d5ded96d0042c032de0d6c3beec2fe974",
+  "inputs": {},
+  "platform": "Linux-7.0.0-1012-aws-aarch64-with-glibc2.39",
+  "regenerate": [],
+  "selection_curation": {
+    "date": "2026-09-12",
+    "note": "Git selection changed; measured source, run and full-bundle identities are unchanged. See ../README.md for recovery."
+  },
+  "source_archive_sha256": "84d21b831b66321dacf15ae526f9e460578560f370966c79364a574325e3c6b2",
+  "source_digest": "ed33a769582e1196b36d6c700b71dee0cdc536eb942ab9f6accf1d308497a947",
+  "source_unchanged": true,
+  "started_utc": "2026-09-11T23:18:18.238837+00:00",
+  "status": "complete"
+}

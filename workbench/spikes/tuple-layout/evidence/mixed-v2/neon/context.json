@@ -1,0 +1,201 @@
+{
+  "benchmark_context": {
+    "aslr_enabled": true,
+    "caches": [
+      {
+        "level": 1,
+        "num_sharing": 1,
+        "size": 65536,
+        "type": "Data"
+      },
+      {
+        "level": 1,
+        "num_sharing": 1,
+        "size": 65536,
+        "type": "Instruction"
+      },
+      {
+        "level": 2,
+        "num_sharing": 1,
+        "size": 2097152,
+        "type": "Unified"
+      },
+      {
+        "level": 3,
+        "num_sharing": 1,
+        "size": 37748736,
+        "type": "Unified"
+      }
+    ],
+    "cpu_scaling_enabled": false,
+    "date": "2026-09-11T23:14:28+00:00",
+    "executable": "/opt/sixdb/jobs/20260911T231352Z-4a377dd1/results/tuple-runtime/neon/bin/tuple_runtime_bench",
+    "host_name": "ip-172-31-22-148",
+    "json_schema_version": 1,
+    "library_build_type": "release",
+    "library_version": "v1.9.4",
+    "load_avg": [
+      0.675781,
+      0.496094,
+      0.276855
+    ],
+    "mhz_per_cpu": 2000,
+    "num_cpus": 1
+  },
+  "binary_sha256": {
+    "libtuple_runtime.a": "f7351c403d7fa49e3a3ccb4886dde2769b64ae438acb1a276e09bd72d27e0979",
+    "tuple_runtime_bench": "f6892238f1008f8793eead0ec4e5a06323a26edbc066de5bb091dc8149437ca5",
+    "tuple_runtime_check": "f6138b52b0055d8fb30ed23360458b78fd026d018d6a705899e8ff6cac240bff"
+  },
+  "build_context_sha256": {
+    ".ninja_log": "c8721a7e5d8de15bc969de1ff5583acf257213766da0fa4ef30a855f20922d84",
+    "CMakeCache.txt": "03fb94c09448b9398ae4473e6bd7f643a263c7b733da2d4d2b9655699f70e955",
+    "build.ninja": "38a63c3f223a3125d9a192e0e5fc97e6f833728af8fdac5bd99e232bdfac55d4",
+    "commands.stdout": "edf2dd1b81046d8d19da406f1cb883649fc5e0cc0cff64dbbeecff9661d68129",
+    "compile_commands.json": "2088ee88312386245720732f2455337247baa6ead9d05628fced7a0e84accd3c",
+    "rules.ninja": "8fe337947126d1c9a6db11a9c54a30825326ae7919066baeafd327bc1fb0595c"
+  },
+  "commands": [
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        "/opt/sixdb/source/build/workspaces/tuple-runtime/source",
+        "-B",
+        "/opt/sixdb/source/build/workspaces/tuple-runtime/build/neon-neoverse-v2",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_CXX_COMPILER=clang++-21",
+        "-DSIXDB_SPIKES=tuple-layout",
+        "-DSIXDB_BENCHMARKS=",
+        "-DSIXDB_MARCH=armv8-a+simd",
+        "-DSIXDB_TUNE=neoverse-v2",
+        "-DCMAKE_CXX_FLAGS="
+      ],
+      "cwd": "/opt/sixdb/source",
+      "name": "neon/configure",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.07779540799998585
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "/opt/sixdb/source/build/workspaces/tuple-runtime/build/neon-neoverse-v2",
+        "--target",
+        "tuple_runtime_check",
+        "tuple_runtime_bench",
+        "-j",
+        "1"
+      ],
+      "cwd": "/opt/sixdb/source",
+      "name": "neon/build",
+      "required": true,
+      "returncode": 0,
+      "seconds": 11.535943566000014
+    },
+    {
+      "argv": [
+        "ninja",
+        "-C",
+        "/opt/sixdb/source/build/workspaces/tuple-runtime/build/neon-neoverse-v2",
+        "-t",
+        "commands",
+        "tuple_runtime_check",
+        "tuple_runtime_bench"
+      ],
+      "cwd": "/opt/sixdb/source",
+      "name": "neon/commands",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.0035640429999830303
+    },
+    {
+      "argv": [
+        "llvm-size-21",
+        "/opt/sixdb/jobs/20260911T231352Z-4a377dd1/results/tuple-runtime/neon/bin/tuple_runtime_check",
+        "/opt/sixdb/jobs/20260911T231352Z-4a377dd1/results/tuple-runtime/neon/bin/tuple_runtime_bench",
+        "/opt/sixdb/jobs/20260911T231352Z-4a377dd1/results/tuple-runtime/neon/bin/libtuple_runtime.a"
+      ],
+      "cwd": "/opt/sixdb/source",
+      "name": "neon/size",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.008996064999962528
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20260911T231352Z-4a377dd1/results/tuple-runtime/neon/bin/tuple_runtime_check"
+      ],
+      "cwd": "/opt/sixdb/source",
+      "name": "neon/check",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.04456584999996949
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20260911T231352Z-4a377dd1/results/tuple-runtime/neon/bin/tuple_runtime_bench",
+        "--check-extra"
+      ],
+      "cwd": "/opt/sixdb/source",
+      "name": "neon/extra-check",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.012892073000045912
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20260911T231352Z-4a377dd1/results/tuple-runtime/neon/bin/tuple_runtime_bench",
+        "--describe",
+        "/opt/sixdb/jobs/20260911T231352Z-4a377dd1/results/tuple-runtime/neon/description.json"
+      ],
+      "cwd": "/opt/sixdb/source",
+      "name": "neon/describe",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.004720021999958135
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20260911T231352Z-4a377dd1/results/tuple-runtime/neon/bin/tuple_runtime_bench",
+        "--benchmark_filter=^(mixture|small)/",
+        "--benchmark_min_time=0.02s",
+        "--benchmark_repetitions=3",
+        "--benchmark_enable_random_interleaving=false",
+        "--benchmark_report_aggregates_only=false",
+        "--benchmark_color=false",
+        "--benchmark_out_format=json",
+        "--benchmark_out=/opt/sixdb/jobs/20260911T231352Z-4a377dd1/results/tuple-runtime/neon/benchmark.json"
+      ],
+      "cwd": "/opt/sixdb/source",
+      "name": "neon/benchmark",
+      "required": true,
+      "returncode": 0,
+      "seconds": 71.21821812099995
+    }
+  ],
+  "cpu": 0,
+  "description_sha256": "e1eb0c4a7a3bdab6466654d9f6b08dc461d79a9e295eb082f7e29e65d4251119",
+  "existing_build_directory": true,
+  "individual_repetitions": 2289,
+  "march": "armv8-a+simd",
+  "profile": "neon",
+  "source_digest": "be7fbb8726904617535101bc6e94bf6841087e0189477be951b4739d4d7a6a89",
+  "timing_units": "Google Benchmark time per iteration; item/preparation/reuse counters are study-owned",
+  "tune": "neoverse-v2"
+}

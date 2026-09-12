@@ -1,0 +1,128 @@
+{
+  "commands": [
+    {
+      "name": "git-head",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hardware",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/commands",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/size",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/describe",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/benchmark",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/commands",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/size",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/describe",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/benchmark",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "config": {
+    "allowed_cpus": [
+      0
+    ],
+    "cpu": 0,
+    "filter": "^runtime/tiny_",
+    "jobs": 1,
+    "min_time": "1x",
+    "output": "/opt/sixdb/jobs/20260911T222612Z-f6dc3e90/results/tuple-runtime",
+    "profiles": [
+      "avx2",
+      "avx512"
+    ],
+    "repetitions": 1,
+    "tune": "zen5",
+    "workspace": "/opt/sixdb/source/build/workspaces/tuple-runtime"
+  },
+  "configure_flags": [],
+  "files_sha256": {
+    "avx2/checks.txt": "1cdce5f08fc33a793fe3aa09e325717c43f4db61cfd978e889b853ac5a4107d0",
+    "avx2/context.json": "e74b6f94395cdc79c2d56ec696fe17c163effc26d60e069d8570177b9dec1151",
+    "avx2/sizes.txt": "ab5e6f6db54583d17debb918d99c7e0f07504869d17de2741253c5966640160f",
+    "avx512/checks.txt": "1cdce5f08fc33a793fe3aa09e325717c43f4db61cfd978e889b853ac5a4107d0",
+    "avx512/context.json": "a0abfbcbbac1d50a893f7310e4101aaafcc29e80ea87fcf4060cda8bc708a0c3",
+    "avx512/sizes.txt": "75f32d02895b4a14a7c24a9f0f74ffaa52d1f988b2af481c967a269fbec2c9b0",
+    "hardware.txt": "427156707877b30a76c64379ce10caf73cc3e543c8c7a5971de01924842a2c9a"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "git_head": "9fdff1d841718b7d1179728e5d285648fda0ff9c",
+  "inputs": {},
+  "platform": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39",
+  "regenerate": [],
+  "source_archive_sha256": "a44562124f23c7d01d30fa8c2226c9a7513bd33e62c3daa09b5f66b08a2a732e",
+  "source_digest": "fccb96b38a1762d30df3df4287df479a51b6481b0d0fb44020eea84e0eada8c8",
+  "source_unchanged": true,
+  "started_utc": "2026-09-11T22:27:51.826142+00:00",
+  "status": "complete"
+}

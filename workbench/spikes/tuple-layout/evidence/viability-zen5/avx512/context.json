@@ -1,0 +1,201 @@
+{
+  "benchmark_context": {
+    "aslr_enabled": true,
+    "caches": [
+      {
+        "level": 1,
+        "num_sharing": 1,
+        "size": 49152,
+        "type": "Data"
+      },
+      {
+        "level": 1,
+        "num_sharing": 1,
+        "size": 32768,
+        "type": "Instruction"
+      },
+      {
+        "level": 2,
+        "num_sharing": 1,
+        "size": 1048576,
+        "type": "Unified"
+      },
+      {
+        "level": 3,
+        "num_sharing": 1,
+        "size": 4194304,
+        "type": "Unified"
+      }
+    ],
+    "cpu_scaling_enabled": false,
+    "date": "2026-09-11T23:08:48+00:00",
+    "executable": "/opt/sixdb/jobs/20260911T230625Z-c73d98a7/results/tuple-runtime/avx512/bin/tuple_runtime_bench",
+    "host_name": "ip-172-31-45-98",
+    "json_schema_version": 1,
+    "library_build_type": "release",
+    "library_version": "v1.9.4",
+    "load_avg": [
+      0.904785,
+      0.540039,
+      0.300781
+    ],
+    "mhz_per_cpu": 4510,
+    "num_cpus": 1
+  },
+  "binary_sha256": {
+    "libtuple_runtime.a": "8b61459709a4a1b8dfa9b96db58790c4a010ee85673f161cee81b9740de2cd50",
+    "tuple_runtime_bench": "50cb64d0c062f36eb5a4e1e744113c36c9f19c63d4cc84573b4d6aad40887203",
+    "tuple_runtime_check": "1a88200d18033e5f039b4d9083d3bb6becda19e1f3a19fecd7c6b9131e57b540"
+  },
+  "build_context_sha256": {
+    ".ninja_log": "16fbfaa0f1dbf821abeb4a8580e15d2c8fa178f7fca6b294ef339656c092155a",
+    "CMakeCache.txt": "0d97a69ba8f3263931b6b3f68f03ff1fef35c6bb9f2886c9abe75d0f9d43ec96",
+    "build.ninja": "7c758848b0cbc57fc15e4e964e1d2f0bbd09a55704cbf5a2113709b9a43d7a9b",
+    "commands.stdout": "79b06b7e2d5ec01c6bb1c5f99e63f8c0d7f7f362b4a9e0d87c16e3ff8b8d184b",
+    "compile_commands.json": "6e0319d5e693d8875cc2af1a3e596794fb66ac056644a1f3da71979192d56c9a",
+    "rules.ninja": "e92570b0016053ffedfde0f772554361c8655505cd352a35e50954378ea21063"
+  },
+  "commands": [
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        "/opt/sixdb/source/build/workspaces/tuple-runtime/source",
+        "-B",
+        "/opt/sixdb/source/build/workspaces/tuple-runtime/build/avx512-zen5",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_CXX_COMPILER=clang++-21",
+        "-DSIXDB_SPIKES=tuple-layout",
+        "-DSIXDB_BENCHMARKS=",
+        "-DSIXDB_MARCH=znver5",
+        "-DSIXDB_TUNE=zen5",
+        "-DCMAKE_CXX_FLAGS="
+      ],
+      "cwd": "/opt/sixdb/source",
+      "name": "avx512/configure",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.06050019899998915
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "/opt/sixdb/source/build/workspaces/tuple-runtime/build/avx512-zen5",
+        "--target",
+        "tuple_runtime_check",
+        "tuple_runtime_bench",
+        "-j",
+        "1"
+      ],
+      "cwd": "/opt/sixdb/source",
+      "name": "avx512/build",
+      "required": true,
+      "returncode": 0,
+      "seconds": 6.032141807000016
+    },
+    {
+      "argv": [
+        "ninja",
+        "-C",
+        "/opt/sixdb/source/build/workspaces/tuple-runtime/build/avx512-zen5",
+        "-t",
+        "commands",
+        "tuple_runtime_check",
+        "tuple_runtime_bench"
+      ],
+      "cwd": "/opt/sixdb/source",
+      "name": "avx512/commands",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.0032098510000651004
+    },
+    {
+      "argv": [
+        "llvm-size-21",
+        "/opt/sixdb/jobs/20260911T230625Z-c73d98a7/results/tuple-runtime/avx512/bin/libtuple_runtime.a",
+        "/opt/sixdb/jobs/20260911T230625Z-c73d98a7/results/tuple-runtime/avx512/bin/tuple_runtime_bench",
+        "/opt/sixdb/jobs/20260911T230625Z-c73d98a7/results/tuple-runtime/avx512/bin/tuple_runtime_check"
+      ],
+      "cwd": "/opt/sixdb/source",
+      "name": "avx512/size",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.01022275700006503
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20260911T230625Z-c73d98a7/results/tuple-runtime/avx512/bin/tuple_runtime_check"
+      ],
+      "cwd": "/opt/sixdb/source",
+      "name": "avx512/check",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.0324316370000588
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20260911T230625Z-c73d98a7/results/tuple-runtime/avx512/bin/tuple_runtime_bench",
+        "--check-extra"
+      ],
+      "cwd": "/opt/sixdb/source",
+      "name": "avx512/extra-check",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.007838797999966118
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20260911T230625Z-c73d98a7/results/tuple-runtime/avx512/bin/tuple_runtime_bench",
+        "--describe",
+        "/opt/sixdb/jobs/20260911T230625Z-c73d98a7/results/tuple-runtime/avx512/description.json"
+      ],
+      "cwd": "/opt/sixdb/source",
+      "name": "avx512/describe",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.0036452430000508684
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "/opt/sixdb/jobs/20260911T230625Z-c73d98a7/results/tuple-runtime/avx512/bin/tuple_runtime_bench",
+        "--benchmark_filter=^(fusion|scan|small)/",
+        "--benchmark_min_time=0.02s",
+        "--benchmark_repetitions=3",
+        "--benchmark_enable_random_interleaving=false",
+        "--benchmark_report_aggregates_only=false",
+        "--benchmark_color=false",
+        "--benchmark_out_format=json",
+        "--benchmark_out=/opt/sixdb/jobs/20260911T230625Z-c73d98a7/results/tuple-runtime/avx512/benchmark.json"
+      ],
+      "cwd": "/opt/sixdb/source",
+      "name": "avx512/benchmark",
+      "required": true,
+      "returncode": 0,
+      "seconds": 100.31714106800007
+    }
+  ],
+  "cpu": 0,
+  "description_sha256": "4f274f31479be04376fb0cde7b9ae18128b1f8d209bcf7c322b759a41a8f8b15",
+  "existing_build_directory": true,
+  "individual_repetitions": 2580,
+  "march": "znver5",
+  "profile": "avx512",
+  "source_digest": "f0933a29bbdb2fe211495471e137be9009a02eddca97adc8b10bad77e734c74a",
+  "timing_units": "Google Benchmark time per iteration; item/preparation/reuse counters are study-owned",
+  "tune": "zen5"
+}

@@ -1,0 +1,97 @@
+{
+  "commands": [
+    {
+      "name": "git-head",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hardware",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neon/configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neon/build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neon/commands",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neon/size",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neon/check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neon/describe",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neon/benchmark",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "config": {
+    "allowed_cpus": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "cpu": 2,
+    "filter": "^runtime/tiny_",
+    "jobs": 1,
+    "min_time": "1x",
+    "output": "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/compound-neon-check",
+    "profiles": [
+      "neon"
+    ],
+    "repetitions": 1,
+    "tune": "generic",
+    "workspace": "/home/ashtonsix/sixdb/build/workspaces/tuple-runtime-runner-smoke"
+  },
+  "configure_flags": [],
+  "files_sha256": {
+    "hardware.txt": "f989bcdf782a9088083f5a5a1c54f7d9ec4f9f48574f74897c4a5c244d08a484",
+    "neon/checks.txt": "1cdce5f08fc33a793fe3aa09e325717c43f4db61cfd978e889b853ac5a4107d0",
+    "neon/context.json": "ad19cfedbd5f9c5ec0f1d9c8452e0c3d6b1f6805274ef8397d4a35dc0995a4e5",
+    "neon/sizes.txt": "cd0b95519d1ac2215aa215556b51bd27131815440b6b5b2e825ef307f3852e0f"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "git_head": "54f8b014eb74fdb8e3f3b6b0e683eebfad758a5c",
+  "inputs": {},
+  "platform": "Linux-7.0.14-orbstack-00380-ga7e0a2dc9535-aarch64-with-glibc2.42",
+  "regenerate": [],
+  "source_archive_sha256": "c8883003647c72702c5d780bc34e8532775bc7d049cc8ee326285746be07010f",
+  "source_digest": "6663f3972c235c59369c0a8cecd207b707a145372c1b3f15bd587e70622f25fe",
+  "source_unchanged": true,
+  "started_utc": "2026-09-11T22:28:01.700678+00:00",
+  "status": "complete"
+}

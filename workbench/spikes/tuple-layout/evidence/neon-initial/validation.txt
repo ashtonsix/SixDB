@@ -1,0 +1,3 @@
+Optimized checks: 42 bindings; 10752 reads; 2752512 partial/full writes; byte and neighbor checks passed
+Sanitizer checks: 42 bindings; 10752 reads; 2752512 partial/full writes; byte and neighbor checks passed
+Sanitizer command: clang++-21 -std=c++23 -O1 -g -fsanitize=address,undefined -fno-sanitize-recover=all workbench/spikes/tuple-layout/edge.cpp workbench/spikes/tuple-layout/check.cpp -o build/tuple-layout/check-san

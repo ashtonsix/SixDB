@@ -12,6 +12,9 @@ Loose thoughts can stay in the [notebook](../notebook/ideas.md) indefinitely.
 - [Ikea composition and ergonomics](ikea-composition/README.md): current
   composition direction and its owned block probes; authoring responsibilities,
   interface seams, measured tradeoffs and historical alternatives.
+- [Tuple layout and bound operations](tuple-layout/README.md): byte-contained
+  codes, transactional access and useful scans; physical layout and per-operation
+  maps, informing TuplePack and Engine representation analysis.
 - [Packed integer kernels](packed-integer-kernels/README.md): physical grain,
   coalescing and projection costs by width and ISA.
 - [SeriesPack range execution](seriespack-range-execution/README.md): arbitrary

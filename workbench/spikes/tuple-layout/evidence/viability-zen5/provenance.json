@@ -1,0 +1,166 @@
+{
+  "archived_files": {
+    "avx2/description.json": {
+      "artifact": "artifact.json",
+      "member": "avx2/description.json",
+      "sha256": "255c386d21d1c6ce36e78b523a5314126dcfe78ab6fc72ec0ddfbd909d7fef31"
+    },
+    "avx2/samples.csv": {
+      "artifact": "artifact.json",
+      "member": "avx2/samples.csv",
+      "sha256": "5b530ab1bc62e970059550e70a93ecc16e0e8f73af87deadf5973058ea6d4a2b"
+    },
+    "avx512/description.json": {
+      "artifact": "artifact.json",
+      "member": "avx512/description.json",
+      "sha256": "4f274f31479be04376fb0cde7b9ae18128b1f8d209bcf7c322b759a41a8f8b15"
+    },
+    "avx512/samples.csv": {
+      "artifact": "artifact.json",
+      "member": "avx512/samples.csv",
+      "sha256": "adf92c0e37f3b0485c257bb609208b55d506a7ffac2eba9d4af07867561afa88"
+    }
+  },
+  "commands": [
+    {
+      "name": "git-head",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hardware",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/commands",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/size",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/extra-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/describe",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx2/benchmark",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/commands",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/size",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/extra-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/describe",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "avx512/benchmark",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "config": {
+    "allowed_cpus": [
+      0
+    ],
+    "cpu": 0,
+    "filter": "^(fusion|scan|small)/",
+    "jobs": 1,
+    "min_time": "0.02s",
+    "output": "/opt/sixdb/jobs/20260911T230625Z-c73d98a7/results/tuple-runtime",
+    "profiles": [
+      "avx2",
+      "avx512"
+    ],
+    "repetitions": 3,
+    "tune": "zen5",
+    "workspace": "/opt/sixdb/source/build/workspaces/tuple-runtime"
+  },
+  "configure_flags": [],
+  "files_sha256": {
+    "avx2/checks.txt": "cbddaafd6e63942c5f1fa468f435e6e40683fbdb6b5ac7801c0d80f8e65722e0",
+    "avx2/context.json": "fb947f8c0d32b6c2cd75bc1e126330a97b77069c217f33951c5c90868cbe29e9",
+    "avx2/extra-checks.txt": "8d5e7390d1524484505eb2bae6c5ae42eb2d5daecd47cae3b8e1c51679c6fcbf",
+    "avx2/sizes.txt": "6988c18645e17373f117a05c8381e37cb557fedfcb41781868f9844d5087f790",
+    "avx512/checks.txt": "cbddaafd6e63942c5f1fa468f435e6e40683fbdb6b5ac7801c0d80f8e65722e0",
+    "avx512/context.json": "eca347d70c9adbe6ebbdfb51088b5db898e8e66a8fe7c61932fe6b88721c4c60",
+    "avx512/extra-checks.txt": "8d5e7390d1524484505eb2bae6c5ae42eb2d5daecd47cae3b8e1c51679c6fcbf",
+    "avx512/sizes.txt": "33c192aa3cef5f208a6d69221f20e66f844d231a538ddee4410a85a5183922b4",
+    "hardware.txt": "cc5577ce9dcf1a0cd948ce2e4a25df34d4bb8066974dff8b3222fbdee51101ca"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "git_head": "e8d76badc6f14296e24492d1b38758824dad2fc1",
+  "inputs": {},
+  "platform": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39",
+  "regenerate": [],
+  "selection_curation": {
+    "date": "2026-09-12",
+    "note": "Git selection changed; measured source, run and full-bundle identities are unchanged. See ../README.md for recovery."
+  },
+  "source_archive_sha256": "a0cfed3ff350054b03e5ae586283fcdbe439c03928b152fe9b54419af7fb7e23",
+  "source_digest": "f0933a29bbdb2fe211495471e137be9009a02eddca97adc8b10bad77e734c74a",
+  "source_unchanged": true,
+  "started_utc": "2026-09-11T23:06:56.194429+00:00",
+  "status": "complete"
+}

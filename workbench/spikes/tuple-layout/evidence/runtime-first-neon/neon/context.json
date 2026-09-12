@@ -1,0 +1,187 @@
+{
+  "benchmark_context": {
+    "aslr_enabled": true,
+    "caches": [
+      {
+        "level": 1,
+        "num_sharing": 1,
+        "size": 131072,
+        "type": "Data"
+      },
+      {
+        "level": 1,
+        "num_sharing": 1,
+        "size": 196608,
+        "type": "Instruction"
+      },
+      {
+        "level": 2,
+        "num_sharing": 4,
+        "size": 12582912,
+        "type": "Unified"
+      },
+      {
+        "level": 3,
+        "num_sharing": 10,
+        "size": 67108864,
+        "type": "Unified"
+      }
+    ],
+    "cpu_scaling_enabled": false,
+    "date": "2026-09-11T23:13:37+01:00",
+    "executable": "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/runtime-neon-first/neon/bin/tuple_runtime_bench",
+    "host_name": "ubuntu",
+    "json_schema_version": 1,
+    "library_build_type": "release",
+    "library_version": "v1.9.4",
+    "load_avg": [
+      0.414062,
+      0.32959,
+      0.229492
+    ],
+    "mhz_per_cpu": 2000,
+    "num_cpus": 10
+  },
+  "binary_sha256": {
+    "libtuple_runtime.a": "c90f1f4037806fca53b13e580255c6645d8e201176ed8beef0214dcbe827d81d",
+    "tuple_runtime_bench": "23e3af912f8b825bf04617b2c1d9b5a2c576f9013d9184a555a9127c2915ab17",
+    "tuple_runtime_check": "043efc792f81687c409d376ff4ca7299edd50a2adfca25ff25d5a986754be818"
+  },
+  "build_context_sha256": {
+    ".ninja_log": "fbd798a703d7d7c766f4c7728f8be88c83464097303fc3c72e2a59151c9ab171",
+    "CMakeCache.txt": "8d7e46a2d30734e6bac8ee890476dd0b60b5be4e1723a6496caa8bee20603431",
+    "build.ninja": "80a18753fe35029ef9b40c4244b7e886e004af72abcf1e548954a754ba59c080",
+    "commands.stdout": "3312a8ae09942a1c686802a561cab49c79c8620e4c3241114b0b95370e35e3f7",
+    "compile_commands.json": "fe4a709f6c278015d206e73d8ac6931dd90da851d7b380a692cd2836430e5686",
+    "rules.ninja": "dc3a461accfc68604d9876e9b2e6e063faf98c78027cc27a736d646e7b7eb6d0"
+  },
+  "commands": [
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        "/home/ashtonsix/sixdb/build/workspaces/tuple-runtime-runner-smoke/source",
+        "-B",
+        "/home/ashtonsix/sixdb/build/workspaces/tuple-runtime-runner-smoke/build/neon-generic",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_CXX_COMPILER=clang++-21",
+        "-DSIXDB_SPIKES=tuple-layout",
+        "-DSIXDB_BENCHMARKS=",
+        "-DSIXDB_MARCH=armv8-a+simd",
+        "-DSIXDB_TUNE=generic",
+        "-DCMAKE_CXX_FLAGS="
+      ],
+      "cwd": "/home/ashtonsix/sixdb",
+      "name": "neon/configure",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.1162966531701386
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "/home/ashtonsix/sixdb/build/workspaces/tuple-runtime-runner-smoke/build/neon-generic",
+        "--target",
+        "tuple_runtime_check",
+        "tuple_runtime_bench",
+        "-j",
+        "1"
+      ],
+      "cwd": "/home/ashtonsix/sixdb",
+      "name": "neon/build",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.013257829006761312
+    },
+    {
+      "argv": [
+        "ninja",
+        "-C",
+        "/home/ashtonsix/sixdb/build/workspaces/tuple-runtime-runner-smoke/build/neon-generic",
+        "-t",
+        "commands",
+        "tuple_runtime_check",
+        "tuple_runtime_bench"
+      ],
+      "cwd": "/home/ashtonsix/sixdb",
+      "name": "neon/commands",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.003740146989002824
+    },
+    {
+      "argv": [
+        "llvm-size-21",
+        "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/runtime-neon-first/neon/bin/tuple_runtime_check",
+        "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/runtime-neon-first/neon/bin/tuple_runtime_bench",
+        "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/runtime-neon-first/neon/bin/libtuple_runtime.a"
+      ],
+      "cwd": "/home/ashtonsix/sixdb",
+      "name": "neon/size",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.01330608013086021
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "2",
+        "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/runtime-neon-first/neon/bin/tuple_runtime_check"
+      ],
+      "cwd": "/home/ashtonsix/sixdb",
+      "name": "neon/check",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.031206893967464566
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "2",
+        "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/runtime-neon-first/neon/bin/tuple_runtime_bench",
+        "--describe",
+        "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/runtime-neon-first/neon/description.json"
+      ],
+      "cwd": "/home/ashtonsix/sixdb",
+      "name": "neon/describe",
+      "required": true,
+      "returncode": 0,
+      "seconds": 0.0031951020937412977
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "2",
+        "/home/ashtonsix/sixdb/build/experiments/tuple-runtime/runtime-neon-first/neon/bin/tuple_runtime_bench",
+        "--benchmark_filter=.",
+        "--benchmark_min_time=0.02s",
+        "--benchmark_repetitions=5",
+        "--benchmark_enable_random_interleaving=false",
+        "--benchmark_report_aggregates_only=false",
+        "--benchmark_color=false",
+        "--benchmark_out_format=json",
+        "--benchmark_out=/home/ashtonsix/sixdb/build/experiments/tuple-runtime/runtime-neon-first/neon/benchmark.json"
+      ],
+      "cwd": "/home/ashtonsix/sixdb",
+      "name": "neon/benchmark",
+      "required": true,
+      "returncode": 0,
+      "seconds": 39.567647812888026
+    }
+  ],
+  "cpu": 2,
+  "description_sha256": "fb1fbff66d8cad07d84a4c66fb1460e23bbef35ca3e7a163882b63897cc3cb77",
+  "existing_build_directory": true,
+  "individual_repetitions": 1260,
+  "march": "armv8-a+simd",
+  "profile": "neon",
+  "source_digest": "1c834eeea1f4f88912f468bc492ba3bee0ed4cbbfb03425b18ffc42fed63b7fc",
+  "timing_units": "Google Benchmark time per iteration; item/preparation/reuse counters are study-owned",
+  "tune": "generic"
+}

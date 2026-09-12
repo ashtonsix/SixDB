@@ -1,0 +1,72 @@
+{
+  "scope": "Local Apple-hosted AArch64 VM screen; no server CPU or transaction claim",
+  "command": [
+    "taskset",
+    "-c",
+    "2",
+    "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/tuple-layout/neon/workbench/spikes/tuple-layout/tuple_layout_bench",
+    "--benchmark_filter=edge/",
+    "--benchmark_out=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/tuple-layout/screen-clean/samples.json",
+    "--benchmark_out_format=json",
+    "--benchmark_enable_random_interleaving=false",
+    "--benchmark_color=false"
+  ],
+  "validation": "42 bindings; 10752 reads; 2752512 partial/full writes; byte and neighbor checks passed\n",
+  "host": "Linux-7.0.14-orbstack-00380-ga7e0a2dc9535-aarch64-with-glibc2.42",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "build_cache_sha256": "1e372d3889e8868a8e3d050da1d11ef04b0c2067ebc7f9caafb0b7de4782ba7b",
+  "compile_commands_sha256": "c907ef0f8e80d2929f27e59093abca71562efeb58fd803dacd2fa9d3f4a890c8",
+  "source_sha256": {
+    "edge.h": "e7e2d7be64a560fa31ccb9631d0a7365834d3f444cbb3f01fbfaa0f846ed8990",
+    "edge.cpp": "83897f89003cdab6f2e1dc61e00e1e133bed94cfab4b5608dfbb6fe7e9478ebc",
+    "check.cpp": "7e422bec9f4b1d960552a9345a43f1ab02e561c28583ff47ee412ed4f3b10584",
+    "bench.cpp": "2802edbbf48b6e84ed445d8a9366789a895b5112adf3400062f2f3452ffe059f",
+    "CMakeLists.txt": "455dd2266c973f0de659eaa76b41d8236ffbdb3073fd4ef4050fd712265081fe",
+    "screen.py": "752e9307ef510e659183657e65243c0c6c14df52819eb1322a00338561ece2e9"
+  },
+  "binary_sha256": "43623d3b2e0a533e51c9af9c1bfbdbdaf3785d98b22e512069944907d4132097",
+  "google_benchmark_context": {
+    "date": "2026-09-11T22:38:53+01:00",
+    "host_name": "ubuntu",
+    "executable": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/tuple-layout/neon/workbench/spikes/tuple-layout/tuple_layout_bench",
+    "num_cpus": 10,
+    "mhz_per_cpu": 2000,
+    "cpu_scaling_enabled": false,
+    "aslr_enabled": true,
+    "caches": [
+      {
+        "type": "Data",
+        "level": 1,
+        "size": 131072,
+        "num_sharing": 1
+      },
+      {
+        "type": "Instruction",
+        "level": 1,
+        "size": 196608,
+        "num_sharing": 1
+      },
+      {
+        "type": "Unified",
+        "level": 2,
+        "size": 12582912,
+        "num_sharing": 4
+      },
+      {
+        "type": "Unified",
+        "level": 3,
+        "size": 67108864,
+        "num_sharing": 10
+      }
+    ],
+    "load_avg": [
+      0.19043,
+      0.263672,
+      0.175781
+    ],
+    "library_version": "v1.9.4",
+    "library_build_type": "release",
+    "json_schema_version": 1
+  },
+  "cases": 546
+}

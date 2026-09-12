@@ -1,0 +1,37 @@
+{
+  "binary_sha256": "50cb64d0c062f36eb5a4e1e744113c36c9f19c63d4cc84573b4d6aad40887203",
+  "tools": "Ubuntu LLVM version 21.1.8",
+  "interpretation": "Inspect vector payload spills separately from callee saves; this is not timing or a dynamic traffic count.",
+  "entries": [
+    {
+      "symbol": "000000000002dfc0 00000000000001f2 t tuple_composition_probe::(anonymous namespace)::normalized(tuple_composition_probe::recipe const&, tuple_composition_probe::raw_view, long long vector[8], long long vector[8])",
+      "text_bytes": 498,
+      "stack_accesses": []
+    },
+    {
+      "symbol": "000000000002e780 00000000000001d9 t unsigned long tuple_composition_probe::(anonymous namespace)::constants<false, false>(tuple_composition_probe::recipe const&, tuple_composition_probe::raw_view, long long vector[8], long long vector[8])",
+      "text_bytes": 473,
+      "stack_accesses": []
+    },
+    {
+      "symbol": "000000000002e590 00000000000001e4 t unsigned long tuple_composition_probe::(anonymous namespace)::constants<false, true>(tuple_composition_probe::recipe const&, tuple_composition_probe::raw_view, long long vector[8], long long vector[8])",
+      "text_bytes": 484,
+      "stack_accesses": []
+    },
+    {
+      "symbol": "000000000002e3b0 00000000000001d9 t unsigned long tuple_composition_probe::(anonymous namespace)::constants<true, false>(tuple_composition_probe::recipe const&, tuple_composition_probe::raw_view, long long vector[8], long long vector[8])",
+      "text_bytes": 473,
+      "stack_accesses": []
+    },
+    {
+      "symbol": "000000000002e1c0 00000000000001e4 t unsigned long tuple_composition_probe::(anonymous namespace)::constants<true, true>(tuple_composition_probe::recipe const&, tuple_composition_probe::raw_view, long long vector[8], long long vector[8])",
+      "text_bytes": 484,
+      "stack_accesses": []
+    },
+    {
+      "symbol": "000000000002d2e0 000000000000036a T tuple_composition_probe::replace_and_sum_delta(tuple_composition_probe::recipe const&, tuple_composition_probe::raw_view, long long vector[8], long long vector[8])",
+      "text_bytes": 874,
+      "stack_accesses": []
+    }
+  ]
+}

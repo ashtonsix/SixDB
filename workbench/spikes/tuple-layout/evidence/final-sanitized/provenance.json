@@ -1,0 +1,56 @@
+{
+  "commands": [
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "extra-check",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "config": {
+    "cpu": 2,
+    "profile": "neon",
+    "sanitizers": "address,undefined"
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=tuple-layout",
+    "-DSIXDB_MARCH=armv8-a+simd",
+    "-DCMAKE_CXX_FLAGS=-fsanitize=address,undefined -fno-omit-frame-pointer",
+    "-DCMAKE_CXX_FLAGS_RELEASE=-O1 -g"
+  ],
+  "files_sha256": {
+    "checks.txt": "6f4ba98049ac212c6d954cb6da85fcbc76941a034e25dbe82ee361a7f2896b29",
+    "compiler.txt": "dfb0aa39f1baf9eb2391a5b89e349f1570faa009cb0d02cfe112778cd10328fb",
+    "extra-checks.txt": "d7266f6f9670c0d15b72558aef1830f6d81090dcb2b0922ef6b57e08764fd30f"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {},
+  "platform": "Linux-7.0.14-orbstack-00380-ga7e0a2dc9535-aarch64-with-glibc2.42",
+  "regenerate": [],
+  "source_archive_sha256": "22cf857bf0d945e6fa89343693d019ebc32606bf439116e074e5fd499ffe1a17",
+  "source_digest": "b4a07ca47d5f2c8f3f810352112ba1c95af67bda1e90ccdd138ccaab80c8787d",
+  "source_unchanged": true,
+  "started_utc": "2026-09-12T01:44:13.267487+00:00",
+  "status": "complete"
+}
