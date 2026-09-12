@@ -36,7 +36,6 @@ def main():
         run.step('git-status',['git','status','--short'])
         run.step('compiler',['clang++-21','--version'])
         run.step('hardware',['lscpu'])
-        run.step('dev-configure',[sys.executable,str(ROOT/'workbench/tools/dev.py'),'--add','aggregate-maintenance'], check=False)
         run.step('configure',['cmake','-S',str(run.source_root),'-B',str(build),'-G','Ninja','-DCMAKE_BUILD_TYPE=Release','-DSIXDB_SPIKES=aggregate-maintenance',f'-DSIXDB_MARCH={a.march}','-DSIXDB_TUNE=generic'])
         run.step('build',['cmake','--build',str(build),'--target','dirty_buffer_probe','-j','4'])
         for name in ('CMakeCache.txt','compile_commands.json'): shutil.copy2(build/name,out/name)

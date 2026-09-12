@@ -38,6 +38,9 @@ they do not establish SixDB contracts or reproduce its benchmark claims.
 - [Foyer build survey](../../../calico/workbench/science/systems/foyer-build-shape/BRIEF.md):
   parsing, template, optimization, and shared-compilation costs.
 
+Our [initial build survey](build-iteration.md) records what these sources suggested
+for SixDB.
+
 ## Operating tools
 
 - [Build](../../../calico/BUILDING.md),

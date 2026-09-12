@@ -79,6 +79,43 @@ class ArtifactsCheck(unittest.TestCase):
                 artifacts.fetch(destination, self.root / "build/bad")
             self.assertFalse((self.root / "build/bad").exists())
 
+    def test_recovery_outside_checkout_preserves_existing_destination(self):
+        evidence = self.root / 'evidence'
+        destination = self.root / 'another-volume/recovered'
+        with patch.object(artifacts, 'aws', self.fake_aws), \
+                patch.object(artifacts, 'ROOT', self.root / 'checkout'):
+            artifacts.retain(self.source, evidence)
+            artifacts.fetch(evidence, destination)
+            for path in artifacts.files(self.source):
+                self.assertEqual(path.read_bytes(), (destination / path.name).read_bytes())
+            (destination / 'notes.txt').write_text('keep my notes')
+            with patch.object(artifacts, 'aws') as aws, self.assertRaisesRegex(ValueError, 'already exists'):
+                artifacts.fetch(evidence, destination, selected=['summary.csv'])
+            aws.assert_not_called()
+            self.assertEqual((destination / 'notes.txt').read_text(), 'keep my notes')
+
+    def test_routine_preview_is_bounded_but_checks_every_ignore_rule(self):
+        staging = self.root / 'staging'
+        staging.mkdir()
+        for index in range(20):
+            (staging / f'{index:02d}.txt').write_text('x' * (index + 1))
+        (staging / 'small.stderr').write_text('')
+        subprocess.run(['git', 'init', '-q', str(self.root)], check=True)
+        (self.root / '.gitignore').write_text('*.stderr\n')
+        output = io.StringIO()
+        with redirect_stdout(output):
+            ignored = artifacts.preview_export(staging, self.root / 'evidence')
+        self.assertEqual(ignored, {'evidence/small.stderr'})
+        self.assertIn('21 files', output.getvalue())
+        self.assertIn('19.txt', output.getvalue())
+        self.assertNotIn('00.txt', output.getvalue())
+        self.assertIn('small.stderr', output.getvalue())
+        self.assertLessEqual(len(output.getvalue().splitlines()), 10)
+        output = io.StringIO()
+        with redirect_stdout(output):
+            artifacts.preview_export(staging, self.root / 'evidence', detailed=True)
+        self.assertIn('00.txt', output.getvalue())
+
     def test_upload_failure_preserves_source_and_writes_no_evidence(self):
         failure = subprocess.CompletedProcess([], 1, "", "unavailable")
         with patch.object(artifacts, "aws", return_value=failure):
@@ -345,7 +382,7 @@ class ArtifactsCheck(unittest.TestCase):
         before = {p: p.read_bytes() for p in artifacts.files(staging)}
         output = io.StringIO()
         with redirect_stdout(output):
-            self.assertFalse(artifacts.preview_export(staging, self.root / 'evidence'))
+            self.assertFalse(artifacts.preview_export(staging, self.root / 'evidence', detailed=True))
         self.assertIn('3 distinct names, 4 named rows', output.getvalue())
         self.assertIn('read 3; write 1', output.getvalue())
         self.assertIn('Across directories: samples.csv', output.getvalue())

@@ -70,7 +70,7 @@ The broader [experiment ideas](experiments.md) remain available without a
 scheduled continuation. [Sketches, filters, and histograms](../../notebook/secondary-summaries.md)
 remain a separate, unexperimented question.
 
-The other outcome is a usable [research workflow](../../design/research-experience.md):
+The other outcome is a usable [research workflow](../../notebook/research-experience.md):
 one investigation home, independently compiled code, a small default run,
 oracle checks, reproducible tables, and source-linked evidence. The next
 question can reuse that support and change it where it gets in the way.

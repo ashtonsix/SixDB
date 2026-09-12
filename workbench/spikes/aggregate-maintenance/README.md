@@ -20,7 +20,7 @@ work and the CPU cost of applying and querying corrections. Its CMake targets
 and `aggregate-deltas-v1` measurement identifier name that particular probe.
 
 [First findings](FINDINGS.md) and [retained evidence](evidence/local-arm-20260907/README.md)
-are available. [Research-experience notes](../../design/research-experience.md)
+are available. [Research-experience notes](../../notebook/research-experience.md)
 record what using this probe changed about the workbench.
 The separate [sketches, filters, and histograms note](../../notebook/secondary-summaries.md)
 keeps their different contracts open. A related
@@ -53,10 +53,8 @@ result. Google Benchmark is fetched by immutable revision and archive hash;
 subsequent builds reuse it. Running an experiment stays local; retention is
 an explicit follow-up command printed by the runner.
 
-The editor refresh uses [dev.py](../../tools/dev.py) to add this study to the
-existing active selection. Other active spikes remain selected; unrelated
-inactive studies stay excluded. The repository's `.clangd` reads
-`build/clang/dev/compile_commands.json`. clangd itself never runs the workflow.
+For editor support, [activate the study](../../tools/editors.md) with
+`python3 workbench/tools/dev.py --add aggregate-maintenance`.
 
 The result directory contains `summary.md`, `summary.csv`, `accounting.csv`,
 every raw timing repetition in `benchmark.json`, command logs, compiler flags,

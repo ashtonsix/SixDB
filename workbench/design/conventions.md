@@ -1,117 +1,60 @@
 # Build and code conventions
 
-## Established direction
+## Current build settings
 
-One repository; CMake with Ninja; independently and incrementally compilable
-TUs, particularly for prototypes. C++ is primary, with pinned Clang and modern
-C++. Prefer error codes to exception unwinding. Use `-O2` or `-O3` without
-options such as fast-math that compromise deterministic execution.
+[BUILDING.md](../../BUILDING.md) owns the compiler pin, presets, target selection
+and release packaging. [Tuning](tuning.md) owns ISA and microarchitecture flags.
+Settings are applied by [sixdb_target](../../cmake/Targets.cmake), keeping ordinary
+CMake declarations and target-local dependencies.
 
-Release artifacts should shed symbols and present a modest barrier to casual
-reverse engineering. Keep build time and binary size under control through
-CPS and deliberate inlining, particularly across combinatorial spaces.
+C++23 is selected with language extensions off. First-party targets disable
+fast-math, implicit FMA contraction and non-IEEE denormal handling. Explicit FMA
+can belong in a specified algorithm; these flags alone do not make algorithms,
+parallel reductions or math-library results deterministic.
 
-See the [Workbench guide](../README.md) for research tooling, shared datasets,
-and evidence storage, and [AGENTS.md](../../AGENTS.md) for agent working defaults.
+Unity builds and LTO are off. Source paths are remapped; hidden visibility and
+Linux section garbage collection reduce exposed names and unused code. A future
+shared-library API will need explicit exports. Distribution strips binaries
+while keeping private debug information: inexpensive friction against casual
+inspection, not a bespoke obfuscation scheme.
 
-## Implemented starting choices
+## Source boundaries and composition
 
-- Clang **21.1.8**, already installed in the Linux development VM. The exact
-  version is checked; the pin lives in
-  [ClangVersion.cmake](../../cmake/ClangVersion.cmake). This is an initial
-  working pin, not a claim that it is the latest release. Standard-library,
-  linker, and sysroot pins remain to be selected. The
-  [worker configuration](../tools/workers.md) selects base AMIs; package versions
-  installed during setup are recorded with each run.
-- C++23, with language extensions off. The installed Clang/libstdc++ combination
-  can compile `std::expected`; this does not establish full library coverage.
-- Development uses `-O2 -g`; release uses `-O3 -g`. Both retain assertions for
-  now. Distribution binaries are stripped separately from the local binaries
-  used for debugging and profiling.
-- Project targets use `-fno-fast-math`, `-ffp-contract=off`, and
-  `-fdenormal-fp-math=ieee`. Implicit FMA contraction can change rounding even
-  without fast-math. An explicit FMA may still belong in a specified algorithm.
-  These flags alone do not establish deterministic algorithms, parallel
-  reductions, math-library results, or runtime FP state.
-- ISA selection is explicit through `SIXDB_MARCH`; empty means the compiler's
-  target baseline. `SIXDB_TUNE` independently selects generic, Granite Rapids,
-  Zen 5, or Neoverse V2 compiler tuning and [source-level flags](tuning.md).
-  Compiler/ISA/tuning/optimization variants use separate build directories.
-  Unity builds and interprocedural optimization are off initially.
-- Ordinary CMake targets and target-local dependencies, with `sixdb_target(name)`
-  applying project settings. Prototypes are individually selected for
-  configuration and excluded from the default build.
-- [Ikea's scaffold](../../ikea/README.md#build-and-run) starts with public
-  headers in `include/ikea/`, compiled implementation in `src/`, and the `ikea`
-  namespace. The broader header conventions below remain proposals.
-- Hidden symbol visibility, hidden inline visibility, and source-path remapping
-  apply to project targets. Linux builds put functions/data in separate
-  sections and discard unreferenced sections at link time. Public library
-  entry points will need explicit export annotations when introduced.
-- `sixdb_release_artifact(name)` adds a Linux executable packaging target,
-  `name_dist`. It creates a stripped executable in `dist/bin/` and separate
-  debugging information in `dist/symbols/`. Ship the former; retain the latter
-  privately. Required dynamic-linking symbols remain. This is inexpensive
-  friction for inspection, not protection against determined reverse engineering.
+Ikea uses `include/ikea/`, `src/` and the `ikea` namespace. The proposed default
+for other modules is the same shape with their own name; private helpers use
+`detail` or adjacent private headers. Small prototypes can keep files together.
+Headers include their own requirements.
 
-See [build iteration](build-iteration.md) for the Calico findings.
+Compile shared orchestration and validation once behind declarations. Keep
+kernel templates and useful inlining visible. Reuse stages across compositions
+and specialize where measurements justify the runtime, build-time and code-size
+trade-off. [Ikea's stage guide](../../ikea/docs/extension.md) owns its
+implemented model; it is not a prescribed ABI for every module.
 
-## Proposals for discussion
+## Open choices
 
-**Headers and namespaces.** Use `<module>/include/<module>/name.h` for shared
-headers, `<module>/src/*.cpp` for compiled implementation, and adjacent private
-headers. Use module namespaces: `ikea`, `orbital`, `loom`, `engine`, `shore`,
-and `workbench`. They match ownership and include paths; a second `sixdb::`
-prefix on every module seems unnecessary. Reserve `detail` for internal
-helpers. Small prototypes can keep their `.h` and `.cpp` files together.
+**Errors.** Prefer small typed status codes or `std::expected<T, Error>`;
+format diagnostics at the appropriate boundary. Mark fallible results
+`[[nodiscard]]`. Avoid throwing `.value()` access when failure is possible.
+Assertions express programming errors. No common project error type is fixed.
 
-Headers include their own requirements. Compile shared orchestration and
-validation once behind small declarations. Templates and code that benefits
-from inlining can remain visible, especially Ikea kernel stages. Explicit
-instantiation can help when the relevant type set is known. Avoid a blanket
-PImpl, virtual-interface, or TU-size rule.
+**Exceptions and RTTI.** Both stay at compiler defaults. Explicit error returns
+are the preferred API style, but dependencies, allocation and adapters still
+need agreed failure boundaries before disabling exceptions globally. Targets
+can disable either facility when their contract permits.
 
-**CPS and specialization.** Compile reusable stage implementations and compose
-recipes through explicit continuations. Inline within a stage where that pays;
-do not instantiate every combination of stages, types, widths, and options by
-default. Specialize selected compositions when measurements justify the extra
-code. The precise stage ABI, calling convention, handoff state, and placement
-of TU boundaries remain experiment questions. Compilation time, generated code
-size, and runtime performance all matter when assessing a composition.
+**Configuration flags.** Use `SIXDB_` for project settings. Shared booleans use
+`0`/`1` and `#if`, as the current tuning flags do. Compiler macros establish ISA
+availability; deployment modes are separate. Introduce other flags or a generated
+configuration header when a concrete consumer needs them.
 
-**Errors.** Use small typed status codes, or `std::expected<T, Error>` for a
-value-or-failure result. Keep hot-path errors cheap and format diagnostics at
-an appropriate boundary. Mark fallible results `[[nodiscard]]`. Avoid `.value()`
-when failure is possible because that uses throwing access. Assertions express
-programming errors, not recoverable failures. No common error type is fixed yet.
-
-**Exceptions and RTTI.** Keep explicit error returns as the default API style
-without imposing global `-fno-exceptions` yet: dependencies, allocation, and
-adapters need an agreed failure boundary. RTTI stays at the compiler default
-for now. Either can be disabled for a target with a defined contract. The
-initial scaffold does not otherwise change them.
-
-**Preprocessor flags.** Prefix project configuration with `SIXDB_`. For shared
-booleans, generate `0` or `1` and use `#if SIXDB_FEATURE`; `#ifdef` is true even
-when a defined flag has value zero. Keep platform/ISA capabilities separate
-from runtime deployment choices. Distribution and durability should not become
-compile-time switches merely because they have different operating modes.
-The first source-level flags are the four `SIXDB_TUNE_*` booleans described
-above, supplied by CMake. ISA feature availability uses compiler macros.
-Other feature flags and a generated configuration header can be introduced
-when needed.
+Standard-library, linker and sysroot pins remain open; workers record installed
+package versions. Header conventions above are a starting proposal, not a
+migration request for every prototype.
 
 ## Documentation and comments
 
 Use concise `///` comments for non-obvious caller contracts and ordinary comments
 for implementation invariants and reasons. Skip signature narration and repeated
-shared obligations; many declarations need no comment. Guides teach through
-examples, specifications own exact semantics, and measurements stay with evidence.
-Replace stale explanations rather than accumulating advice.
-
-## References
-
-- [Clang C++ status](https://clang.llvm.org/cxx_status.html).
-- [Clang floating-point controls](https://clang.llvm.org/docs/UsersManual.html#controlling-floating-point-behavior).
-- [LLVM symbol stripping](https://llvm.org/docs/CommandGuide/llvm-strip.html).
-- [Calico build documentation](../../../calico/BUILDING.md).
+shared obligations. Guides teach through examples, specifications own exact
+semantics, and measurements stay with evidence. Replace stale explanations.

@@ -41,7 +41,6 @@ def main():
         run.step('git-head', ['git', 'rev-parse', 'HEAD'])
         run.step('compiler', ['clang++-21', '--version'])
         run.step('hardware', ['lscpu'])
-        run.step('dev-configure', [sys.executable, str(ROOT / 'workbench/tools/dev.py'), '--add', 'row-filter-signatures'], check=False)
         source = run.source_root / HERE.relative_to(ROOT)
         run.step('semantics', [sys.executable, str(source / 'semantics.py'), str(output / 'semantics.json')])
         text_path = None

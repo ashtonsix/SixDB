@@ -1,5 +1,5 @@
 #!/bin/bash
-# A small real build through the same path used by a research script.
+# Check configuration and a tiny compiled program without building SixDB.
 set -euo pipefail
 printf '%s\n' "${SMOKE_MESSAGE:-worker smoke passed}" > "$SIXDB_RESULTS/message.txt"
 printf '%s\n' "$@" > "$SIXDB_RESULTS/arguments.txt"
@@ -8,7 +8,6 @@ if [[ ${SMOKE_BUILD:-1} == 0 ]]; then
   exit "${SMOKE_EXIT:-0}"
 fi
 cmake --preset dev
-cmake --build --preset dev
 cat > "$SIXDB_RESULTS/smoke.cpp" <<'CPP'
 #include <bit>
 #include <cstdint>

@@ -55,7 +55,6 @@ def main():
         run.step('git-head', ['git', 'rev-parse', 'HEAD'])
         run.step('compiler', ['clang++-21', '--version'])
         run.step('hardware', ['lscpu'])
-        run.step('dev-configure', [sys.executable, str(ROOT/'workbench/tools/dev.py'), '--add', 'regexp-lowering'], check=False)
         run.step('configure', ['cmake', '-S', str(run.source_root), '-B', str(build), '-G', 'Ninja', '-DCMAKE_BUILD_TYPE=Release', '-DSIXDB_SPIKES=regexp-lowering', '-DSIXDB_TUNE=generic'])
         run.step('build', ['cmake', '--build', str(build), '--target', *executables, '-j', '4'])
         for name in ('CMakeCache.txt', 'compile_commands.json'): shutil.copy2(build/name, output/name)

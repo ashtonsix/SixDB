@@ -54,8 +54,6 @@ def main() -> int:
         run.step("git-status", ["git", "status", "--short"])
         run.step("hardware", ["lscpu"])
         run.step("compiler", ["clang++-21", "--version"])
-        run.step("dev-configure", [sys.executable, str(ROOT / "workbench/tools/dev.py"),
-            "--add", "aggregate-maintenance"], check=False)
         run.step("configure", ["cmake", "-S", str(run.source_root), "-B", str(build), "-G", "Ninja",
             "-DCMAKE_BUILD_TYPE=Release", "-DSIXDB_SPIKES=aggregate-maintenance",
             "-DSIXDB_TUNE=generic", "-DSIXDB_MARCH="])

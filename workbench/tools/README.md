@@ -1,35 +1,22 @@
 # Research tools
 
-Start with the task at hand. These helpers can be used independently; an
-experiment can still be one script. Commands run from the repository root on
-Linux; prefix with `orb -m ubuntu` from the Mac.
+Commands run from the repository root on Linux; prefix with `orb -m ubuntu`
+from the Mac. Use the helpers independently or start from an existing runner.
 
-| I want to… | Start here |
+| Task | Tool and guide |
 | --- | --- |
-| Run an existing script on the right CPU | [Workers](workers.md): `worker.py run SCRIPT --machine zen5`; Spot and compatible instance reuse are the defaults |
-| Freeze sources while continuing to edit | [Capture example below](#captured-experiment-runs); `capture.py` also derives small variants |
-| Write a local experiment runner | [experiment.py](experiment.py), used by the [aggregate runner](../spikes/aggregate-maintenance/run.py) for timings and the [regexp runner](../spikes/regexp-lowering/run.py) for counts |
-| Rerun measured binaries without rebuilding | [Replay example](../benchmarks/README.md#replay-and-summarize): `replay.py` restores selected files and runs pinned sequential trials |
-| Turn measurements into a compact table | [Summary examples](../benchmarks/README.md#replay-and-summarize): `evidence.py` reads raw or compact repetitions |
-| Browse results or share an interactive snapshot | [Results explorer](../results/README.md): `results.py --serve` discovers retained evidence |
-| Keep results, or recover selected files | [Retention and recovery](artifacts.md): `artifacts.py`; recover into `build/recovered/NAME` |
-| Inspect disk use or recover a damaged worker collection | [Local storage](storage.md): `worker.py cache`; `wait JOB` revalidates collected files |
-| Reuse input data | [Dataset catalog](../datasets/README.md): `datasets.py` prepares shared inputs; adapters live beside their datasets |
-| Diagnose an expensive compilation | [Compile probes](compilation.md): replay selected TUs serially with timing, process RSS and failure evidence |
-| Enable a study in the editor | [Editor guide](editors.md): `dev.py --add NAME` or `--add-benchmark NAME` |
-| Check documentation links and headings | `python3 workbench/tools/check_docs.py`; advisory navigation hints |
-
-The command entry points stay here. `experiment.py` and `evidence.py` also
-provide small Python APIs; `worker_runtime.py` and `worker_pool.py` are worker
-implementation details. Helper regression checks live under [tests/](tests/README.md),
-separate from tools used to conduct research. Component-specific workloads and
-applicability belong in their [benchmark suite](../benchmarks/README.md).
+| Run a script on EC2 | [Workers](workers.md): `worker.py run SCRIPT`; Spot and compatible reuse by default |
+| Freeze sources while editing | [Capture example below](#captured-experiment-runs) |
+| Reuse input data | [Datasets](../datasets/README.md): `datasets.py get NAME` |
+| Replay binaries or summarize measurements | [Benchmark tools](../benchmarks/README.md#replay-and-summarize): `replay.py`, `evidence.py` |
+| Browse or share results | [Results explorer](../results/README.md): `results.py --serve` |
+| Retain or recover evidence | [Artifacts](artifacts.md): `artifacts.py`; [local storage](storage.md): `worker.py cache` |
+| Diagnose compilation or editor issues | [Compile probes](compilation.md), [editor setup](editors.md) |
 
 ## Captured experiment runs
 
-For a comparison across machines, capture once and use the current worker tool
-with `--source` to keep collection and recovery improvements. Derive a small
-variant without taking unrelated live edits:
+An ordinary worker run captures current sources itself. For several machines
+or a variant based on earlier bytes, capture explicitly and use current tools:
 
 ```sh
 python3 workbench/tools/capture.py create build/captures/base
@@ -39,23 +26,21 @@ python3 workbench/tools/worker.py run workbench/benchmarks/seriespack/run.sh \
   --source build/captures/variant --machine zen5
 ```
 
-`--replace PATH` takes that live file; `PATH=INPUT` can map an ignored prototype
-instead. Directories replace the subtree, `--drop PATH` omits a source, and
-`--expect PATH=SHA256` checks an agreed input. The adjacent `.capture.json` records
-the result; `capture.py verify PATH` checks it later. Captures exclude builds,
-spike evidence and Python bytecode caches.
+`--replace PATH` takes that live file or directory; `PATH=INPUT` maps a different
+input into the capture. `capture.py create --help` covers deletion and hash checks.
+The adjacent `.capture.json` identifies the result; `capture.py verify PATH`
+checks it later. Builds, spike evidence and Python caches are excluded.
 
-For an authored runner, `experiment.Run(..., workspace=...)` records sources,
-commands and receipts while preserving incremental builds at stable paths.
-Build from `run.source_root` into `run.build_dir`; runs sharing that workspace
-serialize. `run.input()` records a prepared dataset; `run.compact()` names the
-[selected comparison inputs](artifacts.md#make-selection-repeatable) and offline
-report. The runners above are complete examples; execution and analysis stay
-with the study.
+For a local runner, `experiment.Run(..., workspace=...)` captures sources and
+preserves incremental builds. Build from `run.source_root` into `run.build_dir`;
+runs sharing a workspace serialize. `run.input()` records a prepared dataset;
+`run.compact()` names [selected evidence](artifacts.md#make-selection-repeatable).
+The [aggregate runner](../spikes/aggregate-maintenance/run.py) measures timings;
+the [regexp runner](../spikes/regexp-lowering/run.py) studies counts.
 
 ## Changing a helper
 
-Use a separate worktree while other tasks rely on the current tools; prepared
-inputs can share `SIXDB_DATA_CACHE`. Discover and run the relevant offline check
-with `python3 workbench/tools/check.py --list` and `check.py NAME`.
-[Check prerequisites](tests/README.md) describe the few that compile fixtures.
+A separate worktree keeps current tools available to other tasks. Discover the
+relevant [offline check](tests/README.md) with `python3 workbench/tools/check.py --list`;
+run it with `check.py NAME`. For documentation edits, `check_docs.py` offers link
+and catalog hints. Neither tool is a required experiment step.

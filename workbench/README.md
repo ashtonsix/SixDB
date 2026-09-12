@@ -1,26 +1,19 @@
 # Workbench
 
-A place for science and a Swiss army knife for anyone working on SixDB.
-Design develops here first, through investigation, experiments, and spikes.
-Successor to Calico's `workbench`.
+A place for science and tools that make it easier: investigations, dataset
+preparation, model fitting, performance measurement and development tooling.
+Design develops here first. Successor to Calico's `workbench`.
 
-Its scope includes dataset preparation, model-fitting experiments, performance
-measurement and development tooling. Investigations can consume SixDB modules
-directly while keeping experimental alternatives and their evidence together.
-
-| To… | Start here |
+| Looking for… | Start here |
 | --- | --- |
-| Capture or revisit an idea | [Notebook](notebook/ideas.md): loose thoughts, questions, and connections |
-| Start or explore an investigation | [Spikes](spikes/README.md): one home for its question, reading, code, and findings |
-| Build a prototype or enable editor support | [Study builds](spikes/README.md#building-a-study): opt-in targets and independent TU compilation |
-| Run while continuing to edit | [Run helpers](tools/README.md): captured sources, incremental workspaces, and receipts; existing runners are examples |
-| Run a script on a cloud machine | [Workers](tools/workers.md): configurable Spot/On-Demand capacity, S3 results, and cleanup |
-| Reuse or prepare input data | [Datasets](datasets/README.md): catalog, cached recipes, and spike-local adapters |
-| Run a recurring component/system workload | [Benchmarks](benchmarks/README.md): suites, CPU affinity and measurement conventions |
-| Browse performance evidence | [Results explorer](results/README.md): generated comparisons, repetitions and original tables |
-| Keep selected evidence or recover a run | [Retention and recovery](tools/artifacts.md): compact Git evidence, full S3 bundles, and shared inputs |
-| Find current direction and conventions | [Design](design/README.md): cross-cutting notes |
+| Questions and earlier work | [Notebook](notebook/ideas.md), [Calico reference map](notebook/calico.md) |
+| An investigation or prototype | [Spikes](spikes/README.md): questions, code, reading and findings |
+| Recurring workloads and measurement conventions | [Benchmarks](benchmarks/README.md) |
+| Reusable input data | [Datasets](datasets/README.md) |
+| Commands for running, capturing or recovering experiments | [Tools](tools/README.md) |
+| Browsable performance evidence | [Results explorer](results/README.md) |
+| Cross-cutting design and conventions | [Design](design/README.md) |
 
-Each study's entry page points to its findings and follow-ups; the catalog
-describes the question. The [Calico overview](notebook/calico.md) maps earlier work.
-Use shared helpers as they help the investigation; a spike can start with one README.
+A spike can start with one README and a script. Use shared helpers as they help
+the question; the [first research loops](notebook/research-experience.md) explain
+some of their origins.

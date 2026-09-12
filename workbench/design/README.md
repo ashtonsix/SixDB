@@ -1,14 +1,12 @@
 # Design development
 
-Cross-cutting notes for SixDB's architecture, interfaces, and conventions.
-Most constraints and architectural bets have yet to be recorded. Design for
-a bounded investigation belongs in its [spike](../spikes/README.md).
+Cross-cutting conventions live here; module contracts belong with their module
+and candidate designs with their [investigation](../spikes/README.md).
+Most architectural bets and constraints have yet to be recorded.
 
-- [Direction](direction.md): the starting intent and lessons from Calico.
-- [Conventions](conventions.md): current settings and proposals for discussion.
-- [Build iteration](build-iteration.md): Calico findings and incremental spike builds.
+- [Build and code conventions](conventions.md): current settings and open choices.
 - [Tuning flags](tuning.md): microarchitecture policy independent of ISA availability.
-- [Research experience](research-experience.md): lessons from the first three investigations.
 
-The [tools guide](../tools/README.md) has current operating commands.
-Loose questions and reading can stay in the [notebook](../notebook/ideas.md).
+[Project direction](../../README.md) owns the overall intent. Historical context
+lives in the notebook: [Calico build lessons](../notebook/build-iteration.md) and
+[the first research loops](../notebook/research-experience.md).

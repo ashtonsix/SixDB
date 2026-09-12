@@ -9,61 +9,23 @@ there is no required template. Several implementations or measurement campaigns
 can share the same home, which remains useful after adoption or abandonment.
 Loose thoughts can stay in the [notebook](../notebook/ideas.md) indefinitely.
 
-- [Ikea composition and ergonomics](ikea-composition/README.md): current
-  composition direction and its owned block probes; authoring responsibilities,
-  interface seams, measured tradeoffs and historical alternatives.
-- [Tuple layout and bound operations](tuple-layout/README.md): byte-contained
-  codes, transactional access and useful scans; physical layout and per-operation
-  maps, informing TuplePack and Engine representation analysis.
-- [Packed integer kernels](packed-integer-kernels/README.md): physical grain,
-  coalescing and projection costs by width and ISA.
-- [SeriesPack range execution](seriespack-range-execution/README.md): arbitrary
-  ranges, clipping, admission, stores and alignment.
-- [SeriesPack head projection](seriespack-head-projection/README.md): combining
-  independent planes under dense, gapped and small placements.
-- [BEC packed metadata](bec-packed-metadata/README.md): a concrete consumer of
-  packed lengths, with specialized, native and materialized controls.
-- [Executable placement](executable-placement/README.md): relinking exact inputs
-  to distinguish changed code from short-call placement effects.
-- [Row filter signatures](row-filter-signatures/README.md): compact per-row
-  evidence for conjunctive and factored Boolean filters, progressive refinement,
-  8/16/32-bit planes, and block rollups. The spike concluded with a resident
-  study and [findings](row-filter-signatures/FINDINGS.md) on conditional
-  rollup/text wins, direct-column controls, Boolean placement, and maintenance
-  costs. The production design remains open.
-- [Aggregate maintenance](aggregate-maintenance/README.md): maintaining useful
-  descendant summaries without excessive mutation cost. The initial spike
-  concluded with two count/sum probes; [conclusions](aggregate-maintenance/CONCLUSIONS.md)
-  and reproducible evidence are available. The production design remains open.
-- [Trie remapping](trie-remapping/README.md): preserve natural-key trie regions
-  and pack difficult suffixes into ordered physical positions with growth room.
-  The first spike is concluded, with [findings](trie-remapping/FINDINGS.md) on
-  density, column movement, gap policy, and partial ordering. The broader design
-  question remains open.
-- [Regexp lowering](regexp-lowering/README.md): replace regexp predicates with
-  exact LIKE expressions, or prefilter with necessary LIKE signatures before
-  FSST decoding and RE2 evaluation. The spike is concluded, with
-  [provisional recommendations](regexp-lowering/CONCLUSIONS.md) from studies of
-  exact coverage, richer constraints, survivor bounds, switching, and factored
-  filters with explicit relative order. FSST execution and timing remain open.
+- [Ikea composition](ikea-composition/README.md): reusable stages, ergonomics and interface seams.
+- [Tuple layout](tuple-layout/README.md): physical layout, bound operations and native batching.
+- [Packed integer kernels](packed-integer-kernels/README.md): grain, coalescing and width/ISA costs.
+- [SeriesPack range execution](seriespack-range-execution/README.md): ranges, clipping, stores and alignment.
+- [SeriesPack head projection](seriespack-head-projection/README.md): independent planes under varied placements.
+- [BEC packed metadata](bec-packed-metadata/README.md): packed lengths as a concrete SeriesPack consumer.
+- [Executable placement](executable-placement/README.md): distinguishing changed code from placement effects.
+- [Row filter signatures](row-filter-signatures/README.md): per-row Boolean evidence and progressive refinement.
+- [Aggregate maintenance](aggregate-maintenance/README.md): descendant summaries without excessive mutation cost.
+- [Trie remapping](trie-remapping/README.md): natural-key tries with difficult suffixes remapped to physical positions.
+- [Regexp lowering](regexp-lowering/README.md): exact LIKE rewrites and necessary-condition prefilters.
 
 ## Building a study
 
-Use the parts of the [shared tooling](../tools/README.md) that help the question:
-[datasets](../datasets/README.md) can be reused across studies,
-[`Run`](../tools/experiment.py) can capture sources and reuse a build workspace,
-and [retention](../tools/artifacts.md) can keep selected counters or timing
-samples and recover full runs later. The [regexp runner](regexp-lowering/run.py)
-combines these; the [aggregate runner](aggregate-maintenance/run.py) shows a
-Google Benchmark study. A standalone prototype can start with the build below.
-
-The editor uses one stable development configuration. Activate a study with
-`python3 workbench/tools/dev.py --add NAME` (repeat `--add` for several), or
-use its runner when that integrates the helper. `--remove NAME` deactivates it;
-`--list` shows the selection. Refresh with no arguments after changing target
-dependencies. Configuration may fetch declared dependencies; clangd only reads
-the resulting flags and never invokes CMake or Ninja. Benchmark builds remain
-independent. No spike-specific editor settings are needed.
+Activate a study in the editor with `python3 workbench/tools/dev.py --add NAME`;
+[editor setup](../tools/editors.md) owns refresh and dependency instructions.
+For execution, use its runner or configure the target directly as below.
 
 Create a directory such as `workbench/spikes/example/` and declare its
 sources and dependencies in a small `CMakeLists.txt`:
@@ -103,7 +65,4 @@ Inspect names with `ninja -C build/clang/dev -t targets all`. Normal builds need
 no clean step. Use separate build directories for concurrent builds or different
 compiler/ISA/optimization settings.
 
-For an executable that needs a distribution artifact, add
-`sixdb_release_artifact(example_bench)` and build `example_bench_dist` in a
-Release configuration. Stripped binaries go to `dist/bin/`; private debugging
-information goes separately to `dist/symbols/` within that build directory.
+[BUILDING.md](../../BUILDING.md) covers distribution packaging.

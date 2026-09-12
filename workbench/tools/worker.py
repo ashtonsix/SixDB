@@ -588,22 +588,26 @@ def main():
             cmd.add_argument('script', type=Path)
             cmd.add_argument('--source', type=Path, help='capture study sources from this checkout; use current controller tools')
             cmd.add_argument('--arg', action='append', default=[], help='script argument; repeat, use --arg=--flag for flags')
-            cmd.add_argument('--detach', action='store_true')
+            cmd.add_argument('--detach', action='store_true', help='submit and return; wait JOB resumes collection')
         cmd.add_argument('--machine', choices=['zen5', 'granite-rapids', 'neoverse-v2'])
-        cmd.add_argument('--instance-type')
-        cmd.add_argument('--ami')
+        cmd.add_argument('--instance-type', help='override the machine preset with an exact EC2 instance type')
+        cmd.add_argument('--ami', help='override the pinned regional image; target architecture is checked')
         cmd.add_argument('--capacity', choices=['spot', 'on-demand', 'spot-or-on-demand'],
                          help='default: spot; spot-or-on-demand explicitly allows launch fallback')
-        cmd.add_argument('--deadline', type=int, dest='deadline_seconds', help='job deadline including setup and collection')
+        cmd.add_argument('--deadline', type=int, dest='deadline_seconds', help='seconds including dispatch, setup and collection; default 3600')
         cmd.add_argument('--idle-seconds', type=int, help='keep worker ready after collection; default 300, zero shuts down')
         cmd.add_argument('--max-age', type=int, dest='max_age_seconds', help='maximum instance lifetime; default 14400 seconds')
         cmd.add_argument('--fresh', action='store_true', help='launch a fresh instance instead of reusing a compatible idle worker')
-        cmd.add_argument('--disk-gb', type=int)
-        cmd.add_argument('--setup', choices=['minimal', 'toolchain'])
+        cmd.add_argument('--disk-gb', type=int, help='encrypted disposable gp3 root disk; default 24 GiB')
+        cmd.add_argument('--setup', choices=['minimal', 'toolchain'], help='default: toolchain; minimal installs bootstrap tools only')
         cmd.add_argument('--sync-seconds', type=int, help='optional live output sync; zero keeps uploads outside measurement')
-        cmd.add_argument('--env', action='append', default=[])
-    for name in ('status', 'wait', 'fetch', 'cancel', 'logs'):
-        cmd = commands.add_parser(name)
+        cmd.add_argument('--env', action='append', default=[], metavar='NAME=VALUE', help='recorded script configuration; repeat as needed')
+    for name, help_text in {
+        'status': 'show job and instance state', 'wait': 'observe completion and collect results',
+        'fetch': 'collect, repair or selectively recover results',
+        'cancel': 'terminate the worker if this job still owns it', 'logs': 'show uploaded script output',
+    }.items():
+        cmd = commands.add_parser(name, help=help_text)
         cmd.add_argument('job')
         if name == 'logs':
             cmd.add_argument('--console', action='store_true', help='show instance boot diagnostics instead of script output')

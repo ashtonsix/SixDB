@@ -269,7 +269,7 @@ def prepare_compact(source, staging, selected, regenerate):
         path.write_text(json.dumps(meta, indent=2, sort_keys=True) + '\n')
 
 
-def preview_export(staging, destination):
+def preview_export(staging, destination, *, detailed=False):
     """Describe actual compact bytes and ignore rules; size is information, not a gate."""
     members = sorted(files(staging), key=lambda p: (-p.stat().st_size, p.as_posix()))
     names = [p.relative_to(staging).as_posix() for p in members]
@@ -286,7 +286,7 @@ def preview_export(staging, destination):
     lines = total_bytes = 0
     by_name = Counter()
     copies = defaultdict(list)
-    for path, name in zip(members, names):
+    for index, (path, name) in enumerate(zip(members, names)):
         data = path.read_bytes()
         count = None if b'\0' in data else len(data.splitlines())
         total_bytes += len(data)
@@ -295,20 +295,21 @@ def preview_export(staging, destination):
         copies[hashlib.sha256(data).hexdigest()].append(name)
         relative = (destination / name).relative_to(root).as_posix() if root else ''
         warning = '  IGNORED by Git' if relative in ignored else ''
-        print(f'  {len(data):>9,} bytes {str(count) if count is not None else "binary":>7} lines  {name}{warning}')
-        if path.suffix == '.csv':
+        if detailed or index < 5:
+            print(f'  {len(data):>9,} bytes {str(count) if count is not None else "binary":>7} lines  {name}{warning}')
+        if detailed and path.suffix == '.csv':
             coverage = csv_coverage(path)
             if coverage:
                 print(f'    {coverage}')
     print(f'  {len(members)} files, {total_bytes:,} bytes, {lines:,} text lines; plus artifact.json after upload')
-    if len(by_name) < len(members):
+    if detailed and len(by_name) < len(members):
         print('  Across directories: ' + '; '.join(f'{name} {size:,} bytes'
                                                  for name, size in by_name.most_common(4)))
     for group in copies.values():
-        if len(group) > 1:
+        if detailed and len(group) > 1:
             print('  Identical bytes: ' + ' = '.join(group))
-    print('  Keep inputs for the findings and complete comparisons; full diagnostics can stay in the bundle.')
-    print('  Selection examples: workbench/tools/artifacts.md')
+    if not detailed and len(members) > 5:
+        print('  Showing the 5 largest files; artifacts.py preview shows all files and CSV coverage.')
     for name in sorted(ignored):
         print(f'  Ignored export: {name}')
     return ignored
@@ -338,7 +339,7 @@ def preview(source, destination, selected=None, regenerate=None):
     with tempfile.TemporaryDirectory(prefix='sixdb-retention-preview-') as name:
         staging = Path(name)
         prepare_compact(source.resolve(), staging, selected, regenerate)
-        return preview_export(staging, destination.resolve())
+        return preview_export(staging, destination.resolve(), detailed=True)
 
 
 def worker_reference(source):
@@ -489,9 +490,6 @@ def fetch(reference_path, destination, *, selected=None):
         reference_path = reference_path / "artifact.json"
     reference = json.loads(reference_path.read_text())
     destination = destination.resolve()
-    if not destination.is_relative_to(ROOT / 'build'):
-        raise ValueError("fetch needs a new directory under this checkout's build/, "
-                         'for example build/recovered/NAME; SIXDB_DATA_CACHE is for prepared inputs')
     if destination.exists():
         raise ValueError('fetch destination already exists')
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -529,7 +527,7 @@ def main():
     fetch_parser = commands.add_parser("fetch", help="download and verify a reference or evidence directory")
     fetch_parser.add_argument("reference", type=Path)
     fetch_parser.add_argument("output", type=Path,
-                              help="new directory under this checkout's build/, e.g. build/recovered/NAME")
+                              help="new recovery directory, e.g. build/recovered/NAME or a path on another volume")
     fetch_parser.add_argument('--file', action='append', dest='selected',
                               help='Restore only this exact bundle file; repeat as needed (no input dataset restoration)')
     args = parser.parse_args()
