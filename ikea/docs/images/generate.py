@@ -12,6 +12,7 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[3]
 OUT = ROOT / "ikea/docs/seriespack/images"
+TUPLE_OUT = ROOT / "ikea/docs/tuplepack/images"
 BUILD = ROOT / "build/diagrams"
 INK = "#233047"
 MUTED = "#586579"
@@ -27,6 +28,7 @@ def wire_data():
     source = BUILD / "wire_data.cpp"
     source.write_text(r'''
 #include <ikea/seriespack/detail/point.h>
+#include <ikea/tuplepack/detail/plan.h>
 #include <iostream>
 namespace sp = ikea::seriespack;
 template<unsigned R> void emit() {
@@ -53,6 +55,21 @@ int main() {
     using Child = sp::format<4, sp::geometry::striped>;
     static_assert(P::tile_rows == 64 && P::tile_bytes == 96);
     static_assert(Parent::tile_rows == 8 && Child::tile_rows == 64);
+    // ordinary.cpp checks construction and both public packet shapes. Read
+    // its known physical bytes here using the implementation's scalar body.
+    namespace tp = ikea::tuplepack;
+    const std::array<tp::byte, 4> tuple_bytes{0x4b, 0x05, 0x18, 0x02};
+    tp::detail::scalar_read<8> projection{};
+    projection.codes[0] = {0, 1, 7}; // rank
+    projection.codes[2] = {0, 0, 1}; // flag; slot 1 remains a hole
+    projection.codes[3] = {1, 0, 3}; // tag
+    const auto pair = tp::detail::read_body<8, 4>(projection, tuple_bytes.data()) |
+                     (tp::detail::read_body<8, 4>(projection, tuple_bytes.data() + 2) << 32);
+    std::cout << "tuple";
+    for (auto b : tuple_bytes) std::cout << ' ' << unsigned(b);
+    for (unsigned slot = 0; slot < 8; ++slot)
+        std::cout << ' ' << unsigned(tp::byte(pair >> (slot * 8)));
+    std::cout << '\n';
 }
 ''')
     compiler = "clang++-21"
@@ -70,7 +87,10 @@ int main() {
     local = [int(value) for value in lines[7].split()[1:]]
     if local != [1] * 8 + [0xaa, 0xcc, 0xf0]:
         raise RuntimeError("Local11 example changed; revisit the figure and its prose")
-    return tables, local
+    packed = [int(value) for value in lines[8].split()[1:]]
+    if packed != [0x4b, 5, 0x18, 2, 37, 0, 1, 5, 12, 0, 0, 2]:
+        raise RuntimeError("TuplePack ordinary projection changed; revisit the figure and prose")
+    return tables, local, packed
 
 
 class Figure:
@@ -244,7 +264,8 @@ def local_and_placement(local):
 def architecture():
     f = Figure(664, "Ikea: independent choices and prepared operations",
                "Under a fixed logical container contract, admissible logical expressions, physical placement "
-               "and execution recipes are prepared once. Ordinary read and mutation calls reuse that binding. "
+               "and execution recipes are prepared once. Ordinary read and mutation calls reuse that binding; "
+               "checked calls validate each new command before execution. "
                "The integration model allows different segments to keep different representations.")
     f.heading(32, 42, "Ikea · independent choices, ordinary calls")
     f.text(32, 80, "SeriesPack example", 22, color=MUTED)
@@ -258,9 +279,9 @@ def architecture():
         f.path(f"M{x},160 V200", arrow=True, color=RULE)
     f.path("M156,340 V376 H716 V340")
     f.path("M436,340 V400", arrow=True)
-    f.card(288, 408, 296, 104, "Admit + bind once", ["Selected realization"], title_size=23)
+    f.card(288, 408, 296, 104, "Prepare + bind", ["Retain placement proof"], title_size=23)
     f.path("M868,104 V512", dash=True, color=RULE)
-    f.card(900, 208, 348, 132, "Read or mutate", ["Ordinary operation call", "Borrowed data and local outputs"], title_size=23)
+    f.card(900, 208, 348, 132, "Read or mutate", ["Checked: validate command", "Then execute over borrowed data"], title_size=23)
     f.path("M584,460 H884 V274 H892", arrow=True)
     f.text(728, 442, "prepared operation", 20, anchor="middle", color=MUTED)
     f.path("M1248,274 H1264 V372 H932 V348", arrow=True)
@@ -383,12 +404,130 @@ def lifecycle():
     f.save(ROOT / "ikea/docs/images/mutation-lifetime.svg")
 
 
+def tuple_projection(packed):
+    f = Figure(800, "TuplePack: physical codes, placement and a two-row projection",
+               "Each two-byte unit has a flag in byte zero bit zero, a seven-bit rank in bits one "
+               "through seven, and a three-bit tag in byte one. Original rows zero and one are at "
+               "storage offsets two and ten, with bytes 4b 05 and 18 02. Repeating map 1, hole, 0, 2 "
+               "yields decoded slots 25 00 01 05, then 0c 00 00 02 in a uint64 packet.")
+    f.heading(32, 42, "From packed codes to two rows in a word")
+    f.text(32, 80, "2 physical bytes per unit · 8-byte stride · reader<8, 2>", 22, color=MUTED)
+    f.path("M640,120 V382", color=RULE)
+    f.heading(32, 142, "1  Describe the codes")
+    f.heading(672, 142, "2  Place original rows")
+    # Bit seven is on the left here; projected GPR slots below run low to high.
+    for byte, y in [(0, 214), (1, 294)]:
+        f.text(32, y + 29, f"byte {byte}", 20, color=MUTED)
+        for j in range(8):
+            bit = 7 - j
+            x = 128 + 56 * j
+            if byte == 0:
+                color, label = (BLUE, "r") if bit else (AMBER, "f")
+            else:
+                color, label = (GREEN, "t") if bit < 3 else ("#edf0f5", "·")
+            f.rect(x, y, 56, 44, color, "white")
+            f.text(x + 28, y + 29, label, 23, anchor="middle", mono=True)
+            if byte == 0:
+                f.text(x + 28, y - 14, bit, 18, color=MUTED, anchor="middle")
+    f.text(32, 376, "Code ranks: 0 flag · 1 rank · 2 tag", 21, color=MUTED)
+    storage = {2: packed[0], 3: packed[1], 10: packed[2], 11: packed[3]}
+    for offset in range(12):
+        x = 672 + offset * 48
+        f.text(x + 24, 200, offset, 18, anchor="middle", color=MUTED)
+        f.rect(x, 214, 48, 44, "#eef5fc" if offset in storage else "#f6f8fb", "white")
+        f.text(x + 24, 243, f"{storage[offset]:02x}" if offset in storage else "·",
+               21, anchor="middle", mono=True, color=INK if offset in storage else MUTED)
+    for offset, row in [(2, 0), (10, 1)]:
+        x = 672 + offset * 48
+        f.path(f"M{x},264 V278 H{x + 96} V264")
+        f.text(x + 48, 308, f"row {row}", 20, anchor="middle")
+    f.lines(672, 344, ["Offsets count bytes from the storage origin.",
+                      "Gaps remain available to the owner or siblings."], 20, 28, color=MUTED)
+    f.path("M32,408 H1248", color=RULE)
+    f.heading(32, 454, "3  Repeat the map, then join decoded rows")
+    f.text(32, 490, "Map {1, hole, 0, 2} · four decoded byte slots per original row", 22, color=MUTED)
+    labels = [("code 1", BLUE), ("hole", "#edf0f5"), ("code 0", AMBER), ("code 2", GREEN)]
+    for row, x in [(0, 64), (1, 688)]:
+        f.text(x, 534, f"Original row {row}", 21, "bold")
+        for slot, (name, color) in enumerate(labels):
+            sx = x + slot * 128
+            f.text(sx + 64, 572, name, 20, anchor="middle", color=MUTED)
+            f.path(f"M{sx + 64},582 V598", arrow=True)
+            f.rect(sx, 608, 128, 56, color, "white")
+            f.text(sx + 64, 644, f"{packed[4 + row * 4 + slot]:02x}", 26, anchor="middle", mono=True)
+        f.path(f"M{x},672 V684 H{x + 512} V672")
+        f.text(x + 256, 716, "bits 0…31 · low word" if row == 0 else "bits 32…63 · high word",
+               21, anchor="middle", color=MUTED)
+    f.text(640, 774, "uint64_t = 0x0200000c05010025 · byte values shown in hexadecimal",
+           22, anchor="middle", mono=False)
+    f.save(TUPLE_OUT / "projection.svg")
+
+
+def tuple_observation():
+    f = Figure(920, "TuplePack: mutation destinations, issued bytes and observation dependencies",
+               "After substitution in composition.cpp, B remains in original byte zero bits one through "
+               "seven, sharing the byte with retired A at bit zero. C remains in original byte one. "
+               "New A occupies bit three of new-source byte two. Mutation writes new A and B; issued "
+               "stores cover new byte two and original byte zero, preserving neighbors; the summary "
+               "observes new A, B and untouched C. A range admits the whole call, then repeats optional "
+               "before-values, all child stores, optional after-values and law per nonempty window.")
+    f.heading(32, 42, "Mutation, stores and observations")
+    f.text(32, 80, "composition.cpp after A is substituted · one original row", 22, color=MUTED)
+    f.heading(32, 140, "Original source")
+    f.heading(672, 140, "New source")
+    f.text(32, 184, "byte 0", 20, color=MUTED)
+    f.text(352, 184, "byte 1", 20, color=MUTED)
+    f.rect(32, 204, 224, 64, AMBER, "white")
+    f.rect(256, 204, 32, 64, "#edf0f5", "white")
+    f.text(144, 233, "B", 25, "bold", anchor="middle")
+    f.text(144, 256, "bits 7…1", 18, anchor="middle")
+    f.text(272, 245, "a", 21, anchor="middle", color=MUTED)
+    f.rect(352, 204, 256, 64, GREEN, "white")
+    f.text(480, 242, "C · unchanged", 23, "bold", anchor="middle")
+    f.path("M272,268 V290 H368", arrow=False)
+    f.text(376, 297, "a = retired A, bit 0", 19, color=MUTED)
+    f.path("M32,278 V310 H288 V302")
+    f.text(32, 346, "Issued store: byte 0, preserving a", 21)
+    f.text(672, 184, "byte 2 · bit positions 7 → 0", 20, color=MUTED)
+    for j in range(8):
+        bit, x = 7 - j, 672 + j * 64
+        f.rect(x, 204, 64, 64, BLUE if bit == 3 else "#edf0f5", "white")
+        f.text(x + 32, 245, "A" if bit == 3 else "·", 25, "bold" if bit == 3 else "normal",
+               anchor="middle", color=INK if bit == 3 else MUTED)
+    f.path("M672,278 V310 H1184 V278")
+    f.text(672, 346, "Issued store: byte 2, preserving other bits", 21)
+    f.path("M32,382 H1248", color=RULE)
+    f.card(32, 410, 344, 104, "Logical destinations", ["New A + B"], title_size=23)
+    f.card(408, 410, 464, 104, "Issued byte coverage", ["New source: 2 · original source: 0"], title_size=23)
+    f.card(904, 410, 344, 104, "Summary dependencies", ["New A + B + C"], "#edf8f6", title_size=22)
+    f.path("M32,546 H1248", color=RULE)
+    f.heading(32, 590, "For a range: admit once, observe each window")
+    f.card(32, 648, 248, 132, "Admit whole call", ["Range · values", "Effect capacity"], title_size=22)
+    f.path("M280,714 H344", arrow=True)
+    f.rect(352, 626, 896, 176, "#fafbfc", radius=8)
+    f.text(376, 656, "ONE NONEMPTY WINDOW · Rows = 1 here", 18, "bold", color=MUTED)
+    stages = [(376, "Read before*", 184), (600, "Write children", 184),
+              (824, "Read after*", 184), (1048, "Run law", 176)]
+    for i, (x, title, width) in enumerate(stages):
+        f.rect(x, 686, width, 60, "#edf8f6" if i != 1 else "#eef5fc", radius=6)
+        f.text(x + width / 2, 723, title, 21, "bold", anchor="middle")
+        if i < 3:
+            f.path(f"M{x + width},716 H{x + width + 32}", arrow=True)
+    f.text(800, 780, "Repeat this bracket at the next original window", 20, anchor="middle", color=MUTED)
+    f.lines(32, 854, ["* Read only values requested by the law; this example requests after-values only.",
+                     "The owner supplies isolation. Whole-call admission does not create a range snapshot."],
+            21, 32, color=MUTED)
+    f.save(TUPLE_OUT / "observation.svg")
+
+
 if __name__ == "__main__":
-    tables, local = wire_data()
+    tables, local, packed = wire_data()
     stripes(tables)
     local_and_placement(local)
     architecture()
     substitution()
     execution()
     lifecycle()
-    print("Rendered six documentation figures from the current SeriesPack wire data.")
+    tuple_projection(packed)
+    tuple_observation()
+    print("Rendered eight documentation figures; wire examples checked against current C++ bodies.")

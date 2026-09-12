@@ -1,4 +1,4 @@
-# Composing and extending
+# Composing and extending SeriesPack
 
 The examples build through `ikea_examples`. Start with
 [composition.cpp](../../examples/seriespack/composition.cpp), then [pipeline.cpp](../../examples/seriespack/pipeline.cpp).
@@ -39,17 +39,16 @@ placement or execution choice. Engine can retain different bindings across segme
 ## Author a native body
 
 The pipeline example interprets raw eight-bit patterns as signed integers, flips
-the sign bit to obtain unsigned order, and consumes selected ranks. Its transform
-contains explicit NEON or x86 instructions. Ikea does not require an ISA abstraction
-inside that body. The example sums ranks only to make its result observable;
-this is not the aggregate law for the original signed field.
+the sign bit to obtain unsigned order, and consumes selected ranks. This maps
+−128..127 to 0..255: −1's byte `ff` becomes rank 127, while zero's byte `00`
+becomes rank 128. The transform contains explicit NEON or x86 instructions.
+Its sum makes the result observable; it is a sum of ranks, with different
+semantics from a sum of the original signed values.
 
 A body specifies value domain, native carrier, original coordinates, activity,
 readable extent and write footprint. Keep acquisition, publication and fallible
-work outside it. Put a shared ISA kernel in
-`detail/native/{neon,avx2,avx512}/{read,write}.h`; put owner-independent logical
-nodes and evaluators in `author/`. [Source boundaries](../source.md) explain how to
-change one responsibility without introducing an artificial call in the inner loop.
+work outside it. [Source boundaries](../source.md#seriespack-source-boundaries)
+locate native kernels, logical nodes and shared preparation.
 
 `value_expression` and `payload_expression` describe bit-window joins.
 `composition::read(ops, expression, rows, mask)` traverses those joins;
@@ -80,32 +79,24 @@ its ordinal. It returns updated values/activity and a stop flag. A stop jumps to
 completion; it is not a scheduler suspension.
 
 `chain<K>` carries 16 values. `packet_chain<K,N>` carries 16/32/64 when its native
-carrier fits at most eight vector arguments. Native vectors are flattened at the
-call boundary: passing a C++ aggregate can otherwise introduce memory handoff.
-A carrier change requires a real typed bridge with admitted semantics, never a
-function-pointer cast. Clang 21.1.8 and the target ISA are part of this private ABI.
-
-The table has power-of-two slots: 1..Slots−1 stages plus completion. Unused slots
-also contain completion. Alignment is at least 64 bytes and at least the table
-size, so an early-return cursor can locate the final slot arithmetically. Local
-stack addresses and destructors cannot survive a terminating `musttail` hop.
-Plans and bindings remain owned by the driver throughout execution.
+carrier fits at most eight vector arguments; N counts logical values here.
+Native vectors are flattened at the call boundary to preserve register handoff.
+The [shared execution guide](../source.md#shared-execution-entry) owns the private
+ABI, table bounds and lifetime rules. Plans and bindings remain owned by the driver.
 
 Choose grain and fusion using representative whole pipelines. Cheap repeated
 predicates in 16-row stages are a stress case; CPS need not be the best execution
 for that recipe. Fuse cheap adjacent work or choose inline execution when useful.
-The [benchmark suite](../../../workbench/benchmarks/seriespack/README.md) compares representative pipelines at several
-grains and a 36-recipe inline/CPS catalog for runtime, compile cost and code size.
-Manual fusion remains available for critical recipes. These styles implement the
-same logical operation, with explicit equivalence obligations.
+The [benchmark suite](../../../workbench/benchmarks/seriespack/README.md) compares
+whole pipelines at several grains for runtime, compile cost and code size.
+Changing execution style must preserve the logical operation's semantics.
 
 ## Validate the extension
 
-Run `ikea_validate`, then the relevant benchmark suite. Add checks for the new
-wire law or semantic behavior, including boundaries, inactive regions, substitution
-and effects. Use the frozen reference for existing wire laws; do not modify it to
-agree with a changed kernel. Tests should name the format and failing scenario.
-
-Compare the ordinary operation as well as the inner body. Look for repeated
-metadata discovery, traversal dispatch, stores/reloads and journal work at the
-boundary. Preserve family-wide simplifications before adding per-case exceptions.
+The [test guide](../../test/seriespack/README.md) maps behavior to checks;
+[shared authoring guidance](../source.md#define-the-operation-before-its-execution)
+covers independent wire validation and consumer measurements. For substitution,
+exercise inaccessible retired storage as well as new leaves. For a new native
+body, check original coordinates, inactive regions and actual store coverage.
+Measure the ordinary operation and a representative consumer when changing
+execution, including repeated metadata work, register handoff and journaling.

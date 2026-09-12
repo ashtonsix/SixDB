@@ -1,163 +1,140 @@
 # Using TuplePack
 
-TuplePack holds byte-contained unsigned codes in small fixed-layout units. Use it
-for transactional projections and updates; use SeriesPack for packed integer
-arrays. Neither primitive owns application field semantics or chooses a schema.
-Supply the layout and operation maps manually. Automatic layout analysis is
-experimental; higher-level components need a layout-selection policy from Engine.
+TuplePack projects and replaces small unsigned codes packed into fixed-layout
+units. Each code fits within one physical byte; a read expands each selected
+code into a byte slot. The caller chooses which codes to expose and how many
+original rows to carry in one packet. Storage layout and packet shape are
+independent.
 
-Link `ikea::tuplepack` and include `<ikea/tuplepack.h>`. Start with the executable
-[ordinary example](../../examples/tuplepack/ordinary.cpp), built as
-`ikea_example_tuplepack_ordinary`. [Reference](reference.md) owns exact contracts;
-[composition](extending.md) covers native callers and substituted children.
+Link `ikea::tuplepack` and include `<ikea/tuplepack.h>`. The executable
+[ordinary example](../../examples/tuplepack/ordinary.cpp) follows the layout below;
+build it as `ikea_example_tuplepack_ordinary` using the
+[Ikea build instructions](../../README.md#build-and-run). Field semantics and
+layout-selection policy belong to Engine; callers currently supply descriptions
+and maps manually. The [automatic layout analyser](../../../workbench/spikes/tuple-layout/analyser/README.md)
+remains experimental.
 
 ## Describe bytes, then place them
 
-The example has a flag, seven-bit rank and three-bit tag:
-
-```text
-physical byte 0:  r r r r r r r f      bit 7 ... bit 0
-physical byte 1:  . . . . . t t t      '.' is spare, with no value semantics
-code rank:       0=flag, 1=rank, 2=tag
-```
+Consider a flag, a seven-bit rank and a three-bit tag in a two-byte unit.
+A `code` gives its physical byte offset, bit shift and width. Its index in the
+description is its **code rank**; that index has no application meaning.
+Here the field named rank has code rank 1.
 
 ```cpp
+namespace tp = ikea::tuplepack;
 std::array<tp::code, 3> codes{{{0, 0, 1}, {0, 1, 7}, {1, 0, 3}}};
-auto format = tp::layout::make(2, codes); // check expected before dereferencing
+auto format = tp::layout::make(2, codes);
+// Check each expected result before dereferencing it.
 auto placed = tp::view::bind(*format, bytes, 2, 8, 2);
 ```
 
-`view::bind` places two units at storage offsets 2 and 10: unit bytes=2,
-stride=8, unit offset=2. The enclosing allocation belongs to the caller. The
-last unit needs only its own two bytes, not a full final stride. A read-only
-owner uses `const_view`. Views admit extents and address arithmetic, not the
-meaning of existing bytes: the caller must bind the description that encoded them.
+The view places two original rows at storage offsets 2 and 10:
+`offset + row × stride`, with an eight-byte stride and two-byte units. Only the
+units belong to this operation. The gaps can hold sibling fields, and the last
+row requires its two bytes rather than a complete final stride. `const_view`
+provides read-only placement. Binding checks extents and arithmetic; the caller
+must supply the layout that actually encoded those bytes.
 
-Keep each named view and prepared plan at a stable address while operations
-borrow them. Reader/writer preparation copies the controls, so the original
-description and map need not survive. A view's raw storage stays alive and its
-placement remains unchanged. A move of a containing work object can invalidate
-self-references; the integration example explicitly prevents such moves.
+To place these units in a larger record, change the stride and offset. To place
+them separately, bind another buffer. Neither change requires a different code
+map or packet shape. Rebinding describes existing storage; the caller performs
+any migration. Engine can retain different descriptions across segments.
 
-For a larger record, bind separate units with the larger record stride and their
-own offsets. For column-like access, place units in separate 16/32-byte planes.
-Changing placement is independent of changing code widths, maps or execution
-style. Rebinding does not migrate bytes; different segments can retain different
-descriptions indefinitely.
+## Project codes into a packet
 
-## Construct, project and replace
-
-`constructor::make(format)` prepares complete rank-ordered initialization.
-`construction_input` has 128 byte slots; only defined codes are consumed. Bind
-it with `bind_constructor`, then call `initialize(first, inputs, effects)`.
-Each input initializes one original row; construction has no `Rows` parameter.
-The command validates every selected code before zeroing any destination unit.
-It initializes spare bits to zero and preserves bytes outside each unit.
-
-Readers and replacement writers select ordered code ranks:
+The example constructs rows `(flag=1, rank=37, tag=5)` and
+`(flag=0, rank=12, tag=2)`. Read them in the order rank, hole, flag, tag:
 
 ```cpp
 std::array<tp::byte, 4> map{1, tp::hole, 0, 2};
-auto plan = tp::reader<8>::make(*format, map);
+auto plan = tp::reader<8, 2>::make(*format, map);
 auto read = tp::bind_reader(*plan, *placed);
-auto result = read->get(0);
+auto result = read->get(0); // 0x0200000c05010025
 ```
 
-`reader<8>` returns a uint64_t whose low byte is code 1, next byte zero,
-third byte code 0 and fourth byte code 2. All unused slots are zero. Duplicate
-read ranks are allowed. `reader<64>` returns a 64-byte array for ordinary buffered
-use; native authors can keep the same result in registers. A short map is padded
-with holes.
+![Two-byte units at offsets 2 and 10 decode through the same rank-hole-flag-tag map into two four-byte rows in a uint64 packet.](images/projection.svg)
 
-`writer<8>` accepts the scalar packet and `writer<64>` the byte array. Bind with
-`bind_writer`, then use `set(row, input, effects)` or
-`replace(first, inputs, effects, selection)`. Writers reject duplicate ranks at
-preparation and out-of-width selected values at invocation. Hole slots are
-ignored, even if nonzero. Replacement preserves unselected codes and spare bits.
+*The map names code ranks. The result contains decoded byte slots: its low four
+bytes belong to original row 0, its high four to row 1. Hexadecimal byte values
+are shown from least- to most-significant slot.*
 
-`read(first, outputs, selection)` and `replace` use original row coordinates.
-`selection::bits(origin, words)` supplies 64 original-row bits per word; the origin
-need not be a multiple of 64. Inactive rows produce zero read output and issue no
-payload accesses or mutations. Zero output is not evidence of absence. Selection
-storage and all input slots remain stable through admission and execution.
+`reader<N, Rows>` chooses **N decoded packet bytes**, divided into `N/Rows`
+slots per row. The same map applies to every row. A hole produces zero; a short
+map leaves trailing slots zero; duplicate read ranks are allowed. These slots
+do not describe physical byte positions.
 
-## Choose rows per packet
+With `reader<8>` the default `Rows=1` leaves four extra zero slots for this map.
+With `reader<64, 16>` the same four-slot projection carries sixteen rows, even
+if each physical unit is embedded in a much larger record. Ordinary eight-byte
+packets are `uint64_t`; 64-byte packets are byte arrays. The
+[reference](reference.md#packet-shape-and-coordinates) lists all supported shapes.
 
-`reader<N, Rows>` and `writer<N, Rows>` take two choices: output packet width
-and original rows per packet. `N=8` supports Rows 1/2/4/8 and returns a `uint64_t`;
-`N=64` supports Rows 1/2/4/8/16/32/64 and returns a byte array. The default is one
-row. Each row occupies `N/Rows` byte slots, in row order. The supplied map applies
-to every row. Physical tuple size and stride are independent of this shape.
+Choose enough slots for the projection and enough rows for the consumer. A few
+rows feeding scalar logic can fit in a GPR; a scan can fill a vector packet.
+Physical placement and code shifts also affect transfer cost, so a short
+projection can still benefit from SIMD. Preparation selects transfer lowerings;
+the [packet-width comparisons](../../../workbench/benchmarks/tuplepack/words.md)
+explain the measured choices and counterexamples. Native callers can keep
+payloads in registers through [composition](extending.md#keep-native-payloads-native).
 
-For two four-code rows, use `reader<8, 2>`: the first row occupies bits 0–31 and
-the second bits 32–63. The executable [word example](../../examples/tuplepack/words.cpp)
-constructs this reader and writer, extracts both row words, then performs a native
-update with a one-row tail. Both packet widths support the same masks, range
-admission, effects, erasure, nested maintenance and native composition.
+## Construct and replace
 
-Start with an 8-byte packet when the consumer needs a few rows in a scalar word;
-fill a 64-byte packet when scanning enough rows for a vector consumer. Small
-physical tuples with consecutive selected bytes and a common bit shift admit
-particularly cheap word transfers. Preparation recognizes this automatically;
-no method enum is required. Mixed shifts and scattered maps can favor the vector
-carrier even for small projections. Compare the complete consumer when that
-choice matters; the [packet-width comparisons](../../../workbench/benchmarks/tuplepack/words.md)
-show both gains and counterexamples.
+Construction supplies every code in description order. Prepare a `constructor`
+with `constructor::make(*format)`, bind it with `bind_constructor`, then call
+`initialize(first, inputs, effects)`. Each `construction_input` initializes one
+original row. Construction zeroes spare bits in the unit and preserves bytes
+outside it. The ordinary example provides the full setup.
 
-Choose a shape around the projected codes and the rows the consumer needs. A
-scan selecting four codes can use `Rows=16` even from 64-byte tuples. Choosing
-`Rows=2` for the same map leaves 28 unused slots per row, but may suit a caller
-that only needs two rows. Transfer cost also depends on which physical bytes
-contain those codes; the decoded packet size alone does not predict it.
+Replacement supplies only mapped codes. To change the first row's seven-bit rank:
 
-For example, `reader<64, 64>` can extract one code from each of 64 one-byte
-tuples. `reader<64, 32>` can extract two codes from each of 32 such tuples,
-expanding 32 physical bytes into 64 code bytes. The executable
-[packet example](../../examples/tuplepack/packets.cpp) uses the latter shape
-for a masked read–transform–write, sharing bodies between inline and CPS execution.
+```cpp
+std::array<tp::byte, 1> rank_map{1};
+auto write_plan = tp::writer<8>::make(*format, rank_map);
+auto write = tp::bind_writer(*write_plan, *placed);
+auto status = write->set(0, 99, effects);
+```
 
-Bind these plans with the same `bind_reader` and `bind_writer` functions.
-`get(first, active)` and `set(first, input, effects, active)` interpret bit `r`
-as original row `first+r`; the default mask selects the full packet. Pass an
-explicit mask for a short tail. Inactive rows issue no payload accesses, their
-read slots are zero, and their write slots are ignored even if out of width.
+The store preserves the flag sharing that byte, the tag and all spare bits.
+Writers reject duplicate destination ranks during preparation and selected
+out-of-width values during checked calls. Hole and unused input slots are ignored.
+A rank of 128 fails before data or effect output changes.
 
-For `read` and `replace`, each span element is a packet and advances `Rows`
-original rows. The final packet may be partial; unused read slots are zero and
-unused write slots are ignored. Surplus packets are an error. `size()`, selection
-origins and maintenance coordinates remain measured in original rows.
+Provide a preallocated `ikea::source_write_journal`. Its records identify the
+actual view and issued byte spans relative to that view's storage. Here a rank
+update writes the byte at offset 2, including the preserved flag. Reserve
+`writer::effect_capacity()` records per active row, summed across children;
+construction requires one per initialized row. Coalescing can reduce actual use.
+The [integration guide](../integration.md#consume-effects-and-publish) explains
+how owners consume coverage and coordinate visibility.
 
-## Effects and failure
+## Select rows and handle a tail
 
-Provide preallocated `ikea::source_write_journal` storage. Construction requires
-one entry per initialized row. `writer::effect_capacity()` bounds entries per
-selected replacement row before coalescing. Effects identify the actual named
-view and plane-zero byte spans relative to its storage, including the unit offset.
-They describe issued writes, including preserved neighboring bits; unchanged
-values can still generate effects. Owner isolation must protect those bytes.
-For a multi-row call, reserve that bound for every active row, summed across
-composed children. A full tightly packed store can issue one contiguous span;
-the capacity bound remains conservative.
+`get(first, active)` and `set(first, input, effects, active)` use bit `r` for
+original row `first+r`. The default mask selects all `Rows`. For a two-row
+packet with only its first row remaining, pass `active=1`. Inactive rows issue
+no payload accesses; their read slots are zero and write slots are ignored.
+Keep the mask alongside values: zero can also be a selected code's value.
 
-Checked range, value and capacity errors leave the **whole call's** data,
-maintenance and effect output unchanged. Earlier completed calls remain completed.
-Checked operations do not prove arbitrary object lifetimes, locking or aliasing of
-input/plan/selection/output metadata. Those are explicit owner obligations.
-Effect callbacks must have sufficient admitted capacity and cannot fail or suspend.
+Range calls `read(first, outputs, selection)` and
+`replace(first, inputs, effects, selection)` advance `Rows` original rows per
+span element. They handle a partial final packet automatically. Selections retain
+original row coordinates; filtering never compacts the array. The
+[word example](../../examples/tuplepack/words.cpp) demonstrates a native two-row
+update and a one-row tail; the [packet example](../../examples/tuplepack/packets.cpp)
+uses sparse rows in a wider carrier.
 
-Trusted `_unchecked` entries reuse these proofs. A plan's raw
-`set_unchecked(byte*, input)` emits no effects; use the bound operation's trusted
-entry to retain its pre-write coverage. Native kernel authors can fuse bodies
-inside that admitted boundary. Nothing here acquires storage or publishes data.
+## Keep the binding valid
 
-## Build and validate
+Named views and prepared plans remain alive at stable addresses while bound
+operations borrow them. The bytes remain borrowed too. Preparation copies the
+layout and map controls, so those original descriptions can expire. The
+[borrowing reference](reference.md#borrowing-and-admission) records the precise
+lifetimes and owner obligations.
 
-Use the [pinned Linux toolchain](../../../BUILDING.md). Configure the desired ISA,
-then build `ikea_validate` for both Ikea modules, or just
-`ikea_tuplepack_wire_check`, `ikea_tuplepack_operations_check`,
-`ikea_tuplepack_execution_check`, `ikea_tuplepack_packets_check`,
-`ikea_tuplepack_gpr_check`,
-`ikea_tuplepack_ownership_check` and the examples.
-`python3 ikea/test/headers.py BUILD` checks header independence.
-The [routine benchmark suite](../../../workbench/benchmarks/tuplepack/README.md)
-distinguishes bodies, ordinary calls and matched effects controls.
+Checked mutation rejects a bad range, selected value or capacity before changing
+the whole call's data, effects or maintenance. Earlier successful calls remain
+real. Use `tp::describe(error)` with the command and supplied extents to diagnose
+a failure. Trusted `_unchecked` calls reuse established proofs; the bound write
+entry retains byte coverage, while the plan's raw pointer entry emits no effects.
+Isolation, suspension and publication belong to the owner.

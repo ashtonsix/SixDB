@@ -33,6 +33,14 @@ int main() {
     auto value = read->get(0);
     assert(value);
     assert(*value == 0x05010025);
+    // The same map repeats for each row; packet width is decoded bytes,
+    // independent of the two-byte physical units and their eight-byte stride.
+    auto pair_plan = tp::reader<8, 2>::make(*format, map);
+    assert(pair_plan);
+    auto pair = tp::bind_reader(*pair_plan, *source);
+    assert(pair);
+    auto pair_value = pair->get(0);
+    assert(pair_value && *pair_value == 0x0200000c05010025ull);
     const std::array<tp::byte, 1> rank{1};
     auto writer = tp::writer<8>::make(*format, rank);
     assert(writer);

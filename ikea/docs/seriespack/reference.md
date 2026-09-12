@@ -47,9 +47,11 @@ journal unchanged. Cold mutation binding may allocate temporary alias-analysis
 storage; allocation failure is a typed error. Kernel execution does not allocate.
 Diagnostic formatting and optional source identities stay outside hot bodies.
 
-Trusted `_unchecked` calls require prior proof of range, value domain, accessible
+Trusted `get_unchecked`, `read_unchecked` and `replace_unchecked` calls require
+prior proof of range, value domain, accessible
 extent, stable selection, effect capacity, disjointness and owner lifetime.
-Sixteen-row entries require aligned original coordinates and a full logical region.
+`read16_unchecked` and `replace16_unchecked` require original coordinates divisible
+by 16 and a full sixteen-row logical region.
 A nonempty native write can read all sixteen input slots, even where inactive.
 An empty region reads no input/data and emits no contributions. Scalar edges read
 only selected input positions. Checked does not imply isolation or publication.
@@ -67,8 +69,8 @@ a failed command with an unchanged-effects guarantee.
 | Linux x86 AVX2 (`x86-64-v3`) | Same capabilities; native wide-value carriers can occupy several YMM/XMM arguments |
 | Linux x86 AVX-512 (`x86-64-v4`) | Wider grouped bodies where useful; VBMI/VBMI2/GFNI paths compile only with their feature flags |
 
-Select the ISA at build time. Dense width and layout selection has a compiled
-runtime binder; placed/composed operations bind concrete types. Full mutation
+Select the ISA at build time. Headless dense reads have a compiled runtime
+width/layout binder; placed/composed operations bind concrete types. Full mutation
 and CPS require one of the native profiles above. Scalar wire/point functions
 are available as building blocks and correctness fallbacks.
 

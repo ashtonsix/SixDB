@@ -1,111 +1,153 @@
-# Source and compilation boundaries
+# Extending and changing Ikea
 
-Ikea separates ordinary caller contracts, composition authoring and implementation.
-Both modules use ordinary caller headers, supported `author/` headers and internal
-`detail/` headers. Template bodies remain visible where they need the caller's
-concrete context; consumers also link the compiled library. The
-[extension guide](extension.md) describes shared facilities.
+Ikea separates ordinary caller contracts, supported `author/` surfaces and
+internal `detail/` implementation. Template bodies remain visible where the
+caller’s concrete context enables useful specialization; consumers also link
+the compiled library. This guide explains how to extend that structure and
+where existing behavior lives.
+
+## Define the operation before its execution
+
+Begin with the value domain, physical law and operations. Specify original
+coordinates, access bounds, borrowing and failure guarantees so different
+representations can serve the same logical contract. SeriesPack composes
+bit-window joins; TuplePack composes ordered code projections and mutation groups.
+Their value types, traversal and error vocabulary remain module-specific.
+
+Keep three descriptions distinct: logical mutation destinations, issued byte
+writes, and maintenance dependencies. A summary can depend on untouched fields;
+a preserving store can reissue bits outside the mutation map. The owner needs
+enough information to admit all accessed storage and reserve effects before
+execution. [Owner integration](integration.md) owns leases, suspension, cancellation
+and coordinated visibility.
+
+Compile cold validation, control preparation, diagnostics and alias analysis in
+independent TUs. Share native bodies between ordinary and composed callers, and
+keep explicit ISA instructions available for inlining. Choose applicability and
+traversal at the operation boundary. Erase a useful whole operation so repeated
+inner work retains the concrete traversal.
+
+Validate wire behavior independently, then check boundaries, inactive masks,
+substituted storage, effects and lifetimes. Inspect the finished consumer as well
+as the leaf kernel: a vector aggregate or outlined helper can introduce memory
+handoff. Compare complete operations, including their admission and effects.
+Research history and timing comparisons belong with Workbench evidence.
+
+## Shared facilities
+
+| Facility | Shared mechanism | Module-owned behavior |
+| --- | --- | --- |
+| `ikea/effects.h` | Issued byte spans qualified by named source views | Physical footprints, traversal and capacity bounds |
+| `detail/overlap.h`, `src/overlap.cpp` | Cold overlap analysis for repeating spans and interleaving | Semantic conflicts, view rules and diagnostics |
+| `detail/native_chain.h` | Bounded straight-through tables, native argument handoff and early completion | Carrier, mask meaning, stage grain and semantic body |
+
+Shared mechanics need checks from both affected modules. Hooks must remain
+infallible and cannot suspend after admission. Persistent summary writes need
+their own coverage; private contributions can instead be retained by the owner.
 
 ## SeriesPack source boundaries
 
-| Surface | Owning files | Responsibility |
-| --- | --- | --- |
-| Ordinary callers | Umbrella `seriespack.h`; `{read,write,read_operation,mutation_operation}.h` | Checked operations, explicit trusted entries, whole-operation bindings |
-| Storage/configuration | `format.h`, `view.h`, `presets.h`, `representation.h`, `selection.h`, `effects.h`, `status.h` | Unsigned domains, placement, recovery metadata, masks and local outputs |
-| Composition authors | `author/{expression,read,write,record,native,chain,summaries}.h` | Logical trees, admitted typed operations, evaluators, native carriers, CPS wrappers and maintenance laws |
-| Implementation | `detail/` | Wire arithmetic, traversal, footprint derivation and native code; not a supported include surface |
-| Compiled implementation | `src/seriespack/{readers,admission,representation}.cpp` | Runtime dense dispatch; cold placement/alias checks and diagnostics; descriptor parsing/encoding |
+Paths below are relative to [include/ikea/seriespack](../include/ikea/seriespack)
+unless marked `src/`. Read-only callers can include `read.h` to avoid exposing
+write instantiations through the ordinary umbrella.
 
-The paths in that table are relative to [include/ikea/seriespack](../include/ikea/seriespack),
-except the umbrella and [src](../src/seriespack). Read-only code should include `read.h`; using
-the ordinary umbrella also exposes write instantiations to the compiler.
+| Responsibility | Owning files |
+| --- | --- |
+| Ordinary calls and erasure | `{read,write,read_operation,mutation_operation}.h` |
+| Format, placement and recovery | `format.h`, `view.h`, `presets.h`, `representation.h` |
+| Logical expressions and evaluation | `author/{expression,read,record,native,summaries}.h` |
+| Typed mutation binding and preflight | `author/write.h` |
+| Runtime dense read dispatch | `src/seriespack/readers.cpp` |
+| Cold placement/alias rules and diagnostics | `src/seriespack/admission.cpp`; leaf walk in `detail/mutation/admission.h` |
+| Descriptor parsing and encoding | `src/seriespack/representation.cpp` |
+| Native reconstruction and stores | `detail/native/{avx2,avx512,neon}/{read,write}.h` |
+| Shared field geometry and store coverage | `detail/mutation/{fields,footprint}.h` |
+| Physical/composed traversal and reverse projection | `detail/mutation/{physical,composed,assignment}.h` |
+| CPS authoring | `author/chain.h`; shared mechanism below |
 
-## Where to change a behavior
+NEON’s grouped evaluator lives in `neon/groups.h`; AVX-512 grouping lives with
+its read bodies. Store widths and transpose/permutation constants remain next
+to the instructions they control.
 
-A native store or reconstruction belongs in
-`detail/native/{avx2,avx512,neon}/{read,write}.h`. NEON's grouped evaluator has
-`neon/groups.h`; AVX-512 grouping lives with its read bodies. ISA instructions,
-exact store sizes, transpose/permutation constants and register-level reductions
-stay visible for inlining. Comments explain bounds and choices that affect codegen.
-
-A placement/alias rule belongs in [src/seriespack/admission.cpp](../src/seriespack/admission.cpp), with
-small declaration/state headers under `detail/`. The templated writable-leaf walk
-is in `detail/mutation/admission.h`; it supplies actual source identity and field
-geometry to that compiled analysis. Allocation and error text stay there.
-`author/write.h` owns typed binding, preflight and endpoint adapters; journal
-storage, erased interfaces and physical overlap analysis have separate homes.
-
-Physical field descriptions in `detail/mutation/fields.h` are shared by
-construction, clearing and admission. `footprint.h` describes actual point/native
-store coverage. Coverage cannot always equal a field's abstract bit extent because
-preserving neighbors can issue a wider store.
-
-`physical.h` owns specialized physical range traversal; `composed.h` owns traversal
-through substituted leaves; `assignment.h` supplies native reverse projection.
-Construction has physical and composed drivers. They share native bodies and field
-walks. Canonical physical expressions select the physical range driver once at the
-operation boundary. The chosen substituted striped child can be assembled once
-per tile; other nested leaves retain their own writers.
-
-An owner adapter belongs with its owner or an executable example.
-[examples/seriespack/integration.cpp](../examples/seriespack/integration.cpp) demonstrates the contract;
-[test/seriespack/integration/ownership.cpp](../test/seriespack/integration/ownership.cpp) owns exhaustive
-event-order checks.
-
-## Compilation and validation
-
-SeriesPack has three independently compiled TUs, with common cold overlap analysis
-linked from `ikea_core`. Mutation tests are grouped by behavior,
-with eight-width TU shards beneath that organization to control compiler memory.
-Test-only noinline wrappers avoid cloning the same optimized operation for every
-assertion scenario; they do not change library/benchmark kernel inlining.
-
-`python3 ikea/test/headers.py BUILD` checks each ordinary/author header independently
-using the configured profile. `ikea_validate` runs the behavior tests and executable
-guides. [Benchmark instructions](../../workbench/benchmarks/seriespack/README.md) include isolated catalog compilation
-and representative incremental edit probes.
-
-The [frozen wire fixture](../test/seriespack/reference/README.md) independently checks
-compatibility. Historical comparisons are available through the opt-in targets
-documented in [Workbench](../../workbench/spikes/ikea-composition/ikea2-campaign/README.md).
+Construction and replacement share native bodies and field walks. Canonical
+physical expressions select the physical range driver once. A substituted
+striped child can be assembled once per tile; other nested leaves retain their
+own writers. This preserves specialized traversal beneath a common operation.
 
 ## TuplePack source boundaries
 
-Ordinary `tuplepack/{description,view,plan,read,write,construction,selection}.h`
-separates placement, prepared controls and commands. `author/composition.h` owns
-recursive groups; `author/maintenance.h` owns independent observations;
-`author/execution.h` owns whole-operation erasure/native adapters and the module's
-pipeline carrier. `author/routes.h` exposes route normalization. Row shapes belong
-to the ordinary reader/writer plans and carry through native adapters and groups.
-`detail/mutation.h` shares checked mutation admission and driving;
-`detail/window.h` owns row masks, tails and maintenance brackets. Physical
-traversal remains specialized. `detail/{plan,packet_plan,gpr}.h` and
-`detail/native/` are internal. `detail/native/shuffle.h` groups the small ISA
-shuffle bodies; bounded memory access, packet traversal and route selection
-have their own headers beside it.
+Paths below are relative to [include/ikea/tuplepack](../include/ikea/tuplepack)
+unless marked `src/`.
 
-`src/tuplepack/{description,prepare,packet_prepare,construction,kernels,gpr,packet,routes}.cpp`
-compile cold work and named kernel endpoints independently. The physical native
-functions share inline bodies with authors. GPR point and multi-row operations
-share bounded word transfers and code extraction; preparation selects ordinary
-endpoints once. Arbitrary distant maps retain the complete byte-coalesced path.
-Prepared controls contain only one ISA's data.
+| Responsibility | Owning files |
+| --- | --- |
+| Physical description and recovery | `description.h`; `src/tuplepack/description.cpp` |
+| Ordinary placement, plans and commands | `{view,plan,read,write,construction,selection}.h` |
+| Code-map admission and ISA controls | `src/tuplepack/{prepare,packet_prepare}.cpp` |
+| Construction preparation | `src/tuplepack/construction.cpp` |
+| Recursive mutation groups | `author/composition.h` |
+| Independent observation projection/law | `author/maintenance.h` |
+| Erasure, native adapters and pipeline carriers | `author/execution.h`; bodies exposed by `author/native.h` |
+| Route normalization | `author/routes.h`; `src/tuplepack/routes.cpp` |
+| Shared command admission and observation windows | `detail/{mutation,window}.h` |
+| GPR transfer bodies and endpoints | `detail/gpr.h`; `src/tuplepack/gpr.cpp` |
+| 64-byte point/native and packet endpoints | `src/tuplepack/{kernels,packet}.cpp` |
+| Native instructions and bounded memory helpers | `detail/native/`; small shuffles in `detail/native/shuffle.h` |
+| Internal controls | `detail/{plan,packet_plan,gpr}.h` |
 
-The [TuplePack tests](../test/tuplepack/README.md) are organized by wire, operations,
-packet shapes, execution and ownership. Its [benchmarks](../../workbench/benchmarks/tuplepack/README.md)
-separate primitive controls, ordinary calls, scans and CPS consumers. A change to
-shared effects, overlap or pipeline mechanics must run both modules' affected checks.
+Preparation chooses transfer lowerings from the code map. Consecutive bytes with
+a common shift admit bounded GPR transfers; general maps retain byte gathering
+and replacement. Full tight windows can coalesce across rows. The ordinary
+endpoint and inlined native body share these controls.
+
+64-byte packet bodies also use physical extent and placement: short units can
+use a route over complete units, while scattered projections use word assembly
+or point bodies. Sparse masks access only active units. These are implementation
+choices; caller obligations come from the declared access masks and
+[operation contracts](tuplepack/reference.md), independently of decoded packet size.
 
 ## Shared execution entry
 
-`include/ikea/detail/native_chain.h` owns pipeline entry and continuation hops for
-both modules. On AArch64, `run` enters through a fixed-frame AAPCS shim that
-preserves caller registers and passes register payloads as separate arguments. Keep this
-entry when changing the chain: Clang 21 can otherwise retain a realigned caller's
-frame base in x19 across a `preserve_none` call that clobbers it.
+Both modules use `include/ikea/detail/native_chain.h`. A plan has a power-of-two
+number of slots, at least two: 1..Slots−1 stages plus completion. Unused slots also contain
+completion. Alignment is at least 64 bytes and at least the table size, allowing
+an early-completion cursor to locate the final slot arithmetically.
 
-Only the shim excludes ASan/UBSan instrumentation so its frame stays fixed;
-stages and completion remain instrumented. The regression in
-[execution.cpp](../test/tuplepack/execution.cpp) exercises a realigned caller and
-deliberate stage clobber. The [evidence note](../../workbench/spikes/tuple-layout/module-evidence/README.md#validation-abi-and-compilation)
-retains the reproducer and disassembly findings.
+Clang 21.1.8 and the selected ISA define the private `preserve_none`/`musttail`
+ABI. Native payloads are flattened into separate register arguments. Carrier
+changes need real typed bridges with admitted semantics. A terminating tail hop
+cannot retain stage-local stack addresses or pending destructors. Driver-owned
+plans and bindings survive the complete chain; explicit suspension follows return.
+
+TuplePack’s named vector endpoints use `IKEA_TUPLE_CC`: AVX2 needs regcall to
+avoid the default SysV aggregate return through memory. NEON uses a four-vector
+HVA, AVX2 a pair and AVX-512/VBMI one vector. GPR endpoints use the ordinary
+integer convention. Inline bodies share the same controls.
+
+On AArch64, `run` enters through a fixed-frame AAPCS shim that preserves caller
+registers and passes payloads separately. Keep this entry: Clang 21 can otherwise
+retain a realigned caller’s frame base in x19 across a `preserve_none` call that
+clobbers it. Only the shim excludes ASan/UBSan instrumentation so its frame stays
+fixed; stages and completion remain instrumented. The
+[execution regression](../test/tuplepack/execution.cpp) and
+[evidence note](../../workbench/spikes/tuple-layout/module-evidence/README.md#validation-abi-and-compilation)
+retain the check, reproducer and disassembly findings.
+
+## Compilation and validation
+
+Use the [pinned build](../../BUILDING.md) and preserve incremental TUs.
+SeriesPack’s mutation tests use behavior groups and eight-width TU shards to
+bound compiler memory. Test-only noinline wrappers limit repeated assertion
+instantiations without changing library or benchmark inlining.
+
+`ikea_validate` runs behavior checks and executable guides.
+`python3 ikea/test/headers.py BUILD` checks ordinary/author headers independently
+with that build’s profile. The [SeriesPack tests](../test/seriespack/README.md)
+and [TuplePack tests](../test/tuplepack/README.md) identify focused targets.
+Use the [frozen SeriesPack fixture](../test/seriespack/reference/README.md) for its
+existing wire law; never change the reference just to agree with a changed kernel.
+
+The [SeriesPack](../../workbench/benchmarks/seriespack/README.md) and
+[TuplePack](../../workbench/benchmarks/tuplepack/README.md) benchmark guides own
+consumer comparisons and compilation probes. Owner adapters belong with their
+owners or in executable integration examples.

@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="920" viewBox="0 0 1280 920" role="img" aria-labelledby="title description">
+<title id="title">TuplePack: mutation destinations, issued bytes and observation dependencies</title>
+<desc id="description">After substitution in composition.cpp, B remains in original byte zero bits one through seven, sharing the byte with retired A at bit zero. C remains in original byte one. New A occupies bit three of new-source byte two. Mutation writes new A and B; issued stores cover new byte two and original byte zero, preserving neighbors; the summary observes new A, B and untouched C. A range admits the whole call, then repeats optional before-values, all child stores, optional after-values and law per nonempty window.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8" fill="#586579"/></marker></defs>
+<rect width="1280" height="100%" fill="white"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#233047" font-size="21">
+<text x="32" y="42" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">Mutation, stores and observations</text>
+<text x="32" y="80" font-size="22" font-weight="normal" fill="#586579" text-anchor="start">composition.cpp after A is substituted · one original row</text>
+<text x="32" y="140" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">Original source</text>
+<text x="672" y="140" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">New source</text>
+<text x="32" y="184" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">byte 0</text>
+<text x="352" y="184" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">byte 1</text>
+<rect x="32" y="204" width="224" height="64" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<rect x="256" y="204" width="32" height="64" rx="0" fill="#edf0f5" stroke="white" stroke-width="1.5"/>
+<text x="144" y="233" font-size="25" font-weight="bold" fill="#233047" text-anchor="middle">B</text>
+<text x="144" y="256" font-size="18" font-weight="normal" fill="#233047" text-anchor="middle">bits 7…1</text>
+<text x="272" y="245" font-size="21" font-weight="normal" fill="#586579" text-anchor="middle">a</text>
+<rect x="352" y="204" width="256" height="64" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="480" y="242" font-size="23" font-weight="bold" fill="#233047" text-anchor="middle">C · unchanged</text>
+<path d="M272,268 V290 H368" fill="none" stroke="#586579" stroke-width="1.8"/>
+<text x="376" y="297" font-size="19" font-weight="normal" fill="#586579" text-anchor="start">a = retired A, bit 0</text>
+<path d="M32,278 V310 H288 V302" fill="none" stroke="#586579" stroke-width="1.8"/>
+<text x="32" y="346" font-size="21" font-weight="normal" fill="#233047" text-anchor="start">Issued store: byte 0, preserving a</text>
+<text x="672" y="184" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">byte 2 · bit positions 7 → 0</text>
+<rect x="672" y="204" width="64" height="64" rx="0" fill="#edf0f5" stroke="white" stroke-width="1.5"/>
+<text x="704" y="245" font-size="25" font-weight="normal" fill="#586579" text-anchor="middle">·</text>
+<rect x="736" y="204" width="64" height="64" rx="0" fill="#edf0f5" stroke="white" stroke-width="1.5"/>
+<text x="768" y="245" font-size="25" font-weight="normal" fill="#586579" text-anchor="middle">·</text>
+<rect x="800" y="204" width="64" height="64" rx="0" fill="#edf0f5" stroke="white" stroke-width="1.5"/>
+<text x="832" y="245" font-size="25" font-weight="normal" fill="#586579" text-anchor="middle">·</text>
+<rect x="864" y="204" width="64" height="64" rx="0" fill="#edf0f5" stroke="white" stroke-width="1.5"/>
+<text x="896" y="245" font-size="25" font-weight="normal" fill="#586579" text-anchor="middle">·</text>
+<rect x="928" y="204" width="64" height="64" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="960" y="245" font-size="25" font-weight="bold" fill="#233047" text-anchor="middle">A</text>
+<rect x="992" y="204" width="64" height="64" rx="0" fill="#edf0f5" stroke="white" stroke-width="1.5"/>
+<text x="1024" y="245" font-size="25" font-weight="normal" fill="#586579" text-anchor="middle">·</text>
+<rect x="1056" y="204" width="64" height="64" rx="0" fill="#edf0f5" stroke="white" stroke-width="1.5"/>
+<text x="1088" y="245" font-size="25" font-weight="normal" fill="#586579" text-anchor="middle">·</text>
+<rect x="1120" y="204" width="64" height="64" rx="0" fill="#edf0f5" stroke="white" stroke-width="1.5"/>
+<text x="1152" y="245" font-size="25" font-weight="normal" fill="#586579" text-anchor="middle">·</text>
+<path d="M672,278 V310 H1184 V278" fill="none" stroke="#586579" stroke-width="1.8"/>
+<text x="672" y="346" font-size="21" font-weight="normal" fill="#233047" text-anchor="start">Issued store: byte 2, preserving other bits</text>
+<path d="M32,382 H1248" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
+<g data-layout="card">
+<rect x="32" y="410" width="344" height="104" rx="8" fill="#f6f8fb" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="56" y="450" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Logical destinations</text>
+<text x="56" y="486" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">New A + B</text>
+</g>
+<g data-layout="card">
+<rect x="408" y="410" width="464" height="104" rx="8" fill="#f6f8fb" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="432" y="450" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Issued byte coverage</text>
+<text x="432" y="486" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">New source: 2 · original source: 0</text>
+</g>
+<g data-layout="card">
+<rect x="904" y="410" width="344" height="104" rx="8" fill="#edf8f6" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="928" y="450" font-size="22" font-weight="bold" fill="#233047" text-anchor="start">Summary dependencies</text>
+<text x="928" y="486" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">New A + B + C</text>
+</g>
+<path d="M32,546 H1248" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
+<text x="32" y="590" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">For a range: admit once, observe each window</text>
+<g data-layout="card">
+<rect x="32" y="648" width="248" height="132" rx="8" fill="#f6f8fb" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="56" y="688" font-size="22" font-weight="bold" fill="#233047" text-anchor="start">Admit whole call</text>
+<text x="56" y="724" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Range · values</text>
+<text x="56" y="752" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Effect capacity</text>
+</g>
+<path d="M280,714 H344" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="352" y="626" width="896" height="176" rx="8" fill="#fafbfc" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="376" y="656" font-size="18" font-weight="bold" fill="#586579" text-anchor="start">ONE NONEMPTY WINDOW · Rows = 1 here</text>
+<rect x="376" y="686" width="184" height="60" rx="6" fill="#edf8f6" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="468.0" y="723" font-size="21" font-weight="bold" fill="#233047" text-anchor="middle">Read before*</text>
+<path d="M560,716 H592" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="600" y="686" width="184" height="60" rx="6" fill="#eef5fc" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="692.0" y="723" font-size="21" font-weight="bold" fill="#233047" text-anchor="middle">Write children</text>
+<path d="M784,716 H816" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="824" y="686" width="184" height="60" rx="6" fill="#edf8f6" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="916.0" y="723" font-size="21" font-weight="bold" fill="#233047" text-anchor="middle">Read after*</text>
+<path d="M1008,716 H1040" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="1048" y="686" width="176" height="60" rx="6" fill="#edf8f6" stroke="#d9e0e9" stroke-width="1.5"/>
+<text x="1136.0" y="723" font-size="21" font-weight="bold" fill="#233047" text-anchor="middle">Run law</text>
+<text x="800" y="780" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">Repeat this bracket at the next original window</text>
+<text x="32" y="854" font-size="21" font-weight="normal" fill="#586579" text-anchor="start">* Read only values requested by the law; this example requests after-values only.</text>
+<text x="32" y="886" font-size="21" font-weight="normal" fill="#586579" text-anchor="start">The owner supplies isolation. Whole-call admission does not create a range snapshot.</text>
+</g></svg>

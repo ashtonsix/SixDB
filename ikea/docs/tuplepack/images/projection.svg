@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800" role="img" aria-labelledby="title description">
+<title id="title">TuplePack: physical codes, placement and a two-row projection</title>
+<desc id="description">Each two-byte unit has a flag in byte zero bit zero, a seven-bit rank in bits one through seven, and a three-bit tag in byte one. Original rows zero and one are at storage offsets two and ten, with bytes 4b 05 and 18 02. Repeating map 1, hole, 0, 2 yields decoded slots 25 00 01 05, then 0c 00 00 02 in a uint64 packet.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8" fill="#586579"/></marker></defs>
+<rect width="1280" height="100%" fill="white"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#233047" font-size="21">
+<text x="32" y="42" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">From packed codes to two rows in a word</text>
+<text x="32" y="80" font-size="22" font-weight="normal" fill="#586579" text-anchor="start">2 physical bytes per unit · 8-byte stride · reader&lt;8, 2&gt;</text>
+<path d="M640,120 V382" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
+<text x="32" y="142" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">1  Describe the codes</text>
+<text x="672" y="142" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">2  Place original rows</text>
+<text x="32" y="243" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">byte 0</text>
+<rect x="128" y="214" width="56" height="44" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="156" y="243" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">r</text>
+<text x="156" y="200" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">7</text>
+<rect x="184" y="214" width="56" height="44" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="212" y="243" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">r</text>
+<text x="212" y="200" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">6</text>
+<rect x="240" y="214" width="56" height="44" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="268" y="243" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">r</text>
+<text x="268" y="200" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">5</text>
+<rect x="296" y="214" width="56" height="44" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="324" y="243" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">r</text>
+<text x="324" y="200" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">4</text>
+<rect x="352" y="214" width="56" height="44" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="380" y="243" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">r</text>
+<text x="380" y="200" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">3</text>
+<rect x="408" y="214" width="56" height="44" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="436" y="243" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">r</text>
+<text x="436" y="200" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">2</text>
+<rect x="464" y="214" width="56" height="44" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="492" y="243" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">r</text>
+<text x="492" y="200" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">1</text>
+<rect x="520" y="214" width="56" height="44" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="548" y="243" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">f</text>
+<text x="548" y="200" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">0</text>
+<text x="32" y="323" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">byte 1</text>
+<rect x="128" y="294" width="56" height="44" rx="0" fill="#edf0f5" stroke="white" stroke-width="1.5"/>
+<text x="156" y="323" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">·</text>
+<rect x="184" y="294" width="56" height="44" rx="0" fill="#edf0f5" stroke="white" stroke-width="1.5"/>
+<text x="212" y="323" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">·</text>
+<rect x="240" y="294" width="56" height="44" rx="0" fill="#edf0f5" stroke="white" stroke-width="1.5"/>
+<text x="268" y="323" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">·</text>
+<rect x="296" y="294" width="56" height="44" rx="0" fill="#edf0f5" stroke="white" stroke-width="1.5"/>
+<text x="324" y="323" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">·</text>
+<rect x="352" y="294" width="56" height="44" rx="0" fill="#edf0f5" stroke="white" stroke-width="1.5"/>
+<text x="380" y="323" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">·</text>
+<rect x="408" y="294" width="56" height="44" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="436" y="323" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">t</text>
+<rect x="464" y="294" width="56" height="44" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="492" y="323" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">t</text>
+<rect x="520" y="294" width="56" height="44" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="548" y="323" font-size="23" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">t</text>
+<text x="32" y="376" font-size="21" font-weight="normal" fill="#586579" text-anchor="start">Code ranks: 0 flag · 1 rank · 2 tag</text>
+<text x="696" y="200" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">0</text>
+<rect x="672" y="214" width="48" height="44" rx="0" fill="#f6f8fb" stroke="white" stroke-width="1.5"/>
+<text x="696" y="243" font-size="21" font-weight="normal" fill="#586579" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">·</text>
+<text x="744" y="200" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">1</text>
+<rect x="720" y="214" width="48" height="44" rx="0" fill="#f6f8fb" stroke="white" stroke-width="1.5"/>
+<text x="744" y="243" font-size="21" font-weight="normal" fill="#586579" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">·</text>
+<text x="792" y="200" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">2</text>
+<rect x="768" y="214" width="48" height="44" rx="0" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<text x="792" y="243" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">4b</text>
+<text x="840" y="200" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">3</text>
+<rect x="816" y="214" width="48" height="44" rx="0" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<text x="840" y="243" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">05</text>
+<text x="888" y="200" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">4</text>
+<rect x="864" y="214" width="48" height="44" rx="0" fill="#f6f8fb" stroke="white" stroke-width="1.5"/>
+<text x="888" y="243" font-size="21" font-weight="normal" fill="#586579" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">·</text>
+<text x="936" y="200" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">5</text>
+<rect x="912" y="214" width="48" height="44" rx="0" fill="#f6f8fb" stroke="white" stroke-width="1.5"/>
+<text x="936" y="243" font-size="21" font-weight="normal" fill="#586579" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">·</text>
+<text x="984" y="200" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">6</text>
+<rect x="960" y="214" width="48" height="44" rx="0" fill="#f6f8fb" stroke="white" stroke-width="1.5"/>
+<text x="984" y="243" font-size="21" font-weight="normal" fill="#586579" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">·</text>
+<text x="1032" y="200" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">7</text>
+<rect x="1008" y="214" width="48" height="44" rx="0" fill="#f6f8fb" stroke="white" stroke-width="1.5"/>
+<text x="1032" y="243" font-size="21" font-weight="normal" fill="#586579" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">·</text>
+<text x="1080" y="200" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">8</text>
+<rect x="1056" y="214" width="48" height="44" rx="0" fill="#f6f8fb" stroke="white" stroke-width="1.5"/>
+<text x="1080" y="243" font-size="21" font-weight="normal" fill="#586579" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">·</text>
+<text x="1128" y="200" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">9</text>
+<rect x="1104" y="214" width="48" height="44" rx="0" fill="#f6f8fb" stroke="white" stroke-width="1.5"/>
+<text x="1128" y="243" font-size="21" font-weight="normal" fill="#586579" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">·</text>
+<text x="1176" y="200" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">10</text>
+<rect x="1152" y="214" width="48" height="44" rx="0" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<text x="1176" y="243" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">18</text>
+<text x="1224" y="200" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">11</text>
+<rect x="1200" y="214" width="48" height="44" rx="0" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<text x="1224" y="243" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">02</text>
+<path d="M768,264 V278 H864 V264" fill="none" stroke="#586579" stroke-width="1.8"/>
+<text x="816" y="308" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">row 0</text>
+<path d="M1152,264 V278 H1248 V264" fill="none" stroke="#586579" stroke-width="1.8"/>
+<text x="1200" y="308" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">row 1</text>
+<text x="672" y="344" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Offsets count bytes from the storage origin.</text>
+<text x="672" y="372" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">Gaps remain available to the owner or siblings.</text>
+<path d="M32,408 H1248" fill="none" stroke="#d9e0e9" stroke-width="1.8"/>
+<text x="32" y="454" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">3  Repeat the map, then join decoded rows</text>
+<text x="32" y="490" font-size="22" font-weight="normal" fill="#586579" text-anchor="start">Map {1, hole, 0, 2} · four decoded byte slots per original row</text>
+<text x="64" y="534" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">Original row 0</text>
+<text x="128" y="572" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">code 1</text>
+<path d="M128,582 V598" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="64" y="608" width="128" height="56" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="128" y="644" font-size="26" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">25</text>
+<text x="256" y="572" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">hole</text>
+<path d="M256,582 V598" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="192" y="608" width="128" height="56" rx="0" fill="#edf0f5" stroke="white" stroke-width="1.5"/>
+<text x="256" y="644" font-size="26" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">00</text>
+<text x="384" y="572" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">code 0</text>
+<path d="M384,582 V598" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="320" y="608" width="128" height="56" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="384" y="644" font-size="26" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">01</text>
+<text x="512" y="572" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">code 2</text>
+<path d="M512,582 V598" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="448" y="608" width="128" height="56" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="512" y="644" font-size="26" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">05</text>
+<path d="M64,672 V684 H576 V672" fill="none" stroke="#586579" stroke-width="1.8"/>
+<text x="320" y="716" font-size="21" font-weight="normal" fill="#586579" text-anchor="middle">bits 0…31 · low word</text>
+<text x="688" y="534" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">Original row 1</text>
+<text x="752" y="572" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">code 1</text>
+<path d="M752,582 V598" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="688" y="608" width="128" height="56" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="752" y="644" font-size="26" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">0c</text>
+<text x="880" y="572" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">hole</text>
+<path d="M880,582 V598" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="816" y="608" width="128" height="56" rx="0" fill="#edf0f5" stroke="white" stroke-width="1.5"/>
+<text x="880" y="644" font-size="26" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">00</text>
+<text x="1008" y="572" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">code 0</text>
+<path d="M1008,582 V598" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="944" y="608" width="128" height="56" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="1008" y="644" font-size="26" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">00</text>
+<text x="1136" y="572" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">code 2</text>
+<path d="M1136,582 V598" fill="none" stroke="#586579" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="1072" y="608" width="128" height="56" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="1136" y="644" font-size="26" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">02</text>
+<path d="M688,672 V684 H1200 V672" fill="none" stroke="#586579" stroke-width="1.8"/>
+<text x="944" y="716" font-size="21" font-weight="normal" fill="#586579" text-anchor="middle">bits 32…63 · high word</text>
+<text x="640" y="774" font-size="22" font-weight="normal" fill="#233047" text-anchor="middle">uint64_t = 0x0200000c05010025 · byte values shown in hexadecimal</text>
+</g></svg>

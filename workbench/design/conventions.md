@@ -28,7 +28,7 @@ Headers include their own requirements.
 Compile shared orchestration and validation once behind declarations. Keep
 kernel templates and useful inlining visible. Reuse stages across compositions
 and specialize where measurements justify the runtime, build-time and code-size
-trade-off. [Ikea's stage guide](../../ikea/docs/extension.md) owns its
+trade-off. [Ikea's authoring guide](../../ikea/docs/source.md) owns its
 implemented model; it is not a prescribed ABI for every module.
 
 ## Open choices

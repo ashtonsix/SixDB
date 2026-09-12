@@ -5,6 +5,7 @@ representation, attach its storage, and prepare bindings for repeated reads or
 mutations. [ordinary.cpp](../../examples/seriespack/ordinary.cpp) demonstrates this
 with a 20-bit array: construction, point/range replacement, reads, failures and
 physical-description serialization. Build and run it with `ikea_example_seriespack_ordinary`.
+See [Ikea's build instructions](../../README.md#build-and-run).
 
 ## Choose and place the representation
 
@@ -23,6 +24,7 @@ even for an incomplete logical tile. `describe_preset<F>` can suggest tight or
 cacheline strides; it does not allocate.
 
 ```cpp
+namespace sp = ikea::seriespack;
 using F = sp::preset_format<20, sp::preset::bulk_x86, 8>;
 auto storage = sp::view<F, std::uint8_t>::attach(count, planes);
 if (!storage) { /* report sp::describe(storage.error()) */ }
@@ -52,15 +54,16 @@ copies its pointer/count proof and does not borrow a view object.
 | Read a range | `read.read(first, output_span)` | Output length determines count; arbitrary edges |
 | Replace a point | `write.set(row, value, summary, effects)` | A scalar value crosses the boundary directly |
 | Replace a selected range | `write.replace(first, input_span, selection, summary, effects)` | All checks precede any local write |
-| Already admitted read | `get_unchecked(row)`, `read_unchecked(first,count,out)` | No repeated bounds/capacity checks |
-| Already admitted write | `replace_unchecked(first,count,input,selection,summary,effects)` | Whole concrete traversal remains behind one erased call |
-| Already admitted region | `read16_unchecked`, `replace16_unchecked` | Sixteen logical positions, original first row divisible by 16 |
 
-Checked calls return errors for command range, value domain or capacity. A returned
-failure leaves output/data, summary and effect records unchanged. Lifetime,
-isolation and non-aliasing remain caller obligations. “Checked” is a local command
-guarantee, not transactional publication. The [reference](reference.md) specifies
-which inputs must remain readable.
+The example initializes values 0..511, then changes row 7 from 7 to 1000.
+That replacement adds 993 to `sum_change`. A later attempt to set row 7 to 123
+with an empty journal fails: the row remains 1000 and the delta remains 993.
+Checked rejection preserves that call's outputs; it does not undo earlier calls.
+
+Trusted `_unchecked` entries reuse command proofs and keep concrete traversal
+behind the erased call. The [reference](reference.md#borrowing-and-failure-guarantees)
+owns their bounds, readable-input requirements and sixteen-row entry alignment.
+Lifetime, isolation and non-aliasing remain caller obligations for both surfaces.
 
 Use the typed prepared operation directly when erasure has no benefit. It also
 provides `effect_capacity(first,count,selection)` and

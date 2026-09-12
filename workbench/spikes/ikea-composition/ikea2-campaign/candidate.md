@@ -6,7 +6,7 @@ own the source checkpoints and transition. Historical case names and source
 identities below describe the measured candidate, before its namespace change.
 
 Ikea2 is ready to evaluate as the replacement candidate described by its
-[capabilities and limits](../../../../ikea/docs/capabilities.md). Ordinary construction,
+[module guides](../../../../ikea/README.md). Ordinary construction,
 point/range mutation, whole-operation writable composition, physical recovery
 descriptions, shared-body CPS and owner interoperation now have coherent caller
 surfaces and executable guides. This account closes the campaign snapshot; it
