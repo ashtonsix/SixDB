@@ -8,6 +8,8 @@ import subprocess
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('build', type=Path)
+parser.add_argument('--module', choices=('seriespack', 'tuplepack'),
+                    help='Check only this module; the default checks every supported header')
 args = parser.parse_args()
 entries = json.loads((args.build / 'compile_commands.json').read_text())
 entry = next(e for e in entries if e['file'].endswith('/ikea/examples/seriespack/ordinary.cpp'))
@@ -27,6 +29,9 @@ for part in parts:
 command += ['-fsyntax-only', '-x', 'c++', '-']
 include = Path(__file__).resolve().parents[1] / 'include'
 headers = sorted(p for p in include.rglob('*.h') if 'detail' not in p.parts)
+if args.module:
+    headers = [p for p in headers if args.module in p.relative_to(include).parts
+               or p.name == args.module + '.h']
 for header in headers:
     name = header.relative_to(include)
     result = subprocess.run(command, input=f'#include <{name}>\n', text=True,

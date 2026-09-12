@@ -30,4 +30,8 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64|x86_64|AMD64")
   add_executable(tuple_packet_crossover batching/crossover.cpp)
   sixdb_target(tuple_packet_crossover)
   target_link_libraries(tuple_packet_crossover PRIVATE ikea::tuplepack benchmark::benchmark)
+  add_executable(tuple_gpr_probe batching/gpr/main.cpp batching/gpr/rows1.cpp
+    batching/gpr/rows2.cpp batching/gpr/rows4.cpp batching/gpr/rows8.cpp)
+  sixdb_target(tuple_gpr_probe)
+  target_link_libraries(tuple_gpr_probe PRIVATE ikea::tuplepack benchmark::benchmark)
 endif()

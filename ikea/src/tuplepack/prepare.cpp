@@ -122,11 +122,62 @@ std::expected<scalar_write<64>, error> prepare_write_codes(const layout& f,
                                                            std::span<const byte> m) {
     return write<64>(f, m);
 }
-std::expected<scalar_read<8>, error> prepare_read8(const layout& f, std::span<const byte> m) {
-    return read<8>(f, m);
+namespace {
+word_transfer transfer(const scalar_read<8>& p, unsigned rows) {
+    word_transfer t;
+    if (!p.slots)
+        return t;
+    t.offset = p.codes[0].offset;
+    t.shift = p.codes[0].shift;
+    for (unsigned i = 0; i < p.slots; ++i) {
+        const auto c = p.codes[i];
+        if (!c.width || c.offset != t.offset + i || c.shift != t.shift)
+            return {};
+        t.mask |= std::uint64_t((1u << c.width) - 1) << (8 * i);
+    }
+    t.bytes = p.slots;
+    const auto row_mask = t.mask;
+    for (unsigned r = 1; r < rows; ++r)
+        t.mask |= row_mask << (r * (64 / rows));
+    return t;
 }
-std::expected<scalar_write<8>, error> prepare_write8(const layout& f, std::span<const byte> m) {
-    return write<8>(f, m);
+} // namespace
+std::expected<gpr_read, error> prepare_read8(const layout& f, std::span<const byte> m,
+                                             unsigned rows) {
+    if (!std::has_single_bit(rows) || rows > 8 || m.size() > 8 / rows)
+        return std::unexpected(error::map);
+    auto scalar = read<8>(f, m);
+    if (!scalar)
+        return std::unexpected(scalar.error());
+    gpr_read p;
+    static_cast<scalar_read<8>&>(p) = *scalar;
+    p.transfer = transfer(p, rows);
+    return p;
+}
+std::expected<gpr_write, error> prepare_write8(const layout& f, std::span<const byte> m,
+                                               unsigned rows) {
+    if (!std::has_single_bit(rows) || rows > 8 || m.size() > 8 / rows)
+        return std::unexpected(error::map);
+    auto scalar = write<8>(f, m);
+    if (!scalar)
+        return std::unexpected(scalar.error());
+    gpr_write p;
+    static_cast<scalar_write<8>&>(p) = *scalar;
+    p.transfer = transfer(p.read, rows);
+    for (unsigned r = 0; r < rows; ++r)
+        for (unsigned i = 0; i < 8 / rows; ++i)
+            p.invalid_word |= std::uint64_t(p.invalid[i]) << (8 * (r * (8 / rows) + i));
+    if (p.transfer.bytes) {
+        const auto full = ~std::uint64_t(0) >> (64 - 8 * p.transfer.bytes);
+        if (((p.transfer.mask << p.transfer.shift) & full) != full)
+            p.native_reads = p.writes;
+    } else if (p.word.bytes && p.word.selected > 1)
+        p.native_reads = ((std::uint64_t(1) << p.word.bytes) - 1) << p.word.offset;
+    else
+        for (unsigned i = 0; i < p.count; ++i)
+            if (p.stores[i].mask != 255)
+                p.native_reads |= std::uint64_t(1) << p.stores[i].offset;
+    return p;
 }
 std::expected<read64, error> prepare_read64(const layout& f, std::span<const byte> m) {
     auto scalar = read<64>(f, m);

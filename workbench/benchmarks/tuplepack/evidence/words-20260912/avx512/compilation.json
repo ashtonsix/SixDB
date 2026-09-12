@@ -1,0 +1,18 @@
+{
+  "build.resources": {
+    "sha256": "36e629df71477af20f9cf2c5b8508582bdb0cc0c94f8555a66b9defeb8a764bd",
+    "text": "\tCommand being timed: \"cmake --build build/tuplepack/words-avx512 --target ikea_tuplepack_word_bench ikea_tuplepack_gpr_check ikea_tuplepack_packets_check ikea_tuplepack_operations_check ikea_tuplepack_wire_check ikea_tuplepack_execution_check ikea_example_tuplepack_words -j 1\"\n\tUser time (seconds): 88.66\n\tSystem time (seconds): 1.75\n\tPercent of CPU this job got: 99%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 1:30.61\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 1055748\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 4\n\tMinor (reclaiming a frame) page faults: 1837477\n\tVoluntary context switches: 417\n\tInvoluntary context switches: 4841\n\tSwaps: 0\n\tFile system inputs: 816\n\tFile system outputs: 130096\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 0\n"
+  },
+  "size.txt": {
+    "sha256": "9152d51c756f9d4e0f4d0816e3fef5d01d5a0a2b5390fa24f09a34fd4b1630ed",
+    "text": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n1791305\t   6296\t    680\t1798281\t 1b7089\t/opt/sixdb/jobs/20260912T204548Z-7f1ccc6d/results/avx512/ikea_tuplepack_word_bench\n   1706\t      0\t      0\t   1706\t    6aa\tdescription.cpp.o (ex build/tuplepack/words-avx512/ikea/libikea_tuplepack.a)\n   1190\t      0\t      0\t   1190\t    4a6\tconstruction.cpp.o (ex build/tuplepack/words-avx512/ikea/libikea_tuplepack.a)\n  18302\t      0\t      0\t  18302\t   477e\tprepare.cpp.o (ex build/tuplepack/words-avx512/ikea/libikea_tuplepack.a)\n   7457\t      0\t      0\t   7457\t   1d21\tkernels.cpp.o (ex build/tuplepack/words-avx512/ikea/libikea_tuplepack.a)\n  23843\t    112\t      0\t  23955\t   5d93\tgpr.cpp.o (ex build/tuplepack/words-avx512/ikea/libikea_tuplepack.a)\n   5901\t      0\t      0\t   5901\t   170d\troutes.cpp.o (ex build/tuplepack/words-avx512/ikea/libikea_tuplepack.a)\n   8763\t      0\t      0\t   8763\t   223b\tpacket_prepare.cpp.o (ex build/tuplepack/words-avx512/ikea/libikea_tuplepack.a)\n 181667\t      0\t      0\t 181667\t  2c5a3\tpacket.cpp.o (ex build/tuplepack/words-avx512/ikea/libikea_tuplepack.a)\n"
+  },
+  "checks.log": {
+    "sha256": "1c0b37ee200e26b0905e577f343a74fa1da54bb95cfaf203cdcf7e932af557c6",
+    "text": "TuplePack GPR: four shapes, wire/effects, guarded transfers, erasure, nested maintenance and CPS passed\nTuplePack packet operations: seven shapes, buffered/native wire, admission, sparse tails, effects and nested native maintenance passed\nTuplePack operation admission, complete maintenance, nesting and construction passed\nTuplePack wire: 5301385 checks passed; independent description-bit reference; 2,304 single-code shapes per packet size, every byte value and slot; 1,200 random schemas; descriptor mutation and guard pages\nTuplePack: 512 independent routes, CPS early completion, 2/4-row batch maps and inactive-null lanes passed\nTuplePack: two four-code rows in a GPR, native update and one-row tail passed\nIkea: 13 ordinary/author headers compile independently\n"
+  },
+  "source_archive_sha256": "e78d12abba78bece6c59b489a3d7c1d4a74e3d7fe039a77c5c41b39dc7497bc3",
+  "source_manifest_sha256": "884f8b671fc1e5e5b12ff247de131ae7dbc2210dd5ab627331d9d55ad94d20b6",
+  "profile": "avx512",
+  "compiler": "Clang 21.1.8, C++23, Release -O3 -g, assertions enabled, no LTO"
+}

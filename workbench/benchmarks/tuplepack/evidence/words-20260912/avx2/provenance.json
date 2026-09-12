@@ -1,0 +1,116 @@
+{
+  "cases": 214,
+  "counters": [
+    "items_per_iteration",
+    "rows_per_call",
+    "drawn_codes",
+    "stride"
+  ],
+  "files_sha256": {
+    "cases.csv": "71a4ddec43d57bb7a28760d5d98dfd8f40cb7d6ffda78a9adbab8c13eecb9bc9",
+    "compilation.json": "d851eafb4e0449e4ee736241184e5ef3b0845090eab19f764c2bfc6017233693",
+    "coverage.json": "775c8f10b077a189d9c0e7787cd91fd74cb68c2d74091f7a62de0806c82e17ad"
+  },
+  "filter": "^word/(2/(unit4/stride4/map0|unit16/stride16/map2)/random/all/(word_hash|update)/|4/unit4/stride4/map1/random/all/|8/unit1/stride1/map0/scan/all/(sum|update)/|4/(unit8/stride8/map2|unit16/(stride16|stride64)/(map1|map2))/(scan|random)/all/)|^gpr/(?=.*/point$)(2/(unit4/stride4/map0|unit16/stride16/map2)/random/all/(word_hash|update)/|4/unit4/stride4/map1/random/all/|8/unit1/stride1/map0/scan/all/(sum|update)/|4/(unit8/stride8/map2|unit16/(stride16|stride64)/(map1|map2))/(scan|random)/all/)",
+  "format": 1,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "avx2": {
+      "context": {
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 4194304,
+            "type": "Unified"
+          }
+        ],
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-12T20:49:35+00:00",
+        "executable": "/opt/sixdb/jobs/20260912T204548Z-7f1ccc6d/results/avx2/ikea_tuplepack_word_bench",
+        "host_name": "ip-172-31-25-75",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.972656,
+          0.504883,
+          0.205566
+        ],
+        "mhz_per_cpu": 4538,
+        "num_cpus": 1
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260912T204548Z-7f1ccc6d/results/avx2/samples.json",
+      "sha256": "1378a845c22675cfc87ecbc894c4236a99a8ed1961815393c7bd75ba0a344530"
+    },
+    "prior_points": {
+      "context": {
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 4194304,
+            "type": "Unified"
+          }
+        ],
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-12T19:16:19+00:00",
+        "executable": "/opt/sixdb/jobs/20260912T191330Z-74d0330a/results/avx2/tuple_gpr_probe",
+        "host_name": "ip-172-31-16-219",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.994629,
+          0.459961,
+          0.179199
+        ],
+        "mhz_per_cpu": 4510,
+        "num_cpus": 1
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260912T191330Z-74d0330a/results/avx2/samples.json",
+      "sha256": "01aaad205cfeb7d0c3eac3fe1fa4910f364cca4b6973e3ffb2a134dc3d2293af"
+    }
+  },
+  "kind": "google-benchmark-summary",
+  "prior_bundle": "../../../../../spikes/tuple-layout/batching/gpr/evidence/zen-avx2/artifact.json",
+  "units": "CPU/real times are ns per benchmark iteration. ns_per_item uses the reported item rate; an item means what the benchmark counts, not necessarily a value or byte."
+}

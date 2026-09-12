@@ -1,38 +1,53 @@
 #pragma once
 #include <ikea/tuplepack/detail/plan.h>
-#include <ikea/tuplepack/detail/packet_plan.h>
 #include <ikea/tuplepack/detail/window.h>
+#include <ikea/tuplepack/detail/packet_plan.h>
 #include <bit>
 
 namespace ikea::tuplepack {
-/// Prepared ordered code projection. Owns its controls; the source description
-/// and map can be released after make(). Width is the outer packet byte count.
-template <unsigned N, unsigned Rows = 1> class reader;
-template <unsigned N> class reader<N, 1> {
-    static_assert(N == 8 || N == 64);
-    detail::read_control<N> controls_;
-    detail::read8_function scalar_ = nullptr;
-    explicit reader(detail::read_control<N> controls) : controls_(std::move(controls)) {
+namespace detail {
+// Distinct from empty controls nested inside write64, so the unused endpoint
+// occupies no extra cache line in an aligned 64-byte packet plan.
+struct no_kernel_entry {};
+template <unsigned N, unsigned Rows>
+using read_control =
+    std::conditional_t<N == 8, gpr_read, std::conditional_t<Rows == 1, read64, packet_read>>;
+template <unsigned N, unsigned Rows>
+using write_control =
+    std::conditional_t<N == 8, gpr_write, std::conditional_t<Rows == 1, write64, packet_write>>;
+} // namespace detail
+/// Prepared ordered code projection. Owns its controls; the description and map
+/// may be released after make(). N is 8 or 64 output bytes; Rows is a power of two
+/// in 1..N. Each original row has N/Rows map slots, in row-major order. A short
+/// map leaves trailing slots zero. Physical extent and stride are independent.
+template <unsigned N, unsigned Rows = 1> class reader {
+    static_assert((N == 8 || N == 64) && Rows <= N && std::has_single_bit(Rows));
+    detail::read_control<N, Rows> controls_;
+    [[no_unique_address]] std::conditional_t<N == 8, detail::gpr_reader<Rows>,
+                                             detail::no_kernel_entry> entry_{};
+    explicit reader(detail::read_control<N, Rows> controls) : controls_(std::move(controls)) {
         if constexpr (N == 8)
-            scalar_ = detail::select_read8(controls_.slots);
+            entry_ = detail::select_gpr_reader<Rows>(controls_);
     }
 
   public:
-    static constexpr unsigned slots = N, rows = 1, bytes_per_row = N;
+    static constexpr unsigned slots = N, rows = Rows, bytes_per_row = N / Rows;
     [[nodiscard]] static std::expected<reader, error> make(const layout& format,
                                                            std::span<const byte> map) {
         auto prepared = [&] {
             if constexpr (N == 8)
-                return detail::prepare_read8(format, map);
-            else
+                return detail::prepare_read8(format, map, Rows);
+            else if constexpr (Rows == 1)
                 return detail::prepare_read64(format, map);
+            else
+                return detail::prepare_packet_read(format, map, Rows);
         }();
         if (!prepared)
             return std::unexpected(prepared.error());
         return reader(std::move(*prepared));
     }
-    /// Byte-position masks relative to one unit. Native read64 may load whole
-    /// 16-byte source chunks, bounded by the described unit's exact extent.
+    /// Possible read bytes relative to one physical unit. SIMD may read preserved
+    /// neighbors within the unit; allocation padding is never required.
     std::uint64_t read_bytes() const noexcept {
         if constexpr (N == 8)
             return controls_.reads;
@@ -42,44 +57,56 @@ template <unsigned N> class reader<N, 1> {
     unsigned unit_bytes() const noexcept {
         return controls_.bytes;
     }
-    /// Trusted exact unit storage, encoded using this reader's description.
-    packet<N> get_unchecked(const byte* row) const {
-        if constexpr (N == 8)
-            return scalar_(controls_, row);
+    /// Trusted unit storage and active mask. Bit r names first+r; inactive rows
+    /// issue no payload access and produce zero slots. The allocation contains
+    /// all active units at the supplied stride, with this plan's physical layout.
+    packet<N> get_unchecked(const byte* first, std::size_t stride,
+                            std::uint64_t active = detail::all_rows<Rows>) const {
+        if constexpr (N == 8) {
+            if constexpr (Rows == 1)
+                return active ? entry_(controls_, first) : packet<N>{};
+            else
+                return entry_(controls_, first, stride, active);
+        } else if constexpr (Rows == 1)
+            return active ? detail::read_buffered(controls_, first) : packet<N>{};
         else
-            return detail::read_buffered(controls_, row);
+            return detail::read_packet_buffered(controls_, Rows, first, stride, active);
     }
-    packet<N> get_unchecked(const byte* row, std::size_t, std::uint64_t active) const {
-        return active ? get_unchecked(row) : packet<N>{};
+    packet<N> get_unchecked(const byte* row) const
+        requires(Rows == 1)
+    {
+        return get_unchecked(row, 0);
     }
-    /// Authoring access; control representation is internal and not serialized.
-    const detail::read_control<N>& controls() const noexcept {
+    /// Authoring access; controls are internal and are not serialized.
+    const auto& controls() const noexcept {
         return controls_;
     }
 };
-
-/// Prepared replacement map. Holes are ignored; duplicate destinations are
-/// rejected at preparation. All unselected bits, including padding, survive.
-template <unsigned N, unsigned Rows = 1> class writer;
-template <unsigned N> class writer<N, 1> {
-    static_assert(N == 8 || N == 64);
-    detail::write_control<N> controls_;
-    detail::write8_function scalar_ = nullptr;
-    explicit writer(detail::write_control<N> controls) : controls_(std::move(controls)) {
-        if constexpr (N == 8) {
-            scalar_ = detail::select_write8(controls_);
-        }
+/// Prepared replacement map, with the same packet shape as reader. Holes and
+/// trailing slots are ignored; duplicate destinations reject at preparation.
+/// Unselected bits survive. Access/effect masks describe one physical unit;
+/// operation admission multiplies effect capacity by the active row count.
+template <unsigned N, unsigned Rows = 1> class writer {
+    static_assert((N == 8 || N == 64) && Rows <= N && std::has_single_bit(Rows));
+    detail::write_control<N, Rows> controls_;
+    [[no_unique_address]] std::conditional_t<N == 8, detail::gpr_writer<Rows>,
+                                             detail::no_kernel_entry> entry_{};
+    explicit writer(detail::write_control<N, Rows> controls) : controls_(std::move(controls)) {
+        if constexpr (N == 8)
+            entry_ = detail::select_gpr_writer<Rows>(controls_);
     }
 
   public:
-    static constexpr unsigned slots = N, rows = 1, bytes_per_row = N;
+    static constexpr unsigned slots = N, rows = Rows, bytes_per_row = N / Rows;
     [[nodiscard]] static std::expected<writer, error> make(const layout& format,
                                                            std::span<const byte> map) {
         auto prepared = [&] {
             if constexpr (N == 8)
-                return detail::prepare_write8(format, map);
-            else
+                return detail::prepare_write8(format, map, Rows);
+            else if constexpr (Rows == 1)
                 return detail::prepare_write64(format, map);
+            else
+                return detail::prepare_packet_write(format, map, Rows);
         }();
         if (!prepared)
             return std::unexpected(prepared.error());
@@ -91,132 +118,64 @@ template <unsigned N> class writer<N, 1> {
     std::uint64_t write_bytes() const noexcept {
         return controls_.writes;
     }
-    /// Possible old-data reads, including word-coalesced point loads. Owners
-    /// admit this independently of issued stores and semantic observation maps.
+    /// Possible old-data reads, independent of issued stores and semantic
+    /// observation maps. Owners admit both read and write coverage.
     std::uint64_t read_bytes() const noexcept {
-        if constexpr (N == 8) {
-            const auto& w = controls_.word;
-            if (w.bytes && w.selected > 1)
-                return ((std::uint64_t(1) << w.bytes) - 1) << w.offset;
-        } else {
+        if constexpr (N == 8 || Rows > 1)
+            return controls_.native_reads;
+        else {
             if (controls_.needs_old)
                 return controls_.read.bytes == 64 ? ~std::uint64_t(0)
                                                   : (std::uint64_t(1) << controls_.read.bytes) - 1;
+            return 0;
         }
-        std::uint64_t result = 0;
-        for (unsigned i = 0; i < controls_.count; ++i)
-            if (controls_.stores[i].mask != 255)
-                result |= std::uint64_t(1) << controls_.stores[i].offset;
-        return result;
     }
-    /// Upper bound before journal coalescing: consecutive issued bytes form a run.
-    unsigned effect_capacity() const noexcept {
-        return controls_.runs;
-    }
-    bool accepts(const packet<N>& input) const noexcept {
-        return detail::fits<N>(controls_, input);
-    }
-    bool accepts(const packet<N>& input, std::uint64_t active) const noexcept {
-        return !active || accepts(input);
-    }
-    void set_unchecked(byte* row, std::size_t, const packet<N>& input, std::uint64_t active) const {
-        if (active)
-            set_unchecked(row, input);
-    }
-    /// Trusted widths and readable/writable unit; caller emits effects before
-    /// entering. This body cannot fail, allocate, suspend or publish.
-    void set_unchecked(byte* row, const packet<N>& input) const {
-        if constexpr (N == 8)
-            scalar_(controls_, row, input);
-        else
-            detail::write_buffered(controls_, row, input);
-    }
-    const detail::write_control<N>& controls() const noexcept {
-        return controls_;
-    }
-};
-/// One 64-byte packet projects Rows consecutive original rows, in row-major
-/// order. Rows is 2/4/8/16/32/64; each row has 64/Rows map slots. The map is shared
-/// by the rows, while placement and the active row mask remain independent.
-template <unsigned N, unsigned Rows> class reader {
-    static_assert(N == 64 && Rows >= 2 && Rows <= 64 && std::has_single_bit(Rows));
-    detail::packet_read controls_;
-    explicit reader(detail::packet_read controls) : controls_(std::move(controls)) {}
-
-  public:
-    /// Total packet slots, original rows, and the map capacity for each row.
-    static constexpr unsigned slots = N, rows = Rows, bytes_per_row = N / Rows;
-    [[nodiscard]] static std::expected<reader, error> make(const layout& format,
-                                                           std::span<const byte> map) {
-        auto prepared = detail::prepare_packet_read(format, map, Rows);
-        if (!prepared)
-            return std::unexpected(prepared.error());
-        return reader(std::move(*prepared));
-    }
-    unsigned unit_bytes() const noexcept {
-        return controls_.bytes;
-    }
-    std::uint64_t read_bytes() const noexcept {
-        return controls_.native_reads;
-    }
-    packet<N> get_unchecked(const byte* first, std::size_t stride,
-                            std::uint64_t active = detail::all_rows<Rows>) const {
-        return detail::read_packet_buffered(controls_, Rows, first, stride, active);
-    }
-    const detail::packet_read& controls() const noexcept {
-        return controls_;
-    }
-};
-/// Prepared packet replacement. Selected code widths and holes have the same
-/// meaning as a one-row writer. Access/effect masks describe one physical unit;
-/// operation admission multiplies capacity by the number of active rows.
-template <unsigned N, unsigned Rows> class writer {
-    static_assert(N == 64 && Rows >= 2 && Rows <= 64 && std::has_single_bit(Rows));
-    detail::packet_write controls_;
-    explicit writer(detail::packet_write controls) : controls_(std::move(controls)) {}
-
-  public:
-    /// Total packet slots, original rows, and the map capacity for each row.
-    static constexpr unsigned slots = N, rows = Rows, bytes_per_row = N / Rows;
-    [[nodiscard]] static std::expected<writer, error> make(const layout& format,
-                                                           std::span<const byte> map) {
-        auto prepared = detail::prepare_packet_write(format, map, Rows);
-        if (!prepared)
-            return std::unexpected(prepared.error());
-        return writer(std::move(*prepared));
-    }
-    unsigned unit_bytes() const noexcept {
-        return controls_.read.bytes;
-    }
-    std::uint64_t write_bytes() const noexcept {
-        return controls_.writes;
-    }
-    std::uint64_t read_bytes() const noexcept {
-        return controls_.native_reads;
-    }
+    /// Conservative runs per active row, before journal coalescing.
     unsigned effect_capacity() const noexcept {
         return controls_.runs;
     }
     bool accepts(const packet<N>& input,
                  std::uint64_t active = detail::all_rows<Rows>) const noexcept {
-        if (active == detail::all_rows<Rows>)
-            return detail::fits<64>(controls_, input);
-        for (unsigned r = 0; r < Rows; ++r) {
-            if (!(active & (std::uint64_t(1) << r)))
-                continue;
-            byte invalid = 0;
-            for (unsigned i = 0; i < bytes_per_row; ++i)
-                invalid |= input[r * bytes_per_row + i] & controls_.invalid[r * bytes_per_row + i];
-            if (invalid)
-                return false;
+        if constexpr (N == 8)
+            return !(input & controls_.invalid_word & detail::gpr_row_mask<Rows>(active));
+        else {
+            if (active == detail::all_rows<Rows>)
+                return detail::fits<64>(controls_, input);
+            for (unsigned r = 0; r < Rows; ++r) {
+                if (!(active & (std::uint64_t(1) << r)))
+                    continue;
+                byte invalid = 0;
+                for (unsigned i = 0; i < bytes_per_row; ++i)
+                    invalid |=
+                        input[r * bytes_per_row + i] & controls_.invalid[r * bytes_per_row + i];
+                if (invalid)
+                    return false;
+            }
+            return true;
         }
-        return true;
     }
+    /// Trusted widths, active rows and readable/writable units. Caller emits
+    /// effects before entering. No allocation, failure, suspension or publication.
     void set_unchecked(byte* first, std::size_t stride, const packet<N>& input,
                        std::uint64_t active = detail::all_rows<Rows>) const {
-        detail::write_packet_buffered(controls_, Rows, first, stride, input, active);
+        if constexpr (N == 8) {
+            if constexpr (Rows == 1) {
+                if (active)
+                    entry_(controls_, first, input);
+            } else
+                entry_(controls_, first, stride, input, active);
+        } else if constexpr (Rows == 1) {
+            if (active)
+                detail::write_buffered(controls_, first, input);
+        } else
+            detail::write_packet_buffered(controls_, Rows, first, stride, input, active);
     }
-    const detail::packet_write& controls() const noexcept {
+    void set_unchecked(byte* row, const packet<N>& input) const
+        requires(Rows == 1)
+    {
+        set_unchecked(row, 0, input);
+    }
+    const auto& controls() const noexcept {
         return controls_;
     }
 };

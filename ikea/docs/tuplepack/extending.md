@@ -52,26 +52,40 @@ counts. See the [maintenance review](../../../workbench/spikes/tuple-layout/main
 
 `author/native.h` exposes explicit ISA bodies and compiled endpoints.
 `native::read`/`write` use `IKEA_TUPLE_CC`; AVX2 needs its regcall convention to
-avoid the default SysV aggregate return through memory. Inline `read_body` and
+avoid the default SysV aggregate return through memory. GPR endpoints use the
+ordinary integer calling convention. Inline `read_body` and
 `write_body` use the same controls. Their inputs and effects are already admitted;
 kernel bodies do not acquire buffers, publish or suspend.
 
-`native_reader` and `native_writer` infer Rows from ordinary bound operations.
+`native_reader` and `native_writer` infer N and Rows from ordinary bound operations.
 The reader separates checked `admit(first, active)` from register-valued
 `get_unchecked`; a retained extent proof can cover many calls. The writer offers
 checked `set/replace`, explicit trusted entries, and is a mutation-group leaf.
 The same whole-call admission, effects and observation shell therefore encloses
-register-valued operations. `word<I>`
+register-valued operations. Explicit adapter types are `native_reader<N, Byte, Rows>`
+and `native_writer<N, Rows>`; deduction normally avoids spelling them.
+`native::packet_for<8>` is `uint64_t`; `packet_for<64>` is the ISA vector carrier.
+The [word example](../../examples/tuplepack/words.cpp) passes two four-byte rows
+between scalar consumers with no packet buffer. `word<I>`
 extracts a compile-time 64-bit piece into a GPR for caller-owned struct assembly.
 Callers perform wider signed/float semantics explicitly; Ikea does not infer
 those from byte code ranks.
 
 `reader<64, Rows>` and `writer<64, Rows>` select a native execution grain without
 changing storage: 64×1, 32×2, 16×4, 8×8, 4×16, 2×32 or 1×64 projected bytes×rows.
-The active mask names original rows. `native::row_mask<Rows>(active)` expands it
+The active mask names original rows. `native::row_mask_for<N, Rows>(active)` expands it
 into a byte mask when a transform needs one. Returned zero bytes do not replace
 the row mask. The [packet example](../../examples/tuplepack/packets.cpp) builds a
 native update over one-byte tuples with sparse rows and a final tail.
+
+When a scattered map favors SIMD but the surrounding consumer wants a GPR,
+`native::compact_word<Rows>(wide)` gathers each row's first `8/Rows` bytes into
+one word. `expand_word<Rows>(word)` reverses this placement and zeros unused slots.
+These helpers compose in registers. Prepare the same map, with at most `8/Rows`
+entries, on both packet widths to preserve the logical read/write operation;
+compacting discards later slots, and an expanded write to extra mapped codes
+would set them to zero. This lets a consumer retain its GPR interface while a
+measured operation uses a wider internal carrier.
 
 Keep shared hot bodies inlinable through their wrappers. An outlined helper
 lambda capturing a native carrier can introduce aggregate ABI transfers even
@@ -93,18 +107,21 @@ reference and test the fallback for layouts outside that proof.
 
 ## Share bodies across execution styles
 
-`chain<Slots, Mask>` uses Ikea's shared bounded straight-through mechanism. A stage
-body receives bindings, original row, active mask, `native::pipeline_values` and
-ordinal, then returns values, mask and an early-completion flag. The same body can
-be called inline or wrapped with `chain::stage<Body>`. The table holds up to
+`packet_chain<N, Slots, Mask>` uses Ikea's shared bounded straight-through
+mechanism. A stage body receives bindings, original row, active mask,
+`native::pipeline_values_for<N>` and ordinal, then returns values, mask and an
+early-completion flag. The same body can be called inline or wrapped with
+`stage<Body>`. `N=8` carries one GPR; `N=64` carries native vectors. `chain<Slots,
+Mask>` is the 64-byte shorthand used by the packet example. The table holds up to
 `Slots-1` stages plus completion; slots are a power of two, aligned to at least
-64 bytes. Flattened vector arguments preserve the carrier at continuation hops.
+64 bytes. Flattened register arguments preserve the carrier at continuation hops.
 
 Enter a pipeline with `chain::run`, which bridges the caller's ABI to its stages.
 The compiler-specific entry requirements are documented with the
 [shared implementation](../source.md#shared-execution-entry).
 
-The [execution check](../../test/tuplepack/execution.cpp) tests early completion,
+The [execution check](../../test/tuplepack/execution.cpp) and
+[GPR pipeline check](../../test/tuplepack/gpr_pipeline.cpp) test early completion,
 native handoff, normalized/general routes and sparse batch coordinates. The
 [benchmark](../../../workbench/benchmarks/tuplepack/README.md) compares inline and CPS
 decode/repack with the same bodies. Choose enough work per stage to amortize
@@ -115,7 +132,8 @@ after returning to the owner, with explicit retained state, not inside a kernel.
 
 Code-map admission and ISA-control preparation live in compiled
 `src/tuplepack/prepare.cpp` and `packet_prepare.cpp`; description recovery in
-`description.cpp`; scalar point/native endpoints in `kernels.cpp`; packet
+`description.cpp`; GPR bodies/endpoints in `detail/gpr.h` and `gpr.cpp`;
+64-byte point/native endpoints in `kernels.cpp`; packet
 endpoints in `packet.cpp`; cold route lowering in `routes.cpp`.
 Native instruction bodies and exact bounded memory helpers live
 under `tuplepack/detail/native/`; `author/` exposes the supported composition

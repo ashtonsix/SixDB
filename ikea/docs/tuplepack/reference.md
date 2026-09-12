@@ -6,7 +6,7 @@ This reference specifies their bounds, recovery format and execution requirement
 | Surface | Contract |
 | --- | --- |
 | `layout` | Owned 1–64-byte unit, 1–128 ordered code descriptors; widths 1–8, byte-contained, disjoint physical bits |
-| `reader<N, Rows=1>` | Owned prepared map/control; N=8 supports one row; N=64 supports power-of-two Rows through 64, with 64/Rows slots per row; read duplicates allowed; holes and unused slots zero |
+| `reader<N, Rows=1>` | Owned prepared map/control; N=8 or 64; power-of-two Rows in 1..N, with N/Rows slots per row; read duplicates allowed; holes and unused slots zero |
 | `writer<N, Rows=1>` | Same shapes as reader; duplicate destinations rejected; selected unsigned widths checked; all other bits preserved |
 | `constructor` | One 128-slot rank-ordered input per original row; defined codes consumed, spare bits zeroed, no dependence on prior contents |
 | `view` / `const_view` | Borrowed storage with original row count, byte stride and unit offset; exact last-row extent |
@@ -66,11 +66,19 @@ Array size is bounded by addressable storage and checked extent arithmetic.
 Engine defines the size and representation policy of its record segments.
 
 Prepared controls and native calling conventions are specific to the compiled
-ISA. An x86 build without AVX2 uses the scalar/buffered surface; optimized native
+ISA. An x86 build without AVX2 supports native GPR packets and buffered 64-byte
+packets; optimized native
 AVX-512 requires VBMI. Native calls must use matching carrier types and calling
 conventions.
 
-Scalar eight-byte maps suit small transactional projections. Native packet
+Eight-byte packets use the same word lowering for one or several rows. A
+consecutive map with a common bit shift uses bounded word transfers, including
+short maps with unused slots. Full tight windows coalesce across rows. General
+maps gather selected bytes and use bounded word assembly or per-byte replacement;
+writes preserve the selected-byte footprint. Choosing a GPR carrier does not
+promise a speedup for every map or consumer.
+
+64-byte native packet
 bodies choose transfers from physical byte extent and placement independently of
 the projected slot count. Full tight windows coalesce across rows; small tuples
 with short physical transfers can use a route over complete units. Their

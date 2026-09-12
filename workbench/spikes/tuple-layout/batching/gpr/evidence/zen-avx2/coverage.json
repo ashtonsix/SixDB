@@ -1,0 +1,3034 @@
+{
+  "metric": "Median CPU ns per original row, including inactive rows",
+  "profile": {
+    "job": "20260912T191330Z-74d0330a",
+    "samples_sha256": "01aaad205cfeb7d0c3eac3fe1fa4910f364cca4b6973e3ffb2a134dc3d2293af",
+    "cases": 5313,
+    "groups": {
+      "random/1/word_hash/gpr_inline-over-point": {
+        "pairs": 23,
+        "median_ratio": 0.8988141570230171,
+        "below_0_8": 5,
+        "above_1_4": 0,
+        "best": [
+          0.147805956466312,
+          "gpr/1/unit64/stride64/map0/random/all/word_hash/gpr_inline",
+          0.5933302509833419,
+          4.014251287082425
+        ],
+        "worst": [
+          0.9481663231746992,
+          "gpr/1/unit16/stride64/map2/random/all/word_hash/gpr_inline",
+          3.7612855460275805,
+          3.9669048078335574
+        ]
+      },
+      "random/1/word_hash/gpr_compiled-over-point": {
+        "pairs": 23,
+        "median_ratio": 1.0636589168343578,
+        "below_0_8": 5,
+        "above_1_4": 0,
+        "best": [
+          0.3349434168845365,
+          "gpr/1/unit8/stride64/map0/random/all/word_hash/gpr_compiled",
+          1.3469616077619762,
+          4.021460162706551
+        ],
+        "worst": [
+          1.1845945512868783,
+          "gpr/1/unit4/stride4/map2/random/all/word_hash/gpr_compiled",
+          2.30940148305091,
+          1.9495290439603186
+        ]
+      },
+      "random/1/word_hash/gpr_inline-over-gpr_points": {
+        "pairs": 23,
+        "median_ratio": 0.9545476966585122,
+        "below_0_8": 3,
+        "above_1_4": 0,
+        "best": [
+          0.6754371879160807,
+          "gpr/1/unit64/stride64/map0/random/all/word_hash/gpr_inline",
+          0.5933302509833419,
+          0.8784388268788361
+        ],
+        "worst": [
+          0.9660195214649528,
+          "gpr/1/unit8/stride64/map2/random/all/word_hash/gpr_inline",
+          3.7473790391740693,
+          3.8791959747265046
+        ]
+      },
+      "random/1/word_hash/gpr_compiled-over-gpr_points": {
+        "pairs": 23,
+        "median_ratio": 1.1573555980587802,
+        "below_0_8": 0,
+        "above_1_4": 5,
+        "best": [
+          1.058167042767787,
+          "gpr/1/unit64/stride64/map1/random/all/word_hash/gpr_compiled",
+          4.14152888524106,
+          3.913870606296998
+        ],
+        "worst": [
+          2.1067408153668774,
+          "gpr/1/unit16/stride16/map0/random/all/word_hash/gpr_compiled",
+          1.347675488819861,
+          0.6396968620865546
+        ]
+      },
+      "random/1/word_hash/gpr_inline-over-simd": {
+        "pairs": 23,
+        "median_ratio": 1.0670870032884359,
+        "below_0_8": 9,
+        "above_1_4": 5,
+        "best": [
+          0.22901061027798655,
+          "gpr/1/unit8/stride8/map0/random/all/word_hash/gpr_inline",
+          0.5495742187500152,
+          2.39977622907039
+        ],
+        "worst": [
+          1.8143919225798777,
+          "gpr/1/unit16/stride64/map1/random/all/word_hash/gpr_inline",
+          3.7424689734602055,
+          2.062657426372799
+        ]
+      },
+      "random/1/word_hash/gpr_compiled-over-simd": {
+        "pairs": 23,
+        "median_ratio": 1.2741248720523752,
+        "below_0_8": 6,
+        "above_1_4": 8,
+        "best": [
+          0.47192344006500686,
+          "gpr/1/unit8/stride8/map0/random/all/word_hash/gpr_compiled",
+          1.1325106534091283,
+          2.39977622907039
+        ],
+        "worst": [
+          2.0595049557862897,
+          "gpr/1/unit16/stride64/map1/random/all/word_hash/gpr_compiled",
+          4.248053191704174,
+          2.062657426372799
+        ]
+      },
+      "random/1/sum/gpr_inline-over-point": {
+        "pairs": 23,
+        "median_ratio": 0.9810037493314175,
+        "below_0_8": 5,
+        "above_1_4": 0,
+        "best": [
+          0.30531821939492154,
+          "gpr/1/unit8/stride64/map0/random/all/sum/gpr_inline",
+          1.4019423458094087,
+          4.591741523279458
+        ],
+        "worst": [
+          1.0174444448355056,
+          "gpr/1/unit4/stride64/map1/random/all/sum/gpr_inline",
+          3.026671139385419,
+          2.9747777922899306
+        ]
+      },
+      "random/1/sum/gpr_compiled-over-point": {
+        "pairs": 23,
+        "median_ratio": 1.0259254331136702,
+        "below_0_8": 5,
+        "above_1_4": 0,
+        "best": [
+          0.4099042578012166,
+          "gpr/1/unit16/stride16/map0/random/all/sum/gpr_compiled",
+          1.602724584211949,
+          3.909997404782245
+        ],
+        "worst": [
+          1.080137518761492,
+          "gpr/1/unit4/stride64/map1/random/all/sum/gpr_compiled",
+          3.2131691034308347,
+          2.9747777922899306
+        ]
+      },
+      "random/1/sum/gpr_inline-over-gpr_points": {
+        "pairs": 23,
+        "median_ratio": 1.0028576626509544,
+        "below_0_8": 0,
+        "above_1_4": 0,
+        "best": [
+          0.861619732298449,
+          "gpr/1/unit64/stride64/map0/random/all/sum/gpr_inline",
+          1.4031993778425993,
+          1.6285599380360491
+        ],
+        "worst": [
+          1.0455456524440874,
+          "gpr/1/unit16/stride16/map2/random/all/sum/gpr_inline",
+          3.9188201694796105,
+          3.7481100517408326
+        ]
+      },
+      "random/1/sum/gpr_compiled-over-gpr_points": {
+        "pairs": 23,
+        "median_ratio": 1.0607690733189294,
+        "below_0_8": 0,
+        "above_1_4": 0,
+        "best": [
+          1.0352279276643572,
+          "gpr/1/unit8/stride64/map1/random/all/sum/gpr_compiled",
+          4.634390688819484,
+          4.476686307406161
+        ],
+        "worst": [
+          1.2198007520019762,
+          "gpr/1/unit8/stride8/map0/random/all/sum/gpr_compiled",
+          1.6031172369786022,
+          1.3142451620459445
+        ]
+      },
+      "random/1/sum/gpr_inline-over-simd": {
+        "pairs": 23,
+        "median_ratio": 1.044003687954968,
+        "below_0_8": 8,
+        "above_1_4": 5,
+        "best": [
+          0.3813251665141817,
+          "gpr/1/unit8/stride8/map0/random/all/sum/gpr_inline",
+          1.1977600567485014,
+          3.141046439965184
+        ],
+        "worst": [
+          1.6589625908388705,
+          "gpr/1/unit64/stride64/map1/random/all/sum/gpr_inline",
+          4.550625828912241,
+          2.7430551201345494
+        ]
+      },
+      "random/1/sum/gpr_compiled-over-simd": {
+        "pairs": 23,
+        "median_ratio": 1.0662635319107132,
+        "below_0_8": 5,
+        "above_1_4": 5,
+        "best": [
+          0.510376802004994,
+          "gpr/1/unit8/stride8/map0/random/all/sum/gpr_compiled",
+          1.6031172369786022,
+          3.141046439965184
+        ],
+        "worst": [
+          1.7027303098968187,
+          "gpr/1/unit16/stride64/map2/random/all/sum/gpr_compiled",
+          4.670431791070461,
+          2.7429075314654368
+        ]
+      },
+      "random/1/update/gpr_inline-over-point": {
+        "pairs": 23,
+        "median_ratio": 1.0353344960277158,
+        "below_0_8": 5,
+        "above_1_4": 0,
+        "best": [
+          0.27237645176114145,
+          "gpr/1/unit16/stride16/map0/random/all/update/gpr_inline",
+          2.6334660313098355,
+          9.668479100459221
+        ],
+        "worst": [
+          1.0621586041516842,
+          "gpr/1/unit4/stride4/map1/random/all/update/gpr_inline",
+          6.225865955421118,
+          5.861521933810949
+        ]
+      },
+      "random/1/update/gpr_compiled-over-point": {
+        "pairs": 23,
+        "median_ratio": 1.0903583277033206,
+        "below_0_8": 5,
+        "above_1_4": 0,
+        "best": [
+          0.31872415913007135,
+          "gpr/1/unit64/stride64/map0/random/all/update/gpr_compiled",
+          3.2593682843837257,
+          10.226298167292606
+        ],
+        "worst": [
+          1.1480638875068152,
+          "gpr/1/unit4/stride4/map1/random/all/update/gpr_compiled",
+          6.729401658037464,
+          5.861521933810949
+        ]
+      },
+      "random/1/update/gpr_inline-over-gpr_points": {
+        "pairs": 23,
+        "median_ratio": 1.01253121663458,
+        "below_0_8": 0,
+        "above_1_4": 0,
+        "best": [
+          0.9863551092610358,
+          "gpr/1/unit16/stride16/map2/random/all/update/gpr_inline",
+          20.392914271140015,
+          20.675022696864335
+        ],
+        "worst": [
+          1.1068014597074949,
+          "gpr/1/unit8/stride8/map0/random/all/update/gpr_inline",
+          2.8476439806637623,
+          2.5728588950509126
+        ]
+      },
+      "random/1/update/gpr_compiled-over-gpr_points": {
+        "pairs": 23,
+        "median_ratio": 1.0831097020894462,
+        "below_0_8": 0,
+        "above_1_4": 0,
+        "best": [
+          0.9573907334820176,
+          "gpr/1/unit16/stride16/map2/random/all/update/gpr_compiled",
+          19.79407514450831,
+          20.675022696864335
+        ],
+        "worst": [
+          1.324786119389467,
+          "gpr/1/unit16/stride16/map0/random/all/update/gpr_compiled",
+          3.3575963810138325,
+          2.534444112806069
+        ]
+      },
+      "random/1/update/gpr_inline-over-simd": {
+        "pairs": 23,
+        "median_ratio": 0.8100416638946825,
+        "below_0_8": 10,
+        "above_1_4": 0,
+        "best": [
+          0.28294244202373764,
+          "gpr/1/unit16/stride16/map0/random/all/update/gpr_inline",
+          2.6334660313098355,
+          9.307426671212864
+        ],
+        "worst": [
+          1.359706657541086,
+          "gpr/1/unit8/stride64/map2/random/all/update/gpr_inline",
+          10.514777247890594,
+          7.733121838871977
+        ]
+      },
+      "random/1/update/gpr_compiled-over-simd": {
+        "pairs": 23,
+        "median_ratio": 0.876359467927035,
+        "below_0_8": 7,
+        "above_1_4": 2,
+        "best": [
+          0.3374019243764606,
+          "gpr/1/unit64/stride64/map0/random/all/update/gpr_compiled",
+          3.2593682843837257,
+          9.660194708157748
+        ],
+        "worst": [
+          1.441094037129717,
+          "gpr/1/unit8/stride64/map2/random/all/update/gpr_compiled",
+          11.144155770395997,
+          7.733121838871977
+        ]
+      },
+      "random/2/word_hash/gpr_inline-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.8068468503878776,
+        "below_0_8": 21,
+        "above_1_4": 0,
+        "best": [
+          0.1256758434547993,
+          "gpr/2/unit4/stride4/map0/random/all/word_hash/gpr_inline",
+          0.24274023119223034,
+          1.931478830930103
+        ],
+        "worst": [
+          0.901863218049931,
+          "gpr/2/unit4/stride64/map2/random/half/word_hash/gpr_inline",
+          1.1361152453954606,
+          1.2597423008913093
+        ]
+      },
+      "random/2/word_hash/gpr_compiled-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.9002991352506521,
+        "below_0_8": 13,
+        "above_1_4": 0,
+        "best": [
+          0.34849628870498783,
+          "gpr/2/unit4/stride64/map0/random/all/word_hash/gpr_compiled",
+          0.792984473442804,
+          2.2754459635410584
+        ],
+        "worst": [
+          0.9648188165056492,
+          "gpr/2/unit64/stride64/map1/random/half/word_hash/gpr_compiled",
+          1.211122783398616,
+          1.255285202443525
+        ]
+      },
+      "random/2/word_hash/gpr_inline-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.981789878502036,
+        "below_0_8": 1,
+        "above_1_4": 0,
+        "best": [
+          0.5259303144383227,
+          "gpr/2/unit4/stride4/map0/random/all/word_hash/gpr_inline",
+          0.24274023119223034,
+          0.46154447562405565
+        ],
+        "worst": [
+          1.0090125635410834,
+          "gpr/2/unit8/stride64/map1/random/all/word_hash/gpr_inline",
+          1.9085882092197402,
+          1.8915405795559543
+        ]
+      },
+      "random/2/word_hash/gpr_compiled-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 1.1431167830814948,
+        "below_0_8": 0,
+        "above_1_4": 10,
+        "best": [
+          1.0235110076551526,
+          "gpr/2/unit16/stride64/map1/random/half/word_hash/gpr_compiled",
+          1.179380550322604,
+          1.1522890731039093
+        ],
+        "worst": [
+          2.958303156303783,
+          "gpr/2/unit4/stride4/map0/random/half/word_hash/gpr_compiled",
+          0.9006671417736342,
+          0.3044539704642583
+        ]
+      },
+      "random/2/word_hash/gpr_inline-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.7157162769698702,
+        "below_0_8": 32,
+        "above_1_4": 0,
+        "best": [
+          0.15207725794778104,
+          "gpr/2/unit4/stride4/map0/random/all/word_hash/gpr_inline",
+          0.24274023119223034,
+          1.596163913447074
+        ],
+        "worst": [
+          1.3850747352818045,
+          "gpr/2/unit16/stride64/map2/random/all/word_hash/gpr_inline",
+          1.8829537030503714,
+          1.359460002472191
+        ]
+      },
+      "random/2/word_hash/gpr_compiled-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.7879184662799423,
+        "below_0_8": 23,
+        "above_1_4": 1,
+        "best": [
+          0.4922376377247912,
+          "gpr/2/unit8/stride8/map0/random/all/word_hash/gpr_compiled",
+          0.6812681378287071,
+          1.3840228491621407
+        ],
+        "worst": [
+          1.5043750003402614,
+          "gpr/2/unit16/stride64/map2/random/all/word_hash/gpr_compiled",
+          2.045137641681674,
+          1.359460002472191
+        ]
+      },
+      "random/2/sum/gpr_inline-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.8198007756688332,
+        "below_0_8": 14,
+        "above_1_4": 0,
+        "best": [
+          0.251387533246508,
+          "gpr/2/unit4/stride4/map0/random/all/sum/gpr_inline",
+          0.5636562063330068,
+          2.242180425790214
+        ],
+        "worst": [
+          0.9402730378576615,
+          "gpr/2/unit16/stride64/map2/random/half/sum/gpr_inline",
+          1.4190521371662979,
+          1.5091915646113783
+        ]
+      },
+      "random/2/sum/gpr_compiled-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.89951353227933,
+        "below_0_8": 14,
+        "above_1_4": 0,
+        "best": [
+          0.35201072702944153,
+          "gpr/2/unit4/stride4/map0/random/all/sum/gpr_compiled",
+          0.789271561813596,
+          2.242180425790214
+        ],
+        "worst": [
+          0.9909902841874105,
+          "gpr/2/unit64/stride64/map2/random/half/sum/gpr_compiled",
+          1.5290648994574974,
+          1.5429665899411877
+        ]
+      },
+      "random/2/sum/gpr_inline-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 1.0200515109247053,
+        "below_0_8": 1,
+        "above_1_4": 0,
+        "best": [
+          0.6922201437496003,
+          "gpr/2/unit4/stride4/map0/random/all/sum/gpr_inline",
+          0.5636562063330068,
+          0.8142730479928082
+        ],
+        "worst": [
+          1.1124558735279866,
+          "gpr/2/unit8/stride8/map2/random/half/sum/gpr_inline",
+          1.2443782824437757,
+          1.1185866442481147
+        ]
+      },
+      "random/2/sum/gpr_compiled-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 1.1229055156559427,
+        "below_0_8": 0,
+        "above_1_4": 3,
+        "best": [
+          0.9692959428770962,
+          "gpr/2/unit4/stride4/map0/random/all/sum/gpr_compiled",
+          0.789271561813596,
+          0.8142730479928082
+        ],
+        "worst": [
+          1.5626996026623046,
+          "gpr/2/unit8/stride8/map0/random/half/sum/gpr_compiled",
+          0.9576342520480134,
+          0.6128076377677021
+        ]
+      },
+      "random/2/sum/gpr_inline-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.8702990205311596,
+        "below_0_8": 16,
+        "above_1_4": 2,
+        "best": [
+          0.35432866953363473,
+          "gpr/2/unit4/stride4/map0/random/all/sum/gpr_inline",
+          0.5636562063330068,
+          1.5907722258966166
+        ],
+        "worst": [
+          1.4139966007986127,
+          "gpr/2/unit1/stride64/map0/random/all/sum/gpr_inline",
+          2.13166197625057,
+          1.5075439184554096
+        ]
+      },
+      "random/2/sum/gpr_compiled-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.918431955968709,
+        "below_0_8": 15,
+        "above_1_4": 5,
+        "best": [
+          0.49615623718143187,
+          "gpr/2/unit4/stride4/map0/random/all/sum/gpr_compiled",
+          0.789271561813596,
+          1.5907722258966166
+        ],
+        "worst": [
+          1.4957600685217574,
+          "gpr/2/unit1/stride64/map0/random/all/sum/gpr_compiled",
+          2.254923994768422,
+          1.5075439184554096
+        ]
+      },
+      "random/2/update/gpr_inline-over-point": {
+        "pairs": 46,
+        "median_ratio": 1.0113690246203468,
+        "below_0_8": 14,
+        "above_1_4": 0,
+        "best": [
+          0.1886201605086575,
+          "gpr/2/unit4/stride4/map0/random/all/update/gpr_inline",
+          1.1557658497247778,
+          6.127477818956311
+        ],
+        "worst": [
+          1.1623561111389615,
+          "gpr/2/unit1/stride1/map0/random/half/update/gpr_inline",
+          2.9089599505538493,
+          2.502640905551258
+        ]
+      },
+      "random/2/update/gpr_compiled-over-point": {
+        "pairs": 46,
+        "median_ratio": 1.103884056062408,
+        "below_0_8": 14,
+        "above_1_4": 0,
+        "best": [
+          0.2838421188035407,
+          "gpr/2/unit4/stride4/map0/random/all/update/gpr_compiled",
+          1.7392362870542577,
+          6.127477818956311
+        ],
+        "worst": [
+          1.281842613154874,
+          "gpr/2/unit1/stride1/map0/random/half/update/gpr_compiled",
+          3.2079917581601043,
+          2.502640905551258
+        ]
+      },
+      "random/2/update/gpr_inline-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.9519949745633349,
+        "below_0_8": 1,
+        "above_1_4": 0,
+        "best": [
+          0.3866979632696326,
+          "gpr/2/unit4/stride4/map0/random/all/update/gpr_inline",
+          1.1557658497247778,
+          2.9888076987850534
+        ],
+        "worst": [
+          1.0185235036316589,
+          "gpr/2/unit16/stride64/map2/random/half/update/gpr_inline",
+          5.781444987520323,
+          5.676300023422079
+        ]
+      },
+      "random/2/update/gpr_compiled-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 1.0611662119711296,
+        "below_0_8": 1,
+        "above_1_4": 0,
+        "best": [
+          0.5819164236498906,
+          "gpr/2/unit4/stride4/map0/random/all/update/gpr_compiled",
+          1.7392362870542577,
+          2.9888076987850534
+        ],
+        "worst": [
+          1.369109168294717,
+          "gpr/2/unit4/stride4/map0/random/half/update/gpr_compiled",
+          2.2354087068910298,
+          1.6327468682978183
+        ]
+      },
+      "random/2/update/gpr_inline-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.8375051255649774,
+        "below_0_8": 17,
+        "above_1_4": 5,
+        "best": [
+          0.27745650869625554,
+          "gpr/2/unit4/stride4/map0/random/all/update/gpr_inline",
+          1.1557658497247778,
+          4.165574832450761
+        ],
+        "worst": [
+          2.5554064906925875,
+          "gpr/2/unit16/stride16/map2/random/all/update/gpr_inline",
+          10.843906372648922,
+          4.243515234130096
+        ]
+      },
+      "random/2/update/gpr_compiled-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.9370561489294471,
+        "below_0_8": 17,
+        "above_1_4": 6,
+        "best": [
+          0.41752611752529745,
+          "gpr/2/unit4/stride4/map0/random/all/update/gpr_compiled",
+          1.7392362870542577,
+          4.165574832450761
+        ],
+        "worst": [
+          2.638409411040479,
+          "gpr/2/unit16/stride16/map2/random/all/update/gpr_compiled",
+          11.196130529622488,
+          4.243515234130096
+        ]
+      },
+      "random/4/word_hash/gpr_inline-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.7281322269974541,
+        "below_0_8": 37,
+        "above_1_4": 0,
+        "best": [
+          0.29079497208390154,
+          "gpr/4/unit16/stride16/map0/random/all/word_hash/gpr_inline",
+          0.3457810559153385,
+          1.1890888395951087
+        ],
+        "worst": [
+          0.8897266873330658,
+          "gpr/4/unit64/stride64/map2/random/half/word_hash/gpr_inline",
+          0.7019046850161154,
+          0.7888992147915195
+        ]
+      },
+      "random/4/word_hash/gpr_compiled-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.8251871677955926,
+        "below_0_8": 21,
+        "above_1_4": 0,
+        "best": [
+          0.3763939374515695,
+          "gpr/4/unit4/stride4/map0/random/all/word_hash/gpr_compiled",
+          0.4474383651052416,
+          1.1887501911818474
+        ],
+        "worst": [
+          0.9364313337390991,
+          "gpr/4/unit64/stride64/map2/random/half/word_hash/gpr_compiled",
+          0.7387499438929507,
+          0.7888992147915195
+        ]
+      },
+      "random/4/word_hash/gpr_inline-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.9405923444991182,
+        "below_0_8": 3,
+        "above_1_4": 0,
+        "best": [
+          0.777580303090122,
+          "gpr/4/unit16/stride16/map0/random/all/word_hash/gpr_inline",
+          0.3457810559153385,
+          0.44468854797529794
+        ],
+        "worst": [
+          1.0607456381204796,
+          "gpr/4/unit8/stride64/map0/random/all/word_hash/gpr_inline",
+          0.5364163408295926,
+          0.5056974278773007
+        ]
+      },
+      "random/4/word_hash/gpr_compiled-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 1.0738635998596195,
+        "below_0_8": 0,
+        "above_1_4": 5,
+        "best": [
+          0.955272500042184,
+          "gpr/4/unit64/stride64/map2/random/half/word_hash/gpr_compiled",
+          0.7387499438929507,
+          0.7733394857073015
+        ],
+        "worst": [
+          1.682293901578571,
+          "gpr/4/unit4/stride4/map0/random/half/word_hash/gpr_compiled",
+          0.43855393067779214,
+          0.2606880582912876
+        ]
+      },
+      "random/4/word_hash/gpr_inline-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.6957566656726848,
+        "below_0_8": 30,
+        "above_1_4": 0,
+        "best": [
+          0.30836056491363983,
+          "gpr/4/unit8/stride8/map0/random/half/word_hash/gpr_inline",
+          0.23513527684564456,
+          0.762533551952394
+        ],
+        "worst": [
+          1.3852235669826385,
+          "gpr/4/unit16/stride64/map2/random/all/word_hash/gpr_inline",
+          1.031817511792408,
+          0.7448743555814338
+        ]
+      },
+      "random/4/word_hash/gpr_compiled-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.7671373443888178,
+        "below_0_8": 24,
+        "above_1_4": 2,
+        "best": [
+          0.5685302686439704,
+          "gpr/4/unit64/stride64/map2/random/half/word_hash/gpr_compiled",
+          0.7387499438929507,
+          1.2994030127102638
+        ],
+        "worst": [
+          1.531531539053623,
+          "gpr/4/unit16/stride16/map2/random/all/word_hash/gpr_compiled",
+          0.9049565397358191,
+          0.5908833848077445
+        ]
+      },
+      "random/4/sum/gpr_inline-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.7483986640908413,
+        "below_0_8": 46,
+        "above_1_4": 0,
+        "best": [
+          0.3520288596943132,
+          "gpr/4/unit16/stride64/map0/random/all/sum/gpr_inline",
+          0.5430234258532058,
+          1.5425537165468313
+        ],
+        "worst": [
+          0.7989890177635961,
+          "gpr/4/unit64/stride64/map2/random/half/sum/gpr_inline",
+          0.8056349981396048,
+          1.0083179871415644
+        ]
+      },
+      "random/4/sum/gpr_compiled-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.837050115560908,
+        "below_0_8": 14,
+        "above_1_4": 0,
+        "best": [
+          0.4756080958567172,
+          "gpr/4/unit8/stride8/map0/random/all/sum/gpr_compiled",
+          0.6230690393785357,
+          1.3100471686803308
+        ],
+        "worst": [
+          0.910817620495163,
+          "gpr/4/unit8/stride8/map2/random/half/sum/gpr_compiled",
+          0.7338632532375011,
+          0.8057192095587026
+        ]
+      },
+      "random/4/sum/gpr_inline-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.9616483586695145,
+        "below_0_8": 0,
+        "above_1_4": 0,
+        "best": [
+          0.8180459167134042,
+          "gpr/4/unit8/stride8/map0/random/all/sum/gpr_inline",
+          0.5131713648816084,
+          0.6273136438885176
+        ],
+        "worst": [
+          0.9896161958608692,
+          "gpr/4/unit16/stride64/map1/random/half/sum/gpr_inline",
+          0.768597660186777,
+          0.7766623701203397
+        ]
+      },
+      "random/4/sum/gpr_compiled-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 1.1069300052490798,
+        "below_0_8": 0,
+        "above_1_4": 0,
+        "best": [
+          0.9932336805498587,
+          "gpr/4/unit8/stride8/map0/random/all/sum/gpr_compiled",
+          0.6230690393785357,
+          0.6273136438885176
+        ],
+        "worst": [
+          1.27939423103654,
+          "gpr/4/unit16/stride64/map0/random/half/sum/gpr_compiled",
+          0.5887417392361111,
+          0.4601722635243744
+        ]
+      },
+      "random/4/sum/gpr_inline-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.7784552262829882,
+        "below_0_8": 26,
+        "above_1_4": 1,
+        "best": [
+          0.42917092392538014,
+          "gpr/4/unit4/stride4/map0/random/half/sum/gpr_inline",
+          0.40917635492137006,
+          0.9534111751534069
+        ],
+        "worst": [
+          1.5764321929500356,
+          "gpr/4/unit16/stride64/map2/random/all/sum/gpr_inline",
+          1.2008099425624634,
+          0.7617263513981807
+        ]
+      },
+      "random/4/sum/gpr_compiled-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.9172491858017296,
+        "below_0_8": 14,
+        "above_1_4": 4,
+        "best": [
+          0.5336279617152501,
+          "gpr/4/unit8/stride8/map0/random/half/sum/gpr_compiled",
+          0.5077771329917816,
+          0.9515564577231379
+        ],
+        "worst": [
+          1.6961673577031493,
+          "gpr/4/unit16/stride64/map2/random/all/sum/gpr_compiled",
+          1.2920153727439128,
+          0.7617263513981807
+        ]
+      },
+      "random/4/update/gpr_inline-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.8788943468732207,
+        "below_0_8": 15,
+        "above_1_4": 0,
+        "best": [
+          0.465493210913762,
+          "gpr/4/unit8/stride8/map0/random/all/update/gpr_inline",
+          2.3634399034295446,
+          5.077281146141998
+        ],
+        "worst": [
+          0.9478126868763522,
+          "gpr/4/unit8/stride8/map2/random/half/update/gpr_inline",
+          2.7958776595749435,
+          2.9498208858009116
+        ]
+      },
+      "random/4/update/gpr_compiled-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.9791914504719876,
+        "below_0_8": 15,
+        "above_1_4": 0,
+        "best": [
+          0.5333853690330026,
+          "gpr/4/unit8/stride64/map0/random/all/update/gpr_compiled",
+          2.8070168417005554,
+          5.2626431182196045
+        ],
+        "worst": [
+          1.1131666557193014,
+          "gpr/4/unit8/stride8/map2/random/half/update/gpr_compiled",
+          3.283642250417948,
+          2.9498208858009116
+        ]
+      },
+      "random/4/update/gpr_inline-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.7982418642410307,
+        "below_0_8": 26,
+        "above_1_4": 0,
+        "best": [
+          0.5914002706537096,
+          "gpr/4/unit1/stride1/map0/random/all/update/gpr_inline",
+          3.063467378525909,
+          5.180023632961273
+        ],
+        "worst": [
+          0.871085302617626,
+          "gpr/4/unit64/stride64/map2/random/half/update/gpr_inline",
+          3.38551297460905,
+          3.8865458577197054
+        ]
+      },
+      "random/4/update/gpr_compiled-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.9084417443040351,
+        "below_0_8": 1,
+        "above_1_4": 0,
+        "best": [
+          0.6499082917749396,
+          "gpr/4/unit1/stride1/map0/random/all/update/gpr_compiled",
+          3.366540310651678,
+          5.180023632961273
+        ],
+        "worst": [
+          1.0164134342756326,
+          "gpr/4/unit4/stride4/map0/random/half/update/gpr_compiled",
+          1.6676320866425562,
+          1.6407025236054928
+        ]
+      },
+      "random/4/update/gpr_inline-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.8834570548529501,
+        "below_0_8": 16,
+        "above_1_4": 5,
+        "best": [
+          0.49382190675619786,
+          "gpr/4/unit16/stride16/map0/random/half/update/gpr_inline",
+          1.3035089991891187,
+          2.6396338059434594
+        ],
+        "worst": [
+          2.785579521167925,
+          "gpr/4/unit16/stride16/map2/random/all/update/gpr_inline",
+          6.030736387528019,
+          2.164984464345674
+        ]
+      },
+      "random/4/update/gpr_compiled-over-simd": {
+        "pairs": 46,
+        "median_ratio": 1.0217248971083346,
+        "below_0_8": 14,
+        "above_1_4": 9,
+        "best": [
+          0.6127296814231256,
+          "gpr/4/unit16/stride16/map0/random/half/update/gpr_compiled",
+          1.6173819809894483,
+          2.6396338059434594
+        ],
+        "worst": [
+          2.909431060040573,
+          "gpr/4/unit16/stride16/map2/random/all/update/gpr_compiled",
+          6.2988730450726065,
+          2.164984464345674
+        ]
+      },
+      "random/8/word_hash/gpr_inline-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.45962356762841733,
+        "below_0_8": 46,
+        "above_1_4": 0,
+        "best": [
+          0.0810302579855727,
+          "gpr/8/unit1/stride1/map0/random/all/word_hash/gpr_inline",
+          0.08177687532365856,
+          1.0092140560408778
+        ],
+        "worst": [
+          0.5020745547014271,
+          "gpr/8/unit8/stride64/map1/random/all/word_hash/gpr_inline",
+          0.5065927734373976,
+          1.0089990992247304
+        ]
+      },
+      "random/8/word_hash/gpr_compiled-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.503793673752182,
+        "below_0_8": 46,
+        "above_1_4": 0,
+        "best": [
+          0.17194357502041344,
+          "gpr/8/unit1/stride1/map0/random/all/word_hash/gpr_compiled",
+          0.1735278727565204,
+          1.0092140560408778
+        ],
+        "worst": [
+          0.5238427987031198,
+          "gpr/8/unit64/stride64/map2/random/half/word_hash/gpr_compiled",
+          0.29523601930929305,
+          0.5635965981401488
+        ]
+      },
+      "random/8/word_hash/gpr_inline-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.8308785666246012,
+        "below_0_8": 20,
+        "above_1_4": 0,
+        "best": [
+          0.2102491065819128,
+          "gpr/8/unit1/stride1/map0/random/all/word_hash/gpr_inline",
+          0.08177687532365856,
+          0.3889523083029054
+        ],
+        "worst": [
+          0.9544768107908417,
+          "gpr/8/unit8/stride64/map1/random/all/word_hash/gpr_inline",
+          0.5065927734373976,
+          0.5307544067180164
+        ]
+      },
+      "random/8/word_hash/gpr_compiled-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.939114700379224,
+        "below_0_8": 1,
+        "above_1_4": 0,
+        "best": [
+          0.44614177381711706,
+          "gpr/8/unit1/stride1/map0/random/all/word_hash/gpr_compiled",
+          0.1735278727565204,
+          0.3889523083029054
+        ],
+        "worst": [
+          1.1753049710028254,
+          "gpr/8/unit8/stride8/map0/random/half/word_hash/gpr_compiled",
+          0.28667510089556836,
+          0.24391550105583548
+        ]
+      },
+      "random/8/word_hash/gpr_inline-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.48468048144868014,
+        "below_0_8": 33,
+        "above_1_4": 0,
+        "best": [
+          0.20396850137801956,
+          "gpr/8/unit1/stride1/map0/random/all/word_hash/gpr_inline",
+          0.08177687532365856,
+          0.4009289413373665
+        ],
+        "worst": [
+          0.8407538433780879,
+          "gpr/8/unit8/stride64/map2/random/all/word_hash/gpr_inline",
+          0.5037826417798462,
+          0.5992034954674536
+        ]
+      },
+      "random/8/word_hash/gpr_compiled-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.5499491707152342,
+        "below_0_8": 33,
+        "above_1_4": 0,
+        "best": [
+          0.4328145336120878,
+          "gpr/8/unit1/stride1/map0/random/all/word_hash/gpr_compiled",
+          0.1735278727565204,
+          0.4009289413373665
+        ],
+        "worst": [
+          0.8422353688672831,
+          "gpr/8/unit8/stride64/map2/random/all/word_hash/gpr_compiled",
+          0.5046703770315961,
+          0.5992034954674536
+        ]
+      },
+      "random/8/sum/gpr_inline-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.4988855900322505,
+        "below_0_8": 46,
+        "above_1_4": 0,
+        "best": [
+          0.14121983368956553,
+          "gpr/8/unit1/stride1/map0/random/all/sum/gpr_inline",
+          0.14646555997529748,
+          1.037145818322257
+        ],
+        "worst": [
+          0.574737688276646,
+          "gpr/8/unit8/stride64/map2/random/half/sum/gpr_inline",
+          0.325098026819604,
+          0.5656459171738192
+        ]
+      },
+      "random/8/sum/gpr_compiled-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.5527060324887874,
+        "below_0_8": 46,
+        "above_1_4": 0,
+        "best": [
+          0.18053397097611895,
+          "gpr/8/unit1/stride1/map0/random/all/sum/gpr_compiled",
+          0.1872400530629935,
+          1.037145818322257
+        ],
+        "worst": [
+          0.6139379688524075,
+          "gpr/8/unit16/stride64/map2/random/half/sum/gpr_compiled",
+          0.34792048600715525,
+          0.5667029955119072
+        ]
+      },
+      "random/8/sum/gpr_inline-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.8877536091722766,
+        "below_0_8": 10,
+        "above_1_4": 0,
+        "best": [
+          0.282023220374422,
+          "gpr/8/unit1/stride1/map0/random/all/sum/gpr_inline",
+          0.14646555997529748,
+          0.5193386550967174
+        ],
+        "worst": [
+          0.9679564033484703,
+          "gpr/8/unit8/stride64/map2/random/half/sum/gpr_inline",
+          0.325098026819604,
+          0.33586019545403706
+        ]
+      },
+      "random/8/sum/gpr_compiled-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.9721330380185581,
+        "below_0_8": 1,
+        "above_1_4": 0,
+        "best": [
+          0.36053556041986407,
+          "gpr/8/unit1/stride1/map0/random/all/sum/gpr_compiled",
+          0.1872400530629935,
+          0.5193386550967174
+        ],
+        "worst": [
+          1.0346563581059713,
+          "gpr/8/unit16/stride16/map2/random/half/sum/gpr_compiled",
+          0.3240723701823308,
+          0.3132173959434933
+        ]
+      },
+      "random/8/sum/gpr_inline-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.6281112550266851,
+        "below_0_8": 33,
+        "above_1_4": 0,
+        "best": [
+          0.3923359517705667,
+          "gpr/8/unit1/stride1/map0/random/all/sum/gpr_inline",
+          0.14646555997529748,
+          0.3733166927841188
+        ],
+        "worst": [
+          0.9584147996591582,
+          "gpr/8/unit64/stride64/map1/random/all/sum/gpr_inline",
+          0.5394916668308204,
+          0.5628999750657859
+        ]
+      },
+      "random/8/sum/gpr_compiled-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.6716585100239142,
+        "below_0_8": 24,
+        "above_1_4": 0,
+        "best": [
+          0.501558212322615,
+          "gpr/8/unit1/stride1/map0/random/all/sum/gpr_compiled",
+          0.1872400530629935,
+          0.3733166927841188
+        ],
+        "worst": [
+          0.9843299422140144,
+          "gpr/8/unit16/stride64/map1/random/all/sum/gpr_compiled",
+          0.5467395740950535,
+          0.5554434043378725
+        ]
+      },
+      "random/8/update/gpr_inline-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.712916970662142,
+        "below_0_8": 46,
+        "above_1_4": 0,
+        "best": [
+          0.09997551255539475,
+          "gpr/8/unit1/stride1/map0/random/all/update/gpr_inline",
+          0.35903330792251,
+          3.5912124753906682
+        ],
+        "worst": [
+          0.7811665820685845,
+          "gpr/8/unit4/stride4/map2/random/half/update/gpr_inline",
+          1.460525728878832,
+          1.8696725671639158
+        ]
+      },
+      "random/8/update/gpr_compiled-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.7100963650662957,
+        "below_0_8": 46,
+        "above_1_4": 0,
+        "best": [
+          0.11364622483557926,
+          "gpr/8/unit1/stride1/map0/random/all/update/gpr_compiled",
+          0.408127740410585,
+          3.5912124753906682
+        ],
+        "worst": [
+          0.767854811183729,
+          "gpr/8/unit8/stride8/map1/random/half/update/gpr_compiled",
+          1.4344689185076511,
+          1.8681512411132337
+        ]
+      },
+      "random/8/update/gpr_inline-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.6065599322242978,
+        "below_0_8": 46,
+        "above_1_4": 0,
+        "best": [
+          0.08625953063900638,
+          "gpr/8/unit1/stride1/map0/random/all/update/gpr_inline",
+          0.35903330792251,
+          4.162245090632987
+        ],
+        "worst": [
+          0.6728857930574668,
+          "gpr/8/unit64/stride64/map0/random/half/update/gpr_inline",
+          1.4859370795233238,
+          2.2083050271748266
+        ]
+      },
+      "random/8/update/gpr_compiled-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.6070118816571677,
+        "below_0_8": 46,
+        "above_1_4": 0,
+        "best": [
+          0.09805471122521468,
+          "gpr/8/unit1/stride1/map0/random/all/update/gpr_compiled",
+          0.408127740410585,
+          4.162245090632987
+        ],
+        "worst": [
+          0.6646979233292276,
+          "gpr/8/unit4/stride64/map2/random/half/update/gpr_compiled",
+          1.4642716099548185,
+          2.202912869985843
+        ]
+      },
+      "random/8/update/gpr_inline-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.7832724414215967,
+        "below_0_8": 24,
+        "above_1_4": 0,
+        "best": [
+          0.4251143382283603,
+          "gpr/8/unit1/stride1/map0/random/all/update/gpr_inline",
+          0.35903330792251,
+          0.8445570418037669
+        ],
+        "worst": [
+          0.854852992814787,
+          "gpr/8/unit4/stride64/map0/random/all/update/gpr_inline",
+          2.4243858667045806,
+          2.8360266467825883
+        ]
+      },
+      "random/8/update/gpr_compiled-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.7792699859127643,
+        "below_0_8": 24,
+        "above_1_4": 0,
+        "best": [
+          0.48324473091707837,
+          "gpr/8/unit1/stride1/map0/random/all/update/gpr_compiled",
+          0.408127740410585,
+          0.8445570418037669
+        ],
+        "worst": [
+          0.8567473993997686,
+          "gpr/8/unit64/stride64/map2/random/all/update/gpr_compiled",
+          2.4370900848733736,
+          2.8445841639913727
+        ]
+      },
+      "scan/1/word_hash/gpr_inline-over-point": {
+        "pairs": 23,
+        "median_ratio": 0.8870899539397312,
+        "below_0_8": 5,
+        "above_1_4": 0,
+        "best": [
+          0.16706353660682718,
+          "gpr/1/unit16/stride16/map0/scan/all/word_hash/gpr_inline",
+          0.5501981289776827,
+          3.2933465922760696
+        ],
+        "worst": [
+          0.9064116998578383,
+          "gpr/1/unit4/stride64/map0/scan/all/word_hash/gpr_inline",
+          1.8093142406724172,
+          1.9961285152830552
+        ]
+      },
+      "scan/1/word_hash/gpr_compiled-over-point": {
+        "pairs": 23,
+        "median_ratio": 1.0656261469958566,
+        "below_0_8": 5,
+        "above_1_4": 0,
+        "best": [
+          0.3450876538710933,
+          "gpr/1/unit8/stride8/map0/scan/all/word_hash/gpr_compiled",
+          1.1331662333567978,
+          3.283705518424862
+        ],
+        "worst": [
+          1.1327825559134757,
+          "gpr/1/unit4/stride4/map0/scan/all/word_hash/gpr_compiled",
+          2.2049724993930058,
+          1.946509935099518
+        ]
+      },
+      "scan/1/word_hash/gpr_inline-over-gpr_points": {
+        "pairs": 23,
+        "median_ratio": 0.94924056235226,
+        "below_0_8": 1,
+        "above_1_4": 0,
+        "best": [
+          0.3680671135109721,
+          "gpr/1/unit8/stride64/map0/scan/all/word_hash/gpr_inline",
+          0.6417243361551849,
+          1.7434981626959591
+        ],
+        "worst": [
+          0.9609137524231973,
+          "gpr/1/unit8/stride8/map1/scan/all/word_hash/gpr_inline",
+          2.897085844966207,
+          3.014928069933895
+        ]
+      },
+      "scan/1/word_hash/gpr_compiled-over-gpr_points": {
+        "pairs": 23,
+        "median_ratio": 1.1594707549971703,
+        "below_0_8": 1,
+        "above_1_4": 4,
+        "best": [
+          0.7722030760991624,
+          "gpr/1/unit8/stride64/map0/scan/all/word_hash/gpr_compiled",
+          1.3463346444070576,
+          1.7434981626959591
+        ],
+        "worst": [
+          2.0804941428099606,
+          "gpr/1/unit16/stride16/map0/scan/all/word_hash/gpr_compiled",
+          1.346434105666907,
+          0.647170341872909
+        ]
+      },
+      "scan/1/word_hash/gpr_inline-over-simd": {
+        "pairs": 23,
+        "median_ratio": 0.9340643540713954,
+        "below_0_8": 11,
+        "above_1_4": 1,
+        "best": [
+          0.2294925779873547,
+          "gpr/1/unit8/stride8/map0/scan/all/word_hash/gpr_inline",
+          0.54878311704333,
+          2.3912891730797874
+        ],
+        "worst": [
+          1.4195237763180897,
+          "gpr/1/unit16/stride64/map2/scan/all/word_hash/gpr_inline",
+          2.9566769033478018,
+          2.082865361379663
+        ]
+      },
+      "scan/1/word_hash/gpr_compiled-over-simd": {
+        "pairs": 23,
+        "median_ratio": 1.1181477378178022,
+        "below_0_8": 6,
+        "above_1_4": 6,
+        "best": [
+          0.47387252286906445,
+          "gpr/1/unit8/stride8/map0/scan/all/word_hash/gpr_compiled",
+          1.1331662333567978,
+          2.3912891730797874
+        ],
+        "worst": [
+          1.7325292346410304,
+          "gpr/1/unit16/stride64/map2/scan/all/word_hash/gpr_compiled",
+          3.6086251304114207,
+          2.082865361379663
+        ]
+      },
+      "scan/1/word_hash/gpr_inline-over-simd_full": {
+        "pairs": 23,
+        "median_ratio": 3.40828065500948,
+        "below_0_8": 0,
+        "above_1_4": 16,
+        "best": [
+          1.128462962481355,
+          "gpr/1/unit16/stride64/map2/scan/all/word_hash/gpr_inline",
+          2.9566769033478018,
+          2.620092109045762
+        ],
+        "worst": [
+          6.708670685504138,
+          "gpr/1/unit8/stride8/map2/scan/all/word_hash/gpr_inline",
+          2.8921686786771104,
+          0.43110905487228757
+        ]
+      },
+      "scan/1/word_hash/gpr_compiled-over-simd_full": {
+        "pairs": 23,
+        "median_ratio": 4.285112120542216,
+        "below_0_8": 0,
+        "above_1_4": 20,
+        "best": [
+          1.354629597794407,
+          "gpr/1/unit64/stride64/map2/scan/all/word_hash/gpr_compiled",
+          3.5377495262674876,
+          2.6115991648400514
+        ],
+        "worst": [
+          8.121504050975005,
+          "gpr/1/unit8/stride8/map2/scan/all/word_hash/gpr_compiled",
+          3.5012539355572896,
+          0.43110905487228757
+        ]
+      },
+      "scan/1/sum/gpr_inline-over-point": {
+        "pairs": 23,
+        "median_ratio": 0.9953244299570054,
+        "below_0_8": 5,
+        "above_1_4": 0,
+        "best": [
+          0.306601854218075,
+          "gpr/1/unit16/stride16/map0/scan/all/sum/gpr_inline",
+          1.1982667808893364,
+          3.9082176588438102
+        ],
+        "worst": [
+          1.006847374530346,
+          "gpr/1/unit64/stride64/map2/scan/all/sum/gpr_inline",
+          3.982740752551238,
+          3.955654901924959
+        ]
+      },
+      "scan/1/sum/gpr_compiled-over-point": {
+        "pairs": 23,
+        "median_ratio": 1.0364018455503496,
+        "below_0_8": 5,
+        "above_1_4": 0,
+        "best": [
+          0.38277071154751674,
+          "gpr/1/unit8/stride8/map0/scan/all/sum/gpr_compiled",
+          1.4938403735551646,
+          3.902702919760152
+        ],
+        "worst": [
+          1.0715348015684536,
+          "gpr/1/unit4/stride64/map0/scan/all/sum/gpr_compiled",
+          2.812665314048461,
+          2.624894039774944
+        ]
+      },
+      "scan/1/sum/gpr_inline-over-gpr_points": {
+        "pairs": 23,
+        "median_ratio": 1.0315644460188829,
+        "below_0_8": 0,
+        "above_1_4": 0,
+        "best": [
+          0.9053923666310137,
+          "gpr/1/unit64/stride64/map0/scan/all/sum/gpr_inline",
+          1.229504092528657,
+          1.3579793002934968
+        ],
+        "worst": [
+          1.0506915428102737,
+          "gpr/1/unit64/stride64/map2/scan/all/sum/gpr_inline",
+          3.982740752551238,
+          3.7905899022453755
+        ]
+      },
+      "scan/1/sum/gpr_compiled-over-gpr_points": {
+        "pairs": 23,
+        "median_ratio": 1.0778442731427906,
+        "below_0_8": 0,
+        "above_1_4": 0,
+        "best": [
+          1.05642408824559,
+          "gpr/1/unit4/stride64/map0/scan/all/sum/gpr_compiled",
+          2.812665314048461,
+          2.6624395877979947
+        ],
+        "worst": [
+          1.246363299100372,
+          "gpr/1/unit16/stride64/map0/scan/all/sum/gpr_compiled",
+          1.684863304596038,
+          1.3518235861182502
+        ]
+      },
+      "scan/1/sum/gpr_inline-over-simd": {
+        "pairs": 23,
+        "median_ratio": 0.9689117410051559,
+        "below_0_8": 11,
+        "above_1_4": 5,
+        "best": [
+          0.3806186922443567,
+          "gpr/1/unit8/stride8/map0/scan/all/sum/gpr_inline",
+          1.197875656167996,
+          3.147180316091679
+        ],
+        "worst": [
+          1.4799816454777015,
+          "gpr/1/unit64/stride64/map1/scan/all/sum/gpr_inline",
+          3.9526042419755503,
+          2.6707116632515717
+        ]
+      },
+      "scan/1/sum/gpr_compiled-over-simd": {
+        "pairs": 23,
+        "median_ratio": 0.9956503572902656,
+        "below_0_8": 5,
+        "above_1_4": 5,
+        "best": [
+          0.4746599252407272,
+          "gpr/1/unit8/stride8/map0/scan/all/sum/gpr_compiled",
+          1.4938403735551646,
+          3.147180316091679
+        ],
+        "worst": [
+          1.5376459780499336,
+          "gpr/1/unit64/stride64/map1/scan/all/sum/gpr_compiled",
+          4.106609047529828,
+          2.6707116632515717
+        ]
+      },
+      "scan/1/sum/gpr_inline-over-simd_full": {
+        "pairs": 23,
+        "median_ratio": 5.630135798274992,
+        "below_0_8": 0,
+        "above_1_4": 23,
+        "best": [
+          1.5341156328213965,
+          "gpr/1/unit16/stride64/map2/scan/all/sum/gpr_inline",
+          3.9413825689231787,
+          2.569156121350886
+        ],
+        "worst": [
+          11.3330075307576,
+          "gpr/1/unit8/stride8/map2/scan/all/sum/gpr_inline",
+          3.9127156715349436,
+          0.345249543064001
+        ]
+      },
+      "scan/1/sum/gpr_compiled-over-simd_full": {
+        "pairs": 23,
+        "median_ratio": 6.313378981873779,
+        "below_0_8": 0,
+        "above_1_4": 23,
+        "best": [
+          1.5955332097449082,
+          "gpr/1/unit16/stride64/map2/scan/all/sum/gpr_compiled",
+          4.0991739126347575,
+          2.569156121350886
+        ],
+        "worst": [
+          11.729506680752353,
+          "gpr/1/unit8/stride8/map2/scan/all/sum/gpr_compiled",
+          4.049606821895897,
+          0.345249543064001
+        ]
+      },
+      "scan/1/update/gpr_inline-over-point": {
+        "pairs": 23,
+        "median_ratio": 1.0370842420758923,
+        "below_0_8": 5,
+        "above_1_4": 0,
+        "best": [
+          0.27459089945827464,
+          "gpr/1/unit16/stride16/map0/scan/all/update/gpr_inline",
+          2.657638084202232,
+          9.678536650141503
+        ],
+        "worst": [
+          1.051630513519608,
+          "gpr/1/unit4/stride4/map1/scan/all/update/gpr_inline",
+          6.155925077551042,
+          5.85369575950048
+        ]
+      },
+      "scan/1/update/gpr_compiled-over-point": {
+        "pairs": 23,
+        "median_ratio": 1.0938309505428976,
+        "below_0_8": 5,
+        "above_1_4": 0,
+        "best": [
+          0.3219852437480372,
+          "gpr/1/unit16/stride64/map0/scan/all/update/gpr_compiled",
+          3.163949209686832,
+          9.826379534842019
+        ],
+        "worst": [
+          1.1582829239667598,
+          "gpr/1/unit4/stride4/map1/scan/all/update/gpr_compiled",
+          6.780235840326039,
+          5.85369575950048
+        ]
+      },
+      "scan/1/update/gpr_inline-over-gpr_points": {
+        "pairs": 23,
+        "median_ratio": 1.016282659751407,
+        "below_0_8": 0,
+        "above_1_4": 0,
+        "best": [
+          0.9890533530008924,
+          "gpr/1/unit16/stride64/map2/scan/all/update/gpr_inline",
+          20.42684285848467,
+          20.65292311735001
+        ],
+        "worst": [
+          1.1081363482763402,
+          "gpr/1/unit8/stride8/map0/scan/all/update/gpr_inline",
+          2.8501367494113836,
+          2.5720090797893707
+        ]
+      },
+      "scan/1/update/gpr_compiled-over-gpr_points": {
+        "pairs": 23,
+        "median_ratio": 1.091317029123343,
+        "below_0_8": 0,
+        "above_1_4": 0,
+        "best": [
+          0.9621963302869283,
+          "gpr/1/unit16/stride64/map2/scan/all/update/gpr_compiled",
+          19.872166833212248,
+          20.65292311735001
+        ],
+        "worst": [
+          1.3245166309466383,
+          "gpr/1/unit16/stride16/map0/scan/all/update/gpr_compiled",
+          3.354204398943633,
+          2.532398854475966
+        ]
+      },
+      "scan/1/update/gpr_inline-over-simd": {
+        "pairs": 23,
+        "median_ratio": 0.7973243728296395,
+        "below_0_8": 12,
+        "above_1_4": 0,
+        "best": [
+          0.2812313071280381,
+          "gpr/1/unit64/stride64/map0/scan/all/update/gpr_inline",
+          2.723727243334676,
+          9.685007231768212
+        ],
+        "worst": [
+          1.3296693355272475,
+          "gpr/1/unit8/stride64/map1/scan/all/update/gpr_inline",
+          10.194206408345723,
+          7.666722948306138
+        ]
+      },
+      "scan/1/update/gpr_compiled-over-simd": {
+        "pairs": 23,
+        "median_ratio": 0.8646632812734226,
+        "below_0_8": 7,
+        "above_1_4": 1,
+        "best": [
+          0.3267382583794489,
+          "gpr/1/unit64/stride64/map0/scan/all/update/gpr_compiled",
+          3.1644623953003133,
+          9.685007231768212
+        ],
+        "worst": [
+          1.4004778495606758,
+          "gpr/1/unit8/stride64/map2/scan/all/update/gpr_compiled",
+          10.743122669741735,
+          7.671040761631332
+        ]
+      },
+      "scan/1/update/gpr_inline-over-simd_full": {
+        "pairs": 23,
+        "median_ratio": 3.3784637320956152,
+        "below_0_8": 0,
+        "above_1_4": 17,
+        "best": [
+          1.0715885635945053,
+          "gpr/1/unit64/stride64/map0/scan/all/update/gpr_inline",
+          2.723727243334676,
+          2.5417658753265204
+        ],
+        "worst": [
+          10.67675144939003,
+          "gpr/1/unit8/stride8/map2/scan/all/update/gpr_inline",
+          10.060701748348938,
+          0.9422998930001047
+        ]
+      },
+      "scan/1/update/gpr_compiled-over-simd_full": {
+        "pairs": 23,
+        "median_ratio": 3.7223720644307927,
+        "below_0_8": 0,
+        "above_1_4": 17,
+        "best": [
+          1.2449857896112482,
+          "gpr/1/unit64/stride64/map0/scan/all/update/gpr_compiled",
+          3.1644623953003133,
+          2.5417658753265204
+        ],
+        "worst": [
+          11.258623027099864,
+          "gpr/1/unit8/stride8/map1/scan/all/update/gpr_compiled",
+          10.619943071705503,
+          0.9432719299813984
+        ]
+      },
+      "scan/2/word_hash/gpr_inline-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.7732753714451575,
+        "below_0_8": 30,
+        "above_1_4": 0,
+        "best": [
+          0.12580012625829928,
+          "gpr/2/unit4/stride4/map0/scan/all/word_hash/gpr_inline",
+          0.2429084176846567,
+          1.93090758260373
+        ],
+        "worst": [
+          0.8373216182947731,
+          "gpr/2/unit64/stride64/map2/scan/half/word_hash/gpr_inline",
+          0.9420219470919278,
+          1.125041951037141
+        ]
+      },
+      "scan/2/word_hash/gpr_compiled-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.9037977500502228,
+        "below_0_8": 9,
+        "above_1_4": 0,
+        "best": [
+          0.3509360707533574,
+          "gpr/2/unit4/stride4/map0/scan/all/word_hash/gpr_compiled",
+          0.677625120026817,
+          1.93090758260373
+        ],
+        "worst": [
+          0.9547422389603366,
+          "gpr/2/unit64/stride64/map2/scan/half/word_hash/gpr_compiled",
+          1.0741250712575054,
+          1.125041951037141
+        ]
+      },
+      "scan/2/word_hash/gpr_inline-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.9843638163600088,
+        "below_0_8": 1,
+        "above_1_4": 0,
+        "best": [
+          0.5263202687325869,
+          "gpr/2/unit4/stride4/map0/scan/all/word_hash/gpr_inline",
+          0.2429084176846567,
+          0.46152206577488614
+        ],
+        "worst": [
+          1.0253622029190823,
+          "gpr/2/unit4/stride4/map0/scan/half/word_hash/gpr_inline",
+          0.30680941916693366,
+          0.2992205274326324
+        ]
+      },
+      "scan/2/word_hash/gpr_compiled-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 1.1504521582652723,
+        "below_0_8": 0,
+        "above_1_4": 11,
+        "best": [
+          1.1274807522062333,
+          "gpr/2/unit64/stride64/map2/scan/half/word_hash/gpr_compiled",
+          1.0741250712575054,
+          0.9526770804341249
+        ],
+        "worst": [
+          3.0083654932208486,
+          "gpr/2/unit4/stride4/map0/scan/half/word_hash/gpr_compiled",
+          0.9001647095916736,
+          0.2992205274326324
+        ]
+      },
+      "scan/2/word_hash/gpr_inline-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.6071383405633783,
+        "below_0_8": 34,
+        "above_1_4": 0,
+        "best": [
+          0.15243380848494248,
+          "gpr/2/unit4/stride4/map0/scan/all/word_hash/gpr_inline",
+          0.2429084176846567,
+          1.5935337449018168
+        ],
+        "worst": [
+          1.1471344701634358,
+          "gpr/2/unit16/stride64/map2/scan/all/word_hash/gpr_inline",
+          1.5446265632069713,
+          1.3465087166170706
+        ]
+      },
+      "scan/2/word_hash/gpr_compiled-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.7196559244542985,
+        "below_0_8": 28,
+        "above_1_4": 0,
+        "best": [
+          0.4252342457100385,
+          "gpr/2/unit4/stride4/map0/scan/all/word_hash/gpr_compiled",
+          0.677625120026817,
+          1.5935337449018168
+        ],
+        "worst": [
+          1.3384758647565351,
+          "gpr/2/unit16/stride64/map2/scan/all/word_hash/gpr_compiled",
+          1.802269418876246,
+          1.3465087166170706
+        ]
+      },
+      "scan/2/word_hash/gpr_inline-over-simd_full": {
+        "pairs": 46,
+        "median_ratio": 1.2630983005559127,
+        "below_0_8": 0,
+        "above_1_4": 22,
+        "best": [
+          0.9017045609813827,
+          "gpr/2/unit8/stride8/map0/scan/half/word_hash/gpr_inline",
+          0.30316343321461686,
+          0.3362114891430345
+        ],
+        "worst": [
+          6.357096690336537,
+          "gpr/2/unit4/stride4/map2/scan/all/word_hash/gpr_inline",
+          1.4874604451865134,
+          0.23398424117846306
+        ]
+      },
+      "scan/2/word_hash/gpr_compiled-over-simd_full": {
+        "pairs": 46,
+        "median_ratio": 2.6468590596498878,
+        "below_0_8": 0,
+        "above_1_4": 41,
+        "best": [
+          1.2900551731733174,
+          "gpr/2/unit16/stride16/map2/scan/half/word_hash/gpr_compiled",
+          1.0070905547126727,
+          0.7806569638687626
+        ],
+        "worst": [
+          7.471117545691774,
+          "gpr/2/unit4/stride4/map2/scan/all/word_hash/gpr_compiled",
+          1.748123769683791,
+          0.23398424117846306
+        ]
+      },
+      "scan/2/sum/gpr_inline-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.8211856451420427,
+        "below_0_8": 14,
+        "above_1_4": 0,
+        "best": [
+          0.25092933070402085,
+          "gpr/2/unit4/stride4/map0/scan/all/sum/gpr_inline",
+          0.5646959687291934,
+          2.2504183434628864
+        ],
+        "worst": [
+          0.9032388795486629,
+          "gpr/2/unit16/stride16/map1/scan/half/sum/gpr_inline",
+          1.2445847106734196,
+          1.3779131289115045
+        ]
+      },
+      "scan/2/sum/gpr_compiled-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.9187869476992896,
+        "below_0_8": 14,
+        "above_1_4": 0,
+        "best": [
+          0.3214720018553389,
+          "gpr/2/unit4/stride4/map0/scan/all/sum/gpr_compiled",
+          0.7234464898849897,
+          2.2504183434628864
+        ],
+        "worst": [
+          0.9747934404714274,
+          "gpr/2/unit16/stride64/map2/scan/half/sum/gpr_compiled",
+          1.356947400189377,
+          1.3920358343128914
+        ]
+      },
+      "scan/2/sum/gpr_inline-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 1.0131371207117386,
+        "below_0_8": 1,
+        "above_1_4": 0,
+        "best": [
+          0.6930377776692286,
+          "gpr/2/unit4/stride4/map0/scan/all/sum/gpr_inline",
+          0.5646959687291934,
+          0.8148126796613245
+        ],
+        "worst": [
+          1.1123158670330975,
+          "gpr/2/unit8/stride8/map1/scan/half/sum/gpr_inline",
+          1.2437801952908831,
+          1.1181897446167366
+        ]
+      },
+      "scan/2/sum/gpr_compiled-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 1.1544143118167236,
+        "below_0_8": 0,
+        "above_1_4": 7,
+        "best": [
+          0.8878684732614728,
+          "gpr/2/unit4/stride4/map0/scan/all/sum/gpr_compiled",
+          0.7234464898849897,
+          0.8148126796613245
+        ],
+        "worst": [
+          1.561256081656093,
+          "gpr/2/unit8/stride8/map0/scan/half/sum/gpr_compiled",
+          0.9562801533170919,
+          0.6125069196225155
+        ]
+      },
+      "scan/2/sum/gpr_inline-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.8521643759241087,
+        "below_0_8": 18,
+        "above_1_4": 0,
+        "best": [
+          0.3536376211453229,
+          "gpr/2/unit4/stride4/map0/scan/all/sum/gpr_inline",
+          0.5646959687291934,
+          1.5968209685958124
+        ],
+        "worst": [
+          1.2755913056160924,
+          "gpr/2/unit1/stride64/map0/scan/all/sum/gpr_inline",
+          1.878282923647678,
+          1.4724801865441488
+        ]
+      },
+      "scan/2/sum/gpr_compiled-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.90859568884607,
+        "below_0_8": 15,
+        "above_1_4": 1,
+        "best": [
+          0.453054227188138,
+          "gpr/2/unit4/stride4/map0/scan/all/sum/gpr_compiled",
+          0.7234464898849897,
+          1.5968209685958124
+        ],
+        "worst": [
+          1.42107916083405,
+          "gpr/2/unit1/stride64/map0/scan/all/sum/gpr_compiled",
+          2.0925109078389243,
+          1.4724801865441488
+        ]
+      },
+      "scan/2/sum/gpr_inline-over-simd_full": {
+        "pairs": 46,
+        "median_ratio": 2.5638888954680867,
+        "below_0_8": 0,
+        "above_1_4": 46,
+        "best": [
+          1.4546490934494225,
+          "gpr/2/unit8/stride64/map2/scan/all/sum/gpr_inline",
+          1.8733465325340513,
+          1.287833980696862
+        ],
+        "worst": [
+          10.547858921783163,
+          "gpr/2/unit4/stride4/map2/scan/all/sum/gpr_inline",
+          1.8372576046428353,
+          0.17418298995719206
+        ]
+      },
+      "scan/2/sum/gpr_compiled-over-simd_full": {
+        "pairs": 46,
+        "median_ratio": 3.551791356110873,
+        "below_0_8": 0,
+        "above_1_4": 46,
+        "best": [
+          1.629096954505606,
+          "gpr/2/unit64/stride64/map2/scan/all/sum/gpr_compiled",
+          2.0898253416596453,
+          1.2828121345876924
+        ],
+        "worst": [
+          12.062334333242685,
+          "gpr/2/unit4/stride4/map2/scan/all/sum/gpr_compiled",
+          2.1010534600275035,
+          0.17418298995719206
+        ]
+      },
+      "scan/2/update/gpr_inline-over-point": {
+        "pairs": 46,
+        "median_ratio": 1.0149157386406251,
+        "below_0_8": 14,
+        "above_1_4": 0,
+        "best": [
+          0.18772620587279196,
+          "gpr/2/unit4/stride4/map0/scan/all/update/gpr_inline",
+          1.1560445465275218,
+          6.158141539977039
+        ],
+        "worst": [
+          1.1595161952043453,
+          "gpr/2/unit1/stride1/map0/scan/half/update/gpr_inline",
+          2.905261002493107,
+          2.505580357142923
+        ]
+      },
+      "scan/2/update/gpr_compiled-over-point": {
+        "pairs": 46,
+        "median_ratio": 1.1069109032047852,
+        "below_0_8": 14,
+        "above_1_4": 0,
+        "best": [
+          0.28192534611578457,
+          "gpr/2/unit4/stride4/map0/scan/all/update/gpr_compiled",
+          1.7361361850880173,
+          6.158141539977039
+        ],
+        "worst": [
+          1.2818950824471136,
+          "gpr/2/unit1/stride1/map0/scan/half/update/gpr_compiled",
+          3.2118911384975957,
+          2.505580357142923
+        ]
+      },
+      "scan/2/update/gpr_inline-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.9561935024150705,
+        "below_0_8": 1,
+        "above_1_4": 0,
+        "best": [
+          0.3862067813841342,
+          "gpr/2/unit4/stride4/map0/scan/all/update/gpr_inline",
+          1.1560445465275218,
+          2.9933305220181543
+        ],
+        "worst": [
+          1.0220474543515425,
+          "gpr/2/unit16/stride16/map2/scan/half/update/gpr_inline",
+          5.682888187602842,
+          5.5602977762010655
+        ]
+      },
+      "scan/2/update/gpr_compiled-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 1.0760692840925632,
+        "below_0_8": 1,
+        "above_1_4": 0,
+        "best": [
+          0.5800014974348655,
+          "gpr/2/unit4/stride4/map0/scan/all/update/gpr_compiled",
+          1.7361361850880173,
+          2.9933305220181543
+        ],
+        "worst": [
+          1.3721255286502063,
+          "gpr/2/unit4/stride4/map0/scan/half/update/gpr_compiled",
+          2.23831316380788,
+          1.6312743382959747
+        ]
+      },
+      "scan/2/update/gpr_inline-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.8462372954259079,
+        "below_0_8": 18,
+        "above_1_4": 5,
+        "best": [
+          0.2766561962201731,
+          "gpr/2/unit4/stride4/map0/scan/all/update/gpr_inline",
+          1.1560445465275218,
+          4.1786324048477095
+        ],
+        "worst": [
+          2.5370506091116827,
+          "gpr/2/unit16/stride16/map2/scan/all/update/gpr_inline",
+          10.754843263240495,
+          4.23911262338049
+        ]
+      },
+      "scan/2/update/gpr_compiled-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.951489738938524,
+        "below_0_8": 17,
+        "above_1_4": 8,
+        "best": [
+          0.41547951982421166,
+          "gpr/2/unit4/stride4/map0/scan/all/update/gpr_compiled",
+          1.7361361850880173,
+          4.1786324048477095
+        ],
+        "worst": [
+          2.6405508837429514,
+          "gpr/2/unit16/stride16/map2/scan/all/update/gpr_compiled",
+          11.193592583953254,
+          4.23911262338049
+        ]
+      },
+      "scan/2/update/gpr_inline-over-simd_full": {
+        "pairs": 46,
+        "median_ratio": 1.4136754124512305,
+        "below_0_8": 0,
+        "above_1_4": 23,
+        "best": [
+          0.9190173991855427,
+          "gpr/2/unit16/stride16/map0/scan/half/update/gpr_inline",
+          1.5075197247137448,
+          1.6403603740796946
+        ],
+        "worst": [
+          11.078878430026256,
+          "gpr/2/unit4/stride4/map1/scan/all/update/gpr_inline",
+          5.349284618297629,
+          0.4828362953960992
+        ]
+      },
+      "scan/2/update/gpr_compiled-over-simd_full": {
+        "pairs": 46,
+        "median_ratio": 1.4669787446553029,
+        "below_0_8": 0,
+        "above_1_4": 26,
+        "best": [
+          1.25753009077661,
+          "gpr/2/unit16/stride16/map0/scan/half/update/gpr_compiled",
+          2.0628025301227924,
+          1.6403603740796946
+        ],
+        "worst": [
+          11.922430027139585,
+          "gpr/2/unit4/stride4/map2/scan/all/update/gpr_compiled",
+          5.750416775625955,
+          0.4823191884989899
+        ]
+      },
+      "scan/4/word_hash/gpr_inline-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.6667044792930027,
+        "below_0_8": 45,
+        "above_1_4": 0,
+        "best": [
+          0.2910903426409157,
+          "gpr/4/unit8/stride8/map0/scan/all/word_hash/gpr_inline",
+          0.34583506082913723,
+          1.1880677926019474
+        ],
+        "worst": [
+          0.8143428266381517,
+          "gpr/4/unit64/stride64/map2/scan/half/word_hash/gpr_inline",
+          0.6034110566007944,
+          0.7409791513628896
+        ]
+      },
+      "scan/4/word_hash/gpr_compiled-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.7766281259000063,
+        "below_0_8": 30,
+        "above_1_4": 0,
+        "best": [
+          0.37895532081388833,
+          "gpr/4/unit16/stride16/map0/scan/all/word_hash/gpr_compiled",
+          0.4497127410158613,
+          1.1867170516302716
+        ],
+        "worst": [
+          0.9063171683995005,
+          "gpr/4/unit64/stride64/map2/scan/half/word_hash/gpr_compiled",
+          0.671562126306279,
+          0.7409791513628896
+        ]
+      },
+      "scan/4/word_hash/gpr_inline-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.9411212549958677,
+        "below_0_8": 7,
+        "above_1_4": 0,
+        "best": [
+          0.7782070853344546,
+          "gpr/4/unit64/stride64/map0/scan/all/word_hash/gpr_inline",
+          0.4252684926649684,
+          0.5464721417721329
+        ],
+        "worst": [
+          1.063720349593782,
+          "gpr/4/unit64/stride64/map2/scan/half/word_hash/gpr_inline",
+          0.6034110566007944,
+          0.5672647485132982
+        ]
+      },
+      "scan/4/word_hash/gpr_compiled-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 1.1042433738567992,
+        "below_0_8": 0,
+        "above_1_4": 7,
+        "best": [
+          0.9775967744620385,
+          "gpr/4/unit64/stride64/map0/scan/all/word_hash/gpr_compiled",
+          0.5342294031297989,
+          0.5464721417721329
+        ],
+        "worst": [
+          1.6864745965514973,
+          "gpr/4/unit8/stride8/map0/scan/half/word_hash/gpr_compiled",
+          0.44073563886890704,
+          0.2613354744685293
+        ]
+      },
+      "scan/4/word_hash/gpr_inline-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.5982914783877875,
+        "below_0_8": 30,
+        "above_1_4": 0,
+        "best": [
+          0.3084675691139166,
+          "gpr/4/unit4/stride4/map0/scan/half/word_hash/gpr_inline",
+          0.23534870065497684,
+          0.7629609210816679
+        ],
+        "worst": [
+          1.3218267107385278,
+          "gpr/4/unit16/stride16/map2/scan/all/word_hash/gpr_inline",
+          0.7815452840441214,
+          0.59126153049779
+        ]
+      },
+      "scan/4/word_hash/gpr_compiled-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.7018351408604963,
+        "below_0_8": 29,
+        "above_1_4": 2,
+        "best": [
+          0.5659867494261486,
+          "gpr/4/unit16/stride64/map0/scan/half/word_hash/gpr_compiled",
+          0.43451203165872865,
+          0.7677070745901357
+        ],
+        "worst": [
+          1.5319171130988876,
+          "gpr/4/unit16/stride16/map2/scan/all/word_hash/gpr_compiled",
+          0.9057636568866042,
+          0.59126153049779
+        ]
+      },
+      "scan/4/word_hash/gpr_inline-over-simd_full": {
+        "pairs": 46,
+        "median_ratio": 1.1122747439317486,
+        "below_0_8": 0,
+        "above_1_4": 21,
+        "best": [
+          0.9096000500662635,
+          "gpr/4/unit8/stride8/map2/scan/half/word_hash/gpr_inline",
+          0.4924156073001111,
+          0.5413539799874011
+        ],
+        "worst": [
+          5.698266539207049,
+          "gpr/4/unit1/stride1/map0/scan/all/word_hash/gpr_inline",
+          0.7836235114771137,
+          0.13751963094133537
+        ]
+      },
+      "scan/4/word_hash/gpr_compiled-over-simd_full": {
+        "pairs": 46,
+        "median_ratio": 1.9296946548407083,
+        "below_0_8": 0,
+        "above_1_4": 28,
+        "best": [
+          1.0439598011741857,
+          "gpr/4/unit8/stride8/map2/scan/half/word_hash/gpr_compiled",
+          0.5651517933125014,
+          0.5413539799874011
+        ],
+        "worst": [
+          6.56547246237127,
+          "gpr/4/unit1/stride1/map0/scan/all/word_hash/gpr_compiled",
+          0.9028813499807974,
+          0.13751963094133537
+        ]
+      },
+      "scan/4/sum/gpr_inline-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.7227406801420697,
+        "below_0_8": 46,
+        "above_1_4": 0,
+        "best": [
+          0.391576986539333,
+          "gpr/4/unit4/stride4/map0/scan/all/sum/gpr_inline",
+          0.5134361985027182,
+          1.3112011587819519
+        ],
+        "worst": [
+          0.769440930930262,
+          "gpr/4/unit16/stride64/map1/scan/half/sum/gpr_inline",
+          0.6248488653271295,
+          0.8120816559260511
+        ]
+      },
+      "scan/4/sum/gpr_compiled-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.8231248593415221,
+        "below_0_8": 15,
+        "above_1_4": 0,
+        "best": [
+          0.47498714380429824,
+          "gpr/4/unit4/stride4/map0/scan/all/sum/gpr_compiled",
+          0.6228036933627255,
+          1.3112011587819519
+        ],
+        "worst": [
+          0.9220305520490532,
+          "gpr/4/unit64/stride64/map2/scan/half/sum/gpr_compiled",
+          0.7830404015832887,
+          0.8492564588484808
+        ]
+      },
+      "scan/4/sum/gpr_inline-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.956634500035974,
+        "below_0_8": 0,
+        "above_1_4": 0,
+        "best": [
+          0.8180446299989484,
+          "gpr/4/unit8/stride8/map0/scan/all/sum/gpr_inline",
+          0.5130473648120595,
+          0.6271630495425646
+        ],
+        "worst": [
+          0.9662888822978278,
+          "gpr/4/unit4/stride4/map1/scan/all/sum/gpr_inline",
+          0.9377840324457521,
+          0.9705006956260416
+        ]
+      },
+      "scan/4/sum/gpr_compiled-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 1.1127545665378098,
+        "below_0_8": 0,
+        "above_1_4": 0,
+        "best": [
+          0.9929864818319865,
+          "gpr/4/unit4/stride4/map0/scan/all/sum/gpr_compiled",
+          0.6228036933627255,
+          0.6272025901235824
+        ],
+        "worst": [
+          1.1799611803698484,
+          "gpr/4/unit64/stride64/map2/scan/half/sum/gpr_compiled",
+          0.7830404015832887,
+          0.6636153922774405
+        ]
+      },
+      "scan/4/sum/gpr_inline-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.7217940896323064,
+        "below_0_8": 29,
+        "above_1_4": 0,
+        "best": [
+          0.42919694844072026,
+          "gpr/4/unit8/stride8/map0/scan/half/sum/gpr_inline",
+          0.4092299569155815,
+          0.9534782537534827
+        ],
+        "worst": [
+          1.39282137254262,
+          "gpr/4/unit16/stride16/map2/scan/all/sum/gpr_inline",
+          0.9359836069094002,
+          0.6720054885435492
+        ]
+      },
+      "scan/4/sum/gpr_compiled-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.8553147506762221,
+        "below_0_8": 22,
+        "above_1_4": 3,
+        "best": [
+          0.5324145685451732,
+          "gpr/4/unit16/stride16/map0/scan/half/sum/gpr_compiled",
+          0.5087085911557899,
+          0.9554745891830871
+        ],
+        "worst": [
+          1.5939095328745494,
+          "gpr/4/unit16/stride16/map2/scan/all/sum/gpr_compiled",
+          1.071115954333582,
+          0.6720054885435492
+        ]
+      },
+      "scan/4/sum/gpr_inline-over-simd_full": {
+        "pairs": 46,
+        "median_ratio": 2.07987207817705,
+        "below_0_8": 0,
+        "above_1_4": 28,
+        "best": [
+          1.0535124315459785,
+          "gpr/4/unit4/stride4/map2/scan/half/sum/gpr_inline",
+          0.6117833448540893,
+          0.5807082351712991
+        ],
+        "worst": [
+          8.327944847692946,
+          "gpr/4/unit1/stride1/map0/scan/all/sum/gpr_inline",
+          0.9356902113337842,
+          0.11235547646463993
+        ]
+      },
+      "scan/4/sum/gpr_compiled-over-simd_full": {
+        "pairs": 46,
+        "median_ratio": 2.3622496347903885,
+        "below_0_8": 0,
+        "above_1_4": 32,
+        "best": [
+          1.2588303342739187,
+          "gpr/4/unit8/stride64/map2/scan/half/sum/gpr_compiled",
+          0.7350600217464559,
+          0.5839230289683411
+        ],
+        "worst": [
+          9.505813640652205,
+          "gpr/4/unit1/stride1/map0/scan/all/sum/gpr_compiled",
+          1.068030220779552,
+          0.11235547646463993
+        ]
+      },
+      "scan/4/update/gpr_inline-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.8806156355108887,
+        "below_0_8": 15,
+        "above_1_4": 0,
+        "best": [
+          0.4649043677592326,
+          "gpr/4/unit16/stride16/map0/scan/all/update/gpr_inline",
+          2.3560860554645644,
+          5.067893998975609
+        ],
+        "worst": [
+          0.9469238172025318,
+          "gpr/4/unit16/stride16/map2/scan/half/update/gpr_inline",
+          3.406814323053394,
+          3.5977702336372124
+        ]
+      },
+      "scan/4/update/gpr_compiled-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.9658363618501608,
+        "below_0_8": 15,
+        "above_1_4": 0,
+        "best": [
+          0.5319585155416039,
+          "gpr/4/unit16/stride64/map0/scan/all/update/gpr_compiled",
+          2.7527406754080097,
+          5.174728094361563
+        ],
+        "worst": [
+          1.1074669450639263,
+          "gpr/4/unit8/stride8/map2/scan/half/update/gpr_compiled",
+          3.2811749879974093,
+          2.962774647696605
+        ]
+      },
+      "scan/4/update/gpr_inline-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.7985197374023831,
+        "below_0_8": 25,
+        "above_1_4": 0,
+        "best": [
+          0.5901331934313603,
+          "gpr/4/unit1/stride1/map0/scan/all/update/gpr_inline",
+          3.062117942872603,
+          5.188859018534033
+        ],
+        "worst": [
+          0.8644280829517597,
+          "gpr/4/unit64/stride64/map2/scan/half/update/gpr_inline",
+          3.3850589336802575,
+          3.9159520617623946
+        ]
+      },
+      "scan/4/update/gpr_compiled-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.8928633688575587,
+        "below_0_8": 1,
+        "above_1_4": 0,
+        "best": [
+          0.6466570386943868,
+          "gpr/4/unit1/stride1/map0/scan/all/update/gpr_compiled",
+          3.35541220712788,
+          5.188859018534033
+        ],
+        "worst": [
+          1.0145503558653435,
+          "gpr/4/unit4/stride64/map0/scan/half/update/gpr_compiled",
+          1.6984625301529452,
+          1.6741037251958484
+        ]
+      },
+      "scan/4/update/gpr_inline-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.8854975953214607,
+        "below_0_8": 16,
+        "above_1_4": 5,
+        "best": [
+          0.4965243176988348,
+          "gpr/4/unit8/stride8/map0/scan/half/update/gpr_inline",
+          1.3026118405419767,
+          2.6234603102200356
+        ],
+        "worst": [
+          2.8028048556676484,
+          "gpr/4/unit16/stride16/map2/scan/all/update/gpr_inline",
+          6.060355358328862,
+          2.1622466316461555
+        ]
+      },
+      "scan/4/update/gpr_compiled-over-simd": {
+        "pairs": 46,
+        "median_ratio": 1.037354602022793,
+        "below_0_8": 12,
+        "above_1_4": 9,
+        "best": [
+          0.6241028169099293,
+          "gpr/4/unit16/stride16/map0/scan/half/update/gpr_compiled",
+          1.6387533522039592,
+          2.6257746445013477
+        ],
+        "worst": [
+          2.9162844741584406,
+          "gpr/4/unit16/stride16/map2/scan/all/update/gpr_compiled",
+          6.305726281171068,
+          2.1622466316461555
+        ]
+      },
+      "scan/4/update/gpr_inline-over-simd_full": {
+        "pairs": 46,
+        "median_ratio": 1.164275556679252,
+        "below_0_8": 0,
+        "above_1_4": 16,
+        "best": [
+          0.8723376841669734,
+          "gpr/4/unit16/stride16/map0/scan/half/update/gpr_inline",
+          1.304969663671337,
+          1.495945535033832
+        ],
+        "worst": [
+          11.490505217655192,
+          "gpr/4/unit1/stride1/map0/scan/all/update/gpr_inline",
+          3.062117942872603,
+          0.2664911494202753
+        ]
+      },
+      "scan/4/update/gpr_compiled-over-simd_full": {
+        "pairs": 46,
+        "median_ratio": 1.2481651468804655,
+        "below_0_8": 0,
+        "above_1_4": 18,
+        "best": [
+          1.0398188504557717,
+          "gpr/4/unit16/stride64/map0/scan/all/update/gpr_compiled",
+          2.7527406754080097,
+          2.647327151456653
+        ],
+        "worst": [
+          12.591083097608465,
+          "gpr/4/unit1/stride1/map0/scan/all/update/gpr_compiled",
+          3.35541220712788,
+          0.2664911494202753
+        ]
+      },
+      "scan/8/word_hash/gpr_inline-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.3691902197163487,
+        "below_0_8": 46,
+        "above_1_4": 0,
+        "best": [
+          0.08396186613172917,
+          "gpr/8/unit1/stride1/map0/scan/all/word_hash/gpr_inline",
+          0.07781174714745373,
+          0.9267510446394032
+        ],
+        "worst": [
+          0.43609054895104504,
+          "gpr/8/unit8/stride64/map1/scan/half/word_hash/gpr_inline",
+          0.2460376992789969,
+          0.5641894782420904
+        ]
+      },
+      "scan/8/word_hash/gpr_compiled-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.47232593105609477,
+        "below_0_8": 46,
+        "above_1_4": 0,
+        "best": [
+          0.15938704992195646,
+          "gpr/8/unit1/stride1/map0/scan/all/word_hash/gpr_compiled",
+          0.14771211501716586,
+          0.9267510446394032
+        ],
+        "worst": [
+          0.5115807425573772,
+          "gpr/8/unit8/stride64/map1/scan/half/word_hash/gpr_compiled",
+          0.2886284722221478,
+          0.5641894782420904
+        ]
+      },
+      "scan/8/word_hash/gpr_inline-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.7919321815897002,
+        "below_0_8": 33,
+        "above_1_4": 0,
+        "best": [
+          0.20077399781472974,
+          "gpr/8/unit1/stride1/map0/scan/all/word_hash/gpr_inline",
+          0.07781174714745373,
+          0.3875588870788779
+        ],
+        "worst": [
+          0.9209150758811723,
+          "gpr/8/unit64/stride64/map1/scan/half/word_hash/gpr_inline",
+          0.24566928879742578,
+          0.26676649696754995
+        ]
+      },
+      "scan/8/word_hash/gpr_compiled-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.9664186677921586,
+        "below_0_8": 1,
+        "above_1_4": 0,
+        "best": [
+          0.38113463512733936,
+          "gpr/8/unit1/stride1/map0/scan/all/word_hash/gpr_compiled",
+          0.14771211501716586,
+          0.3875588870788779
+        ],
+        "worst": [
+          1.1748632672622927,
+          "gpr/8/unit16/stride16/map2/scan/half/word_hash/gpr_compiled",
+          0.2869317588180148,
+          0.2442256616692368
+        ]
+      },
+      "scan/8/word_hash/gpr_inline-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.4586632314063115,
+        "below_0_8": 46,
+        "above_1_4": 0,
+        "best": [
+          0.19601642394967703,
+          "gpr/8/unit1/stride1/map0/scan/all/word_hash/gpr_inline",
+          0.07781174714745373,
+          0.39696544595380545
+        ],
+        "worst": [
+          0.6366929315834988,
+          "gpr/8/unit1/stride64/map0/scan/all/word_hash/gpr_inline",
+          0.3739523332441542,
+          0.5873354559066789
+        ]
+      },
+      "scan/8/word_hash/gpr_compiled-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.5373148867516936,
+        "below_0_8": 46,
+        "above_1_4": 0,
+        "best": [
+          0.3721032057645516,
+          "gpr/8/unit1/stride1/map0/scan/all/word_hash/gpr_compiled",
+          0.14771211501716586,
+          0.39696544595380545
+        ],
+        "worst": [
+          0.7228897931423338,
+          "gpr/8/unit8/stride64/map2/scan/all/word_hash/gpr_compiled",
+          0.4241068833705128,
+          0.5866826276892915
+        ]
+      },
+      "scan/8/word_hash/gpr_inline-over-simd_full": {
+        "pairs": 46,
+        "median_ratio": 1.071531246126405,
+        "below_0_8": 0,
+        "above_1_4": 10,
+        "best": [
+          0.8248041697266215,
+          "gpr/8/unit64/stride64/map0/scan/all/word_hash/gpr_inline",
+          0.3727893856408591,
+          0.4519732068818455
+        ],
+        "worst": [
+          1.5561127694743648,
+          "gpr/8/unit16/stride16/map0/scan/all/word_hash/gpr_inline",
+          0.30833128341013694,
+          0.19814199167216354
+        ]
+      },
+      "scan/8/word_hash/gpr_compiled-over-simd_full": {
+        "pairs": 46,
+        "median_ratio": 1.28863358432552,
+        "below_0_8": 0,
+        "above_1_4": 20,
+        "best": [
+          0.9368109320728137,
+          "gpr/8/unit8/stride64/map0/scan/all/word_hash/gpr_compiled",
+          0.4231930145354913,
+          0.4517379121517324
+        ],
+        "worst": [
+          2.930617795543218,
+          "gpr/8/unit1/stride1/map0/scan/all/word_hash/gpr_compiled",
+          0.14771211501716586,
+          0.0504030635594315
+        ]
+      },
+      "scan/8/sum/gpr_inline-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.48331747220232935,
+        "below_0_8": 46,
+        "above_1_4": 0,
+        "best": [
+          0.14880100737479654,
+          "gpr/8/unit1/stride1/map0/scan/all/sum/gpr_inline",
+          0.14619760115242283,
+          0.9825041088880783
+        ],
+        "worst": [
+          0.5110837201954241,
+          "gpr/8/unit4/stride64/map1/scan/half/sum/gpr_inline",
+          0.28894309534016077,
+          0.5653537452331234
+        ]
+      },
+      "scan/8/sum/gpr_compiled-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.5473071687004336,
+        "below_0_8": 46,
+        "above_1_4": 0,
+        "best": [
+          0.19043240279988471,
+          "gpr/8/unit1/stride1/map0/scan/all/sum/gpr_compiled",
+          0.18710061821631632,
+          0.9825041088880783
+        ],
+        "worst": [
+          0.5876604728672145,
+          "gpr/8/unit8/stride64/map2/scan/half/sum/gpr_compiled",
+          0.33163042917969804,
+          0.5643231840345879
+        ]
+      },
+      "scan/8/sum/gpr_inline-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.8225435126096945,
+        "below_0_8": 23,
+        "above_1_4": 0,
+        "best": [
+          0.2889047939730512,
+          "gpr/8/unit1/stride1/map0/scan/all/sum/gpr_inline",
+          0.14619760115242283,
+          0.5060407587631102
+        ],
+        "worst": [
+          0.8968485599985476,
+          "gpr/8/unit4/stride64/map1/scan/half/sum/gpr_inline",
+          0.28894309534016077,
+          0.32217601524679784
+        ]
+      },
+      "scan/8/sum/gpr_compiled-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.9326499689708687,
+        "below_0_8": 1,
+        "above_1_4": 0,
+        "best": [
+          0.36973428518611207,
+          "gpr/8/unit1/stride1/map0/scan/all/sum/gpr_compiled",
+          0.18710061821631632,
+          0.5060407587631102
+        ],
+        "worst": [
+          1.033646075547641,
+          "gpr/8/unit8/stride8/map1/scan/half/sum/gpr_compiled",
+          0.32401854820547304,
+          0.31347146365723216
+        ]
+      },
+      "scan/8/sum/gpr_inline-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.5621474973251342,
+        "below_0_8": 33,
+        "above_1_4": 0,
+        "best": [
+          0.38878971064444023,
+          "gpr/8/unit1/stride1/map0/scan/all/sum/gpr_inline",
+          0.14619760115242283,
+          0.3760325881826767
+        ],
+        "worst": [
+          0.8867356114243272,
+          "gpr/8/unit4/stride64/map0/scan/all/sum/gpr_inline",
+          0.4690968115829908,
+          0.5290154196350587
+        ]
+      },
+      "scan/8/sum/gpr_compiled-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.6463471832663062,
+        "below_0_8": 24,
+        "above_1_4": 0,
+        "best": [
+          0.49756490287331906,
+          "gpr/8/unit1/stride1/map0/scan/all/sum/gpr_compiled",
+          0.18710061821631632,
+          0.3760325881826767
+        ],
+        "worst": [
+          0.9721419997320154,
+          "gpr/8/unit4/stride64/map0/scan/all/sum/gpr_compiled",
+          0.5142781079330973,
+          0.5290154196350587
+        ]
+      },
+      "scan/8/sum/gpr_inline-over-simd_full": {
+        "pairs": 46,
+        "median_ratio": 1.2690525320731576,
+        "below_0_8": 0,
+        "above_1_4": 20,
+        "best": [
+          1.0479446575329554,
+          "gpr/8/unit1/stride64/map0/scan/all/sum/gpr_inline",
+          0.4687721290684797,
+          0.44732527209218387
+        ],
+        "worst": [
+          4.601857799315433,
+          "gpr/8/unit1/stride1/map0/scan/all/sum/gpr_inline",
+          0.14619760115242283,
+          0.031769256575935705
+        ]
+      },
+      "scan/8/sum/gpr_compiled-over-simd_full": {
+        "pairs": 46,
+        "median_ratio": 1.4579738583091228,
+        "below_0_8": 0,
+        "above_1_4": 33,
+        "best": [
+          1.1484026820073068,
+          "gpr/8/unit1/stride64/map0/scan/all/sum/gpr_compiled",
+          0.5137095422003122,
+          0.44732527209218387
+        ],
+        "worst": [
+          5.889360922535394,
+          "gpr/8/unit1/stride1/map0/scan/all/sum/gpr_compiled",
+          0.18710061821631632,
+          0.031769256575935705
+        ]
+      },
+      "scan/8/update/gpr_inline-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.7072423383206592,
+        "below_0_8": 46,
+        "above_1_4": 0,
+        "best": [
+          0.09963408175780843,
+          "gpr/8/unit1/stride1/map0/scan/all/update/gpr_inline",
+          0.35801856664782294,
+          3.5933343323030593
+        ],
+        "worst": [
+          0.781441869418903,
+          "gpr/8/unit1/stride1/map0/scan/half/update/gpr_inline",
+          1.4637285016319392,
+          1.873112459050088
+        ]
+      },
+      "scan/8/update/gpr_compiled-over-point": {
+        "pairs": 46,
+        "median_ratio": 0.7063372703608193,
+        "below_0_8": 46,
+        "above_1_4": 0,
+        "best": [
+          0.11346865878294182,
+          "gpr/8/unit1/stride1/map0/scan/all/update/gpr_compiled",
+          0.40773082724512594,
+          3.5933343323030593
+        ],
+        "worst": [
+          0.7717759754467642,
+          "gpr/8/unit8/stride8/map1/scan/half/update/gpr_compiled",
+          1.442078078438636,
+          1.868519005925066
+        ]
+      },
+      "scan/8/update/gpr_inline-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.6073468268336675,
+        "below_0_8": 46,
+        "above_1_4": 0,
+        "best": [
+          0.08541344709826676,
+          "gpr/8/unit1/stride1/map0/scan/all/update/gpr_inline",
+          0.35801856664782294,
+          4.191594869551729
+        ],
+        "worst": [
+          0.6705255191536782,
+          "gpr/8/unit8/stride8/map0/scan/half/update/gpr_inline",
+          1.4424263114825606,
+          2.1511877926781335
+        ]
+      },
+      "scan/8/update/gpr_compiled-over-gpr_points": {
+        "pairs": 46,
+        "median_ratio": 0.6055713255717622,
+        "below_0_8": 46,
+        "above_1_4": 0,
+        "best": [
+          0.09727343408279598,
+          "gpr/8/unit1/stride1/map0/scan/all/update/gpr_compiled",
+          0.40773082724512594,
+          4.191594869551729
+        ],
+        "worst": [
+          0.6652527184437628,
+          "gpr/8/unit8/stride8/map0/scan/half/update/gpr_compiled",
+          1.4310835269621658,
+          2.1511877926781335
+        ]
+      },
+      "scan/8/update/gpr_inline-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.7814898175858702,
+        "below_0_8": 24,
+        "above_1_4": 0,
+        "best": [
+          0.42287080618194317,
+          "gpr/8/unit1/stride1/map0/scan/all/update/gpr_inline",
+          0.35801856664782294,
+          0.8466381727325554
+        ],
+        "worst": [
+          0.8454544226467229,
+          "gpr/8/unit4/stride64/map2/scan/all/update/gpr_inline",
+          2.3971111854805662,
+          2.835293211875728
+        ]
+      },
+      "scan/8/update/gpr_compiled-over-simd": {
+        "pairs": 46,
+        "median_ratio": 0.7750353691355771,
+        "below_0_8": 24,
+        "above_1_4": 0,
+        "best": [
+          0.48158805068895005,
+          "gpr/8/unit1/stride1/map0/scan/all/update/gpr_compiled",
+          0.40773082724512594,
+          0.8466381727325554
+        ],
+        "worst": [
+          0.8478686285046542,
+          "gpr/8/unit16/stride64/map1/scan/all/update/gpr_compiled",
+          2.4105204271513063,
+          2.8430352841366795
+        ]
+      },
+      "scan/8/update/gpr_inline-over-simd_full": {
+        "pairs": 46,
+        "median_ratio": 0.9984941260909246,
+        "below_0_8": 0,
+        "above_1_4": 1,
+        "best": [
+          0.9089791770166026,
+          "gpr/8/unit16/stride64/map1/scan/all/update/gpr_inline",
+          2.3933677152596156,
+          2.6330280998460105
+        ],
+        "worst": [
+          3.6913665358736973,
+          "gpr/8/unit1/stride1/map0/scan/all/update/gpr_inline",
+          0.35801856664782294,
+          0.0969880837268534
+        ]
+      },
+      "scan/8/update/gpr_compiled-over-simd_full": {
+        "pairs": 46,
+        "median_ratio": 0.9907026328826554,
+        "below_0_8": 0,
+        "above_1_4": 1,
+        "best": [
+          0.9090023616725724,
+          "gpr/8/unit64/stride64/map0/scan/all/update/gpr_compiled",
+          2.3889283804144035,
+          2.6280771988521066
+        ],
+        "worst": [
+          4.203927034927449,
+          "gpr/8/unit1/stride1/map0/scan/all/update/gpr_compiled",
+          0.40773082724512594,
+          0.0969880837268534
+        ]
+      }
+    }
+  }
+}

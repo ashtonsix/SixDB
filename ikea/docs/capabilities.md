@@ -9,7 +9,7 @@ with source-qualified mutation effects.
 | Values | Unsigned arrays, widths 1–64 bits | Units of 1–64 bytes containing 1–128 byte-contained codes, widths 1–8 bits |
 | Representation choice | `compact`, `bulk_x86`, `bulk_arm` presets; explicit formats | Manually specified code offsets, shifts and widths |
 | Placement | Tiled payload and optional head planes; independent strides and interleaving | Unit offset and row stride; multiple units per record or separate planes |
-| Reads | Checked point/range reads; scalar and native evaluation | Ordered scalar projections; 64-byte packets covering 1/2/4/8/16/32/64 rows |
+| Reads | Checked point/range reads; scalar and native evaluation | 8-byte GPR packets covering 1/2/4/8 rows; 64-byte packets covering 1/2/4/8/16/32/64 rows |
 | Mutation | Construction, point/range replacement and selected writes | Construction, point/packet/range replacement and selected writes; buffered and native |
 | Composition | Recursive bit-window joins and child substitution | Recursive mutation groups, child substitution and bit-route normalization |
 | Maintenance | Optional modulo-u64 replacement delta; authored contribution laws | Separate observation projection; old/new/coordinate-only callbacks over rows or packets |

@@ -83,11 +83,26 @@ storage and all input slots remain stable through admission and execution.
 
 ## Choose rows per packet
 
-`reader<64, Rows>` and `writer<64, Rows>` support `Rows` of 1, 2, 4, 8, 16, 32
-or 64. The default is one row; the scalar `reader<8>` and `writer<8>` are
-one-row operations. A 64-byte packet contains `64/Rows` byte slots for each row,
-in row order. The supplied map describes those slots and applies to every row.
-Physical tuple size and stride are independent of this materialized shape.
+`reader<N, Rows>` and `writer<N, Rows>` take two choices: output packet width
+and original rows per packet. `N=8` supports Rows 1/2/4/8 and returns a `uint64_t`;
+`N=64` supports Rows 1/2/4/8/16/32/64 and returns a byte array. The default is one
+row. Each row occupies `N/Rows` byte slots, in row order. The supplied map applies
+to every row. Physical tuple size and stride are independent of this shape.
+
+For two four-code rows, use `reader<8, 2>`: the first row occupies bits 0–31 and
+the second bits 32–63. The executable [word example](../../examples/tuplepack/words.cpp)
+constructs this reader and writer, extracts both row words, then performs a native
+update with a one-row tail. Both packet widths support the same masks, range
+admission, effects, erasure, nested maintenance and native composition.
+
+Start with an 8-byte packet when the consumer needs a few rows in a scalar word;
+fill a 64-byte packet when scanning enough rows for a vector consumer. Small
+physical tuples with consecutive selected bytes and a common bit shift admit
+particularly cheap word transfers. Preparation recognizes this automatically;
+no method enum is required. Mixed shifts and scattered maps can favor the vector
+carrier even for small projections. Compare the complete consumer when that
+choice matters; the [packet-width comparisons](../../../workbench/benchmarks/tuplepack/words.md)
+show both gains and counterexamples.
 
 Choose a shape around the projected codes and the rows the consumer needs. A
 scan selecting four codes can use `Rows=16` even from 64-byte tuples. Choosing
@@ -141,6 +156,7 @@ Use the [pinned Linux toolchain](../../../BUILDING.md). Configure the desired IS
 then build `ikea_validate` for both Ikea modules, or just
 `ikea_tuplepack_wire_check`, `ikea_tuplepack_operations_check`,
 `ikea_tuplepack_execution_check`, `ikea_tuplepack_packets_check`,
+`ikea_tuplepack_gpr_check`,
 `ikea_tuplepack_ownership_check` and the examples.
 `python3 ikea/test/headers.py BUILD` checks header independence.
 The [routine benchmark suite](../../../workbench/benchmarks/tuplepack/README.md)

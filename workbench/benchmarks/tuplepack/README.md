@@ -59,3 +59,18 @@ The initial implementation evidence is retained under
 It distinguishes the early boundary failures from the final measured sources.
 The [packet experiment](../../spikes/tuple-layout/batching/README.md) retains
 the transfer-grain investigation and comparisons with repeated point operations.
+
+## Choose an 8-byte or 64-byte packet
+
+The separate `ikea_tuplepack_word_bench` target compares the supported GPR
+operations, repeated scalar points, same-row SIMD operations and fuller SIMD
+scans. Its 40 routine cases include compact two-row reads/updates, a scattered
+counterexample, two-code point calls, and scans of one-byte tuples. `TUPLEPACK_WORD_BROAD=1` enables
+4,439 selectable cases over extents, strides, maps, masks and consumers.
+[Packet-width comparisons](words.md) explain how to use these results.
+
+`run-words.sh` builds this target and relevant checks, and captures build time/RSS,
+code size and three sequential repetitions by default. It selects the broad
+matrix for evidence collection; the executable alone uses the routine set.
+Use `--benchmark_filter` for a narrower question. `TUPLE_PROFILES` selects
+`avx2`, `avx512` or `neon`; `baseline` runs x86 without AVX2 validation only.

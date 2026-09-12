@@ -4,8 +4,61 @@
 #include <ikea/tuplepack/detail/packet_plan.h>
 #include <ikea/tuplepack/detail/native/types.h>
 #include <ikea/tuplepack/detail/native/memory.h>
-#include <ikea/tuplepack/detail/native/neon/shuffle.h>
-#include <ikea/tuplepack/detail/native/avx2/shuffle.h>
+#include <ikea/tuplepack/detail/native/shuffle.h>
+#include <ikea/tuplepack/detail/gpr.h>
+namespace ikea::tuplepack::native {
+template <unsigned N> struct packet_type;
+template <> struct packet_type<8> {
+    using type = std::uint64_t;
+};
+#if defined(__aarch64__) || defined(__AVX2__)
+template <> struct packet_type<64> {
+    using type = packet;
+};
+#endif
+/// Register carrier selected by logical packet width: uint64_t for 8 bytes,
+/// and the current ISA's vector carrier for 64 bytes.
+template <unsigned N> using packet_for = typename packet_type<N>::type;
+/// Compiled GPR endpoints share the inline body's controls and uint64_t ABI.
+/// Match Rows to preparation; the one-row form needs only the unit pointer.
+template <unsigned Rows>
+inline std::uint64_t read(const detail::gpr_read& p, const byte* first, std::size_t stride,
+                          std::uint64_t active = detail::all_rows<Rows>) {
+    return detail::read_gpr<Rows>(p, first, stride, active);
+}
+template <unsigned Rows>
+inline void write(const detail::gpr_write& p, byte* first, std::size_t stride, std::uint64_t input,
+                  std::uint64_t active = detail::all_rows<Rows>) {
+    detail::write_gpr<Rows>(p, first, stride, input, active);
+}
+inline std::uint64_t read(const detail::gpr_read& p, const byte* row) {
+    return read<1>(p, row, 0);
+}
+inline void write(const detail::gpr_write& p, byte* row, std::uint64_t input) {
+    write<1>(p, row, 0, input);
+}
+/// Active-only address callback; optional nonzero stride promises one common
+/// allocation. Trusted widths, addresses and mask; effects belong to the shell.
+template <unsigned Rows, class Address>
+[[gnu::always_inline]] inline std::uint64_t read_body(const detail::gpr_read& p, Address&& address,
+                                                      std::uint64_t active,
+                                                      std::size_t stride = 0) {
+    return detail::read_gpr_body<Rows>(p, std::forward<Address>(address), active, stride);
+}
+template <unsigned Rows, class Address>
+[[gnu::always_inline]] inline void write_body(const detail::gpr_write& p, Address&& address,
+                                              std::uint64_t input, std::uint64_t active,
+                                              std::size_t stride = 0) {
+    detail::write_gpr_body<Rows>(p, std::forward<Address>(address), input, active, stride);
+}
+[[gnu::always_inline]] inline std::uint64_t read_body(const detail::gpr_read& p, const byte* row) {
+    return read_body<1>(p, [&](unsigned) { return row; }, 1);
+}
+[[gnu::always_inline]] inline void write_body(const detail::gpr_write& p, byte* row,
+                                              std::uint64_t input) {
+    write_body<1>(p, [&](unsigned) { return row; }, input, 1);
+}
+} // namespace ikea::tuplepack::native
 #if defined(__aarch64__) || defined(__AVX2__)
 namespace ikea::tuplepack::native {
 [[gnu::always_inline]] inline native_packet load_packet(const byte* p) {
@@ -35,19 +88,7 @@ namespace ikea::tuplepack::native {
 template <bool Left>
 [[gnu::always_inline]] inline native_packet transform(native_packet source,
                                                       const detail::shuffle& p) {
-#if defined(__aarch64__)
-    return {native_detail::apply16<0>(source, p), native_detail::apply16<1>(source, p),
-            native_detail::apply16<2>(source, p), native_detail::apply16<3>(source, p)};
-#elif defined(__AVX512VBMI__)
-    auto result = _mm512_permutexvar_epi8(_mm512_loadu_si512(p.index.data()), source);
-    if (p.shifting)
-        result = _mm512_multishift_epi64_epi8(_mm512_loadu_si512(p.bit_index.data()), result);
-    if (p.masking)
-        result = _mm512_and_si512(result, _mm512_loadu_si512(p.mask.data()));
-    return result;
-#else
-    return {native_detail::apply32<0, Left>(source, p), native_detail::apply32<1, Left>(source, p)};
-#endif
+    return native_detail::apply<Left>(source, p);
 }
 [[gnu::always_inline]] inline native_packet read_body(const detail::read64& p, const byte* row) {
     using namespace native_detail;
@@ -163,3 +204,18 @@ IKEA_TUPLE_CC void write(const detail::packet_write&, unsigned rows, byte* first
 
 #include <ikea/tuplepack/detail/native/packet.h>
 #include <ikea/tuplepack/detail/native/selection.h>
+
+namespace ikea::tuplepack::native {
+/// Byte mask matching packet_for<N>: every slot of an active original row is
+/// 0xff. Use alongside values; zero decoded bytes do not imply inactivity.
+template <unsigned N, unsigned Rows>
+[[gnu::always_inline]] inline packet_for<N> row_mask_for(std::uint64_t active) {
+    static_assert((N == 8 || N == 64) && Rows <= N && std::has_single_bit(Rows));
+    if constexpr (N == 8)
+        return detail::gpr_row_mask<Rows>(active);
+#if defined(__aarch64__) || defined(__AVX2__)
+    else
+        return row_mask<Rows>(active);
+#endif
+}
+} // namespace ikea::tuplepack::native

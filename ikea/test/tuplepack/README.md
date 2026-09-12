@@ -8,6 +8,7 @@
 | `ikea_tuplepack_operations_check` | Whole-call rejection, shared-byte groups, nested writes, complete maintenance, sparse selections, 128-code construction, shared overlap proof |
 | `ikea_tuplepack_execution_check` | General/normalized routing against independent bits, native CPS completion, 2/4-row batch shapes, inactive-null lanes |
 | `ikea_tuplepack_packets_check` | All seven row shapes; independent buffered/native wire checks, tiny and scattered units, masks through bit 63, range tails, admission, effects and nested packet observations |
+| `ikea_tuplepack_gpr_check` | All four GPR shapes; shared independent wire reference, every bounded word-transfer length/shift/width and mask at guard pages, failed admission, nested maintenance, erasure, CPS early completion and register carrier bridges |
 | `ikea_tuplepack_ownership_check` | In-place retained storage, generation checks, completed frontiers, cancellation, actual substituted sources, exact/conservative/bypass summary publication |
 
 Wire and ownership failures report the failing scenario/source location. The
@@ -17,5 +18,6 @@ fixed seeds. Source and pipeline metadata remain separate from native payloads.
 
 Short teaching programs live in `examples/tuplepack`; exhaustive owner-event
 checks remain here. Run the [header checker](../headers.py) under each configured
-profile and use ASan/UBSan for boundary changes. The [benchmark suite](../../../workbench/benchmarks/tuplepack/README.md)
+profile (`--module tuplepack` restricts it to this module) and use ASan/UBSan for
+boundary changes. The [benchmark suite](../../../workbench/benchmarks/tuplepack/README.md)
 has performance controls; these checks do not assert timings.

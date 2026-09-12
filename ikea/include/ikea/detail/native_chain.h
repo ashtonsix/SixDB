@@ -18,7 +18,7 @@ class native_chain<Native, Mask, Slots, Error, std::index_sequence<I...>> {
 
   public:
     struct slot;
-    // Flatten vectors at the ABI. Passing the C++ aggregate itself can create a
+    // Flatten register values at the ABI. Passing the C++ aggregate itself can create a
     // hidden memory argument even when every useful value fits in registers.
     typedef IKEA_CHAIN_CC void (*function)(const slot*, void*, std::size_t, Mask, argument<I>...);
     struct slot {

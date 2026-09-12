@@ -1,0 +1,11 @@
+{
+  "profile": "Zen 5 AVX2",
+  "current_binary_sha256": "a836cec7ade575248f83abfd62149ff6df1805dc84b5489e8db832fad227b42a",
+  "prior_binary_sha256": "3b1e45c5691db0f0f7d0914b702027663944082eb1b944fe13aedbf35a387a0a",
+  "current_virtual_address": "0x15eff0",
+  "prior_virtual_address": "0x159060",
+  "bytes": 78,
+  "both_code_sha256": "7e6d07785541a9985bd731e821f51f6f1b8c817725203deb25ebe27cb3ee5cd3",
+  "finding": "The selected two-code point endpoint is byte-identical, including relative branches. Both read-consumer loops still make four two-argument indirect calls and assemble the results in registers; stack offsets, register allocation and instruction placement differ. This rules out added inner-kernel instructions, but does not identify the cause of the cross-binary timing difference.",
+  "decision": "Retain the observed AVX2 tail as an unresolved cross-binary control difference; use one ordinary four-row packet for this consumer, which is roughly twice as fast as current repeated points. Do not duplicate the identical point kernel."
+}

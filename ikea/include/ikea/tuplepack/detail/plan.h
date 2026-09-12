@@ -1,6 +1,7 @@
 #pragma once
 #include <ikea/tuplepack/description.h>
 #include <type_traits>
+#include <bit>
 
 namespace ikea::tuplepack {
 template <unsigned N> using packet = std::conditional_t<N == 8, std::uint64_t, std::array<byte, N>>;
@@ -68,13 +69,36 @@ struct write64 : scalar_write<64> {
     unsigned round_count = 0;
     bool dense = false, needs_old = false;
 };
-template <unsigned N> using read_control = std::conditional_t<N == 8, scalar_read<8>, read64>;
-template <unsigned N> using write_control = std::conditional_t<N == 8, scalar_write<8>, write64>;
-
-std::expected<scalar_read<8>, error> prepare_read8(const layout&, std::span<const byte>);
+// A consecutive, equally shifted byte projection admits a bounded word
+// transfer. Short maps keep their row's trailing output slots zero.
+struct word_transfer {
+    std::uint64_t mask = 0;
+    byte offset = 0, shift = 0, bytes = 0;
+};
+struct gpr_read : scalar_read<8> {
+    word_transfer transfer;
+};
+struct gpr_write : scalar_write<8> {
+    word_transfer transfer;
+    std::uint64_t invalid_word = 0, native_reads = 0;
+};
+std::expected<gpr_read, error> prepare_read8(const layout&, std::span<const byte>,
+                                             unsigned rows = 1);
 std::expected<read64, error> prepare_read64(const layout&, std::span<const byte>);
-std::expected<scalar_write<8>, error> prepare_write8(const layout&, std::span<const byte>);
+std::expected<gpr_write, error> prepare_write8(const layout&, std::span<const byte>,
+                                               unsigned rows = 1);
 std::expected<write64, error> prepare_write64(const layout&, std::span<const byte>);
+
+template <unsigned Rows>
+[[gnu::always_inline]] inline std::uint64_t gpr_row_mask(std::uint64_t active) {
+    static_assert(Rows <= 8 && std::has_single_bit(Rows));
+    constexpr unsigned bits = 64 / Rows;
+    constexpr auto part = ~std::uint64_t(0) >> (64 - bits);
+    std::uint64_t mask = 0;
+    for (unsigned r = 0; r < Rows; ++r)
+        mask |= (std::uint64_t(0) - ((active >> r) & 1)) & (part << (bits * r));
+    return mask;
+}
 
 template <unsigned N>
 [[gnu::always_inline]] inline byte input_byte(const packet<N>& input, unsigned i) {
@@ -126,10 +150,23 @@ template <unsigned N>
         row[b.offset] = value;
     }
 }
-using read8_function = std::uint64_t (*)(const scalar_read<8>&, const byte*);
-using write8_function = void (*)(const scalar_write<8>&, byte*, std::uint64_t);
-read8_function select_read8(unsigned slots);
-write8_function select_write8(const scalar_write<8>&);
+// A point endpoint has no traversal stride or active-row argument. Keeping
+// those unused arguments out preserves registers for the surrounding caller.
+template <unsigned Rows>
+using gpr_reader =
+    std::conditional_t<Rows == 1, std::uint64_t (*)(const gpr_read&, const byte*),
+                       std::uint64_t (*)(const gpr_read&, const byte*, std::size_t, std::uint64_t)>;
+template <unsigned Rows>
+using gpr_writer = std::conditional_t<Rows == 1, void (*)(const gpr_write&, byte*, std::uint64_t),
+                                      void (*)(const gpr_write&, byte*, std::size_t, std::uint64_t,
+                                               std::uint64_t)>;
+template <unsigned Rows> gpr_reader<Rows> select_gpr_reader(const gpr_read&);
+template <unsigned Rows> gpr_writer<Rows> select_gpr_writer(const gpr_write&);
+template <unsigned Rows>
+std::uint64_t read_gpr(const gpr_read&, const byte*, std::size_t stride, std::uint64_t active);
+template <unsigned Rows>
+void write_gpr(const gpr_write&, byte*, std::size_t stride, std::uint64_t input,
+               std::uint64_t active);
 std::array<byte, 64> read_buffered(const read64&, const byte*);
 void write_buffered(const write64&, byte*, const std::array<byte, 64>&);
 } // namespace detail

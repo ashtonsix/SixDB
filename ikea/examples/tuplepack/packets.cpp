@@ -9,8 +9,8 @@ namespace {
 constexpr unsigned rows = 32;
 using pipeline = tp::chain<8>;
 struct context {
-    const tp::native_reader<tp::byte, rows>& read;
-    const tp::native_writer<rows>& write;
+    const tp::native_reader<64, tp::byte, rows>& read;
+    const tp::native_writer<64, rows>& write;
     ikea::source_write_journal& effects;
     bool okay = true;
     std::size_t completed = 0;

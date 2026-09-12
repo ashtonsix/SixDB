@@ -1,0 +1,774 @@
+{
+  "metric": "Median CPU ns per original row, including inactive rows",
+  "case_weighting": "Parameter grid, with coincident combinations; not application frequency",
+  "job": "20260912T204548Z-e0eb1437",
+  "samples_sha256": "917b0db46cc76f4cc0cd45471e73c96e53cdc8e2489e863dfff1fcf89ad33eca",
+  "total_cases": 4439,
+  "repetitions_per_case": 3,
+  "selection": "40 routine cases plus all competitors in the AVX2 four-row/two-code point-regression families, with matching prior point controls. The same family selection applies to every profile.",
+  "groups": {
+    "1/random/word_hash/gpr/points": {
+      "pairs": 23,
+      "median_ratio": 0.9997429857374461,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "1/random/word_hash/gpr/simd": {
+      "pairs": 23,
+      "median_ratio": 1.178881599772051,
+      "over_1_4": 11,
+      "over_2": 5
+    },
+    "1/random/word_hash/gpr_native/points": {
+      "pairs": 23,
+      "median_ratio": 0.8723542818879269,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "1/random/word_hash/gpr_native/simd": {
+      "pairs": 23,
+      "median_ratio": 1.0276963419843312,
+      "over_1_4": 11,
+      "over_2": 0
+    },
+    "1/random/sum/gpr/points": {
+      "pairs": 23,
+      "median_ratio": 0.9995501211167785,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "1/random/sum/gpr/simd": {
+      "pairs": 23,
+      "median_ratio": 1.017066252420152,
+      "over_1_4": 11,
+      "over_2": 0
+    },
+    "1/random/sum/gpr_native/points": {
+      "pairs": 23,
+      "median_ratio": 0.8814269205340968,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "1/random/sum/gpr_native/simd": {
+      "pairs": 23,
+      "median_ratio": 0.881361603727646,
+      "over_1_4": 7,
+      "over_2": 0
+    },
+    "1/random/update/gpr/points": {
+      "pairs": 23,
+      "median_ratio": 0.999438527146337,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "1/random/update/gpr/simd": {
+      "pairs": 23,
+      "median_ratio": 0.8556019266334507,
+      "over_1_4": 4,
+      "over_2": 0
+    },
+    "1/random/update/gpr_native/points": {
+      "pairs": 23,
+      "median_ratio": 1.0059644840252961,
+      "over_1_4": 2,
+      "over_2": 0
+    },
+    "1/random/update/gpr_native/simd": {
+      "pairs": 23,
+      "median_ratio": 0.8518774037787593,
+      "over_1_4": 4,
+      "over_2": 0
+    },
+    "1/scan/word_hash/gpr/points": {
+      "pairs": 23,
+      "median_ratio": 0.9998117767945581,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "1/scan/word_hash/gpr/simd": {
+      "pairs": 23,
+      "median_ratio": 1.1646906408151407,
+      "over_1_4": 11,
+      "over_2": 5
+    },
+    "1/scan/word_hash/gpr/simd_full": {
+      "pairs": 23,
+      "median_ratio": 2.6974938846912058,
+      "over_1_4": 23,
+      "over_2": 14
+    },
+    "1/scan/word_hash/gpr_native/points": {
+      "pairs": 23,
+      "median_ratio": 0.8672673880283698,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "1/scan/word_hash/gpr_native/simd": {
+      "pairs": 23,
+      "median_ratio": 1.0135225147802898,
+      "over_1_4": 11,
+      "over_2": 1
+    },
+    "1/scan/word_hash/gpr_native/simd_full": {
+      "pairs": 23,
+      "median_ratio": 2.3373816379379604,
+      "over_1_4": 17,
+      "over_2": 13
+    },
+    "1/scan/sum/gpr/points": {
+      "pairs": 23,
+      "median_ratio": 0.999503861606136,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "1/scan/sum/gpr/simd": {
+      "pairs": 23,
+      "median_ratio": 1.020375506104031,
+      "over_1_4": 11,
+      "over_2": 0
+    },
+    "1/scan/sum/gpr/simd_full": {
+      "pairs": 23,
+      "median_ratio": 3.01448424699384,
+      "over_1_4": 23,
+      "over_2": 14
+    },
+    "1/scan/sum/gpr_native/points": {
+      "pairs": 23,
+      "median_ratio": 0.8792433291599746,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "1/scan/sum/gpr_native/simd": {
+      "pairs": 23,
+      "median_ratio": 0.878799760590081,
+      "over_1_4": 7,
+      "over_2": 0
+    },
+    "1/scan/sum/gpr_native/simd_full": {
+      "pairs": 23,
+      "median_ratio": 2.6506480102659373,
+      "over_1_4": 23,
+      "over_2": 14
+    },
+    "1/scan/update/gpr/points": {
+      "pairs": 23,
+      "median_ratio": 0.9993382564163981,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "1/scan/update/gpr/simd": {
+      "pairs": 23,
+      "median_ratio": 0.8425212866774333,
+      "over_1_4": 4,
+      "over_2": 0
+    },
+    "1/scan/update/gpr/simd_full": {
+      "pairs": 23,
+      "median_ratio": 2.325851902153652,
+      "over_1_4": 18,
+      "over_2": 15
+    },
+    "1/scan/update/gpr_native/points": {
+      "pairs": 23,
+      "median_ratio": 1.006173136411962,
+      "over_1_4": 2,
+      "over_2": 0
+    },
+    "1/scan/update/gpr_native/simd": {
+      "pairs": 23,
+      "median_ratio": 0.853605426885307,
+      "over_1_4": 4,
+      "over_2": 0
+    },
+    "1/scan/update/gpr_native/simd_full": {
+      "pairs": 23,
+      "median_ratio": 2.3409539902524243,
+      "over_1_4": 18,
+      "over_2": 15
+    },
+    "2/random/word_hash/gpr/points": {
+      "pairs": 46,
+      "median_ratio": 0.9225296725674871,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "2/random/word_hash/gpr/simd": {
+      "pairs": 46,
+      "median_ratio": 0.7277731600748127,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "2/random/word_hash/gpr_native/points": {
+      "pairs": 46,
+      "median_ratio": 0.7647228917548535,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "2/random/word_hash/gpr_native/simd": {
+      "pairs": 46,
+      "median_ratio": 0.5764812842273883,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "2/random/sum/gpr/points": {
+      "pairs": 46,
+      "median_ratio": 0.910958202103131,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "2/random/sum/gpr/simd": {
+      "pairs": 46,
+      "median_ratio": 0.7548079774338061,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "2/random/sum/gpr_native/points": {
+      "pairs": 46,
+      "median_ratio": 0.7675152409657504,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "2/random/sum/gpr_native/simd": {
+      "pairs": 46,
+      "median_ratio": 0.5993353360823888,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "2/random/update/gpr/points": {
+      "pairs": 46,
+      "median_ratio": 1.0351938008942563,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "2/random/update/gpr/simd": {
+      "pairs": 46,
+      "median_ratio": 0.8588412987630476,
+      "over_1_4": 4,
+      "over_2": 0
+    },
+    "2/random/update/gpr_native/points": {
+      "pairs": 46,
+      "median_ratio": 0.9636253803385643,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "2/random/update/gpr_native/simd": {
+      "pairs": 46,
+      "median_ratio": 0.7246129609786283,
+      "over_1_4": 4,
+      "over_2": 0
+    },
+    "2/scan/word_hash/gpr/points": {
+      "pairs": 46,
+      "median_ratio": 0.9222186265578761,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "2/scan/word_hash/gpr/simd": {
+      "pairs": 46,
+      "median_ratio": 0.7277895363030915,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "2/scan/word_hash/gpr/simd_full": {
+      "pairs": 46,
+      "median_ratio": 1.9718845858991512,
+      "over_1_4": 34,
+      "over_2": 23
+    },
+    "2/scan/word_hash/gpr_native/points": {
+      "pairs": 46,
+      "median_ratio": 0.7637149258810709,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "2/scan/word_hash/gpr_native/simd": {
+      "pairs": 46,
+      "median_ratio": 0.5766114457597122,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "2/scan/word_hash/gpr_native/simd_full": {
+      "pairs": 46,
+      "median_ratio": 1.5862039827747765,
+      "over_1_4": 27,
+      "over_2": 11
+    },
+    "2/scan/sum/gpr/points": {
+      "pairs": 46,
+      "median_ratio": 0.9036377554123325,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "2/scan/sum/gpr/simd": {
+      "pairs": 46,
+      "median_ratio": 0.7544740429767647,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "2/scan/sum/gpr/simd_full": {
+      "pairs": 46,
+      "median_ratio": 2.1614630066217715,
+      "over_1_4": 46,
+      "over_2": 23
+    },
+    "2/scan/sum/gpr_native/points": {
+      "pairs": 46,
+      "median_ratio": 0.7682529272588745,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "2/scan/sum/gpr_native/simd": {
+      "pairs": 46,
+      "median_ratio": 0.5988237455367018,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "2/scan/sum/gpr_native/simd_full": {
+      "pairs": 46,
+      "median_ratio": 1.7777648255201548,
+      "over_1_4": 28,
+      "over_2": 16
+    },
+    "2/scan/update/gpr/points": {
+      "pairs": 46,
+      "median_ratio": 1.0427033520586702,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "2/scan/update/gpr/simd": {
+      "pairs": 46,
+      "median_ratio": 0.8567342349850218,
+      "over_1_4": 4,
+      "over_2": 0
+    },
+    "2/scan/update/gpr/simd_full": {
+      "pairs": 46,
+      "median_ratio": 1.5531952427020856,
+      "over_1_4": 26,
+      "over_2": 21
+    },
+    "2/scan/update/gpr_native/points": {
+      "pairs": 46,
+      "median_ratio": 0.9706238107518432,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "2/scan/update/gpr_native/simd": {
+      "pairs": 46,
+      "median_ratio": 0.7192788967854753,
+      "over_1_4": 4,
+      "over_2": 0
+    },
+    "2/scan/update/gpr_native/simd_full": {
+      "pairs": 46,
+      "median_ratio": 1.5097039878365452,
+      "over_1_4": 24,
+      "over_2": 11
+    },
+    "4/random/word_hash/gpr/points": {
+      "pairs": 46,
+      "median_ratio": 0.8274113061367823,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "4/random/word_hash/gpr/simd": {
+      "pairs": 46,
+      "median_ratio": 0.5459973620311014,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "4/random/word_hash/gpr_native/points": {
+      "pairs": 46,
+      "median_ratio": 0.6372270475206738,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "4/random/word_hash/gpr_native/simd": {
+      "pairs": 46,
+      "median_ratio": 0.400262499012929,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "4/random/sum/gpr/points": {
+      "pairs": 46,
+      "median_ratio": 0.83334802146447,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "4/random/sum/gpr/simd": {
+      "pairs": 46,
+      "median_ratio": 0.5930482008603701,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "4/random/sum/gpr_native/points": {
+      "pairs": 46,
+      "median_ratio": 0.6874046319414895,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "4/random/sum/gpr_native/simd": {
+      "pairs": 46,
+      "median_ratio": 0.470517938657965,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "4/random/update/gpr/points": {
+      "pairs": 46,
+      "median_ratio": 0.8419120361873071,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "4/random/update/gpr/simd": {
+      "pairs": 46,
+      "median_ratio": 0.7460652695522305,
+      "over_1_4": 3,
+      "over_2": 0
+    },
+    "4/random/update/gpr_native/points": {
+      "pairs": 46,
+      "median_ratio": 0.8346277151030432,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "4/random/update/gpr_native/simd": {
+      "pairs": 46,
+      "median_ratio": 0.7265956016713928,
+      "over_1_4": 3,
+      "over_2": 0
+    },
+    "4/scan/word_hash/gpr/points": {
+      "pairs": 46,
+      "median_ratio": 0.8269947573267178,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "4/scan/word_hash/gpr/simd": {
+      "pairs": 46,
+      "median_ratio": 0.5456914609922636,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "4/scan/word_hash/gpr/simd_full": {
+      "pairs": 46,
+      "median_ratio": 1.6572785896322895,
+      "over_1_4": 25,
+      "over_2": 16
+    },
+    "4/scan/word_hash/gpr_native/points": {
+      "pairs": 46,
+      "median_ratio": 0.6360871551051392,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "4/scan/word_hash/gpr_native/simd": {
+      "pairs": 46,
+      "median_ratio": 0.3997919312156456,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "4/scan/word_hash/gpr_native/simd_full": {
+      "pairs": 46,
+      "median_ratio": 1.2158304730920864,
+      "over_1_4": 16,
+      "over_2": 9
+    },
+    "4/scan/sum/gpr/points": {
+      "pairs": 46,
+      "median_ratio": 0.8344154519998755,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "4/scan/sum/gpr/simd": {
+      "pairs": 46,
+      "median_ratio": 0.5929598915516042,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "4/scan/sum/gpr/simd_full": {
+      "pairs": 46,
+      "median_ratio": 1.8388070600197146,
+      "over_1_4": 32,
+      "over_2": 18
+    },
+    "4/scan/sum/gpr_native/points": {
+      "pairs": 46,
+      "median_ratio": 0.6849854901440621,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "4/scan/sum/gpr_native/simd": {
+      "pairs": 46,
+      "median_ratio": 0.46739646230128484,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "4/scan/sum/gpr_native/simd_full": {
+      "pairs": 46,
+      "median_ratio": 1.430552385555671,
+      "over_1_4": 25,
+      "over_2": 12
+    },
+    "4/scan/update/gpr/points": {
+      "pairs": 46,
+      "median_ratio": 0.8424757279501073,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "4/scan/update/gpr/simd": {
+      "pairs": 46,
+      "median_ratio": 0.7460014512318283,
+      "over_1_4": 3,
+      "over_2": 0
+    },
+    "4/scan/update/gpr/simd_full": {
+      "pairs": 46,
+      "median_ratio": 1.310169679280989,
+      "over_1_4": 20,
+      "over_2": 5
+    },
+    "4/scan/update/gpr_native/points": {
+      "pairs": 46,
+      "median_ratio": 0.8332113631070113,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "4/scan/update/gpr_native/simd": {
+      "pairs": 46,
+      "median_ratio": 0.7282431297066905,
+      "over_1_4": 4,
+      "over_2": 0
+    },
+    "4/scan/update/gpr_native/simd_full": {
+      "pairs": 46,
+      "median_ratio": 1.300938245643029,
+      "over_1_4": 19,
+      "over_2": 4
+    },
+    "8/random/word_hash/gpr/points": {
+      "pairs": 46,
+      "median_ratio": 0.46691575636347904,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/random/word_hash/gpr/simd": {
+      "pairs": 46,
+      "median_ratio": 0.3883384174446026,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/random/word_hash/gpr_native/points": {
+      "pairs": 46,
+      "median_ratio": 0.28566620539606624,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/random/word_hash/gpr_native/simd": {
+      "pairs": 46,
+      "median_ratio": 0.21984421609135252,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/random/sum/gpr/points": {
+      "pairs": 46,
+      "median_ratio": 0.5162219906193856,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/random/sum/gpr/simd": {
+      "pairs": 46,
+      "median_ratio": 0.521526553607276,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/random/sum/gpr_native/points": {
+      "pairs": 46,
+      "median_ratio": 0.3461148737247649,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/random/sum/gpr_native/simd": {
+      "pairs": 46,
+      "median_ratio": 0.3387933541122088,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/random/update/gpr/points": {
+      "pairs": 46,
+      "median_ratio": 0.6416756087784612,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/random/update/gpr/simd": {
+      "pairs": 46,
+      "median_ratio": 0.6550521060056711,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/random/update/gpr_native/points": {
+      "pairs": 46,
+      "median_ratio": 0.6375087568707449,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/random/update/gpr_native/simd": {
+      "pairs": 46,
+      "median_ratio": 0.5955467562458208,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/scan/word_hash/gpr/points": {
+      "pairs": 46,
+      "median_ratio": 0.46525135445772486,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/scan/word_hash/gpr/simd": {
+      "pairs": 46,
+      "median_ratio": 0.3886434070491378,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/scan/word_hash/gpr/simd_full": {
+      "pairs": 46,
+      "median_ratio": 1.061705375155169,
+      "over_1_4": 1,
+      "over_2": 1
+    },
+    "8/scan/word_hash/gpr_native/points": {
+      "pairs": 46,
+      "median_ratio": 0.2875681822793381,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/scan/word_hash/gpr_native/simd": {
+      "pairs": 46,
+      "median_ratio": 0.23765140524502237,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/scan/word_hash/gpr_native/simd_full": {
+      "pairs": 46,
+      "median_ratio": 0.7002040495317889,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/scan/sum/gpr/points": {
+      "pairs": 46,
+      "median_ratio": 0.5169600337009221,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/scan/sum/gpr/simd": {
+      "pairs": 46,
+      "median_ratio": 0.5249890501431775,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/scan/sum/gpr/simd_full": {
+      "pairs": 46,
+      "median_ratio": 1.2746607249172357,
+      "over_1_4": 1,
+      "over_2": 1
+    },
+    "8/scan/sum/gpr_native/points": {
+      "pairs": 46,
+      "median_ratio": 0.3477427475079018,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/scan/sum/gpr_native/simd": {
+      "pairs": 46,
+      "median_ratio": 0.34679993830435596,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/scan/sum/gpr_native/simd_full": {
+      "pairs": 46,
+      "median_ratio": 0.8996610961295717,
+      "over_1_4": 1,
+      "over_2": 0
+    },
+    "8/scan/update/gpr/points": {
+      "pairs": 46,
+      "median_ratio": 0.645440219841825,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/scan/update/gpr/simd": {
+      "pairs": 46,
+      "median_ratio": 0.65177331748174,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/scan/update/gpr/simd_full": {
+      "pairs": 46,
+      "median_ratio": 0.8354213284883383,
+      "over_1_4": 1,
+      "over_2": 1
+    },
+    "8/scan/update/gpr_native/points": {
+      "pairs": 46,
+      "median_ratio": 0.6382128940744404,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/scan/update/gpr_native/simd": {
+      "pairs": 46,
+      "median_ratio": 0.591661203258354,
+      "over_1_4": 0,
+      "over_2": 0
+    },
+    "8/scan/update/gpr_native/simd_full": {
+      "pairs": 46,
+      "median_ratio": 0.816630312360055,
+      "over_1_4": 1,
+      "over_2": 1
+    }
+  },
+  "prior_points": {
+    "job": "20260912T191330Z-258f987b",
+    "samples_sha256": "a515363afbb8455ff50cc25313743a3d787148ca783def7c4accbfbf737714bc",
+    "artifact": "../../../../../spikes/tuple-layout/batching/gpr/evidence/v2/artifact.json",
+    "comparison": {
+      "word_hash": {
+        "pairs": 322,
+        "median_current_over_prior": 1.0258086818227865,
+        "over_1_4": 0,
+        "maximum": [
+          1.0923095847119528,
+          "word/8/unit16/stride64/map2/random/all/word_hash/points",
+          1.5318155631734345,
+          1.4023639310803828
+        ],
+        "exceptions_over_1_4": []
+      },
+      "sum": {
+        "pairs": 322,
+        "median_current_over_prior": 1.0247030879518992,
+        "over_1_4": 0,
+        "maximum": [
+          1.0888987205738474,
+          "word/8/unit1/stride64/map0/random/all/sum/points",
+          1.6006948749269687,
+          1.4700126326564198
+        ],
+        "exceptions_over_1_4": []
+      },
+      "update": {
+        "pairs": 322,
+        "median_current_over_prior": 1.0556855643720267,
+        "over_1_4": 0,
+        "maximum": [
+          1.1828747433480395,
+          "word/4/unit16/stride16/map1/scan/half/update/points",
+          4.907180895907604,
+          4.148521154503808
+        ],
+        "exceptions_over_1_4": []
+      }
+    }
+  }
+}

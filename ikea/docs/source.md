@@ -79,14 +79,17 @@ pipeline carrier. `author/routes.h` exposes route normalization. Row shapes belo
 to the ordinary reader/writer plans and carry through native adapters and groups.
 `detail/mutation.h` shares checked mutation admission and driving;
 `detail/window.h` owns row masks, tails and maintenance brackets. Physical
-traversal remains specialized. `detail/{plan,packet_plan}.h` and
-`detail/native/` are internal.
+traversal remains specialized. `detail/{plan,packet_plan,gpr}.h` and
+`detail/native/` are internal. `detail/native/shuffle.h` groups the small ISA
+shuffle bodies; bounded memory access, packet traversal and route selection
+have their own headers beside it.
 
-`src/tuplepack/{description,prepare,packet_prepare,construction,kernels,packet,routes}.cpp`
-compile cold work and named kernel endpoints independently. The physical native functions
-share inline bodies with authors. Scalar point functions retain a small set of
-count specializations and a bounded word writer; arbitrary distant maps retain
-the complete byte-coalesced path. Prepared controls contain only one ISA's data.
+`src/tuplepack/{description,prepare,packet_prepare,construction,kernels,gpr,packet,routes}.cpp`
+compile cold work and named kernel endpoints independently. The physical native
+functions share inline bodies with authors. GPR point and multi-row operations
+share bounded word transfers and code extraction; preparation selects ordinary
+endpoints once. Arbitrary distant maps retain the complete byte-coalesced path.
+Prepared controls contain only one ISA's data.
 
 The [TuplePack tests](../test/tuplepack/README.md) are organized by wire, operations,
 packet shapes, execution and ownership. Its [benchmarks](../../workbench/benchmarks/tuplepack/README.md)
@@ -97,7 +100,7 @@ shared effects, overlap or pipeline mechanics must run both modules' affected ch
 
 `include/ikea/detail/native_chain.h` owns pipeline entry and continuation hops for
 both modules. On AArch64, `run` enters through a fixed-frame AAPCS shim that
-preserves caller registers and passes vectors as separate arguments. Keep this
+preserves caller registers and passes register payloads as separate arguments. Keep this
 entry when changing the chain: Clang 21 can otherwise retain a realigned caller's
 frame base in x19 across a `preserve_none` call that clobbers it.
 

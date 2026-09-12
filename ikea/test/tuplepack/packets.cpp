@@ -1,3 +1,4 @@
+#include "packet_wire.h"
 #include <ikea/tuplepack.h>
 #include <ikea/tuplepack/author/execution.h>
 #include <ikea/tuplepack/author/composition.h>
@@ -14,145 +15,6 @@ void require(bool valid, unsigned rows, unsigned trial, const char* scenario) {
     if (!valid) {
         std::fprintf(stderr, "TuplePack packets: rows=%u trial=%u %s\n", rows, trial, scenario);
         std::abort();
-    }
-}
-template <unsigned Rows> void wire(std::mt19937& random) {
-    constexpr unsigned B = 64 / Rows;
-    constexpr auto all = tp::detail::all_rows<Rows>;
-    for (unsigned trial = 0; trial < 120; ++trial) {
-        const unsigned extent = trial % 4 ? 1 + random() % 64 : 1;
-        const unsigned stride = trial % 2 ? extent + 11 : extent;
-        const std::size_t count = Rows * 2 + 1, offset = 3;
-        std::vector<tp::code> codes;
-        for (unsigned i = 0; i < extent; ++i) {
-            const unsigned width = 1 + random() % 8;
-            codes.push_back({tp::byte(i), 0, tp::byte(width)});
-            if (width < 8)
-                codes.push_back({tp::byte(i), tp::byte(width), tp::byte(8 - width)});
-        }
-        const auto format = *tp::layout::make(extent, codes);
-        std::vector<unsigned> ranks(codes.size());
-        for (unsigned i = 0; i < ranks.size(); ++i)
-            ranks[i] = i;
-        std::shuffle(ranks.begin(), ranks.end(), random);
-        std::array<tp::byte, B> map;
-        map.fill(tp::hole);
-        for (unsigned i = 0; i < std::min(B, unsigned(ranks.size())); ++i)
-            if (trial % 3 || i % 3)
-                map[i] = ranks[i];
-        auto rp = *tp::reader<64, Rows>::make(format, map);
-        auto wp = *tp::writer<64, Rows>::make(format, map);
-        std::vector<tp::byte> data(offset + (count - 1) * stride + extent);
-        for (auto& b : data)
-            b = random();
-        auto view = *tp::view::bind(format, data, count, stride, offset);
-        auto read = *tp::bind_reader(rp, view);
-        auto write = *tp::bind_writer(wp, view);
-        const std::uint64_t active =
-            trial % 3 ? ((std::uint64_t(random()) << 32) | random()) & all : all;
-        const std::size_t first = 1;
-        std::array<tp::byte, 64> expected{}, values{};
-        auto wanted = data;
-        for (unsigned r = 0; r < Rows; ++r)
-            for (unsigned i = 0; i < B; ++i) {
-                values[r * B + i] = random();
-                if (map[i] == tp::hole)
-                    continue;
-                const auto c = codes[map[i]];
-                if (!(active & (std::uint64_t(1) << r)))
-                    continue;
-                const auto pos = offset + (first + r) * stride + c.offset;
-                values[r * B + i] &= (1u << c.width) - 1;
-                for (unsigned bit = 0; bit < c.width; ++bit) {
-                    expected[r * B + i] |= ((data[pos] >> (c.shift + bit)) & 1) << bit;
-                    wanted[pos] = tp::byte((wanted[pos] & ~(1u << (c.shift + bit))) |
-                                           (((values[r * B + i] >> bit) & 1) << (c.shift + bit)));
-                }
-            }
-        require(read.get(first, active) == expected, Rows, trial, "buffered read/reference");
-        require(!read.get(count, all), Rows, trial, "active tail rejection");
-        require(read.get(count, 0) == std::array<tp::byte, 64>{}, Rows, trial, "empty end window");
-        if constexpr (Rows < 64)
-            require(!read.get(0, all + 1), Rows, trial, "high active bit rejected");
-#if defined(__aarch64__) || defined(__AVX2__)
-        const auto native_read = tp::native_reader(read);
-        std::array<tp::byte, 64> actual{};
-        tp::native::store_packet(actual.data(), native_read.get_unchecked(first, active));
-        require(actual == expected, Rows, trial, "native read/reference");
-        tp::native::store_packet(actual.data(), tp::native::row_mask<Rows>(active));
-        for (unsigned i = 0; i < 64; ++i)
-            require(actual[i] == ((active & (std::uint64_t(1) << (i / B))) ? 255 : 0), Rows, trial,
-                    "native row mask");
-#endif
-        std::array<ikea::owner_write, 4096> entries{};
-        ikea::source_write_journal effects{entries};
-        auto saved = data;
-        if (active && wp.effect_capacity()) {
-            std::array<ikea::owner_write, 0> none;
-            ikea::source_write_journal too_small{none};
-            require(!write.set(first, values, too_small, active), Rows, trial,
-                    "capacity before bytes");
-            require(data == saved && !too_small.used, Rows, trial, "capacity unchanged");
-        }
-        for (unsigned r = 0; r < Rows; ++r) {
-            if (!(active & (std::uint64_t(1) << r)))
-                continue;
-            bool done = false;
-            for (unsigned i = 0; i < B; ++i) {
-                if (map[i] == tp::hole || codes[map[i]].width == 8)
-                    continue;
-                auto bad = values;
-                bad[r * B + i] = 1u << codes[map[i]].width;
-                require(!write.set(first, bad, effects, active), Rows, trial, "width before bytes");
-                require(data == saved && !effects.used, Rows, trial, "width unchanged");
-#if defined(__aarch64__) || defined(__AVX2__)
-                const auto nw = tp::native_writer(write);
-                require(!nw.set(first, tp::native::load_packet(bad.data()), effects, active), Rows,
-                        trial, "native width before bytes");
-                require(data == saved && !effects.used, Rows, trial, "native width unchanged");
-#endif
-                done = true;
-                break;
-            }
-            if (done)
-                break;
-        }
-        require(bool(write.set(first, values, effects, active)), Rows, trial, "buffered set");
-        require(data == wanted, Rows, trial, "buffered write/reference");
-        for (unsigned i = 0; i < effects.used; ++i) {
-            const auto& e = entries[i];
-            require(e.source == &view && e.bytes.offset >= offset &&
-                        e.bytes.offset + e.bytes.size <= data.size(),
-                    Rows, trial, "qualified bounds");
-        }
-#if defined(__aarch64__) || defined(__AVX2__)
-        std::copy(saved.begin(), saved.end(), data.begin());
-        effects.used = 0;
-        const auto nw = tp::native_writer(write);
-        require(bool(nw.set(first, tp::native::load_packet(values.data()), effects, active)), Rows,
-                trial, "native set");
-        require(data == wanted, Rows, trial, "native write/reference");
-#endif
-        // Three packet windows include one row in the last; selection crosses
-        // a backing word boundary with an origin unrelated to the packet shape.
-        std::array<std::uint64_t, 4> selected_words{0xaaaaaaaaaaaaaaaaull, ~0ull, ~0ull, ~0ull};
-        const auto selected = tp::selection::bits(0, selected_words);
-        std::array<tp::packet<64>, 3> out{};
-        require(bool(read.read(0, out, selected)), Rows, trial, "packet range tail");
-        for (unsigned r = 0; r < 3 * Rows; ++r)
-            for (unsigned i = 0; i < B; ++i) {
-                tp::byte value = 0;
-                if (r < count && selected.contains(r) && map[i] != tp::hole) {
-                    const auto c = codes[map[i]];
-                    value =
-                        (data[offset + r * stride + c.offset] >> c.shift) & ((1u << c.width) - 1);
-                }
-                require(out[r / Rows][(r % Rows) * B + i] == value, Rows, trial,
-                        "range original coordinates");
-            }
-        effects.used = 0;
-        require(bool(write.replace(0, out, effects, selected)), Rows, trial, "range replacement");
-        require(data == wanted, Rows, trial, "range preserves same values and inactive rows");
     }
 }
 // A late bad packet must not leave earlier packets or observations committed.
@@ -315,13 +177,13 @@ void composition() {
 #endif
 int main() {
     std::mt19937 random(89123);
-    wire<1>(random);
-    wire<2>(random);
-    wire<4>(random);
-    wire<8>(random);
-    wire<16>(random);
-    wire<32>(random);
-    wire<64>(random);
+    wire<64, 1>(random);
+    wire<64, 2>(random);
+    wire<64, 4>(random);
+    wire<64, 8>(random);
+    wire<64, 16>(random);
+    wire<64, 32>(random);
+    wire<64, 64>(random);
     range_admission();
     guarded_tails();
 #if defined(__aarch64__) || defined(__AVX2__)

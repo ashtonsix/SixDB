@@ -1,12 +1,31 @@
 #pragma once
 #include <ikea/tuplepack/detail/plan.h>
 #include <ikea/tuplepack/detail/native/types.h>
-#include <algorithm>
-#include <cstring>
 #include <type_traits>
-#include <ikea/tuplepack/detail/native/memory.h>
-#if defined(__AVX2__) && !defined(__AVX512VBMI__)
+
+#if defined(__aarch64__) || defined(__AVX2__)
 namespace ikea::tuplepack::native::native_detail {
+#if defined(__aarch64__)
+template <unsigned I>
+[[gnu::always_inline]] inline vector16 apply16(native_packet source, const detail::shuffle& p) {
+    const auto index = vld1q_u8(p.index.data() + 16 * I);
+    uint8x16_t value;
+    if (p.routes <= 1)
+        value = vqtbl1q_u8(source.a, index);
+    else if (p.routes <= 3)
+        value = vqtbl2q_u8({{source.a, source.b}}, index);
+    else if (p.routes <= 7)
+        value = vqtbl3q_u8({{source.a, source.b, source.c}}, index);
+    else
+        value = vqtbl4q_u8({{source.a, source.b, source.c, source.d}}, index);
+    if (p.shifting)
+        value = vshlq_u8(value, vld1q_s8(p.shift.data() + 16 * I));
+    if (p.masking)
+        value = vandq_u8(value, vld1q_u8(p.mask.data() + 16 * I));
+    return value;
+}
+#endif
+#if defined(__AVX2__) && !defined(__AVX512VBMI__)
 template <unsigned I, bool Left>
 [[gnu::always_inline]] inline __m256i apply32(native_packet source, const detail::shuffle& p) {
     auto result = _mm256_setzero_si256();
@@ -45,6 +64,24 @@ template <unsigned I, bool Left>
         result = _mm256_and_si256(
             result, _mm256_loadu_si256(reinterpret_cast<const __m256i*>(p.mask.data() + I * 32)));
     return result;
+}
+#endif
+
+template <bool Left>
+[[gnu::always_inline]] inline native_packet apply(native_packet source, const detail::shuffle& p) {
+#if defined(__aarch64__)
+    return {apply16<0>(source, p), apply16<1>(source, p), apply16<2>(source, p),
+            apply16<3>(source, p)};
+#elif defined(__AVX512VBMI__)
+    auto result = _mm512_permutexvar_epi8(_mm512_loadu_si512(p.index.data()), source);
+    if (p.shifting)
+        result = _mm512_multishift_epi64_epi8(_mm512_loadu_si512(p.bit_index.data()), result);
+    if (p.masking)
+        result = _mm512_and_si512(result, _mm512_loadu_si512(p.mask.data()));
+    return result;
+#else
+    return {apply32<0, Left>(source, p), apply32<1, Left>(source, p)};
+#endif
 }
 } // namespace ikea::tuplepack::native::native_detail
 #endif

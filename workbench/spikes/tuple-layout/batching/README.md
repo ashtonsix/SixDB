@@ -7,6 +7,9 @@ See the [readiness review](../readiness-review.md) for the wider audit and the
 [packet example](../../../../ikea/examples/tuplepack/packets.cpp) for executable
 inline/CPS updates with full, sparse and tail packets.
 
+The separate [GPR motivation probe](gpr/README.md) asks whether extending the
+eight-byte interface to multiple rows would earn its implementation cost.
+
 ## What controls the transfer choice
 
 The decoded shape, physical tuple extent, selected byte demand and stride are
