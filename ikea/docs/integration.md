@@ -1,15 +1,10 @@
 # Integrating with owners
 
-Ikea's containers and kernels operate within owner-supplied lifetime and visibility
-rules. This guide explains that boundary using SeriesPack, the first implemented
-component. The responsibilities apply beyond packed arrays; the concrete journal,
-summary and operation types here are SeriesPack's current realization.
-
-[examples/seriespack/integration.cpp](examples/seriespack/integration.cpp) is a small executable adapter
-for an in-place mutation with a retained lease. It teaches local obligations;
-[test/seriespack/integration/ownership.cpp](test/seriespack/integration/ownership.cpp) separately checks
-acquisition waits, stale replies, rotation, clean/dirty cancellation, sealing,
-conflicts and coordinated visibility. Neither implements Loom, Engine or Orbital.
+An owner supplies storage, keeps borrowed bindings alive, and coordinates the
+visibility of data and summaries. Ikea executes admitted operations within those
+lifetimes. The executable [SeriesPack adapter](../examples/seriespack/integration.cpp)
+and [TuplePack adapter](../examples/tuplepack/integration.cpp) show how to retain an
+in-place mutation across scheduling boundaries and publish its effects.
 
 ## Who owns what
 
@@ -20,11 +15,10 @@ conflicts and coordinated visibility. Neither implements Loom, Engine or Orbital
 | Orbital | OS-facing services, including the intended UFFD page-COW version mechanism |
 | Ikea | Admitted operations over borrowed storage; native contributions and issued-byte coverage; composition and physical descriptions |
 
-SeriesPack does not prescribe immutable buffers or MVCC beforeimages. Orbital can
-preserve page versions through UFFD COW while an admitted operation writes in
-place. Current old values may still be needed for summary deltas. Private-copy
-mutation is another owner policy and may win in some situations. Version retention
-and visibility/isolation are separate obligations.
+Ikea supports in-place and private-copy mutation. Orbital can preserve page
+versions through UFFD COW during in-place writes. A summary law may separately
+need current old values to calculate a replacement delta. The owner coordinates
+version retention, isolation and visibility.
 
 ![Owner retains mutation state across waits and coordinates publication after bounded Ikea calls](images/mutation-lifetime.svg)
 
@@ -33,7 +27,7 @@ suspension and coordinated publication remain owner responsibilities.*
 
 ## Bind once, invoke bounded work
 
-The example moves the only readable buffer lease into a stable-address work
+The SeriesPack example moves the only readable buffer lease into a stable-address work
 object. This models caller-owned exclusion and keeps the named view alive for
 its borrowed operation. One step invokes a complete 64-row range and returns.
 Its kernels do not allocate, wait, format errors or call the scheduler. Chunk
@@ -45,10 +39,9 @@ input/selection/effect disjointness, sufficient effect capacity, exclusion and a
 maintenance policy. Checked endpoints add command validation; trusted endpoints
 reuse established proofs. Neither establishes transaction isolation.
 
-Empty prefilters can skip work. Predicates or signatures may return conservative
-evidence for the engine to combine at its chosen granularity. SeriesPack's current
-execution mask means “selected original rows”; it does not itself encode unknown,
-impossible or definitely-true evidence, nor does it implement planner probes.
+Selections name original rows, and empty regions skip work. Keep any predicate
+evidence alongside the selection; a cleared activity bit only means the row is
+excluded from this operation.
 
 ## Retain live state across suspension
 
@@ -68,26 +61,38 @@ distinct from an explicit Loom stop and restart frontier.
 
 ## Consume effects and publish
 
-Effects identify actual substituted source views and plane-relative **issued
-byte spans**. Resolve them into stable owner/partition coordinates before destroying
+`<ikea/effects.h>` supplies preallocated journals for **issued byte spans**.
+Effects identify actual substituted source views and plane-relative offsets.
+Resolve them into stable owner/partition coordinates before destroying
 those views. Coverage can include neighboring values preserved by a wider store;
 it need not be a minimal byte difference. Low-level coverage hooks execute before
 their associated local write group. A bulk call can contain multiple such groups;
 it is not a transaction-wide pre-notification barrier. Reserve resources before
 entry. Coverage and maintenance hooks must neither fail nor suspend mid-group.
 
-`sum_change` describes modulo-u64 replacement contributions; it is one optional
-law. Other aggregates, row signatures and summaries can use native contributions,
-explicit invalidation or a repair obligation. Before data becomes visible, readers
+SeriesPack's `sum_change` accumulates modulo-u64 replacement deltas. TuplePack's
+[observation](tuplepack/extending.md) takes a separate read projection and a
+maintenance law. The projection can include untouched dependencies: updating A
+and B may require observing A, B and C to maintain a shared row signature.
+The law requests old values, new values, both or neither, and receives the original
+row coordinate on every invocation. After-values include all child mutations.
+
+Maintenance callbacks can accumulate private contributions for publication or
+write persistent summaries using separately admitted resources and byte coverage.
+Reserve those resources in addition to the data journal. Shared hash bits cannot
+be removed by subtracting one field's contribution, because another field may
+share the witness. Use complete recomputation, conservative widening or invalidation
+as appropriate for the summary.
+
+Before data becomes visible, readers
 must see exact summaries, compatible corrections, conservative evidence or a
 valid bypass. Merely queueing an ephemeral repair does not ensure integrity.
 
-The example's owner consumes mapped coverage, applies the delta and returns the
+The SeriesPack example consumes mapped coverage, applies the delta and returns the
 lease to readers at one serialized boundary. A real owner must coordinate this
 under its concurrency, durability, recovery and multi-participant rules. The
-exhaustive adapter checks publication conflict and cancellation-after-submission
-separately from local writes. Submission cancellation may still produce a committed
-transaction outcome.
+outcome of cancellation after submission depends on that publication protocol;
+the transaction may already have committed.
 
 ## Cancellation and failures
 
@@ -103,4 +108,4 @@ unchanged. Prior successful chunks remain real. Use the error description,
 original range, effect capacity and optional binding diagnostic to identify the
 bad command or mapping. Keep those diagnostics outside hot kernels. Allocation,
 queue failures, stale mappings and publication conflicts belong to the driver or
-owner; do not disguise them as codec errors.
+owner and should be reported with that operation's context.

@@ -1,6 +1,6 @@
 # Semantic and execution reference
 
-This reference describes the current SeriesPack surface. Exact physical bytes
+This reference specifies SeriesPack's operation contracts. Exact physical bytes
 and recovery metadata are in [representation.md](representation.md).
 
 ## Values, coordinates and substitution
@@ -12,11 +12,9 @@ modulo 2^64. Signedness, floating interpretation and order (including NaNs/zero)
 nullability, collation, FOR bases, patches and predictive relationships belong to
 the enclosing semantic composition and Engine schema.
 
-The signed-rank [example](../examples/seriespack/pipeline.cpp) supplies one transform. It does
-not make a general signed/float container policy. Engine defines segment or
-record-slice nodes and may impose the agreed maximum of 2^16 record positions.
-Standalone SeriesPack arrays have no such limit; they are bounded by addressable
-storage and checked extent arithmetic.
+The signed-rank [example](../../examples/seriespack/pipeline.cpp) supplies one transform.
+SeriesPack arrays are bounded by addressable storage and checked extent arithmetic;
+Engine defines the size and representation policy of its record segments.
 
 Positions and counts always refer to the original logical array. Masks do not
 compact or renumber them. Byte offsets refer to the named plane's origin. Physical
@@ -69,11 +67,10 @@ a failed command with an unchanged-effects guarantee.
 | Linux x86 AVX2 (`x86-64-v3`) | Same capabilities; native wide-value carriers can occupy several YMM/XMM arguments |
 | Linux x86 AVX-512 (`x86-64-v4`) | Wider grouped bodies where useful; VBMI/VBMI2/GFNI paths compile only with their feature flags |
 
-Selection is a build/profile choice, not a runtime CPU detector. Dense width and
-layout selection has a compiled runtime binder. Placed/composed operations bind
-concrete types; they do not preinstantiate every possible erased composition.
-Scalar wire/point functions exist as building blocks and correctness fallbacks;
-a scalar-only full mutation/CPS product profile is not promised.
+Select the ISA at build time. Dense width and layout selection has a compiled
+runtime binder; placed/composed operations bind concrete types. Full mutation
+and CPS require one of the native profiles above. Scalar wire/point functions
+are available as building blocks and correctness fallbacks.
 
 Manual fusion, inline execution and CPS retain the same logical contract. CPS is
 straight-through with early completion, a bounded power-of-two function table and
@@ -83,6 +80,5 @@ libraries or persisted plans. Incompatible carriers require real bridges.
 Suspension happens after returning to the owning driver.
 
 The in-process recorder exposes loads, bit joins, predicates and reduction with
-source identity and selection. It is illustrative reflection for composition,
-not an Engine-owned equivalence graph, complete planner IR or serialized schema.
-Physical descriptors do not persist its addresses or function pointers.
+source identity and selection. Its addresses refer to live bindings. Use
+[physical descriptors](representation.md#recovery-and-descriptor-v1) for recovery.

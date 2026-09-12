@@ -52,3 +52,5 @@ must not be treated as measurements against those strengthened controls.
 source checkpoints and the relocated predecessor workload findings. The active
 comparator uses current/predecessor labels; historical CSV/JSON case names remain
 unchanged and the analyzer understands both.
+
+[Preset selection notes](preset-selection.md) record the initial retained and borderline choices.

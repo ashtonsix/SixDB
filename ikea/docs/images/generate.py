@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Render Ikea's documentation figures. Run on Linux with the pinned toolchain.
 
-From the repository root: python3 ikea/images/generate.py
+From the repository root: python3 ikea/docs/images/generate.py
 On macOS/OrbStack, prefix that command with orb -m ubuntu.
 Wire data is read from the current C++ implementation; generated SVGs are committed.
 """
@@ -10,8 +10,8 @@ from html import escape
 from pathlib import Path
 import subprocess
 
-ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / "ikea/seriespack/images"
+ROOT = Path(__file__).resolve().parents[3]
+OUT = ROOT / "ikea/docs/seriespack/images"
 BUILD = ROOT / "build/diagrams"
 INK = "#233047"
 MUTED = "#586579"
@@ -273,7 +273,7 @@ def architecture():
     f.text(624, 599, "Segment A: field X · Local", 20, anchor="middle")
     f.rect(840, 570, 384, 44, "#edf8f6", radius=4)
     f.text(1032, 599, "Segment B: field X · striped", 20, anchor="middle")
-    f.save(ROOT / "ikea/images/architecture.svg")
+    f.save(ROOT / "ikea/docs/images/architecture.svg")
 
 
 def substitution():
@@ -380,7 +380,7 @@ def lifecycle():
     f.lines(32, 704, ["Cancellation after writes needs owner resolution.",
                      "Rejected calls leave their data, summary and effects unchanged; earlier chunks remain."],
             21, 32, color=MUTED)
-    f.save(ROOT / "ikea/images/mutation-lifetime.svg")
+    f.save(ROOT / "ikea/docs/images/mutation-lifetime.svg")
 
 
 if __name__ == "__main__":

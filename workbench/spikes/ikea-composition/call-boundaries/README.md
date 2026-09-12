@@ -10,4 +10,4 @@ Retained evidence includes short-call regressions, selected effect coverage and
 uninstalled alternatives. Identical instructions do not imply identical timings:
 [executable placement](../../executable-placement/README.md) owns that discriminator.
 The current public surface is described in the
-[SeriesPack reference](../../../../ikea/seriespack/reference.md).
+[SeriesPack reference](../../../../ikea/docs/seriespack/reference.md).

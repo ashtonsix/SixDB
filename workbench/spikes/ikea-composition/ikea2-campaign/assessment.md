@@ -99,7 +99,7 @@ ns/value while inline fell from 0.540 to 0.312. These deliberately tiny stages
 expose a poor amortization point; the larger ratio must not be hidden by the
 absolute improvement. A general continuation grain still needs evidence.
 
-The [integration contract](../../../../ikea/integration.md) tests owned waits, rotation, stale
+The [integration contract](../../../../ikea/docs/integration.md) tests owned waits, rotation, stale
 completion, pre/post-submission cancellation, conflicts and coordinated visibility
 of data and safe summaries. A second adapter mutates one active buffer across a
 stop. It requires no immutable candidate and accumulates repeated-write deltas

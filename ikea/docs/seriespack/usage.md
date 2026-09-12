@@ -2,7 +2,7 @@
 
 SeriesPack stores fixed-width unsigned values in caller-owned bytes. Choose a
 representation, attach its storage, and prepare bindings for repeated reads or
-mutations. [ordinary.cpp](../examples/seriespack/ordinary.cpp) demonstrates this
+mutations. [ordinary.cpp](../../examples/seriespack/ordinary.cpp) demonstrates this
 with a 20-bit array: construction, point/range replacement, reads, failures and
 physical-description serialization. Build and run it with `ikea_example_seriespack_ordinary`.
 

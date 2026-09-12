@@ -22,7 +22,7 @@ original tile row j; body bytes are little-endian per row.
 
 ![Left: Local11 values 8 through 15 become eight 01 body bytes and residual bitplanes aa, cc, f0. Right: a 64-row K20/H8 tile occupies 64 body bytes, 32 stripe bytes and 64 head bytes, followed by a preserved 32-byte gap.](images/local-and-placement.svg)
 
-The right pane follows [ordinary.cpp](../examples/seriespack/ordinary.cpp).
+The right pane follows [ordinary.cpp](../../examples/seriespack/ordinary.cpp).
 Interleaving the planes and reserving a sibling gap are owner placement choices
 within the same physical format.
 
@@ -49,9 +49,9 @@ fields and preserves unowned stride gaps.
 
 ## Preset policy
 
-Presets are a small set of construction policies that can change after
-measurement. They do not identify persisted formats or promise that one layout
-always wins. Head separation is independent of the payload policy and defaults
+Presets select a physical geometry for each width. Persist the resolved
+descriptor for recovery, because preset policies can change. Head separation
+is independent of the payload policy and defaults
 to zero: `preset_format<20, preset::bulk_x86, 8>` requests the physical tour's
 eight-bit head and x86 bulk choice for its 12-bit payload.
 
@@ -65,30 +65,11 @@ All other remaining widths use Local. ARM-oriented bytes can be read on x86;
 ISA dispatch and execution grain are independent of these choices.
 `describe_preset<F>(count, tile_spacing::tight)` suggests minimal independent
 plane strides; `cacheline` rounds each present plane's tile stride to 64 bytes.
-Owners can instead supply strides and offsets for interleaving. No preset chooses
-a buffer pool, partition size, record schema or segment migration policy.
-
-The implementation retains 76 headless formats / 206 placements for explicit selection
-and validation, but does not expose 206 named recipes. Borderline choices:
-
-- Striped10/14/15 remain explicit and in ARM-oriented recipes. They do not earn
-  an unconditional x86 default merely by winning isolated primitive cases.
-- Cacheline spacing remains an explicit placement choice. Its locality benefit
-  depends on siblings and access patterns; padding every object by default costs
-  space and can hurt scans.
-- One-bit extraction, complete-stripe writing, exact-width native stores and
-  whole-body AVX-512 permutation earned inclusion through family-level gains.
-- A separate named ScanPack/LocalPack facade, per-width threshold dispatches,
-  additional tail dialects and automatic layout tuning are excluded from this
-  initial surface. Explicit formats and the same native functions remain usable.
-- AVX2 bit-mask packing earned a place for one/two-bit residuals. Four-bit
-  packing did not benefit from the same treatment; a full native transpose
-  remains the simpler basis. Measurements decide whether larger grouping helps.
-- CPS is an execution choice, never a different container or physical format.
+Owners can instead supply strides and offsets for interleaving.
 
 ## Recovery and descriptor v1
 
-[representation.h](../include/ikea/seriespack/representation.h) supplies a 40-byte,
+[representation.h](../../include/ikea/seriespack/representation.h) supplies a 40-byte,
 little-endian descriptor and checked parsing. It records the resolved physical
 choice, not a preset name. Unknown versions, tags and reserved fields fail closed.
 
@@ -115,11 +96,10 @@ old bytes.
 supplied plane spans. The descriptor identifies representation; actual residency,
 accessible extent, base alignment and overlap still require view admission.
 A runtime owner can choose a compiled typed binding or use the compiled dense
-headless binder. This does not instantiate an erased mutation table for every
-possible composition.
+headless binder.
 
-Version 1's byte law is executable in [wire.h](../include/ikea/seriespack/detail/wire.h)
-and [point.h](../include/ikea/seriespack/detail/point.h), with independent prior-wire
+Version 1's byte law is executable in [wire.h](../../include/ikea/seriespack/detail/wire.h)
+and [point.h](../../include/ikea/seriespack/detail/point.h), with independent prior-wire
 tests. The layouts above, including head order, body endianness and slack policy,
 belong to that law. Changes need a new physical version, regardless of unchanged
 preset names.
@@ -129,5 +109,5 @@ within a physical tile. Residual bit b is stored at
 `stripe_offset(floor(tail_bit<R>(g,b)/8)) + lane`, at bit
 `tail_bit<R>(g,b) modulo 8`. Body bytes use `body_offset(row)` and little-endian
 row values shifted right by R. The executable mapping includes the intentionally
-nonlinear R=3 and R=6 cases; the [frozen independent fixture](../test/seriespack/reference/README.md)
+nonlinear R=3 and R=6 cases; the [frozen independent fixture](../../test/seriespack/reference/README.md)
 retains the same law with different implementation.

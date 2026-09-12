@@ -1,8 +1,7 @@
 # Composing and extending
 
 The examples build through `ikea_examples`. Start with
-[composition.cpp](../examples/seriespack/composition.cpp), then [pipeline.cpp](../examples/seriespack/pipeline.cpp).
-They use only Ikea headers and the standard library.
+[composition.cpp](../../examples/seriespack/composition.cpp), then [pipeline.cpp](../../examples/seriespack/pipeline.cpp).
 
 ## Replace a nested child
 
@@ -28,7 +27,7 @@ admission checks actual leaf extents and writable overlap. Descriptions own thei
 small nodes and borrow named source views. Keep every used source alive.
 
 Retired fields do not participate in admission, preservation reads or writes.
-The exhaustive [substitution test](../test/seriespack/mutation/substitution.cpp) makes retired
+The exhaustive [substitution test](../../test/seriespack/mutation/substitution.cpp) makes retired
 bytes inaccessible and replaces multiple owners, including a nested value node.
 A prefix-bound writable expression may replace that prefix; initialization requires
 exact extents in every used leaf so that clearing slack cannot damage a larger child.
@@ -54,10 +53,9 @@ change one responsibility without introducing an artificial call in the inner lo
 
 `value_expression` and `payload_expression` describe bit-window joins.
 `composition::read(ops, expression, rows, mask)` traverses those joins;
-`selected_sum` is a small shared body used with scalar, native or recording ops.
-This authoring protocol is deliberately limited: it is not a generic ISA language
-or a complete query IR. New semantic transforms can supply the evaluators they
-need. For writable nodes, also define reverse projection/assignment, admission and
+`selected_sum` is a shared body used with scalar, native or recording ops.
+New semantic transforms supply their own evaluators. For writable nodes,
+also define reverse projection/assignment, admission and
 issued-byte coverage; a read-only transform is not automatically writable.
 
 Share reconstruction/projection/store bodies across ordinary and compound callers.
@@ -96,7 +94,7 @@ Plans and bindings remain owned by the driver throughout execution.
 Choose grain and fusion using representative whole pipelines. Cheap repeated
 predicates in 16-row stages are a stress case; CPS need not be the best execution
 for that recipe. Fuse cheap adjacent work or choose inline execution when useful.
-The [benchmark suite](../../workbench/benchmarks/seriespack/README.md) compares representative pipelines at several
+The [benchmark suite](../../../workbench/benchmarks/seriespack/README.md) compares representative pipelines at several
 grains and a 36-recipe inline/CPS catalog for runtime, compile cost and code size.
 Manual fusion remains available for critical recipes. These styles implement the
 same logical operation, with explicit equivalence obligations.
@@ -111,5 +109,3 @@ agree with a changed kernel. Tests should name the format and failing scenario.
 Compare the ordinary operation as well as the inner body. Look for repeated
 metadata discovery, traversal dispatch, stores/reloads and journal work at the
 boundary. Preserve family-wide simplifications before adding per-case exceptions.
-A modest explained primitive gap can be a reasonable maintenance choice; a broad
-unexplained regression is not an acceptable composition cost.

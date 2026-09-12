@@ -6,7 +6,7 @@ own the source checkpoints and transition. Historical case names and source
 identities below describe the measured candidate, before its namespace change.
 
 Ikea2 is ready to evaluate as the replacement candidate described by its
-[capabilities and limits](../../../../ikea/capabilities.md). Ordinary construction,
+[capabilities and limits](../../../../ikea/docs/capabilities.md). Ordinary construction,
 point/range mutation, whole-operation writable composition, physical recovery
 descriptions, shared-body CPS and owner interoperation now have coherent caller
 surfaces and executable guides. This account closes the campaign snapshot; it
@@ -161,7 +161,7 @@ the candidate.
 
 ## Source boundaries and edit cost
 
-[Source responsibilities](../../../../ikea/source.md) separate ordinary headers,
+[Source responsibilities](../../../../ikea/docs/source.md) separate ordinary headers,
 authoring headers, internal bodies and three compiled TUs. Journals, cold alias
 analysis, erased endpoints and typed adapters no longer occupy one prepared
 mutation header. Construction and admission share physical-field descriptions;

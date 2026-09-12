@@ -5,7 +5,7 @@ a kernel author's local context manageable. It owns the bitset, packed-integer
 and heterogeneous probes and the experiments that informed both Ikea implementations.
 
 For current use, start with [Ikea](../../../ikea/README.md),
-[SeriesPack](../../../ikea/seriespack/usage.md), or the
+[SeriesPack](../../../ikea/docs/seriespack/usage.md), or the
 [maintained benchmarks](../../benchmarks/seriespack/README.md).
 The [replacement campaign](ikea2-campaign/README.md) records its evidence and limits;
 the [predecessor account](seriespack-predecessor/README.md) preserves earlier findings,
