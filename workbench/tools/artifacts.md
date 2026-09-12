@@ -105,10 +105,10 @@ an analyzer expects. Keep selection logic beside the study; changing selection
 is not another experiment. Curation before committing avoids later history
 rewrites, which need coordination with other users of the branch.
 
-After verified retention, inactive expanded copies can be removed. Ignored
-`build/` can also contain unretained prototypes, so treat it as working space,
-not indiscriminate cache. For partial eviction, record removed paths, hashes and
-the recovery reference outside the removed files.
+For local worker copies, [storage management](storage.md) reclaims older archived
+compiler output and keeps recovery receipts. Other ignored `build/` directories
+can contain unretained prototypes: remove inactive copies deliberately after
+verified retention, recording removed paths, hashes and their recovery reference.
 
 Bundles use content-addressed, conditionally written objects under
 `s3://calico-fleet-artifacts/sixdb/artifacts/sha256/` in `us-east-1`; single PUTs

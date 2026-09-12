@@ -18,6 +18,8 @@ do not change the requested hardware type.
 The second script is illustrative. A script receives the current source,
 including uncommitted and non-ignored new files, on one EC2 worker at a time.
 The command waits and downloads verified results to `build/workers/JOB/results/`.
+[Local storage](storage.md) checks host headroom, repairs damaged collections,
+and reclaims older archived compiler output while preserving measurements.
 After collection the worker stays ready for another compatible job for five
 minutes, then shuts itself down. Collection and cleanup continue if the
 controlling session disconnects. No commit, SSH key,
@@ -151,7 +153,7 @@ python3 workbench/tools/worker.py cancel JOB
 python3 workbench/tools/worker.py list
 ```
 
-`wait` resumes observation and fetches results, reconstructing missing local job
+`wait` resumes observation and fetches results, reconstructing missing or unreadable local job
 records from S3. Ctrl-C detaches the controller. `cancel` terminates a worker only
 while it still belongs to that job, including its subsequent idle window. It
 cannot terminate a worker already claimed by another job. `status` includes the current session state;
@@ -190,8 +192,9 @@ instance profile then needs access to both stores. Automatic profiles include
 both and use a separate name for another result bucket.
 
 Use [retention](artifacts.md) on a recovered study run to keep selected evidence
-in Git, or keep the worker's small `artifact.json` for a generic bundle. Do not
-commit the fetched directory. Bundles have the artifact helper's 5 GB limit.
+in Git, or keep its `artifact.json` for generic recovery. The local collection is
+not a Git export; `worker.py fetch JOB --full` also restores reclaimed compiler
+output. Bundles have the artifact helper's 5 GB limit.
 
 For tool development, see the [offline checks](README.md#changing-a-helper) and
 [reuse smoke script](worker-reuse-smoke.sh). The initial

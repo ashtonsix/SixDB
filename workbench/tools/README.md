@@ -13,6 +13,7 @@ Linux; prefix with `orb -m ubuntu` from the Mac.
 | Turn measurements into a compact table | [Summary examples](../benchmarks/README.md#replay-and-summarize): `evidence.py` reads raw or compact repetitions |
 | Browse results or share an interactive snapshot | [Results explorer](../results/README.md): `results.py --serve` discovers retained evidence |
 | Keep results, or recover selected files | [Retention and recovery](artifacts.md): `artifacts.py`; recover into `build/recovered/NAME` |
+| Inspect disk use or recover a damaged worker collection | [Local storage](storage.md): `worker.py cache`; `wait JOB` revalidates collected files |
 | Reuse input data | [Dataset catalog](../datasets/README.md): `datasets.py` prepares shared inputs; adapters live beside their datasets |
 | Diagnose an expensive compilation | [Compile probes](compilation.md): replay selected TUs serially with timing, process RSS and failure evidence |
 | Enable a study in the editor | [Editor guide](editors.md): `dev.py --add NAME` or `--add-benchmark NAME` |

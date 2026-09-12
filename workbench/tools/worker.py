@@ -25,6 +25,8 @@ import uuid
 from experiment import source_files
 import artifacts
 import worker_pool as pool
+import storage
+import worker_cache
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
@@ -87,10 +89,7 @@ class Aws:
 
 
 def save(path, value):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix('.tmp')
-    temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + '\n')
-    temporary.replace(path)
+    storage.write_json(path, value)
 
 
 def environment(values):
@@ -223,6 +222,8 @@ def ensure_infrastructure(config, aws):
 
 def snapshot(directory):
     sources = source_files(ROOT)
+    # Allow for incompressible input and tar/gzip overhead before allocating compute.
+    storage.require_space(directory, int(sum(len(data) * 1.01 + 1024 for data in sources.values())) + 10240)
     hashes = {name: hashlib.sha256(data).hexdigest() for name, data in sources.items()}
     path = directory / 'source.tar.gz'
     with path.open('wb') as raw, gzip.GzipFile(fileobj=raw, mode='wb', mtime=0, filename='') as zipped:
@@ -342,14 +343,16 @@ def locate(value, config):
     directory = JOBS / value
     if Path(value).is_dir():
         directory = Path(value).resolve()
-    if not (directory / 'job.json').exists():
-        if not re.fullmatch(r'[a-zA-Z0-9_-]+', value):
+    job = worker_cache.read(directory / 'job.json')
+    if not job:
+        identifier = directory.name
+        if not re.fullmatch(r'[a-zA-Z0-9_-]+', identifier):
             raise ValueError('expected a worker job ID or existing local job directory')
-        job = Aws(config['region']).get_json(config['bucket'], f'sixdb/workers/{value}/job.json')
+        job = Aws(config['region']).get_json(config['bucket'], f'sixdb/workers/{identifier}/job.json')
         if job is None:
             raise ValueError('worker job not found')
         save(directory / 'job.json', job)
-    return directory, json.loads((directory / 'job.json').read_text())
+    return directory, job
 
 
 def instances(job, aws):
@@ -476,19 +479,24 @@ def idle_hint(job, aws):
         pass  # Optional advice must not turn a successful launch into a failed job.
 
 
-def fetch(job, directory, state, aws):
+def fetch(job, directory, state, aws, *, full=False):
     # A final reference describes an immutable bundle; partial syncs are kept separate.
+    worker_cache.preflight(ROOT, protect=directory)
     if state and state.get('artifact'):
         save(directory / 'artifact.json', state['artifact'])
         destination = directory / 'results'
-        if not destination.exists():
-            artifacts.restore_bundle(state['artifact'], destination)
+        worker_cache.collect(directory, state['artifact'], full=full)
         for receipt in sorted(destination.rglob('run.json')):
             # Failed/aborted scripts can leave unfinished study receipts. Recover
             # their raw evidence too; their own readers still check validity.
             if (receipt.parent / 'input-artifacts.json').exists():
                 artifacts.restore_inputs(receipt.parent)
         print(f'Results: {destination}', flush=True)
+        evicted = worker_cache.read(directory / 'collection.json').get('evicted', [])
+        omitted = sum(not (destination / name).exists() for name in evicted)
+        if omitted:
+            print(f'{omitted} archived compiler outputs omitted locally; restore with worker.py fetch {job["id"]} --full', flush=True)
+        worker_cache.maintain(ROOT)
     else:
         destination = directory / 'partial'
         subprocess.run(['aws', 's3', 'sync', '--only-show-errors', job['uri'] + '/live/',
@@ -591,13 +599,23 @@ def main():
         cmd.add_argument('job')
         if name == 'logs':
             cmd.add_argument('--console', action='store_true', help='show instance boot diagnostics instead of script output')
+        if name == 'fetch':
+            cmd.add_argument('--full', action='store_true', help='also restore compiler output reclaimed from the local cache')
     commands.add_parser('list', help='list SixDB worker instances')
+    cache = commands.add_parser('cache', help='inspect local worker storage and host headroom')
+    cache.add_argument('--prune', action='store_true', help='reclaim older verified archived compiler output toward the soft budget')
+    cache.add_argument('--older-hours', type=float, default=24, help='preserve recent collections; default 24 hours')
     argv = sys.argv[1:]
     arguments = []
     if '--' in argv:
         split = argv.index('--')
         argv, arguments = argv[:split], argv[split + 1:]
     args = parser.parse_args(argv)
+    if args.command == 'cache':
+        if args.older_hours < 0:
+            parser.error('--older-hours must be nonnegative')
+        worker_cache.maintain(ROOT, prune=args.prune, older_hours=args.older_hours)
+        return 0
     if arguments and args.command != 'run':
         parser.error('arguments after -- are for run scripts')
     base = json.loads((HERE / 'worker.json').read_text())
@@ -616,6 +634,7 @@ def main():
         script = args.script.resolve()
         if not script.is_relative_to(ROOT) or not script.is_file():
             parser.error('script must be a file in this repository')
+        worker_cache.preflight(ROOT)
         name = str(script.relative_to(ROOT))
         directory = JOBS / (datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ') + '-' + uuid.uuid4().hex[:8])
         directory.mkdir(parents=True)
@@ -674,7 +693,7 @@ def main():
     elif args.command == 'wait':
         return wait(job, directory, aws)
     elif args.command == 'fetch':
-        fetch(job, directory, status(job, aws), aws)
+        fetch(job, directory, status(job, aws), aws, full=args.full)
     elif args.command == 'status':
         assignment = aws.get_json(job['config']['bucket'], job['prefix'] + '/assignment.json')
         session, _ = pool.Store(job['config']['bucket'], aws.region).read(pool.state_key(assignment['worker_id'])) if assignment else (None, None)
@@ -688,5 +707,5 @@ def main():
 if __name__ == '__main__':
     try:
         sys.exit(main())
-    except (ValueError, RuntimeError, subprocess.CalledProcessError) as error:
+    except (OSError, ValueError, RuntimeError, subprocess.CalledProcessError) as error:
         sys.exit(str(error))

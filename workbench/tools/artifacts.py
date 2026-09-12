@@ -16,6 +16,7 @@ import tarfile
 import tempfile
 
 from evidence import compact_run, compact_files, git_root, verify_exports
+import storage
 
 ROOT = Path(__file__).resolve().parents[2]
 BUCKET = "calico-fleet-artifacts"
@@ -28,6 +29,63 @@ def sha256(path):
         for block in iter(lambda: handle.read(1024 * 1024), b""):
             h.update(block)
     return h.hexdigest()
+
+
+def rebuildable(name, size, prefix):
+    """Large compiler outputs; measurements, logs and arbitrary data stay local."""
+    return size >= 1024 ** 2 and (Path(name).suffix in {'.asm', '.s'} or
+        prefix.startswith((b'\x7fELF', b'!<arch>\n', b'BC\xc0\xde')) or
+        (b'file format elf' in prefix and b'Disassembly of section ' in prefix))
+
+
+def remote_manifest(reference):
+    """Verify the entire S3 object and its members without storing a local bundle."""
+    class Reader:
+        def __init__(self, stream):
+            self.stream, self.hash, self.size = stream, hashlib.sha256(), 0
+
+        def read(self, size=-1):
+            data = self.stream.read(size)
+            self.hash.update(data)
+            self.size += len(data)
+            return data
+
+    members = {}
+    with tempfile.TemporaryFile() as errors:
+        command = ['aws', 's3', 'cp', '--only-show-errors',
+                   f"s3://{reference['bucket']}/{reference['key']}", '-', '--region', reference['region']]
+        with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=errors) as process:
+            reader = Reader(process.stdout)
+            try:
+                with tarfile.open(fileobj=reader, mode='r|gz') as archive:
+                    for member in archive:
+                        name = PurePosixPath(member.name)
+                        if (not member.isfile() or not name.parts or name.is_absolute() or
+                                '..' in name.parts or name.as_posix() in members):
+                            raise ValueError(f'unsafe archive member: {member.name}')
+                        digest, size, prefix = hashlib.sha256(), 0, b''
+                        with archive.extractfile(member) as source:
+                            for chunk in iter(lambda: source.read(1024 ** 2), b''):
+                                if size == 0:
+                                    prefix = chunk[:512]
+                                digest.update(chunk)
+                                size += len(chunk)
+                        if size != member.size:
+                            raise ValueError(f'truncated archive member: {name}')
+                        members[name.as_posix()] = {'bytes': size, 'sha256': digest.hexdigest(),
+                            'rebuildable': rebuildable(name, size, prefix)}
+                while reader.read(1024 ** 2):
+                    pass
+            except BaseException:
+                process.kill()
+                raise
+            if process.wait():
+                errors.seek(0)
+                raise RuntimeError(errors.read().decode(errors='replace').strip())
+    if (reader.size != reference['bytes'] or reader.hash.hexdigest() != reference['sha256'] or
+            len(members) != reference['files']):
+        raise ValueError('remote bundle size/SHA-256/file count mismatch; local data preserved')
+    return members
 
 
 def files(directory):
@@ -128,7 +186,16 @@ def restore_inputs(directory):
             if datasets.verify(target)['id'] != ref['id']:
                 raise ValueError('Existing restored input differs')
         else:
-            shutil.copytree(datasets.restore(ref), target)
+            source = datasets.restore(ref)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            with storage.transfer_lock():
+                storage.require_space(target, sum(path.stat().st_size for path in files(source)))
+                with tempfile.TemporaryDirectory(dir=target.parent, prefix='.input-') as temp:
+                    staging = Path(temp) / 'input'
+                    shutil.copytree(source, staging)
+                    storage.sync_tree(staging)
+                    staging.rename(target)
+                    storage.sync_directory(target.parent)
 
 
 def publish(directory, temporary, *, bucket=BUCKET, region=REGION, validate_run=True):
@@ -288,7 +355,7 @@ def retain(source, destination, selected=None, regenerate=None):
     print(f"Retained: {destination}")
 
 
-def unpack(bundle, destination, *, selected=None):
+def unpack(bundle, destination, *, selected=None, manifest=None):
     if selected is not None:
         names = [PurePosixPath(name) for name in selected]
         if not names or any(not name.parts or name.is_absolute() or '..' in name.parts for name in names):
@@ -305,6 +372,7 @@ def unpack(bundle, destination, *, selected=None):
             seen.add(name.as_posix())
             if selected is not None and name.as_posix() not in selected:
                 continue
+            storage.require_space(destination, member.size)
             path = destination.joinpath(*name.parts)
             path.parent.mkdir(parents=True, exist_ok=True)
             source = archive.extractfile(member)
@@ -313,6 +381,11 @@ def unpack(bundle, destination, *, selected=None):
             with source, path.open("xb") as target:
                 shutil.copyfileobj(source, target)
             path.chmod(member.mode & 0o777)
+            if manifest is not None:
+                with path.open('rb') as handle:
+                    prefix = handle.read(512)
+                manifest[name.as_posix()] = {'bytes': member.size, 'sha256': sha256(path),
+                    'rebuildable': rebuildable(name, member.size, prefix)}
     if selected is not None and selected - seen:
         raise ValueError(f"selected files missing from bundle: {', '.join(sorted(selected - seen))}")
     return len(seen)
@@ -320,22 +393,32 @@ def unpack(bundle, destination, *, selected=None):
 
 def restore_bundle(reference, destination, *, selected=None):
     """Restore verified bytes; a selection omits whole-run validation and dependencies."""
+    with storage.transfer_lock():
+        return _restore_bundle(reference, destination, selected=selected)
+
+
+def _restore_bundle(reference, destination, *, selected=None):
     destination = destination.resolve()
     if destination.exists():
         raise ValueError("fetch destination already exists")
     destination.parent.mkdir(parents=True, exist_ok=True)
+    storage.require_space(destination, reference['bytes'])
     with tempfile.TemporaryDirectory(dir=destination.parent, prefix=".fetch-") as name:
         temporary = Path(name)
         bundle = temporary / "bundle.tar.gz"
         download(reference, bundle)
         staging = temporary / "run"
         staging.mkdir()
-        count = unpack(bundle, staging, selected=selected)
+        manifest = {}
+        count = unpack(bundle, staging, selected=selected, manifest=manifest)
         if count != reference["files"]:
             raise ValueError("bundle file count mismatch")
         if selected is None and reference.get('kind') != 'files':
             verify_run(staging)
+        storage.sync_tree(staging)
         staging.rename(destination)
+        storage.sync_directory(destination.parent)
+        return manifest
 
 
 def fetch(reference_path, destination, *, selected=None):
