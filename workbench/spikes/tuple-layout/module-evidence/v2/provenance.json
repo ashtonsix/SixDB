@@ -1,0 +1,63 @@
+{
+  "cases": 37,
+  "counters": [
+    "items_per_iteration"
+  ],
+  "files_sha256": {
+    "cases.csv": "71b925a1a21a75237d4d201b5a34775b0eea7c236fd80845d556cc404a33e3a2"
+  },
+  "filter": null,
+  "format": 1,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "neon": {
+      "context": {
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-12T10:05:31+00:00",
+        "executable": "/opt/sixdb/jobs/20260912T100312Z-716f4fed/results/neon/ikea_tuplepack_bench",
+        "host_name": "ip-172-31-23-26",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          1.12305,
+          0.478027,
+          0.181641
+        ],
+        "mhz_per_cpu": 2000,
+        "num_cpus": 1
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260912T100312Z-716f4fed/results/neon/samples.json",
+      "sha256": "583bfed9fadbb81d69ed50e7263500632f062d2a8f6f6e8845060fb27dda5b54"
+    }
+  },
+  "kind": "google-benchmark-summary",
+  "units": "CPU/real times are ns per benchmark iteration. ns_per_item uses the reported item rate; an item means what the benchmark counts, not necessarily a value or byte."
+}

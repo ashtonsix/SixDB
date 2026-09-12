@@ -1,0 +1,65 @@
+[
+  {
+    "profile": "avx2",
+    "worker_job": "20260912T100312Z-8474ceea",
+    "source": {
+      "digest": "595122fdff6befde2387f8f677dc071129e83e4db202e8cd57f54bd451f5f09e",
+      "pool_sha256": "b0c2f84df06c0b7e1b1d66b0869a42095ea9b9b1aeb002545fff40a67c046bb0",
+      "runtime_sha256": "a2666954a6d1e7fcaa5e2e4c19021230510dcffd6987dcafff18cbccac1ae1d5",
+      "setup_sha256": "62576c70b9f5acb09dc05c23ccb8f1f268ab995175a8b11fba175261fad0543e",
+      "sha256": "f0fc0b2f609baa375fc4d71d77bac7f7a6c1bd8931b44b59eda55f1b2eb2c54a"
+    },
+    "source_commit": "54f8b014eb74fdb8e3f3b6b0e683eebfad758a5c",
+    "library_text_bytes": 35926,
+    "benchmark_text_bytes": 425970,
+    "build_resources": "\tCommand being timed: \"cmake --build build/benchmarks/tuplepack/avx2 --target ikea_tuplepack_wire_check ikea_tuplepack_operations_check ikea_tuplepack_execution_check ikea_tuplepack_ownership_check ikea_tuplepack_bench -j 1\"\n\tUser time (seconds): 27.52\n\tSystem time (seconds): 1.00\n\tPercent of CPU this job got: 98%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:28.98\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 263836\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 234\n\tMinor (reclaiming a frame) page faults: 707072\n\tVoluntary context switches: 690\n\tInvoluntary context switches: 1992\n\tSwaps: 0\n\tFile system inputs: 27136\n\tFile system outputs: 56208\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 0\n",
+    "checks": {
+      "wire": "TuplePack wire: 5301385 checks passed; independent description-bit reference; 2,304 single-code shapes per packet size, every byte value and slot; 1,200 random schemas; descriptor mutation and guard pages\n",
+      "operations": "TuplePack operation admission, complete maintenance, nesting and construction passed\n",
+      "execution": "TuplePack: 512 independent routes, CPS early completion, 2/4-row batch maps and inactive-null lanes passed\n",
+      "ownership": "TuplePack ownership: 43137 checks passed; retained in-place chunks, stale replies, clean/dirty cancellation, exact/conservative/bypass publication, complete independent observations and substituted source identities\n"
+    }
+  },
+  {
+    "profile": "avx512",
+    "worker_job": "20260912T100312Z-8474ceea",
+    "source": {
+      "digest": "595122fdff6befde2387f8f677dc071129e83e4db202e8cd57f54bd451f5f09e",
+      "pool_sha256": "b0c2f84df06c0b7e1b1d66b0869a42095ea9b9b1aeb002545fff40a67c046bb0",
+      "runtime_sha256": "a2666954a6d1e7fcaa5e2e4c19021230510dcffd6987dcafff18cbccac1ae1d5",
+      "setup_sha256": "62576c70b9f5acb09dc05c23ccb8f1f268ab995175a8b11fba175261fad0543e",
+      "sha256": "f0fc0b2f609baa375fc4d71d77bac7f7a6c1bd8931b44b59eda55f1b2eb2c54a"
+    },
+    "source_commit": "54f8b014eb74fdb8e3f3b6b0e683eebfad758a5c",
+    "library_text_bytes": 35359,
+    "benchmark_text_bytes": 424202,
+    "build_resources": "\tCommand being timed: \"cmake --build build/benchmarks/tuplepack/avx512 --target ikea_tuplepack_wire_check ikea_tuplepack_operations_check ikea_tuplepack_execution_check ikea_tuplepack_ownership_check ikea_tuplepack_bench -j 1\"\n\tUser time (seconds): 27.04\n\tSystem time (seconds): 1.00\n\tPercent of CPU this job got: 99%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:28.12\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 231800\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 5\n\tMinor (reclaiming a frame) page faults: 695202\n\tVoluntary context switches: 316\n\tInvoluntary context switches: 1948\n\tSwaps: 0\n\tFile system inputs: 672\n\tFile system outputs: 55384\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 0\n",
+    "checks": {
+      "wire": "TuplePack wire: 5301385 checks passed; independent description-bit reference; 2,304 single-code shapes per packet size, every byte value and slot; 1,200 random schemas; descriptor mutation and guard pages\n",
+      "operations": "TuplePack operation admission, complete maintenance, nesting and construction passed\n",
+      "execution": "TuplePack: 512 independent routes, CPS early completion, 2/4-row batch maps and inactive-null lanes passed\n",
+      "ownership": "TuplePack ownership: 43137 checks passed; retained in-place chunks, stale replies, clean/dirty cancellation, exact/conservative/bypass publication, complete independent observations and substituted source identities\n"
+    }
+  },
+  {
+    "profile": "neon",
+    "worker_job": "20260912T100312Z-716f4fed",
+    "source": {
+      "digest": "595122fdff6befde2387f8f677dc071129e83e4db202e8cd57f54bd451f5f09e",
+      "pool_sha256": "b0c2f84df06c0b7e1b1d66b0869a42095ea9b9b1aeb002545fff40a67c046bb0",
+      "runtime_sha256": "a2666954a6d1e7fcaa5e2e4c19021230510dcffd6987dcafff18cbccac1ae1d5",
+      "setup_sha256": "62576c70b9f5acb09dc05c23ccb8f1f268ab995175a8b11fba175261fad0543e",
+      "sha256": "f0fc0b2f609baa375fc4d71d77bac7f7a6c1bd8931b44b59eda55f1b2eb2c54a"
+    },
+    "source_commit": "54f8b014eb74fdb8e3f3b6b0e683eebfad758a5c",
+    "library_text_bytes": 30575,
+    "benchmark_text_bytes": 396502,
+    "build_resources": "\tCommand being timed: \"cmake --build build/benchmarks/tuplepack/neon --target ikea_tuplepack_wire_check ikea_tuplepack_operations_check ikea_tuplepack_execution_check ikea_tuplepack_ownership_check ikea_tuplepack_bench -j 1\"\n\tUser time (seconds): 32.72\n\tSystem time (seconds): 1.53\n\tPercent of CPU this job got: 99%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:34.43\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 230612\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 53\n\tMinor (reclaiming a frame) page faults: 707693\n\tVoluntary context switches: 425\n\tInvoluntary context switches: 2163\n\tSwaps: 0\n\tFile system inputs: 15728\n\tFile system outputs: 55240\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 0\n",
+    "checks": {
+      "wire": "TuplePack wire: 5301385 checks passed; independent description-bit reference; 2,304 single-code shapes per packet size, every byte value and slot; 1,200 random schemas; descriptor mutation and guard pages\n",
+      "operations": "TuplePack operation admission, complete maintenance, nesting and construction passed\n",
+      "execution": "TuplePack: 512 independent routes, CPS early completion, 2/4-row batch maps and inactive-null lanes passed\n",
+      "ownership": "TuplePack ownership: 43137 checks passed; retained in-place chunks, stale replies, clean/dirty cancellation, exact/conservative/bypass publication, complete independent observations and substituted source identities\n"
+    }
+  }
+]

@@ -1,4 +1,5 @@
 #pragma once
+#include <ikea/detail/overlap.h>
 #include <ikea/seriespack/status.h>
 #include <array>
 #include <cstddef>
@@ -6,12 +7,8 @@
 #include <expected>
 
 namespace ikea::seriespack::detail {
-struct occupied_run {
-    std::uintptr_t base;
-    std::size_t stride, bytes, count;
-};
-/// Cold overlap proof for repeating occupied fields, including interleaved gaps.
-bool overlaps(occupied_run a, occupied_run b) noexcept;
+using ikea::detail::occupied_run;
+using ikea::detail::overlaps;
 struct stream_extent {
     const void* data;
     std::size_t bytes, stride;

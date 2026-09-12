@@ -1,0 +1,20 @@
+# TuplePack validation
+
+`ikea_validate` runs both Ikea modules, with these independently compiled TuplePack checks:
+
+| Target | Evidence |
+| --- | --- |
+| `ikea_tuplepack_wire_check` | Independent per-bit description reference; widths/shifts/offsets, holes/duplicates, sparse/dense writes, eight contributions, descriptors, exact guard pages |
+| `ikea_tuplepack_operations_check` | Whole-call rejection, shared-byte groups, nested writes, complete maintenance, sparse selections, 128-code construction, shared overlap proof |
+| `ikea_tuplepack_execution_check` | General/normalized routing against independent bits, native CPS completion, 2/4-row batch shapes, inactive-null lanes |
+| `ikea_tuplepack_ownership_check` | In-place retained storage, generation checks, completed frontiers, cancellation, actual substituted sources, exact/conservative/bypass summary publication |
+
+Wire and ownership failures report the failing scenario/source location. The
+wire reference derives expected bytes directly from physical descriptions rather
+than production controls or the former spike implementation. Random cases use
+fixed seeds. Source and pipeline metadata remain separate from native payloads.
+
+Short teaching programs live in `examples/tuplepack`; exhaustive owner-event
+checks remain here. Run the [header checker](../headers.py) under each configured
+profile and use ASan/UBSan for boundary changes. The [benchmark suite](../../../workbench/benchmarks/tuplepack/README.md)
+has performance controls; these checks do not assert timings.

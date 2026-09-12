@@ -1,0 +1,186 @@
+{
+  "method": "One warm serial rebuild per mtime edit; source bytes unchanged. Local OrbStack ARM, pinned toolchain. Includes required relinks; max process RSS, not concurrent total.",
+  "targets": [
+    "ikea_tuplepack_wire_check",
+    "ikea_tuplepack_operations_check",
+    "ikea_tuplepack_execution_check",
+    "ikea_tuplepack_ownership_check",
+    "ikea_example_tuplepack_ordinary",
+    "ikea_example_tuplepack_composition",
+    "ikea_example_tuplepack_integration",
+    "ikea_tuplepack_bench"
+  ],
+  "scenarios": [
+    {
+      "limits": "Completed edges from this invocation only. Failed edges have no duration; overlapping edge durations are not wall time. GNU time RSS is a process maximum, not aggregate concurrent memory.",
+      "build_state": "Warm TuplePack targets; mtime edit None; source bytes unchanged.",
+      "completed_edges": [],
+      "build": {
+        "elapsed_seconds": "0.02",
+        "user_seconds": "0.00",
+        "system_seconds": "0.01",
+        "max_process_rss_kib": "17700",
+        "exit_status": "0"
+      },
+      "scenario": "unchanged",
+      "source": null
+    },
+    {
+      "limits": "Completed edges from this invocation only. Failed edges have no duration; overlapping edge durations are not wall time. GNU time RSS is a process maximum, not aggregate concurrent memory.",
+      "build_state": "Warm TuplePack targets; mtime edit ikea/src/tuplepack/prepare.cpp; source bytes unchanged.",
+      "completed_edges": [
+        {
+          "output": "ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/prepare.cpp.o",
+          "seconds": 0.817
+        },
+        {
+          "output": "workbench/benchmarks/tuplepack/ikea_tuplepack_bench",
+          "seconds": 0.101
+        },
+        {
+          "output": "ikea/ikea_tuplepack_wire_check",
+          "seconds": 0.067
+        },
+        {
+          "output": "ikea/ikea_tuplepack_ownership_check",
+          "seconds": 0.053
+        },
+        {
+          "output": "ikea/ikea_tuplepack_operations_check",
+          "seconds": 0.049
+        },
+        {
+          "output": "ikea/ikea_tuplepack_execution_check",
+          "seconds": 0.049
+        },
+        {
+          "output": "ikea/ikea_example_tuplepack_ordinary",
+          "seconds": 0.047
+        },
+        {
+          "output": "ikea/ikea_example_tuplepack_composition",
+          "seconds": 0.047
+        },
+        {
+          "output": "ikea/ikea_example_tuplepack_integration",
+          "seconds": 0.047
+        },
+        {
+          "output": "ikea/libikea_tuplepack.a",
+          "seconds": 0.026
+        }
+      ],
+      "build": {
+        "elapsed_seconds": "1.31",
+        "user_seconds": "0.86",
+        "system_seconds": "0.44",
+        "max_process_rss_kib": "129188",
+        "exit_status": "0"
+      },
+      "scenario": "preparation",
+      "source": "ikea/src/tuplepack/prepare.cpp"
+    },
+    {
+      "limits": "Completed edges from this invocation only. Failed edges have no duration; overlapping edge durations are not wall time. GNU time RSS is a process maximum, not aggregate concurrent memory.",
+      "build_state": "Warm TuplePack targets; mtime edit ikea/include/ikea/tuplepack/detail/native/neon/shuffle.h; source bytes unchanged.",
+      "completed_edges": [
+        {
+          "output": "ikea/CMakeFiles/ikea_tuplepack_wire_check.dir/test/tuplepack/wire.cpp.o",
+          "seconds": 3.011
+        },
+        {
+          "output": "ikea/CMakeFiles/ikea_tuplepack_execution_check.dir/test/tuplepack/execution.cpp.o",
+          "seconds": 2.902
+        },
+        {
+          "output": "workbench/benchmarks/tuplepack/CMakeFiles/ikea_tuplepack_bench.dir/main.cpp.o",
+          "seconds": 2.173
+        },
+        {
+          "output": "workbench/benchmarks/tuplepack/CMakeFiles/ikea_tuplepack_bench.dir/composition.cpp.o",
+          "seconds": 1.304
+        },
+        {
+          "output": "ikea/CMakeFiles/ikea_example_tuplepack_composition.dir/examples/tuplepack/composition.cpp.o",
+          "seconds": 0.656
+        },
+        {
+          "output": "ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/kernels.cpp.o",
+          "seconds": 0.546
+        },
+        {
+          "output": "ikea/CMakeFiles/ikea_tuplepack.dir/src/tuplepack/routes.cpp.o",
+          "seconds": 0.461
+        },
+        {
+          "output": "workbench/benchmarks/tuplepack/ikea_tuplepack_bench",
+          "seconds": 0.079
+        },
+        {
+          "output": "ikea/ikea_tuplepack_wire_check",
+          "seconds": 0.051
+        },
+        {
+          "output": "ikea/ikea_tuplepack_operations_check",
+          "seconds": 0.05
+        },
+        {
+          "output": "ikea/ikea_tuplepack_ownership_check",
+          "seconds": 0.048
+        },
+        {
+          "output": "ikea/ikea_example_tuplepack_ordinary",
+          "seconds": 0.048
+        },
+        {
+          "output": "ikea/ikea_tuplepack_execution_check",
+          "seconds": 0.047
+        },
+        {
+          "output": "ikea/ikea_example_tuplepack_integration",
+          "seconds": 0.047
+        },
+        {
+          "output": "ikea/ikea_example_tuplepack_composition",
+          "seconds": 0.045
+        },
+        {
+          "output": "ikea/libikea_tuplepack.a",
+          "seconds": 0.024
+        }
+      ],
+      "build": {
+        "elapsed_seconds": "11.50",
+        "user_seconds": "11.16",
+        "system_seconds": "0.32",
+        "max_process_rss_kib": "232436",
+        "exit_status": "0"
+      },
+      "scenario": "native-body",
+      "source": "ikea/include/ikea/tuplepack/detail/native/neon/shuffle.h"
+    },
+    {
+      "limits": "Completed edges from this invocation only. Failed edges have no duration; overlapping edge durations are not wall time. GNU time RSS is a process maximum, not aggregate concurrent memory.",
+      "build_state": "Warm TuplePack targets; mtime edit ikea/examples/tuplepack/integration.cpp; source bytes unchanged.",
+      "completed_edges": [
+        {
+          "output": "ikea/CMakeFiles/ikea_example_tuplepack_integration.dir/examples/tuplepack/integration.cpp.o",
+          "seconds": 0.399
+        },
+        {
+          "output": "ikea/ikea_example_tuplepack_integration",
+          "seconds": 0.047
+        }
+      ],
+      "build": {
+        "elapsed_seconds": "0.45",
+        "user_seconds": "0.41",
+        "system_seconds": "0.03",
+        "max_process_rss_kib": "142548",
+        "exit_status": "0"
+      },
+      "scenario": "owner-adapter",
+      "source": "ikea/examples/tuplepack/integration.cpp"
+    }
+  ]
+}

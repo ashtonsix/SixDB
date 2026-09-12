@@ -30,24 +30,6 @@ std::string_view describe(error reason) noexcept {
     return "unknown SeriesPack admission error";
 }
 namespace detail {
-bool overlaps(occupied_run a, occupied_run b) noexcept {
-    if (!a.count || !b.count)
-        return false;
-    if (a.base + (a.count - 1) * a.stride + a.bytes <= b.base ||
-        b.base + (b.count - 1) * b.stride + b.bytes <= a.base)
-        return false;
-    std::size_t i = 0, j = 0;
-    while (i < a.count && j < b.count) {
-        const auto x = a.base + i * a.stride, y = b.base + j * b.stride;
-        if (x < y + b.bytes && y < x + a.bytes)
-            return true;
-        if (x + a.bytes <= y)
-            i += std::min(a.count - i, (y - x - a.bytes) / a.stride + 1);
-        else
-            j += std::min(b.count - j, (x - y - b.bytes) / b.stride + 1);
-    }
-    return false;
-}
 std::expected<void, error> admit_view(std::size_t count, std::size_t rows,
                                       std::array<std::size_t, 3> used,
                                       std::array<stream_extent, 3> streams, bool striped) {

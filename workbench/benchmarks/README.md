@@ -2,7 +2,9 @@
 
 Recurring component and system workloads, plus shared measurement machinery.
 The [SeriesPack suite](seriespack/README.md) measures packed arrays, access,
-composition and caller costs. Individual candidate experiments and their findings
+composition and caller costs. The [TuplePack suite](tuplepack/README.md) measures
+ordered code maps, mutation effects, native batching and pipeline boundaries.
+Individual candidate experiments and their findings
 stay with the [investigation](../spikes/README.md) that asks the question.
 
 The [results explorer](../results/README.md) turns retained evidence into a
