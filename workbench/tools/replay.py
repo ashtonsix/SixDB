@@ -73,10 +73,14 @@ def replay(spec_path, output, *, cpu=None):
         validate(spec)
         for label, variant in spec['variants'].items():
             reference = variant['artifact']
-            cached = datasets.cache_root() / 'worker-bundles' / reference['sha256']
+            identity = reference['sha256']
+            if reference.get('subdirectory'):
+                scope = PurePosixPath(reference['subdirectory']).as_posix()
+                identity += '/scope-' + hashlib.sha256(scope.encode()).hexdigest()
+            cached = datasets.cache_root() / 'worker-bundles' / identity
             if not cached.exists():
                 selection = hashlib.sha256(json.dumps(sorted(variant['files_sha256'])).encode()).hexdigest()
-                cached = datasets.cache_root() / 'selected-worker-bundles' / reference['sha256'] / selection
+                cached = datasets.cache_root() / 'selected-worker-bundles' / identity / selection
             destination = output / 'binary-sources' / label
             with datasets.locked('replay-' + reference['sha256']):
                 if not cached.exists():

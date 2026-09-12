@@ -7,12 +7,14 @@ from contextlib import redirect_stdout
 import json
 from pathlib import Path
 import subprocess
+import shutil
 import tarfile
 import tempfile
 import unittest
 from unittest.mock import patch
 
 import artifacts
+import worker_cache
 import datasets
 from evidence import digest, read_measurements, summarize, verify_compact, verify_exports
 from experiment import source_files
@@ -96,6 +98,59 @@ class ArtifactsCheck(unittest.TestCase):
             restored = self.root / 'generic'
             artifacts.restore_bundle(reference, restored)
             self.assertEqual((restored / 'run.json').read_text(), 'an arbitrary script output')
+
+    def test_retain_partially_collected_study_reuses_complete_worker_archive(self):
+        (self.source / 'probe').write_bytes(b'\x7fELF' + b'a' * 2 ** 20)
+        self.receipt['artifact_sha256']['probe'] = artifacts.sha256(self.source / 'probe')
+        (self.source / 'run.json').write_text(json.dumps(self.receipt))
+        output = self.root / 'worker-output'
+        output.mkdir()
+        shutil.copytree(self.source, output / 'study')
+        (output / 'unrelated.csv').write_text('different study\n')
+        job = self.root / 'build/workers/fixture'
+        job.mkdir(parents=True)
+        with patch.object(artifacts, 'aws', self.fake_aws), patch.object(artifacts, 'ROOT', self.root), \
+                tempfile.TemporaryDirectory() as temp:
+            reference = artifacts.publish(output, Path(temp), validate_run=False)
+            worker_cache.collect(job, reference)
+            self.assertFalse((job / 'results/study/probe').exists())
+            manifest = json.loads((job / 'collection.json').read_text())['members']
+            evidence = self.root / 'evidence'
+            with patch.object(artifacts, 'remote_manifest', return_value=manifest) as remote, \
+                    patch.object(artifacts, 'publish') as publish:
+                artifacts.retain(job / 'results/study', evidence)
+            remote.assert_called_once_with(reference)
+            publish.assert_not_called()
+            scoped = json.loads((evidence / 'artifact.json').read_text())
+            self.assertEqual(scoped['sha256'], reference['sha256'])
+            self.assertEqual(scoped['subdirectory'], 'study')
+            recovered = self.root / 'build/recovered'
+            artifacts.fetch(evidence, recovered)
+            for original in artifacts.files(self.source):
+                self.assertEqual(original.read_bytes(), (recovered / original.name).read_bytes())
+            self.assertFalse((recovered / 'unrelated.csv').exists())
+            selected = self.root / 'build/selected'
+            artifacts.fetch(evidence, selected, selected=['probe'])
+            self.assertEqual([p.name for p in artifacts.files(selected)], ['probe'])
+            (job / 'results/study/summary.csv').write_text('changed locally')
+            with patch.object(artifacts, 'remote_manifest', return_value=manifest), \
+                    self.assertRaisesRegex(ValueError, 'differs from archived'):
+                artifacts.retain(job / 'results/study', self.root / 'changed')
+            self.assertFalse((self.root / 'changed').exists())
+            (job / 'results/study/summary.csv').write_bytes((self.source / 'summary.csv').read_bytes())
+            bad = dict(manifest)
+            bad['study/probe'] = bad['study/probe'] | {'sha256': '0' * 64}
+            with patch.object(artifacts, 'remote_manifest', return_value=bad), \
+                    self.assertRaisesRegex(ValueError, 'missing or changed'):
+                artifacts.retain(job / 'results/study', self.root / 'bad-archive')
+
+    def test_scoped_reference_validates_scope_and_entire_archive(self):
+        with patch.object(artifacts, 'aws', self.fake_aws), tempfile.TemporaryDirectory() as temp:
+            reference = artifacts.publish(self.source, Path(temp))
+            for scope in ['../escape', '/absolute', 'missing', 'summary.csv']:
+                with self.subTest(scope=scope), self.assertRaises(ValueError):
+                    artifacts.restore_bundle(reference | {'subdirectory': scope}, self.root / 'scoped')
+                self.assertFalse((self.root / 'scoped').exists())
 
     def test_selected_fetch_avoids_unrelated_expansion_and_input_restoration(self):
         binary = self.source / 'bin/probe'

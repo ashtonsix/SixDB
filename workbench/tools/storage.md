@@ -1,24 +1,32 @@
 # Local worker storage
 
-Worker results are recoverable local copies. Ordinary `worker.py run`, `wait`
-and `fetch` reclaim older archived compiler output when results exceed a
-10 GiB soft budget or free space falls below 10 GiB. This covers the checkout,
-its Git worktrees and `build/workspaces/*/build/workers`; OrbStack aliases count once.
+Ordinary worker collection keeps measurements, logs, source snapshots and
+metadata locally. Recognized compiler outputs of at least 1 MiB stay in S3;
+they are hashed while reading the archive but never expanded onto disk.
+The complete compressed archive is still downloaded and verified temporarily.
+Prepared inputs stay referenced until explicitly restored.
 
 ```sh
+python3 workbench/tools/worker.py fetch JOB --list  # discover member paths and sizes
+python3 workbench/tools/worker.py fetch JOB --file study/probe  # add an exact member
+python3 workbench/tools/worker.py fetch JOB --full  # all output and prepared inputs
 python3 workbench/tools/worker.py cache          # largest collections and headroom
-python3 workbench/tools/worker.py cache --prune  # apply the same reclamation now
-touch build/workers/JOB/.keep-local             # keep a working set available
-python3 workbench/tools/worker.py fetch JOB --full  # restore reclaimed outputs too
+touch build/workers/JOB/.keep-local             # protect already fetched output
 ```
 
-Only large binaries, archives, LLVM bitcode and assembly are candidates, after
-24 hours without collection access. A fresh S3 read verifies the full archive
-hash and every member before deleting matching local files. Measurements,
-logs, datasets, local edits, recent jobs and pinned collections stay. Removing
-`.keep-local` releases a pin; `cache --older-hours N` adjusts the age for an
-explicit cleanup. Recovery references and member hashes remain beside results.
-Reclamation is local: it never deletes S3 objects or changes Git evidence.
+Repeat `--file` for several members. Existing local files are preserved when
+adding output. A pin prevents later reclamation; it does not request full fetch.
+The console reports omitted files and bytes. [Retention](artifacts.md) can reuse
+the complete worker archive, so making a Git export does not require full fetch.
+
+For older/full collections, worker commands also reclaim archived compiler
+output after 24 hours without collection access, toward a 10 GiB soft budget
+or 10 GiB free space. A fresh S3 read verifies the archive and each removed file.
+Measurements, logs, datasets, edits, recent and pinned collections stay.
+`cache --prune` applies this now; `--older-hours N` adjusts its age threshold.
+Removing `.keep-local` releases a pin. Recovery references remain beside results.
+The cache covers Git worktrees and conventional `build/workspaces/*/build/workers`
+as well as this checkout; OrbStack aliases count once. S3 objects are never deleted.
 
 `SIXDB_WORKER_CACHE_GIB` adjusts the soft budget. Preserved output can exceed
 it; the console explains that instead of silently deleting research data.
@@ -42,10 +50,9 @@ unverified collections are restored. Data is synced before publication; the
 collection receipt is synced afterward. A write or sync failure is an error,
 even when the remote job is complete. Retry `wait JOB` or `fetch JOB`.
 
-Differing and user-added files survive in `replaced-results-*` beside the repaired
-tree; byte-identical duplicates are removed. Inspect these conflicts before
-discarding them. Reclaimed compiler files are reported as omitted, and `--full`
-restores them. This does not make an interrupted experiment scientifically valid:
+During repair, differing and user-added files survive in `replaced-results-*`
+beside the repaired tree; byte-identical duplicates are removed. Inspect these
+conflicts before discarding them. This does not make an interrupted experiment scientifically valid:
 script status and the study's own validation still apply.
 
 ## Why this exists: 2026-09-12

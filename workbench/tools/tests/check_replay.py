@@ -146,6 +146,30 @@ class ReplayCheck(unittest.TestCase):
         with self.assertRaises(FileExistsError):
             self.run_replay()
 
+    def test_same_named_inputs_in_two_studies_have_distinct_cache_entries(self):
+        combined = self.root / 'combined'
+        for label in ('baseline', 'candidate'):
+            source = combined / label
+            (source / 'bin').mkdir(parents=True)
+            shutil.copy2(self.binary, source / 'bin/probe')
+            (source / 'capture.json').write_text(json.dumps({'study': label}))
+            variant = self.spec['variants'][label]
+            variant.update(binary='bin/probe', source_receipt='capture.json',
+                source_digest=datasets.digest(source / 'capture.json'),
+                files_sha256={name: datasets.digest(source / name) for name in ['bin/probe', 'capture.json']})
+        bundle = self.root / 'combined.tar.gz'
+        count = artifacts.pack(combined, bundle, validate_run=False)
+        identity = artifacts.sha256(bundle)
+        self.objects[identity] = bundle.read_bytes()
+        for label, variant in self.spec['variants'].items():
+            variant['artifact'] = dict(format=1, kind='files', bucket='fixture', region='fixture', key=identity,
+                sha256=identity, bytes=bundle.stat().st_size, files=count, subdirectory=label)
+        self.run_replay()
+        self.assertEqual(self.receipt()['status'], 'complete')
+        self.assertEqual(len(self.downloads), 2)
+        self.run_replay(self.root / 'again')
+        self.assertEqual(len(self.downloads), 2)
+
     def test_cli_output_and_worker_defaults_with_existing_full_cache(self):
         # The original spike used a full-bundle cache; existing specs/caches still work.
         for label, variant in self.spec['variants'].items():

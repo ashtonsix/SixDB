@@ -17,9 +17,10 @@ do not change the requested hardware type.
 
 The second script is illustrative. A script receives the current source,
 including uncommitted and non-ignored new files, on one EC2 worker at a time.
-The command waits and downloads verified results to `build/workers/JOB/results/`.
-[Local storage](storage.md) checks host headroom, repairs damaged collections,
-and reclaims older archived compiler output while preserving measurements.
+The command waits and collects measurements, logs and metadata under
+`build/workers/JOB/results/`. Bulky compiler output stays in the verified S3
+archive; `fetch JOB --file PATH` or `--full` retrieves it when needed.
+[Local storage](storage.md) covers headroom, recovery and older local copies.
 After collection the worker stays ready for another compatible job for five
 minutes, then shuts itself down. Collection and cleanup continue if the
 controlling session disconnects. No commit, SSH key,
@@ -68,6 +69,10 @@ Compatible reuse skips completed toolchain setup. Packages installed by earlier
 scripts also persist; use `--fresh` when the experiment needs a new OS environment.
 
 Source selection matches [local experiments](README.md#captured-experiment-runs).
+To study a capture while using current worker tools, pass `--source PATH` to
+`run`; the script path is relative to that source checkout. Job records remain
+under the controller checkout. Captured study and setup-script bytes stay exact;
+the controller supplies its current runtime and records their separate hashes.
 A synthetic Git commit lets runners use Git; its hash differs from local HEAD.
 `job.json` records the original commit and the actual captured source digest.
 Each job replaces the source snapshot at a stable path, preserving unchanged
@@ -184,7 +189,8 @@ and [Spot interruption behavior](https://docs.aws.amazon.com/AWSEC2/latest/UserG
 explain those boundaries.
 
 Shared prepared inputs recorded by nested `Run.input()` calls are published
-independently and restored on fetch. Keep the script's completed runs under
+independently and restored with `fetch JOB --full`. Ordinary collection retains
+their references. Keep the script's completed runs under
 `SIXDB_RESULTS` and use the default shared dataset cache. Missing dependencies
 are reported while preserving raw output. The datasets retain their existing
 shared store even if a custom worker result bucket is selected; a custom

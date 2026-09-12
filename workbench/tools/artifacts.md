@@ -71,9 +71,12 @@ Replace `retain` with `preview` to inspect without uploading or writing. Neither
 uses a size threshold. Ignored export members are refused; choose a `.txt` name
 for a selected diagnostic or a scoped ignore exception.
 
-Retention checks the completed run, uploads its full bundle, downloads and
-hash-verifies it, then writes the selected bytes with `provenance.json` and an
-`artifact.json` recovery reference. Failed retention leaves the source intact;
+Retention checks the completed run and verifies its complete archive before
+writing selected bytes with `provenance.json` and an `artifact.json` reference.
+For collected worker studies it reuses the existing S3 archive, recording the
+study's subdirectory; omitted local compiler output need not be fetched or
+uploaded again. Other runs are bundled, uploaded and download-verified.
+Failed retention leaves the source intact;
 identical exports are safe to retry. Scoped `.gitattributes` protects hashed
 line endings. For a generic or failed run, `artifacts.py put DIRECTORY REF.json`
 keeps a bundle and reference without making an offline evidence export.
@@ -91,6 +94,8 @@ python3 workbench/tools/artifacts.py fetch path/to/evidence-or-artifact.json \
 ```
 
 Fetch verifies the bundle hash, safe archive members and the original run receipt.
+With the current helper, subdirectory references recover that study directly
+into the requested directory.
 Repeat `--file EXACT/MEMBER` to expand only selected files; the compressed bundle
 is still downloaded and verified, but whole-run and input-dependency restoration
 are omitted. Full fetch restores shared prepared inputs used by `run.input()`.

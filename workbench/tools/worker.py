@@ -220,8 +220,9 @@ def ensure_infrastructure(config, aws):
     config['instance_profile'] = role
 
 
-def snapshot(directory):
-    sources = source_files(ROOT)
+def snapshot(directory, root=None):
+    root = ROOT if root is None else root
+    sources = source_files(root)
     # Allow for incompressible input and tar/gzip overhead before allocating compute.
     storage.require_space(directory, int(sum(len(data) * 1.01 + 1024 for data in sources.values())) + 10240)
     hashes = {name: hashlib.sha256(data).hexdigest() for name, data in sources.items()}
@@ -231,13 +232,15 @@ def snapshot(directory):
             for name, data in sources.items():
                 info = tarfile.TarInfo(name)
                 info.size = len(data)
-                info.mode = 0o755 if (ROOT / name).stat().st_mode & 0o111 else 0o644
+                info.mode = 0o755 if (root / name).stat().st_mode & 0o111 else 0o644
                 archive.addfile(info, io.BytesIO(data))
-    runtime = sources['workbench/tools/worker_runtime.py']
+    # Study sources remain exact; the controller's lifecycle tools stay current.
+    runtime = (HERE / 'worker_runtime.py').read_bytes()
+    worker_pool = (HERE / 'worker_pool.py').read_bytes()
     (directory / 'runtime.py').write_bytes(runtime)
-    (directory / 'worker_pool.py').write_bytes(sources['workbench/tools/worker_pool.py'])
+    (directory / 'worker_pool.py').write_bytes(worker_pool)
     return {'sha256': artifacts.sha256(path), 'files': hashes,
-            'pool_sha256': hashes['workbench/tools/worker_pool.py'],
+            'pool_sha256': hashlib.sha256(worker_pool).hexdigest(),
             'setup_sha256': hashes['workbench/tools/worker-setup.sh'],
             'digest': hashlib.sha256(json.dumps(hashes, sort_keys=True).encode()).hexdigest(),
             'runtime_sha256': hashlib.sha256(runtime).hexdigest()}
@@ -479,23 +482,27 @@ def idle_hint(job, aws):
         pass  # Optional advice must not turn a successful launch into a failed job.
 
 
-def fetch(job, directory, state, aws, *, full=False):
+def fetch(job, directory, state, aws, *, full=False, selected=None):
     # A final reference describes an immutable bundle; partial syncs are kept separate.
     worker_cache.preflight(ROOT, protect=directory)
     if state and state.get('artifact'):
         save(directory / 'artifact.json', state['artifact'])
+        save(directory / 'status.json', state)
         destination = directory / 'results'
-        worker_cache.collect(directory, state['artifact'], full=full)
-        for receipt in sorted(destination.rglob('run.json')):
+        worker_cache.collect(directory, state['artifact'], full=full, selected=selected)
+        for receipt in sorted(destination.rglob('run.json')) if full else []:
             # Failed/aborted scripts can leave unfinished study receipts. Recover
             # their raw evidence too; their own readers still check validity.
             if (receipt.parent / 'input-artifacts.json').exists():
                 artifacts.restore_inputs(receipt.parent)
         print(f'Results: {destination}', flush=True)
         evicted = worker_cache.read(directory / 'collection.json').get('evicted', [])
-        omitted = sum(not (destination / name).exists() for name in evicted)
+        manifest = worker_cache.read(directory / 'collection.json')['members']
+        omitted = [name for name in evicted if not (destination / name).exists()]
         if omitted:
-            print(f'{omitted} archived compiler outputs omitted locally; restore with worker.py fetch {job["id"]} --full', flush=True)
+            size = sum(manifest[name]['bytes'] for name in omitted)
+            print(f'{len(omitted)} files ({size / storage.GIB:.2f} GiB) remain in S3. '
+                  f'Retrieve one: worker.py fetch {job["id"]} --file PATH; everything: --full', flush=True)
         worker_cache.maintain(ROOT)
     else:
         destination = directory / 'partial'
@@ -579,6 +586,7 @@ def main():
         cmd = commands.add_parser(name, help='run a script' if name == 'run' else 'resolve settings without creating anything')
         if name == 'run':
             cmd.add_argument('script', type=Path)
+            cmd.add_argument('--source', type=Path, help='capture study sources from this checkout; use current controller tools')
             cmd.add_argument('--arg', action='append', default=[], help='script argument; repeat, use --arg=--flag for flags')
             cmd.add_argument('--detach', action='store_true')
         cmd.add_argument('--machine', choices=['zen5', 'granite-rapids', 'neoverse-v2'])
@@ -600,7 +608,10 @@ def main():
         if name == 'logs':
             cmd.add_argument('--console', action='store_true', help='show instance boot diagnostics instead of script output')
         if name == 'fetch':
-            cmd.add_argument('--full', action='store_true', help='also restore compiler output reclaimed from the local cache')
+            selection = cmd.add_mutually_exclusive_group()
+            selection.add_argument('--full', action='store_true', help='restore all compiler output and prepared inputs too')
+            selection.add_argument('--file', action='append', dest='selected', help='retrieve an exact archive member; repeat as needed')
+            selection.add_argument('--list', action='store_true', dest='list_files', help='list member paths, sizes and local presence without extracting')
     commands.add_parser('list', help='list SixDB worker instances')
     cache = commands.add_parser('cache', help='inspect local worker storage and host headroom')
     cache.add_argument('--prune', action='store_true', help='reclaim older verified archived compiler output toward the soft budget')
@@ -631,14 +642,15 @@ def main():
         if args.command == 'plan':
             print(json.dumps(config, indent=2))
             return 0
-        script = args.script.resolve()
-        if not script.is_relative_to(ROOT) or not script.is_file():
-            parser.error('script must be a file in this repository')
+        source_root = args.source.resolve() if args.source else ROOT
+        script = (source_root / args.script).resolve()
+        if not script.is_relative_to(source_root) or not script.is_file():
+            parser.error('script must be a file in the source repository')
         worker_cache.preflight(ROOT)
-        name = str(script.relative_to(ROOT))
+        name = str(script.relative_to(source_root))
         directory = JOBS / (datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ') + '-' + uuid.uuid4().hex[:8])
         directory.mkdir(parents=True)
-        source = snapshot(directory)
+        source = snapshot(directory, source_root)
         if name not in source['files']:
             raise ValueError('script is ignored/excluded from source capture; use a non-ignored repository file')
         ensure_infrastructure(config, aws)
@@ -646,7 +658,7 @@ def main():
         # Per-file hashes live separately: EC2 user-data has a small fixed size limit.
         save(directory / 'source-manifest.json', source.pop('files'))
         job = {'format': 2, 'profile': pool.profile(config, source), 'id': directory.name, 'created_at': time.time(),
-            'source': source, 'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
+            'source': source, 'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=source_root, text=True).strip(),
             'script': name, 'args': args.arg + arguments, 'config': config, 'prefix': prefix,
             'uri': f"s3://{config['bucket']}/{prefix}"}
         save(directory / 'job.json', job)
@@ -693,7 +705,13 @@ def main():
     elif args.command == 'wait':
         return wait(job, directory, aws)
     elif args.command == 'fetch':
-        fetch(job, directory, status(job, aws), aws, full=args.full)
+        state = status(job, aws)
+        if args.list_files:
+            if not state or not state.get('artifact'):
+                raise ValueError('No complete artifact is available; inspect logs or partial output.')
+            worker_cache.list_files(directory, state['artifact'])
+        else:
+            fetch(job, directory, state, aws, full=args.full, selected=args.selected)
     elif args.command == 'status':
         assignment = aws.get_json(job['config']['bucket'], job['prefix'] + '/assignment.json')
         session, _ = pool.Store(job['config']['bucket'], aws.region).read(pool.state_key(assignment['worker_id'])) if assignment else (None, None)

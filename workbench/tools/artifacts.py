@@ -2,6 +2,7 @@
 """Retain selected runs in Git with full, verified bundles in SixDB's S3 prefix."""
 
 import argparse
+from contextlib import nullcontext
 from collections import Counter, defaultdict
 import csv
 import gzip
@@ -98,7 +99,7 @@ def files(directory):
     return result
 
 
-def verify_run(directory):
+def verify_run(directory, *, archived=None):
     receipt = directory / "run.json"
     if not receipt.exists():
         return  # A validation/log bundle can be retained without being a run.
@@ -107,7 +108,10 @@ def verify_run(directory):
         raise ValueError("cannot retain an unfinished run")
     for name, expected in data["artifact_sha256"].items():
         path = directory / name
-        if not path.resolve().is_relative_to(directory.resolve()) or sha256(path) != expected:
+        if not path.resolve().is_relative_to(directory.resolve()):
+            raise ValueError(f'run artifact is outside its directory: {name}')
+        actual = sha256(path) if archived is None or path.is_file() else archived.get(name, {}).get('sha256')
+        if actual != expected:
             raise ValueError(f"run artifact missing or changed: {name}")
 
 
@@ -337,6 +341,30 @@ def preview(source, destination, selected=None, regenerate=None):
         return preview_export(staging, destination.resolve())
 
 
+def worker_reference(source):
+    """Reuse a worker's complete archive even when local compiler output is absent."""
+    for parent in source.parents:
+        receipt_path = parent / 'collection.json'
+        if not receipt_path.is_file() or not source.is_relative_to(parent / 'results'):
+            continue
+        receipt = json.loads(receipt_path.read_text())
+        reference = receipt['artifact']
+        prefix = source.relative_to(parent / 'results').as_posix()
+        prefix = '' if prefix == '.' else prefix + '/'
+        members = {name.removeprefix(prefix): entry for name, entry in remote_manifest(reference).items()
+                   if name.startswith(prefix)}
+        if not members:
+            raise ValueError('study is not present in the verified worker archive')
+        for path in files(source):
+            name = path.relative_to(source).as_posix()
+            if name in members and sha256(path) != members[name]['sha256']:
+                raise ValueError(f'local worker output differs from archived output: {name}')
+        verify_run(source, archived=members)
+        print('Reuse verified worker archive; no duplicate upload.', flush=True)
+        return reference | {'subdirectory': prefix.rstrip('/'), 'kind': 'run'}
+    return None
+
+
 def retain(source, destination, selected=None, regenerate=None):
     source, destination = source.resolve(), destination.resolve()
     if destination.is_relative_to(source):
@@ -349,13 +377,13 @@ def retain(source, destination, selected=None, regenerate=None):
         prepare_compact(source, staging, selected, regenerate)
         if preview_export(staging, destination):
             raise ValueError('Compact export contains Git-ignored files; rename the selected output or adjust its scoped ignore rule')
-        reference = publish(source, temporary)
+        reference = worker_reference(source) or publish(source, temporary)
         (staging / "artifact.json").write_text(json.dumps(reference, indent=2) + "\n")
         install(staging, destination)
     print(f"Retained: {destination}")
 
 
-def unpack(bundle, destination, *, selected=None, manifest=None):
+def selection(selected):
     if selected is not None:
         names = [PurePosixPath(name) for name in selected]
         if not names or any(not name.parts or name.is_absolute() or '..' in name.parts for name in names):
@@ -363,41 +391,75 @@ def unpack(bundle, destination, *, selected=None, manifest=None):
         selected = {name.as_posix() for name in names}
         if len(selected) != len(names):
             raise ValueError('select distinct files')
+    return selected
+
+
+def unpack(bundle, destination, *, selected=None, manifest=None, omit_compiler=False, subdirectory=''):
+    selected = selection(selected)
+    scope = PurePosixPath(subdirectory)
+    if scope.is_absolute() or '..' in scope.parts:
+        raise ValueError('bundle subdirectory must be a relative path')
+    if selected is not None and omit_compiler:
+        raise ValueError('choose exact files or omit compiler output, not both')
     with tarfile.open(bundle) as archive:
-        seen = set()
+        seen, scoped = set(), set()
         for member in archive:
             name = PurePosixPath(member.name)
             if not member.isfile() or not name.parts or name.is_absolute() or ".." in name.parts or name.as_posix() in seen:
                 raise ValueError(f"unsafe archive member: {member.name}")
             seen.add(name.as_posix())
-            if selected is not None and name.as_posix() not in selected:
+            if not name.is_relative_to(scope):
                 continue
-            storage.require_space(destination, member.size)
-            path = destination.joinpath(*name.parts)
-            path.parent.mkdir(parents=True, exist_ok=True)
+            name = name.relative_to(scope)
+            if not name.parts:
+                raise ValueError('bundle subdirectory names a file')
+            scoped.add(name.as_posix())
             source = archive.extractfile(member)
             if source is None:
                 raise ValueError(f'archive member has no file contents: {member.name}')
-            with source, path.open("xb") as target:
-                shutil.copyfileobj(source, target)
-            path.chmod(member.mode & 0o777)
+            with source:
+                prefix = source.read(512)
+                compiler = rebuildable(name, member.size, prefix)
+                keep = name.as_posix() in selected if selected is not None else not (omit_compiler and compiler)
+                path = destination.joinpath(*name.parts)
+                if keep:
+                    storage.require_space(destination, member.size)
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                digest, size = hashlib.sha256(), 0
+                # Hash omitted members without ever expanding them onto disk.
+                with (path.open('xb') if keep else nullcontext()) as target:
+                    chunk = prefix
+                    while chunk:
+                        digest.update(chunk)
+                        size += len(chunk)
+                        if target is not None:
+                            target.write(chunk)
+                        chunk = source.read(1024 ** 2)
+                if size != member.size:
+                    raise ValueError(f'truncated archive member: {name}')
+            if keep:
+                path.chmod(member.mode & 0o777)
             if manifest is not None:
-                with path.open('rb') as handle:
-                    prefix = handle.read(512)
-                manifest[name.as_posix()] = {'bytes': member.size, 'sha256': sha256(path),
-                    'rebuildable': rebuildable(name, member.size, prefix)}
-    if selected is not None and selected - seen:
-        raise ValueError(f"selected files missing from bundle: {', '.join(sorted(selected - seen))}")
+                manifest[name.as_posix()] = {'bytes': member.size, 'sha256': digest.hexdigest(),
+                                           'rebuildable': compiler}
+    if selected is not None and selected - scoped:
+        raise ValueError(f"selected files missing from bundle: {', '.join(sorted(selected - scoped))}")
+    if subdirectory and not scoped:
+        raise ValueError('bundle subdirectory is empty or missing')
     return len(seen)
 
 
-def restore_bundle(reference, destination, *, selected=None):
-    """Restore verified bytes; a selection omits whole-run validation and dependencies."""
+def restore_bundle(reference, destination, *, selected=None, omit_compiler=False):
+    """Restore chosen files durably; return hashes for every in-scope member.
+
+    Exact selections skip whole-run validation. Compiler omissions instead
+    validate missing run members against the verified archive's hashes.
+    """
     with storage.transfer_lock():
-        return _restore_bundle(reference, destination, selected=selected)
+        return _restore_bundle(reference, destination, selected=selected, omit_compiler=omit_compiler)
 
 
-def _restore_bundle(reference, destination, *, selected=None):
+def _restore_bundle(reference, destination, *, selected=None, omit_compiler=False):
     destination = destination.resolve()
     if destination.exists():
         raise ValueError("fetch destination already exists")
@@ -410,11 +472,12 @@ def _restore_bundle(reference, destination, *, selected=None):
         staging = temporary / "run"
         staging.mkdir()
         manifest = {}
-        count = unpack(bundle, staging, selected=selected, manifest=manifest)
+        count = unpack(bundle, staging, selected=selected, manifest=manifest, omit_compiler=omit_compiler,
+                       subdirectory=reference.get('subdirectory', ''))
         if count != reference["files"]:
             raise ValueError("bundle file count mismatch")
         if selected is None and reference.get('kind') != 'files':
-            verify_run(staging)
+            verify_run(staging, archived=manifest if omit_compiler else None)
         storage.sync_tree(staging)
         staging.rename(destination)
         storage.sync_directory(destination.parent)

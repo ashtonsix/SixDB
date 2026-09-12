@@ -135,7 +135,12 @@ class StorageChecks(unittest.TestCase):
             with self.assertRaises(OSError):
                 cache.collect(self.job, self.reference)
         self.assertFalse((self.job / 'results').exists())
-        with patch.object(artifacts.shutil, 'copyfileobj', side_effect=OSError(28, 'injected write failure')):
+        original = Path.open
+        def failed_open(path, mode='r', *args, **kwargs):
+            if mode == 'xb':
+                raise OSError(28, 'injected output creation failure')
+            return original(path, mode, *args, **kwargs)
+        with patch.object(Path, 'open', failed_open):
             with self.assertRaises(OSError):
                 cache.collect(self.job, self.reference)
         self.assertFalse((self.job / 'results').exists())
@@ -154,7 +159,7 @@ class StorageChecks(unittest.TestCase):
                              ('large.csv', b'measurements\n'), ('script.log', b'log\n')]:
             (self.source / name).write_bytes(prefix + b'a' * 2 ** 20)
         self.repack()
-        cache.collect(self.job, self.reference)
+        cache.collect(self.job, self.reference, full=True)
         (self.job / 'results/changed').write_bytes(b'\x7fELF' + b'b' * 2 ** 20)
         with self.stream():
             manifest = artifacts.remote_manifest(self.reference)
@@ -177,7 +182,7 @@ class StorageChecks(unittest.TestCase):
     def test_corrupt_remote_stream_cannot_remove_local_file(self):
         (self.source / 'probe').write_bytes(b'\x7fELF' + b'a' * 2 ** 20)
         self.repack()
-        cache.collect(self.job, self.reference)
+        cache.collect(self.job, self.reference, full=True)
         reference = self.reference | {'sha256': '0' * 64}
         with self.stream(), self.assertRaisesRegex(ValueError, 'SHA-256'):
             cache.reclaim(self.job, reference)
@@ -186,7 +191,7 @@ class StorageChecks(unittest.TestCase):
     def test_reclamation_receipt_failure_leaves_everything(self):
         (self.source / 'probe').write_bytes(b'\x7fELF' + b'a' * 2 ** 20)
         self.repack()
-        cache.collect(self.job, self.reference)
+        cache.collect(self.job, self.reference, full=True)
         with self.stream(), patch.object(storage, 'write_json', side_effect=OSError(28, 'full')):
             with self.assertRaises(OSError):
                 cache.reclaim(self.job, self.reference)
@@ -252,6 +257,128 @@ worker_cache.collect(pathlib.Path(sys.argv[3]),json.loads(sys.argv[4]))
             self.assertEqual(process.returncode, 0, (output, error))
         self.assertEqual((self.root / 'downloads').read_text(), 'download\n')
         self.assertTrue(cache.verified(self.job, self.reference))
+
+    def test_fresh_collection_never_expands_compiler_output(self):
+        for name, prefix in [('probe', b'\x7fELF'), ('other.a', b'!<arch>\n'), ('kernel.asm', b'assembly\n')]:
+            (self.source / name).write_bytes(prefix + b'a' * 2 ** 20)
+        self.repack()
+        created = []
+        original = Path.open
+        def record(path, mode='r', *args, **kwargs):
+            if mode == 'xb':
+                created.append(path.name)
+            return original(path, mode, *args, **kwargs)
+        with patch.object(Path, 'open', record):
+            cache.collect(self.job, self.reference)
+        self.assertFalse(set(created) & {'probe', 'other.a', 'kernel.asm'})
+        self.assertTrue(cache.verified(self.job, self.reference))
+        self.assertFalse(cache.verified(self.job, self.reference, full=True))
+        with self.stream():
+            self.assertEqual(artifacts.remote_manifest(self.reference), cache.read(self.job / 'collection.json')['members'])
+        with patch.object(artifacts, 'download') as download:
+            cache.collect(self.job, self.reference)
+        download.assert_not_called()
+
+    def test_selected_and_full_fetch_preserve_existing_notes_and_inputs(self):
+        for name in ['probe', 'second']:
+            (self.source / name).write_bytes(b'\x7fELF' + b'a' * 2 ** 20)
+        self.repack()
+        cache.collect(self.job, self.reference)
+        notes = self.job / 'results/notes'
+        notes.write_text('local analysis')
+        inputs = self.job / 'results/inputs'
+        inputs.mkdir()
+        (inputs / 'data').write_text('prepared input')
+        original_inode = (inputs / 'data').stat().st_ino
+        cache.collect(self.job, self.reference, selected=['probe'])
+        self.assertTrue((self.job / 'results/probe').exists())
+        self.assertFalse((self.job / 'results/second').exists())
+        self.assertEqual(notes.read_text(), 'local analysis')
+        cache.collect(self.job, self.reference, full=True)
+        self.assertTrue(cache.verified(self.job, self.reference, full=True))
+        self.assertEqual((inputs / 'data').stat().st_ino, original_inode)
+        self.assertFalse(list(self.job.glob('replaced-results-*')))
+        with self.assertRaisesRegex(ValueError, 'selected files missing'):
+            cache.collect(self.job, self.reference, selected=['absent'])
+
+    def test_selected_first_then_wait_collects_measurements(self):
+        (self.source / 'probe').write_bytes(b'\x7fELF' + b'a' * 2 ** 20)
+        self.repack()
+        cache.collect(self.job, self.reference, selected=['probe'])
+        self.assertFalse((self.job / 'results/case-0.csv').exists())
+        self.assertFalse(cache.verified(self.job, self.reference))
+        cache.collect(self.job, self.reference)
+        self.assertTrue(cache.verified(self.job, self.reference))
+        self.assertTrue((self.job / 'results/probe').exists())
+
+    def test_compiler_expansion_can_exceed_headroom_without_blocking_measurements(self):
+        (self.source / 'huge.asm').write_bytes(b'asm\n' * 2 ** 20)
+        self.repack()
+        with patch.object(storage, 'headroom', return_value={'destination': {'free': 100_000}}):
+            cache.collect(self.job, self.reference)
+            self.assertTrue(cache.verified(self.job, self.reference))
+            with self.assertRaises(OSError):
+                cache.collect(self.job, self.reference, full=True)
+        self.assertTrue(cache.verified(self.job, self.reference))
+
+    def test_failed_selected_publication_is_retryable(self):
+        (self.source / 'probe').write_bytes(b'\x7fELF' + b'a' * 2 ** 20)
+        self.repack()
+        cache.collect(self.job, self.reference)
+        with patch.object(storage, 'write_json', side_effect=OSError(28, 'receipt write failed')):
+            with self.assertRaises(OSError):
+                cache.collect(self.job, self.reference, selected=['probe'])
+        self.assertTrue(cache.verified(self.job, self.reference))
+        cache.collect(self.job, self.reference, selected=['probe'])
+        self.assertTrue(cache.verified(self.job, self.reference, full=True))
+
+    def test_file_added_during_download_is_preserved(self):
+        (self.source / 'probe').write_bytes(b'\x7fELF' + b'a' * 2 ** 20)
+        self.repack()
+        cache.collect(self.job, self.reference)
+        restore = artifacts.restore_bundle
+        def concurrent_write(*args, **kwargs):
+            members = restore(*args, **kwargs)
+            (self.job / 'results/probe').write_text('concurrent local edit')
+            return members
+        with patch.object(artifacts, 'restore_bundle', side_effect=concurrent_write):
+            with self.assertRaisesRegex(ValueError, 'appeared during fetch'):
+                cache.collect(self.job, self.reference, selected=['probe'])
+        self.assertEqual((self.job / 'results/probe').read_text(), 'concurrent local edit')
+
+    def test_captured_source_uses_current_controller_and_exact_study_bytes(self):
+        capture = self.root / 'capture'
+        capture.mkdir()
+        subprocess.run(['git', 'init', '-q', str(capture)], check=True)
+        contents = {'probe.sh': b'echo captured\n', 'workbench/tools/worker_runtime.py': b'old runtime',
+                    'workbench/tools/worker_pool.py': b'old pool', 'workbench/tools/worker-setup.sh': b'old setup'}
+        for name, data in contents.items():
+            path = capture / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(data)
+        snapshot = worker.snapshot(self.job, capture)
+        self.assertEqual((self.job / 'runtime.py').read_bytes(), (worker.HERE / 'worker_runtime.py').read_bytes())
+        self.assertEqual((self.job / 'worker_pool.py').read_bytes(), (worker.HERE / 'worker_pool.py').read_bytes())
+        self.assertEqual(snapshot['setup_sha256'], artifacts.sha256(capture / 'workbench/tools/worker-setup.sh'))
+        import tarfile
+        with tarfile.open(self.job / 'source.tar.gz') as archive:
+            for name, data in contents.items():
+                self.assertEqual(archive.extractfile(name).read(), data)
+
+    def test_cli_lists_omitted_files_without_expansion(self):
+        (self.source / 'probe').write_bytes(b'\x7fELF' + b'a' * 2 ** 20)
+        self.repack()
+        cache.collect(self.job, self.reference)
+        output = io.StringIO()
+        with patch.object(sys, 'argv', ['worker.py', 'fetch', 'fixture', '--list']), \
+                patch.object(worker, 'locate', return_value=(self.job, {'config': {'region': 'fixture'}})), \
+                patch.object(worker, 'status', return_value={'artifact': self.reference}), \
+                patch.object(artifacts, 'remote_manifest') as remote, redirect_stdout(output):
+            self.assertEqual(worker.main(), 0)
+        self.assertIn('S3      probe', output.getvalue())
+        self.assertIn('present case-0.csv', output.getvalue())
+        remote.assert_not_called()
+        self.assertFalse((self.job / 'results/probe').exists())
 
 
 if __name__ == '__main__':

@@ -27,14 +27,16 @@ applicability belong in their [benchmark suite](../benchmarks/README.md).
 
 ## Captured experiment runs
 
-For a comparison across machines, capture once and run ordinary build/worker
-commands from that checkout. Derive a small variant without taking unrelated
-live edits:
+For a comparison across machines, capture once and use the current worker tool
+with `--source` to keep collection and recovery improvements. Derive a small
+variant without taking unrelated live edits:
 
 ```sh
 python3 workbench/tools/capture.py create build/captures/base
 python3 workbench/tools/capture.py create build/captures/variant \
   --base build/captures/base --replace ikea/examples/seriespack/ordinary.cpp
+python3 workbench/tools/worker.py run workbench/benchmarks/seriespack/run.sh \
+  --source build/captures/variant --machine zen5
 ```
 
 `--replace PATH` takes that live file; `PATH=INPUT` can map an ignored prototype

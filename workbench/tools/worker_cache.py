@@ -31,7 +31,7 @@ def matches(root, name, expected):
         return False  # Another collector may have moved a previously observed file.
 
 
-def verified(directory, reference, *, full=False):
+def verified(directory, reference, *, full=False, selected=None):
     receipt = read(directory / 'collection.json')
     members = receipt.get('members', {})
     if (receipt.get('artifact') != reference or not isinstance(members, dict) or len(members) != reference['files'] or
@@ -42,29 +42,81 @@ def verified(directory, reference, *, full=False):
         return False
     if not isinstance(receipt.get('evicted', []), list):
         return False
+    if selected is not None and set(selected) - members.keys():
+        return False
     evicted = set(receipt.get('evicted', [])) if not full else set()
     for name, expected in members.items():
         path = directory / 'results' / name
-        if name in evicted and not path.exists() and not path.is_symlink():
+        required = full or (name in selected if selected is not None else not expected.get('rebuildable', False))
+        if name in evicted and not required and not path.exists() and not path.is_symlink():
             continue
         if not matches(directory / 'results', name, expected):
             return False
     return True
 
 
-def collect(directory, reference, *, full=False):
+def list_files(directory, reference):
+    receipt = read(directory / 'collection.json')
+    members = receipt.get('members', {}) if receipt.get('artifact') == reference else {}
+    if len(members) != reference['files']:
+        members = artifacts.remote_manifest(reference)
+    for name, entry in sorted(members.items()):
+        location = 'present' if (directory / 'results' / name).is_file() else 'S3'
+        print(f"{entry['bytes']:>12,} bytes  {location:7} {name}")
+
+
+def collect(directory, reference, *, full=False, selected=None):
     """A successful call means retained members match verified remote bytes."""
+    selected = artifacts.selection(selected)
+    if full and selected is not None:
+        raise ValueError('choose full collection or selected files')
     with storage.lock(directory / '.collection.lock'):
-        if verified(directory, reference, full=full):
+        if verified(directory, reference, full=full, selected=selected):
             receipt = read(directory / 'collection.json')
             receipt['accessed_at'] = time.time()
             storage.write_json(directory / 'collection.json', receipt)
             return
         print(f'Verifying/restoring local collection: {directory.name}', flush=True)
         destination = directory / 'results'
+        available = verified(directory, reference, selected=set())
+        wanted = selected
+        if available:
+            current = read(directory / 'collection.json')['members']
+            wanted = {name for name, entry in current.items()
+                      if full or (name in selected if selected is not None else not entry['rebuildable'])}
+            if selected is not None and selected - current.keys():
+                raise ValueError('selected files missing from bundle: ' + ', '.join(sorted(selected - current.keys())))
+            wanted = {name for name in wanted if not (destination / name).exists()}
         with tempfile.TemporaryDirectory(dir=directory, prefix='.collection-') as temp:
             staging = Path(temp) / 'results'
-            members = artifacts.restore_bundle(reference, staging)
+            members = artifacts.restore_bundle(reference, staging, selected=wanted,
+                omit_compiler=not full and wanted is None)
+            if available:
+                # Adding selected files leaves existing measurements, prepared
+                # inputs and local notes at their original paths.
+                for path in artifacts.files(staging):
+                    target = destination / path.relative_to(staging)
+                    if target.resolve() != destination.resolve() / path.relative_to(staging):
+                        raise ValueError(f'local output path was replaced by a symlink: {target}')
+                    if target.exists():
+                        raise ValueError(f'local output appeared during fetch; preserved: {target}')
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    path.rename(target)
+                    storage.sync_directory(target.parent)
+                storage.write_json(directory / 'collection.json', {
+                    'format': 1, 'artifact': reference, 'members': members,
+                    'evicted': sorted(name for name in members if not (destination / name).exists()),
+                    'accessed_at': time.time()})
+                return
+            linked = False
+            for name, expected in members.items():
+                target = staging / name
+                if not target.exists() and matches(destination, name, expected):
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    os.link(destination / name, target)
+                    linked = True
+            if linked:
+                storage.sync_tree(staging)
             # Preserve existing output if publication is interrupted. Its differing
             # files remain available as conflicts after the new tree is durable.
             previous = directory / ('replaced-results-' + uuid.uuid4().hex[:8])
@@ -74,7 +126,8 @@ def collect(directory, reference, *, full=False):
             storage.sync_directory(directory)
             storage.write_json(directory / 'collection.json', {
                 'format': 1, 'artifact': reference, 'members': members,
-                'evicted': [], 'accessed_at': time.time()})
+                'evicted': sorted(name for name in members if not (destination / name).exists()),
+                'accessed_at': time.time()})
         # Remove only byte-identical duplicates. Changed and user-added files stay
         # in the old tree, including interrupted-write witnesses such as empty files.
         if previous.is_dir() and not previous.is_symlink():
