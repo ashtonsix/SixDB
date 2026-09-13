@@ -41,6 +41,15 @@ them separately, bind another buffer. Neither change requires a different code
 map or packet shape. Rebinding describes existing storage; the caller performs
 any migration. Engine can retain different descriptions across segments.
 
+Place codes used together near one another to reduce the cache lines touched by
+their projection. A dense plane containing a few frequently scanned codes can
+fit more useful rows per line than those codes embedded in large records;
+keeping a whole tuple together favors operations that need most of one record.
+Count the physical byte envelope as well as decoded packet bytes: a short map
+can still fetch distant bytes. Stored placement and the row-major ordering of
+materialized packets are separate concerns; changing Rows does not turn a packet
+into code-major order.
+
 ## Project codes into a packet
 
 The example constructs rows `(flag=1, rank=37, tag=5)` and

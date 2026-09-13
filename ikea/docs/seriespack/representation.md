@@ -26,6 +26,36 @@ The right pane follows [ordinary.cpp](../../examples/seriespack/ordinary.cpp).
 Interleaving the planes and reserving a sibling gap are owner placement choices
 within the same physical format.
 
+Keeping whole-byte bodies near their residuals limits the cache lines needed to
+reconstruct a point or a small group. Version 1 uses these mixed striped layouts;
+all numbers in the last column are **bytes**, and width means K−H:
+
+| Payload width | Rows per tile | Payload byte order |
+| --- | --- | --- |
+| 10 | 128 | `body64 || tail32 || body64` |
+| 12 | 64 | `body64 || tail32` |
+| 14 | 128 | `body32 || tail32 || body32 || tail32 || body32 || tail32 || body32` |
+| 15 | 256 | Eight `body32` chunks alternating with seven `tail32` stripes |
+| 20 | 64 | `body64 || tail32 || body64` |
+
+For a headless striped 20-bit tile, the first body covers rows 0–31 and the
+second covers rows 32–63. The shared residual stripe sits between them:
+
+```text
+byte offsets:  0                64         96                160
+               | body rows 0–31 | residual | body rows 32–63 |
+```
+
+Putting that stripe after both bodies would separate the first rows' body and
+residual by two cache lines at a 64-byte-aligned tile origin. The middle placement
+keeps point and aligned 16-row payload accesses within two adjacent 64-byte lines
+at tile phases 0 or 32, as reached by tight 160-byte tiles. This is a byte-access
+bound, not a measured cache-miss reduction; heads, siblings and other strides
+need their own accounting. The 12-bit wire keeps its body contiguous: its
+body-first arrangement already meets that bound. These within-tile offsets
+belong to the physical format; owner placement controls plane origins and tile
+strides.
+
 ## Striped residuals
 
 A stripe contains 32 bytes. At lane j, its byte carries residual bits from rows
@@ -63,9 +93,33 @@ eight-bit head and x86 bulk choice for its 12-bit payload.
 
 All other remaining widths use Local. ARM-oriented bytes can be read on x86;
 ISA dispatch and execution grain are independent of these choices.
+
+The wider striped selection for ARM reflects the cost of rearranging individual
+bits. Local residuals need a bit transpose to become byte values. Our NEON
+kernels use several shift/mask/exchange steps for that transpose, with narrower
+special cases; GFNI-enabled x86 kernels can use a vector affine instruction.
+BMI2 also supplies `PEXT` for Local point extraction. Striped residuals instead
+let the NEON bulk paths work directly on byte lanes with shifts, masks and
+joins. This makes stripes attractive at more mixed widths. It is a rationale
+for the measured preset choices, not a claim that all ARM bit operations are
+slow or that stripes win every operation. Body reconstruction, point updates,
+tile size and the enclosing consumer still matter.
+
+Local's eight-row tiles keep small objects and accesses compact. Stripes amortize
+bit work across more rows, but a short array still occupies its full final tile.
+Separating heads can let a filter reject rows without fetching their payload;
+interleaving frequently consumed pieces can reduce the distinct cache lines
+needed when reconstruction is common. These are competing access patterns, so
+head separation and placement remain independent choices.
+
 `describe_preset<F>(count, tile_spacing::tight)` suggests minimal independent
 plane strides; `cacheline` rounds each present plane's tile stride to 64 bytes.
-Owners can instead supply strides and offsets for interleaving.
+Rounding can keep an awkward tile from crossing an extra line on point access,
+but padding increases storage and can increase scan traffic. It does not promise fewer lines
+for an arbitrary composition. Owners can instead supply strides and offsets
+for interleaving. The [locality study](../../../workbench/spikes/ikea-composition/probes/ikea-integers/locality/README.md)
+records exact geometry, while the [preset selection notes](../../../workbench/spikes/ikea-composition/ikea2-campaign/preset-selection.md)
+link the comparative evidence and retained tradeoffs.
 
 ## Recovery and descriptor v1
 
