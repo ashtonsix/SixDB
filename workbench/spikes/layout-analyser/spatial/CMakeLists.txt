@@ -1,0 +1,2 @@
+add_executable(layout_spatial_probe probe.cpp)
+sixdb_target(layout_spatial_probe)

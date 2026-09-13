@@ -1,0 +1,141 @@
+{
+  "commands": [
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "prefix-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "prefix-4096-918273",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "prefix-4096-712367",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "prefix-262144-918273",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "prefix-262144-712367",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "bucket-check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "bucket-4096-918273",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "bucket-4096-712367",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "bucket-262144-918273",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "bucket-262144-712367",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "analyse",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "config": {
+    "cpu": 0,
+    "families": [
+      "prefix",
+      "bucket"
+    ],
+    "filter": "",
+    "march": "x86-64-v3",
+    "ms": 10,
+    "output": "/opt/sixdb/jobs/20260913T145641Z-fbac20ae/results/consumers",
+    "reps": 3,
+    "rows": [
+      4096,
+      262144
+    ],
+    "seeds": [
+      918273,
+      712367
+    ],
+    "tune": "granite-rapids",
+    "workspace": "/opt/sixdb/source/build/workspaces/layout-consumers"
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=layout-analyser",
+    "-DSIXDB_MARCH=x86-64-v3",
+    "-DSIXDB_TUNE=granite-rapids"
+  ],
+  "files_sha256": {
+    "bucket-262144-712367.csv": "c65313e79c4ac8a88c9909e6944214caf75e63b4f273bc8916f27ee970f6f9ac",
+    "bucket-262144-712367.stderr": "eb1cb3ff9a6026bc31e1728efeb339530d8356c2f7f8551f3a79edf6704bfc0f",
+    "bucket-262144-918273.csv": "9966773f0dc0a8eec07098eb66447f93e6d11cab9f3cf5fc1242a5b8d5ddf833",
+    "bucket-262144-918273.stderr": "97e052deedf556ac43ddd05493a06be34be5924e118484b88b8b4e76664bfb46",
+    "bucket-4096-712367.csv": "dd99f0a29450f95871044e2f609f66fa46421260e8c74952c4e6783fca7589fe",
+    "bucket-4096-712367.stderr": "e04c084dbe654adfc60581c696da12eec71d9ff1129cf56069e6a331efb063f1",
+    "bucket-4096-918273.csv": "25e8831681e09fe7c09c1efc3e83b721300eed88b3cdcf417a26d9affb760c79",
+    "bucket-4096-918273.stderr": "dbf31d347e945464e072ecaf6ffc112bbf4834ee15664b17ecf079a98b35771d",
+    "bucket-check.stderr": "c8f4687703f414f0cdf94edab92719f57dfabc95d37f50d1c562969c710e4c26",
+    "cases.json": "b00ed090c6ae438c8600a111576c767ffdb8e1f2a1ad646f179d0d28579df9ab",
+    "hardware.json": "ba516a1c02a3dca07e45daea4540cf183b2250f9cebddfad55e2f904fda69ada",
+    "prefix-262144-712367.csv": "953bdc4335c3c532ab8519c974c2461016efbfd683548d0561c2324110f2d02c",
+    "prefix-262144-712367.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "prefix-262144-918273.csv": "0f36fca1188e1606bef7da479ccfef21b5691e9676f27a024f70f87e80eb1ba3",
+    "prefix-262144-918273.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "prefix-4096-712367.csv": "5a610fdba18255895ba2ce9b6534e8e3d51c389fc824d13769659ed65186a713",
+    "prefix-4096-712367.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "prefix-4096-918273.csv": "f17515c27320bee48fa78af00d67c368e33adc485c3bfb73fe66bb21e32a0bba",
+    "prefix-4096-918273.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "prefix-check.stderr": "93efd95617962cb260e165e86f60679059df9a640f7fe286a848363e24ffe2c1",
+    "summary.csv": "7846246c6a61fd519fc06c19f7333da68e26b59df5dd33f41ef451c3b9f65400",
+    "summary.md": "7d1a3ef1971bee99f2b69115e5f5c93794bec3523cb0430a4e669e2ffe6c9904"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {},
+  "platform": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/layout-analyser/analyze.py",
+    "{evidence}"
+  ],
+  "source_archive_sha256": "44a303f8fa241062cee6985fcf6892a1ba6354ee0ded6f7d60bb6885a5e5d68f",
+  "source_digest": "8a02f1e4062ad7b8fd344c01a98a6d4a61c17bfe2f1e2e7fffb71749a618fb98",
+  "source_unchanged": true,
+  "started_utc": "2026-09-13T14:58:12.527655+00:00",
+  "status": "complete"
+}

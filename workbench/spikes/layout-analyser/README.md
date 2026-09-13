@@ -29,6 +29,10 @@ Authored workloads let us investigate that seam now without inventing them.
 
 ## Read and work here
 
+- [First findings](findings.md): measured boundary/bucket/spatial consumers,
+  modeled refinement, and a retained-plan palette/selection comparison.
+- [Evidence and reproduction](evidence/README.md): source captures, complete
+  comparison rows, hardware context and verification.
 - [Design](design.md): candidate semantics, cost consumption, reusable training,
   palettes, local fitting and retained historical representations.
 - [Worked examples](examples.md): moving string-prefix bytes around a 64B
@@ -65,8 +69,10 @@ The filtering and Calico studies in
 [prior art](prior-art.md) remain in their owning homes. The new spike does not
 establish that their prototypes are production interfaces.
 
-Opening this spike adds design and reproducible starting points; it does not
-claim new hardware measurements or an implemented general layout analyser.
+The first empirical pass now includes native consumer screens on Zen 5 and
+Granite Rapids, a Boolean refinement model and an offline palette study. These
+expose useful decision variables and counterexamples; they do not establish
+an Engine module contract or an implemented general layout analyser.
 
 Opening verification on 2026-09-13 passed all 12 reference checks on Linux,
 replayed 392 retained cost rows into the 28-candidate ranking, and reproduced

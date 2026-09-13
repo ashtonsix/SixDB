@@ -1,0 +1,16 @@
+{
+  "kind": "exact logical counts and modeled address unions; no CPU timing",
+  "rows": 65536,
+  "seed": 192837,
+  "field_true_probability": 0.1,
+  "logical_bytes_per_row": 4,
+  "script_sha256": "9c3dd61c51be8144cfe264ef527fa8433adf066785b7840452f46801f64b38a8",
+  "value_sequence_sha256": "ad15d4344b5b89549bfe2a33233585c13d4dee3e1fc80242e8cc5620497b90e9",
+  "assumptions": [
+    "one byte per Boolean field; all group rows loaded for an unresolved group",
+    "filter-only result, including certified matches; no later field projection",
+    "aligned synthetic plane origins; field-byte traffic is distinct from line demand",
+    "line union is a cold-demand geometry model, not measured bandwidth or prefetch",
+    "clustered fixture is the same multiset sorted by complete field state"
+  ]
+}

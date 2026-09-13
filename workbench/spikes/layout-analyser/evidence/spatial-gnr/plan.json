@@ -1,0 +1,31 @@
+{
+  "format": 1,
+  "line_bytes": 64,
+  "largest_reported_cache_bytes": 503316480,
+  "footprints": [
+    {
+      "name": "hot-control",
+      "rows": 128,
+      "logical_bytes": 12288,
+      "smallest_core_only_bytes": 8192,
+      "core_bytes_over_reported_llc": 1.6276041666666666e-05
+    },
+    {
+      "name": "larger",
+      "rows": 11184800,
+      "logical_bytes": 1073740800,
+      "smallest_core_only_bytes": 715827200,
+      "core_bytes_over_reported_llc": 1.4222208658854167
+    }
+  ],
+  "seeds": [
+    12971,
+    918273
+  ],
+  "phases": [
+    0,
+    32
+  ],
+  "extension_phase": "same offset as core base, separate mapping for split",
+  "qualification": "Reported cache capacity is context, not measured residency. Smoke sizes establish no DRAM claim."
+}

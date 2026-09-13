@@ -1,0 +1,4 @@
+# Preserve captured CSV line endings and verbatim /proc mapping receipts.
+# Native exports already set -text to protect their recorded content hashes.
+*.csv whitespace=cr-at-eol
+spatial-*/placement.txt whitespace=-blank-at-eol

@@ -1,0 +1,3149 @@
+{
+  "format": 1,
+  "hardware_lookup_key": "6a473f1e5be5ac193edbba81f14ebb1d46b2a56adfe6ecf0b097904347902679",
+  "line_bytes": 64,
+  "cases": [
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.75044669198,
+      "ns_per_operation_min": 2.74967552183,
+      "ns_per_operation_max": 2.7613212076,
+      "batches_below_target": 0,
+      "allocated_bytes": 12288,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.5,
+      "model_lines_per_operation_range": [
+        1.5,
+        1.5
+      ],
+      "model_pages_per_operation": 1.0078125
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.6381085841600003,
+      "ns_per_operation_min": 2.62070657902,
+      "ns_per_operation_max": 2.63934750949,
+      "batches_below_target": 0,
+      "allocated_bytes": 16384,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.0,
+      "model_lines_per_operation_range": [
+        1.0,
+        1.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.6386794873749997,
+      "ns_per_operation_min": 2.56748975304,
+      "ns_per_operation_max": 2.64811046886,
+      "batches_below_target": 0,
+      "allocated_bytes": 12288,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.0,
+      "model_lines_per_operation_range": [
+        1.0,
+        1.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 3.539061380875,
+      "ns_per_operation_min": 3.52810251028,
+      "ns_per_operation_max": 3.5589287555,
+      "batches_below_target": 0,
+      "allocated_bytes": 12288,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.015625
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 3.3631503789500004,
+      "ns_per_operation_min": 3.3463863629,
+      "ns_per_operation_max": 3.37063510883,
+      "batches_below_target": 0,
+      "allocated_bytes": 16384,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 3.043025033705,
+      "ns_per_operation_min": 3.02864644385,
+      "ns_per_operation_max": 3.32637440075,
+      "batches_below_target": 0,
+      "allocated_bytes": 12288,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 2.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 3.31231324957,
+      "ns_per_operation_min": 3.27923103933,
+      "ns_per_operation_max": 3.34011949122,
+      "batches_below_target": 0,
+      "allocated_bytes": 12288,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.5546875,
+      "model_lines_per_operation_range": [
+        1.5546875,
+        1.5546875
+      ],
+      "model_pages_per_operation": 1.01171875
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.66696947904,
+      "ns_per_operation_min": 2.62181915058,
+      "ns_per_operation_max": 2.66979749425,
+      "batches_below_target": 0,
+      "allocated_bytes": 16384,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.125,
+      "model_lines_per_operation_range": [
+        1.125,
+        1.125
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.691580935895,
+      "ns_per_operation_min": 2.6608994568,
+      "ns_per_operation_max": 2.71822669436,
+      "batches_below_target": 0,
+      "allocated_bytes": 12288,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.125,
+      "model_lines_per_operation_range": [
+        1.125,
+        1.125
+      ],
+      "model_pages_per_operation": 1.125
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 1.6682055657600001,
+      "ns_per_operation_min": 1.65791477641,
+      "ns_per_operation_max": 1.70170290899,
+      "batches_below_target": 0,
+      "allocated_bytes": 12288,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.5,
+      "model_lines_per_operation_range": [
+        1.5,
+        1.5
+      ],
+      "model_pages_per_operation": 1.0078125
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 1.635575711045,
+      "ns_per_operation_min": 1.6323017133,
+      "ns_per_operation_max": 1.63823414617,
+      "batches_below_target": 0,
+      "allocated_bytes": 16384,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.0,
+      "model_lines_per_operation_range": [
+        1.0,
+        1.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 1.635839298105,
+      "ns_per_operation_min": 1.63035582625,
+      "ns_per_operation_max": 1.63698198646,
+      "batches_below_target": 0,
+      "allocated_bytes": 12288,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.0,
+      "model_lines_per_operation_range": [
+        1.0,
+        1.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.458564237405,
+      "ns_per_operation_min": 2.45479883991,
+      "ns_per_operation_max": 2.4639169385,
+      "batches_below_target": 0,
+      "allocated_bytes": 12288,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.015625
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.55433059964,
+      "ns_per_operation_min": 2.54157924218,
+      "ns_per_operation_max": 2.5750983425,
+      "batches_below_target": 0,
+      "allocated_bytes": 16384,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.686460795925,
+      "ns_per_operation_min": 2.68435186151,
+      "ns_per_operation_max": 2.69018223227,
+      "batches_below_target": 0,
+      "allocated_bytes": 12288,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 2.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 1.935455126225,
+      "ns_per_operation_min": 1.92089680321,
+      "ns_per_operation_max": 1.93936886075,
+      "batches_below_target": 0,
+      "allocated_bytes": 12288,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.5546875,
+      "model_lines_per_operation_range": [
+        1.5546875,
+        1.5546875
+      ],
+      "model_pages_per_operation": 1.01171875
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.03628363265,
+      "ns_per_operation_min": 2.0043879595,
+      "ns_per_operation_max": 2.10975448506,
+      "batches_below_target": 0,
+      "allocated_bytes": 16384,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.125,
+      "model_lines_per_operation_range": [
+        1.125,
+        1.125
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.0606775373949997,
+      "ns_per_operation_min": 2.03275174388,
+      "ns_per_operation_max": 2.08829199561,
+      "batches_below_target": 0,
+      "allocated_bytes": 12288,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.125,
+      "model_lines_per_operation_range": [
+        1.125,
+        1.125
+      ],
+      "model_pages_per_operation": 1.125
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 1.47745236094,
+      "ns_per_operation_min": 1.46905917723,
+      "ns_per_operation_max": 1.48123829488,
+      "batches_below_target": 0,
+      "allocated_bytes": 12288,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.5,
+      "model_lines_per_operation_range": [
+        1.5,
+        1.5
+      ],
+      "model_pages_per_operation": 1.0078125
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 1.474618676995,
+      "ns_per_operation_min": 1.47242789705,
+      "ns_per_operation_max": 1.49384300813,
+      "batches_below_target": 0,
+      "allocated_bytes": 16384,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.0,
+      "model_lines_per_operation_range": [
+        1.0,
+        1.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 1.46971302016,
+      "ns_per_operation_min": 1.46775711148,
+      "ns_per_operation_max": 1.47191396598,
+      "batches_below_target": 0,
+      "allocated_bytes": 12288,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.0,
+      "model_lines_per_operation_range": [
+        1.0,
+        1.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.304194878755,
+      "ns_per_operation_min": 2.29589397031,
+      "ns_per_operation_max": 2.31242588822,
+      "batches_below_target": 0,
+      "allocated_bytes": 12288,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.015625
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.251169304735,
+      "ns_per_operation_min": 2.24390971618,
+      "ns_per_operation_max": 2.26592761371,
+      "batches_below_target": 0,
+      "allocated_bytes": 16384,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.54167361176,
+      "ns_per_operation_min": 2.53352758425,
+      "ns_per_operation_max": 2.54652177118,
+      "batches_below_target": 0,
+      "allocated_bytes": 12288,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 2.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 1.75432710688,
+      "ns_per_operation_min": 1.75082208673,
+      "ns_per_operation_max": 1.80136455111,
+      "batches_below_target": 0,
+      "allocated_bytes": 12288,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.5546875,
+      "model_lines_per_operation_range": [
+        1.5546875,
+        1.5546875
+      ],
+      "model_pages_per_operation": 1.01171875
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 1.688574391415,
+      "ns_per_operation_min": 1.68506102301,
+      "ns_per_operation_max": 1.70758884643,
+      "batches_below_target": 0,
+      "allocated_bytes": 16384,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.125,
+      "model_lines_per_operation_range": [
+        1.125,
+        1.125
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 1.774831669775,
+      "ns_per_operation_min": 1.77228844465,
+      "ns_per_operation_max": 1.78914640578,
+      "batches_below_target": 0,
+      "allocated_bytes": 12288,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.125,
+      "model_lines_per_operation_range": [
+        1.125,
+        1.125
+      ],
+      "model_pages_per_operation": 1.125
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.753488288685,
+      "ns_per_operation_min": 2.7503390929,
+      "ns_per_operation_max": 2.75843573597,
+      "batches_below_target": 0,
+      "allocated_bytes": 16384,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.5,
+      "model_lines_per_operation_range": [
+        1.5,
+        1.5
+      ],
+      "model_pages_per_operation": 1.0078125
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.621877899245,
+      "ns_per_operation_min": 2.5741758156,
+      "ns_per_operation_max": 2.6424854614,
+      "batches_below_target": 0,
+      "allocated_bytes": 20480,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.6377068819750003,
+      "ns_per_operation_min": 2.59434504741,
+      "ns_per_operation_max": 2.64123998746,
+      "batches_below_target": 0,
+      "allocated_bytes": 20480,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.015625
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 3.5319468076050002,
+      "ns_per_operation_min": 3.52809068291,
+      "ns_per_operation_max": 3.55682886193,
+      "batches_below_target": 0,
+      "allocated_bytes": 16384,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.015625
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 3.3608717382249997,
+      "ns_per_operation_min": 3.34469001754,
+      "ns_per_operation_max": 3.37860592746,
+      "batches_below_target": 0,
+      "allocated_bytes": 20480,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 3.0498738201,
+      "ns_per_operation_min": 3.02674892942,
+      "ns_per_operation_max": 3.05507019446,
+      "batches_below_target": 0,
+      "allocated_bytes": 20480,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 3.0,
+      "model_lines_per_operation_range": [
+        3.0,
+        3.0
+      ],
+      "model_pages_per_operation": 2.015625
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 3.3176310177649997,
+      "ns_per_operation_min": 3.29463417453,
+      "ns_per_operation_max": 3.34079507635,
+      "batches_below_target": 0,
+      "allocated_bytes": 16384,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.5703125,
+      "model_lines_per_operation_range": [
+        1.5703125,
+        1.5703125
+      ],
+      "model_pages_per_operation": 1.01171875
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.66188230568,
+      "ns_per_operation_min": 2.63504942261,
+      "ns_per_operation_max": 2.67458183406,
+      "batches_below_target": 0,
+      "allocated_bytes": 20480,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.66936844513,
+      "ns_per_operation_min": 2.63757645358,
+      "ns_per_operation_max": 2.70237932782,
+      "batches_below_target": 0,
+      "allocated_bytes": 20480,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 2.125,
+      "model_lines_per_operation_range": [
+        2.125,
+        2.125
+      ],
+      "model_pages_per_operation": 1.140625
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 1.669261901095,
+      "ns_per_operation_min": 1.65720038556,
+      "ns_per_operation_max": 1.68247753439,
+      "batches_below_target": 0,
+      "allocated_bytes": 16384,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.5,
+      "model_lines_per_operation_range": [
+        1.5,
+        1.5
+      ],
+      "model_pages_per_operation": 1.0078125
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 1.63035363387,
+      "ns_per_operation_min": 1.62943474845,
+      "ns_per_operation_max": 1.63257982928,
+      "batches_below_target": 0,
+      "allocated_bytes": 20480,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 1.635632264825,
+      "ns_per_operation_min": 1.63296070058,
+      "ns_per_operation_max": 1.6366848339,
+      "batches_below_target": 0,
+      "allocated_bytes": 20480,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.015625
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.473546267625,
+      "ns_per_operation_min": 2.46676723729,
+      "ns_per_operation_max": 2.48275060372,
+      "batches_below_target": 0,
+      "allocated_bytes": 16384,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.015625
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.5655222465499996,
+      "ns_per_operation_min": 2.53430750473,
+      "ns_per_operation_max": 2.57765754591,
+      "batches_below_target": 0,
+      "allocated_bytes": 20480,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.694877258315,
+      "ns_per_operation_min": 2.68438312533,
+      "ns_per_operation_max": 2.710897632,
+      "batches_below_target": 0,
+      "allocated_bytes": 20480,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 3.0,
+      "model_lines_per_operation_range": [
+        3.0,
+        3.0
+      ],
+      "model_pages_per_operation": 2.015625
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 1.935315663035,
+      "ns_per_operation_min": 1.92667184905,
+      "ns_per_operation_max": 1.9661297123,
+      "batches_below_target": 0,
+      "allocated_bytes": 16384,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.5703125,
+      "model_lines_per_operation_range": [
+        1.5703125,
+        1.5703125
+      ],
+      "model_pages_per_operation": 1.01171875
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.058777349795,
+      "ns_per_operation_min": 2.01657757454,
+      "ns_per_operation_max": 2.1353266027,
+      "batches_below_target": 0,
+      "allocated_bytes": 20480,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.0471547076850003,
+      "ns_per_operation_min": 2.03003000544,
+      "ns_per_operation_max": 2.06098443606,
+      "batches_below_target": 0,
+      "allocated_bytes": 20480,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 2.125,
+      "model_lines_per_operation_range": [
+        2.125,
+        2.125
+      ],
+      "model_pages_per_operation": 1.140625
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 1.4746906440949998,
+      "ns_per_operation_min": 1.47161840728,
+      "ns_per_operation_max": 1.47757981979,
+      "batches_below_target": 0,
+      "allocated_bytes": 16384,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.5,
+      "model_lines_per_operation_range": [
+        1.5,
+        1.5
+      ],
+      "model_pages_per_operation": 1.0078125
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 1.4856450683700002,
+      "ns_per_operation_min": 1.47383197396,
+      "ns_per_operation_max": 1.51173742317,
+      "batches_below_target": 0,
+      "allocated_bytes": 20480,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 1.468974456035,
+      "ns_per_operation_min": 1.46600544098,
+      "ns_per_operation_max": 1.47793873522,
+      "batches_below_target": 0,
+      "allocated_bytes": 20480,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.015625
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.3093405794799997,
+      "ns_per_operation_min": 2.30618112756,
+      "ns_per_operation_max": 2.31340393715,
+      "batches_below_target": 0,
+      "allocated_bytes": 16384,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.015625
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.24865763561,
+      "ns_per_operation_min": 2.24312946157,
+      "ns_per_operation_max": 2.25432266265,
+      "batches_below_target": 0,
+      "allocated_bytes": 20480,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 2.542907978885,
+      "ns_per_operation_min": 2.53928981504,
+      "ns_per_operation_max": 2.54661979064,
+      "batches_below_target": 0,
+      "allocated_bytes": 20480,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 3.0,
+      "model_lines_per_operation_range": [
+        3.0,
+        3.0
+      ],
+      "model_pages_per_operation": 2.015625
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 1.754543693935,
+      "ns_per_operation_min": 1.75323003042,
+      "ns_per_operation_max": 1.7976365666,
+      "batches_below_target": 0,
+      "allocated_bytes": 16384,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.5703125,
+      "model_lines_per_operation_range": [
+        1.5703125,
+        1.5703125
+      ],
+      "model_pages_per_operation": 1.01171875
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 1.69109219024,
+      "ns_per_operation_min": 1.68326863291,
+      "ns_per_operation_max": 1.6975697314,
+      "batches_below_target": 0,
+      "allocated_bytes": 20480,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "hot-control",
+      "rows": "128",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 1.7835798945399999,
+      "ns_per_operation_min": 1.77487292271,
+      "ns_per_operation_max": 1.79060702889,
+      "batches_below_target": 0,
+      "allocated_bytes": 20480,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 2.125,
+      "model_lines_per_operation_range": [
+        2.125,
+        2.125
+      ],
+      "model_pages_per_operation": 1.140625
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 185.7884174505,
+      "ns_per_operation_min": 184.65334588,
+      "ns_per_operation_max": 186.295511051,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073741824,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.5,
+      "model_lines_per_operation_range": [
+        1.5,
+        1.5
+      ],
+      "model_pages_per_operation": 1.007812477648237
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 190.2494518005,
+      "ns_per_operation_min": 189.594157607,
+      "ns_per_operation_max": 190.504400079,
+      "batches_below_target": 0,
+      "allocated_bytes": 1431654400,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.0,
+      "model_lines_per_operation_range": [
+        1.0,
+        1.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 176.518517631,
+      "ns_per_operation_min": 176.097643856,
+      "ns_per_operation_max": 176.75718493,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073745920,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.0,
+      "model_lines_per_operation_range": [
+        1.0,
+        1.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 186.8592496515,
+      "ns_per_operation_min": 185.921368911,
+      "ns_per_operation_max": 188.013330055,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073741824,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0156249552964738
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 191.73783853999998,
+      "ns_per_operation_min": 191.30291619,
+      "ns_per_operation_max": 191.900884951,
+      "batches_below_target": 0,
+      "allocated_bytes": 1431654400,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 190.7580336705,
+      "ns_per_operation_min": 190.609703437,
+      "ns_per_operation_max": 194.863560636,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073745920,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 2.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 186.63073130499998,
+      "ns_per_operation_min": 185.951172752,
+      "ns_per_operation_max": 187.680692458,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073741824,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.5625039339103068,
+      "model_lines_per_operation_range": [
+        1.5625013411057864,
+        1.5625065267148273
+      ],
+      "model_pages_per_operation": 1.0087960893355268
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 190.6345054895,
+      "ns_per_operation_min": 190.013908608,
+      "ns_per_operation_max": 191.120493885,
+      "batches_below_target": 0,
+      "allocated_bytes": 1431654400,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.125,
+      "model_lines_per_operation_range": [
+        1.125,
+        1.125
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 180.54483289799998,
+      "ns_per_operation_min": 178.620354588,
+      "ns_per_operation_max": 181.412228739,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073745920,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.125,
+      "model_lines_per_operation_range": [
+        1.125,
+        1.125
+      ],
+      "model_pages_per_operation": 1.125
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 29.62187960445,
+      "ns_per_operation_min": 29.5189917567,
+      "ns_per_operation_max": 29.8322664688,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073741824,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.5,
+      "model_lines_per_operation_range": [
+        1.5,
+        1.5
+      ],
+      "model_pages_per_operation": 1.007812477648237
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 28.73842884985,
+      "ns_per_operation_min": 28.7208202203,
+      "ns_per_operation_max": 28.8081462342,
+      "batches_below_target": 0,
+      "allocated_bytes": 1431654400,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.0,
+      "model_lines_per_operation_range": [
+        1.0,
+        1.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 26.75344869825,
+      "ns_per_operation_min": 26.7164981046,
+      "ns_per_operation_max": 26.8573863636,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073745920,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.0,
+      "model_lines_per_operation_range": [
+        1.0,
+        1.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 41.9484143659,
+      "ns_per_operation_min": 41.7972197983,
+      "ns_per_operation_max": 42.0692660575,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073741824,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0156249552964738
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 41.70470285565,
+      "ns_per_operation_min": 41.6199385774,
+      "ns_per_operation_max": 42.0645698627,
+      "batches_below_target": 0,
+      "allocated_bytes": 1431654400,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 44.1914555468,
+      "ns_per_operation_min": 44.1415880481,
+      "ns_per_operation_max": 44.4149207854,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073745920,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 2.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 32.509929502549994,
+      "ns_per_operation_min": 32.3601329483,
+      "ns_per_operation_max": 32.7283437344,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073741824,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.5625039339103068,
+      "model_lines_per_operation_range": [
+        1.5625013411057864,
+        1.5625065267148273
+      ],
+      "model_pages_per_operation": 1.0087960893355268
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 31.62624816715,
+      "ns_per_operation_min": 31.5234997497,
+      "ns_per_operation_max": 31.6921882376,
+      "batches_below_target": 0,
+      "allocated_bytes": 1431654400,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.125,
+      "model_lines_per_operation_range": [
+        1.125,
+        1.125
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 37.724775230700004,
+      "ns_per_operation_min": 37.6768681604,
+      "ns_per_operation_max": 37.7589846041,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073745920,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.125,
+      "model_lines_per_operation_range": [
+        1.125,
+        1.125
+      ],
+      "model_pages_per_operation": 1.125
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 29.562208398899998,
+      "ns_per_operation_min": 29.4730012159,
+      "ns_per_operation_max": 29.6534268829,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073741824,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.5,
+      "model_lines_per_operation_range": [
+        1.5,
+        1.5
+      ],
+      "model_pages_per_operation": 1.007812477648237
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 29.59577770725,
+      "ns_per_operation_min": 29.404904245,
+      "ns_per_operation_max": 29.7058820006,
+      "batches_below_target": 0,
+      "allocated_bytes": 1431654400,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.0,
+      "model_lines_per_operation_range": [
+        1.0,
+        1.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 27.5306006366,
+      "ns_per_operation_min": 27.4819376296,
+      "ns_per_operation_max": 27.5633535691,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073745920,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.0,
+      "model_lines_per_operation_range": [
+        1.0,
+        1.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 40.3865218421,
+      "ns_per_operation_min": 40.3616060189,
+      "ns_per_operation_max": 40.5143317717,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073741824,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0156249552964738
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 40.681212493749996,
+      "ns_per_operation_min": 40.4207065839,
+      "ns_per_operation_max": 40.8313168765,
+      "batches_below_target": 0,
+      "allocated_bytes": 1431654400,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 43.58896761675,
+      "ns_per_operation_min": 43.3142216222,
+      "ns_per_operation_max": 43.695762821,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073745920,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 2.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 32.455202015249995,
+      "ns_per_operation_min": 32.3802180638,
+      "ns_per_operation_max": 32.5563175023,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073741824,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.5625039339103068,
+      "model_lines_per_operation_range": [
+        1.5625013411057864,
+        1.5625065267148273
+      ],
+      "model_pages_per_operation": 1.0087960893355268
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 31.95832817755,
+      "ns_per_operation_min": 31.7366318575,
+      "ns_per_operation_max": 32.0520813962,
+      "batches_below_target": 0,
+      "allocated_bytes": 1431654400,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.125,
+      "model_lines_per_operation_range": [
+        1.125,
+        1.125
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "0",
+      "extension_phase": "0",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 36.8117632859,
+      "ns_per_operation_min": 36.761133592,
+      "ns_per_operation_max": 37.1391064659,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073745920,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.125,
+      "model_lines_per_operation_range": [
+        1.125,
+        1.125
+      ],
+      "model_pages_per_operation": 1.125
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 185.7377430085,
+      "ns_per_operation_min": 184.05626207,
+      "ns_per_operation_max": 186.573069255,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073741824,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.5,
+      "model_lines_per_operation_range": [
+        1.5,
+        1.5
+      ],
+      "model_pages_per_operation": 1.007812477648237
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 191.98491121900003,
+      "ns_per_operation_min": 190.891311065,
+      "ns_per_operation_max": 192.295395269,
+      "batches_below_target": 0,
+      "allocated_bytes": 1431658496,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 177.38899430499998,
+      "ns_per_operation_min": 176.704797761,
+      "ns_per_operation_max": 177.736328678,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073745920,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0156249552964738
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 186.9256351475,
+      "ns_per_operation_min": 185.661177849,
+      "ns_per_operation_max": 187.546584204,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073741824,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0156249552964738
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 191.7512865225,
+      "ns_per_operation_min": 190.994002664,
+      "ns_per_operation_max": 198.764947339,
+      "batches_below_target": 0,
+      "allocated_bytes": 1431658496,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 190.6679427885,
+      "ns_per_operation_min": 190.134901205,
+      "ns_per_operation_max": 190.881996549,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073745920,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 3.0,
+      "model_lines_per_operation_range": [
+        3.0,
+        3.0
+      ],
+      "model_pages_per_operation": 2.015624955296474
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 186.045529558,
+      "ns_per_operation_min": 185.556279415,
+      "ns_per_operation_max": 187.454553233,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073741824,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.5624960660896932,
+      "model_lines_per_operation_range": [
+        1.5624934732851727,
+        1.5624986588942136
+      ],
+      "model_pages_per_operation": 1.008795731707317
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 192.624618411,
+      "ns_per_operation_min": 192.442768042,
+      "ns_per_operation_max": 193.02899882,
+      "batches_below_target": 0,
+      "allocated_bytes": 1431658496,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "1",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 179.9823813565,
+      "ns_per_operation_min": 179.682140673,
+      "ns_per_operation_max": 180.043219816,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073745920,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 2.125,
+      "model_lines_per_operation_range": [
+        2.125,
+        2.125
+      ],
+      "model_pages_per_operation": 1.1406249552964738
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 29.5771350404,
+      "ns_per_operation_min": 29.5503136399,
+      "ns_per_operation_max": 29.8068901545,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073741824,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.5,
+      "model_lines_per_operation_range": [
+        1.5,
+        1.5
+      ],
+      "model_pages_per_operation": 1.007812477648237
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 30.678310206749998,
+      "ns_per_operation_min": 30.595258297,
+      "ns_per_operation_max": 30.9107844575,
+      "batches_below_target": 0,
+      "allocated_bytes": 1431658496,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 29.2611862528,
+      "ns_per_operation_min": 29.1596750054,
+      "ns_per_operation_max": 29.3763416422,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073745920,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0156249552964738
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 41.97422104105,
+      "ns_per_operation_min": 41.8775946821,
+      "ns_per_operation_max": 42.0652969208,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073741824,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0156249552964738
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 42.910121683,
+      "ns_per_operation_min": 42.8013463808,
+      "ns_per_operation_max": 43.0836166941,
+      "batches_below_target": 0,
+      "allocated_bytes": 1431658496,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 47.791815141949996,
+      "ns_per_operation_min": 47.7612416851,
+      "ns_per_operation_max": 48.0193830019,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073745920,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 3.0,
+      "model_lines_per_operation_range": [
+        3.0,
+        3.0
+      ],
+      "model_pages_per_operation": 2.015624955296474
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 32.51174665615,
+      "ns_per_operation_min": 32.3856371147,
+      "ns_per_operation_max": 32.6728774766,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073741824,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.5624960660896932,
+      "model_lines_per_operation_range": [
+        1.5624934732851727,
+        1.5624986588942136
+      ],
+      "model_pages_per_operation": 1.008795731707317
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 33.91054015275,
+      "ns_per_operation_min": 33.7905730098,
+      "ns_per_operation_max": 33.9760839711,
+      "batches_below_target": 0,
+      "allocated_bytes": 1431658496,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "32",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 39.4173920857,
+      "ns_per_operation_min": 39.285418425,
+      "ns_per_operation_max": 39.4524088942,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073745920,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 2.125,
+      "model_lines_per_operation_range": [
+        2.125,
+        2.125
+      ],
+      "model_pages_per_operation": 1.1406249552964738
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 29.6447659323,
+      "ns_per_operation_min": 29.5220309706,
+      "ns_per_operation_max": 29.7976025499,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073741824,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 1.5,
+      "model_lines_per_operation_range": [
+        1.5,
+        1.5
+      ],
+      "model_pages_per_operation": 1.007812477648237
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 31.0325010729,
+      "ns_per_operation_min": 31.0100559688,
+      "ns_per_operation_max": 31.0601451076,
+      "batches_below_target": 0,
+      "allocated_bytes": 1431658496,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "0",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 29.770363260899998,
+      "ns_per_operation_min": 29.6249950826,
+      "ns_per_operation_max": 29.8972027216,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073745920,
+      "useful_bytes_per_operation": 64.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0156249552964738
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 40.53669046385,
+      "ns_per_operation_min": 40.3512606394,
+      "ns_per_operation_max": 40.6360546456,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073741824,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0156249552964738
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 41.4528786836,
+      "ns_per_operation_min": 41.26290108,
+      "ns_per_operation_max": 41.4891661004,
+      "batches_below_target": 0,
+      "allocated_bytes": 1431658496,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "1",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 46.912135174499994,
+      "ns_per_operation_min": 46.7909079286,
+      "ns_per_operation_max": 47.0259592483,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073745920,
+      "useful_bytes_per_operation": 96.0,
+      "model_lines_per_operation": 3.0,
+      "model_lines_per_operation_range": [
+        3.0,
+        3.0
+      ],
+      "model_pages_per_operation": 2.015624955296474
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "dense96",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 32.45501363455,
+      "ns_per_operation_min": 32.3183886167,
+      "ns_per_operation_max": 32.7748658,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073741824,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 1.5624960660896932,
+      "model_lines_per_operation_range": [
+        1.5624934732851727,
+        1.5624986588942136
+      ],
+      "model_pages_per_operation": 1.008795731707317
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "padded128",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 34.19540125885,
+      "ns_per_operation_min": 33.9993534976,
+      "ns_per_operation_max": 34.2183289822,
+      "batches_below_target": 0,
+      "allocated_bytes": 1431658496,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 2.0,
+      "model_lines_per_operation_range": [
+        2.0,
+        2.0
+      ],
+      "model_pages_per_operation": 1.0
+    },
+    {
+      "footprint": "larger",
+      "rows": "11184800",
+      "phase": "32",
+      "extension_phase": "32",
+      "pattern": "random",
+      "k": "8",
+      "extension_denominator": "8",
+      "compute_rounds": "0",
+      "prefetch_extension": "0",
+      "layout": "split64+32",
+      "samples": 4,
+      "seeds": [
+        12971,
+        918273
+      ],
+      "ns_per_operation_median": 38.224908491899996,
+      "ns_per_operation_min": 38.1596202882,
+      "ns_per_operation_max": 38.3273674093,
+      "batches_below_target": 0,
+      "allocated_bytes": 1073745920,
+      "useful_bytes_per_operation": 68.0,
+      "model_lines_per_operation": 2.125,
+      "model_lines_per_operation_range": [
+        2.125,
+        2.125
+      ],
+      "model_pages_per_operation": 1.1406249552964738
+    }
+  ],
+  "limitations": [
+    "Batch CLOCK_MONOTONIC_RAW wall timing; no per-load timers or PMU traffic.",
+    "Line/page demand counts are per-operation address unions, not cache misses or transferred bytes.",
+    "padded128 specifies a 128B stride; strict 128B row alignment requires a base phase divisible by 128.",
+    "Compute rounds produce a consumed result, not a calibrated pre-load delay: extension addresses/conditions can be known earlier, so the compiler or CPU may issue their loads before the arithmetic completes.",
+    "Footprints are labeled controls; capacity ratios alone do not establish residency.",
+    "Idle sibling/background load is not enforced; placements are first-touch receipts.",
+    "Only read consumers; no mutation, output materialization or migration costs.",
+    "Sample min/max are observed ranges, not confidence intervals."
+  ]
+}

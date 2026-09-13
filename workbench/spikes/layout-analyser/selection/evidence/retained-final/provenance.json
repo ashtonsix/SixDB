@@ -1,0 +1,22 @@
+{
+  "kind": "derived retained measurements",
+  "analysis_seconds": 0.1393501480051782,
+  "analysis_timing_scope": "one Python analysis run; not a production selector benchmark",
+  "code_hashes": {
+    "workbench/spikes/layout-analyser/selection/study.py": "1b8b279a1c8a0d9c51e699b9699b8b8ec6550efba5d6510f76b21d7c4a6ac016",
+    "workbench/spikes/layout-analyser/tuplepack-reference/analyse.py": "b92c2633e84d524fe2ef6d01d6dcd08e97a571a6333a99b227241bfd34c26396",
+    "workbench/spikes/tuple-layout/runtime/report.py": "b85936e2de58cdf42ddfd145fcedb89109eb5a8b18d24a1dfc44f424bc8173d8"
+  },
+  "input_hashes": {
+    "workbench/spikes/tuple-layout/evidence/final-v2/neon/samples.csv": "479aae6fd0062b40dbc90a2d45b407d537ca9b005099c9538335fcc4f55dd835",
+    "workbench/spikes/tuple-layout/evidence/final-zen5/avx2/samples.csv": "6b59fcc7f72a7d5c8c330b9361a00c202b5251da46d6a80b7cafc0624ec50e95",
+    "workbench/spikes/tuple-layout/evidence/final-zen5/avx512/samples.csv": "d63a177adf41ebc15a5ac43044d96085e057a841de818a1ea769e9764e3e6604"
+  },
+  "limits": [
+    "28-layout measured subset only; structural diversity restricted to that subset",
+    "finalist and local-fit choices charge plan-probe counts, not estimated experiment time",
+    "held-out workload classes share a capture and data set; not collection/key-region/temporal holdouts",
+    "three observed repetitions summarized by medians; no statistical winner claim",
+    "no independent container generalization or migration performance established"
+  ]
+}

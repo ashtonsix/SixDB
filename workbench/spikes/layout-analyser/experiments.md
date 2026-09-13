@@ -1,8 +1,16 @@
 # Hypotheses and experiments
 
-Proposed work, 2026-09-13. Begin with exact small comparisons and ordinary
-consumers. These are useful next questions, not a mandatory roadmap or a new
-benchmark framework. No hardware campaign was run to open this spike.
+Research questions, 2026-09-13. The authorized first pass ran exact small
+comparisons and ordinary consumers; [findings](findings.md) distinguishes what
+was measured, modeled and left open. These remain questions rather than a
+mandatory roadmap or a new benchmark framework.
+
+The first pass covers retained shortlists/palettes, fixed-length prefix boundary
+cases, a bounded hash table, Boolean refinement geometry and spatial read
+consumers. It does not yet cover independent-container training, variable-length
+arenas/patches, table construction timing or actual historical migration. The
+existing reference's cost-consumption and break-even checks remain arithmetic
+controls for those unknown owner costs.
 
 ## Cost consumption and small search
 

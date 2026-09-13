@@ -1,0 +1,109 @@
+{
+  "commands": [
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hot-control-s12971-p0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hot-control-s12971-p32",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hot-control-s918273-p0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "hot-control-s918273-p32",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "larger-s12971-p0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "larger-s12971-p32",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "larger-s918273-p0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "larger-s918273-p32",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "report",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "config": {
+    "compute": 0,
+    "cpu": 0,
+    "large_mib": 1024,
+    "march": "x86-64-v3",
+    "ms": 3.0,
+    "ordered": false,
+    "output": "/opt/sixdb/jobs/20260913T152403Z-9e96fc9e/results/spatial",
+    "phases": "0,32",
+    "prefetch_extension": false,
+    "profile": "screen",
+    "reps": 2,
+    "seeds": "12971,918273",
+    "tune": "granite-rapids",
+    "workspace": "/opt/sixdb/source/build/workspaces/layout-spatial"
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=layout-analyser",
+    "-DSIXDB_MARCH=x86-64-v3",
+    "-DSIXDB_TUNE=granite-rapids"
+  ],
+  "files_sha256": {
+    "analysis.json": "4305693f4de7a6b0098426076a4cd5a838dd3ae35a52f8c4cb1ecde844131e73",
+    "checks.txt": "82ac13f1543e2fbfa1917e307be786cc2f6bb984193a42f8df339be3655a407a",
+    "hardware.json": "ba516a1c02a3dca07e45daea4540cf183b2250f9cebddfad55e2f904fda69ada",
+    "placement.txt": "f03d51d62ae3a4148d8f8e82ea1c1a92ed1a9f40ab55f245b36b69ff2115e699",
+    "plan.json": "dd4705ec01037a57671a1fc698de4ed828ece3e02943c78f3148fd0c71900a4c",
+    "samples.csv": "957328d889e40e67a515b2c0bd2b64c68c254dd98200dd0002367251233b4e7a",
+    "summary.md": "673df8b67f43302e40b2c787184d9acca7cca20da6a77cdbe4dee784d4efa061"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {},
+  "platform": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/layout-analyser/spatial/report.py",
+    "{evidence}"
+  ],
+  "source_archive_sha256": "105a5e6a5f30b0b4a2736688cd5eb29c1bd492543f947bc5c5caa6ae49f8a7d6",
+  "source_digest": "97282eb63b8004f07b66561c6d909bd46cf7c3275cf9e574b6c4474d47a1cba1",
+  "source_unchanged": true,
+  "started_utc": "2026-09-13T15:25:29.434284+00:00",
+  "status": "complete"
+}
