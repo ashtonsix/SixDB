@@ -1,0 +1,4 @@
+find_package(Threads REQUIRED)
+add_executable(memory_characterisation_probe probe.cpp)
+sixdb_target(memory_characterisation_probe)
+target_link_libraries(memory_characterisation_probe PRIVATE Threads::Threads)

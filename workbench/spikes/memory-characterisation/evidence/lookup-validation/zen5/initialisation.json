@@ -1,0 +1,164 @@
+{
+  "source": "static-lookup",
+  "entry": {
+    "probe_format": 1,
+    "status": "validated",
+    "instance_examples": [
+      "c8a.large"
+    ],
+    "architecture": "Zen 5",
+    "lookup_context": {
+      "identity": {
+        "vendor_id": "AuthenticAMD",
+        "cpu family": "26",
+        "model": "2",
+        "stepping": "1",
+        "model name": "AMD EPYC 9R45",
+        "microcode": "0xb002162",
+        "CPU implementer": null,
+        "CPU architecture": null,
+        "CPU variant": null,
+        "CPU part": null,
+        "CPU revision": null,
+        "isa": "x86_64",
+        "hypervisor_flag": true,
+        "midr": null
+      },
+      "kernel": "7.0.0-1012-aws",
+      "base_page": 4096,
+      "thp_policy": [
+        "always [madvise] never",
+        "always defer defer+madvise [madvise] never",
+        {
+          "hugepages-1024kB": "always inherit madvise [never]",
+          "hugepages-128kB": "always inherit madvise [never]",
+          "hugepages-16kB": "always inherit madvise [never]",
+          "hugepages-2048kB": "always [inherit] madvise never",
+          "hugepages-256kB": "always inherit madvise [never]",
+          "hugepages-32kB": "always inherit madvise [never]",
+          "hugepages-512kB": "always inherit madvise [never]",
+          "hugepages-64kB": "always inherit madvise [never]",
+          "hugepages-8kB": null
+        }
+      ],
+      "caches": [
+        {
+          "level": "1",
+          "type": "Data",
+          "size": "48K",
+          "coherency_line_size": "64",
+          "ways_of_associativity": "12",
+          "shared_cpus": 1
+        },
+        {
+          "level": "1",
+          "type": "Instruction",
+          "size": "32K",
+          "coherency_line_size": "64",
+          "ways_of_associativity": "8",
+          "shared_cpus": 1
+        },
+        {
+          "level": "2",
+          "type": "Unified",
+          "size": "1024K",
+          "coherency_line_size": "64",
+          "ways_of_associativity": "16",
+          "shared_cpus": 1
+        },
+        {
+          "level": "3",
+          "type": "Unified",
+          "size": "8192K",
+          "coherency_line_size": "64",
+          "ways_of_associativity": "4",
+          "shared_cpus": 2
+        }
+      ],
+      "smt_width": 1,
+      "governor": null
+    },
+    "line_bytes_reported": 64,
+    "mlp": {
+      "status": "validated",
+      "candidate_k": [
+        32,
+        48,
+        64
+      ],
+      "best_ns_per_load_range": [
+        5.014975,
+        5.08048
+      ],
+      "serial_ns_range": [
+        137.195,
+        138.289
+      ],
+      "individual_10pct_k": [
+        32,
+        32
+      ],
+      "right_censored": false,
+      "near_best_tolerance": 0.15,
+      "scope": "isolated CPU, 256 MiB random encoded-pointer chains, base pages"
+    },
+    "adjacent_forward_observation": {
+      "parity0": "observed-benefit",
+      "parity1": "observed-benefit"
+    },
+    "consistent_training_suffix": {
+      "1": 2,
+      "2": 3,
+      "4": 3,
+      "-1": 3,
+      "-2": 4
+    },
+    "stream_capacity": null,
+    "exact_outstanding_misses": null,
+    "cache_to_cache_route": null,
+    "limitations": [
+      "idle isolated condition; active sibling load is a separate profile",
+      "training suffix is a conditioned latency observation, not exact activation length",
+      "seed repeats use the same worker; cross-instance evidence only where multiple examples are listed",
+      "storage/network and current page allocation must be checked at runtime"
+    ],
+    "evidence": [
+      "evidence/c8a.large/screen",
+      "evidence/c8a.large/repeat"
+    ],
+    "evidence_source_digests": [
+      "f618daf10bc9c095ed1ad4d751500d34bd336fc94b91bc55340410f5a271eb83",
+      "e2322f9b997de84871acf2dccbfc1032621a3e391d6c7441f24933fc34af9ec6"
+    ]
+  },
+  "runtime_page_options": {
+    "base_bytes": 4096,
+    "thp_enabled": "always [madvise] never",
+    "thp_defrag": "always defer defer+madvise [madvise] never",
+    "thp_sizes": {
+      "hugepages-1024kB": "always inherit madvise [never]",
+      "hugepages-128kB": "always inherit madvise [never]",
+      "hugepages-16kB": "always inherit madvise [never]",
+      "hugepages-2048kB": "always [inherit] madvise never",
+      "hugepages-256kB": "always inherit madvise [never]",
+      "hugepages-32kB": "always inherit madvise [never]",
+      "hugepages-512kB": "always inherit madvise [never]",
+      "hugepages-64kB": "always inherit madvise [never]",
+      "hugepages-8kB": null
+    },
+    "hugetlb": {
+      "hugepages-1048576kB": {
+        "nr_hugepages": "0",
+        "free_hugepages": "0",
+        "resv_hugepages": "0",
+        "surplus_hugepages": "0"
+      },
+      "hugepages-2048kB": {
+        "nr_hugepages": "0",
+        "free_hugepages": "0",
+        "resv_hugepages": "0",
+        "surplus_hugepages": "0"
+      }
+    }
+  }
+}

@@ -16,6 +16,7 @@ Loose thoughts can stay in the [notebook](../notebook/ideas.md) indefinitely.
 - [SeriesPack head projection](seriespack-head-projection/README.md): independent planes under varied placements.
 - [BEC packed metadata](bec-packed-metadata/README.md): packed lengths as a concrete SeriesPack consumer.
 - [Executable placement](executable-placement/README.md): distinguishing changed code from placement effects.
+- [Memory characterisation](memory-characterisation/README.md): automatic MLP, prefetch, cache sharing and host diagnostics.
 - [Row filter signatures](row-filter-signatures/README.md): per-row Boolean evidence and progressive refinement.
 - [Aggregate maintenance](aggregate-maintenance/README.md): descendant summaries without excessive mutation cost.
 - [Trie remapping](trie-remapping/README.md): natural-key tries with difficult suffixes remapped to physical positions.

@@ -1,0 +1,133 @@
+{
+  "commands": [
+    {
+      "name": "hardware",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "isolated",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "thp",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "thp-tlb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "separate-core-cpu1-handoff",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "separate-core-cpu1-compute",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "separate-core-cpu1-stream",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "separate-core-cpu1-prefetch",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "smt-sibling-cpu2-handoff",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "smt-sibling-cpu2-compute",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "smt-sibling-cpu2-stream",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "smt-sibling-cpu2-prefetch",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "system",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "instance-store",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "analyse",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "config": {
+    "build_dir": "/opt/sixdb/source/build/workspaces/memory-characterisation",
+    "cpu": 0,
+    "force_probe": false,
+    "lookup": null,
+    "mib": null,
+    "output": "/opt/sixdb/jobs/20260913T105141Z-1e4f35d4/results/study",
+    "profile": "screen",
+    "seed": 357712151618,
+    "smt": true,
+    "system": true
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=memory-characterisation",
+    "-DSIXDB_TUNE=generic",
+    "-DSIXDB_MARCH="
+  ],
+  "files_sha256": {
+    "hardware.json": "b50f15764d8058f59c99a9ef7a150cf444d7521e675e6bf5b89a3345aa9a6f38",
+    "initialisation.json": "a1c2a138ddc49042e55436a5e12e01111943c0252ed11fe1263516afb6d6e4bd",
+    "instance-store/system.json": "8fd96f92436269bf5ac96f4b15598a6d801e04dc2eec74683a6c5a2aba659416",
+    "isolated.stderr": "242afd65362482aec98745015774b35f801902906c5db3b8c04721c9551608e3",
+    "samples.csv": "d8db9f726c8293d9239e1a0870bcf39e62f41b538ce70206725e2a33246c39bf",
+    "system.json": "29edc434f634d3886560a6ffa3c8ac4fa71ac4a7017062aa71a7353886e1e6b2",
+    "thp-tlb.stderr": "d747d665a8163a174b6faabd2039a1664b3fe7801c2a2ab82fa147391e0e2f10",
+    "thp.stderr": "04e851127308e23f8b394a785c822afe066aaacafe13a493f26069c3743dd0de"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {},
+  "platform": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39",
+  "regenerate": [],
+  "source_archive_sha256": "612d90bdc4d430ea97ebff1b5b39e5d851f63f0b718363f33ffbcc78c132677c",
+  "source_digest": "abb7e0b86e15293a070247f07064a9a7a4268aaf0afa7fe367e535048d38f75d",
+  "source_unchanged": true,
+  "started_utc": "2026-09-13T10:53:19.882663+00:00",
+  "status": "complete"
+}

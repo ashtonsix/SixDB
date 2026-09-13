@@ -1,0 +1,159 @@
+{
+  "commands": [
+    {
+      "name": "hardware",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "isolated",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "thp",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "thp-tlb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "separate-core-cpu1-handoff",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "separate-core-cpu1-compute",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "separate-core-cpu1-stream",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "separate-core-cpu1-prefetch",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "separate-core-cpu48-handoff",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "separate-core-cpu48-compute",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "separate-core-cpu48-stream",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "separate-core-cpu48-prefetch",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "smt-sibling-cpu96-handoff",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "smt-sibling-cpu96-compute",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "smt-sibling-cpu96-stream",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "smt-sibling-cpu96-prefetch",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "memory-node0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "memory-node1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "system",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "analyse",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "config": {
+    "build_dir": "/opt/sixdb/source/build/workspaces/memory-characterisation",
+    "cpu": 0,
+    "force_probe": false,
+    "lookup": null,
+    "mib": null,
+    "output": "/opt/sixdb/jobs/20260913T110235Z-83b6aeb3/results/study",
+    "profile": "screen",
+    "seed": 357712151618,
+    "smt": true,
+    "system": true
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=memory-characterisation",
+    "-DSIXDB_TUNE=generic",
+    "-DSIXDB_MARCH="
+  ],
+  "files_sha256": {
+    "hardware.json": "fcfd0dea63b7160efc2a1856a2e0a9631e84b5fec3ae1084468b9c1de2902276",
+    "initialisation.json": "01587371ea3a7a3aa879e37993f13b72d3448544d08915708766dc8405f5a79e",
+    "isolated.stderr": "84b81cc0584e08519eb92e3ff32bac62f6f9ae359b6c9e3887508ab5815c83e6",
+    "memory-node0.stderr": "8817be190eb71d3c7b73f848466a02ddaaca5f13f444bffe8c5cbc556c433dc9",
+    "memory-node1.stderr": "fe7a2f80a2bfd78bb18c3ec3583c8fbadbc6c58a52cfee1d40676a4e9223381c",
+    "samples.csv": "7b6d10a8e0b8692dabfb0b768fcee237b74b97a53eb483bd74a38db821d05db7",
+    "system.json": "1522d2070a1e79ea098b7cb695ec9b8171702bdedd3f86328ae48b4ea3033bfb",
+    "thp-tlb.stderr": "36f8ea39d3a2b0cdf7d754d71df02e65b9e2e683ac58c7c090a80b452eed13ef",
+    "thp.stderr": "5fbd7242f8be7eb7db0049fd1173aed3162e567d51c6ef4cb943661893efbe0e"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {},
+  "platform": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39",
+  "regenerate": [],
+  "source_archive_sha256": "2fad9b251b82aae438e1882fcadd2d37f6508379f4109f82f8c0861438f47623",
+  "source_digest": "439172c9523680a613391348c0667bcacc1497131166f59d4d2496079512a20e",
+  "source_unchanged": true,
+  "started_utc": "2026-09-13T11:04:11.099620+00:00",
+  "status": "complete"
+}

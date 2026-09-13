@@ -26,4 +26,7 @@ work; a kernel stage need not be a scheduler task.
 Queue policy, partition geometry, ownership across waits and the concrete
 acquisition interface remain open. The
 [integration proposal](../workbench/spikes/ikea-composition/semantics-and-integration.md#loom-resources-progress-and-retained-state)
-develops some candidate seams. No runtime is implemented here yet.
+develops some candidate seams. Initial
+[objectives and architecture questions](../workbench/notebook/loom-objectives-and-architecture.md)
+explore mixed-workload goals, locality, resource coupling and analyser placement
+without selecting a design. No runtime is implemented here yet.

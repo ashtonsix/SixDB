@@ -1,0 +1,2734 @@
+{
+  "format": 1,
+  "date": "2026-09-13",
+  "entries": {
+    "17d21898a2b85b7ea83e8c8714de21d5aad6c7785fa29f304141e8030c02f62f": {
+      "probe_format": 1,
+      "status": "validated",
+      "instance_examples": [
+        "c5a.xlarge"
+      ],
+      "architecture": "Zen 2",
+      "lookup_context": {
+        "identity": {
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "23",
+          "model": "49",
+          "stepping": "0",
+          "model name": "AMD EPYC 7R32",
+          "microcode": "0x830107f",
+          "CPU implementer": null,
+          "CPU architecture": null,
+          "CPU variant": null,
+          "CPU part": null,
+          "CPU revision": null,
+          "isa": "x86_64",
+          "hypervisor_flag": true,
+          "midr": null
+        },
+        "kernel": "7.0.0-1012-aws",
+        "base_page": 4096,
+        "thp_policy": [
+          "always [madvise] never",
+          "always defer defer+madvise [madvise] never",
+          {
+            "hugepages-1024kB": "always inherit madvise [never]",
+            "hugepages-128kB": "always inherit madvise [never]",
+            "hugepages-16kB": "always inherit madvise [never]",
+            "hugepages-2048kB": "always [inherit] madvise never",
+            "hugepages-256kB": "always inherit madvise [never]",
+            "hugepages-32kB": "always inherit madvise [never]",
+            "hugepages-512kB": "always inherit madvise [never]",
+            "hugepages-64kB": "always inherit madvise [never]",
+            "hugepages-8kB": null
+          }
+        ],
+        "caches": [
+          {
+            "level": "1",
+            "type": "Data",
+            "size": "32K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "8",
+            "shared_cpus": 2
+          },
+          {
+            "level": "1",
+            "type": "Instruction",
+            "size": "32K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "8",
+            "shared_cpus": 2
+          },
+          {
+            "level": "2",
+            "type": "Unified",
+            "size": "512K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "8",
+            "shared_cpus": 2
+          },
+          {
+            "level": "3",
+            "type": "Unified",
+            "size": "8192K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "8",
+            "shared_cpus": 4
+          }
+        ],
+        "smt_width": 2,
+        "governor": null
+      },
+      "line_bytes_reported": 64,
+      "mlp": {
+        "status": "validated",
+        "candidate_k": [
+          16,
+          24,
+          32,
+          48,
+          64
+        ],
+        "best_ns_per_load_range": [
+          9.52056,
+          9.801615
+        ],
+        "serial_ns_range": [
+          126.742,
+          127.23750000000001
+        ],
+        "individual_10pct_k": [
+          16,
+          16
+        ],
+        "right_censored": false,
+        "near_best_tolerance": 0.15,
+        "scope": "isolated CPU, 256 MiB random encoded-pointer chains, base pages"
+      },
+      "adjacent_forward_observation": {
+        "parity0": "observed-benefit",
+        "parity1": "observed-benefit"
+      },
+      "consistent_training_suffix": {
+        "1": 2,
+        "2": 6,
+        "4": 3,
+        "-1": 2,
+        "-2": 4
+      },
+      "stream_capacity": null,
+      "exact_outstanding_misses": null,
+      "cache_to_cache_route": null,
+      "conditional_mlp_observations": [
+        {
+          "condition": "thp",
+          "page_mode": "thp-requested",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 24,
+          "best_ns_per_load": 5.77662,
+          "serial_ns_per_load": 107.271
+        },
+        {
+          "condition": "separate-core-cpu1-compute",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 16,
+          "best_ns_per_load": 9.85327,
+          "serial_ns_per_load": 127.029
+        },
+        {
+          "condition": "separate-core-cpu1-stream",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 16,
+          "best_ns_per_load": 10.2455,
+          "serial_ns_per_load": 167.64
+        },
+        {
+          "condition": "smt-sibling-cpu2-compute",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 12,
+          "best_ns_per_load": 15.6514,
+          "serial_ns_per_load": 131.202
+        },
+        {
+          "condition": "smt-sibling-cpu2-stream",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 12,
+          "best_ns_per_load": 17.0329,
+          "serial_ns_per_load": 164.604
+        }
+      ],
+      "limitations": [
+        "idle isolated condition; active sibling load is a separate profile",
+        "training suffix is a conditioned latency observation, not exact activation length",
+        "seed repeats use the same worker; cross-instance evidence only where multiple examples are listed",
+        "storage/network and current page allocation must be checked at runtime"
+      ],
+      "evidence": [
+        "evidence/c5a.xlarge/screen",
+        "evidence/c5a.xlarge/repeat"
+      ],
+      "evidence_source_digests": [
+        "6b26cad0d8fb6be6e942a66cd467ac73f12880bc69f6b7ca4cfeaab1b6bf606c",
+        "6b26cad0d8fb6be6e942a66cd467ac73f12880bc69f6b7ca4cfeaab1b6bf606c"
+      ],
+      "handoff_observations": [
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "cold",
+          "median_ns": 130.003,
+          "instance": "c5a.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-clean",
+          "median_ns": 80.002,
+          "instance": "c5a.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-dirty",
+          "median_ns": 80.002,
+          "instance": "c5a.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "local-hot",
+          "median_ns": 30.0008,
+          "instance": "c5a.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "cold",
+          "median_ns": 130.007,
+          "instance": "c5a.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "peer-clean",
+          "median_ns": 30.0015,
+          "instance": "c5a.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "peer-dirty",
+          "median_ns": 30.0015,
+          "instance": "c5a.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "local-hot",
+          "median_ns": 30.0015,
+          "instance": "c5a.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        }
+      ]
+    },
+    "fdd244b1ad7115b4d1e443c60f28abf8ab85cce737e51d563f814a60db3fee12": {
+      "probe_format": 1,
+      "status": "validated",
+      "instance_examples": [
+        "c6a.xlarge"
+      ],
+      "architecture": "Zen 3",
+      "lookup_context": {
+        "identity": {
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "25",
+          "model": "1",
+          "stepping": "1",
+          "model name": "AMD EPYC 7R13 Processor",
+          "microcode": "0xa0011de",
+          "CPU implementer": null,
+          "CPU architecture": null,
+          "CPU variant": null,
+          "CPU part": null,
+          "CPU revision": null,
+          "isa": "x86_64",
+          "hypervisor_flag": true,
+          "midr": null
+        },
+        "kernel": "7.0.0-1012-aws",
+        "base_page": 4096,
+        "thp_policy": [
+          "always [madvise] never",
+          "always defer defer+madvise [madvise] never",
+          {
+            "hugepages-1024kB": "always inherit madvise [never]",
+            "hugepages-128kB": "always inherit madvise [never]",
+            "hugepages-16kB": "always inherit madvise [never]",
+            "hugepages-2048kB": "always [inherit] madvise never",
+            "hugepages-256kB": "always inherit madvise [never]",
+            "hugepages-32kB": "always inherit madvise [never]",
+            "hugepages-512kB": "always inherit madvise [never]",
+            "hugepages-64kB": "always inherit madvise [never]",
+            "hugepages-8kB": null
+          }
+        ],
+        "caches": [
+          {
+            "level": "1",
+            "type": "Data",
+            "size": "32K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "8",
+            "shared_cpus": 2
+          },
+          {
+            "level": "1",
+            "type": "Instruction",
+            "size": "32K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "8",
+            "shared_cpus": 2
+          },
+          {
+            "level": "2",
+            "type": "Unified",
+            "size": "512K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "8",
+            "shared_cpus": 2
+          },
+          {
+            "level": "3",
+            "type": "Unified",
+            "size": "8192K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "4",
+            "shared_cpus": 4
+          }
+        ],
+        "smt_width": 2,
+        "governor": null
+      },
+      "line_bytes_reported": 64,
+      "mlp": {
+        "status": "validated",
+        "candidate_k": [
+          24,
+          32,
+          64
+        ],
+        "best_ns_per_load_range": [
+          6.666404999999999,
+          6.72389
+        ],
+        "serial_ns_range": [
+          128.71499999999997,
+          129.18
+        ],
+        "individual_10pct_k": [
+          24,
+          24
+        ],
+        "right_censored": false,
+        "near_best_tolerance": 0.15,
+        "scope": "isolated CPU, 256 MiB random encoded-pointer chains, base pages"
+      },
+      "adjacent_forward_observation": {
+        "parity0": "observed-benefit",
+        "parity1": "observed-benefit"
+      },
+      "consistent_training_suffix": {
+        "1": 3,
+        "2": 3,
+        "4": 3,
+        "-1": 3,
+        "-2": 3
+      },
+      "stream_capacity": null,
+      "exact_outstanding_misses": null,
+      "cache_to_cache_route": null,
+      "conditional_mlp_observations": [
+        {
+          "condition": "thp",
+          "page_mode": "thp-requested",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 24,
+          "best_ns_per_load": 5.35233,
+          "serial_ns_per_load": 105.302
+        },
+        {
+          "condition": "separate-core-cpu1-compute",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 24,
+          "best_ns_per_load": 6.68168,
+          "serial_ns_per_load": 135.206
+        },
+        {
+          "condition": "separate-core-cpu1-stream",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 24,
+          "best_ns_per_load": 7.56449,
+          "serial_ns_per_load": 144.638
+        },
+        {
+          "condition": "smt-sibling-cpu2-compute",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 16,
+          "best_ns_per_load": 11.3232,
+          "serial_ns_per_load": 133.153
+        },
+        {
+          "condition": "smt-sibling-cpu2-stream",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 16,
+          "best_ns_per_load": 14.2549,
+          "serial_ns_per_load": 169.32
+        }
+      ],
+      "limitations": [
+        "idle isolated condition; active sibling load is a separate profile",
+        "training suffix is a conditioned latency observation, not exact activation length",
+        "seed repeats use the same worker; cross-instance evidence only where multiple examples are listed",
+        "storage/network and current page allocation must be checked at runtime"
+      ],
+      "evidence": [
+        "evidence/c6a.xlarge/screen",
+        "evidence/c6a.xlarge/repeat"
+      ],
+      "evidence_source_digests": [
+        "6b26cad0d8fb6be6e942a66cd467ac73f12880bc69f6b7ca4cfeaab1b6bf606c",
+        "6b26cad0d8fb6be6e942a66cd467ac73f12880bc69f6b7ca4cfeaab1b6bf606c"
+      ],
+      "handoff_observations": [
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "cold",
+          "median_ns": 130.192,
+          "instance": "c6a.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-clean",
+          "median_ns": 90.191,
+          "instance": "c6a.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-dirty",
+          "median_ns": 90.191,
+          "instance": "c6a.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "local-hot",
+          "median_ns": 29.8121,
+          "instance": "c6a.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "cold",
+          "median_ns": 129.814,
+          "instance": "c6a.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "peer-clean",
+          "median_ns": 30.1893,
+          "instance": "c6a.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "peer-dirty",
+          "median_ns": 40.0008,
+          "instance": "c6a.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "local-hot",
+          "median_ns": 29.812,
+          "instance": "c6a.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        }
+      ]
+    },
+    "244e8d9e21402f2dc141bd9e6e1ead60d439550bcd53d9522bd508cfb0efb552": {
+      "probe_format": 1,
+      "status": "validated",
+      "instance_examples": [
+        "c7a.large"
+      ],
+      "architecture": "Zen 4",
+      "lookup_context": {
+        "identity": {
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "25",
+          "model": "17",
+          "stepping": "1",
+          "model name": "AMD EPYC 9R14",
+          "microcode": "0xa101158",
+          "CPU implementer": null,
+          "CPU architecture": null,
+          "CPU variant": null,
+          "CPU part": null,
+          "CPU revision": null,
+          "isa": "x86_64",
+          "hypervisor_flag": true,
+          "midr": null
+        },
+        "kernel": "7.0.0-1012-aws",
+        "base_page": 4096,
+        "thp_policy": [
+          "always [madvise] never",
+          "always defer defer+madvise [madvise] never",
+          {
+            "hugepages-1024kB": "always inherit madvise [never]",
+            "hugepages-128kB": "always inherit madvise [never]",
+            "hugepages-16kB": "always inherit madvise [never]",
+            "hugepages-2048kB": "always [inherit] madvise never",
+            "hugepages-256kB": "always inherit madvise [never]",
+            "hugepages-32kB": "always inherit madvise [never]",
+            "hugepages-512kB": "always inherit madvise [never]",
+            "hugepages-64kB": "always inherit madvise [never]",
+            "hugepages-8kB": null
+          }
+        ],
+        "caches": [
+          {
+            "level": "1",
+            "type": "Data",
+            "size": "32K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "8",
+            "shared_cpus": 1
+          },
+          {
+            "level": "1",
+            "type": "Instruction",
+            "size": "32K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "8",
+            "shared_cpus": 1
+          },
+          {
+            "level": "2",
+            "type": "Unified",
+            "size": "1024K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "8",
+            "shared_cpus": 1
+          },
+          {
+            "level": "3",
+            "type": "Unified",
+            "size": "8192K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "4",
+            "shared_cpus": 2
+          }
+        ],
+        "smt_width": 1,
+        "governor": null
+      },
+      "line_bytes_reported": 64,
+      "mlp": {
+        "status": "validated",
+        "candidate_k": [
+          24,
+          32,
+          48,
+          64
+        ],
+        "best_ns_per_load_range": [
+          8.04397,
+          8.21513
+        ],
+        "serial_ns_range": [
+          146.8095,
+          147.074
+        ],
+        "individual_10pct_k": [
+          24,
+          24
+        ],
+        "right_censored": false,
+        "near_best_tolerance": 0.15,
+        "scope": "isolated CPU, 256 MiB random encoded-pointer chains, base pages"
+      },
+      "adjacent_forward_observation": {
+        "parity0": "observed-benefit",
+        "parity1": "observed-benefit"
+      },
+      "consistent_training_suffix": {
+        "1": 3,
+        "2": 6,
+        "4": 3,
+        "-1": 3,
+        "-2": 3
+      },
+      "stream_capacity": null,
+      "exact_outstanding_misses": null,
+      "cache_to_cache_route": null,
+      "conditional_mlp_observations": [
+        {
+          "condition": "thp",
+          "page_mode": "thp-requested",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 24,
+          "best_ns_per_load": 6.86459,
+          "serial_ns_per_load": 127.063
+        },
+        {
+          "condition": "separate-core-cpu1-compute",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 24,
+          "best_ns_per_load": 8.08714,
+          "serial_ns_per_load": 145.83
+        },
+        {
+          "condition": "separate-core-cpu1-stream",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 24,
+          "best_ns_per_load": 9.60235,
+          "serial_ns_per_load": 188.916
+        }
+      ],
+      "limitations": [
+        "idle isolated condition; active sibling load is a separate profile",
+        "training suffix is a conditioned latency observation, not exact activation length",
+        "seed repeats use the same worker; cross-instance evidence only where multiple examples are listed",
+        "storage/network and current page allocation must be checked at runtime"
+      ],
+      "evidence": [
+        "evidence/c7a.large/screen",
+        "evidence/c7a.large/repeat"
+      ],
+      "evidence_source_digests": [
+        "6b26cad0d8fb6be6e942a66cd467ac73f12880bc69f6b7ca4cfeaab1b6bf606c",
+        "6b26cad0d8fb6be6e942a66cd467ac73f12880bc69f6b7ca4cfeaab1b6bf606c"
+      ],
+      "handoff_observations": [
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "cold",
+          "median_ns": 160.003,
+          "instance": "c7a.large",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-clean",
+          "median_ns": 80.0014,
+          "instance": "c7a.large",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-dirty",
+          "median_ns": 80.0014,
+          "instance": "c7a.large",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "local-hot",
+          "median_ns": 30.0005,
+          "instance": "c7a.large",
+          "scope": "one screen; repeated samples, no route inference"
+        }
+      ]
+    },
+    "b35d84e59b05995a36b38bfb6a5394063d753370d1b59f04b714259697674d02": {
+      "probe_format": 1,
+      "status": "validated",
+      "instance_examples": [
+        "c8a.large"
+      ],
+      "architecture": "Zen 5",
+      "lookup_context": {
+        "identity": {
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "26",
+          "model": "2",
+          "stepping": "1",
+          "model name": "AMD EPYC 9R45",
+          "microcode": "0xb002162",
+          "CPU implementer": null,
+          "CPU architecture": null,
+          "CPU variant": null,
+          "CPU part": null,
+          "CPU revision": null,
+          "isa": "x86_64",
+          "hypervisor_flag": true,
+          "midr": null
+        },
+        "kernel": "7.0.0-1012-aws",
+        "base_page": 4096,
+        "thp_policy": [
+          "always [madvise] never",
+          "always defer defer+madvise [madvise] never",
+          {
+            "hugepages-1024kB": "always inherit madvise [never]",
+            "hugepages-128kB": "always inherit madvise [never]",
+            "hugepages-16kB": "always inherit madvise [never]",
+            "hugepages-2048kB": "always [inherit] madvise never",
+            "hugepages-256kB": "always inherit madvise [never]",
+            "hugepages-32kB": "always inherit madvise [never]",
+            "hugepages-512kB": "always inherit madvise [never]",
+            "hugepages-64kB": "always inherit madvise [never]",
+            "hugepages-8kB": null
+          }
+        ],
+        "caches": [
+          {
+            "level": "1",
+            "type": "Data",
+            "size": "48K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "12",
+            "shared_cpus": 1
+          },
+          {
+            "level": "1",
+            "type": "Instruction",
+            "size": "32K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "8",
+            "shared_cpus": 1
+          },
+          {
+            "level": "2",
+            "type": "Unified",
+            "size": "1024K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "16",
+            "shared_cpus": 1
+          },
+          {
+            "level": "3",
+            "type": "Unified",
+            "size": "8192K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "4",
+            "shared_cpus": 2
+          }
+        ],
+        "smt_width": 1,
+        "governor": null
+      },
+      "line_bytes_reported": 64,
+      "mlp": {
+        "status": "validated",
+        "candidate_k": [
+          32,
+          48,
+          64
+        ],
+        "best_ns_per_load_range": [
+          5.014975,
+          5.08048
+        ],
+        "serial_ns_range": [
+          137.195,
+          138.289
+        ],
+        "individual_10pct_k": [
+          32,
+          32
+        ],
+        "right_censored": false,
+        "near_best_tolerance": 0.15,
+        "scope": "isolated CPU, 256 MiB random encoded-pointer chains, base pages"
+      },
+      "adjacent_forward_observation": {
+        "parity0": "observed-benefit",
+        "parity1": "observed-benefit"
+      },
+      "consistent_training_suffix": {
+        "1": 2,
+        "2": 3,
+        "4": 3,
+        "-1": 3,
+        "-2": 4
+      },
+      "stream_capacity": null,
+      "exact_outstanding_misses": null,
+      "cache_to_cache_route": null,
+      "conditional_mlp_observations": [
+        {
+          "condition": "thp",
+          "page_mode": "thp-requested",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 32,
+          "best_ns_per_load": 4.71686,
+          "serial_ns_per_load": 121.897
+        },
+        {
+          "condition": "separate-core-cpu1-compute",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 32,
+          "best_ns_per_load": 5.11255,
+          "serial_ns_per_load": 136.208
+        },
+        {
+          "condition": "separate-core-cpu1-stream",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 32,
+          "best_ns_per_load": 5.77413,
+          "serial_ns_per_load": 157.28
+        }
+      ],
+      "limitations": [
+        "idle isolated condition; active sibling load is a separate profile",
+        "training suffix is a conditioned latency observation, not exact activation length",
+        "seed repeats use the same worker; cross-instance evidence only where multiple examples are listed",
+        "storage/network and current page allocation must be checked at runtime"
+      ],
+      "evidence": [
+        "evidence/c8a.large/screen",
+        "evidence/c8a.large/repeat"
+      ],
+      "evidence_source_digests": [
+        "f618daf10bc9c095ed1ad4d751500d34bd336fc94b91bc55340410f5a271eb83",
+        "e2322f9b997de84871acf2dccbfc1032621a3e391d6c7441f24933fc34af9ec6"
+      ],
+      "handoff_observations": [
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "cold",
+          "median_ns": 130.001,
+          "instance": "c8a.large",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-clean",
+          "median_ns": 60.0005,
+          "instance": "c8a.large",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-dirty",
+          "median_ns": 60.0005,
+          "instance": "c8a.large",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "local-hot",
+          "median_ns": 20.0002,
+          "instance": "c8a.large",
+          "scope": "one screen; repeated samples, no route inference"
+        }
+      ]
+    },
+    "a7c73c59d7fbafabf620b2c5b6e667c6eaad14da4141ebfada3b9be0aac8f89c": {
+      "probe_format": 1,
+      "status": "validated",
+      "instance_examples": [
+        "c8a.24xlarge"
+      ],
+      "architecture": "Zen 5",
+      "lookup_context": {
+        "identity": {
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "26",
+          "model": "2",
+          "stepping": "1",
+          "model name": "AMD EPYC 9R45",
+          "microcode": "0xb002162",
+          "CPU implementer": null,
+          "CPU architecture": null,
+          "CPU variant": null,
+          "CPU part": null,
+          "CPU revision": null,
+          "isa": "x86_64",
+          "hypervisor_flag": true,
+          "midr": null
+        },
+        "kernel": "7.0.0-1012-aws",
+        "base_page": 4096,
+        "thp_policy": [
+          "always [madvise] never",
+          "always defer defer+madvise [madvise] never",
+          {
+            "hugepages-1024kB": "always inherit madvise [never]",
+            "hugepages-128kB": "always inherit madvise [never]",
+            "hugepages-16kB": "always inherit madvise [never]",
+            "hugepages-2048kB": "always [inherit] madvise never",
+            "hugepages-256kB": "always inherit madvise [never]",
+            "hugepages-32kB": "always inherit madvise [never]",
+            "hugepages-512kB": "always inherit madvise [never]",
+            "hugepages-64kB": "always inherit madvise [never]",
+            "hugepages-8kB": null
+          }
+        ],
+        "caches": [
+          {
+            "level": "1",
+            "type": "Data",
+            "size": "48K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "12",
+            "shared_cpus": 1
+          },
+          {
+            "level": "1",
+            "type": "Instruction",
+            "size": "32K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "8",
+            "shared_cpus": 1
+          },
+          {
+            "level": "2",
+            "type": "Unified",
+            "size": "1024K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "16",
+            "shared_cpus": 1
+          },
+          {
+            "level": "3",
+            "type": "Unified",
+            "size": "32768K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "16",
+            "shared_cpus": 8
+          }
+        ],
+        "smt_width": 1,
+        "governor": null
+      },
+      "line_bytes_reported": 64,
+      "mlp": {
+        "status": "validated",
+        "candidate_k": [
+          32,
+          48,
+          64
+        ],
+        "best_ns_per_load_range": [
+          4.9695599999999995,
+          5.04461
+        ],
+        "serial_ns_range": [
+          138.16500000000002,
+          141.692
+        ],
+        "individual_10pct_k": [
+          32,
+          32
+        ],
+        "right_censored": false,
+        "near_best_tolerance": 0.15,
+        "scope": "isolated CPU, 256 MiB random encoded-pointer chains, base pages"
+      },
+      "adjacent_forward_observation": {
+        "parity0": "observed-benefit",
+        "parity1": "observed-benefit"
+      },
+      "consistent_training_suffix": {
+        "1": 3,
+        "2": 3,
+        "4": 3,
+        "-1": 3,
+        "-2": 4
+      },
+      "stream_capacity": null,
+      "exact_outstanding_misses": null,
+      "cache_to_cache_route": null,
+      "conditional_mlp_observations": [
+        {
+          "condition": "thp",
+          "page_mode": "thp-requested",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 32,
+          "best_ns_per_load": 4.54152,
+          "serial_ns_per_load": 118.135
+        },
+        {
+          "condition": "separate-core-cpu1-compute",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 32,
+          "best_ns_per_load": 5.03984,
+          "serial_ns_per_load": 140.899
+        },
+        {
+          "condition": "separate-core-cpu1-stream",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 32,
+          "best_ns_per_load": 5.59866,
+          "serial_ns_per_load": 155.055
+        },
+        {
+          "condition": "separate-core-cpu8-compute",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 32,
+          "best_ns_per_load": 5.04638,
+          "serial_ns_per_load": 137.228
+        },
+        {
+          "condition": "separate-core-cpu8-stream",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 32,
+          "best_ns_per_load": 5.11656,
+          "serial_ns_per_load": 141.539
+        }
+      ],
+      "limitations": [
+        "idle isolated condition; active sibling load is a separate profile",
+        "training suffix is a conditioned latency observation, not exact activation length",
+        "seed repeats use the same worker; cross-instance evidence only where multiple examples are listed",
+        "storage/network and current page allocation must be checked at runtime"
+      ],
+      "evidence": [
+        "evidence/c8a.24xlarge/screen",
+        "evidence/c8a.24xlarge/repeat"
+      ],
+      "evidence_source_digests": [
+        "abb7e0b86e15293a070247f07064a9a7a4268aaf0afa7fe367e535048d38f75d",
+        "abb7e0b86e15293a070247f07064a9a7a4268aaf0afa7fe367e535048d38f75d"
+      ],
+      "handoff_observations": [
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "cold",
+          "median_ns": 140.002,
+          "instance": "c8a.24xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-clean",
+          "median_ns": 60.0009,
+          "instance": "c8a.24xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-dirty",
+          "median_ns": 60.0009,
+          "instance": "c8a.24xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "local-hot",
+          "median_ns": 20.0003,
+          "instance": "c8a.24xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu8-handoff",
+          "state": "cold",
+          "median_ns": 140.002,
+          "instance": "c8a.24xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu8-handoff",
+          "state": "peer-clean",
+          "median_ns": 260.004,
+          "instance": "c8a.24xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu8-handoff",
+          "state": "peer-dirty",
+          "median_ns": 280.004,
+          "instance": "c8a.24xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu8-handoff",
+          "state": "local-hot",
+          "median_ns": 20.0003,
+          "instance": "c8a.24xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        }
+      ]
+    },
+    "f37f37bebd701c99ad69bbe11a128697a670e8c0d9f6ac2e803cfa497e87d735": {
+      "probe_format": 1,
+      "status": "validated",
+      "instance_examples": [
+        "c6i.xlarge",
+        "i4i.xlarge"
+      ],
+      "architecture": "Ice Lake",
+      "lookup_context": {
+        "identity": {
+          "vendor_id": "GenuineIntel",
+          "cpu family": "6",
+          "model": "106",
+          "stepping": "6",
+          "model name": "Intel(R) Xeon(R) Platinum 8375C CPU @ 2.90GHz",
+          "microcode": "0xd000433",
+          "CPU implementer": null,
+          "CPU architecture": null,
+          "CPU variant": null,
+          "CPU part": null,
+          "CPU revision": null,
+          "isa": "x86_64",
+          "hypervisor_flag": true,
+          "midr": null
+        },
+        "kernel": "7.0.0-1012-aws",
+        "base_page": 4096,
+        "thp_policy": [
+          "always [madvise] never",
+          "always defer defer+madvise [madvise] never",
+          {
+            "hugepages-1024kB": "always inherit madvise [never]",
+            "hugepages-128kB": "always inherit madvise [never]",
+            "hugepages-16kB": "always inherit madvise [never]",
+            "hugepages-2048kB": "always [inherit] madvise never",
+            "hugepages-256kB": "always inherit madvise [never]",
+            "hugepages-32kB": "always inherit madvise [never]",
+            "hugepages-512kB": "always inherit madvise [never]",
+            "hugepages-64kB": "always inherit madvise [never]",
+            "hugepages-8kB": null
+          }
+        ],
+        "caches": [
+          {
+            "level": "1",
+            "type": "Data",
+            "size": "48K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "12",
+            "shared_cpus": 2
+          },
+          {
+            "level": "1",
+            "type": "Instruction",
+            "size": "32K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "8",
+            "shared_cpus": 2
+          },
+          {
+            "level": "2",
+            "type": "Unified",
+            "size": "1280K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "20",
+            "shared_cpus": 2
+          },
+          {
+            "level": "3",
+            "type": "Unified",
+            "size": "55296K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "12",
+            "shared_cpus": 4
+          }
+        ],
+        "smt_width": 2,
+        "governor": null
+      },
+      "line_bytes_reported": 64,
+      "mlp": {
+        "status": "validated",
+        "candidate_k": [
+          12,
+          16,
+          24,
+          32,
+          48,
+          64
+        ],
+        "best_ns_per_load_range": [
+          11.62415,
+          13.429
+        ],
+        "serial_ns_range": [
+          133.7185,
+          142.785
+        ],
+        "individual_10pct_k": [
+          12,
+          12,
+          12,
+          12
+        ],
+        "right_censored": false,
+        "near_best_tolerance": 0.15,
+        "scope": "isolated CPU, 256 MiB random encoded-pointer chains, base pages"
+      },
+      "adjacent_forward_observation": {
+        "parity0": "no-clear-benefit",
+        "parity1": "no-clear-benefit"
+      },
+      "consistent_training_suffix": {
+        "1": 6,
+        "2": 6,
+        "4": 6,
+        "-1": 6,
+        "-2": 6
+      },
+      "stream_capacity": null,
+      "exact_outstanding_misses": null,
+      "cache_to_cache_route": null,
+      "conditional_mlp_observations": [
+        {
+          "condition": "thp",
+          "page_mode": "thp-requested",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 24,
+          "best_ns_per_load": 7.73095,
+          "serial_ns_per_load": 121.917
+        },
+        {
+          "condition": "separate-core-cpu1-compute",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 12,
+          "best_ns_per_load": 13.7474,
+          "serial_ns_per_load": 147.505
+        },
+        {
+          "condition": "separate-core-cpu1-stream",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 12,
+          "best_ns_per_load": 13.5357,
+          "serial_ns_per_load": 147.3
+        },
+        {
+          "condition": "smt-sibling-cpu2-compute",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 12,
+          "best_ns_per_load": 14.873,
+          "serial_ns_per_load": 149.271
+        },
+        {
+          "condition": "smt-sibling-cpu2-stream",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 8,
+          "best_ns_per_load": 24.1721,
+          "serial_ns_per_load": 179.978
+        },
+        {
+          "condition": "thp",
+          "page_mode": "thp-requested",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 24,
+          "best_ns_per_load": 7.86296,
+          "serial_ns_per_load": 117.254
+        },
+        {
+          "condition": "separate-core-cpu1-compute",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 12,
+          "best_ns_per_load": 12.3161,
+          "serial_ns_per_load": 137.336
+        },
+        {
+          "condition": "separate-core-cpu1-stream",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 12,
+          "best_ns_per_load": 12.4579,
+          "serial_ns_per_load": 140.648
+        },
+        {
+          "condition": "smt-sibling-cpu2-compute",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 12,
+          "best_ns_per_load": 14.3479,
+          "serial_ns_per_load": 139.943
+        },
+        {
+          "condition": "smt-sibling-cpu2-stream",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 12,
+          "best_ns_per_load": 22.2055,
+          "serial_ns_per_load": 200.254
+        }
+      ],
+      "limitations": [
+        "idle isolated condition; active sibling load is a separate profile",
+        "training suffix is a conditioned latency observation, not exact activation length",
+        "seed repeats use the same worker; cross-instance evidence only where multiple examples are listed",
+        "storage/network and current page allocation must be checked at runtime"
+      ],
+      "evidence": [
+        "evidence/c6i.xlarge/screen",
+        "evidence/c6i.xlarge/repeat",
+        "evidence/i4i.xlarge/screen",
+        "evidence/i4i.xlarge/repeat"
+      ],
+      "evidence_source_digests": [
+        "6b26cad0d8fb6be6e942a66cd467ac73f12880bc69f6b7ca4cfeaab1b6bf606c",
+        "6b26cad0d8fb6be6e942a66cd467ac73f12880bc69f6b7ca4cfeaab1b6bf606c",
+        "abb7e0b86e15293a070247f07064a9a7a4268aaf0afa7fe367e535048d38f75d",
+        "abb7e0b86e15293a070247f07064a9a7a4268aaf0afa7fe367e535048d38f75d"
+      ],
+      "handoff_observations": [
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "cold",
+          "median_ns": 176.557,
+          "instance": "c6i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-clean",
+          "median_ns": 140.694,
+          "instance": "c6i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-dirty",
+          "median_ns": 143.452,
+          "instance": "c6i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "local-hot",
+          "median_ns": 22.0696,
+          "instance": "c6i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "cold",
+          "median_ns": 140.002,
+          "instance": "c6i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "peer-clean",
+          "median_ns": 26.8969,
+          "instance": "c6i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "peer-dirty",
+          "median_ns": 26.8969,
+          "instance": "c6i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "local-hot",
+          "median_ns": 26.2073,
+          "instance": "c6i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "cold",
+          "median_ns": 154.489,
+          "instance": "i4i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-clean",
+          "median_ns": 109.659,
+          "instance": "i4i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-dirty",
+          "median_ns": 111.039,
+          "instance": "i4i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "local-hot",
+          "median_ns": 21.3801,
+          "instance": "i4i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "cold",
+          "median_ns": 120.007,
+          "instance": "i4i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "peer-clean",
+          "median_ns": 24.8291,
+          "instance": "i4i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "peer-dirty",
+          "median_ns": 24.8291,
+          "instance": "i4i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "local-hot",
+          "median_ns": 24.1394,
+          "instance": "i4i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        }
+      ]
+    },
+    "8919b34197499ef0a603597fef94be0e36ad45305ada1c4126f4b44bf8eb6c58": {
+      "probe_format": 1,
+      "status": "validated",
+      "instance_examples": [
+        "c7i.xlarge"
+      ],
+      "architecture": "Sapphire Rapids",
+      "lookup_context": {
+        "identity": {
+          "vendor_id": "GenuineIntel",
+          "cpu family": "6",
+          "model": "143",
+          "stepping": "8",
+          "model name": "Intel(R) Xeon(R) Platinum 8488C",
+          "microcode": "0x2b000661",
+          "CPU implementer": null,
+          "CPU architecture": null,
+          "CPU variant": null,
+          "CPU part": null,
+          "CPU revision": null,
+          "isa": "x86_64",
+          "hypervisor_flag": true,
+          "midr": null
+        },
+        "kernel": "7.0.0-1012-aws",
+        "base_page": 4096,
+        "thp_policy": [
+          "always [madvise] never",
+          "always defer defer+madvise [madvise] never",
+          {
+            "hugepages-1024kB": "always inherit madvise [never]",
+            "hugepages-128kB": "always inherit madvise [never]",
+            "hugepages-16kB": "always inherit madvise [never]",
+            "hugepages-2048kB": "always [inherit] madvise never",
+            "hugepages-256kB": "always inherit madvise [never]",
+            "hugepages-32kB": "always inherit madvise [never]",
+            "hugepages-512kB": "always inherit madvise [never]",
+            "hugepages-64kB": "always inherit madvise [never]",
+            "hugepages-8kB": null
+          }
+        ],
+        "caches": [
+          {
+            "level": "1",
+            "type": "Data",
+            "size": "48K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "12",
+            "shared_cpus": 2
+          },
+          {
+            "level": "1",
+            "type": "Instruction",
+            "size": "32K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "8",
+            "shared_cpus": 2
+          },
+          {
+            "level": "2",
+            "type": "Unified",
+            "size": "2048K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "16",
+            "shared_cpus": 2
+          },
+          {
+            "level": "3",
+            "type": "Unified",
+            "size": "107520K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "15",
+            "shared_cpus": 4
+          }
+        ],
+        "smt_width": 2,
+        "governor": null
+      },
+      "line_bytes_reported": 64,
+      "mlp": {
+        "status": "validated",
+        "candidate_k": [
+          16,
+          24,
+          32,
+          48,
+          64
+        ],
+        "best_ns_per_load_range": [
+          11.1999,
+          11.2584
+        ],
+        "serial_ns_range": [
+          149.427,
+          150.993
+        ],
+        "individual_10pct_k": [
+          16,
+          16
+        ],
+        "right_censored": false,
+        "near_best_tolerance": 0.15,
+        "scope": "isolated CPU, 256 MiB random encoded-pointer chains, base pages"
+      },
+      "adjacent_forward_observation": {
+        "parity0": "no-clear-benefit",
+        "parity1": "no-clear-benefit"
+      },
+      "consistent_training_suffix": {
+        "1": 3,
+        "2": 3,
+        "4": 3,
+        "-1": 3,
+        "-2": 3
+      },
+      "stream_capacity": null,
+      "exact_outstanding_misses": null,
+      "cache_to_cache_route": null,
+      "conditional_mlp_observations": [
+        {
+          "condition": "thp",
+          "page_mode": "thp-requested",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 16,
+          "best_ns_per_load": 9.89431,
+          "serial_ns_per_load": 136.291
+        },
+        {
+          "condition": "separate-core-cpu1-compute",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 16,
+          "best_ns_per_load": 11.3643,
+          "serial_ns_per_load": 150.007
+        },
+        {
+          "condition": "separate-core-cpu1-stream",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 16,
+          "best_ns_per_load": 11.4962,
+          "serial_ns_per_load": 150.554
+        },
+        {
+          "condition": "smt-sibling-cpu2-compute",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 16,
+          "best_ns_per_load": 11.9899,
+          "serial_ns_per_load": 150.373
+        },
+        {
+          "condition": "smt-sibling-cpu2-stream",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 12,
+          "best_ns_per_load": 19.4101,
+          "serial_ns_per_load": 205.722
+        }
+      ],
+      "limitations": [
+        "idle isolated condition; active sibling load is a separate profile",
+        "training suffix is a conditioned latency observation, not exact activation length",
+        "seed repeats use the same worker; cross-instance evidence only where multiple examples are listed",
+        "storage/network and current page allocation must be checked at runtime"
+      ],
+      "evidence": [
+        "evidence/c7i.xlarge/screen",
+        "evidence/c7i.xlarge/repeat"
+      ],
+      "evidence_source_digests": [
+        "6b26cad0d8fb6be6e942a66cd467ac73f12880bc69f6b7ca4cfeaab1b6bf606c",
+        "6b26cad0d8fb6be6e942a66cd467ac73f12880bc69f6b7ca4cfeaab1b6bf606c"
+      ],
+      "handoff_observations": [
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "cold",
+          "median_ns": 142.505,
+          "instance": "c7i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-clean",
+          "median_ns": 175.006,
+          "instance": "c7i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-dirty",
+          "median_ns": 176.673,
+          "instance": "c7i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "local-hot",
+          "median_ns": 25.8342,
+          "instance": "c7i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "cold",
+          "median_ns": 152.509,
+          "instance": "c7i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "peer-clean",
+          "median_ns": 34.1687,
+          "instance": "c7i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "peer-dirty",
+          "median_ns": 57.5035,
+          "instance": "c7i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "local-hot",
+          "median_ns": 34.1687,
+          "instance": "c7i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        }
+      ]
+    },
+    "a7c2c5274deaa6e0bae2fe0bb336c7ddf7e35f9c6d7a0db30a973a73788276d7": {
+      "probe_format": 1,
+      "status": "validated",
+      "instance_examples": [
+        "c7i.48xlarge"
+      ],
+      "architecture": "Sapphire Rapids",
+      "lookup_context": {
+        "identity": {
+          "vendor_id": "GenuineIntel",
+          "cpu family": "6",
+          "model": "143",
+          "stepping": "8",
+          "model name": "Intel(R) Xeon(R) Platinum 8488C",
+          "microcode": "0x2b000670",
+          "CPU implementer": null,
+          "CPU architecture": null,
+          "CPU variant": null,
+          "CPU part": null,
+          "CPU revision": null,
+          "isa": "x86_64",
+          "hypervisor_flag": true,
+          "midr": null
+        },
+        "kernel": "7.0.0-1012-aws",
+        "base_page": 4096,
+        "thp_policy": [
+          "always [madvise] never",
+          "always defer defer+madvise [madvise] never",
+          {
+            "hugepages-1024kB": "always inherit madvise [never]",
+            "hugepages-128kB": "always inherit madvise [never]",
+            "hugepages-16kB": "always inherit madvise [never]",
+            "hugepages-2048kB": "always [inherit] madvise never",
+            "hugepages-256kB": "always inherit madvise [never]",
+            "hugepages-32kB": "always inherit madvise [never]",
+            "hugepages-512kB": "always inherit madvise [never]",
+            "hugepages-64kB": "always inherit madvise [never]",
+            "hugepages-8kB": null
+          }
+        ],
+        "caches": [
+          {
+            "level": "1",
+            "type": "Data",
+            "size": "48K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "12",
+            "shared_cpus": 2
+          },
+          {
+            "level": "1",
+            "type": "Instruction",
+            "size": "32K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "8",
+            "shared_cpus": 2
+          },
+          {
+            "level": "2",
+            "type": "Unified",
+            "size": "2048K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "16",
+            "shared_cpus": 2
+          },
+          {
+            "level": "3",
+            "type": "Unified",
+            "size": "107520K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "15",
+            "shared_cpus": 96
+          }
+        ],
+        "smt_width": 2,
+        "governor": null
+      },
+      "line_bytes_reported": 64,
+      "mlp": {
+        "status": "validated",
+        "candidate_k": [
+          16,
+          24,
+          32,
+          48,
+          64
+        ],
+        "best_ns_per_load_range": [
+          9.255085000000001,
+          10.1308
+        ],
+        "serial_ns_range": [
+          91.2135,
+          104.07
+        ],
+        "individual_10pct_k": [
+          24,
+          16
+        ],
+        "right_censored": false,
+        "near_best_tolerance": 0.15,
+        "scope": "isolated CPU, 256 MiB random encoded-pointer chains, base pages"
+      },
+      "adjacent_forward_observation": {
+        "parity0": "no-clear-benefit",
+        "parity1": "no-clear-benefit"
+      },
+      "consistent_training_suffix": {
+        "1": 3,
+        "2": 3,
+        "4": 3,
+        "-1": 3,
+        "-2": 3
+      },
+      "stream_capacity": null,
+      "exact_outstanding_misses": null,
+      "cache_to_cache_route": null,
+      "conditional_mlp_observations": [
+        {
+          "condition": "thp",
+          "page_mode": "thp-requested",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 16,
+          "best_ns_per_load": 9.16088,
+          "serial_ns_per_load": 108.532
+        },
+        {
+          "condition": "separate-core-cpu1-compute",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 16,
+          "best_ns_per_load": 10.1537,
+          "serial_ns_per_load": 89.6488
+        },
+        {
+          "condition": "separate-core-cpu1-stream",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 16,
+          "best_ns_per_load": 11.2655,
+          "serial_ns_per_load": 146.343
+        },
+        {
+          "condition": "separate-core-cpu48-compute",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 24,
+          "best_ns_per_load": 10.1164,
+          "serial_ns_per_load": 89.4148
+        },
+        {
+          "condition": "separate-core-cpu48-stream",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 24,
+          "best_ns_per_load": 10.0461,
+          "serial_ns_per_load": 87.8638
+        },
+        {
+          "condition": "smt-sibling-cpu96-compute",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 16,
+          "best_ns_per_load": 11.1572,
+          "serial_ns_per_load": 81.5113
+        },
+        {
+          "condition": "smt-sibling-cpu96-stream",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 12,
+          "best_ns_per_load": 19.2184,
+          "serial_ns_per_load": 201.083
+        },
+        {
+          "condition": "memory-node0",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 24,
+          "best_ns_per_load": 9.89096,
+          "serial_ns_per_load": 80.5285
+        },
+        {
+          "condition": "memory-node1",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 16,
+          "best_ns_per_load": 15.9405,
+          "serial_ns_per_load": 106.204
+        }
+      ],
+      "limitations": [
+        "idle isolated condition; active sibling load is a separate profile",
+        "training suffix is a conditioned latency observation, not exact activation length",
+        "seed repeats use the same worker; cross-instance evidence only where multiple examples are listed",
+        "storage/network and current page allocation must be checked at runtime"
+      ],
+      "evidence": [
+        "evidence/c7i.48xlarge/screen",
+        "evidence/c7i.48xlarge/repeat"
+      ],
+      "evidence_source_digests": [
+        "439172c9523680a613391348c0667bcacc1497131166f59d4d2496079512a20e",
+        "439172c9523680a613391348c0667bcacc1497131166f59d4d2496079512a20e"
+      ],
+      "handoff_observations": [
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "cold",
+          "median_ns": 149.172,
+          "instance": "c7i.48xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-clean",
+          "median_ns": 160.005,
+          "instance": "c7i.48xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-dirty",
+          "median_ns": 161.672,
+          "instance": "c7i.48xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "local-hot",
+          "median_ns": 25.0008,
+          "instance": "c7i.48xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu48-handoff",
+          "state": "cold",
+          "median_ns": 142.505,
+          "instance": "c7i.48xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu48-handoff",
+          "state": "peer-clean",
+          "median_ns": 349.178,
+          "instance": "c7i.48xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu48-handoff",
+          "state": "peer-dirty",
+          "median_ns": 350.845,
+          "instance": "c7i.48xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu48-handoff",
+          "state": "local-hot",
+          "median_ns": 25.8342,
+          "instance": "c7i.48xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu96-handoff",
+          "state": "cold",
+          "median_ns": 147.506,
+          "instance": "c7i.48xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu96-handoff",
+          "state": "peer-clean",
+          "median_ns": 30.0013,
+          "instance": "c7i.48xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu96-handoff",
+          "state": "peer-dirty",
+          "median_ns": 30.0013,
+          "instance": "c7i.48xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu96-handoff",
+          "state": "local-hot",
+          "median_ns": 30.0013,
+          "instance": "c7i.48xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        }
+      ]
+    },
+    "20f2064b19b233f500e99f894597410fccd9b52072ceb27f503f36357b50a019": {
+      "probe_format": 1,
+      "status": "validated",
+      "instance_examples": [
+        "c8i.xlarge"
+      ],
+      "architecture": "Granite Rapids",
+      "lookup_context": {
+        "identity": {
+          "vendor_id": "GenuineIntel",
+          "cpu family": "6",
+          "model": "173",
+          "stepping": "1",
+          "model name": "Intel(R) Xeon(R) 6975P-C",
+          "microcode": "0x1000434",
+          "CPU implementer": null,
+          "CPU architecture": null,
+          "CPU variant": null,
+          "CPU part": null,
+          "CPU revision": null,
+          "isa": "x86_64",
+          "hypervisor_flag": true,
+          "midr": null
+        },
+        "kernel": "7.0.0-1012-aws",
+        "base_page": 4096,
+        "thp_policy": [
+          "always [madvise] never",
+          "always defer defer+madvise [madvise] never",
+          {
+            "hugepages-1024kB": "always inherit madvise [never]",
+            "hugepages-128kB": "always inherit madvise [never]",
+            "hugepages-16kB": "always inherit madvise [never]",
+            "hugepages-2048kB": "always [inherit] madvise never",
+            "hugepages-256kB": "always inherit madvise [never]",
+            "hugepages-32kB": "always inherit madvise [never]",
+            "hugepages-512kB": "always inherit madvise [never]",
+            "hugepages-64kB": "always inherit madvise [never]",
+            "hugepages-8kB": null
+          }
+        ],
+        "caches": [
+          {
+            "level": "1",
+            "type": "Data",
+            "size": "48K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "12",
+            "shared_cpus": 2
+          },
+          {
+            "level": "1",
+            "type": "Instruction",
+            "size": "64K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "16",
+            "shared_cpus": 2
+          },
+          {
+            "level": "2",
+            "type": "Unified",
+            "size": "2048K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "16",
+            "shared_cpus": 2
+          },
+          {
+            "level": "3",
+            "type": "Unified",
+            "size": "491520K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "16",
+            "shared_cpus": 4
+          }
+        ],
+        "smt_width": 2,
+        "governor": null
+      },
+      "line_bytes_reported": 64,
+      "mlp": {
+        "status": "validated",
+        "candidate_k": [
+          24,
+          64
+        ],
+        "best_ns_per_load_range": [
+          7.7557,
+          7.76127
+        ],
+        "serial_ns_range": [
+          128.6645,
+          131.357
+        ],
+        "individual_10pct_k": [
+          64,
+          24
+        ],
+        "right_censored": false,
+        "near_best_tolerance": 0.15,
+        "scope": "isolated CPU, 256 MiB random encoded-pointer chains, base pages"
+      },
+      "adjacent_forward_observation": {
+        "parity0": "no-clear-benefit",
+        "parity1": "no-clear-benefit"
+      },
+      "consistent_training_suffix": {
+        "1": null,
+        "2": null,
+        "4": null,
+        "-1": 12,
+        "-2": 12
+      },
+      "stream_capacity": null,
+      "exact_outstanding_misses": null,
+      "cache_to_cache_route": null,
+      "conditional_mlp_observations": [
+        {
+          "condition": "thp",
+          "page_mode": "thp-requested",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 48,
+          "best_ns_per_load": 4.95227,
+          "serial_ns_per_load": 124.92
+        },
+        {
+          "condition": "separate-core-cpu1-compute",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 32,
+          "best_ns_per_load": 8.2429,
+          "serial_ns_per_load": 128.872
+        },
+        {
+          "condition": "separate-core-cpu1-stream",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 24,
+          "best_ns_per_load": 8.95664,
+          "serial_ns_per_load": 131.882
+        },
+        {
+          "condition": "smt-sibling-cpu2-compute",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 24,
+          "best_ns_per_load": 9.05503,
+          "serial_ns_per_load": 86.967
+        },
+        {
+          "condition": "smt-sibling-cpu2-stream",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 16,
+          "best_ns_per_load": 16.0607,
+          "serial_ns_per_load": 194.152
+        }
+      ],
+      "limitations": [
+        "idle isolated condition; active sibling load is a separate profile",
+        "training suffix is a conditioned latency observation, not exact activation length",
+        "seed repeats use the same worker; cross-instance evidence only where multiple examples are listed",
+        "storage/network and current page allocation must be checked at runtime"
+      ],
+      "evidence": [
+        "evidence/c8i.xlarge/screen",
+        "evidence/c8i.xlarge/repeat"
+      ],
+      "evidence_source_digests": [
+        "f618daf10bc9c095ed1ad4d751500d34bd336fc94b91bc55340410f5a271eb83",
+        "e2322f9b997de84871acf2dccbfc1032621a3e391d6c7441f24933fc34af9ec6"
+      ],
+      "handoff_observations": [
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "cold",
+          "median_ns": 153.338,
+          "instance": "c8i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-clean",
+          "median_ns": 156.301,
+          "instance": "c8i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-dirty",
+          "median_ns": 157.782,
+          "instance": "c8i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "local-hot",
+          "median_ns": 24.4452,
+          "instance": "c8i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "cold",
+          "median_ns": 154.081,
+          "instance": "c8i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "peer-clean",
+          "median_ns": 28.8901,
+          "instance": "c8i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "peer-dirty",
+          "median_ns": 81.4849,
+          "instance": "c8i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "smt-sibling-cpu2-handoff",
+          "state": "local-hot",
+          "median_ns": 28.8901,
+          "instance": "c8i.xlarge",
+          "scope": "one screen; repeated samples, no route inference"
+        }
+      ]
+    },
+    "e5e709d7d7db9017035b36f6b4a7dc094c39cb01e2b2ac3cb4fa5de55a4f443a": {
+      "probe_format": 1,
+      "status": "validated",
+      "instance_examples": [
+        "c6g.large"
+      ],
+      "architecture": "Neoverse N1",
+      "lookup_context": {
+        "identity": {
+          "vendor_id": null,
+          "cpu family": null,
+          "model": null,
+          "stepping": null,
+          "model name": null,
+          "microcode": null,
+          "CPU implementer": "0x41",
+          "CPU architecture": "8",
+          "CPU variant": "0x3",
+          "CPU part": "0xd0c",
+          "CPU revision": "1",
+          "isa": "aarch64",
+          "hypervisor_flag": false,
+          "midr": "0x00000000413fd0c1"
+        },
+        "kernel": "7.0.0-1012-aws",
+        "base_page": 4096,
+        "thp_policy": [
+          "always [madvise] never",
+          "always defer defer+madvise [madvise] never",
+          {
+            "hugepages-1024kB": "always inherit madvise [never]",
+            "hugepages-128kB": "always inherit madvise [never]",
+            "hugepages-16kB": "always inherit madvise [never]",
+            "hugepages-2048kB": "always [inherit] madvise never",
+            "hugepages-256kB": "always inherit madvise [never]",
+            "hugepages-32kB": "always inherit madvise [never]",
+            "hugepages-512kB": "always inherit madvise [never]",
+            "hugepages-64kB": "always inherit madvise [never]",
+            "hugepages-8kB": null
+          }
+        ],
+        "caches": [
+          {
+            "level": "1",
+            "type": "Data",
+            "size": "64K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "4",
+            "shared_cpus": 1
+          },
+          {
+            "level": "1",
+            "type": "Instruction",
+            "size": "64K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "4",
+            "shared_cpus": 1
+          },
+          {
+            "level": "2",
+            "type": "Unified",
+            "size": "1024K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "8",
+            "shared_cpus": 1
+          },
+          {
+            "level": "3",
+            "type": "Unified",
+            "size": "32768K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "16",
+            "shared_cpus": 2
+          }
+        ],
+        "smt_width": 1,
+        "governor": null
+      },
+      "line_bytes_reported": 64,
+      "mlp": {
+        "status": "validated",
+        "candidate_k": [
+          16,
+          24,
+          32,
+          48,
+          64
+        ],
+        "best_ns_per_load_range": [
+          9.27345,
+          9.319424999999999
+        ],
+        "serial_ns_range": [
+          135.4405,
+          136.609
+        ],
+        "individual_10pct_k": [
+          16,
+          24
+        ],
+        "right_censored": false,
+        "near_best_tolerance": 0.15,
+        "scope": "isolated CPU, 256 MiB random encoded-pointer chains, base pages"
+      },
+      "adjacent_forward_observation": {
+        "parity0": "unresolved",
+        "parity1": "unresolved"
+      },
+      "consistent_training_suffix": {
+        "1": 3,
+        "2": 3,
+        "4": 2,
+        "-1": 2,
+        "-2": 3
+      },
+      "stream_capacity": null,
+      "exact_outstanding_misses": null,
+      "cache_to_cache_route": null,
+      "conditional_mlp_observations": [
+        {
+          "condition": "thp",
+          "page_mode": "thp-requested",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 12,
+          "best_ns_per_load": 9.16544,
+          "serial_ns_per_load": 106.371
+        },
+        {
+          "condition": "separate-core-cpu1-compute",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 16,
+          "best_ns_per_load": 9.26979,
+          "serial_ns_per_load": 138.257
+        },
+        {
+          "condition": "separate-core-cpu1-stream",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 16,
+          "best_ns_per_load": 9.58826,
+          "serial_ns_per_load": 143.005
+        }
+      ],
+      "limitations": [
+        "idle isolated condition; active sibling load is a separate profile",
+        "training suffix is a conditioned latency observation, not exact activation length",
+        "seed repeats use the same worker; cross-instance evidence only where multiple examples are listed",
+        "storage/network and current page allocation must be checked at runtime"
+      ],
+      "evidence": [
+        "evidence/c6g.large/screen",
+        "evidence/c6g.large/repeat"
+      ],
+      "evidence_source_digests": [
+        "6b26cad0d8fb6be6e942a66cd467ac73f12880bc69f6b7ca4cfeaab1b6bf606c",
+        "6b26cad0d8fb6be6e942a66cd467ac73f12880bc69f6b7ca4cfeaab1b6bf606c"
+      ],
+      "handoff_observations": [
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "cold",
+          "median_ns": 147.692,
+          "instance": "c6g.large",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-clean",
+          "median_ns": 98.4615,
+          "instance": "c6g.large",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-dirty",
+          "median_ns": 98.4615,
+          "instance": "c6g.large",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "local-hot",
+          "median_ns": 49.2308,
+          "instance": "c6g.large",
+          "scope": "one screen; repeated samples, no route inference"
+        }
+      ]
+    },
+    "ff7b1e1c26ecc3b2f23e9f84d63bd51d4f856f13a7154788932fc406154b1f6c": {
+      "probe_format": 1,
+      "status": "validated",
+      "instance_examples": [
+        "c7g.large"
+      ],
+      "architecture": "Neoverse V1",
+      "lookup_context": {
+        "identity": {
+          "vendor_id": null,
+          "cpu family": null,
+          "model": null,
+          "stepping": null,
+          "model name": null,
+          "microcode": null,
+          "CPU implementer": "0x41",
+          "CPU architecture": "8",
+          "CPU variant": "0x1",
+          "CPU part": "0xd40",
+          "CPU revision": "1",
+          "isa": "aarch64",
+          "hypervisor_flag": false,
+          "midr": "0x00000000411fd401"
+        },
+        "kernel": "7.0.0-1012-aws",
+        "base_page": 4096,
+        "thp_policy": [
+          "always [madvise] never",
+          "always defer defer+madvise [madvise] never",
+          {
+            "hugepages-1024kB": "always inherit madvise [never]",
+            "hugepages-128kB": "always inherit madvise [never]",
+            "hugepages-16kB": "always inherit madvise [never]",
+            "hugepages-2048kB": "always [inherit] madvise never",
+            "hugepages-256kB": "always inherit madvise [never]",
+            "hugepages-32kB": "always inherit madvise [never]",
+            "hugepages-512kB": "always inherit madvise [never]",
+            "hugepages-64kB": "always inherit madvise [never]",
+            "hugepages-8kB": null
+          }
+        ],
+        "caches": [
+          {
+            "level": "1",
+            "type": "Data",
+            "size": "64K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "4",
+            "shared_cpus": 1
+          },
+          {
+            "level": "1",
+            "type": "Instruction",
+            "size": "64K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "4",
+            "shared_cpus": 1
+          },
+          {
+            "level": "2",
+            "type": "Unified",
+            "size": "1024K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "8",
+            "shared_cpus": 1
+          },
+          {
+            "level": "3",
+            "type": "Unified",
+            "size": "32768K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "16",
+            "shared_cpus": 2
+          }
+        ],
+        "smt_width": 1,
+        "governor": null
+      },
+      "line_bytes_reported": 64,
+      "mlp": {
+        "status": "validated",
+        "candidate_k": [
+          24,
+          32,
+          48
+        ],
+        "best_ns_per_load_range": [
+          6.72207,
+          6.723255
+        ],
+        "serial_ns_range": [
+          128.314,
+          130.25549999999998
+        ],
+        "individual_10pct_k": [
+          24,
+          24
+        ],
+        "right_censored": false,
+        "near_best_tolerance": 0.15,
+        "scope": "isolated CPU, 256 MiB random encoded-pointer chains, base pages"
+      },
+      "adjacent_forward_observation": {
+        "parity0": "unresolved",
+        "parity1": "no-clear-benefit"
+      },
+      "consistent_training_suffix": {
+        "1": 3,
+        "2": 2,
+        "4": 2,
+        "-1": 4,
+        "-2": 2
+      },
+      "stream_capacity": null,
+      "exact_outstanding_misses": null,
+      "cache_to_cache_route": null,
+      "conditional_mlp_observations": [
+        {
+          "condition": "thp",
+          "page_mode": "thp-requested",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 24,
+          "best_ns_per_load": 6.47544,
+          "serial_ns_per_load": 111.68
+        },
+        {
+          "condition": "separate-core-cpu1-compute",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 24,
+          "best_ns_per_load": 6.71517,
+          "serial_ns_per_load": 126.835
+        },
+        {
+          "condition": "separate-core-cpu1-stream",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 24,
+          "best_ns_per_load": 7.02463,
+          "serial_ns_per_load": 134.27
+        }
+      ],
+      "limitations": [
+        "idle isolated condition; active sibling load is a separate profile",
+        "training suffix is a conditioned latency observation, not exact activation length",
+        "seed repeats use the same worker; cross-instance evidence only where multiple examples are listed",
+        "storage/network and current page allocation must be checked at runtime"
+      ],
+      "evidence": [
+        "evidence/c7g.large/screen",
+        "evidence/c7g.large/repeat"
+      ],
+      "evidence_source_digests": [
+        "6b26cad0d8fb6be6e942a66cd467ac73f12880bc69f6b7ca4cfeaab1b6bf606c",
+        "6b26cad0d8fb6be6e942a66cd467ac73f12880bc69f6b7ca4cfeaab1b6bf606c"
+      ],
+      "handoff_observations": [
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "cold",
+          "median_ns": 161.905,
+          "instance": "c7g.large",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-clean",
+          "median_ns": 99.0476,
+          "instance": "c7g.large",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-dirty",
+          "median_ns": 99.0476,
+          "instance": "c7g.large",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "local-hot",
+          "median_ns": 45.7143,
+          "instance": "c7g.large",
+          "scope": "one screen; repeated samples, no route inference"
+        }
+      ]
+    },
+    "088f6754a9141660e2e2fb5817361da3964dc188b377e0773f9d16d40886d880": {
+      "probe_format": 1,
+      "status": "validated",
+      "instance_examples": [
+        "c8g.large"
+      ],
+      "architecture": "Neoverse V2",
+      "lookup_context": {
+        "identity": {
+          "vendor_id": null,
+          "cpu family": null,
+          "model": null,
+          "stepping": null,
+          "model name": null,
+          "microcode": null,
+          "CPU implementer": "0x41",
+          "CPU architecture": "8",
+          "CPU variant": "0x0",
+          "CPU part": "0xd4f",
+          "CPU revision": "1",
+          "isa": "aarch64",
+          "hypervisor_flag": false,
+          "midr": "0x00000000410fd4f1"
+        },
+        "kernel": "7.0.0-1012-aws",
+        "base_page": 4096,
+        "thp_policy": [
+          "always [madvise] never",
+          "always defer defer+madvise [madvise] never",
+          {
+            "hugepages-1024kB": "always inherit madvise [never]",
+            "hugepages-128kB": "always inherit madvise [never]",
+            "hugepages-16kB": "always inherit madvise [never]",
+            "hugepages-2048kB": "always [inherit] madvise never",
+            "hugepages-256kB": "always inherit madvise [never]",
+            "hugepages-32kB": "always inherit madvise [never]",
+            "hugepages-512kB": "always inherit madvise [never]",
+            "hugepages-64kB": "always inherit madvise [never]",
+            "hugepages-8kB": null
+          }
+        ],
+        "caches": [
+          {
+            "level": "1",
+            "type": "Data",
+            "size": "64K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "4",
+            "shared_cpus": 1
+          },
+          {
+            "level": "1",
+            "type": "Instruction",
+            "size": "64K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "4",
+            "shared_cpus": 1
+          },
+          {
+            "level": "2",
+            "type": "Unified",
+            "size": "2048K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "8",
+            "shared_cpus": 1
+          },
+          {
+            "level": "3",
+            "type": "Unified",
+            "size": "36864K",
+            "coherency_line_size": "64",
+            "ways_of_associativity": "12",
+            "shared_cpus": 2
+          }
+        ],
+        "smt_width": 1,
+        "governor": null
+      },
+      "line_bytes_reported": 64,
+      "mlp": {
+        "status": "validated",
+        "candidate_k": [
+          24,
+          32,
+          48,
+          64
+        ],
+        "best_ns_per_load_range": [
+          6.97149,
+          7.111459999999999
+        ],
+        "serial_ns_range": [
+          136.928,
+          139.199
+        ],
+        "individual_10pct_k": [
+          24,
+          24
+        ],
+        "right_censored": false,
+        "near_best_tolerance": 0.15,
+        "scope": "isolated CPU, 256 MiB random encoded-pointer chains, base pages"
+      },
+      "adjacent_forward_observation": {
+        "parity0": "unresolved",
+        "parity1": "unresolved"
+      },
+      "consistent_training_suffix": {
+        "1": 3,
+        "2": 2,
+        "4": 2,
+        "-1": 2,
+        "-2": 2
+      },
+      "stream_capacity": null,
+      "exact_outstanding_misses": null,
+      "cache_to_cache_route": null,
+      "conditional_mlp_observations": [
+        {
+          "condition": "thp",
+          "page_mode": "thp-requested",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 24,
+          "best_ns_per_load": 7.03547,
+          "serial_ns_per_load": 122.123
+        },
+        {
+          "condition": "separate-core-cpu1-compute",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 24,
+          "best_ns_per_load": 7.17631,
+          "serial_ns_per_load": 135.092
+        },
+        {
+          "condition": "separate-core-cpu1-stream",
+          "page_mode": "base",
+          "bytes": 268435456,
+          "smallest_k_within_10pct_of_best": 24,
+          "best_ns_per_load": 7.34747,
+          "serial_ns_per_load": 135.989
+        }
+      ],
+      "limitations": [
+        "idle isolated condition; active sibling load is a separate profile",
+        "training suffix is a conditioned latency observation, not exact activation length",
+        "seed repeats use the same worker; cross-instance evidence only where multiple examples are listed",
+        "storage/network and current page allocation must be checked at runtime"
+      ],
+      "evidence": [
+        "evidence/c8g.large/screen",
+        "evidence/c8g.large/repeat"
+      ],
+      "evidence_source_digests": [
+        "6b26cad0d8fb6be6e942a66cd467ac73f12880bc69f6b7ca4cfeaab1b6bf606c",
+        "6b26cad0d8fb6be6e942a66cd467ac73f12880bc69f6b7ca4cfeaab1b6bf606c"
+      ],
+      "handoff_observations": [
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "cold",
+          "median_ns": 165.0,
+          "instance": "c8g.large",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-clean",
+          "median_ns": 85.0,
+          "instance": "c8g.large",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "peer-dirty",
+          "median_ns": 85.0,
+          "instance": "c8g.large",
+          "scope": "one screen; repeated samples, no route inference"
+        },
+        {
+          "condition": "separate-core-cpu1-handoff",
+          "state": "local-hot",
+          "median_ns": 43.0,
+          "instance": "c8g.large",
+          "scope": "one screen; repeated samples, no route inference"
+        }
+      ]
+    }
+  },
+  "scope": "spike observations qualified by CPU/environment; no exact hardware resource-count claims"
+}

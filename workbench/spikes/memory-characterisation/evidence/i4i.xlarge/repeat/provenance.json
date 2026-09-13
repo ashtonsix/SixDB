@@ -1,0 +1,69 @@
+{
+  "commands": [
+    {
+      "name": "hardware",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "isolated",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "analyse",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "config": {
+    "build_dir": "/opt/sixdb/source/build/workspaces/memory-characterisation",
+    "cpu": 0,
+    "force_probe": false,
+    "lookup": null,
+    "mib": 256,
+    "output": "/opt/sixdb/jobs/20260913T105141Z-1e4f35d4/results/repeat",
+    "profile": "quick",
+    "seed": 918273,
+    "smt": false,
+    "system": false
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=memory-characterisation",
+    "-DSIXDB_TUNE=generic",
+    "-DSIXDB_MARCH="
+  ],
+  "files_sha256": {
+    "hardware.json": "b50f15764d8058f59c99a9ef7a150cf444d7521e675e6bf5b89a3345aa9a6f38",
+    "initialisation.json": "e30c57a88723ab1a062ef631f8130225eb6af19b2799a6cb397717d74b34f8bb",
+    "isolated.stderr": "fed53c35c0547677555def0158c33089e06e73f6c4059976b3bd90c15a19d714",
+    "samples.csv": "abb1d12e0ec2281020bc121ae6365cd4b2cce70627dd838c6bd0a0456475faf9"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {},
+  "platform": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39",
+  "regenerate": [],
+  "source_archive_sha256": "e7658760965229536f91bb5df9a269fb204c7e7a9035a987459fd41a31183a7f",
+  "source_digest": "abb7e0b86e15293a070247f07064a9a7a4268aaf0afa7fe367e535048d38f75d",
+  "source_unchanged": true,
+  "started_utc": "2026-09-13T10:54:25.662061+00:00",
+  "status": "complete"
+}

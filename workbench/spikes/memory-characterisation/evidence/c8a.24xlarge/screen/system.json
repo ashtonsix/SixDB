@@ -1,0 +1,198 @@
+{
+  "discovery": {
+    "block_devices": {
+      "nvme0n1": {
+        "size": "50331648",
+        "device/model": "Amazon Elastic Block Store",
+        "device/numa_node": "0",
+        "queue/logical_block_size": "512",
+        "queue/physical_block_size": "4096",
+        "queue/rotational": "0",
+        "queue/scheduler": "[none] mq-deadline",
+        "queue/read_ahead_kb": "128",
+        "queue/nr_requests": "63",
+        "queue/max_sectors_kb": "256"
+      }
+    },
+    "numa": {
+      "node0": {
+        "cpulist": "0-95",
+        "distance": "10",
+        "meminfo": "Node 0 MemTotal:       194180052 kB\nNode 0 MemFree:        189414260 kB\nNode 0 MemUsed:         4765792 kB\nNode 0 SwapCached:            0 kB\nNode 0 Active:           363416 kB\nNode 0 Inactive:        2288844 kB\nNode 0 Active(anon):     167416 kB\nNode 0 Inactive(anon):        0 kB\nNode 0 Active(file):     196000 kB\nNode 0 Inactive(file):  2288844 kB\nNode 0 Unevictable:       43660 kB\nNode 0 Mlocked:           27028 kB\nNode 0 Dirty:              2700 kB\nNode 0 Writeback:             0 kB\nNode 0 FilePages:       2511668 kB\nNode 0 Mapped:            96640 kB\nNode 0 AnonPages:        184332 kB\nNode 0 Shmem:              3496 kB\nNode 0 KernelStack:       19984 kB\nNode 0 PageTables:         4712 kB\nNode 0 SecPageTables:         0 kB\nNode 0 NFS_Unstable:          0 kB\nNode 0 Bounce:                0 kB\nNode 0 WritebackTmp:          0 kB\nNode 0 KReclaimable:     171716 kB\nNode 0 Slab:             448676 kB\nNode 0 SReclaimable:     171716 kB\nNode 0 SUnreclaim:       276960 kB\nNode 0 AnonHugePages:         0 kB\nNode 0 ShmemHugePages:        0 kB\nNode 0 ShmemPmdMapped:        0 kB\nNode 0 FileHugePages:     61440 kB\nNode 0 FilePmdMapped:         0 kB\nNode 0 Unaccepted:            0 kB\nNode 0 HugePages_Total:     0\nNode 0 HugePages_Free:      0\nNode 0 HugePages_Surp:      0"
+      }
+    },
+    "network_interfaces": {
+      "enp71s0": {
+        "mtu": "9001",
+        "speed": null,
+        "duplex": null,
+        "device/numa_node": "0"
+      },
+      "lo": {
+        "mtu": "65536",
+        "speed": null,
+        "duplex": null,
+        "device/numa_node": null
+      }
+    },
+    "mountinfo": "28 1 259:1 / / rw,relatime shared:1 - ext4 /dev/root rw,discard,errors=remount-ro,commit=30\n29 28 0:7 / /dev rw,nosuid,noexec,relatime shared:2 - devtmpfs devtmpfs rw,size=90394876k,nr_inodes=22598719,mode=755,inode64\n30 28 0:25 / /proc rw,nosuid,nodev,noexec,relatime shared:5 - proc proc rw\n31 28 0:26 / /sys rw,nosuid,nodev,noexec,relatime shared:6 - sysfs sysfs rw\n32 31 0:8 / /sys/kernel/security rw,nosuid,nodev,noexec,relatime shared:7 - securityfs securityfs rw\n33 29 0:27 / /dev/shm rw,nosuid,nodev shared:3 - tmpfs tmpfs rw,inode64\n34 29 0:28 / /dev/pts rw,nosuid,noexec,relatime shared:4 - devpts devpts rw,gid=5,mode=620,ptmxmode=000\n35 28 0:29 / /run rw,nosuid,nodev shared:12 - tmpfs tmpfs rw,size=38836012k,nr_inodes=819200,mode=755,inode64\n36 35 0:30 / /run/lock rw,nosuid,nodev,noexec,relatime shared:13 - tmpfs tmpfs rw,size=5120k,inode64\n37 31 0:31 / /sys/fs/cgroup rw,nosuid,nodev,noexec,relatime shared:8 - cgroup2 cgroup2 rw,nsdelegate,memory_recursiveprot\n38 31 0:32 / /sys/fs/pstore rw,nosuid,nodev,noexec,relatime shared:9 - pstore none rw\n39 31 0:33 / /sys/firmware/efi/efivars rw,nosuid,nodev,noexec,relatime shared:10 - efivarfs efivarfs rw\n40 31 0:34 / /sys/fs/bpf rw,nosuid,nodev,noexec,relatime shared:11 - bpf bpf rw,mode=700\n42 30 0:35 / /proc/sys/fs/binfmt_misc rw,relatime shared:14 - autofs systemd-1 rw,fd=32,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=10894\n43 29 0:36 / /dev/hugepages rw,nosuid,nodev,relatime shared:15 - hugetlbfs hugetlbfs rw,pagesize=2M\n44 29 0:23 / /dev/mqueue rw,nosuid,nodev,noexec,relatime shared:16 - mqueue mqueue rw\n45 31 0:9 / /sys/kernel/debug rw,nosuid,nodev,noexec,relatime shared:17 - debugfs debugfs rw\n46 31 0:14 / /sys/kernel/tracing rw,nosuid,nodev,noexec,relatime shared:18 - tracefs tracefs rw\n47 31 0:37 / /sys/fs/fuse/connections rw,nosuid,nodev,noexec,relatime shared:19 - fusectl fusectl rw\n48 31 0:21 / /sys/kernel/config rw,nosuid,nodev,noexec,relatime shared:20 - configfs configfs rw\n50 28 7:0 / /snap/amazon-ssm-agent/13349 ro,nodev,relatime shared:44 - squashfs /dev/loop0 ro,errors=continue,threads=single\n52 28 7:1 / /snap/core22/2437 ro,nodev,relatime shared:47 - squashfs /dev/loop1 ro,errors=continue,threads=single\n54 28 7:2 / /snap/snapd/27710 ro,nodev,relatime shared:49 - squashfs /dev/loop2 ro,errors=continue,threads=single\n56 28 259:4 / /boot rw,relatime shared:51 - ext4 /dev/nvme0n1p16 rw\n58 56 259:3 / /boot/efi rw,relatime shared:53 - vfat /dev/nvme0n1p15 rw,fmask=0077,dmask=0077,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro\n60 42 0:38 / /proc/sys/fs/binfmt_misc rw,nosuid,nodev,noexec,relatime shared:55 - binfmt_misc binfmt_misc rw",
+    "meminfo": "MemTotal:       194180052 kB\nMemFree:        189414260 kB\nMemAvailable:   190545372 kB\nBuffers:           64920 kB\nCached:          2446748 kB\nSwapCached:            0 kB\nActive:           363416 kB\nInactive:        2288844 kB\nActive(anon):     167416 kB\nInactive(anon):        0 kB\nActive(file):     196000 kB\nInactive(file):  2288844 kB\nUnevictable:       43660 kB\nMlocked:           27028 kB\nSwapTotal:             0 kB\nSwapFree:              0 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              2700 kB\nWriteback:             0 kB\nAnonPages:        184332 kB\nMapped:            96640 kB\nShmem:              3496 kB\nKReclaimable:     171716 kB\nSlab:             448676 kB\nSReclaimable:     171716 kB\nSUnreclaim:       276960 kB\nKernelStack:       19984 kB\nPageTables:         4712 kB\nSecPageTables:         0 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    97090024 kB\nCommitted_AS:    1070188 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:       38040 kB\nVmallocChunk:          0 kB\nPercpu:            55680 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:     61440 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:        13322240 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:      117152 kB\nDirectMap2M:     5613568 kB\nDirectMap1G:    192937984 kB"
+  },
+  "storage": {
+    "directory": "/opt/sixdb/jobs/20260913T105142Z-75cc5bb0/results/study",
+    "file_bytes": 67108864,
+    "scope": "temporary file on output filesystem; no raw-device access",
+    "measurements": {
+      "buffered-after-dontneed": {
+        "bytes": 67108864,
+        "elapsed_ns": 77838260,
+        "MiB_per_second": 822.2177628328279
+      },
+      "buffered-warm": {
+        "bytes": 67108864,
+        "elapsed_ns": 1780865,
+        "MiB_per_second": 35937.59212517513
+      },
+      "4k-buffered-write-fdatasync": {
+        "n": 32,
+        "p10_ns": 365971,
+        "median_ns": 396286.0,
+        "p90_ns": 491622,
+        "max_ns": 631922
+      },
+      "4k-direct-random-read": {
+        "n": 128,
+        "p10_ns": 208701,
+        "median_ns": 236355.5,
+        "p90_ns": 387621,
+        "max_ns": 489712
+      },
+      "4k-direct-app-concurrency-1": {
+        "operations": 128,
+        "elapsed_ns": 33996364,
+        "IOPS": 3765.1085274884103,
+        "service": {
+          "n": 128,
+          "p10_ns": 195010,
+          "median_ns": 217506.0,
+          "p90_ns": 366041,
+          "max_ns": 694852
+        }
+      },
+      "4k-direct-app-concurrency-2": {
+        "operations": 256,
+        "elapsed_ns": 36096332,
+        "IOPS": 7092.133350280577,
+        "service": {
+          "n": 256,
+          "p10_ns": 199631,
+          "median_ns": 225496.0,
+          "p90_ns": 404321,
+          "max_ns": 610332
+        }
+      },
+      "4k-direct-app-concurrency-4": {
+        "operations": 512,
+        "elapsed_ns": 36888494,
+        "IOPS": 13879.666651612288,
+        "service": {
+          "n": 512,
+          "p10_ns": 197561,
+          "median_ns": 235926.0,
+          "p90_ns": 383381,
+          "max_ns": 644122
+        }
+      },
+      "4k-direct-app-concurrency-8": {
+        "operations": 1024,
+        "elapsed_ns": 59021222,
+        "IOPS": 17349.69160753737,
+        "service": {
+          "n": 1024,
+          "p10_ns": 209641,
+          "median_ns": 520397.0,
+          "p90_ns": 631362,
+          "max_ns": 1074434
+        }
+      },
+      "4k-direct-app-concurrency-16": {
+        "operations": 2048,
+        "elapsed_ns": 183759486,
+        "IOPS": 11145.002876205259,
+        "service": {
+          "n": 2048,
+          "p10_ns": 520952,
+          "median_ns": 594287.0,
+          "p90_ns": 5272116,
+          "max_ns": 7151902
+        }
+      }
+    }
+  },
+  "network": {
+    "loopback": {
+      "1": {
+        "n": 200,
+        "p10_ns": 4740,
+        "median_ns": 5915.0,
+        "p90_ns": 6160,
+        "max_ns": 72390
+      },
+      "64": {
+        "n": 200,
+        "p10_ns": 4750,
+        "median_ns": 5890.0,
+        "p90_ns": 6030,
+        "max_ns": 12141
+      },
+      "4096": {
+        "n": 100,
+        "p10_ns": 8440,
+        "median_ns": 8890.0,
+        "p90_ns": 10660,
+        "max_ns": 18590
+      },
+      "1048576": {
+        "n": 8,
+        "p10_ns": 206041,
+        "median_ns": 286251.0,
+        "p90_ns": 370701,
+        "max_ns": 401421
+      }
+    },
+    "regional_https": [
+      {
+        "http_code": 405,
+        "remote_ip": "16.15.236.230",
+        "time_namelookup": 0.001455,
+        "time_connect": 0.002451,
+        "time_appconnect": 0.016158,
+        "time_starttransfer": 0.021019,
+        "time_total": 0.021043,
+        "exitcode": 0
+      },
+      {
+        "http_code": 405,
+        "remote_ip": "52.217.119.16",
+        "time_namelookup": 0.001333,
+        "time_connect": 0.00153,
+        "time_appconnect": 0.013658,
+        "time_starttransfer": 0.01506,
+        "time_total": 0.015083,
+        "exitcode": 0
+      },
+      {
+        "http_code": 405,
+        "remote_ip": "54.231.160.104",
+        "time_namelookup": 0.00117,
+        "time_connect": 0.001952,
+        "time_appconnect": 0.014098,
+        "time_starttransfer": 0.016081,
+        "time_total": 0.016105,
+        "exitcode": 0
+      }
+    ],
+    "scope": "TCP loopback echo RTT and fresh HTTPS HEAD connections; no peer bandwidth or network tail claims"
+  },
+  "elapsed_seconds": 0.6478842159999942
+}

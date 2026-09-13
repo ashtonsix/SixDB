@@ -1,0 +1,26 @@
+timer_ns_per_tick=0.416681
+mapping=mlp-16384 bytes=16384
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+AnonHugePages:         0 kB
+VmFlags: rd wr mr mw me ac sd hg 
+numa_mapping=7bc11b9bb000 default anon=4 dirty=4 N0=4 kernelpagesize_kB=4
+mapping=mlp-524288 bytes=524288
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+AnonHugePages:         0 kB
+VmFlags: rd wr mr mw me ac sd hg 
+numa_mapping=7bc11b580000 default anon=128 dirty=128 active=0 N0=128 kernelpagesize_kB=4
+mapping=mlp-8388608 bytes=8388608
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+AnonHugePages:      8192 kB
+VmFlags: rd wr mr mw me ac sd hg 
+numa_mapping=7bc11aa00000 default anon=2048 dirty=2048 active=0 N0=2048 kernelpagesize_kB=4
+mapping=mlp-268435456 bytes=268435456
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+AnonHugePages:    262144 kB
+VmFlags: rd wr mr mw me ac sd hg 
+numa_mapping=7bc10b200000 default anon=65536 dirty=65536 active=0 N0=65536 kernelpagesize_kB=4
+checksum=72915968

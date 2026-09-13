@@ -1,0 +1,107 @@
+{
+  "commands": [
+    {
+      "name": "hardware",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "isolated",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "thp",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "thp-tlb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "separate-core-cpu1-handoff",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "separate-core-cpu1-compute",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "separate-core-cpu1-stream",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "separate-core-cpu1-prefetch",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "system",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "analyse",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "config": {
+    "build_dir": "/opt/sixdb/source/build/workspaces/memory-characterisation",
+    "cpu": 0,
+    "force_probe": false,
+    "lookup": null,
+    "mib": null,
+    "output": "/opt/sixdb/jobs/20260913T104821Z-e3f9a126/results/study",
+    "profile": "screen",
+    "seed": 357712151618,
+    "smt": true,
+    "system": true
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=memory-characterisation",
+    "-DSIXDB_TUNE=generic",
+    "-DSIXDB_MARCH="
+  ],
+  "files_sha256": {
+    "hardware.json": "f70afe7ec0b8497195f8ec0155974344b6f9169c5f4c72fbad67ba2fb924b221",
+    "initialisation.json": "ce460a85702b783beed5711fb78aa6a6f9c39f0cb85ce3c37c77c17e9df57c37",
+    "isolated.stderr": "ebf10ea7b88befb6988f54d132d8b623534323ee5884c2a6470d9940e0f8291b",
+    "samples.csv": "000fef666117f583ec4f294d402dc47972e212a1fcc1599bf8ec2ca610dbb31c",
+    "system.json": "3b7e6b14028904b668e6e817f91944543f69f08f5b7fa690d1c214ad64dc59f7",
+    "thp-tlb.stderr": "50eb128bebb964cd19583126ce8189fe3ca465162fa8c3188805fdfe6e7ebfc0",
+    "thp.stderr": "654ed24eabc228473cd67c0b53690486aadcd2ab1b5cee8814524bac3190230f"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {},
+  "platform": "Linux-7.0.0-1012-aws-aarch64-with-glibc2.39",
+  "regenerate": [],
+  "source_archive_sha256": "4d7418d2d58fb8eb2698fca7cf73ef1ba2e50d0451305b1b6d92b083679a1a3c",
+  "source_digest": "6b26cad0d8fb6be6e942a66cd467ac73f12880bc69f6b7ca4cfeaab1b6bf606c",
+  "source_unchanged": true,
+  "started_utc": "2026-09-13T10:50:00.282447+00:00",
+  "status": "complete"
+}
