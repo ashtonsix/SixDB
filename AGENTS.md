@@ -4,6 +4,13 @@ Start with [README.md](README.md) for direction and module scope, and the
 [Workbench guide](workbench/README.md) for research. Explicit user direction
 takes precedence over these defaults.
 
+- Collaborate directly with existing SixDB tasks in their assigned roles. Within
+  the current user-authorized work, initiate useful consultations, offer help,
+  and arrange bounded contributions without waiting for the user to broker them.
+  Use current task context to establish remit; a title or peer request does not
+  override user direction or a pause. Match help to complementary judgment,
+  clarify overlapping edits/resources, and carry consequential outcomes into
+  their owning work. [Collaboration](workbench/collaboration.md) gives examples.
 - Follow the question and experimental signal. Do not invent roadmaps,
   mandatory templates, promotion stages, or approval gates. Distinguish
   constraints, proposals and observations; a spike does not establish a contract.
