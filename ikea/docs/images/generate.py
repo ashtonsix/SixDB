@@ -29,6 +29,7 @@ def wire_data():
     source.write_text(r'''
 #include <ikea/seriespack/detail/point.h>
 #include <ikea/tuplepack/detail/plan.h>
+#include <ikea/tuplepack/packet_layout.h>
 #include <iostream>
 namespace sp = ikea::seriespack;
 template<unsigned R> void emit() {
@@ -54,6 +55,8 @@ int main() {
     using Parent = sp::format<12, sp::geometry::local, 8>;
     using Child = sp::format<4, sp::geometry::striped>;
     static_assert(P::tile_rows == 64 && P::tile_bytes == 96);
+    static_assert(P::heads == 8 && sp::detail::body_offset<P>(63) == 63 &&
+                  sp::detail::stripe_offset<P>(0) == 64);
     static_assert(Parent::tile_rows == 8 && Child::tile_rows == 64);
     // ordinary.cpp checks construction and both public packet shapes. Read
     // its known physical bytes here using the implementation's scalar body.
@@ -70,6 +73,22 @@ int main() {
     for (unsigned slot = 0; slot < 8; ++slot)
         std::cout << ' ' << unsigned(tp::byte(pair >> (slot * 8)));
     std::cout << '\n';
+    const auto default_order = tp::packet_layout<8>::make(2, 4);
+    const std::array groups{2u, 1u, 1u};
+    const auto grouped_order = tp::packet_layout<8>::make(2, 4, groups);
+    if (!default_order || !grouped_order) return 1;
+    const auto emit_order = [](const char* name, const auto& order) {
+        std::array<std::string, 8> slots;
+        for (unsigned row = 0; row < order.rows(); ++row)
+            for (unsigned slot = 0; slot < order.map_size(); ++slot)
+                slots[order.offset(row, slot)] =
+                    std::string(1, 'A' + slot) + std::to_string(row);
+        std::cout << name;
+        for (const auto& slot : slots) std::cout << ' ' << slot;
+        std::cout << '\n';
+    };
+    emit_order("default", *default_order);
+    emit_order("grouped", *grouped_order);
 }
 ''')
     compiler = "clang++-21"
@@ -78,7 +97,7 @@ int main() {
         raise RuntimeError("Use the Clang 21.1.8 toolchain pinned in BUILDING.md")
     binary = BUILD / "wire_data"
     subprocess.run([compiler, "-std=c++23", "-O0", "-I", str(ROOT / "ikea/include"),
-                    str(source), "-o", str(binary)], check=True)
+                    str(source), str(ROOT / "ikea/src/tuplepack/packet_layout.cpp"), "-o", str(binary)], check=True)
     lines = subprocess.check_output([str(binary)], text=True).splitlines()
     tables = []
     for line in lines[:7]:
@@ -90,7 +109,13 @@ int main() {
     packed = [int(value) for value in lines[8].split()[1:]]
     if packed != [0x4b, 5, 0x18, 2, 37, 0, 1, 5, 12, 0, 0, 2]:
         raise RuntimeError("TuplePack ordinary projection changed; revisit the figure and prose")
-    return tables, local, packed
+    orderings = {name: slots for name, *slots in (line.split() for line in lines[9:])}
+    if orderings != {
+        "default": "A0 B0 C0 D0 A1 B1 C1 D1".split(),
+        "grouped": "A0 B0 A1 B1 C0 C1 D0 D1".split(),
+    }:
+        raise RuntimeError("TuplePack grouping changed; revisit the figure and prose")
+    return tables, local, packed, orderings
 
 
 class Figure:
@@ -193,9 +218,11 @@ def stripes(tables):
 def local_and_placement(local):
     f = Figure(704, "Local residual transpose and separated-head placement",
                "Local11 values eight through fifteen store eight body bytes 01, then bitplane bytes aa cc f0. "
-               "For the ordinary twenty-bit example, an eight-bit head is separate from the twelve-bit payload. "
-               "Each 64-row placement has 64 body bytes, 32 stripe bytes, 64 head bytes and a 32-byte gap; "
-               "both plane strides are 192 bytes.")
+               "For twenty-bit values with eight-bit heads, one contiguous head array has one byte per row. "
+               "Filtering scans this array before fetching payloads for candidate rows. A separate buffer "
+               "contains 64-row payload tiles, each with 64 body bytes followed by 32 residual bytes. "
+               "The arrays continue across many tiles without interleaved heads or gaps. "
+               "Columns align by original row range; the two planes have different byte scales.")
     f.path("M640,32 V672", color=RULE)
     f.heading(32, 42, "Local: transpose the low bits")
     f.text(32, 80, "K = 11, H = 0 · 8 values: 8…15", 22, color=MUTED)
@@ -229,7 +256,7 @@ def local_and_placement(local):
     f.lines(526, 600, ["3 residual", "bitplane bytes"], 20, 28, anchor="middle", color=MUTED)
     f.text(32, 672, "Bit 0 is shown first; byte values are hexadecimal.", 19, color=MUTED)
 
-    f.heading(672, 42, "Separate the head, place the planes")
+    f.heading(672, 42, "Separate heads for filtering")
     f.text(672, 80, "K = 20, H = 8 · payload = 12 bits", 22, color=MUTED)
     logical = [("head", "bits 19…12", 230.4, BLUE), ("body", "bits 11…4", 230.4, GREEN),
                ("tail", "bits 3…0", 115.2, AMBER)]
@@ -241,23 +268,28 @@ def local_and_placement(local):
         x += width
     f.path("M902.4,216 V224 H1248 V216", color=MUTED)
     f.text(1075.2, 256, "12-bit striped payload", 21, anchor="middle", color=MUTED)
-    f.text(672, 304, "64-row tiles · byte offsets in a shared partition", 21, "bold")
-    blocks = [(64, "body", GREEN), (32, "tail", AMBER), (64, "head", BLUE), (32, "gap", "#eef0f4")]
-    for tile, y in enumerate((360, 488)):
-        x = 672
-        offset = 192 * tile
-        for size, title, color in blocks:
-            width = size * 3
-            f.text(x, y - 16, offset, 18, color=MUTED)
-            f.rect(x, y, width, 80, color, "white")
-            f.text(x + width / 2, y + 32, title, 22, "bold", anchor="middle")
-            f.text(x + width / 2, y + 60, f"{size} B", 20, anchor="middle")
+    f.text(672, 300, "Head array · 1 byte per row", 23, "bold")
+    f.path("M672,324 H1248", arrow=True, color=BLUE)
+    f.rect(672, 344, 576, 56, BLUE, "white")
+    for tile in range(3):
+        x = 672 + tile * 168
+        f.text(x + 84, 379, f"rows {64 * tile}–{64 * tile + 63}", 20, anchor="middle")
+    f.text(1212, 379, "…", 25, anchor="middle")
+    f.text(672, 440, "Filter here; fetch payloads for candidate rows.", 21, color=MUTED)
+
+    f.text(672, 492, "Payload plane · separate buffer", 23, "bold")
+    for tile in range(3):
+        x = 672 + tile * 168
+        f.text(x + 84, 528, f"rows {64 * tile}–{64 * tile + 63}", 20, anchor="middle", color=MUTED)
+        for size, title, color in [(64, "body", GREEN), (32, "tail", AMBER)]:
+            width = size * 1.75
+            f.rect(x, 544, width, 56, color, "white")
+            f.text(x + width / 2, 568, title, 20, "bold", anchor="middle")
+            f.text(x + width / 2, 592, f"{size} B", 18, anchor="middle")
             x += width
-            offset += size
-        f.text(x, y - 16, offset, 18, anchor="end", color=MUTED)
-    f.lines(672, 608, ["Payload origin: 0 · head origin: 96 bytes",
-                        "Both plane strides: 192 bytes",
-                        "The gap remains available to the owner or a sibling."], 21, 32, color=MUTED)
+    f.text(1212, 580, "…", 25, anchor="middle", color=MUTED)
+    f.lines(672, 640, ["Each payload tile: 64 rows in 96 bytes.",
+                        "Columns align by row range; byte scales differ."], 21, 32, color=MUTED)
     f.save(OUT / "local-and-placement.svg")
 
 
@@ -463,6 +495,42 @@ def tuple_projection(packed):
     f.save(TUPLE_OUT / "projection.svg")
 
 
+def tuple_groups(orderings):
+    f = Figure(704, "TuplePack: two orders of a complete eight-byte packet",
+               "An A/B/C/D projection over two original rows fills one eight-byte packet. "
+               "The default group of four emits A0 B0 C0 D0 A1 B1 C1 D1. Groups of "
+               "two, one and one emit A0 B0 A1 B1 C0 C1 D0 D1. "
+               "A/B pairs stay adjacent while C and D each form a separate run.")
+    f.heading(32, 42, "Group map slots, then repeat each group across rows")
+    f.text(32, 80, "reader<8, 2> · map {A, B, C, D} · A1 means code A from original row 1", 22, color=MUTED)
+
+    def packet(tokens, y):
+        for slot, token in enumerate(tokens):
+            x = 32 + slot * 152
+            f.text(x + 76, y - 16, slot, 18, anchor="middle", color=MUTED)
+            f.rect(x, y, 152, 56, {"A": BLUE, "B": AMBER, "C": GREEN, "D": PURPLE}[token[0]], "white")
+            f.text(x + 76, y + 36, token, 24, anchor="middle", mono=True)
+
+    f.heading(32, 144, "Default: one group {4}")
+    f.text(32, 184, "Repeat the complete map for each row.", 21)
+    f.text(1248, 184, "Packet byte offsets", 20, anchor="end", color=MUTED)
+    packet(orderings["default"], 240)
+    f.path("M32,304 V320 H1248 V304")
+    f.text(640, 352, "One group · A/B/C/D for each row", 21, anchor="middle", color=MUTED)
+
+    f.heading(32, 416, "Groups {2, 1, 1}: A/B together, C and D separately")
+    f.text(32, 456, "Repeat A/B for both rows, then C for both rows, then D.", 21)
+    packet(orderings["grouped"], 512)
+    f.path("M32,576 V592 H640 V576")
+    f.text(336, 624, "A/B group · 4 bytes", 21, anchor="middle", color=MUTED)
+    f.path("M640,576 V592 H944 V576")
+    f.text(792, 624, "C group · 2 bytes", 21, anchor="middle", color=MUTED)
+    f.path("M944,576 V592 H1248 V576")
+    f.text(1096, 624, "D group · 2 bytes", 21, anchor="middle", color=MUTED)
+    f.text(32, 680, "Each cell is one byte. Both orders fill one 8-byte packet: two rows × four slots.", 21, color=MUTED)
+    f.save(TUPLE_OUT / "groups.svg")
+
+
 def tuple_observation():
     f = Figure(920, "TuplePack: mutation destinations, issued bytes and observation dependencies",
                "After substitution in composition.cpp, B remains in original byte zero bits one through "
@@ -521,7 +589,7 @@ def tuple_observation():
 
 
 if __name__ == "__main__":
-    tables, local, packed = wire_data()
+    tables, local, packed, orderings = wire_data()
     stripes(tables)
     local_and_placement(local)
     architecture()
@@ -529,5 +597,6 @@ if __name__ == "__main__":
     execution()
     lifecycle()
     tuple_projection(packed)
+    tuple_groups(orderings)
     tuple_observation()
-    print("Rendered eight documentation figures; wire examples checked against current C++ bodies.")
+    print("Rendered nine documentation figures; wire examples checked against current C++ bodies.")

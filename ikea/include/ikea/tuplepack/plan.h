@@ -1,8 +1,8 @@
 #pragma once
+#include <bit>
+#include <ikea/tuplepack/detail/packet_plan.h>
 #include <ikea/tuplepack/detail/plan.h>
 #include <ikea/tuplepack/detail/window.h>
-#include <ikea/tuplepack/detail/packet_plan.h>
-#include <bit>
 
 namespace ikea::tuplepack {
 namespace detail {
@@ -18,8 +18,10 @@ using write_control =
 } // namespace detail
 /// Prepared ordered code projection. Owns its controls; the description and map
 /// may be released after make(). N is 8 or 64 output bytes; Rows is a power of two
-/// in 1..N. Each original row has N/Rows map slots, in row-major order. A short
-/// map leaves trailing slots zero. Physical extent and stride are independent.
+/// in 1..N; a map has at most N/Rows slots. Groups partition those slots, with
+/// rows repeated inside each group. The default is one group of map.size();
+/// unused packet capacity is trailing zero space. Physical extent and stride
+/// are independent of this decoded byte order.
 template <unsigned N, unsigned Rows = 1> class reader {
     static_assert((N == 8 || N == 64) && Rows <= N && std::has_single_bit(Rows));
     detail::read_control<N, Rows> controls_;
@@ -31,16 +33,21 @@ template <unsigned N, unsigned Rows = 1> class reader {
     }
 
   public:
-    static constexpr unsigned slots = N, rows = Rows, bytes_per_row = N / Rows;
-    [[nodiscard]] static std::expected<reader, error> make(const layout& format,
-                                                           std::span<const byte> map) {
+    static constexpr unsigned slots = N, rows = Rows, max_map_slots = N / Rows;
+    [[nodiscard]] static std::expected<reader, error>
+    make(const layout& format, std::span<const byte> map, std::span<const unsigned> groups = {}) {
+        if constexpr (N == 64 && Rows == 1) {
+            auto ordering = packet_layout<N>::make(Rows, map.size(), groups);
+            if (!ordering)
+                return std::unexpected(ordering.error());
+        }
         auto prepared = [&] {
             if constexpr (N == 8)
-                return detail::prepare_read8(format, map, Rows);
+                return detail::prepare_read8(format, map, Rows, groups);
             else if constexpr (Rows == 1)
                 return detail::prepare_read64(format, map);
             else
-                return detail::prepare_packet_read(format, map, Rows);
+                return detail::prepare_packet_read(format, map, Rows, groups);
         }();
         if (!prepared)
             return std::unexpected(prepared.error());
@@ -77,6 +84,10 @@ template <unsigned N, unsigned Rows = 1> class reader {
     {
         return get_unchecked(row, 0);
     }
+    /// Borrowed ordering metadata; its address is stable while this plan is.
+    const packet_layout<N>& ordering() const noexcept {
+        return controls_.ordering;
+    }
     /// Authoring access; controls are internal and are not serialized.
     const auto& controls() const noexcept {
         return controls_;
@@ -97,20 +108,29 @@ template <unsigned N, unsigned Rows = 1> class writer {
     }
 
   public:
-    static constexpr unsigned slots = N, rows = Rows, bytes_per_row = N / Rows;
-    [[nodiscard]] static std::expected<writer, error> make(const layout& format,
-                                                           std::span<const byte> map) {
+    static constexpr unsigned slots = N, rows = Rows, max_map_slots = N / Rows;
+    [[nodiscard]] static std::expected<writer, error>
+    make(const layout& format, std::span<const byte> map, std::span<const unsigned> groups = {}) {
+        if constexpr (N == 64 && Rows == 1) {
+            auto ordering = packet_layout<N>::make(Rows, map.size(), groups);
+            if (!ordering)
+                return std::unexpected(ordering.error());
+        }
         auto prepared = [&] {
             if constexpr (N == 8)
-                return detail::prepare_write8(format, map, Rows);
+                return detail::prepare_write8(format, map, Rows, groups);
             else if constexpr (Rows == 1)
                 return detail::prepare_write64(format, map);
             else
-                return detail::prepare_packet_write(format, map, Rows);
+                return detail::prepare_packet_write(format, map, Rows, groups);
         }();
         if (!prepared)
             return std::unexpected(prepared.error());
         return writer(std::move(*prepared));
+    }
+    /// Borrowed ordering metadata; its address is stable while this plan is.
+    const packet_layout<N>& ordering() const noexcept {
+        return controls_.read.ordering;
     }
     unsigned unit_bytes() const noexcept {
         return controls_.read.bytes;
@@ -136,18 +156,25 @@ template <unsigned N, unsigned Rows = 1> class writer {
     }
     bool accepts(const packet<N>& input,
                  std::uint64_t active = detail::all_rows<Rows>) const noexcept {
-        if constexpr (N == 8)
-            return !(input & controls_.invalid_word & detail::gpr_row_mask<Rows>(active));
-        else {
+        if constexpr (N == 8) {
+            if (active == detail::all_rows<Rows>)
+                return !(input & controls_.invalid_word);
+            std::uint64_t mask = 0;
+            for (unsigned r = 0; r < Rows; ++r)
+                if (active & (std::uint64_t(1) << r))
+                    for (unsigned i = 0; i < ordering().map_size(); ++i)
+                        mask |= std::uint64_t(255) << (8 * ordering().template offset<Rows>(r, i));
+            return !(input & controls_.invalid_word & mask);
+        } else {
             if (active == detail::all_rows<Rows>)
                 return detail::fits<64>(controls_, input);
             for (unsigned r = 0; r < Rows; ++r) {
                 if (!(active & (std::uint64_t(1) << r)))
                     continue;
                 byte invalid = 0;
-                for (unsigned i = 0; i < bytes_per_row; ++i)
-                    invalid |=
-                        input[r * bytes_per_row + i] & controls_.invalid[r * bytes_per_row + i];
+                for (unsigned i = 0; i < ordering().map_size(); ++i)
+                    invalid |= input[ordering().template offset<Rows>(r, i)] &
+                               controls_.invalid[ordering().template offset<Rows>(r, i)];
                 if (invalid)
                     return false;
             }

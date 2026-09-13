@@ -12,7 +12,7 @@ target_link_libraries(ikea_seriespack PUBLIC ikea_core)
 
 add_library(ikea_tuplepack STATIC src/tuplepack/description.cpp src/tuplepack/construction.cpp
   src/tuplepack/prepare.cpp src/tuplepack/kernels.cpp src/tuplepack/gpr.cpp src/tuplepack/routes.cpp
-  src/tuplepack/packet_prepare.cpp src/tuplepack/packet.cpp)
+  src/tuplepack/packet_layout.cpp src/tuplepack/packet_prepare.cpp src/tuplepack/packet.cpp)
 add_library(ikea::tuplepack ALIAS ikea_tuplepack)
 sixdb_target(ikea_tuplepack)
 target_include_directories(ikea_tuplepack PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -86,14 +86,14 @@ foreach(example ordinary composition pipeline integration)
   sixdb_target(ikea_example_seriespack_${example})
   target_link_libraries(ikea_example_seriespack_${example} PRIVATE ikea::seriespack)
 endforeach()
-foreach(example ordinary composition integration packets words)
+foreach(example ordinary composition integration packets words groups)
   add_executable(ikea_example_tuplepack_${example} EXCLUDE_FROM_ALL examples/tuplepack/${example}.cpp)
   sixdb_target(ikea_example_tuplepack_${example})
   target_link_libraries(ikea_example_tuplepack_${example} PRIVATE ikea::tuplepack)
 endforeach()
 add_custom_target(ikea_examples DEPENDS ikea_example_seriespack_ordinary
   ikea_example_seriespack_composition ikea_example_seriespack_pipeline ikea_example_seriespack_integration
-  ikea_example_tuplepack_ordinary ikea_example_tuplepack_composition ikea_example_tuplepack_integration ikea_example_tuplepack_packets ikea_example_tuplepack_words
+  ikea_example_tuplepack_ordinary ikea_example_tuplepack_composition ikea_example_tuplepack_integration ikea_example_tuplepack_packets ikea_example_tuplepack_words ikea_example_tuplepack_groups
   ikea_example_bec256_ordinary ikea_example_bec256_native ikea_example_bec256_integration)
 add_custom_target(ikea_validate
   COMMAND python3 "${CMAKE_CURRENT_SOURCE_DIR}/test/seriespack/reference/check.py"
@@ -114,6 +114,7 @@ add_custom_target(ikea_validate
   COMMAND $<TARGET_FILE:ikea_example_tuplepack_integration>
   COMMAND $<TARGET_FILE:ikea_example_tuplepack_packets>
   COMMAND $<TARGET_FILE:ikea_example_tuplepack_words>
+  COMMAND $<TARGET_FILE:ikea_example_tuplepack_groups>
   COMMAND $<TARGET_FILE:ikea_bec256_check>
   COMMAND $<TARGET_FILE:ikea_bec256_composition_check>
   COMMAND $<TARGET_FILE:ikea_example_bec256_ordinary>

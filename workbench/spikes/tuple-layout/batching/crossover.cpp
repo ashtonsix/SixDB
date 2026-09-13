@@ -38,8 +38,12 @@ void run(benchmark::State &state, unsigned extent, unsigned draws,
   // A runtime reversed map prevents identity-copy fixtures from deciding the
   // result.
   std::reverse(map.begin(), map.end());
-  const auto rp = *reader<64, Rows>::make(format, map);
-  const auto wp = *writer<64, Rows>::make(format, map);
+  // Retain this experiment's fixed row slices explicitly; ordinary short maps
+  // now occupy a packed prefix of the packet.
+  auto packet_map = map;
+  packet_map.resize(B, hole);
+  const auto rp = *reader<64, Rows>::make(format, packet_map);
+  const auto wp = *writer<64, Rows>::make(format, packet_map);
   const auto point_r = *reader<64>::make(format, map);
   const auto point_w = *writer<64>::make(format, map);
   // Use the ordinary prepared scalar kernel when the actual projection fits

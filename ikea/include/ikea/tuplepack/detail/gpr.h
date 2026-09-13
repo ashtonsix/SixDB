@@ -57,33 +57,53 @@ template <unsigned Bytes> [[gnu::always_inline]] inline std::uint64_t load_word(
 }
 /// Same point body serves every shape. Word assembly avoids one read/modify/write
 /// per contribution; stores still touch only the declared selected bytes.
-template <unsigned Slots>
-[[gnu::always_inline]] inline void write_gpr_row(const gpr_write& p, byte* row,
-                                                 std::uint64_t input) {
+template <unsigned Slots, class GetByte>
+[[gnu::always_inline]] inline void write_gpr_row(const gpr_write& p, byte* row, GetByte get) {
     if (p.word.selected == 1) {
-        write_gpr_single(p, row, input);
-    } else if constexpr (Slots > 1) {
-        if (p.word.bytes) {
-            const auto& w = p.word;
-            auto next = load_short_word(row + w.offset, w.bytes) & ~w.changed;
-            // Bounded by the shape. Do not instantiate a separate store traversal
-            // for every possible count: it multiplies code size without saving loads.
-            for (unsigned i = 0; i < Slots; ++i)
-                if (i < w.selected)
-                    next |= std::uint64_t(byte(input >> w.input_shift[i])) << w.output_shift[i];
-            for (unsigned i = 0; i < p.count; ++i)
-                row[p.stores[i].offset] = byte(next >> (8 * (p.stores[i].offset - w.offset)));
-        } else
-            write_body<8>(p, row, input);
+        const auto& b = p.stores[0];
+        row[b.offset] = (b.mask == 255 ? 0 : row[b.offset] & byte(~b.mask)) |
+                        (get(b.input[0]) << b.shift[0]);
+    } else if (p.word.bytes && p.word.selected > 1) {
+        const auto& w = p.word;
+        auto next = load_short_word(row + w.offset, w.bytes) & ~w.changed;
+        // Shape-bounded assembly shares physical traversal between grouped and
+        // single-group packets. Only the source-byte extraction differs.
+        for (unsigned i = 0; i < Slots; ++i)
+            if (i < w.selected)
+                next |= std::uint64_t(get(w.input_shift[i] / 8)) << w.output_shift[i];
+        for (unsigned i = 0; i < p.count; ++i)
+            row[p.stores[i].offset] = byte(next >> (8 * (p.stores[i].offset - w.offset)));
+    } else {
+        for (unsigned i = 0; i < p.count; ++i) {
+            const auto& b = p.stores[i];
+            byte value = b.mask == 255 ? 0 : row[b.offset] & byte(~b.mask);
+            for (unsigned j = 0; j < b.count; ++j)
+                value |= get(b.input[j]) << b.shift[j];
+            row[b.offset] = value;
+        }
     }
 }
 template <unsigned Rows, unsigned Count, class Address>
 [[gnu::always_inline]] inline std::uint64_t read_gpr_rows(const gpr_read& p, Address&& address,
                                                           std::uint64_t active) {
+    if constexpr (Rows == 1)
+        return active ? read_body<8, Count>(p, address(0)) : 0;
     std::uint64_t value = 0;
-    for (unsigned r = 0; r < Rows; ++r)
-        if (active & (std::uint64_t(1) << r))
-            value |= read_body<8, Count>(p, address(r)) << (r * (64 / Rows));
+    if (!p.ordering.single_group()) {
+        for (unsigned r = 0; r < Rows; ++r)
+            if (active & (std::uint64_t(1) << r)) {
+                const auto row = address(r);
+                for (unsigned i = 0; i < Count; ++i) {
+                    const auto c = p.codes[i];
+                    if (c.width)
+                        value |= std::uint64_t((row[c.offset] >> c.shift) & ((1u << c.width) - 1))
+                                 << (8 * p.ordering.template offset<Rows>(r, i));
+                }
+            }
+    } else
+        for (unsigned r = 0; r < Rows; ++r)
+            if (active & (std::uint64_t(1) << r))
+                value |= read_body<8, Count>(p, address(r)) << (r * p.slots * 8);
     return value;
 }
 template <unsigned Rows, unsigned Bytes, class Address>
@@ -103,7 +123,7 @@ read_gpr_transfer(const gpr_read& p, Address&& address, std::uint64_t active, st
             if (active & (std::uint64_t(1) << r))
                 value |= (bytes == B ? load_word<B>(address(r) + t.offset)
                                      : load_short_word(address(r) + t.offset, bytes))
-                         << (r * B * 8);
+                         << (r * p.slots * 8);
     return (value >> t.shift) & t.mask;
 }
 /// Row addresses are requested only for active rows. A nonzero stride promises
@@ -149,10 +169,10 @@ template <unsigned Rows, unsigned Bytes, class Address>
         for (unsigned r = 0; r < Rows; ++r)
             if (active & (std::uint64_t(1) << r)) {
                 auto row = address(r) + t.offset;
-                const auto mask = changed >> (r * B * 8);
+                const auto mask = changed >> (r * p.read.slots * 8);
                 const auto full = ~std::uint64_t(0) >> (64 - 8 * bytes);
                 const auto old = (mask & full) == full ? 0 : load_short_word(row, bytes) & ~mask;
-                const auto next = old | (encoded >> (r * B * 8));
+                const auto next = old | (encoded >> (r * p.read.slots * 8));
                 if (bytes == B)
                     __builtin_memcpy(row, &next, B);
                 else
@@ -174,8 +194,24 @@ template <unsigned Rows, class Address>
         write_gpr_transfer<Rows, 0>(p, address, input, active, stride);
         return;
     }
+    if constexpr (Rows > 1) {
+        if (!p.read.ordering.single_group()) {
+            for (unsigned r = 0; r < Rows; ++r)
+                if (active & (std::uint64_t(1) << r))
+                    write_gpr_row<B>(
+                        p, address(r), [&](unsigned slot) __attribute__((always_inline)) {
+                            return byte(input >>
+                                        (8 * p.read.ordering.template offset<Rows>(r, slot)));
+                        });
+            return;
+        }
+    }
     for (unsigned r = 0; r < Rows; ++r)
-        if (active & (std::uint64_t(1) << r))
-            write_gpr_row<B>(p, address(r), input >> (r * B * 8));
+        if (active & (std::uint64_t(1) << r)) {
+            const auto row_input = input >> (r * p.read.slots * 8);
+            write_gpr_row<B>(p, address(r), [&](unsigned slot) __attribute__((always_inline)) {
+                return byte(row_input >> (8 * slot));
+            });
+        }
 }
 } // namespace ikea::tuplepack::detail

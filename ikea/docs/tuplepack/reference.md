@@ -25,25 +25,50 @@ are little-endian within the byte on every ISA. Spare bits have no value semanti
 `decode` requires exactly one description. It rejects trailing data, unknown
 versions, malformed widths/extents and overlapping codes. Persist the description
 with the owner's placement and semantic schema. Rebuild ISA-specific controls
-from the description and operation map; those controls are not a recovery format.
+from the description, operation map and groups; those controls are not a recovery format.
 Rebinding does not migrate bytes or retain an earlier data version.
 
 ## Packet shape and coordinates
 
 `reader<N, Rows=1>` and `writer<N, Rows=1>` own prepared maps and controls.
-N is decoded packet bytes. Rows is original rows per packet.
+N is decoded packet capacity in bytes. Rows is original rows per packet.
 
-| N | Supported Rows | Slots per row | Ordinary packet type |
+| N | Supported Rows | Maximum map slots per row | Ordinary packet type |
 | --- | --- | --- | --- |
 | 8 | 1, 2, 4, 8 | 8/Rows | `uint64_t` |
 | 64 | 1, 2, 4, 8, 16, 32, 64 | 64/Rows | `std::array<byte, 64>` |
 
-The map has at most `N/Rows` entries and repeats for every row. Slots are in
-row-major order; in a GPR, slot zero occupies bits 0–7. Entries name code ranks
-or `hole`. Reads allow duplicate ranks and zero holes and trailing slots.
-Writers reject duplicate destination ranks, ignore hole/trailing input slots,
-and preserve every unmapped bit, including spare bits. Selected input codes
-must fit their unsigned widths.
+The map has at most `N/Rows` entries and repeats for every row. Entries name code
+ranks or `hole`. `reader::make(layout, map, groups = {})` and the matching writer
+call accept `std::span<const unsigned>` group lengths. Explicit lengths must be
+positive and sum exactly to `map.size()`; holes count toward that size. Invalid
+groups reject with `error::map`. Omitted groups mean one group of `map.size()`,
+with an empty map requiring no groups.
+
+Groups partition consecutive map slots. Each group emits its slots for all
+original rows before the next group. For a group starting at map slot b with
+length L, slot s of original row r occupies packet byte:
+
+```text
+Rows × b + r × L + (s − b)
+```
+
+Exactly `Rows × map.size()` byte positions are used, including holes and inactive
+rows. The rest is trailing capacity: zero on reads and ignored on writes. With
+one group, the used bytes are row-major, with no padding between rows. In a GPR,
+byte zero occupies bits 0–7. Positions depend on map, groups and Rows, independently
+of N.
+
+Both plans own a `packet_layout<N>` and return it by const reference from
+`ordering()`. Its `rows()`, `map_size()` and `used_bytes()` describe the packet;
+`offset(row, map_slot)` gives
+the byte position for valid original-row and map-slot indices. Authors can also
+prepare this metadata with `packet_layout<N>::make(rows, map_size, groups)`.
+
+Reads allow duplicate ranks and zero holes. Writers reject duplicate destination
+ranks, consume the same grouped order, ignore hole input slots and preserve every
+unmapped bit, including spare bits. Selected input codes must fit their unsigned
+widths.
 
 `get/set(first, ..., active)` uses mask bit r for original row `first+r`.
 Bits beyond Rows or active rows beyond the view reject. An empty mask may begin
@@ -66,7 +91,7 @@ and preserves bytes outside each unit. It needs no prior initialized contents.
 
 | Resource | Required lifetime or proof |
 | --- | --- |
-| Layout and map supplied to preparation | Can expire after their controls are copied |
+| Layout, map and groups supplied to preparation | Can expire after their controls are copied |
 | Named view and prepared plan | Stable addresses through every bound invocation |
 | Source view identified by emitted effects | Resolvable until the owner consumes those effects; the prepared plan need not survive for this alone |
 | View storage | Live, with unchanged placement and the layout that encoded it |
@@ -160,10 +185,17 @@ allocation with that byte stride; omit it for arbitrary addresses. Ordinary
 bindings supply that proof. Controls must match Rows; one-row bodies use a
 direct pointer. Access stays within active units, including with sparse masks.
 
-`compact_word<Rows>` and `expand_word<Rows>` support Rows 1/2/4/8. They move
-the first `8/Rows` slots of each wide row to/from a word. Compaction discards
-later slots; expansion zeroes them. Preserving the logical operation requires
-the same short map with no additional write destinations.
+`native::row_mask(plan, active)` expands original-row activity using the prepared
+packet order. Each map slot of an active row, including a hole, gets byte `0xff`;
+inactive slots and trailing capacity get zero. `row_mask_for<N, Rows>` describes
+full-capacity row-major blocks and does not account for a short map or grouping.
+
+`compact_word(wide)` extracts packet bytes 0–7 into a GPR;
+`expand_word(word)` preserves those positions and zeroes bytes 8–63.
+Equivalent operations on the two widths use the same
+map, groups and Rows, with at most `8/Rows` map slots (Rows 1/2/4/8). The entire
+used sequence then fits in the first eight bytes. Compaction of a larger map
+discards data; expansion does not supply values for additional write destinations.
 
 The restricted route algebra carries input bits or zeros. Conflicting OR,
 arithmetic and predicates require authored bodies. A normalized route requires

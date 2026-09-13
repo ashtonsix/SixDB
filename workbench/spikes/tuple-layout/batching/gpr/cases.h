@@ -75,8 +75,12 @@ void run(benchmark::State& state, unsigned extent, unsigned stride, unsigned pat
         map[i] = pattern == 2 && drawn > 1 ? i * (codes.size() - 1) / (drawn - 1)
                  : pattern == 1 ? drawn - 1 - i : i;
     gpr_probe::plan<Rows> gp(format, map);
-    const auto rp = *tp::reader<64, Step>::make(format, map);
-    const auto wp = *tp::writer<64, Step>::make(format, map);
+    // These retained controls consume fixed row slices. Express their padding
+    // in the map, independently of the new packed-prefix default.
+    auto simd_map = map;
+    simd_map.resize(64 / Step, tp::hole);
+    const auto rp = *tp::reader<64, Step>::make(format, simd_map);
+    const auto wp = *tp::writer<64, Step>::make(format, simd_map);
     std::vector<tp::byte> bytes((count - 1) * stride + extent);
     for (unsigned i = 0; i < bytes.size(); ++i)
         bytes[i] = tp::byte(i * 113 + i / 7 + 91);

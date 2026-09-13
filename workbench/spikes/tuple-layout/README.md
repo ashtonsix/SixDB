@@ -20,6 +20,8 @@ archived intermediate sweeps and explains how to recover either captured source
 or inputs accepted by the report tools.
 
 [Implementation decisions](implementation-decisions.md) record the selection of techniques for Ikea.
+The [grouped-packet probe](batching/groups/README.md) investigates keeping
+caller-selected byte groups together across rows for materialization and mutation.
 
 Earlier evidence: [static extraction and ABI](initial.md),
 [first runtime maps and whole-operation composition](runtime-first.md).

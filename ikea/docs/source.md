@@ -1,10 +1,8 @@
 # Extending and changing Ikea
 
 Ikea separates ordinary caller contracts, supported `author/` surfaces and
-internal `detail/` implementation. Template bodies remain visible where the
-caller’s concrete context enables useful specialization; consumers also link
-the compiled library. This guide explains how to extend that structure and
-where existing behavior lives.
+internal `detail/` implementation. Bodies stay in headers where caller context
+enables useful specialization; cold work belongs in compiled TUs.
 
 ## Define the operation before its execution
 
@@ -85,6 +83,7 @@ unless marked `src/`.
 | --- | --- |
 | Physical description and recovery | `description.h`; `src/tuplepack/description.cpp` |
 | Ordinary placement, plans and commands | `{view,plan,read,write,construction,selection}.h` |
+| Decoded packet grouping | `packet_layout.h`; `src/tuplepack/packet_layout.cpp` |
 | Code-map admission and ISA controls | `src/tuplepack/{prepare,packet_prepare}.cpp` |
 | Construction preparation | `src/tuplepack/construction.cpp` |
 | Recursive mutation groups | `author/composition.h` |
@@ -97,16 +96,13 @@ unless marked `src/`.
 | Native instructions and bounded memory helpers | `detail/native/`; small shuffles in `detail/native/shuffle.h` |
 | Internal controls | `detail/{plan,packet_plan,gpr}.h` |
 
-Preparation chooses transfer lowerings from the code map. Consecutive bytes with
-a common shift admit bounded GPR transfers; general maps retain byte gathering
-and replacement. Full tight windows can coalesce across rows. The ordinary
-endpoint and inlined native body share these controls.
-
-64-byte packet bodies also use physical extent and placement: short units can
-use a route over complete units, while scattered projections use word assembly
-or point bodies. Sparse masks access only active units. These are implementation
-choices; caller obligations come from the declared access masks and
-[operation contracts](tuplepack/reference.md), independently of decoded packet size.
+Preparation selects physical transfers and folds grouping into decoded-byte
+routes. Short units and tight windows permit combined loads; consecutive bytes
+with a common shift permit bounded GPR transfers. Scattered maps use byte/word
+assembly or point bodies with a register permutation. Ordinary and inline native
+operations share controls and access only active units. The declared access masks
+and [contracts](tuplepack/reference.md) define caller obligations independently
+of the chosen lowering.
 
 ## Bec256 source boundaries
 
@@ -131,11 +127,10 @@ prepared replacements own transient bytes that can survive an owner wait.
 Both report the issued body span. Metadata and summaries are separate children
 of the owner's mutation, including when the body has zero bytes.
 
-The native optional heuristic encode arm shares byte populations and rank widths with
-the accepted encoder. It can decline before count-tree construction or any
-destination/effect access. `detail/write.h` adapts that decision to the ordinary
-checked result; unconditional encoding has no heuristic branch. The statistical
-model is an analysis aid, independent of wire identity and exact write admission.
+The optional heuristic shares byte populations and rank widths with encoding,
+and can decline before count-tree construction or destination/effect access.
+`detail/write.h` adapts this to the ordinary result. Unconditional encoding has
+no heuristic branch; the statistical model is separate from exact write admission.
 
 ## Shared execution entry
 

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="704" viewBox="0 0 1280 704" role="img" aria-labelledby="title description">
 <title id="title">Local residual transpose and separated-head placement</title>
-<desc id="description">Local11 values eight through fifteen store eight body bytes 01, then bitplane bytes aa cc f0. For the ordinary twenty-bit example, an eight-bit head is separate from the twelve-bit payload. Each 64-row placement has 64 body bytes, 32 stripe bytes, 64 head bytes and a 32-byte gap; both plane strides are 192 bytes.</desc>
+<desc id="description">Local11 values eight through fifteen store eight body bytes 01, then bitplane bytes aa cc f0. For twenty-bit values with eight-bit heads, one contiguous head array has one byte per row. Filtering scans this array before fetching payloads for candidate rows. A separate buffer contains 64-row payload tiles, each with 64 body bytes followed by 32 residual bytes. The arrays continue across many tiles without interleaved heads or gaps. Columns align by original row range; the two planes have different byte scales.</desc>
 <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8" fill="#586579"/></marker></defs>
 <rect width="1280" height="100%" fill="white"/>
 <g font-family="Arial, Helvetica, sans-serif" fill="#233047" font-size="21">
@@ -161,7 +161,7 @@
 <text x="526" y="600" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">3 residual</text>
 <text x="526" y="628" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">bitplane bytes</text>
 <text x="32" y="672" font-size="19" font-weight="normal" fill="#586579" text-anchor="start">Bit 0 is shown first; byte values are hexadecimal.</text>
-<text x="672" y="42" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">Separate the head, place the planes</text>
+<text x="672" y="42" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">Separate heads for filtering</text>
 <text x="672" y="80" font-size="22" font-weight="normal" fill="#586579" text-anchor="start">K = 20, H = 8 · payload = 12 bits</text>
 <rect x="672" y="120" width="230.4" height="80" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
 <text x="787.2" y="152" font-size="22" font-weight="bold" fill="#233047" text-anchor="middle">head</text>
@@ -174,42 +174,37 @@
 <text x="1190.3999999999999" y="180" font-size="18" font-weight="normal" fill="#233047" text-anchor="middle">bits 3…0</text>
 <path d="M902.4,216 V224 H1248 V216" fill="none" stroke="#586579" stroke-width="1.8"/>
 <text x="1075.2" y="256" font-size="21" font-weight="normal" fill="#586579" text-anchor="middle">12-bit striped payload</text>
-<text x="672" y="304" font-size="21" font-weight="bold" fill="#233047" text-anchor="start">64-row tiles · byte offsets in a shared partition</text>
-<text x="672" y="344" font-size="18" font-weight="normal" fill="#586579" text-anchor="start">0</text>
-<rect x="672" y="360" width="192" height="80" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
-<text x="768.0" y="392" font-size="22" font-weight="bold" fill="#233047" text-anchor="middle">body</text>
-<text x="768.0" y="420" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">64 B</text>
-<text x="864" y="344" font-size="18" font-weight="normal" fill="#586579" text-anchor="start">64</text>
-<rect x="864" y="360" width="96" height="80" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
-<text x="912.0" y="392" font-size="22" font-weight="bold" fill="#233047" text-anchor="middle">tail</text>
-<text x="912.0" y="420" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">32 B</text>
-<text x="960" y="344" font-size="18" font-weight="normal" fill="#586579" text-anchor="start">96</text>
-<rect x="960" y="360" width="192" height="80" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
-<text x="1056.0" y="392" font-size="22" font-weight="bold" fill="#233047" text-anchor="middle">head</text>
-<text x="1056.0" y="420" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">64 B</text>
-<text x="1152" y="344" font-size="18" font-weight="normal" fill="#586579" text-anchor="start">160</text>
-<rect x="1152" y="360" width="96" height="80" rx="0" fill="#eef0f4" stroke="white" stroke-width="1.5"/>
-<text x="1200.0" y="392" font-size="22" font-weight="bold" fill="#233047" text-anchor="middle">gap</text>
-<text x="1200.0" y="420" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">32 B</text>
-<text x="1248" y="344" font-size="18" font-weight="normal" fill="#586579" text-anchor="end">192</text>
-<text x="672" y="472" font-size="18" font-weight="normal" fill="#586579" text-anchor="start">192</text>
-<rect x="672" y="488" width="192" height="80" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
-<text x="768.0" y="520" font-size="22" font-weight="bold" fill="#233047" text-anchor="middle">body</text>
-<text x="768.0" y="548" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">64 B</text>
-<text x="864" y="472" font-size="18" font-weight="normal" fill="#586579" text-anchor="start">256</text>
-<rect x="864" y="488" width="96" height="80" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
-<text x="912.0" y="520" font-size="22" font-weight="bold" fill="#233047" text-anchor="middle">tail</text>
-<text x="912.0" y="548" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">32 B</text>
-<text x="960" y="472" font-size="18" font-weight="normal" fill="#586579" text-anchor="start">288</text>
-<rect x="960" y="488" width="192" height="80" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
-<text x="1056.0" y="520" font-size="22" font-weight="bold" fill="#233047" text-anchor="middle">head</text>
-<text x="1056.0" y="548" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">64 B</text>
-<text x="1152" y="472" font-size="18" font-weight="normal" fill="#586579" text-anchor="start">352</text>
-<rect x="1152" y="488" width="96" height="80" rx="0" fill="#eef0f4" stroke="white" stroke-width="1.5"/>
-<text x="1200.0" y="520" font-size="22" font-weight="bold" fill="#233047" text-anchor="middle">gap</text>
-<text x="1200.0" y="548" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">32 B</text>
-<text x="1248" y="472" font-size="18" font-weight="normal" fill="#586579" text-anchor="end">384</text>
-<text x="672" y="608" font-size="21" font-weight="normal" fill="#586579" text-anchor="start">Payload origin: 0 · head origin: 96 bytes</text>
-<text x="672" y="640" font-size="21" font-weight="normal" fill="#586579" text-anchor="start">Both plane strides: 192 bytes</text>
-<text x="672" y="672" font-size="21" font-weight="normal" fill="#586579" text-anchor="start">The gap remains available to the owner or a sibling.</text>
+<text x="672" y="300" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Head array · 1 byte per row</text>
+<path d="M672,324 H1248" fill="none" stroke="#98c9f3" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="672" y="344" width="576" height="56" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="756" y="379" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">rows 0–63</text>
+<text x="924" y="379" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">rows 64–127</text>
+<text x="1092" y="379" font-size="20" font-weight="normal" fill="#233047" text-anchor="middle">rows 128–191</text>
+<text x="1212" y="379" font-size="25" font-weight="normal" fill="#233047" text-anchor="middle">…</text>
+<text x="672" y="440" font-size="21" font-weight="normal" fill="#586579" text-anchor="start">Filter here; fetch payloads for candidate rows.</text>
+<text x="672" y="492" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Payload plane · separate buffer</text>
+<text x="756" y="528" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">rows 0–63</text>
+<rect x="672" y="544" width="112.0" height="56" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="728.0" y="568" font-size="20" font-weight="bold" fill="#233047" text-anchor="middle">body</text>
+<text x="728.0" y="592" font-size="18" font-weight="normal" fill="#233047" text-anchor="middle">64 B</text>
+<rect x="784.0" y="544" width="56.0" height="56" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="812.0" y="568" font-size="20" font-weight="bold" fill="#233047" text-anchor="middle">tail</text>
+<text x="812.0" y="592" font-size="18" font-weight="normal" fill="#233047" text-anchor="middle">32 B</text>
+<text x="924" y="528" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">rows 64–127</text>
+<rect x="840" y="544" width="112.0" height="56" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="896.0" y="568" font-size="20" font-weight="bold" fill="#233047" text-anchor="middle">body</text>
+<text x="896.0" y="592" font-size="18" font-weight="normal" fill="#233047" text-anchor="middle">64 B</text>
+<rect x="952.0" y="544" width="56.0" height="56" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="980.0" y="568" font-size="20" font-weight="bold" fill="#233047" text-anchor="middle">tail</text>
+<text x="980.0" y="592" font-size="18" font-weight="normal" fill="#233047" text-anchor="middle">32 B</text>
+<text x="1092" y="528" font-size="20" font-weight="normal" fill="#586579" text-anchor="middle">rows 128–191</text>
+<rect x="1008" y="544" width="112.0" height="56" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="1064.0" y="568" font-size="20" font-weight="bold" fill="#233047" text-anchor="middle">body</text>
+<text x="1064.0" y="592" font-size="18" font-weight="normal" fill="#233047" text-anchor="middle">64 B</text>
+<rect x="1120.0" y="544" width="56.0" height="56" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="1148.0" y="568" font-size="20" font-weight="bold" fill="#233047" text-anchor="middle">tail</text>
+<text x="1148.0" y="592" font-size="18" font-weight="normal" fill="#233047" text-anchor="middle">32 B</text>
+<text x="1212" y="580" font-size="25" font-weight="normal" fill="#586579" text-anchor="middle">…</text>
+<text x="672" y="640" font-size="21" font-weight="normal" fill="#586579" text-anchor="start">Each payload tile: 64 rows in 96 bytes.</text>
+<text x="672" y="672" font-size="21" font-weight="normal" fill="#586579" text-anchor="start">Columns align by row range; byte scales differ.</text>
 </g></svg>

@@ -1,6 +1,6 @@
-#include <ikea/tuplepack/detail/packet_plan.h>
 #include <algorithm>
 #include <bit>
+#include <ikea/tuplepack/detail/packet_plan.h>
 namespace ikea::tuplepack::detail {
 namespace {
 packet_placement place(std::uint64_t used, unsigned bytes) {
@@ -21,29 +21,43 @@ packet_placement place(std::uint64_t used, unsigned bytes) {
     p.grain = std::bit_ceil(std::max(1u, p.count));
     return p;
 }
-unsigned slot(const packet_placement& p, unsigned offset) {
+unsigned slot(const packet_placement &p, unsigned offset) {
     for (unsigned i = 0; i < p.count; ++i)
         if (p.offsets[i] == offset)
             return i;
     __builtin_unreachable();
 }
 } // namespace
-std::expected<packet_read, error> prepare_packet_read(const layout& f, std::span<const byte> map,
-                                                      unsigned rows) {
+std::expected<packet_read, error> prepare_packet_read(const layout &f, std::span<const byte> map,
+                                                      unsigned rows,
+                                                      std::span<const unsigned> groups) {
     if (!rows || rows > 64 || !std::has_single_bit(rows) || map.size() > 64 / rows)
         return std::unexpected(error::map);
     auto codes = prepare_read_codes(f, map);
     if (!codes)
         return std::unexpected(codes.error());
-    const auto& scalar = *codes;
+    auto ordering = packet_layout<64>::make(rows, map.size(), groups);
+    if (!ordering)
+        return std::unexpected(ordering.error());
+    auto &scalar = *codes;
+    scalar.ordering = *ordering;
     packet_read p;
-    static_cast<scalar_read<64>&>(p) = scalar;
+    static_cast<scalar_read<64> &>(p) = scalar;
     p.place = place(scalar.reads, 64 / rows);
     for (unsigned i = 0; i < p.place.count; ++i)
         p.native_reads |= std::uint64_t(1) << p.place.offsets[i];
     if (rows <= 4 && !p.place.contiguous && p.place.count > 8) {
         p.point = *prepare_read64(f, map);
         p.native_reads = p.point.native_reads;
+        shuffle_description reordered;
+        for (unsigned r = 0; r < rows; ++r)
+            for (unsigned i = 0; i < map.size(); ++i) {
+                const auto out = ordering->offset(r, i);
+                reordered.index[out] = r * (64 / rows) + i;
+                reordered.mask[out] = 255;
+            }
+        p.route = compile_shuffle(reordered, false);
+        return p;
     }
     shuffle_description route;
     for (unsigned r = 0; r < rows; ++r)
@@ -51,7 +65,7 @@ std::expected<packet_read, error> prepare_packet_read(const layout& f, std::span
             const auto c = scalar.codes[i];
             if (!c.width)
                 continue;
-            const auto out = r * (64 / rows) + i;
+            const auto out = ordering->offset(r, i);
             route.index[out] = r * p.place.grain + slot(p.place, c.offset);
             route.shift[out] = -c.shift;
             route.mask[out] = (1u << c.width) - 1;
@@ -68,7 +82,7 @@ std::expected<packet_read, error> prepare_packet_read(const layout& f, std::span
                 const auto c = scalar.codes[i];
                 if (!c.width)
                     continue;
-                const auto out = r * (64 / rows) + i;
+                const auto out = ordering->offset(r, i);
                 tight.index[out] = r * f.bytes() + c.offset;
                 tight.shift[out] = -c.shift;
                 tight.mask[out] = (1u << c.width) - 1;
@@ -79,16 +93,22 @@ std::expected<packet_read, error> prepare_packet_read(const layout& f, std::span
     }
     return p;
 }
-std::expected<packet_write, error> prepare_packet_write(const layout& f, std::span<const byte> map,
-                                                        unsigned rows) {
+std::expected<packet_write, error> prepare_packet_write(const layout &f, std::span<const byte> map,
+                                                        unsigned rows,
+                                                        std::span<const unsigned> groups) {
     if (!rows || rows > 64 || !std::has_single_bit(rows) || map.size() > 64 / rows)
         return std::unexpected(error::map);
     auto codes = prepare_write_codes(f, map);
     if (!codes)
         return std::unexpected(codes.error());
-    const auto& scalar = *codes;
+    auto ordering = packet_layout<64>::make(rows, map.size(), groups);
+    if (!ordering)
+        return std::unexpected(ordering.error());
+    auto &scalar = *codes;
+    scalar.read.ordering = *ordering;
     packet_write p;
-    static_cast<scalar_write<64>&>(p) = scalar;
+    static_cast<scalar_write<64> &>(p) = scalar;
+    p.invalid.fill(0);
     p.place = place(scalar.writes, 64 / rows);
     if (rows <= 4 && !p.place.contiguous && p.place.count > 8) {
         const auto point = *prepare_write64(f, map);
@@ -101,9 +121,17 @@ std::expected<packet_write, error> prepare_packet_write(const layout& f, std::sp
                 f.bytes() == 64 ? ~std::uint64_t(0) : (std::uint64_t(1) << f.bytes()) - 1;
         // Point lowering is used per row, but packet-wide admission uses the
         // repeated input map. Ignored rows are masked by the operation shell.
-        for (unsigned r = 1; r < rows; ++r)
+        for (unsigned r = 0; r < rows; ++r)
             for (unsigned i = 0; i < map.size(); ++i)
-                p.invalid[r * (64 / rows) + i] = scalar.invalid[i];
+                p.invalid[ordering->offset(r, i)] = scalar.invalid[i];
+        shuffle_description unpack;
+        for (unsigned r = 0; r < rows; ++r)
+            for (unsigned i = 0; i < map.size(); ++i) {
+                const auto out = r * (64 / rows) + i;
+                unpack.index[out] = ordering->offset(r, i);
+                unpack.mask[out] = 255;
+            }
+        p.ungroup = compile_shuffle(unpack, false);
         return p;
     }
     // The issued-store footprint follows the selected physical transfer, which
@@ -119,14 +147,14 @@ std::expected<packet_write, error> prepare_packet_write(const layout& f, std::sp
     std::array<shuffle_description, 8> routes;
     for (unsigned r = 0; r < rows; ++r) {
         for (unsigned i = 0; i < map.size(); ++i)
-            p.invalid[r * (64 / rows) + i] = scalar.invalid[i];
+            p.invalid[ordering->offset(r, i)] = scalar.invalid[i];
         for (unsigned i = 0; i < scalar.count; ++i) {
-            const auto& b = scalar.stores[i];
+            const auto &b = scalar.stores[i];
             const auto out = r * p.place.grain + slot(p.place, b.offset);
             p.preserve[out] = byte(~b.mask);
             for (unsigned j = 0; j < b.count; ++j) {
                 const auto c = scalar.read.codes[b.input[j]];
-                routes[j].index[out] = r * (64 / rows) + b.input[j];
+                routes[j].index[out] = ordering->offset(r, b.input[j]);
                 routes[j].shift[out] = c.shift;
                 routes[j].mask[out] = ((1u << c.width) - 1) << c.shift;
             }

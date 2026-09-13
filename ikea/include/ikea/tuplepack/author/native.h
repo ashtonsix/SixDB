@@ -1,11 +1,11 @@
 #pragma once
 #include <bit>
-#include <utility>
-#include <ikea/tuplepack/detail/packet_plan.h>
-#include <ikea/tuplepack/detail/native/types.h>
+#include <ikea/tuplepack/detail/gpr.h>
 #include <ikea/tuplepack/detail/native/memory.h>
 #include <ikea/tuplepack/detail/native/shuffle.h>
-#include <ikea/tuplepack/detail/gpr.h>
+#include <ikea/tuplepack/detail/native/types.h>
+#include <ikea/tuplepack/detail/packet_plan.h>
+#include <utility>
 namespace ikea::tuplepack::native {
 template <unsigned N> struct packet_type;
 template <> struct packet_type<8> {
@@ -22,57 +22,55 @@ template <unsigned N> using packet_for = typename packet_type<N>::type;
 /// Compiled GPR endpoints share the inline body's controls and uint64_t ABI.
 /// Match Rows to preparation; the one-row form needs only the unit pointer.
 template <unsigned Rows>
-inline std::uint64_t read(const detail::gpr_read& p, const byte* first, std::size_t stride,
+inline std::uint64_t read(const detail::gpr_read &p, const byte *first, std::size_t stride,
                           std::uint64_t active = detail::all_rows<Rows>) {
     return detail::read_gpr<Rows>(p, first, stride, active);
 }
 template <unsigned Rows>
-inline void write(const detail::gpr_write& p, byte* first, std::size_t stride, std::uint64_t input,
+inline void write(const detail::gpr_write &p, byte *first, std::size_t stride, std::uint64_t input,
                   std::uint64_t active = detail::all_rows<Rows>) {
     detail::write_gpr<Rows>(p, first, stride, input, active);
 }
-inline std::uint64_t read(const detail::gpr_read& p, const byte* row) {
-    return read<1>(p, row, 0);
-}
-inline void write(const detail::gpr_write& p, byte* row, std::uint64_t input) {
+inline std::uint64_t read(const detail::gpr_read &p, const byte *row) { return read<1>(p, row, 0); }
+inline void write(const detail::gpr_write &p, byte *row, std::uint64_t input) {
     write<1>(p, row, 0, input);
 }
 /// Active-only address callback; optional nonzero stride promises one common
 /// allocation. Trusted widths, addresses and mask; effects belong to the shell.
 template <unsigned Rows, class Address>
-[[gnu::always_inline]] inline std::uint64_t read_body(const detail::gpr_read& p, Address&& address,
+[[gnu::always_inline]] inline std::uint64_t read_body(const detail::gpr_read &p, Address &&address,
                                                       std::uint64_t active,
                                                       std::size_t stride = 0) {
     return detail::read_gpr_body<Rows>(p, std::forward<Address>(address), active, stride);
 }
 template <unsigned Rows, class Address>
-[[gnu::always_inline]] inline void write_body(const detail::gpr_write& p, Address&& address,
+[[gnu::always_inline]] inline void write_body(const detail::gpr_write &p, Address &&address,
                                               std::uint64_t input, std::uint64_t active,
                                               std::size_t stride = 0) {
     detail::write_gpr_body<Rows>(p, std::forward<Address>(address), input, active, stride);
 }
-[[gnu::always_inline]] inline std::uint64_t read_body(const detail::gpr_read& p, const byte* row) {
+[[gnu::always_inline]] inline std::uint64_t read_body(const detail::gpr_read &p, const byte *row) {
     return read_body<1>(p, [&](unsigned) { return row; }, 1);
 }
-[[gnu::always_inline]] inline void write_body(const detail::gpr_write& p, byte* row,
+[[gnu::always_inline]] inline void write_body(const detail::gpr_write &p, byte *row,
                                               std::uint64_t input) {
     write_body<1>(p, [&](unsigned) { return row; }, input, 1);
 }
 } // namespace ikea::tuplepack::native
 #if defined(__aarch64__) || defined(__AVX2__)
 namespace ikea::tuplepack::native {
-[[gnu::always_inline]] inline native_packet load_packet(const byte* p) {
+[[gnu::always_inline]] inline native_packet load_packet(const byte *p) {
     using namespace native_detail;
     return join(load16(p, 16), load16(p + 16, 16), load16(p + 32, 16), load16(p + 48, 16));
 }
 /// Trusted 0..64-byte physical unit load, zero-filling the rest. No allocation
 /// padding or next tuple is read. The caller owns this raw-byte interpretation.
-[[gnu::always_inline]] inline native_packet load_unit(const byte* p, unsigned bytes) {
+[[gnu::always_inline]] inline native_packet load_unit(const byte *p, unsigned bytes) {
     using namespace native_detail;
     return join(row_part<0>(p, bytes), row_part<1>(p, bytes), row_part<2>(p, bytes),
                 row_part<3>(p, bytes));
 }
-[[gnu::always_inline]] inline void store_packet(byte* p, native_packet value) {
+[[gnu::always_inline]] inline void store_packet(byte *p, native_packet value) {
 #if defined(__aarch64__)
     vst1q_u8(p, value.a);
     vst1q_u8(p + 16, value.b);
@@ -81,16 +79,16 @@ namespace ikea::tuplepack::native {
 #elif defined(__AVX512VBMI__)
     _mm512_storeu_si512(p, value);
 #else
-    _mm256_storeu_si256(reinterpret_cast<__m256i*>(p), value.a);
-    _mm256_storeu_si256(reinterpret_cast<__m256i*>(p + 32), value.b);
+    _mm256_storeu_si256(reinterpret_cast<__m256i *>(p), value.a);
+    _mm256_storeu_si256(reinterpret_cast<__m256i *>(p + 32), value.b);
 #endif
 }
 template <bool Left>
 [[gnu::always_inline]] inline native_packet transform(native_packet source,
-                                                      const detail::shuffle& p) {
+                                                      const detail::shuffle &p) {
     return native_detail::apply<Left>(source, p);
 }
-[[gnu::always_inline]] inline native_packet read_body(const detail::read64& p, const byte* row) {
+[[gnu::always_inline]] inline native_packet read_body(const detail::read64 &p, const byte *row) {
     using namespace native_detail;
     return transform<false>(join(load_chunk<0>(p, row), load_chunk<1>(p, row),
                                  load_chunk<2>(p, row), load_chunk<3>(p, row)),
@@ -129,7 +127,7 @@ namespace native_detail {
 /// Encoded physical bytes remain in registers through sparse stores. Bit masks
 /// describe issued bytes; they never authorize writing an inactive neighbor.
 template <unsigned W>
-[[gnu::always_inline]] inline void store_selected_word(byte* row, packet encoded,
+[[gnu::always_inline]] inline void store_selected_word(byte *row, packet encoded,
                                                        std::uint64_t written) {
     const auto part = split<W / 2>(encoded);
 #if defined(__aarch64__)
@@ -144,7 +142,7 @@ template <unsigned W>
         mask &= mask - 1;
     }
 }
-[[gnu::always_inline]] inline void store_selected(byte* row, packet encoded,
+[[gnu::always_inline]] inline void store_selected(byte *row, packet encoded,
                                                   std::uint64_t written) {
 #if defined(__AVX512VBMI__)
     _mm512_mask_storeu_epi8(row, written, encoded);
@@ -160,7 +158,7 @@ template <unsigned W>
 #endif
 }
 template <class Plan>
-[[gnu::always_inline]] inline packet encode(const Plan& p, const byte* row, packet input) {
+[[gnu::always_inline]] inline packet encode(const Plan &p, const byte *row, packet input) {
     auto encoded = join(zero16(), zero16(), zero16(), zero16());
     if (p.needs_old)
         encoded = bit_and(load_unit(row, p.read.bytes), load_packet(p.preserve.data()));
@@ -169,7 +167,7 @@ template <class Plan>
     return encoded;
 }
 } // namespace native_detail
-[[gnu::always_inline]] inline void write_body(const detail::write64& p, byte* row, packet input) {
+[[gnu::always_inline]] inline void write_body(const detail::write64 &p, byte *row, packet input) {
     if (!p.count)
         return;
     using namespace native_detail;
@@ -191,13 +189,13 @@ template <class Plan>
 }
 /// Trusted in-register endpoints. Input widths, extents, isolation and effects
 /// are admitted by the operation shell. No allocation, checks or suspension.
-IKEA_TUPLE_CC packet read(const detail::read64&, const byte* row);
-IKEA_TUPLE_CC void write(const detail::write64&, byte* row, packet input);
+IKEA_TUPLE_CC packet read(const detail::read64 &, const byte *row);
+IKEA_TUPLE_CC void write(const detail::write64 &, byte *row, packet input);
 /// Packet-shaped compiled endpoints. Rows must match preparation (2..64,
 /// powers of two). Bit r selects first+r; inactive rows issue no payload access.
-IKEA_TUPLE_CC packet read(const detail::packet_read&, unsigned rows, const byte* first,
+IKEA_TUPLE_CC packet read(const detail::packet_read &, unsigned rows, const byte *first,
                           std::size_t stride, std::uint64_t active);
-IKEA_TUPLE_CC void write(const detail::packet_write&, unsigned rows, byte* first,
+IKEA_TUPLE_CC void write(const detail::packet_write &, unsigned rows, byte *first,
                          std::size_t stride, packet input, std::uint64_t active);
 } // namespace ikea::tuplepack::native
 #endif
@@ -206,8 +204,9 @@ IKEA_TUPLE_CC void write(const detail::packet_write&, unsigned rows, byte* first
 #include <ikea/tuplepack/detail/native/selection.h>
 
 namespace ikea::tuplepack::native {
-/// Byte mask matching packet_for<N>: every slot of an active original row is
-/// 0xff. Use alongside values; zero decoded bytes do not imply inactivity.
+/// Mask for full-capacity row slices. For a prepared projection, use
+/// row_mask(plan, active) so short maps and explicit groups are respected.
+/// Zero decoded values do not imply inactivity.
 template <unsigned N, unsigned Rows>
 [[gnu::always_inline]] inline packet_for<N> row_mask_for(std::uint64_t active) {
     static_assert((N == 8 || N == 64) && Rows <= N && std::has_single_bit(Rows));
@@ -216,6 +215,29 @@ template <unsigned N, unsigned Rows>
 #if defined(__aarch64__) || defined(__AVX2__)
     else
         return row_mask<Rows>(active);
+#endif
+}
+/// Mask for a prepared reader/writer's byte order. Bit r still selects original
+/// row r, regardless of where that row's groups appear in the packet.
+template <class Plan>
+[[gnu::always_inline]] inline packet_for<Plan::slots> row_mask(const Plan &plan,
+                                                               std::uint64_t active) {
+    constexpr auto N = Plan::slots, Rows = Plan::rows;
+    const auto &order = plan.ordering();
+    if (order.row_major() && order.used_bytes() == N)
+        return row_mask_for<N, Rows>(active);
+    if constexpr (N == 8) {
+        std::uint64_t result = 0;
+        for (unsigned i = 0; i < 8; ++i) {
+            const auto row = order.row_indices()[i];
+            if (row < Rows && (active & (std::uint64_t(1) << row)))
+                result |= std::uint64_t(255) << (8 * i);
+        }
+        return result;
+    }
+#if defined(__aarch64__) || defined(__AVX2__)
+    else
+        return row_mask(order, active);
 #endif
 }
 } // namespace ikea::tuplepack::native

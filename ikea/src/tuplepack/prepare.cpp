@@ -1,16 +1,17 @@
-#include <ikea/tuplepack/detail/packet_plan.h>
 #include <algorithm>
 #include <bit>
+#include <ikea/tuplepack/detail/packet_plan.h>
 
 namespace ikea::tuplepack::detail {
 namespace {
 template <unsigned N>
-std::expected<scalar_read<N>, error> read(const layout& format, std::span<const byte> map) {
+std::expected<scalar_read<N>, error> read(const layout &format, std::span<const byte> map) {
     if (map.size() > N)
         return std::unexpected(error::map);
     scalar_read<N> p;
     p.bytes = format.bytes();
     p.slots = map.size();
+    p.ordering = *packet_layout<N>::make(1, map.size());
     for (unsigned i = 0; i < map.size(); ++i) {
         if (map[i] == hole)
             continue;
@@ -22,7 +23,7 @@ std::expected<scalar_read<N>, error> read(const layout& format, std::span<const 
     return p;
 }
 template <unsigned N>
-std::expected<scalar_write<N>, error> write(const layout& format, std::span<const byte> map) {
+std::expected<scalar_write<N>, error> write(const layout &format, std::span<const byte> map) {
     auto r = read<N>(format, map);
     if (!r)
         return std::unexpected(r.error());
@@ -38,7 +39,7 @@ std::expected<scalar_write<N>, error> write(const layout& format, std::span<cons
         seen[map[i]] = true;
         const auto c = p.read.codes[i];
         p.invalid[i] = byte(~((1u << c.width) - 1));
-        auto& b = by_byte[c.offset];
+        auto &b = by_byte[c.offset];
         b.offset = c.offset;
         b.mask |= ((1u << c.width) - 1) << c.shift;
         b.input[b.count] = i;
@@ -61,7 +62,7 @@ std::expected<scalar_write<N>, error> write(const layout& format, std::span<cons
             selected += c.width != 0;
         p.word.selected = selected;
         if (p.count && p.stores[p.count - 1].offset - p.stores[0].offset < 8) {
-            auto& w = p.word;
+            auto &w = p.word;
             w.offset = p.stores[0].offset;
             w.bytes = p.stores[p.count - 1].offset - w.offset + 1;
             unsigned slot = 0;
@@ -78,7 +79,7 @@ std::expected<scalar_write<N>, error> write(const layout& format, std::span<cons
     }
     return p;
 }
-void set_route(shuffle& p, unsigned out, unsigned in, int shift, byte mask, bool left) {
+void set_route(shuffle &p, unsigned out, unsigned in, int shift, byte mask, bool left) {
     p.index[out] = in;
     p.mask[out] = mask;
     p.routes |= 1u << (in / 16);
@@ -94,18 +95,18 @@ void set_route(shuffle& p, unsigned out, unsigned in, int shift, byte mask, bool
 #endif
     (void)left;
 }
-void initialize(shuffle& p) {
+void initialize(shuffle &p) {
 #if defined(__AVX2__) && !defined(__AVX512VBMI__)
-    for (auto& indices : p.avx2_index)
+    for (auto &indices : p.avx2_index)
         indices.fill(255);
 #endif
     (void)p;
 }
-void finish(shuffle& p) {
+void finish(shuffle &p) {
     p.masking = std::ranges::any_of(p.mask, [](byte b) { return b != 255; });
 }
 } // namespace
-shuffle compile_shuffle(const shuffle_description& description, bool left) {
+shuffle compile_shuffle(const shuffle_description &description, bool left) {
     shuffle result;
     initialize(result);
     for (unsigned i = 0; i < 64; ++i)
@@ -115,17 +116,17 @@ shuffle compile_shuffle(const shuffle_description& description, bool left) {
     finish(result);
     return result;
 }
-std::expected<scalar_read<64>, error> prepare_read_codes(const layout& f, std::span<const byte> m) {
+std::expected<scalar_read<64>, error> prepare_read_codes(const layout &f, std::span<const byte> m) {
     return read<64>(f, m);
 }
-std::expected<scalar_write<64>, error> prepare_write_codes(const layout& f,
+std::expected<scalar_write<64>, error> prepare_write_codes(const layout &f,
                                                            std::span<const byte> m) {
     return write<64>(f, m);
 }
 namespace {
-word_transfer transfer(const scalar_read<8>& p, unsigned rows) {
+word_transfer transfer(const scalar_read<8> &p, unsigned rows) {
     word_transfer t;
-    if (!p.slots)
+    if (!p.slots || !p.ordering.single_group())
         return t;
     t.offset = p.codes[0].offset;
     t.shift = p.codes[0].shift;
@@ -138,35 +139,43 @@ word_transfer transfer(const scalar_read<8>& p, unsigned rows) {
     t.bytes = p.slots;
     const auto row_mask = t.mask;
     for (unsigned r = 1; r < rows; ++r)
-        t.mask |= row_mask << (r * (64 / rows));
+        t.mask |= row_mask << (r * (8 * p.slots));
     return t;
 }
 } // namespace
-std::expected<gpr_read, error> prepare_read8(const layout& f, std::span<const byte> m,
-                                             unsigned rows) {
+std::expected<gpr_read, error> prepare_read8(const layout &f, std::span<const byte> m,
+                                             unsigned rows, std::span<const unsigned> groups) {
     if (!std::has_single_bit(rows) || rows > 8 || m.size() > 8 / rows)
         return std::unexpected(error::map);
     auto scalar = read<8>(f, m);
     if (!scalar)
         return std::unexpected(scalar.error());
     gpr_read p;
-    static_cast<scalar_read<8>&>(p) = *scalar;
+    static_cast<scalar_read<8> &>(p) = *scalar;
+    auto order = packet_layout<8>::make(rows, m.size(), groups);
+    if (!order)
+        return std::unexpected(order.error());
+    p.ordering = *order;
     p.transfer = transfer(p, rows);
     return p;
 }
-std::expected<gpr_write, error> prepare_write8(const layout& f, std::span<const byte> m,
-                                               unsigned rows) {
+std::expected<gpr_write, error> prepare_write8(const layout &f, std::span<const byte> m,
+                                               unsigned rows, std::span<const unsigned> groups) {
     if (!std::has_single_bit(rows) || rows > 8 || m.size() > 8 / rows)
         return std::unexpected(error::map);
     auto scalar = write<8>(f, m);
     if (!scalar)
         return std::unexpected(scalar.error());
     gpr_write p;
-    static_cast<scalar_write<8>&>(p) = *scalar;
+    static_cast<scalar_write<8> &>(p) = *scalar;
+    auto order = packet_layout<8>::make(rows, m.size(), groups);
+    if (!order)
+        return std::unexpected(order.error());
+    p.read.ordering = *order;
     p.transfer = transfer(p.read, rows);
     for (unsigned r = 0; r < rows; ++r)
-        for (unsigned i = 0; i < 8 / rows; ++i)
-            p.invalid_word |= std::uint64_t(p.invalid[i]) << (8 * (r * (8 / rows) + i));
+        for (unsigned i = 0; i < m.size(); ++i)
+            p.invalid_word |= std::uint64_t(p.invalid[i]) << (8 * (p.read.ordering.offset(r, i)));
     if (p.transfer.bytes) {
         const auto full = ~std::uint64_t(0) >> (64 - 8 * p.transfer.bytes);
         if (((p.transfer.mask << p.transfer.shift) & full) != full)
@@ -179,12 +188,12 @@ std::expected<gpr_write, error> prepare_write8(const layout& f, std::span<const 
                 p.native_reads |= std::uint64_t(1) << p.stores[i].offset;
     return p;
 }
-std::expected<read64, error> prepare_read64(const layout& f, std::span<const byte> m) {
+std::expected<read64, error> prepare_read64(const layout &f, std::span<const byte> m) {
     auto scalar = read<64>(f, m);
     if (!scalar)
         return std::unexpected(scalar.error());
     read64 p;
-    static_cast<scalar_read<64>&>(p) = *scalar;
+    static_cast<scalar_read<64> &>(p) = *scalar;
     unsigned chunks = 0;
     for (auto c : p.codes)
         if (c.width)
@@ -209,17 +218,17 @@ std::expected<read64, error> prepare_read64(const layout& f, std::span<const byt
     finish(p.operation);
     return p;
 }
-std::expected<write64, error> prepare_write64(const layout& f, std::span<const byte> m) {
+std::expected<write64, error> prepare_write64(const layout &f, std::span<const byte> m) {
     auto scalar = write<64>(f, m);
     if (!scalar)
         return std::unexpected(scalar.error());
     write64 p;
-    static_cast<scalar_write<64>&>(p) = *scalar;
+    static_cast<scalar_write<64> &>(p) = *scalar;
     p.preserve.fill(255);
-    for (auto& round : p.rounds)
+    for (auto &round : p.rounds)
         initialize(round);
     for (unsigned i = 0; i < p.count; ++i) {
-        const auto& b = p.stores[i];
+        const auto &b = p.stores[i];
         p.preserve[b.offset] = byte(~b.mask);
         for (unsigned j = 0; j < b.count; ++j) {
             const auto c = p.read.codes[b.input[j]];

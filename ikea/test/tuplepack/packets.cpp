@@ -1,17 +1,18 @@
 #include "packet_wire.h"
-#include <ikea/tuplepack.h>
-#include <ikea/tuplepack/author/execution.h>
-#include <ikea/tuplepack/author/composition.h>
-#include <ikea/tuplepack/author/maintenance.h>
+#include "grouped_maintenance.h"
 #include <cstdio>
 #include <cstdlib>
+#include <ikea/tuplepack.h>
+#include <ikea/tuplepack/author/composition.h>
+#include <ikea/tuplepack/author/execution.h>
+#include <ikea/tuplepack/author/maintenance.h>
 #include <random>
-#include <vector>
 #include <sys/mman.h>
 #include <unistd.h>
+#include <vector>
 
 namespace tp = ikea::tuplepack;
-void require(bool valid, unsigned rows, unsigned trial, const char* scenario) {
+void require(bool valid, unsigned rows, unsigned trial, const char *scenario) {
     if (!valid) {
         std::fprintf(stderr, "TuplePack packets: rows=%u trial=%u %s\n", rows, trial, scenario);
         std::abort();
@@ -27,9 +28,7 @@ struct row_observer {
         ++before_count;
         return 0;
     }
-    void after(std::size_t, unsigned) {
-        ++after_count;
-    }
+    void after(std::size_t, unsigned) { ++after_count; }
 };
 void range_admission() {
     const std::array<tp::code, 1> codes{{{0, 2, 3}}};
@@ -42,9 +41,9 @@ void range_admission() {
     auto view = *tp::view::bind(f, bytes, 65, 1);
     auto write = *tp::bind_writer(wp, view);
     std::array<tp::packet<64>, 3> input{};
-    for (auto& packet : input)
+    for (auto &packet : input)
         for (unsigned r = 0; r < 32; ++r)
-            packet[2 * r] = 5;
+            packet[r] = 5;
     input[2][0] = 8;
     std::array<ikea::owner_write, 65> storage;
     ikea::source_write_journal effects{storage};
@@ -69,7 +68,7 @@ void range_admission() {
 }
 void guarded_tails() {
     const auto page = std::size_t(sysconf(_SC_PAGESIZE));
-    auto allocation = static_cast<tp::byte*>(
+    auto allocation = static_cast<tp::byte *>(
         mmap(nullptr, 2 * page, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
     require(allocation != MAP_FAILED, 64, 0, "guard allocation");
     require(mprotect(allocation + page, page, PROT_NONE) == 0, 64, 0, "guard protection");
@@ -111,8 +110,8 @@ struct batch_law {
     std::uint64_t seen = 0;
     std::array<tp::byte, 64> old_a{}, old_bc{}, new_a{}, new_bc{};
     template <class Before, class After>
-    void observe_batch(std::size_t first, std::uint64_t active, const Before& before,
-                       const After& after) {
+    void observe_batch(std::size_t first, std::uint64_t active, const Before &before,
+                       const After &after) {
         require(first == 1, 64, 0, "maintenance original first");
         ++calls;
         seen = active;
@@ -176,6 +175,7 @@ void composition() {
 }
 #endif
 int main() {
+    grouped_maintenance<64>();
     std::mt19937 random(89123);
     wire<64, 1>(random);
     wire<64, 2>(random);

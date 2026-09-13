@@ -99,19 +99,15 @@ body issues no store or effect, though a checked write still validates its offse
 
 ## Estimate space or skip an unpromising encode
 
-`estimate_bytes(bits)` predicts headless body bytes for analysis. It uses a fixed
-statistical model. It returns an integer in 0..47, with zero for empty/full inputs.
-It is **not an allocation bound**; use a successful `prepare` result’s `bytes()` for
-the exact size before writing. Estimates exclude the owner's directory and may have
-correlated errors across related blocks.
+`estimate_bytes(bits)` uses a fixed statistical model to predict headless body
+bytes in 0..47, with zero for empty/full inputs. It is **not an allocation bound**;
+use `prepare` and `bytes()` for an exact size. Estimates exclude owner metadata
+and may have correlated errors across related blocks.
 
-`encode_if_promising` can skip encoding based on a simpler statistic: the exact sum of
-the byte-rank field widths. It compares this count directly with the cutoff;
-it does not consult `estimate_bytes`. `enum_bits(bits)` exposes that statistic for policy
-calibration. It excludes the population tree and ranges from 0 to 224 **bits**.
-The [ordinary example](../../examples/bec256/ordinary.cpp) supplies a cutoff.
-The result has three outcomes: an error, a decline
-(an empty optional), or an encoded byte count, possibly zero:
+`encode_if_promising` compares a cutoff with `enum_bits(bits)`: the exact sum of
+byte-rank widths, 0..224 **bits**, excluding the count tree. It does not consult
+the size estimate. The result is an error, a decline (empty optional), or an
+encoded byte count, possibly zero:
 
 ```cpp
 auto attempt = bc::encode_if_promising(bits, population, cutoff, target, offset, effects);
@@ -126,17 +122,14 @@ if (!attempt) {
 }
 ```
 
-A block of population 1..255 is declined when its enumerative cost is **at least** the
-cutoff. Zero declines every such block; 225 or greater disables the
-shortcut. Empty/full blocks still encode as zero bytes. Zero is a successful encoding,
-not a decline. Population is checked before the decision. On decline the
-destination is not admitted or accessed;
-on acceptance all ordinary encode checks and exact-store guarantees apply.
+A population of 1..255 declines when the statistic is **at least** the cutoff:
+zero declines all such blocks; 225 disables the shortcut. Empty/full blocks
+successfully encode as zero bytes. Population is checked before the decision.
+Decline leaves destination and effects untouched without admitting them;
+acceptance applies ordinary encode checks and exact stores.
 
-Decline predicts that encoding is not worthwhile; it does not prove that the
-body would be large. Acceptance likewise promises no size saving. Choose a
-cutoff against the cost and compression loss acceptable to the owner. Ikea
-supplies no default cutoff, raw escape or representation-selection policy.
+The heuristic guarantees no size saving. The owner chooses a cutoff and fallback
+against acceptable encoding cost and compression loss; Ikea supplies no default.
 The [predictor evidence](../../../workbench/spikes/ikea-composition/probes/ikea-blocks/predictor/README.md)
 records the model's accuracy and known limits.
 
@@ -152,15 +145,11 @@ TuplePack directory entry holding population, length and address, then updates a
 count contribution and generation under assumed exclusion. The owner can also
 replace in place when space and isolation permit it.
 
-Effects record issued stores, including stores of unchanged values. They provide
-neither beforeimages nor rollback. The owner resolves them and publishes the body,
-metadata and dependent summaries together. Coverage hooks use pre-admitted
-resources and must not fail or suspend during a write.
-
-Leases, allocation, cancellation and publication belong to the owner. It may wait
-after a completed operation frontier while retaining live storage, destination
-identities, generation, journal and pending summary/publication state. See
-[owner integration](../integration.md) for that protocol.
+The owner resolves issued-store effects and publishes body, metadata and summaries
+together. Effects supply neither beforeimages nor rollback. Hooks need admitted
+resources and cannot fail or suspend during writes. The
+[integration guide](../integration.md) covers leases, cancellation and retaining
+state across waits at completed operation boundaries.
 
 ## Compose native values
 

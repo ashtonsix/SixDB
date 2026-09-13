@@ -22,6 +22,7 @@ explore the Engine/Loom/Orbital seams; module guides own implemented contracts.
 | --- | --- |
 | How can shared bodies cross native and erased boundaries? | [Bitset primitives](probes/ikea-blocks/README.md), [ABI](probes/ikea-blocks/abi/README.md), [composition](probes/ikea-blocks/composition/README.md) |
 | Can format, placement and native grain vary independently? | [Packed integers](probes/ikea-integers/README.md), [body/tail composition](probes/ikea-integers/composition/README.md), [locality](probes/ikea-integers/locality/README.md) |
+| Should striped12 also centre its residual? | [Ordinary access and mutation comparison](placement/README.md) |
 | How do dependent metadata, independent sources and selected regions fit together? | [Heterogeneous structures](probes/ikea-heterogeneous/README.md), [masked operations](probes/ikea-heterogeneous/operations/README.md), [closing assessment](probes/ikea-heterogeneous/closing.md) |
 | Where should traversal and call boundaries sit? | [Native regions](native-regions/README.md), [call boundaries](call-boundaries/README.md) |
 

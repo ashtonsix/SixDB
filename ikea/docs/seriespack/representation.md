@@ -20,11 +20,18 @@ and residuals 0..7. Transposing their low three bits produces residual bytes
 `aa cc f0` after the eight body bytes. In residual byte b, bit j holds bit b of
 original tile row j; body bytes are little-endian per row.
 
-![Left: Local11 values 8 through 15 become eight 01 body bytes and residual bitplanes aa, cc, f0. Right: a 64-row K20/H8 tile occupies 64 body bytes, 32 stripe bytes and 64 head bytes, followed by a preserved 32-byte gap.](images/local-and-placement.svg)
+![Left: Local11 values 8 through 15 become eight 01 body bytes and residual bitplanes aa, cc, f0. Right: one contiguous head array covers many 64-row K20/H8 payload tiles in a separate buffer. Each payload tile has 64 body bytes followed by 32 residual bytes. Shared row ranges connect the planes.](images/local-and-placement.svg)
 
-The right pane follows [ordinary.cpp](../../examples/seriespack/ordinary.cpp).
-Interleaving the planes and reserving a sibling gap are owner placement choices
-within the same physical format.
+The right pane separates storage for filtering: scan one contiguous head byte
+per row, then fetch payloads for candidate rows. Reconstructing those values
+still needs both planes. Here the head stride is 64 bytes and the payload stride
+is 96 bytes, with independent origins. Row numbers connect the two arrays;
+payload tile boundaries do not interrupt the head array.
+
+A common head array across differently represented or ragged payload regions
+requires composition or multiple bindings: each view fixes its format and tile
+strides. [ordinary.cpp](../../examples/seriespack/ordinary.cpp) demonstrates
+interleaved placement with siblings in the stride gaps.
 
 Keeping whole-byte bodies near their residuals limits the cache lines needed to
 reconstruct a point or a small group. Version 1 uses these mixed striped layouts;
@@ -32,11 +39,11 @@ all numbers in the last column are **bytes**, and width means K−H:
 
 | Payload width | Rows per tile | Payload byte order |
 | --- | --- | --- |
-| 10 | 128 | `body64 || tail32 || body64` |
-| 12 | 64 | `body64 || tail32` |
-| 14 | 128 | `body32 || tail32 || body32 || tail32 || body32 || tail32 || body32` |
+| 10 | 128 | `body64 \|\| tail32 \|\| body64` |
+| 12 | 64 | `body64 \|\| tail32` |
+| 14 | 128 | `body32 \|\| tail32 \|\| body32 \|\| tail32 \|\| body32 \|\| tail32 \|\| body32` |
 | 15 | 256 | Eight `body32` chunks alternating with seven `tail32` stripes |
-| 20 | 64 | `body64 || tail32 || body64` |
+| 20 | 64 | `body64 \|\| tail32 \|\| body64` |
 
 For a headless striped 20-bit tile, the first body covers rows 0–31 and the
 second covers rows 32–63. The shared residual stripe sits between them:
@@ -46,15 +53,14 @@ byte offsets:  0                64         96                160
                | body rows 0–31 | residual | body rows 32–63 |
 ```
 
-Putting that stripe after both bodies would separate the first rows' body and
-residual by two cache lines at a 64-byte-aligned tile origin. The middle placement
-keeps point and aligned 16-row payload accesses within two adjacent 64-byte lines
-at tile phases 0 or 32, as reached by tight 160-byte tiles. This is a byte-access
-bound, not a measured cache-miss reduction; heads, siblings and other strides
-need their own accounting. The 12-bit wire keeps its body contiguous: its
-body-first arrangement already meets that bound. These within-tile offsets
-belong to the physical format; owner placement controls plane origins and tile
-strides.
+The middle stripe keeps point and aligned 16-row payload accesses within two
+adjacent 64-byte lines at tile phases 0 or 32, as reached by tight 160-byte tiles.
+Putting it last would separate the first rows' body and residual by two lines at
+phase 0. These are access bounds; heads, siblings and other strides need separate
+accounting. The 12-bit body-first layout already meets that bound, and
+[measurements](../../../workbench/spikes/ikea-composition/placement/README.md)
+found no broad benefit from centering its stripe. Within-tile offsets belong to
+the physical format; owners choose plane origins and strides.
 
 ## Striped residuals
 
@@ -94,16 +100,13 @@ eight-bit head and x86 bulk choice for its 12-bit payload.
 All other remaining widths use Local. ARM-oriented bytes can be read on x86;
 ISA dispatch and execution grain are independent of these choices.
 
-The wider striped selection for ARM reflects the cost of rearranging individual
-bits. Local residuals need a bit transpose to become byte values. Our NEON
-kernels use several shift/mask/exchange steps for that transpose, with narrower
-special cases; GFNI-enabled x86 kernels can use a vector affine instruction.
-BMI2 also supplies `PEXT` for Local point extraction. Striped residuals instead
-let the NEON bulk paths work directly on byte lanes with shifts, masks and
-joins. This makes stripes attractive at more mixed widths. It is a rationale
-for the measured preset choices, not a claim that all ARM bit operations are
-slow or that stripes win every operation. Body reconstruction, point updates,
-tile size and the enclosing consumer still matter.
+ARM favors stripes at more widths because Local residuals need a bit transpose
+to become byte values. NEON usually needs several shift/mask/exchange steps;
+GFNI-enabled x86 can use a vector affine instruction, and BMI2 supplies `PEXT`
+for Local point extraction. Stripes let NEON bulk paths use byte-lane shifts,
+masks and joins directly. The measured presets also account for body
+reconstruction, point updates and tile size; enclosing consumers can favor
+different choices.
 
 Local's eight-row tiles keep small objects and accesses compact. Stripes amortize
 bit work across more rows, but a short array still occupies its full final tile.
@@ -113,11 +116,9 @@ needed when reconstruction is common. These are competing access patterns, so
 head separation and placement remain independent choices.
 
 `describe_preset<F>(count, tile_spacing::tight)` suggests minimal independent
-plane strides; `cacheline` rounds each present plane's tile stride to 64 bytes.
-Rounding can keep an awkward tile from crossing an extra line on point access,
-but padding increases storage and can increase scan traffic. It does not promise fewer lines
-for an arbitrary composition. Owners can instead supply strides and offsets
-for interleaving. The [locality study](../../../workbench/spikes/ikea-composition/probes/ikea-integers/locality/README.md)
+plane strides; `cacheline` rounds each to 64 bytes. Padding can avoid an extra
+line on point access but increases storage and sometimes scan traffic. Owners
+can supply other strides and offsets. The [locality study](../../../workbench/spikes/ikea-composition/probes/ikea-integers/locality/README.md)
 records exact geometry, while the [preset selection notes](../../../workbench/spikes/ikea-composition/ikea2-campaign/preset-selection.md)
 link the comparative evidence and retained tradeoffs.
 
@@ -137,14 +138,11 @@ choice, not a preset name. Unknown versions, tags and reserved fields fail close
 | 8..15 | Logical count, unsigned little-endian u64 |
 | 16..39 | Payload, head0, head1 tile strides, three little-endian u64 values; absent planes have stride zero |
 
-The owner must retain each plane's partition/object identity and offset alongside
-the descriptor, plus expression-node identities, transform semantics and edges for
-compound containers. Their persistence schema belongs to Engine's integration
-design. Neither raw pointers nor the in-process recorder's source addresses
-are a persistence format. Different segments in one collection
-may retain different descriptors indefinitely. Recovery resolves their actual
-descriptions and owner mappings; it must never rerun a current preset to guess
-old bytes.
+The owner retains each plane's partition/object identity and offset, plus
+expression identities, transform semantics and edges for compound containers.
+Engine owns that persistence schema; in-process pointers cannot serve as stored
+identities. Segments may retain different descriptors indefinitely. Recovery
+uses those descriptors and owner mappings, never current preset policy.
 
 `attach_representation<F>` checks an exact physical match before admitting the
 supplied plane spans. The descriptor identifies representation; actual residency,

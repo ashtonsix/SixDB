@@ -52,7 +52,7 @@ std::string_view describe(error reason) noexcept {
     case error::description:
         return "invalid or unsupported physical description";
     case error::map:
-        return "map length or code rank is invalid";
+        return "map length, code rank or packet groups are invalid";
     case error::duplicate:
         return "a writer selects the same code more than once";
     case error::value:

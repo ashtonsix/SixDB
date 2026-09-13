@@ -117,7 +117,7 @@ void run(benchmark::State &state, unsigned extent, unsigned stride,
       word result = 0;
       for (unsigned r = 0; r < Rows; ++r)
         if (active & (word(1) << r))
-          result |= pr.get_unchecked(first + r) << (r * B * 8);
+          result |= pr.get_unchecked(first + r) << (r * drawn * 8);
       return result;
     } else if constexpr (Method == method::gpr)
       return grb.get_unchecked(first, active);
@@ -133,7 +133,7 @@ void run(benchmark::State &state, unsigned extent, unsigned stride,
       if constexpr (Method == method::full_simd)
         return hash_full(value, std::make_index_sequence<8>{});
       else
-        return hash(tp::native::compact_word<Rows>(value));
+        return hash(tp::native::compact_word(value));
     } else {
       const auto value = read_word(first);
       return consumer == 1 ? sum(value) : hash(value);
@@ -150,9 +150,9 @@ void run(benchmark::State &state, unsigned extent, unsigned stride,
       return okay;
     } else if constexpr (Method == method::simd_word) {
       const auto value =
-          tp::native::compact_word<Rows>(nr.get_unchecked(first, active));
-      return bool(nw.set(first, tp::native::expand_word<Rows>(toggle(value)),
-                         effects, active));
+          tp::native::compact_word(nr.get_unchecked(first, active));
+      return bool(nw.set(first, tp::native::expand_word(toggle(value)), effects,
+                         active));
     } else if constexpr (Method == method::simd || Method == method::full_simd)
       return bool(nw.set(first, toggle(nr.get_unchecked(first, active)),
                          effects, active));
@@ -167,6 +167,7 @@ void run(benchmark::State &state, unsigned extent, unsigned stride,
   word expected_result = 0, actual_result = 0;
   auto expected = bytes;
   for (auto first : trace) {
+    std::array<tp::byte, 64> expected_packet{};
     for (unsigned group = 0; group < Step / Rows; ++group) {
       word value = 0;
       for (unsigned r = 0; r < Rows; ++r) {
@@ -179,7 +180,8 @@ void run(benchmark::State &state, unsigned extent, unsigned stride,
           tp::byte decoded = 0;
           for (unsigned bit = 0; bit < c.width; ++bit)
             decoded |= ((initial[offset] >> (c.shift + bit)) & 1) << bit;
-          value |= word(decoded) << (8 * (r * B + i));
+          value |= word(decoded) << (8 * (r * drawn + i));
+          expected_packet[local * drawn + i] = decoded;
           const unsigned replacement = (decoded & 1) ^ 1;
           for (unsigned bit = 0; bit < c.width; ++bit)
             expected[offset] =
@@ -187,8 +189,16 @@ void run(benchmark::State &state, unsigned extent, unsigned stride,
                          (((replacement >> bit) & 1) << (c.shift + bit)));
         }
       }
-      expected_result += consumer == 1 ? sum(value) : hash(value);
+      if constexpr (Method != method::full_simd)
+        expected_result += consumer == 1 ? sum(value) : hash(value);
     }
+    if constexpr (Method == method::full_simd)
+      for (unsigned part = 0; part < 8; ++part) {
+        word value = 0;
+        for (unsigned i = 0; i < 8; ++i)
+          value |= word(expected_packet[8 * part + i]) << (8 * i);
+        expected_result += consumer == 1 ? sum(value) : hash(value);
+      }
     actual_result += consume(first);
   }
   if (actual_result != expected_result) {

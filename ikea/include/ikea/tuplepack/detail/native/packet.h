@@ -1,9 +1,9 @@
 #pragma once
-#include <ikea/tuplepack/detail/native/selection.h>
-#include <ikea/tuplepack/author/native.h>
-#include <ikea/tuplepack/detail/packet_plan.h>
 #include <algorithm>
 #include <bit>
+#include <ikea/tuplepack/author/native.h>
+#include <ikea/tuplepack/detail/native/selection.h>
+#include <ikea/tuplepack/detail/packet_plan.h>
 #include <utility>
 #if defined(__aarch64__) || defined(__AVX2__)
 namespace ikea::tuplepack::native::packet_detail {
@@ -55,8 +55,8 @@ template <unsigned Bytes, unsigned I>
 #endif
 }
 template <unsigned Bytes, unsigned Mode>
-[[gnu::always_inline]] inline std::uint64_t load_word(const detail::packet_placement& p,
-                                                      const byte* row) {
+[[gnu::always_inline]] inline std::uint64_t load_word(const detail::packet_placement &p,
+                                                      const byte *row) {
     if constexpr (Mode != 2) {
         if constexpr (Mode == 0) {
             using word = std::conditional_t<
@@ -81,7 +81,7 @@ template <unsigned Bytes, unsigned Mode>
     return word;
 }
 template <unsigned Bytes, unsigned Mode>
-[[gnu::always_inline]] inline void store_word(const detail::packet_placement& p, byte* row,
+[[gnu::always_inline]] inline void store_word(const detail::packet_placement &p, byte *row,
                                               std::uint64_t value) {
     if constexpr (Mode != 2) {
         if constexpr (Mode == 0) {
@@ -98,8 +98,8 @@ template <unsigned Bytes, unsigned Mode>
     }(std::make_index_sequence<Bytes>{});
 }
 template <unsigned Part, unsigned Mode>
-[[gnu::always_inline]] inline vector16 gather16(const detail::packet_placement& p,
-                                                const byte* row) {
+[[gnu::always_inline]] inline vector16 gather16(const detail::packet_placement &p,
+                                                const byte *row) {
     if constexpr (Mode == 0)
         return load16(row + p.first + Part * 16, 16);
     if (p.count <= Part * 16)
@@ -115,7 +115,7 @@ template <unsigned Part, unsigned Mode>
     return result;
 }
 template <unsigned Part, unsigned Mode>
-[[gnu::always_inline]] inline void scatter16(const detail::packet_placement& p, byte* row,
+[[gnu::always_inline]] inline void scatter16(const detail::packet_placement &p, byte *row,
                                              vector16 value) {
     if constexpr (Mode == 0) {
         store16(row + p.first + Part * 16, 16, value);
@@ -134,7 +134,7 @@ template <unsigned Part, unsigned Mode>
     }(std::make_index_sequence<16>{});
 }
 template <unsigned Rows, unsigned Grain, unsigned Part, bool Full, unsigned Mode, class Address>
-[[gnu::always_inline]] inline vector16 gather_part(const detail::packet_placement& p,
+[[gnu::always_inline]] inline vector16 gather_part(const detail::packet_placement &p,
                                                    Address address, std::uint64_t active) {
     constexpr unsigned B = Grain;
     if constexpr (Part * 16 >= Rows * Grain)
@@ -158,7 +158,7 @@ template <unsigned Rows, unsigned Grain, unsigned Part, bool Full, unsigned Mode
     }
 }
 template <unsigned Rows, unsigned Grain, bool Full, unsigned Mode, class Address>
-[[gnu::always_inline]] inline packet gather(const detail::packet_placement& p, Address address,
+[[gnu::always_inline]] inline packet gather(const detail::packet_placement &p, Address address,
                                             std::uint64_t active) {
     return join(gather_part<Rows, Grain, 0, Full, Mode>(p, address, active),
                 gather_part<Rows, Grain, 1, Full, Mode>(p, address, active),
@@ -166,7 +166,7 @@ template <unsigned Rows, unsigned Grain, bool Full, unsigned Mode, class Address
                 gather_part<Rows, Grain, 3, Full, Mode>(p, address, active));
 }
 template <unsigned Rows, unsigned Grain, unsigned Part, bool Full, unsigned Mode, class Address>
-[[gnu::always_inline]] inline void scatter_part(const detail::packet_placement& p, Address address,
+[[gnu::always_inline]] inline void scatter_part(const detail::packet_placement &p, Address address,
                                                 std::uint64_t active, vector16 value) {
     constexpr unsigned B = Grain;
     if constexpr (Part * 16 >= Rows * Grain)
@@ -188,7 +188,7 @@ template <unsigned Rows, unsigned Grain, unsigned Part, bool Full, unsigned Mode
     }
 }
 template <unsigned Rows, unsigned Grain, bool Full, unsigned Mode, class Address>
-[[gnu::always_inline]] inline void scatter(const detail::packet_placement& p, Address address,
+[[gnu::always_inline]] inline void scatter(const detail::packet_placement &p, Address address,
                                            std::uint64_t active, packet value) {
     scatter_part<Rows, Grain, 0, Full, Mode>(p, address, active, split<0>(value));
     scatter_part<Rows, Grain, 1, Full, Mode>(p, address, active, split<1>(value));
@@ -196,7 +196,7 @@ template <unsigned Rows, unsigned Grain, bool Full, unsigned Mode, class Address
     scatter_part<Rows, Grain, 3, Full, Mode>(p, address, active, split<3>(value));
 }
 template <bool Left>
-[[gnu::always_inline]] inline packet transform_prefix(packet source, const detail::shuffle& p,
+[[gnu::always_inline]] inline packet transform_prefix(packet source, const detail::shuffle &p,
                                                       unsigned bytes) {
 #if defined(__aarch64__)
     return {apply16<0>(source, p), bytes > 16 ? apply16<1>(source, p) : zero16(),
@@ -211,7 +211,7 @@ template <bool Left>
 #endif
 }
 template <unsigned Rows, bool Left>
-[[gnu::always_inline]] inline packet transform(packet source, const detail::shuffle& p) {
+[[gnu::always_inline]] inline packet transform(packet source, const detail::shuffle &p) {
     if constexpr (Rows < 4)
         return native::transform<Left>(source, p);
     else {
@@ -235,14 +235,14 @@ template <unsigned Rows, bool Left>
         return value;
 #else
         auto apply = [&](auto value, unsigned half) __attribute__((always_inline)) {
-            value = _mm256_shuffle_epi8(value, _mm256_loadu_si256(reinterpret_cast<const __m256i*>(
+            value = _mm256_shuffle_epi8(value, _mm256_loadu_si256(reinterpret_cast<const __m256i *>(
                                                    p.index.data() + half * 32)));
             if (p.shifting) {
                 const auto lo = _mm256_set1_epi16(255), hi = _mm256_set1_epi16(short(0xff00));
                 const auto ef = _mm256_loadu_si256(
-                    reinterpret_cast<const __m256i*>(p.even_factor.data() + half * 16));
+                    reinterpret_cast<const __m256i *>(p.even_factor.data() + half * 16));
                 const auto of = _mm256_loadu_si256(
-                    reinterpret_cast<const __m256i*>(p.odd_factor.data() + half * 16));
+                    reinterpret_cast<const __m256i *>(p.odd_factor.data() + half * 16));
                 auto even = _mm256_mullo_epi16(_mm256_and_si256(value, lo), ef);
                 __m256i odd;
                 if constexpr (Left) {
@@ -255,8 +255,9 @@ template <unsigned Rows, bool Left>
                 value = _mm256_or_si256(even, _mm256_and_si256(odd, hi));
             }
             if (p.masking)
-                value = _mm256_and_si256(value, _mm256_loadu_si256(reinterpret_cast<const __m256i*>(
-                                                    p.mask.data() + half * 32)));
+                value =
+                    _mm256_and_si256(value, _mm256_loadu_si256(reinterpret_cast<const __m256i *>(
+                                                p.mask.data() + half * 32)));
             return value;
         };
         return {apply(source.a, 0), apply(source.b, 1)};
@@ -264,7 +265,7 @@ template <unsigned Rows, bool Left>
     }
 }
 template <unsigned Rows, unsigned Grain, bool Full, class Address>
-[[gnu::always_inline]] inline packet gather_selected(const detail::packet_placement& p,
+[[gnu::always_inline]] inline packet gather_selected(const detail::packet_placement &p,
                                                      Address address, std::uint64_t active) {
     // Grain is bit_ceil(count). One-byte transfers are always contiguous;
     // two-byte transfers cannot have a short tail. Preserve these facts through
@@ -288,7 +289,7 @@ template <unsigned Rows, unsigned Grain, bool Full, class Address>
     }
 }
 template <unsigned Rows, unsigned Grain, bool Full, class Address>
-[[gnu::always_inline]] inline void scatter_selected(const detail::packet_placement& p,
+[[gnu::always_inline]] inline void scatter_selected(const detail::packet_placement &p,
                                                     Address address, std::uint64_t active,
                                                     packet value) {
     if constexpr (Grain == 1)
@@ -308,7 +309,7 @@ template <unsigned Rows, unsigned Grain, bool Full, class Address>
     }
 }
 template <unsigned Rows, unsigned Grain = 64 / Rows, class Address>
-[[gnu::always_inline]] inline packet gather_grain(const detail::packet_placement& p,
+[[gnu::always_inline]] inline packet gather_grain(const detail::packet_placement &p,
                                                   Address address, std::uint64_t active) {
     if constexpr (Grain > 1)
         if (p.grain != Grain)
@@ -317,7 +318,7 @@ template <unsigned Rows, unsigned Grain = 64 / Rows, class Address>
                                : gather_selected<Rows, Grain, false>(p, address, active);
 }
 template <unsigned Rows, unsigned Grain = 64 / Rows, class Address>
-[[gnu::always_inline]] inline void scatter_grain(const detail::packet_placement& p, Address address,
+[[gnu::always_inline]] inline void scatter_grain(const detail::packet_placement &p, Address address,
                                                  std::uint64_t active, packet value) {
     if constexpr (Grain > 1)
         if (p.grain != Grain) {
@@ -330,7 +331,7 @@ template <unsigned Rows, unsigned Grain = 64 / Rows, class Address>
         scatter_selected<Rows, Grain, false>(p, address, active, value);
 }
 template <unsigned Rows, class Address>
-[[gnu::always_inline]] inline packet gather_bound(const detail::packet_placement& p,
+[[gnu::always_inline]] inline packet gather_bound(const detail::packet_placement &p,
                                                   Address address, std::uint64_t active,
                                                   std::size_t stride) {
     if (active == all<Rows> && p.contiguous && p.count == p.grain && stride == p.grain)
@@ -341,7 +342,7 @@ template <unsigned Rows, class Address>
         // active address; gathered-pointer callers need not supply inactive ones.
         const unsigned first_active = std::countr_zero(active);
         const auto base = address(first_active) - first_active * stride + p.first;
-        const auto mask = [&]<unsigned G = 64 / Rows>(auto&& self)
+        const auto mask = [&]<unsigned G = 64 / Rows>(auto &&self)
                               __attribute__((always_inline)) -> std::uint64_t {
             if constexpr (G > 1)
                 if (p.grain != G)
@@ -354,7 +355,7 @@ template <unsigned Rows, class Address>
     return gather_grain<Rows>(p, address, active);
 }
 template <unsigned Rows, class Address>
-[[gnu::always_inline]] inline void scatter_bound(const detail::packet_placement& p, Address address,
+[[gnu::always_inline]] inline void scatter_bound(const detail::packet_placement &p, Address address,
                                                  std::uint64_t active, std::size_t stride,
                                                  packet value) {
     if (active == all<Rows> && p.contiguous && p.count == p.grain && stride == p.grain) {
@@ -370,7 +371,7 @@ template <unsigned Rows, class Address>
     if (p.contiguous && p.count == p.grain && stride == p.grain) {
         const unsigned first_active = std::countr_zero(active);
         auto base = address(first_active) - first_active * stride + p.first;
-        const auto mask = [&]<unsigned G = 64 / Rows>(auto&& self)
+        const auto mask = [&]<unsigned G = 64 / Rows>(auto &&self)
                               __attribute__((always_inline)) -> std::uint64_t {
             if constexpr (G > 1)
                 if (p.grain != G)
@@ -383,12 +384,12 @@ template <unsigned Rows, class Address>
 #endif
     scatter_grain<Rows>(p, address, active, value);
 }
-[[gnu::always_inline]] inline void point_write(const detail::packet_write& p, byte* row,
+[[gnu::always_inline]] inline void point_write(const detail::packet_write &p, byte *row,
                                                packet input) {
     store_selected(row, encode(p, row, input), p.writes);
 }
 template <unsigned Rows, class Address>
-[[gnu::always_inline]] inline packet read(const detail::packet_read& p, Address address,
+[[gnu::always_inline]] inline packet read(const detail::packet_read &p, Address address,
                                           std::uint64_t active = all<Rows>,
                                           std::size_t stride = 0) {
     if (!p.place.count || !active)
@@ -404,7 +405,8 @@ template <unsigned Rows, class Address>
                                 : join(zero16(), zero16(), zero16(), zero16());
             auto b = active & 2 ? native::read_body(p.point, address(1))
                                 : join(zero16(), zero16(), zero16(), zero16());
-            return join(split<0>(a), split<1>(a), split<0>(b), split<1>(b));
+            const auto value = join(split<0>(a), split<1>(a), split<0>(b), split<1>(b));
+            return p.ordering.row_major() ? value : native::transform<false>(value, p.route);
         }
     }
     if constexpr (Rows == 4) {
@@ -414,15 +416,17 @@ template <unsigned Rows, class Address>
                            ? split<0>(native::read_body(p.point, address(row)))
                            : zero16();
             };
-            return join(part(0), part(1), part(2), part(3));
+            const auto value = join(part(0), part(1), part(2), part(3));
+            return p.ordering.row_major() ? value : native::transform<false>(value, p.route);
         }
     }
     auto value = gather_bound<Rows>(p.place, address, active, stride);
-    return p.place.grain == 64 / Rows ? transform<Rows, false>(value, p.route)
-                                      : native::transform<false>(value, p.route);
+    return p.ordering.row_major() && p.place.grain == 64 / Rows
+               ? transform<Rows, false>(value, p.route)
+               : native::transform<false>(value, p.route);
 }
 template <unsigned Rows, class Address>
-[[gnu::always_inline]] inline void write(const detail::packet_write& p, Address address,
+[[gnu::always_inline]] inline void write(const detail::packet_write &p, Address address,
                                          packet value, std::uint64_t active = all<Rows>,
                                          std::size_t stride = 0) {
     if (!p.place.count || !active)
@@ -430,6 +434,8 @@ template <unsigned Rows, class Address>
     static_assert(Rows > 1);
     if constexpr (Rows == 2 || Rows == 4) {
         if (!p.place.contiguous && p.place.count > 8) {
+            if (!p.read.ordering.row_major())
+                value = native::transform<false>(value, p.ungroup);
             [&]<std::size_t... I>(std::index_sequence<I...>) __attribute__((always_inline)) {
                 auto apply = [&]<unsigned R>() __attribute__((always_inline)) {
                     if (!(active & (std::uint64_t(1) << R)))
@@ -454,7 +460,7 @@ template <unsigned Rows, class Address>
     }
     for (unsigned round = 0; round < p.round_count; ++round)
         updated = native::bit_or(
-            updated, p.place.grain == 64 / Rows
+            updated, p.read.ordering.row_major() && p.place.grain == 64 / Rows
                          ? transform<Rows, true>(value, p.rounds[round])
                          : transform_prefix<true>(value, p.rounds[round], Rows * p.place.grain));
     scatter_bound<Rows>(p.place, address, active, stride, updated);
@@ -463,14 +469,14 @@ template <unsigned Rows, class Address>
 
 namespace ikea::tuplepack::native {
 template <unsigned Rows, class Address>
-[[gnu::always_inline]] inline packet read_body(const detail::packet_read& p, Address address,
+[[gnu::always_inline]] inline packet read_body(const detail::packet_read &p, Address address,
                                                std::uint64_t active = packet_detail::all<Rows>,
                                                std::size_t stride = 0) {
     return packet_detail::read<Rows>(p, address, active, stride);
 }
 template <unsigned Rows, class Address>
 [[gnu::always_inline]] inline void
-write_body(const detail::packet_write& p, Address address, packet input,
+write_body(const detail::packet_write &p, Address address, packet input,
            std::uint64_t active = packet_detail::all<Rows>, std::size_t stride = 0) {
     packet_detail::write<Rows>(p, address, input, active, stride);
 }

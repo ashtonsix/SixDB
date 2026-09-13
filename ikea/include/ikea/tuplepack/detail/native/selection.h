@@ -56,8 +56,8 @@ template <unsigned Rows, unsigned Part>
                          ? _mm_unpacklo_epi64(_mm_set1_epi8(selected), _mm_set1_epi8(selected >> 8))
                          : _mm_set1_epi8(selected);
         return _mm_xor_si128(
-            _mm_cmpeq_epi8(_mm_and_si128(value, _mm_loadu_si128(
-                                                    reinterpret_cast<const __m128i*>(bits.data()))),
+            _mm_cmpeq_epi8(_mm_and_si128(value, _mm_loadu_si128(reinterpret_cast<const __m128i *>(
+                                                    bits.data()))),
                            _mm_setzero_si128()),
             _mm_set1_epi8(-1));
 #endif
@@ -76,6 +76,33 @@ template <unsigned Rows> [[gnu::always_inline]] inline packet row_mask(std::uint
     return join(mask_part<Rows, 0>(active), mask_part<Rows, 1>(active), mask_part<Rows, 2>(active),
                 mask_part<Rows, 3>(active));
 #endif
+}
+/// Expand original-row bits into this plan's grouped map slots. Trailing
+/// capacity is zero; explicit holes still belong to their original row.
+[[gnu::always_inline]] inline packet row_mask(const packet_layout<64> &order,
+                                              std::uint64_t active) {
+    using namespace native_detail;
+    const auto part = [&](unsigned first) __attribute__((always_inline)) {
+#if defined(__aarch64__)
+        const auto owner = vld1q_u8(order.row_indices().data() + first);
+        const auto selected =
+            vqtbl1q_u8(vreinterpretq_u8_u64(vdupq_n_u64(active)), vshrq_n_u8(owner, 3));
+        const auto bit =
+            vshlq_u8(vdupq_n_u8(1), vreinterpretq_s8_u8(vandq_u8(owner, vdupq_n_u8(7))));
+        return vtstq_u8(selected, bit);
+#else
+        const auto owner =
+            _mm_loadu_si128(reinterpret_cast<const __m128i *>(order.row_indices().data() + first));
+        const auto index = _mm_or_si128(_mm_and_si128(_mm_srli_epi16(owner, 3), _mm_set1_epi8(31)),
+                                        _mm_and_si128(owner, _mm_set1_epi8(char(0x80))));
+        const auto selected = _mm_shuffle_epi8(_mm_set1_epi64x(active), index);
+        const auto bit = _mm_shuffle_epi8(_mm_set1_epi64x(0x8040201008040201ull),
+                                          _mm_and_si128(owner, _mm_set1_epi8(7)));
+        return _mm_xor_si128(_mm_cmpeq_epi8(_mm_and_si128(selected, bit), _mm_setzero_si128()),
+                             _mm_set1_epi8(-1));
+#endif
+    };
+    return join(part(0), part(16), part(32), part(48));
 }
 } // namespace ikea::tuplepack::native
 #endif

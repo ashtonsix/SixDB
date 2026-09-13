@@ -22,20 +22,24 @@ struct packet_read : scalar_read<64> {
 };
 struct packet_write : scalar_write<64> {
     packet_placement place;
+    // Only scattered wide maps use point bodies plus this register permutation.
+    shuffle ungroup;
     std::array<shuffle, 8> rounds;
     std::array<byte, 64> preserve{};
     unsigned round_count = 0;
     bool needs_old = false;
     std::uint64_t native_reads = 0;
 };
-std::expected<scalar_read<64>, error> prepare_read_codes(const layout&, std::span<const byte>);
-std::expected<scalar_write<64>, error> prepare_write_codes(const layout&, std::span<const byte>);
-std::expected<packet_read, error> prepare_packet_read(const layout&, std::span<const byte>,
-                                                      unsigned rows);
-std::expected<packet_write, error> prepare_packet_write(const layout&, std::span<const byte>,
-                                                        unsigned rows);
-std::array<byte, 64> read_packet_buffered(const packet_read&, unsigned rows, const byte*,
+std::expected<scalar_read<64>, error> prepare_read_codes(const layout &, std::span<const byte>);
+std::expected<scalar_write<64>, error> prepare_write_codes(const layout &, std::span<const byte>);
+std::expected<packet_read, error> prepare_packet_read(const layout &, std::span<const byte>,
+                                                      unsigned rows,
+                                                      std::span<const unsigned> groups = {});
+std::expected<packet_write, error> prepare_packet_write(const layout &, std::span<const byte>,
+                                                        unsigned rows,
+                                                        std::span<const unsigned> groups = {});
+std::array<byte, 64> read_packet_buffered(const packet_read &, unsigned rows, const byte *,
                                           std::size_t stride, std::uint64_t active);
-void write_packet_buffered(const packet_write&, unsigned rows, byte*, std::size_t stride,
-                           const std::array<byte, 64>&, std::uint64_t active);
+void write_packet_buffered(const packet_write &, unsigned rows, byte *, std::size_t stride,
+                           const std::array<byte, 64> &, std::uint64_t active);
 } // namespace ikea::tuplepack::detail

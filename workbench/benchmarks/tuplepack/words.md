@@ -29,9 +29,9 @@ then bind their native adapters. A consumer that processes two four-byte rows
 can keep its scalar input and output:
 
 ```cpp
-auto word = tp::native::compact_word<2>(read.get_unchecked(first, active));
+auto word = tp::native::compact_word(read.get_unchecked(first, active));
 auto next = transform(word); // caller's scalar computation
-auto status = write.set(first, tp::native::expand_word<2>(next), effects, active);
+auto status = write.set(first, tp::native::expand_word(next), effects, active);
 ```
 
 The helpers move values in registers. Compacting discards slots after the first

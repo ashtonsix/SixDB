@@ -1,11 +1,12 @@
 #include "packet_wire.h"
-#include <ikea/tuplepack/author/composition.h>
-#include <ikea/tuplepack/author/maintenance.h>
+#include "grouped_maintenance.h"
 #include <cstdio>
 #include <cstdlib>
+#include <ikea/tuplepack/author/composition.h>
+#include <ikea/tuplepack/author/maintenance.h>
 #include <sys/mman.h>
 #include <unistd.h>
-void require(bool valid, unsigned rows, unsigned trial, const char* scenario) {
+void require(bool valid, unsigned rows, unsigned trial, const char *scenario) {
     if (!valid) {
         std::fprintf(stderr, "TuplePack GPR: rows=%u trial=%u %s\n", rows, trial, scenario);
         std::abort();
@@ -16,7 +17,7 @@ void require(bool valid, unsigned rows, unsigned trial, const char* scenario) {
 template <unsigned Rows> void transfers() {
     constexpr unsigned B = 8 / Rows;
     const auto page = std::size_t(sysconf(_SC_PAGESIZE));
-    auto allocation = static_cast<tp::byte*>(
+    auto allocation = static_cast<tp::byte *>(
         mmap(nullptr, 2 * page, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
     require(allocation != MAP_FAILED && !mprotect(allocation + page, page, PROT_NONE), Rows, 0,
             "guard setup");
@@ -53,9 +54,9 @@ template <unsigned Rows> void transfers() {
                                     for (unsigned i = 0; i < bytes; ++i) {
                                         expected |=
                                             std::uint64_t((0xa5 >> shift) & ((1u << width) - 1))
-                                            << (8 * (r * B + i));
+                                            << (8 * (r * bytes + i));
                                         input |= std::uint64_t((1u << width) - 1)
-                                                 << (8 * (r * B + i));
+                                                 << (8 * (r * bytes + i));
                                     }
                             require(read.get(0, active) == expected &&
                                         nr.get_unchecked(0, active) == expected &&
@@ -106,8 +107,8 @@ struct law {
     unsigned calls = 0;
     std::uint64_t old = 0, next = 0;
     template <class Before, class After>
-    void observe_batch(std::size_t first, std::uint64_t active, const Before& before,
-                       const After& after) {
+    void observe_batch(std::size_t first, std::uint64_t active, const Before &before,
+                       const After &after) {
         require(first == 1 && active == 3, 2, 0, "original row observation");
         ++calls;
         old = std::get<0>(before);
@@ -134,10 +135,10 @@ void composition() {
     auto maintenance = tp::observation(projected, summary);
     std::array<ikea::owner_write, 8> records;
     ikea::source_write_journal effects{records};
-    const std::uint64_t av = 7ull | (7ull << 32), bv = 3ull | (3ull << 32);
+    const std::uint64_t av = 7ull | (7ull << 8), bv = 3ull | (3ull << 8);
     require(bool(parent.set(1, {{av}, bv}, effects, 3, maintenance)), 2, 0, "nested word mutation");
-    require(summary.calls == 1 && summary.old == (0xa5ull | (0xa5ull << 32)) &&
-                summary.next == (0xbfull | (0xbfull << 32)),
+    require(summary.calls == 1 && summary.old == (0xa5ull | (0xa5ull << 8)) &&
+                summary.next == (0xbfull | (0xbfull << 8)),
             2, 0, "complete before and after");
     auto substituted = *tp::composition::bind_group(tp::native_writer(moved));
     auto rebuilt = *tp::composition::bind_group(substituted, tp::native_writer(bo));
@@ -161,6 +162,7 @@ void composition() {
 void pipeline_check();
 void carrier_check();
 int main() {
+    grouped_maintenance<8>();
     std::mt19937 random(420312);
     wire<8, 1>(random);
     wire<8, 2>(random);

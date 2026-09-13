@@ -1,7 +1,7 @@
-#include <ikea/tuplepack.h>
-#include <ikea/tuplepack/author/execution.h>
 #include <cassert>
 #include <cstdio>
+#include <ikea/tuplepack.h>
+#include <ikea/tuplepack/author/execution.h>
 
 namespace tp = ikea::tuplepack;
 #if defined(__aarch64__) || defined(__AVX2__)
@@ -9,9 +9,9 @@ namespace {
 constexpr unsigned rows = 32;
 using pipeline = tp::chain<8>;
 struct context {
-    const tp::native_reader<64, tp::byte, rows>& read;
-    const tp::native_writer<64, rows>& write;
-    ikea::source_write_journal& effects;
+    const tp::native_reader<64, tp::byte, rows> &read;
+    const tp::native_writer<64, rows> &write;
+    ikea::source_write_journal &effects;
     bool okay = true;
     std::size_t completed = 0;
 };
@@ -30,23 +30,23 @@ struct context {
             _mm256_xor_si256(_mm256_and_si256(v.b, one), one)};
 #endif
 }
-[[gnu::always_inline]] inline pipeline::result decode(void* opaque, std::size_t first,
+[[gnu::always_inline]] inline pipeline::result decode(void *opaque, std::size_t first,
                                                       std::uint64_t active,
                                                       tp::native::pipeline_values, unsigned) {
-    auto& c = *static_cast<context*>(opaque);
+    auto &c = *static_cast<context *>(opaque);
     return {tp::native::pipeline_values::from(c.read.get_unchecked(first, active)), active,
             !active};
 }
-[[gnu::always_inline]] inline pipeline::result update(void* opaque, std::size_t first,
+[[gnu::always_inline]] inline pipeline::result update(void *opaque, std::size_t first,
                                                       std::uint64_t active,
                                                       tp::native::pipeline_values values,
                                                       unsigned) {
-    auto& c = *static_cast<context*>(opaque);
+    auto &c = *static_cast<context *>(opaque);
     c.okay = bool(c.write.set(first, change(values.get()), c.effects, active));
     return {values, active, !c.okay};
 }
-void complete(void* opaque, std::size_t first, std::uint64_t, tp::native::pipeline_values) {
-    auto& c = *static_cast<context*>(opaque);
+void complete(void *opaque, std::size_t first, std::uint64_t, tp::native::pipeline_values) {
+    auto &c = *static_cast<context *>(opaque);
     if (c.okay)
         c.completed = std::min(c.write.size(), first + rows);
 }
@@ -60,9 +60,12 @@ int main() {
     auto format = tp::layout::make(1, codes);
     assert(format);
     std::array<tp::byte, 2> map{0, 1};
-    auto read_plan = tp::reader<64, rows>::make(*format, map);
+    // One byte-code group at a time: all first codes, then all second codes.
+    // The same reader/writer interface defaults to interleaved rows.
+    const std::array<unsigned, 2> groups{1, 1};
+    auto read_plan = tp::reader<64, rows>::make(*format, map, groups);
     assert(read_plan);
-    auto write_plan = tp::writer<64, rows>::make(*format, map);
+    auto write_plan = tp::writer<64, rows>::make(*format, map, groups);
     assert(write_plan);
     std::array<tp::byte, 65> bytes{}, initial{}, expected{};
     for (unsigned r = 0; r < bytes.size(); ++r) {

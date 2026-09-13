@@ -88,7 +88,12 @@ directory::directory(layout kind, std::span<const entry> entries, unsigned check
         tuple_writer_ = *tp::writer<8>::make(*tuple_layout_, mapped);
         tuple_read_ = *tp::bind_reader(*tuple_plan_, *tuple_view_);
         if (kind != layout::tuple_absolute) {
-            frame_plan_ = *tp::reader<64, 16>::make(*tuple_layout_, mapped);
+            // This consumer uses u32 lanes; its spare bytes are explicit map
+            // holes, not implicit padding supplied by the packet carrier.
+            std::array<tp::byte, 4> frame_map;
+            frame_map.fill(tp::hole);
+            std::copy(mapped.begin(), mapped.end(), frame_map.begin());
+            frame_plan_ = *tp::reader<64, 16>::make(*tuple_layout_, frame_map);
             frame_read_ = *tp::bind_reader(*frame_plan_, *tuple_view_);
         }
         tuple_write_ = *tp::bind_writer(*tuple_writer_, *tuple_view_);

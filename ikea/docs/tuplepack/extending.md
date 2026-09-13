@@ -19,16 +19,14 @@ auto new_parent = tp::composition::bind_group(new_a, b);
 Both parents accept the same logical input type. A valid substitution also keeps
 the parent's value meaning, original coordinates and operation guarantees;
 matching C++ types alone does not establish that equivalence.
-Groups can themselves be children;
+Mutation groups can themselves be children;
 all children use the same original-row packet shape. Preparation checks actual
 destination bits for overlap, and a checked invocation admits the complete group
 before any child writes. Disjoint codes may share a byte because the children
 preserve each other's bits in sequence.
 
-The caller initializes or migrates the chosen storage. Old bindings still refer
-to their old sources, and aliases see writes to shared storage. Retaining an old
-reader's data version requires the owner's versioning and visibility protocol.
-Rebinding alone neither migrates bytes nor preserves a historical edition.
+The caller migrates storage and coordinates visibility. Old bindings still refer
+to their old sources; retaining a data version requires owner versioning.
 
 ## Observe the dependencies of the summary
 
@@ -42,15 +40,10 @@ tp::observation maintenance(observe_row, law);
 
 ![A and B are mutation destinations, a shared-byte store preserves neighboring bits, and maintenance reads A, B and untouched C. Whole-call admission precedes per-window before, write and after brackets.](images/observation.svg)
 
-*The three sets answer different questions: which values change, which bytes
-need write protection, and which values determine the summary. Observation
-brackets repeat per window after the whole call has passed admission.*
-
 The example's law requests after-values only and recomputes the signature into
-private state. Another law can request before-values, both versions, or just
-coordinates for invalidation. It receives requested after-values only after all
-children in that window have written. A range repeats this process window by
-window; an owner supplies any required isolation across the range.
+private state after all children in a window have written. Laws can instead
+request before-values, both, or coordinates for invalidation. A range repeats
+the bracket per window; the owner supplies isolation across the range.
 
 Simply removing A's old hash bits could erase a witness also supplied by B or C.
 The summary's law determines whether replacement needs complete recomputation,
@@ -83,18 +76,25 @@ native body. The [word example](../../examples/tuplepack/words.cpp) carries two
 four-byte rows in a `uint64_t`; the [packet example](../../examples/tuplepack/packets.cpp)
 keeps a larger projection in ISA vectors.
 
-Activity travels separately from payload. `native::row_mask_for<N, Rows>(active)`
-expands it into a byte mask for a transform. Code ranks carry no signed, floating
-or application semantics; the consumer supplies those operations explicitly.
-`native::word<I>` extracts a compile-time 64-bit piece for scalar consumers.
+Activity travels separately: `native::row_mask(plan, active)` expands original-row
+bits into a byte mask in the plan's packet order. A consumer's contract includes
+the map, groups, Rows and value interpretation; carrier types alone cannot prove
+compatibility.
 
-When a map benefits from SIMD and the consumer wants a word, prepare the same
-short map on both widths. `native::compact_word<Rows>(wide)` gathers each row's
-first `8/Rows` slots into a GPR; `expand_word<Rows>(word)` places them back and
-zeroes the rest. An equivalent write therefore maps only those first slots:
-extra mapped destinations would receive zero. The bridge uses registers; it
-does not require a staging buffer. Compare the complete consumer and its allowed
-store coverage using the [packet-width evidence](../../../workbench/benchmarks/tuplepack/words.md).
+`native::compact_word` extracts the first eight bytes into a GPR; `expand_word`
+zero-extends back to a vector. For a whole packet to cross widths unchanged,
+both plans use the same map, groups and Rows and at most eight used bytes.
+`native::word<I>` extracts another compile-time 64-bit piece. See the
+[conversion bounds](reference.md#routes-and-native-execution) before using a
+converted packet for writes.
+
+The [grouped example](../../examples/tuplepack/groups.cpp) reads four A/B pairs
+followed by C with groups `{2,1}`. A/B hold a 12-bit value in two byte slots;
+`compact_word` collects the four pairs into a GPR. The body increments them
+modulo 4096 and a `writer<8,4>` maps only A/B, preserving C. Compare complete
+consumers when choosing widths and groups; the [width](../../../workbench/benchmarks/tuplepack/words.md)
+and [grouping](../../../workbench/spikes/tuple-layout/batching/groups/README.md)
+studies retain benefits and counterexamples.
 
 ## Normalize wiring before execution
 
@@ -124,10 +124,7 @@ state. Keep shared bodies inlinable through their wrappers: an outlined lambda
 capturing a vector aggregate can introduce memory handoff. Explicit ISA bodies
 remain available under `author/native.h`.
 
-Choose fusion and stage grain around a representative consumer. The
-[benchmark guide](../../../workbench/benchmarks/tuplepack/README.md) compares inline
-and CPS with shared bodies. [Source boundaries](../source.md#tuplepack-source-boundaries)
-locate preparation, native endpoints and traversal; the
-[shared execution entry](../source.md#shared-execution-entry) owns the private ABI
-and table requirements. The [test guide](../../test/tuplepack/README.md) maps
-wire, operation, packet, execution and ownership changes to their checks.
+Use the [benchmarks](../../../workbench/benchmarks/tuplepack/README.md) to choose
+fusion and stage grain. The [source guide](../source.md#tuplepack-source-boundaries)
+locates implementation and private ABI rules; the
+[test guide](../../test/tuplepack/README.md) identifies checks for each change.

@@ -106,14 +106,14 @@ template <unsigned R, class Emit>
 template <class F> constexpr std::size_t body_offset(std::size_t i) {
     if constexpr (F::storage == geometry::local)
         return i * F::body;
-    else if constexpr (F::payload == 10)
-        return (i / 32 + (i / 32 >= 2)) * 32 + i % 32;
+    else if constexpr (F::payload == 10 || F::payload == 20)
+        // Place one shared stripe between equal body halves; each half ends
+        // on a native 32-row boundary. The same law covers one/two-byte bodies.
+        return i * F::body + (i >= F::tile_rows / 2 ? 32 : 0);
     else if constexpr (F::payload == 12)
         return i;
     else if constexpr (F::payload == 14 || F::payload == 15)
         return (i / 32) * 64 + i % 32;
-    else if constexpr (F::payload == 20)
-        return (i / 32) * 96 + (i % 32) * 2;
     else
         return 0;
 }

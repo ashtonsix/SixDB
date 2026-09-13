@@ -38,7 +38,7 @@ auto read = sp::bind_decoder<std::uint32_t>(*storage);
 `attach` inspects metadata, not bytes. It checks full occupied extents, stride,
 64-byte payload alignment, arithmetic overflow and occupied-field overlap.
 Disjoint fields may interleave inside overlapping span envelopes; gaps remain
-owned by their siblings, as in the physical tour's shared-partition example.
+owned by their siblings, as in `ordinary.cpp`'s shared-partition example.
 
 The named view, prepared mutation and byte owner remain alive at stable addresses
 while the erased operations borrow them. Copying a view copies a borrow. Replacing
@@ -106,8 +106,6 @@ owner's binding names. Overlap admission is intentionally conservative: distinct
 writable leaves' whole fields must not overlap, even if a proposed bit-level
 alias might be safe under a stronger proof.
 
-Capacity errors can mean short plane/input/output storage or insufficient journal
-records; report the operation and supplied extents with the error. Fix the command
-or storage reservation and retry. A failure after a *previous successful call*
-does not undo that earlier call. Cancellation, acquisition and publication failures
-belong to the enclosing owner protocol.
+For capacity errors, report plane/input/output extents and available journal
+records with the operation, then correct the command or reservation.
+Cancellation, acquisition and publication failures belong to the owner protocol.

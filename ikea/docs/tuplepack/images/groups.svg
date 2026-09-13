@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="704" viewBox="0 0 1280 704" role="img" aria-labelledby="title description">
+<title id="title">TuplePack: two orders of a complete eight-byte packet</title>
+<desc id="description">An A/B/C/D projection over two original rows fills one eight-byte packet. The default group of four emits A0 B0 C0 D0 A1 B1 C1 D1. Groups of two, one and one emit A0 B0 A1 B1 C0 C1 D0 D1. A/B pairs stay adjacent while C and D each form a separate run.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8" fill="#586579"/></marker></defs>
+<rect width="1280" height="100%" fill="white"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#233047" font-size="21">
+<text x="32" y="42" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">Group map slots, then repeat each group across rows</text>
+<text x="32" y="80" font-size="22" font-weight="normal" fill="#586579" text-anchor="start">reader&lt;8, 2&gt; · map {A, B, C, D} · A1 means code A from original row 1</text>
+<text x="32" y="144" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">Default: one group {4}</text>
+<text x="32" y="184" font-size="21" font-weight="normal" fill="#233047" text-anchor="start">Repeat the complete map for each row.</text>
+<text x="1248" y="184" font-size="20" font-weight="normal" fill="#586579" text-anchor="end">Packet byte offsets</text>
+<text x="108" y="224" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">0</text>
+<rect x="32" y="240" width="152" height="56" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="108" y="276" font-size="24" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A0</text>
+<text x="260" y="224" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">1</text>
+<rect x="184" y="240" width="152" height="56" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="260" y="276" font-size="24" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B0</text>
+<text x="412" y="224" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">2</text>
+<rect x="336" y="240" width="152" height="56" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="412" y="276" font-size="24" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C0</text>
+<text x="564" y="224" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">3</text>
+<rect x="488" y="240" width="152" height="56" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="564" y="276" font-size="24" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D0</text>
+<text x="716" y="224" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">4</text>
+<rect x="640" y="240" width="152" height="56" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="716" y="276" font-size="24" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A1</text>
+<text x="868" y="224" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">5</text>
+<rect x="792" y="240" width="152" height="56" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="868" y="276" font-size="24" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B1</text>
+<text x="1020" y="224" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">6</text>
+<rect x="944" y="240" width="152" height="56" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="1020" y="276" font-size="24" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C1</text>
+<text x="1172" y="224" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">7</text>
+<rect x="1096" y="240" width="152" height="56" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="1172" y="276" font-size="24" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D1</text>
+<path d="M32,304 V320 H1248 V304" fill="none" stroke="#586579" stroke-width="1.8"/>
+<text x="640" y="352" font-size="21" font-weight="normal" fill="#586579" text-anchor="middle">One group · A/B/C/D for each row</text>
+<text x="32" y="416" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">Groups {2, 1, 1}: A/B together, C and D separately</text>
+<text x="32" y="456" font-size="21" font-weight="normal" fill="#233047" text-anchor="start">Repeat A/B for both rows, then C for both rows, then D.</text>
+<text x="108" y="496" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">0</text>
+<rect x="32" y="512" width="152" height="56" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="108" y="548" font-size="24" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A0</text>
+<text x="260" y="496" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">1</text>
+<rect x="184" y="512" width="152" height="56" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="260" y="548" font-size="24" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B0</text>
+<text x="412" y="496" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">2</text>
+<rect x="336" y="512" width="152" height="56" rx="0" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="412" y="548" font-size="24" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">A1</text>
+<text x="564" y="496" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">3</text>
+<rect x="488" y="512" width="152" height="56" rx="0" fill="#ffdb79" stroke="white" stroke-width="1.5"/>
+<text x="564" y="548" font-size="24" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">B1</text>
+<text x="716" y="496" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">4</text>
+<rect x="640" y="512" width="152" height="56" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="716" y="548" font-size="24" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C0</text>
+<text x="868" y="496" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">5</text>
+<rect x="792" y="512" width="152" height="56" rx="0" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="868" y="548" font-size="24" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">C1</text>
+<text x="1020" y="496" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">6</text>
+<rect x="944" y="512" width="152" height="56" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="1020" y="548" font-size="24" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D0</text>
+<text x="1172" y="496" font-size="18" font-weight="normal" fill="#586579" text-anchor="middle">7</text>
+<rect x="1096" y="512" width="152" height="56" rx="0" fill="#c7b9f3" stroke="white" stroke-width="1.5"/>
+<text x="1172" y="548" font-size="24" font-weight="normal" fill="#233047" text-anchor="middle" font-family="DejaVu Sans Mono, monospace">D1</text>
+<path d="M32,576 V592 H640 V576" fill="none" stroke="#586579" stroke-width="1.8"/>
+<text x="336" y="624" font-size="21" font-weight="normal" fill="#586579" text-anchor="middle">A/B group · 4 bytes</text>
+<path d="M640,576 V592 H944 V576" fill="none" stroke="#586579" stroke-width="1.8"/>
+<text x="792" y="624" font-size="21" font-weight="normal" fill="#586579" text-anchor="middle">C group · 2 bytes</text>
+<path d="M944,576 V592 H1248 V576" fill="none" stroke="#586579" stroke-width="1.8"/>
+<text x="1096" y="624" font-size="21" font-weight="normal" fill="#586579" text-anchor="middle">D group · 2 bytes</text>
+<text x="32" y="680" font-size="21" font-weight="normal" fill="#586579" text-anchor="start">Each cell is one byte. Both orders fill one 8-byte packet: two rows × four slots.</text>
+</g></svg>
