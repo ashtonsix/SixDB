@@ -84,25 +84,36 @@ def compact_run(source, destination):
     (destination / "provenance.json").write_text(json.dumps(provenance, indent=2) + "\n")
 
 
-def compact_files(source, destination, receipt):
-    if receipt['status'] != 'complete' or not receipt['source_unchanged']:
-        raise ValueError('Only a successful run can install compact evidence')
-    selected = receipt['compact']['files']
+def copy_compact_files(source, destination, selected, expected=None):
+    """Copy an explicit selection without imposing an experiment receipt schema."""
     if not selected or len(set(selected)) != len(selected):
         raise ValueError('Choose distinct compact files')
+    hashes = {}
     for name in selected:
         p = Path(name)
-        if p.is_absolute() or '..' in p.parts or name in ('artifact.json', 'provenance.json', '.gitattributes'):
+        if (not p.parts or p.is_absolute() or '..' in p.parts or
+                p.as_posix() in ('artifact.json', 'provenance.json', '.gitattributes') or
+                (source / p).resolve() != source.resolve() / p):
             raise ValueError(f'Invalid compact file: {name}')
-        expected = receipt['artifact_sha256'].get(name)
-        if expected is None or digest(source / name) != expected:
+        checksum = digest(source / name)
+        if expected is not None and expected.get(name) != checksum:
             raise ValueError(f'Compact input missing or changed: {name}')
         (destination / name).parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source / name, destination / name)
+        if digest(destination / name) != checksum:
+            raise ValueError(f'Compact input changed while copying: {name}')
+        hashes[name] = checksum
     # Preserve exactly the selected bytes, including pre-existing CRLF CSVs.
     (destination / '.gitattributes').write_text('* -text\n')
+    return hashes
+
+
+def compact_files(source, destination, receipt):
+    if receipt['status'] != 'complete' or not receipt['source_unchanged']:
+        raise ValueError('Only a successful run can install compact evidence')
+    hashes = copy_compact_files(source, destination, receipt['compact']['files'], receipt['artifact_sha256'])
     provenance = {k: receipt[k] for k in ('status', 'source_unchanged', 'started_utc', 'source_digest', 'config', 'platform')}
-    provenance.update(format=2, files_sha256={name: digest(destination / name) for name in selected},
+    provenance.update(format=2, files_sha256=hashes,
                       regenerate=receipt['compact']['regenerate'], full_bundle='artifact.json',
                       source_archive_sha256=digest(source / 'source.tar.gz'),
                       inputs={k: {f: v[f] for f in ('id', 'key')} for k, v in receipt.get('inputs', {}).items()})

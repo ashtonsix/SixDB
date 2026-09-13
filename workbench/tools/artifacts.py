@@ -16,7 +16,7 @@ import subprocess
 import tarfile
 import tempfile
 
-from evidence import compact_run, compact_files, git_root, verify_exports
+from evidence import compact_run, compact_files, copy_compact_files, git_root, verify_exports
 import storage
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -256,10 +256,18 @@ def install(staging, destination):
 
 
 def prepare_compact(source, staging, selected, regenerate):
-    if selected is None:
+    receipt_path = source / 'run.json'
+    if not receipt_path.exists():
+        if selected is None:
+            raise ValueError('No run.json selection recipe; choose output files with --file PATH (repeat as needed)')
+        hashes = copy_compact_files(source, staging, selected)
+        provenance = {'format': 2, 'kind': 'files', 'files_sha256': hashes,
+                      'regenerate': regenerate or [], 'full_bundle': 'artifact.json'}
+        (staging / 'provenance.json').write_text(json.dumps(provenance, indent=2, sort_keys=True) + '\n')
+    elif selected is None:
         compact_run(source, staging)
     else:
-        receipt = json.loads((source / 'run.json').read_text())
+        receipt = json.loads(receipt_path.read_text())
         receipt['compact'] = {'files': selected, 'regenerate': regenerate or []}
         compact_files(source, staging, receipt)
     if regenerate is not None:
@@ -342,7 +350,7 @@ def preview(source, destination, selected=None, regenerate=None):
         return preview_export(staging, destination.resolve(), detailed=True)
 
 
-def worker_reference(source):
+def worker_reference(source, *, selected=None):
     """Reuse a worker's complete archive even when local compiler output is absent."""
     for parent in source.parents:
         receipt_path = parent / 'collection.json'
@@ -356,13 +364,17 @@ def worker_reference(source):
                    if name.startswith(prefix)}
         if not members:
             raise ValueError('study is not present in the verified worker archive')
+        for name, checksum in (selected or {}).items():
+            if members.get(name, {}).get('sha256') != checksum:
+                raise ValueError(f'selected output is not in the verified worker archive: {name}')
         for path in files(source):
             name = path.relative_to(source).as_posix()
             if name in members and sha256(path) != members[name]['sha256']:
                 raise ValueError(f'local worker output differs from archived output: {name}')
         verify_run(source, archived=members)
         print('Reuse verified worker archive; no duplicate upload.', flush=True)
-        return reference | {'subdirectory': prefix.rstrip('/'), 'kind': 'run'}
+        kind = 'run' if (source / 'run.json').exists() else 'files'
+        return reference | {'subdirectory': prefix.rstrip('/'), 'kind': kind}
     return None
 
 
@@ -378,7 +390,9 @@ def retain(source, destination, selected=None, regenerate=None):
         prepare_compact(source, staging, selected, regenerate)
         if preview_export(staging, destination):
             raise ValueError('Compact export contains Git-ignored files; rename the selected output or adjust its scoped ignore rule')
-        reference = worker_reference(source) or publish(source, temporary)
+        provenance = json.loads((staging / 'provenance.json').read_text())
+        raw_selection = provenance['files_sha256'] if provenance.get('kind') == 'files' else None
+        reference = worker_reference(source, selected=raw_selection) or publish(source, temporary)
         (staging / "artifact.json").write_text(json.dumps(reference, indent=2) + "\n")
         install(staging, destination)
     print(f"Retained: {destination}")

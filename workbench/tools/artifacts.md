@@ -44,16 +44,26 @@ python3 workbench/tools/artifacts.py retain build/experiments/STUDY/RUN \
   workbench/spikes/STUDY/evidence/NAME
 ```
 
-The recipe supplies the selection. Without one, the legacy timing format keeps
-iteration rows, accounting and summaries. Override with repeated `--file PATH`
-and optionally `--regenerate 'python3 path/to/report.py {evidence}'`.
+The recipe supplies the selection; the legacy timing format keeps iteration rows,
+accounting and summaries. Override with repeated `--file PATH` and optionally
+`--regenerate 'python3 path/to/report.py {evidence}'`. Plain script outputs need
+an explicit selection, for example:
+
+```sh
+python3 workbench/tools/artifacts.py retain build/workers/JOB/results \
+  workbench/spikes/STUDY/evidence/NAME --file samples.json --file worker-result.json
+```
+
+No `run.json` is needed. Provenance records selected bytes without inferring
+success or source stability; the worker's status and host/source context remain
+in its archive. Selected worker files must match that archive.
 
 `retain` shows totals and the five largest files. Replace it with `preview` for
 all files, CSV coverage, repeated names and identical bytes, without uploading.
 Size is descriptive; ignored export members are refused so they cannot disappear
 from a later commit. A selected diagnostic can use `.txt` or a scoped ignore rule.
 
-Retention verifies the completed run and full archive, then installs the selected
+Retention verifies any experiment receipt and the full archive, then installs selected
 bytes with provenance and an `artifact.json` recovery reference. Worker studies
 reuse their existing archive, including omitted local compiler output. Other runs
 upload and download-verify a new bundle. Failed retention preserves the source;

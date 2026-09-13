@@ -136,6 +136,69 @@ class ArtifactsCheck(unittest.TestCase):
             artifacts.restore_bundle(reference, restored)
             self.assertEqual((restored / 'run.json').read_text(), 'an arbitrary script output')
 
+    def test_plain_files_selection_without_run_receipt(self):
+        (self.source / 'run.json').unlink()
+        selected = ['accounting.csv', 'summary.md']
+        destination = self.root / 'evidence'
+        before = {p.name: p.read_bytes() for p in artifacts.files(self.source)}
+        with patch.object(artifacts, 'aws', self.fake_aws):
+            with self.assertRaisesRegex(ValueError, 'choose output files with --file'):
+                artifacts.preview(self.source, destination)
+            artifacts.preview(self.source, destination, selected)
+            self.assertFalse(destination.exists())
+            self.assertFalse(self.objects)
+            artifacts.retain(self.source, destination, selected, ['report.py', '{evidence}'])
+            artifacts.retain(self.source, destination, selected, ['report.py', '{evidence}'])
+            meta = verify_compact(destination)
+            self.assertEqual(meta['kind'], 'files')
+            self.assertNotIn('status', meta)
+            self.assertNotIn('source_unchanged', meta)
+            self.assertEqual(meta['regenerate'], ['report.py', '{evidence}'])
+            self.assertEqual(set(meta['files_sha256']), set(selected))
+            restored = self.root / 'restored'
+            artifacts.fetch(destination, restored)
+        self.assertEqual(before, {p.name: p.read_bytes() for p in artifacts.files(self.source)})
+        self.assertEqual(before, {p.name: p.read_bytes() for p in artifacts.files(restored)})
+        self.assertEqual(len(self.objects), 1)
+
+    def test_raw_worker_selection_reuses_archive_and_rejects_unarchived_files(self):
+        (self.source / 'run.json').unlink()
+        (self.source / 'probe').write_bytes(b'\x7fELF' + b'a' * 2 ** 20)
+        (self.source / 'worker-result.json').write_text('{"state":"complete","script_returncode":0}\n')
+        selected = ['accounting.csv', 'worker-result.json']
+        for scope in ('', 'study'):
+            with self.subTest(scope=scope), patch.object(artifacts, 'aws', self.fake_aws), \
+                    tempfile.TemporaryDirectory() as temp:
+                output = Path(temp) / 'output'
+                shutil.copytree(self.source, output / scope)
+                reference = artifacts.publish(output, Path(temp), validate_run=False)
+                job = self.root / 'build/workers' / (scope or 'root')
+                job.mkdir(parents=True)
+                worker_cache.collect(job, reference)
+                source = job / 'results' / scope
+                self.assertFalse((source / 'probe').exists())
+                manifest = json.loads((job / 'collection.json').read_text())['members']
+                evidence = self.root / ('evidence-' + (scope or 'root'))
+                with patch.object(artifacts, 'remote_manifest', return_value=manifest), \
+                        patch.object(artifacts, 'publish') as publish:
+                    artifacts.retain(source, evidence, selected)
+                    publish.assert_not_called()
+                    kept = json.loads((evidence / 'artifact.json').read_text())
+                    self.assertEqual(kept, reference | {'subdirectory': scope})
+                    self.assertEqual(set(verify_compact(evidence)['files_sha256']), set(selected))
+                    recovered = Path(temp) / 'recovered'
+                    artifacts.fetch(evidence, recovered)
+                    for path in artifacts.files(self.source):
+                        self.assertEqual(path.read_bytes(), (recovered / path.name).read_bytes())
+                    (source / 'local.csv').write_text('created after collection\n')
+                    with self.assertRaisesRegex(ValueError, 'not in the verified worker archive'):
+                        artifacts.retain(source, Path(temp) / 'unarchived', ['local.csv'])
+                    (source / 'accounting.csv').write_text('changed locally\n')
+                    with self.assertRaisesRegex(ValueError, 'not in the verified worker archive'):
+                        artifacts.retain(source, Path(temp) / 'changed', selected)
+                self.assertFalse((Path(temp) / 'unarchived').exists())
+                self.assertFalse((Path(temp) / 'changed').exists())
+
     def test_retain_partially_collected_study_reuses_complete_worker_archive(self):
         (self.source / 'probe').write_bytes(b'\x7fELF' + b'a' * 2 ** 20)
         self.receipt['artifact_sha256']['probe'] = artifacts.sha256(self.source / 'probe')
