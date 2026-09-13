@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "kind": "synthetic",
+  "context": {
+    "id": "synthetic-example",
+    "contract_id": "byte8-preserve-v1",
+    "provenance": "Authored arithmetic fixture. These numbers are not observations or a CPU cost model.",
+    "statistic": "synthetic costs, expressed in ns only to exercise the input schema"
+  },
+  "measurements": [
+    {"candidate_id":"b2-A0s0-B0s1-C1s0-D1s3","operation_id":"R_AC","recipe_id":"direct","run_ns":8,"prepare_ns":0},
+    {"candidate_id":"b2-A0s0-B0s1-C1s0-D1s3","operation_id":"R_0","recipe_id":"direct","run_ns":13,"prepare_ns":0},
+    {"candidate_id":"b2-A0s0-B0s1-C1s0-D1s3","operation_id":"R_1","recipe_id":"direct","run_ns":11,"prepare_ns":0},
+    {"candidate_id":"b2-A0s0-B0s1-C1s0-D1s3","operation_id":"W_A","recipe_id":"direct","run_ns":3,"prepare_ns":0},
+    {"candidate_id":"b2-A0s0-B0s1-C1s0-D1s3","operation_id":"W_AC","recipe_id":"direct","run_ns":5,"prepare_ns":0},
+    {"candidate_id":"b2-A0s0-B0s1-C1s0-D1s3","operation_id":"W_AB","recipe_id":"direct","run_ns":4,"prepare_ns":0},
+    {"candidate_id":"b2-A0s0-B0s1-C1s0-D1s3","operation_id":"W_all","recipe_id":"direct","run_ns":6,"prepare_ns":0},
+    {"candidate_id":"b2-A0s0-B0s1-C1s0-D1s3","operation_id":"R_AC","recipe_id":"prepared","run_ns":2,"prepare_ns":40},
+    {"candidate_id":"b2-A0s0-B0s1-C1s0-D1s3","operation_id":"R_0","recipe_id":"prepared","run_ns":4,"prepare_ns":40},
+    {"candidate_id":"b2-A0s0-B0s1-C1s0-D1s3","operation_id":"R_1","recipe_id":"prepared","run_ns":3,"prepare_ns":40},
+    {"candidate_id":"b2-A0s0-B0s1-C1s0-D1s3","operation_id":"W_A","recipe_id":"prepared","run_ns":2,"prepare_ns":100},
+    {"candidate_id":"b2-A0s0-B0s1-C1s0-D1s3","operation_id":"W_AC","recipe_id":"prepared","run_ns":3,"prepare_ns":100},
+    {"candidate_id":"b2-A0s0-B0s1-C1s0-D1s3","operation_id":"W_AB","recipe_id":"prepared","run_ns":1,"prepare_ns":100},
+    {"candidate_id":"b2-A0s0-B0s1-C1s0-D1s3","operation_id":"W_all","recipe_id":"prepared","run_ns":2,"prepare_ns":100},
+    {"candidate_id":"b3-A0s0-B1s0-C0s1-D2s0","operation_id":"R_AC","recipe_id":"direct","run_ns":3,"prepare_ns":0},
+    {"candidate_id":"b3-A0s0-B1s0-C0s1-D2s0","operation_id":"R_0","recipe_id":"direct","run_ns":10,"prepare_ns":0},
+    {"candidate_id":"b3-A0s0-B1s0-C0s1-D2s0","operation_id":"R_1","recipe_id":"direct","run_ns":12,"prepare_ns":0},
+    {"candidate_id":"b3-A0s0-B1s0-C0s1-D2s0","operation_id":"W_A","recipe_id":"direct","run_ns":3,"prepare_ns":0},
+    {"candidate_id":"b3-A0s0-B1s0-C0s1-D2s0","operation_id":"W_AC","recipe_id":"direct","run_ns":3,"prepare_ns":0},
+    {"candidate_id":"b3-A0s0-B1s0-C0s1-D2s0","operation_id":"W_AB","recipe_id":"direct","run_ns":7,"prepare_ns":0},
+    {"candidate_id":"b3-A0s0-B1s0-C0s1-D2s0","operation_id":"W_all","recipe_id":"direct","run_ns":9,"prepare_ns":0},
+    {"candidate_id":"b3-A0s0-B1s0-C0s1-D2s0","operation_id":"R_AC","recipe_id":"prepared","run_ns":0.8,"prepare_ns":80},
+    {"candidate_id":"b3-A0s0-B1s0-C0s1-D2s0","operation_id":"R_0","recipe_id":"prepared","run_ns":4,"prepare_ns":80},
+    {"candidate_id":"b3-A0s0-B1s0-C0s1-D2s0","operation_id":"R_1","recipe_id":"prepared","run_ns":5,"prepare_ns":80},
+    {"candidate_id":"b3-A0s0-B1s0-C0s1-D2s0","operation_id":"W_A","recipe_id":"prepared","run_ns":2,"prepare_ns":120},
+    {"candidate_id":"b3-A0s0-B1s0-C0s1-D2s0","operation_id":"W_AC","recipe_id":"prepared","run_ns":1,"prepare_ns":120},
+    {"candidate_id":"b3-A0s0-B1s0-C0s1-D2s0","operation_id":"W_AB","recipe_id":"prepared","run_ns":5,"prepare_ns":120},
+    {"candidate_id":"b3-A0s0-B1s0-C0s1-D2s0","operation_id":"W_all","recipe_id":"prepared","run_ns":8,"prepare_ns":120}
+  ]
+}

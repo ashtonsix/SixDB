@@ -23,8 +23,8 @@ or inputs accepted by the report tools.
 
 Earlier evidence: [static extraction and ABI](initial.md),
 [first runtime maps and whole-operation composition](runtime-first.md).
-The [literature/design note](layout-search-reading.md) connects HyPer, HYRISE,
-PAX, H2O and ByteStore to the experiments. The [small analyser](analyser/README.md)
+The [literature/design note](../layout-analyser/tuplepack-search.md) connects HyPer, HYRISE,
+PAX, H2O and ByteStore to the experiments. The [small analyser](../layout-analyser/tuplepack-reference/README.md)
 keeps an exhaustive reference and explicit measured subsets.
 
 ## Starting hypothesis

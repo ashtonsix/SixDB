@@ -22,6 +22,10 @@ Engine composes [Ikea](../ikea/README.md) parts and binds their work through
 and formats. This division is a working proposal: representation schemas,
 publication/recovery protocols and concrete integration interfaces remain open.
 
+The [layout-analyser investigation](../workbench/spikes/layout-analyser/README.md)
+explores workload objectives, plane organization and hardware fitting, with
+reusable training separated from selection and local fitting.
+
 The [trie-remapping investigation](../workbench/spikes/trie-remapping/README.md),
 [aggregate maintenance](../workbench/spikes/aggregate-maintenance/README.md)
 and [Ikea composition](../workbench/spikes/ikea-composition/README.md) inform

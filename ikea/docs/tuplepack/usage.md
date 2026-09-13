@@ -11,7 +11,7 @@ Link `ikea::tuplepack` and include `<ikea/tuplepack.h>`. The executable
 build it as `ikea_example_tuplepack_ordinary` using the
 [Ikea build instructions](../../README.md#build-and-run). Field semantics and
 layout-selection policy belong to Engine; callers currently supply descriptions
-and maps manually. The [automatic layout analyser](../../../workbench/spikes/tuple-layout/analyser/README.md)
+and maps manually. The [automatic layout analyser](../../../workbench/spikes/layout-analyser/README.md)
 remains experimental.
 
 ## Describe bytes, then place them

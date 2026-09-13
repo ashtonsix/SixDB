@@ -57,7 +57,7 @@ The [viability round](../viability.md) adds `fusion/`, `scan/`, `small/` and
 `mixture/` families. Scalar candidate descriptions are embedded from
 [point-subset.tsv](point-subset.tsv) at configuration; they never read a changing
 live file during a captured run. [point-subset.json](point-subset.json) records
-the 28-ID selection. Regenerate it with the analyser's `select` and `enumerate`
+the 28-ID selection. Regenerate it with the [analyser reference](../../layout-analyser/tuplepack-reference/README.md) `select` and `enumerate`
 commands. `extra-checks.txt` retains the additional native scan/scalar checks.
 
 `report.py` exports measured scalar costs for the analyser; `mixed_report.py`

@@ -151,7 +151,7 @@ Correctness of the composition therefore does not establish performance.
 
 ## What this changes in the next experiment
 
-[HyPer's useful precedent](layout-search-reading.md) is specialization of a useful
+[HyPer's useful precedent](../layout-analyser/tuplepack-search.md) is specialization of a useful
 processing region and measured amortization. Compare the same compound operation,
 packet inputs, admission/effects and opaque outer endpoint in four forms:
 
@@ -176,5 +176,5 @@ algorithm or a sensing cadence.
 
 Multi-tuple gather shapes, point/scan crossover, sparse SIMD mutation, wider
 record composition and real layout-search regret remain unmeasured. The
-[small exhaustive layout reference](layout-search-reading.md) is a promising way
+[small exhaustive layout reference](../layout-analyser/tuplepack-search.md) is a promising way
 to evaluate an analyser once competing operation families are credible.

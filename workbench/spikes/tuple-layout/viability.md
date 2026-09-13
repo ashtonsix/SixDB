@@ -15,7 +15,7 @@ longer require competing caller contracts in the demonstrated family.
 This is an implementation starting point, not a graduated Ikea API or a claim
 that every format/map is equally fast. Everything here remains Workbench.
 The [original hypothesis](README.md), [first runtime screen](runtime-first.md)
-and [literature](layout-search-reading.md) retain their narrower evidence.
+and [literature](../layout-analyser/tuplepack-search.md) retain their narrower evidence.
 
 ## Current evidence
 
@@ -172,7 +172,7 @@ publication, page faults and scheduling.
 
 ## What the analyser must learn from complete workloads
 
-The [executable analyser](analyser/README.md) enumerates 2,816 small legal layouts,
+The [executable analyser](../layout-analyser/tuplepack-reference/README.md) enumerates 2,816 small legal layouts,
 ingests measured operation costs, charges preparation against a stated reuse
 horizon, and compares structural heuristics with its declared subset optimum.
 Its migration arithmetic treats resident preparation as sunk. It is useful
@@ -286,7 +286,7 @@ round. `--check-extra` on the benchmark runs its scalar/scan checks without timi
 python3 workbench/spikes/tuple-layout/runtime/report.py \
   workbench/spikes/tuple-layout/evidence/final-zen5 \
   workbench/spikes/tuple-layout/evidence/final-v2 \
-  --cost-output build/tuple-layout/analyser/measured
+  --cost-output build/layout-analyser/tuplepack-reference/measured
 python3 workbench/spikes/tuple-layout/runtime/mixed_report.py \
   workbench/spikes/tuple-layout/evidence/final-zen5 \
   workbench/spikes/tuple-layout/evidence/final-v2

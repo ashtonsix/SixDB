@@ -10,6 +10,7 @@ can share the same home, which remains useful after adoption or abandonment.
 Loose thoughts can stay in the [notebook](../notebook/ideas.md) indefinitely.
 
 - [Ikea composition](ikea-composition/README.md): reusable stages, ergonomics and interface seams.
+- [Layout analyser](layout-analyser/README.md): workload objectives, plane splitting, hardware fitting and reusable layout selection.
 - [Tuple layout](tuple-layout/README.md): physical layout, bound operations and native batching.
 - [Packed integer kernels](packed-integer-kernels/README.md): grain, coalescing and width/ISA costs.
 - [SeriesPack range execution](seriespack-range-execution/README.md): ranges, clipping, stores and alignment.

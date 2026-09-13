@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "kind": "synthetic",
+  "context_id": "synthetic-example",
+  "provenance": "Authored arithmetic fixture; no migration was performed or timed.",
+  "scope": "Entire fictional segment; 10000 ns is an invented total repacking cost, excluding new operation preparation.",
+  "current_candidate": "b2-A0s0-B0s1-C1s0-D1s3",
+  "current_recipes": {"R_AC":"direct","R_0":"direct","R_1":"direct","W_A":"direct","W_AC":"direct","W_AB":"direct","W_all":"direct"},
+  "migration_costs": [{"candidate_id":"b3-A0s0-B1s0-C0s1-D2s0","total_ns":10000}]
+}
