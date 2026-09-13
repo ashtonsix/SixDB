@@ -1,0 +1,66 @@
+{
+  "cases": 261,
+  "counters": [
+    "body_bytes_per_block",
+    "population_per_block",
+    "blocks_per_call",
+    "output_body_bytes"
+  ],
+  "files_sha256": {
+    "cases.csv": "0f76cf560fd12b95430d508f9b1db6e4cb6de4a1207e59fefa761a0556a55ddc"
+  },
+  "filter": "^codec/|^pair_mutation/",
+  "format": 1,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "neoverse-v2": {
+      "context": {
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-13T17:15:48+00:00",
+        "executable": "/opt/sixdb/jobs/20260913T171441Z-0d42bb61/results/bec_composition_bench",
+        "host_name": "ip-172-31-28-36",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.654297,
+          0.350586,
+          0.296875
+        ],
+        "mhz_per_cpu": 2000,
+        "num_cpus": 1
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260913T171441Z-0d42bb61/results/samples.json",
+      "sha256": "53c2751e9086e34bc181a054eb8cb2a168f14b3501949ab71fc683ecfc0534e1"
+    }
+  },
+  "kind": "google-benchmark-summary",
+  "units": "CPU/real times are ns per benchmark iteration. ns_per_item uses the reported item rate; an item means what the benchmark counts, not necessarily a value or byte."
+}

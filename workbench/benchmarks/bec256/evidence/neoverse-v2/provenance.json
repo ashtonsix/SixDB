@@ -1,0 +1,65 @@
+{
+  "cases": 78,
+  "counters": [
+    "body_bytes_per_block",
+    "blocks_per_iteration",
+    "declined_fraction"
+  ],
+  "files_sha256": {
+    "cases.csv": "2347911a978a90e2826deffdcd6f3f857400ba6179e429165d6fb5bf17da180c"
+  },
+  "filter": null,
+  "format": 1,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "neoverse-v2": {
+      "context": {
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 65536,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 2097152,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 37748736,
+            "type": "Unified"
+          }
+        ],
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-13T17:26:01+00:00",
+        "executable": "/opt/sixdb/jobs/20260913T172459Z-7cedf2ba/results/ikea_bec256_bench",
+        "host_name": "ip-172-31-28-36",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.557617,
+          0.334961,
+          0.295898
+        ],
+        "mhz_per_cpu": 2000,
+        "num_cpus": 1
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260913T172459Z-7cedf2ba/results/samples.json",
+      "sha256": "0ca8a41ac18b85a0f1e6ff8baf8b8ef4efb97ea7f630e4dfc711dadfddf0d389"
+    }
+  },
+  "kind": "google-benchmark-summary",
+  "units": "CPU/real times are ns per benchmark iteration. ns_per_item uses the reported item rate; an item means what the benchmark counts, not necessarily a value or byte."
+}

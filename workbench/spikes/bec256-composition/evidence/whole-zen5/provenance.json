@@ -1,0 +1,77 @@
+{
+  "cases": 1353,
+  "counters": [
+    "original_blocks",
+    "selected_blocks",
+    "issued_output_bytes",
+    "left_metadata_bytes",
+    "right_metadata_bytes",
+    "raw_allocation_bytes",
+    "metadata_bytes",
+    "readable_suffix_bytes",
+    "predicted_allocation_bytes",
+    "actual_allocation_bytes",
+    "body_mae_bytes",
+    "wrong_byte_choice_fraction",
+    "storage_regret_bytes",
+    "max_storage_regret_bytes",
+    "output_body_bytes"
+  ],
+  "files_sha256": {
+    "cases.csv": "29994fc69926841d279f65918bf99795cf1264a4f93b3825effa853bdde20d12"
+  },
+  "filter": null,
+  "format": 1,
+  "full_bundle": "artifact.json",
+  "inputs": {
+    "zen5": {
+      "context": {
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 49152,
+            "type": "Data"
+          },
+          {
+            "level": 1,
+            "num_sharing": 1,
+            "size": 32768,
+            "type": "Instruction"
+          },
+          {
+            "level": 2,
+            "num_sharing": 1,
+            "size": 1048576,
+            "type": "Unified"
+          },
+          {
+            "level": 3,
+            "num_sharing": 1,
+            "size": 4194304,
+            "type": "Unified"
+          }
+        ],
+        "cpu_scaling_enabled": false,
+        "date": "2026-09-13T17:37:22+00:00",
+        "executable": "/opt/sixdb/jobs/20260913T173648Z-cbd24719/results/bec_composition_bench",
+        "host_name": "ip-172-31-47-188",
+        "json_schema_version": 1,
+        "library_build_type": "release",
+        "library_version": "v1.9.4",
+        "load_avg": [
+          0.245605,
+          0.301758,
+          0.290039
+        ],
+        "mhz_per_cpu": 4525,
+        "num_cpus": 1
+      },
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260913T173648Z-cbd24719/results/samples.json",
+      "sha256": "525b606c661ff5053d01b43ab3200709174a73e3d328588483eb2af5d6282f2e"
+    }
+  },
+  "kind": "google-benchmark-summary",
+  "units": "CPU/real times are ns per benchmark iteration. ns_per_item uses the reported item rate; an item means what the benchmark counts, not necessarily a value or byte."
+}

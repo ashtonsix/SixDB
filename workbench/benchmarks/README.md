@@ -4,6 +4,8 @@ Recurring component and system workloads, plus shared measurement machinery.
 The [SeriesPack suite](seriespack/README.md) measures packed arrays, access,
 composition and caller costs. The [TuplePack suite](tuplepack/README.md) measures
 ordered code maps, mutation effects, native batching and pipeline boundaries.
+The [Bec256 suite](bec256/README.md) measures headless bitset reads, exact writes,
+analysis and native pair consumers.
 Individual candidate experiments and their findings
 stay with the [investigation](../spikes/README.md) that asks the question.
 

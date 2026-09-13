@@ -11,7 +11,8 @@ where existing behavior lives.
 Begin with the value domain, physical law and operations. Specify original
 coordinates, access bounds, borrowing and failure guarantees so different
 representations can serve the same logical contract. SeriesPack composes
-bit-window joins; TuplePack composes ordered code projections and mutation groups.
+bit-window joins; TuplePack composes ordered code projections and mutation groups;
+Bec256 supplies headless bitset bodies and native pairs with independent addresses.
 Their value types, traversal and error vocabulary remain module-specific.
 
 Keep three descriptions distinct: logical mutation destinations, issued byte
@@ -21,8 +22,9 @@ enough information to admit all accessed storage and reserve effects before
 execution. [Owner integration](integration.md) owns leases, suspension, cancellation
 and coordinated visibility.
 
-Compile cold validation, control preparation, diagnostics and alias analysis in
-independent TUs. Share native bodies between ordinary and composed callers, and
+Compile cold validation, control preparation and diagnostics in independent TUs.
+Keep cheap command admission visible where outlining would spill live native
+values. Share native bodies between ordinary and composed callers, and
 keep explicit ISA instructions available for inlining. Choose applicability and
 traversal at the operation boundary. Erase a useful whole operation so repeated
 inner work retains the concrete traversal.
@@ -41,7 +43,7 @@ Research history and timing comparisons belong with Workbench evidence.
 | `detail/overlap.h`, `src/overlap.cpp` | Cold overlap analysis for repeating spans and interleaving | Semantic conflicts, view rules and diagnostics |
 | `detail/native_chain.h` | Bounded straight-through tables, native argument handoff and early completion | Carrier, mask meaning, stage grain and semantic body |
 
-Shared mechanics need checks from both affected modules. Hooks must remain
+Shared mechanics need checks from affected modules. Hooks must remain
 infallible and cannot suspend after admission. Persistent summary writes need
 their own coverage; private contributions can instead be retained by the owner.
 
@@ -106,9 +108,38 @@ or point bodies. Sparse masks access only active units. These are implementation
 choices; caller obligations come from the declared access masks and
 [operation contracts](tuplepack/reference.md), independently of decoded packet size.
 
+## Bec256 source boundaries
+
+Paths below are relative to [include/ikea/bec256](../include/ikea/bec256)
+unless marked `src/`.
+
+| Responsibility | Owning files |
+| --- | --- |
+| Ordinary sources, destinations and prepared replacements | `codec.h`; `src/bec256/codec.cpp` |
+| Statistical size estimates and cutoff calibration statistic | `analysis.h`, `author/analysis.h`; `src/bec256/analysis.cpp`, `detail/estimate.h` |
+| Exact framing validation and diagnostics | `src/bec256/validation.cpp` |
+| Native blocks, pairs and bounded read adapters | `author/native.h` |
+| Shared checked and trusted native writes | `author/write.h`; `detail/write.h` |
+| Count-tree, byte-rank and bit-packing bodies | `detail/{tables,pack,scalar}.h`, `detail/native/{avx512,neon}.h` |
+| Register bitstream assembly and exact stores | `detail/native/{assemble,emit}.h` |
+| Native pipeline carrier | `author/chain.h` |
+
+The [representation guide](bec256/representation.md) defines one fixed wire
+format. Population, body length, placement and directory schema belong to the
+caller. Native immediate writes retain values through admission and exact stores;
+prepared replacements own transient bytes that can survive an owner wait.
+Both report the issued body span. Metadata and summaries are separate children
+of the owner's mutation, including when the body has zero bytes.
+
+The native optional heuristic encode arm shares byte populations and rank widths with
+the accepted encoder. It can decline before count-tree construction or any
+destination/effect access. `detail/write.h` adapts that decision to the ordinary
+checked result; unconditional encoding has no heuristic branch. The statistical
+model is an analysis aid, independent of wire identity and exact write admission.
+
 ## Shared execution entry
 
-Both modules use `include/ikea/detail/native_chain.h`. A plan has a power-of-two
+The modules use `include/ikea/detail/native_chain.h`. A plan has a power-of-two
 number of slots, at least two: 1..Slots−1 stages plus completion. Unused slots also contain
 completion. Alignment is at least 64 bytes and at least the table size, allowing
 an early-completion cursor to locate the final slot arithmetically.
@@ -143,11 +174,13 @@ instantiations without changing library or benchmark inlining.
 `ikea_validate` runs behavior checks and executable guides.
 `python3 ikea/test/headers.py BUILD` checks ordinary/author headers independently
 with that build’s profile. The [SeriesPack tests](../test/seriespack/README.md)
-and [TuplePack tests](../test/tuplepack/README.md) identify focused targets.
+and [TuplePack tests](../test/tuplepack/README.md) identify focused targets;
+[Bec256 checks](../test/bec256/README.md) cover its wire, replacement and pair composition.
 Use the [frozen SeriesPack fixture](../test/seriespack/reference/README.md) for its
 existing wire law; never change the reference just to agree with a changed kernel.
 
-The [SeriesPack](../../workbench/benchmarks/seriespack/README.md) and
-[TuplePack](../../workbench/benchmarks/tuplepack/README.md) benchmark guides own
+The [SeriesPack](../../workbench/benchmarks/seriespack/README.md),
+[TuplePack](../../workbench/benchmarks/tuplepack/README.md) and
+[Bec256](../../workbench/benchmarks/bec256/README.md) benchmark guides own
 consumer comparisons and compilation probes. Owner adapters belong with their
 owners or in executable integration examples.

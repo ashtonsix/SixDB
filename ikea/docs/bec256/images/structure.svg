@@ -1,0 +1,199 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="816" viewBox="0 0 1280 816" role="img" aria-labelledby="title description">
+<title id="title">Bec256&#x27;s fixed division of bit positions</title>
+<desc id="description">The whole block covers positions zero through 255 and has supplied population p. Its left half covers zero through 127 with encoded count q; its right half covers 128 through 255 with inferred count p minus q. Repeating the same division in both halves produces four regions of 64 positions, eight of 32, sixteen of 16 and thirty-two byte-sized leaves of eight positions. The tree boundaries are fixed. The split fields recover every byte&#x27;s population; byte ranks then select its pattern.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8" fill="#586579"/></marker></defs>
+<rect width="1280" height="100%" fill="white"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#233047" font-size="21">
+<text x="32" y="42" font-size="26" font-weight="bold" fill="#233047" text-anchor="start">One fixed tree, with counts recovered from parent to child</text>
+<text x="32" y="80" font-size="22" font-weight="normal" fill="#586579" text-anchor="start">Horizontal position follows bit index throughout · lower positions are always on the left</text>
+<text x="32" y="154" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Whole block</text>
+<text x="32" y="182" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">256 positions</text>
+<rect x="226.0" y="128" width="1020.0" height="64" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<text x="736.0" y="154" font-size="23" font-weight="bold" fill="#233047" text-anchor="middle">Positions 0–255</text>
+<text x="736.0" y="180" font-size="22" font-weight="normal" fill="#233047" text-anchor="middle">population p · supplied separately</text>
+<text x="32" y="274" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Two halves</text>
+<text x="32" y="302" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">128 each</text>
+<path d="M736.0,192 V220.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M480.0,245 V220.0 H992.0 V245" fill="none" stroke="#586579" stroke-width="1.8"/>
+<rect x="226.0" y="248" width="508.0" height="80" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="480.0" y="276" font-size="23" font-weight="bold" fill="#233047" text-anchor="middle">Positions 0–127</text>
+<text x="480.0" y="308" font-size="24" font-weight="normal" fill="#233047" text-anchor="middle">q · encode left count</text>
+<rect x="738.0" y="248" width="508.0" height="80" rx="3" fill="#98c9f3" stroke="white" stroke-width="1.5"/>
+<text x="992.0" y="276" font-size="23" font-weight="bold" fill="#233047" text-anchor="middle">Positions 128–255</text>
+<text x="992.0" y="308" font-size="24" font-weight="normal" fill="#233047" text-anchor="middle">p − q · infer right count</text>
+<text x="32" y="430" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Four regions</text>
+<text x="32" y="458" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">64 each</text>
+<path d="M480.0,382 V380" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M352.0,401 V380 H608.0 V401" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M992.0,382 V380" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M864.0,401 V380 H1120.0 V401" fill="none" stroke="#586579" stroke-width="1.8"/>
+<rect x="226.0" y="404" width="252.0" height="48" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<text x="352.0" y="435" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle">0–63</text>
+<rect x="482.0" y="404" width="252.0" height="48" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<text x="608.0" y="435" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle">64–127</text>
+<rect x="738.0" y="404" width="252.0" height="48" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<text x="864.0" y="435" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle">128–191</text>
+<rect x="994.0" y="404" width="252.0" height="48" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<text x="1120.0" y="435" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle">192–255</text>
+<text x="32" y="522" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">Eight regions</text>
+<text x="32" y="550" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">32 each</text>
+<path d="M352.0,452 V474.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M288.0,493 V474.0 H416.0 V493" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M608.0,452 V474.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M544.0,493 V474.0 H672.0 V493" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M864.0,452 V474.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M800.0,493 V474.0 H928.0 V493" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M1120.0,452 V474.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M1056.0,493 V474.0 H1184.0 V493" fill="none" stroke="#586579" stroke-width="1.8"/>
+<rect x="226.0" y="496" width="124.0" height="48" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<text x="288.0" y="527" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle">0–31</text>
+<rect x="354.0" y="496" width="124.0" height="48" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<text x="416.0" y="527" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle">32–63</text>
+<rect x="482.0" y="496" width="124.0" height="48" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<text x="544.0" y="527" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle">64–95</text>
+<rect x="610.0" y="496" width="124.0" height="48" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<text x="672.0" y="527" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle">96–127</text>
+<rect x="738.0" y="496" width="124.0" height="48" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<text x="800.0" y="527" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle">128–159</text>
+<rect x="866.0" y="496" width="124.0" height="48" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<text x="928.0" y="527" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle">160–191</text>
+<rect x="994.0" y="496" width="124.0" height="48" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<text x="1056.0" y="527" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle">192–223</text>
+<rect x="1122.0" y="496" width="124.0" height="48" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<text x="1184.0" y="527" font-size="21" font-weight="normal" fill="#233047" text-anchor="middle">224–255</text>
+<text x="32" y="614" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">16 regions</text>
+<text x="32" y="642" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">16 each</text>
+<path d="M288.0,544 V566.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M256.0,585 V566.0 H320.0 V585" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M416.0,544 V566.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M384.0,585 V566.0 H448.0 V585" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M544.0,544 V566.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M512.0,585 V566.0 H576.0 V585" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M672.0,544 V566.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M640.0,585 V566.0 H704.0 V585" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M800.0,544 V566.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M768.0,585 V566.0 H832.0 V585" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M928.0,544 V566.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M896.0,585 V566.0 H960.0 V585" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M1056.0,544 V566.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M1024.0,585 V566.0 H1088.0 V585" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M1184.0,544 V566.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M1152.0,585 V566.0 H1216.0 V585" fill="none" stroke="#586579" stroke-width="1.8"/>
+<rect x="226.0" y="588" width="60.0" height="40" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<rect x="290.0" y="588" width="60.0" height="40" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<rect x="354.0" y="588" width="60.0" height="40" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<rect x="418.0" y="588" width="60.0" height="40" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<rect x="482.0" y="588" width="60.0" height="40" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<rect x="546.0" y="588" width="60.0" height="40" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<rect x="610.0" y="588" width="60.0" height="40" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<rect x="674.0" y="588" width="60.0" height="40" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<rect x="738.0" y="588" width="60.0" height="40" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<rect x="802.0" y="588" width="60.0" height="40" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<rect x="866.0" y="588" width="60.0" height="40" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<rect x="930.0" y="588" width="60.0" height="40" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<rect x="994.0" y="588" width="60.0" height="40" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<rect x="1058.0" y="588" width="60.0" height="40" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<rect x="1122.0" y="588" width="60.0" height="40" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<rect x="1186.0" y="588" width="60.0" height="40" rx="3" fill="#eef5fc" stroke="white" stroke-width="1.5"/>
+<text x="32" y="698" font-size="23" font-weight="bold" fill="#233047" text-anchor="start">32 byte leaves</text>
+<text x="32" y="726" font-size="20" font-weight="normal" fill="#586579" text-anchor="start">8 each</text>
+<path d="M256.0,628 V650.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M240.0,669 V650.0 H272.0 V669" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M320.0,628 V650.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M304.0,669 V650.0 H336.0 V669" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M384.0,628 V650.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M368.0,669 V650.0 H400.0 V669" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M448.0,628 V650.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M432.0,669 V650.0 H464.0 V669" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M512.0,628 V650.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M496.0,669 V650.0 H528.0 V669" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M576.0,628 V650.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M560.0,669 V650.0 H592.0 V669" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M640.0,628 V650.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M624.0,669 V650.0 H656.0 V669" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M704.0,628 V650.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M688.0,669 V650.0 H720.0 V669" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M768.0,628 V650.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M752.0,669 V650.0 H784.0 V669" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M832.0,628 V650.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M816.0,669 V650.0 H848.0 V669" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M896.0,628 V650.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M880.0,669 V650.0 H912.0 V669" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M960.0,628 V650.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M944.0,669 V650.0 H976.0 V669" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M1024.0,628 V650.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M1008.0,669 V650.0 H1040.0 V669" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M1088.0,628 V650.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M1072.0,669 V650.0 H1104.0 V669" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M1152.0,628 V650.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M1136.0,669 V650.0 H1168.0 V669" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M1216.0,628 V650.0" fill="none" stroke="#586579" stroke-width="1.8"/>
+<path d="M1200.0,669 V650.0 H1232.0 V669" fill="none" stroke="#586579" stroke-width="1.8"/>
+<rect x="226.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="240.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">0</text>
+<rect x="258.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="272.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">1</text>
+<rect x="290.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="304.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">2</text>
+<rect x="322.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="336.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">3</text>
+<rect x="354.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="368.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">4</text>
+<rect x="386.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="400.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">5</text>
+<rect x="418.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="432.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">6</text>
+<rect x="450.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="464.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">7</text>
+<rect x="482.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="496.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">8</text>
+<rect x="514.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="528.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">9</text>
+<rect x="546.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="560.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">10</text>
+<rect x="578.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="592.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">11</text>
+<rect x="610.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="624.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">12</text>
+<rect x="642.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="656.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">13</text>
+<rect x="674.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="688.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">14</text>
+<rect x="706.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="720.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">15</text>
+<rect x="738.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="752.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">16</text>
+<rect x="770.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="784.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">17</text>
+<rect x="802.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="816.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">18</text>
+<rect x="834.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="848.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">19</text>
+<rect x="866.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="880.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">20</text>
+<rect x="898.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="912.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">21</text>
+<rect x="930.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="944.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">22</text>
+<rect x="962.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="976.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">23</text>
+<rect x="994.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="1008.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">24</text>
+<rect x="1026.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="1040.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">25</text>
+<rect x="1058.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="1072.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">26</text>
+<rect x="1090.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="1104.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">27</text>
+<rect x="1122.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="1136.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">28</text>
+<rect x="1154.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="1168.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">29</text>
+<rect x="1186.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="1200.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">30</text>
+<rect x="1218.0" y="672" width="28.0" height="48" rx="3" fill="#a9e8a2" stroke="white" stroke-width="1.5"/>
+<text x="1232.0" y="703" font-size="19" font-weight="normal" fill="#233047" text-anchor="middle">31</text>
+<text x="736" y="366" font-size="22" font-weight="normal" fill="#586579" text-anchor="middle">Repeat in each half, using that region&#x27;s population as p.</text>
+<text x="736" y="748" font-size="22" font-weight="normal" fill="#233047" text-anchor="middle">Leaf labels are plain byte indices 0..31; their populations are now known.</text>
+<text x="736" y="782" font-size="22" font-weight="normal" fill="#586579" text-anchor="middle">Next: a rank selects the exact bit pattern within each byte.</text>
+</g></svg>

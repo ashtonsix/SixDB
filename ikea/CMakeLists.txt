@@ -19,6 +19,25 @@ target_include_directories(ikea_tuplepack PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/in
 target_compile_features(ikea_tuplepack PUBLIC cxx_std_23)
 target_link_libraries(ikea_tuplepack PUBLIC ikea_core)
 
+add_library(ikea_bec256 STATIC src/bec256/codec.cpp src/bec256/validation.cpp src/bec256/analysis.cpp)
+add_library(ikea::bec256 ALIAS ikea_bec256)
+sixdb_target(ikea_bec256)
+target_include_directories(ikea_bec256 PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_compile_features(ikea_bec256 PUBLIC cxx_std_23)
+target_link_libraries(ikea_bec256 PUBLIC ikea_core)
+add_executable(ikea_bec256_check EXCLUDE_FROM_ALL test/bec256/check.cpp test/bec256/analysis.cpp)
+sixdb_target(ikea_bec256_check)
+target_link_libraries(ikea_bec256_check PRIVATE ikea::bec256)
+add_executable(ikea_bec256_composition_check EXCLUDE_FROM_ALL test/bec256/composition.cpp)
+sixdb_target(ikea_bec256_composition_check)
+target_link_libraries(ikea_bec256_composition_check PRIVATE ikea::bec256)
+foreach(example ordinary native integration)
+  add_executable(ikea_example_bec256_${example} EXCLUDE_FROM_ALL examples/bec256/${example}.cpp)
+  sixdb_target(ikea_example_bec256_${example})
+  target_link_libraries(ikea_example_bec256_${example} PRIVATE ikea::bec256)
+endforeach()
+target_link_libraries(ikea_example_bec256_integration PRIVATE ikea::tuplepack)
+
 add_executable(ikea_tuplepack_wire_check EXCLUDE_FROM_ALL test/tuplepack/wire.cpp)
 sixdb_target(ikea_tuplepack_wire_check)
 target_link_libraries(ikea_tuplepack_wire_check PRIVATE ikea::tuplepack)
@@ -74,7 +93,8 @@ foreach(example ordinary composition integration packets words)
 endforeach()
 add_custom_target(ikea_examples DEPENDS ikea_example_seriespack_ordinary
   ikea_example_seriespack_composition ikea_example_seriespack_pipeline ikea_example_seriespack_integration
-  ikea_example_tuplepack_ordinary ikea_example_tuplepack_composition ikea_example_tuplepack_integration ikea_example_tuplepack_packets ikea_example_tuplepack_words)
+  ikea_example_tuplepack_ordinary ikea_example_tuplepack_composition ikea_example_tuplepack_integration ikea_example_tuplepack_packets ikea_example_tuplepack_words
+  ikea_example_bec256_ordinary ikea_example_bec256_native ikea_example_bec256_integration)
 add_custom_target(ikea_validate
   COMMAND python3 "${CMAKE_CURRENT_SOURCE_DIR}/test/seriespack/reference/check.py"
   COMMAND $<TARGET_FILE:ikea_seriespack_check>
@@ -94,6 +114,12 @@ add_custom_target(ikea_validate
   COMMAND $<TARGET_FILE:ikea_example_tuplepack_integration>
   COMMAND $<TARGET_FILE:ikea_example_tuplepack_packets>
   COMMAND $<TARGET_FILE:ikea_example_tuplepack_words>
+  COMMAND $<TARGET_FILE:ikea_bec256_check>
+  COMMAND $<TARGET_FILE:ikea_bec256_composition_check>
+  COMMAND $<TARGET_FILE:ikea_example_bec256_ordinary>
+  COMMAND $<TARGET_FILE:ikea_example_bec256_native>
+  COMMAND $<TARGET_FILE:ikea_example_bec256_integration>
   DEPENDS ikea_seriespack_check ikea_seriespack_ownership_check ikea_examples
     ikea_tuplepack_wire_check ikea_tuplepack_operations_check ikea_tuplepack_execution_check ikea_tuplepack_ownership_check ikea_tuplepack_packets_check ikea_tuplepack_gpr_check
+    ikea_bec256_check ikea_bec256_composition_check
   USES_TERMINAL)
