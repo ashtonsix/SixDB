@@ -1,0 +1,38 @@
+{
+  "quantiles": "Hyndman\u2013Fan type 7 linear interpolation of recorded samples; pooled percentiles and independent-pass spread are separate.",
+  "units": "Latency fields ending _us are microseconds; raw timestamps _ns are nanoseconds; rates are unique 4096-byte records per second; Unix timestamps are seconds.",
+  "analyzers": {
+    "summarize.py": "50c07e4467ff2103db47c4a97dfe2840df5e6a1b5f9adc3de051436cc40ba35a",
+    "persistence/analyze.py": "f5c2d4c515ec57131333d93b252f0ada64dd152664047c3b3bb676bd3afc50af",
+    "persistence/diagnostic_analyze.py": "10452c569e7a7b52c5ce2dd05097c0826987fbfbce7f1f30b24735c82cc96ea8",
+    "commit/analyze.py": "535d38d435df51771bea96c4d54b71604178a21b8a96459805d351a695265fed",
+    "commit/throughput_summary.py": "7cbf9c6c0e7bb88d1cbb4eed499cb66cc924292b40c6511043d3af2990db13de",
+    "commit/throughput_analyze.py": "b7ab80694d6b4403c30801d2c9d16e97160c4c1d2e9cf47ca78cc6ad3c6dd6de",
+    "commit/network_summary.py": "f1c8e5998323ac24a5376e09a2b5ef2ee61549bb81bc3e9c99f160a8f9f943e0",
+    "recover-durable.py": "d6fa9f6422ebd3a63e6d3338421ea57504245e9df1b60d68d08560672839624b",
+    "plot-durable.py": "3094992c0fa3fb70b25b391504d28cf9ddba4e5c1a1c3913960f39c03d755b97"
+  },
+  "counts": {
+    "commits.csv": {
+      "configurations": 114,
+      "samples": 2160300
+    },
+    "d3-diagnostic.csv": {
+      "configurations": 8,
+      "samples": 48000
+    },
+    "persistence.csv": {
+      "configurations": 458,
+      "samples": 5106000
+    }
+  },
+  "selected_numeric_sha256": {
+    "commit-passes.csv": "af05bd78fa93602c79ac316aa61f430e8a76f3bdda02032b11cf0fc83f164801",
+    "commits.csv": "24b511e64bb5ff48162dae39778b318c138e6b0d81b045f1ee357a3e9f4848c9",
+    "d3-diagnostic-passes.csv": "530390ae11812cab42ab5c1b69751aefca0dd811a314e90bfa235eb4294d8a0b",
+    "d3-diagnostic.csv": "78fa1cd5c35fd9c18afa49ff73ee5c547bf24bf36755c079b3b05213751f1348",
+    "d3-request-traces.csv": "c0ad94f7ff7fe0b3cbed1d72526a9c7bf5b475caece459358faba5635b2c3efd",
+    "persistence-passes.csv": "414c8a14851fd807de489db1f8800b13669074209905d1edf8a8d21b31b4c8f7",
+    "persistence.csv": "5bf464a643d39681540118626153f1ea38c8b8d11ce920997b111929eb328815"
+  }
+}

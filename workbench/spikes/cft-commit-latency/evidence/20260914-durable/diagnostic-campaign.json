@@ -1,0 +1,123 @@
+{
+  "bucket": "calico-fleet-artifacts",
+  "format": 1,
+  "id": "20260914T170103Z-576d167b",
+  "launch_complete": true,
+  "launch_started": true,
+  "members": {
+    "d3-fua-check": {
+      "args": [],
+      "cancellation": {
+        "requested": true,
+        "utc": 1789405456.7091305
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1789405454.6316004
+      },
+      "config": {
+        "ami": "ami-025d99823a4caad37",
+        "architecture": "x86_64",
+        "bucket": "calico-fleet-artifacts",
+        "capacity": "on-demand",
+        "data_volumes": [],
+        "deadline_seconds": 1800,
+        "disk_gb": 24,
+        "env": {
+          "SIXDB_GROUP_MEMBER": "d3-fua-check",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260914T170103Z-576d167b"
+        },
+        "fresh": true,
+        "hardware": {
+          "EbsInfo": {
+            "AttachmentLimitType": "shared",
+            "EbsOptimizedInfo": {
+              "BaselineBandwidthInMbps": 850,
+              "BaselineIops": 5000,
+              "BaselineThroughputInMBps": 106.25,
+              "MaximumBandwidthInMbps": 2800,
+              "MaximumIops": 15000,
+              "MaximumThroughputInMBps": 350.0
+            },
+            "EbsOptimizedSupport": "default",
+            "EncryptionSupport": "supported",
+            "MaximumEbsAttachments": 24,
+            "NvmeSupport": "required"
+          },
+          "Hypervisor": "nitro",
+          "InstanceStorageInfo": {
+            "Disks": [
+              {
+                "Count": 3,
+                "SizeInGB": 1980,
+                "Type": "hdd"
+              }
+            ],
+            "EncryptionSupport": "required",
+            "NvmeSupport": "required",
+            "TotalSizeInGB": 5940
+          },
+          "MemoryInfo": {
+            "SizeInMiB": 32768
+          },
+          "ProcessorInfo": {
+            "Manufacturer": "Intel",
+            "SupportedArchitectures": [
+              "x86_64"
+            ],
+            "SustainedClockSpeedInGhz": 3.1
+          },
+          "VCpuInfo": {
+            "DefaultCores": 2,
+            "DefaultThreadsPerCore": 2,
+            "DefaultVCpus": 4,
+            "ValidCores": [
+              1,
+              2
+            ],
+            "ValidThreadsPerCore": [
+              1,
+              2
+            ]
+          }
+        },
+        "idle_seconds": 0,
+        "image_name": "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-20260904",
+        "instance_store_count": 1,
+        "instance_store_mappings": [],
+        "instance_store_nvme": true,
+        "instance_type": "d3.xlarge",
+        "machine": "zen5",
+        "max_age_seconds": 1800,
+        "region": "us-east-1",
+        "root_device": "/dev/sda1",
+        "security_group_id": "sg-050db96b674650573",
+        "setup": "toolchain",
+        "subnets": [
+          {
+            "id": "subnet-75288838",
+            "zone": "us-east-1a"
+          }
+        ],
+        "sync_seconds": 0,
+        "threads_per_core": 1,
+        "vpc_id": "vpc-5e2d0124"
+      },
+      "job": "20260914T170108Z-ab5168d6",
+      "job_created_at": 1789405274.9055603,
+      "phase": "submitted",
+      "script": "workbench/spikes/cft-commit-latency/persistence/d3-diagnostic.sh"
+    }
+  },
+  "network": {
+    "id": "sg-050db96b674650573",
+    "name": "sixdb-group-20260914T170103Z-576d167b",
+    "vpc_id": "vpc-5e2d0124"
+  },
+  "network_error": null,
+  "network_removed": true,
+  "region": "us-east-1",
+  "source": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/cft-commit-latency/d3-diagnostic/20260914T170103Z-90d24b33/source",
+  "study": "D3 FUA/flush qualification",
+  "uri": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260914T170103Z-576d167b"
+}

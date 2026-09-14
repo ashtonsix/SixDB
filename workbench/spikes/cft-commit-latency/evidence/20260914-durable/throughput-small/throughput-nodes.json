@@ -1,0 +1,275 @@
+[
+  {
+    "worker": "use1-az1",
+    "peers": [
+      {
+        "node": 0,
+        "ip": "172.31.6.6",
+        "az": "us-east-1c",
+        "az_id": "use1-az1",
+        "identity": {
+          "accountId": "728776296140",
+          "architecture": "arm64",
+          "availabilityZone": "us-east-1c",
+          "billingProducts": null,
+          "devpayProductCodes": null,
+          "marketplaceProductCodes": null,
+          "imageId": "ami-0246d714afcc1d494",
+          "instanceId": "i-00dfc59269d4e5e94",
+          "instanceType": "i8g.large",
+          "kernelId": null,
+          "pendingTime": "2026-09-14T17:56:13Z",
+          "privateIp": "172.31.6.6",
+          "ramdiskId": null,
+          "region": "us-east-1",
+          "version": "2017-09-30"
+        }
+      },
+      {
+        "node": 1,
+        "ip": "172.31.94.171",
+        "az": "us-east-1d",
+        "az_id": "use1-az2",
+        "identity": {
+          "accountId": "728776296140",
+          "architecture": "arm64",
+          "availabilityZone": "us-east-1d",
+          "billingProducts": null,
+          "devpayProductCodes": null,
+          "marketplaceProductCodes": null,
+          "imageId": "ami-0246d714afcc1d494",
+          "instanceId": "i-0207cd3737738539a",
+          "instanceType": "i8g.large",
+          "kernelId": null,
+          "pendingTime": "2026-09-14T17:56:30Z",
+          "privateIp": "172.31.94.171",
+          "ramdiskId": null,
+          "region": "us-east-1",
+          "version": "2017-09-30"
+        }
+      },
+      {
+        "node": 2,
+        "ip": "172.31.31.123",
+        "az": "us-east-1a",
+        "az_id": "use1-az4",
+        "identity": {
+          "accountId": "728776296140",
+          "architecture": "arm64",
+          "availabilityZone": "us-east-1a",
+          "billingProducts": null,
+          "devpayProductCodes": null,
+          "marketplaceProductCodes": null,
+          "imageId": "ami-0246d714afcc1d494",
+          "instanceId": "i-0af470a41ee08ab0f",
+          "instanceType": "i8g.large",
+          "kernelId": null,
+          "pendingTime": "2026-09-14T17:56:46Z",
+          "privateIp": "172.31.31.123",
+          "ramdiskId": null,
+          "region": "us-east-1",
+          "version": "2017-09-30"
+        }
+      }
+    ],
+    "storage": {
+      "format": 1,
+      "ebs": {},
+      "instance_store": [
+        {
+          "device": "/dev/nvme1n1",
+          "size_bytes": 468000000000,
+          "model": "Amazon EC2 NVMe Instance Storage",
+          "serial": "AWSA834A2372C35D1788",
+          "mountpoints": [],
+          "identity": "nvme-model-and-serial"
+        }
+      ],
+      "root_devices": [
+        "/dev/nvme0n1"
+      ]
+    }
+  },
+  {
+    "worker": "use1-az2",
+    "peers": [
+      {
+        "node": 0,
+        "ip": "172.31.6.6",
+        "az": "us-east-1c",
+        "az_id": "use1-az1",
+        "identity": {
+          "accountId": "728776296140",
+          "architecture": "arm64",
+          "availabilityZone": "us-east-1c",
+          "billingProducts": null,
+          "devpayProductCodes": null,
+          "marketplaceProductCodes": null,
+          "imageId": "ami-0246d714afcc1d494",
+          "instanceId": "i-00dfc59269d4e5e94",
+          "instanceType": "i8g.large",
+          "kernelId": null,
+          "pendingTime": "2026-09-14T17:56:13Z",
+          "privateIp": "172.31.6.6",
+          "ramdiskId": null,
+          "region": "us-east-1",
+          "version": "2017-09-30"
+        }
+      },
+      {
+        "node": 1,
+        "ip": "172.31.94.171",
+        "az": "us-east-1d",
+        "az_id": "use1-az2",
+        "identity": {
+          "accountId": "728776296140",
+          "architecture": "arm64",
+          "availabilityZone": "us-east-1d",
+          "billingProducts": null,
+          "devpayProductCodes": null,
+          "marketplaceProductCodes": null,
+          "imageId": "ami-0246d714afcc1d494",
+          "instanceId": "i-0207cd3737738539a",
+          "instanceType": "i8g.large",
+          "kernelId": null,
+          "pendingTime": "2026-09-14T17:56:30Z",
+          "privateIp": "172.31.94.171",
+          "ramdiskId": null,
+          "region": "us-east-1",
+          "version": "2017-09-30"
+        }
+      },
+      {
+        "node": 2,
+        "ip": "172.31.31.123",
+        "az": "us-east-1a",
+        "az_id": "use1-az4",
+        "identity": {
+          "accountId": "728776296140",
+          "architecture": "arm64",
+          "availabilityZone": "us-east-1a",
+          "billingProducts": null,
+          "devpayProductCodes": null,
+          "marketplaceProductCodes": null,
+          "imageId": "ami-0246d714afcc1d494",
+          "instanceId": "i-0af470a41ee08ab0f",
+          "instanceType": "i8g.large",
+          "kernelId": null,
+          "pendingTime": "2026-09-14T17:56:46Z",
+          "privateIp": "172.31.31.123",
+          "ramdiskId": null,
+          "region": "us-east-1",
+          "version": "2017-09-30"
+        }
+      }
+    ],
+    "storage": {
+      "format": 1,
+      "ebs": {},
+      "instance_store": [
+        {
+          "device": "/dev/nvme1n1",
+          "size_bytes": 468000000000,
+          "model": "Amazon EC2 NVMe Instance Storage",
+          "serial": "AWSA82B4FE77FDFCD233",
+          "mountpoints": [],
+          "identity": "nvme-model-and-serial"
+        }
+      ],
+      "root_devices": [
+        "/dev/nvme0n1"
+      ]
+    }
+  },
+  {
+    "worker": "use1-az4",
+    "peers": [
+      {
+        "node": 0,
+        "ip": "172.31.6.6",
+        "az": "us-east-1c",
+        "az_id": "use1-az1",
+        "identity": {
+          "accountId": "728776296140",
+          "architecture": "arm64",
+          "availabilityZone": "us-east-1c",
+          "billingProducts": null,
+          "devpayProductCodes": null,
+          "marketplaceProductCodes": null,
+          "imageId": "ami-0246d714afcc1d494",
+          "instanceId": "i-00dfc59269d4e5e94",
+          "instanceType": "i8g.large",
+          "kernelId": null,
+          "pendingTime": "2026-09-14T17:56:13Z",
+          "privateIp": "172.31.6.6",
+          "ramdiskId": null,
+          "region": "us-east-1",
+          "version": "2017-09-30"
+        }
+      },
+      {
+        "node": 1,
+        "ip": "172.31.94.171",
+        "az": "us-east-1d",
+        "az_id": "use1-az2",
+        "identity": {
+          "accountId": "728776296140",
+          "architecture": "arm64",
+          "availabilityZone": "us-east-1d",
+          "billingProducts": null,
+          "devpayProductCodes": null,
+          "marketplaceProductCodes": null,
+          "imageId": "ami-0246d714afcc1d494",
+          "instanceId": "i-0207cd3737738539a",
+          "instanceType": "i8g.large",
+          "kernelId": null,
+          "pendingTime": "2026-09-14T17:56:30Z",
+          "privateIp": "172.31.94.171",
+          "ramdiskId": null,
+          "region": "us-east-1",
+          "version": "2017-09-30"
+        }
+      },
+      {
+        "node": 2,
+        "ip": "172.31.31.123",
+        "az": "us-east-1a",
+        "az_id": "use1-az4",
+        "identity": {
+          "accountId": "728776296140",
+          "architecture": "arm64",
+          "availabilityZone": "us-east-1a",
+          "billingProducts": null,
+          "devpayProductCodes": null,
+          "marketplaceProductCodes": null,
+          "imageId": "ami-0246d714afcc1d494",
+          "instanceId": "i-0af470a41ee08ab0f",
+          "instanceType": "i8g.large",
+          "kernelId": null,
+          "pendingTime": "2026-09-14T17:56:46Z",
+          "privateIp": "172.31.31.123",
+          "ramdiskId": null,
+          "region": "us-east-1",
+          "version": "2017-09-30"
+        }
+      }
+    ],
+    "storage": {
+      "format": 1,
+      "ebs": {},
+      "instance_store": [
+        {
+          "device": "/dev/nvme1n1",
+          "size_bytes": 468000000000,
+          "model": "Amazon EC2 NVMe Instance Storage",
+          "serial": "AWSAC92B622FBA7C3FE1",
+          "mountpoints": [],
+          "identity": "nvme-model-and-serial"
+        }
+      ],
+      "root_devices": [
+        "/dev/nvme0n1"
+      ]
+    }
+  }
+]

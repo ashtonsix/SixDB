@@ -1,0 +1,791 @@
+{
+  "ebs-zen5": {
+    "manifest": {
+      "format": 1,
+      "ebs": {
+        "gp3": {
+          "device": "/dev/nvme0n1",
+          "size_bytes": 34359738368,
+          "model": "Amazon Elastic Block Store",
+          "serial": "vol00cc82c5179214601",
+          "mountpoints": [],
+          "volume_id": "vol-00cc82c5179214601",
+          "attachment": "/dev/sdf",
+          "type": "gp3",
+          "iops": 3000,
+          "throughput_mib_s": 125
+        },
+        "io2": {
+          "device": "/dev/nvme2n1",
+          "size_bytes": 34359738368,
+          "model": "Amazon Elastic Block Store",
+          "serial": "vol0761d1db8b775d520",
+          "mountpoints": [],
+          "volume_id": "vol-0761d1db8b775d520",
+          "attachment": "/dev/sdg",
+          "type": "io2",
+          "iops": 3000
+        }
+      },
+      "instance_store": [],
+      "root_devices": [
+        "/dev/nvme1n1"
+      ]
+    },
+    "receipts": {
+      "gp3-before": {
+        "device": "/dev/nvme0n1",
+        "label": "gp3",
+        "utc": 1789403959.9718988,
+        "sysfs": {
+          "queue/write_cache": "write through",
+          "queue/fua": "0",
+          "queue/logical_block_size": "512",
+          "queue/physical_block_size": "4096",
+          "queue/rotational": "0",
+          "queue/scheduler": "[none] mq-deadline",
+          "queue/nr_requests": "63",
+          "queue/io_poll": "0",
+          "stat": "149        0     6800       92        0        0        0        0        0       67       92        0        0        0        0        0        0"
+        },
+        "lsblk": {
+          "args": [
+            "lsblk",
+            "-b",
+            "-J",
+            "-O",
+            "/dev/nvme0n1"
+          ],
+          "returncode": 0,
+          "stdout": "{\n   \"blockdevices\": [\n      {\n         \"alignment\": 0,\n         \"id-link\": \"nvme-uuid.8915ff24-9fe7-5395-a1a5-a80894a9cd93\",\n         \"id\": \"uuid.8915ff24-9fe7-5395-a1a5-a80894a9cd93\",\n         \"disc-aln\": 0,\n         \"dax\": false,\n         \"disc-gran\": 0,\n         \"disk-seq\": 9,\n         \"disc-max\": 0,\n         \"disc-zero\": false,\n         \"fsavail\": null,\n         \"fsroots\": [\n             null\n         ],\n         \"fssize\": null,\n         \"fstype\": null,\n         \"fsused\": null,\n         \"fsuse%\": null,\n         \"fsver\": null,\n         \"group\": \"disk\",\n         \"hctl\": null,\n         \"hotplug\": false,\n         \"kname\": \"nvme0n1\",\n         \"label\": null,\n         \"log-sec\": 512,\n         \"maj:min\": \"259:0\",\n         \"min-io\": 4096,\n         \"mode\": \"brw-rw----\",\n         \"model\": \"Amazon Elastic Block Store\",\n         \"mq\": \"  2\",\n         \"name\": \"nvme0n1\",\n         \"opt-io\": 4096,\n         \"owner\": \"root\",\n         \"partflags\": null,\n         \"partlabel\": null,\n         \"partn\": null,\n         \"parttype\": null,\n         \"parttypename\": null,\n         \"partuuid\": null,\n         \"path\": \"/dev/nvme0n1\",\n         \"phy-sec\": 4096,\n         \"pkname\": null,\n         \"pttype\": null,\n         \"ptuuid\": null,\n         \"ra\": 128,\n         \"rand\": false,\n         \"rev\": \"2.0\",\n         \"rm\": false,\n         \"ro\": false,\n         \"rota\": false,\n         \"rq-size\": 63,\n         \"sched\": \"none\",\n         \"serial\": \"vol00cc82c5179214601\",\n         \"size\": 34359738368,\n         \"start\": null,\n         \"state\": \"live\",\n         \"subsystems\": \"block:nvme:pci\",\n         \"mountpoint\": null,\n         \"mountpoints\": [\n             null\n         ],\n         \"tran\": \"nvme\",\n         \"type\": \"disk\",\n         \"uuid\": null,\n         \"vendor\": null,\n         \"wsame\": 0,\n         \"wwn\": \"uuid.8915ff24-9fe7-5395-a1a5-a80894a9cd93\",\n         \"zoned\": \"none\",\n         \"zone-sz\": 0,\n         \"zone-wgran\": 0,\n         \"zone-app\": 0,\n         \"zone-nr\": 0,\n         \"zone-omax\": 0,\n         \"zone-amax\": 0\n      }\n   ]\n}\n",
+          "stderr": ""
+        },
+        "udev": {
+          "args": [
+            "udevadm",
+            "info",
+            "--query=all",
+            "--name=/dev/nvme0n1"
+          ],
+          "returncode": 0,
+          "stdout": "P: /devices/pci0000:01/0000:01:00.0/0000:02:00.0/0000:03:03.6/0000:22:00.0/nvme/nvme0/nvme0n1\nM: nvme0n1\nR: 1\nU: block\nT: disk\nD: b 259:0\nN: nvme0n1\nL: 0\nS: disk/by-diskseq/9\nS: disk/by-id/nvme-uuid.8915ff24-9fe7-5395-a1a5-a80894a9cd93\nS: disk/by-id/nvme-Amazon_Elastic_Block_Store_vol00cc82c5179214601\nS: disk/by-id/nvme-Amazon_Elastic_Block_Store_vol00cc82c5179214601_1\nS: disk/by-path/pci-0000:22:00.0-nvme-1\nQ: 9\nE: DEVPATH=/devices/pci0000:01/0000:01:00.0/0000:02:00.0/0000:03:03.6/0000:22:00.0/nvme/nvme0/nvme0n1\nE: DEVNAME=/dev/nvme0n1\nE: DEVTYPE=disk\nE: DISKSEQ=9\nE: MAJOR=259\nE: MINOR=0\nE: SUBSYSTEM=block\nE: USEC_INITIALIZED=2015212\nE: MPATH_SBIN_PATH=/sbin\nE: DM_MULTIPATH_DEVICE_PATH=0\nE: ID_SERIAL_SHORT=vol00cc82c5179214601\nE: ID_WWN=uuid.8915ff24-9fe7-5395-a1a5-a80894a9cd93\nE: ID_MODEL=Amazon Elastic Block Store\nE: ID_REVISION=2.0\nE: ID_NSID=1\nE: ID_SERIAL=Amazon_Elastic_Block_Store_vol00cc82c5179214601_1\nE: ID_PATH=pci-0000:22:00.0-nvme-1\nE: ID_PATH_TAG=pci-0000_22_00_0-nvme-1\nE: DEVLINKS=/dev/disk/by-diskseq/9 /dev/disk/by-id/nvme-uuid.8915ff24-9fe7-5395-a1a5-a80894a9cd93 /dev/disk/by-id/nvme-Amazon_Elastic_Block_Store_vol00cc82c5179214601 /dev/disk/by-id/nvme-Amazon_Elastic_Block_Store_vol00cc82c5179214601_1 /dev/disk/by-path/pci-0000:22:00.0-nvme-1\nE: TAGS=:systemd:\nE: CURRENT_TAGS=:systemd:\n\n",
+          "stderr": ""
+        },
+        "nvme_identify": {
+          "args": [
+            "nvme",
+            "id-ctrl",
+            "/dev/nvme0n1",
+            "-o",
+            "json"
+          ],
+          "returncode": 0,
+          "stdout": "{\n  \"vid\":7439,\n  \"ssvid\":7439,\n  \"sn\":\"vol00cc82c5179214601\",\n  \"mn\":\"Amazon Elastic Block Store              \",\n  \"fr\":\"2.0     \",\n  \"rab\":32,\n  \"ieee\":10486492,\n  \"cmic\":0,\n  \"mdts\":6,\n  \"cntlid\":0,\n  \"ver\":66560,\n  \"rtd3r\":0,\n  \"rtd3e\":0,\n  \"oaes\":256,\n  \"ctratt\":0,\n  \"rrls\":0,\n  \"cntrltype\":1,\n  \"fguid\":\"00000000-0000-0000-0000-000000000000\",\n  \"crdt1\":0,\n  \"crdt2\":0,\n  \"crdt3\":0,\n  \"nvmsr\":0,\n  \"vwci\":0,\n  \"mec\":0,\n  \"oacs\":0,\n  \"acl\":4,\n  \"aerl\":0,\n  \"frmw\":3,\n  \"lpa\":0,\n  \"elpe\":63,\n  \"npss\":0,\n  \"avscc\":1,\n  \"apsta\":0,\n  \"wctemp\":343,\n  \"cctemp\":0,\n  \"mtfa\":0,\n  \"hmpre\":0,\n  \"hmmin\":0,\n  \"tnvmcap\":0,\n  \"unvmcap\":0,\n  \"rpmbs\":0,\n  \"edstt\":0,\n  \"dsto\":0,\n  \"fwug\":0,\n  \"kas\":0,\n  \"hctma\":0,\n  \"mntmt\":0,\n  \"mxtmt\":0,\n  \"sanicap\":0,\n  \"hmminds\":0,\n  \"hmmaxd\":0,\n  \"nsetidmax\":0,\n  \"endgidmax\":0,\n  \"anatt\":0,\n  \"anacap\":0,\n  \"anagrpmax\":0,\n  \"nanagrpid\":0,\n  \"pels\":0,\n  \"domainid\":0,\n  \"megcap\":0,\n  \"sqes\":102,\n  \"cqes\":68,\n  \"maxcmd\":0,\n  \"nn\":1,\n  \"oncs\":0,\n  \"fuses\":0,\n  \"fna\":0,\n  \"vwc\":0,\n  \"awun\":0,\n  \"awupf\":0,\n  \"icsvscc\":0,\n  \"nwpc\":0,\n  \"acwu\":0,\n  \"ocfs\":0,\n  \"sgls\":0,\n  \"mnan\":0,\n  \"maxdna\":0,\n  \"maxcna\":0,\n  \"oaqd\":0,\n  \"subnqn\":\"nqn:2008-08.com.amazon.aws:ebs:vol00cc82c5179214601\",\n  \"ioccsz\":0,\n  \"iorcsz\":0,\n  \"icdoff\":0,\n  \"fcatt\":0,\n  \"msdbd\":0,\n  \"ofcs\":0,\n  \"psds\":[\n    {\n      \"max_power\":1,\n      \"max_power_scale\":0,\n      \"non-operational_state\":0,\n      \"entry_lat\":1000000,\n      \"exit_lat\":1000000,\n      \"read_tput\":0,\n      \"read_lat\":0,\n      \"write_tput\":0,\n      \"write_lat\":0,\n      \"idle_power\":0,\n      \"idle_scale\":0,\n      \"active_power\":0,\n      \"active_power_work\":0,\n      \"active_scale\":0\n    }\n  ]\n}\n",
+          "stderr": ""
+        },
+        "nvme_namespace": {
+          "args": [
+            "nvme",
+            "id-ns",
+            "/dev/nvme0n1",
+            "-o",
+            "json"
+          ],
+          "returncode": 0,
+          "stdout": "{\n  \"nsze\":67108864,\n  \"ncap\":67108864,\n  \"nuse\":67108864,\n  \"nsfeat\":18,\n  \"nlbaf\":0,\n  \"flbas\":0,\n  \"mc\":0,\n  \"dpc\":0,\n  \"dps\":0,\n  \"nmic\":0,\n  \"rescap\":0,\n  \"fpi\":0,\n  \"dlfeat\":0,\n  \"nawun\":31,\n  \"nawupf\":31,\n  \"nacwu\":0,\n  \"nabsn\":31,\n  \"nabo\":0,\n  \"nabspf\":31,\n  \"noiob\":0,\n  \"nvmcap\":34359738368,\n  \"nsattr\":0,\n  \"nvmsetid\":0,\n  \"npwg\":7,\n  \"npwa\":7,\n  \"npdg\":7,\n  \"npda\":7,\n  \"nows\":7,\n  \"mssrl\":0,\n  \"mcl\":0,\n  \"msrc\":0,\n  \"nulbaf\":0,\n  \"anagrpid\":0,\n  \"endgid\":0,\n  \"eui64\":\"0000000000000000\",\n  \"nguid\":\"00000000000000000000000000000000\",\n  \"lbafs\":[\n    {\n      \"ms\":0,\n      \"ds\":9,\n      \"rp\":0\n    }\n  ],\n  \"vs\":[\n    \"sdf.............\",\n    \"................\",\n    \"vol00cc82c517921\",\n    \"4601\"\n  ]\n}\n",
+          "stderr": ""
+        },
+        "nvme_write_cache": {
+          "args": [
+            "nvme",
+            "get-feature",
+            "/dev/nvme0n1",
+            "-f",
+            "6",
+            "-H"
+          ],
+          "returncode": 1,
+          "stdout": "",
+          "stderr": "NVMe status: Invalid Field in Command: A reserved coded value or an unsupported value in a defined field(0x2002)\n"
+        },
+        "nvme_smart": {
+          "args": [
+            "nvme",
+            "smart-log",
+            "/dev/nvme0n1",
+            "-o",
+            "json"
+          ],
+          "returncode": 0,
+          "stdout": "{\n  \"critical_warning\":0,\n  \"temperature\":0,\n  \"avail_spare\":0,\n  \"spare_thresh\":0,\n  \"percent_used\":0,\n  \"endurance_grp_critical_warning_summary\":0,\n  \"data_units_read\":0,\n  \"data_units_written\":0,\n  \"host_read_commands\":0,\n  \"host_write_commands\":0,\n  \"controller_busy_time\":0,\n  \"power_cycles\":0,\n  \"power_on_hours\":0,\n  \"unsafe_shutdowns\":0,\n  \"media_errors\":0,\n  \"num_err_log_entries\":0,\n  \"warning_temp_time\":0,\n  \"critical_comp_time\":0,\n  \"thm_temp1_trans_count\":0,\n  \"thm_temp2_trans_count\":0,\n  \"thm_temp1_total_time\":0,\n  \"thm_temp2_total_time\":0\n}\n",
+          "stderr": ""
+        }
+      },
+      "io2-before": {
+        "device": "/dev/nvme2n1",
+        "label": "io2",
+        "utc": 1789405700.2312384,
+        "sysfs": {
+          "queue/write_cache": "write through",
+          "queue/fua": "0",
+          "queue/logical_block_size": "512",
+          "queue/physical_block_size": "4096",
+          "queue/rotational": "0",
+          "queue/scheduler": "[none] mq-deadline",
+          "queue/nr_requests": "63",
+          "queue/io_poll": "0",
+          "stat": "149        0     6800       52        0        0        0        0        0       36       52        0        0        0        0        0        0"
+        },
+        "lsblk": {
+          "args": [
+            "lsblk",
+            "-b",
+            "-J",
+            "-O",
+            "/dev/nvme2n1"
+          ],
+          "returncode": 0,
+          "stdout": "{\n   \"blockdevices\": [\n      {\n         \"alignment\": 0,\n         \"id-link\": \"nvme-uuid.05faa56b-7f3e-5b26-aece-61915cd14d5f\",\n         \"id\": \"uuid.05faa56b-7f3e-5b26-aece-61915cd14d5f\",\n         \"disc-aln\": 0,\n         \"dax\": false,\n         \"disc-gran\": 0,\n         \"disk-seq\": 11,\n         \"disc-max\": 0,\n         \"disc-zero\": false,\n         \"fsavail\": null,\n         \"fsroots\": [\n             null\n         ],\n         \"fssize\": null,\n         \"fstype\": null,\n         \"fsused\": null,\n         \"fsuse%\": null,\n         \"fsver\": null,\n         \"group\": \"disk\",\n         \"hctl\": null,\n         \"hotplug\": false,\n         \"kname\": \"nvme2n1\",\n         \"label\": null,\n         \"log-sec\": 512,\n         \"maj:min\": \"259:6\",\n         \"min-io\": 4096,\n         \"mode\": \"brw-rw----\",\n         \"model\": \"Amazon Elastic Block Store\",\n         \"mq\": \"  2\",\n         \"name\": \"nvme2n1\",\n         \"opt-io\": 4096,\n         \"owner\": \"root\",\n         \"partflags\": null,\n         \"partlabel\": null,\n         \"partn\": null,\n         \"parttype\": null,\n         \"parttypename\": null,\n         \"partuuid\": null,\n         \"path\": \"/dev/nvme2n1\",\n         \"phy-sec\": 4096,\n         \"pkname\": null,\n         \"pttype\": null,\n         \"ptuuid\": null,\n         \"ra\": 128,\n         \"rand\": false,\n         \"rev\": \"2.0\",\n         \"rm\": false,\n         \"ro\": false,\n         \"rota\": false,\n         \"rq-size\": 63,\n         \"sched\": \"none\",\n         \"serial\": \"vol0761d1db8b775d520\",\n         \"size\": 34359738368,\n         \"start\": null,\n         \"state\": \"live\",\n         \"subsystems\": \"block:nvme:pci\",\n         \"mountpoint\": null,\n         \"mountpoints\": [\n             null\n         ],\n         \"tran\": \"nvme\",\n         \"type\": \"disk\",\n         \"uuid\": null,\n         \"vendor\": null,\n         \"wsame\": 0,\n         \"wwn\": \"uuid.05faa56b-7f3e-5b26-aece-61915cd14d5f\",\n         \"zoned\": \"none\",\n         \"zone-sz\": 0,\n         \"zone-wgran\": 0,\n         \"zone-app\": 0,\n         \"zone-nr\": 0,\n         \"zone-omax\": 0,\n         \"zone-amax\": 0\n      }\n   ]\n}\n",
+          "stderr": ""
+        },
+        "udev": {
+          "args": [
+            "udevadm",
+            "info",
+            "--query=all",
+            "--name=/dev/nvme2n1"
+          ],
+          "returncode": 0,
+          "stdout": "P: /devices/pci0000:01/0000:01:00.0/0000:02:00.0/0000:03:03.7/0000:23:00.0/nvme/nvme2/nvme2n1\nM: nvme2n1\nR: 1\nU: block\nT: disk\nD: b 259:6\nN: nvme2n1\nL: 0\nS: disk/by-id/nvme-uuid.05faa56b-7f3e-5b26-aece-61915cd14d5f\nS: disk/by-path/pci-0000:23:00.0-nvme-1\nS: disk/by-id/nvme-Amazon_Elastic_Block_Store_vol0761d1db8b775d520_1\nS: disk/by-diskseq/11\nS: disk/by-id/nvme-Amazon_Elastic_Block_Store_vol0761d1db8b775d520\nQ: 11\nE: DEVPATH=/devices/pci0000:01/0000:01:00.0/0000:02:00.0/0000:03:03.7/0000:23:00.0/nvme/nvme2/nvme2n1\nE: DEVNAME=/dev/nvme2n1\nE: DEVTYPE=disk\nE: DISKSEQ=11\nE: MAJOR=259\nE: MINOR=6\nE: SUBSYSTEM=block\nE: USEC_INITIALIZED=2015241\nE: MPATH_SBIN_PATH=/sbin\nE: DM_MULTIPATH_DEVICE_PATH=0\nE: ID_SERIAL_SHORT=vol0761d1db8b775d520\nE: ID_WWN=uuid.05faa56b-7f3e-5b26-aece-61915cd14d5f\nE: ID_MODEL=Amazon Elastic Block Store\nE: ID_REVISION=2.0\nE: ID_NSID=1\nE: ID_SERIAL=Amazon_Elastic_Block_Store_vol0761d1db8b775d520_1\nE: ID_PATH=pci-0000:23:00.0-nvme-1\nE: ID_PATH_TAG=pci-0000_23_00_0-nvme-1\nE: DEVLINKS=/dev/disk/by-id/nvme-uuid.05faa56b-7f3e-5b26-aece-61915cd14d5f /dev/disk/by-path/pci-0000:23:00.0-nvme-1 /dev/disk/by-id/nvme-Amazon_Elastic_Block_Store_vol0761d1db8b775d520_1 /dev/disk/by-diskseq/11 /dev/disk/by-id/nvme-Amazon_Elastic_Block_Store_vol0761d1db8b775d520\nE: TAGS=:systemd:\nE: CURRENT_TAGS=:systemd:\n\n",
+          "stderr": ""
+        },
+        "nvme_identify": {
+          "args": [
+            "nvme",
+            "id-ctrl",
+            "/dev/nvme2n1",
+            "-o",
+            "json"
+          ],
+          "returncode": 0,
+          "stdout": "{\n  \"vid\":7439,\n  \"ssvid\":7439,\n  \"sn\":\"vol0761d1db8b775d520\",\n  \"mn\":\"Amazon Elastic Block Store              \",\n  \"fr\":\"2.0     \",\n  \"rab\":32,\n  \"ieee\":10486492,\n  \"cmic\":0,\n  \"mdts\":6,\n  \"cntlid\":0,\n  \"ver\":66560,\n  \"rtd3r\":0,\n  \"rtd3e\":0,\n  \"oaes\":256,\n  \"ctratt\":0,\n  \"rrls\":0,\n  \"cntrltype\":1,\n  \"fguid\":\"00000000-0000-0000-0000-000000000000\",\n  \"crdt1\":0,\n  \"crdt2\":0,\n  \"crdt3\":0,\n  \"nvmsr\":0,\n  \"vwci\":0,\n  \"mec\":0,\n  \"oacs\":0,\n  \"acl\":4,\n  \"aerl\":0,\n  \"frmw\":3,\n  \"lpa\":0,\n  \"elpe\":63,\n  \"npss\":0,\n  \"avscc\":1,\n  \"apsta\":0,\n  \"wctemp\":343,\n  \"cctemp\":0,\n  \"mtfa\":0,\n  \"hmpre\":0,\n  \"hmmin\":0,\n  \"tnvmcap\":0,\n  \"unvmcap\":0,\n  \"rpmbs\":0,\n  \"edstt\":0,\n  \"dsto\":0,\n  \"fwug\":0,\n  \"kas\":0,\n  \"hctma\":0,\n  \"mntmt\":0,\n  \"mxtmt\":0,\n  \"sanicap\":0,\n  \"hmminds\":0,\n  \"hmmaxd\":0,\n  \"nsetidmax\":0,\n  \"endgidmax\":0,\n  \"anatt\":0,\n  \"anacap\":0,\n  \"anagrpmax\":0,\n  \"nanagrpid\":0,\n  \"pels\":0,\n  \"domainid\":0,\n  \"megcap\":0,\n  \"sqes\":102,\n  \"cqes\":68,\n  \"maxcmd\":0,\n  \"nn\":1,\n  \"oncs\":0,\n  \"fuses\":0,\n  \"fna\":0,\n  \"vwc\":0,\n  \"awun\":0,\n  \"awupf\":0,\n  \"icsvscc\":0,\n  \"nwpc\":0,\n  \"acwu\":0,\n  \"ocfs\":0,\n  \"sgls\":0,\n  \"mnan\":0,\n  \"maxdna\":0,\n  \"maxcna\":0,\n  \"oaqd\":0,\n  \"subnqn\":\"nqn:2008-08.com.amazon.aws:ebs:vol0761d1db8b775d520\",\n  \"ioccsz\":0,\n  \"iorcsz\":0,\n  \"icdoff\":0,\n  \"fcatt\":0,\n  \"msdbd\":0,\n  \"ofcs\":0,\n  \"psds\":[\n    {\n      \"max_power\":1,\n      \"max_power_scale\":0,\n      \"non-operational_state\":0,\n      \"entry_lat\":1000000,\n      \"exit_lat\":1000000,\n      \"read_tput\":0,\n      \"read_lat\":0,\n      \"write_tput\":0,\n      \"write_lat\":0,\n      \"idle_power\":0,\n      \"idle_scale\":0,\n      \"active_power\":0,\n      \"active_power_work\":0,\n      \"active_scale\":0\n    }\n  ]\n}\n",
+          "stderr": ""
+        },
+        "nvme_namespace": {
+          "args": [
+            "nvme",
+            "id-ns",
+            "/dev/nvme2n1",
+            "-o",
+            "json"
+          ],
+          "returncode": 0,
+          "stdout": "{\n  \"nsze\":67108864,\n  \"ncap\":67108864,\n  \"nuse\":67108864,\n  \"nsfeat\":18,\n  \"nlbaf\":0,\n  \"flbas\":0,\n  \"mc\":0,\n  \"dpc\":0,\n  \"dps\":0,\n  \"nmic\":0,\n  \"rescap\":0,\n  \"fpi\":0,\n  \"dlfeat\":0,\n  \"nawun\":31,\n  \"nawupf\":31,\n  \"nacwu\":0,\n  \"nabsn\":31,\n  \"nabo\":0,\n  \"nabspf\":31,\n  \"noiob\":0,\n  \"nvmcap\":34359738368,\n  \"nsattr\":0,\n  \"nvmsetid\":0,\n  \"npwg\":7,\n  \"npwa\":7,\n  \"npdg\":7,\n  \"npda\":7,\n  \"nows\":7,\n  \"mssrl\":0,\n  \"mcl\":0,\n  \"msrc\":0,\n  \"nulbaf\":0,\n  \"anagrpid\":0,\n  \"endgid\":0,\n  \"eui64\":\"0000000000000000\",\n  \"nguid\":\"00000000000000000000000000000000\",\n  \"lbafs\":[\n    {\n      \"ms\":0,\n      \"ds\":9,\n      \"rp\":0\n    }\n  ],\n  \"vs\":[\n    \"sdg.............\",\n    \"................\",\n    \"vol0761d1db8b775\",\n    \"d520\"\n  ]\n}\n",
+          "stderr": ""
+        },
+        "nvme_write_cache": {
+          "args": [
+            "nvme",
+            "get-feature",
+            "/dev/nvme2n1",
+            "-f",
+            "6",
+            "-H"
+          ],
+          "returncode": 1,
+          "stdout": "",
+          "stderr": "NVMe status: Invalid Field in Command: A reserved coded value or an unsupported value in a defined field(0x2002)\n"
+        },
+        "nvme_smart": {
+          "args": [
+            "nvme",
+            "smart-log",
+            "/dev/nvme2n1",
+            "-o",
+            "json"
+          ],
+          "returncode": 0,
+          "stdout": "{\n  \"critical_warning\":0,\n  \"temperature\":0,\n  \"avail_spare\":0,\n  \"spare_thresh\":0,\n  \"percent_used\":0,\n  \"endurance_grp_critical_warning_summary\":0,\n  \"data_units_read\":0,\n  \"data_units_written\":0,\n  \"host_read_commands\":0,\n  \"host_write_commands\":0,\n  \"controller_busy_time\":0,\n  \"power_cycles\":0,\n  \"power_on_hours\":0,\n  \"unsafe_shutdowns\":0,\n  \"media_errors\":0,\n  \"num_err_log_entries\":0,\n  \"warning_temp_time\":0,\n  \"critical_comp_time\":0,\n  \"thm_temp1_trans_count\":0,\n  \"thm_temp2_trans_count\":0,\n  \"thm_temp1_total_time\":0,\n  \"thm_temp2_total_time\":0\n}\n",
+          "stderr": ""
+        }
+      },
+      "mounts-before": {
+        "args": [
+          "findmnt",
+          "-J"
+        ],
+        "returncode": 0,
+        "stdout": "{\n   \"filesystems\": [\n      {\n         \"target\": \"/\",\n         \"source\": \"/dev/nvme1n1p1\",\n         \"fstype\": \"ext4\",\n         \"options\": \"rw,relatime,discard,errors=remount-ro,commit=30\",\n         \"children\": [\n            {\n               \"target\": \"/dev\",\n               \"source\": \"devtmpfs\",\n               \"fstype\": \"devtmpfs\",\n               \"options\": \"rw,nosuid,noexec,relatime,size=3441200k,nr_inodes=860300,mode=755,inode64\",\n               \"children\": [\n                  {\n                     \"target\": \"/dev/shm\",\n                     \"source\": \"tmpfs\",\n                     \"fstype\": \"tmpfs\",\n                     \"options\": \"rw,nosuid,nodev,inode64\"\n                  },{\n                     \"target\": \"/dev/pts\",\n                     \"source\": \"devpts\",\n                     \"fstype\": \"devpts\",\n                     \"options\": \"rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000\"\n                  },{\n                     \"target\": \"/dev/hugepages\",\n                     \"source\": \"hugetlbfs\",\n                     \"fstype\": \"hugetlbfs\",\n                     \"options\": \"rw,nosuid,nodev,relatime,pagesize=2M\"\n                  },{\n                     \"target\": \"/dev/mqueue\",\n                     \"source\": \"mqueue\",\n                     \"fstype\": \"mqueue\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  }\n               ]\n            },{\n               \"target\": \"/proc\",\n               \"source\": \"proc\",\n               \"fstype\": \"proc\",\n               \"options\": \"rw,nosuid,nodev,noexec,relatime\",\n               \"children\": [\n                  {\n                     \"target\": \"/proc/sys/fs/binfmt_misc\",\n                     \"source\": \"systemd-1\",\n                     \"fstype\": \"autofs\",\n                     \"options\": \"rw,relatime,fd=32,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=3583\",\n                     \"children\": [\n                        {\n                           \"target\": \"/proc/sys/fs/binfmt_misc\",\n                           \"source\": \"binfmt_misc\",\n                           \"fstype\": \"binfmt_misc\",\n                           \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                        }\n                     ]\n                  }\n               ]\n            },{\n               \"target\": \"/sys\",\n               \"source\": \"sysfs\",\n               \"fstype\": \"sysfs\",\n               \"options\": \"rw,nosuid,nodev,noexec,relatime\",\n               \"children\": [\n                  {\n                     \"target\": \"/sys/kernel/security\",\n                     \"source\": \"securityfs\",\n                     \"fstype\": \"securityfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/fs/cgroup\",\n                     \"source\": \"cgroup2\",\n                     \"fstype\": \"cgroup2\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime,nsdelegate,memory_recursiveprot\"\n                  },{\n                     \"target\": \"/sys/fs/pstore\",\n                     \"source\": \"none\",\n                     \"fstype\": \"pstore\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/firmware/efi/efivars\",\n                     \"source\": \"efivarfs\",\n                     \"fstype\": \"efivarfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/fs/bpf\",\n                     \"source\": \"bpf\",\n                     \"fstype\": \"bpf\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime,mode=700\"\n                  },{\n                     \"target\": \"/sys/kernel/debug\",\n                     \"source\": \"debugfs\",\n                     \"fstype\": \"debugfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/kernel/tracing\",\n                     \"source\": \"tracefs\",\n                     \"fstype\": \"tracefs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/kernel/config\",\n                     \"source\": \"configfs\",\n                     \"fstype\": \"configfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/fs/fuse/connections\",\n                     \"source\": \"fusectl\",\n                     \"fstype\": \"fusectl\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  }\n               ]\n            },{\n               \"target\": \"/run\",\n               \"source\": \"tmpfs\",\n               \"fstype\": \"tmpfs\",\n               \"options\": \"rw,nosuid,nodev,size=1587944k,nr_inodes=819200,mode=755,inode64\",\n               \"children\": [\n                  {\n                     \"target\": \"/run/lock\",\n                     \"source\": \"tmpfs\",\n                     \"fstype\": \"tmpfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime,size=5120k,inode64\"\n                  }\n               ]\n            },{\n               \"target\": \"/snap/core22/2437\",\n               \"source\": \"/dev/loop0\",\n               \"fstype\": \"squashfs\",\n               \"options\": \"ro,nodev,relatime,errors=continue,threads=single\"\n            },{\n               \"target\": \"/snap/amazon-ssm-agent/13349\",\n               \"source\": \"/dev/loop1\",\n               \"fstype\": \"squashfs\",\n               \"options\": \"ro,nodev,relatime,errors=continue,threads=single\"\n            },{\n               \"target\": \"/snap/snapd/27710\",\n               \"source\": \"/dev/loop2\",\n               \"fstype\": \"squashfs\",\n               \"options\": \"ro,nodev,relatime,errors=continue,threads=single\"\n            },{\n               \"target\": \"/boot\",\n               \"source\": \"/dev/nvme1n1p16\",\n               \"fstype\": \"ext4\",\n               \"options\": \"rw,relatime\",\n               \"children\": [\n                  {\n                     \"target\": \"/boot/efi\",\n                     \"source\": \"/dev/nvme1n1p15\",\n                     \"fstype\": \"vfat\",\n                     \"options\": \"rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro\"\n                  }\n               ]\n            }\n         ]\n      }\n   ]\n}\n",
+        "stderr": ""
+      }
+    }
+  },
+  "hdd": {
+    "manifest": {
+      "format": 1,
+      "ebs": {},
+      "instance_store": [
+        {
+          "device": "/dev/nvme1n1",
+          "size_bytes": 1980000000000,
+          "model": "Amazon EC2 NVMe Instance Storage",
+          "serial": "AWS218E867D93BCAEF6F",
+          "mountpoints": [],
+          "identity": "nvme-model-and-serial"
+        },
+        {
+          "device": "/dev/nvme2n1",
+          "size_bytes": 1980000000000,
+          "model": "Amazon EC2 NVMe Instance Storage",
+          "serial": "AWS0A9A3B736B40D7F21",
+          "mountpoints": [],
+          "identity": "nvme-model-and-serial"
+        },
+        {
+          "device": "/dev/nvme3n1",
+          "size_bytes": 1980000000000,
+          "model": "Amazon EC2 NVMe Instance Storage",
+          "serial": "AWSE7FF4F105966FDCC3",
+          "mountpoints": [],
+          "identity": "nvme-model-and-serial"
+        }
+      ],
+      "root_devices": [
+        "/dev/nvme0n1"
+      ]
+    },
+    "receipts": {
+      "instance-store-0-before": {
+        "device": "/dev/nvme1n1",
+        "label": "instance-store-0",
+        "utc": 1789404016.0083654,
+        "sysfs": {
+          "queue/write_cache": "write back",
+          "queue/fua": "1",
+          "queue/logical_block_size": "512",
+          "queue/physical_block_size": "512",
+          "queue/rotational": "0",
+          "queue/scheduler": "none [mq-deadline]",
+          "queue/nr_requests": "126",
+          "queue/io_poll": "0",
+          "stat": "143        0     6932      299        0        0        0        0        0      273      299        0        0        0        0        0        0"
+        },
+        "lsblk": {
+          "args": [
+            "lsblk",
+            "-b",
+            "-J",
+            "-O",
+            "/dev/nvme1n1"
+          ],
+          "returncode": 0,
+          "stdout": "{\n   \"blockdevices\": [\n      {\n         \"alignment\": 0,\n         \"id-link\": \"nvme-Amazon_EC2_NVMe_Instance_Storage_AWS218E867D93BCAEF6F\",\n         \"id\": \"Amazon_EC2_NVMe_Instance_Storage_AWS218E867D93BCAEF6F\",\n         \"disc-aln\": 0,\n         \"dax\": false,\n         \"disc-gran\": 0,\n         \"disk-seq\": 10,\n         \"disc-max\": 0,\n         \"disc-zero\": false,\n         \"fsavail\": null,\n         \"fsroots\": [\n             null\n         ],\n         \"fssize\": null,\n         \"fstype\": null,\n         \"fsused\": null,\n         \"fsuse%\": null,\n         \"fsver\": null,\n         \"group\": \"disk\",\n         \"hctl\": null,\n         \"hotplug\": false,\n         \"kname\": \"nvme1n1\",\n         \"label\": null,\n         \"log-sec\": 512,\n         \"maj:min\": \"259:2\",\n         \"min-io\": 512,\n         \"mode\": \"brw-rw----\",\n         \"model\": \"Amazon EC2 NVMe Instance Storage\",\n         \"mq\": \"  1\",\n         \"name\": \"nvme1n1\",\n         \"opt-io\": 0,\n         \"owner\": \"root\",\n         \"partflags\": null,\n         \"partlabel\": null,\n         \"partn\": null,\n         \"parttype\": null,\n         \"parttypename\": null,\n         \"partuuid\": null,\n         \"path\": \"/dev/nvme1n1\",\n         \"phy-sec\": 512,\n         \"pkname\": null,\n         \"pttype\": null,\n         \"ptuuid\": null,\n         \"ra\": 128,\n         \"rand\": false,\n         \"rev\": \"0\",\n         \"rm\": false,\n         \"ro\": false,\n         \"rota\": false,\n         \"rq-size\": 126,\n         \"sched\": \"mq-deadline\",\n         \"serial\": \"AWS218E867D93BCAEF6F\",\n         \"size\": 1980000000000,\n         \"start\": null,\n         \"state\": \"live\",\n         \"subsystems\": \"block:nvme:pci\",\n         \"mountpoint\": null,\n         \"mountpoints\": [\n             null\n         ],\n         \"tran\": \"nvme\",\n         \"type\": \"disk\",\n         \"uuid\": null,\n         \"vendor\": null,\n         \"wsame\": 0,\n         \"wwn\": \"nvme.1d0f-4157533231384538363744393342434145463646-416d617a6f6e20454332204e564d6520496e7374616e63652053746f72616765-00000001\",\n         \"zoned\": \"none\",\n         \"zone-sz\": 0,\n         \"zone-wgran\": 0,\n         \"zone-app\": 0,\n         \"zone-nr\": 0,\n         \"zone-omax\": 0,\n         \"zone-amax\": 0\n      }\n   ]\n}\n",
+          "stderr": ""
+        },
+        "udev": {
+          "args": [
+            "udevadm",
+            "info",
+            "--query=all",
+            "--name=/dev/nvme1n1"
+          ],
+          "returncode": 0,
+          "stdout": "P: /devices/pci0000:00/0000:00:1d.0/nvme/nvme1/nvme1n1\nM: nvme1n1\nR: 1\nU: block\nT: disk\nD: b 259:2\nN: nvme1n1\nL: 0\nS: disk/by-path/pci-0000:00:1d.0-nvme-1\nS: disk/by-id/nvme-nvme.1d0f-4157533231384538363744393342434145463646-416d617a6f6e20454332204e564d6520496e7374616e63652053746f72616765-00000001\nS: disk/by-diskseq/10\nS: disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS218E867D93BCAEF6F_1\nS: disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS218E867D93BCAEF6F\nQ: 10\nE: DEVPATH=/devices/pci0000:00/0000:00:1d.0/nvme/nvme1/nvme1n1\nE: DEVNAME=/dev/nvme1n1\nE: DEVTYPE=disk\nE: DISKSEQ=10\nE: MAJOR=259\nE: MINOR=2\nE: SUBSYSTEM=block\nE: USEC_INITIALIZED=2985272\nE: MPATH_SBIN_PATH=/sbin\nE: DM_MULTIPATH_DEVICE_PATH=0\nE: ID_SERIAL_SHORT=AWS218E867D93BCAEF6F\nE: ID_WWN=nvme.1d0f-4157533231384538363744393342434145463646-416d617a6f6e20454332204e564d6520496e7374616e63652053746f72616765-00000001\nE: ID_MODEL=Amazon EC2 NVMe Instance Storage\nE: ID_REVISION=0\nE: ID_NSID=1\nE: ID_SERIAL=Amazon_EC2_NVMe_Instance_Storage_AWS218E867D93BCAEF6F_1\nE: ID_PATH=pci-0000:00:1d.0-nvme-1\nE: ID_PATH_TAG=pci-0000_00_1d_0-nvme-1\nE: DEVLINKS=/dev/disk/by-path/pci-0000:00:1d.0-nvme-1 /dev/disk/by-id/nvme-nvme.1d0f-4157533231384538363744393342434145463646-416d617a6f6e20454332204e564d6520496e7374616e63652053746f72616765-00000001 /dev/disk/by-diskseq/10 /dev/disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS218E867D93BCAEF6F_1 /dev/disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS218E867D93BCAEF6F\nE: TAGS=:systemd:\nE: CURRENT_TAGS=:systemd:\n\n",
+          "stderr": ""
+        },
+        "nvme_identify": {
+          "args": [
+            "nvme",
+            "id-ctrl",
+            "/dev/nvme1n1",
+            "-o",
+            "json"
+          ],
+          "returncode": 0,
+          "stdout": "{\n  \"vid\":7439,\n  \"ssvid\":7439,\n  \"sn\":\"AWS218E867D93BCAEF6F\",\n  \"mn\":\"Amazon EC2 NVMe Instance Storage        \",\n  \"fr\":\"0\",\n  \"rab\":0,\n  \"ieee\":4240589,\n  \"cmic\":0,\n  \"mdts\":9,\n  \"cntlid\":0,\n  \"ver\":0,\n  \"rtd3r\":0,\n  \"rtd3e\":0,\n  \"oaes\":0,\n  \"ctratt\":0,\n  \"rrls\":0,\n  \"cntrltype\":0,\n  \"fguid\":\"00000000-0000-0000-0000-000000000000\",\n  \"crdt1\":0,\n  \"crdt2\":0,\n  \"crdt3\":0,\n  \"nvmsr\":0,\n  \"vwci\":0,\n  \"mec\":0,\n  \"oacs\":0,\n  \"acl\":3,\n  \"aerl\":4,\n  \"frmw\":3,\n  \"lpa\":0,\n  \"elpe\":63,\n  \"npss\":0,\n  \"avscc\":0,\n  \"apsta\":0,\n  \"wctemp\":0,\n  \"cctemp\":0,\n  \"mtfa\":0,\n  \"hmpre\":0,\n  \"hmmin\":0,\n  \"tnvmcap\":0,\n  \"unvmcap\":0,\n  \"rpmbs\":0,\n  \"edstt\":0,\n  \"dsto\":0,\n  \"fwug\":0,\n  \"kas\":0,\n  \"hctma\":0,\n  \"mntmt\":0,\n  \"mxtmt\":0,\n  \"sanicap\":0,\n  \"hmminds\":0,\n  \"hmmaxd\":0,\n  \"nsetidmax\":0,\n  \"endgidmax\":0,\n  \"anatt\":0,\n  \"anacap\":0,\n  \"anagrpmax\":0,\n  \"nanagrpid\":0,\n  \"pels\":0,\n  \"domainid\":0,\n  \"megcap\":0,\n  \"sqes\":102,\n  \"cqes\":68,\n  \"maxcmd\":0,\n  \"nn\":1,\n  \"oncs\":0,\n  \"fuses\":0,\n  \"fna\":0,\n  \"vwc\":1,\n  \"awun\":0,\n  \"awupf\":0,\n  \"icsvscc\":0,\n  \"nwpc\":0,\n  \"acwu\":0,\n  \"ocfs\":0,\n  \"sgls\":0,\n  \"mnan\":0,\n  \"maxdna\":0,\n  \"maxcna\":0,\n  \"oaqd\":0,\n  \"ioccsz\":0,\n  \"iorcsz\":0,\n  \"icdoff\":0,\n  \"fcatt\":0,\n  \"msdbd\":0,\n  \"ofcs\":0,\n  \"psds\":[\n    {\n      \"max_power\":0,\n      \"max_power_scale\":0,\n      \"non-operational_state\":0,\n      \"entry_lat\":0,\n      \"exit_lat\":0,\n      \"read_tput\":0,\n      \"read_lat\":0,\n      \"write_tput\":0,\n      \"write_lat\":0,\n      \"idle_power\":0,\n      \"idle_scale\":0,\n      \"active_power\":0,\n      \"active_power_work\":0,\n      \"active_scale\":0\n    }\n  ]\n}\n",
+          "stderr": ""
+        },
+        "nvme_namespace": {
+          "args": [
+            "nvme",
+            "id-ns",
+            "/dev/nvme1n1",
+            "-o",
+            "json"
+          ],
+          "returncode": 0,
+          "stdout": "{\n  \"nsze\":3867187500,\n  \"ncap\":3867187500,\n  \"nuse\":3867187500,\n  \"nsfeat\":0,\n  \"nlbaf\":0,\n  \"flbas\":0,\n  \"mc\":0,\n  \"dpc\":0,\n  \"dps\":0,\n  \"nmic\":0,\n  \"rescap\":0,\n  \"fpi\":0,\n  \"dlfeat\":0,\n  \"nawun\":0,\n  \"nawupf\":0,\n  \"nacwu\":0,\n  \"nabsn\":0,\n  \"nabo\":0,\n  \"nabspf\":0,\n  \"noiob\":0,\n  \"nvmcap\":0,\n  \"nsattr\":0,\n  \"nvmsetid\":0,\n  \"mssrl\":0,\n  \"mcl\":0,\n  \"msrc\":0,\n  \"nulbaf\":0,\n  \"anagrpid\":0,\n  \"endgid\":0,\n  \"eui64\":\"0000000000000000\",\n  \"nguid\":\"00000000000000000000000000000000\",\n  \"lbafs\":[\n    {\n      \"ms\":0,\n      \"ds\":9,\n      \"rp\":0\n    }\n  ],\n  \"vs\":[]\n}\n",
+          "stderr": ""
+        },
+        "nvme_write_cache": {
+          "args": [
+            "nvme",
+            "get-feature",
+            "/dev/nvme1n1",
+            "-f",
+            "6",
+            "-H"
+          ],
+          "returncode": 0,
+          "stdout": "get-feature:0x06 (Volatile Write Cache), Current value:0x00000001\n\tVolatile Write Cache Enable (WCE): Enabled\n",
+          "stderr": ""
+        },
+        "nvme_smart": {
+          "args": [
+            "nvme",
+            "smart-log",
+            "/dev/nvme1n1",
+            "-o",
+            "json"
+          ],
+          "returncode": 0,
+          "stdout": "{\n  \"critical_warning\":0,\n  \"temperature\":273,\n  \"avail_spare\":100,\n  \"spare_thresh\":0,\n  \"percent_used\":0,\n  \"endurance_grp_critical_warning_summary\":0,\n  \"data_units_read\":7,\n  \"data_units_written\":0,\n  \"host_read_commands\":143,\n  \"host_write_commands\":0,\n  \"controller_busy_time\":0,\n  \"power_cycles\":0,\n  \"power_on_hours\":0,\n  \"unsafe_shutdowns\":0,\n  \"media_errors\":0,\n  \"num_err_log_entries\":2,\n  \"warning_temp_time\":0,\n  \"critical_comp_time\":0,\n  \"thm_temp1_trans_count\":0,\n  \"thm_temp2_trans_count\":0,\n  \"thm_temp1_total_time\":0,\n  \"thm_temp2_total_time\":0\n}\n",
+          "stderr": ""
+        }
+      },
+      "mounts-before": {
+        "args": [
+          "findmnt",
+          "-J"
+        ],
+        "returncode": 0,
+        "stdout": "{\n   \"filesystems\": [\n      {\n         \"target\": \"/\",\n         \"source\": \"/dev/nvme0n1p1\",\n         \"fstype\": \"ext4\",\n         \"options\": \"rw,relatime,discard,errors=remount-ro,commit=30\",\n         \"children\": [\n            {\n               \"target\": \"/dev\",\n               \"source\": \"devtmpfs\",\n               \"fstype\": \"devtmpfs\",\n               \"options\": \"rw,nosuid,noexec,relatime,size=14895112k,nr_inodes=3723778,mode=755,inode64\",\n               \"children\": [\n                  {\n                     \"target\": \"/dev/shm\",\n                     \"source\": \"tmpfs\",\n                     \"fstype\": \"tmpfs\",\n                     \"options\": \"rw,nosuid,nodev,inode64\"\n                  },{\n                     \"target\": \"/dev/pts\",\n                     \"source\": \"devpts\",\n                     \"fstype\": \"devpts\",\n                     \"options\": \"rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000\"\n                  },{\n                     \"target\": \"/dev/mqueue\",\n                     \"source\": \"mqueue\",\n                     \"fstype\": \"mqueue\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/dev/hugepages\",\n                     \"source\": \"hugetlbfs\",\n                     \"fstype\": \"hugetlbfs\",\n                     \"options\": \"rw,nosuid,nodev,relatime,pagesize=2M\"\n                  }\n               ]\n            },{\n               \"target\": \"/proc\",\n               \"source\": \"proc\",\n               \"fstype\": \"proc\",\n               \"options\": \"rw,nosuid,nodev,noexec,relatime\",\n               \"children\": [\n                  {\n                     \"target\": \"/proc/sys/fs/binfmt_misc\",\n                     \"source\": \"systemd-1\",\n                     \"fstype\": \"autofs\",\n                     \"options\": \"rw,relatime,fd=32,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=2269\",\n                     \"children\": [\n                        {\n                           \"target\": \"/proc/sys/fs/binfmt_misc\",\n                           \"source\": \"binfmt_misc\",\n                           \"fstype\": \"binfmt_misc\",\n                           \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                        }\n                     ]\n                  }\n               ]\n            },{\n               \"target\": \"/sys\",\n               \"source\": \"sysfs\",\n               \"fstype\": \"sysfs\",\n               \"options\": \"rw,nosuid,nodev,noexec,relatime\",\n               \"children\": [\n                  {\n                     \"target\": \"/sys/kernel/security\",\n                     \"source\": \"securityfs\",\n                     \"fstype\": \"securityfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/fs/cgroup\",\n                     \"source\": \"cgroup2\",\n                     \"fstype\": \"cgroup2\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime,nsdelegate,memory_recursiveprot\"\n                  },{\n                     \"target\": \"/sys/fs/pstore\",\n                     \"source\": \"none\",\n                     \"fstype\": \"pstore\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/firmware/efi/efivars\",\n                     \"source\": \"efivarfs\",\n                     \"fstype\": \"efivarfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/fs/bpf\",\n                     \"source\": \"bpf\",\n                     \"fstype\": \"bpf\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime,mode=700\"\n                  },{\n                     \"target\": \"/sys/kernel/debug\",\n                     \"source\": \"debugfs\",\n                     \"fstype\": \"debugfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/kernel/tracing\",\n                     \"source\": \"tracefs\",\n                     \"fstype\": \"tracefs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/fs/fuse/connections\",\n                     \"source\": \"fusectl\",\n                     \"fstype\": \"fusectl\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/kernel/config\",\n                     \"source\": \"configfs\",\n                     \"fstype\": \"configfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  }\n               ]\n            },{\n               \"target\": \"/run\",\n               \"source\": \"tmpfs\",\n               \"fstype\": \"tmpfs\",\n               \"options\": \"rw,nosuid,nodev,size=6496308k,nr_inodes=819200,mode=755,inode64\",\n               \"children\": [\n                  {\n                     \"target\": \"/run/lock\",\n                     \"source\": \"tmpfs\",\n                     \"fstype\": \"tmpfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime,size=5120k,inode64\"\n                  }\n               ]\n            },{\n               \"target\": \"/snap/amazon-ssm-agent/13349\",\n               \"source\": \"/dev/loop0\",\n               \"fstype\": \"squashfs\",\n               \"options\": \"ro,nodev,relatime,errors=continue,threads=single\"\n            },{\n               \"target\": \"/snap/core22/2437\",\n               \"source\": \"/dev/loop1\",\n               \"fstype\": \"squashfs\",\n               \"options\": \"ro,nodev,relatime,errors=continue,threads=single\"\n            },{\n               \"target\": \"/snap/snapd/27710\",\n               \"source\": \"/dev/loop2\",\n               \"fstype\": \"squashfs\",\n               \"options\": \"ro,nodev,relatime,errors=continue,threads=single\"\n            },{\n               \"target\": \"/boot\",\n               \"source\": \"/dev/nvme0n1p16\",\n               \"fstype\": \"ext4\",\n               \"options\": \"rw,relatime\",\n               \"children\": [\n                  {\n                     \"target\": \"/boot/efi\",\n                     \"source\": \"/dev/nvme0n1p15\",\n                     \"fstype\": \"vfat\",\n                     \"options\": \"rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro\"\n                  }\n               ]\n            }\n         ]\n      }\n   ]\n}\n",
+        "stderr": ""
+      }
+    }
+  },
+  "nvme-arm": {
+    "manifest": {
+      "format": 1,
+      "ebs": {},
+      "instance_store": [
+        {
+          "device": "/dev/nvme1n1",
+          "size_bytes": 468000000000,
+          "model": "Amazon EC2 NVMe Instance Storage",
+          "serial": "AWSAC388CFF809C887F4",
+          "mountpoints": [],
+          "identity": "nvme-model-and-serial"
+        }
+      ],
+      "root_devices": [
+        "/dev/nvme0n1"
+      ]
+    },
+    "receipts": {
+      "instance-store-0-before": {
+        "device": "/dev/nvme1n1",
+        "label": "instance-store-0",
+        "utc": 1789404014.8971708,
+        "sysfs": {
+          "queue/write_cache": "write through",
+          "queue/fua": "0",
+          "queue/logical_block_size": "512",
+          "queue/physical_block_size": "512",
+          "queue/rotational": "0",
+          "queue/scheduler": "[none] mq-deadline",
+          "queue/nr_requests": "127",
+          "queue/io_poll": "0",
+          "stat": "155        0     6908        5        0        0        0        0        0        4        5        0        0        0        0        0        0"
+        },
+        "lsblk": {
+          "args": [
+            "lsblk",
+            "-b",
+            "-J",
+            "-O",
+            "/dev/nvme1n1"
+          ],
+          "returncode": 0,
+          "stdout": "{\n   \"blockdevices\": [\n      {\n         \"alignment\": 0,\n         \"id-link\": \"nvme-Amazon_EC2_NVMe_Instance_Storage_AWSAC388CFF809C887F4\",\n         \"id\": \"Amazon_EC2_NVMe_Instance_Storage_AWSAC388CFF809C887F4\",\n         \"disc-aln\": 0,\n         \"dax\": false,\n         \"disc-gran\": 512,\n         \"disk-seq\": 9,\n         \"disc-max\": 2199023255040,\n         \"disc-zero\": false,\n         \"fsavail\": null,\n         \"fsroots\": [\n             null\n         ],\n         \"fssize\": null,\n         \"fstype\": null,\n         \"fsused\": null,\n         \"fsuse%\": null,\n         \"fsver\": null,\n         \"group\": \"disk\",\n         \"hctl\": null,\n         \"hotplug\": false,\n         \"kname\": \"nvme1n1\",\n         \"label\": null,\n         \"log-sec\": 512,\n         \"maj:min\": \"259:0\",\n         \"min-io\": 512,\n         \"mode\": \"brw-rw----\",\n         \"model\": \"Amazon EC2 NVMe Instance Storage\",\n         \"mq\": \"  2\",\n         \"name\": \"nvme1n1\",\n         \"opt-io\": 0,\n         \"owner\": \"root\",\n         \"partflags\": null,\n         \"partlabel\": null,\n         \"partn\": null,\n         \"parttype\": null,\n         \"parttypename\": null,\n         \"partuuid\": null,\n         \"path\": \"/dev/nvme1n1\",\n         \"phy-sec\": 512,\n         \"pkname\": null,\n         \"pttype\": null,\n         \"ptuuid\": null,\n         \"ra\": 128,\n         \"rand\": false,\n         \"rev\": \"0\",\n         \"rm\": false,\n         \"ro\": false,\n         \"rota\": false,\n         \"rq-size\": 127,\n         \"sched\": \"none\",\n         \"serial\": \"AWSAC388CFF809C887F4\",\n         \"size\": 468000000000,\n         \"start\": null,\n         \"state\": \"live\",\n         \"subsystems\": \"block:nvme:pci\",\n         \"mountpoint\": null,\n         \"mountpoints\": [\n             null\n         ],\n         \"tran\": \"nvme\",\n         \"type\": \"disk\",\n         \"uuid\": null,\n         \"vendor\": null,\n         \"wsame\": 0,\n         \"wwn\": \"nvme.1d0f-4157534143333838434646383039433838374634-416d617a6f6e20454332204e564d6520496e7374616e63652053746f72616765-00000001\",\n         \"zoned\": \"none\",\n         \"zone-sz\": 0,\n         \"zone-wgran\": 0,\n         \"zone-app\": 0,\n         \"zone-nr\": 0,\n         \"zone-omax\": 0,\n         \"zone-amax\": 0\n      }\n   ]\n}\n",
+          "stderr": ""
+        },
+        "udev": {
+          "args": [
+            "udevadm",
+            "info",
+            "--query=all",
+            "--name=/dev/nvme1n1"
+          ],
+          "returncode": 0,
+          "stdout": "P: /devices/pci0000:2b/0000:2b:00.0/0000:2c:00.0/nvme/nvme1/nvme1n1\nM: nvme1n1\nR: 1\nU: block\nT: disk\nD: b 259:0\nN: nvme1n1\nL: 0\nS: disk/by-diskseq/9\nS: disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWSAC388CFF809C887F4_1\nS: disk/by-id/nvme-nvme.1d0f-4157534143333838434646383039433838374634-416d617a6f6e20454332204e564d6520496e7374616e63652053746f72616765-00000001\nS: disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWSAC388CFF809C887F4\nS: disk/by-path/pci-0000:2c:00.0-nvme-1\nQ: 9\nE: DEVPATH=/devices/pci0000:2b/0000:2b:00.0/0000:2c:00.0/nvme/nvme1/nvme1n1\nE: DEVNAME=/dev/nvme1n1\nE: DEVTYPE=disk\nE: DISKSEQ=9\nE: MAJOR=259\nE: MINOR=0\nE: SUBSYSTEM=block\nE: USEC_INITIALIZED=1792285\nE: MPATH_SBIN_PATH=/sbin\nE: DM_MULTIPATH_DEVICE_PATH=0\nE: ID_SERIAL_SHORT=AWSAC388CFF809C887F4\nE: ID_WWN=nvme.1d0f-4157534143333838434646383039433838374634-416d617a6f6e20454332204e564d6520496e7374616e63652053746f72616765-00000001\nE: ID_MODEL=Amazon EC2 NVMe Instance Storage\nE: ID_REVISION=0\nE: ID_NSID=1\nE: ID_SERIAL=Amazon_EC2_NVMe_Instance_Storage_AWSAC388CFF809C887F4_1\nE: ID_PATH=pci-0000:2c:00.0-nvme-1\nE: ID_PATH_TAG=pci-0000_2c_00_0-nvme-1\nE: DEVLINKS=/dev/disk/by-diskseq/9 /dev/disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWSAC388CFF809C887F4_1 /dev/disk/by-id/nvme-nvme.1d0f-4157534143333838434646383039433838374634-416d617a6f6e20454332204e564d6520496e7374616e63652053746f72616765-00000001 /dev/disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWSAC388CFF809C887F4 /dev/disk/by-path/pci-0000:2c:00.0-nvme-1\nE: TAGS=:systemd:\nE: CURRENT_TAGS=:systemd:\n\n",
+          "stderr": ""
+        },
+        "nvme_identify": {
+          "args": [
+            "nvme",
+            "id-ctrl",
+            "/dev/nvme1n1",
+            "-o",
+            "json"
+          ],
+          "returncode": 0,
+          "stdout": "{\n  \"vid\":7439,\n  \"ssvid\":7439,\n  \"sn\":\"AWSAC388CFF809C887F4\",\n  \"mn\":\"Amazon EC2 NVMe Instance Storage        \",\n  \"fr\":\"0\",\n  \"rab\":0,\n  \"ieee\":4240589,\n  \"cmic\":0,\n  \"mdts\":5,\n  \"cntlid\":0,\n  \"ver\":131072,\n  \"rtd3r\":0,\n  \"rtd3e\":0,\n  \"oaes\":256,\n  \"ctratt\":0,\n  \"rrls\":0,\n  \"cntrltype\":1,\n  \"fguid\":\"00000000-0000-0000-0000-000000000000\",\n  \"crdt1\":0,\n  \"crdt2\":0,\n  \"crdt3\":0,\n  \"nvmsr\":0,\n  \"vwci\":0,\n  \"mec\":0,\n  \"oacs\":8,\n  \"acl\":3,\n  \"aerl\":4,\n  \"frmw\":3,\n  \"lpa\":0,\n  \"elpe\":63,\n  \"npss\":0,\n  \"avscc\":0,\n  \"apsta\":0,\n  \"wctemp\":0,\n  \"cctemp\":0,\n  \"mtfa\":0,\n  \"hmpre\":0,\n  \"hmmin\":0,\n  \"tnvmcap\":468000000000,\n  \"unvmcap\":0,\n  \"rpmbs\":0,\n  \"edstt\":0,\n  \"dsto\":0,\n  \"fwug\":0,\n  \"kas\":0,\n  \"hctma\":0,\n  \"mntmt\":0,\n  \"mxtmt\":0,\n  \"sanicap\":0,\n  \"hmminds\":0,\n  \"hmmaxd\":0,\n  \"nsetidmax\":0,\n  \"endgidmax\":0,\n  \"anatt\":0,\n  \"anacap\":0,\n  \"anagrpmax\":0,\n  \"nanagrpid\":0,\n  \"pels\":0,\n  \"domainid\":0,\n  \"megcap\":0,\n  \"sqes\":102,\n  \"cqes\":68,\n  \"maxcmd\":0,\n  \"nn\":31,\n  \"oncs\":4,\n  \"fuses\":0,\n  \"fna\":0,\n  \"vwc\":0,\n  \"awun\":0,\n  \"awupf\":0,\n  \"icsvscc\":0,\n  \"nwpc\":0,\n  \"acwu\":0,\n  \"ocfs\":0,\n  \"sgls\":0,\n  \"mnan\":0,\n  \"maxdna\":0,\n  \"maxcna\":0,\n  \"oaqd\":0,\n  \"subnqn\":\"nqn.2008-08.com.amazon.aws:ec2-nvme-instance:AWSAC388CFF809C887F4\",\n  \"ioccsz\":0,\n  \"iorcsz\":0,\n  \"icdoff\":0,\n  \"fcatt\":0,\n  \"msdbd\":0,\n  \"ofcs\":0,\n  \"psds\":[\n    {\n      \"max_power\":0,\n      \"max_power_scale\":0,\n      \"non-operational_state\":0,\n      \"entry_lat\":0,\n      \"exit_lat\":0,\n      \"read_tput\":0,\n      \"read_lat\":0,\n      \"write_tput\":0,\n      \"write_lat\":0,\n      \"idle_power\":0,\n      \"idle_scale\":0,\n      \"active_power\":0,\n      \"active_power_work\":0,\n      \"active_scale\":0\n    }\n  ]\n}\n",
+          "stderr": ""
+        },
+        "nvme_namespace": {
+          "args": [
+            "nvme",
+            "id-ns",
+            "/dev/nvme1n1",
+            "-o",
+            "json"
+          ],
+          "returncode": 0,
+          "stdout": "{\n  \"nsze\":914062500,\n  \"ncap\":914062500,\n  \"nuse\":914062500,\n  \"nsfeat\":0,\n  \"nlbaf\":0,\n  \"flbas\":0,\n  \"mc\":0,\n  \"dpc\":0,\n  \"dps\":0,\n  \"nmic\":0,\n  \"rescap\":0,\n  \"fpi\":0,\n  \"dlfeat\":0,\n  \"nawun\":0,\n  \"nawupf\":0,\n  \"nacwu\":0,\n  \"nabsn\":0,\n  \"nabo\":0,\n  \"nabspf\":0,\n  \"noiob\":0,\n  \"nvmcap\":468000000000,\n  \"nsattr\":0,\n  \"nvmsetid\":0,\n  \"mssrl\":0,\n  \"mcl\":0,\n  \"msrc\":0,\n  \"nulbaf\":0,\n  \"anagrpid\":0,\n  \"endgid\":0,\n  \"eui64\":\"0000000000000000\",\n  \"nguid\":\"c388cff809c887f440b4cd0000000001\",\n  \"lbafs\":[\n    {\n      \"ms\":0,\n      \"ds\":9,\n      \"rp\":0\n    }\n  ],\n  \"vs\":[]\n}\n",
+          "stderr": ""
+        },
+        "nvme_write_cache": {
+          "args": [
+            "nvme",
+            "get-feature",
+            "/dev/nvme1n1",
+            "-f",
+            "6",
+            "-H"
+          ],
+          "returncode": 1,
+          "stdout": "",
+          "stderr": "NVMe status: Invalid Field in Command: A reserved coded value or an unsupported value in a defined field(0x2002)\n"
+        },
+        "nvme_smart": {
+          "args": [
+            "nvme",
+            "smart-log",
+            "/dev/nvme1n1",
+            "-o",
+            "json"
+          ],
+          "returncode": 0,
+          "stdout": "{\n  \"critical_warning\":0,\n  \"temperature\":273,\n  \"avail_spare\":100,\n  \"spare_thresh\":0,\n  \"percent_used\":0,\n  \"endurance_grp_critical_warning_summary\":0,\n  \"data_units_read\":7,\n  \"data_units_written\":0,\n  \"host_read_commands\":163,\n  \"host_write_commands\":0,\n  \"controller_busy_time\":0,\n  \"power_cycles\":0,\n  \"power_on_hours\":0,\n  \"unsafe_shutdowns\":0,\n  \"media_errors\":0,\n  \"num_err_log_entries\":1,\n  \"warning_temp_time\":0,\n  \"critical_comp_time\":0,\n  \"thm_temp1_trans_count\":0,\n  \"thm_temp2_trans_count\":0,\n  \"thm_temp1_total_time\":0,\n  \"thm_temp2_total_time\":0\n}\n",
+          "stderr": ""
+        }
+      },
+      "mounts-before": {
+        "args": [
+          "findmnt",
+          "-J"
+        ],
+        "returncode": 0,
+        "stdout": "{\n   \"filesystems\": [\n      {\n         \"target\": \"/\",\n         \"source\": \"/dev/nvme0n1p1\",\n         \"fstype\": \"ext4\",\n         \"options\": \"rw,relatime,discard,errors=remount-ro,commit=30\",\n         \"children\": [\n            {\n               \"target\": \"/dev\",\n               \"source\": \"devtmpfs\",\n               \"fstype\": \"devtmpfs\",\n               \"options\": \"rw,nosuid,noexec,relatime,size=7340932k,nr_inodes=1835233,mode=755,inode64\",\n               \"children\": [\n                  {\n                     \"target\": \"/dev/shm\",\n                     \"source\": \"tmpfs\",\n                     \"fstype\": \"tmpfs\",\n                     \"options\": \"rw,nosuid,nodev,inode64\"\n                  },{\n                     \"target\": \"/dev/pts\",\n                     \"source\": \"devpts\",\n                     \"fstype\": \"devpts\",\n                     \"options\": \"rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000\"\n                  },{\n                     \"target\": \"/dev/hugepages\",\n                     \"source\": \"hugetlbfs\",\n                     \"fstype\": \"hugetlbfs\",\n                     \"options\": \"rw,nosuid,nodev,relatime,pagesize=2M\"\n                  },{\n                     \"target\": \"/dev/mqueue\",\n                     \"source\": \"mqueue\",\n                     \"fstype\": \"mqueue\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  }\n               ]\n            },{\n               \"target\": \"/proc\",\n               \"source\": \"proc\",\n               \"fstype\": \"proc\",\n               \"options\": \"rw,nosuid,nodev,noexec,relatime\",\n               \"children\": [\n                  {\n                     \"target\": \"/proc/sys/fs/binfmt_misc\",\n                     \"source\": \"systemd-1\",\n                     \"fstype\": \"autofs\",\n                     \"options\": \"rw,relatime,fd=32,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=861\",\n                     \"children\": [\n                        {\n                           \"target\": \"/proc/sys/fs/binfmt_misc\",\n                           \"source\": \"binfmt_misc\",\n                           \"fstype\": \"binfmt_misc\",\n                           \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                        }\n                     ]\n                  }\n               ]\n            },{\n               \"target\": \"/sys\",\n               \"source\": \"sysfs\",\n               \"fstype\": \"sysfs\",\n               \"options\": \"rw,nosuid,nodev,noexec,relatime\",\n               \"children\": [\n                  {\n                     \"target\": \"/sys/kernel/security\",\n                     \"source\": \"securityfs\",\n                     \"fstype\": \"securityfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/fs/cgroup\",\n                     \"source\": \"cgroup2\",\n                     \"fstype\": \"cgroup2\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime,nsdelegate,memory_recursiveprot\"\n                  },{\n                     \"target\": \"/sys/fs/pstore\",\n                     \"source\": \"none\",\n                     \"fstype\": \"pstore\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/firmware/efi/efivars\",\n                     \"source\": \"efivarfs\",\n                     \"fstype\": \"efivarfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/fs/bpf\",\n                     \"source\": \"bpf\",\n                     \"fstype\": \"bpf\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime,mode=700\"\n                  },{\n                     \"target\": \"/sys/kernel/debug\",\n                     \"source\": \"debugfs\",\n                     \"fstype\": \"debugfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/kernel/tracing\",\n                     \"source\": \"tracefs\",\n                     \"fstype\": \"tracefs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/fs/fuse/connections\",\n                     \"source\": \"fusectl\",\n                     \"fstype\": \"fusectl\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/kernel/config\",\n                     \"source\": \"configfs\",\n                     \"fstype\": \"configfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  }\n               ]\n            },{\n               \"target\": \"/run\",\n               \"source\": \"tmpfs\",\n               \"fstype\": \"tmpfs\",\n               \"options\": \"rw,nosuid,nodev,size=3208476k,nr_inodes=819200,mode=755,inode64\",\n               \"children\": [\n                  {\n                     \"target\": \"/run/lock\",\n                     \"source\": \"tmpfs\",\n                     \"fstype\": \"tmpfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime,size=5120k,inode64\"\n                  }\n               ]\n            },{\n               \"target\": \"/snap/amazon-ssm-agent/13348\",\n               \"source\": \"/dev/loop0\",\n               \"fstype\": \"squashfs\",\n               \"options\": \"ro,nodev,relatime,errors=continue,threads=single\"\n            },{\n               \"target\": \"/snap/snapd/27709\",\n               \"source\": \"/dev/loop1\",\n               \"fstype\": \"squashfs\",\n               \"options\": \"ro,nodev,relatime,errors=continue,threads=single\"\n            },{\n               \"target\": \"/snap/core22/2438\",\n               \"source\": \"/dev/loop2\",\n               \"fstype\": \"squashfs\",\n               \"options\": \"ro,nodev,relatime,errors=continue,threads=single\"\n            },{\n               \"target\": \"/boot\",\n               \"source\": \"/dev/nvme0n1p16\",\n               \"fstype\": \"ext4\",\n               \"options\": \"rw,relatime\",\n               \"children\": [\n                  {\n                     \"target\": \"/boot/efi\",\n                     \"source\": \"/dev/nvme0n1p15\",\n                     \"fstype\": \"vfat\",\n                     \"options\": \"rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro\"\n                  }\n               ]\n            }\n         ]\n      }\n   ]\n}\n",
+        "stderr": ""
+      }
+    }
+  },
+  "nvme-i4i": {
+    "manifest": {
+      "format": 1,
+      "ebs": {},
+      "instance_store": [
+        {
+          "device": "/dev/nvme1n1",
+          "size_bytes": 937000000000,
+          "model": "Amazon EC2 NVMe Instance Storage",
+          "serial": "AWS449E2D81689CEC3F5",
+          "mountpoints": [],
+          "identity": "nvme-model-and-serial"
+        }
+      ],
+      "root_devices": [
+        "/dev/nvme0n1"
+      ]
+    },
+    "receipts": {
+      "instance-store-0-before": {
+        "device": "/dev/nvme1n1",
+        "label": "instance-store-0",
+        "utc": 1789404024.0303345,
+        "sysfs": {
+          "queue/write_cache": "write through",
+          "queue/fua": "0",
+          "queue/logical_block_size": "512",
+          "queue/physical_block_size": "512",
+          "queue/rotational": "0",
+          "queue/scheduler": "[none] mq-deadline",
+          "queue/nr_requests": "127",
+          "queue/io_poll": "0",
+          "stat": "176        0     6911       17        0        0        0        0        0        3       17        0        0        0        0        0        0"
+        },
+        "lsblk": {
+          "args": [
+            "lsblk",
+            "-b",
+            "-J",
+            "-O",
+            "/dev/nvme1n1"
+          ],
+          "returncode": 0,
+          "stdout": "{\n   \"blockdevices\": [\n      {\n         \"alignment\": 0,\n         \"id-link\": \"nvme-eui.49e2d81689cec3f540b4cd0000000001\",\n         \"id\": \"eui.49e2d81689cec3f540b4cd0000000001\",\n         \"disc-aln\": 0,\n         \"dax\": false,\n         \"disc-gran\": 512,\n         \"disk-seq\": 10,\n         \"disc-max\": 2199023255040,\n         \"disc-zero\": false,\n         \"fsavail\": null,\n         \"fsroots\": [\n             null\n         ],\n         \"fssize\": null,\n         \"fstype\": null,\n         \"fsused\": null,\n         \"fsuse%\": null,\n         \"fsver\": null,\n         \"group\": \"disk\",\n         \"hctl\": null,\n         \"hotplug\": false,\n         \"kname\": \"nvme1n1\",\n         \"label\": null,\n         \"log-sec\": 512,\n         \"maj:min\": \"259:1\",\n         \"min-io\": 512,\n         \"mode\": \"brw-rw----\",\n         \"model\": \"Amazon EC2 NVMe Instance Storage\",\n         \"mq\": \"  2\",\n         \"name\": \"nvme1n1\",\n         \"opt-io\": 0,\n         \"owner\": \"root\",\n         \"partflags\": null,\n         \"partlabel\": null,\n         \"partn\": null,\n         \"parttype\": null,\n         \"parttypename\": null,\n         \"partuuid\": null,\n         \"path\": \"/dev/nvme1n1\",\n         \"phy-sec\": 512,\n         \"pkname\": null,\n         \"pttype\": null,\n         \"ptuuid\": null,\n         \"ra\": 128,\n         \"rand\": false,\n         \"rev\": \"0\",\n         \"rm\": false,\n         \"ro\": false,\n         \"rota\": false,\n         \"rq-size\": 127,\n         \"sched\": \"none\",\n         \"serial\": \"AWS449E2D81689CEC3F5\",\n         \"size\": 937000000000,\n         \"start\": null,\n         \"state\": \"live\",\n         \"subsystems\": \"block:nvme:pci\",\n         \"mountpoint\": null,\n         \"mountpoints\": [\n             null\n         ],\n         \"tran\": \"nvme\",\n         \"type\": \"disk\",\n         \"uuid\": null,\n         \"vendor\": null,\n         \"wsame\": 0,\n         \"wwn\": \"eui.49e2d81689cec3f540b4cd0000000001\",\n         \"zoned\": \"none\",\n         \"zone-sz\": 0,\n         \"zone-wgran\": 0,\n         \"zone-app\": 0,\n         \"zone-nr\": 0,\n         \"zone-omax\": 0,\n         \"zone-amax\": 0\n      }\n   ]\n}\n",
+          "stderr": ""
+        },
+        "udev": {
+          "args": [
+            "udevadm",
+            "info",
+            "--query=all",
+            "--name=/dev/nvme1n1"
+          ],
+          "returncode": 0,
+          "stdout": "P: /devices/pci0000:00/0000:00:1f.0/nvme/nvme1/nvme1n1\nM: nvme1n1\nR: 1\nU: block\nT: disk\nD: b 259:1\nN: nvme1n1\nL: 0\nS: disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS449E2D81689CEC3F5_1\nS: disk/by-path/pci-0000:00:1f.0-nvme-1\nS: disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS449E2D81689CEC3F5\nS: disk/by-id/nvme-eui.49e2d81689cec3f540b4cd0000000001\nS: disk/by-diskseq/10\nQ: 10\nE: DEVPATH=/devices/pci0000:00/0000:00:1f.0/nvme/nvme1/nvme1n1\nE: DEVNAME=/dev/nvme1n1\nE: DEVTYPE=disk\nE: DISKSEQ=10\nE: MAJOR=259\nE: MINOR=1\nE: SUBSYSTEM=block\nE: USEC_INITIALIZED=1969303\nE: MPATH_SBIN_PATH=/sbin\nE: DM_MULTIPATH_DEVICE_PATH=0\nE: ID_SERIAL_SHORT=AWS449E2D81689CEC3F5\nE: ID_WWN=eui.49e2d81689cec3f540b4cd0000000001\nE: ID_MODEL=Amazon EC2 NVMe Instance Storage\nE: ID_REVISION=0\nE: ID_NSID=1\nE: ID_SERIAL=Amazon_EC2_NVMe_Instance_Storage_AWS449E2D81689CEC3F5_1\nE: ID_PATH=pci-0000:00:1f.0-nvme-1\nE: ID_PATH_TAG=pci-0000_00_1f_0-nvme-1\nE: DEVLINKS=/dev/disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS449E2D81689CEC3F5_1 /dev/disk/by-path/pci-0000:00:1f.0-nvme-1 /dev/disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS449E2D81689CEC3F5 /dev/disk/by-id/nvme-eui.49e2d81689cec3f540b4cd0000000001 /dev/disk/by-diskseq/10\nE: TAGS=:systemd:\nE: CURRENT_TAGS=:systemd:\n\n",
+          "stderr": ""
+        },
+        "nvme_identify": {
+          "args": [
+            "nvme",
+            "id-ctrl",
+            "/dev/nvme1n1",
+            "-o",
+            "json"
+          ],
+          "returncode": 0,
+          "stdout": "{\n  \"vid\":7439,\n  \"ssvid\":7439,\n  \"sn\":\"AWS449E2D81689CEC3F5\",\n  \"mn\":\"Amazon EC2 NVMe Instance Storage        \",\n  \"fr\":\"0\",\n  \"rab\":0,\n  \"ieee\":4240589,\n  \"cmic\":0,\n  \"mdts\":5,\n  \"cntlid\":0,\n  \"ver\":66560,\n  \"rtd3r\":0,\n  \"rtd3e\":0,\n  \"oaes\":256,\n  \"ctratt\":0,\n  \"rrls\":0,\n  \"cntrltype\":1,\n  \"fguid\":\"00000000-0000-0000-0000-000000000000\",\n  \"crdt1\":0,\n  \"crdt2\":0,\n  \"crdt3\":0,\n  \"nvmsr\":0,\n  \"vwci\":0,\n  \"mec\":0,\n  \"oacs\":8,\n  \"acl\":3,\n  \"aerl\":4,\n  \"frmw\":3,\n  \"lpa\":0,\n  \"elpe\":63,\n  \"npss\":0,\n  \"avscc\":0,\n  \"apsta\":0,\n  \"wctemp\":0,\n  \"cctemp\":0,\n  \"mtfa\":0,\n  \"hmpre\":0,\n  \"hmmin\":0,\n  \"tnvmcap\":937000000000,\n  \"unvmcap\":0,\n  \"rpmbs\":0,\n  \"edstt\":0,\n  \"dsto\":0,\n  \"fwug\":0,\n  \"kas\":0,\n  \"hctma\":0,\n  \"mntmt\":0,\n  \"mxtmt\":0,\n  \"sanicap\":0,\n  \"hmminds\":0,\n  \"hmmaxd\":0,\n  \"nsetidmax\":0,\n  \"endgidmax\":0,\n  \"anatt\":0,\n  \"anacap\":0,\n  \"anagrpmax\":0,\n  \"nanagrpid\":0,\n  \"pels\":0,\n  \"domainid\":0,\n  \"megcap\":0,\n  \"sqes\":102,\n  \"cqes\":68,\n  \"maxcmd\":0,\n  \"nn\":62,\n  \"oncs\":4,\n  \"fuses\":0,\n  \"fna\":0,\n  \"vwc\":0,\n  \"awun\":0,\n  \"awupf\":0,\n  \"icsvscc\":0,\n  \"nwpc\":0,\n  \"acwu\":0,\n  \"ocfs\":0,\n  \"sgls\":0,\n  \"mnan\":0,\n  \"maxdna\":0,\n  \"maxcna\":0,\n  \"oaqd\":0,\n  \"subnqn\":\"nqn.2008-08.com.amazon.aws:ec2-nvme-instance:AWS449E2D81689CEC3F5\",\n  \"ioccsz\":0,\n  \"iorcsz\":0,\n  \"icdoff\":0,\n  \"fcatt\":0,\n  \"msdbd\":0,\n  \"ofcs\":0,\n  \"psds\":[\n    {\n      \"max_power\":0,\n      \"max_power_scale\":0,\n      \"non-operational_state\":0,\n      \"entry_lat\":0,\n      \"exit_lat\":0,\n      \"read_tput\":0,\n      \"read_lat\":0,\n      \"write_tput\":0,\n      \"write_lat\":0,\n      \"idle_power\":0,\n      \"idle_scale\":0,\n      \"active_power\":0,\n      \"active_power_work\":0,\n      \"active_scale\":0\n    }\n  ]\n}\n",
+          "stderr": ""
+        },
+        "nvme_namespace": {
+          "args": [
+            "nvme",
+            "id-ns",
+            "/dev/nvme1n1",
+            "-o",
+            "json"
+          ],
+          "returncode": 0,
+          "stdout": "{\n  \"nsze\":1830078125,\n  \"ncap\":1830078125,\n  \"nuse\":1830078125,\n  \"nsfeat\":0,\n  \"nlbaf\":0,\n  \"flbas\":0,\n  \"mc\":0,\n  \"dpc\":0,\n  \"dps\":0,\n  \"nmic\":0,\n  \"rescap\":0,\n  \"fpi\":0,\n  \"dlfeat\":0,\n  \"nawun\":0,\n  \"nawupf\":0,\n  \"nacwu\":0,\n  \"nabsn\":0,\n  \"nabo\":0,\n  \"nabspf\":0,\n  \"noiob\":0,\n  \"nvmcap\":937000000000,\n  \"nsattr\":0,\n  \"nvmsetid\":0,\n  \"mssrl\":0,\n  \"mcl\":0,\n  \"msrc\":0,\n  \"nulbaf\":0,\n  \"anagrpid\":0,\n  \"endgid\":0,\n  \"eui64\":\"0000000000000000\",\n  \"nguid\":\"49e2d81689cec3f540b4cd0000000001\",\n  \"lbafs\":[\n    {\n      \"ms\":0,\n      \"ds\":9,\n      \"rp\":0\n    }\n  ],\n  \"vs\":[]\n}\n",
+          "stderr": ""
+        },
+        "nvme_write_cache": {
+          "args": [
+            "nvme",
+            "get-feature",
+            "/dev/nvme1n1",
+            "-f",
+            "6",
+            "-H"
+          ],
+          "returncode": 1,
+          "stdout": "",
+          "stderr": "NVMe status: Invalid Field in Command: A reserved coded value or an unsupported value in a defined field(0x2002)\n"
+        },
+        "nvme_smart": {
+          "args": [
+            "nvme",
+            "smart-log",
+            "/dev/nvme1n1",
+            "-o",
+            "json"
+          ],
+          "returncode": 0,
+          "stdout": "{\n  \"critical_warning\":0,\n  \"temperature\":273,\n  \"avail_spare\":100,\n  \"spare_thresh\":0,\n  \"percent_used\":0,\n  \"endurance_grp_critical_warning_summary\":0,\n  \"data_units_read\":7,\n  \"data_units_written\":0,\n  \"host_read_commands\":184,\n  \"host_write_commands\":0,\n  \"controller_busy_time\":0,\n  \"power_cycles\":0,\n  \"power_on_hours\":0,\n  \"unsafe_shutdowns\":0,\n  \"media_errors\":0,\n  \"num_err_log_entries\":2,\n  \"warning_temp_time\":0,\n  \"critical_comp_time\":0,\n  \"thm_temp1_trans_count\":0,\n  \"thm_temp2_trans_count\":0,\n  \"thm_temp1_total_time\":0,\n  \"thm_temp2_total_time\":0\n}\n",
+          "stderr": ""
+        }
+      },
+      "mounts-before": {
+        "args": [
+          "findmnt",
+          "-J"
+        ],
+        "returncode": 0,
+        "stdout": "{\n   \"filesystems\": [\n      {\n         \"target\": \"/\",\n         \"source\": \"/dev/nvme0n1p1\",\n         \"fstype\": \"ext4\",\n         \"options\": \"rw,relatime,discard,errors=remount-ro,commit=30\",\n         \"children\": [\n            {\n               \"target\": \"/dev\",\n               \"source\": \"devtmpfs\",\n               \"fstype\": \"devtmpfs\",\n               \"options\": \"rw,nosuid,noexec,relatime,size=14817212k,nr_inodes=3704303,mode=755,inode64\",\n               \"children\": [\n                  {\n                     \"target\": \"/dev/shm\",\n                     \"source\": \"tmpfs\",\n                     \"fstype\": \"tmpfs\",\n                     \"options\": \"rw,nosuid,nodev,inode64\"\n                  },{\n                     \"target\": \"/dev/pts\",\n                     \"source\": \"devpts\",\n                     \"fstype\": \"devpts\",\n                     \"options\": \"rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000\"\n                  },{\n                     \"target\": \"/dev/hugepages\",\n                     \"source\": \"hugetlbfs\",\n                     \"fstype\": \"hugetlbfs\",\n                     \"options\": \"rw,nosuid,nodev,relatime,pagesize=2M\"\n                  },{\n                     \"target\": \"/dev/mqueue\",\n                     \"source\": \"mqueue\",\n                     \"fstype\": \"mqueue\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  }\n               ]\n            },{\n               \"target\": \"/proc\",\n               \"source\": \"proc\",\n               \"fstype\": \"proc\",\n               \"options\": \"rw,nosuid,nodev,noexec,relatime\",\n               \"children\": [\n                  {\n                     \"target\": \"/proc/sys/fs/binfmt_misc\",\n                     \"source\": \"systemd-1\",\n                     \"fstype\": \"autofs\",\n                     \"options\": \"rw,relatime,fd=32,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=317\",\n                     \"children\": [\n                        {\n                           \"target\": \"/proc/sys/fs/binfmt_misc\",\n                           \"source\": \"binfmt_misc\",\n                           \"fstype\": \"binfmt_misc\",\n                           \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                        }\n                     ]\n                  }\n               ]\n            },{\n               \"target\": \"/sys\",\n               \"source\": \"sysfs\",\n               \"fstype\": \"sysfs\",\n               \"options\": \"rw,nosuid,nodev,noexec,relatime\",\n               \"children\": [\n                  {\n                     \"target\": \"/sys/kernel/security\",\n                     \"source\": \"securityfs\",\n                     \"fstype\": \"securityfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/fs/cgroup\",\n                     \"source\": \"cgroup2\",\n                     \"fstype\": \"cgroup2\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime,nsdelegate,memory_recursiveprot\"\n                  },{\n                     \"target\": \"/sys/fs/pstore\",\n                     \"source\": \"none\",\n                     \"fstype\": \"pstore\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/firmware/efi/efivars\",\n                     \"source\": \"efivarfs\",\n                     \"fstype\": \"efivarfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/fs/bpf\",\n                     \"source\": \"bpf\",\n                     \"fstype\": \"bpf\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime,mode=700\"\n                  },{\n                     \"target\": \"/sys/kernel/debug\",\n                     \"source\": \"debugfs\",\n                     \"fstype\": \"debugfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/kernel/tracing\",\n                     \"source\": \"tracefs\",\n                     \"fstype\": \"tracefs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/fs/fuse/connections\",\n                     \"source\": \"fusectl\",\n                     \"fstype\": \"fusectl\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/kernel/config\",\n                     \"source\": \"configfs\",\n                     \"fstype\": \"configfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  }\n               ]\n            },{\n               \"target\": \"/run\",\n               \"source\": \"tmpfs\",\n               \"fstype\": \"tmpfs\",\n               \"options\": \"rw,nosuid,nodev,size=6462312k,nr_inodes=819200,mode=755,inode64\",\n               \"children\": [\n                  {\n                     \"target\": \"/run/lock\",\n                     \"source\": \"tmpfs\",\n                     \"fstype\": \"tmpfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime,size=5120k,inode64\"\n                  }\n               ]\n            },{\n               \"target\": \"/snap/amazon-ssm-agent/13349\",\n               \"source\": \"/dev/loop0\",\n               \"fstype\": \"squashfs\",\n               \"options\": \"ro,nodev,relatime,errors=continue,threads=single\"\n            },{\n               \"target\": \"/snap/core22/2437\",\n               \"source\": \"/dev/loop1\",\n               \"fstype\": \"squashfs\",\n               \"options\": \"ro,nodev,relatime,errors=continue,threads=single\"\n            },{\n               \"target\": \"/snap/snapd/27710\",\n               \"source\": \"/dev/loop2\",\n               \"fstype\": \"squashfs\",\n               \"options\": \"ro,nodev,relatime,errors=continue,threads=single\"\n            },{\n               \"target\": \"/boot\",\n               \"source\": \"/dev/nvme0n1p16\",\n               \"fstype\": \"ext4\",\n               \"options\": \"rw,relatime\",\n               \"children\": [\n                  {\n                     \"target\": \"/boot/efi\",\n                     \"source\": \"/dev/nvme0n1p15\",\n                     \"fstype\": \"vfat\",\n                     \"options\": \"rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro\"\n                  }\n               ]\n            }\n         ]\n      }\n   ]\n}\n",
+        "stderr": ""
+      }
+    }
+  },
+  "nvme-i7i": {
+    "manifest": {
+      "format": 1,
+      "ebs": {},
+      "instance_store": [
+        {
+          "device": "/dev/nvme1n1",
+          "size_bytes": 937000000000,
+          "model": "Amazon EC2 NVMe Instance Storage",
+          "serial": "AWS88DED4B5E23FD5439",
+          "mountpoints": [],
+          "identity": "nvme-model-and-serial"
+        }
+      ],
+      "root_devices": [
+        "/dev/nvme0n1"
+      ]
+    },
+    "receipts": {
+      "instance-store-0-before": {
+        "device": "/dev/nvme1n1",
+        "label": "instance-store-0",
+        "utc": 1789404033.486673,
+        "sysfs": {
+          "queue/write_cache": "write through",
+          "queue/fua": "0",
+          "queue/logical_block_size": "512",
+          "queue/physical_block_size": "512",
+          "queue/rotational": "0",
+          "queue/scheduler": "[none] mq-deadline",
+          "queue/nr_requests": "127",
+          "queue/io_poll": "0",
+          "stat": "176        0     6911       12        0        0        0        0        0        5       12        0        0        0        0        0        0"
+        },
+        "lsblk": {
+          "args": [
+            "lsblk",
+            "-b",
+            "-J",
+            "-O",
+            "/dev/nvme1n1"
+          ],
+          "returncode": 0,
+          "stdout": "{\n   \"blockdevices\": [\n      {\n         \"alignment\": 0,\n         \"id-link\": \"nvme-Amazon_EC2_NVMe_Instance_Storage_AWS88DED4B5E23FD5439\",\n         \"id\": \"Amazon_EC2_NVMe_Instance_Storage_AWS88DED4B5E23FD5439\",\n         \"disc-aln\": 0,\n         \"dax\": false,\n         \"disc-gran\": 512,\n         \"disk-seq\": 10,\n         \"disc-max\": 2199023255040,\n         \"disc-zero\": false,\n         \"fsavail\": null,\n         \"fsroots\": [\n             null\n         ],\n         \"fssize\": null,\n         \"fstype\": null,\n         \"fsused\": null,\n         \"fsuse%\": null,\n         \"fsver\": null,\n         \"group\": \"disk\",\n         \"hctl\": null,\n         \"hotplug\": false,\n         \"kname\": \"nvme1n1\",\n         \"label\": null,\n         \"log-sec\": 512,\n         \"maj:min\": \"259:5\",\n         \"min-io\": 512,\n         \"mode\": \"brw-rw----\",\n         \"model\": \"Amazon EC2 NVMe Instance Storage\",\n         \"mq\": \"  2\",\n         \"name\": \"nvme1n1\",\n         \"opt-io\": 0,\n         \"owner\": \"root\",\n         \"partflags\": null,\n         \"partlabel\": null,\n         \"partn\": null,\n         \"parttype\": null,\n         \"parttypename\": null,\n         \"partuuid\": null,\n         \"path\": \"/dev/nvme1n1\",\n         \"phy-sec\": 512,\n         \"pkname\": null,\n         \"pttype\": null,\n         \"ptuuid\": null,\n         \"ra\": 128,\n         \"rand\": false,\n         \"rev\": \"0\",\n         \"rm\": false,\n         \"ro\": false,\n         \"rota\": false,\n         \"rq-size\": 127,\n         \"sched\": \"none\",\n         \"serial\": \"AWS88DED4B5E23FD5439\",\n         \"size\": 937000000000,\n         \"start\": null,\n         \"state\": \"live\",\n         \"subsystems\": \"block:nvme:pci\",\n         \"mountpoint\": null,\n         \"mountpoints\": [\n             null\n         ],\n         \"tran\": \"nvme\",\n         \"type\": \"disk\",\n         \"uuid\": null,\n         \"vendor\": null,\n         \"wsame\": 0,\n         \"wwn\": \"nvme.1d0f-4157533838444544344235453233464435343339-416d617a6f6e20454332204e564d6520496e7374616e63652053746f72616765-00000001\",\n         \"zoned\": \"none\",\n         \"zone-sz\": 0,\n         \"zone-wgran\": 0,\n         \"zone-app\": 0,\n         \"zone-nr\": 0,\n         \"zone-omax\": 0,\n         \"zone-amax\": 0\n      }\n   ]\n}\n",
+          "stderr": ""
+        },
+        "udev": {
+          "args": [
+            "udevadm",
+            "info",
+            "--query=all",
+            "--name=/dev/nvme1n1"
+          ],
+          "returncode": 0,
+          "stdout": "P: /devices/pci0000:2c/0000:2c:00.0/0000:2d:00.0/nvme/nvme1/nvme1n1\nM: nvme1n1\nR: 1\nU: block\nT: disk\nD: b 259:5\nN: nvme1n1\nL: 0\nS: disk/by-path/pci-0000:2d:00.0-nvme-1\nS: disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS88DED4B5E23FD5439\nS: disk/by-id/nvme-nvme.1d0f-4157533838444544344235453233464435343339-416d617a6f6e20454332204e564d6520496e7374616e63652053746f72616765-00000001\nS: disk/by-diskseq/10\nS: disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS88DED4B5E23FD5439_1\nQ: 10\nE: DEVPATH=/devices/pci0000:2c/0000:2c:00.0/0000:2d:00.0/nvme/nvme1/nvme1n1\nE: DEVNAME=/dev/nvme1n1\nE: DEVTYPE=disk\nE: DISKSEQ=10\nE: MAJOR=259\nE: MINOR=5\nE: SUBSYSTEM=block\nE: USEC_INITIALIZED=2042906\nE: MPATH_SBIN_PATH=/sbin\nE: DM_MULTIPATH_DEVICE_PATH=0\nE: ID_SERIAL_SHORT=AWS88DED4B5E23FD5439\nE: ID_WWN=nvme.1d0f-4157533838444544344235453233464435343339-416d617a6f6e20454332204e564d6520496e7374616e63652053746f72616765-00000001\nE: ID_MODEL=Amazon EC2 NVMe Instance Storage\nE: ID_REVISION=0\nE: ID_NSID=1\nE: ID_SERIAL=Amazon_EC2_NVMe_Instance_Storage_AWS88DED4B5E23FD5439_1\nE: ID_PATH=pci-0000:2d:00.0-nvme-1\nE: ID_PATH_TAG=pci-0000_2d_00_0-nvme-1\nE: DEVLINKS=/dev/disk/by-path/pci-0000:2d:00.0-nvme-1 /dev/disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS88DED4B5E23FD5439 /dev/disk/by-id/nvme-nvme.1d0f-4157533838444544344235453233464435343339-416d617a6f6e20454332204e564d6520496e7374616e63652053746f72616765-00000001 /dev/disk/by-diskseq/10 /dev/disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS88DED4B5E23FD5439_1\nE: TAGS=:systemd:\nE: CURRENT_TAGS=:systemd:\n\n",
+          "stderr": ""
+        },
+        "nvme_identify": {
+          "args": [
+            "nvme",
+            "id-ctrl",
+            "/dev/nvme1n1",
+            "-o",
+            "json"
+          ],
+          "returncode": 0,
+          "stdout": "{\n  \"vid\":7439,\n  \"ssvid\":7439,\n  \"sn\":\"AWS88DED4B5E23FD5439\",\n  \"mn\":\"Amazon EC2 NVMe Instance Storage        \",\n  \"fr\":\"0\",\n  \"rab\":0,\n  \"ieee\":4240589,\n  \"cmic\":0,\n  \"mdts\":5,\n  \"cntlid\":0,\n  \"ver\":131072,\n  \"rtd3r\":0,\n  \"rtd3e\":0,\n  \"oaes\":256,\n  \"ctratt\":0,\n  \"rrls\":0,\n  \"cntrltype\":1,\n  \"fguid\":\"00000000-0000-0000-0000-000000000000\",\n  \"crdt1\":0,\n  \"crdt2\":0,\n  \"crdt3\":0,\n  \"nvmsr\":0,\n  \"vwci\":0,\n  \"mec\":0,\n  \"oacs\":8,\n  \"acl\":3,\n  \"aerl\":4,\n  \"frmw\":3,\n  \"lpa\":0,\n  \"elpe\":63,\n  \"npss\":0,\n  \"avscc\":0,\n  \"apsta\":0,\n  \"wctemp\":0,\n  \"cctemp\":0,\n  \"mtfa\":0,\n  \"hmpre\":0,\n  \"hmmin\":0,\n  \"tnvmcap\":937000000000,\n  \"unvmcap\":0,\n  \"rpmbs\":0,\n  \"edstt\":0,\n  \"dsto\":0,\n  \"fwug\":0,\n  \"kas\":0,\n  \"hctma\":0,\n  \"mntmt\":0,\n  \"mxtmt\":0,\n  \"sanicap\":0,\n  \"hmminds\":0,\n  \"hmmaxd\":0,\n  \"nsetidmax\":0,\n  \"endgidmax\":0,\n  \"anatt\":0,\n  \"anacap\":0,\n  \"anagrpmax\":0,\n  \"nanagrpid\":0,\n  \"pels\":0,\n  \"domainid\":0,\n  \"megcap\":0,\n  \"sqes\":102,\n  \"cqes\":68,\n  \"maxcmd\":0,\n  \"nn\":62,\n  \"oncs\":4,\n  \"fuses\":0,\n  \"fna\":0,\n  \"vwc\":0,\n  \"awun\":0,\n  \"awupf\":0,\n  \"icsvscc\":0,\n  \"nwpc\":0,\n  \"acwu\":0,\n  \"ocfs\":0,\n  \"sgls\":0,\n  \"mnan\":0,\n  \"maxdna\":0,\n  \"maxcna\":0,\n  \"oaqd\":0,\n  \"subnqn\":\"nqn.2008-08.com.amazon.aws:ec2-nvme-instance:AWS88DED4B5E23FD5439\",\n  \"ioccsz\":0,\n  \"iorcsz\":0,\n  \"icdoff\":0,\n  \"fcatt\":0,\n  \"msdbd\":0,\n  \"ofcs\":0,\n  \"psds\":[\n    {\n      \"max_power\":0,\n      \"max_power_scale\":0,\n      \"non-operational_state\":0,\n      \"entry_lat\":0,\n      \"exit_lat\":0,\n      \"read_tput\":0,\n      \"read_lat\":0,\n      \"write_tput\":0,\n      \"write_lat\":0,\n      \"idle_power\":0,\n      \"idle_scale\":0,\n      \"active_power\":0,\n      \"active_power_work\":0,\n      \"active_scale\":0\n    }\n  ]\n}\n",
+          "stderr": ""
+        },
+        "nvme_namespace": {
+          "args": [
+            "nvme",
+            "id-ns",
+            "/dev/nvme1n1",
+            "-o",
+            "json"
+          ],
+          "returncode": 0,
+          "stdout": "{\n  \"nsze\":1830078125,\n  \"ncap\":1830078125,\n  \"nuse\":1830078125,\n  \"nsfeat\":0,\n  \"nlbaf\":0,\n  \"flbas\":0,\n  \"mc\":0,\n  \"dpc\":0,\n  \"dps\":0,\n  \"nmic\":0,\n  \"rescap\":0,\n  \"fpi\":0,\n  \"dlfeat\":0,\n  \"nawun\":0,\n  \"nawupf\":0,\n  \"nacwu\":0,\n  \"nabsn\":0,\n  \"nabo\":0,\n  \"nabspf\":0,\n  \"noiob\":0,\n  \"nvmcap\":937000000000,\n  \"nsattr\":0,\n  \"nvmsetid\":0,\n  \"mssrl\":0,\n  \"mcl\":0,\n  \"msrc\":0,\n  \"nulbaf\":0,\n  \"anagrpid\":0,\n  \"endgid\":0,\n  \"eui64\":\"0000000000000000\",\n  \"nguid\":\"8ded4b5e23fd543940b4cd0000000001\",\n  \"lbafs\":[\n    {\n      \"ms\":0,\n      \"ds\":9,\n      \"rp\":0\n    }\n  ],\n  \"vs\":[]\n}\n",
+          "stderr": ""
+        },
+        "nvme_write_cache": {
+          "args": [
+            "nvme",
+            "get-feature",
+            "/dev/nvme1n1",
+            "-f",
+            "6",
+            "-H"
+          ],
+          "returncode": 1,
+          "stdout": "",
+          "stderr": "NVMe status: Invalid Field in Command: A reserved coded value or an unsupported value in a defined field(0x2002)\n"
+        },
+        "nvme_smart": {
+          "args": [
+            "nvme",
+            "smart-log",
+            "/dev/nvme1n1",
+            "-o",
+            "json"
+          ],
+          "returncode": 0,
+          "stdout": "{\n  \"critical_warning\":0,\n  \"temperature\":273,\n  \"avail_spare\":100,\n  \"spare_thresh\":0,\n  \"percent_used\":0,\n  \"endurance_grp_critical_warning_summary\":0,\n  \"data_units_read\":7,\n  \"data_units_written\":0,\n  \"host_read_commands\":184,\n  \"host_write_commands\":0,\n  \"controller_busy_time\":0,\n  \"power_cycles\":0,\n  \"power_on_hours\":0,\n  \"unsafe_shutdowns\":0,\n  \"media_errors\":0,\n  \"num_err_log_entries\":1,\n  \"warning_temp_time\":0,\n  \"critical_comp_time\":0,\n  \"thm_temp1_trans_count\":0,\n  \"thm_temp2_trans_count\":0,\n  \"thm_temp1_total_time\":0,\n  \"thm_temp2_total_time\":0\n}\n",
+          "stderr": ""
+        }
+      },
+      "mounts-before": {
+        "args": [
+          "findmnt",
+          "-J"
+        ],
+        "returncode": 0,
+        "stdout": "{\n   \"filesystems\": [\n      {\n         \"target\": \"/\",\n         \"source\": \"/dev/nvme0n1p1\",\n         \"fstype\": \"ext4\",\n         \"options\": \"rw,relatime,discard,errors=remount-ro,commit=30\",\n         \"children\": [\n            {\n               \"target\": \"/dev\",\n               \"source\": \"devtmpfs\",\n               \"fstype\": \"devtmpfs\",\n               \"options\": \"rw,nosuid,noexec,relatime,size=14827976k,nr_inodes=3706994,mode=755,inode64\",\n               \"children\": [\n                  {\n                     \"target\": \"/dev/shm\",\n                     \"source\": \"tmpfs\",\n                     \"fstype\": \"tmpfs\",\n                     \"options\": \"rw,nosuid,nodev,inode64\"\n                  },{\n                     \"target\": \"/dev/pts\",\n                     \"source\": \"devpts\",\n                     \"fstype\": \"devpts\",\n                     \"options\": \"rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000\"\n                  },{\n                     \"target\": \"/dev/hugepages\",\n                     \"source\": \"hugetlbfs\",\n                     \"fstype\": \"hugetlbfs\",\n                     \"options\": \"rw,nosuid,nodev,relatime,pagesize=2M\"\n                  },{\n                     \"target\": \"/dev/mqueue\",\n                     \"source\": \"mqueue\",\n                     \"fstype\": \"mqueue\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  }\n               ]\n            },{\n               \"target\": \"/proc\",\n               \"source\": \"proc\",\n               \"fstype\": \"proc\",\n               \"options\": \"rw,nosuid,nodev,noexec,relatime\",\n               \"children\": [\n                  {\n                     \"target\": \"/proc/sys/fs/binfmt_misc\",\n                     \"source\": \"systemd-1\",\n                     \"fstype\": \"autofs\",\n                     \"options\": \"rw,relatime,fd=32,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=890\",\n                     \"children\": [\n                        {\n                           \"target\": \"/proc/sys/fs/binfmt_misc\",\n                           \"source\": \"binfmt_misc\",\n                           \"fstype\": \"binfmt_misc\",\n                           \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                        }\n                     ]\n                  }\n               ]\n            },{\n               \"target\": \"/sys\",\n               \"source\": \"sysfs\",\n               \"fstype\": \"sysfs\",\n               \"options\": \"rw,nosuid,nodev,noexec,relatime\",\n               \"children\": [\n                  {\n                     \"target\": \"/sys/kernel/security\",\n                     \"source\": \"securityfs\",\n                     \"fstype\": \"securityfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/fs/cgroup\",\n                     \"source\": \"cgroup2\",\n                     \"fstype\": \"cgroup2\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime,nsdelegate,memory_recursiveprot\"\n                  },{\n                     \"target\": \"/sys/fs/pstore\",\n                     \"source\": \"none\",\n                     \"fstype\": \"pstore\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/firmware/efi/efivars\",\n                     \"source\": \"efivarfs\",\n                     \"fstype\": \"efivarfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/fs/bpf\",\n                     \"source\": \"bpf\",\n                     \"fstype\": \"bpf\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime,mode=700\"\n                  },{\n                     \"target\": \"/sys/kernel/tracing\",\n                     \"source\": \"tracefs\",\n                     \"fstype\": \"tracefs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/kernel/debug\",\n                     \"source\": \"debugfs\",\n                     \"fstype\": \"debugfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/fs/fuse/connections\",\n                     \"source\": \"fusectl\",\n                     \"fstype\": \"fusectl\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/kernel/config\",\n                     \"source\": \"configfs\",\n                     \"fstype\": \"configfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  }\n               ]\n            },{\n               \"target\": \"/run\",\n               \"source\": \"tmpfs\",\n               \"fstype\": \"tmpfs\",\n               \"options\": \"rw,nosuid,nodev,size=6462320k,nr_inodes=819200,mode=755,inode64\",\n               \"children\": [\n                  {\n                     \"target\": \"/run/lock\",\n                     \"source\": \"tmpfs\",\n                     \"fstype\": \"tmpfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime,size=5120k,inode64\"\n                  }\n               ]\n            },{\n               \"target\": \"/snap/amazon-ssm-agent/13349\",\n               \"source\": \"/dev/loop0\",\n               \"fstype\": \"squashfs\",\n               \"options\": \"ro,nodev,relatime,errors=continue,threads=single\"\n            },{\n               \"target\": \"/snap/core22/2437\",\n               \"source\": \"/dev/loop1\",\n               \"fstype\": \"squashfs\",\n               \"options\": \"ro,nodev,relatime,errors=continue,threads=single\"\n            },{\n               \"target\": \"/snap/snapd/27710\",\n               \"source\": \"/dev/loop2\",\n               \"fstype\": \"squashfs\",\n               \"options\": \"ro,nodev,relatime,errors=continue,threads=single\"\n            },{\n               \"target\": \"/boot\",\n               \"source\": \"/dev/nvme0n1p16\",\n               \"fstype\": \"ext4\",\n               \"options\": \"rw,relatime\",\n               \"children\": [\n                  {\n                     \"target\": \"/boot/efi\",\n                     \"source\": \"/dev/nvme0n1p15\",\n                     \"fstype\": \"vfat\",\n                     \"options\": \"rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro\"\n                  }\n               ]\n            }\n         ]\n      }\n   ]\n}\n",
+        "stderr": ""
+      }
+    }
+  },
+  "sata-ssd": {
+    "manifest": {
+      "format": 1,
+      "ebs": {},
+      "instance_store": [
+        {
+          "device": "/dev/xvdb",
+          "size_bytes": 800000000000,
+          "model": "",
+          "serial": "",
+          "mountpoints": [],
+          "name": "ephemeral0",
+          "identity": "imds:ephemeral0"
+        }
+      ],
+      "root_devices": [
+        "/dev/xvda"
+      ]
+    },
+    "receipts": {
+      "instance-store-0-before": {
+        "device": "/dev/xvdb",
+        "label": "instance-store-0",
+        "utc": 1789404094.5627136,
+        "sysfs": {
+          "queue/write_cache": "write back",
+          "queue/fua": "0",
+          "queue/logical_block_size": "512",
+          "queue/physical_block_size": "512",
+          "queue/rotational": "0",
+          "queue/scheduler": "none [mq-deadline]",
+          "queue/nr_requests": "64",
+          "queue/io_poll": "0",
+          "stat": "198        0     9121       13        0        0        0        0        0       11       13        0        0        0        0        0        0"
+        },
+        "lsblk": {
+          "args": [
+            "lsblk",
+            "-b",
+            "-J",
+            "-O",
+            "/dev/xvdb"
+          ],
+          "returncode": 0,
+          "stdout": "{\n   \"blockdevices\": [\n      {\n         \"alignment\": 0,\n         \"id-link\": null,\n         \"id\": null,\n         \"disc-aln\": 0,\n         \"dax\": false,\n         \"disc-gran\": 512,\n         \"disk-seq\": 9,\n         \"disc-max\": 2199023255040,\n         \"disc-zero\": false,\n         \"fsavail\": null,\n         \"fsroots\": [\n             null\n         ],\n         \"fssize\": null,\n         \"fstype\": null,\n         \"fsused\": null,\n         \"fsuse%\": null,\n         \"fsver\": null,\n         \"group\": \"disk\",\n         \"hctl\": null,\n         \"hotplug\": false,\n         \"kname\": \"xvdb\",\n         \"label\": null,\n         \"log-sec\": 512,\n         \"maj:min\": \"202:16\",\n         \"min-io\": 512,\n         \"mode\": \"brw-rw----\",\n         \"model\": null,\n         \"mq\": \"  1\",\n         \"name\": \"xvdb\",\n         \"opt-io\": 0,\n         \"owner\": \"root\",\n         \"partflags\": null,\n         \"partlabel\": null,\n         \"partn\": null,\n         \"parttype\": null,\n         \"parttypename\": null,\n         \"partuuid\": null,\n         \"path\": \"/dev/xvdb\",\n         \"phy-sec\": 512,\n         \"pkname\": null,\n         \"pttype\": null,\n         \"ptuuid\": null,\n         \"ra\": 128,\n         \"rand\": false,\n         \"rev\": null,\n         \"rm\": false,\n         \"ro\": false,\n         \"rota\": false,\n         \"rq-size\": 64,\n         \"sched\": \"mq-deadline\",\n         \"serial\": null,\n         \"size\": 800000000000,\n         \"start\": null,\n         \"state\": \"Connected\",\n         \"subsystems\": \"block:xen\",\n         \"mountpoint\": null,\n         \"mountpoints\": [\n             null\n         ],\n         \"tran\": null,\n         \"type\": \"disk\",\n         \"uuid\": null,\n         \"vendor\": null,\n         \"wsame\": 0,\n         \"wwn\": null,\n         \"zoned\": \"none\",\n         \"zone-sz\": 0,\n         \"zone-wgran\": 0,\n         \"zone-app\": 0,\n         \"zone-nr\": 0,\n         \"zone-omax\": 0,\n         \"zone-amax\": 0\n      }\n   ]\n}\n",
+          "stderr": ""
+        },
+        "udev": {
+          "args": [
+            "udevadm",
+            "info",
+            "--query=all",
+            "--name=/dev/xvdb"
+          ],
+          "returncode": 0,
+          "stdout": "P: /devices/vbd-51728/block/xvdb\nM: xvdb\nU: block\nT: disk\nD: b 202:16\nN: xvdb\nL: 0\nS: disk/by-diskseq/9\nQ: 9\nE: DEVPATH=/devices/vbd-51728/block/xvdb\nE: DEVNAME=/dev/xvdb\nE: DEVTYPE=disk\nE: DISKSEQ=9\nE: MAJOR=202\nE: MINOR=16\nE: SUBSYSTEM=block\nE: USEC_INITIALIZED=2616606\nE: DEVLINKS=/dev/disk/by-diskseq/9\nE: TAGS=:systemd:\nE: CURRENT_TAGS=:systemd:\n\n",
+          "stderr": ""
+        },
+        "hdparm": {
+          "args": [
+            "hdparm",
+            "-I",
+            "/dev/xvdb"
+          ],
+          "returncode": 0,
+          "stdout": "\n/dev/xvdb:\n",
+          "stderr": ""
+        }
+      },
+      "mounts-before": {
+        "args": [
+          "findmnt",
+          "-J"
+        ],
+        "returncode": 0,
+        "stdout": "{\n   \"filesystems\": [\n      {\n         \"target\": \"/\",\n         \"source\": \"/dev/xvda1\",\n         \"fstype\": \"ext4\",\n         \"options\": \"rw,relatime,discard,errors=remount-ro,commit=30\",\n         \"children\": [\n            {\n               \"target\": \"/dev\",\n               \"source\": \"devtmpfs\",\n               \"fstype\": \"devtmpfs\",\n               \"options\": \"rw,nosuid,noexec,relatime,size=14372036k,nr_inodes=3593009,mode=755,inode64\",\n               \"children\": [\n                  {\n                     \"target\": \"/dev/shm\",\n                     \"source\": \"tmpfs\",\n                     \"fstype\": \"tmpfs\",\n                     \"options\": \"rw,nosuid,nodev,inode64\"\n                  },{\n                     \"target\": \"/dev/pts\",\n                     \"source\": \"devpts\",\n                     \"fstype\": \"devpts\",\n                     \"options\": \"rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000\"\n                  },{\n                     \"target\": \"/dev/hugepages\",\n                     \"source\": \"hugetlbfs\",\n                     \"fstype\": \"hugetlbfs\",\n                     \"options\": \"rw,nosuid,nodev,relatime,pagesize=2M\"\n                  },{\n                     \"target\": \"/dev/mqueue\",\n                     \"source\": \"mqueue\",\n                     \"fstype\": \"mqueue\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  }\n               ]\n            },{\n               \"target\": \"/proc\",\n               \"source\": \"proc\",\n               \"fstype\": \"proc\",\n               \"options\": \"rw,nosuid,nodev,noexec,relatime\",\n               \"children\": [\n                  {\n                     \"target\": \"/proc/sys/fs/binfmt_misc\",\n                     \"source\": \"systemd-1\",\n                     \"fstype\": \"autofs\",\n                     \"options\": \"rw,relatime,fd=32,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=2735\",\n                     \"children\": [\n                        {\n                           \"target\": \"/proc/sys/fs/binfmt_misc\",\n                           \"source\": \"binfmt_misc\",\n                           \"fstype\": \"binfmt_misc\",\n                           \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                        }\n                     ]\n                  }\n               ]\n            },{\n               \"target\": \"/sys\",\n               \"source\": \"sysfs\",\n               \"fstype\": \"sysfs\",\n               \"options\": \"rw,nosuid,nodev,noexec,relatime\",\n               \"children\": [\n                  {\n                     \"target\": \"/sys/kernel/security\",\n                     \"source\": \"securityfs\",\n                     \"fstype\": \"securityfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/fs/cgroup\",\n                     \"source\": \"cgroup2\",\n                     \"fstype\": \"cgroup2\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime,nsdelegate,memory_recursiveprot\"\n                  },{\n                     \"target\": \"/sys/fs/pstore\",\n                     \"source\": \"none\",\n                     \"fstype\": \"pstore\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/fs/bpf\",\n                     \"source\": \"bpf\",\n                     \"fstype\": \"bpf\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime,mode=700\"\n                  },{\n                     \"target\": \"/sys/kernel/tracing\",\n                     \"source\": \"tracefs\",\n                     \"fstype\": \"tracefs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/kernel/debug\",\n                     \"source\": \"debugfs\",\n                     \"fstype\": \"debugfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/fs/fuse/connections\",\n                     \"source\": \"fusectl\",\n                     \"fstype\": \"fusectl\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  },{\n                     \"target\": \"/sys/kernel/config\",\n                     \"source\": \"configfs\",\n                     \"fstype\": \"configfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime\"\n                  }\n               ]\n            },{\n               \"target\": \"/run\",\n               \"source\": \"tmpfs\",\n               \"fstype\": \"tmpfs\",\n               \"options\": \"rw,nosuid,nodev,size=6265540k,nr_inodes=819200,mode=755,inode64\",\n               \"children\": [\n                  {\n                     \"target\": \"/run/lock\",\n                     \"source\": \"tmpfs\",\n                     \"fstype\": \"tmpfs\",\n                     \"options\": \"rw,nosuid,nodev,noexec,relatime,size=5120k,inode64\"\n                  }\n               ]\n            },{\n               \"target\": \"/snap/amazon-ssm-agent/13349\",\n               \"source\": \"/dev/loop0\",\n               \"fstype\": \"squashfs\",\n               \"options\": \"ro,nodev,relatime,errors=continue,threads=single\"\n            },{\n               \"target\": \"/snap/core22/2437\",\n               \"source\": \"/dev/loop1\",\n               \"fstype\": \"squashfs\",\n               \"options\": \"ro,nodev,relatime,errors=continue,threads=single\"\n            },{\n               \"target\": \"/snap/snapd/27710\",\n               \"source\": \"/dev/loop2\",\n               \"fstype\": \"squashfs\",\n               \"options\": \"ro,nodev,relatime,errors=continue,threads=single\"\n            },{\n               \"target\": \"/boot\",\n               \"source\": \"/dev/xvda16\",\n               \"fstype\": \"ext4\",\n               \"options\": \"rw,relatime\",\n               \"children\": [\n                  {\n                     \"target\": \"/boot/efi\",\n                     \"source\": \"/dev/xvda15\",\n                     \"fstype\": \"vfat\",\n                     \"options\": \"rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro\"\n                  }\n               ]\n            }\n         ]\n      }\n   ]\n}\n",
+        "stderr": ""
+      }
+    }
+  }
+}

@@ -18,7 +18,7 @@ def main():
     chosen = [next(s for s in subnets if s['AvailabilityZone'] == z['ZoneName']) for z in zones]
     assert len({s['VpcId'] for s in chosen}) == 1
     spec = {
-        'script': 'workbench/spikes/az-latency/cloud.sh',
+        'script': 'workbench/spikes/cft-commit-latency/cloud.sh',
         'config': {'instance_type': 'i4i.xlarge', 'capacity': 'on-demand', 'threads_per_core': 1,
                    'deadline_seconds': 3600, 'max_age_seconds': 3600,
                    'env': {'AZ_RUN_URI': '{group_uri}'}},

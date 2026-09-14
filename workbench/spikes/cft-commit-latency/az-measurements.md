@@ -1,11 +1,11 @@
-# Latency between us-east-1 availability zones
+# Measuring AZ links
 
 Measure all 15 AZ pairs, in both initiating directions, and explore how message
 size and MTU affect round-trip latency. Compare the 20 possible three-AZ sets
 using their measured pair links. These are observations from one six-instance
 cohort, not a latency guarantee for an AZ or an application replication benchmark.
 
-The [September 14 findings](FINDINGS.md) contain pair tables, MTU effects and the
+The [September 14 findings](az-findings.md) contain pair tables, MTU effects and the
 good-versus-bad three-voter CFT comparison. [Retained evidence](evidence/20260914/README.md)
 provides all measured cases and recovery of the six raw worker archives.
 
@@ -62,23 +62,38 @@ RTT/2 is not a measured one-way latency. No fsync, WAL, quorum or simultaneous
 three-node replication is measured. Three-AZ rankings use the **largest of the
 six directional p99s**, with mean directional p50 as a deterministic tie-break.
 That score is a placement comparison, not a percentile of a composed transaction.
-`consensus.py` separately evaluates every leader in every triple using empirical
-link CDFs. It bounds the healthy first-follower RTT across every possible coupling
-of the marginals, reports an explicitly hypothetical independence scenario, and
-uses the remaining measured link for a single follower failure. Its empirical
-CDF inverse uses nearest-rank quantiles, unlike the interpolated descriptive
-tables. These are network-only models, without simultaneous fan-out measurements.
 One host per AZ cannot describe within-AZ host/rack/path variation, and repeated
 passes over minutes cannot describe diurnal or longer-term network tails.
+
+## Three-node network model
+
+`consensus.py` evaluates every leader in every triple using the measured link
+distributions. A healthy leader needs the first of its two follower replies;
+with one follower unavailable, it needs the remaining reply. The underlying
+measurement never fans out to both followers simultaneously, so their joint
+delay distribution is unknown.
+
+An empirical cumulative distribution F(t) is the fraction of observed RTTs no
+greater than t. For follower distributions F1 and F2, the cumulative probability
+of receiving the first reply is bounded by `max(F1, F2)` and `min(1, F1 + F2)`.
+Inverting these bounds gives latency ranges across possible relationships between
+the observed marginals. The independent-links scenario uses
+`1 - (1 - F1) * (1 - F2)` and is labeled separately.
+
+These bounds apply to the empirical marginals, not an unknown production
+population; they are not confidence intervals. The CDF inverse uses nearest-rank
+quantiles, unlike the interpolated descriptive tables. The single-follower-loss
+scenario uses the remaining link's measured RTTs without injecting a failure or
+election. The [findings](az-findings.md) show the resulting placement comparisons.
 
 ## Run and recover
 
 From the repository root on Linux (prefix with `orb -m ubuntu` on the Mac):
 
 ```sh
-python3 workbench/spikes/az-latency/launch.py
+python3 workbench/spikes/cft-commit-latency/launch.py
 python3 workbench/tools/worker_group.py wait build/az-latency/RUN/group.json
-python3 workbench/spikes/az-latency/summarize.py \
+python3 workbench/spikes/cft-commit-latency/summarize.py \
   build/workers/JOB1/results build/workers/JOB2/results \
   build/workers/JOB3/results build/workers/JOB4/results \
   build/workers/JOB5/results build/workers/JOB6/results \

@@ -1,0 +1,177 @@
+{
+  "utc": 1789410619.904536,
+  "jobs": [
+    "20260914T163740Z-12c9cc51",
+    "20260914T163744Z-25999be5",
+    "20260914T163802Z-b6b0d980",
+    "20260914T163753Z-7df950ea",
+    "20260914T163757Z-6b499468",
+    "20260914T163749Z-b4b1de59",
+    "20260914T170108Z-ab5168d6",
+    "20260914T165831Z-36a1ced9",
+    "20260914T165836Z-04b8b7c2",
+    "20260914T165841Z-8a3b4a16",
+    "20260914T165845Z-64397b04",
+    "20260914T174309Z-1ef3b830",
+    "20260914T174314Z-1baad953",
+    "20260914T174319Z-3c3e1c9f",
+    "20260914T181256Z-80a5bfc6",
+    "20260914T181301Z-b1ee791a",
+    "20260914T181306Z-c1a693aa"
+  ],
+  "instances": [
+    {
+      "id": "i-0810be9b8c3d4d6a6",
+      "state": "terminated",
+      "job": "20260914T165836Z-04b8b7c2"
+    },
+    {
+      "id": "i-0bfeb72e7151e7656",
+      "state": "terminated",
+      "job": "20260914T181301Z-b1ee791a"
+    },
+    {
+      "id": "i-0609c7cb7aac9875f",
+      "state": "terminated",
+      "job": "20260914T174314Z-1baad953"
+    },
+    {
+      "id": "i-0d56f6a32323eb716",
+      "state": "terminated",
+      "job": "20260914T174309Z-1ef3b830"
+    },
+    {
+      "id": "i-0b6680a7070b004e9",
+      "state": "terminated",
+      "job": "20260914T165831Z-36a1ced9"
+    },
+    {
+      "id": "i-0b781502c04d20b3d",
+      "state": "terminated",
+      "job": "20260914T181256Z-80a5bfc6"
+    },
+    {
+      "id": "i-0ff9b8d979db3163d",
+      "state": "terminated",
+      "job": "20260914T165845Z-64397b04"
+    },
+    {
+      "id": "i-00e2ece136aeb823c",
+      "state": "terminated",
+      "job": "20260914T165841Z-8a3b4a16"
+    },
+    {
+      "id": "i-02d71839e228ccb19",
+      "state": "terminated",
+      "job": "20260914T174319Z-3c3e1c9f"
+    },
+    {
+      "id": "i-02fe1ff76c0bc1376",
+      "state": "terminated",
+      "job": "20260914T181306Z-c1a693aa"
+    }
+  ],
+  "remaining_volumes": [],
+  "remaining_private_groups": [],
+  "receipts": [
+    {
+      "group": "20260914T163736Z-e940daf3",
+      "network_removed": true,
+      "members": {
+        "ebs-zen5": {
+          "exit_code": 0,
+          "utc": 1789406432.9358473
+        },
+        "hdd": {
+          "exit_code": 0,
+          "utc": 1789404678.0497406
+        },
+        "nvme-arm": {
+          "exit_code": 0,
+          "utc": 1789404149.1006536
+        },
+        "nvme-i4i": {
+          "exit_code": 0,
+          "utc": 1789404241.6678712
+        },
+        "nvme-i7i": {
+          "exit_code": 0,
+          "utc": 1789404161.6532152
+        },
+        "sata-ssd": {
+          "exit_code": 0,
+          "utc": 1789404434.5367017
+        }
+      }
+    },
+    {
+      "group": "20260914T170103Z-576d167b",
+      "network_removed": true,
+      "members": {
+        "d3-fua-check": {
+          "exit_code": 0,
+          "utc": 1789405454.6316004
+        }
+      }
+    },
+    {
+      "group": "20260914T165826Z-990528b5",
+      "network_removed": true,
+      "members": {
+        "use1-az1": {
+          "exit_code": 0,
+          "utc": 1789409520.3258317
+        },
+        "use1-az2": {
+          "exit_code": 0,
+          "utc": 1789409517.4871168
+        },
+        "use1-az4": {
+          "exit_code": 0,
+          "utc": 1789409523.9801447
+        },
+        "use1-az6": {
+          "exit_code": 0,
+          "utc": 1789409514.2161396
+        }
+      }
+    },
+    {
+      "group": "20260914T174304Z-790721aa",
+      "network_removed": true,
+      "members": {
+        "use1-az1": {
+          "exit_code": 1,
+          "utc": 1789408289.017913
+        },
+        "use1-az2": {
+          "exit_code": 1,
+          "utc": 1789408290.7175088
+        },
+        "use1-az4": {
+          "exit_code": 1,
+          "utc": 1789408292.3524256
+        }
+      }
+    },
+    {
+      "group": "20260914T181251Z-3dc76165",
+      "network_removed": true,
+      "members": {
+        "use1-az1": {
+          "exit_code": 1,
+          "utc": 1789410178.5981398
+        },
+        "use1-az2": {
+          "exit_code": 1,
+          "utc": 1789410178.5843897
+        },
+        "use1-az4": {
+          "exit_code": 1,
+          "utc": 1789409751.5113347
+        }
+      }
+    }
+  ],
+  "clean": true
+}

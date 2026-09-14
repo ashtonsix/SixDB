@@ -30,8 +30,8 @@ request counts. Oversize ICMP rejections are excluded from fitting-packet loss.
 From the repository root on Linux, prefixing with `orb -m ubuntu` on the Mac:
 
 ```sh
-python3 workbench/spikes/az-latency/recover.py \
-  workbench/spikes/az-latency/evidence/20260914 \
+python3 workbench/spikes/cft-commit-latency/recover.py \
+  workbench/spikes/cft-commit-latency/evidence/20260914 \
   --output build/az-latency/recovered-20260914
 ```
 
@@ -42,7 +42,7 @@ workers. For only the compact evidence, use the ordinary `artifacts.py fetch`
 command on this directory instead.
 
 `plot.py SUMMARY --output FIGURES` renders the figures using matplotlib 3.10.8.
-The [findings](../../FINDINGS.md) distinguish the measured link distributions from
+The [findings](../../az-findings.md) distinguish the measured link distributions from
 network-only consensus models and discuss the cohort's sampling limits.
 
 Recovery was exercised against all six S3 archives after retention. All eight

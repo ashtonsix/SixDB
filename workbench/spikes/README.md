@@ -19,7 +19,7 @@ Loose thoughts can stay in the [notebook](../notebook/ideas.md) indefinitely.
 - [Bec256 with current Ikea](bec256-composition/README.md): exact codec operations, native pairs and larger-bitset population/length directories built with SeriesPack and TuplePack.
 - [Executable placement](executable-placement/README.md): distinguishing changed code from placement effects.
 - [Memory characterisation](memory-characterisation/README.md): automatic MLP, prefetch, cache sharing and host diagnostics.
-- [AZ latency](az-latency/README.md): all us-east-1 AZ pairs, MTU/message-size sweeps and network-only CFT quorum comparisons.
+- [CFT commit latency](cft-commit-latency/README.md): durable quorum commits across AZ, hardware, persistence-method and transport choices; initial all-AZ latency evidence.
 - [Row filter signatures](row-filter-signatures/README.md): per-row Boolean evidence and progressive refinement.
 - [Aggregate maintenance](aggregate-maintenance/README.md): descendant summaries without excessive mutation cost.
 - [Trie remapping](trie-remapping/README.md): natural-key tries with difficult suffixes remapped to physical positions.

@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="666" viewBox="0 0 1120 666" role="img" aria-labelledby="title desc">
+  <title id="title">A quorum can commit while the third replica is still working</title>
+  <desc id="desc">Schematic for one record within the pipelined fixed-leader experiment. Latency starts at scheduled arrival and includes queueing, batch formation and preparation. Local persistence and both remote paths proceed together. In this example the leader is durable before follower A acknowledges, allowing commit. Follower B finishes later. The pipeline retains the batch slot until both followers acknowledge and sends finish. All durability applies to a contiguous log prefix. Horizontal lengths are illustrative, not measured durations.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#65717c"/></marker>
+    <marker id="green-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#187361"/></marker>
+  </defs>
+  <rect width="1120" height="666" rx="12" fill="#fbfcfd"/>
+  <g font-family="Arial, Helvetica, sans-serif" fill="#233047">
+    <text x="40" y="45" font-size="27" font-weight="700">A quorum can commit while the third replica is still working</text>
+    <text x="40" y="76" font-size="18" fill="#586579">One record in the pipeline · fixed leader · three AZs · schematic, with no time scale</text>
+
+    <path d="M48 146 V130 H792 V146" fill="none" stroke="#187361" stroke-width="2.5"/>
+    <text x="420" y="118" text-anchor="middle" font-size="20" font-weight="700" fill="#187361">Measured latency: scheduled arrival → quorum commit</text>
+
+    <circle cx="48" cy="194" r="5" fill="#233047"/>
+    <path d="M48 194 H73" fill="none" stroke="#65717c" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="80" y="159" width="235" height="70" rx="7" fill="#edf0f4" stroke="#cbd3de"/>
+    <text x="197.5" y="188" text-anchor="middle" font-size="19">Queue, form batch,</text>
+    <text x="197.5" y="213" text-anchor="middle" font-size="19">prepare record</text>
+    <path d="M315 194 H354 V433" fill="none" stroke="#65717c" stroke-width="2"/>
+    <text x="371" y="183" font-size="18" fill="#586579">Local write + both replications</text>
+    <text x="371" y="208" font-size="18" fill="#586579">proceed together</text>
+
+    <text x="315" y="283" text-anchor="end" font-size="20" font-weight="700">Leader</text>
+    <path d="M354 277 H374" fill="none" stroke="#65717c" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="380" y="252" width="232" height="50" rx="6" fill="#d6eeeb" stroke="#8bbdb6"/>
+    <text x="496" y="284" text-anchor="middle" font-size="19">Persist locally</text>
+    <circle cx="628" cy="277" r="6" fill="#187361"/>
+    <path d="M634 277 H792" fill="none" stroke="#187361" stroke-width="2" stroke-dasharray="5 5"/>
+    <text x="685" y="261" font-size="17" fill="#187361">Durable</text>
+
+    <text x="315" y="361" text-anchor="end" font-size="20" font-weight="700">Follower A</text>
+    <path d="M354 355 H374" fill="none" stroke="#65717c" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="380" y="330" width="100" height="50" rx="6" fill="#e2ecf6" stroke="#abc2dc"/>
+    <text x="430" y="362" text-anchor="middle" font-size="18">Request</text>
+    <rect x="485" y="330" width="173" height="50" rx="6" fill="#d6eeeb" stroke="#8bbdb6"/>
+    <text x="571.5" y="362" text-anchor="middle" font-size="19">Persist</text>
+    <rect x="663" y="330" width="109" height="50" rx="6" fill="#e2ecf6" stroke="#abc2dc"/>
+    <text x="717.5" y="362" text-anchor="middle" font-size="18">ACK</text>
+    <circle cx="792" cy="355" r="7" fill="#187361"/>
+
+    <text x="315" y="439" text-anchor="end" font-size="20" font-weight="700">Follower B</text>
+    <path d="M354 433 H374" fill="none" stroke="#65717c" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="380" y="408" width="150" height="50" rx="6" fill="#e2ecf6" stroke="#abc2dc"/>
+    <text x="455" y="440" text-anchor="middle" font-size="18">Request</text>
+    <rect x="535" y="408" width="333" height="50" rx="6" fill="#d6eeeb" stroke="#8bbdb6"/>
+    <text x="701.5" y="440" text-anchor="middle" font-size="19">Persist</text>
+    <rect x="873" y="408" width="127" height="50" rx="6" fill="#e2ecf6" stroke="#abc2dc"/>
+    <text x="936.5" y="440" text-anchor="middle" font-size="18">ACK</text>
+    <circle cx="1016" cy="433" r="6" fill="#65717c"/>
+
+    <path d="M792 149 V396" fill="none" stroke="#187361" stroke-width="2.5" stroke-dasharray="6 5"/>
+    <path d="M792 225 H820" fill="none" stroke="#187361" stroke-width="2" marker-end="url(#green-arrow)"/>
+    <text x="834" y="217" font-size="23" font-weight="700" fill="#187361">Commit</text>
+    <text x="834" y="245" font-size="18" fill="#187361">Leader + one follower</text>
+    <text x="834" y="271" font-size="18" fill="#187361">have a durable prefix</text>
+
+    <path d="M1016 447 V487 H694" fill="none" stroke="#65717c" stroke-width="1.8" marker-end="url(#arrow)"/>
+    <text x="679" y="491" text-anchor="end" font-size="19" font-weight="700">Release slot once both ACKs and sends finish</text>
+
+    <path d="M40 526 H1080" stroke="#d9dfe6"/>
+    <text x="40" y="559" font-size="19" font-weight="700">The third replica still affects future work.</text>
+    <text x="40" y="588" font-size="18">A retained slot occupies the bounded window. If the window fills, new arrivals wait.</text>
+    <text x="40" y="617" font-size="18">Here A supplies the first durable ACK; if the leader finishes last, local durability sets commit.</text>
+    <text x="40" y="644" font-size="17" fill="#586579">A durable prefix contains every preceding record. Later completions cannot skip a gap.</text>
+  </g>
+</svg>

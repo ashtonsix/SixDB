@@ -61,7 +61,7 @@ map it into another environment variable with `"PEERS": "{group_uri}"` in
 readiness. Peer discovery, barriers, phase ordering and readiness timeouts stay
 with the experiment; avoid control traffic during measurements.
 
-The [AZ-latency launcher](../spikes/az-latency/launch.py) is the worked example:
+The [CFT spike’s AZ-cohort launcher](../spikes/cft-commit-latency/launch.py) is the worked example:
 it chooses the six AZs and supplies network and script settings. The shared helper
 owns capture, submission, observation and cleanup. The study's `node.py` owns its
 rendezvous and timed phases. Worker deadlines still include setup, peer waits and

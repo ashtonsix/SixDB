@@ -1,0 +1,28 @@
+{
+  "quantiles": "Hyndman\u2013Fan type 7 linear interpolation of recorded samples; pooled percentiles and independent-pass spread are separate.",
+  "units": "Latency fields ending _us are microseconds; raw timestamps _ns are nanoseconds; rates are unique 4096-byte records per second; Unix timestamps are seconds.",
+  "analyzers": {
+    "summarize.py": "50c07e4467ff2103db47c4a97dfe2840df5e6a1b5f9adc3de051436cc40ba35a",
+    "persistence/analyze.py": "f5c2d4c515ec57131333d93b252f0ada64dd152664047c3b3bb676bd3afc50af",
+    "persistence/diagnostic_analyze.py": "10452c569e7a7b52c5ce2dd05097c0826987fbfbce7f1f30b24735c82cc96ea8",
+    "commit/analyze.py": "535d38d435df51771bea96c4d54b71604178a21b8a96459805d351a695265fed",
+    "commit/throughput_summary.py": "0dc37734b76c13a3752077f9ffe222f7a38c01dba06607c22f3a8334dc0c90c3",
+    "commit/throughput_analyze.py": "477da392869de18547140d191d23c80ae78e177475733b18ca58677448f3fb80",
+    "commit/network_summary.py": "05711219698fa78364b5280d122cf977e25272d46717498478bef75bec10444e",
+    "recover-durable.py": "f74c3f28a7763f828350faab45b1a5af5a97cbabe8f2f4bc89fca7d9b43a0741",
+    "plot-durable.py": "ad346ed4dc7ff7d80a2bf9cc98ad067e24ea59cef45a7bd0e08bd95f2737b443"
+  },
+  "counts": {
+    "throughput.csv": {
+      "configurations": 112,
+      "samples": 50811269
+    }
+  },
+  "analysis_source_archive_sha256": "9ab57952f43c85c38ba3266c61bf87ab6fc6dce23a75d420c247e9b0f283d34b",
+  "selected_numeric_sha256": {
+    "knees.csv": "9da43f878fca68dac003d11680db8251e9b85107f4242d2a3bb9a3708f525247",
+    "network-counters.csv": "fa31c85ee7a3d5a8b619ee2f501a13285e3ff46ee15812464019e716c3c33f69",
+    "throughput-passes.csv": "24f730e0c10a39abf1950c7fdcc3ca3c1f67c1c0c24a510d03801a0c329e4d3f",
+    "throughput.csv": "dd840dadee32f577aecbe0c2420eadbcf30c57924110843d3fa5707f892b499c"
+  }
+}

@@ -1,0 +1,9 @@
+layout,method,trace_file,data_writes,block_fua_writes,decoded_nvme_writes,decoded_nvme_fua_writes,flushes_after_first_data_write_before_recovery,first_data_write_line,first_recovery_read_line
+initialized,direct-dsync,initialized-direct-dsync-trace.txt,42,42,42,42,0,15,141
+initialized,direct-dsync-fdatasync,initialized-direct-dsync-fdatasync-trace.txt,42,42,42,42,42,15,267
+initialized,direct-fdatasync,initialized-direct-fdatasync-trace.txt,42,0,42,0,42,15,267
+initialized,uring-direct-dsync,initialized-uring-direct-dsync-trace.txt,42,42,42,42,0,15,141
+raw,direct-dsync,raw-direct-dsync-trace.txt,42,42,42,42,42,20,422
+raw,direct-dsync-fdatasync,raw-direct-dsync-fdatasync-trace.txt,42,42,41,41,84,9,537
+raw,direct-fdatasync,raw-direct-fdatasync-trace.txt,42,0,42,0,42,27,420
+raw,uring-direct-dsync,raw-uring-direct-dsync-trace.txt,42,42,42,42,0,27,153

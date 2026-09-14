@@ -1,0 +1,48 @@
+{
+  "utc": 1789411936.8493497,
+  "jobs": [
+    "20260914T175545Z-9f339acd",
+    "20260914T175550Z-ea51ec7b",
+    "20260914T175555Z-78dc2893"
+  ],
+  "instances": [
+    {
+      "id": "i-0207cd3737738539a",
+      "state": "terminated",
+      "job": "20260914T175550Z-ea51ec7b"
+    },
+    {
+      "id": "i-00dfc59269d4e5e94",
+      "state": "terminated",
+      "job": "20260914T175545Z-9f339acd"
+    },
+    {
+      "id": "i-0af470a41ee08ab0f",
+      "state": "terminated",
+      "job": "20260914T175555Z-78dc2893"
+    }
+  ],
+  "remaining_volumes": [],
+  "remaining_private_groups": [],
+  "receipts": [
+    {
+      "group": "20260914T175540Z-cf37fba4",
+      "network_removed": true,
+      "members": {
+        "use1-az1": {
+          "exit_code": 0,
+          "utc": 1789411692.1391792
+        },
+        "use1-az2": {
+          "exit_code": 0,
+          "utc": 1789411689.976597
+        },
+        "use1-az4": {
+          "exit_code": 0,
+          "utc": 1789411751.6253688
+        }
+      }
+    }
+  ],
+  "clean": true
+}
