@@ -68,6 +68,8 @@ def profile(config, source):
     keys = ('region', 'bucket', 'instance_type', 'ami', 'architecture', 'disk_gb',
             'threads_per_core', 'setup', 'vpc_id', 'security_group_id', 'instance_profile', 'public_ip')
     settings = {key: config.get(key) for key in keys}
+    if config.get('data_volumes') or config.get('instance_store_count'):
+        settings.update({key: config.get(key) for key in ('data_volumes', 'instance_store_count', 'instance_store_mappings')})
     settings['code'] = {key: source[key] for key in ('runtime_sha256', 'pool_sha256', 'setup_sha256')}
     return hashlib.sha256(json.dumps(settings, sort_keys=True).encode()).hexdigest()
 

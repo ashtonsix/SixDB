@@ -190,7 +190,14 @@ class GroupCheck(unittest.TestCase):
 
     def test_network_cleanup_retries_dependencies_and_accepts_absence(self):
         self.network()
+        self.group.update(network=self.group.read()['network'] | {'udp_ports': [[43002, 43003]]})
         self.group.launch()
+        rules = next(c.kwargs['IpPermissions'] for c in self.aws.call.call_args_list
+                     if c.args[1] == 'authorize-security-group-ingress')
+        self.assertEqual(rules, [
+            {'IpProtocol': 'tcp', 'FromPort': 43000, 'ToPort': 43001, 'UserIdGroupPairs': [{'GroupId': 'sg-fixture'}]},
+            {'IpProtocol': 'udp', 'FromPort': 43002, 'ToPort': 43003, 'UserIdGroupPairs': [{'GroupId': 'sg-fixture'}]},
+            {'IpProtocol': 'icmp', 'FromPort': -1, 'ToPort': -1, 'UserIdGroupPairs': [{'GroupId': 'sg-fixture'}]}])
         self.delete_failures = 1
         self.assertEqual(self.group.wait(), 0)
         deletes = [c for c in self.aws.call.call_args_list if c.args[1] == 'delete-security-group']
@@ -269,6 +276,15 @@ class GroupCheck(unittest.TestCase):
                                 for e in private.read()['members'].values()))
             with self.assertRaisesRegex(ValueError, 'existing group'):
                 groups.create(spec, self.root / 'new-group', source=source)
+
+    def test_invalid_udp_ranges_fail_before_capture_or_cloud_calls(self):
+        for ports in ([[0, 3]], [[3, 2]], [[1, 65536]], [[True, 2]], [['1', 2]], [3]):
+            with self.subTest(ports=ports), patch.object(groups.capture, 'capture') as capture:
+                with self.assertRaisesRegex(ValueError, 'TCP/UDP'):
+                    groups.create({'script': 'probe.sh', 'members': {'a': {}},
+                        'network': {'vpc_id': 'vpc-fixture', 'udp_ports': ports}}, self.root / 'bad-group')
+                capture.assert_not_called()
+                self.aws.call.assert_not_called()
 
     def test_real_preparation_and_dispatch_use_identical_capture_and_literal_arguments(self):
         source = self.root / 'source'

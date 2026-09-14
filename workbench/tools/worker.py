@@ -35,7 +35,7 @@ CAPACITY_ERRORS = {'InsufficientInstanceCapacity', 'InsufficientFreeAddressesInS
                    'UnfulfillableCapacity', 'Unsupported', 'SpotMaxPriceTooLow'}
 FINAL = {'complete', 'failed', 'timeout', 'interrupted', 'upload-failed'}
 RESERVED = {'SIXDB_RESULTS', 'SIXDB_SOURCE', 'SIXDB_JOB', 'SIXDB_RESULTS_S3',
-            'SIXDB_SOURCE_COMMIT', 'SIXDB_WORKER_ID', 'SIXDB_WORKER_REUSED', 'AWS_REGION', 'AWS_DEFAULT_REGION'}
+            'SIXDB_SOURCE_COMMIT', 'SIXDB_WORKER_ID', 'SIXDB_WORKER_REUSED', 'SIXDB_DEVICES', 'AWS_REGION', 'AWS_DEFAULT_REGION'}
 
 
 class AwsError(RuntimeError):
@@ -120,6 +120,23 @@ def configuration(args, defaults):
     config['env'] = dict(config.get('env', {})) | environment(getattr(args, 'env', []))
     environment([f'{k}={v}' for k, v in config['env'].items()])
     config['env'] = {k: str(v) for k, v in config['env'].items()}
+    volumes = config.get('data_volumes', [])
+    if not isinstance(volumes, list):
+        raise ValueError('data_volumes must be a list of named new gp3/io2 volumes')
+    names = set()
+    for volume in volumes:
+        if (not isinstance(volume, dict) or set(volume) - {'name', 'type', 'size_gib', 'iops', 'throughput_mib_s'} or
+                not isinstance(volume.get('name'), str) or not re.fullmatch(r'[A-Za-z0-9_-]+', volume['name']) or volume['name'] in names or
+                volume.get('type') not in {'gp3', 'io2'} or type(volume.get('size_gib')) is not int or volume['size_gib'] <= 0):
+            raise ValueError('data volumes need distinct names, gp3/io2 type and positive integer size_gib; attachment names are assigned')
+        names.add(volume['name'])
+        if volume['type'] == 'io2' and ('iops' not in volume or 'throughput_mib_s' in volume):
+            raise ValueError('io2 needs iops and does not accept throughput_mib_s')
+        if any(type(volume[k]) is not int or volume[k] <= 0 for k in ('iops', 'throughput_mib_s') if k in volume):
+            raise ValueError('volume IOPS and throughput must be positive integers')
+    count = config.get('instance_store_count', 0)
+    if type(count) is not int or count < 0:
+        raise ValueError('instance_store_count must be a nonnegative integer')
     if config['capacity'] not in {'spot', 'on-demand', 'spot-or-on-demand'}:
         raise ValueError('unknown capacity choice')
     if config['setup'] not in {'toolchain', 'minimal'}:
@@ -142,9 +159,40 @@ def resolve(config, aws):
     if image['State'] != 'available' or image['Architecture'] not in hardware['ProcessorInfo']['SupportedArchitectures']:
         raise ValueError('AMI is unavailable or incompatible with instance architecture')
     config['hardware'] = {k: hardware[k] for k in ('VCpuInfo', 'MemoryInfo', 'ProcessorInfo')}
+    config['hardware'].update({k: hardware[k] for k in ('InstanceStorageInfo', 'EbsInfo', 'Hypervisor') if k in hardware})
     config['architecture'] = image['Architecture']
     config['root_device'] = image['RootDeviceName']
     config['image_name'] = image['Name']
+    info = hardware.get('InstanceStorageInfo', {})
+    count = config.get('instance_store_count', 0)
+    if count > sum(d['Count'] for d in info.get('Disks', [])):
+        raise ValueError('instance_store_count exceeds the instance type local-disk count')
+    config['instance_store_nvme'] = info.get('NvmeSupport') == 'required'
+    if config.get('data_volumes') and hardware.get('Hypervisor') != 'nitro':
+        raise ValueError('named EBS data-volume discovery currently requires a Nitro instance')
+    # Reserve AMI mappings, including sd/xvd aliases, before assigning new disks.
+    def slot(device):
+        return re.sub(r'\d+$', '', device.removeprefix('/dev/').replace('xvd', 'sd', 1))
+    used = {slot(b['DeviceName']) for b in image.get('BlockDeviceMappings', [])} | {slot(config['root_device'])}
+    def attachment(letters):
+        for letter in letters:
+            name = 'sd' + letter
+            if name not in used:
+                used.add(name)
+                return '/dev/' + name
+        raise ValueError('not enough unused attachment names for requested data disks')
+    inherited = {b['VirtualName']: b['DeviceName'] for b in image.get('BlockDeviceMappings', []) if b.get('VirtualName')}
+    config['instance_store_mappings'] = []
+    if not config['instance_store_nvme']:
+        for i in range(count):
+            name = f'ephemeral{i}'
+            device = inherited.get(name) or attachment('bcdefghijklmnopqrstuvwxyz')
+            if slot(device) == slot(config['root_device']):
+                raise ValueError('instance-store mapping overlaps the root device')
+            config['instance_store_mappings'].append({'name': name, 'attachment': device})
+    config['data_volumes'] = [v | {'attachment': attachment('fghijklmnopqrstuvwxyzbcde'),
+        'iops': v.get('iops', 3000), **({'throughput_mib_s': v.get('throughput_mib_s', 125)} if v['type'] == 'gp3' else {})}
+        for v in config.get('data_volumes', [])]
     if config.get('threads_per_core') not in (None, hardware['VCpuInfo']['DefaultThreadsPerCore']):
         if config['threads_per_core'] not in hardware['VCpuInfo'].get('ValidThreadsPerCore', []):
             raise ValueError('threads_per_core is unsupported for this instance type')
@@ -254,6 +302,7 @@ def boot_script(job):
     uri = shlex.quote(job['uri'] + '/runtime.py')
     pool_uri = shlex.quote(job['uri'] + '/worker_pool.py')
     max_age = config.get('max_age_seconds', config['deadline_seconds'])
+    disk_package = ' amazon-ec2-utils' if config.get('data_volumes') else ''
     script = f'''#!/bin/bash
 set -euo pipefail
 mkdir -p /opt/sixdb
@@ -264,7 +313,7 @@ trap '/sbin/shutdown -h now' EXIT
 echo {shlex.quote(encoded)} | base64 -d > /opt/sixdb/job.json
 export DEBIAN_FRONTEND=noninteractive AWS_DEFAULT_REGION={region} AWS_REGION={region}
 apt-get update -qq
-apt-get install -y -qq curl unzip ca-certificates python3 git
+apt-get install -y -qq curl unzip ca-certificates python3 git{disk_package}
 if ! command -v aws >/dev/null; then
   curl --fail --retry 3 -sS "https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m).zip" -o /opt/sixdb/aws.zip
   unzip -q /opt/sixdb/aws.zip -d /opt/sixdb/aws-install
@@ -300,6 +349,14 @@ def launch_request(job, subnet, capacity):
         UserData=boot_script(job | {'config': config | {'actual_capacity': capacity},
                                    'worker': {'id': job['id'], 'reused': False, 'subnet_id': subnet['id']}}),
         TagSpecifications=[{'ResourceType': kind, 'Tags': tags} for kind in ('instance', 'volume')])
+    for volume in config.get('data_volumes', []):
+        ebs = {'VolumeSize': volume['size_gib'], 'VolumeType': volume['type'], 'Iops': volume['iops'],
+               'Encrypted': True, 'DeleteOnTermination': True}
+        if volume['type'] == 'gp3':
+            ebs['Throughput'] = volume['throughput_mib_s']
+        request['BlockDeviceMappings'].append({'DeviceName': volume['attachment'], 'Ebs': ebs})
+    request['BlockDeviceMappings'] += [{'DeviceName': v['attachment'], 'VirtualName': v['name']}
+                                      for v in config.get('instance_store_mappings', [])]
     if config.get('threads_per_core'):
         request['CpuOptions'] = {'CoreCount': config['hardware']['VCpuInfo']['DefaultCores'],
                                  'ThreadsPerCore': config['threads_per_core']}

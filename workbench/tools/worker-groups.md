@@ -41,7 +41,12 @@ An optional `network` entry creates one temporary security group with only
 self-referencing ingress, for example:
 
 ```json
-"network": {"vpc_id": "vpc-...", "tcp_ports": [[43000, 43001]], "icmp": true}
+"network": {
+  "vpc_id": "vpc-...",
+  "tcp_ports": [[43000, 43001]],
+  "udp_ports": [[43002, 43002]],
+  "icmp": true
+}
 ```
 
 Members can select subnets with `config.subnets: ["subnet-..."]`. Private-group

@@ -63,8 +63,9 @@ class Group:
                         {'Key': 'Project', 'Value': 'SixDB'}, {'Key': 'SixDBWorkerGroup', 'Value': state['id']}]}])['GroupId']
                 network['id'] = group_id
                 self.update(network=network)
-                rules = [{'IpProtocol': 'tcp', 'FromPort': a, 'ToPort': b,
-                          'UserIdGroupPairs': [{'GroupId': group_id}]} for a, b in network.get('tcp_ports', [])]
+                rules = [{'IpProtocol': protocol, 'FromPort': a, 'ToPort': b,
+                          'UserIdGroupPairs': [{'GroupId': group_id}]}
+                         for protocol in ('tcp', 'udp') for a, b in network.get(protocol + '_ports', [])]
                 if network.get('icmp'):
                     rules.append({'IpProtocol': 'icmp', 'FromPort': -1, 'ToPort': -1,
                                   'UserIdGroupPairs': [{'GroupId': group_id}]})
@@ -239,9 +240,10 @@ def create(spec, directory=None, *, source=worker.ROOT):
         raise ValueError('provide named group members')
     network = spec.get('network')
     if network:
-        if not network.get('vpc_id') or any(not (len(p) == 2 and 0 < p[0] <= p[1] <= 65535)
-                                              for p in network.get('tcp_ports', [])):
-            raise ValueError('network needs a VPC ID and TCP port ranges within 1..65535')
+        if not network.get('vpc_id') or any(not (isinstance(p, list) and len(p) == 2
+                and all(type(n) is int for n in p) and 0 < p[0] <= p[1] <= 65535)
+                for protocol in ('tcp', 'udp') for p in network.get(protocol + '_ports', [])):
+            raise ValueError('network needs a VPC ID and TCP/UDP port ranges within 1..65535')
         network = network | {'name': 'sixdb-group-' + group_id}
     members = {}
     for name, entry in spec['members'].items():

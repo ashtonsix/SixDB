@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 from pathlib import Path, PurePosixPath
+import re
 import shutil
 import signal
 import subprocess
@@ -41,7 +42,7 @@ def extract(bundle, destination):
             output.chmod(member.mode & 0o777)
 
 
-def metadata(path):
+def metadata(path, *, text=False):
     base = 'http://169.254.169.254/latest/'
     request = urllib.request.Request(base + 'api/token', method='PUT',
         headers={'X-aws-ec2-metadata-token-ttl-seconds': '60'})
@@ -49,7 +50,99 @@ def metadata(path):
         token = response.read().decode()
     request = urllib.request.Request(base + path, headers={'X-aws-ec2-metadata-token': token})
     with urllib.request.urlopen(request, timeout=2) as response:
-        return json.loads(response.read())
+        body = response.read().decode()
+        return body.strip() if text else json.loads(body)
+
+
+def data_devices(config):
+    """Identify requested disks without formatting, mounting or writing to them."""
+    def read(command):
+        return subprocess.run(command, check=True, text=True, capture_output=True, timeout=15).stdout
+
+    inventory = json.loads(read(['lsblk', '--json', '--bytes', '--paths', '--output',
+                                'NAME,TYPE,SIZE,MODEL,SERIAL,MOUNTPOINTS']))
+    disks, roots = {}, set()
+    root_found = False
+
+    def visit(node, parents=()):
+        nonlocal root_found
+        if node['type'] == 'disk':
+            parents += (node['name'],)
+            disks.setdefault(node['name'], {'device': node['name'], 'size_bytes': int(node['size']),
+                'model': (node.get('model') or '').strip(), 'serial': (node.get('serial') or '').strip(),
+                'mountpoints': set()})
+        mounts = {m for m in node.get('mountpoints', []) if m}
+        for parent in parents:
+            disks[parent]['mountpoints'].update(mounts)
+        if '/' in mounts:
+            root_found = bool(parents) or root_found
+        if mounts & {'/', '/boot', '/boot/efi'}:
+            roots.update(parents)
+        for child in node.get('children', []):
+            visit(child, parents)
+
+    for node in inventory['blockdevices']:
+        visit(node)
+    if not root_found:
+        raise ValueError('cannot establish root-disk ancestry; refusing data-device discovery')
+    for disk in disks.values():
+        disk['mountpoints'] = sorted(disk['mountpoints'])
+    available = [d for name, d in sorted(disks.items()) if name not in roots]
+    result = {'format': 1, 'ebs': {}, 'instance_store': [], 'root_devices': sorted(roots)}
+
+    def attachment(value):
+        value = value.strip().removeprefix('/dev/')
+        if not re.fullmatch(r'(sd|xvd)[a-z]+', value):
+            raise ValueError(f'invalid whole-disk attachment name: {value!r}')
+        return '/dev/' + re.sub(r'^xvd', 'sd', value)
+
+    wanted = {attachment(v['attachment']): v for v in config.get('data_volumes', [])}
+    volume_ids = set()
+    if wanted:
+        for disk in available:
+            if disk['model'] != 'Amazon Elastic Block Store':
+                continue
+            # AWS vendor data carries the launch attachment name; NVMe order does not.
+            output = read(['ebsnvme-id', disk['device']]).strip().splitlines()
+            if len(output) != 2 or not re.fullmatch(r'Volume ID: vol-[0-9a-f]+', output[0]):
+                raise ValueError(f'unrecognized ebsnvme-id output for {disk["device"]}: {output!r}')
+            label, volume_id = attachment(output[1]), output[0].removeprefix('Volume ID: ')
+            if label not in wanted:
+                continue
+            volume = wanted[label]
+            if volume['name'] in result['ebs'] or volume_id in volume_ids:
+                raise ValueError(f'ambiguous EBS mapping for {label}')
+            if (disk['serial'].replace('-', '') != volume_id.replace('-', '') or
+                    disk['size_bytes'] != volume['size_gib'] * 1024**3):
+                raise ValueError(f'EBS identity/size mismatch for {label}')
+            volume_ids.add(volume_id)
+            result['ebs'][volume['name']] = disk | {'volume_id': volume_id, 'attachment': label,
+                **{k: volume[k] for k in ('type', 'iops', 'throughput_mib_s') if k in volume}}
+        missing = {v['name'] for v in wanted.values()} - result['ebs'].keys()
+        if missing:
+            raise ValueError(f'requested EBS disks missing or excluded as root: {sorted(missing)}')
+
+    count = config.get('instance_store_count', 0)
+    if count and config['instance_store_nvme']:
+        result['instance_store'] = [d | {'identity': 'nvme-model-and-serial'} for d in available
+            if d['model'] == 'Amazon EC2 NVMe Instance Storage' and d['serial']]
+        if len(result['instance_store']) < count:
+            raise ValueError(f'expected at least {count} non-root NVMe instance-store disks')
+    elif count:
+        seen = set()
+        for mapping in config['instance_store_mappings']:
+            label = attachment(metadata('meta-data/block-device-mapping/' + mapping['name'], text=True))
+            if label != attachment(mapping['attachment']):
+                raise ValueError(f'instance-store IMDS mapping mismatch for {mapping["name"]}')
+            matches = [d for d in available if re.fullmatch(r'/dev/(sd|xvd)[a-z]+', d['device'])
+                       and attachment(d['device']) == label]
+            if len(matches) != 1 or matches[0]['device'] in seen:
+                raise ValueError(f'missing, root or ambiguous instance-store disk: {mapping["name"]}')
+            seen.add(matches[0]['device'])
+            result['instance_store'].append(matches[0] | {'name': mapping['name'], 'identity': 'imds:' + mapping['name']})
+        if len(result['instance_store']) != count:
+            raise ValueError('instance-store mapping count mismatch')
+    return result
 
 
 def terminate_group(process):
@@ -210,6 +303,10 @@ class Worker:
                     'SIXDB_RESULTS': str(self.results), 'SIXDB_SOURCE': str(self.source),
                     'SIXDB_JOB': self.job['id'], 'SIXDB_RESULTS_S3': self.job['uri'] + '/live/',
                     'SIXDB_SOURCE_COMMIT': self.job['source_commit']}
+            if self.config.get('data_volumes') or self.config.get('instance_store_count'):
+                devices = self.results / 'devices.json'
+                devices.write_text(json.dumps(data_devices(self.config), indent=2) + '\n')
+                env['SIXDB_DEVICES'] = str(devices)
             self.status('running')
             script_started = time.time()
             command = ['bash', self.job['script'], *self.job['args']]

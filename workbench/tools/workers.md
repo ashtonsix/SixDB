@@ -55,6 +55,7 @@ not secrets. Local AWS credentials are not copied to the worker.
 | `SIXDB_DATA_CACHE` | Shared prepared inputs outside collected results |
 | `SIXDB_JOB`, `SIXDB_SOURCE_COMMIT` | Job ID and original local HEAD |
 | `SIXDB_WORKER_ID`, `SIXDB_WORKER_REUSED` | Instance session and `0`/`1` reuse indicator |
+| `SIXDB_DEVICES` | [Requested data-disk identities](#data-disks), when configured |
 | `SIXDB_RESULTS_S3` | Mutable `live/` prefix for optional script checkpoints |
 
 Setup installs pinned Clang, LLVM tools, CMake, Ninja, Git, Python/PyYAML and a C++
@@ -118,3 +119,52 @@ An overlay can supply `vpc_id`, `subnets`, `public_ip`, `security_group_id` and
 `instance_profile` instead. Subnets need outbound package/S3 access; custom
 profiles need access to shared input stores as well as the chosen result bucket.
 [Offline checks](tests/README.md) cover helper development.
+
+## Data disks
+
+Storage experiments can request new disposable EBS disks in a settings overlay
+(or in a group member's `config`):
+
+```json
+{
+  "data_volumes": [
+    {"name": "bulk", "type": "gp3", "size_gib": 32},
+    {"name": "wal", "type": "io2", "size_gib": 32, "iops": 3000}
+  ]
+}
+```
+
+Names are distinct letters, digits, underscores or hyphens. gp3 defaults to
+3000 IOPS and 125 MiB/s; `iops` and `throughput_mib_s` override these. io2 requires
+`iops` and has no throughput setting. AWS checks current size/performance limits.
+Attachments are assigned away from the AMI's mappings. These encrypted volumes
+are created with the instance and deleted when it terminates.
+
+For local disks, set `"instance_store_count": 1` and select a supporting instance
+type. This requests `ephemeral0` on legacy hosts such as I2. On NVMe hosts, AWS
+attaches all local disks automatically; the count is a minimum and the manifest
+includes all identified non-root local disks. See [AWS instance-store attachment
+semantics](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/add-instance-store-volumes.html).
+
+Before the script runs, `$SIXDB_DEVICES` points to `$SIXDB_RESULTS/devices.json`:
+
+- `format: 1`, with `ebs` keyed by logical name. Entries include `device`,
+  `volume_id`, `attachment`, `size_bytes`, `model`, `serial` and `mountpoints`,
+  plus requested `type`, `iops` and gp3 `throughput_mib_s`.
+- `instance_store` is a separate list with `device`, `size_bytes`, `model`,
+  `serial`, `mountpoints` and `identity`; legacy mappings also have `name`.
+- `root_devices` lists excluded whole disks, including root/boot ancestry.
+
+Named EBS discovery currently requires Nitro. The worker installs Ubuntu's
+`amazon-ec2-utils` and uses `ebsnvme-id` to match volume IDs and launch attachment
+names; [NVMe enumeration order is not stable](https://docs.aws.amazon.com/ebs/latest/userguide/identify-nvme-ebs-device.html).
+Local NVMe identification uses model/serial; legacy mappings use IMDS and the
+corresponding non-root whole disk. Missing or ambiguous identities fail the job
+before its script starts.
+
+The helper does not format, mount or write disks. The study owns initialization,
+filesystem/raw access and evidence of persistence semantics; this manifest makes
+no PLP claim. Compatible reuse preserves data-disk contents and mounts. Use
+`--fresh` when a new disk is part of the experiment; changed disk requirements
+select a different worker profile. `check.py worker_devices` checks discovery
+and launch behavior offline.
