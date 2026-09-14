@@ -2,10 +2,12 @@
 """Launch named workers from one capture; resume collection or cancel a recorded group."""
 import argparse
 import concurrent.futures
+from collections import Counter
 from datetime import datetime, timezone
 import json
 from pathlib import Path
 import re
+import shlex
 import sys
 import threading
 import time
@@ -14,6 +16,8 @@ import uuid
 import capture
 import storage
 import worker
+import worker_network as networks
+from worker_context import put
 
 
 def identifier():
@@ -28,12 +32,45 @@ class Group:
     def read(self):
         return json.loads(self.receipt.read_text())
 
+    def uri(self):
+        state = self.read()
+        return state.get('uri', f's3://{state["bucket"]}/sixdb/worker-groups/{state["id"]}')
+
+    def control(self, **fields):
+        with storage.lock(self.directory / '.control.lock'):
+            state = self.read()
+            try:
+                put(worker.Aws(state['region']), self.uri() + '/control.json',
+                    {k: state[k] for k in ('aborted', 'launch_error', 'launch_complete',
+                        'network', 'network_removed', 'network_error', 'network_checked_at') if k in state}
+                    | fields | {'updated_at': time.time()})
+                self.update(control_error=None)
+            except Exception as error:
+                self.update(control_error=str(error))
+                print(f'Group control publication failed: {error}', file=sys.stderr, flush=True)
+
+    def publish(self, name, value):
+        """Release a study-owned startup condition after controller-side preparation."""
+        from worker_context import label
+        state = self.read()
+        put(worker.Aws(state['region']), self.uri() + '/values/' + label(name) + '/controller.json',
+            {'job': state['id'], 'member': 'controller', 'value': value, 'updated_at': time.time()})
+
     def update(self, member=None, **fields):
         # Wait and cancel may be separate controllers. Never replace their
         # independently recorded outcomes with an earlier in-memory copy.
         with storage.lock(self.directory / '.receipt.lock'):
             state = self.read()
             target = state if member is None else state['members'][member]
+            if 'collection' in fields:
+                # Partial checkpoints cannot replace already recovered immutable evidence.
+                previous = target.get('collection', {})
+                incoming = fields['collection']
+                if previous.get('artifact') and not incoming.get('artifact'):
+                    incoming = incoming | {k: previous[k] for k in ('artifact', 'results') if k in previous}
+                if 'exit_code' not in incoming and 'exit_code' in previous:
+                    incoming['exit_code'] = previous['exit_code']
+                fields['collection'] = incoming
             target.update(fields)
             storage.write_json(self.receipt, state)
 
@@ -49,28 +86,16 @@ class Group:
             if state.get('launch_started') or state.get('aborted'):
                 raise ValueError('group launch already attempted; use wait/status/cancel')
             self.update(launch_started=True)
-            self._launch()
+            with networks.lock(state):
+                self._launch()
 
     def _launch(self):
         state = self.read()
         try:
+            # Immutable membership exists even if a peer fails before running its script.
+            put(worker.Aws(state['region']), self.uri() + '/manifest.json', state | {'uri': self.uri()})
             if state.get('network'):
-                network = state['network']
-                aws = worker.Aws(state['region'])
-                group_id = aws.call('ec2', 'create-security-group', GroupName=network['name'],
-                    Description='Temporary SixDB worker group', VpcId=network['vpc_id'],
-                    TagSpecifications=[{'ResourceType': 'security-group', 'Tags': [
-                        {'Key': 'Project', 'Value': 'SixDB'}, {'Key': 'SixDBWorkerGroup', 'Value': state['id']}]}])['GroupId']
-                network['id'] = group_id
-                self.update(network=network)
-                rules = [{'IpProtocol': protocol, 'FromPort': a, 'ToPort': b,
-                          'UserIdGroupPairs': [{'GroupId': group_id}]}
-                         for protocol in ('tcp', 'udp') for a, b in network.get(protocol + '_ports', [])]
-                if network.get('icmp'):
-                    rules.append({'IpProtocol': 'icmp', 'FromPort': -1, 'ToPort': -1,
-                                  'UserIdGroupPairs': [{'GroupId': group_id}]})
-                if rules:
-                    aws.call('ec2', 'authorize-security-group-ingress', GroupId=group_id, IpPermissions=rules)
+                group_id = networks.ensure(state, worker.Aws(state['region']), self.update)
             for name, entry in state['members'].items():
                 if self.read().get('aborted'):
                     raise RuntimeError('group was cancelled during launch')
@@ -91,9 +116,11 @@ class Group:
                 self.update(name, phase='submitted')
         except BaseException as error:
             self.update(launch_error=str(error) or type(error).__name__)
+            self.control(launch_error=str(error) or type(error).__name__)
             print(f'Partial group recorded: {self.receipt}\nUse worker_group.py wait or cancel; do not rerun the launch.', file=sys.stderr)
             raise
         self.update(launch_complete=True)
+        self.control(launch_complete=True)
 
     def observe(self, name, stop=None):
         entry = self.read()['members'][name]
@@ -112,7 +139,7 @@ class Group:
                 if stop is not None and stop.is_set():
                     return {'detached': True}
                 self.update(name, observation_error=str(error))
-                end = entry['job_created_at'] + entry['config']['deadline_seconds'] + 300
+                end = entry.get('job_created_at', 0) + entry['config']['deadline_seconds'] + 300
                 if time.time() >= end:
                     result = {'error': str(error), 'deadline_elapsed': True}
                     break
@@ -122,6 +149,8 @@ class Group:
                 else:
                     stop.wait(10)
         self.update(name, collection=result | {'utc': time.time()})
+        print(f"{name}: collection {'complete' if result.get('exit_code') == 0 else 'incomplete/failed'}; "
+              f"{worker.JOBS / entry['job']}", flush=True)
         return result
 
     def cancel_member(self, name):
@@ -141,46 +170,12 @@ class Group:
 
     def remove_network(self):
         state = self.read()
-        network = state.get('network')
-        if not network or state.get('network_removed'):
-            return True
-        aws = worker.Aws(state['region'])
-        try:
-            # The name is recorded before create. Discover an accepted create
-            # whose response was lost, without creating a second resource.
-            groups = aws.call('ec2', 'describe-security-groups', Filters=[
-                {'Name': 'group-name', 'Values': [network['name']]},
-                {'Name': 'vpc-id', 'Values': [network['vpc_id']]}])['SecurityGroups']
-            for group in groups:
-                tags = {t['Key']: t['Value'] for t in group.get('Tags', [])}
-                if tags.get('SixDBWorkerGroup') != state['id']:
-                    raise ValueError('security group ownership differs; preserved')
-                group_id = group['GroupId']
-                for attempt in range(60):
-                    reservations = aws.call('ec2', 'describe-instances', Filters=[
-                        {'Name': 'instance.group-id', 'Values': [group_id]}])['Reservations']
-                    if not any(i['State']['Name'] != 'terminated' for r in reservations for i in r['Instances']):
-                        break
-                    time.sleep(5)
-                else:
-                    raise RuntimeError('instances still reference the security group; retry cleanup later')
-                if group.get('IpPermissions'):
-                    aws.call('ec2', 'revoke-security-group-ingress', GroupId=group_id, IpPermissions=group['IpPermissions'])
-                for attempt in range(12):
-                    try:
-                        aws.call('ec2', 'delete-security-group', GroupId=group_id)
-                        break
-                    except worker.AwsError as error:
-                        if error.code == 'InvalidGroup.NotFound':
-                            break
-                        if error.code != 'DependencyViolation' or attempt == 11:
-                            raise
-                        time.sleep(5)
-            self.update(network_removed=True, network_error=None)
-            return True
-        except Exception as error:
-            self.update(network_error=str(error))
-            return False
+        with networks.lock(state):
+            removed = networks.remove(state, worker.Aws(state['region']), self.update)
+            self.control()
+            if state.get('network'):
+                print('Private network removed' if removed else 'Private network cleanup pending: ' + self.read()['network_error'], flush=True)
+            return removed
 
     def wait(self):
         with storage.lock(self.directory / '.dispatch.lock'):
@@ -200,9 +195,9 @@ class Group:
             result = entry['collection']
             # Private-group hosts are dedicated. An observation error before
             # the deadline grants no authority to cancel an active measurement.
-            if result.get('deadline_elapsed') or (state.get('network') and 'exit_code' in result):
+            if result.get('deadline_elapsed') or (state.get('network') and not state['network'].get('scope') and 'exit_code' in result):
                 clean = self.cancel_member(name) and clean
-        if state.get('network'):
+        if state.get('network') and not state['network'].get('scope'):
             clean = self.remove_network() and clean
         state = self.read()
         complete = state.get('launch_complete', False) and not state.get('aborted') and all(
@@ -211,23 +206,147 @@ class Group:
 
     def cancel(self):
         self.update(aborted=True)
+        self.control(aborted=True)
         with storage.lock(self.directory / '.dispatch.lock'):
             clean = True
             for name in self.read()['members']:
                 clean = self.cancel_member(name) and clean
-            return 0 if self.remove_network() and clean else 1
+            if not (self.read().get('network') or {}).get('scope'):
+                clean = self.remove_network() and clean
+            return 0 if clean else 1
 
     def status(self):
         state = self.read()
-        for name, entry in state['members'].items():
+        def inspect(item):
+            name, entry = item
             try:
                 located = self.job(name)
                 if located:
-                    _, job = located
-                    entry['worker_status'] = worker.status(job, worker.Aws(job['config']['region']))
+                    directory, job = located
+                    aws = worker.Aws(job['config']['region'])
+                    entry['worker_status'] = worker.status(job, aws)
+                    entry['source_commit'] = job.get('source_commit')
+                    entry['source_sha256'] = job.get('source', {}).get('sha256')
+                    entry['results'] = str(directory / 'results')
+                    entry.pop('observation_error', None)
+                    try:
+                        instances = [{'id': i['InstanceId'], 'state': i['State']['Name']}
+                                     for i in worker.instances(job, aws)]
+                        if instances or not entry.get('instances'):
+                            entry['instances'] = instances
+                            entry['resource_observed_at'] = time.time()
+                            self.update(name, instances=instances, resource_observed_at=entry['resource_observed_at'])
+                        else:
+                            entry['resource_note'] = 'no longer listed by EC2; showing last observation'
+                        assignment = aws.get_json(state['bucket'], job['prefix'] + '/assignment.json') if job.get('prefix') else None
+                        if assignment:
+                            entry['session'] = aws.get_json(state['bucket'], worker.pool.state_key(assignment['worker_id']))
+                    except Exception as error:
+                        entry['resource_error'] = str(error)
+                    prefix = self.uri().removeprefix(f's3://{state["bucket"]}/')
+                    progress = aws.get_json(state['bucket'], prefix + f'/members/{name}/progress.json')
+                    if progress and progress.get('job') == entry['job'] and progress.get('member') == name:
+                        entry['progress'] = progress
             except Exception as error:
                 entry['observation_error'] = str(error)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=min(8, len(state['members']))) as pool:
+            list(pool.map(inspect, state['members'].items()))
         return state
+
+    def show(self, state=None):
+        state = state or self.status()
+        counts = Counter((e.get('worker_status') or {}).get('state', e['phase']) for e in state['members'].values())
+        print(f"Group {state['id']} — {len(state['members'])} members; " + ", ".join(f"{n} {phase}" for phase, n in counts.items()))
+        for name, entry in state['members'].items():
+            live = entry.get('worker_status') or {}
+            progress = entry.get('progress') or {}
+            lifecycle = live.get('state', entry['phase'])
+            age = f"; reported {max(0, time.time()-progress['updated_at']):.0f}s ago" if progress.get('updated_at') else ''
+            phase = progress.get('phase', 'no study progress reported')
+            collected = entry.get('collection', {})
+            evidence = ('collected' if collected.get('exit_code') == 0 else
+                        'failed/partial collected' if 'exit_code' in collected else 'not collected')
+            if live.get('artifact'):
+                evidence += '; archive published'
+            reused = live.get('worker') or {}
+            session = entry.get('session') or {}
+            print(f"  {name}: {lifecycle} | last progress: {phase}{age} | {evidence}")
+            detail = {k: progress[k] for k in ('case', 'completed', 'total', 'waiting_for', 'last_completed', 'log') if k in progress}
+            if detail:
+                print('    ' + json.dumps(detail, ensure_ascii=False))
+            print(f"    job={entry['job']}" + (f"; reused={reused['reused']}" if 'reused' in reused else '')
+                  + (f"; lifetime remaining={max(0, reused['max_end']-time.time()):.0f}s"
+                     if reused.get('max_end') and session.get('state') in {'busy', 'idle', 'assigned'} else ''))
+            if 'script_seconds' in live:
+                print(f"    script={live['script_seconds']:.2f}s; worker before collection={live.get('worker_seconds_before_collection', 0):.2f}s")
+            if 'instances' in entry:
+                resources = ', '.join(f"{i['id']} {i['state']}" for i in entry['instances']) or 'none listed by EC2'
+                print('    resources: ' + resources + ('; ' + entry['resource_note'] if entry.get('resource_note') else ''))
+            if session:
+                print(f"    session: {session['state']}; current job={session.get('job_id')}"
+                      + (f"; idle remaining={max(0, session['idle_until']-time.time()):.0f}s" if session.get('idle_until') and session.get('state') == 'idle' else ''))
+            error = live.get('error') or progress.get('error') or entry.get('observation_error') or entry.get('resource_error') or entry.get('collection_error')
+            if error:
+                print(f"    {live.get('failure_phase', 'error')}: {error}")
+                log = ' --file setup.log' if live.get('failure_phase') == 'setting-up' else ''
+                print(f'    Inspect: worker_group.py logs {shlex.quote(str(self.receipt))} {name}{log}')
+        for key in ('launch_error', 'network_error', 'control_error'):
+            if state.get(key):
+                print(f'{key}: {state[key]}')
+        if state.get('network'):
+            network = state['network']
+            print('Private network: ' + ('removed at last cleanup' if state.get('network_removed') else 'retained')
+                  + (f"; reusable scope={network['scope']}" if network.get('scope') else ''))
+            if network.get('scope') and not state.get('network_removed'):
+                print(f'  Cleanup when unused: worker_group.py cleanup-network {shlex.quote(str(self.receipt))}')
+        print(f'Receipt: {self.receipt}')
+
+    def fetch(self, members=None, *, partial=False):
+        """Collect published outputs now, without waiting for or stopping active peers."""
+        state = self.read()
+        names = list(state['members'] if members is None else members)
+        if not names or any(name not in state['members'] for name in names):
+            raise ValueError('unknown group member')
+        def collect(name):
+            try:
+                located = self.job(name)
+                if located is None:
+                    print(f'{name}: not submitted', flush=True)
+                    return True
+                directory, job = located
+                aws = worker.Aws(job['config']['region'])
+                status = worker.status(job, aws)
+                if not (status and (status.get('artifact') or status.get('state') in worker.FINAL)) and not partial:
+                    print(f'{name}: still active or unreported; use --partial for uploaded checkpoints', flush=True)
+                    return True
+                worker.fetch(job, directory, status, aws)
+                outcome = {'utc': time.time(), 'results': str(directory / ('results' if status and status.get('artifact') else 'partial'))}
+                if status and status.get('state') in worker.FINAL:
+                    outcome['exit_code'] = 0 if status['state'] == 'complete' else 1
+                outcome['artifact'] = status.get('artifact') if status else None
+                self.update(name, collection=outcome, collection_error=None)
+                return True
+            except Exception as error:
+                self.update(name, collection_error=str(error))
+                print(f'{name}: collection error: {error}', file=sys.stderr, flush=True)
+                return False
+        with concurrent.futures.ThreadPoolExecutor(max_workers=min(8, len(names))) as pool:
+            return 0 if all(list(pool.map(collect, names))) else 1
+
+    def references(self):
+        state = self.status()
+        members = {}
+        for name, entry in state['members'].items():
+            status = entry.get('worker_status') or {}
+            members[name] = {k: entry[k] for k in ('job', 'phase', 'collection', 'results', 'source_commit',
+                                                    'source_sha256', 'observation_error', 'instances', 'session',
+                                                    'resource_observed_at', 'resource_note', 'resource_error') if k in entry}
+            members[name] |= {'uri': f's3://{state["bucket"]}/sixdb/workers/{entry["job"]}',
+                             'state': status.get('state'), 'artifact': status.get('artifact'),
+                             'error': status.get('error'), 'worker': status.get('worker')}
+        return {'format': 1, 'group': state['id'], 'uri': self.uri(), 'region': state['region'],
+                'bucket': state['bucket'], 'network': state.get('network'),
+                'network_removed': state.get('network_removed', False), 'members': members}
 
 
 def create(spec, directory=None, *, source=worker.ROOT):
@@ -240,20 +359,18 @@ def create(spec, directory=None, *, source=worker.ROOT):
         raise ValueError('provide named group members')
     network = spec.get('network')
     if network:
-        if not network.get('vpc_id') or any(not (isinstance(p, list) and len(p) == 2
-                and all(type(n) is int for n in p) and 0 < p[0] <= p[1] <= 65535)
-                for protocol in ('tcp', 'udp') for p in network.get(protocol + '_ports', [])):
-            raise ValueError('network needs a VPC ID and TCP/UDP port ranges within 1..65535')
-        network = network | {'name': 'sixdb-group-' + group_id}
+        network = networks.normalize(network) | {'name': 'sixdb-group-' + group_id}
     members = {}
     for name, entry in spec['members'].items():
-        if not re.fullmatch(r'[A-Za-z0-9_-]+', name):
+        if not re.fullmatch(r'[A-Za-z0-9_-]+', name) or name == 'controller':
             raise ValueError('member names use letters, digits, underscore or hyphen')
         common = spec.get('config', {})
         overlay = common | entry.get('config', {})
         overlay['env'] = common.get('env', {}) | entry.get('config', {}).get('env', {})
         if network:
-            overlay |= {'vpc_id': network['vpc_id'], 'fresh': True, 'idle_seconds': 0}
+            overlay['vpc_id'] = network['vpc_id']
+            if not network.get('scope'):
+                overlay |= {'fresh': True, 'idle_seconds': 0}
         config = worker.configuration(argparse.Namespace(instance_type=overlay.get('instance_type'),
                                                          ami=overlay.get('ami')), worker.settings(overlay))
         if 'threads_per_core' in overlay:
@@ -271,18 +388,59 @@ def create(spec, directory=None, *, source=worker.ROOT):
     if len(locations) != 1:
         raise ValueError('a group uses one region and result bucket')
     region, bucket = locations.pop()
+    if network and network.get('scope'):
+        network['name'] = 'sixdb-scope-' + networks.identity({'network': network, 'region': region})
     uri = f's3://{bucket}/sixdb/worker-groups/{group_id}'
     for name, entry in members.items():
         entry['config']['env'] = {k: v.replace('{group_uri}', uri) for k, v in entry['config']['env'].items()}
         entry['config']['env'] |= {'SIXDB_GROUP_URI': uri, 'SIXDB_GROUP_MEMBER': name}
     directory.mkdir(parents=True)
     group = Group(directory / 'group.json')
-    storage.write_json(group.receipt, {'format': 1, 'id': group_id, 'region': region, 'bucket': bucket,
+    storage.write_json(group.receipt, {'format': 2, 'id': group_id, 'region': region, 'bucket': bucket,
         'uri': uri, 'source': str(directory / 'source'), 'members': members, 'network': network})
     print(f'Group: {group.receipt}', flush=True)
     worker.worker_cache.preflight(worker.ROOT)
     capture.capture(Path(source), directory / 'source')
     return group
+
+
+def recover(group_id, directory=None, *, config=None):
+    """Restore membership from S3; ambiguous submissions remain observations, never retries."""
+    if not re.fullmatch(r'[A-Za-z0-9_-]+', group_id):
+        raise ValueError('expected a group ID')
+    config = config or worker.settings()
+    aws = worker.Aws(config['region'])
+    state = aws.get_json(config['bucket'], f'sixdb/worker-groups/{group_id}/manifest.json')
+    if state is None:
+        raise ValueError('group manifest not found; older groups need their original local receipt')
+    if (state['id'] != group_id or state['bucket'] != config['bucket'] or state['region'] != config['region']
+            or state['uri'] != f's3://{config["bucket"]}/sixdb/worker-groups/{group_id}'):
+        raise ValueError('group manifest identity differs')
+    directory = Path(directory or worker.ROOT / 'build/worker-groups' / group_id).resolve()
+    if directory.exists():
+        raise ValueError('recovery needs a new directory; existing receipts are not overwritten')
+    state['launch_started'] = True
+    state['recovered'] = True
+    state['source_available'] = False
+    for name, entry in state['members'].items():
+        if not re.fullmatch(r'[A-Za-z0-9_-]+', name) or name == 'controller' or not re.fullmatch(r'[A-Za-z0-9_-]+', entry['job']):
+            raise ValueError('invalid recorded job ID')
+        job = aws.get_json(config['bucket'], f'sixdb/workers/{entry["job"]}/job.json')
+        if job is not None:
+            if (job['id'] != entry['job'] or job['config']['env']['SIXDB_GROUP_URI'] != state['uri']
+                    or job['config']['env']['SIXDB_GROUP_MEMBER'] != name):
+                raise ValueError('worker belongs to a different group')
+            entry.update(phase='submitting', job_created_at=job['created_at'], config=job['config'])
+            worker.save(worker.JOBS / entry['job'] / 'job.json', job)
+        else:
+            entry['phase'] = 'planned'
+    control = aws.get_json(config['bucket'], f'sixdb/worker-groups/{group_id}/control.json') or {}
+    state.update({k: control[k] for k in ('aborted', 'launch_error', 'launch_complete', 'network', 'network_removed',
+        'network_error', 'network_checked_at') if k in control})
+    directory.mkdir(parents=True)
+    storage.write_json(directory / 'group.json', state)
+    print(f'Recovered: {directory / "group.json"}; submission uncertainty is preserved')
+    return Group(directory / 'group.json')
 
 
 def main():
@@ -293,27 +451,57 @@ def main():
     run.add_argument('--output', type=Path, help='new receipt/source directory; default build/worker-groups/ID')
     run.add_argument('--source', type=Path, default=worker.ROOT)
     run.add_argument('--detach', action='store_true')
-    for name in ('wait', 'status', 'cancel'):
+    for name in ('wait', 'status', 'cancel', 'fetch', 'references', 'logs', 'cleanup-network'):
         sub = commands.add_parser(name)
         sub.add_argument('receipt', type=Path, help='existing group.json')
+        if name == 'status':
+            sub.add_argument('--json', action='store_true', help='include full lifecycle, study progress and errors')
+        elif name == 'fetch':
+            sub.add_argument('--member', action='append', help='select named members; default all published outputs')
+            sub.add_argument('--partial', action='store_true', help='also fetch uploaded live checkpoints')
+        elif name == 'references':
+            sub.add_argument('--output', type=Path, help='write a compact named-member artifact manifest')
+        elif name == 'logs':
+            sub.add_argument('member')
+            sub.add_argument('--file', choices=['script.log', 'setup.log', 'bootstrap.log'], default='script.log')
+            sub.add_argument('--console', action='store_true')
+    restore = commands.add_parser('recover', help='restore a lost local group receipt from S3')
+    restore.add_argument('group_id')
+    restore.add_argument('--output', type=Path)
+    restore.add_argument('--bucket', default=worker.settings()['bucket'])
+    restore.add_argument('--region', default=worker.settings()['region'])
     args = parser.parse_args()
     if args.command == 'run':
         group = create(json.loads(args.spec.read_text()), args.output, source=args.source)
         group.launch()
         return 0 if args.detach else group.wait()
+    if args.command == 'recover':
+        recover(args.group_id, args.output, config={'bucket': args.bucket, 'region': args.region})
+        return 0
     group = Group(args.receipt)
+    if args.command == 'cleanup-network':
+        with storage.lock(group.directory / '.dispatch.lock'):
+            return 0 if group.remove_network() else 1
     if args.command == 'status':
         state = group.status()
-        for name, entry in state['members'].items():
-            live = (entry.get('worker_status') or {}).get('state', entry['phase'])
-            print(f"{name}: {entry['job']} {live}; collection={entry.get('collection', 'pending')}")
-            if entry.get('observation_error'):
-                print(f"  Last observation error: {entry['observation_error']}")
-        if state.get('network'):
-            print('Private network: ' + ('removed' if state.get('network_removed') else 'retained'))
-        for key in ('launch_error', 'network_error'):
-            if state.get(key):
-                print(f'{key}: {state[key]}')
+        print(json.dumps(state, indent=2)) if args.json else group.show(state)
+        return 0
+    if args.command == 'fetch':
+        return group.fetch(args.member, partial=args.partial)
+    if args.command == 'references':
+        value = group.references()
+        if args.output:
+            storage.write_json(args.output, value)
+            print(args.output)
+        else:
+            print(json.dumps(value, indent=2))
+        return 0
+    if args.command == 'logs':
+        located = group.job(args.member)
+        if not located:
+            raise ValueError('member has not been submitted')
+        _, job = located
+        worker.logs(job, worker.Aws(job['config']['region']), console=args.console, file=args.file)
         return 0
     return getattr(group, args.command)()
 

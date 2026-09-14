@@ -1,0 +1,114 @@
+{
+  "format": 1,
+  "check": "Two private Spot cohorts reuse the same two hosts with isolated job identities and retained setup",
+  "script": "workbench/tools/tests/group-smoke.sh",
+  "instance_type": "c8g.medium",
+  "region": "us-east-1",
+  "setup": "minimal",
+  "deadline_seconds": 600,
+  "idle_seconds": 600,
+  "max_age_seconds": 1800,
+  "network_scope": "scaffolding-smoke-20260914",
+  "checks": {
+    "private_endpoints_and_expected_job_ids": true,
+    "both_hosts_reused": true,
+    "setup_markers_retained": true,
+    "receipt_recovered_from_s3": true,
+    "named_member_fetch": true,
+    "instances_terminated": true,
+    "security_group_removed": true
+  },
+  "limits": "Two ARM Spot workers in one AZ, minimal setup and a cache sentinel; no performance claim, UDP/fault-injection exercise, or cross-controller concurrency test. Source snapshots are in each archive; later diagnostic refinements also have offline coverage.",
+  "cohorts": [
+    {
+      "group": "20260914T200601Z-9bde7c43",
+      "manifest": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260914T200601Z-9bde7c43/manifest.json",
+      "members": {
+        "alpha": {
+          "job": "20260914T200606Z-b4789c05",
+          "instance": "i-01b2827fa0b737aa7",
+          "reused": false,
+          "setup_reused": false,
+          "setup_sentinel": "a9d07bbe-1f6c-412d-8b1e-6e58f96d9a83",
+          "source_digest": "96cb87355848a0952680ad2f2118103ccf1b3a84e7914977d027a7cff13f0ca8",
+          "artifact": {
+            "bucket": "calico-fleet-artifacts",
+            "bytes": 2483771,
+            "files": 11,
+            "format": 1,
+            "key": "sixdb/artifacts/sha256/14f91fcc063997c573cb6c60cdfa089e0d25830d2a428af2e48c81bb26d0720f.tar.gz",
+            "kind": "files",
+            "region": "us-east-1",
+            "sha256": "14f91fcc063997c573cb6c60cdfa089e0d25830d2a428af2e48c81bb26d0720f",
+            "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/14f91fcc063997c573cb6c60cdfa089e0d25830d2a428af2e48c81bb26d0720f.tar.gz"
+          }
+        },
+        "beta": {
+          "job": "20260914T200611Z-d4b9d1a0",
+          "instance": "i-0c512a75ab05f082b",
+          "reused": false,
+          "setup_reused": false,
+          "setup_sentinel": "31365afe-fa59-4df9-8fcb-f63f538eaff8",
+          "source_digest": "96cb87355848a0952680ad2f2118103ccf1b3a84e7914977d027a7cff13f0ca8",
+          "artifact": {
+            "bucket": "calico-fleet-artifacts",
+            "bytes": 2483766,
+            "files": 11,
+            "format": 1,
+            "key": "sixdb/artifacts/sha256/5d01b20d7c7b71dffcd255b4a1b0417d149fb37f75e56795ef39d0fd1c40b656.tar.gz",
+            "kind": "files",
+            "region": "us-east-1",
+            "sha256": "5d01b20d7c7b71dffcd255b4a1b0417d149fb37f75e56795ef39d0fd1c40b656",
+            "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/5d01b20d7c7b71dffcd255b4a1b0417d149fb37f75e56795ef39d0fd1c40b656.tar.gz"
+          }
+        }
+      }
+    },
+    {
+      "group": "20260914T200849Z-cad77fb6",
+      "manifest": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260914T200849Z-cad77fb6/manifest.json",
+      "members": {
+        "alpha": {
+          "job": "20260914T200854Z-ea82eaf3",
+          "instance": "i-0c512a75ab05f082b",
+          "reused": true,
+          "setup_reused": true,
+          "setup_sentinel": "31365afe-fa59-4df9-8fcb-f63f538eaff8",
+          "source_digest": "01bbe0a1646d85fc0c859f76035571e68e92cebb250cab28d23080c82fee2e6e",
+          "artifact": {
+            "bucket": "calico-fleet-artifacts",
+            "bytes": 2485889,
+            "files": 11,
+            "format": 1,
+            "key": "sixdb/artifacts/sha256/c2152bb223be5f6adc25f7fda3885686a300685c32fe47b15cf78d6824d2a5d0.tar.gz",
+            "kind": "files",
+            "region": "us-east-1",
+            "sha256": "c2152bb223be5f6adc25f7fda3885686a300685c32fe47b15cf78d6824d2a5d0",
+            "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/c2152bb223be5f6adc25f7fda3885686a300685c32fe47b15cf78d6824d2a5d0.tar.gz"
+          }
+        },
+        "beta": {
+          "job": "20260914T200858Z-f7d8f384",
+          "instance": "i-01b2827fa0b737aa7",
+          "reused": true,
+          "setup_reused": true,
+          "setup_sentinel": "a9d07bbe-1f6c-412d-8b1e-6e58f96d9a83",
+          "source_digest": "01bbe0a1646d85fc0c859f76035571e68e92cebb250cab28d23080c82fee2e6e",
+          "artifact": {
+            "bucket": "calico-fleet-artifacts",
+            "bytes": 2485911,
+            "files": 11,
+            "format": 1,
+            "key": "sixdb/artifacts/sha256/e0cfe9226eb705b8ef7ce4576aef488d1658cf23e393f842d4ce8192ff6eb9ce.tar.gz",
+            "kind": "files",
+            "region": "us-east-1",
+            "sha256": "e0cfe9226eb705b8ef7ce4576aef488d1658cf23e393f842d4ce8192ff6eb9ce",
+            "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/e0cfe9226eb705b8ef7ce4576aef488d1658cf23e393f842d4ce8192ff6eb9ce.tar.gz"
+          }
+        }
+      }
+    }
+  ],
+  "closure_observed_utc": "2026-09-14T20:13:44.943873+00:00",
+  "removed_security_group": "sg-0d52803160594a9fd"
+}

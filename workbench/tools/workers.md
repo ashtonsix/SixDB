@@ -63,7 +63,8 @@ standard library. Script-specific dependencies belong in the script. Reuse keeps
 installed packages, unchanged build inputs and prepared datasets. `--fresh` asks
 for a new environment; add `--idle-seconds 0` to terminate it after this job.
 For longer edit/review loops use `--idle-seconds 600`; a narrowly missed reuse
-window can prompt this suggestion in the console.
+window can prompt this suggestion in the console. The next job's entire deadline
+must also fit the remaining `--max-age` lifetime.
 
 For an explicit [source capture](README.md#captured-experiment-runs), use
 `run SCRIPT --source PATH`. The script is relative to that checkout; job records
@@ -92,8 +93,10 @@ boots needs controller cleanup through `wait` or `cancel`.
 Completion requires a verified uploaded bundle; nonzero script exits remain
 failures with output available. Vanished workers or failed uploads are incomplete.
 Scripts can opt into `--sync-seconds N` for partial-output recovery; by default
-uploads happen after measurement. `logs JOB --console` shows instance-wide boot
-diagnostics, possibly including earlier jobs on a reused worker.
+uploads happen after measurement. `logs JOB --file setup.log` shows toolchain
+setup output; status preserves the phase where failure occurred. `logs JOB
+--console` shows instance-wide boot diagnostics, possibly including earlier jobs
+on a reused worker.
 
 Spot workers poll interruption notices every five seconds and attempt early
 collection when warned; output can still be lost. On-demand with sync disabled

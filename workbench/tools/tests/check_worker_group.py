@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Exercise group capture, uncertain submission, observer recovery and independent cleanup offline."""
 import json
+import io
+from contextlib import redirect_stdout
 from pathlib import Path
 import subprocess
 import tempfile
@@ -29,6 +31,9 @@ class GroupCheck(unittest.TestCase):
         storage.write_json(self.group.receipt, {'id': 'fixture', 'region': 'us-east-1', 'bucket': 'fixture',
             'source': str(self.root), 'members': self.members})
         self.aws = Mock(spec=worker.Aws)
+        self.objects = {}
+        self.aws.get_json.side_effect = lambda bucket, key: self.objects.get(key)
+        self.aws.upload.side_effect = lambda path, uri, **kw: self.objects.update({uri.removeprefix('s3://fixture/'): json.loads(Path(path).read_text())}) if str(path).endswith('.json') else None
         self.now = 1000
         def advance(seconds):
             self.now += seconds
@@ -82,6 +87,77 @@ class GroupCheck(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'already attempted'):
             self.group.launch()
         self.assertEqual(worker.dispatch.call_count, before)
+
+    def test_remote_manifest_precedes_dispatch_and_recovery_never_resubmits(self):
+        def dispatch(job, directory, aws):
+            manifest = self.objects['sixdb/worker-groups/fixture/manifest.json']
+            self.assertEqual(set(manifest['members']), {'server', 'client'})
+            self.objects[f'sixdb/workers/{job["id"]}/job.json'] = job | {'config': job['config'] | {
+                'env': {'SIXDB_GROUP_URI': self.group.uri(), 'SIXDB_GROUP_MEMBER': job['id'].removeprefix('job-')}}}
+        worker.dispatch.side_effect = dispatch
+        self.group.launch()
+        restored = groups.recover('fixture', self.root / 'restored', config=self.config)
+        self.assertTrue(restored.read()['launch_complete'])
+        self.assertTrue(restored.read()['recovered'])
+        self.assertTrue(all(e['phase'] == 'submitting' for e in restored.read()['members'].values()))
+        with self.assertRaises(ValueError):
+            restored.launch()
+        self.assertEqual(worker.dispatch.call_count, 2)
+        self.group.cancel()
+        control = self.objects['sixdb/worker-groups/fixture/control.json']
+        self.assertTrue(control['aborted'])
+        self.assertTrue(control['launch_complete'])
+
+    def test_partial_collection_leaves_active_peers_alone_and_preserves_archive(self):
+        self.group.launch()
+        def status(job, aws):
+            return {'state': 'failed', 'artifact': {'manifest': 's3://fixture/archive'}} if job['id'] == 'job-server' else {'state': 'running'}
+        with patch.object(worker, 'status', side_effect=status), patch.object(worker, 'fetch') as fetch:
+            self.assertEqual(self.group.fetch(), 0)
+            self.assertEqual([c.args[0]['id'] for c in fetch.call_args_list], ['job-server'])
+        archive = self.group.read()['members']['server']['collection']['artifact']
+        with patch.object(worker, 'status', return_value=None), patch.object(worker, 'fetch'):
+            self.assertEqual(self.group.fetch(['server'], partial=True), 0)
+        self.assertEqual(self.group.read()['members']['server']['collection']['artifact'], archive)
+        worker.cancel.assert_not_called()
+        worker.wait.assert_not_called()
+
+    def test_status_joins_named_progress_and_root_cause_but_rejects_stale_progress(self):
+        self.group.launch()
+        self.objects['sixdb/worker-groups/fixture/members/server/progress.json'] = {
+            'job': 'job-server', 'member': 'server', 'phase': 'measuring', 'case': 'batch-8', 'updated_at': 900}
+        self.objects['sixdb/worker-groups/fixture/members/client/progress.json'] = {
+            'job': 'old-client', 'member': 'client', 'phase': 'ready', 'updated_at': 1000}
+        with patch.object(worker, 'status', return_value={'state': 'failed', 'failure_phase': 'setting-up', 'error': 'apt failed'}):
+            state = self.group.status()
+        self.assertNotIn('progress', state['members']['client'])
+        output = io.StringIO()
+        with redirect_stdout(output):
+            self.group.show(state)
+        self.assertIn('server: failed | last progress: measuring; reported 100s ago', output.getvalue())
+        self.assertIn('apt failed', output.getvalue())
+        self.assertIn('--file setup.log', output.getvalue())
+
+    def test_resource_termination_is_not_erased_when_ec2_ages_out_old_instances(self):
+        self.group.launch()
+        self.group.update('server', instances=[{'id': 'i-old', 'state': 'terminated'}], resource_observed_at=900)
+        with patch.object(worker, 'status', return_value={'state': 'complete'}), patch.object(worker, 'instances', return_value=[]):
+            state = self.group.references()
+        server = state['members']['server']
+        self.assertEqual(server['instances'], [{'id': 'i-old', 'state': 'terminated'}])
+        self.assertEqual(server['resource_observed_at'], 900)
+        self.assertIn('last observation', server['resource_note'])
+
+    def test_scoped_wait_retains_hosts_and_cancel_does_not_remove_shared_network(self):
+        self.group.launch()
+        self.group.update(network={'scope': 'study', 'name': 'scope', 'vpc_id': 'vpc-fixture'})
+        with patch.object(self.group, 'remove_network') as remove:
+            self.assertEqual(self.group.wait(), 0)
+            worker.cancel.assert_not_called()
+            remove.assert_not_called()
+            self.assertEqual(self.group.cancel(), 0)
+            self.assertEqual(worker.cancel.call_count, 2)
+            remove.assert_not_called()
 
     def test_lost_submission_response_and_partial_cancel_do_not_resubmit(self):
         worker.dispatch.side_effect = RuntimeError('accepted, response lost')
@@ -274,6 +350,10 @@ class GroupCheck(unittest.TestCase):
             private = groups.create(spec, self.root / 'private-group', source=source)
             self.assertTrue(all(e['config']['fresh'] and e['config']['idle_seconds'] == 0
                                 for e in private.read()['members'].values()))
+            spec['network']['scope'] = 'repeat-study'
+            scoped = groups.create(spec, self.root / 'scoped-group', source=source)
+            self.assertTrue(all(not e['config']['fresh'] and e['config']['idle_seconds'] == 300
+                                for e in scoped.read()['members'].values()))
             with self.assertRaisesRegex(ValueError, 'existing group'):
                 groups.create(spec, self.root / 'new-group', source=source)
 

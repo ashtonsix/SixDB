@@ -24,6 +24,8 @@ Research-facing [navigation checks](../check_docs.py) and
 checks live with their adapters, such as [keyset windows](../../datasets/keyset-windows.md).
 
 The [worker smoke script](../worker-smoke.sh) and
-[reuse probe](../worker-reuse-smoke.sh) are optional live checks. Historical
-[lifecycle](worker-validation.json) and [reuse](worker-reuse-validation.json)
-receipts record their original tested conditions, not current coverage claims.
+[reuse probe](../worker-reuse-smoke.sh) are optional live checks. The
+[group smoke](group-smoke.sh) checks private peer readiness and cached setup across
+cohorts; its [group guide](../worker-groups.md) gives configuration. Historical
+[lifecycle](worker-validation.json), [reuse](worker-reuse-validation.json) and
+[group reuse](worker-group-validation.json) receipts record their original tested conditions, not current coverage claims.

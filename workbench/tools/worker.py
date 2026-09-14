@@ -62,9 +62,9 @@ class Aws:
             raise AwsError(result.stderr.strip())
         return json.loads(result.stdout or '{}')
 
-    def upload(self, path, uri):
+    def upload(self, path, uri, *, timeout=None):
         subprocess.run(['aws', 's3', 'cp', '--only-show-errors', str(path), uri,
-                        '--region', self.region, '--no-cli-pager'], check=True)
+                        '--region', self.region, '--no-cli-pager'], check=True, timeout=timeout)
 
     def get_object(self, bucket, key, *, timeout=None):
         with tempfile.TemporaryDirectory() as temp:
@@ -159,7 +159,7 @@ def resolve(config, aws):
     if image['State'] != 'available' or image['Architecture'] not in hardware['ProcessorInfo']['SupportedArchitectures']:
         raise ValueError('AMI is unavailable or incompatible with instance architecture')
     config['hardware'] = {k: hardware[k] for k in ('VCpuInfo', 'MemoryInfo', 'ProcessorInfo')}
-    config['hardware'].update({k: hardware[k] for k in ('InstanceStorageInfo', 'EbsInfo', 'Hypervisor') if k in hardware})
+    config['hardware'].update({k: hardware[k] for k in ('InstanceStorageInfo', 'EbsInfo', 'Hypervisor', 'NetworkInfo') if k in hardware})
     config['architecture'] = image['Architecture']
     config['root_device'] = image['RootDeviceName']
     config['image_name'] = image['Name']
@@ -607,7 +607,9 @@ def wait(job, directory, aws, interval=10, *, stop=None):
             stop.wait(interval)
 
 
-def logs(job, aws, *, console=False):
+def logs(job, aws, *, console=False, file='script.log'):
+    if file not in {'script.log', 'setup.log', 'bootstrap.log'}:
+        raise ValueError('choose script.log, setup.log or bootstrap.log')
     if console:
         found = False
         for item in instances(job, aws):
@@ -622,12 +624,12 @@ def logs(job, aws, *, console=False):
             print('No EC2 console output is available yet.')
         return
 
-    data = aws.get_bytes(job['config']['bucket'], job['prefix'] + '/live/script.log')
+    data = aws.get_bytes(job['config']['bucket'], job['prefix'] + '/live/' + file)
     if data is not None:
         print(data.decode('utf-8', errors='replace'), end='')
         return
     state = status(job, aws) or {}
-    print(f"No script log has been uploaded (job state: {state.get('state', 'not yet reported')}).")
+    print(f"No {file} has been uploaded (job state: {state.get('state', 'not yet reported')}).")
     if state.get('state') in FINAL:
         print('The script may not have started, or collection may be incomplete. '
               f"Inspect collected output with: python3 workbench/tools/worker.py fetch {job['id']}")
@@ -721,6 +723,7 @@ def main():
         cmd = commands.add_parser(name, help=help_text)
         cmd.add_argument('job')
         if name == 'logs':
+            cmd.add_argument('--file', choices=['script.log', 'setup.log', 'bootstrap.log'], default='script.log')
             cmd.add_argument('--console', action='store_true', help='show instance boot diagnostics instead of script output')
         if name == 'fetch':
             selection = cmd.add_mutually_exclusive_group()
@@ -802,7 +805,7 @@ def main():
         print(json.dumps({'worker': status(job, aws), 'session': session, 'instances': [
             {'id': i['InstanceId'], 'state': i['State']['Name']} for i in instances(job, aws)]}, indent=2))
     else:
-        logs(job, aws, console=args.console)
+        logs(job, aws, console=args.console, file=args.file)
     return 0
 
 

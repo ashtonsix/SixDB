@@ -172,11 +172,12 @@ class LogTests(unittest.TestCase):
             self.assertEqual(aws.get_json('bucket', 'status'), {'text': 'café'})
 
     def test_console_cli_option_reaches_log_reader(self):
-        with patch.object(worker.sys, 'argv', ['worker.py', 'logs', 'test-worker', '--console']), \
+        with patch.object(worker.sys, 'argv', ['worker.py', 'logs', 'test-worker', '--console', '--file', 'setup.log']), \
                 patch.object(worker, 'locate', return_value=(Path('unused'), job())), \
                 patch.object(worker, 'logs') as logs:
             self.assertEqual(worker.main(), 0)
         self.assertTrue(logs.call_args.kwargs['console'])
+        self.assertEqual(logs.call_args.kwargs['file'], 'setup.log')
 
 
 class RuntimeTests(unittest.TestCase):
@@ -227,11 +228,29 @@ class RuntimeTests(unittest.TestCase):
                     self.assertEqual(running.run(), 0 if code == 0 else 1)
                 self.assertEqual(events[-1]['state'], 'complete' if code == 0 else 'failed')
                 self.assertEqual(events[-1]['script_returncode'], code)
+                if code:
+                    self.assertEqual(events[-1]['failure_phase'], 'running')
                 restored = directory / 'recovered'
                 self.assertEqual((restored / 'values.txt').read_text(),
                     'with spaces; $(not executed)\na b\n$(literal)\n')
                 self.assertEqual(json.loads((restored / 'job.json').read_text())['source_commit'], 'original-commit')
                 self.assertTrue((restored / 'source.tar.gz').exists())
+
+    def test_setup_failure_keeps_phase_and_log_in_archive(self):
+        with tempfile.TemporaryDirectory() as temp:
+            directory = Path(temp)
+            running, events, publish = self.fixture(directory, 'touch should-not-run\n')
+            running.config['setup'] = 'toolchain'
+            def execute(command, output, *args):
+                self.assertIn('worker-setup.sh', command[-1])
+                output.write_text('package index failed\n')
+                return 17
+            with patch.object(running, 'execute', side_effect=execute), patch.object(artifacts, 'publish', side_effect=publish):
+                self.assertEqual(running.run(), 1)
+            self.assertEqual(events[-1]['failure_phase'], 'setting-up')
+            self.assertIn('setup exited 17', events[-1]['error'])
+            self.assertEqual((directory / 'recovered/setup.log').read_text(), 'package index failed\n')
+            self.assertFalse((running.source / 'should-not-run').exists())
 
     def test_timeout_and_upload_failure_never_report_success(self):
         with tempfile.TemporaryDirectory() as temp:

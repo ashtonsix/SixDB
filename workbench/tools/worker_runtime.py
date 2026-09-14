@@ -316,11 +316,14 @@ class Worker:
             code = self.execute(command, self.results / 'script.log', env)
             result = {'state': 'complete' if code == 0 else 'failed', 'script_returncode': code,
                       'script_seconds': time.time() - script_started}
+            if code:
+                result['failure_phase'] = 'running'
             if self.interrupted.is_set():
                 result['state'] = 'interrupted'
         except Exception as error:
             result |= {'state': 'interrupted' if isinstance(error, InterruptedError) else
-                       'timeout' if isinstance(error, TimeoutError) else 'failed', 'error': str(error)}
+                       'timeout' if isinstance(error, TimeoutError) else 'failed', 'error': str(error),
+                       'failure_phase': self.state['state']}
         finally:
             self.stop.set()
             if monitor:
