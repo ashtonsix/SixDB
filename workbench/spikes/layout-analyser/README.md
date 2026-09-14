@@ -1,81 +1,57 @@
 # Layout analyser
 
-Design spike opened 2026-09-13. **Given the information a data structure must
-preserve, the operations it must support, and a workload cost function, which
-planes, layouts and operation recipes should Engine choose?** Start with small
-micro-analysis problems whose alternatives can be enumerated and measured.
-The proposed module and interfaces below are research questions, not an Engine
-contract or a selected implementation.
+The analyser should choose **representations together with programs for reading
+and maintaining them**. A filter, prefix, exact core, residual, patch stream or
+directory changes which information an operation must acquire and when it can
+acquire it. Plane splitting, packing, placement and packet arrangement realize
+those choices. Their value comes from complete operations over a workload and a
+lifetime, not a universal score for a byte width.
 
-Two useful scales of analysis are emerging:
+This spike investigates that direction through a connected record and bucket
+problem. Expensive analysis may produce a small family of representations and
+programs; bounded local fitting adapts it to data and demand in a key region;
+cheap selection chooses how to use a retained image. New advice need not require
+historical re-encoding.
 
-- **Workload / macro analysis** considers micro-indices, redundant summaries,
-  field groups and the value of co-location across operations. It supplies
-  semantic alternatives, constraints and objectives for more local decisions.
-- **Hardware / micro analysis** takes a data-unit description and supplied
-  objective, then explores partitioning, bit/byte placement, capacity, padding
-  and executable recipes in a particular hardware and access context.
+The original macro/micro distinction remains a division of scope. Macro considers
+maintained facts, micro-indices and workload objectives. Micro realizes admitted
+alternatives in actual codecs and hardware conditions, and can return a frontier
+or a counterproposal. Both can split planes. Training versus selection is a
+separate axis. We can investigate objective definition and consumption now;
+production from real Engine telemetry depends on work not yet defined.
 
-Both can split planes. Macro might separate a filter from its records; micro
-might split high-order evidence from residual bits within that filter, or keep
-the two streams adjacent. Neither scale dictates when the work runs. Expensive
-training, fast selection and bounded local fitting can occur at either scale.
-A local fit may revise a partition if the supplied alternatives permit it.
+## Read the argument and its material
 
-Initial emphasis is micro analysis and the **definition and consumption** of
-cost functions. Producing reliable macro objectives from a production workload
-depends on query, index and mutation mechanisms SixDB has not yet defined.
-Authored workloads let us investigate that seam now without inventing them.
+1. [Design synthesis](design.md): how conditional information needs lead to joint
+   representation/program search, contextual costs, reusable fitting and history.
+2. [Connected worked case](case-study.md): follow the 65B record through reads,
+   filtering, byte relocation, packet choices, updates and changing key regions;
+   use a nested bucket/directory to test the account's reach.
+3. [Research dossier](prior-art.md): the original filtering, three-array and PFOR
+   material alongside current SeriesPack/TuplePack, Bec256, hardware and literature;
+   what each contributes and how the mechanisms connect.
+4. [Next experiments](experiments.md): test the joint account, its reuse and its
+   value while historical images remain, rather than widening isolated benchmarks.
 
-## Read and work here
+The synthesis was rebuilt on 2026-09-14 after the first empirical pass proved
+better at exposing local counterexamples than assembling an overall account.
+It proposes a direction for research; it does not specify an Engine API.
 
-- [First findings](findings.md): measured boundary/bucket/spatial consumers,
-  modeled refinement, and a retained-plan palette/selection comparison.
-- [Evidence and reproduction](evidence/README.md): source captures, complete
-  comparison rows, hardware context and verification.
-- [Design](design.md): candidate semantics, cost consumption, reusable training,
-  palettes, local fitting and retained historical representations.
-- [Worked examples](examples.md): moving string-prefix bytes around a 64B
-  boundary, a variable-capacity hash bucket, and spatially adjacent planes.
-- [Experiments](experiments.md): falsifiable hypotheses and bounded comparisons.
-- [Prior art](prior-art.md): local evidence, its limits and primary literature.
-- [TuplePack reference](tuplepack-reference/README.md): the transferred small
-  exhaustive analyser, executable checks and cost-input examples.
-- [TuplePack search note](tuplepack-search.md): the transferred detailed reading,
-  operation-recipe hypotheses and larger placement experiments.
+## Supporting work
 
-The original cache-line question is a geometry baseline, not the objective:
-for a uniformly selected densely packed slot of width `w`, starting at byte
-zero on a 64B-aligned base, the steady-state full-slot expectation is
-`1 + (w - gcd(w,64))/64` distinct lines. Ranking `w / expectation` rewards useful
-payload per demanded line, but does not price latency, scans, dependency chains,
-bandwidth, writes or padding. [The examples](examples.md#geometry-baseline)
-make the assumptions and nonlinear alternatives explicit.
+- [First findings](findings.md) and [evidence/reproduction](evidence/README.md):
+  measured prefix/bucket/spatial consumers, modeled Boolean refinement and offline
+  palette selection. Their captured sources and limitations remain unchanged.
+- [Geometry and original fixtures](examples.md): 1..128B slots, 63/64/65B prefix
+  boundaries, variable bucket capacity and split/dense/padded spatial placement.
+- [TuplePack reference](tuplepack-reference/README.md) and
+  [search note](tuplepack-search.md): transferred finite exhaustive analysis,
+  operation costs, checks and detailed earlier reading.
 
-## Responsibility and evidence
-
-This investigation owns Engine layout-analysis hypotheses, candidate selection
-and consumer cost experiments. Ikea owns supported representation laws and local
-operation capabilities; [its integration guide](../../../ikea/docs/integration.md)
-describes the current owner obligations. Loom's
-[memory-characterisation investigation](../memory-characterisation/README.md)
-keeps hardware diagnostics and their interpretation. Layout-specific derived
-measurements belong here and refer back to that evidence.
-
-The [TuplePack investigation](../tuple-layout/README.md) retains kernel/runtime
-measurements and their original provenance. Its bounded analyser and search note
-now live here; the old paths retain discovery and command compatibility.
-The filtering and Calico studies in
-[prior art](prior-art.md) remain in their owning homes. The new spike does not
-establish that their prototypes are production interfaces.
-
-The first empirical pass now includes native consumer screens on Zen 5 and
-Granite Rapids, a Boolean refinement model and an offline palette study. These
-expose useful decision variables and counterexamples; they do not establish
-an Engine module contract or an implemented general layout analyser.
-
-Opening verification on 2026-09-13 passed all 12 reference checks on Linux,
-replayed 392 retained cost rows into the 28-candidate ranking, and reproduced
-the 56-plan mixed reports. Old-path and canonical synthetic rankings agree.
-The [reference guide](tuplepack-reference/README.md) documents the replay route;
-code/fixture and historical-evidence hashes were preserved during relocation.
+This task owns the synthesis, candidate analysis and derived consumer experiments.
+Ikea owns representation laws and local operation capabilities. Loom owns
+[memory-characterisation](../memory-characterisation/README.md) and hardware
+interpretation. Original runtime evidence remains in
+[tuple-layout](../tuple-layout/README.md); the filtering and Calico sources remain
+in their owning homes. The dossier distinguishes current capabilities, retained
+measurements and proposed extensions.

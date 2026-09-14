@@ -1,5 +1,10 @@
 # First empirical findings
 
+These are the retained 2026-09-13 comparisons. The
+[2026-09-14 synthesis](design.md) and [source dossier](prior-art.md) now connect
+them to the original research and later Ikea work. New worked traces there are
+logical examples, not additional measurements; captured results below are unchanged.
+
 2026-09-13. This pass makes the decision space more concrete without specifying
 an Engine module. A layout's byte width is too weak a summary: conditional
 refinement, physical plane placement, operation recipe and request concurrency
@@ -15,7 +20,7 @@ confidence intervals or variation across a fleet.
 ## Relocating a byte changes the dependency, not just the stride
 
 [The prefix consumer](prefix/README.md) compares the two equivalent-record
-families from the design: 55 or 57 other fixed bytes plus a string. This first
+families from the [original fixtures](examples.md): 55 or 57 other fixed bytes plus a string. This first
 fixture gives every string exactly 16 bytes. It measures a known-row scalar
 projection, equality, full reconstruction and preserving scalar writes.
 It uses ordinary retained TuplePack operations for the scalar projections and

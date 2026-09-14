@@ -1,6 +1,6 @@
 # Spatial placement with the same consumer
 
-Exploratory native fixture for the [layout-analyser spatial question](../experiments.md#spatial-placement-and-consumer-timing).
+Exploratory native fixture for the [layout-analyser spatial question](../experiments.md#add-mechanisms-only-to-discriminate-a-live-explanation).
 Every organization represents the same 96B logical row: a 64B core and a 32B
 extension. This is a read consumer over scalar u64 fields, not an Engine
 interface or an Ikea layout selection result.

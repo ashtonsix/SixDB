@@ -2,6 +2,9 @@
 
 These are concrete questions and exact geometry calculations, not measured
 performance winners. All examples assume 64B cache lines unless stated otherwise.
+For the connected read/update/adaptation argument, start with the
+[worked investigation](case-study.md); this page retains the original geometry
+and standalone fixtures.
 
 ## Geometry baseline
 
@@ -223,5 +226,5 @@ time it is needed. They do not imply a 128B coherence line, free bandwidth, or
 that 96/128B objects win. Their fenced target-load diagnostic includes specific
 PC history and uncalibrated source-loop slack. Measure the ordinary consumer
 with controlled useful work and lookahead; keep the latency diagnostic separate.
-The [experiment design](experiments.md#spatial-placement-and-consumer-timing)
+The [experiment design](experiments.md#add-mechanisms-only-to-discriminate-a-live-explanation)
 preserves these distinctions.
