@@ -1,0 +1,51 @@
+{
+  "raw_root": "build/cft-commit-latency/cliff/raw-local/local-nvme",
+  "cases": 4,
+  "sample_dtype": [
+    [
+      "arrival",
+      "<u8"
+    ],
+    [
+      "prepared",
+      "<u8"
+    ],
+    [
+      "commit",
+      "<u8"
+    ],
+    [
+      "batch",
+      "<u8"
+    ],
+    [
+      "records",
+      "<u4"
+    ],
+    [
+      "padding",
+      "<u4"
+    ]
+  ],
+  "detail_dtype": [
+    [
+      "prepare_start",
+      "<u8"
+    ],
+    [
+      "local",
+      "<u8"
+    ],
+    [
+      "ack0",
+      "<u8"
+    ],
+    [
+      "ack1",
+      "<u8"
+    ]
+  ],
+  "quantiles": "NumPy linear/type 7; arrival cohort after first scheduled second",
+  "remote_alignment": "realtime anchors, NTP-level precision; leader stages use its one steady clock",
+  "local_only": "local control aliases ACK detail fields to local completion solely for trace format compatibility; it performs no replication"
+}

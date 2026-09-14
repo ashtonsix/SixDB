@@ -1,0 +1,13 @@
+{
+  "purpose": "Causal cliff probe, preparation/controller limits and same-demand latency/throughput decisions",
+  "raw": "all per-record stages, monitors, preparation ledgers and exact captured sources recover through workers.json",
+  "failed_local": "native count guard rejected the first local-only attempt before measurement because environment flags were not forwarded; replaced by fresh successful cohort",
+  "analysis_sources": [
+    "cliff_analyze.py",
+    "cliff_original.py",
+    "cliff_plot.py",
+    "cliff_recover.py",
+    "cliff_archive.py"
+  ],
+  "selection": "all tested successful policies, including unfavorable comparisons; original high-rate repeats reanalyzed as shared input"
+}

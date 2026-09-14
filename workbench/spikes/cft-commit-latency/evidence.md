@@ -13,11 +13,12 @@ sources; compact exports have separate immutable recovery references.
 | Persistence | [All paths](evidence/20260914-durable/persistence.csv), [passes](evidence/20260914-durable/persistence-passes.csv) | [Devices and settings](evidence/20260914-durable/devices.json); screen and longer tails are labeled separately |
 | D3 completion diagnostic | [Timings](evidence/20260914-durable/d3-diagnostic.csv), [passes](evidence/20260914-durable/d3-diagnostic-passes.csv), [issued requests](evidence/20260914-durable/d3-request-traces.csv) | Timing runs are separate from traced runs |
 | Joint durable commit | [Configurations](evidence/20260914-durable/commits.csv), [passes](evidence/20260914-durable/commit-passes.csv) | [Nodes and storage](evidence/20260914-durable/commit-nodes.json); healthy and known-follower-absent cases are separate |
+| Cliff and live preparation | [Follow-up evidence guide](evidence/20260914-cliff/README.md) | Longer replication runs, local-only storage controls and real background file preparation |
 
 ## Read the fields and distributions
 
-Numerical columns ending `_us` are **microseconds**; the main report converts commit times
-to milliseconds. Raw timestamps ending `_ns` are nanoseconds. Network echo sizes
+Numerical columns ending `_us` are **microseconds**; `_ms` columns and the main
+report use **milliseconds**. Raw timestamps ending `_ns` are nanoseconds. Network echo sizes
 describe both the request and the full-size reply; durable replication uses a
 record and a small acknowledgment. In the one-record CSVs, `remote1_*` and
 `remote2_*` are follower write durations, not leader-observed acknowledgment
@@ -33,8 +34,8 @@ byte for byte. The compact bundle was also uploaded and download-verified.
 
 ## Throughput cohorts
 
-The [throughput findings](commit/throughput.md) distinguish short screens from
-three-pass candidates. Each completed cohort has its own immutable directory,
+The [original throughput findings](commit/throughput.md) distinguish short screens
+from three-pass candidates. Each original cohort has its own immutable directory,
 with raw worker references, captured settings, analysis and recovery reference:
 
 | Cohort | Cases and passes | Selected choices | Recovery |
@@ -67,6 +68,17 @@ earlier classification. The corrected drain rule changed no cohort classificatio
 or selected landmark. The analyzer validates archived summaries against their
 original definitions before recomputing and ranking from the recorded timestamps.
 
+## Cliff follow-up
+
+The [longer-run findings](commit/cliff.md) have a separate
+[retained guide](evidence/20260914-cliff/README.md) covering cases, time-aligned
+diagnostics, preparation receipts and captured sources. Its
+[recovery verification](evidence/20260914-cliff/recovery-verified.json) records
+byte-identical reconstruction of the selected numerical tables and all four
+figures; the [cleanup receipt](evidence/20260914-cliff/resources.json) covers
+all new instances, including the failed setup attempt. Follow that guide's
+[`cliff_recover.py`](commit/cliff_recover.py) recipe to recover this campaign.
+
 ## Recover a comparison
 
 From the repository root on Linux, prefixing with `orb -m ubuntu` on the Mac:
@@ -80,7 +92,7 @@ python3 workbench/spikes/cft-commit-latency/recover-durable.py \
 Choose a fresh output directory. This fetches and hash-verifies the selected
 workers' raw archives and reruns their analysis without launching machines.
 Use `--study persistence` or `--study diagnostic` for those studies; omitting
-`--study` recovers all available studies, including nested throughput cohorts.
+`--study` recovers the original durable studies, including nested throughput cohorts.
 Use `--study throughput` for the small cohort and `--study throughput-scale`
 for the larger standard-ENA cohort; `--study throughput-express` recovers Express.
 AWS read access to the existing artifact bucket is required.
@@ -93,7 +105,7 @@ sources and recorded toolchain/settings; a rerun on new hosts is a new observati
 
 ## Regenerate the report figures
 
-The figures in `images/` are reader-facing views of the retained CSVs. Original
+The figures in `images/` are reader-facing views of the original studies' CSVs. Original
 figures and source hashes in `evidence/` remain part of the immutable exports.
 With matplotlib 3.10.8 available, run from the repository root on Linux:
 
@@ -112,3 +124,6 @@ Repeated-candidate plots show pooled values and observed pass ranges. Their
 budget view has a fixed 0.3–1.25 ms scale and flags any range extending above it;
 the companion view retains the full tail. MTU intervals describe variation
 across directions. None of these intervals is a confidence interval.
+The cliff figures live with their retained evidence; their
+[separate reproduction guide](evidence/20260914-cliff/README.md#recover-and-verify)
+specifies the analyzer and plotting sources used for that follow-up.

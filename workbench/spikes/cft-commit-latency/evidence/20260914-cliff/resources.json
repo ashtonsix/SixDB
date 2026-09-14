@@ -1,0 +1,116 @@
+{
+  "utc": 1789423921.9698265,
+  "jobs": [
+    "20260914T214207Z-6b0b8555",
+    "20260914T214212Z-9b4c7b4c",
+    "20260914T214216Z-9c258d8d",
+    "20260914T214908Z-9faf5294",
+    "20260914T214913Z-653255ea",
+    "20260914T214918Z-57e8e375",
+    "20260914T215624Z-f479d358",
+    "20260914T215855Z-0d7e1c95"
+  ],
+  "instances": [
+    {
+      "id": "i-0fce7de7d5517577e",
+      "state": "terminated",
+      "job": "20260914T214212Z-9b4c7b4c"
+    },
+    {
+      "id": "i-0f767b6e89cc64de7",
+      "state": "terminated",
+      "job": "20260914T214913Z-653255ea"
+    },
+    {
+      "id": "i-0e1d19411eacc3dde",
+      "state": "terminated",
+      "job": "20260914T214207Z-6b0b8555"
+    },
+    {
+      "id": "i-08cc590692255467f",
+      "state": "terminated",
+      "job": "20260914T214918Z-57e8e375"
+    },
+    {
+      "id": "i-03857f13879f8bce8",
+      "state": "terminated",
+      "job": "20260914T214216Z-9c258d8d"
+    },
+    {
+      "id": "i-013c3e2d6d29f1426",
+      "state": "terminated",
+      "job": "20260914T215855Z-0d7e1c95"
+    },
+    {
+      "id": "i-04b97353c6b876802",
+      "state": "terminated",
+      "job": "20260914T214908Z-9faf5294"
+    },
+    {
+      "id": "i-05ef67b995e3a66de",
+      "state": "terminated",
+      "job": "20260914T215624Z-f479d358"
+    }
+  ],
+  "remaining_volumes": [],
+  "remaining_private_groups": [],
+  "receipts": [
+    {
+      "group": "20260914T214202Z-ca6367a5",
+      "network_removed": true,
+      "members": {
+        "use1-az1": {
+          "exit_code": 0,
+          "utc": 1789423445.6530962
+        },
+        "use1-az2": {
+          "exit_code": 0,
+          "utc": 1789423443.4841115
+        },
+        "use1-az4": {
+          "exit_code": 0,
+          "utc": 1789423509.4692276
+        }
+      }
+    },
+    {
+      "group": "20260914T214904Z-23a9b757",
+      "network_removed": true,
+      "members": {
+        "use1-az1": {
+          "exit_code": 0,
+          "utc": 1789423716.0493758
+        },
+        "use1-az2": {
+          "exit_code": 0,
+          "utc": 1789423739.8398771
+        },
+        "use1-az4": {
+          "exit_code": 0,
+          "utc": 1789423851.3540404
+        }
+      }
+    },
+    {
+      "group": "20260914T215617Z-2e42d476",
+      "network_removed": false,
+      "members": {
+        "local-nvme": {
+          "exit_code": 1,
+          "utc": 1789423125.7458143
+        }
+      }
+    },
+    {
+      "group": "20260914T215849Z-12dc7b0b",
+      "network_removed": false,
+      "members": {
+        "local-nvme": {
+          "exit_code": 0,
+          "utc": 1789423583.5288966
+        }
+      }
+    }
+  ],
+  "clean": true
+}

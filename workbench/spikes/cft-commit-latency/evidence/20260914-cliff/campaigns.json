@@ -1,0 +1,1281 @@
+{
+  "small": {
+    "bucket": "calico-fleet-artifacts",
+    "control_error": null,
+    "format": 2,
+    "id": "20260914T214202Z-ca6367a5",
+    "launch_complete": true,
+    "launch_started": true,
+    "members": {
+      "use1-az1": {
+        "args": [],
+        "cancellation": {
+          "requested": true,
+          "utc": 1789423511.7414465
+        },
+        "collection": {
+          "exit_code": 0,
+          "utc": 1789423445.6530962
+        },
+        "config": {
+          "ami": "ami-0246d714afcc1d494",
+          "architecture": "arm64",
+          "bucket": "calico-fleet-artifacts",
+          "capacity": "on-demand",
+          "data_volumes": [],
+          "deadline_seconds": 3600,
+          "disk_gb": 64,
+          "env": {
+            "CFT_NODE": "0",
+            "CFT_PLAN": "workbench/spikes/cft-commit-latency/commit/cliff-small.json",
+            "CFT_PROFILE": "small",
+            "SIXDB_GROUP_MEMBER": "use1-az1",
+            "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260914T214202Z-ca6367a5"
+          },
+          "fresh": true,
+          "hardware": {
+            "EbsInfo": {
+              "AttachmentLimitType": "dedicated",
+              "EbsOptimizedInfo": {
+                "BaselineBandwidthInMbps": 625,
+                "BaselineIops": 2500,
+                "BaselineThroughputInMBps": 78.125,
+                "MaximumBandwidthInMbps": 10000,
+                "MaximumIops": 40000,
+                "MaximumThroughputInMBps": 1250.0
+              },
+              "EbsOptimizedSupport": "default",
+              "EncryptionSupport": "supported",
+              "MaximumEbsAttachments": 32,
+              "NvmeSupport": "required"
+            },
+            "Hypervisor": "nitro",
+            "InstanceStorageInfo": {
+              "Disks": [
+                {
+                  "Count": 1,
+                  "SizeInGB": 468,
+                  "Type": "ssd"
+                }
+              ],
+              "EncryptionSupport": "required",
+              "NvmeSupport": "required",
+              "TotalSizeInGB": 468
+            },
+            "MemoryInfo": {
+              "SizeInMiB": 16384
+            },
+            "NetworkInfo": {
+              "DefaultNetworkCardIndex": 0,
+              "EfaSupported": false,
+              "EnaSrdSupported": false,
+              "EnaSupport": "required",
+              "EncryptionInTransitSupported": true,
+              "FlexibleEnaQueuesSupport": "unsupported",
+              "Ipv4AddressesPerInterface": 10,
+              "Ipv6AddressesPerInterface": 10,
+              "Ipv6Supported": true,
+              "MaximumNetworkCards": 1,
+              "MaximumNetworkInterfaces": 3,
+              "NetworkCards": [
+                {
+                  "BaselineBandwidthInGbps": 1.172,
+                  "DefaultEnaQueueCountPerInterface": 2,
+                  "MaximumNetworkInterfaces": 3,
+                  "NetworkCardIndex": 0,
+                  "NetworkPerformance": "Up to 10 Gigabit",
+                  "PeakBandwidthInGbps": 10.0
+                }
+              ],
+              "NetworkPerformance": "Up to 10 Gigabit"
+            },
+            "ProcessorInfo": {
+              "Manufacturer": "AWS",
+              "SupportedArchitectures": [
+                "arm64"
+              ],
+              "SustainedClockSpeedInGhz": 2.8
+            },
+            "VCpuInfo": {
+              "DefaultCores": 2,
+              "DefaultThreadsPerCore": 1,
+              "DefaultVCpus": 2,
+              "ValidCores": [
+                1,
+                2
+              ],
+              "ValidThreadsPerCore": [
+                1
+              ]
+            }
+          },
+          "idle_seconds": 0,
+          "image_name": "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-20260904",
+          "instance_store_count": 1,
+          "instance_store_mappings": [],
+          "instance_store_nvme": true,
+          "instance_type": "i8g.large",
+          "machine": "neoverse-v2",
+          "max_age_seconds": 3600,
+          "region": "us-east-1",
+          "root_device": "/dev/sda1",
+          "security_group_id": "sg-0cc0e3aa9dd8b5937",
+          "setup": "toolchain",
+          "subnets": [
+            {
+              "id": "subnet-800010e7",
+              "zone": "us-east-1c"
+            }
+          ],
+          "sync_seconds": 0,
+          "threads_per_core": 1,
+          "vpc_id": "vpc-5e2d0124"
+        },
+        "instances": [
+          {
+            "id": "i-0e1d19411eacc3dde",
+            "state": "terminated"
+          }
+        ],
+        "job": "20260914T214207Z-6b0b8555",
+        "job_created_at": 1789422147.3058467,
+        "phase": "submitted",
+        "resource_observed_at": 1789423465.8716831,
+        "script": "workbench/spikes/cft-commit-latency/commit/cliff_cloud.sh"
+      },
+      "use1-az2": {
+        "args": [],
+        "cancellation": {
+          "requested": true,
+          "utc": 1789423514.2765267
+        },
+        "collection": {
+          "exit_code": 0,
+          "utc": 1789423443.4841115
+        },
+        "config": {
+          "ami": "ami-0246d714afcc1d494",
+          "architecture": "arm64",
+          "bucket": "calico-fleet-artifacts",
+          "capacity": "on-demand",
+          "data_volumes": [],
+          "deadline_seconds": 3600,
+          "disk_gb": 64,
+          "env": {
+            "CFT_NODE": "1",
+            "CFT_PLAN": "workbench/spikes/cft-commit-latency/commit/cliff-small.json",
+            "CFT_PROFILE": "small",
+            "SIXDB_GROUP_MEMBER": "use1-az2",
+            "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260914T214202Z-ca6367a5"
+          },
+          "fresh": true,
+          "hardware": {
+            "EbsInfo": {
+              "AttachmentLimitType": "dedicated",
+              "EbsOptimizedInfo": {
+                "BaselineBandwidthInMbps": 625,
+                "BaselineIops": 2500,
+                "BaselineThroughputInMBps": 78.125,
+                "MaximumBandwidthInMbps": 10000,
+                "MaximumIops": 40000,
+                "MaximumThroughputInMBps": 1250.0
+              },
+              "EbsOptimizedSupport": "default",
+              "EncryptionSupport": "supported",
+              "MaximumEbsAttachments": 32,
+              "NvmeSupport": "required"
+            },
+            "Hypervisor": "nitro",
+            "InstanceStorageInfo": {
+              "Disks": [
+                {
+                  "Count": 1,
+                  "SizeInGB": 468,
+                  "Type": "ssd"
+                }
+              ],
+              "EncryptionSupport": "required",
+              "NvmeSupport": "required",
+              "TotalSizeInGB": 468
+            },
+            "MemoryInfo": {
+              "SizeInMiB": 16384
+            },
+            "NetworkInfo": {
+              "DefaultNetworkCardIndex": 0,
+              "EfaSupported": false,
+              "EnaSrdSupported": false,
+              "EnaSupport": "required",
+              "EncryptionInTransitSupported": true,
+              "FlexibleEnaQueuesSupport": "unsupported",
+              "Ipv4AddressesPerInterface": 10,
+              "Ipv6AddressesPerInterface": 10,
+              "Ipv6Supported": true,
+              "MaximumNetworkCards": 1,
+              "MaximumNetworkInterfaces": 3,
+              "NetworkCards": [
+                {
+                  "BaselineBandwidthInGbps": 1.172,
+                  "DefaultEnaQueueCountPerInterface": 2,
+                  "MaximumNetworkInterfaces": 3,
+                  "NetworkCardIndex": 0,
+                  "NetworkPerformance": "Up to 10 Gigabit",
+                  "PeakBandwidthInGbps": 10.0
+                }
+              ],
+              "NetworkPerformance": "Up to 10 Gigabit"
+            },
+            "ProcessorInfo": {
+              "Manufacturer": "AWS",
+              "SupportedArchitectures": [
+                "arm64"
+              ],
+              "SustainedClockSpeedInGhz": 2.8
+            },
+            "VCpuInfo": {
+              "DefaultCores": 2,
+              "DefaultThreadsPerCore": 1,
+              "DefaultVCpus": 2,
+              "ValidCores": [
+                1,
+                2
+              ],
+              "ValidThreadsPerCore": [
+                1
+              ]
+            }
+          },
+          "idle_seconds": 0,
+          "image_name": "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-20260904",
+          "instance_store_count": 1,
+          "instance_store_mappings": [],
+          "instance_store_nvme": true,
+          "instance_type": "i8g.large",
+          "machine": "neoverse-v2",
+          "max_age_seconds": 3600,
+          "region": "us-east-1",
+          "root_device": "/dev/sda1",
+          "security_group_id": "sg-0cc0e3aa9dd8b5937",
+          "setup": "toolchain",
+          "subnets": [
+            {
+              "id": "subnet-d1aeb1ff",
+              "zone": "us-east-1d"
+            }
+          ],
+          "sync_seconds": 0,
+          "threads_per_core": 1,
+          "vpc_id": "vpc-5e2d0124"
+        },
+        "instances": [
+          {
+            "id": "i-0fce7de7d5517577e",
+            "state": "terminated"
+          }
+        ],
+        "job": "20260914T214212Z-9b4c7b4c",
+        "job_created_at": 1789422164.9007902,
+        "phase": "submitted",
+        "resource_observed_at": 1789423465.9351084,
+        "script": "workbench/spikes/cft-commit-latency/commit/cliff_cloud.sh"
+      },
+      "use1-az4": {
+        "args": [],
+        "cancellation": {
+          "requested": true,
+          "utc": 1789423516.5368116
+        },
+        "collection": {
+          "exit_code": 0,
+          "utc": 1789423509.4692276
+        },
+        "config": {
+          "ami": "ami-0246d714afcc1d494",
+          "architecture": "arm64",
+          "bucket": "calico-fleet-artifacts",
+          "capacity": "on-demand",
+          "data_volumes": [],
+          "deadline_seconds": 3600,
+          "disk_gb": 64,
+          "env": {
+            "CFT_NODE": "2",
+            "CFT_PLAN": "workbench/spikes/cft-commit-latency/commit/cliff-small.json",
+            "CFT_PROFILE": "small",
+            "SIXDB_GROUP_MEMBER": "use1-az4",
+            "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260914T214202Z-ca6367a5"
+          },
+          "fresh": true,
+          "hardware": {
+            "EbsInfo": {
+              "AttachmentLimitType": "dedicated",
+              "EbsOptimizedInfo": {
+                "BaselineBandwidthInMbps": 625,
+                "BaselineIops": 2500,
+                "BaselineThroughputInMBps": 78.125,
+                "MaximumBandwidthInMbps": 10000,
+                "MaximumIops": 40000,
+                "MaximumThroughputInMBps": 1250.0
+              },
+              "EbsOptimizedSupport": "default",
+              "EncryptionSupport": "supported",
+              "MaximumEbsAttachments": 32,
+              "NvmeSupport": "required"
+            },
+            "Hypervisor": "nitro",
+            "InstanceStorageInfo": {
+              "Disks": [
+                {
+                  "Count": 1,
+                  "SizeInGB": 468,
+                  "Type": "ssd"
+                }
+              ],
+              "EncryptionSupport": "required",
+              "NvmeSupport": "required",
+              "TotalSizeInGB": 468
+            },
+            "MemoryInfo": {
+              "SizeInMiB": 16384
+            },
+            "NetworkInfo": {
+              "DefaultNetworkCardIndex": 0,
+              "EfaSupported": false,
+              "EnaSrdSupported": false,
+              "EnaSupport": "required",
+              "EncryptionInTransitSupported": true,
+              "FlexibleEnaQueuesSupport": "unsupported",
+              "Ipv4AddressesPerInterface": 10,
+              "Ipv6AddressesPerInterface": 10,
+              "Ipv6Supported": true,
+              "MaximumNetworkCards": 1,
+              "MaximumNetworkInterfaces": 3,
+              "NetworkCards": [
+                {
+                  "BaselineBandwidthInGbps": 1.172,
+                  "DefaultEnaQueueCountPerInterface": 2,
+                  "MaximumNetworkInterfaces": 3,
+                  "NetworkCardIndex": 0,
+                  "NetworkPerformance": "Up to 10 Gigabit",
+                  "PeakBandwidthInGbps": 10.0
+                }
+              ],
+              "NetworkPerformance": "Up to 10 Gigabit"
+            },
+            "ProcessorInfo": {
+              "Manufacturer": "AWS",
+              "SupportedArchitectures": [
+                "arm64"
+              ],
+              "SustainedClockSpeedInGhz": 2.8
+            },
+            "VCpuInfo": {
+              "DefaultCores": 2,
+              "DefaultThreadsPerCore": 1,
+              "DefaultVCpus": 2,
+              "ValidCores": [
+                1,
+                2
+              ],
+              "ValidThreadsPerCore": [
+                1
+              ]
+            }
+          },
+          "idle_seconds": 0,
+          "image_name": "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-20260904",
+          "instance_store_count": 1,
+          "instance_store_mappings": [],
+          "instance_store_nvme": true,
+          "instance_type": "i8g.large",
+          "machine": "neoverse-v2",
+          "max_age_seconds": 3600,
+          "region": "us-east-1",
+          "root_device": "/dev/sda1",
+          "security_group_id": "sg-0cc0e3aa9dd8b5937",
+          "setup": "toolchain",
+          "subnets": [
+            {
+              "id": "subnet-75288838",
+              "zone": "us-east-1a"
+            }
+          ],
+          "sync_seconds": 0,
+          "threads_per_core": 1,
+          "vpc_id": "vpc-5e2d0124"
+        },
+        "instances": [
+          {
+            "id": "i-03857f13879f8bce8",
+            "state": "running"
+          }
+        ],
+        "job": "20260914T214216Z-9c258d8d",
+        "job_created_at": 1789422181.6673539,
+        "phase": "submitted",
+        "resource_observed_at": 1789423466.055779,
+        "script": "workbench/spikes/cft-commit-latency/commit/cliff_cloud.sh"
+      }
+    },
+    "network": {
+      "icmp": true,
+      "id": "sg-0cc0e3aa9dd8b5937",
+      "name": "sixdb-group-20260914T214202Z-ca6367a5",
+      "tcp_ports": [
+        [
+          43000,
+          43001
+        ]
+      ],
+      "udp_ports": [
+        [
+          43001,
+          43001
+        ]
+      ],
+      "vpc_id": "vpc-5e2d0124"
+    },
+    "network_checked_at": 1789423520.6959112,
+    "network_error": null,
+    "network_removed": true,
+    "plan": "workbench/spikes/cft-commit-latency/commit/cliff-small.json",
+    "region": "us-east-1",
+    "source": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/cft-commit-latency/cliff/small/20260914T214202Z-3ab6a170/source",
+    "study": "CFT repeated-run cliff interventions",
+    "uri": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260914T214202Z-ca6367a5"
+  },
+  "express": {
+    "bucket": "calico-fleet-artifacts",
+    "control_error": null,
+    "format": 2,
+    "id": "20260914T214904Z-23a9b757",
+    "launch_complete": true,
+    "launch_started": true,
+    "members": {
+      "use1-az1": {
+        "args": [],
+        "cancellation": {
+          "requested": true,
+          "utc": 1789423853.64143
+        },
+        "collection": {
+          "exit_code": 0,
+          "utc": 1789423716.0493758
+        },
+        "config": {
+          "ami": "ami-0246d714afcc1d494",
+          "architecture": "arm64",
+          "bucket": "calico-fleet-artifacts",
+          "capacity": "on-demand",
+          "data_volumes": [],
+          "deadline_seconds": 3600,
+          "disk_gb": 64,
+          "env": {
+            "CFT_NODE": "0",
+            "CFT_PLAN": "workbench/spikes/cft-commit-latency/commit/cliff-express.json",
+            "CFT_PROFILE": "express",
+            "SIXDB_GROUP_MEMBER": "use1-az1",
+            "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260914T214904Z-23a9b757"
+          },
+          "fresh": true,
+          "hardware": {
+            "EbsInfo": {
+              "AttachmentLimitType": "dedicated",
+              "EbsOptimizedInfo": {
+                "BaselineBandwidthInMbps": 10000,
+                "BaselineIops": 40000,
+                "BaselineThroughputInMBps": 1250.0,
+                "MaximumBandwidthInMbps": 10000,
+                "MaximumIops": 40000,
+                "MaximumThroughputInMBps": 1250.0
+              },
+              "EbsOptimizedSupport": "default",
+              "EncryptionSupport": "supported",
+              "MaximumEbsAttachments": 32,
+              "NvmeSupport": "required"
+            },
+            "Hypervisor": "nitro",
+            "InstanceStorageInfo": {
+              "Disks": [
+                {
+                  "Count": 2,
+                  "SizeInGB": 3750,
+                  "Type": "ssd"
+                }
+              ],
+              "EncryptionSupport": "required",
+              "NvmeSupport": "required",
+              "TotalSizeInGB": 7500
+            },
+            "MemoryInfo": {
+              "SizeInMiB": 262144
+            },
+            "NetworkInfo": {
+              "DefaultNetworkCardIndex": 0,
+              "EfaSupported": false,
+              "EnaSrdSupported": true,
+              "EnaSupport": "required",
+              "EncryptionInTransitSupported": true,
+              "FlexibleEnaQueuesSupport": "unsupported",
+              "Ipv4AddressesPerInterface": 30,
+              "Ipv6AddressesPerInterface": 30,
+              "Ipv6Supported": true,
+              "MaximumNetworkCards": 1,
+              "MaximumNetworkInterfaces": 8,
+              "NetworkCards": [
+                {
+                  "BaselineBandwidthInGbps": 25.0,
+                  "DefaultEnaQueueCountPerInterface": 8,
+                  "MaximumNetworkInterfaces": 8,
+                  "NetworkCardIndex": 0,
+                  "NetworkPerformance": "Up to 25 Gigabit",
+                  "PeakBandwidthInGbps": 25.0
+                }
+              ],
+              "NetworkPerformance": "Up to 25 Gigabit"
+            },
+            "ProcessorInfo": {
+              "Manufacturer": "AWS",
+              "SupportedArchitectures": [
+                "arm64"
+              ],
+              "SustainedClockSpeedInGhz": 2.8
+            },
+            "VCpuInfo": {
+              "DefaultCores": 32,
+              "DefaultThreadsPerCore": 1,
+              "DefaultVCpus": 32,
+              "ValidCores": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32
+              ],
+              "ValidThreadsPerCore": [
+                1
+              ]
+            }
+          },
+          "idle_seconds": 0,
+          "image_name": "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-20260904",
+          "instance_store_count": 1,
+          "instance_store_mappings": [],
+          "instance_store_nvme": true,
+          "instance_type": "i8g.8xlarge",
+          "machine": "neoverse-v2",
+          "max_age_seconds": 3600,
+          "region": "us-east-1",
+          "root_device": "/dev/sda1",
+          "security_group_id": "sg-0d1693cceb778590e",
+          "setup": "toolchain",
+          "subnets": [
+            {
+              "id": "subnet-800010e7",
+              "zone": "us-east-1c"
+            }
+          ],
+          "sync_seconds": 0,
+          "threads_per_core": 1,
+          "vpc_id": "vpc-5e2d0124"
+        },
+        "instances": [
+          {
+            "id": "i-04b97353c6b876802",
+            "state": "running"
+          }
+        ],
+        "job": "20260914T214908Z-9faf5294",
+        "job_created_at": 1789422568.7246492,
+        "phase": "submitted",
+        "resource_observed_at": 1789423580.010522,
+        "script": "workbench/spikes/cft-commit-latency/commit/cliff_cloud.sh"
+      },
+      "use1-az2": {
+        "args": [],
+        "cancellation": {
+          "requested": true,
+          "utc": 1789423855.9393628
+        },
+        "collection": {
+          "exit_code": 0,
+          "utc": 1789423739.8398771
+        },
+        "config": {
+          "ami": "ami-0246d714afcc1d494",
+          "architecture": "arm64",
+          "bucket": "calico-fleet-artifacts",
+          "capacity": "on-demand",
+          "data_volumes": [],
+          "deadline_seconds": 3600,
+          "disk_gb": 64,
+          "env": {
+            "CFT_NODE": "1",
+            "CFT_PLAN": "workbench/spikes/cft-commit-latency/commit/cliff-express.json",
+            "CFT_PROFILE": "express",
+            "SIXDB_GROUP_MEMBER": "use1-az2",
+            "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260914T214904Z-23a9b757"
+          },
+          "fresh": true,
+          "hardware": {
+            "EbsInfo": {
+              "AttachmentLimitType": "dedicated",
+              "EbsOptimizedInfo": {
+                "BaselineBandwidthInMbps": 10000,
+                "BaselineIops": 40000,
+                "BaselineThroughputInMBps": 1250.0,
+                "MaximumBandwidthInMbps": 10000,
+                "MaximumIops": 40000,
+                "MaximumThroughputInMBps": 1250.0
+              },
+              "EbsOptimizedSupport": "default",
+              "EncryptionSupport": "supported",
+              "MaximumEbsAttachments": 32,
+              "NvmeSupport": "required"
+            },
+            "Hypervisor": "nitro",
+            "InstanceStorageInfo": {
+              "Disks": [
+                {
+                  "Count": 2,
+                  "SizeInGB": 3750,
+                  "Type": "ssd"
+                }
+              ],
+              "EncryptionSupport": "required",
+              "NvmeSupport": "required",
+              "TotalSizeInGB": 7500
+            },
+            "MemoryInfo": {
+              "SizeInMiB": 262144
+            },
+            "NetworkInfo": {
+              "DefaultNetworkCardIndex": 0,
+              "EfaSupported": false,
+              "EnaSrdSupported": true,
+              "EnaSupport": "required",
+              "EncryptionInTransitSupported": true,
+              "FlexibleEnaQueuesSupport": "unsupported",
+              "Ipv4AddressesPerInterface": 30,
+              "Ipv6AddressesPerInterface": 30,
+              "Ipv6Supported": true,
+              "MaximumNetworkCards": 1,
+              "MaximumNetworkInterfaces": 8,
+              "NetworkCards": [
+                {
+                  "BaselineBandwidthInGbps": 25.0,
+                  "DefaultEnaQueueCountPerInterface": 8,
+                  "MaximumNetworkInterfaces": 8,
+                  "NetworkCardIndex": 0,
+                  "NetworkPerformance": "Up to 25 Gigabit",
+                  "PeakBandwidthInGbps": 25.0
+                }
+              ],
+              "NetworkPerformance": "Up to 25 Gigabit"
+            },
+            "ProcessorInfo": {
+              "Manufacturer": "AWS",
+              "SupportedArchitectures": [
+                "arm64"
+              ],
+              "SustainedClockSpeedInGhz": 2.8
+            },
+            "VCpuInfo": {
+              "DefaultCores": 32,
+              "DefaultThreadsPerCore": 1,
+              "DefaultVCpus": 32,
+              "ValidCores": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32
+              ],
+              "ValidThreadsPerCore": [
+                1
+              ]
+            }
+          },
+          "idle_seconds": 0,
+          "image_name": "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-20260904",
+          "instance_store_count": 1,
+          "instance_store_mappings": [],
+          "instance_store_nvme": true,
+          "instance_type": "i8g.8xlarge",
+          "machine": "neoverse-v2",
+          "max_age_seconds": 3600,
+          "region": "us-east-1",
+          "root_device": "/dev/sda1",
+          "security_group_id": "sg-0d1693cceb778590e",
+          "setup": "toolchain",
+          "subnets": [
+            {
+              "id": "subnet-d1aeb1ff",
+              "zone": "us-east-1d"
+            }
+          ],
+          "sync_seconds": 0,
+          "threads_per_core": 1,
+          "vpc_id": "vpc-5e2d0124"
+        },
+        "instances": [
+          {
+            "id": "i-0f767b6e89cc64de7",
+            "state": "running"
+          }
+        ],
+        "job": "20260914T214913Z-653255ea",
+        "job_created_at": 1789422585.353108,
+        "phase": "submitted",
+        "resource_observed_at": 1789423579.935505,
+        "script": "workbench/spikes/cft-commit-latency/commit/cliff_cloud.sh"
+      },
+      "use1-az4": {
+        "args": [],
+        "cancellation": {
+          "requested": true,
+          "utc": 1789423858.0822437
+        },
+        "collection": {
+          "exit_code": 0,
+          "utc": 1789423851.3540404
+        },
+        "config": {
+          "ami": "ami-0246d714afcc1d494",
+          "architecture": "arm64",
+          "bucket": "calico-fleet-artifacts",
+          "capacity": "on-demand",
+          "data_volumes": [],
+          "deadline_seconds": 3600,
+          "disk_gb": 64,
+          "env": {
+            "CFT_NODE": "2",
+            "CFT_PLAN": "workbench/spikes/cft-commit-latency/commit/cliff-express.json",
+            "CFT_PROFILE": "express",
+            "SIXDB_GROUP_MEMBER": "use1-az4",
+            "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260914T214904Z-23a9b757"
+          },
+          "fresh": true,
+          "hardware": {
+            "EbsInfo": {
+              "AttachmentLimitType": "dedicated",
+              "EbsOptimizedInfo": {
+                "BaselineBandwidthInMbps": 10000,
+                "BaselineIops": 40000,
+                "BaselineThroughputInMBps": 1250.0,
+                "MaximumBandwidthInMbps": 10000,
+                "MaximumIops": 40000,
+                "MaximumThroughputInMBps": 1250.0
+              },
+              "EbsOptimizedSupport": "default",
+              "EncryptionSupport": "supported",
+              "MaximumEbsAttachments": 32,
+              "NvmeSupport": "required"
+            },
+            "Hypervisor": "nitro",
+            "InstanceStorageInfo": {
+              "Disks": [
+                {
+                  "Count": 2,
+                  "SizeInGB": 3750,
+                  "Type": "ssd"
+                }
+              ],
+              "EncryptionSupport": "required",
+              "NvmeSupport": "required",
+              "TotalSizeInGB": 7500
+            },
+            "MemoryInfo": {
+              "SizeInMiB": 262144
+            },
+            "NetworkInfo": {
+              "DefaultNetworkCardIndex": 0,
+              "EfaSupported": false,
+              "EnaSrdSupported": true,
+              "EnaSupport": "required",
+              "EncryptionInTransitSupported": true,
+              "FlexibleEnaQueuesSupport": "unsupported",
+              "Ipv4AddressesPerInterface": 30,
+              "Ipv6AddressesPerInterface": 30,
+              "Ipv6Supported": true,
+              "MaximumNetworkCards": 1,
+              "MaximumNetworkInterfaces": 8,
+              "NetworkCards": [
+                {
+                  "BaselineBandwidthInGbps": 25.0,
+                  "DefaultEnaQueueCountPerInterface": 8,
+                  "MaximumNetworkInterfaces": 8,
+                  "NetworkCardIndex": 0,
+                  "NetworkPerformance": "Up to 25 Gigabit",
+                  "PeakBandwidthInGbps": 25.0
+                }
+              ],
+              "NetworkPerformance": "Up to 25 Gigabit"
+            },
+            "ProcessorInfo": {
+              "Manufacturer": "AWS",
+              "SupportedArchitectures": [
+                "arm64"
+              ],
+              "SustainedClockSpeedInGhz": 2.8
+            },
+            "VCpuInfo": {
+              "DefaultCores": 32,
+              "DefaultThreadsPerCore": 1,
+              "DefaultVCpus": 32,
+              "ValidCores": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32
+              ],
+              "ValidThreadsPerCore": [
+                1
+              ]
+            }
+          },
+          "idle_seconds": 0,
+          "image_name": "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-20260904",
+          "instance_store_count": 1,
+          "instance_store_mappings": [],
+          "instance_store_nvme": true,
+          "instance_type": "i8g.8xlarge",
+          "machine": "neoverse-v2",
+          "max_age_seconds": 3600,
+          "region": "us-east-1",
+          "root_device": "/dev/sda1",
+          "security_group_id": "sg-0d1693cceb778590e",
+          "setup": "toolchain",
+          "subnets": [
+            {
+              "id": "subnet-75288838",
+              "zone": "us-east-1a"
+            }
+          ],
+          "sync_seconds": 0,
+          "threads_per_core": 1,
+          "vpc_id": "vpc-5e2d0124"
+        },
+        "instances": [
+          {
+            "id": "i-08cc590692255467f",
+            "state": "running"
+          }
+        ],
+        "job": "20260914T214918Z-57e8e375",
+        "job_created_at": 1789422602.2259693,
+        "phase": "submitted",
+        "resource_observed_at": 1789423579.960085,
+        "script": "workbench/spikes/cft-commit-latency/commit/cliff_cloud.sh"
+      }
+    },
+    "network": {
+      "icmp": true,
+      "id": "sg-0d1693cceb778590e",
+      "name": "sixdb-group-20260914T214904Z-23a9b757",
+      "tcp_ports": [
+        [
+          43000,
+          43001
+        ]
+      ],
+      "udp_ports": [
+        [
+          43001,
+          43001
+        ]
+      ],
+      "vpc_id": "vpc-5e2d0124"
+    },
+    "network_checked_at": 1789423862.2503164,
+    "network_error": null,
+    "network_removed": true,
+    "plan": "workbench/spikes/cft-commit-latency/commit/cliff-express.json",
+    "region": "us-east-1",
+    "source": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/cft-commit-latency/cliff/express/20260914T214904Z-2c3df909/source",
+    "study": "CFT repeated-run cliff interventions",
+    "uri": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260914T214904Z-23a9b757"
+  },
+  "local": {
+    "bucket": "calico-fleet-artifacts",
+    "control_error": null,
+    "format": 2,
+    "id": "20260914T215849Z-12dc7b0b",
+    "launch_complete": true,
+    "launch_started": true,
+    "members": {
+      "local-nvme": {
+        "args": [],
+        "collection": {
+          "exit_code": 0,
+          "utc": 1789423583.5288966
+        },
+        "config": {
+          "ami": "ami-0246d714afcc1d494",
+          "architecture": "arm64",
+          "bucket": "calico-fleet-artifacts",
+          "capacity": "on-demand",
+          "data_volumes": [],
+          "deadline_seconds": 1800,
+          "disk_gb": 32,
+          "env": {
+            "SIXDB_GROUP_MEMBER": "local-nvme",
+            "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260914T215849Z-12dc7b0b"
+          },
+          "fresh": true,
+          "hardware": {
+            "EbsInfo": {
+              "AttachmentLimitType": "dedicated",
+              "EbsOptimizedInfo": {
+                "BaselineBandwidthInMbps": 625,
+                "BaselineIops": 2500,
+                "BaselineThroughputInMBps": 78.125,
+                "MaximumBandwidthInMbps": 10000,
+                "MaximumIops": 40000,
+                "MaximumThroughputInMBps": 1250.0
+              },
+              "EbsOptimizedSupport": "default",
+              "EncryptionSupport": "supported",
+              "MaximumEbsAttachments": 32,
+              "NvmeSupport": "required"
+            },
+            "Hypervisor": "nitro",
+            "InstanceStorageInfo": {
+              "Disks": [
+                {
+                  "Count": 1,
+                  "SizeInGB": 468,
+                  "Type": "ssd"
+                }
+              ],
+              "EncryptionSupport": "required",
+              "NvmeSupport": "required",
+              "TotalSizeInGB": 468
+            },
+            "MemoryInfo": {
+              "SizeInMiB": 16384
+            },
+            "NetworkInfo": {
+              "DefaultNetworkCardIndex": 0,
+              "EfaSupported": false,
+              "EnaSrdSupported": false,
+              "EnaSupport": "required",
+              "EncryptionInTransitSupported": true,
+              "FlexibleEnaQueuesSupport": "unsupported",
+              "Ipv4AddressesPerInterface": 10,
+              "Ipv6AddressesPerInterface": 10,
+              "Ipv6Supported": true,
+              "MaximumNetworkCards": 1,
+              "MaximumNetworkInterfaces": 3,
+              "NetworkCards": [
+                {
+                  "BaselineBandwidthInGbps": 1.172,
+                  "DefaultEnaQueueCountPerInterface": 2,
+                  "MaximumNetworkInterfaces": 3,
+                  "NetworkCardIndex": 0,
+                  "NetworkPerformance": "Up to 10 Gigabit",
+                  "PeakBandwidthInGbps": 10.0
+                }
+              ],
+              "NetworkPerformance": "Up to 10 Gigabit"
+            },
+            "ProcessorInfo": {
+              "Manufacturer": "AWS",
+              "SupportedArchitectures": [
+                "arm64"
+              ],
+              "SustainedClockSpeedInGhz": 2.8
+            },
+            "VCpuInfo": {
+              "DefaultCores": 2,
+              "DefaultThreadsPerCore": 1,
+              "DefaultVCpus": 2,
+              "ValidCores": [
+                1,
+                2
+              ],
+              "ValidThreadsPerCore": [
+                1
+              ]
+            }
+          },
+          "idle_seconds": 0,
+          "image_name": "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-20260904",
+          "instance_store_count": 1,
+          "instance_store_mappings": [],
+          "instance_store_nvme": true,
+          "instance_type": "i8g.large",
+          "machine": "neoverse-v2",
+          "max_age_seconds": 1800,
+          "region": "us-east-1",
+          "root_device": "/dev/sda1",
+          "setup": "toolchain",
+          "subnets": [
+            {
+              "id": "subnet-75288838",
+              "zone": "us-east-1a"
+            },
+            {
+              "id": "subnet-c29a879e",
+              "zone": "us-east-1b"
+            },
+            {
+              "id": "subnet-800010e7",
+              "zone": "us-east-1c"
+            },
+            {
+              "id": "subnet-d1aeb1ff",
+              "zone": "us-east-1d"
+            }
+          ],
+          "sync_seconds": 0,
+          "threads_per_core": 1,
+          "vpc_id": "vpc-5e2d0124"
+        },
+        "instances": [
+          {
+            "id": "i-013c3e2d6d29f1426",
+            "state": "shutting-down"
+          }
+        ],
+        "job": "20260914T215855Z-0d7e1c95",
+        "job_created_at": 1789423143.623193,
+        "phase": "submitted",
+        "resource_observed_at": 1789423581.0788193,
+        "script": "workbench/spikes/cft-commit-latency/commit/cliff_storage.sh"
+      }
+    },
+    "network": null,
+    "region": "us-east-1",
+    "source": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/cft-commit-latency/cliff/local-rerun/source",
+    "uri": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260914T215849Z-12dc7b0b"
+  },
+  "failed-local": {
+    "bucket": "calico-fleet-artifacts",
+    "control_error": null,
+    "format": 2,
+    "id": "20260914T215617Z-2e42d476",
+    "launch_complete": true,
+    "launch_started": true,
+    "members": {
+      "local-nvme": {
+        "args": [],
+        "collection": {
+          "exit_code": 1,
+          "utc": 1789423125.7458143
+        },
+        "config": {
+          "ami": "ami-0246d714afcc1d494",
+          "architecture": "arm64",
+          "bucket": "calico-fleet-artifacts",
+          "capacity": "on-demand",
+          "data_volumes": [],
+          "deadline_seconds": 1800,
+          "disk_gb": 32,
+          "env": {
+            "SIXDB_GROUP_MEMBER": "local-nvme",
+            "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260914T215617Z-2e42d476"
+          },
+          "fresh": true,
+          "hardware": {
+            "EbsInfo": {
+              "AttachmentLimitType": "dedicated",
+              "EbsOptimizedInfo": {
+                "BaselineBandwidthInMbps": 625,
+                "BaselineIops": 2500,
+                "BaselineThroughputInMBps": 78.125,
+                "MaximumBandwidthInMbps": 10000,
+                "MaximumIops": 40000,
+                "MaximumThroughputInMBps": 1250.0
+              },
+              "EbsOptimizedSupport": "default",
+              "EncryptionSupport": "supported",
+              "MaximumEbsAttachments": 32,
+              "NvmeSupport": "required"
+            },
+            "Hypervisor": "nitro",
+            "InstanceStorageInfo": {
+              "Disks": [
+                {
+                  "Count": 1,
+                  "SizeInGB": 468,
+                  "Type": "ssd"
+                }
+              ],
+              "EncryptionSupport": "required",
+              "NvmeSupport": "required",
+              "TotalSizeInGB": 468
+            },
+            "MemoryInfo": {
+              "SizeInMiB": 16384
+            },
+            "NetworkInfo": {
+              "DefaultNetworkCardIndex": 0,
+              "EfaSupported": false,
+              "EnaSrdSupported": false,
+              "EnaSupport": "required",
+              "EncryptionInTransitSupported": true,
+              "FlexibleEnaQueuesSupport": "unsupported",
+              "Ipv4AddressesPerInterface": 10,
+              "Ipv6AddressesPerInterface": 10,
+              "Ipv6Supported": true,
+              "MaximumNetworkCards": 1,
+              "MaximumNetworkInterfaces": 3,
+              "NetworkCards": [
+                {
+                  "BaselineBandwidthInGbps": 1.172,
+                  "DefaultEnaQueueCountPerInterface": 2,
+                  "MaximumNetworkInterfaces": 3,
+                  "NetworkCardIndex": 0,
+                  "NetworkPerformance": "Up to 10 Gigabit",
+                  "PeakBandwidthInGbps": 10.0
+                }
+              ],
+              "NetworkPerformance": "Up to 10 Gigabit"
+            },
+            "ProcessorInfo": {
+              "Manufacturer": "AWS",
+              "SupportedArchitectures": [
+                "arm64"
+              ],
+              "SustainedClockSpeedInGhz": 2.8
+            },
+            "VCpuInfo": {
+              "DefaultCores": 2,
+              "DefaultThreadsPerCore": 1,
+              "DefaultVCpus": 2,
+              "ValidCores": [
+                1,
+                2
+              ],
+              "ValidThreadsPerCore": [
+                1
+              ]
+            }
+          },
+          "idle_seconds": 0,
+          "image_name": "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-20260904",
+          "instance_store_count": 1,
+          "instance_store_mappings": [],
+          "instance_store_nvme": true,
+          "instance_type": "i8g.large",
+          "machine": "neoverse-v2",
+          "max_age_seconds": 1800,
+          "region": "us-east-1",
+          "root_device": "/dev/sda1",
+          "setup": "toolchain",
+          "subnets": [
+            {
+              "id": "subnet-75288838",
+              "zone": "us-east-1a"
+            },
+            {
+              "id": "subnet-c29a879e",
+              "zone": "us-east-1b"
+            },
+            {
+              "id": "subnet-800010e7",
+              "zone": "us-east-1c"
+            },
+            {
+              "id": "subnet-d1aeb1ff",
+              "zone": "us-east-1d"
+            }
+          ],
+          "sync_seconds": 0,
+          "threads_per_core": 1,
+          "vpc_id": "vpc-5e2d0124"
+        },
+        "job": "20260914T215624Z-f479d358",
+        "job_created_at": 1789422992.1874073,
+        "phase": "submitted",
+        "script": "workbench/spikes/cft-commit-latency/commit/cliff_storage.sh"
+      }
+    },
+    "network": null,
+    "region": "us-east-1",
+    "source": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/cft-commit-latency/cliff/local/source",
+    "uri": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260914T215617Z-2e42d476"
+  }
+}

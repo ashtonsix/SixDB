@@ -1,0 +1,12 @@
+[
+  {"name":"original-16s-r0","rate":104400,"seconds":16,"batch":4},
+  {"name":"original-60s-r0","rate":104400,"seconds":60,"batch":4},
+  {"name":"skip-initialize-60s-r0","rate":104400,"seconds":60,"batch":4,"skip_initialize":true},
+  {"name":"below-cliff-90k-r0","rate":90000,"seconds":60,"batch":4,"skip_initialize":true},
+  {"name":"batch16-104k-r0","rate":104400,"seconds":60,"batch":16,"skip_initialize":true},
+  {"name":"adaptive-batch-104k-r0","rate":104400,"seconds":60,"batch":64,"base_batch":4,"adaptive":true,"skip_initialize":true},
+  {"name":"baseline-network-15k-r0","rate":15000,"seconds":60,"batch":4,"skip_initialize":true},
+  {"name":"below-cliff-90k-r1","rate":90000,"seconds":60,"batch":4,"skip_initialize":true,"repeat":1},
+  {"name":"skip-initialize-60s-r1","rate":104400,"seconds":60,"batch":4,"skip_initialize":true,"repeat":1},
+  {"name":"adaptive-batch-104k-r1","rate":104400,"seconds":60,"batch":64,"base_batch":4,"adaptive":true,"skip_initialize":true,"repeat":1}
+]

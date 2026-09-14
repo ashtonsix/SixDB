@@ -1,0 +1,1077 @@
+[
+  {
+    "cohort": "small",
+    "member": "use1-az1",
+    "job": "20260914T214207Z-6b0b8555",
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 11757056,
+      "files": 60,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/89f2ae36fa7807c5525c4e989a233d880b5c9fa5739c28f4c1048ee47afd7b29.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "89f2ae36fa7807c5525c4e989a233d880b5c9fa5739c28f4c1048ee47afd7b29",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/89f2ae36fa7807c5525c4e989a233d880b5c9fa5739c28f4c1048ee47afd7b29.tar.gz"
+    },
+    "source_digest": "e62be50a382b46dcbd748e9b52a5af3615b8dd6f61f1d71d4e329fc93b8e08b7",
+    "status": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 11757056,
+        "files": 60,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/89f2ae36fa7807c5525c4e989a233d880b5c9fa5739c28f4c1048ee47afd7b29.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "89f2ae36fa7807c5525c4e989a233d880b5c9fa5739c28f4c1048ee47afd7b29",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/89f2ae36fa7807c5525c4e989a233d880b5c9fa5739c28f4c1048ee47afd7b29.tar.gz"
+      },
+      "job": "20260914T214207Z-6b0b8555",
+      "script_returncode": 0,
+      "script_seconds": 1197.8636674880981,
+      "state": "complete",
+      "updated_at": 1789423432.3483312,
+      "worker": {
+        "id": "20260914T214207Z-6b0b8555",
+        "instance_id": "i-0e1d19411eacc3dde",
+        "max_end": 1789425747.3058467,
+        "reuse_count": 0,
+        "reused": false
+      },
+      "worker_seconds_before_collection": 1235.2528038024902
+    },
+    "hardware": {
+      "EbsInfo": {
+        "AttachmentLimitType": "dedicated",
+        "EbsOptimizedInfo": {
+          "BaselineBandwidthInMbps": 625,
+          "BaselineIops": 2500,
+          "BaselineThroughputInMBps": 78.125,
+          "MaximumBandwidthInMbps": 10000,
+          "MaximumIops": 40000,
+          "MaximumThroughputInMBps": 1250.0
+        },
+        "EbsOptimizedSupport": "default",
+        "EncryptionSupport": "supported",
+        "MaximumEbsAttachments": 32,
+        "NvmeSupport": "required"
+      },
+      "Hypervisor": "nitro",
+      "InstanceStorageInfo": {
+        "Disks": [
+          {
+            "Count": 1,
+            "SizeInGB": 468,
+            "Type": "ssd"
+          }
+        ],
+        "EncryptionSupport": "required",
+        "NvmeSupport": "required",
+        "TotalSizeInGB": 468
+      },
+      "MemoryInfo": {
+        "SizeInMiB": 16384
+      },
+      "NetworkInfo": {
+        "DefaultNetworkCardIndex": 0,
+        "EfaSupported": false,
+        "EnaSrdSupported": false,
+        "EnaSupport": "required",
+        "EncryptionInTransitSupported": true,
+        "FlexibleEnaQueuesSupport": "unsupported",
+        "Ipv4AddressesPerInterface": 10,
+        "Ipv6AddressesPerInterface": 10,
+        "Ipv6Supported": true,
+        "MaximumNetworkCards": 1,
+        "MaximumNetworkInterfaces": 3,
+        "NetworkCards": [
+          {
+            "BaselineBandwidthInGbps": 1.172,
+            "DefaultEnaQueueCountPerInterface": 2,
+            "MaximumNetworkInterfaces": 3,
+            "NetworkCardIndex": 0,
+            "NetworkPerformance": "Up to 10 Gigabit",
+            "PeakBandwidthInGbps": 10.0
+          }
+        ],
+        "NetworkPerformance": "Up to 10 Gigabit"
+      },
+      "ProcessorInfo": {
+        "Manufacturer": "AWS",
+        "SupportedArchitectures": [
+          "arm64"
+        ],
+        "SustainedClockSpeedInGhz": 2.8
+      },
+      "VCpuInfo": {
+        "DefaultCores": 2,
+        "DefaultThreadsPerCore": 1,
+        "DefaultVCpus": 2,
+        "ValidCores": [
+          1,
+          2
+        ],
+        "ValidThreadsPerCore": [
+          1
+        ]
+      }
+    },
+    "instance_type": "i8g.large",
+    "ami": "ami-0246d714afcc1d494"
+  },
+  {
+    "cohort": "small",
+    "member": "use1-az2",
+    "job": "20260914T214212Z-9b4c7b4c",
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 11708124,
+      "files": 60,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/7fdc9ec4fd23999cf437306f2f68f4400ee796d65bf5dfa62dd69c8aabd20e44.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "7fdc9ec4fd23999cf437306f2f68f4400ee796d65bf5dfa62dd69c8aabd20e44",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/7fdc9ec4fd23999cf437306f2f68f4400ee796d65bf5dfa62dd69c8aabd20e44.tar.gz"
+    },
+    "source_digest": "e62be50a382b46dcbd748e9b52a5af3615b8dd6f61f1d71d4e329fc93b8e08b7",
+    "status": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 11708124,
+        "files": 60,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/7fdc9ec4fd23999cf437306f2f68f4400ee796d65bf5dfa62dd69c8aabd20e44.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "7fdc9ec4fd23999cf437306f2f68f4400ee796d65bf5dfa62dd69c8aabd20e44",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/7fdc9ec4fd23999cf437306f2f68f4400ee796d65bf5dfa62dd69c8aabd20e44.tar.gz"
+      },
+      "job": "20260914T214212Z-9b4c7b4c",
+      "script_returncode": 0,
+      "script_seconds": 1176.4245865345001,
+      "state": "complete",
+      "updated_at": 1789423432.6807568,
+      "worker": {
+        "id": "20260914T214212Z-9b4c7b4c",
+        "instance_id": "i-0fce7de7d5517577e",
+        "max_end": 1789425764.9007902,
+        "reuse_count": 0,
+        "reused": false
+      },
+      "worker_seconds_before_collection": 1215.2236983776093
+    },
+    "hardware": {
+      "EbsInfo": {
+        "AttachmentLimitType": "dedicated",
+        "EbsOptimizedInfo": {
+          "BaselineBandwidthInMbps": 625,
+          "BaselineIops": 2500,
+          "BaselineThroughputInMBps": 78.125,
+          "MaximumBandwidthInMbps": 10000,
+          "MaximumIops": 40000,
+          "MaximumThroughputInMBps": 1250.0
+        },
+        "EbsOptimizedSupport": "default",
+        "EncryptionSupport": "supported",
+        "MaximumEbsAttachments": 32,
+        "NvmeSupport": "required"
+      },
+      "Hypervisor": "nitro",
+      "InstanceStorageInfo": {
+        "Disks": [
+          {
+            "Count": 1,
+            "SizeInGB": 468,
+            "Type": "ssd"
+          }
+        ],
+        "EncryptionSupport": "required",
+        "NvmeSupport": "required",
+        "TotalSizeInGB": 468
+      },
+      "MemoryInfo": {
+        "SizeInMiB": 16384
+      },
+      "NetworkInfo": {
+        "DefaultNetworkCardIndex": 0,
+        "EfaSupported": false,
+        "EnaSrdSupported": false,
+        "EnaSupport": "required",
+        "EncryptionInTransitSupported": true,
+        "FlexibleEnaQueuesSupport": "unsupported",
+        "Ipv4AddressesPerInterface": 10,
+        "Ipv6AddressesPerInterface": 10,
+        "Ipv6Supported": true,
+        "MaximumNetworkCards": 1,
+        "MaximumNetworkInterfaces": 3,
+        "NetworkCards": [
+          {
+            "BaselineBandwidthInGbps": 1.172,
+            "DefaultEnaQueueCountPerInterface": 2,
+            "MaximumNetworkInterfaces": 3,
+            "NetworkCardIndex": 0,
+            "NetworkPerformance": "Up to 10 Gigabit",
+            "PeakBandwidthInGbps": 10.0
+          }
+        ],
+        "NetworkPerformance": "Up to 10 Gigabit"
+      },
+      "ProcessorInfo": {
+        "Manufacturer": "AWS",
+        "SupportedArchitectures": [
+          "arm64"
+        ],
+        "SustainedClockSpeedInGhz": 2.8
+      },
+      "VCpuInfo": {
+        "DefaultCores": 2,
+        "DefaultThreadsPerCore": 1,
+        "DefaultVCpus": 2,
+        "ValidCores": [
+          1,
+          2
+        ],
+        "ValidThreadsPerCore": [
+          1
+        ]
+      }
+    },
+    "instance_type": "i8g.large",
+    "ami": "ami-0246d714afcc1d494"
+  },
+  {
+    "cohort": "small",
+    "member": "use1-az4",
+    "job": "20260914T214216Z-9c258d8d",
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 488853486,
+      "files": 90,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/8ee4f92d67889047361ffc5afd3c6af64ae3bdb56a8c7ec8b502e762a4c27cfe.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "8ee4f92d67889047361ffc5afd3c6af64ae3bdb56a8c7ec8b502e762a4c27cfe",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/8ee4f92d67889047361ffc5afd3c6af64ae3bdb56a8c7ec8b502e762a4c27cfe.tar.gz"
+    },
+    "source_digest": "e62be50a382b46dcbd748e9b52a5af3615b8dd6f61f1d71d4e329fc93b8e08b7",
+    "status": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 488853486,
+        "files": 90,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/8ee4f92d67889047361ffc5afd3c6af64ae3bdb56a8c7ec8b502e762a4c27cfe.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "8ee4f92d67889047361ffc5afd3c6af64ae3bdb56a8c7ec8b502e762a4c27cfe",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/8ee4f92d67889047361ffc5afd3c6af64ae3bdb56a8c7ec8b502e762a4c27cfe.tar.gz"
+      },
+      "job": "20260914T214216Z-9c258d8d",
+      "script_returncode": 0,
+      "script_seconds": 1160.2717468738556,
+      "state": "complete",
+      "updated_at": 1789423460.0832617,
+      "worker": {
+        "id": "20260914T214216Z-9c258d8d",
+        "instance_id": "i-03857f13879f8bce8",
+        "max_end": 1789425781.6673539,
+        "reuse_count": 0,
+        "reused": false
+      },
+      "worker_seconds_before_collection": 1198.6769089698792
+    },
+    "hardware": {
+      "EbsInfo": {
+        "AttachmentLimitType": "dedicated",
+        "EbsOptimizedInfo": {
+          "BaselineBandwidthInMbps": 625,
+          "BaselineIops": 2500,
+          "BaselineThroughputInMBps": 78.125,
+          "MaximumBandwidthInMbps": 10000,
+          "MaximumIops": 40000,
+          "MaximumThroughputInMBps": 1250.0
+        },
+        "EbsOptimizedSupport": "default",
+        "EncryptionSupport": "supported",
+        "MaximumEbsAttachments": 32,
+        "NvmeSupport": "required"
+      },
+      "Hypervisor": "nitro",
+      "InstanceStorageInfo": {
+        "Disks": [
+          {
+            "Count": 1,
+            "SizeInGB": 468,
+            "Type": "ssd"
+          }
+        ],
+        "EncryptionSupport": "required",
+        "NvmeSupport": "required",
+        "TotalSizeInGB": 468
+      },
+      "MemoryInfo": {
+        "SizeInMiB": 16384
+      },
+      "NetworkInfo": {
+        "DefaultNetworkCardIndex": 0,
+        "EfaSupported": false,
+        "EnaSrdSupported": false,
+        "EnaSupport": "required",
+        "EncryptionInTransitSupported": true,
+        "FlexibleEnaQueuesSupport": "unsupported",
+        "Ipv4AddressesPerInterface": 10,
+        "Ipv6AddressesPerInterface": 10,
+        "Ipv6Supported": true,
+        "MaximumNetworkCards": 1,
+        "MaximumNetworkInterfaces": 3,
+        "NetworkCards": [
+          {
+            "BaselineBandwidthInGbps": 1.172,
+            "DefaultEnaQueueCountPerInterface": 2,
+            "MaximumNetworkInterfaces": 3,
+            "NetworkCardIndex": 0,
+            "NetworkPerformance": "Up to 10 Gigabit",
+            "PeakBandwidthInGbps": 10.0
+          }
+        ],
+        "NetworkPerformance": "Up to 10 Gigabit"
+      },
+      "ProcessorInfo": {
+        "Manufacturer": "AWS",
+        "SupportedArchitectures": [
+          "arm64"
+        ],
+        "SustainedClockSpeedInGhz": 2.8
+      },
+      "VCpuInfo": {
+        "DefaultCores": 2,
+        "DefaultThreadsPerCore": 1,
+        "DefaultVCpus": 2,
+        "ValidCores": [
+          1,
+          2
+        ],
+        "ValidThreadsPerCore": [
+          1
+        ]
+      }
+    },
+    "instance_type": "i8g.large",
+    "ami": "ami-0246d714afcc1d494"
+  },
+  {
+    "cohort": "express",
+    "member": "use1-az1",
+    "job": "20260914T214908Z-9faf5294",
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 27905469,
+      "files": 92,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/748542fafe11d9e89c39c43ab3cfc4c7d3cd185678ee380f216d7e8f603afb02.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "748542fafe11d9e89c39c43ab3cfc4c7d3cd185678ee380f216d7e8f603afb02",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/748542fafe11d9e89c39c43ab3cfc4c7d3cd185678ee380f216d7e8f603afb02.tar.gz"
+    },
+    "source_digest": "30a4e98565563bce33fd2bc2adb99be6dff0dfabc83ce60a538b1abf86230f85",
+    "status": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 27905469,
+        "files": 92,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/748542fafe11d9e89c39c43ab3cfc4c7d3cd185678ee380f216d7e8f603afb02.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "748542fafe11d9e89c39c43ab3cfc4c7d3cd185678ee380f216d7e8f603afb02",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/748542fafe11d9e89c39c43ab3cfc4c7d3cd185678ee380f216d7e8f603afb02.tar.gz"
+      },
+      "job": "20260914T214908Z-9faf5294",
+      "script_returncode": 0,
+      "script_seconds": 1037.822881937027,
+      "state": "complete",
+      "updated_at": 1789423690.3273602,
+      "worker": {
+        "id": "20260914T214908Z-9faf5294",
+        "instance_id": "i-04b97353c6b876802",
+        "max_end": 1789426168.7246492,
+        "reuse_count": 0,
+        "reused": false
+      },
+      "worker_seconds_before_collection": 1071.4484527111053
+    },
+    "hardware": {
+      "EbsInfo": {
+        "AttachmentLimitType": "dedicated",
+        "EbsOptimizedInfo": {
+          "BaselineBandwidthInMbps": 10000,
+          "BaselineIops": 40000,
+          "BaselineThroughputInMBps": 1250.0,
+          "MaximumBandwidthInMbps": 10000,
+          "MaximumIops": 40000,
+          "MaximumThroughputInMBps": 1250.0
+        },
+        "EbsOptimizedSupport": "default",
+        "EncryptionSupport": "supported",
+        "MaximumEbsAttachments": 32,
+        "NvmeSupport": "required"
+      },
+      "Hypervisor": "nitro",
+      "InstanceStorageInfo": {
+        "Disks": [
+          {
+            "Count": 2,
+            "SizeInGB": 3750,
+            "Type": "ssd"
+          }
+        ],
+        "EncryptionSupport": "required",
+        "NvmeSupport": "required",
+        "TotalSizeInGB": 7500
+      },
+      "MemoryInfo": {
+        "SizeInMiB": 262144
+      },
+      "NetworkInfo": {
+        "DefaultNetworkCardIndex": 0,
+        "EfaSupported": false,
+        "EnaSrdSupported": true,
+        "EnaSupport": "required",
+        "EncryptionInTransitSupported": true,
+        "FlexibleEnaQueuesSupport": "unsupported",
+        "Ipv4AddressesPerInterface": 30,
+        "Ipv6AddressesPerInterface": 30,
+        "Ipv6Supported": true,
+        "MaximumNetworkCards": 1,
+        "MaximumNetworkInterfaces": 8,
+        "NetworkCards": [
+          {
+            "BaselineBandwidthInGbps": 25.0,
+            "DefaultEnaQueueCountPerInterface": 8,
+            "MaximumNetworkInterfaces": 8,
+            "NetworkCardIndex": 0,
+            "NetworkPerformance": "Up to 25 Gigabit",
+            "PeakBandwidthInGbps": 25.0
+          }
+        ],
+        "NetworkPerformance": "Up to 25 Gigabit"
+      },
+      "ProcessorInfo": {
+        "Manufacturer": "AWS",
+        "SupportedArchitectures": [
+          "arm64"
+        ],
+        "SustainedClockSpeedInGhz": 2.8
+      },
+      "VCpuInfo": {
+        "DefaultCores": 32,
+        "DefaultThreadsPerCore": 1,
+        "DefaultVCpus": 32,
+        "ValidCores": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32
+        ],
+        "ValidThreadsPerCore": [
+          1
+        ]
+      }
+    },
+    "instance_type": "i8g.8xlarge",
+    "ami": "ami-0246d714afcc1d494"
+  },
+  {
+    "cohort": "express",
+    "member": "use1-az2",
+    "job": "20260914T214913Z-653255ea",
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 27685470,
+      "files": 92,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/1f3513dabc000dfea7900fa3b68b2f6610a54da81dc3718d5e2de7a8469db1c0.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "1f3513dabc000dfea7900fa3b68b2f6610a54da81dc3718d5e2de7a8469db1c0",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/1f3513dabc000dfea7900fa3b68b2f6610a54da81dc3718d5e2de7a8469db1c0.tar.gz"
+    },
+    "source_digest": "30a4e98565563bce33fd2bc2adb99be6dff0dfabc83ce60a538b1abf86230f85",
+    "status": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 27685470,
+        "files": 92,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/1f3513dabc000dfea7900fa3b68b2f6610a54da81dc3718d5e2de7a8469db1c0.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "1f3513dabc000dfea7900fa3b68b2f6610a54da81dc3718d5e2de7a8469db1c0",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/1f3513dabc000dfea7900fa3b68b2f6610a54da81dc3718d5e2de7a8469db1c0.tar.gz"
+      },
+      "job": "20260914T214913Z-653255ea",
+      "script_returncode": 0,
+      "script_seconds": 1014.6215436458588,
+      "state": "complete",
+      "updated_at": 1789423691.1113718,
+      "worker": {
+        "id": "20260914T214913Z-653255ea",
+        "instance_id": "i-0f767b6e89cc64de7",
+        "max_end": 1789426185.353108,
+        "reuse_count": 0,
+        "reused": false
+      },
+      "worker_seconds_before_collection": 1051.71413230896
+    },
+    "hardware": {
+      "EbsInfo": {
+        "AttachmentLimitType": "dedicated",
+        "EbsOptimizedInfo": {
+          "BaselineBandwidthInMbps": 10000,
+          "BaselineIops": 40000,
+          "BaselineThroughputInMBps": 1250.0,
+          "MaximumBandwidthInMbps": 10000,
+          "MaximumIops": 40000,
+          "MaximumThroughputInMBps": 1250.0
+        },
+        "EbsOptimizedSupport": "default",
+        "EncryptionSupport": "supported",
+        "MaximumEbsAttachments": 32,
+        "NvmeSupport": "required"
+      },
+      "Hypervisor": "nitro",
+      "InstanceStorageInfo": {
+        "Disks": [
+          {
+            "Count": 2,
+            "SizeInGB": 3750,
+            "Type": "ssd"
+          }
+        ],
+        "EncryptionSupport": "required",
+        "NvmeSupport": "required",
+        "TotalSizeInGB": 7500
+      },
+      "MemoryInfo": {
+        "SizeInMiB": 262144
+      },
+      "NetworkInfo": {
+        "DefaultNetworkCardIndex": 0,
+        "EfaSupported": false,
+        "EnaSrdSupported": true,
+        "EnaSupport": "required",
+        "EncryptionInTransitSupported": true,
+        "FlexibleEnaQueuesSupport": "unsupported",
+        "Ipv4AddressesPerInterface": 30,
+        "Ipv6AddressesPerInterface": 30,
+        "Ipv6Supported": true,
+        "MaximumNetworkCards": 1,
+        "MaximumNetworkInterfaces": 8,
+        "NetworkCards": [
+          {
+            "BaselineBandwidthInGbps": 25.0,
+            "DefaultEnaQueueCountPerInterface": 8,
+            "MaximumNetworkInterfaces": 8,
+            "NetworkCardIndex": 0,
+            "NetworkPerformance": "Up to 25 Gigabit",
+            "PeakBandwidthInGbps": 25.0
+          }
+        ],
+        "NetworkPerformance": "Up to 25 Gigabit"
+      },
+      "ProcessorInfo": {
+        "Manufacturer": "AWS",
+        "SupportedArchitectures": [
+          "arm64"
+        ],
+        "SustainedClockSpeedInGhz": 2.8
+      },
+      "VCpuInfo": {
+        "DefaultCores": 32,
+        "DefaultThreadsPerCore": 1,
+        "DefaultVCpus": 32,
+        "ValidCores": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32
+        ],
+        "ValidThreadsPerCore": [
+          1
+        ]
+      }
+    },
+    "instance_type": "i8g.8xlarge",
+    "ami": "ami-0246d714afcc1d494"
+  },
+  {
+    "cohort": "express",
+    "member": "use1-az4",
+    "job": "20260914T214918Z-57e8e375",
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 886598743,
+      "files": 131,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/58ee41ec0733508d94317cba357c131ef823a4be42cc58583b6cacc2d81f8957.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "58ee41ec0733508d94317cba357c131ef823a4be42cc58583b6cacc2d81f8957",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/58ee41ec0733508d94317cba357c131ef823a4be42cc58583b6cacc2d81f8957.tar.gz"
+    },
+    "source_digest": "30a4e98565563bce33fd2bc2adb99be6dff0dfabc83ce60a538b1abf86230f85",
+    "status": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 886598743,
+        "files": 131,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/58ee41ec0733508d94317cba357c131ef823a4be42cc58583b6cacc2d81f8957.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "58ee41ec0733508d94317cba357c131ef823a4be42cc58583b6cacc2d81f8957",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/58ee41ec0733508d94317cba357c131ef823a4be42cc58583b6cacc2d81f8957.tar.gz"
+      },
+      "job": "20260914T214918Z-57e8e375",
+      "script_returncode": 0,
+      "script_seconds": 1000.6229493618011,
+      "state": "complete",
+      "updated_at": 1789423740.767833,
+      "worker": {
+        "id": "20260914T214918Z-57e8e375",
+        "instance_id": "i-08cc590692255467f",
+        "max_end": 1789426202.2259693,
+        "reuse_count": 0,
+        "reused": false
+      },
+      "worker_seconds_before_collection": 1034.9710297584534
+    },
+    "hardware": {
+      "EbsInfo": {
+        "AttachmentLimitType": "dedicated",
+        "EbsOptimizedInfo": {
+          "BaselineBandwidthInMbps": 10000,
+          "BaselineIops": 40000,
+          "BaselineThroughputInMBps": 1250.0,
+          "MaximumBandwidthInMbps": 10000,
+          "MaximumIops": 40000,
+          "MaximumThroughputInMBps": 1250.0
+        },
+        "EbsOptimizedSupport": "default",
+        "EncryptionSupport": "supported",
+        "MaximumEbsAttachments": 32,
+        "NvmeSupport": "required"
+      },
+      "Hypervisor": "nitro",
+      "InstanceStorageInfo": {
+        "Disks": [
+          {
+            "Count": 2,
+            "SizeInGB": 3750,
+            "Type": "ssd"
+          }
+        ],
+        "EncryptionSupport": "required",
+        "NvmeSupport": "required",
+        "TotalSizeInGB": 7500
+      },
+      "MemoryInfo": {
+        "SizeInMiB": 262144
+      },
+      "NetworkInfo": {
+        "DefaultNetworkCardIndex": 0,
+        "EfaSupported": false,
+        "EnaSrdSupported": true,
+        "EnaSupport": "required",
+        "EncryptionInTransitSupported": true,
+        "FlexibleEnaQueuesSupport": "unsupported",
+        "Ipv4AddressesPerInterface": 30,
+        "Ipv6AddressesPerInterface": 30,
+        "Ipv6Supported": true,
+        "MaximumNetworkCards": 1,
+        "MaximumNetworkInterfaces": 8,
+        "NetworkCards": [
+          {
+            "BaselineBandwidthInGbps": 25.0,
+            "DefaultEnaQueueCountPerInterface": 8,
+            "MaximumNetworkInterfaces": 8,
+            "NetworkCardIndex": 0,
+            "NetworkPerformance": "Up to 25 Gigabit",
+            "PeakBandwidthInGbps": 25.0
+          }
+        ],
+        "NetworkPerformance": "Up to 25 Gigabit"
+      },
+      "ProcessorInfo": {
+        "Manufacturer": "AWS",
+        "SupportedArchitectures": [
+          "arm64"
+        ],
+        "SustainedClockSpeedInGhz": 2.8
+      },
+      "VCpuInfo": {
+        "DefaultCores": 32,
+        "DefaultThreadsPerCore": 1,
+        "DefaultVCpus": 32,
+        "ValidCores": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32
+        ],
+        "ValidThreadsPerCore": [
+          1
+        ]
+      }
+    },
+    "instance_type": "i8g.8xlarge",
+    "ami": "ami-0246d714afcc1d494"
+  },
+  {
+    "cohort": "local",
+    "member": "local-nvme",
+    "job": "20260914T215855Z-0d7e1c95",
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 141108393,
+      "files": 36,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/a3bae1448bc0130db8159615a545da266521381085256636f010876d83c8055f.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "a3bae1448bc0130db8159615a545da266521381085256636f010876d83c8055f",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/a3bae1448bc0130db8159615a545da266521381085256636f010876d83c8055f.tar.gz"
+    },
+    "source_digest": "d99082f9eaebe38013041838b207b752432034de1d83b8610474b5cb61e6c0bb",
+    "status": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 141108393,
+        "files": 36,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/a3bae1448bc0130db8159615a545da266521381085256636f010876d83c8055f.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "a3bae1448bc0130db8159615a545da266521381085256636f010876d83c8055f",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/a3bae1448bc0130db8159615a545da266521381085256636f010876d83c8055f.tar.gz"
+      },
+      "job": "20260914T215855Z-0d7e1c95",
+      "script_returncode": 0,
+      "script_seconds": 316.13683104515076,
+      "state": "complete",
+      "updated_at": 1789423558.7963362,
+      "worker": {
+        "id": "20260914T215855Z-0d7e1c95",
+        "instance_id": "i-013c3e2d6d29f1426",
+        "max_end": 1789424943.623193,
+        "reuse_count": 0,
+        "reused": false
+      },
+      "worker_seconds_before_collection": 355.96246004104614
+    },
+    "hardware": {
+      "EbsInfo": {
+        "AttachmentLimitType": "dedicated",
+        "EbsOptimizedInfo": {
+          "BaselineBandwidthInMbps": 625,
+          "BaselineIops": 2500,
+          "BaselineThroughputInMBps": 78.125,
+          "MaximumBandwidthInMbps": 10000,
+          "MaximumIops": 40000,
+          "MaximumThroughputInMBps": 1250.0
+        },
+        "EbsOptimizedSupport": "default",
+        "EncryptionSupport": "supported",
+        "MaximumEbsAttachments": 32,
+        "NvmeSupport": "required"
+      },
+      "Hypervisor": "nitro",
+      "InstanceStorageInfo": {
+        "Disks": [
+          {
+            "Count": 1,
+            "SizeInGB": 468,
+            "Type": "ssd"
+          }
+        ],
+        "EncryptionSupport": "required",
+        "NvmeSupport": "required",
+        "TotalSizeInGB": 468
+      },
+      "MemoryInfo": {
+        "SizeInMiB": 16384
+      },
+      "NetworkInfo": {
+        "DefaultNetworkCardIndex": 0,
+        "EfaSupported": false,
+        "EnaSrdSupported": false,
+        "EnaSupport": "required",
+        "EncryptionInTransitSupported": true,
+        "FlexibleEnaQueuesSupport": "unsupported",
+        "Ipv4AddressesPerInterface": 10,
+        "Ipv6AddressesPerInterface": 10,
+        "Ipv6Supported": true,
+        "MaximumNetworkCards": 1,
+        "MaximumNetworkInterfaces": 3,
+        "NetworkCards": [
+          {
+            "BaselineBandwidthInGbps": 1.172,
+            "DefaultEnaQueueCountPerInterface": 2,
+            "MaximumNetworkInterfaces": 3,
+            "NetworkCardIndex": 0,
+            "NetworkPerformance": "Up to 10 Gigabit",
+            "PeakBandwidthInGbps": 10.0
+          }
+        ],
+        "NetworkPerformance": "Up to 10 Gigabit"
+      },
+      "ProcessorInfo": {
+        "Manufacturer": "AWS",
+        "SupportedArchitectures": [
+          "arm64"
+        ],
+        "SustainedClockSpeedInGhz": 2.8
+      },
+      "VCpuInfo": {
+        "DefaultCores": 2,
+        "DefaultThreadsPerCore": 1,
+        "DefaultVCpus": 2,
+        "ValidCores": [
+          1,
+          2
+        ],
+        "ValidThreadsPerCore": [
+          1
+        ]
+      }
+    },
+    "instance_type": "i8g.large",
+    "ami": "ami-0246d714afcc1d494"
+  },
+  {
+    "cohort": "failed-local",
+    "member": "local-nvme",
+    "job": "20260914T215624Z-f479d358",
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 5574737,
+      "files": 15,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/3b20bd197ff7db80d4bb21e50fa1c29da666b4549617d019d911ee1792181fcb.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "3b20bd197ff7db80d4bb21e50fa1c29da666b4549617d019d911ee1792181fcb",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/3b20bd197ff7db80d4bb21e50fa1c29da666b4549617d019d911ee1792181fcb.tar.gz"
+    },
+    "source_digest": "0e5814684970dd39b5e3233691dd46c4462c1b585221b02b11f8b7e6aff07621",
+    "status": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 5574737,
+        "files": 15,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/3b20bd197ff7db80d4bb21e50fa1c29da666b4549617d019d911ee1792181fcb.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "3b20bd197ff7db80d4bb21e50fa1c29da666b4549617d019d911ee1792181fcb",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/3b20bd197ff7db80d4bb21e50fa1c29da666b4549617d019d911ee1792181fcb.tar.gz"
+      },
+      "failure_phase": "running",
+      "job": "20260914T215624Z-f479d358",
+      "script_returncode": 1,
+      "script_seconds": 11.96665096282959,
+      "state": "failed",
+      "updated_at": 1789423092.1457467,
+      "worker": {
+        "id": "20260914T215624Z-f479d358",
+        "instance_id": "i-05ef67b995e3a66de",
+        "max_end": 1789424792.1874073,
+        "reuse_count": 0,
+        "reused": false
+      },
+      "worker_seconds_before_collection": 49.734697341918945
+    },
+    "hardware": {
+      "EbsInfo": {
+        "AttachmentLimitType": "dedicated",
+        "EbsOptimizedInfo": {
+          "BaselineBandwidthInMbps": 625,
+          "BaselineIops": 2500,
+          "BaselineThroughputInMBps": 78.125,
+          "MaximumBandwidthInMbps": 10000,
+          "MaximumIops": 40000,
+          "MaximumThroughputInMBps": 1250.0
+        },
+        "EbsOptimizedSupport": "default",
+        "EncryptionSupport": "supported",
+        "MaximumEbsAttachments": 32,
+        "NvmeSupport": "required"
+      },
+      "Hypervisor": "nitro",
+      "InstanceStorageInfo": {
+        "Disks": [
+          {
+            "Count": 1,
+            "SizeInGB": 468,
+            "Type": "ssd"
+          }
+        ],
+        "EncryptionSupport": "required",
+        "NvmeSupport": "required",
+        "TotalSizeInGB": 468
+      },
+      "MemoryInfo": {
+        "SizeInMiB": 16384
+      },
+      "NetworkInfo": {
+        "DefaultNetworkCardIndex": 0,
+        "EfaSupported": false,
+        "EnaSrdSupported": false,
+        "EnaSupport": "required",
+        "EncryptionInTransitSupported": true,
+        "FlexibleEnaQueuesSupport": "unsupported",
+        "Ipv4AddressesPerInterface": 10,
+        "Ipv6AddressesPerInterface": 10,
+        "Ipv6Supported": true,
+        "MaximumNetworkCards": 1,
+        "MaximumNetworkInterfaces": 3,
+        "NetworkCards": [
+          {
+            "BaselineBandwidthInGbps": 1.172,
+            "DefaultEnaQueueCountPerInterface": 2,
+            "MaximumNetworkInterfaces": 3,
+            "NetworkCardIndex": 0,
+            "NetworkPerformance": "Up to 10 Gigabit",
+            "PeakBandwidthInGbps": 10.0
+          }
+        ],
+        "NetworkPerformance": "Up to 10 Gigabit"
+      },
+      "ProcessorInfo": {
+        "Manufacturer": "AWS",
+        "SupportedArchitectures": [
+          "arm64"
+        ],
+        "SustainedClockSpeedInGhz": 2.8
+      },
+      "VCpuInfo": {
+        "DefaultCores": 2,
+        "DefaultThreadsPerCore": 1,
+        "DefaultVCpus": 2,
+        "ValidCores": [
+          1,
+          2
+        ],
+        "ValidThreadsPerCore": [
+          1
+        ]
+      }
+    },
+    "instance_type": "i8g.large",
+    "ami": "ami-0246d714afcc1d494"
+  },
+  {
+    "cohort": "original",
+    "member": "use1-az4",
+    "job": "20260914T175555Z-78dc2893",
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 438966339,
+      "files": 168,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/cd3ef368994aa9a59cbb36ff8a0151b58b6bbc6ac9107376169fcf0e395e16de.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "cd3ef368994aa9a59cbb36ff8a0151b58b6bbc6ac9107376169fcf0e395e16de",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/cd3ef368994aa9a59cbb36ff8a0151b58b6bbc6ac9107376169fcf0e395e16de.tar.gz"
+    }
+  }
+]

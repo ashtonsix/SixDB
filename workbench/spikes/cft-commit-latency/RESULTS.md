@@ -1,14 +1,17 @@
-# Durable commit latency and operating choices
+# Durable commit latency and operating limits
 
 **Preparing the log and choosing its replica placement made sub-millisecond
-commits possible. Keeping that latency under load is a separate choice.** In the
-measured ENA Express cohort, a 1 ms p99 budget admitted **231,309 commits/s**;
-a 1 ms p99.9 budget selected **129,537/s**. The highest observed goodput was
-322,317/s, but its p99.9 was nearly 49 ms.
+commits possible. Longer runs expose limits that short throughput screens miss.**
+The original ENA Express choice near 130,000 commits/s had **0.923 ms p99.9**;
+a later 60-second raw-log control had **2.053 ms**. The
+[cliff follow-up](commit/cliff.md) identifies storage throughput limiting on
+small instances and measures real background log preparation on larger hosts.
+Preparation pauses improved tails in both paired comparisons, but the tested
+controllers did not establish sub-millisecond service at that offered rate.
 
 The [study overview](README.md) maps the supporting guides. This report follows
-the decision from the low-load path to an operating point, then explains where
-the evidence leaves room for a different choice. Measurements are from
+the decision from the low-load path through the original throughput choices
+to the longer-run findings and their implications. Measurements are from
 14 September 2026 in AWS us-east-1.
 
 ## Know which latency is being measured
@@ -25,8 +28,9 @@ preserve order and how a lagging replica can still delay later admissions.
 
 The commit tables and plots use measured joint rounds, with latency in **milliseconds**.
 P99 describes the observed 99th percentile, p99.9 the 99.9th. **Pooled** means
-combining the raw observations from three passes before computing the percentile.
-The range of those passes' percentiles shows variation that pooling can conceal.
+combining raw observations before computing the percentile. The original
+throughput selections pool three passes; the follow-up reports individual
+passes. Pass ranges show variation that pooling can conceal.
 The 1 ms reference is a budget for this commit path, excluding client RPC and
 failure detection or election time.
 
@@ -67,18 +71,24 @@ rows and the narrower comparisons:
   than the 4 KiB record. Each conclusion has its own population and controls in
   the [one-record comparison](commit/latency.md).
 
-## Choose a rate for the percentile that matters
+## Read the original short-run choices
 
-The pipeline uses **4 KiB records, raw NVMe and direct `O_DSYNC`**, with the good
-placement and one pinned application CPU per voter. **Goodput** counts unique
-durable commits/s without a deadline filter. A candidate must keep up and drain its work in **all three passes** under the
+The original pipeline uses **4 KiB records, raw NVMe and direct `O_DSYNC`**,
+with the good placement and one pinned application CPU per voter. **Goodput** counts unique
+durable commits/s without a deadline filter. Candidates qualified by keeping
+up and draining their work in **all three passes** under the
 [finite-run stability rule](commit/README.md#count-waiting-from-the-arrival-schedule).
 Among those candidates, the following are the highest-goodput choices for the
 named **pooled** 1 ms budget. ENA (Elastic Network Adapter) is the AWS network
-interface; Express is its alternative network path. The cohorts compare small
-and larger instances, then the two network modes on the larger size:
+interface; Express is its alternative network path.
 
-![Observed operating choices on common axes: Express offers more throughput under a p99 budget; protecting p99.9 selects about 130 thousand commits per second with more pass margin than larger standard ENA.](images/operating-choices.png)
+**The later 60-second probe did not confirm the near-130,000/s sub-millisecond
+choice:** raw logs with a four-record batch cap reached 2.053 ms p99.9, and initialized files reached
+1.648–2.544 ms across two passes. These fresh-cohort observations also change
+instrumentation and preparation conditions. The table below preserves the
+original short-run selections; it is not a sustained-rate recommendation.
+
+![Original short-run choices on common axes: a p99 budget selects more throughput than a p99.9 budget. The later longer-run follow-up did not preserve the near-130,000/s sub-millisecond tail.](images/operating-choices.png)
 
 | Cohort / budget | Commits/s | p50 | p90 | p99 | p99.9 |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -94,8 +104,8 @@ p99.9 exceeded it. Its p99.9 choice stayed at **0.816–0.930 ms** across passes
 The [throughput findings](commit/throughput.md) retain the policies, offered rates,
 all four percentile preferences and their alternatives.
 
-Express's fastest stable point, **322,317/s**, completed only **74.814%** of its arrival
-cohort below 1 ms, with **48.861 ms p99.9**. Choosing its 1 ms p99 or p99.9 point
+The original Express cohort's fastest stable point, **322,317/s**, completed only
+**74.814%** of its arrival cohort below 1 ms, with **48.861 ms p99.9**. Choosing its 1 ms p99 or p99.9 point
 therefore gives up **28.2% or 59.8%** of the largest observed stable goodput.
 Stable admission and acceptable latency are separate requirements.
 
@@ -104,38 +114,44 @@ These are short observations. The table's rows contain about **45, 44, 43 and
 shortens high-rate passes; the 322,317/s candidate has only about **5.2 seconds
 per pass**. These measurements do not establish long-term capacity.
 
-## Use the surrounding evidence to judge a boundary
+## What the longer-run probe changes
 
-Three details materially change how the selected points should be used:
+The [targeted follow-up](commit/cliff.md) separates three engineering decisions:
 
-- **A short screen can miss accumulating work.** On the small cohort, one
-  104,400 offered/s policy had **0.689 ms p99** in a six-second screen, then
-  **82.805–92.780 ms** in three 15-second repeats. Goodput stayed near 104,000/s
-  and the median below 0.709 ms. [Queue growth](commit/throughput.md#why-the-104000s-screen-is-not-the-recommendation)
-  explains why that point was rejected.
-- **Sparse choices do not resolve a knee.** Express has no repeated rates
-  between 4,000 and 129,600/s. Staying within 25% of its best latency selects
-  about 4,000/s and sacrifices 98.8% of observed stable goodput, but the gap
-  leaves intermediate possibilities unresolved. On standard ENA, a candidate
-  misses a relative median limit by just **1 µs**, much less than pass variation.
-- **The exact rate maximum may be a poor bargain.** One Express fill-wait
-  setting gains only **0.18% goodput** while worsening p99.9 from **1.500 to
-  19.216 ms**. The [full distribution and nearby policy](commit/throughput.md#ena-express-removing-the-per-flow-constraint)
-  give an engineer reason to choose the slightly lower rate.
+- **Keep demand within the resource budget.** At 104,400 offered/s, the small
+  instance's 60-second reproduction reached **1,235 ms p99**. A local-only
+  control reproduced the slowdown and reported NVMe throughput limiting while
+  its operation-rate limit counter stayed zero. Larger batches reduced operation count but could
+  not remove the byte-throughput deficit. Two 60-second passes at 90,000/s had
+  **0.809–0.911 ms p99.9**; that rate still exceeds the small instance's network
+  baseline in replicated bytes, so it is measured headroom rather than an SLA.
+- **Pay for preparation while serving.** On Express at 129,600/s, live file
+  preparation gave **3.788–5.267 ms p99.9**. Pausing preparation under pressure
+  improved it in both paired repeats, to **2.027–2.415 ms**, while preparing
+  the full consumed range. Adding batch adaptation gave **1.292–10.621 ms**
+  across two passes: its better median did not establish a reliable tail gain.
+- **Judge the actual deadline outcome.** Under the same 45,000/135,000/s burst
+  trace, combined adaptation improved p99.9 from **12.652 to 1.753 ms**, yet
+  reduced the post-warmup arrival fraction committed within 1 ms from **90.847% to
+  85.714%**. Both policies committed all offered work. That is a real trade-off,
+  not an improvement at every latency objective.
 
-The network model also helps predict which change could matter. Standard ENA's
-5 Gbit/s flow ceiling permits about **153,000 4 KiB records/s per follower** before
-overhead, consistent with its short screens. More aggregate instance bandwidth
-alone cannot remove that constraint; Express does. The larger-host comparison
-also changes platform resources and tuning, and standard versus Express uses
-fresh cohorts rather than a same-host crossover. The
-[network controls and measured ceilings](commit/throughput.md#what-the-network-ceiling-explains)
-bound that interpretation.
+The larger-host residual tails did not carry the same NVMe limit signal. The
+follow-up identifies the small-instance cause; it has not explained or removed
+every tail mechanism. Its [proposed operating policy](commit/cliff.md#what-this-supports-for-a-service-objective)
+combines resource budgets, retained-byte limits, preparation reserves and explicit
+admission costs.
+
+The original [throughput guide](commit/throughput.md) still supplies the sampled
+landscape: sparse rate coverage, variation near numerical cutoffs, and the cost
+of choosing different percentiles. Its [network ceiling comparison](commit/throughput.md#what-the-network-ceiling-explains)
+also distinguishes standard ENA's per-flow limit from aggregate instance
+bandwidth. These are separate constraints from the storage ceiling above.
 
 ## Carry the result into a system
 
-A deployment still has to supply prepared log space, admission/backpressure and
-replica recovery. This bounded pipeline retains slots until both followers
+A continuing deployment also has to retire or reuse log space, control admission
+and recover replicas. This bounded pipeline retains slots until both followers
 acknowledge, so it does not sustain admission after a follower disappears. The
 known-absent-follower tests belong to the separate one-record experiment.
 
@@ -148,5 +164,4 @@ tuning constant; the consuming workload and its actual environment matter.
 All measured paths request [power-safe completion](persistence/README.md#what-makes-completion-durable).
 Readback checks content and ordering; it is not a physical power-cut test.
 The [evidence guide](evidence.md) collects exact cases, populations, captured
-sources and recovery commands. All retained studies were independently recovered
-and their numerical results reproduced.
+sources, recovery commands and independent validation receipts.

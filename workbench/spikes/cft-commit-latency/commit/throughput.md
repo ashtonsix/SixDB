@@ -1,15 +1,20 @@
-# Latency, throughput and the limits of the measured choices
+# Original short-run throughput choices
 
-The pipeline experiments ask how much useful throughput survives a latency
-preference, and whether that choice keeps up when arrivals continue independently
-of completions. The [main report](../RESULTS.md) puts these results alongside
-storage and placement. This guide keeps the workload comparisons and the evidence
-that qualifies each operating point together. Jump to
+The original pipeline experiments ask how much useful throughput survives a
+latency preference when arrivals continue independently of completions. This
+guide preserves those short screens and repeated choices. **The later
+[cliff follow-up](cliff.md) changes their interpretation:** the near-130,000/s
+Express choice had 0.923 ms pooled p99.9 here, but a fresh-cohort 60-second raw
+control reached 2.053 ms. The follow-up also identifies the small-instance
+storage ceiling and tests live file preparation and adaptive controls.
+
+The [main report](../RESULTS.md) connects both studies to storage and placement.
+For the original sampled landscape, jump to
 [small instances](#small-instances-the-repeated-tail-changes-the-choice),
 [larger standard ENA](#larger-standard-ena-instances-more-throughput-less-tail-margin)
 or [ENA Express](#ena-express-removing-the-per-flow-constraint).
 
-All cohorts replicate **4 KiB records to raw NVMe with direct `O_DSYNC` writes**
+All original cohorts replicate **4 KiB records to raw NVMe with direct `O_DSYNC` writes**
 in the good placement: leader `use1-az4`, followers `use1-az2` and `use1-az1`.
 Each voter has one pinned application CPU. The
 [commit method](README.md) explains batches, windows, arrival timing and the
@@ -43,8 +48,8 @@ Pass ranges below describe observed variation, not confidence intervals.
 
 ## Small instances: the repeated tail changes the choice
 
-On **i8g.large with standard ENA and MTU 9001**, the highest repeated stable
-candidate offered **52,700 records/s**, using TCP, W16, B16 and a 50 µs wait.
+In the original **i8g.large cohort with standard ENA and MTU 9001**, the highest
+repeated stable candidate offered **52,700 records/s**, using TCP, W16, B16 and a 50 µs wait.
 It delivered **52,693 commits/s**, with pooled p50/p90/p99/p99.9 of
 **0.602/0.708/0.790/0.834 ms**. Its three pass p99.9 values ranged
 **0.766–0.845 ms**; the largest all-follower drain was **0.873 ms**.
@@ -98,10 +103,12 @@ policy.
 
 ![At the same offered rate, goodput remains about 104 thousand commits per second while p99 rises from 0.689 ms in the screen to 83–93 ms in the repeats.](../images/throughput-small/screen-reversal.png)
 
-Four repeated policies around 104,000–105,000 offered/s failed in every pass;
-six of the ten repeated candidates were stable. There is **no repeated candidate
-between about 53,000 and 104,000 offered/s**. The best observed stable point
-does not locate the boundary inside that gap.
+Four original repeated policies around 104,000–105,000 offered/s failed in every
+pass; six of the ten candidates were stable. The original repeated set had
+**no candidate between about 53,000 and 104,000 offered/s**. The
+[later 60-second probes](cliff.md#batching-cannot-remove-the-bytes-that-must-be-written)
+add a 90,000/s comparison and show why its observed headroom still does not
+establish a continuing-capacity guarantee.
 
 The leader's outbound bandwidth-allowance counter increased in every experiment
 phase, including **2,872 / 3,249 / 2,547** across the three tail phases. These
@@ -110,6 +117,12 @@ individual cases. They support bandwidth-allowance involvement, without identify
 credit depletion or uniquely explaining this policy's reversal. Other hosts'
 bandwidth counters and all PPS, connection-tracking and link-local allowance
 counters remained zero.
+
+The later reproduction resolves that ambiguity for its first 16-second case:
+all three hosts' network allowance counters stayed zero, the leader's local
+durable prefix limited the tail, and a local-only control identified NVMe
+throughput limiting. The [causal comparison](cliff.md#removing-replication-identifies-the-resource)
+keeps those case-specific measurements separate from the phase totals above.
 
 The [offered-load screen](../images/throughput-small/offered-load.png)
 shows the earlier short passes; the
@@ -217,6 +230,14 @@ delivered 129,537/s with **0.687/0.806/0.882/0.923 ms** percentiles and more
 observed p99.9 margin than the larger standard-ENA maximum. This compares selected
 policies on fresh cohorts; it is not an isolated same-host network intervention.
 
+**The longer follow-up did not preserve that sub-millisecond p99.9 choice.**
+At the same 129,600 offered/s, a fresh-cohort 60-second raw B4 control had
+2.053 ms p99.9. Initialized files had 1.648–2.544 ms across two passes, and
+preparing them during arrivals added further cost. The
+[file and controller comparison](cliff.md#the-longer-runs-change-the-original-1-ms-choice)
+states the changed observation window, instrumentation and preparation conditions;
+the difference is not an isolated duration effect.
+
 The exact p90 selection deserves another look. Its 100 µs fill wait gives only
 **0.18% more goodput** than the matching 50 µs-wait point, while pooled p90 rises
 from **0.932 to 0.993 ms** and p99.9 from **1.500 to 19.216 ms**. Maximizing
@@ -284,10 +305,11 @@ retain that surrounding evidence.
 
 ## Coverage and recovery
 
-The completed small cohort contains **132 passes and 56,866,000 native records**;
+The original small cohort contains **132 passes and 56,866,000 native records**;
 the larger standard cohort contains **77 passes and 37,729,500**; ENA Express
 contains **79 passes and 80,972,000**. Those totals
 include preflights, screens and warmup, unlike the selected point populations above.
 [Retained evidence](../evidence.md) supplies the cases, passes, independent
-recovery checks and captured source. Return to the [main report](../RESULTS.md)
-for the operating choices alongside storage, placement and failure behaviour.
+recovery checks and captured source. Continue with the [longer-run cliff and
+preparation findings](cliff.md), or return to the [main report](../RESULTS.md)
+for their implications alongside storage, placement and failure behaviour.

@@ -55,8 +55,10 @@ Raw I/O did not improve the good one-record median. At 4 KiB, TCP and MTU
 9001, raw NVMe gave p50/p90/p99/p99.9 **0.489/0.497/0.505/0.517 ms** versus
 **0.474/0.480/0.493/0.520 ms** for the initialized file. Raw was slightly lower at
 the pooled p99.9, with overlapping pass ranges. This comparison offers no broad
-latency reason to take on raw-region management. The throughput campaign tests
-raw NVMe only, so it does not settle the file-versus-raw choice under load.
+latency reason to take on raw-region management. The original throughput
+campaign tested raw NVMe only. The later [cliff follow-up](cliff.md#controllers-improve-different-parts-of-the-distribution)
+compares raw logs, initialized files and files prepared during arrivals under
+load; their tails and preparation costs qualify this low-load comparison.
 
 ## Prepared EBS offers another candidate
 

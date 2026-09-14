@@ -7,7 +7,9 @@ path of a crash-fault-tolerant (CFT) log. Client RPC, elections, competing leade
 and membership changes are outside the experiment. The [study overview](../README.md)
 connects these measurements to storage and placement choices; the
 [one-record findings](latency.md) compare storage and placement, while the
-[throughput findings](throughput.md) examine a stream of arrivals.
+[original throughput findings](throughput.md) examine a stream of arrivals.
+The [cliff follow-up](cliff.md) extends the observation window and tests live
+file preparation and adaptive controls.
 
 ## Follow one record
 
@@ -35,8 +37,11 @@ prefix. Finishing a later write cannot acknowledge past an unfinished predecesso
 | Open-loop pipeline | Schedule individual arrivals independently of completions | Measure latency and queue behavior at a specified offered rate, including waiting before admission |
 
 The one-record probe prepares the payload before starting its timer. Pipeline
-record generation and preparation happen after arrival and count toward primary
-latency, so the two measurements have different preparation boundaries.
+record generation and payload preparation happen after arrival and count toward
+primary latency. This differs from **file preparation**, which initializes the
+future log destination. The original pipeline completes that work before
+traffic; the [live-preparation cases](cliff.md#preparing-real-future-extents)
+measure replenishing prepared space during arrivals.
 
 The one-record surviving-majority cases start with one follower already known
 unavailable. They measure the remaining durable path, excluding failure detection
@@ -80,10 +85,13 @@ Closed-loop results instead discard the first 10% of records. Queue/backlog
 snapshots, drain time, retries, per-process CPU and per-pass percentiles accompany
 the latency results.
 
-Open-loop screens target seven scheduled seconds and repeated tail passes target
-sixteen, using a record count capped at 2,000,000 per pass. Faster selected rates
-can therefore produce shorter intervals. Per-pass `measurement_seconds` records
+The original open-loop screens target seven scheduled seconds and repeated tail
+passes target sixteen, using a record count capped at 2,000,000 per pass. Faster
+selected rates can therefore produce shorter intervals. Per-pass `measurement_seconds` records
 the actual interval after warmup; pooled `measurement_seconds` sums those intervals.
+The later cliff probe raises the count limit and uses longer schedules;
+its [measurement boundaries](cliff.md#measurement-boundaries-and-recovery)
+state durations, populations and the additional stage diagnostics.
 
 The finite-run `stable_observed` criterion requires:
 
