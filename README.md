@@ -1,3 +1,8 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="workbench/design/identity/sixdb-reversed.svg">
+  <img src="workbench/design/identity/sixdb.svg" width="112" height="84" alt="">
+</picture>
+
 # SixDB
 
 SixDB is Calico's successor: a SQL database aiming for HTAP dominance with

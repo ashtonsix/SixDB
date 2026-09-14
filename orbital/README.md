@@ -1,3 +1,8 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../workbench/design/identity/orbital-reversed.svg">
+  <img src="../workbench/design/identity/orbital.svg" width="96" height="96" alt="">
+</picture>
+
 # Orbital
 
 The OS-like layer underneath SixDB. Owns data durability, network transport,
