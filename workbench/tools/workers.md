@@ -13,6 +13,7 @@ uncommitted work, executes the script and collects results in
 `build/workers/JOB/results/`. It uses Spot and reuses a compatible idle worker.
 After collection, the worker stays ready for five minutes, then shuts down.
 No commit, SSH key or job description file is needed.
+For coordinated hosts or several architecture targets, use [worker groups](worker-groups.md).
 
 If exact-type Spot capacity is unavailable, `--capacity spot-or-on-demand`
 permits fallback; `--capacity on-demand` requests it directly. Larger working

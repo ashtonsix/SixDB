@@ -77,7 +77,7 @@ From the repository root on Linux (prefix with `orb -m ubuntu` on the Mac):
 
 ```sh
 python3 workbench/spikes/az-latency/launch.py
-python3 workbench/spikes/az-latency/collect.py build/az-latency/RUN/campaign.json
+python3 workbench/tools/worker_group.py wait build/az-latency/RUN/group.json
 python3 workbench/spikes/az-latency/summarize.py \
   build/workers/JOB1/results build/workers/JOB2/results \
   build/workers/JOB3/results build/workers/JOB4/results \
@@ -85,8 +85,9 @@ python3 workbench/spikes/az-latency/summarize.py \
   --output build/az-latency/RUN/summary
 ```
 
-`launch.py` checks availability and captures the source once, then calls the
-existing [worker helper](../../tools/workers.md) with a single subnet per AZ.
+`launch.py` chooses the AZ cohort and supplies a single subnet per AZ to
+[worker groups](../../tools/worker-groups.md), which resolve availability,
+capture source once and submit the named participants.
 A unique study-owned security group permits only self-referencing ICMP and TCP
 ports 43000–43001; no public ingress is added. The existing worker IAM profile
 provides S3 access. Initial S3 rendezvous uses a unique prefix under `sixdb/`;
@@ -94,13 +95,12 @@ a study-local HTTP barrier coordinates measurement phases thereafter.
 
 Every worker is fresh, with an hour deadline/lifetime and no idle retention.
 Scripts stay alive through the final barrier so their servers cannot disappear
-before peers finish. `collect.py` resumes collection of all six independent jobs,
-verifies their existing archives through the worker helper, confirms termination
-and removes the temporary security group. A failed launch recovers any
-just-created job receipts and aborts the partial campaign. The campaign receipt
-preserves collection outcomes and cleanup errors. Observation failures retry
-the existing job; they do not cause early cancellation. For explicit recovery
-of a partial launch, run `collect.py CAMPAIGN --abort`.
+before peers finish. Group `wait` verifies each archive, closes the dedicated
+workers and removes their temporary security group. For a partial launch, use
+`worker_group.py cancel GROUP.json`. `collect.py GROUP.json [--abort]` forwards
+to those shared operations; the original completed `campaign.json` remains a
+historical receipt. Probe, barrier and retained measurement bytes are unchanged
+by the lifecycle extraction.
 
 The worker archives hold raw per-sample RTTs, ping output, host diagnostics and
 the exact probe sources. Small summaries and recovery references belong beside

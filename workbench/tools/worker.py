@@ -511,10 +511,12 @@ def fetch(job, directory, state, aws, *, full=False, selected=None):
         print(f'Partial output only: {destination}', flush=True)
 
 
-def wait(job, directory, aws, interval=10):
+def wait(job, directory, aws, interval=10, *, stop=None):
     previous = None
     stopped_since = None
     while True:
+        if stop is not None and stop.is_set():
+            raise InterruptedError('observation detached; worker unchanged')
         state = status(job, aws)
         if state != previous and state:
             print(f"{job['id']}: {state['state']}" + (f" — {state['error']}" if state.get('error') else ''), flush=True)
@@ -542,7 +544,10 @@ def wait(job, directory, aws, interval=10):
             fetch(job, directory, state, aws)
             print('Worker deadline elapsed without completion.', flush=True)
             return 1
-        time.sleep(interval)
+        if stop is None:
+            time.sleep(interval)
+        else:
+            stop.wait(interval)
 
 
 def logs(job, aws, *, console=False):
@@ -576,6 +581,55 @@ def logs(job, aws, *, console=False):
         print(f"Live sync is enabled every {job['config']['sync_seconds']} seconds; "
               'try again after the script starts and its first upload completes.')
     print(f"For instance boot diagnostics: python3 workbench/tools/worker.py logs {job['id']} --console")
+
+
+def settings(overlay=None):
+    base = json.loads((HERE / 'worker.json').read_text())
+    overlay = overlay or {}
+    machines = {name: value | overlay.get('machines', {}).get(name, {})
+                for name, value in base['machines'].items()}
+    return base | overlay | {'machines': machines}
+
+
+def prepare(config, source_root, script, arguments, directory, aws):
+    """Persist a job before dispatch can allocate a worker; caller owns directory."""
+    script = (source_root / script).resolve()
+    if not script.is_relative_to(source_root) or not script.is_file():
+        raise ValueError('script must be a file in the source repository')
+    name = str(script.relative_to(source_root))
+    source = snapshot(directory, source_root)
+    if name not in source['files']:
+        raise ValueError('script is ignored/excluded from source capture; use a non-ignored repository file')
+    ensure_infrastructure(config, aws)
+    prefix = 'sixdb/workers/' + directory.name
+    # Per-file hashes live separately: EC2 user-data has a small fixed size limit.
+    save(directory / 'source-manifest.json', source.pop('files'))
+    job = {'format': 2, 'profile': pool.profile(config, source), 'id': directory.name, 'created_at': time.time(),
+        'source': source, 'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=source_root, text=True).strip(),
+        'script': name, 'args': arguments, 'config': config, 'prefix': prefix,
+        'uri': f"s3://{config['bucket']}/{prefix}"}
+    save(directory / 'job.json', job)
+    boot_script(job)  # Validate before uploading or allocating compute.
+    return job
+
+
+def dispatch(job, directory, aws):
+    """Submit one prepared job. An uncertain outcome is recovered by job ID."""
+    config = job['config']
+    for filename in ('source.tar.gz', 'source-manifest.json', 'runtime.py', 'worker_pool.py', 'job.json'):
+        aws.upload(directory / filename, job['uri'] + '/' + filename)
+    cpu = config['hardware']['VCpuInfo']
+    vcpus = cpu['DefaultCores'] * config.get('threads_per_core', cpu['DefaultThreadsPerCore'])
+    memory = config['hardware']['MemoryInfo']['SizeInMiB'] / 1024
+    print(f"Job: {job['id']}\nWorker: {config['instance_type']}, {vcpus} vCPU, {memory:g} GiB; "
+          f"capacity={config['capacity']}; {config['deadline_seconds']}s job deadline, {config['idle_seconds']}s idle window\nS3: {job['uri']}\n"
+          f"Resume: python3 workbench/tools/worker.py wait {job['id']}", flush=True)
+    if not reuse(job, directory, aws):
+        # Replace a rejected reuse candidate's routing with this new session.
+        save(directory / 'assignment.json', {'worker_id': job['id'], 'reused': False})
+        aws.upload(directory / 'assignment.json', job['uri'] + '/assignment.json')
+        launch(job, directory, aws)
+        idle_hint(job, aws)
 
 
 def main():
@@ -633,12 +687,7 @@ def main():
         return 0
     if arguments and args.command != 'run':
         parser.error('arguments after -- are for run scripts')
-    base = json.loads((HERE / 'worker.json').read_text())
-    if args.config != HERE / 'worker.json':
-        overlay = json.loads(args.config.read_text())
-        machines = {name: settings | overlay.get('machines', {}).get(name, {})
-                    for name, settings in base['machines'].items()}
-        base = base | overlay | {'machines': machines}
+    base = settings(json.loads(args.config.read_text()) if args.config != HERE / 'worker.json' else None)
     if args.command in {'run', 'plan'}:
         config = configuration(args, base)
         aws = Aws(config['region'])
@@ -651,37 +700,11 @@ def main():
         if not script.is_relative_to(source_root) or not script.is_file():
             parser.error('script must be a file in the source repository')
         worker_cache.preflight(ROOT)
-        name = str(script.relative_to(source_root))
         directory = JOBS / (datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ') + '-' + uuid.uuid4().hex[:8])
         directory.mkdir(parents=True)
-        source = snapshot(directory, source_root)
-        if name not in source['files']:
-            raise ValueError('script is ignored/excluded from source capture; use a non-ignored repository file')
-        ensure_infrastructure(config, aws)
-        prefix = 'sixdb/workers/' + directory.name
-        # Per-file hashes live separately: EC2 user-data has a small fixed size limit.
-        save(directory / 'source-manifest.json', source.pop('files'))
-        job = {'format': 2, 'profile': pool.profile(config, source), 'id': directory.name, 'created_at': time.time(),
-            'source': source, 'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=source_root, text=True).strip(),
-            'script': name, 'args': args.arg + arguments, 'config': config, 'prefix': prefix,
-            'uri': f"s3://{config['bucket']}/{prefix}"}
-        save(directory / 'job.json', job)
-        boot_script(job)  # Validate before uploading or allocating compute.
-        for filename in ('source.tar.gz', 'source-manifest.json', 'runtime.py', 'worker_pool.py', 'job.json'):
-            aws.upload(directory / filename, job['uri'] + '/' + filename)
-        cpu = config['hardware']['VCpuInfo']
-        vcpus = cpu['DefaultCores'] * config.get('threads_per_core', cpu['DefaultThreadsPerCore'])
-        memory = config['hardware']['MemoryInfo']['SizeInMiB'] / 1024
-        print(f"Job: {job['id']}\nWorker: {config['instance_type']}, {vcpus} vCPU, {memory:g} GiB; "
-              f"capacity={config['capacity']}; {config['deadline_seconds']}s job deadline, {config['idle_seconds']}s idle window\nS3: {job['uri']}\n"
-              f"Resume: python3 workbench/tools/worker.py wait {job['id']}", flush=True)
+        job = prepare(config, source_root, args.script, args.arg + arguments, directory, aws)
         try:
-            if not reuse(job, directory, aws):
-                # Replace a rejected reuse candidate's routing with this new session.
-                save(directory / 'assignment.json', {'worker_id': job['id'], 'reused': False})
-                aws.upload(directory / 'assignment.json', job['uri'] + '/assignment.json')
-                launch(job, directory, aws)
-                idle_hint(job, aws)
+            dispatch(job, directory, aws)
             if not args.detach:
                 return wait(job, directory, aws)
         except (KeyboardInterrupt, Exception) as error:

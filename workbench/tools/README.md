@@ -5,7 +5,7 @@ from the Mac. Use the helpers independently or start from an existing runner.
 
 | Task | Tool and guide |
 | --- | --- |
-| Run a script on EC2 | [Workers](workers.md): `worker.py run SCRIPT`; Spot and compatible reuse by default |
+| Run scripts on EC2 | [Workers](workers.md), [worker groups](worker-groups.md); Spot and compatible reuse by default |
 | Freeze sources while editing | [Capture example below](#captured-experiment-runs) |
 | Reuse input data | [Datasets](../datasets/README.md): `datasets.py get NAME` |
 | Replay binaries or summarize measurements | [Benchmark tools](../benchmarks/README.md#replay-and-summarize): `replay.py`, `evidence.py` |
