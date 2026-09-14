@@ -43,10 +43,10 @@ Each row selects the **lowest pooled median among repeated 4 KiB tail candidates
 for that device**. All four percentiles come from that same configuration; the
 selection does not optimize p99.9. Values are **microseconds**.
 
-![Selected 4 KiB persistence paths. The NVMe paths have low medians but p99.9 around 110 microseconds; growing-file medians are marked separately.](../evidence/20260914-durable/persistence.png)
+![Selected 4 KiB persistence paths on a logarithmic time axis: NVMe medians differ, while all three p99.9 values are around 110 microseconds. Each row uses one configuration.](../images/persistence.png)
 
-The plot also marks each device's growing-file median. The selected-path
-percentiles below expose values that overlap visually. [Complete cases and
+The connecting line spans p50 to p99.9 within a distribution; it is not an
+uncertainty interval. The table exposes percentiles that overlap visually. [Complete cases and
 repetitions](../evidence.md) retain the other paths and preparation modes.
 
 | Device / worker | p50 | p90 | p99 | p99.9 |
@@ -110,5 +110,5 @@ device with writeback cache and flush semantics. The tested NVMe SSDs advertised
 no volatile write cache, consistent with requiring no separate FLUSH for their
 synchronized writes. The [qualification account](README.md#what-makes-completion-durable)
 explains the OS/device/AWS contract and readback checks. The next decision uses
-these paths inside the [joint durable commit](../commit/README.md), including
+these paths inside the [joint durable commit findings](../commit/latency.md), including
 both follower and leader persistence.

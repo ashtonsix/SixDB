@@ -14,12 +14,14 @@ sources; compact exports have separate immutable recovery references.
 | D3 completion diagnostic | [Timings](evidence/20260914-durable/d3-diagnostic.csv), [passes](evidence/20260914-durable/d3-diagnostic-passes.csv), [issued requests](evidence/20260914-durable/d3-request-traces.csv) | Timing runs are separate from traced runs |
 | Joint durable commit | [Configurations](evidence/20260914-durable/commits.csv), [passes](evidence/20260914-durable/commit-passes.csv) | [Nodes and storage](evidence/20260914-durable/commit-nodes.json); healthy and known-follower-absent cases are separate |
 
-The selected [persistence figure](evidence/20260914-durable/persistence.png) and
-[commit figure](evidence/20260914-durable/commits.png) use these tables. Numerical
-columns ending `_us` are **microseconds**; the main report converts commit times
+## Read the fields and distributions
+
+Numerical columns ending `_us` are **microseconds**; the main report converts commit times
 to milliseconds. Raw timestamps ending `_ns` are nanoseconds. Network echo sizes
 describe both the request and the full-size reply; durable replication uses a
-record and a small acknowledgment.
+record and a small acknowledgment. In the one-record CSVs, `remote1_*` and
+`remote2_*` are follower write durations, not leader-observed acknowledgment
+timestamps; they cannot be substituted into the quorum-readiness equation.
 
 The durable [analysis record](evidence/20260914-durable/analysis.json) identifies
 analyzers, units, sample counts and selected CSV hashes. Pooled percentiles and
@@ -44,10 +46,12 @@ with raw worker references, captured settings, analysis and recovery reference:
 All three cohorts independently reproduced all seven reconstructed numeric/context
 outputs byte for byte from recovered raw archives. Six are retained in each
 compact export; the seventh is the equivalent pooled JSON representation in
-ignored recovery output.
-The
-[completed resource receipt](evidence/20260914-durable/resources.json) is a
-snapshot for its listed cohorts, not a claim that later workers are closed.
+ignored recovery output. Cleanup is verified by separate receipts for the
+[original durable studies](evidence/20260914-durable/resources.json),
+[small](evidence/20260914-durable/throughput-small/resources.json),
+[larger standard](evidence/20260914-durable/throughput-scale/resources.json) and
+[Express](evidence/20260914-durable/throughput-express/resources.json) cohorts.
+The network cohort records cleanup in its [campaign receipt](evidence/20260914/campaign.json).
 
 For throughput, the pooled `mean_batch_records` is total native records divided
 by total native batches across whole passes, including warmup. Per-pass
@@ -59,7 +63,8 @@ These quantities differ from each other and from the configured batch-size cap.
 field has this same boundary. `all_followers_drain_seconds` includes both
 acknowledgments, completed sends and native ring teardown. Recomputed
 `stable_observed` checks both drains; `recorded_stable_observed` preserves the
-earlier classification. The analyzer validates archived summaries against their
+earlier classification. The corrected drain rule changed no cohort classification
+or selected landmark. The analyzer validates archived summaries against their
 original definitions before recomputing and ranking from the recorded timestamps.
 
 ## Recover a comparison
@@ -85,3 +90,25 @@ with its [recovery reference](evidence/20260914-durable/artifact.json). The
 [AZ evidence guide](evidence/20260914/README.md) provides the separate command
 for recovering the original network cohort. Reproduction uses the captured
 sources and recorded toolchain/settings; a rerun on new hosts is a new observation.
+
+## Regenerate the report figures
+
+The figures in `images/` are reader-facing views of the retained CSVs. Original
+figures and source hashes in `evidence/` remain part of the immutable exports.
+With matplotlib 3.10.8 available, run from the repository root on Linux:
+
+```sh
+python3 workbench/spikes/cft-commit-latency/plot-durable.py \
+  workbench/spikes/cft-commit-latency/evidence/20260914-durable \
+  --output build/cft-commit-latency/figures
+python3 workbench/spikes/cft-commit-latency/plot.py \
+  workbench/spikes/cft-commit-latency/evidence/20260914 \
+  --output build/cft-commit-latency/figures
+```
+
+The operating-choice chart selects the same `knees.csv` rows as the report;
+the screen/repeat chart selects one unchanged policy from the per-pass CSV.
+Repeated-candidate plots show pooled values and observed pass ranges. Their
+budget view has a fixed 0.3–1.25 ms scale and flags any range extending above it;
+the companion view retains the full tail. MTU intervals describe variation
+across directions. None of these intervals is a confidence interval.

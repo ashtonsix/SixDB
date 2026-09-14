@@ -175,10 +175,13 @@ TCP loopback echo covers 1 byte through 1 MiB messages. It includes the Python
 runtime, scheduler, copying and both local socket endpoints. Three fresh HTTPS
 HEAD connections to the regional S3 endpoint split DNS, connect, TLS and first
 response time. They do not measure peer-to-peer bandwidth, fabric RTT, tail
-latency under load or cross-AZ traffic. Controlled paired hosts, message-size
-and concurrency sweeps, ENA counters, IRQ placement, batching and sustained
-credit behaviour are separate experiments worth pursuing when a consumer
-needs them. There is no throughput inference from an HTTPS handshake.
+latency under load or cross-AZ traffic. The companion [CFT study](../cft-commit-latency/README.md)
+uses [controlled paired hosts](../cft-commit-latency/az-measurements.md), explicit
+[persistence paths](../cft-commit-latency/persistence/README.md) and
+[arrival-driven replication](../cft-commit-latency/commit/README.md) to address
+those questions, including message sizes, batching and ENA counters. Its finite
+runs still do not establish long-term credit behaviour or isolate IRQ placement.
+There is no throughput inference from an HTTPS handshake.
 
 ## Sources and prior work
 

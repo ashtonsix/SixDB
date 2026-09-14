@@ -1,8 +1,9 @@
 # Measuring AZ links
 
-Measure all 15 AZ pairs, in both initiating directions, and explore how message
-size and MTU affect round-trip latency. Compare the 20 possible three-AZ sets
-using their measured pair links. These are observations from one six-instance
+This study measured all 15 AZ pairs, in both initiating directions, and varied
+message size and the maximum transmission unit (MTU): the largest IP packet
+admitted on a path. It compared the 20 possible three-AZ sets using their
+measured pair links. These are observations from one six-instance
 cohort, not a latency guarantee for an AZ or an application replication benchmark.
 
 The [September 14 findings](az-findings.md) contain pair tables, MTU effects and the
@@ -58,9 +59,9 @@ NIC/driver/offload configuration, ENA counters, TCP counters, CPU time and
 interrupts are captured before and after epochs. TCP retransmissions come from
 per-connection `TCP_INFO`; complete TCP request counts do not establish packet
 loss rates. These round trips include both hosts' OS and application processing;
-RTT/2 is not a measured one-way latency. No fsync, WAL, quorum or simultaneous
-three-node replication is measured. Three-AZ rankings use the **largest of the
-six directional p99s**, with mean directional p50 as a deterministic tie-break.
+RTT/2 is not a measured one-way latency. The [joint commit experiment](commit/README.md)
+adds persistence and simultaneous replication; neither is included in these link
+measurements. Three-AZ rankings use the **largest of the six directional p99s**, with mean directional p50 as a deterministic tie-break.
 That score is a placement comparison, not a percentile of a composed transaction.
 One host per AZ cannot describe within-AZ host/rack/path variation, and repeated
 passes over minutes cannot describe diurnal or longer-term network tails.
@@ -114,8 +115,7 @@ before peers finish. Group `wait` verifies each archive, closes the dedicated
 workers and removes their temporary security group. For a partial launch, use
 `worker_group.py cancel GROUP.json`. `collect.py GROUP.json [--abort]` forwards
 to those shared operations; the original completed `campaign.json` remains a
-historical receipt. Probe, barrier and retained measurement bytes are unchanged
-by the lifecycle extraction.
+historical receipt.
 
 The worker archives hold raw per-sample RTTs, ping output, host diagnostics and
 the exact probe sources. Small summaries and recovery references belong beside

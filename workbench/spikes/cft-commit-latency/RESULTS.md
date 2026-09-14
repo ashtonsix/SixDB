@@ -1,219 +1,152 @@
 # Durable commit latency and operating choices
 
-**Prepared NVMe logs achieved sub-millisecond p99.9 one-record commits in the
-selected good placement.** Under scheduled 4 KiB arrivals, the highest measured
-rate with pooled p99 below 1 ms was **231,309 commits/s using ENA Express**.
-Requiring pooled p99.9 below 1 ms selected **129,537/s**. Both selected percentiles
-also stayed below 1 ms in each of their three passes. Throughput, the requested
-percentile and variation between passes all change the operating choice.
+**Preparing the log and choosing its replica placement made sub-millisecond
+commits possible. Keeping that latency under load is a separate choice.** In the
+measured ENA Express cohort, a 1 ms p99 budget admitted **231,309 commits/s**;
+a 1 ms p99.9 budget selected **129,537/s**. The highest observed goodput was
+322,317/s, but its p99.9 was nearly 49 ms.
 
-All times below are actual joint durable commits in **milliseconds**. Commit
-requires the leader's own durable completion plus one durable follower
-acknowledgment. The [commit guide](commit/README.md) explains that boundary and
-how batches, windows and queueing change the path under load.
+The [study overview](README.md) maps the supporting guides. This report follows
+the decision from the low-load path to an operating point, then explains where
+the evidence leaves room for a different choice. Measurements are from
+14 September 2026 in AWS us-east-1.
 
-The one-record experiments prepare payloads before timing, then drain both
-followers before issuing another record. The later arrival-driven pipeline
-includes preparation and waiting from the scheduled arrival. Those experiments
-answer different questions; their latency values do not share an identical clock.
+## Know which latency is being measured
 
-## A useful starting configuration
+A record commits after the leader and one follower have made it durable. Local
+persistence and both replications overlap; the slower third replica can finish
+after commit. The [commit path](commit/README.md) explains how durable prefixes
+preserve order and how a lagging replica can still delay later admissions.
 
-The two measured placements use i8g.large instances:
+| Experiment | Timer and arrival boundary | What it establishes |
+| --- | --- | --- |
+| One outstanding record | Payload prepared before timing; both followers finish before the next record starts | The joint durable path with a comparable starting state |
+| Arrival-driven pipeline | Scheduled arrival to commit, including preparation, batch formation and queueing | Latency at an offered rate, including waiting before admission |
 
-- **Good:** leader `use1-az4`, followers `use1-az2` and `use1-az1`.
-- **Bad:** leader `use1-az6`, followers `use1-az4` and `use1-az2`.
+The commit tables and plots use measured joint rounds, with latency in **milliseconds**.
+P99 describes the observed 99th percentile, p99.9 the 99.9th. **Pooled** means
+combining the raw observations from three passes before computing the percentile.
+The range of those passes' percentiles shows variation that pooling can conceal.
+The 1 ms reference is a budget for this commit path, excluding client RPC and
+failure detection or election time.
 
-The names identify this comparison, rather than permanent properties of the AZs.
-These **4 KiB** rows each pool 120,000 commits from three passes.
+## Remove avoidable write and placement cost first
 
-| Placement / log path | TCP MTU | p50 | p90 | p99 | p99.9 |
+The storage comparison uses host-local NVMe instance store and gp3, an AWS
+Elastic Block Store (EBS) volume type. An initialized log region has already been
+written and synchronized before records arrive.
+
+For 4 KiB records, moving from a growing-gp3 log in the worse measured placement
+to initialized NVMe in the better placement reduced p99 from **3.736 to
+0.493 ms**, an **86.8% reduction**. The latter's p99.9 was **0.520 ms**, with
+pass values of **0.479–0.525 ms**. Each policy below pools 120,000 commits across
+three passes on i8g.large.
+
+![Four measured TCP log policies show how storage preparation and placement change the durable commit distribution. Whiskers are observed pass ranges; the dashed line is 1 ms.](images/commits.png)
+
+“Good” and “bad” identify the two measured placements. The good leader is in
+`use1-az4`, with followers in az2 and az1; the bad leader is in az6, with
+followers in az4 and az2. These labels are not permanent AZ properties.
+Initialized NVMe uses direct `O_DSYNC` writes on tuned ordered ext4; growing gp3
+uses buffered writes followed by `fdatasync`, with a different MTU. The complete
+policy comparison changes several things, so its entire gain cannot be assigned
+to the storage medium. The [one-record findings](commit/latency.md) give the exact
+rows and the narrower comparisons:
+
+- **Prepare before demand.** Holding buffered-fdatasync and ordered ext4 fixed,
+  initializing the destination reduced i8g median write completion from 62.5 to
+  17.4 µs; preallocation alone gave 54.6 µs. A real log must pay that preparation
+  ahead of use. [Persistence findings](persistence/FINDINGS.md) explain the paths.
+- **Choose the leader and its fallback together.** The
+  [network study](az-findings.md) identifies fast links and slower alternatives.
+  Actual commit tests show what remains when the normally faster follower is
+  already known unavailable. Healthy latency alone does not price that fallback.
+- **Keep nearby alternatives in view.** Prepared raw NVMe did not improve the
+  good one-record median over a prepared file. Initialized io2 was a promising
+  EBS alternative in a shorter screen. UDP helped the larger 64 KiB record more
+  than the 4 KiB record. Each conclusion has its own population and controls in
+  the [one-record comparison](commit/latency.md).
+
+## Choose a rate for the percentile that matters
+
+The pipeline uses **4 KiB records, raw NVMe and direct `O_DSYNC`**, with the good
+placement and one pinned application CPU per voter. **Goodput** counts unique
+durable commits/s without a deadline filter. A candidate must keep up and drain its work in **all three passes** under the
+[finite-run stability rule](commit/README.md#count-waiting-from-the-arrival-schedule).
+Among those candidates, the following are the highest-goodput choices for the
+named **pooled** 1 ms budget. ENA (Elastic Network Adapter) is the AWS network
+interface; Express is its alternative network path. The cohorts compare small
+and larger instances, then the two network modes on the larger size:
+
+![Observed operating choices on common axes: Express offers more throughput under a p99 budget; protecting p99.9 selects about 130 thousand commits per second with more pass margin than larger standard ENA.](images/operating-choices.png)
+
+| Cohort / budget | Commits/s | p50 | p90 | p99 | p99.9 |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Good / initialized NVMe | 9001 | 0.474 | 0.480 | 0.493 | 0.520 |
-| Bad / initialized NVMe | 9001 | 0.801 | 0.837 | 0.870 | 1.045 |
-| Good / growing gp3 | 1500 | 3.197 | 3.264 | 3.324 | 4.119 |
-| Bad / growing gp3 | 1500 | 3.533 | 3.622 | 3.736 | 4.978 |
+| i8g.large, standard ENA / p99.9 | 52,693 | 0.602 | 0.708 | 0.790 | 0.834 |
+| i8g.8xlarge, standard ENA / p99.9 | 128,881 | 0.755 | 0.842 | 0.919 | 0.987 |
+| i8g.8xlarge, ENA Express / p99.9 | 129,537 | 0.687 | 0.806 | 0.882 | 0.923 |
+| i8g.8xlarge, ENA Express / p99 | 231,309 | 0.686 | 0.812 | 0.945 | 1.055 |
 
-Moving from the bad-placement growing-gp3 policy to the good-placement
-initialized-NVMe policy reduced p99 by **86.8%**, from **3.736 to 0.493 ms**
-(a **7.58×** latency ratio).
+The larger standard-ENA point has little p99.9 margin: its pass range is
+**0.894–1.019 ms**, so one pass exceeds the pooled budget. Express's p99 choice
+stayed below 1 ms at p99 in all passes (**0.932–0.955 ms**), while every pass's
+p99.9 exceeded it. Its p99.9 choice stayed at **0.816–0.930 ms** across passes.
+The [throughput findings](commit/throughput.md) retain the policies, offered rates,
+all four percentile preferences and their alternatives.
 
-![Measured durable commits for the same four TCP policies, with a 1 ms reference line and observed per-pass ranges for each percentile.](evidence/20260914-durable/commits.png)
+Express's fastest stable point, **322,317/s**, completed only **74.814%** of its arrival
+cohort below 1 ms, with **48.861 ms p99.9**. Choosing its 1 ms p99 or p99.9 point
+therefore gives up **28.2% or 59.8%** of the largest observed stable goodput.
+Stable admission and acceptable latency are separate requirements.
 
-Whiskers show the range across the three measured passes. They are not confidence
-intervals. [Exact cases and repetitions](evidence.md) retain the settings behind
-the comparison.
+These are short observations. The table's rows contain about **45, 44, 43 and
+23 post-warmup seconds total** across three passes. A two-million-record cap
+shortens high-rate passes; the 322,317/s candidate has only about **5.2 seconds
+per pass**. These measurements do not establish long-term capacity.
 
-Initialized NVMe uses direct `O_DSYNC` writes on tuned ordered ext4. Growing gp3
-uses buffered writes followed by `fdatasync` on ordinary ordered ext4. The latter
-is a complete baseline log policy: the difference includes storage, preparation,
-I/O path and MTU. It cannot all be assigned to the medium. Both paths request
-[power-safe completion](persistence/README.md#what-makes-completion-durable).
+## Use the surrounding evidence to judge a boundary
 
-The good initialized-NVMe TCP row placed **99.99917% of observed commits below
-1 ms**; its per-pass p99.9 ranged **0.479–0.525 ms**. The bad placement's p99
-remained below 1 ms while its pooled p99.9 exceeded it. A deployment preference
-therefore needs to name the percentile, as well as its latency budget.
+Three details materially change how the selected points should be used:
 
-## How much throughput does the latency preference cost?
+- **A short screen can miss accumulating work.** On the small cohort, one
+  104,400 offered/s policy had **0.689 ms p99** in a six-second screen, then
+  **82.805–92.780 ms** in three 15-second repeats. Goodput stayed near 104,000/s
+  and the median below 0.709 ms. [Queue growth](commit/throughput.md#why-the-104000s-screen-is-not-the-recommendation)
+  explains why that point was rejected.
+- **Sparse choices do not resolve a knee.** Express has no repeated rates
+  between 4,000 and 129,600/s. Staying within 25% of its best latency selects
+  about 4,000/s and sacrifices 98.8% of observed stable goodput, but the gap
+  leaves intermediate possibilities unresolved. On standard ENA, a candidate
+  misses a relative median limit by just **1 µs**, much less than pass variation.
+- **The exact rate maximum may be a poor bargain.** One Express fill-wait
+  setting gains only **0.18% goodput** while worsening p99.9 from **1.500 to
+  19.216 ms**. The [full distribution and nearby policy](commit/throughput.md#ena-express-removing-the-per-flow-constraint)
+  give an engineer reason to choose the slightly lower rate.
 
-The completed pipeline cohorts use **4 KiB records, raw NVMe, direct `O_DSYNC`
-and the good placement**. These are the highest-goodput candidates stable in all
-three repeated passes. Latency is measured from scheduled arrival, in milliseconds:
+The network model also helps predict which change could matter. Standard ENA's
+5 Gbit/s flow ceiling permits about **153,000 4 KiB records/s per follower** before
+overhead, consistent with its short screens. More aggregate instance bandwidth
+alone cannot remove that constraint; Express does. The larger-host comparison
+also changes platform resources and tuning, and standard versus Express uses
+fresh cohorts rather than a same-host crossover. The
+[network controls and measured ceilings](commit/throughput.md#what-the-network-ceiling-explains)
+bound that interpretation.
 
-| Instance / network | Commits/s | p50 | p90 | p99 | p99.9 | Pass p99.9 range |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| i8g.large / standard ENA | 52,693 | 0.602 | 0.708 | 0.790 | 0.834 | 0.766–0.845 |
-| i8g.8xlarge / standard ENA | 128,881 | 0.755 | 0.842 | 0.919 | 0.987 | 0.894–1.019 |
-| i8g.8xlarge / ENA Express | 322,317 | 0.850 | 1.167 | 27.914 | 48.861 | 1.477–50.567 |
+## Carry the result into a system
 
-The small candidate uses TCP with 16 retained batches, up to 16 records/batch,
-50 µs maximum fill wait and 52,700 offered records/s. Larger standard ENA uses TCP with
-16 batches, up to 64 records/batch, the same wait and 128,800 offered/s. Express
-uses the latter batch/window/wait policy at 320,900 offered/s. Actual batches can
-be smaller. The three measured populations are **2.37, 5.61 and 5.04 million
-post-warmup records over about 45, 44 and 16 seconds total**, respectively, across
-three passes. Goodput counts unique durable commits/s without a deadline filter.
+A deployment still has to supply prepared log space, admission/backpressure and
+replica recovery. This bounded pipeline retains slots until both followers
+acknowledge, so it does not sustain admission after a follower disappears. The
+known-absent-follower tests belong to the separate one-record experiment.
 
-**Larger standard ENA has little margin at p99.9:** its pooled 0.987 ms satisfies
-the report's 1 ms preference, while one pass reaches 1.019 ms. Its three p99
-values remain below 1 ms, at 0.871–0.956 ms. A percentile and a pooled-versus-pass
-requirement therefore change the interpretation of the same operating point.
+[Memory characterisation](../memory-characterisation/README.md) supplies the other
+half of this hardware picture: within-host concurrency, cache sharing and
+placement. Its findings show why CPU identity or NUMA-node identity alone can
+miss a relevant cost. Neither spike turns a local optimum into a universal
+tuning constant; the consuming workload and its actual environment matter.
 
-**Express's fastest stable point has costly tails:** only 74.814% of its commits
-completed below 1 ms. A **p99 budget of 1 ms** instead selects UDP at **231,309/s**,
-with p50/p90/p99/p99.9 **0.686/0.812/0.945/1.055 ms**. Its pass p99 range is
-**0.932–0.955 ms**; every pass's p99.9 exceeds 1 ms. A **p99.9 budget of 1 ms**
-selects TCP at **129,537/s**, with **0.687/0.806/0.882/0.923 ms** percentiles and
-**0.816–0.930 ms** pass p99.9. The sacrifices are **28.2% and 59.8%** of Express's
-largest observed stable goodput. Their post-warmup windows total about 23 and
-43 seconds across three passes. The two-million-record cap shortens high-rate
-passes; these are finite observations, not sustained-capacity trials.
-
-Staying within **25% of the best pooled p99.9** selects 52,693/s on the small
-cohort, 7,501/s on larger standard ENA, and 3,996/s on Express. The respective
-sacrifices are **0%, 94.2% and 98.8%** of each cohort's largest observed stable
-goodput. These large changes partly reflect sparse sampling: the larger standard
-cohort has no repeated rates between 7,500 and about 128,000/s, and Express none
-between 4,000 and 129,600/s. They do not establish universal knees.
-
-Short screens can give a materially different answer. At 104,400 offered/s on
-the small cohort, a TCP W64/B4/wait 50 µs policy gave **0.689 ms p99** in a
-six-second post-warmup screen, then **82.805–92.780 ms p99** across three
-15-second repetitions. Median latency stayed below 0.709 ms and goodput stayed
-near 104,000/s, concealing the queue growth and slow population. All four repeated
-small-cohort policies near that rate were unstable. The untested repeated gap
-between about 53,000 and 104,000/s leaves its true boundary unresolved.
-
-The [throughput findings](commit/throughput.md) give the full percentile choices,
-failed-screen comparison, pass variation and network explanation. The larger
-platform changes hardware and tuning as well as bandwidth; **25 Gbps instance
-bandwidth is not a per-flow entitlement**. Standard ENA's 5 Gbit/s flow limit
-predicts about 153,000 4 KiB records/s per follower before overhead, consistent
-with its short screens. Express exceeds that constraint. Its comparison uses
-matching settings on fresh cohorts, rather than a same-host crossover.
-
-## Which changes earned their place?
-
-**Prepare the log ahead of demand.** In the matched storage screen, keeping
-buffered-fdatasync and ordered ext4 fixed, initialization reduced i8g median write
-completion from 62.5 to 17.4 µs; preallocation alone gave 54.6 µs. The
-[persistence findings](persistence/FINDINGS.md) compare all device classes and
-explain the FUA/flush diagnostic. Preparation has been paid before timing and
-must be supplied by a real log's segment policy.
-
-**Choose the leader and its alternatives together.** The
-[network study](az-findings.md) covers all 15 pairs and 20 triples. Its best
-worst-edge sets were {az2, az4, az5} and {az1, az4, az5} at MTU 9001. The durable
-cohort instead used {az1, az2, az4} for its good placement because i8g.large was
-unavailable in az5. Network-only rankings shortlist feasible choices; hardware
-availability and actual durable rounds complete the comparison.
-
-**Raw I/O did not improve the good one-record median.** At 4 KiB, TCP and MTU
-9001, raw NVMe gave p50/p90/p99/p99.9 **0.489/0.497/0.505/0.517 ms** versus
-**0.474/0.480/0.493/0.520 ms** for the initialized file. Raw was slightly lower at
-the pooled p99.9, with overlapping pass ranges. This comparison offers no broad
-latency reason to take on raw-region management; throughput may change that choice.
-
-## Prepared EBS offers another candidate
-
-Growing gp3 is only one EBS policy. The short joint-commit screen also tested
-initialized extents with direct `O_DSYNC`. These rows use the **good placement,
-tuned ordered ext4 and MTU 9001**, selecting the lowest p99 within each
-device/record-size screen. The transport is part of that selection.
-
-| Device / record / transport | p50 | p90 | p99 | p99.9 |
-| --- | ---: | ---: | ---: | ---: |
-| gp3 / 4 KiB / UDP | 1.303 | 1.343 | 1.372 | 1.404 |
-| io2 / 4 KiB / UDP | 0.720 | 0.768 | 0.823 | 0.896 |
-| gp3 / 64 KiB / TCP | 1.864 | 2.004 | 2.060 | 2.170 |
-| io2 / 64 KiB / UDP | 0.970 | 1.036 | 1.112 | 1.199 |
-
-**These are screening results: 6,000 commits in three passes per row.** They
-support investigating initialized io2 for a sub-millisecond 4 KiB p99, while
-initialized gp3 remained above that budget here. Selection used these same
-observations, and only about six pooled observations lie beyond p99.9. The
-displayed short-screen tails carry less evidence than the longer NVMe runs;
-they do not establish an equally well-tested tail preference.
-The [complete commit table](evidence/20260914-durable/commits.csv) retains all
-screened paths and their separate per-pass ranges.
-
-## Transport and message size change the comparison
-
-The following rows hold the **good placement, initialized NVMe and MTU 9001**
-constant. There are three passes per row: 120,000 commits at 4 KiB and 36,000 at
-64 KiB. These are record sizes, not the later pipeline's batch sizes.
-
-| Record / transport | p50 | p90 | p99 | p99.9 |
-| --- | ---: | ---: | ---: | ---: |
-| 4 KiB / TCP | 0.474 | 0.480 | 0.493 | 0.520 |
-| 4 KiB / UDP | 0.477 | 0.485 | 0.511 | 0.523 |
-| 64 KiB / TCP | 0.639 | 0.738 | 0.805 | 0.874 |
-| 64 KiB / UDP | 0.623 | 0.665 | 0.688 | 0.713 |
-
-The 4 KiB distributions are close; the larger record gives UDP a more useful
-tail advantage in this implementation. All 36,000 good 64 KiB UDP commits were
-below 1 ms. This observed fraction is not a guarantee for unseen traffic.
-
-MTU also needs a percentile-specific reading. In the **bad placement**, initialized
-NVMe TCP at MTU 1500 gave **0.844/0.917/0.941/0.964 ms**, compared with
-**0.801/0.837/0.870/1.045 ms** at MTU 9001. Jumbo frames improved the pooled
-median and p99 while p99.9 worsened in these passes. The complete data and pass
-variation matter more than assigning a universal winner to TCP, UDP or jumbo frames.
-
-## A healthy quorum can conceal a costly fallback
-
-These **4 KiB raw-NVMe, MTU 9001** comparisons remove the normally faster follower
-from an otherwise matching case. That follower is already known unavailable;
-the measurements exclude failure detection and election time. Each row contains
-120,000 commits in three passes.
-
-| Placement / transport / followers | p50 | p90 | p99 | p99.9 |
-| --- | ---: | ---: | ---: | ---: |
-| Good / TCP / both available | 0.489 | 0.497 | 0.505 | 0.517 |
-| Good / TCP / fast follower absent | 0.479 | 0.491 | 0.508 | 0.549 |
-| Bad / UDP / both available | 0.807 | 0.830 | 0.843 | 0.932 |
-| Bad / UDP / fast follower absent | 1.017 | 1.037 | 1.048 | 1.080 |
-
-The good placement retains a fast alternative in these observations. The bad
-placement's tail crosses 1 ms when the fast follower is unavailable. Compare
-healthy and absent rows within each transport; this table does not isolate a
-TCP-versus-UDP effect. It also does not establish the bounded pipeline's behavior
-after a follower disappears: that pipeline retains slots until both acknowledge.
-
-## Evidence and what it establishes
-
-The completed durable commit campaign contains **114 configurations, 336 passes
-and 2,160,300 commits**, including 19 longer tail configurations. All 336 passes
-readback-verified participating nodes in a new process. These checks establish
-record content and ordering under the test; durability relies on the recorded
-OS/device/AWS completion contracts. They do not physically test a power cut.
-
-The storage and initial network studies have their own measured populations and
-controls. They help explain the result, while the actual commit distributions
-come from simultaneous leader/follower work. [Retained evidence and recovery](evidence.md)
-cover the completed network, storage, D3 diagnostic and commit studies. The eleven
-storage/D3/commit worker archives were independently fetched and reanalyzed;
-all selected CSVs reproduced byte for byte. All three
-throughput cohorts also reproduced their seven reconstructed numeric/context outputs
-byte for byte; each has a separate retained bundle.
+All measured paths request [power-safe completion](persistence/README.md#what-makes-completion-durable).
+Readback checks content and ordering; it is not a physical power-cut test.
+The [evidence guide](evidence.md) collects exact cases, populations, captured
+sources and recovery commands. All retained studies were independently recovered
+and their numerical results reproduced.

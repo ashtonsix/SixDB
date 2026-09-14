@@ -78,4 +78,8 @@ accompany the tails. A screen with few observations beyond p99.9 supports only
 a limited estimate of that percentile. [run.py](run.py) defines the matrix;
 [analyze.py](analyze.py) combines its samples, and
 [diagnostic_analyze.py](diagnostic_analyze.py) handles the D3 traces. The
-[overall study](../README.md) combines selected paths with actual quorum commits.
+[joint commit findings](../commit/latency.md) show which of these differences
+survive overlapping leader and follower writes. For a cheaper host diagnostic,
+[memory characterisation](../../memory-characterisation/METHOD.md#storage-and-transport)
+uses temporary files to measure filesystem I/O alongside memory and transport;
+this study varies preparation and durability paths explicitly.

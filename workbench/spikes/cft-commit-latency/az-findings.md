@@ -20,7 +20,7 @@ that fast follower is unavailable, the remaining link matters. If any node may
 become leader, all six directed links within the triple deserve attention.
 These are different placement questions; a single ranking cannot answer all three.
 
-![Directional TCP RTTs at p50 and p99; each cell is one initiating AZ and destination AZ.](evidence/20260914/az-rtt.png)
+![Directional TCP RTTs at p50 and p99; each cell is one initiating AZ and destination AZ.](images/az-rtt.png)
 
 The heatmaps preserve direction. The table below pools both initiating directions:
 18,000 samples per row, **64-byte request and 64-byte reply, persistent TCP,
@@ -95,7 +95,9 @@ For a stable leader, the network term is the first follower reply,
 RPC round to a majority; the minority need not delay that quorum.
 [Raft, §5.3](https://raft.github.io/raft.pdf).
 
-Compare two configurations from this cohort:
+Compare two configurations from this network cohort. These good/bad labels
+refer to different AZ sets from the later durable experiment: i8g availability
+excluded az5 there, and its good set uses {az1, az2, az4}.
 
 - **Good:** {az2, az4, az5}, leader az4, MTU 9001. It combines the fast az4–az2
   path with a relatively fast alternative and ties for the best worst-edge score.
@@ -121,9 +123,9 @@ of that carries into a commit depends on overlapping leader/follower persistence
 and the rest of the operation. Its speedup cannot be applied to the entire commit.
 
 The remaining-link rows use the original measured RTTs with the normally faster
-follower omitted from the model. No failure or election was injected. A leader
-in az2 can benefit from az4 despite a slow path to the third replica, but losing
-az4 exposes that path. All 720 leader/placement/MTU/size scenarios, including
+follower omitted from the model. No failure or election was injected. The [joint commit fallback comparison](commit/latency.md#a-healthy-quorum-can-conceal-a-costly-fallback)
+then tests a known-absent follower with actual durable writes. All 720
+leader/placement/MTU/size scenarios, including
 p99.9, remain in [consensus-scenarios.csv](evidence/20260914/consensus-scenarios.csv);
 the [method](az-measurements.md#three-node-network-model) explains the bounds.
 
@@ -131,7 +133,8 @@ the [method](az-measurements.md#three-node-network-model) explains the bounds.
 
 Each table entry is the median percentage change over the **same 30 directions**,
 comparing MTU 9001 with 1500 after pooling repetitions. Negative means lower RTT.
-The plot's shaded spread describes links, not uncertainty in an estimated mean.
+The plot's intervals span the middle 50% of directions. They describe link
+variation, not confidence in an estimated mean.
 
 | TCP request and reply size | p50 change | p99 change | p99.9 change |
 |---|---:|---:|---:|
@@ -142,7 +145,7 @@ The plot's shaded spread describes links, not uncertainty in an estimated mean.
 | 8,192 bytes | -6.59% | -7.49% | -6.27% |
 | 65,536 bytes | -8.51% | -8.83% | -8.45% |
 
-![MTU 9001 versus 1500, across message sizes. The middle 50% of directions is shaded.](evidence/20260914/mtu-effect.png)
+![Paired MTU effects at p50, p99 and p99.9. Median changes stay near zero for small messages and become negative for larger messages; intervals show the middle 50% of directions.](images/mtu-effect.png)
 
 For 64 KiB messages, median paired p99 changes in the three passes were
 **−10.17%, −6.45%, −11.32%**; for 64 bytes, **+1.34%, −1.38%, −0.35%**.
@@ -176,4 +179,7 @@ allowance-exceeded/drop/error counters did not increase. Aggregate CPU busy time
 was 9.1–15.7% over an epoch, which does not establish per-case saturation.
 The largest TCP outlier was **9.464 ms**. Maxima and p99.9 describe this window;
 they do not set safe timeouts. Per-pass statistics, threshold exceedances and
-recovery checks are retained with the evidence.
+recovery checks are retained with the evidence. Continue to the
+[joint commit comparisons](commit/latency.md) to see how placement and message
+size interact with persistence, then the [arrival-driven pipeline](commit/throughput.md)
+for queueing and bandwidth under load.

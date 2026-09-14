@@ -4,7 +4,10 @@ The pipeline experiments ask how much useful throughput survives a latency
 preference, and whether that choice keeps up when arrivals continue independently
 of completions. The [main report](../RESULTS.md) puts these results alongside
 storage and placement. This guide keeps the workload comparisons and the evidence
-that qualifies each operating point together.
+that qualifies each operating point together. Jump to
+[small instances](#small-instances-the-repeated-tail-changes-the-choice),
+[larger standard ENA](#larger-standard-ena-instances-more-throughput-less-tail-margin)
+or [ENA Express](#ena-express-removing-the-per-flow-constraint).
 
 All cohorts replicate **4 KiB records to raw NVMe with direct `O_DSYNC` writes**
 in the good placement: leader `use1-az4`, followers `use1-az2` and `use1-az1`.
@@ -28,7 +31,9 @@ the [finite-run stability rule](README.md#count-waiting-from-the-arrival-schedul
 That rule checks goodput, queue growth and draining through both followers.
 Latency preferences then select the greatest eligible goodput within 10% or 25%
 of the best observed **pooled** percentile, or below 1 ms at that percentile.
-Each percentile has its own baseline. Exact goodput ties prefer lower latency.
+Pooling combines individual latency observations before computing a percentile;
+it does not average the three pass percentiles. Each percentile has its own
+baseline. Exact goodput ties prefer lower latency.
 
 Throughput sacrificed is `1 - chosen_goodput / largest_repeated_stable_goodput`
 within the same cohort. It measures the cost among the tested choices. Sparse
@@ -62,7 +67,7 @@ The 1,000/s choices use W16, B1 and no fill wait: UDP gives the lowest pooled
 p50, TCP the other three percentiles. The p50 +25% choice uses TCP W64/B64/wait
 50 µs at 5,300 offered/s, with a **0.518 ms** median. The p90 +25% choice uses
 TCP W64/B4/wait 50 µs at 5,200 offered/s, with **0.605 ms** p90.
-The [complete choice table](../evidence/20260914-durable/throughput-small/choices.png)
+The [complete choice table](../images/throughput-small/choices.png)
 and [exact selections](../evidence/20260914-durable/throughput-small/knees.csv)
 retain every requested percentile and its pass range.
 
@@ -87,9 +92,11 @@ stability rule. The median concealed a slow population:
 Goodput barely changed, but the final backlog rose from **63 records** in the
 screen to **8,859–9,812 records** in the repeats. Only **83.5–83.8%** of repeated
 arrival-cohort commits completed below 1 ms, versus **99.989%** in the screen.
-The repeats satisfy the goodput part of the stability rule; their growing queues
+The repeats satisfy the goodput and both drain checks; their growing queues
 reject them. Throughput and median latency alone cannot establish an acceptable
 policy.
+
+![At the same offered rate, goodput remains about 104 thousand commits per second while p99 rises from 0.689 ms in the screen to 83–93 ms in the repeats.](../images/throughput-small/screen-reversal.png)
 
 Four repeated policies around 104,000–105,000 offered/s failed in every pass;
 six of the ten repeated candidates were stable. There is **no repeated candidate
@@ -104,10 +111,11 @@ credit depletion or uniquely explaining this policy's reversal. Other hosts'
 bandwidth counters and all PPS, connection-tracking and link-local allowance
 counters remained zero.
 
-The [offered-load screen](../evidence/20260914-durable/throughput-small/offered-load.png)
+The [offered-load screen](../images/throughput-small/offered-load.png)
 shows the earlier short passes; the
-[repeated latency–goodput plot](../evidence/20260914-durable/throughput-small/throughput.png)
-includes the later failures. Their different conclusions are the result above,
+[repeated latency–goodput plot](../images/throughput-small/throughput.png)
+flags the later failures; its [full-tail view](../images/throughput-small/throughput-full.png)
+shows their complete pass ranges. Their different conclusions are the result above,
 not contradictory views of the same observations.
 
 ## Larger standard-ENA instances: more throughput, less tail margin
@@ -137,7 +145,7 @@ At 1,000 offered/s, W16/B1/no-wait TCP gives the lowest p50/p90 and UDP gives
 the lowest p99/p99.9. The 3,996/s selections use TCP W64/B1/wait 50 µs at
 4,000 offered/s; B1 means each write still contains one record. The 7,501/s
 selection uses TCP W64/B4/wait 50 µs at 7,500 offered/s.
-The [complete choice table](../evidence/20260914-durable/throughput-scale/choices.png)
+The [complete choice table](../images/throughput-scale/choices.png)
 and [exact selections](../evidence/20260914-durable/throughput-scale/knees.csv)
 show their latencies and pass ranges.
 
@@ -149,7 +157,10 @@ in user experience. There are also **no repeated rates between 7,500 and about
 128,000/s**, so these large sacrifice percentages do not resolve the best
 intermediate operating point.
 
-![Repeated standard-ENA choices show four distinct percentile trade-offs, observed pass ranges, and a 1 ms reference.](../evidence/20260914-durable/throughput-scale/throughput.png)
+The [repeated-candidate plot](../images/throughput-scale/throughput.png) shows
+each percentile and its pass range. All observed tails fit in its 0.3–1.25 ms
+budget view. The sparse sampling remains visible; there is no fitted curve
+through the gap.
 
 ### What the network ceiling explains
 
@@ -175,7 +186,7 @@ not provide 25 Gbps to each flow.
 
 All captured allowance counters remained zero across the 21 standard-large
 intervals. Those instance counters do not establish absence of a per-flow limit.
-The [offered-load screen](../evidence/20260914-durable/throughput-scale/offered-load.png)
+The [offered-load screen](../images/throughput-scale/offered-load.png)
 also shows queueing and latency rising sharply at the highest offered rate.
 It supports the distinction between an implementation's short throughput screen
 and a repeatedly acceptable arrival-driven policy.
@@ -235,10 +246,16 @@ The 3,996/s selection uses UDP W64/B1/wait 50 µs at 4,000 offered/s, with
 **0.414/0.494/0.624/0.681 ms** percentiles. There are **no repeated rates between
 4,000 and 129,600/s**. The 98.8% sacrifice describes the selected set; intermediate
 rates remain unresolved. [Exact choices and pass ranges](../evidence/20260914-durable/throughput-express/knees.csv)
-and the [choice table](../evidence/20260914-durable/throughput-express/choices.png)
+and the [choice table](../images/throughput-express/choices.png)
 retain each selection.
 
-![ENA Express repeated candidates retain high-goodput points with expensive tails, rather than equating stability with latency acceptability.](../evidence/20260914-durable/throughput-express/throughput.png)
+![ENA Express candidates near the 1 ms budget, with pooled percentiles and three-pass ranges. Triangles flag observations extending above the 1.25 ms view.](../images/throughput-express/throughput.png)
+
+This view expands the region around 1 ms. Triangles flag a point or pass range
+extending above 1.25 ms; the [full-tail view](../images/throughput-express/throughput-full.png)
+retains all of them on a logarithmic scale, including the 49 ms pooled p99.9.
+Both views use the same candidate set. No line connects different policies or
+interpolates unmeasured rates.
 
 ### What changed in the network
 
@@ -261,7 +278,7 @@ The leader's outbound bandwidth-allowance counter increased by
 **263,389 / 508,028 / 80,662** across the three tail phases. Other hosts' allowance
 counters and the other leader allowance counters remained zero. Phase-level
 counters cannot attribute the transient tails of an individual policy to a
-particular limit. The [offered-load screen](../evidence/20260914-durable/throughput-express/offered-load.png)
+particular limit. The [offered-load screen](../images/throughput-express/offered-load.png)
 and [network counters](../evidence/20260914-durable/throughput-express/network-counters.csv)
 retain that surrounding evidence.
 
@@ -271,8 +288,6 @@ The completed small cohort contains **132 passes and 56,866,000 native records**
 the larger standard cohort contains **77 passes and 37,729,500**; ENA Express
 contains **79 passes and 80,972,000**. Those totals
 include preflights, screens and warmup, unlike the selected point populations above.
-Independent raw recovery and reanalysis reproduced all seven reconstructed numeric and
-context outputs byte for byte for all three cohorts. The corrected all-follower drain
-criterion changed no classification or selected landmark in any of the three
-throughput cohorts.
-[Retained evidence](../evidence.md) supplies the cases, passes and recovery paths.
+[Retained evidence](../evidence.md) supplies the cases, passes, independent
+recovery checks and captured source. Return to the [main report](../RESULTS.md)
+for the operating choices alongside storage, placement and failure behaviour.

@@ -41,7 +41,8 @@ read access to the existing artifact bucket is required. It does not launch
 workers. For only the compact evidence, use the ordinary `artifacts.py fetch`
 command on this directory instead.
 
-`plot.py SUMMARY --output FIGURES` renders the figures using matplotlib 3.10.8.
+The [figure guide](../../evidence.md#regenerate-the-report-figures) regenerates
+the current presentation from these CSVs, outside this original export.
 The [findings](../../az-findings.md) distinguish the measured link distributions from
 network-only consensus models and discuss the cohort's sampling limits.
 

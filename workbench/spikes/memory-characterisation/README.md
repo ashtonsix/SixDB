@@ -18,6 +18,13 @@ The probe is implemented afresh. [Calico's AMAC report](../../../../calico/loom/
 supplies prior questions and numbers to recalibrate, not static SixDB defaults.
 [Method and reading](METHOD.md) explains controls and interpretation.
 
+The [CFT commit study](../cft-commit-latency/README.md) complements these host
+measurements with controlled persistence paths, paired cross-AZ links and an
+actual replicated log under arrival-driven load. Use it when the question moves
+from local memory and diagnostic I/O costs to a durable distributed operation.
+Both studies distinguish measured behaviour from reported hardware properties
+and keep tuning choices conditional on the workload and observation window.
+
 Build/run on Linux (prefix commands with `orb -m ubuntu` from this workspace):
 
 ```sh
