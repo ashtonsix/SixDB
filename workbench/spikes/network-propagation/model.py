@@ -225,7 +225,7 @@ class Flow:
 
 
 class Simulator:
-    def __init__(self, topo, spec, route, seed=1, trace=False):
+    def __init__(self, topo, spec, route, seed=1, trace=False, audit=False):
         validate_plan(topo, spec["source"], spec["targets"], route)
         self.topo, self.spec, self.route, self.seed = topo, spec, route, seed
         self.now = 0.0
@@ -269,6 +269,10 @@ class Simulator:
         self.messages = {}
         self.trace = []
         self.trace_enabled = trace
+        # Passive diagnostics: no extra events or changes to scheduling order.
+        self.audit_enabled = audit
+        self.transfer_audit = []
+        self.cpu_audit = []
         self.edge_bytes = defaultdict(int)
         self.received = defaultdict(set)
         self.control_seen = set()
@@ -366,20 +370,27 @@ class Simulator:
         self.serial += 1
         heapq.heappush(self.events, (max(time, self.now), self.serial, fn))
 
-    def cpu_job(self, node, kind, size, packets, fn):
+    def cpu_job(self, node, kind, size, packets, fn, audit=None):
         n = self.topo.nodes[node]
         duration = n.get("chunk_cpu_us", 1) + size / (n.get("crypto_gbps", 32) * 125) + packets * n.get("packet_cpu_us", .08)
-        self.cpu_task(node,kind,duration,fn)
+        self.cpu_task(node,kind,duration,fn,audit)
 
-    def cpu_task(self, node, kind, duration, fn):
+    def cpu_task(self, node, kind, duration, fn, audit=None):
+        if self.audit_enabled:
+            if audit is None:
+                audit = {}
+            audit.update(node=node, kind=kind, queued_us=self.now, duration_us=duration)
+            self.cpu_audit.append(audit)
         self.serial += 1
-        heapq.heappush(self.cpu[node], (1 if kind == "data" else 0, self.serial, duration, fn))
+        heapq.heappush(self.cpu[node], (1 if kind == "data" else 0, self.serial, duration, fn, audit))
         self.cpu_start(node)
 
     def cpu_start(self, node):
         if node in self.cpu_busy or not self.cpu[node]:
             return
-        _, _, duration, fn = heapq.heappop(self.cpu[node])
+        _, _, duration, fn, audit = heapq.heappop(self.cpu[node])
+        if audit is not None:
+            audit.update(start_us=self.now, end_us=self.now+duration)
         self.cpu_busy.add(node)
         self.cpu_us[node] += duration
         def done():
@@ -400,10 +411,20 @@ class Simulator:
         e = self.topo.edges[eid]
         b, packets = wire(size, self.spec["mtu"])
         stream = (mid, eid, kind)
+        audit = None
+        if self.audit_enabled:
+            audit = dict(message=mid, edge=eid, src=e["src"], dst=e["dst"],
+                         kind=kind, chunk=chunk, attempt=attempt, wire_bytes=b,
+                         created_us=self.now, send_cpu={}, receive_cpu={})
+            for phase in ("send_cpu", "receive_cpu"):
+                audit[phase].update(message=mid, edge=eid, chunk=chunk, phase=phase)
+            self.transfer_audit.append(audit)
         def start():
             self.serial += 1
             identity = self.serial
             sent_at = self.now
+            if audit is not None:
+                audit["start_us"] = self.now
             self.bytes[kind] += b
             self.packets += packets
             self.edge_bytes[eid] += b
@@ -426,6 +447,8 @@ class Simulator:
                 bad = self.failed(e, kind, sent_at, end)
                 probability = 1 - (1-self.spec.get("packet_loss", 0))**packets
                 bad |= draw(self.seed, mid, eid, kind, chunk, attempt, "loss") < probability
+                if audit is not None:
+                    audit.update(wire_end_us=end, arrival_us=end+e["delay_us"]+extra, dropped=bool(bad))
                 if self.trace_enabled and mid == 0:
                     self.trace.append(dict(edge=eid, src=e["src"], dst=e["dst"], kind=kind, chunk=chunk,
                                            start_us=sent_at, wire_end_us=end, arrival_us=end+e["delay_us"]+extra,
@@ -444,16 +467,21 @@ class Simulator:
                         self.finish_transfer(mid)
                 else:
                     def arrived():
+                        if audit is not None:
+                            audit["delivered_us"] = self.now
                         callback()
                         self.finish_transfer(mid)
                     self.event(self.now + e["delay_us"] + extra,
-                               lambda: self.cpu_job(e["dst"], kind, b, packets, arrived))
+                               lambda: self.cpu_job(e["dst"], kind, b, packets, arrived,
+                                                    audit["receive_cpu"] if audit is not None else None))
             self.flows[identity] = Flow(b, tuple(e["resources"]), self.spec.get("control_weight", 1) if kind != "data" else 1,
                                         crossed, self.now, eid, mid, kind, chunk, size)
         def enqueue():
+            if audit is not None:
+                audit["ready_us"] = self.now
             self.stream_queues[stream].append(start)
             self.start_stream(stream)
-        self.cpu_job(e["src"], kind, b, packets, enqueue)
+        self.cpu_job(e["src"], kind, b, packets, enqueue, audit["send_cpu"] if audit is not None else None)
 
     def start_stream(self, stream):
         if stream in self.stream_busy or not self.stream_queues[stream]:

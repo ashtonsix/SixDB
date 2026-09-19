@@ -34,6 +34,13 @@ The new regional bulk route sends two source copies, delegates another boundary
 copy to a local recipient, and branches inside destination zones. It preserves
 the two charged zone crossings while distributing NIC work.
 
+This bulk fixture sends **1 MiB to eight recipients: nine hosts across three
+modeled AZs**, with assumed 10 Gbit/s NICs and Poisson offers. Its p99 includes
+burst contention. The [critical-path diagnostic](CRITICAL_PATH.md) traces the
+actual tail objects and their overlapping work; it also explains why this
+number cannot be compared directly with xmem's approximately 2 ms durable
+small-write commits. It does not establish an optimized latency floor.
+
 | Regional 1 MiB, 100 objects/s | Delivery p99 | Variable $/source GiB | Within 10 ms |
 | --- | ---: | ---: | ---: |
 | Direct fanout | 36.341 ms | 0.1447 | 16.7% |

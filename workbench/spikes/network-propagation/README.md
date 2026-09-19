@@ -12,6 +12,9 @@ from transport delivery.
 
 Start with the [findings](FINDINGS.md) and the
 [interactive workbench](evidence/20260918/index.html). The
+[5.322 ms breakdown](CRITICAL_PATH.md) traces the actual tail objects, including
+CPU/stream dependencies, overlap and the distinction from xmem commit timings.
+The
 [model and assumptions](MODEL.md) explain the equations, accounting and limits.
 The [decision framework](DECISIONS.md) separates obligations, observations,
 resource limits and the costs of changing routes.
