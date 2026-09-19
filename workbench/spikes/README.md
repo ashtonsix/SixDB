@@ -20,7 +20,6 @@ Loose thoughts can stay in the [notebook](../notebook/ideas.md) indefinitely.
 - [Executable placement](executable-placement/README.md): distinguishing changed code from placement effects.
 - [Memory characterisation](memory-characterisation/README.md): automatic MLP, prefetch, cache sharing and host diagnostics.
 - [CFT commit latency](cft-commit-latency/README.md): durable quorum latency, storage throughput cliffs and live log preparation across AZ placement and standard/Express network choices.
-- [Network propagation and request routing](network-propagation/README.md): modeled price/latency routing, uncertainty and failure cases, observed repair and route rewriting, bounded admission, shared capacity and transfer charges.
 - [Row filter signatures](row-filter-signatures/README.md): per-row Boolean evidence and progressive refinement.
 - [Aggregate maintenance](aggregate-maintenance/README.md): descendant summaries without excessive mutation cost.
 - [Trie remapping](trie-remapping/README.md): natural-key tries with difficult suffixes remapped to physical positions.

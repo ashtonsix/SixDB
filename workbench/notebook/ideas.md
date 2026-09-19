@@ -5,6 +5,14 @@ and a few sentences can be enough, especially why something caught our
 attention. Longer thoughts may get their own file. Notes can remain notes
 indefinitely, inform several investigations, or acquire a link to a spike.
 
+## Networking around the consensus obligation
+
+The [consensus-networking note](consensus-networking.md) replaces the retired
+synthetic routing spike. Revisit routing, propagation/write overlap, scheduling
+and repair once the consensus and durability obligations are clearer. It keeps
+useful counterexamples and archive recovery pointers; the measured CFT/PLP work
+remains an independent source of evidence.
+
 ## Sketches, filters, and histograms have different jobs
 
 Ashton's [secondary-summary question](secondary-summaries.md) is deliberately
