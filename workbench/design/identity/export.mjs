@@ -1,23 +1,18 @@
-// Editable masters are sixdb.svg, orbital.svg and consurgent.svg.
+// SixDB's editable centreline, pressure and timing live in sixdb-pen.mjs.
+// Orbital and Consurgent retain their SVG masters.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { renderSixDB } from './sixdb-pen.mjs';
 
 const directory = dirname(fileURLToPath(import.meta.url));
-for (const name of ['sixdb', 'orbital']) {
-  const master = readFileSync(join(directory, `${name}.svg`), 'utf8');
-  writeFileSync(join(directory, `${name}-reversed.svg`),
-    master.replaceAll('fill="#1b1c18"', 'fill="#f6f5f1"'));
-}
-const master = readFileSync(join(directory, 'sixdb.svg'), 'utf8');
-writeFileSync(join(directory, 'favicon.svg'), master
-  .replace('viewBox="0 0 240 180"', 'viewBox="0 -30 240 240"')
-  .replace('fill="#1b1c18"', 'fill="currentColor"')
-  .replace('  <path', `  <style>
-    :root { color: #1b1c18; }
-    @media (prefers-color-scheme: dark) { :root { color: #f6f5f1; } }
-  </style>
-  <path`));
+for (const [name, options] of [
+  ['sixdb', {}], ['sixdb-reversed', { reversed: true }],
+  ['favicon', { icon: true }], ['sixdb-animated', { animated: true }],
+]) writeFileSync(join(directory, `${name}.svg`), renderSixDB(options));
+const orbital = readFileSync(join(directory, 'orbital.svg'), 'utf8');
+writeFileSync(join(directory, 'orbital-reversed.svg'),
+  orbital.replaceAll('fill="#1b1c18"', 'fill="#f6f5f1"'));
 
 // The corrected site-v1 animation reveals each gusset with its side stroke.
 // Preserve its geometry from the static master and its original draw timing.
