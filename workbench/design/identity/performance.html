@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mark reveal performance</title>
+  <style>
+    body {
+      margin: 20px;
+      font: 14px system-ui;
+      background: #f6f5f1;
+      color: #1b1c18;
+    }
+    h1 {
+      font-size: 22px;
+      margin: 0 0 8px;
+    }
+    .controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: 12px 0;
+    }
+    button,
+    select,
+    input {
+      font: inherit;
+      padding: 6px 9px;
+    }
+    #stage {
+      display: flex;
+      gap: 24px;
+      height: 300px;
+      max-width: 1100px;
+      margin: 12px auto;
+    }
+    #stage svg {
+      flex: 1;
+      min-width: 0;
+      width: 100%;
+      height: 300px;
+    }
+    table {
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    th,
+    td {
+      padding: 6px 12px;
+      text-align: right;
+      border-bottom: 1px solid #ccc;
+    }
+    th:first-child,
+    td:first-child {
+      text-align: left;
+    }
+    pre {
+      font-size: 11px;
+      white-space: pre-wrap;
+    }
+    p {
+      margin: 8px 0;
+      color: #666a60;
+    }
+    input {
+      width: 60px;
+    }
+  </style>
+  <h1>Mark reveal performance</h1>
+  <p>Set CPU throttling in DevTools. Keep this page visible. The SVGs run their native CSS animations.</p>
+  <div class="controls">
+    <label>
+      CPU slowdown
+      <select id="cpu">
+        <option>1</option>
+        <option>6</option>
+        <option>20</option>
+      </select>
+      ×
+    </label>
+    <label>
+      Cases
+      <select id="cases">
+        <option value="all">Each mark + together</option>
+        <option value="sixdb">SixDB</option>
+        <option value="consurgent">Consurgent</option>
+        <option value="orbital">Orbital</option>
+        <option value="together">Together</option>
+      </select>
+    </label>
+    <label>
+      Repeats
+      <select id="repeats">
+        <option>3</option>
+        <option>1</option>
+        <option>5</option>
+      </select>
+    </label>
+    <button id="run" disabled>Run</button>
+    <button id="save" disabled>Save measurements</button>
+  </div>
+  <p id="status">Loading assets…</p>
+  <div id="stage"></div>
+  <table>
+    <thead>
+      <tr>
+        <th>Case</th>
+        <th>Run</th>
+        <th>FPS</th>
+        <th>p50</th>
+        <th>p95</th>
+        <th>Max</th>
+        <th>Missed slots</th>
+        <th>Setup</th>
+      </tr>
+    </thead>
+    <tbody id="results"></tbody>
+  </table>
+  <p>
+    Frame intervals use requestAnimationFrame; missed display slots are an estimate, not presented-frame
+    telemetry. Record a Performance trace to inspect actual dropped frames. CPU slowdown does not emulate a
+    phone GPU.
+  </p>
+  <details>
+    <summary>Raw measurements</summary>
+    <pre id="data"></pre>
+  </details>
+  <script type="module">
+    const $ = (id) => document.getElementById(id),
+      names = ['sixdb', 'consurgent', 'orbital'],
+      duration = { sixdb: 2600, consurgent: 1600, orbital: 1800, together: 2600 };
+    const next = () => new Promise(requestAnimationFrame),
+      sources = Object.fromEntries(
+        await Promise.all(
+          names.map(async (name) => [name, await (await fetch(`${name}-animated.svg`)).text()]),
+        ),
+      );
+    $('run').disabled = false;
+    $('status').textContent = 'Ready';
+    let report;
+    const percentile = (sorted, p) => sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * p))];
+    async function trial(name, repeat, cadence) {
+      $('status').textContent = `Measuring ${name}, run ${repeat}`;
+      const begin = performance.now();
+      $('stage').innerHTML = (name === 'together' ? names : [name]).map((n) => sources[n]).join('');
+      const animations = $('stage').getAnimations({ subtree: true });
+      animations.forEach((a) => {
+        a.pause();
+        a.currentTime = 0;
+      });
+      const setupMs = performance.now() - begin;
+      await Promise.all(animations.map((a) => a.ready));
+      await next();
+      await next();
+      const label = `reveal:${$('cpu').value}x:${name}:${repeat}`;
+      performance.mark(label + ':start');
+      let previous = await next(),
+        start = previous,
+        intervals = [];
+      animations.forEach((a) => a.play());
+      while (previous - start < duration[name]) {
+        const now = await next();
+        intervals.push(now - previous);
+        previous = now;
+        if (document.hidden) throw new Error('Page hidden during playback; repeat with this tab visible.');
+      }
+      performance.mark(label + ':end');
+      performance.measure(label, label + ':start', label + ':end');
+      const sorted = [...intervals].sort((a, b) => a - b),
+        slots = intervals.reduce((sum, dt) => sum + Math.max(1, Math.round(dt / cadence)), 0);
+      const row = {
+        name,
+        repeat,
+        setupMs,
+        elapsedMs: previous - start,
+        frames: intervals.length,
+        fps: (intervals.length * 1000) / (previous - start),
+        p50: percentile(sorted, 0.5),
+        p95: percentile(sorted, 0.95),
+        max: sorted.at(-1),
+        missedSlots: slots - intervals.length,
+        slots,
+        intervals,
+      };
+      $('results').insertAdjacentHTML(
+        'beforeend',
+        `<tr><td>${name}</td><td>${repeat}</td><td>${row.fps.toFixed(1)}</td><td>${row.p50.toFixed(1)} ms</td><td>${row.p95.toFixed(1)} ms</td><td>${row.max.toFixed(1)} ms</td><td>${row.missedSlots}/${slots}</td><td>${setupMs.toFixed(1)} ms</td></tr>`,
+      );
+      return row;
+    }
+    $('run').onclick = async () => {
+      document.querySelectorAll('.controls select').forEach((control) => (control.disabled = true));
+      $('run').disabled = true;
+      try {
+        $('save').disabled = true;
+        $('results').textContent = '';
+        $('data').textContent = '';
+        $('stage').textContent = '';
+        $('status').textContent = 'Measuring display cadence';
+        performance.clearMarks();
+        performance.clearMeasures();
+        let previous = await next(),
+          intervals = [];
+        for (let i = 0; i < 40; i++) {
+          const now = await next();
+          intervals.push(now - previous);
+          previous = now;
+        }
+        intervals.sort((a, b) => a - b);
+        const cadence = percentile(intervals, 0.5);
+        report = {
+          date: new Date().toISOString(),
+          userAgent: navigator.userAgent,
+          cpuSlowdown: +$('cpu').value,
+          height: 300,
+          viewport: [innerWidth, innerHeight],
+          devicePixelRatio,
+          cadenceMs: cadence,
+          samples: [],
+        };
+        const cases = $('cases').value === 'all' ? [...names, 'together'] : [$('cases').value];
+        for (let r = 1; r <= +$('repeats').value; r++)
+          for (const name of cases) report.samples.push(await trial(name, r, cadence));
+        $('status').textContent = `Done · display cadence ${cadence.toFixed(2)} ms`;
+        $('data').textContent = JSON.stringify(report, null, 2);
+        $('save').disabled = false;
+      } catch (error) {
+        $('status').textContent = error.message;
+      } finally {
+        $('run').disabled = false;
+        document.querySelectorAll('.controls select').forEach((control) => (control.disabled = false));
+      }
+    };
+    $('save').onclick = () => {
+      const url = URL.createObjectURL(
+          new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' }),
+        ),
+        a = document.createElement('a');
+      a.href = url;
+      a.download = `mark-performance-${report.cpuSlowdown}x.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+  </script>
+</html>

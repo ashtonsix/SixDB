@@ -1,11 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -30 240 240" fill="none" stroke="currentColor" stroke-linecap="round" role="img">
+<svg id="sixdb" xmlns="http://www.w3.org/2000/svg" viewBox="0 -30 240 240" color="#1b1c18" fill="currentColor" role="img">
   <title>SixDB</title>
   <desc>A signature-like mark sweeping from bottom left through a tight apex loop and slanted bowl to upper left.</desc>
   <style>
-    :root { color: #1b1c18; }
-    @media (prefers-color-scheme: dark) { :root { color: #f6f5f1; } }
+    #sixdb { color:#1b1c18; }
+    @media (prefers-color-scheme:dark) { #sixdb { color:#f6f5f1; } }
+
   </style>
-  <g>
+  <g><g fill="none" stroke="currentColor" stroke-linecap="round">
     <path stroke-width="13.1408" d="M18 144C18.2591 143.9437 18.5186 143.886 18.7784 143.827"/>
     <path stroke-width="13.1513" d="M18.7784 143.827C19.037 143.7683 19.2959 143.7082 19.5551 143.6469"/>
     <path stroke-width="13.1642" d="M19.5551 143.6469C19.8132 143.5859 20.0716 143.5235 20.3302 143.4599"/>
@@ -1110,5 +1111,5 @@
     <path stroke-width="13.1025" d="M33.2749 47.2601C33.0213 47.3405 32.7682 47.4215 32.5154 47.5031"/>
     <path stroke-width="13.0992" d="M32.5154 47.5031C32.2622 47.5847 32.0094 47.6669 31.7571 47.7497"/>
     <path stroke-width="13.0971" d="M31.7571 47.7497C31.5043 47.8326 31.2519 47.916 31 48"/>
-  </g>
+  </g></g>
 </svg>

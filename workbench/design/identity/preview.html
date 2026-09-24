@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>The mark family · Reveals</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 32px;
+      color: #1b1c18;
+      background: #f6f5f1;
+      font:
+        14px system-ui,
+        sans-serif;
+    }
+    main {
+      max-width: 1100px;
+      margin: auto;
+    }
+    h1 {
+      font-size: 25px;
+      font-weight: 550;
+      margin: 0 0 8px;
+    }
+    p {
+      line-height: 1.5;
+      color: #73746e;
+      margin: 0 0 24px;
+    }
+    .controls {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 20px 0;
+    }
+    button,
+    select {
+      color: inherit;
+      background: transparent;
+      border: 1px solid #85867d66;
+      border-radius: 7px;
+      font: inherit;
+      padding: 8px 12px;
+    }
+    button {
+      cursor: pointer;
+    }
+    label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    input[type='range'] {
+      width: 180px;
+      accent-color: #55594a;
+    }
+    output {
+      min-width: 3em;
+      font-variant-numeric: tabular-nums;
+    }
+    .marks {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 28px;
+      margin: 30px 0 40px;
+    }
+    article {
+      text-align: center;
+    }
+    article h2 {
+      font-size: 15px;
+      font-weight: 550;
+      margin: 0 0 24px;
+    }
+    object {
+      display: block;
+      width: 100%;
+      height: 250px;
+      pointer-events: none;
+    }
+    article p {
+      font-size: 12px;
+      min-height: 36px;
+      margin: 20px 0 12px;
+    }
+    .sizes {
+      display: grid;
+      grid-template-columns: 90px repeat(2, minmax(0, 1fr));
+      align-items: center;
+      text-align: center;
+      max-width: 600px;
+      margin-top: 30px;
+    }
+    .sizes > * {
+      padding: 18px 0;
+      border-bottom: 1px solid #1b1c1818;
+    }
+    .sizes img {
+      display: block;
+      margin: auto;
+    }
+    .size-label {
+      font-size: 12px;
+      color: #73746e;
+    }
+    footer {
+      font-size: 12px;
+      color: #73746e;
+      margin-top: 24px;
+    }
+    body.dark {
+      background: #090a0e;
+      color: #f6f5f1;
+    }
+    .dark p,
+    .dark footer,
+    .dark .size-label {
+      color: #9a9b96;
+    }
+    .dark .sizes > * {
+      border-color: #ffffff20;
+    }
+    .dark .sizes img {
+      filter: brightness(0) invert(0.96);
+    }
+    .dark select option {
+      color: #f6f5f1;
+      background: #090a0e;
+    }
+    @media (max-width: 700px) {
+      body {
+        padding: 20px;
+      }
+      .marks {
+        gap: 15px;
+      }
+      object {
+        height: 190px;
+      }
+      article p {
+        min-height: 55px;
+      }
+    }
+  </style>
+  <main>
+    <h1>The mark family · Reveals</h1>
+    <p>
+      SixDB writes its signature. Consurgent rises together. Orbital leads with its flyby, then the planet
+      appears.
+    </p>
+    <div class="controls">
+      <button id="play">Replay all</button>
+      <button id="pause">Pause</button>
+      <label>
+        Speed
+        <select id="speed">
+          <option value="1">1×</option>
+          <option value="0.5">½×</option>
+          <option value="0.25">¼×</option>
+        </select>
+      </label>
+      <button id="theme">Dark background</button>
+    </div>
+    <div class="controls">
+      <label>
+        Frame
+        <input id="time" type="range" min="0" max="2.7" value="0" step="0.008333333333333333" />
+      </label>
+      <output id="time-label">0.00s</output>
+      <button id="previous" aria-label="Previous frame">−1 frame</button>
+      <button id="next" aria-label="Next frame">+1 frame</button>
+      <button id="finish">Final marks</button>
+      <label>
+        <input id="reduced" type="checkbox" />
+        Reduced motion
+      </label>
+    </div>
+    <div class="marks">
+      <article>
+        <h2>SixDB</h2>
+        <object id="sixdb" type="image/svg+xml" data="sixdb-animated.svg" aria-label="SixDB reveal"></object>
+        <p>
+          The tuned single pen stroke.
+          <br />
+          2.6 seconds.
+        </p>
+        <button data-replay="sixdb">Replay SixDB</button>
+      </article>
+      <article>
+        <h2>Consurgent</h2>
+        <object
+          id="consurgent"
+          type="image/svg+xml"
+          data="consurgent-animated.svg"
+          aria-label="Consurgent reveal"
+        ></object>
+        <p>
+          Three strands grow from a common base.
+          <br />
+          A small stagger; one shared pace.
+        </p>
+        <button data-replay="consurgent">Replay Consurgent</button>
+      </article>
+      <article>
+        <h2>Orbital</h2>
+        <object
+          id="orbital"
+          type="image/svg+xml"
+          data="orbital-animated.svg"
+          aria-label="Orbital reveal"
+        ></object>
+        <p>
+          Flyby first.
+          <br />
+          The planet settles just before the pass.
+        </p>
+        <button data-replay="orbital">Replay Orbital</button>
+      </article>
+    </div>
+    <div class="sizes" id="sizes">
+      <span></span>
+      <span>Orbital · standard</span>
+      <span>Orbital · small-size weight</span>
+    </div>
+    <footer>
+      Standalone SVGs. Scrub or step at 120 Hz to inspect the actual CSS animation. Reduced motion shows each
+      complete mark immediately.
+    </footer>
+  </main>
+  <script>
+    const objects = [...document.querySelectorAll('object')],
+      ready = new Set();
+    const animations = (targets) =>
+      targets.flatMap((object) => object.contentDocument?.getAnimations() ?? []);
+    const seek = (time) => {
+      for (const a of animations(objects)) {
+        a.pause();
+        a.currentTime = time * 1000;
+      }
+      document.querySelector('#time').value = time;
+      document.querySelector('#time-label').value = time.toFixed(3) + 's';
+    };
+    function replay(targets = objects) {
+      if (document.querySelector('#reduced').checked) return;
+      for (const a of animations(targets)) {
+        a.playbackRate = +document.querySelector('#speed').value;
+        a.currentTime = 0;
+        a.play();
+      }
+      document.querySelector('#time-label').value = 'Playing';
+    }
+    function palette() {
+      const color = document.body.classList.contains('dark') ? '#f6f5f1' : '#1b1c18';
+      for (const object of objects) object.contentDocument?.documentElement.style.setProperty('color', color);
+    }
+    for (const object of objects)
+      object.addEventListener('load', () => {
+        ready.add(object);
+        palette();
+        if (ready.size === objects.length) replay();
+      });
+    document.querySelector('#play').onclick = () => replay();
+    document.querySelector('#pause').onclick = () => {
+      animations(objects).forEach((a) => a.pause());
+      document.querySelector('#time-label').value = 'Paused';
+    };
+    document.querySelector('#speed').onchange = () =>
+      animations(objects).forEach((a) => (a.playbackRate = +document.querySelector('#speed').value));
+    document.querySelector('#time').oninput = (e) => seek(+e.target.value);
+    for (const [id, step] of [
+      ['previous', -1],
+      ['next', 1],
+    ]) {
+      document.getElementById(id).onclick = () =>
+        seek(Math.max(0, Math.min(2.7, +document.querySelector('#time').value + step / 120)));
+    }
+    document.querySelector('#finish').onclick = () => seek(2.7);
+    document
+      .querySelectorAll('[data-replay]')
+      .forEach((button) => (button.onclick = () => replay([document.getElementById(button.dataset.replay)])));
+    document.querySelector('#theme').onclick = () => {
+      const dark = document.body.classList.toggle('dark');
+      document.querySelector('#theme').textContent = dark ? 'Light background' : 'Dark background';
+      palette();
+    };
+    document.querySelector('#reduced').onchange = (e) => {
+      document.querySelector('#time-label').value = e.target.checked ? 'Static' : 'Playing';
+      for (const object of objects) {
+        const doc = object.contentDocument;
+        if (!doc) continue;
+        if (e.target.checked) {
+          const style = doc.createElementNS('http://www.w3.org/2000/svg', 'style');
+          style.id = 'preview-reduced';
+          style.textContent =
+            '.reveal,.nib,.start-cap,.appear{animation:none!important;visibility:visible!important;stroke-dashoffset:0!important;opacity:1!important;transform:none!important}';
+          doc.documentElement.append(style);
+        } else doc.getElementById('preview-reduced')?.remove();
+      }
+      if (!e.target.checked) replay();
+    };
+    document
+      .querySelector('#sizes')
+      .insertAdjacentHTML(
+        'beforeend',
+        [48, 32, 24, 16]
+          .map(
+            (size) =>
+              `<span class="size-label">${size}px</span><span><img src="orbital.svg" height="${size}" alt="Standard Orbital at ${size}px"></span><span><img src="orbital-icon.svg" height="${size}" alt="Fuller Orbital at ${size}px"></span>`,
+          )
+          .join(''),
+      );
+  </script>
+</html>
