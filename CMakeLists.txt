@@ -27,6 +27,7 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 endif()
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 include(cmake/Targets.cmake)
+enable_testing()
 
 # Target dependencies are declared by their owners; order defines no edges.
 foreach(module ikea orbital loom engine shore workbench)

@@ -42,6 +42,13 @@ target. Build it with the release preset to produce a stripped executable in
 Packaging requires `llvm-objcopy-21` and `llvm-strip-21`. Project symbols are
 hidden by default; future shared-library APIs will need explicit exports.
 
+Build the `ikea_validate` target to build and run Ikea's behavior checks and
+examples. They are registered with CTest: `ctest --test-dir BUILD -N` lists them;
+after building, `ctest --test-dir BUILD -R NAME --output-on-failure` reruns a
+selection. The default build does not build tests.
+
 Run `python3 workbench/tools/check.py build` to check incremental compilation
-in a disposable fixture. For expensive TUs, use the optional [compile probe](workbench/tools/compilation.md)
+in a disposable fixture. `check.py --list` discovers other helper suites;
+`check.py all` runs them all, reporting failures without stopping at the first.
+For expensive TUs, use the optional [compile probe](workbench/tools/compilation.md)
 for isolated timing, memory and Clang traces.

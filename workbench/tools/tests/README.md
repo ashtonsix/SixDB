@@ -10,7 +10,9 @@ python3 workbench/tools/check.py worker_reuse
 
 Choose the check for the helper being changed. The launcher runs the existing
 standalone script with its imports available; extra arguments pass through,
-for example `check.py worker -v`. It does not allocate cloud workers.
+for example `check.py worker -v`. `check.py all` runs every suite in a separate
+process and summarizes failures. It does not allocate cloud workers. Standard
+`unittest discover` does not select these `check_*.py` scripts.
 
 `build`, `dev`, `experiment`, `compile_probe` and `replay` use the pinned Linux toolchain in
 disposable fixtures. `build` also uses LLVM objcopy/strip and `readelf`;

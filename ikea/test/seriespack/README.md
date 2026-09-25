@@ -1,9 +1,12 @@
 # SeriesPack validation
 
 Build `ikea_validate` using an enabled native profile. It checks the frozen
-reference hashes and runs `ikea_seriespack_check`, `ikea_seriespack_ownership_check` and the four
-executable guides. `python3 ikea/test/headers.py BUILD` independently parses the
-21 ordinary/author headers with that build's flags.
+reference hashes and runs the behavior checks and four executable guides.
+`ikea_seriespack_descriptor_check` builds and runs separately from the expensive
+format matrix; it exercises descriptor wire bytes, 64-bit counts/strides and
+malformed-input boundaries. CTest lists and reruns the built checks.
+`python3 ikea/test/headers.py BUILD --module seriespack` independently parses the
+ordinary/author headers with that build's flags.
 
 | Behavior | Files | Evidence provided |
 | --- | --- | --- |
@@ -12,7 +15,7 @@ executable guides. `python3 ikea/test/headers.py BUILD` independently parses the
 | Physical mutation | [mutation/cases.h](mutation/cases.h), `mutation/widths_*.cpp`, [verify.cpp](mutation/verify.cpp) | Final bytes against independent encoder, preserved neighbors/gaps, summaries, coverage and rejection |
 | Nested mutation | [mutation/substitution.cpp](mutation/substitution.cpp) | Multiple owners, bulk traversal, points, construction, retired `PROT_NONE` storage and overlap diagnostics |
 | Construction | [mutation/construction.cpp](mutation/construction.cpp) | Partial final tiles, zeroed owned slack, preserved siblings, empty and boundary extents |
-| Descriptions | [format/descriptor.cpp](format/descriptor.cpp) | Stable-byte round trip; reserved/unknown/inconsistent fields rejected |
+| Descriptions | [format/descriptor.cpp](format/descriptor.cpp) | Independent expected bytes, large fields and exact lengths; invalid descriptions rejected |
 | CPS | [execution/chain.cpp](execution/chain.cpp) | Widths, copied aligned tables, every supported depth/early exit, mutation completion |
 | Ownership | [integration/ownership.cpp](integration/ownership.cpp) | Serialized waits, stale replies, cancellation, sealing, conflict, private-copy and in-place visibility obligations |
 
