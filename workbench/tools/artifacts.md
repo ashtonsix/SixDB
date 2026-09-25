@@ -30,7 +30,7 @@ run.compact(["comparison/cases.csv", "comparison/provenance.json"], [])
 
 This keeps both implementations and all repetitions for the selected families.
 Keep counters the comparison uses. `[]` means no offline report command; otherwise
-record one using `{evidence}` for the exported directory. The
+record one using `{evidence}` for the report's working copy. The
 [aggregate runner](../spikes/aggregate-maintenance/run.py) also illustrates separate
 logical accounting.
 
@@ -87,10 +87,19 @@ and recovers a subdirectory reference directly into that destination. Repeated
 The compressed archive still downloads in full. Captured sources are in
 `source.tar.gz`; toolchain binaries are not embedded.
 
-Before removing retained evidence, verify exact-member recovery and preserve its
-measured identity/reference. Keep advertised offline reports working, or replace
-their commands with a tested recovery path. Changing the selection does not
-require rerunning the experiment. Coordinate history rewrites with branch users.
+To narrow an existing export, preview exact omissions, then repeat with `--apply`:
+
+```sh
+python3 workbench/tools/artifacts.py revise path/to/evidence \
+  --drop blocks.csv --drop figure.svg
+```
+
+Apply recovers the named members and matches their hashes before removing local
+copies and updating provenance. It preserves other files, measured identities and
+the existing S3 reference; it neither uploads nor stages/commits. Only hashed,
+byte-identical archived members can be removed this way. Derived files absent
+from the archive need their own recoverable export first. Coordinate any later
+history rewrite with branch users.
 
 [Local worker storage](storage.md) reclaims older verified compiler output.
 Other build directories can contain unretained prototypes; inspect them before
@@ -100,3 +109,38 @@ Bundles are content-addressed under `s3://calico-fleet-artifacts/sixdb/artifacts
 in `us-east-1`, with conditional writes and a 5 GB single-PUT limit. No bucket
 expiry applied when checked on 2026-09-07; this is not Object Lock or a separate
 backup. [Datasets](../datasets/README.md) reuse existing objects, including Calico's.
+
+## Run a report recipe
+
+```sh
+python3 workbench/tools/artifacts.py report path/to/evidence build/reports/NAME
+```
+
+The recipe runs in fresh working space with the current checkout's scripts.
+`--dry-run` shows commands and input source without fetching or executing.
+By default inputs are copies of the hashed retained files. A recipe marked
+`regenerate_from: archive` first fetches the existing `full_bundle`. The
+[network cohorts](../spikes/cft-commit-latency/evidence.md#network-cohorts)
+exercise both, including a report that recovers a second cohort.
+
+Record a recipe during `retain`, or change one without uploading via `revise`:
+
+```sh
+python3 workbench/tools/artifacts.py revise path/to/evidence --apply \
+  --regenerate-from archive \
+  --regenerate 'python3 path/to/plot.py {evidence}'
+```
+
+Repeat `--regenerate` for ordered commands. `{evidence}` is the working input/output
+directory; `{retained}` locates the original export, useful for another cohort's
+reference. Commands are argv lists, run from the repository root without a shell;
+`python3` steps use the interpreter invoking `artifacts.py`, including its venv.
+Recipe commands should operate on working copies; scientific analysis and runtime
+dependencies stay with their owning study. `report` executes the checkout's recipe,
+never one discovered inside a downloaded archive.
+
+The adjacent `NAME.report.json` records input identity, commands, entrypoint hashes
+and completed steps. Failure preserves working files for inspection. This is a
+report execution receipt, not a capture of all imports or an environment lock.
+After revising a selection, run its report to check that the remaining inputs or
+archive recipe suffice; byte recovery alone cannot establish that.

@@ -13,10 +13,11 @@ from pathlib import Path, PurePosixPath
 import shutil
 import shlex
 import subprocess
+import sys
 import tarfile
 import tempfile
 
-from evidence import compact_run, compact_files, copy_compact_files, git_root, verify_exports
+from evidence import compact_run, compact_files, copy_compact_files, git_root, verify_compact, verify_exports
 import storage
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -255,7 +256,7 @@ def install(staging, destination):
     staging.rename(destination)
 
 
-def prepare_compact(source, staging, selected, regenerate):
+def prepare_compact(source, staging, selected, regenerate, regenerate_from=None):
     receipt_path = source / 'run.json'
     if not receipt_path.exists():
         if selected is None:
@@ -270,10 +271,10 @@ def prepare_compact(source, staging, selected, regenerate):
         receipt = json.loads(receipt_path.read_text())
         receipt['compact'] = {'files': selected, 'regenerate': regenerate or []}
         compact_files(source, staging, receipt)
-    if regenerate is not None:
+    if regenerate is not None or regenerate_from is not None:
         path = staging / 'provenance.json'
         meta = json.loads(path.read_text())
-        meta['regenerate'] = regenerate
+        update_recipe(meta, regenerate, regenerate_from)
         path.write_text(json.dumps(meta, indent=2, sort_keys=True) + '\n')
 
 
@@ -343,10 +344,10 @@ def csv_coverage(path):
     return f'{len(counts):,} distinct names, {sum(counts.values()):,} named rows by first path component: {detail}'
 
 
-def preview(source, destination, selected=None, regenerate=None):
+def preview(source, destination, selected=None, regenerate=None, regenerate_from=None):
     with tempfile.TemporaryDirectory(prefix='sixdb-retention-preview-') as name:
         staging = Path(name)
-        prepare_compact(source.resolve(), staging, selected, regenerate)
+        prepare_compact(source.resolve(), staging, selected, regenerate, regenerate_from)
         return preview_export(staging, destination.resolve(), detailed=True)
 
 
@@ -378,7 +379,7 @@ def worker_reference(source, *, selected=None):
     return None
 
 
-def retain(source, destination, selected=None, regenerate=None):
+def retain(source, destination, selected=None, regenerate=None, regenerate_from=None):
     source, destination = source.resolve(), destination.resolve()
     if destination.is_relative_to(source):
         raise ValueError("keep retained evidence outside its input run")
@@ -387,7 +388,7 @@ def retain(source, destination, selected=None, regenerate=None):
         temporary = Path(name)
         staging = temporary / "evidence"
         staging.mkdir()
-        prepare_compact(source, staging, selected, regenerate)
+        prepare_compact(source, staging, selected, regenerate, regenerate_from)
         if preview_export(staging, destination):
             raise ValueError('Compact export contains Git-ignored files; rename the selected output or adjust its scoped ignore rule')
         provenance = json.loads((staging / 'provenance.json').read_text())
@@ -520,6 +521,161 @@ def fetch(reference_path, destination, *, selected=None):
         print('Whole-run validation and input dataset restoration were not requested.')
 
 
+def report_commands(meta):
+    commands = meta.get('regenerate', [])
+    if not isinstance(commands, list):
+        raise ValueError('regenerate must be an argv list or a list of argv lists')
+    if commands and isinstance(commands[0], str):
+        commands = [commands]  # Existing single-command recipes remain valid.
+    if any(not isinstance(c, list) or not c or
+            any(not isinstance(arg, str) for arg in c) for c in commands):
+        raise ValueError('regenerate must be an argv list or a list of argv lists')
+    if meta.get('regenerate_from', 'retained') not in {'retained', 'archive'}:
+        raise ValueError('regenerate_from must be retained or archive')
+    return commands
+
+
+def update_recipe(meta, regenerate, regenerate_from):
+    if regenerate is not None:
+        meta['regenerate'] = regenerate
+    if regenerate_from is not None:
+        meta['regenerate_from'] = regenerate_from
+    report_commands(meta)
+
+
+def export_file(directory, name):
+    path = PurePosixPath(name)
+    if (not path.parts or path.is_absolute() or '..' in path.parts or
+            path.as_posix() != name or (directory / name).resolve() != directory / name):
+        raise ValueError(f'Invalid export member: {name}')
+    return directory / name
+
+
+def revise(evidence, dropped=None, regenerate=None, regenerate_from=None, *, apply=False):
+    """Reduce an existing export after exact recovery; never rewrite its archive."""
+    evidence = evidence.resolve()
+    original = (evidence / 'provenance.json').read_bytes()
+    meta = verify_compact(evidence)
+    key = 'files_sha256' if 'files_sha256' in meta else 'compact_sha256'
+    hashes = meta[key]
+    dropped = sorted(selection(dropped) or [])
+    if set(dropped) - hashes.keys():
+        raise ValueError('Only explicitly hashed export members can be dropped')
+    if set(dropped) & {'provenance.json', meta.get('full_bundle')}:
+        raise ValueError('Preserve provenance and the archive reference')
+    for name in hashes:
+        export_file(evidence, name)
+    meta[key] = {name: checksum for name, checksum in hashes.items() if name not in dropped}
+    update_recipe(meta, regenerate, regenerate_from)
+    removed_bytes = sum((evidence / name).stat().st_size for name in dropped)
+    print(f'Git selection: {len(hashes)} → {len(meta[key])} hashed files; remove {removed_bytes:,} bytes')
+    for name in dropped:
+        print(f'  Archive only: {name}')
+    print(f'Report inputs: {meta.get("regenerate_from", "retained")}')
+    for command in report_commands(meta):
+        print('  ' + shlex.join(command))
+    if not apply:
+        print('Preview only. --apply verifies recovery before removing files; no Git staging or commits.')
+        return meta
+    with tempfile.TemporaryDirectory(dir=evidence.parent, prefix='.revise-') as temp:
+        temp = Path(temp)
+        if dropped:
+            if not meta.get('full_bundle'):
+                raise ValueError('Reduction needs an existing full_bundle recovery reference')
+            reference_path = export_file(evidence, meta['full_bundle'])
+            reference_bytes = reference_path.read_bytes()
+            recovered = temp / 'recovered'
+            restore_bundle(json.loads(reference_bytes), recovered, selected=dropped)
+            for name in dropped:
+                if sha256(recovered / name) != hashes[name]:
+                    raise ValueError(f'Archived bytes differ: {name}; export preserved')
+            if reference_path.read_bytes() != reference_bytes:
+                raise ValueError('Archive reference changed during recovery; export preserved')
+        if (evidence / 'provenance.json').read_bytes() != original:
+            raise ValueError('Provenance changed during recovery; export preserved')
+        verify_compact(evidence)  # Detect edits made while the download was in progress.
+        for name in hashes:
+            export_file(evidence, name)
+        updated = temp / 'provenance.json'
+        updated.write_text(json.dumps(meta, indent=2, sort_keys=True) + '\n')
+        moved = []
+        try:
+            for name in dropped:
+                saved = temp / 'removed' / name
+                saved.parent.mkdir(parents=True, exist_ok=True)
+                (evidence / name).rename(saved)
+                moved.append(name)
+            updated.replace(evidence / 'provenance.json')
+        except BaseException:
+            for name in reversed(moved):
+                (temp / 'removed' / name).rename(evidence / name)
+            raise
+    print('Revised selection; removed bytes are recoverable from the unchanged archive.' if dropped else
+          'Updated report recipe; archive reference unchanged.')
+    return meta
+
+
+def report(evidence, output, *, dry_run=False):
+    """Run a checkout's recorded recipe on a fresh copy, never on retained evidence."""
+    evidence, output = evidence.resolve(), output.resolve()
+    meta = verify_compact(evidence)
+    commands = report_commands(meta)
+    if not commands:
+        raise ValueError('No report recipe; record one with revise --regenerate COMMAND --apply')
+    receipt_path = output.with_name(output.name + '.report.json')
+    if output.exists() or receipt_path.exists() or output.is_relative_to(evidence):
+        raise ValueError('Choose a fresh report destination outside the retained evidence')
+    source = meta.get('regenerate_from', 'retained')
+    commands = [[arg.replace('{evidence}', str(output)).replace('{retained}', str(evidence))
+                 for arg in command] for command in commands]
+    for command in commands:
+        if command[0] == 'python3':
+            command[0] = sys.executable
+    print(f'Report inputs: {source}; output: {output}')
+    for command in commands:
+        print('  ' + shlex.join(command), flush=True)
+    if dry_run:
+        return
+    reference_path = export_file(evidence, meta['full_bundle']) if meta.get('full_bundle') else None
+    receipt = {'format': 1, 'status': 'running', 'input': source,
+               'provenance_sha256': sha256(evidence / 'provenance.json'),
+               'artifact': json.loads(reference_path.read_text()) if reference_path else None,
+               'commands': commands, 'completed_commands': 0,
+               'entrypoint_sha256': {}}
+    # Identify current entrypoints, without claiming to capture their imports or runtime.
+    for command in commands:
+        for arg in command:
+            path = ROOT / arg
+            if path.suffix in {'.py', '.sh'} and path.is_file():
+                receipt['entrypoint_sha256'][arg] = sha256(path)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        if source == 'archive':
+            if reference_path is None:
+                raise ValueError('Archive report needs full_bundle')
+            fetch(reference_path, output)
+        else:
+            output.mkdir()
+            hashes = meta.get('files_sha256', meta.get('compact_sha256', {}))
+            if hashes:
+                copy_compact_files(evidence, output, list(hashes), expected=hashes)
+            shutil.copyfile(evidence / 'provenance.json', output / 'provenance.json')
+            if reference_path:
+                target = output / meta['full_bundle']
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(reference_path, target)
+        for command in commands:
+            subprocess.run(command, cwd=ROOT, check=True)
+            receipt['completed_commands'] += 1
+        receipt['status'] = 'complete'
+    except BaseException as exc:
+        receipt.update(status='failed', error=str(exc))
+        raise
+    finally:
+        receipt_path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + '\n')
+        print(f'Report receipt: {receipt_path}', flush=True)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -529,7 +685,16 @@ def main():
         selection_parser.add_argument('run', type=Path)
         selection_parser.add_argument('evidence', type=Path)
         selection_parser.add_argument('--file', action='append', dest='selected', help='Keep this file byte-for-byte; repeat as needed')
-        selection_parser.add_argument('--regenerate', help='Record an offline table-regeneration command; {evidence} denotes its directory')
+        recipe_arguments(selection_parser)
+    revise_parser = commands.add_parser('revise', help='preview/reduce an existing Git selection without re-uploading')
+    revise_parser.add_argument('evidence', type=Path)
+    revise_parser.add_argument('--drop', action='append', help='Archive-only member; repeat exact paths')
+    revise_parser.add_argument('--apply', action='store_true', help='verify removed bytes in the archive and apply the revision')
+    recipe_arguments(revise_parser)
+    report_parser = commands.add_parser('report', help='run the recorded recipe in fresh working space')
+    report_parser.add_argument('evidence', type=Path)
+    report_parser.add_argument('output', type=Path)
+    report_parser.add_argument('--dry-run', action='store_true', help='show input source and commands without fetching or executing')
     verify_parser = commands.add_parser('verify', help='verify compact evidence under a directory, including Git-only membership')
     verify_parser.add_argument('evidence', type=Path)
     tree = verify_parser.add_mutually_exclusive_group()
@@ -547,7 +712,11 @@ def main():
     args = parser.parse_args()
     if args.command in ('retain', 'preview'):
         action = retain if args.command == 'retain' else preview
-        action(args.run, args.evidence, args.selected, shlex.split(args.regenerate) if args.regenerate else None)
+        action(args.run, args.evidence, args.selected, parse_recipe(args.regenerate), args.regenerate_from)
+    elif args.command == 'revise':
+        revise(args.evidence, args.drop, parse_recipe(args.regenerate), args.regenerate_from, apply=args.apply)
+    elif args.command == 'report':
+        report(args.evidence, args.output, dry_run=args.dry_run)
     elif args.command == 'verify':
         count = verify_exports(args.evidence, tree=args.tree)
         print(f'Verified {count} compact exports ({args.tree or "worktree"})')
@@ -565,6 +734,20 @@ def main():
             raise ValueError("reference already exists with different content")
         args.reference.parent.mkdir(parents=True, exist_ok=True)
         args.reference.write_text(content)
+
+
+def recipe_arguments(parser):
+    parser.add_argument('--regenerate', action='append',
+                        help='Report command (repeat for ordered steps); {evidence} is working input, {retained} is the original export')
+    parser.add_argument('--regenerate-from', choices=['retained', 'archive'],
+                        help='Report input source (default: retained); archive fetches the full_bundle')
+
+
+def parse_recipe(commands):
+    if commands is None:
+        return None
+    parsed = [shlex.split(command) for command in commands]
+    return parsed[0] if len(parsed) == 1 else parsed
 
 
 if __name__ == "__main__":

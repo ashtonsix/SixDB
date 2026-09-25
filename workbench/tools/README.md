@@ -10,7 +10,7 @@ from the Mac. Use the helpers independently or start from an existing runner.
 | Reuse input data | [Datasets](../datasets/README.md): `datasets.py get NAME` |
 | Replay binaries or summarize measurements | [Benchmark tools](../benchmarks/README.md#replay-and-summarize): `replay.py`, `evidence.py` |
 | Browse or share results | [Results explorer](../results/README.md): `results.py --serve` |
-| Retain or recover evidence | [Artifacts](artifacts.md): `artifacts.py`; [local storage](storage.md): `worker.py cache` |
+| Retain, revise or regenerate evidence | [Artifacts](artifacts.md): `artifacts.py`; [local storage](storage.md): `worker.py cache` |
 | Diagnose compilation or editor issues | [Compile probes](compilation.md), [editor setup](editors.md) |
 
 ## Captured experiment runs

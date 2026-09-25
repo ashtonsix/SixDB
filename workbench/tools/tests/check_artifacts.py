@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 import subprocess
 import shutil
+import sys
 import tarfile
 import tempfile
 import unittest
@@ -160,6 +161,153 @@ class ArtifactsCheck(unittest.TestCase):
         self.assertEqual(before, {p.name: p.read_bytes() for p in artifacts.files(self.source)})
         self.assertEqual(before, {p.name: p.read_bytes() for p in artifacts.files(restored)})
         self.assertEqual(len(self.objects), 1)
+
+    def file_export(self, names=('accounting.csv', 'summary.md'), **kwargs):
+        (self.source / 'run.json').unlink()
+        destination = self.root / 'evidence'
+        with patch.object(artifacts, 'aws', self.fake_aws):
+            artifacts.retain(self.source, destination, list(names), **kwargs)
+        return destination
+
+    def snapshot(self, directory):
+        return {str(p.relative_to(directory)): p.read_bytes() for p in artifacts.files(directory)}
+
+    def test_revise_previews_then_recovers_before_removing_only_selected_members(self):
+        evidence = self.file_export()
+        (evidence / 'notes.md').write_text('authored context stays')
+        before = self.snapshot(evidence)
+        with patch.object(artifacts, 'aws', self.fake_aws) as aws, \
+                patch.object(artifacts, 'publish') as publish:
+            artifacts.revise(evidence, ['summary.md'])
+            self.assertEqual(self.snapshot(evidence), before)
+            self.assertEqual(len(self.objects), 1)
+            artifacts.revise(evidence, ['summary.md'], apply=True)
+            publish.assert_not_called()
+        meta = verify_compact(evidence)
+        self.assertEqual(set(meta['files_sha256']), {'accounting.csv'})
+        self.assertFalse((evidence / 'summary.md').exists())
+        self.assertEqual((evidence / 'artifact.json').read_bytes(), before['artifact.json'])
+        self.assertEqual((evidence / 'notes.md').read_bytes(), before['notes.md'])
+        self.assertTrue((self.source / 'summary.md').exists())
+        self.assertEqual(len(self.objects), 1)
+
+    def test_revise_bad_archive_and_changed_bytes_preserve_export(self):
+        evidence = self.file_export()
+        before = self.snapshot(evidence)
+        ref = json.loads((evidence / 'artifact.json').read_text())
+        original_bundle = self.objects[ref['key']]
+        self.objects[ref['key']] = b'corrupt'
+        with patch.object(artifacts, 'aws', self.fake_aws), self.assertRaisesRegex(ValueError, 'SHA-256'):
+            artifacts.revise(evidence, ['summary.md'], apply=True)
+        self.assertEqual(self.snapshot(evidence), before)
+        self.objects[ref['key']] = original_bundle
+        (evidence / 'summary.md').write_text('changed since archiving')
+        meta = json.loads((evidence / 'provenance.json').read_text())
+        meta['files_sha256']['summary.md'] = digest(evidence / 'summary.md')
+        (evidence / 'provenance.json').write_text(json.dumps(meta))
+        changed = self.snapshot(evidence)
+        with patch.object(artifacts, 'aws', self.fake_aws), self.assertRaisesRegex(ValueError, 'Archived bytes differ'):
+            artifacts.revise(evidence, ['summary.md'], apply=True)
+        self.assertEqual(self.snapshot(evidence), changed)
+
+    def test_revise_honors_archive_subdirectory_and_rolls_back_failed_install(self):
+        evidence = self.file_export()
+        outer = self.root / 'outer'
+        shutil.copytree(self.source, outer / 'study')
+        with patch.object(artifacts, 'aws', self.fake_aws), tempfile.TemporaryDirectory() as temp:
+            reference = artifacts.publish(outer, Path(temp)) | {'subdirectory': 'study'}
+            (evidence / 'artifact.json').write_text(json.dumps(reference))
+            before = self.snapshot(evidence)
+            with patch.object(Path, 'replace', side_effect=OSError('fixture install failure')):
+                with self.assertRaisesRegex(OSError, 'install failure'):
+                    artifacts.revise(evidence, ['summary.md'], apply=True)
+            self.assertEqual(self.snapshot(evidence), before)
+            artifacts.revise(evidence, ['summary.md'], apply=True)
+        verify_compact(evidence)
+
+    def test_revise_does_not_remove_concurrent_edits_or_unhashed_files(self):
+        evidence = self.file_export()
+        (evidence / 'notes.md').write_text('keep')
+        for dropped in (['notes.md'], ['../summary.md'], ['summary.md', 'summary.md']):
+            with patch.object(artifacts, 'restore_bundle') as restore, self.assertRaises(ValueError):
+                artifacts.revise(evidence, dropped, apply=True)
+            restore.assert_not_called()
+        restore = artifacts.restore_bundle
+        def edit_during_download(*args, **kwargs):
+            result = restore(*args, **kwargs)
+            (evidence / 'summary.md').write_text('peer edit')
+            return result
+        original = (evidence / 'provenance.json').read_bytes()
+        with patch.object(artifacts, 'aws', self.fake_aws), \
+                patch.object(artifacts, 'restore_bundle', side_effect=edit_during_download), \
+                self.assertRaisesRegex(ValueError, 'Compact evidence changed'):
+            artifacts.revise(evidence, ['summary.md'], apply=True)
+        self.assertEqual((evidence / 'summary.md').read_text(), 'peer edit')
+        self.assertEqual((evidence / 'provenance.json').read_bytes(), original)
+
+    def test_revise_refuses_to_drop_derived_bytes_absent_from_archive(self):
+        evidence = self.root / 'evidence'
+        with patch.object(artifacts, 'aws', self.fake_aws):
+            artifacts.retain(self.source, evidence)
+            before = self.snapshot(evidence)
+            with self.assertRaisesRegex(ValueError, 'missing from bundle'):
+                artifacts.revise(evidence, ['samples.csv'], apply=True)
+        self.assertEqual(self.snapshot(evidence), before)
+
+    def report_script(self):
+        script = self.root / 'plot.py'
+        script.write_text('import pathlib, sys\n'
+                          'p = pathlib.Path(sys.argv[1])\n'
+                          '(p / "figure.txt").write_text((p / "summary.md").read_text())\n')
+        return ['python3', str(script), '{evidence}']
+
+    def test_report_retained_inputs_are_copied_and_recipe_preview_is_offline(self):
+        recipe = self.report_script()
+        evidence = self.file_export(regenerate=recipe)
+        before = self.snapshot(evidence)
+        output = self.root / 'build/report'
+        with patch.object(artifacts, 'aws') as aws, patch.object(artifacts, 'ROOT', self.root):
+            artifacts.report(evidence, output, dry_run=True)
+            self.assertFalse(output.exists())
+            artifacts.report(evidence, output)
+            aws.assert_not_called()
+        self.assertEqual((output / 'figure.txt').read_text(), '# Result\n')
+        self.assertEqual(self.snapshot(evidence), before)
+        verify_compact(output)
+        receipt = json.loads(output.with_name('report.report.json').read_text())
+        self.assertEqual(receipt['status'], 'complete')
+        self.assertEqual(receipt['commands'][0][0], sys.executable)
+        self.assertEqual(receipt['entrypoint_sha256'][recipe[1]], digest(Path(recipe[1])))
+        with self.assertRaisesRegex(ValueError, 'fresh report destination'):
+            artifacts.report(evidence, output)
+
+    def test_archive_report_uses_current_recipe_and_recovers_omitted_inputs(self):
+        evidence = self.file_export(names=('accounting.csv',))
+        recipe = self.report_script()
+        ref = (evidence / 'artifact.json').read_bytes()
+        with patch.object(artifacts, 'aws') as aws:
+            artifacts.revise(evidence, regenerate=recipe, regenerate_from='archive', apply=True)
+            aws.assert_not_called()
+        self.assertEqual((evidence / 'artifact.json').read_bytes(), ref)
+        output = self.root / 'build/report'
+        with patch.object(artifacts, 'aws', self.fake_aws), patch.object(artifacts, 'ROOT', self.root):
+            artifacts.report(evidence, output)
+        self.assertEqual((output / 'figure.txt').read_text(), '# Result\n')
+        self.assertFalse((evidence / 'summary.md').exists())
+
+    def test_report_failure_keeps_working_inputs_and_records_completed_steps(self):
+        recipe = [self.report_script(), [sys.executable, '-c', 'raise SystemExit(7)'],
+                  [sys.executable, '-c', 'raise SystemExit("must not run")']]
+        evidence = self.file_export(regenerate=recipe)
+        before = self.snapshot(evidence)
+        output = self.root / 'build/report'
+        with patch.object(artifacts, 'ROOT', self.root), self.assertRaises(subprocess.CalledProcessError):
+            artifacts.report(evidence, output)
+        receipt = json.loads(output.with_name('report.report.json').read_text())
+        self.assertEqual(receipt['status'], 'failed')
+        self.assertEqual(receipt['completed_commands'], 1)
+        self.assertTrue((output / 'figure.txt').exists())
+        self.assertEqual(self.snapshot(evidence), before)
 
     def test_raw_worker_selection_reuses_archive_and_rejects_unarchived_files(self):
         (self.source / 'run.json').unlink()
