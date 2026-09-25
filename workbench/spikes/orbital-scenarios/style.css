@@ -1,6 +1,10 @@
 :root{color-scheme:light dark;--bg:light-dark(#f5f6f8,#10161e);--surface:light-dark(#fff,#17212d);--text:light-dark(#17293b,#e2eaf2);--muted:light-dark(#536579,#a0b1c4);--line:light-dark(#d8e0e8,#334354);--accent:light-dark(#125cb1,#84beff);--l:light-dark(#6d4bab,#c5a1fa);--c1:light-dark(#127b79,#68d6c2);--c2:light-dark(#a55713,#ffc285)}
 
 *{box-sizing:border-box}
+[hidden]{display:none!important}
+#batch-controls{margin-top:16px}
+.checkbox-label{flex-direction:row;align-items:center;gap:8px}
+.checkbox-label input{width:auto}
 body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,sans-serif}
 main{max-width:1320px;margin:auto;padding:30px 36px}
 header,.result-title{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}

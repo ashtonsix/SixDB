@@ -3,8 +3,10 @@
 An executable contention slice of the evolving [Orbital brief](../../../orbital/BRIEF.md).
 Use it to inspect preparation, discovery, retained protection, retries and
 yielding, and to preserve small counterexamples while the design changes.
-[MODEL.md](MODEL.md) owns the assumptions; [findings](FINDINGS.md) explain the
-first policy comparison. This is a disposable design instrument, not the
+[MODEL.md](MODEL.md) owns the original assumptions; [component retry batches](BATCH.md)
+extend them with scoped reservations, delayed verdicts and bounded selection.
+[Initial findings](FINDINGS.md) explain the first policy comparison.
+This is a disposable design instrument, not the
 architecture of the eventual simulator or an Orbital implementation.
 
 ## Open it
@@ -23,8 +25,9 @@ Choose a scenario, run it, and step through its shard epochs. The display shows
 part generations, retained protection, reservations, current wait edges and
 the transition trace. Small runs keep every epoch; longer runs thin the display
 frames to about 300 while preserving the full event trace in the export.
-Policy comparison uses the same workload, horizon and capacity for all four
-policies. The global cycle oracle is deliberately idealized.
+Policy comparison uses the same workload, horizon and ordinary capacity for all
+policies. Component cuts have additional uncharged retry work; the global cycle
+oracle is instantaneous. Those abstractions limit timing comparisons.
 
 Start with **Reservation blocks an older contender** and compare policies.
 Age priority resolves the two-transaction example but stalls on this
@@ -33,6 +36,12 @@ explains why. **A → B → A discovery** follows the brief's shape. **Slow
 participant, local convoy** makes cross-shard protection visible to local work.
 The generated workloads mix local and cross-shard work with adjustable hotspot
 probability, arrival span and seed.
+
+For the coordinated-retry proposal, choose the three-transaction reservation
+scenario and **Component batch · keep pending round**, then compare with
+**replace every cut**. The batch controls expose cut frequency, aggregate
+arbitration delay, selection heuristic, early retries and local resolution.
+The [batch study](BATCH.md) owns interpretation and its stronger assumptions.
 
 Expand the editor for per-shard periods/capacities, DAG dependencies, read/write
 key sets, weights, arrival times and equal-time shard order. Apply JSON edits
@@ -58,6 +67,7 @@ orb -m ubuntu python3 workbench/spikes/orbital-scenarios/run.py \
 orb -m ubuntu python3 workbench/spikes/orbital-scenarios/run.py \
   --preset hotspot --compare
 orb -m ubuntu python3 workbench/spikes/orbital-scenarios/check.py
+orb -m ubuntu python3 workbench/spikes/orbital-scenarios/check_batch.py
 ```
 
 A positional JSON file replaces `--preset`; exported runs are also accepted as
@@ -70,6 +80,7 @@ the stop reason distinguishes that limit, the time horizon and full completion.
 
 The browser and CLI call the same Python engine. `scenarios.py` authors inputs;
 `model.py` holds logical state, reducers and a deterministic event scheduler;
+`batch.py` supplies the experimental component reservation/selection policy;
 `run.py` supplies replay identity and comparison; `serve.py` and `app.js` project
 that state. There is no second browser implementation of the protocol.
 
@@ -83,5 +94,7 @@ performance. Agreed epochs and atomic invalidation are assumed services.
 Git keeps source, small scenarios and the compact comparison that motivates a
 finding. Exploratory replays and full traces belong in ignored
 `build/orbital-scenarios/`. [compare.py](compare.py) regenerates the retained
-comparison from its authored presets and records source/scenario/trace hashes.
+comparison from its original presets and records source/scenario/trace hashes.
+The original evidence refers to commit `4b509ee`; regression checks retain all
+28 trace identities. `study_batch.py` regenerates the separate batch comparison.
 Nothing in this spike needs the full historical network experiment archives.

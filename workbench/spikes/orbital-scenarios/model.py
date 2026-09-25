@@ -11,7 +11,8 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 
 
-POLICIES = ("reject", "older", "work", "arbitrate")
+LEGACY_POLICIES = ("reject", "older", "work", "arbitrate")
+POLICIES = (*LEGACY_POLICIES, "batch-reset", "batch-hold")
 
 
 def canonical(value):
@@ -52,11 +53,20 @@ def validate(raw):
         integer(config.setdefault("offset_us", 0), "offset_us", 0, 1000000)
         integer(config.setdefault("capacity", 8), "capacity", 1, 1000)
     p = s.setdefault("policy", {})
-    fields(p, "yield reserve_after backoff", "policy")
+    fields(p, "yield reserve_after backoff batch_us arbitration_us solver fast_retries local_solver", "policy")
     if p.setdefault("yield", "older") not in POLICIES:
         raise ValueError(f"yield must be one of {POLICIES}")
     integer(p.setdefault("reserve_after", 3), "reserve_after", 0, 1000)
     integer(p.setdefault("backoff", 4), "backoff", 1, 128)
+    if p["yield"].startswith("batch-"):
+        integer(p.setdefault("batch_us", 500), "batch_us", 1, 1000000)
+        integer(p.setdefault("arbitration_us", 1200), "arbitration_us", 0, 1000000)
+        if p.setdefault("solver", "age") not in ("age", "work", "bounded"):
+            raise ValueError("solver must be age, work or bounded")
+        if type(p.setdefault("fast_retries", True)) is not bool:
+            raise ValueError("fast_retries must be boolean")
+        if type(p.setdefault("local_solver", False)) is not bool:
+            raise ValueError("local_solver must be boolean")
     integer(s.setdefault("control_delay_us", 100), "control_delay_us", 0, 1000000)
     integer(s.setdefault("horizon_us", 10000), "horizon_us", 1, 10000000)
     order = s.setdefault("shard_order", sorted(s["shards"]))
@@ -223,6 +233,9 @@ class Model:
         if tx.state != "preparing":
             return False
         roots = set(root_ids)
+        # A verdict can name several blocking parts. If one depends on another,
+        # only the ancestor is a restart root; descendants must be rediscovered.
+        roots = {r for r in roots if not any(r in self.descendants(tid, [a]) for a in roots if a != r)}
         affected = self.descendants(tid, roots)
         discarded = self.work(tid, affected)
         self.counts["discarded_work"] += discarded
@@ -343,10 +356,19 @@ class Model:
                 continue
             for pid, p in sorted(tx.parts.items()):
                 if p.state == "ready":
-                    for blocker in sorted(self.blockers((tid, pid))):
+                    for blocker in sorted(self.wait_blockers((tid, pid))):
                         edges.append({"from": tid, "to": blocker[0], "part": pid,
                                       "blocked_by": blocker[1], "shard": p.spec["shard"]})
         return edges
+
+    def wait_blockers(self, ref):
+        return self.blockers(ref)
+
+    def eligible(self, ref):
+        return self.part(ref).retry_epoch <= self.epochs[self.part(ref).spec["shard"]]
+
+    def handle_event(self, kind, payload):
+        return False
 
     def cycles(self, edges=None):
         """Return nontrivial strongly connected components, deterministically."""
@@ -401,7 +423,7 @@ class Model:
             for pid, p in tx.parts.items():
                 if p.spec["shard"] != shard:
                     continue
-                if tx.state == "preparing" and p.state == "ready" and p.retry_epoch <= self.epochs[shard]:
+                if tx.state == "preparing" and p.state == "ready" and self.eligible((tid, pid)):
                     queues["L" if tx.spec["kind"] == "L" else "C1"].append((tid, pid))
                 elif tx.state == "authorized" and shard in tx.c2_ready and p.state == "prepared":
                     queues["C2"].append((tid, pid))
@@ -474,7 +496,7 @@ class Model:
             elif kind == "epoch":
                 self.epoch(payload)
                 self.steps += 1
-            else:
+            elif not self.handle_event(kind, payload):
                 raise AssertionError("unknown event kind")
             self.check()
             if kind == "epoch":
@@ -504,6 +526,8 @@ class Model:
                 assert not p.reserved or (p.state == "ready" and tx.state == "preparing")
                 if p.state in ("prepared", "applied"):
                     assert all(p.inputs.get(d) == tx.parts[d].generation for d in p.spec["after"])
+                if p.state == "ready":
+                    assert all(tx.reported.get(d) == tx.parts[d].generation for d in p.spec["after"])
                 if tx.state == "complete":
                     assert p.state == "applied" and not p.reserved
 
@@ -542,7 +566,11 @@ class Model:
 
 def run(scenario, max_steps=2000, frames=False):
     integer(max_steps, "max_steps", 1, 10000)
-    model = Model(scenario)
+    if scenario.get("policy", {}).get("yield", "").startswith("batch-"):
+        from batch import BatchModel
+        model = BatchModel(scenario)
+    else:
+        model = Model(scenario)
     history = [model.snapshot()] if frames else []
     stride = 1
     while model.steps < max_steps and model.step():

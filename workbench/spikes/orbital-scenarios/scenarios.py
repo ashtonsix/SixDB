@@ -63,6 +63,11 @@ def convoy():
     return s
 
 
+def local_queue(count=40):
+    return base("Local hot-key retry queue", [transaction(f"L{i:03}", [part("p", "A", "hot")], kind="L")
+                                             for i in range(count)], horizon_us=20000)
+
+
 def workload(count=80, hot_percent=80, seed=7, arrival_span_us=2400):
     integer(count, "count", 1, 300)
     integer(hot_percent, "hot_percent", 0, 100)
@@ -94,4 +99,4 @@ def workload(count=80, hot_percent=80, seed=7, arrival_span_us=2400):
 
 def presets():
     return {"discovery": discovery(), "cycle": cycle(), "reservation": reservation_cycle(), "readers": readers(),
-            "convoy": convoy(), "hotspot": workload(), "spread": workload(hot_percent=0)}
+            "convoy": convoy(), "hotspot": workload(), "spread": workload(hot_percent=0), "local": local_queue()}

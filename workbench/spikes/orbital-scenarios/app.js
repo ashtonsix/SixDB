@@ -1,7 +1,8 @@
 'use strict';
 const $ = id => document.getElementById(id);
 let scenario, result, presetData, frameIndex = 0, dirty = false, editorDirty = false;
-const names = {reject: 'Reject all', older: 'Favor older', work: 'Retained work', arbitrate: 'Older + oracle'};
+const names = {reject: 'Reject all', older: 'Favor older', work: 'Retained work', arbitrate: 'Older + oracle',
+  'batch-reset': 'Batch replace', 'batch-hold': 'Batch keep pending'};
 const fmt = value => value == null ? '—' : Number(value).toLocaleString();
 const clone = value => JSON.parse(JSON.stringify(value));
 
@@ -24,6 +25,13 @@ function changed() {
   $('status').textContent = 'Scenario changed. Run to update the results below.';
 }
 
+function batchControls() {
+  const active = $('policy').value.startsWith('batch-');
+  $('batch-controls').hidden = !active;
+  $('reserve').parentElement.hidden = active;
+  $('backoff').parentElement.hidden = active;
+}
+
 function loadScenario(value) {
   const candidate = clone(value.scenario || value);
   if (!candidate.shards || !candidate.transactions) throw new Error('Expected a scenario or exported replay.');
@@ -34,6 +42,12 @@ function loadScenario(value) {
   $('backoff').value = scenario.policy.backoff ?? 4;
   $('delay').value = scenario.control_delay_us ?? 100;
   $('horizon').value = scenario.horizon_us ?? 8000;
+  $('batch-period').value = scenario.policy.batch_us ?? 500;
+  $('arbitration-delay').value = scenario.policy.arbitration_us ?? 1200;
+  $('solver').value = scenario.policy.solver ?? 'age';
+  $('fast-retries').checked = scenario.policy.fast_retries ?? true;
+  $('local-solver').checked = scenario.policy.local_solver ?? false;
+  batchControls();
   $('scenario').value = JSON.stringify(scenario, null, 2);
   editorDirty = false;
   changed();
@@ -42,7 +56,9 @@ function loadScenario(value) {
 function editedScenario() {
   if (editorDirty) throw new Error('Apply the edited scenario before running. Your JSON edits are still in the editor.');
   const s = clone(scenario);
-  s.policy = {yield: $('policy').value, reserve_after: Number($('reserve').value), backoff: Number($('backoff').value)};
+  s.policy = {...s.policy, yield: $('policy').value, reserve_after: Number($('reserve').value), backoff: Number($('backoff').value),
+    batch_us: Number($('batch-period').value), arbitration_us: Number($('arbitration-delay').value),
+    solver: $('solver').value, fast_retries: $('fast-retries').checked, local_solver: $('local-solver').checked};
   s.control_delay_us = Number($('delay').value);
   s.horizon_us = Number($('horizon').value);
   $('scenario').value = JSON.stringify(s, null, 2);
@@ -52,7 +68,7 @@ function editedScenario() {
 
 async function busy(task) {
   $('error').hidden = true;
-  const controls = ['run', 'compare', 'generate', 'apply', 'preset', 'import', 'policy', 'reserve', 'backoff', 'delay', 'horizon', 'count', 'hot', 'seed', 'span', 'scenario'];
+  const controls = ['run', 'compare', 'generate', 'apply', 'preset', 'import', 'policy', 'reserve', 'backoff', 'delay', 'horizon', 'count', 'hot', 'seed', 'span', 'scenario', 'batch-period', 'arbitration-delay', 'solver', 'fast-retries', 'local-solver'];
   for (const id of controls) $(id).disabled = true;
   $('status').textContent = 'Running the deterministic model…';
   try { await task(); } catch (error) { showError(error); $('status').textContent = 'Run failed.'; }
@@ -94,6 +110,11 @@ function render() {
   $('latency').textContent = `${fmt(s.p50_completed_us)} / ${fmt(s.p99_completed_us)}`;
   $('retries').textContent = `${fmt(s.counts.retry || 0)} / ${fmt(s.counts.discarded_work || 0)}`;
   $('cycle-status').textContent = s.cycles.length ? `Wait cycles: ${s.cycles.map(c => c.join(' ↔ ')).join('; ')}` : 'No wait cycle in this frame';
+  $('components-note').hidden = !frame.components;
+  if (frame.components) {
+    $('components-note').textContent = `Component batches: ${s.counts.batch_begin || 0} · applied / stale verdicts ${s.counts.verdict_apply || 0} / ${s.counts.verdict_stale || 0} · largest scope ${s.counts.max_component_transactions || 0} transactions. ` +
+      frame.components.map(c => `Round ${c.round}: ${c.members.length} members, ${c.keys.length} keys, ${c.pending ? 'verdict pending' : 'selected ' + c.winners.join(', ')}.`).join(' ');
+  }
   $('time').textContent = `${fmt(frame.time_us)} µs · epoch ${fmt(frame.step)}`;
   $('frame-note').textContent = `Frames every ${result.frame_stride} shard epochs; ${frame.last_epoch ? `last: ${frame.last_epoch.shard} / ${frame.last_epoch.epoch} / ${frame.last_epoch.kind}` : 'initial state'}. Step buttons move between saved frames.`;
   $('start').disabled = $('prev').disabled = frameIndex === 0;
@@ -163,6 +184,12 @@ function drawTimeline(frame) {
       nodes.push(rect);
     }
   });
+  for (const e of result.trace.filter(e => e.type === 'batch_begin')) {
+    const cut = svgElement('line', {x1: x(e.time_us), x2: x(e.time_us), y1: 4, y2: height - 29,
+      stroke: 'var(--text)', 'stroke-dasharray': '2 3', opacity: .45});
+    cut.append(svgElement('title', {}, `Retry cut ${e.round}: ${e.retry_parts} parts at ${e.time_us} µs`));
+    nodes.push(cut);
+  }
   nodes.push(svgElement('line', {x1: x(frame.time_us), x2: x(frame.time_us), y1: 4, y2: height - 29, class: 'cursor'}));
   const ticks = width < 500 ? 2 : 4;
   for (let i = 0; i <= ticks; i++) nodes.push(svgElement('text', {x: x(duration * i / ticks), y: height - 8,
@@ -172,7 +199,8 @@ function drawTimeline(frame) {
 
 $('run').addEventListener('click', runScenario);
 $('preset').addEventListener('change', () => { loadScenario(presetData[$('preset').value]); runScenario(); });
-for (const id of ['policy', 'reserve', 'backoff', 'delay', 'horizon']) $(id).addEventListener('change', changed);
+for (const id of ['policy', 'reserve', 'backoff', 'delay', 'horizon', 'batch-period', 'arbitration-delay', 'solver', 'fast-retries', 'local-solver']) $(id).addEventListener('change', changed);
+$('policy').addEventListener('change', batchControls);
 $('scenario').addEventListener('input', () => { editorDirty = true; changed(); });
 $('apply').addEventListener('click', () => { try { loadScenario(JSON.parse($('scenario').value)); } catch (e) { showError(e); } });
 $('generate').addEventListener('click', () => busy(async () => {
@@ -182,7 +210,8 @@ $('compare').addEventListener('click', () => busy(async () => {
   const data = await api('/api/compare', {scenario: editedScenario(), max_steps: 2000});
   $('comparison').hidden = false;
   $('comparison-rows').replaceChildren(...data.comparisons.map(r => row([names[r.policy], r.completed, `${r.pending} / ${r.future}`,
-    `${fmt(r.p50_completed_us)} / ${fmt(r.p99_completed_us)}`, fmt(r.oldest_pending_us), r.counts.retry || 0, r.counts.discarded_work || 0, r.stop_reason])));
+    `${fmt(r.p50_completed_us)} / ${fmt(r.p99_completed_us)}`, fmt(r.oldest_pending_us), r.counts.retry || 0, r.counts.discarded_work || 0,
+    `${r.counts.verdict_apply || 0} / ${r.counts.verdict_stale || 0}`, r.stop_reason])));
   $('status').textContent = 'Policy comparison complete. The trace above remains the last single-policy run.';
 }));
 $('import').addEventListener('change', async () => {

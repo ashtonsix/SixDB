@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 from run import compare, model_identity
+from model import LEGACY_POLICIES
 from scenarios import presets
 
 
@@ -15,7 +16,9 @@ def main():
     args = parser.parse_args()
     rows = []
     for name, scenario in presets().items():
-        for row in compare(scenario)["comparisons"]:
+        if name not in ("discovery", "cycle", "reservation", "readers", "convoy", "hotspot", "spread"):
+            continue
+        for row in compare(scenario, policies=LEGACY_POLICIES)["comparisons"]:
             rows.append({"scenario": name, **row})
     evidence = {"description": "Synthetic finite workloads; no measured performance or liveness proof.",
                 "model_files_sha256": model_identity(), "max_steps": 2000, "comparisons": rows}

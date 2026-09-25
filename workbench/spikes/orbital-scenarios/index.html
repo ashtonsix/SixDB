@@ -13,13 +13,21 @@
   <p class="intro">Explore preparation, retained protection and yielding through agreed epochs. Times are synthetic. Agreement, failures and recovery are outside this model.</p>
   <section aria-label="Scenario controls" class="controls">
     <label>Scenario<select id="preset"></select></label>
-    <label>Yield policy<select id="policy"><option value="reject">Reject all</option><option value="older" selected>Favor older transaction</option><option value="work">Compare retained work</option><option value="arbitrate">Older + cycle oracle</option></select></label>
+    <label>Yield policy<select id="policy"><option value="reject">Reject all</option><option value="older" selected>Favor older transaction</option><option value="work">Compare retained work</option><option value="arbitrate">Older + cycle oracle</option><option value="batch-reset">Component batch · replace every cut</option><option value="batch-hold">Component batch · keep pending round</option></select></label>
     <label>Reserve after failures<input id="reserve" type="number" min="0" max="1000" value="3"><small>0 disables reservations</small></label>
     <label>Retry window, epochs<input id="backoff" type="number" min="1" max="128" value="4"></label>
     <label>Control delay, µs<input id="delay" type="number" min="0" max="1000000" value="100"></label>
     <label>Horizon, µs<input id="horizon" type="number" min="1" max="10000000" value="8000"></label>
   </section>
-  <div class="actions"><button id="run" class="primary">Run scenario</button><button id="compare">Compare four policies</button><button id="export" disabled>Save replay</button><span id="status" role="status" aria-live="polite">Loading scenarios…</span></div>
+  <section id="batch-controls" class="controls" aria-label="Component batch controls" hidden>
+    <label>Retry cut period, µs<input id="batch-period" type="number" min="1" max="1000000" value="500"></label>
+    <label>Arbitration delay, µs<input id="arbitration-delay" type="number" min="0" max="1000000" value="1200"></label>
+    <label>Selection heuristic<select id="solver"><option value="age">Oldest anchor, then age</option><option value="work">Oldest anchor, then retained work</option><option value="bounded">Oldest anchor, bounded cardinality search</option></select></label>
+    <label class="checkbox-label"><input id="fast-retries" type="checkbox" checked>Try unblocked retries between cuts</label>
+    <label class="checkbox-label"><input id="local-solver" type="checkbox">Solve entirely local components in the shard</label>
+    <p class="muted">Atomic complete multishard cut and atomic verdict application. Delay includes collection and return; batch CPU cost is unmodeled.</p>
+  </section>
+  <div class="actions"><button id="run" class="primary">Run scenario</button><button id="compare">Compare policies</button><button id="export" disabled>Save replay</button><span id="status" role="status" aria-live="polite">Loading scenarios…</span></div>
   <p id="saved" class="muted" hidden></p>
   <p id="error" role="alert" hidden></p>
   <details id="editor-details"><summary>Edit workload and model assumptions</summary>
@@ -42,10 +50,11 @@
       <div><span>Completion p50 / p99</span><strong id="latency">—</strong><small>Completed transactions only · synthetic µs</small></div>
       <div><span>Retries / discarded work</span><strong id="retries">—</strong><small id="cycle-status">—</small></div>
     </div>
+    <p id="components-note" class="muted" hidden></p>
     <div class="playback"><button id="start" aria-label="First frame">First</button><button id="prev" aria-label="Previous frame">Previous</button><button id="next" aria-label="Next frame">Next</button><button id="end" aria-label="Final frame">Final</button><label>Inspect time<input id="frame" type="range" min="0" max="1" value="0"></label><output id="time"></output></div>
     <p id="frame-note" class="muted"></p>
     <div id="timeline-wrap"><svg id="timeline" role="img" aria-label="Shard epochs over synthetic time"></svg></div>
-    <div class="legend"><span class="L">L · local</span><span class="C1">C1 · prepare</span><span class="C2">C2 · execute</span><span>Click an epoch to inspect its nearest saved frame.</span></div>
+    <div class="legend"><span class="L">L · local</span><span class="C1">C1 · prepare</span><span class="C2">C2 · execute</span><span>Dotted line · retry cut</span><span>Click an epoch to inspect its nearest saved frame.</span></div>
     <div class="inspection">
       <section><h3>Protection and discovery</h3><label>Transaction<select id="transaction"></select></label><div id="tx-details"></div><div class="table-wrap"><table><thead><tr><th>Part</th><th>Shard / locks</th><th>State</th><th>Generation</th><th>Attempts</th></tr></thead><tbody id="parts"></tbody></table></div></section>
       <section><h3>Current waits</h3><p id="wait-summary"></p><div id="waits"></div></section>
@@ -53,7 +62,7 @@
     <section><h3>Transition trace <small id="trace-note"></small></h3><div id="trace" class="trace"></div></section>
   </section>
 
-  <section id="comparison" hidden><h2>Same workload, different policies</h2><p class="muted">Compare completion counts before latency: unfinished transactions are censored. The cycle oracle has global, instantaneous knowledge.</p><div class="table-wrap"><table><thead><tr><th>Policy</th><th>Completed</th><th>Pending / future</th><th>p50 / p99, µs</th><th>Oldest wait, µs</th><th>Retries</th><th>Discarded work</th><th>Stop</th></tr></thead><tbody id="comparison-rows"></tbody></table></div></section>
+  <section id="comparison" hidden><h2>Same workload, different policies</h2><p class="muted">Compare completion counts before latency: unfinished transactions are censored. The cycle oracle is instantaneous; component batches use the configured arbitration delay.</p><div class="table-wrap"><table><thead><tr><th>Policy</th><th>Completed</th><th>Pending / future</th><th>p50 / p99, µs</th><th>Oldest wait, µs</th><th>Retries</th><th>Discarded work</th><th>Applied / stale verdicts</th><th>Stop</th></tr></thead><tbody id="comparison-rows"></tbody></table></div></section>
   <footer><strong>Model boundary.</strong> One logical consumer per shard; deterministic priority; key read/write conflicts; atomic invalidation; no loss or recovery. A replay is one schedule, not a confluence proof. Capacity is attempted parts per epoch (whole transactions for C2). See MODEL.md beside the source for the assumptions.</footer>
 </main>
 </body>

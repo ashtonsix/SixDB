@@ -5,6 +5,11 @@ as read on 2026-09-25. It explores preparation, retained protection, discovery,
 retries and yielding. These choices are revisable model policies, not additions
 to the brief or a proposed production decomposition.
 
+The rules below describe the original individual-reservation policies. The
+[component-batch extension](BATCH.md) adds coordinated retry cuts, component
+fences and delayed verdicts, with stronger snapshot/application abstractions
+and separate selected evidence. It retains the same part and C2 invariants.
+
 ## Boundary
 
 Input events are already persisted and admitted. Each shard receives a sequence

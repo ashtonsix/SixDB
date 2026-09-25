@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parent
 
 
 def model_identity():
-    files = ["model.py", "scenarios.py", "run.py", "MODEL.md"]
+    files = ["model.py", "batch.py", "scenarios.py", "run.py", "MODEL.md", "BATCH.md"]
     return {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in files}
 
 
@@ -32,9 +32,9 @@ def execute(scenario, max_steps=2000, frames=False):
     return result
 
 
-def compare(scenario, max_steps=2000):
+def compare(scenario, max_steps=2000, policies=POLICIES):
     rows = []
-    for policy in POLICIES:
+    for policy in policies:
         candidate = copy.deepcopy(scenario)
         candidate.setdefault("policy", {})["yield"] = policy
         result = execute(candidate, max_steps)
