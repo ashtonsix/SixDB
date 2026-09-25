@@ -176,7 +176,7 @@ runtime, scheduler, copying and both local socket endpoints. Three fresh HTTPS
 HEAD connections to the regional S3 endpoint split DNS, connect, TLS and first
 response time. They do not measure peer-to-peer bandwidth, fabric RTT, tail
 latency under load or cross-AZ traffic. The companion [CFT study](../cft-commit-latency/README.md)
-uses [controlled paired hosts](../cft-commit-latency/az-measurements.md), explicit
+uses [network measurements and selection](../cft-commit-latency/network/README.md), explicit
 [persistence paths](../cft-commit-latency/persistence/README.md) and
 [arrival-driven replication](../cft-commit-latency/commit/README.md) to address
 those questions, including message sizes, batching and ENA counters. Its finite

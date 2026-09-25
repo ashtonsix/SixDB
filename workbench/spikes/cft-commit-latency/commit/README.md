@@ -11,6 +11,14 @@ connects these measurements to storage and placement choices; the
 The [cliff follow-up](cliff.md) extends the observation window and tests live
 file preparation and adaptive controls.
 
+These September 14 experiments time **leader-observed durable acknowledgments**.
+The newer [witness branch-start model](../network/README.md#optimize-the-first-durable-followers-branch-start)
+first writes on the leader, then sends, and lets a follower propagate after its
+own write without waiting for a return message. The two boundaries should not
+share a latency label or inherit each other's percentiles. The
+[network selection controls](../network/selection.md) also show that host and
+flow choice belong in interpreting the older placement/transport comparisons.
+
 ## Follow one record
 
 The leader starts its local write and both replications together. Each follower

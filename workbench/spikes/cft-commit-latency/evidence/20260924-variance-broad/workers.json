@@ -1,0 +1,657 @@
+{
+  "bucket": "calico-fleet-artifacts",
+  "format": 1,
+  "group": "20260924T231745Z-7f8ca200",
+  "members": {
+    "use1-az1a": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 7309608,
+        "files": 460,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/9c6991a5403294a7866a0ccdfb5e2f29a524e7028760d0bd49b33cecb2f919c3.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "9c6991a5403294a7866a0ccdfb5e2f29a524e7028760d0bd49b33cecb2f919c3",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/9c6991a5403294a7866a0ccdfb5e2f29a524e7028760d0bd49b33cecb2f919c3.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790292473.5997117
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-0c0d6c3de82fbb602",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260924T231750Z-961fa7dd",
+      "phase": "submitted",
+      "resource_observed_at": 1790292546.4644504,
+      "results": "/home/ashtonsix/sixdb/build/workers/20260924T231750Z-961fa7dd/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790292460.4193518,
+        "instance_id": "i-0c0d6c3de82fbb602",
+        "job_id": "20260924T231750Z-961fa7dd",
+        "max_end": 1790295538.0221908,
+        "profile": "bc1adfee41c3500b0d9bf22d1f7b370fdc3fd91b98fba1f36a3d023fda445a84",
+        "reuse_count": 0,
+        "revision": "f3c9af2a26464e6a97ddfd65acca1042",
+        "state": "retiring",
+        "subnet_id": "subnet-800010e7",
+        "worker_id": "20260924T231750Z-961fa7dd"
+      },
+      "source_commit": "546eb8719828fe89617e6f79b92a629e9ebac7ce",
+      "source_sha256": "13700cf36aca3c6899da5933301c9977e3064849520df569786aeb856c732753",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260924T231750Z-961fa7dd",
+      "worker": {
+        "id": "20260924T231750Z-961fa7dd",
+        "instance_id": "i-0c0d6c3de82fbb602",
+        "max_end": 1790295538.0221908,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "use1-az1b": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 7297981,
+        "files": 460,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/41f59c6cd9f15e4c7be36693683522a0f99c258f2b185ce57e7a87a3cd8b86e5.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "41f59c6cd9f15e4c7be36693683522a0f99c258f2b185ce57e7a87a3cd8b86e5",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/41f59c6cd9f15e4c7be36693683522a0f99c258f2b185ce57e7a87a3cd8b86e5.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790292491.750843
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-08ce65de254ce259b",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260924T231755Z-fdb71d03",
+      "phase": "submitted",
+      "resource_observed_at": 1790292546.4270623,
+      "results": "/home/ashtonsix/sixdb/build/workers/20260924T231755Z-fdb71d03/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790292460.942437,
+        "instance_id": "i-08ce65de254ce259b",
+        "job_id": "20260924T231755Z-fdb71d03",
+        "max_end": 1790295556.985637,
+        "profile": "bc1adfee41c3500b0d9bf22d1f7b370fdc3fd91b98fba1f36a3d023fda445a84",
+        "reuse_count": 0,
+        "revision": "84af45af8b43421b8879a351c3bf479c",
+        "state": "retiring",
+        "subnet_id": "subnet-800010e7",
+        "worker_id": "20260924T231755Z-fdb71d03"
+      },
+      "source_commit": "546eb8719828fe89617e6f79b92a629e9ebac7ce",
+      "source_sha256": "13700cf36aca3c6899da5933301c9977e3064849520df569786aeb856c732753",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260924T231755Z-fdb71d03",
+      "worker": {
+        "id": "20260924T231755Z-fdb71d03",
+        "instance_id": "i-08ce65de254ce259b",
+        "max_end": 1790295556.985637,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "use1-az2a": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 7285679,
+        "files": 460,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/a903495573989273cae2dc05a13199c03f57985236e6a7170b27d9ffbeb35609.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "a903495573989273cae2dc05a13199c03f57985236e6a7170b27d9ffbeb35609",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/a903495573989273cae2dc05a13199c03f57985236e6a7170b27d9ffbeb35609.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790292481.59268
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-06a2da1188cba19bb",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260924T231800Z-03459648",
+      "phase": "submitted",
+      "resource_observed_at": 1790292546.4439347,
+      "results": "/home/ashtonsix/sixdb/build/workers/20260924T231800Z-03459648/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790292460.5468256,
+        "instance_id": "i-06a2da1188cba19bb",
+        "job_id": "20260924T231800Z-03459648",
+        "max_end": 1790295577.8769927,
+        "profile": "bc1adfee41c3500b0d9bf22d1f7b370fdc3fd91b98fba1f36a3d023fda445a84",
+        "reuse_count": 0,
+        "revision": "973ca3c61c0045e69a4faba013b9b950",
+        "state": "retiring",
+        "subnet_id": "subnet-d1aeb1ff",
+        "worker_id": "20260924T231800Z-03459648"
+      },
+      "source_commit": "546eb8719828fe89617e6f79b92a629e9ebac7ce",
+      "source_sha256": "13700cf36aca3c6899da5933301c9977e3064849520df569786aeb856c732753",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260924T231800Z-03459648",
+      "worker": {
+        "id": "20260924T231800Z-03459648",
+        "instance_id": "i-06a2da1188cba19bb",
+        "max_end": 1790295577.8769927,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "use1-az2b": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 7253728,
+        "files": 460,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/f90eae1a8543bccad2ce0164efbdf244c3e9f7cdf50becc838a2fe9cb62bb059.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "f90eae1a8543bccad2ce0164efbdf244c3e9f7cdf50becc838a2fe9cb62bb059",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/f90eae1a8543bccad2ce0164efbdf244c3e9f7cdf50becc838a2fe9cb62bb059.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790292486.5612252
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-06b899cd71280ac7b",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260924T231805Z-2d4cca8e",
+      "phase": "submitted",
+      "resource_observed_at": 1790292546.4241893,
+      "results": "/home/ashtonsix/sixdb/build/workers/20260924T231805Z-2d4cca8e/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790292460.2193427,
+        "instance_id": "i-06b899cd71280ac7b",
+        "job_id": "20260924T231805Z-2d4cca8e",
+        "max_end": 1790295599.342712,
+        "profile": "bc1adfee41c3500b0d9bf22d1f7b370fdc3fd91b98fba1f36a3d023fda445a84",
+        "reuse_count": 0,
+        "revision": "5a23785eecad4804b3670b7536213467",
+        "state": "retiring",
+        "subnet_id": "subnet-d1aeb1ff",
+        "worker_id": "20260924T231805Z-2d4cca8e"
+      },
+      "source_commit": "546eb8719828fe89617e6f79b92a629e9ebac7ce",
+      "source_sha256": "13700cf36aca3c6899da5933301c9977e3064849520df569786aeb856c732753",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260924T231805Z-2d4cca8e",
+      "worker": {
+        "id": "20260924T231805Z-2d4cca8e",
+        "instance_id": "i-06b899cd71280ac7b",
+        "max_end": 1790295599.342712,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "use1-az3a": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 7006165,
+        "files": 460,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/9f718b77887f0d209a513957aa16b33813d28a10a4b4022e1430b961bd2296eb.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "9f718b77887f0d209a513957aa16b33813d28a10a4b4022e1430b961bd2296eb",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/9f718b77887f0d209a513957aa16b33813d28a10a4b4022e1430b961bd2296eb.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790292489.2248282
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-0be33b91cf1f2d392",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260924T231810Z-02fb5aea",
+      "phase": "submitted",
+      "resource_observed_at": 1790292546.4595,
+      "results": "/home/ashtonsix/sixdb/build/workers/20260924T231810Z-02fb5aea/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790292460.5945873,
+        "instance_id": "i-0be33b91cf1f2d392",
+        "job_id": "20260924T231810Z-02fb5aea",
+        "max_end": 1790295622.0588562,
+        "profile": "72da8153c4aec6c0cc99fc2344359220bd4229807679a2ffa06273ff5b9e1720",
+        "reuse_count": 0,
+        "revision": "4c719072ca0f407d9db84d5c7b8a878a",
+        "state": "retiring",
+        "subnet_id": "subnet-a696b298",
+        "worker_id": "20260924T231810Z-02fb5aea"
+      },
+      "source_commit": "546eb8719828fe89617e6f79b92a629e9ebac7ce",
+      "source_sha256": "13700cf36aca3c6899da5933301c9977e3064849520df569786aeb856c732753",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260924T231810Z-02fb5aea",
+      "worker": {
+        "id": "20260924T231810Z-02fb5aea",
+        "instance_id": "i-0be33b91cf1f2d392",
+        "max_end": 1790295622.0588562,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "use1-az3b": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 6994707,
+        "files": 460,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/699d134093976ee406c6fdd85873a00d31426d2212870f50d0c84b169d8dc9b3.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "699d134093976ee406c6fdd85873a00d31426d2212870f50d0c84b169d8dc9b3",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/699d134093976ee406c6fdd85873a00d31426d2212870f50d0c84b169d8dc9b3.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790292484.0073283
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-00d6fc85a94a2228b",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260924T231815Z-07cb2e1e",
+      "phase": "submitted",
+      "resource_observed_at": 1790292546.4404976,
+      "results": "/home/ashtonsix/sixdb/build/workers/20260924T231815Z-07cb2e1e/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790292460.9944172,
+        "instance_id": "i-00d6fc85a94a2228b",
+        "job_id": "20260924T231815Z-07cb2e1e",
+        "max_end": 1790295641.2683399,
+        "profile": "72da8153c4aec6c0cc99fc2344359220bd4229807679a2ffa06273ff5b9e1720",
+        "reuse_count": 0,
+        "revision": "6403298a7b0d46ac9992f70372ce4dd8",
+        "state": "retiring",
+        "subnet_id": "subnet-a696b298",
+        "worker_id": "20260924T231815Z-07cb2e1e"
+      },
+      "source_commit": "546eb8719828fe89617e6f79b92a629e9ebac7ce",
+      "source_sha256": "13700cf36aca3c6899da5933301c9977e3064849520df569786aeb856c732753",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260924T231815Z-07cb2e1e",
+      "worker": {
+        "id": "20260924T231815Z-07cb2e1e",
+        "instance_id": "i-00d6fc85a94a2228b",
+        "max_end": 1790295641.2683399,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "use1-az4a": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 7201054,
+        "files": 460,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/8e6037fcfb8974e0bc709db74c6a3468f08313a078b33afcc9c91eb92d0a9e52.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "8e6037fcfb8974e0bc709db74c6a3468f08313a078b33afcc9c91eb92d0a9e52",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/8e6037fcfb8974e0bc709db74c6a3468f08313a078b33afcc9c91eb92d0a9e52.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790292479.002246
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-0572de255b04dbc6e",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260924T231820Z-9a562e41",
+      "phase": "submitted",
+      "resource_observed_at": 1790292546.4372025,
+      "results": "/home/ashtonsix/sixdb/build/workers/20260924T231820Z-9a562e41/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790292460.4940524,
+        "instance_id": "i-0572de255b04dbc6e",
+        "job_id": "20260924T231820Z-9a562e41",
+        "max_end": 1790295661.557667,
+        "profile": "bc1adfee41c3500b0d9bf22d1f7b370fdc3fd91b98fba1f36a3d023fda445a84",
+        "reuse_count": 0,
+        "revision": "af13f01b13af408aa60c641df78fa9eb",
+        "state": "retiring",
+        "subnet_id": "subnet-75288838",
+        "worker_id": "20260924T231820Z-9a562e41"
+      },
+      "source_commit": "546eb8719828fe89617e6f79b92a629e9ebac7ce",
+      "source_sha256": "13700cf36aca3c6899da5933301c9977e3064849520df569786aeb856c732753",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260924T231820Z-9a562e41",
+      "worker": {
+        "id": "20260924T231820Z-9a562e41",
+        "instance_id": "i-0572de255b04dbc6e",
+        "max_end": 1790295661.557667,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "use1-az4b": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 7184935,
+        "files": 460,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/53fc557c6176160bc21e078a1c17eb5688d833d8d95972495fc879174e58ba47.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "53fc557c6176160bc21e078a1c17eb5688d833d8d95972495fc879174e58ba47",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/53fc557c6176160bc21e078a1c17eb5688d833d8d95972495fc879174e58ba47.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790292476.375929
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-062c7dd6324dd67fd",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260924T231825Z-49d282d2",
+      "phase": "submitted",
+      "resource_observed_at": 1790292546.4009082,
+      "results": "/home/ashtonsix/sixdb/build/workers/20260924T231825Z-49d282d2/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790292460.4760113,
+        "instance_id": "i-062c7dd6324dd67fd",
+        "job_id": "20260924T231825Z-49d282d2",
+        "max_end": 1790295685.2185984,
+        "profile": "bc1adfee41c3500b0d9bf22d1f7b370fdc3fd91b98fba1f36a3d023fda445a84",
+        "reuse_count": 0,
+        "revision": "1520ae68a6ba4f4f849d54ab7f9e03c2",
+        "state": "retiring",
+        "subnet_id": "subnet-75288838",
+        "worker_id": "20260924T231825Z-49d282d2"
+      },
+      "source_commit": "546eb8719828fe89617e6f79b92a629e9ebac7ce",
+      "source_sha256": "13700cf36aca3c6899da5933301c9977e3064849520df569786aeb856c732753",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260924T231825Z-49d282d2",
+      "worker": {
+        "id": "20260924T231825Z-49d282d2",
+        "instance_id": "i-062c7dd6324dd67fd",
+        "max_end": 1790295685.2185984,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "use1-az5a": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 7172514,
+        "files": 460,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/c4c7a9ec64ba7472bf1ea4996b716385ce619f2c4301cf9d324cd68c75bb9f13.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "c4c7a9ec64ba7472bf1ea4996b716385ce619f2c4301cf9d324cd68c75bb9f13",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/c4c7a9ec64ba7472bf1ea4996b716385ce619f2c4301cf9d324cd68c75bb9f13.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790292494.227068
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-00dcbca05db931bf6",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260924T231830Z-d366c52c",
+      "phase": "submitted",
+      "resource_observed_at": 1790292553.635771,
+      "results": "/home/ashtonsix/sixdb/build/workers/20260924T231830Z-d366c52c/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790292459.885579,
+        "instance_id": "i-00dcbca05db931bf6",
+        "job_id": "20260924T231830Z-d366c52c",
+        "max_end": 1790295711.2213547,
+        "profile": "bc1adfee41c3500b0d9bf22d1f7b370fdc3fd91b98fba1f36a3d023fda445a84",
+        "reuse_count": 0,
+        "revision": "936b987d59704862bcdf11d038395127",
+        "state": "retiring",
+        "subnet_id": "subnet-0912d807",
+        "worker_id": "20260924T231830Z-d366c52c"
+      },
+      "source_commit": "546eb8719828fe89617e6f79b92a629e9ebac7ce",
+      "source_sha256": "13700cf36aca3c6899da5933301c9977e3064849520df569786aeb856c732753",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260924T231830Z-d366c52c",
+      "worker": {
+        "id": "20260924T231830Z-d366c52c",
+        "instance_id": "i-00dcbca05db931bf6",
+        "max_end": 1790295711.2213547,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "use1-az5b": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 7140027,
+        "files": 460,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/fc1f4704f36a26652e6e645892416f03b5d8656e56bb5238929856d89ef65598.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "fc1f4704f36a26652e6e645892416f03b5d8656e56bb5238929856d89ef65598",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/fc1f4704f36a26652e6e645892416f03b5d8656e56bb5238929856d89ef65598.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790292496.769053
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-0118bd721cd2fe1a5",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260924T231835Z-4cf03b32",
+      "phase": "submitted",
+      "resource_observed_at": 1790292553.5994356,
+      "results": "/home/ashtonsix/sixdb/build/workers/20260924T231835Z-4cf03b32/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790292460.0191514,
+        "instance_id": "i-0118bd721cd2fe1a5",
+        "job_id": "20260924T231835Z-4cf03b32",
+        "max_end": 1790295737.350087,
+        "profile": "bc1adfee41c3500b0d9bf22d1f7b370fdc3fd91b98fba1f36a3d023fda445a84",
+        "reuse_count": 0,
+        "revision": "687a9ae3d6f54d7e926093e613bc3027",
+        "state": "retiring",
+        "subnet_id": "subnet-0912d807",
+        "worker_id": "20260924T231835Z-4cf03b32"
+      },
+      "source_commit": "546eb8719828fe89617e6f79b92a629e9ebac7ce",
+      "source_sha256": "13700cf36aca3c6899da5933301c9977e3064849520df569786aeb856c732753",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260924T231835Z-4cf03b32",
+      "worker": {
+        "id": "20260924T231835Z-4cf03b32",
+        "instance_id": "i-0118bd721cd2fe1a5",
+        "max_end": 1790295737.350087,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "use1-az6a": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 7106584,
+        "files": 460,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/ffbcff7ce96cb473222280186874857cbaa44e1234d274fffe0de2a10bad4b48.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "ffbcff7ce96cb473222280186874857cbaa44e1234d274fffe0de2a10bad4b48",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/ffbcff7ce96cb473222280186874857cbaa44e1234d274fffe0de2a10bad4b48.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790292499.4241316
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-0637ad39e38c0b801",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260924T231840Z-92f51f5b",
+      "phase": "submitted",
+      "resource_observed_at": 1790292553.6597962,
+      "results": "/home/ashtonsix/sixdb/build/workers/20260924T231840Z-92f51f5b/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790292460.5166025,
+        "instance_id": "i-0637ad39e38c0b801",
+        "job_id": "20260924T231840Z-92f51f5b",
+        "max_end": 1790295764.319694,
+        "profile": "bc1adfee41c3500b0d9bf22d1f7b370fdc3fd91b98fba1f36a3d023fda445a84",
+        "reuse_count": 0,
+        "revision": "f091b7fb620c43ef99544631d570371c",
+        "state": "retiring",
+        "subnet_id": "subnet-c29a879e",
+        "worker_id": "20260924T231840Z-92f51f5b"
+      },
+      "source_commit": "546eb8719828fe89617e6f79b92a629e9ebac7ce",
+      "source_sha256": "13700cf36aca3c6899da5933301c9977e3064849520df569786aeb856c732753",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260924T231840Z-92f51f5b",
+      "worker": {
+        "id": "20260924T231840Z-92f51f5b",
+        "instance_id": "i-0637ad39e38c0b801",
+        "max_end": 1790295764.319694,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "use1-az6b": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 7099301,
+        "files": 460,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/16ba4ddfcd2db1c8c1cf00202fa7f0765517ea64a06021ee40da80d46daa287c.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "16ba4ddfcd2db1c8c1cf00202fa7f0765517ea64a06021ee40da80d46daa287c",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/16ba4ddfcd2db1c8c1cf00202fa7f0765517ea64a06021ee40da80d46daa287c.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790292501.9582396
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-0282942b4b3f0e9e6",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260924T231845Z-14717909",
+      "phase": "submitted",
+      "resource_observed_at": 1790292553.4789267,
+      "results": "/home/ashtonsix/sixdb/build/workers/20260924T231845Z-14717909/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790292460.4355378,
+        "instance_id": "i-0282942b4b3f0e9e6",
+        "job_id": "20260924T231845Z-14717909",
+        "max_end": 1790295792.6712859,
+        "profile": "bc1adfee41c3500b0d9bf22d1f7b370fdc3fd91b98fba1f36a3d023fda445a84",
+        "reuse_count": 0,
+        "revision": "7707ee4afd06421f9a6ad7b51ef22012",
+        "state": "retiring",
+        "subnet_id": "subnet-c29a879e",
+        "worker_id": "20260924T231845Z-14717909"
+      },
+      "source_commit": "546eb8719828fe89617e6f79b92a629e9ebac7ce",
+      "source_sha256": "13700cf36aca3c6899da5933301c9977e3064849520df569786aeb856c732753",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260924T231845Z-14717909",
+      "worker": {
+        "id": "20260924T231845Z-14717909",
+        "instance_id": "i-0282942b4b3f0e9e6",
+        "max_end": 1790295792.6712859,
+        "reuse_count": 0,
+        "reused": false
+      }
+    }
+  },
+  "network": {
+    "icmp": false,
+    "id": "sg-058e363c6249c6169",
+    "name": "sixdb-scope-726026ea2a98778d4532832c",
+    "scope": "cft-variance-20260924",
+    "tcp_ports": [
+      [
+        43400,
+        43400
+      ]
+    ],
+    "udp_ports": [
+      [
+        48000,
+        48015
+      ],
+      [
+        48100,
+        48115
+      ]
+    ],
+    "vpc_id": "vpc-5e2d0124"
+  },
+  "network_removed": true,
+  "region": "us-east-1",
+  "uri": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260924T231745Z-7f8ca200"
+}

@@ -165,8 +165,8 @@ baselines. The loopback numbers visibly include runtime/scheduler placement;
 HTTPS fields are cumulative timestamps for DNS/connect/TLS/first byte, not
 independent stage durations. This campaign does **not** establish peer network
 bandwidth, fabric RTT, p99 tails, cross-AZ cost or sustained ENA/credit limits.
-The [CFT network findings](../cft-commit-latency/az-findings.md) supply controlled
-paired-host measurements, and its [replicated pipeline](../cft-commit-latency/commit/throughput.md)
+The [CFT network study](../cft-commit-latency/network/README.md) separates host,
+direction and flow effects from clock uncertainty; its [replicated pipeline](../cft-commit-latency/commit/throughput.md)
 shows why an apparently healthy short screen can fail repeated queue and tail
 checks. Its [persistence comparison](../cft-commit-latency/persistence/FINDINGS.md)
 also separates log preparation from write completion. Those paths and timing

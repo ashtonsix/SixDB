@@ -1,28 +1,60 @@
-# Durable commit latency and operating limits
+# Findings: network selection, durable latency and operating limits
 
-**Preparing the log and choosing its replica placement made sub-millisecond
-commits possible. Longer runs expose limits that short throughput screens miss.**
-The original ENA Express choice near 130,000 commits/s had **0.923 ms p99.9**;
-a later 60-second raw-log control had **2.053 ms**. The
-[cliff follow-up](commit/cliff.md) identifies storage throughput limiting on
-small instances and measures real background log preparation on larger hosts.
-Preparation pauses improved tails in both paired comparisons, but the tested
-controllers did not establish sub-millisecond service at that offered rate.
+**A fast network edge is a property to discover on actual hosts and flows.**
+Changing just one UDP port selected repeatable latency classes without replacing
+machines. This revises the original interpretation of AZ placement and supports
+cheap screening for an adaptive witness assignment. It does not establish a
+permanent AZ ranking, IID rerolls or a certified 110 µs one-way edge.
 
-The [study overview](README.md) maps the supporting guides. This report follows
-the decision from the low-load path through the original throughput choices
-to the longer-run findings and their implications. Measurements are from
-14 September 2026 in AWS us-east-1.
+**Prepared logs made sub-millisecond leader-observed commits possible; longer
+runs exposed limits missed by short screens.** The original ENA Express choice
+near 130,000 commits/s had **0.923 ms p99.9**; a later 60-second raw-log control
+had **2.053 ms**. The [cliff follow-up](commit/cliff.md) identifies storage
+throughput limiting on small instances and measures real background log
+preparation on larger hosts. The tested controllers did not establish
+sub-millisecond service at that offered rate.
+
+The [study overview](README.md) maps the supporting guides. The original TCP,
+storage and durable-pipeline measurements are from **14 September 2026**;
+the clock-calibrated UDP and fixed-tuple comparisons are from **24 September**.
+Both use AWS us-east-1, with different hosts, protocols and timestamp boundaries.
+
+## Select the hosts and flow, then validate the outgoing edge
+
+On unchanged az2b/az6a hosts, changing one endpoint's UDP port produced four RTT
+classes spanning **266.2 µs**; each class recurred over five shuffled rounds.
+These offset-independent comparisons identify a tuple-sensitive mechanism,
+without identifying its physical cause. Reopening the same tuple generally
+preserved its class during the test; changing a port was the effective reroll.
+
+Host choice still matters. The [selection findings](network/selection.md)
+compare ports on fixed machines, then select host/port candidates for all thirty
+AZ directions using held-out outgoing requests. Promising pairs occurred on
+both az2–az4 and az1–az5. Their clock bounds cannot certify a ≤110 µs outgoing
+edge or resolve which endpoint has a few-microsecond advantage. Opposite
+selected directions may use different tuples, so subtracting their winners
+would not measure asymmetry.
+
+The supported operational hypothesis is to **screen host pairs, sample ports,
+validate separately, retain the tuple, and recheck**. The probe budget is small,
+but the eventual UDP/QUIC transport and real PLP/fanout path need validation.
+[Evidence and accounting](evidence.md#network-cohorts) records each cohort,
+traffic, scoped cost models and verified cleanup, separately from actual billing.
 
 ## Know which latency is being measured
 
-A record commits after the leader and one follower have made it durable. Local
-persistence and both replications overlap; the slower third replica can finish
-after commit. The [commit path](commit/README.md) explains how durable prefixes
-preserve order and how a lagging replica can still delay later admissions.
+The current [witness design's target](network/README.md#optimize-the-first-durable-followers-branch-start)
+is the first follower's branch start after a leader write, outgoing message and
+follower write. There is no return leg in that model. In the older durable
+experiments, local persistence and both replications overlap, and the leader
+waits for a durable acknowledgment. The [commit path](commit/README.md) explains
+that measured boundary, durable prefixes and how a lagging replica can still
+delay later admissions.
 
 | Experiment | Timer and arrival boundary | What it establishes |
 | --- | --- | --- |
+| Calibrated UDP probes | Kernel software TX→RX for each leg; peer turnaround removed from RTT | Host/tuple effects and conditional directional estimates, without durable writes or joint fanout |
+| First durable follower model | Leader write, then first outgoing-message-plus-follower-write completion | Design boundary only; ~140 µs with assumed 15/110/15 µs costs is not a measured p99 |
 | One outstanding record | Payload prepared before timing; both followers finish before the next record starts | The joint durable path with a comparable starting state |
 | Arrival-driven pipeline | Scheduled arrival to commit, including preparation, batch formation and queueing | Latency at an offered rate, including waiting before admission |
 
@@ -34,7 +66,7 @@ passes. Pass ranges show variation that pooling can conceal.
 The 1 ms reference is a budget for this commit path, excluding client RPC and
 failure detection or election time.
 
-## Remove avoidable write and placement cost first
+## Prepare the log and interpret the measured placements
 
 The storage comparison uses host-local NVMe instance store and gp3, an AWS
 Elastic Block Store (EBS) volume type. An initialized log region has already been
@@ -50,7 +82,10 @@ three passes on i8g.large.
 
 “Good” and “bad” identify the two measured placements. The good leader is in
 `use1-az4`, with followers in az2 and az1; the bad leader is in az6, with
-followers in az4 and az2. These labels are not permanent AZ properties.
+followers in az4 and az2. These labels identify the tested host/connection
+configurations. The later tuple controls show why neither the labels nor the
+entire latency difference
+can be attributed to AZ identity alone.
 Initialized NVMe uses direct `O_DSYNC` writes on tuned ordered ext4; growing gp3
 uses buffered writes followed by `fdatasync`, with a different MTU. The complete
 policy comparison changes several things, so its entire gain cannot be assigned
@@ -62,13 +97,14 @@ rows and the narrower comparisons:
   17.4 µs; preallocation alone gave 54.6 µs. A real log must pay that preparation
   ahead of use. [Persistence findings](persistence/FINDINGS.md) explain the paths.
 - **Choose the leader and its fallback together.** The
-  [network study](az-findings.md) identifies fast links and slower alternatives.
-  Actual commit tests show what remains when the normally faster follower is
-  already known unavailable. Healthy latency alone does not price that fallback.
+  [network study](network/README.md) supports screening actual outgoing edges.
+  The older joint commit tests show what remains when the normally faster
+  follower is already known unavailable. Healthy latency alone does not price that fallback.
 - **Keep nearby alternatives in view.** Prepared raw NVMe did not improve the
   good one-record median over a prepared file. Initialized io2 was a promising
-  EBS alternative in a shorter screen. UDP helped the larger 64 KiB record more
-  than the 4 KiB record. Each conclusion has its own population and controls in
+  EBS alternative in a shorter screen. The UDP policy had a larger advantage
+  at 64 KiB than at 4 KiB; flow choice was not controlled across transports.
+  Each conclusion has its own population and controls in
   the [one-record comparison](commit/latency.md).
 
 ## Read the original short-run choices
@@ -161,7 +197,7 @@ placement. Its findings show why CPU identity or NUMA-node identity alone can
 miss a relevant cost. Neither spike turns a local optimum into a universal
 tuning constant; the consuming workload and its actual environment matter.
 
-All measured paths request [power-safe completion](persistence/README.md#what-makes-completion-durable).
+The durable-write experiments request [power-safe completion](persistence/README.md#what-makes-completion-durable).
 Readback checks content and ordering; it is not a physical power-cut test.
 The [evidence guide](evidence.md) collects exact cases, populations, captured
 sources, recovery commands and independent validation receipts.

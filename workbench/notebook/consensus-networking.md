@@ -27,7 +27,8 @@ Useful lessons from the discarded model:
   latency and throughput. Completing a selected subset can hide exhaustion.
 
 Promising mechanisms to investigate in the eventual protocol include overlap
-between propagation and durable writes, choosing quorum paths and AZ placement,
+between propagation and durable writes, choosing quorum paths, hosts and transport
+flows across AZs,
 distributing forwarding work across hosts or chunk routes, scheduling competing
 commits, and adapting to uncertain capacity or missing progress. Establish
 which work may legally overlap before optimising it. These are questions,

@@ -9,16 +9,97 @@ sources; compact exports have separate immutable recovery references.
 
 | Study | Cases and repetitions | Context |
 | --- | --- | --- |
-| Network: all 15 pairs and 20 triples | [AZ evidence guide](evidence/20260914/README.md) | Six i4i.xlarge workers, two MTUs, three passes; network-only quorum models |
+| Original TCP network cohort and modeled triples | [AZ evidence guide](evidence/20260914/README.md) | Six i4i.xlarge workers, two MTUs, three passes; network-only quorum models |
+| One-way clocks and host/port selection | [Network cohorts below](#network-cohorts) | Four September 24 UDP cohorts; complete candidates, uncertainty and held-out selections |
 | Persistence | [All paths](evidence/20260914-durable/persistence.csv), [passes](evidence/20260914-durable/persistence-passes.csv) | [Devices and settings](evidence/20260914-durable/devices.json); screen and longer tails are labeled separately |
 | D3 completion diagnostic | [Timings](evidence/20260914-durable/d3-diagnostic.csv), [passes](evidence/20260914-durable/d3-diagnostic-passes.csv), [issued requests](evidence/20260914-durable/d3-request-traces.csv) | Timing runs are separate from traced runs |
 | Joint durable commit | [Configurations](evidence/20260914-durable/commits.csv), [passes](evidence/20260914-durable/commit-passes.csv) | [Nodes and storage](evidence/20260914-durable/commit-nodes.json); healthy and known-follower-absent cases are separate |
 | Cliff and live preparation | [Follow-up evidence guide](evidence/20260914-cliff/README.md) | Longer replication runs, local-only storage controls and real background file preparation |
 
+## Network cohorts
+
+The [network guide](network/README.md) is the current interpretation; cohort
+reports preserve distinct populations and capture conditions. Original TCP RTT,
+calibrated one-way delay and joint durable commit use different timer boundaries.
+A new-host rerun is a new observation, not a recovery of an earlier cohort.
+
+| September 24 cohort | Completed exchanges, including same-AZ controls | Cross-AZ IPv4+UDP probe bytes | Findings / immutable evidence |
+| --- | ---: | ---: | --- |
+| Initial one-way; 12 hosts | 264,000 | 44.1600 MB | [Report](network/studies/oneway-initial.md) / [export and recovery](evidence/20260924-oneway/README.md) |
+| Fresh one-way confirmation; 12 hosts | 132,000 | 22.0800 MB | [Report](network/studies/oneway-confirmation.md) / [export and recovery](evidence/20260924-oneway-confirmation/README.md) |
+| Dense fixed tuples; 8 hosts in az2/az4 | 102,400 | 18.8416 MB | [Report](network/studies/tuple-dense.md) / [export and recovery](evidence/20260924-variance-dense/README.md) |
+| Broad one-port tuples; 12 hosts across all six AZs | 105,600 | 17.6640 MB | [Selection findings](network/selection.md) / [export and recovery](evidence/20260924-variance-broad/README.md) |
+| Total | **604,000** | **102.7456 MB** | All **44 distinct instances terminated** |
+
+MB here means 1,000,000 bytes. A 64-byte payload plus IPv4/UDP headers is 92
+bytes per datagram, or 184 per complete echo. Probe-byte accounting includes
+warmup but excludes same-AZ controls from the cross-AZ total. No missing or
+duplicate exchanges were observed. This was a paced latency study, not a
+throughput screen.
+
+The four `campaign.json` files model approximately **$1.22 EC2 compute through
+archive completion**, including reused preflight-host lifetimes, and
+**$0.0021 cross-AZ probe transfer** at the captured aggregate two-sided rate of
+$0.02/GB. These are scoped models, not observed billing. Shutdown lag, EBS,
+public IPv4, S3, control traffic, encapsulation and tax are excluded; the user's
+reported ~$40 for earlier spike traffic is outside this follow-up's accounting.
+The corresponding `resources.json` files retain cleanup receipts.
+
+Each Git selection contains `workers.json` (raw archives), `campaign.json`
+(capture/analysis identities, timing and cost scope), and `provenance.json`
+(hashes of the files retained here). `artifact.json` identifies the original
+archived export, including the detail omitted from Git. `clocks.csv` and
+`checks.json` stay local; the full 50/100/1000 ppm `sensitivity.csv` is archived.
+Historical gaps are never replaced by references a corrected sampler would
+have collected.
+
+The selection exports additionally retain the full physical tuple/grid design,
+every host/flow/round, and unselected candidates. `selected-host-pairs-*` evaluates
+ports on fixed machines against flow 0; `selected-az-directions-*` chooses hosts
+and ports jointly. Broad-cohort `request` and `all-legs` files are separate
+rankings. Their clock intervals are conditional measurement bounds, not
+confidence intervals; held-out packet data is excluded from ranking, while
+independent clock fits use the full capture. These are offline holdouts.
+
+Git keeps all candidate scores and losing comparisons, selected summaries,
+measured host/clock context, source/worker references, cost and cleanup receipts,
+and PNG figures. Detailed block/round and boundary tables, full sensitivity
+sweeps, repeated pricing dumps and duplicate SVG renderings live in the existing
+S3 exports. The four evidence guides distinguish the two sets and give exact
+recovery/plot commands. Scope the selection by the finding, not by whether a
+file happens to be CSV or JSON.
+
+For ordinary inspection or figure reproduction, fetch the small export into a
+fresh ignored directory, for example:
+
+```sh
+python3 workbench/tools/artifacts.py fetch \
+  workbench/spikes/cft-commit-latency/evidence/20260924-variance-dense/artifact.json \
+  build/recovered/20260924-variance-dense
+python3 workbench/spikes/cft-commit-latency/variance/plot.py \
+  build/recovered/20260924-variance-dense
+```
+
+Plotting requires Matplotlib 3.10.8. Exact-member S3 recovery of all 98 originally
+selected data/figure members was verified before reducing the Git selection;
+all five report figures were regenerated from those recovered inputs. The
+archive object references and captured-source identities are unchanged. Working
+recovery copies belong in ignored `build/`, not as untracked evidence siblings.
+
+For deeper raw reanalysis, use [oneway/recover.py](oneway/recover.py) for the
+first two cohorts and [variance/recover.py](variance/recover.py) for fixed tuples.
+The evidence guides give their commands and exact output scope; these do not
+automatically rebuild every report and resource receipt. The dense cohort's
+`recovery-verified.json` records full raw recovery and byte-identical named
+tables. The initial cohort's receipt is narrower: exact calibration and identity
+members from the PHC-outage host. Broad raw archives were collected and verified,
+but separate full broad raw reconstruction is not claimed. Recovery launches
+no workers and generates no cross-AZ probes.
+
 ## Read the fields and distributions
 
-Numerical columns ending `_us` are **microseconds**; `_ms` columns and the main
-report use **milliseconds**. Raw timestamps ending `_ns` are nanoseconds. Network echo sizes
+Numerical columns ending `_us` are **microseconds**; `_ms` columns and the durable-commit
+tables use **milliseconds**. The network selection reports use microseconds. Raw timestamps ending `_ns` are nanoseconds. Network echo sizes
 describe both the request and the full-size reply; durable replication uses a
 record and a small acknowledgment. In the one-record CSVs, `remote1_*` and
 `remote2_*` are follower write durations, not leader-observed acknowledgment

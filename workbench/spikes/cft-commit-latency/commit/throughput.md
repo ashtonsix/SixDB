@@ -175,6 +175,12 @@ each percentile and its pass range. All observed tails fit in its 0.3–1.25 ms
 budget view. The sparse sampling remains visible; there is no fitted curve
 through the gap.
 
+The later [small-message tuple study](../network/selection.md) establishes a
+different effect: large latency changes across UDP ports on unchanged hosts.
+It does not measure saturation or remove the bandwidth constraints below.
+Conversely, the throughput cohorts do not isolate port selection as the cause
+of their latency differences; their flow choices were not crossed over.
+
 ### What the network ceiling explains
 
 The larger platform has **25 Gbps baseline and peak instance bandwidth**, removing

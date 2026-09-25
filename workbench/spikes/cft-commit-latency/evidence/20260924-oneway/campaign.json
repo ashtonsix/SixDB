@@ -1,0 +1,17 @@
+{
+  "measured_start_utc": "2026-09-24T22:25:00.098364+00:00",
+  "measured_end_utc": "2026-09-24T22:28:47.389473+00:00",
+  "source_sha256": "d032c4e1f1fe8d4b4493b39db742296c144e3a3f171b3bf1b31ebeddfa977189",
+  "compute_through_completion_usd": 0.4678231954511934,
+  "cross_az_probe_ipv4_bytes": 44160000,
+  "modeled_cross_az_probe_usd": 0.0008832,
+  "cost_limits": "Compute includes reused preflight lifetimes through archive completion, but excludes shutdown lag, EBS, public IPv4, S3 and tax. Transfer is a byte/rate model, not a bill.",
+  "analysis_sources": {
+    "analyze.py": "4656bd6adab4af9f3bcd229e044ce6c6997d419fce2ae9424960d757ad8444ec",
+    "check.py": "1ad54794438965ab15c9e8176e497c5c9f333cf1374237945c607dba5ef0ccb6",
+    "recover.py": "a387054d0412666b734a12d8e3f62533ca3a97e5fcf1e5ecf0eeec491f215dc4",
+    "plot.py": "f4464f82347976bad78b1e9d457256e82b8c816cec4ad482a8b318cd65257456",
+    "assemble.py": "02d2b933f9e45622ed84be2cb72a3fb8099a8dd9b82def5574cb6ff811ce1fd8",
+    "edges.py": "c85803b39f9a3aa688ae9ceeac7081e4ae6afb737a3fc0374919785b02cd260f"
+  }
+}
