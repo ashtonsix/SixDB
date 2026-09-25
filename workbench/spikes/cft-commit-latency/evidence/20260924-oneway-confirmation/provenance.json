@@ -19,5 +19,29 @@
   "format": 2,
   "full_bundle": "artifact.json",
   "kind": "files",
-  "regenerate": []
+  "regenerate": [
+    [
+      "python3",
+      "workbench/spikes/cft-commit-latency/oneway/plot.py",
+      "{evidence}",
+      "--output",
+      "{evidence}",
+      "--confirmation"
+    ],
+    [
+      "python3",
+      "workbench/tools/artifacts.py",
+      "fetch",
+      "{retained}/../20260924-oneway/artifact.json",
+      "{evidence}/initial"
+    ],
+    [
+      "python3",
+      "workbench/spikes/cft-commit-latency/oneway/edges.py",
+      "{evidence}",
+      "--compare-first",
+      "{evidence}/initial"
+    ]
+  ],
+  "regenerate_from": "archive"
 }

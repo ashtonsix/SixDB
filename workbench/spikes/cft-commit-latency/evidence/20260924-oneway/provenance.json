@@ -19,5 +19,12 @@
   "format": 2,
   "full_bundle": "artifact.json",
   "kind": "files",
-  "regenerate": []
+  "regenerate": [
+    "python3",
+    "workbench/spikes/cft-commit-latency/oneway/plot.py",
+    "{evidence}",
+    "--output",
+    "{evidence}"
+  ],
+  "regenerate_from": "archive"
 }

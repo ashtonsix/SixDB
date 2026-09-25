@@ -28,5 +28,11 @@
   "format": 2,
   "full_bundle": "artifact.json",
   "kind": "files",
-  "regenerate": []
+  "regenerate": [
+    "python3",
+    "workbench/spikes/cft-commit-latency/variance/plot.py",
+    "{evidence}",
+    "--broad"
+  ],
+  "regenerate_from": "retained"
 }

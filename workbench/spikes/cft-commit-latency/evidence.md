@@ -45,56 +45,48 @@ public IPv4, S3, control traffic, encapsulation and tax are excluded; the user's
 reported ~$40 for earlier spike traffic is outside this follow-up's accounting.
 The corresponding `resources.json` files retain cleanup receipts.
 
-Each Git selection contains `workers.json` (raw archives), `campaign.json`
-(capture/analysis identities, timing and cost scope), and `provenance.json`
-(hashes of the files retained here). `artifact.json` identifies the original
-archived export, including the detail omitted from Git. `clocks.csv` and
-`checks.json` stay local; the full 50/100/1000 ppm `sensitivity.csv` is archived.
-Historical gaps are never replaced by references a corrected sampler would
-have collected.
+Git keeps candidate scores (including losing comparisons), selected summaries,
+measured host/clock context, campaign/source identities, cost/cleanup receipts,
+raw-worker references and PNGs. `provenance.json` hashes that selection;
+`artifact.json` identifies the original export. Detailed block/round and boundary
+tables, full 50/100/1000 ppm sensitivity, pricing dumps and SVGs live in the export's
+S3 bundle. Historical capture gaps remain gaps.
 
-The selection exports additionally retain the full physical tuple/grid design,
-every host/flow/round, and unselected candidates. `selected-host-pairs-*` evaluates
-ports on fixed machines against flow 0; `selected-az-directions-*` chooses hosts
-and ports jointly. Broad-cohort `request` and `all-legs` files are separate
-rankings. Their clock intervals are conditional measurement bounds, not
-confidence intervals; held-out packet data is excluded from ranking, while
-independent clock fits use the full capture. These are offline holdouts.
+`selected-host-pairs-*` evaluates ports on fixed machines against flow 0;
+`selected-az-directions-*` chooses hosts and ports jointly. Broad `request` and
+`all-legs` rankings stay separate. Clock intervals are conditional measurement
+bounds, not confidence intervals; independent clock fits use the full capture
+while ranking excludes held-out packets. These are offline holdouts.
 
-Git keeps all candidate scores and losing comparisons, selected summaries,
-measured host/clock context, source/worker references, cost and cleanup receipts,
-and PNG figures. Detailed block/round and boundary tables, full sensitivity
-sweeps, repeated pricing dumps and duplicate SVG renderings live in the existing
-S3 exports. The four evidence guides distinguish the two sets and give exact
-recovery/plot commands. Scope the selection by the finding, not by whether a
-file happens to be CSV or JSON.
-
-For ordinary inspection or figure reproduction, fetch the small export into a
-fresh ignored directory, for example:
+Run the cohort's recorded recipe with Matplotlib 3.10.8 available (Linux repository
+root; prefix with `orb -m ubuntu` from the Mac):
 
 ```sh
-python3 workbench/tools/artifacts.py fetch \
-  workbench/spikes/cft-commit-latency/evidence/20260924-variance-dense/artifact.json \
-  build/recovered/20260924-variance-dense
-python3 workbench/spikes/cft-commit-latency/variance/plot.py \
-  build/recovered/20260924-variance-dense
+python3 workbench/tools/artifacts.py report \
+  workbench/spikes/cft-commit-latency/evidence/20260924-variance-dense \
+  build/reports/20260924-variance-dense
 ```
 
-Plotting requires Matplotlib 3.10.8. Exact-member S3 recovery of all 98 originally
-selected data/figure members was verified before reducing the Git selection;
-all five report figures were regenerated from those recovered inputs. The
-archive object references and captured-source identities are unchanged. Working
-recovery copies belong in ignored `build/`, not as untracked evidence siblings.
+The broad figure uses retained inputs offline. The other recipes fetch their small
+exports; confirmation also fetches the initial cohort and produces both figures.
+Use a fresh output directory. `--dry-run` shows the steps; the adjacent report
+receipt records current entrypoints and command completion, without rewriting
+captured-source identities. For archived tables alone, use `artifacts.py fetch`
+with the same two paths. [Artifact tools](../../tools/artifacts.md#run-a-report-recipe)
+own the command details.
 
-For deeper raw reanalysis, use [oneway/recover.py](oneway/recover.py) for the
-first two cohorts and [variance/recover.py](variance/recover.py) for fixed tuples.
-The evidence guides give their commands and exact output scope; these do not
-automatically rebuild every report and resource receipt. The dense cohort's
-`recovery-verified.json` records full raw recovery and byte-identical named
-tables. The initial cohort's receipt is narrower: exact calibration and identity
-members from the PHC-outage host. Broad raw archives were collected and verified,
-but separate full broad raw reconstruction is not claimed. Recovery launches
-no workers and generates no cross-AZ probes.
+All 98 originally selected members were verified through exact-member S3 recovery
+before reducing Git retention; all five figures were regenerated. The recipe
+commands reproduce those figures using current plotting sources.
+
+Deeper raw reanalysis uses `oneway/recover.py` for the first two cohorts and
+`variance/recover.py` for fixed tuples, with the evidence directory and
+`--output build/recovered/NAME-raw`. These fetch existing worker archives and
+recompute timing tables; variance also rebuilds rankings and boundary diagnostics.
+Figures and resource receipts remain separate. Dense raw reconstruction was
+verified; initial verification covered only outage-host calibration/identity,
+and full broad raw reconstruction is not claimed. The cohort guides retain
+these specific limits. Recovery and these report recipes launch no workers.
 
 ## Read the fields and distributions
 

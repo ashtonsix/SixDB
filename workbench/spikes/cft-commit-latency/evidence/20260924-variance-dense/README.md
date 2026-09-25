@@ -13,61 +13,27 @@ preserve that limitation. `pair-variance.csv` retains tuple spreads, same-role
 changes and correlations; `tuples.csv`, `capture-config.json` and
 `variance-checks-all-legs.json` retain the verified design and selection rule.
 
-## Retained here and archived detail
-
-Git keeps the comparison tables, all candidates where applicable, measured
-host/clock context, campaign/source identities, checks, cost/cleanup receipts,
-raw-worker references and the rendered PNGs. `provenance.json` hashes only the
-members retained here. `artifact.json` still identifies the **original archived
-export**, which also contains the omitted detail; its object and source identities
-have not changed.
-
-The detailed per-block tables, full `sensitivity.csv`, `pricing.json` and SVG
-figures are archive-only. Keeping those in S3 avoids duplicating reconstructible
-row detail and a second rendering of each figure in Git. The selected comparisons
-and losing candidates remain reviewable here. Recover into ignored `build/`
-space, rather than placing untracked copies beside these retained files.
-
-This cohort's archive-only detail is `flow-blocks.csv` (all directed
-host/flow/round observations), `pair-blocks.csv` (paired asymmetry) and
-`boundary-blocks.csv` (per-block timestamp-boundary diagnostics).
-
 ## Recover archived detail
 
-From the Linux repository root (prefix with `orb -m ubuntu` on the Mac):
+The recipe fetches the export because the figure needs `flow-blocks.csv`.
+Other archived detail includes paired asymmetry (`pair-blocks.csv`), timestamp
+boundaries (`boundary-blocks.csv`) and full clock-rate sensitivity.
 
 ```sh
-python3 workbench/tools/artifacts.py fetch \
-  workbench/spikes/cft-commit-latency/evidence/20260924-variance-dense/artifact.json \
-  build/recovered/20260924-variance-dense
+python3 workbench/tools/artifacts.py report \
+  workbench/spikes/cft-commit-latency/evidence/20260924-variance-dense \
+  build/reports/20260924-variance-dense
 ```
 
-Choose a fresh destination. This verifies and restores the small archived
-export, including every omitted table and SVG, without launching workers or
-sending probes. Exact-member S3 recovery was checked against the original
-hashes before reducing this Git selection. The [shared fetcher](../../../../tools/artifacts.md#recover-or-reduce-retained-evidence)
-also supports repeated `--file EXACT/MEMBER` selections.
-
-With Matplotlib 3.10.8 available, regenerate the repeatability figure:
-
-```sh
-python3 workbench/spikes/cft-commit-latency/variance/plot.py \
-  build/recovered/20260924-variance-dense
-```
-
-This requires archived `flow-blocks.csv`; the reduced checkout alone is insufficient.
-
+[Shared recovery guidance](../../evidence.md#network-cohorts) explains
+retained versus archived files, runtime requirements and raw reanalysis.
+The executable recipe is in `provenance.json`; `artifact.json` still
+identifies the original export.
 
 ## Deeper raw audit
 
-```sh
-python3 workbench/spikes/cft-commit-latency/variance/recover.py \
-  workbench/spikes/cft-commit-latency/evidence/20260924-variance-dense \
-  --output build/recovered-variance-dense-raw
-```
-
-This downloads eight raw archives and rebuilds clock tables, selection and
-boundary diagnostics. `recovery-verified.json` records byte-identical
-reconstruction of its named tables, with semantically equal clock checks.
-Figures and resource receipts are separate. Full-capture clock fitting makes
-this an offline latency holdout.
+[variance/recover.py](../../variance/README.md) fetches eight raw archives and
+rebuilds clock tables, selection and boundary diagnostics. `recovery-verified.json`
+records byte-identical named tables and semantically equal clock checks; figures
+and resource receipts are separate. Full-capture clock fitting makes this an
+offline latency holdout.
