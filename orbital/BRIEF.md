@@ -64,7 +64,7 @@ The producer supplies $p_1$; preparation discovers $p_2$ and then $p_3$.
 
 Each C1 part acquires the locks needed to protect its reads, writes and predicates for serializability. Durable objects define lock scope and conflict semantics.
 
-At each epoch boundary, a part holds either all its required locks or none. All consumers of a shard agree on a conflict-free lock state. Parts of the same transaction may share protection.
+At each epoch boundary, a part holds either all its required locks or none. All consumers of a shard agree on a conflict-free set of granted locks. Parts of the same transaction may share protection.
 
 When a part finishes its work, it shares its results with known dependents, and further parts discovered with the coordinator. Completed parts retain their results and locks while the remaining parts prepare; results are reshared as further dependencies are discovered.
 
@@ -72,21 +72,15 @@ The coordinator authorizes C2 when every part is complete. C2 executes the trans
 
 ### Contention and Yielding
 
-L transactions and C1 parts fail if they cannot acquire the protection they require, whether because of same-epoch contention or pre-existing locks. Same-epoch contenders are arbitrated by priority, determined from transaction and execution metadata.
+L transactions ordinarily execute within a single epoch without retaining locks across epoch boundaries. L transactions and C1 parts retry when the epoch fold cannot satisfy their protection requirements. Retry scheduling derives solely from agreed state and epoch history. Individual retries are neither witness-journaled nor reported to the coordinator.
 
-Failed transactions and parts may retry or create provisional locks. Provisional locks are an exceptional path; ordinary contention should usually be handled by retries. Retry scheduling derives solely from agreed state and epoch history. Individual retries are neither witness-journaled nor reported to the coordinator.
+Retries may be batched into coordinated epochs, allowing compatible work to proceed and collecting unresolved contention for arbitration. An arbitration component is a connected component of transactions linked by incompatible protection requirements, including relevant existing lock holders. If T1 conflicts with T2 on one shard and T2 with T3 on another, all three belong to one component.
 
-Provisional locks may overlap pre-existing locks without conflict, but not other provisional locks. Once established, they prevent new overlapping locks from being acquired. After creating provisional locks, a shard sends yield requests to the coordinators of all parts whose protection overlaps them.
+For contention that retries do not resolve, a component may reserve the lock scopes held or requested by its members. These provisional locks block new conflicting protection during arbitration; they may overlap existing locks because they reserve scopes without authorizing execution. Arbitration may outlast an epoch, so reservations must not be replaced so frequently that decisions become obsolete before they can take effect.
 
-L transactions ordinarily execute within a single epoch without retaining locks across epoch boundaries. The provisional-lock path is the only exception.
+Arbitration uses lock and preparation information from the involved shards to choose which work can proceed and which parts should yield, with a shared arbitrator where needed. Decisions should weigh the work unblocked against the preparation discarded.
 
-On receiving a yield request, a coordinator may:
-
-- Invalidate the affected part and its dependents, including any C2 inputs derived from them.
-- Cancel the entire transaction if a participant appears unavailable.
-- Reject the request.
-
-The decision should weigh the work blocked against the work that invalidation would discard. Yield requests should include context to support that assessment. When coordinators cannot resolve a deadlock independently, they may defer invalidation decisions to a shared arbitrator, typically selected from among the coordinators involved.
+During preparation, a coordinator receiving a yield request may invalidate affected parts and their dependents, including derived C2 inputs; cancel a transaction if a participant appears unavailable; or reject the request.
 
 ## Dissemination
 
