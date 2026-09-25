@@ -51,7 +51,9 @@ def write_csv(path, rows):
 
 
 class Clock:
-    def __init__(self, path, ppm=100):
+    def __init__(self, path, ppm=100, point_model='affine'):
+        assert point_model in ('affine', 'feasible')
+        self.point_model = point_model
         self.rows = [json.loads(s) for s in path.read_text().splitlines()]
         self.wall_rate = wall_rate_lower_bound(self.rows)
         if self.wall_rate > WALL_RATE:
@@ -98,13 +100,51 @@ class Clock:
         my = sum(w*y for w,y in zip(weights,ys))/total
         self.fit_slope = sum(w*(x-mx)*(y-my) for w,x,y in zip(weights,xs,ys))/sum(w*(x-mx)**2 for w,x in zip(weights,xs))
         self.fit_intercept = my-self.fit_slope*mx
-        if abs(self.fit_slope)/1e9 > self.rho:
+        if point_model == 'affine' and abs(self.fit_slope)/1e9 > self.rho:
             raise ValueError('fitted clock rate exceeds the requested envelope')
         violations = [max(lo-(self.fit_intercept+self.fit_slope*x),
                           (self.fit_intercept+self.fit_slope*x)-hi,0)
                       for x,(_,lo,hi) in zip(xs,self.anchors)]
-        if max(violations) > 1:
+        self.affine_violation = max(violations)
+        if point_model == 'affine' and max(violations) > 1:
             raise ValueError(f'affine clock point model violates reference bounds by {max(violations)} ns')
+        if point_model == 'feasible':
+            # Intersect all independent reference intervals with the rate envelope,
+            # in both time directions. No packet/link observation enters this fit.
+            limits = [[lo, hi] for _, lo, hi in self.anchors]
+            for indices in (range(1, len(limits)), range(len(limits)-2, -1, -1)):
+                for i in indices:
+                    j = i-indices.step
+                    reach = self.rho * abs(self.times[i]-self.times[j])
+                    limits[i][0] = max(limits[i][0], limits[j][0]-reach)
+                    limits[i][1] = min(limits[i][1], limits[j][1]+reach)
+                    if limits[i][0] > limits[i][1]:
+                        raise ValueError('independent reference intervals contradict clock rate envelope')
+            # Stay as close to the affine target as each step permits, while
+            # retaining reachability of all future intervals. Linear interpolation
+            # gives a continuous, rate-bounded curve through feasible anchor values.
+            self.points = []
+            for i, (lo, hi) in enumerate(limits):
+                if i:
+                    reach = self.rho * (self.times[i]-self.times[i-1])
+                    lo, hi = max(lo, self.points[-1]-reach), min(hi, self.points[-1]+reach)
+                if lo > hi:
+                    if lo-hi > 1e-6:
+                        raise ValueError(f'no feasible clock trajectory at anchor {i}: {lo-hi} ns gap')
+                    lo = hi = (lo+hi)/2  # Sub-femtosecond floating-point boundary noise.
+                target = self.fit_intercept+self.fit_slope*xs[i]
+                self.points.append(min(hi, max(lo, target)))
+
+    def point(self, t):
+        if self.point_model == 'affine':
+            return self.fit_intercept+self.fit_slope*(t-self.fit_start)/1e9
+        j = bisect.bisect_right(self.times, t)
+        if j == 0:
+            return self.points[0]
+        if j == len(self.times):
+            return self.points[-1]
+        fraction = (t-self.times[j-1])/(self.times[j]-self.times[j-1])
+        return self.points[j-1]+fraction*(self.points[j]-self.points[j-1])
 
     def offset(self, t):
         left = bisect.bisect_left(self.times, t - 250000000)
@@ -123,7 +163,7 @@ class Clock:
         if lo > hi:
             self.inconsistent += 1
             raise ValueError(f'inconsistent clock envelope ({lo-hi:.1f} ns); do not hide it by fitting')
-        point = self.fit_intercept+self.fit_slope*(t-self.fit_start)/1e9
+        point = self.point(t)
         assert lo-1 <= point <= hi+1, (point,lo,hi)
         return point, lo, hi
 
@@ -140,8 +180,18 @@ class Clock:
         residual = [y-my-slope*(x-mx) for x,y in centers]
         ntp = [r for r in self.rows if r['kind']=='ntp']
         phc = [r for r in self.rows if r['kind']=='phc']
+        extra = {}
+        point_drift = self.fit_slope/1000
+        if self.point_model == 'feasible':
+            point_drift = (self.points[-1]-self.points[0])/(self.times[-1]-self.times[0])*1e6
+            extra = dict(point_model=self.point_model, affine_target_drift_ppm=self.fit_slope/1000,
+                affine_max_violation_us=self.affine_violation/1000,
+                point_max_adjustment_us=max(abs(p-(self.fit_intercept+self.fit_slope*(t-self.fit_start)/1e9))
+                    for t,p in zip(self.times,self.points))/1000,
+                point_max_rate_ppm=max(abs(b-a)/(y-x)*1e6 for x,y,a,b in
+                    zip(self.times,self.times[1:],self.points,self.points[1:]) if y>x))
         return dict(node=node, reference=self.kind, samples=len(anchors), drift_ppm=slope*1e6,
-                    point_model_drift_ppm=self.fit_slope/1000,
+                    point_model_drift_ppm=point_drift,
                     fit_residual_p50_us=quantile([abs(r) for r in residual], .5)/1000,
                     fit_residual_p99_us=quantile([abs(r) for r in residual], .99)/1000,
                     anchor_halfwidth_p50_us=quantile([(b-a)/2000 for _,a,b in anchors], .5),
@@ -151,7 +201,7 @@ class Clock:
                     wall_rate_lower_bound_max_ppm=self.wall_rate*1e6,
                     phc_error_p50_us=quantile([r['error_ns']/1000 for r in phc], .5),
                     ntp_strata='/'.join(map(str, sorted(set(r['stratum'] for r in ntp)))),
-                    ntp_root_distance_p50_us=quantile([(max(0,r['root_delay_ns'])/2+r['dispersion_ns'])/1000 for r in ntp],.5))
+                    ntp_root_distance_p50_us=quantile([(max(0,r['root_delay_ns'])/2+r['dispersion_ns'])/1000 for r in ntp],.5), **extra)
 
     def stamp(self, event):
         # Integer subtract before floating point: epoch nanoseconds exceed 2**53.
@@ -217,7 +267,7 @@ def join_events(client, server, src, dst, repeat, requested):
     return events
 
 
-def analyze(directories, output, ppm=100):
+def analyze(directories, output, ppm=100, point_model='affine'):
     output.mkdir(parents=True, exist_ok=True)
     hosts = {}
     for directory in directories:
@@ -226,7 +276,7 @@ def analyze(directories, output, ppm=100):
         if n in hosts:
             raise ValueError('duplicate host identity')
         hosts[n] = dict(path=directory, identity=identity,
-                        clock=Clock(directory/'calibration.jsonl', ppm),
+                        clock=Clock(directory/'calibration.jsonl', ppm, point_model),
                         cases=json.loads((directory/'cases.json').read_text()))
     az={n:int(h['identity']['az_id'].removeprefix('use1-az')) for n,h in hosts.items()}
     assert [az[n] for n in sorted(hosts)]==sorted(az.values()), 'node ordering must follow AZ ordering'
@@ -331,6 +381,8 @@ def analyze(directories, output, ppm=100):
     checks['cross_az_ipv4_bytes'] = cross_az_requests*2*(64+28)
     checks['warmup_exchanges_per_block'] = 20
     checks['clock_rate_envelope_ppm'] = ppm
+    if point_model != 'affine':
+        checks['clock_point_model'] = point_model
     (output/'checks.json').write_text(json.dumps(checks,indent=2)+'\n')
     print(json.dumps(checks,indent=2))
 
@@ -340,5 +392,6 @@ if __name__ == '__main__':
     parser.add_argument('directories', type=Path, nargs='+')
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--ppm', type=float, default=100)
+    parser.add_argument('--clock-point-model', choices=('affine', 'feasible'), default='affine')
     args = parser.parse_args()
-    analyze(args.directories,args.output,args.ppm)
+    analyze(args.directories,args.output,args.ppm,args.clock_point_model)

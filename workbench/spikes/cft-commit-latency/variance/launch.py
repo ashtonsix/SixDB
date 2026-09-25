@@ -12,7 +12,9 @@ from worker_group import create,identifier
 
 def main():
     p=argparse.ArgumentParser()
-    p.add_argument('--focused',action='store_true',help='four hosts per AZ in az2/az4; 16 tuples, four rounds')
+    mode=p.add_mutually_exclusive_group()
+    mode.add_argument('--focused',action='store_true',help='four hosts per AZ in az2/az4; 16 tuples, four rounds')
+    mode.add_argument('--port-sampling',action='store_true',help='equal-budget consecutive vs scattered ephemeral ports')
     args=p.parse_args()
     aws=Aws('us-east-1')
     subnets=aws.call('ec2','describe-subnets',Filters=[{'Name':'default-for-az','Values':['true']}])['Subnets']
@@ -25,9 +27,11 @@ def main():
          'ONEWAY_LAYOUT':'bipartite' if args.focused else 'full',
          'ONEWAY_PORT_MODE':'both' if args.focused else 'lower-only',
          'ONEWAY_ROUNDS':'4' if args.focused else '5'}
+    if args.port_sampling:
+        env.update(ONEWAY_COUNT='60', ONEWAY_FLOWS='64', ONEWAY_PORT_MODE='port-sampling', ONEWAY_PACE_US='2000')
     spec={'script':'workbench/spikes/cft-commit-latency/oneway/cloud.sh',
           'config':{'instance_type':'m7i.xlarge','capacity':'on-demand','threads_per_core':1,
-                    'setup':'minimal','deadline_seconds':1800,'idle_seconds':0,'max_age_seconds':3600,
+                    'setup':'minimal','deadline_seconds':2700 if args.port_sampling else 1800,'idle_seconds':0,'max_age_seconds':3600,
                     'env':env},
           'network':{'scope':'cft-variance-20260924','vpc_id':selected[0]['VpcId'],
                      'tcp_ports':[[43400,43400]],'udp_ports':[[48000,48015],[48100,48115]]},
@@ -35,6 +39,8 @@ def main():
                      'instance_type':'i4i.xlarge' if s['AvailabilityZoneId']=='use1-az3' else 'm7i.xlarge',
                      'env':{'AZ_NODE':str(az*len(suffixes)+index)}}}
                      for az,s in enumerate(selected) for index,suffix in enumerate(suffixes)}}
+    if args.port_sampling:
+        spec['network'].update(scope='cft-port-sampling-20260925', udp_ports=[[48100,48100],[49152,65535]])
     group=create(spec,ROOT/'build/az-variance'/identifier())
     group.launch()
     print(f'Collect: python3 workbench/tools/worker_group.py wait {group.receipt}')

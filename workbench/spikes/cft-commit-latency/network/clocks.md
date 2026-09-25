@@ -1,6 +1,6 @@
 # Clocks, one-way delay and directional asymmetry
 
-The September 24 UDP studies measure each leg separately, rather than dividing
+The UDP studies measure each leg separately, rather than dividing
 RTT by two. This guide owns the shared clock model and timestamp boundary;
 [controlled comparisons](method.md) own the host/tuple sampling design.
 The [original TCP method](studies/tcp-method.md) timed application RTT and uses
@@ -70,7 +70,7 @@ system-clock steps and slews; observed independent-reference slopes and fit
 residuals diagnose drift and reference noise. Contradictory intervals or missing
 calibration coverage fail analysis rather than being silently fitted away.
 
-Point estimates use a continuous, globally weighted affine fit to independent
+The September 24 point estimates use a continuous, globally weighted affine fit to independent
 reference centers. Its slope must fit the rate envelope, and its trajectory
 must lie inside **every** reference interval; otherwise analysis fails. The
 point model's smoothness is an additional modeling choice. Interval results
@@ -86,9 +86,29 @@ by training and validation; the error intervals still govern the claim.
 
 A moving local point fit was rejected during analysis: changing which noisy NTP
 anchors entered the window could create artificial discontinuities between the
-two legs of an exchange. The retained continuous point model passes the
+two legs of an exchange. The retained continuous point models pass the
 four-timestamp closure check. No cross-AZ observations are used to estimate
 the clock corrections.
+
+The longer [September 25 port capture](studies/port-sampling.md) exposed an
+affine-model failure on three hosts: maximum reference violations of 6.80,
+4.26 and 18.36 µs. Its secondary directional analysis therefore uses an explicit
+`--clock-point-model feasible` alternative, chosen after that failure. Forward
+and backward passes intersect reference intervals with the rate envelope; a
+forward projection stays near the affine target while preserving reachability
+of future intervals. Linear interpolation between those feasible anchor values
+is continuous, satisfies every reference, and obeys the specified rate bound.
+No measured link delay enters this construction, and the reference error/rate
+envelopes are not widened. The old affine mode remains the default for historical
+reproduction. A feasible curve is a permitted point trajectory, not proof of
+the clock's actual fine-grained motion or smaller systematic error.
+
+During packet measurement, the largest corrections to the affine target were
+2.85 µs on az2b and 16.92 µs on az4a; az1b's violation occurred outside that
+window. The **primary RTT policy results are unchanged by this choice**.
+All 50/100/1000 ppm reductions pass reference, coverage and packet-causality
+checks. `clock-model.json` records the deviation and `clocks.csv` records
+the curve diagnostics in the new cohort's evidence.
 
 ## Timestamp boundaries and protocol controls
 
@@ -145,7 +165,7 @@ same construction bounds the median of paired forward-minus-reverse differences.
 These are **conditional clock-error intervals, not statistical confidence
 intervals** or population guarantees. Negative clock-only lower endpoints are
 retained as diagnostics; the main intervals include nonnegative-delay constraints.
-An affine point outside the causal interval fails analysis rather than being
+A point outside the causal interval fails analysis rather than being
 silently clamped. Event joins validate endpoint role, exchange identity and
 sequence range, and reject duplicates. The retained cohorts pass these checks.
 

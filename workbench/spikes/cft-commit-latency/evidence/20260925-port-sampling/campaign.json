@@ -1,0 +1,25 @@
+{
+  "measured_start_utc": "2026-09-25T00:59:38.631067+00:00",
+  "measured_end_utc": "2026-09-25T01:17:28.727631+00:00",
+  "source_sha256": "2e1a195fdc83ee67ba9f6a974c507117ab0afb18c5074ef09629bfb809f80c47",
+  "compute_through_completion_usd": 1.0155548169195519,
+  "cross_az_probe_ipv4_bytes": 211747200,
+  "modeled_cross_az_probe_usd": 0.004234944,
+  "cost_limits": "Compute includes reused preflight lifetimes through archive completion, but excludes shutdown lag, EBS, public IPv4, S3 and tax. Transfer is a byte/rate model, not a bill.",
+  "analysis_sources": {
+    "analyze.py": "0ed93db4f0ee72b4960b2274d3858f59716d58fbeb649c75b2cf29960f5215be",
+    "check.py": "0091d3c7b852b548f5df3d2f56af0ea212d6742346f2328fc0073b21eabf4a3c",
+    "recover.py": "a387054d0412666b734a12d8e3f62533ca3a97e5fcf1e5ecf0eeec491f215dc4",
+    "plot.py": "f4464f82347976bad78b1e9d457256e82b8c816cec4ad482a8b318cd65257456",
+    "assemble.py": "02d2b933f9e45622ed84be2cb72a3fb8099a8dd9b82def5574cb6ff811ce1fd8",
+    "edges.py": "c85803b39f9a3aa688ae9ceeac7081e4ae6afb737a3fc0374919785b02cd260f"
+  },
+  "port_analysis_sources": {
+    "workbench/spikes/cft-commit-latency/variance/diagnose.py": "aa06f7d36f0d68865e69b2b4de966cd81a27093672b68acd6f8b0a354adf7b42",
+    "workbench/spikes/cft-commit-latency/variance/recover.py": "47d68b030b83ba98732ae1a6f9c4fd40d13f0bdf84d3b5f5f1d5fe215a8dc05a",
+    "workbench/spikes/cft-commit-latency/variance/port_plan.py": "0fc25b415c08705fbe324e3da3852a9e9489a83bd54b4eaa7ca7820aa6d156fa",
+    "workbench/spikes/cft-commit-latency/variance/check_ports.py": "fabf039441b3f8b3faaa27cfc2148f2c482055c5cb4699e633fa953df3f02775",
+    "workbench/spikes/cft-commit-latency/variance/port_sampling.py": "a30612e03625370418caec0b76c11e3edb564c30a8efce145b8ee39acdb854b4",
+    "workbench/spikes/cft-commit-latency/variance/port_plot.py": "fe88d3e757e713c5c40aef5ef9d462676b4347aa405a13d718fc4fb8523b04fd"
+  }
+}

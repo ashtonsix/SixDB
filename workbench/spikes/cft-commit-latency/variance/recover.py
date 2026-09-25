@@ -23,13 +23,15 @@ def main():
         assert entry['state']=='complete' and entry['artifact']
         reference=args.output/(name+'.artifact.json');reference.write_text(json.dumps(entry['artifact'],indent=2)+'\n')
         target=args.output/name;artifacts.fetch(reference,target);paths.append(str(target))
-    subprocess.run([sys.executable,str(HERE.parent/'oneway/analyze.py'),*paths,'--output',str(args.output/'summary')],check=True)
-    common=[sys.executable,str(HERE/'analyze.py'),str(args.output),'--inputs',str(args.output)]
-    subprocess.run(common,check=True)
+    model=json.loads((args.evidence/'checks.json').read_text()).get('clock_point_model','affine')
+    subprocess.run([sys.executable,str(HERE.parent/'oneway/analyze.py'),*paths,'--output',str(args.output/'summary'),'--clock-point-model',model],check=True)
     config=json.loads((args.output/'capture-config.json').read_text())
-    if int(next(iter(config.values())).get('ONEWAY_ROUNDS','4'))==5:
+    sampling=next(iter(config.values())).get('ONEWAY_PORT_MODE')=='port-sampling'
+    common=[sys.executable,str(HERE/('port_sampling.py' if sampling else 'analyze.py')),str(args.output),'--inputs',str(args.output)]
+    subprocess.run(common,check=True)
+    if not sampling and int(next(iter(config.values())).get('ONEWAY_ROUNDS','4'))==5:
         subprocess.run(common+['--request-rank'],check=True)
-    subprocess.run([sys.executable,str(HERE/'diagnose.py'),str(args.output),'--inputs',str(args.output)],check=True)
+    subprocess.run([sys.executable,str(HERE/'diagnose.py'),str(args.output),'--inputs',str(args.output),'--clock-point-model',model],check=True)
 
 
 if __name__=='__main__':main()

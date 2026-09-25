@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "seed": 250926,
+  "nodes": 12,
+  "rounds": 5,
+  "count": 60,
+  "warmup": 20,
+  "pace_us": 2000,
+  "budgets": [
+    4,
+    16,
+    32
+  ],
+  "primary_budget": 16,
+  "training_rounds": [
+    0,
+    1,
+    2
+  ],
+  "holdout_rounds": [
+    3,
+    4
+  ],
+  "score": "minimize worst training RTT p50; tie median training RTT p50, then port_a",
+  "overlap": "one physical measurement per tuple/round, shared between logical candidates",
+  "full_plan_sha256": "a13c740dc55d486f98c4ef9270353850e35b4d99d1945e54ba1a9585e83b167c",
+  "physical_tuples": 4219,
+  "logical_candidates": 4224,
+  "complete_grid": true,
+  "port_reservations_verified": true,
+  "actual_order_verified": true,
+  "iid_or_stationarity_assumed": false,
+  "clock_bounds_are_not_confidence_intervals": true,
+  "directional_point_model": "feasible"
+}

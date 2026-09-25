@@ -16,7 +16,7 @@ sub-millisecond service at that offered rate.
 
 The [study overview](README.md) maps the supporting guides. The original TCP,
 storage and durable-pipeline measurements are from **14 September 2026**;
-the clock-calibrated UDP and fixed-tuple comparisons are from **24 September**.
+the clock-calibrated UDP and fixed-tuple comparisons are from **24–25 September**.
 Both use AWS us-east-1, with different hosts, protocols and timestamp boundaries.
 
 ## Select the hosts and flow, then validate the outgoing edge
@@ -26,6 +26,13 @@ classes spanning **266.2 µs**; each class recurred over five shuffled rounds.
 These offset-independent comparisons identify a tuple-sensitive mechanism,
 without identifying its physical cause. Reopening the same tuple generally
 preserved its class during the test; changing a port was the effective reroll.
+
+The [larger port-policy comparison](network/studies/port-sampling.md) separates
+candidate count from spacing. At 16 candidates, scattered ports gained a median
+0.41 µs over consecutive ports; increasing 4→32 candidates improved 31/60 pairs
+by >5 µs under either policy. Four consecutive ports already spanned 355 µs.
+Most tuples remained stable, but a few changed by up to 103 µs during this
+18-minute capture. Revalidation remains part of the supported hypothesis.
 
 Host choice still matters. The [selection findings](network/selection.md)
 compare ports on fixed machines, then select host/port candidates for all thirty

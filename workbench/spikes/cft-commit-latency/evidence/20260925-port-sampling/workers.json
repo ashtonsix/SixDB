@@ -1,0 +1,657 @@
+{
+  "bucket": "calico-fleet-artifacts",
+  "format": 1,
+  "group": "20260925T005146Z-c3b8a106",
+  "members": {
+    "use1-az1a": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 19415051,
+        "files": 7053,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/589e65c2ab0b245c21b841d91105082e5970a39932bdde16f58c5670bf7203d8.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "589e65c2ab0b245c21b841d91105082e5970a39932bdde16f58c5670bf7203d8",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/589e65c2ab0b245c21b841d91105082e5970a39932bdde16f58c5670bf7203d8.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790299178.2497928
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-0010fe48978ce80a3",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260925T005152Z-dc082726",
+      "phase": "submitted",
+      "resource_observed_at": 1790299258.1007767,
+      "results": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260925T005152Z-dc082726/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790299067.869213,
+        "instance_id": "i-0010fe48978ce80a3",
+        "job_id": "20260925T005152Z-dc082726",
+        "max_end": 1790301179.7406394,
+        "profile": "d900a15f0ca3cdc5f40230be2e58c536cc8485db6afd631f5d40a987f4bf0bce",
+        "reuse_count": 0,
+        "revision": "a0c0a35bdd60460bb6a154dcb306439b",
+        "state": "retiring",
+        "subnet_id": "subnet-800010e7",
+        "worker_id": "20260925T005152Z-dc082726"
+      },
+      "source_commit": "7310138666276d52656718a633f67ef27ec36ec5",
+      "source_sha256": "08ccc64aaaca128c229e5ab72b1481d7c67dcb7797091713470503d9a81e8028",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260925T005152Z-dc082726",
+      "worker": {
+        "id": "20260925T005152Z-dc082726",
+        "instance_id": "i-0010fe48978ce80a3",
+        "max_end": 1790301179.7406394,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "use1-az1b": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 19237254,
+        "files": 7043,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/effe03d851072590a7179e8420c8cdb093753135873f3d66f84f02f01c9f603a.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "effe03d851072590a7179e8420c8cdb093753135873f3d66f84f02f01c9f603a",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/effe03d851072590a7179e8420c8cdb093753135873f3d66f84f02f01c9f603a.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790299105.8350933
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-0e27443e03f60cfd3",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260925T005156Z-a8a9c243",
+      "phase": "submitted",
+      "resource_observed_at": 1790299258.3490636,
+      "results": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260925T005156Z-a8a9c243/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790299067.4783835,
+        "instance_id": "i-0e27443e03f60cfd3",
+        "job_id": "20260925T005156Z-a8a9c243",
+        "max_end": 1790301199.166401,
+        "profile": "d900a15f0ca3cdc5f40230be2e58c536cc8485db6afd631f5d40a987f4bf0bce",
+        "reuse_count": 0,
+        "revision": "77c546e6301740f8bf7a2da6d91b1d9f",
+        "state": "retiring",
+        "subnet_id": "subnet-800010e7",
+        "worker_id": "20260925T005156Z-a8a9c243"
+      },
+      "source_commit": "7310138666276d52656718a633f67ef27ec36ec5",
+      "source_sha256": "08ccc64aaaca128c229e5ab72b1481d7c67dcb7797091713470503d9a81e8028",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260925T005156Z-a8a9c243",
+      "worker": {
+        "id": "20260925T005156Z-a8a9c243",
+        "instance_id": "i-0e27443e03f60cfd3",
+        "max_end": 1790301199.166401,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "use1-az2a": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 19319771,
+        "files": 7063,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/b24404d502556ae8ad38f7a56797196a7f33383dafcf201364d573931c1eb5f2.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "b24404d502556ae8ad38f7a56797196a7f33383dafcf201364d573931c1eb5f2",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/b24404d502556ae8ad38f7a56797196a7f33383dafcf201364d573931c1eb5f2.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790299194.4356928
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-04656ae92e902feac",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260925T005201Z-6f1734f2",
+      "phase": "submitted",
+      "resource_observed_at": 1790299258.1403909,
+      "results": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260925T005201Z-6f1734f2/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790299068.2931147,
+        "instance_id": "i-04656ae92e902feac",
+        "job_id": "20260925T005201Z-6f1734f2",
+        "max_end": 1790301219.850593,
+        "profile": "d900a15f0ca3cdc5f40230be2e58c536cc8485db6afd631f5d40a987f4bf0bce",
+        "reuse_count": 0,
+        "revision": "8c7d5d079f5b418e9c654dea85e7456c",
+        "state": "retiring",
+        "subnet_id": "subnet-d1aeb1ff",
+        "worker_id": "20260925T005201Z-6f1734f2"
+      },
+      "source_commit": "7310138666276d52656718a633f67ef27ec36ec5",
+      "source_sha256": "08ccc64aaaca128c229e5ab72b1481d7c67dcb7797091713470503d9a81e8028",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260925T005201Z-6f1734f2",
+      "worker": {
+        "id": "20260925T005201Z-6f1734f2",
+        "instance_id": "i-04656ae92e902feac",
+        "max_end": 1790301219.850593,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "use1-az2b": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 19298025,
+        "files": 7063,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/62a323f4c5791b3b651a18b9f86fd008bf18673b9bcdb2cd58e81929569801a1.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "62a323f4c5791b3b651a18b9f86fd008bf18673b9bcdb2cd58e81929569801a1",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/62a323f4c5791b3b651a18b9f86fd008bf18673b9bcdb2cd58e81929569801a1.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790299148.4259245
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-0c2c51206750da224",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260925T005206Z-a65a3c11",
+      "phase": "submitted",
+      "resource_observed_at": 1790299258.3696134,
+      "results": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260925T005206Z-a65a3c11/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790299067.8348138,
+        "instance_id": "i-0c2c51206750da224",
+        "job_id": "20260925T005206Z-a65a3c11",
+        "max_end": 1790301242.4010472,
+        "profile": "d900a15f0ca3cdc5f40230be2e58c536cc8485db6afd631f5d40a987f4bf0bce",
+        "reuse_count": 0,
+        "revision": "c1307e6a170a48758b8a42e157d72f81",
+        "state": "retiring",
+        "subnet_id": "subnet-d1aeb1ff",
+        "worker_id": "20260925T005206Z-a65a3c11"
+      },
+      "source_commit": "7310138666276d52656718a633f67ef27ec36ec5",
+      "source_sha256": "08ccc64aaaca128c229e5ab72b1481d7c67dcb7797091713470503d9a81e8028",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260925T005206Z-a65a3c11",
+      "worker": {
+        "id": "20260925T005206Z-a65a3c11",
+        "instance_id": "i-0c2c51206750da224",
+        "max_end": 1790301242.4010472,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "use1-az3a": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 17500512,
+        "files": 7063,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/a800b6224032bab40cd77f970d85aceb99895e4f4075cb841fd206f1e820c6b0.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "a800b6224032bab40cd77f970d85aceb99895e4f4075cb841fd206f1e820c6b0",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/a800b6224032bab40cd77f970d85aceb99895e4f4075cb841fd206f1e820c6b0.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790299134.704163
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-0f78ad6cf6192909e",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260925T005211Z-a1dca2f4",
+      "phase": "submitted",
+      "resource_observed_at": 1790299258.1595125,
+      "results": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260925T005211Z-a1dca2f4/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790299068.7888024,
+        "instance_id": "i-0f78ad6cf6192909e",
+        "job_id": "20260925T005211Z-a1dca2f4",
+        "max_end": 1790301265.494046,
+        "profile": "8b89f67e16a8dec47a23448b7e78530331a17be11ff55414b5f274d5b65849f4",
+        "reuse_count": 0,
+        "revision": "89b88a4077d4490480bd661666267dd5",
+        "state": "retiring",
+        "subnet_id": "subnet-a696b298",
+        "worker_id": "20260925T005211Z-a1dca2f4"
+      },
+      "source_commit": "7310138666276d52656718a633f67ef27ec36ec5",
+      "source_sha256": "08ccc64aaaca128c229e5ab72b1481d7c67dcb7797091713470503d9a81e8028",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260925T005211Z-a1dca2f4",
+      "worker": {
+        "id": "20260925T005211Z-a1dca2f4",
+        "instance_id": "i-0f78ad6cf6192909e",
+        "max_end": 1790301265.494046,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "use1-az3b": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 17477063,
+        "files": 7053,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/b2871b8fc4bd008a37639830e4aa68b01d02e200069827bccb91deec0daedd77.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "b2871b8fc4bd008a37639830e4aa68b01d02e200069827bccb91deec0daedd77",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/b2871b8fc4bd008a37639830e4aa68b01d02e200069827bccb91deec0daedd77.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790299164.3390555
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-055f1a92a56781e0c",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260925T005216Z-2863efa5",
+      "phase": "submitted",
+      "resource_observed_at": 1790299258.248208,
+      "results": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260925T005216Z-2863efa5/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790299068.8541949,
+        "instance_id": "i-055f1a92a56781e0c",
+        "job_id": "20260925T005216Z-2863efa5",
+        "max_end": 1790301284.5820723,
+        "profile": "8b89f67e16a8dec47a23448b7e78530331a17be11ff55414b5f274d5b65849f4",
+        "reuse_count": 0,
+        "revision": "d8c249c47e0e4c29b68a38021041cb6d",
+        "state": "retiring",
+        "subnet_id": "subnet-a696b298",
+        "worker_id": "20260925T005216Z-2863efa5"
+      },
+      "source_commit": "7310138666276d52656718a633f67ef27ec36ec5",
+      "source_sha256": "08ccc64aaaca128c229e5ab72b1481d7c67dcb7797091713470503d9a81e8028",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260925T005216Z-2863efa5",
+      "worker": {
+        "id": "20260925T005216Z-2863efa5",
+        "instance_id": "i-055f1a92a56781e0c",
+        "max_end": 1790301284.5820723,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "use1-az4a": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 19377529,
+        "files": 7043,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/7b14765bd5e26428f7dbca1c42b30b0517b33198de924eac349d24c1a4340b1b.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "7b14765bd5e26428f7dbca1c42b30b0517b33198de924eac349d24c1a4340b1b",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/7b14765bd5e26428f7dbca1c42b30b0517b33198de924eac349d24c1a4340b1b.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790299091.5746968
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-0239a979abd3b4596",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260925T005221Z-ac90c4cb",
+      "phase": "submitted",
+      "resource_observed_at": 1790299258.4425735,
+      "results": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260925T005221Z-ac90c4cb/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790299067.9300487,
+        "instance_id": "i-0239a979abd3b4596",
+        "job_id": "20260925T005221Z-ac90c4cb",
+        "max_end": 1790301304.8501482,
+        "profile": "d900a15f0ca3cdc5f40230be2e58c536cc8485db6afd631f5d40a987f4bf0bce",
+        "reuse_count": 0,
+        "revision": "bab0ea6149dc40188d7e0ab479b8e968",
+        "state": "retiring",
+        "subnet_id": "subnet-75288838",
+        "worker_id": "20260925T005221Z-ac90c4cb"
+      },
+      "source_commit": "7310138666276d52656718a633f67ef27ec36ec5",
+      "source_sha256": "08ccc64aaaca128c229e5ab72b1481d7c67dcb7797091713470503d9a81e8028",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260925T005221Z-ac90c4cb",
+      "worker": {
+        "id": "20260925T005221Z-ac90c4cb",
+        "instance_id": "i-0239a979abd3b4596",
+        "max_end": 1790301304.8501482,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "use1-az4b": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 19262367,
+        "files": 7063,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/044f8cf7e71ff1615c155f1e92c84e3818538df0224d062f6e28460631972f69.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "044f8cf7e71ff1615c155f1e92c84e3818538df0224d062f6e28460631972f69",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/044f8cf7e71ff1615c155f1e92c84e3818538df0224d062f6e28460631972f69.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790299120.6916633
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-0ebc44619062c30ac",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260925T005226Z-d38fd41c",
+      "phase": "submitted",
+      "resource_observed_at": 1790299258.4700544,
+      "results": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260925T005226Z-d38fd41c/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790299068.15732,
+        "instance_id": "i-0ebc44619062c30ac",
+        "job_id": "20260925T005226Z-d38fd41c",
+        "max_end": 1790301329.0613523,
+        "profile": "d900a15f0ca3cdc5f40230be2e58c536cc8485db6afd631f5d40a987f4bf0bce",
+        "reuse_count": 0,
+        "revision": "87082a2a27e149078fdceb61d6cdecb5",
+        "state": "retiring",
+        "subnet_id": "subnet-75288838",
+        "worker_id": "20260925T005226Z-d38fd41c"
+      },
+      "source_commit": "7310138666276d52656718a633f67ef27ec36ec5",
+      "source_sha256": "08ccc64aaaca128c229e5ab72b1481d7c67dcb7797091713470503d9a81e8028",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260925T005226Z-d38fd41c",
+      "worker": {
+        "id": "20260925T005226Z-d38fd41c",
+        "instance_id": "i-0ebc44619062c30ac",
+        "max_end": 1790301329.0613523,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "use1-az5a": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 19143538,
+        "files": 7063,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/7eef7cf81d32b66f305be98affb61bd487a9f6abcb5de99c19bdf10f0a271f6e.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "7eef7cf81d32b66f305be98affb61bd487a9f6abcb5de99c19bdf10f0a271f6e",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/7eef7cf81d32b66f305be98affb61bd487a9f6abcb5de99c19bdf10f0a271f6e.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790299205.277273
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-021c5fdd5abd02517",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260925T005231Z-d1affc73",
+      "phase": "submitted",
+      "resource_observed_at": 1790299267.7261462,
+      "results": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260925T005231Z-d1affc73/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790299067.4848428,
+        "instance_id": "i-021c5fdd5abd02517",
+        "job_id": "20260925T005231Z-d1affc73",
+        "max_end": 1790301353.7542918,
+        "profile": "d900a15f0ca3cdc5f40230be2e58c536cc8485db6afd631f5d40a987f4bf0bce",
+        "reuse_count": 0,
+        "revision": "3c046633868d438889f5223816f7224e",
+        "state": "retiring",
+        "subnet_id": "subnet-0912d807",
+        "worker_id": "20260925T005231Z-d1affc73"
+      },
+      "source_commit": "7310138666276d52656718a633f67ef27ec36ec5",
+      "source_sha256": "08ccc64aaaca128c229e5ab72b1481d7c67dcb7797091713470503d9a81e8028",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260925T005231Z-d1affc73",
+      "worker": {
+        "id": "20260925T005231Z-d1affc73",
+        "instance_id": "i-021c5fdd5abd02517",
+        "max_end": 1790301353.7542918,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "use1-az5b": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 19198873,
+        "files": 7063,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/477bcc0adb6057d2d48de747e771afa762ccf7e1aa505f4bf44448f3a0ccad6b.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "477bcc0adb6057d2d48de747e771afa762ccf7e1aa505f4bf44448f3a0ccad6b",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/477bcc0adb6057d2d48de747e771afa762ccf7e1aa505f4bf44448f3a0ccad6b.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790299217.67276
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-00a66e21845ea29f1",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260925T005236Z-7ce1e926",
+      "phase": "submitted",
+      "resource_observed_at": 1790299267.7317502,
+      "results": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260925T005236Z-7ce1e926/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790299068.9050524,
+        "instance_id": "i-00a66e21845ea29f1",
+        "job_id": "20260925T005236Z-7ce1e926",
+        "max_end": 1790301381.1488779,
+        "profile": "d900a15f0ca3cdc5f40230be2e58c536cc8485db6afd631f5d40a987f4bf0bce",
+        "reuse_count": 0,
+        "revision": "301535fa773e4ae0971292cd70b9f85e",
+        "state": "retiring",
+        "subnet_id": "subnet-0912d807",
+        "worker_id": "20260925T005236Z-7ce1e926"
+      },
+      "source_commit": "7310138666276d52656718a633f67ef27ec36ec5",
+      "source_sha256": "08ccc64aaaca128c229e5ab72b1481d7c67dcb7797091713470503d9a81e8028",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260925T005236Z-7ce1e926",
+      "worker": {
+        "id": "20260925T005236Z-7ce1e926",
+        "instance_id": "i-00a66e21845ea29f1",
+        "max_end": 1790301381.1488779,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "use1-az6a": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 19111813,
+        "files": 7043,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/ea6983493d9a9cc8d2331f5be78e3d8180a5e23e2dc61a37e933e6ab7b55bc90.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "ea6983493d9a9cc8d2331f5be78e3d8180a5e23e2dc61a37e933e6ab7b55bc90",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/ea6983493d9a9cc8d2331f5be78e3d8180a5e23e2dc61a37e933e6ab7b55bc90.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790299231.6128528
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-0bd90c0f9b9573842",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260925T005241Z-ea90ba84",
+      "phase": "submitted",
+      "resource_observed_at": 1790299267.6803274,
+      "results": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260925T005241Z-ea90ba84/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790299068.5167587,
+        "instance_id": "i-0bd90c0f9b9573842",
+        "job_id": "20260925T005241Z-ea90ba84",
+        "max_end": 1790301408.2408173,
+        "profile": "d900a15f0ca3cdc5f40230be2e58c536cc8485db6afd631f5d40a987f4bf0bce",
+        "reuse_count": 0,
+        "revision": "2cc866f97b6b4c008ff0b48a9a4ca1e6",
+        "state": "retiring",
+        "subnet_id": "subnet-c29a879e",
+        "worker_id": "20260925T005241Z-ea90ba84"
+      },
+      "source_commit": "7310138666276d52656718a633f67ef27ec36ec5",
+      "source_sha256": "08ccc64aaaca128c229e5ab72b1481d7c67dcb7797091713470503d9a81e8028",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260925T005241Z-ea90ba84",
+      "worker": {
+        "id": "20260925T005241Z-ea90ba84",
+        "instance_id": "i-0bd90c0f9b9573842",
+        "max_end": 1790301408.2408173,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "use1-az6b": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 19018692,
+        "files": 7043,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/93a31f2eb50074c3cd3b1ceb5706a3d25abe415a5fd6e4c2e6c381bfa0f434af.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "93a31f2eb50074c3cd3b1ceb5706a3d25abe415a5fd6e4c2e6c381bfa0f434af",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/93a31f2eb50074c3cd3b1ceb5706a3d25abe415a5fd6e4c2e6c381bfa0f434af.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790299243.386404
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-01cdc872a3a5f4b81",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260925T005246Z-bac61bb4",
+      "phase": "submitted",
+      "resource_observed_at": 1790299267.670769,
+      "results": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20260925T005246Z-bac61bb4/results",
+      "session": {
+        "capacity": "on-demand",
+        "idle_until": 1790299067.6211922,
+        "instance_id": "i-01cdc872a3a5f4b81",
+        "job_id": "20260925T005246Z-bac61bb4",
+        "max_end": 1790301436.2662928,
+        "profile": "d900a15f0ca3cdc5f40230be2e58c536cc8485db6afd631f5d40a987f4bf0bce",
+        "reuse_count": 0,
+        "revision": "55445afa3798414baef3ef390b1b2fae",
+        "state": "retiring",
+        "subnet_id": "subnet-c29a879e",
+        "worker_id": "20260925T005246Z-bac61bb4"
+      },
+      "source_commit": "7310138666276d52656718a633f67ef27ec36ec5",
+      "source_sha256": "08ccc64aaaca128c229e5ab72b1481d7c67dcb7797091713470503d9a81e8028",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260925T005246Z-bac61bb4",
+      "worker": {
+        "id": "20260925T005246Z-bac61bb4",
+        "instance_id": "i-01cdc872a3a5f4b81",
+        "max_end": 1790301436.2662928,
+        "reuse_count": 0,
+        "reused": false
+      }
+    }
+  },
+  "network": {
+    "icmp": false,
+    "id": "sg-037b8b3c33543e429",
+    "name": "sixdb-scope-70f6244d22ecbd378cc154b1",
+    "scope": "cft-port-sampling-20260925",
+    "tcp_ports": [
+      [
+        43400,
+        43400
+      ]
+    ],
+    "udp_ports": [
+      [
+        48100,
+        48100
+      ],
+      [
+        49152,
+        65535
+      ]
+    ],
+    "vpc_id": "vpc-5e2d0124"
+  },
+  "network_removed": true,
+  "region": "us-east-1",
+  "uri": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260925T005146Z-c3b8a106"
+}

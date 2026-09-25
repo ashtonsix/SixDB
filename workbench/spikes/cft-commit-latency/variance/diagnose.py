@@ -11,12 +11,13 @@ from analyze import Clock,read_events,quantile,write_csv
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('campaign',type=Path);p.add_argument('--inputs',type=Path);args=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('campaign',type=Path);p.add_argument('--inputs',type=Path)
+    p.add_argument('--clock-point-model',choices=('affine','feasible'),default='affine');args=p.parse_args()
     refs=json.loads((args.campaign/'workers.json').read_text())
     rows=[]
     for name,member in refs['members'].items():
         folder=args.inputs/name if args.inputs else ROOT/'build/workers'/member['job']/'results'
-        identity=json.loads((folder/'identity.json').read_text());clock=Clock(folder/'calibration.jsonl')
+        identity=json.loads((folder/'identity.json').read_text());clock=Clock(folder/'calibration.jsonl',point_model=args.clock_point_model)
         for case in json.loads((folder/'cases.json').read_text()):
             values={'hardware_to_software_rx':[],'software_to_app_rx':[],'app_to_software_tx':[]}
             for event in read_events(folder/case['file']):

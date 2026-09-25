@@ -7,6 +7,13 @@ class on the same hosts.** The result extends beyond az2–az4. In this cohort,
 a cheap selection mechanism, not evidence that fresh flows are IID or that
 an AZ has one characteristic latency.
 
+The subsequent [4/16/32-port policy comparison](studies/port-sampling.md) found
+little general benefit from scattering ports at equal budgets. More candidates
+helped both policies. It also observed occasional fixed-tuple changes up to
+103 µs over an 18-minute capture, so the repeatability below is a cohort result,
+not a stationarity guarantee. Its new hosts and complete candidate scores are
+kept separate from the September 24 results on this page.
+
 The main table below comes from the broad cohort, measured
 **24 September 2026, 23:25:34–23:27:23 UTC**: twelve fresh hosts, two
 per AZ, all fifteen AZ pairs and six same-AZ controls, four fixed tuples per

@@ -7,10 +7,12 @@ The findings are now organized under [network latency](../network/README.md):
 
 | Source | Responsibility |
 | --- | --- |
-| [launch.py](launch.py) | Broad six-AZ, one-port capture by default; `--focused` selects the eight-host dense control |
+| [launch.py](launch.py) | Broad six-AZ, one-port capture by default; `--focused` selects the dense control; `--port-sampling` compares consecutive and scattered ports |
 | [analyze.py](analyze.py) | Verify physical tuples and complete grids, compare same-role revisits, train and assess host/flow choices |
 | [diagnose.py](diagnose.py) | Per-block application/kernel and hardware/software receive-boundary diagnostics |
 | [plot.py](plot.py) | Dense tuple repeatability and broad held-out edge figures |
+| [port_plan.py](port_plan.py), [check_ports.py](check_ports.py) | Reproducible nested port policies, balanced schedule, overlap and holdout-selection checks |
+| [port_sampling.py](port_sampling.py), [port_plot.py](port_plot.py) | Equal-budget paired comparisons and a figure reproducible from compact scores |
 | [recover.py](recover.py) | Fetch raw archives and reproduce clock analysis, rankings and boundary diagnostics without new probes |
 
 The runner reuses [oneway/](../oneway/README.md) for packet capture and independent

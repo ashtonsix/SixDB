@@ -111,4 +111,33 @@ with tempfile.TemporaryDirectory() as tmp:
             pass
         assert sample_phc(-5,[str(bound)])['error_ns']==25000
         assert len(calls)==2
+    # A changing drift rate can invalidate an affine point despite consistent
+    # references. The alternative must satisfy every reference and rate bound,
+    # without using a link delay or making discontinuous window-fit jumps.
+    rows = [dict(kind='phc', a=t, b=t, utc=EPOCH+t+int(min(t,2000000000-t)*20e-6),
+                 error_ns=1000) for t in range(0,2000000001,50000000)]
+    curve_path=path/'curve';curve_path.write_text('\n'.join(map(json.dumps,rows))+'\n')
+    try:
+        Clock(curve_path)
+        raise AssertionError('invalid affine trajectory accepted')
+    except ValueError:
+        pass
+    curve=Clock(curve_path,point_model='feasible')
+    previous=None
+    for t in range(0,2000000001,1000000):
+        point,lo,hi=curve.offset(t)
+        assert lo-1 <= point <= hi+1
+        assert lo <= EPOCH-curve.origin+min(t,2000000000-t)*20e-6 <= hi
+        if previous is not None:
+            assert abs(point-previous) <= 100.000001  # 100 ppm over one millisecond.
+        previous=point
+    for (t,lo,hi),point in zip(curve.anchors,curve.points):
+        assert lo <= point <= hi
+    rows[20]['utc']+=1000000
+    curve_path.write_text('\n'.join(map(json.dumps,rows))+'\n')
+    try:
+        Clock(curve_path,point_model='feasible')
+        raise AssertionError('inconsistent reference intervals accepted')
+    except ValueError:
+        pass
 print('Clock offset, drift, asymmetric NTP, uncertainty and coverage checks passed.')

@@ -1,0 +1,35 @@
+{
+  "files_sha256": {
+    "README.md": "c8cc9fff5ad4bbe17a79032d59c28c04cb3f21be1b8c69cd3a98135a1dbf1510",
+    "asymmetry.csv": "3b83c7105fff1164f72b3d2939f4670fbce734c9a680382c55677c3111fc771f",
+    "campaign.json": "bc610d60c2572ee88ebe129c73fc68b942533b116ec0c1cb2ad00d8131849029",
+    "capture-config.json": "c60086edbc1105dce8c12419dcb3fb147625fdf762e2e994a4865c3dcd5c3065",
+    "checks.json": "91ba29ea7fdb7fdfef32c28efa7d0e5316cdff4005fd3279164ee2d79561aadc",
+    "clock-model.json": "034b49efd37d094cbd09b15b3e53af215743e266cb0fbe9bf2584113f17d215c",
+    "clocks.csv": "22c9f1e5f49b3df618ece4a187fbe3f3b74ff5840cc3f57d32d23a28a58a23aa",
+    "compute.csv": "ad8d9ea3a5c9f7b34cd5b2157e87d0d778479bb113be592562c1095216bfb316",
+    "counters.csv": "2734b3313c43fc3221cde4d01b8f0df8457d1d3a6e7019fc8720d0189544920b",
+    "directions.csv": "3c25b342a5bfbf43380972aad9a01bae314fec3dc08f69946149e5393262fef6",
+    "hardware-rx.csv": "9f8bb054559d79c3de03b8fb9a21c74131de4a68c72e028d273cd70dd474b97d",
+    "hosts.json": "632ed4a7254f9ecb37cfd1f98b2e435c48468285078b4409ab84f1f93e146af1",
+    "overhead.csv": "e667365be8945727f48dab3e4ec25748b98f6903e8750630792d21650c9f4bcd",
+    "port-candidates.csv": "597495efda5ef8d0458fa10e63db6794ca77aecb9c89b3b21be527a5a6738b6f",
+    "port-comparisons.csv": "64878e0a84bdecdbc07bfc29f9de7102a0b5c99de947eae7259a800f43809a77",
+    "port-design.json": "7576c16592c7fe9675b17c0d4b47f02719724646839c46175d4cceed1334d0a7",
+    "port-request-comparisons.csv": "37e3816a7700fe6916b81bcfd3d2402929db53919b379afd5ac4792b76bbba4b",
+    "port-sampling.png": "1e6a3a246eef8a5366f69194bf7d91ac9970e5381e917ac16421a50efff8ef71",
+    "port-totals.csv": "406debdd0745bd3703d01656e5832232de9bba8156bceac06087ba0434953b46",
+    "resources.json": "de404b953f247f0c0c892dca0de5a074e754138bbd175926453e6b4ba7a9828a",
+    "verification.json": "2c8df3afc88f14ede25758d7166a3a7fd5c730fc8857af820381a4b4d356d687",
+    "workers.json": "c7c4d5bea08c22c7b9e439bf717a002cb8a5705d034812a1c9a032055c24adc5"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/cft-commit-latency/variance/port_plot.py",
+    "{evidence}"
+  ],
+  "regenerate_from": "retained"
+}

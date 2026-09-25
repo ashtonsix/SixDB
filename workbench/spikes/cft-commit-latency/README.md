@@ -24,6 +24,7 @@ added, and separately measured links do not establish a two-follower race.
 | How can a shard find and retain a fast outgoing witness edge? | [Network findings and design boundary](network/README.md), then [host/port selection across all 15 AZ pairs](network/selection.md) |
 | Which directional differences can the clocks resolve? | [Independent references, drift and uncertainty](network/clocks.md) |
 | What separates port choice, host choice and time? | [Controlled comparisons and held-out selection](network/method.md) |
+| Does a wider random port sample find a better frontier? | [Equal-budget consecutive/scattered comparison](network/studies/port-sampling.md) |
 | What changes the latency of one record? | [Placement, prepared files, EBS, transport and fallback](commit/latency.md) |
 | What did the short throughput screens identify? | [Original choices, queueing and variation between passes](commit/throughput.md) |
 | What causes the cliff, and can a controller avoid it? | [Longer runs, live log preparation and service objectives](commit/cliff.md) |

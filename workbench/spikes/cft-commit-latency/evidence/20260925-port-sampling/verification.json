@@ -1,0 +1,10 @@
+{
+  "rtt_and_turnaround_identical_across_clock_envelopes_ppm": [
+    50,
+    100,
+    1000
+  ],
+  "physical_blocks": 21095,
+  "synthetic_clock_checks": "offset, drift, asymmetric NTP, coverage, changing drift, impossible references",
+  "synthetic_policy_checks": "nested budgets, overlaps, execution order, heldout exclusion, separate request roles"
+}

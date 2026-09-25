@@ -7,6 +7,12 @@ host pairs. New machines or long waits are not required to obtain a different
 latency class. Host choice still matters, and the short observations do not
 establish IID rerolls or long-term stability.
 
+A [larger port-policy comparison](studies/port-sampling.md) found little general
+benefit from scattering ports at equal budgets: median gain 0.41 µs at 16 ports.
+Increasing 4→32 candidates improved 31/60 cross-AZ pairs by >5 µs under either
+policy. Most tuples remained stable, but several changed during the longer
+capture, so selection still needs validation over time.
+
 The [selection findings](selection.md) contain the controlled comparisons and
 held-out candidates for both directions of all fifteen AZ pairs. They supersede
 the original AZ-only placement interpretation. The original TCP measurements
@@ -42,6 +48,7 @@ The third witness's alternate path and the joint follower race still matter.
 | Question | Read |
 | --- | --- |
 | Can ports reroll latency cheaply, and what survives validation? | [Host/port selection](selection.md), including all 30 AZ directions and the UDP/QUIC implications |
+| Do scattered ports outperform consecutive ports at equal budgets? | [Port-policy comparison](studies/port-sampling.md), including 4/16/32 candidates and temporal exceptions |
 | What controls distinguish hosts, tuples, roles and elapsed time? | [Experiment design](method.md), including training, holdout and sample budgets |
 | What is a one-way estimate allowed to claim? | [Clocks and timestamp boundaries](clocks.md), including identifiability, uncertainty and sensitivity |
 | What did the earlier measurements actually establish? | [TCP RTTs and modeled triples](studies/tcp.md), [initial one-way cohort](studies/oneway-initial.md), [fresh-host confirmation](studies/oneway-confirmation.md), [dense tuple control](studies/tuple-dense.md) |

@@ -23,13 +23,14 @@ reports preserve distinct populations and capture conditions. Original TCP RTT,
 calibrated one-way delay and joint durable commit use different timer boundaries.
 A new-host rerun is a new observation, not a recovery of an earlier cohort.
 
-| September 24 cohort | Completed exchanges, including same-AZ controls | Cross-AZ IPv4+UDP probe bytes | Findings / immutable evidence |
+| September 24–25 cohort | Completed exchanges, including same-AZ controls | Cross-AZ IPv4+UDP probe bytes | Findings / immutable evidence |
 | --- | ---: | ---: | --- |
 | Initial one-way; 12 hosts | 264,000 | 44.1600 MB | [Report](network/studies/oneway-initial.md) / [export and recovery](evidence/20260924-oneway/README.md) |
 | Fresh one-way confirmation; 12 hosts | 132,000 | 22.0800 MB | [Report](network/studies/oneway-confirmation.md) / [export and recovery](evidence/20260924-oneway-confirmation/README.md) |
 | Dense fixed tuples; 8 hosts in az2/az4 | 102,400 | 18.8416 MB | [Report](network/studies/tuple-dense.md) / [export and recovery](evidence/20260924-variance-dense/README.md) |
 | Broad one-port tuples; 12 hosts across all six AZs | 105,600 | 17.6640 MB | [Selection findings](network/selection.md) / [export and recovery](evidence/20260924-variance-broad/README.md) |
-| Total | **604,000** | **102.7456 MB** | All **44 distinct instances terminated** |
+| Consecutive/scattered ports, September 25; 12 hosts across all six AZs | 1,265,700 | 211.7472 MB | [Policy comparison](network/studies/port-sampling.md) / [export and recovery](evidence/20260925-port-sampling/README.md) |
+| Total | **1,869,700** | **314.4928 MB** | All **56 distinct instances terminated** |
 
 MB here means 1,000,000 bytes. A 64-byte payload plus IPv4/UDP headers is 92
 bytes per datagram, or 184 per complete echo. Probe-byte accounting includes
@@ -37,9 +38,9 @@ warmup but excludes same-AZ controls from the cross-AZ total. No missing or
 duplicate exchanges were observed. This was a paced latency study, not a
 throughput screen.
 
-The four `campaign.json` files model approximately **$1.22 EC2 compute through
+The five `campaign.json` files model approximately **$2.24 EC2 compute through
 archive completion**, including reused preflight-host lifetimes, and
-**$0.0021 cross-AZ probe transfer** at the captured aggregate two-sided rate of
+**$0.0063 cross-AZ probe transfer** at the captured aggregate two-sided rate of
 $0.02/GB. These are scoped models, not observed billing. Shutdown lag, EBS,
 public IPv4, S3, control traffic, encapsulation and tax are excluded; the user's
 reported ~$40 for earlier spike traffic is outside this follow-up's accounting.
@@ -58,6 +59,14 @@ S3 bundle. Historical capture gaps remain gaps.
 bounds, not confidence intervals; independent clock fits use the full capture
 while ranking excludes held-out packets. These are offline holdouts.
 
+The port-policy export keeps every logical candidate and its five RTT medians
+in `port-candidates.csv`, paired 4/16/32-budget scores in `port-comparisons.csv`,
+and separate outgoing-request winners. `port-design.json` hashes the full
+archive-only `port-plan.json`; raw workers retain actual execution order.
+`clock-model.json` records the explicit post-capture point-model change after
+the affine reference check failed. Independent reference bounds remain intact,
+and every primary RTT result is identical across the three clock-rate analyses.
+
 Run the cohort's recorded recipe with Matplotlib 3.10.8 available (Linux repository
 root; prefix with `orb -m ubuntu` from the Mac):
 
@@ -67,7 +76,7 @@ python3 workbench/tools/artifacts.py report \
   build/reports/20260924-variance-dense
 ```
 
-The broad figure uses retained inputs offline. The other recipes fetch their small
+The broad and port-policy figures use retained inputs offline. The other recipes fetch their small
 exports; confirmation also fetches the initial cohort and produces both figures.
 Use a fresh output directory. `--dry-run` shows the steps; the adjacent report
 receipt records current entrypoints and command completion, without rewriting
@@ -75,9 +84,12 @@ captured-source identities. For archived tables alone, use `artifacts.py fetch`
 with the same two paths. [Artifact tools](../../tools/artifacts.md#run-a-report-recipe)
 own the command details.
 
-All 98 originally selected members were verified through exact-member S3 recovery
+All 98 originally selected September 24 members were verified through exact-member S3 recovery
 before reducing Git retention; all five figures were regenerated. The recipe
 commands reproduce those figures using current plotting sources.
+The September 25 export was separately fetched and verified; its offline recipe
+reproduced the PNG byte for byte. Seven port/context tables also reproduced
+byte for byte through the recovered-input reducer using the collected raw archives.
 
 Deeper raw reanalysis uses `oneway/recover.py` for the first two cohorts and
 `variance/recover.py` for fixed tuples, with the evidence directory and
