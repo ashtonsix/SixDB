@@ -11,6 +11,11 @@ thread spawning, and related system services.
 Successor to Calico's `xmem` and `omachine`; see the
 [Calico reference map](../workbench/notebook/calico.md).
 
+The evolving [brief](BRIEF.md) sets the current direction. The
+[scenario workbench](../workbench/spikes/orbital-scenarios/README.md) is an
+interactive contention model for preparation, retained protection and yielding,
+with explicit assumptions and replayable counterexamples.
+
 ## Provisional scope and seams
 
 - Storage services for durable bytes, recovery and the lifetimes of backing
