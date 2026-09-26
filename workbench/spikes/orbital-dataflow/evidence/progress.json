@@ -1,0 +1,918 @@
+{
+  "assumptions": [
+    "source seals and closed lane membership are supplied facts",
+    "one accepted application transition is atomic and durable",
+    "sink deduplication is atomic where explicitly selected",
+    "source inputs and code identity survive replay",
+    "progress accounting is exact central state, not a distributed implementation"
+  ],
+  "coverage_progress_publication": {
+    "arrangement_eviction_negative_control": {
+      "correct_later_join": [
+        {
+          "row": [
+            "a",
+            "old-order",
+            "new-payment"
+          ],
+          "weight": 1
+        }
+      ],
+      "later_join_after_frontier_based_eviction": [],
+      "reason": "completed input epoch does not end future uses of retained join state"
+    },
+    "coverage": [
+      {
+        "complete": false,
+        "stage": "queues empty; payment source has not sealed"
+      },
+      {
+        "complete": false,
+        "stage": "seal and sequence 2 present; sequence 1 missing"
+      },
+      {
+        "complete": true,
+        "duplicates": 1,
+        "stage": "gap repaired, replay suppressed",
+        "unmatched": []
+      }
+    ],
+    "loop_progress": [
+      {
+        "epoch_complete": false,
+        "stage": "empty queues; worker may still emit"
+      },
+      {
+        "epoch_complete": false,
+        "stage": "worker handed token to feedback message"
+      },
+      {
+        "epoch_complete": true,
+        "stage": "all work and messages retired"
+      }
+    ],
+    "partial_order": {
+      "complete": false,
+      "frontier": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "query": [
+        1,
+        1
+      ],
+      "unsafe_lexicographic_min_complete": true
+    },
+    "publication_gates": [
+      {
+        "authority": false,
+        "checks_complete": false,
+        "published": false
+      },
+      {
+        "authority": false,
+        "checks_complete": true,
+        "published": false
+      },
+      {
+        "authority": true,
+        "checks_complete": false,
+        "published": false
+      },
+      {
+        "authority": true,
+        "checks_complete": true,
+        "published": true
+      }
+    ],
+    "timeout_antijoin_negative_control": {
+      "correct_after_missing_payment": [],
+      "policy": "provisional output requires retraction; irreversible action cannot be recalled",
+      "published_without_payment_seal": [
+        {
+          "row": [
+            "a",
+            "order"
+          ],
+          "weight": 1
+        }
+      ]
+    }
+  },
+  "join_histories": [
+    {
+      "case": "same-cut cross term",
+      "epoch": 1,
+      "join_delta": [
+        {
+          "row": [
+            "a",
+            "order-a",
+            "payment-a"
+          ],
+          "weight": 1
+        }
+      ],
+      "joined": [
+        {
+          "row": [
+            "a",
+            "order-a",
+            "payment-a"
+          ],
+          "weight": 1
+        }
+      ],
+      "left_changes": [
+        {
+          "row": [
+            "a",
+            "order-a"
+          ],
+          "weight": 1
+        }
+      ],
+      "right_changes": [
+        {
+          "row": [
+            "a",
+            "payment-a"
+          ],
+          "weight": 1
+        }
+      ],
+      "unmatched": [],
+      "unmatched_delta": []
+    },
+    {
+      "case": "unmatched order at complete cut",
+      "epoch": 2,
+      "join_delta": [],
+      "joined": [
+        {
+          "row": [
+            "a",
+            "order-a",
+            "payment-a"
+          ],
+          "weight": 1
+        }
+      ],
+      "left_changes": [
+        {
+          "row": [
+            "b",
+            "order-b/event-9"
+          ],
+          "weight": 1
+        }
+      ],
+      "right_changes": [],
+      "unmatched": [
+        {
+          "row": [
+            "b",
+            "order-b/event-9"
+          ],
+          "weight": 1
+        }
+      ],
+      "unmatched_delta": [
+        {
+          "row": [
+            "b",
+            "order-b/event-9"
+          ],
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "case": "later accepted correction of old event time",
+      "epoch": 3,
+      "join_delta": [
+        {
+          "row": [
+            "b",
+            "order-b/event-9",
+            "payment-b/event-9"
+          ],
+          "weight": 1
+        }
+      ],
+      "joined": [
+        {
+          "row": [
+            "a",
+            "order-a",
+            "payment-a"
+          ],
+          "weight": 1
+        },
+        {
+          "row": [
+            "b",
+            "order-b/event-9",
+            "payment-b/event-9"
+          ],
+          "weight": 1
+        }
+      ],
+      "left_changes": [],
+      "right_changes": [
+        {
+          "row": [
+            "b",
+            "payment-b/event-9"
+          ],
+          "weight": 1
+        }
+      ],
+      "unmatched": [],
+      "unmatched_delta": [
+        {
+          "row": [
+            "b",
+            "order-b/event-9"
+          ],
+          "weight": -1
+        }
+      ]
+    },
+    {
+      "case": "delete the last matching payment",
+      "epoch": 4,
+      "join_delta": [
+        {
+          "row": [
+            "a",
+            "order-a",
+            "payment-a"
+          ],
+          "weight": -1
+        }
+      ],
+      "joined": [
+        {
+          "row": [
+            "b",
+            "order-b/event-9",
+            "payment-b/event-9"
+          ],
+          "weight": 1
+        }
+      ],
+      "left_changes": [],
+      "right_changes": [
+        {
+          "row": [
+            "a",
+            "payment-a"
+          ],
+          "weight": -1
+        }
+      ],
+      "unmatched": [
+        {
+          "row": [
+            "a",
+            "order-a"
+          ],
+          "weight": 1
+        }
+      ],
+      "unmatched_delta": [
+        {
+          "row": [
+            "a",
+            "order-a"
+          ],
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "case": "duplicate-valued bag rows are real multiplicity",
+      "epoch": 5,
+      "join_delta": [
+        {
+          "row": [
+            "b",
+            "order-b/event-9",
+            "payment-b/event-9"
+          ],
+          "weight": 1
+        }
+      ],
+      "joined": [
+        {
+          "row": [
+            "b",
+            "order-b/event-9",
+            "payment-b/event-9"
+          ],
+          "weight": 2
+        }
+      ],
+      "left_changes": [
+        {
+          "row": [
+            "b",
+            "order-b/event-9"
+          ],
+          "weight": 1
+        }
+      ],
+      "right_changes": [],
+      "unmatched": [
+        {
+          "row": [
+            "a",
+            "order-a"
+          ],
+          "weight": 1
+        }
+      ],
+      "unmatched_delta": []
+    },
+    {
+      "case": "same-cut deletion of both sides",
+      "epoch": 6,
+      "join_delta": [
+        {
+          "row": [
+            "b",
+            "order-b/event-9",
+            "payment-b/event-9"
+          ],
+          "weight": -2
+        }
+      ],
+      "joined": [],
+      "left_changes": [
+        {
+          "row": [
+            "b",
+            "order-b/event-9"
+          ],
+          "weight": -2
+        }
+      ],
+      "right_changes": [
+        {
+          "row": [
+            "b",
+            "payment-b/event-9"
+          ],
+          "weight": -1
+        }
+      ],
+      "unmatched": [
+        {
+          "row": [
+            "a",
+            "order-a"
+          ],
+          "weight": 1
+        }
+      ],
+      "unmatched_delta": []
+    }
+  ],
+  "python": "3.13.7",
+  "recovery_histories": [
+    {
+      "accepted_epoch": 1,
+      "crash": "before_prepare",
+      "joined": [
+        {
+          "row": [
+            "a",
+            "order",
+            "payment"
+          ],
+          "weight": 1
+        }
+      ],
+      "recovery_sends": 1,
+      "retained_output_records": 1,
+      "sink_effects_with_sink_atomic_dedup": 1
+    },
+    {
+      "accepted_epoch": 1,
+      "crash": "after_prepare",
+      "joined": [
+        {
+          "row": [
+            "a",
+            "order",
+            "payment"
+          ],
+          "weight": 1
+        }
+      ],
+      "recovery_sends": 1,
+      "retained_output_records": 1,
+      "sink_effects_with_sink_atomic_dedup": 1
+    },
+    {
+      "accepted_epoch": 1,
+      "crash": "after_accept",
+      "joined": [
+        {
+          "row": [
+            "a",
+            "order",
+            "payment"
+          ],
+          "weight": 1
+        }
+      ],
+      "recovery_sends": 1,
+      "retained_output_records": 1,
+      "sink_effects_with_sink_atomic_dedup": 1
+    },
+    {
+      "accepted_epoch": 1,
+      "crash": "after_sink_before_receipt",
+      "joined": [
+        {
+          "row": [
+            "a",
+            "order",
+            "payment"
+          ],
+          "weight": 1
+        }
+      ],
+      "recovery_sends": 1,
+      "retained_output_records": 1,
+      "sink_effects_with_sink_atomic_dedup": 1
+    },
+    {
+      "crash": "emit delta before persisting its input cut",
+      "negative_control": true,
+      "recovered_cut": 1,
+      "sink_effects_without_dedup": 2,
+      "sink_relation": [
+        {
+          "row": [
+            "a",
+            "order",
+            "payment"
+          ],
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "crash": "persist input cut before derived state/output",
+      "negative_control": true,
+      "recovered_cut": 1,
+      "sink_effects_without_dedup": 0,
+      "sink_relation": []
+    },
+    {
+      "crash": "external reply lost",
+      "indistinguishable_histories": [
+        {
+          "local_observation": {
+            "intent": "orders/code-v1/epoch-1/record-0",
+            "receipt": null
+          },
+          "sink_effects_after_blind_retry": 1,
+          "sink_effects_before_retry": 0
+        },
+        {
+          "local_observation": {
+            "intent": "orders/code-v1/epoch-1/record-0",
+            "receipt": null
+          },
+          "sink_effects_after_blind_retry": 2,
+          "sink_effects_before_retry": 1
+        }
+      ],
+      "negative_control": true
+    }
+  ],
+  "recursive_bag_nontermination": {
+    "case": "UNION ALL counts walks through a cycle",
+    "completed": false,
+    "iterations": [
+      {
+        "iteration": 1,
+        "new_walks": 1,
+        "total_walks": 2
+      },
+      {
+        "iteration": 2,
+        "new_walks": 1,
+        "total_walks": 3
+      },
+      {
+        "iteration": 3,
+        "new_walks": 1,
+        "total_walks": 4
+      },
+      {
+        "iteration": 4,
+        "new_walks": 1,
+        "total_walks": 5
+      },
+      {
+        "iteration": 5,
+        "new_walks": 1,
+        "total_walks": 6
+      },
+      {
+        "iteration": 6,
+        "new_walks": 1,
+        "total_walks": 7
+      },
+      {
+        "iteration": 7,
+        "new_walks": 1,
+        "total_walks": 8
+      },
+      {
+        "iteration": 8,
+        "new_walks": 1,
+        "total_walks": 9
+      }
+    ],
+    "remaining_work": 1,
+    "round_limit": 8,
+    "set_reachability_nodes": 3
+  },
+  "recursive_histories": [
+    {
+      "added": [],
+      "after_nodes": 1,
+      "before_nodes": 3,
+      "case": "cycle loses its only rooted support",
+      "correct": true,
+      "correct_result": [
+        0
+      ],
+      "full_adjacency_entries": 2,
+      "full_edge_visits": 0,
+      "incremental_adjacency_entries": 4,
+      "incremental_edge_visits": 5,
+      "index_updates": 1,
+      "initial_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "naive_support_count_result": [
+        0,
+        1,
+        2
+      ],
+      "overdeleted_nodes": 2,
+      "partial_overdelete_is_final": true,
+      "rederived_nodes": 0,
+      "removed": [
+        [
+          0,
+          1
+        ]
+      ],
+      "worklist_peak_nodes": 1
+    },
+    {
+      "added": [],
+      "after_nodes": 200,
+      "before_nodes": 201,
+      "case": "local leaf deletion",
+      "correct": true,
+      "full_adjacency_entries": 199,
+      "full_edge_visits": 199,
+      "incremental_adjacency_entries": 398,
+      "incremental_edge_visits": 1,
+      "index_updates": 1,
+      "initial_edges": {
+        "count": 200,
+        "generator": "recursive_histories"
+      },
+      "overdeleted_nodes": 1,
+      "partial_overdelete_is_final": true,
+      "rederived_nodes": 0,
+      "removed": [
+        [
+          199,
+          200
+        ]
+      ],
+      "worklist_peak_nodes": 1
+    },
+    {
+      "added": [],
+      "after_nodes": 1,
+      "before_nodes": 201,
+      "case": "bridge deletion discards almost everything",
+      "correct": true,
+      "full_adjacency_entries": 200,
+      "full_edge_visits": 0,
+      "incremental_adjacency_entries": 400,
+      "incremental_edge_visits": 401,
+      "index_updates": 1,
+      "initial_edges": {
+        "count": 201,
+        "generator": "recursive_histories"
+      },
+      "overdeleted_nodes": 200,
+      "partial_overdelete_is_final": true,
+      "rederived_nodes": 0,
+      "removed": [
+        [
+          0,
+          1
+        ]
+      ],
+      "worklist_peak_nodes": 1
+    },
+    {
+      "added": [],
+      "after_nodes": 201,
+      "before_nodes": 201,
+      "case": "redundant path deletion rederives a long suffix",
+      "correct": true,
+      "full_adjacency_entries": 200,
+      "full_edge_visits": 200,
+      "incremental_adjacency_entries": 400,
+      "incremental_edge_visits": 593,
+      "index_updates": 1,
+      "initial_edges": {
+        "count": 201,
+        "generator": "recursive_histories"
+      },
+      "overdeleted_nodes": 198,
+      "partial_overdelete_is_final": false,
+      "rederived_nodes": 198,
+      "removed": [
+        [
+          1,
+          3
+        ]
+      ],
+      "worklist_peak_nodes": 1
+    },
+    {
+      "added": [
+        [
+          200,
+          201
+        ]
+      ],
+      "after_nodes": 202,
+      "before_nodes": 201,
+      "case": "local insertion into an existing chain",
+      "correct": true,
+      "full_adjacency_entries": 201,
+      "full_edge_visits": 201,
+      "incremental_adjacency_entries": 402,
+      "incremental_edge_visits": 1,
+      "index_updates": 1,
+      "initial_edges": {
+        "count": 200,
+        "generator": "recursive_histories"
+      },
+      "overdeleted_nodes": 0,
+      "partial_overdelete_is_final": false,
+      "rederived_nodes": 0,
+      "removed": [],
+      "worklist_peak_nodes": 1
+    },
+    {
+      "added": [
+        [
+          1,
+          2
+        ]
+      ],
+      "after_nodes": 4,
+      "before_nodes": 2,
+      "case": "new bridge reaches a previously disconnected cycle",
+      "correct": true,
+      "full_adjacency_entries": 4,
+      "full_edge_visits": 4,
+      "incremental_adjacency_entries": 8,
+      "incremental_edge_visits": 3,
+      "index_updates": 1,
+      "initial_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "overdeleted_nodes": 0,
+      "partial_overdelete_is_final": false,
+      "rederived_nodes": 0,
+      "removed": [],
+      "worklist_peak_nodes": 1
+    },
+    {
+      "added": [
+        [
+          3,
+          2
+        ]
+      ],
+      "after_nodes": 4,
+      "before_nodes": 4,
+      "case": "same-cut replacement bridge",
+      "correct": true,
+      "full_adjacency_entries": 4,
+      "full_edge_visits": 4,
+      "incremental_adjacency_entries": 8,
+      "incremental_edge_visits": 9,
+      "index_updates": 2,
+      "initial_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "overdeleted_nodes": 2,
+      "partial_overdelete_is_final": false,
+      "rederived_nodes": 2,
+      "removed": [
+        [
+          0,
+          1
+        ]
+      ],
+      "worklist_peak_nodes": 1
+    }
+  ],
+  "retention": {
+    "capacity_bytes": 5504,
+    "over_capacity_offer_refused": true,
+    "states": [
+      {
+        "objects": {
+          "committed-intent@1": {
+            "bytes": 128,
+            "owners": [
+              "dispatcher"
+            ]
+          },
+          "input@1": {
+            "bytes": 1024,
+            "owners": [
+              "replay",
+              "worker"
+            ]
+          },
+          "result@1": {
+            "bytes": 256,
+            "owners": [
+              "client",
+              "worker"
+            ]
+          },
+          "state@0": {
+            "bytes": 4096,
+            "owners": [
+              "snapshot-reader"
+            ]
+          }
+        },
+        "retained_bytes": 5504,
+        "stage": "all owners active"
+      },
+      {
+        "objects": {
+          "committed-intent@1": {
+            "bytes": 128,
+            "owners": [
+              "dispatcher"
+            ]
+          },
+          "input@1": {
+            "bytes": 1024,
+            "owners": [
+              "replay",
+              "worker"
+            ]
+          },
+          "result@1": {
+            "bytes": 256,
+            "owners": [
+              "worker"
+            ]
+          },
+          "state@0": {
+            "bytes": 4096,
+            "owners": [
+              "snapshot-reader"
+            ]
+          }
+        },
+        "retained_bytes": 5504,
+        "stage": "client cancels interest"
+      },
+      {
+        "objects": {
+          "committed-intent@1": {
+            "bytes": 128,
+            "owners": [
+              "dispatcher"
+            ]
+          },
+          "input@1": {
+            "bytes": 1024,
+            "owners": [
+              "replay"
+            ]
+          },
+          "state@0": {
+            "bytes": 4096,
+            "owners": [
+              "snapshot-reader"
+            ]
+          }
+        },
+        "retained_bytes": 5248,
+        "stage": "worker reaches actual stopping point"
+      },
+      {
+        "objects": {
+          "committed-intent@1": {
+            "bytes": 128,
+            "owners": [
+              "dispatcher"
+            ]
+          },
+          "state@0": {
+            "bytes": 4096,
+            "owners": [
+              "snapshot-reader"
+            ]
+          }
+        },
+        "retained_bytes": 4224,
+        "stage": "accepted checkpoint covers replay cut"
+      },
+      {
+        "objects": {
+          "committed-intent@1": {
+            "bytes": 128,
+            "owners": [
+              "dispatcher"
+            ]
+          }
+        },
+        "retained_bytes": 128,
+        "stage": "independent snapshot reader finishes"
+      },
+      {
+        "objects": {},
+        "retained_bytes": 0,
+        "stage": "external intent obtains qualifying receipt"
+      }
+    ]
+  },
+  "source_sha256": {
+    "check_progress.py": "6c7de8728ed8d5273d06e9d7cc99d84f1d0be29672c505360bd1fc9ee5ecaf74",
+    "progress_probe.py": "f840c18bddc9c04cfecf00ab5e5dbf7cb7e5b3f6b1445dd1769419ef54eabdf7"
+  },
+  "study": "finite dataflow progress, incremental changes and recovery",
+  "units": "logical tuples, edge entries, modeled bytes; no elapsed timings"
+}
