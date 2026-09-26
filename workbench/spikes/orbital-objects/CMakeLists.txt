@@ -1,0 +1,7 @@
+add_executable(orbital_objects_capabilities capabilities.cpp)
+sixdb_target(orbital_objects_capabilities)
+
+find_package(Threads REQUIRED)
+add_executable(orbital_objects_views views.cpp)
+sixdb_target(orbital_objects_views)
+target_link_libraries(orbital_objects_views PRIVATE Threads::Threads)
