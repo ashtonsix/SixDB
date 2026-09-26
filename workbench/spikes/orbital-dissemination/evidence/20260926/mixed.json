@@ -1,0 +1,4668 @@
+{
+  "results": [
+    {
+      "application_bytes_at_cutoff": {
+        "background": 0,
+        "foreground": 576
+      },
+      "application_bytes_at_drain": {
+        "background": 0,
+        "foreground": 0
+      },
+      "application_high_bytes": {
+        "background": 0,
+        "foreground": 1152
+      },
+      "background_read": {
+        "admitted": 0,
+        "completed": 0,
+        "deadline_fraction": 0.0,
+        "deadline_us": 2000,
+        "goodput_per_s": 0.0,
+        "offered": 0,
+        "oldest_unfinished_us": 0,
+        "p50_us": null,
+        "p999_us": null,
+        "p99_us": null,
+        "pending_at_cutoff": 0,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "cancellation": [],
+      "client_response": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 1.0,
+        "deadline_us": 150,
+        "goodput_per_s": 19966.666666666668,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 93.39152000000013,
+        "p999_us": 93.39152000001195,
+        "p99_us": 93.39152000001195,
+        "pending_at_cutoff": 1,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "completed_tx_wire_bytes_by_class": {
+        "foreground": 772800
+      },
+      "config": {
+        "background_rate": 0,
+        "count": 600,
+        "name": "foreground-only"
+      },
+      "counters": {
+        "bytes:control": 772799.9999994328,
+        "delivered_messages": 3600,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 3600,
+        "packets": 3600,
+        "persisted_bytes": 614400,
+        "price": 0.0,
+        "received_batches": 3600,
+        "wire_bytes": 772799.9999994328
+      },
+      "cpu_budget": "two effect/background CPU slots total; other hosts fixed",
+      "foreground_effect": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 1.0,
+        "deadline_us": 150,
+        "goodput_per_s": 19966.666666666668,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 84.55711999999994,
+        "p999_us": 84.55712000000858,
+        "p99_us": 84.55712000000858,
+        "pending_at_cutoff": 1,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "logical_background_bytes": 0,
+      "model": "authored mixed resource proxy; no witness admission",
+      "placement": "shared",
+      "resource_bytes_at_cutoff": {
+        "client:cpu": 0,
+        "client:disk": 0,
+        "client:disk_bytes": 0,
+        "client:memory": 0,
+        "client:rx": 0,
+        "client:tx": 0,
+        "durable:cpu": 0,
+        "durable:disk": 512,
+        "durable:disk_bytes": 0,
+        "durable:memory": 0,
+        "durable:rx": 0,
+        "durable:tx": 0,
+        "effect:cpu": 0,
+        "effect:disk": 0,
+        "effect:disk_bytes": 0,
+        "effect:memory": 0,
+        "effect:rx": 0,
+        "effect:tx": 0,
+        "sink:cpu": 0,
+        "sink:disk": 0,
+        "sink:disk_bytes": 0,
+        "sink:memory": 0,
+        "sink:rx": 0,
+        "sink:tx": 0,
+        "writer:cpu": 0,
+        "writer:disk": 0,
+        "writer:disk_bytes": 0,
+        "writer:memory": 0,
+        "writer:rx": 0,
+        "writer:tx": 0
+      },
+      "resources": {
+        "client:cpu": {
+          "high_bytes": 160,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 423.35999999999706,
+          "service_us": 423.35999999999706
+        },
+        "client:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:rx": {
+          "high_bytes": 160,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 76.80000000000005,
+          "service_us": 76.80000000000005
+        },
+        "client:tx": {
+          "high_bytes": 120,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "durable:cpu": {
+          "high_bytes": 608,
+          "jobs": 2400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 852.0960000000006,
+          "service_us": 852.0960000000006
+        },
+        "durable:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "durable:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "durable:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "durable:rx": {
+          "high_bytes": 608,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 349.44000000000335,
+          "service_us": 349.44000000000335
+        },
+        "durable:tx": {
+          "high_bytes": 160,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 134.4000000000003,
+          "service_us": 134.4000000000003
+        },
+        "effect:cpu": {
+          "high_bytes": 632,
+          "jobs": 3000,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 2046.7200000000025,
+          "service_us": 2046.7200000000025
+        },
+        "effect:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:rx": {
+          "high_bytes": 160,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 134.40000000000032,
+          "service_us": 134.40000000000032
+        },
+        "effect:tx": {
+          "high_bytes": 160,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 134.4000000000003,
+          "service_us": 134.4000000000003
+        },
+        "sink:cpu": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:rx": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:tx": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "writer:cpu": {
+          "high_bytes": 608,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 428.7359999999981,
+          "service_us": 428.7359999999981
+        },
+        "writer:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "writer:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "writer:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "writer:rx": {
+          "high_bytes": 120,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "writer:tx": {
+          "high_bytes": 608,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 291.84000000000174,
+          "service_us": 291.84000000000174
+        }
+      },
+      "work": {
+        "foreground_admitted": 600,
+        "foreground_submitted_application_cpu_us": 1200
+      }
+    },
+    {
+      "application_bytes_at_cutoff": {
+        "background": 0,
+        "foreground": 576
+      },
+      "application_bytes_at_drain": {
+        "background": 0,
+        "foreground": 0
+      },
+      "application_high_bytes": {
+        "background": 270336,
+        "foreground": 10368
+      },
+      "background_read": {
+        "admitted": 30,
+        "completed": 30,
+        "deadline_fraction": 1.0,
+        "deadline_us": 2000,
+        "goodput_per_s": 1000.0,
+        "offered": 30,
+        "oldest_unfinished_us": 0,
+        "p50_us": 834.6208800000002,
+        "p999_us": 849.2555200000002,
+        "p99_us": 849.2555200000002,
+        "pending_at_cutoff": 0,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "cancellation": [],
+      "client_response": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 0.6266666666666667,
+        "deadline_us": 150,
+        "goodput_per_s": 19966.666666666668,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 93.39152000001195,
+        "p999_us": 881.2968000000074,
+        "p99_us": 880.8954400000075,
+        "pending_at_cutoff": 1,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "completed_tx_wire_bytes_by_class": {
+        "background": 136560,
+        "foreground": 810320
+      },
+      "config": {
+        "count": 600,
+        "name": "shared-large"
+      },
+      "counters": {
+        "bytes:bulk": 132959.9999999422,
+        "bytes:control": 813919.9999993951,
+        "delivered_messages": 3794,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_messages": 134,
+        "logical_messages": 3794,
+        "packets": 4018,
+        "persisted_bytes": 614400,
+        "price": 0.0,
+        "received_batches": 3928,
+        "retry_messages": 134,
+        "wire_bytes": 946879.9999993349
+      },
+      "cpu_budget": "two effect/background CPU slots total; other hosts fixed",
+      "foreground_effect": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 0.6266666666666667,
+        "deadline_us": 150,
+        "goodput_per_s": 19966.666666666668,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 84.55712000000858,
+        "p999_us": 853.6850400000294,
+        "p99_us": 853.6850399999903,
+        "pending_at_cutoff": 1,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "logical_background_bytes": 3932160,
+      "model": "authored mixed resource proxy; no witness admission",
+      "placement": "shared",
+      "resource_bytes_at_cutoff": {
+        "client:cpu": 0,
+        "client:disk": 0,
+        "client:disk_bytes": 0,
+        "client:memory": 0,
+        "client:rx": 0,
+        "client:tx": 0,
+        "durable:cpu": 0,
+        "durable:disk": 512,
+        "durable:disk_bytes": 0,
+        "durable:memory": 0,
+        "durable:rx": 0,
+        "durable:tx": 0,
+        "effect:cpu": 0,
+        "effect:disk": 0,
+        "effect:disk_bytes": 0,
+        "effect:memory": 0,
+        "effect:rx": 0,
+        "effect:tx": 0,
+        "sink:cpu": 0,
+        "sink:disk": 0,
+        "sink:disk_bytes": 0,
+        "sink:memory": 0,
+        "sink:rx": 0,
+        "sink:tx": 0,
+        "writer:cpu": 0,
+        "writer:disk": 0,
+        "writer:disk_bytes": 0,
+        "writer:memory": 0,
+        "writer:rx": 0,
+        "writer:tx": 0
+      },
+      "resources": {
+        "client:cpu": {
+          "high_bytes": 1480,
+          "jobs": 1200,
+          "mean_wait_us": 0.25780846666578033,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 423.35999999999706,
+          "service_us": 423.35999999999706
+        },
+        "client:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:rx": {
+          "high_bytes": 320,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 76.80000000000005,
+          "service_us": 76.80000000000005
+        },
+        "client:tx": {
+          "high_bytes": 240,
+          "jobs": 600,
+          "mean_wait_us": 0.0058866666666601,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "durable:cpu": {
+          "high_bytes": 848,
+          "jobs": 2668,
+          "mean_wait_us": 0.0012467166416536303,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 946.646400000001,
+          "service_us": 946.646400000001
+        },
+        "durable:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "durable:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "durable:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "durable:rx": {
+          "high_bytes": 848,
+          "jobs": 1334,
+          "mean_wait_us": 0.0012581709145064318,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 362.30400000000367,
+          "service_us": 362.30400000000367
+        },
+        "durable:tx": {
+          "high_bytes": 320,
+          "jobs": 1334,
+          "mean_wait_us": 0.012857571214391728,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 151.5519999999993,
+          "service_us": 151.5519999999993
+        },
+        "effect:cpu": {
+          "high_bytes": 265984,
+          "jobs": 3448,
+          "mean_wait_us": 37.00040211136945,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 25804.461600000264,
+          "service_us": 25804.461600000264
+        },
+        "effect:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:memory": {
+          "high_bytes": 262144,
+          "jobs": 30,
+          "mean_wait_us": 3.276799999999777,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 196.60799999999992,
+          "service_us": 196.60799999999992
+        },
+        "effect:rx": {
+          "high_bytes": 320,
+          "jobs": 1364,
+          "mean_wait_us": 8.334812149678595e-17,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 154.43199999999928,
+          "service_us": 154.43199999999928
+        },
+        "effect:tx": {
+          "high_bytes": 1760,
+          "jobs": 1454,
+          "mean_wait_us": 0.03147372764804167,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 253.63199999999742,
+          "service_us": 253.63199999999742
+        },
+        "sink:cpu": {
+          "high_bytes": 4216,
+          "jobs": 180,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 62.731200000000094,
+          "service_us": 62.731200000000094
+        },
+        "sink:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:rx": {
+          "high_bytes": 1400,
+          "jobs": 120,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 106.36800000000005,
+          "service_us": 106.36800000000005
+        },
+        "sink:tx": {
+          "high_bytes": 120,
+          "jobs": 30,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 2.8800000000000012,
+          "service_us": 2.8800000000000012
+        },
+        "writer:cpu": {
+          "high_bytes": 608,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 428.7359999999981,
+          "service_us": 428.7359999999981
+        },
+        "writer:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "writer:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "writer:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "writer:rx": {
+          "high_bytes": 120,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "writer:tx": {
+          "high_bytes": 608,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 291.84000000000174,
+          "service_us": 291.84000000000174
+        }
+      },
+      "work": {
+        "background_admitted": 30,
+        "background_compute_input_bytes": 3932160,
+        "background_memory_offered_bytes": 3932160,
+        "background_output_offered_bytes": 122880,
+        "background_scan_bytes": 3932160,
+        "background_submitted_compute_us": 23607.96000000001,
+        "background_submitted_reduce_us": 7.5,
+        "foreground_admitted": 600,
+        "foreground_submitted_application_cpu_us": 1200
+      }
+    },
+    {
+      "application_bytes_at_cutoff": {
+        "background": 0,
+        "foreground": 576
+      },
+      "application_bytes_at_drain": {
+        "background": 0,
+        "foreground": 0
+      },
+      "application_high_bytes": {
+        "background": 270336,
+        "foreground": 2304
+      },
+      "background_read": {
+        "admitted": 30,
+        "completed": 30,
+        "deadline_fraction": 1.0,
+        "deadline_us": 2000,
+        "goodput_per_s": 1000.0,
+        "offered": 30,
+        "oldest_unfinished_us": 0,
+        "p50_us": 1325.1540800000075,
+        "p999_us": 1326.108880000007,
+        "p99_us": 1326.108880000007,
+        "pending_at_cutoff": 0,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "cancellation": [],
+      "client_response": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 0.9516666666666667,
+        "deadline_us": 150,
+        "goodput_per_s": 19966.666666666668,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 93.39152000001195,
+        "p999_us": 169.49480000000403,
+        "p99_us": 169.49480000000017,
+        "pending_at_cutoff": 1,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "completed_tx_wire_bytes_by_class": {
+        "background": 226560,
+        "foreground": 772800
+      },
+      "config": {
+        "chunk_bytes": 8192,
+        "count": 600,
+        "name": "shared-small"
+      },
+      "counters": {
+        "bytes:bulk": 168959.99999957075,
+        "bytes:control": 830399.999999316,
+        "delivered_messages": 4560,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 4560,
+        "packets": 4560,
+        "persisted_bytes": 614400,
+        "price": 0.0,
+        "received_batches": 4560,
+        "wire_bytes": 999359.9999988786
+      },
+      "cpu_budget": "two effect/background CPU slots total; other hosts fixed",
+      "foreground_effect": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 0.9766666666666667,
+        "deadline_us": 150,
+        "goodput_per_s": 19966.666666666668,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 84.55712000000858,
+        "p999_us": 152.12320000000182,
+        "p99_us": 152.1232,
+        "pending_at_cutoff": 1,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "logical_background_bytes": 3932160,
+      "model": "authored mixed resource proxy; no witness admission",
+      "placement": "shared",
+      "resource_bytes_at_cutoff": {
+        "client:cpu": 0,
+        "client:disk": 0,
+        "client:disk_bytes": 0,
+        "client:memory": 0,
+        "client:rx": 0,
+        "client:tx": 0,
+        "durable:cpu": 0,
+        "durable:disk": 512,
+        "durable:disk_bytes": 0,
+        "durable:memory": 0,
+        "durable:rx": 0,
+        "durable:tx": 0,
+        "effect:cpu": 0,
+        "effect:disk": 0,
+        "effect:disk_bytes": 0,
+        "effect:memory": 0,
+        "effect:rx": 0,
+        "effect:tx": 0,
+        "sink:cpu": 0,
+        "sink:disk": 0,
+        "sink:disk_bytes": 0,
+        "sink:memory": 0,
+        "sink:rx": 0,
+        "sink:tx": 0,
+        "writer:cpu": 0,
+        "writer:disk": 0,
+        "writer:disk_bytes": 0,
+        "writer:memory": 0,
+        "writer:rx": 0,
+        "writer:tx": 0
+      },
+      "resources": {
+        "client:cpu": {
+          "high_bytes": 160,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 423.35999999999706,
+          "service_us": 423.35999999999706
+        },
+        "client:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:rx": {
+          "high_bytes": 160,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 76.80000000000005,
+          "service_us": 76.80000000000005
+        },
+        "client:tx": {
+          "high_bytes": 120,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "durable:cpu": {
+          "high_bytes": 728,
+          "jobs": 2400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 852.0960000000005,
+          "service_us": 852.0960000000005
+        },
+        "durable:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "durable:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "durable:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "durable:rx": {
+          "high_bytes": 728,
+          "jobs": 1200,
+          "mean_wait_us": 0.0012020000000676609,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 349.44000000000335,
+          "service_us": 349.44000000000335
+        },
+        "durable:tx": {
+          "high_bytes": 160,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 134.4000000000003,
+          "service_us": 134.4000000000003
+        },
+        "effect:cpu": {
+          "high_bytes": 33048,
+          "jobs": 4440,
+          "mean_wait_us": 8.231941477476793,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 26220.21119999969,
+          "service_us": 26220.21119999969
+        },
+        "effect:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:memory": {
+          "high_bytes": 32768,
+          "jobs": 480,
+          "mean_wait_us": 0.08011333333328953,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 196.60800000000143,
+          "service_us": 196.60800000000143
+        },
+        "effect:rx": {
+          "high_bytes": 280,
+          "jobs": 1680,
+          "mean_wait_us": 9.500000011135918e-05,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 180.47999999999942,
+          "service_us": 180.47999999999942
+        },
+        "effect:tx": {
+          "high_bytes": 704,
+          "jobs": 1680,
+          "mean_wait_us": 0.024844571428492487,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 269.5679999999966,
+          "service_us": 269.5679999999966
+        },
+        "sink:cpu": {
+          "high_bytes": 1104,
+          "jobs": 1440,
+          "mean_wait_us": 0.106934666666698,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 460.5311999999943,
+          "service_us": 460.5311999999943
+        },
+        "sink:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:rx": {
+          "high_bytes": 704,
+          "jobs": 480,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 135.1679999999991,
+          "service_us": 135.1679999999991
+        },
+        "sink:tx": {
+          "high_bytes": 120,
+          "jobs": 480,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 46.079999999999515,
+          "service_us": 46.079999999999515
+        },
+        "writer:cpu": {
+          "high_bytes": 608,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 428.7359999999981,
+          "service_us": 428.7359999999981
+        },
+        "writer:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "writer:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "writer:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "writer:rx": {
+          "high_bytes": 120,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "writer:tx": {
+          "high_bytes": 608,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 291.84000000000174,
+          "service_us": 291.84000000000174
+        }
+      },
+      "work": {
+        "background_admitted": 30,
+        "background_compute_input_bytes": 3932160,
+        "background_memory_offered_bytes": 3932160,
+        "background_output_offered_bytes": 122880,
+        "background_scan_bytes": 3932160,
+        "background_submitted_compute_us": 23832.959999999744,
+        "background_submitted_reduce_us": 120.0,
+        "foreground_admitted": 600,
+        "foreground_submitted_application_cpu_us": 1200
+      }
+    },
+    {
+      "application_bytes_at_cutoff": {
+        "background": 0,
+        "foreground": 576
+      },
+      "application_bytes_at_drain": {
+        "background": 0,
+        "foreground": 0
+      },
+      "application_high_bytes": {
+        "background": 270336,
+        "foreground": 1152
+      },
+      "background_read": {
+        "admitted": 30,
+        "completed": 30,
+        "deadline_fraction": 1.0,
+        "deadline_us": 2000,
+        "goodput_per_s": 1000.0,
+        "offered": 30,
+        "oldest_unfinished_us": 0,
+        "p50_us": 828.0138400000033,
+        "p999_us": 1614.945840000004,
+        "p99_us": 1614.945840000004,
+        "pending_at_cutoff": 0,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "cancellation": [],
+      "client_response": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 1.0,
+        "deadline_us": 150,
+        "goodput_per_s": 19966.666666666668,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 93.74392000000034,
+        "p999_us": 93.74392000001171,
+        "p99_us": 93.74392000001171,
+        "pending_at_cutoff": 1,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "completed_tx_wire_bytes_by_class": {
+        "background": 136560,
+        "foreground": 772800
+      },
+      "config": {
+        "count": 600,
+        "name": "split-cores-large",
+        "placement": "cores"
+      },
+      "counters": {
+        "bytes:bulk": 132959.9999999418,
+        "bytes:control": 776399.9999994265,
+        "delivered_messages": 3660,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 3660,
+        "packets": 3750,
+        "persisted_bytes": 614400,
+        "price": 0.0,
+        "received_batches": 3660,
+        "wire_bytes": 909359.9999993661
+      },
+      "cpu_budget": "two effect/background CPU slots total; other hosts fixed",
+      "foreground_effect": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 1.0,
+        "deadline_us": 150,
+        "goodput_per_s": 19966.666666666668,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 84.55711999999994,
+        "p999_us": 84.55712000000858,
+        "p99_us": 84.55712000000858,
+        "pending_at_cutoff": 1,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "logical_background_bytes": 3932160,
+      "model": "authored mixed resource proxy; no witness admission",
+      "placement": "cores",
+      "resource_bytes_at_cutoff": {
+        "client:cpu": 0,
+        "client:disk": 0,
+        "client:disk_bytes": 0,
+        "client:memory": 0,
+        "client:rx": 0,
+        "client:tx": 0,
+        "durable:cpu": 0,
+        "durable:disk": 512,
+        "durable:disk_bytes": 0,
+        "durable:memory": 0,
+        "durable:rx": 0,
+        "durable:tx": 0,
+        "effect:background_core": 0,
+        "effect:cpu": 0,
+        "effect:disk": 0,
+        "effect:disk_bytes": 0,
+        "effect:memory": 0,
+        "effect:rx": 0,
+        "effect:tx": 0,
+        "sink:cpu": 0,
+        "sink:disk": 0,
+        "sink:disk_bytes": 0,
+        "sink:memory": 0,
+        "sink:rx": 0,
+        "sink:tx": 0,
+        "writer:cpu": 0,
+        "writer:disk": 0,
+        "writer:disk_bytes": 0,
+        "writer:memory": 0,
+        "writer:rx": 0,
+        "writer:tx": 0
+      },
+      "resources": {
+        "client:cpu": {
+          "high_bytes": 160,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 423.35999999999706,
+          "service_us": 423.35999999999706
+        },
+        "client:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:rx": {
+          "high_bytes": 160,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 76.80000000000005,
+          "service_us": 76.80000000000005
+        },
+        "client:tx": {
+          "high_bytes": 120,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "durable:cpu": {
+          "high_bytes": 608,
+          "jobs": 2400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 852.0960000000006,
+          "service_us": 852.0960000000006
+        },
+        "durable:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "durable:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "durable:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "durable:rx": {
+          "high_bytes": 608,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 349.44000000000335,
+          "service_us": 349.44000000000335
+        },
+        "durable:tx": {
+          "high_bytes": 160,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 134.4000000000003,
+          "service_us": 134.4000000000003
+        },
+        "effect:background_core": {
+          "high_bytes": 262144,
+          "jobs": 30,
+          "mean_wait_us": 390.1892000000005,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 23607.96000000001,
+          "service_us": 23607.96000000001
+        },
+        "effect:cpu": {
+          "high_bytes": 4432,
+          "jobs": 3150,
+          "mean_wait_us": 0.46967619047617715,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 2101.951200000008,
+          "service_us": 2101.951200000008
+        },
+        "effect:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:memory": {
+          "high_bytes": 262144,
+          "jobs": 30,
+          "mean_wait_us": 3.276799999999777,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 196.60799999999992,
+          "service_us": 196.60799999999992
+        },
+        "effect:rx": {
+          "high_bytes": 160,
+          "jobs": 1230,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 137.28000000000023,
+          "service_us": 137.28000000000023
+        },
+        "effect:tx": {
+          "high_bytes": 4432,
+          "jobs": 1320,
+          "mean_wait_us": 0.10171272727262988,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 240.76799999999753,
+          "service_us": 240.76799999999753
+        },
+        "sink:cpu": {
+          "high_bytes": 4216,
+          "jobs": 180,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 62.731200000000094,
+          "service_us": 62.731200000000094
+        },
+        "sink:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:rx": {
+          "high_bytes": 2800,
+          "jobs": 120,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 106.36800000000005,
+          "service_us": 106.36800000000005
+        },
+        "sink:tx": {
+          "high_bytes": 120,
+          "jobs": 30,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 2.8800000000000012,
+          "service_us": 2.8800000000000012
+        },
+        "writer:cpu": {
+          "high_bytes": 608,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 428.7359999999981,
+          "service_us": 428.7359999999981
+        },
+        "writer:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "writer:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "writer:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "writer:rx": {
+          "high_bytes": 120,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "writer:tx": {
+          "high_bytes": 608,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 291.84000000000174,
+          "service_us": 291.84000000000174
+        }
+      },
+      "work": {
+        "background_admitted": 30,
+        "background_compute_input_bytes": 3932160,
+        "background_memory_offered_bytes": 3932160,
+        "background_output_offered_bytes": 122880,
+        "background_scan_bytes": 3932160,
+        "background_submitted_compute_us": 23607.96000000001,
+        "background_submitted_reduce_us": 7.5,
+        "foreground_admitted": 600,
+        "foreground_submitted_application_cpu_us": 1200
+      }
+    },
+    {
+      "application_bytes_at_cutoff": {
+        "background": 0,
+        "foreground": 576
+      },
+      "application_bytes_at_drain": {
+        "background": 0,
+        "foreground": 0
+      },
+      "application_high_bytes": {
+        "background": 270336,
+        "foreground": 10368
+      },
+      "background_read": {
+        "admitted": 30,
+        "completed": 30,
+        "deadline_fraction": 1.0,
+        "deadline_us": 2000,
+        "goodput_per_s": 1000.0,
+        "offered": 30,
+        "oldest_unfinished_us": 0,
+        "p50_us": 834.6208800000002,
+        "p999_us": 849.2555200000002,
+        "p99_us": 849.2555200000002,
+        "pending_at_cutoff": 0,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "cancellation": [],
+      "client_response": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 0.6266666666666667,
+        "deadline_us": 150,
+        "goodput_per_s": 19966.666666666668,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 93.39152000001195,
+        "p999_us": 881.2968000000074,
+        "p99_us": 880.8954400000075,
+        "pending_at_cutoff": 1,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "completed_tx_wire_bytes_by_class": {
+        "background": 136560,
+        "foreground": 810320
+      },
+      "config": {
+        "count": 600,
+        "name": "shared-large-reserved",
+        "reserve_bytes": 65536
+      },
+      "counters": {
+        "bytes:bulk": 132959.9999999422,
+        "bytes:control": 813919.9999993951,
+        "delivered_messages": 3794,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_messages": 134,
+        "logical_messages": 3794,
+        "packets": 4018,
+        "persisted_bytes": 614400,
+        "price": 0.0,
+        "received_batches": 3928,
+        "retry_messages": 134,
+        "wire_bytes": 946879.9999993349
+      },
+      "cpu_budget": "two effect/background CPU slots total; other hosts fixed",
+      "foreground_effect": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 0.6266666666666667,
+        "deadline_us": 150,
+        "goodput_per_s": 19966.666666666668,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 84.55712000000858,
+        "p999_us": 853.6850400000294,
+        "p99_us": 853.6850399999903,
+        "pending_at_cutoff": 1,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "logical_background_bytes": 3932160,
+      "model": "authored mixed resource proxy; no witness admission",
+      "placement": "shared",
+      "resource_bytes_at_cutoff": {
+        "client:cpu": 0,
+        "client:disk": 0,
+        "client:disk_bytes": 0,
+        "client:memory": 0,
+        "client:rx": 0,
+        "client:tx": 0,
+        "durable:cpu": 0,
+        "durable:disk": 512,
+        "durable:disk_bytes": 0,
+        "durable:memory": 0,
+        "durable:rx": 0,
+        "durable:tx": 0,
+        "effect:cpu": 0,
+        "effect:disk": 0,
+        "effect:disk_bytes": 0,
+        "effect:memory": 0,
+        "effect:rx": 0,
+        "effect:tx": 0,
+        "sink:cpu": 0,
+        "sink:disk": 0,
+        "sink:disk_bytes": 0,
+        "sink:memory": 0,
+        "sink:rx": 0,
+        "sink:tx": 0,
+        "writer:cpu": 0,
+        "writer:disk": 0,
+        "writer:disk_bytes": 0,
+        "writer:memory": 0,
+        "writer:rx": 0,
+        "writer:tx": 0
+      },
+      "resources": {
+        "client:cpu": {
+          "high_bytes": 1480,
+          "jobs": 1200,
+          "mean_wait_us": 0.25780846666578033,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 423.35999999999706,
+          "service_us": 423.35999999999706
+        },
+        "client:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:rx": {
+          "high_bytes": 320,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 76.80000000000005,
+          "service_us": 76.80000000000005
+        },
+        "client:tx": {
+          "high_bytes": 240,
+          "jobs": 600,
+          "mean_wait_us": 0.0058866666666601,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "durable:cpu": {
+          "high_bytes": 848,
+          "jobs": 2668,
+          "mean_wait_us": 0.0012467166416536303,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 946.646400000001,
+          "service_us": 946.646400000001
+        },
+        "durable:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "durable:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "durable:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "durable:rx": {
+          "high_bytes": 848,
+          "jobs": 1334,
+          "mean_wait_us": 0.0012581709145064318,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 362.30400000000367,
+          "service_us": 362.30400000000367
+        },
+        "durable:tx": {
+          "high_bytes": 320,
+          "jobs": 1334,
+          "mean_wait_us": 0.012857571214391728,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 151.5519999999993,
+          "service_us": 151.5519999999993
+        },
+        "effect:cpu": {
+          "high_bytes": 265984,
+          "jobs": 3448,
+          "mean_wait_us": 37.00040211136945,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 25804.461600000264,
+          "service_us": 25804.461600000264
+        },
+        "effect:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:memory": {
+          "high_bytes": 262144,
+          "jobs": 30,
+          "mean_wait_us": 3.276799999999777,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 196.60799999999992,
+          "service_us": 196.60799999999992
+        },
+        "effect:rx": {
+          "high_bytes": 320,
+          "jobs": 1364,
+          "mean_wait_us": 8.334812149678595e-17,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 154.43199999999928,
+          "service_us": 154.43199999999928
+        },
+        "effect:tx": {
+          "high_bytes": 1760,
+          "jobs": 1454,
+          "mean_wait_us": 0.03147372764804167,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 253.63199999999742,
+          "service_us": 253.63199999999742
+        },
+        "sink:cpu": {
+          "high_bytes": 4216,
+          "jobs": 180,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 62.731200000000094,
+          "service_us": 62.731200000000094
+        },
+        "sink:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:rx": {
+          "high_bytes": 1400,
+          "jobs": 120,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 106.36800000000005,
+          "service_us": 106.36800000000005
+        },
+        "sink:tx": {
+          "high_bytes": 120,
+          "jobs": 30,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 2.8800000000000012,
+          "service_us": 2.8800000000000012
+        },
+        "writer:cpu": {
+          "high_bytes": 608,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 428.7359999999981,
+          "service_us": 428.7359999999981
+        },
+        "writer:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "writer:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "writer:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "writer:rx": {
+          "high_bytes": 120,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "writer:tx": {
+          "high_bytes": 608,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 291.84000000000174,
+          "service_us": 291.84000000000174
+        }
+      },
+      "work": {
+        "background_admitted": 30,
+        "background_compute_input_bytes": 3932160,
+        "background_memory_offered_bytes": 3932160,
+        "background_output_offered_bytes": 122880,
+        "background_scan_bytes": 3932160,
+        "background_submitted_compute_us": 23607.96000000001,
+        "background_submitted_reduce_us": 7.5,
+        "foreground_admitted": 600,
+        "foreground_submitted_application_cpu_us": 1200
+      }
+    },
+    {
+      "application_bytes_at_cutoff": {
+        "background": 0,
+        "foreground": 576
+      },
+      "application_bytes_at_drain": {
+        "background": 0,
+        "foreground": 0
+      },
+      "application_high_bytes": {
+        "background": 270336,
+        "foreground": 19584
+      },
+      "background_read": {
+        "admitted": 30,
+        "completed": 30,
+        "deadline_fraction": 1.0,
+        "deadline_us": 2000,
+        "goodput_per_s": 1000.0,
+        "offered": 30,
+        "oldest_unfinished_us": 0,
+        "p50_us": 1619.613680000035,
+        "p999_us": 1625.3407200000547,
+        "p99_us": 1625.3407200000547,
+        "pending_at_cutoff": 0,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "cancellation": [],
+      "client_response": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 0.20166666666666666,
+        "deadline_us": 150,
+        "goodput_per_s": 19966.666666666668,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 702.8248000000494,
+        "p999_us": 1695.7664000000332,
+        "p99_us": 1695.7656000000316,
+        "pending_at_cutoff": 1,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "completed_tx_wire_bytes_by_class": {
+        "background": 136560,
+        "foreground": 919240
+      },
+      "config": {
+        "compute_copies": 2,
+        "count": 600,
+        "name": "shared-recompute-2x"
+      },
+      "counters": {
+        "bytes:bulk": 132959.99999994138,
+        "bytes:control": 922839.9999992806,
+        "delivered_messages": 4183,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_messages": 523,
+        "logical_messages": 4183,
+        "packets": 4796,
+        "persisted_bytes": 614400,
+        "price": 0.0,
+        "received_batches": 4706,
+        "retry_messages": 523,
+        "wire_bytes": 1055799.9999992219
+      },
+      "cpu_budget": "two effect/background CPU slots total; other hosts fixed",
+      "foreground_effect": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 0.22666666666666666,
+        "deadline_us": 150,
+        "goodput_per_s": 19966.666666666668,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 673.6460000000334,
+        "p999_us": 1647.3012000000344,
+        "p99_us": 1647.3012000000344,
+        "pending_at_cutoff": 1,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "logical_background_bytes": 3932160,
+      "model": "authored mixed resource proxy; no witness admission",
+      "placement": "shared",
+      "resource_bytes_at_cutoff": {
+        "client:cpu": 0,
+        "client:disk": 0,
+        "client:disk_bytes": 0,
+        "client:memory": 0,
+        "client:rx": 0,
+        "client:tx": 0,
+        "durable:cpu": 0,
+        "durable:disk": 512,
+        "durable:disk_bytes": 0,
+        "durable:memory": 0,
+        "durable:rx": 0,
+        "durable:tx": 0,
+        "effect:cpu": 0,
+        "effect:disk": 0,
+        "effect:disk_bytes": 0,
+        "effect:memory": 0,
+        "effect:rx": 0,
+        "effect:tx": 0,
+        "sink:cpu": 0,
+        "sink:disk": 0,
+        "sink:disk_bytes": 0,
+        "sink:memory": 0,
+        "sink:rx": 0,
+        "sink:tx": 0,
+        "writer:cpu": 0,
+        "writer:disk": 0,
+        "writer:disk_bytes": 0,
+        "writer:memory": 0,
+        "writer:rx": 0,
+        "writer:tx": 0
+      },
+      "resources": {
+        "client:cpu": {
+          "high_bytes": 2120,
+          "jobs": 1200,
+          "mean_wait_us": 0.7163829333330043,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 423.35999999999706,
+          "service_us": 423.35999999999706
+        },
+        "client:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:rx": {
+          "high_bytes": 320,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 76.80000000000005,
+          "service_us": 76.80000000000005
+        },
+        "client:tx": {
+          "high_bytes": 240,
+          "jobs": 600,
+          "mean_wait_us": 0.009870666666543002,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "durable:cpu": {
+          "high_bytes": 848,
+          "jobs": 3446,
+          "mean_wait_us": 0.015288078932097762,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 1221.1247999999925,
+          "service_us": 1221.1247999999925
+        },
+        "durable:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "durable:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "durable:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "durable:rx": {
+          "high_bytes": 728,
+          "jobs": 1723,
+          "mean_wait_us": 0.002364434126447124,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 399.6480000000051,
+          "service_us": 399.6480000000051
+        },
+        "durable:tx": {
+          "high_bytes": 320,
+          "jobs": 1723,
+          "mean_wait_us": 0.028746883342971496,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 201.34399999999545,
+          "service_us": 201.34399999999545
+        },
+        "effect:cpu": {
+          "high_bytes": 271904,
+          "jobs": 4226,
+          "mean_wait_us": 155.77705739706926,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 49671.9000000012,
+          "service_us": 49671.9000000012
+        },
+        "effect:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:memory": {
+          "high_bytes": 262144,
+          "jobs": 30,
+          "mean_wait_us": 3.276799999999777,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 196.60799999999992,
+          "service_us": 196.60799999999992
+        },
+        "effect:rx": {
+          "high_bytes": 320,
+          "jobs": 1753,
+          "mean_wait_us": 9.373645189535184e-05,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 204.22399999999567,
+          "service_us": 204.22399999999567
+        },
+        "effect:tx": {
+          "high_bytes": 1400,
+          "jobs": 1843,
+          "mean_wait_us": 0.005552989690612822,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 290.9759999999981,
+          "service_us": 290.9759999999981
+        },
+        "sink:cpu": {
+          "high_bytes": 4216,
+          "jobs": 180,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 62.731200000000094,
+          "service_us": 62.731200000000094
+        },
+        "sink:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:rx": {
+          "high_bytes": 1400,
+          "jobs": 120,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 106.36800000000005,
+          "service_us": 106.36800000000005
+        },
+        "sink:tx": {
+          "high_bytes": 120,
+          "jobs": 30,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 2.8800000000000012,
+          "service_us": 2.8800000000000012
+        },
+        "writer:cpu": {
+          "high_bytes": 608,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 428.7359999999981,
+          "service_us": 428.7359999999981
+        },
+        "writer:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "writer:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "writer:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "writer:rx": {
+          "high_bytes": 120,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "writer:tx": {
+          "high_bytes": 608,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 291.84000000000174,
+          "service_us": 291.84000000000174
+        }
+      },
+      "work": {
+        "background_admitted": 30,
+        "background_compute_input_bytes": 7864320,
+        "background_memory_offered_bytes": 3932160,
+        "background_output_offered_bytes": 122880,
+        "background_scan_bytes": 3932160,
+        "background_submitted_compute_us": 47200.92000000002,
+        "background_submitted_reduce_us": 7.5,
+        "foreground_admitted": 600,
+        "foreground_submitted_application_cpu_us": 1200
+      }
+    },
+    {
+      "application_bytes_at_cutoff": {
+        "background": 11141120,
+        "foreground": 576
+      },
+      "application_bytes_at_drain": {
+        "background": 0,
+        "foreground": 0
+      },
+      "application_high_bytes": {
+        "background": 17825792,
+        "foreground": 2304
+      },
+      "background_read": {
+        "admitted": 30,
+        "completed": 3,
+        "deadline_fraction": 0.0,
+        "deadline_us": 2000,
+        "goodput_per_s": 66.66666666666667,
+        "offered": 30,
+        "oldest_unfinished_us": 50000.0,
+        "p50_us": 8462.68895999944,
+        "p999_us": 10667.053760003182,
+        "p99_us": 10667.053760003182,
+        "pending_at_cutoff": 28,
+        "refused": 0,
+        "unfinished": 27
+      },
+      "cancellation": [],
+      "client_response": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 0.9883333333333333,
+        "deadline_us": 150,
+        "goodput_per_s": 19966.666666666668,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 94.20520000290526,
+        "p999_us": 495.29639999621577,
+        "p99_us": 159.25799999504306,
+        "pending_at_cutoff": 1,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "completed_tx_wire_bytes_by_class": {
+        "background": 39875104,
+        "foreground": 772800
+      },
+      "config": {
+        "chunk_bytes": 8192,
+        "count": 600,
+        "name": "shared-shuffle-16x",
+        "output_ratio": 16
+      },
+      "counters": {
+        "bytes:bulk": 39854943.99999984,
+        "bytes:control": 792959.999999397,
+        "delivered_messages": 3903,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_messages": 33,
+        "logical_messages": 3949,
+        "overflow:effect:tx": 14113,
+        "overflow:reassembly:sink": 64,
+        "packets": 32456,
+        "persisted_bytes": 614400,
+        "price": 0.0,
+        "reassembly_expired": 196,
+        "received_batches": 3936,
+        "retry_exhausted": 46,
+        "retry_messages": 248,
+        "wire_bytes": 40647903.99999968
+      },
+      "cpu_budget": "two effect/background CPU slots total; other hosts fixed",
+      "foreground_effect": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 0.995,
+        "deadline_us": 150,
+        "goodput_per_s": 19966.666666666668,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 84.55712000000858,
+        "p999_us": 152.41840000000047,
+        "p99_us": 105.1248000000005,
+        "pending_at_cutoff": 1,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "logical_background_bytes": 3932160,
+      "model": "authored mixed resource proxy; no witness admission",
+      "placement": "shared",
+      "resource_bytes_at_cutoff": {
+        "client:cpu": 0,
+        "client:disk": 0,
+        "client:disk_bytes": 0,
+        "client:memory": 0,
+        "client:rx": 0,
+        "client:tx": 0,
+        "durable:cpu": 0,
+        "durable:disk": 512,
+        "durable:disk_bytes": 0,
+        "durable:memory": 0,
+        "durable:rx": 0,
+        "durable:tx": 0,
+        "effect:cpu": 0,
+        "effect:disk": 0,
+        "effect:disk_bytes": 0,
+        "effect:memory": 0,
+        "effect:rx": 0,
+        "effect:tx": 702016,
+        "sink:cpu": 1400,
+        "sink:disk": 0,
+        "sink:disk_bytes": 0,
+        "sink:memory": 0,
+        "sink:rx": 1400,
+        "sink:tx": 0,
+        "writer:cpu": 0,
+        "writer:disk": 0,
+        "writer:disk_bytes": 0,
+        "writer:memory": 0,
+        "writer:rx": 0,
+        "writer:tx": 0
+      },
+      "resources": {
+        "client:cpu": {
+          "high_bytes": 320,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 423.35999999999706,
+          "service_us": 423.35999999999706
+        },
+        "client:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:rx": {
+          "high_bytes": 320,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 76.80000000000005,
+          "service_us": 76.80000000000005
+        },
+        "client:tx": {
+          "high_bytes": 120,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "durable:cpu": {
+          "high_bytes": 608,
+          "jobs": 2400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 852.0960000000006,
+          "service_us": 852.0960000000006
+        },
+        "durable:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "durable:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "durable:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "durable:rx": {
+          "high_bytes": 608,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 349.44000000000335,
+          "service_us": 349.44000000000335
+        },
+        "durable:tx": {
+          "high_bytes": 160,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 134.4000000000003,
+          "service_us": 134.4000000000003
+        },
+        "effect:cpu": {
+          "high_bytes": 703912,
+          "jobs": 46150,
+          "mean_wait_us": 24.924383521581376,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 27263.881680016395,
+          "service_us": 27263.881680016395
+        },
+        "effect:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:memory": {
+          "high_bytes": 32768,
+          "jobs": 181,
+          "mean_wait_us": 0.20366850828721159,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 74.13759999999978,
+          "service_us": 74.13759999999978
+        },
+        "effect:rx": {
+          "high_bytes": 280,
+          "jobs": 1368,
+          "mean_wait_us": 8.309941356414693e-05,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 150.5279999999999,
+          "service_us": 150.5279999999999
+        },
+        "effect:tx": {
+          "high_bytes": 1048528,
+          "jobs": 29888,
+          "mean_wait_us": 665.6195282306278,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 32018.35519999159,
+          "service_us": 32018.35519999159
+        },
+        "sink:cpu": {
+          "high_bytes": 131192,
+          "jobs": 28991,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 10930.852080001803,
+          "service_us": 10930.852080001803
+        },
+        "sink:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:rx": {
+          "high_bytes": 2800,
+          "jobs": 28688,
+          "mean_wait_us": 1.433073155712472e-14,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 31883.95519999117,
+          "service_us": 31883.95519999117
+        },
+        "sink:tx": {
+          "high_bytes": 120,
+          "jobs": 168,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 16.12800000000001,
+          "service_us": 16.12800000000001
+        },
+        "writer:cpu": {
+          "high_bytes": 608,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 428.7359999999981,
+          "service_us": 428.7359999999981
+        },
+        "writer:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "writer:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "writer:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "writer:rx": {
+          "high_bytes": 120,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "writer:tx": {
+          "high_bytes": 608,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 291.84000000000174,
+          "service_us": 291.84000000000174
+        }
+      },
+      "work": {
+        "background_admitted": 30,
+        "background_compute_input_bytes": 1482752,
+        "background_failed": 27,
+        "background_memory_offered_bytes": 1482752,
+        "background_output_offered_bytes": 23724032,
+        "background_scan_bytes": 1482752,
+        "background_submitted_compute_us": 8987.012000000006,
+        "background_submitted_reduce_us": 33.75,
+        "background_transport_give_up": 46,
+        "foreground_admitted": 600,
+        "foreground_submitted_application_cpu_us": 1200
+      }
+    },
+    {
+      "application_bytes_at_cutoff": {
+        "background": 6684672,
+        "foreground": 576
+      },
+      "application_bytes_at_drain": {
+        "background": 0,
+        "foreground": 0
+      },
+      "application_high_bytes": {
+        "background": 15597568,
+        "foreground": 1152
+      },
+      "background_read": {
+        "admitted": 30,
+        "completed": 3,
+        "deadline_fraction": 0.0,
+        "deadline_us": 2000,
+        "goodput_per_s": 33.333333333333336,
+        "offered": 30,
+        "oldest_unfinished_us": 50000.0,
+        "p50_us": 6133.611760000502,
+        "p999_us": 8558.41895999114,
+        "p99_us": 8558.41895999114,
+        "pending_at_cutoff": 29,
+        "refused": 0,
+        "unfinished": 27
+      },
+      "cancellation": [],
+      "client_response": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 1.0,
+        "deadline_us": 150,
+        "goodput_per_s": 19966.666666666668,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 94.69680000495282,
+        "p999_us": 96.71600000416038,
+        "p99_us": 96.32880000288787,
+        "pending_at_cutoff": 1,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "completed_tx_wire_bytes_by_class": {
+        "background": 42396704,
+        "foreground": 772800
+      },
+      "config": {
+        "chunk_bytes": 8192,
+        "count": 600,
+        "name": "shuffle-cores",
+        "output_ratio": 16,
+        "placement": "cores"
+      },
+      "counters": {
+        "bytes:bulk": 42375943.99999976,
+        "bytes:control": 793559.9999993666,
+        "delivered_messages": 3911,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_messages": 35,
+        "logical_messages": 3959,
+        "overflow:effect:tx": 13495,
+        "overflow:reassembly:sink": 57,
+        "packets": 34278,
+        "persisted_bytes": 614400,
+        "price": 0.0,
+        "reassembly_expired": 210,
+        "received_batches": 3946,
+        "retry_exhausted": 48,
+        "retry_messages": 254,
+        "wire_bytes": 43169503.999999605
+      },
+      "cpu_budget": "two effect/background CPU slots total; other hosts fixed",
+      "foreground_effect": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 1.0,
+        "deadline_us": 150,
+        "goodput_per_s": 19966.666666666668,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 84.61096000009456,
+        "p999_us": 85.30799999999545,
+        "p99_us": 85.30519999999981,
+        "pending_at_cutoff": 1,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "logical_background_bytes": 3932160,
+      "model": "authored mixed resource proxy; no witness admission",
+      "placement": "cores",
+      "resource_bytes_at_cutoff": {
+        "client:cpu": 0,
+        "client:disk": 0,
+        "client:disk_bytes": 0,
+        "client:memory": 0,
+        "client:rx": 0,
+        "client:tx": 0,
+        "durable:cpu": 0,
+        "durable:disk": 512,
+        "durable:disk_bytes": 0,
+        "durable:memory": 0,
+        "durable:rx": 0,
+        "durable:tx": 0,
+        "effect:background_core": 8192,
+        "effect:cpu": 0,
+        "effect:disk": 0,
+        "effect:disk_bytes": 0,
+        "effect:memory": 0,
+        "effect:rx": 0,
+        "effect:tx": 796304,
+        "sink:cpu": 0,
+        "sink:disk": 0,
+        "sink:disk_bytes": 0,
+        "sink:memory": 0,
+        "sink:rx": 1400,
+        "sink:tx": 0,
+        "writer:cpu": 0,
+        "writer:disk": 0,
+        "writer:disk_bytes": 0,
+        "writer:memory": 0,
+        "writer:rx": 0,
+        "writer:tx": 0
+      },
+      "resources": {
+        "client:cpu": {
+          "high_bytes": 160,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 423.35999999999706,
+          "service_us": 423.35999999999706
+        },
+        "client:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:rx": {
+          "high_bytes": 160,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 76.80000000000005,
+          "service_us": 76.80000000000005
+        },
+        "client:tx": {
+          "high_bytes": 120,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "durable:cpu": {
+          "high_bytes": 608,
+          "jobs": 2400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 852.0960000000006,
+          "service_us": 852.0960000000006
+        },
+        "durable:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "durable:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "durable:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "durable:rx": {
+          "high_bytes": 608,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 349.44000000000335,
+          "service_us": 349.44000000000335
+        },
+        "durable:tx": {
+          "high_bytes": 160,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 134.4000000000003,
+          "service_us": 134.4000000000003
+        },
+        "effect:background_core": {
+          "high_bytes": 40960,
+          "jobs": 186,
+          "mean_wait_us": 33.40026236559019,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 9235.272000000006,
+          "service_us": 9235.272000000006
+        },
+        "effect:cpu": {
+          "high_bytes": 465352,
+          "jobs": 47173,
+          "mean_wait_us": 29.028006301979527,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 18731.659600012274,
+          "service_us": 18731.659600012274
+        },
+        "effect:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:memory": {
+          "high_bytes": 32768,
+          "jobs": 186,
+          "mean_wait_us": 0.19819354838701772,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 76.18559999999977,
+          "service_us": 76.18559999999977
+        },
+        "effect:rx": {
+          "high_bytes": 280,
+          "jobs": 1373,
+          "mean_wait_us": 6.712308971543941e-05,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 151.008,
+          "service_us": 151.008
+        },
+        "effect:tx": {
+          "high_bytes": 1048528,
+          "jobs": 31705,
+          "mean_wait_us": 672.0102085165504,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 34035.15519999383,
+          "service_us": 34035.15519999383
+        },
+        "sink:cpu": {
+          "high_bytes": 131192,
+          "jobs": 30816,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 11619.734080002876,
+          "service_us": 11619.734080002876
+        },
+        "sink:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:rx": {
+          "high_bytes": 2800,
+          "jobs": 30505,
+          "mean_wait_us": 2.7940021783560156e-12,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 33900.75519999298,
+          "service_us": 33900.75519999298
+        },
+        "sink:tx": {
+          "high_bytes": 120,
+          "jobs": 173,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 16.60800000000001,
+          "service_us": 16.60800000000001
+        },
+        "writer:cpu": {
+          "high_bytes": 608,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 428.7359999999981,
+          "service_us": 428.7359999999981
+        },
+        "writer:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "writer:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "writer:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "writer:rx": {
+          "high_bytes": 120,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "writer:tx": {
+          "high_bytes": 608,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 291.84000000000174,
+          "service_us": 291.84000000000174
+        }
+      },
+      "work": {
+        "background_admitted": 30,
+        "background_compute_input_bytes": 1523712,
+        "background_failed": 27,
+        "background_memory_offered_bytes": 1523712,
+        "background_output_offered_bytes": 24379392,
+        "background_scan_bytes": 1523712,
+        "background_submitted_compute_us": 9235.272000000006,
+        "background_submitted_reduce_us": 34.5,
+        "background_transport_give_up": 48,
+        "foreground_admitted": 600,
+        "foreground_submitted_application_cpu_us": 1200
+      }
+    },
+    {
+      "application_bytes_at_cutoff": {
+        "background": 11141120,
+        "foreground": 576
+      },
+      "application_bytes_at_drain": {
+        "background": 0,
+        "foreground": 0
+      },
+      "application_high_bytes": {
+        "background": 17825792,
+        "foreground": 1152
+      },
+      "background_read": {
+        "admitted": 30,
+        "completed": 2,
+        "deadline_fraction": 0.0,
+        "deadline_us": 2000,
+        "goodput_per_s": 0.0,
+        "offered": 30,
+        "oldest_unfinished_us": 50000.0,
+        "p50_us": 6414.021360000501,
+        "p999_us": 8892.616559990682,
+        "p99_us": 8892.616559990682,
+        "pending_at_cutoff": 30,
+        "refused": 0,
+        "unfinished": 28
+      },
+      "cancellation": [],
+      "client_response": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 1.0,
+        "deadline_us": 150,
+        "goodput_per_s": 19966.666666666668,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 93.74392000000034,
+        "p999_us": 93.74392000001171,
+        "p99_us": 93.74392000001171,
+        "pending_at_cutoff": 1,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "completed_tx_wire_bytes_by_class": {
+        "background": 42743176,
+        "foreground": 772800
+      },
+      "config": {
+        "chunk_bytes": 8192,
+        "count": 600,
+        "name": "shuffle-host",
+        "output_ratio": 16,
+        "placement": "host"
+      },
+      "counters": {
+        "bytes:bulk": 42722295.99999971,
+        "bytes:control": 793679.9999993616,
+        "delivered_messages": 3905,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_messages": 43,
+        "logical_messages": 3956,
+        "overflow:background:tx": 12645,
+        "overflow:reassembly:sink": 72,
+        "packets": 34529,
+        "persisted_bytes": 614400,
+        "price": 0.0,
+        "reassembly_expired": 188,
+        "received_batches": 3948,
+        "retry_exhausted": 51,
+        "retry_messages": 252,
+        "wire_bytes": 43515975.999999546
+      },
+      "cpu_budget": "two effect/background CPU slots total; other hosts fixed",
+      "foreground_effect": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 1.0,
+        "deadline_us": 150,
+        "goodput_per_s": 19966.666666666668,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 84.55711999999994,
+        "p999_us": 84.55712000000858,
+        "p99_us": 84.55712000000858,
+        "pending_at_cutoff": 1,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "logical_background_bytes": 3932160,
+      "model": "authored mixed resource proxy; no witness admission",
+      "placement": "host",
+      "resource_bytes_at_cutoff": {
+        "background:cpu": 0,
+        "background:disk": 0,
+        "background:disk_bytes": 0,
+        "background:memory": 0,
+        "background:rx": 0,
+        "background:tx": 657704,
+        "client:cpu": 0,
+        "client:disk": 0,
+        "client:disk_bytes": 0,
+        "client:memory": 0,
+        "client:rx": 0,
+        "client:tx": 0,
+        "durable:cpu": 0,
+        "durable:disk": 512,
+        "durable:disk_bytes": 0,
+        "durable:memory": 0,
+        "durable:rx": 0,
+        "durable:tx": 0,
+        "effect:cpu": 0,
+        "effect:disk": 0,
+        "effect:disk_bytes": 0,
+        "effect:memory": 0,
+        "effect:rx": 0,
+        "effect:tx": 0,
+        "sink:cpu": 0,
+        "sink:disk": 0,
+        "sink:disk_bytes": 0,
+        "sink:memory": 0,
+        "sink:rx": 1400,
+        "sink:tx": 0,
+        "writer:cpu": 0,
+        "writer:disk": 0,
+        "writer:disk_bytes": 0,
+        "writer:memory": 0,
+        "writer:rx": 0,
+        "writer:tx": 0
+      },
+      "resources": {
+        "background:cpu": {
+          "high_bytes": 1028704,
+          "jobs": 43756,
+          "mean_wait_us": 102.04307943152617,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 25495.265440016243,
+          "service_us": 25495.265440016243
+        },
+        "background:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "background:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "background:memory": {
+          "high_bytes": 32768,
+          "jobs": 182,
+          "mean_wait_us": 0.20254945054936976,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 74.54719999999978,
+          "service_us": 74.54719999999978
+        },
+        "background:rx": {
+          "high_bytes": 120,
+          "jobs": 174,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 16.70400000000001,
+          "service_us": 16.70400000000001
+        },
+        "background:tx": {
+          "high_bytes": 1048432,
+          "jobs": 30755,
+          "mean_wait_us": 683.2992551155686,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 34177.83679999361,
+          "service_us": 34177.83679999361
+        },
+        "client:cpu": {
+          "high_bytes": 160,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 423.35999999999706,
+          "service_us": 423.35999999999706
+        },
+        "client:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:rx": {
+          "high_bytes": 160,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 76.80000000000005,
+          "service_us": 76.80000000000005
+        },
+        "client:tx": {
+          "high_bytes": 120,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "durable:cpu": {
+          "high_bytes": 608,
+          "jobs": 2400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 852.0960000000006,
+          "service_us": 852.0960000000006
+        },
+        "durable:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "durable:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "durable:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "durable:rx": {
+          "high_bytes": 608,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 349.44000000000335,
+          "service_us": 349.44000000000335
+        },
+        "durable:tx": {
+          "high_bytes": 160,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 134.4000000000003,
+          "service_us": 134.4000000000003
+        },
+        "effect:cpu": {
+          "high_bytes": 632,
+          "jobs": 3000,
+          "mean_wait_us": 0.47047999999996093,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 2046.7200000000025,
+          "service_us": 2046.7200000000025
+        },
+        "effect:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:rx": {
+          "high_bytes": 160,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 134.40000000000032,
+          "service_us": 134.40000000000032
+        },
+        "effect:tx": {
+          "high_bytes": 160,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 134.4000000000003,
+          "service_us": 134.4000000000003
+        },
+        "sink:cpu": {
+          "high_bytes": 131192,
+          "jobs": 31060,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 11712.763520003036,
+          "service_us": 11712.763520003036
+        },
+        "sink:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:rx": {
+          "high_bytes": 2800,
+          "jobs": 30755,
+          "mean_wait_us": 9.540183192109236e-12,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 34177.83679999361,
+          "service_us": 34177.83679999361
+        },
+        "sink:tx": {
+          "high_bytes": 120,
+          "jobs": 174,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 16.70400000000001,
+          "service_us": 16.70400000000001
+        },
+        "writer:cpu": {
+          "high_bytes": 608,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 428.7359999999981,
+          "service_us": 428.7359999999981
+        },
+        "writer:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "writer:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "writer:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "writer:rx": {
+          "high_bytes": 120,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "writer:tx": {
+          "high_bytes": 608,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 291.84000000000174,
+          "service_us": 291.84000000000174
+        }
+      },
+      "work": {
+        "background_admitted": 30,
+        "background_compute_input_bytes": 1490944,
+        "background_failed": 28,
+        "background_memory_offered_bytes": 1490944,
+        "background_output_offered_bytes": 23855104,
+        "background_scan_bytes": 1490944,
+        "background_submitted_compute_us": 9036.664000000006,
+        "background_submitted_reduce_us": 32.75,
+        "background_transport_give_up": 51,
+        "foreground_admitted": 600,
+        "foreground_submitted_application_cpu_us": 1200
+      }
+    },
+    {
+      "application_bytes_at_cutoff": {
+        "background": 270336,
+        "foreground": 1152
+      },
+      "application_bytes_at_drain": {
+        "background": 0,
+        "foreground": 0
+      },
+      "application_high_bytes": {
+        "background": 270336,
+        "foreground": 2304
+      },
+      "background_read": {
+        "admitted": 16,
+        "completed": 16,
+        "deadline_fraction": 0.0,
+        "deadline_us": 2000,
+        "goodput_per_s": 466.6666666666667,
+        "offered": 30,
+        "oldest_unfinished_us": 48000.0,
+        "p50_us": 2188.4087200000067,
+        "p999_us": 2188.74672,
+        "p99_us": 2188.74672,
+        "pending_at_cutoff": 16,
+        "refused": 14,
+        "unfinished": 14
+      },
+      "cancellation": [],
+      "client_response": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 0.79,
+        "deadline_us": 150,
+        "goodput_per_s": 19933.333333333336,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 93.39152000001195,
+        "p999_us": 192.18624000000636,
+        "p99_us": 192.1862399999991,
+        "pending_at_cutoff": 2,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "completed_tx_wire_bytes_by_class": {
+        "background": 120832,
+        "foreground": 772800
+      },
+      "config": {
+        "background_credit_bytes": 270336,
+        "chunk_bytes": 8192,
+        "compute_copies": 2,
+        "count": 600,
+        "name": "bounded-admission"
+      },
+      "counters": {
+        "bytes:bulk": 90111.99999975678,
+        "bytes:control": 803519.9999993751,
+        "delivered_messages": 4112,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 4112,
+        "packets": 4112,
+        "persisted_bytes": 614400,
+        "price": 0.0,
+        "received_batches": 4112,
+        "wire_bytes": 893631.999999127
+      },
+      "cpu_budget": "two effect/background CPU slots total; other hosts fixed",
+      "foreground_effect": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 0.8433333333333334,
+        "deadline_us": 150,
+        "goodput_per_s": 19933.333333333336,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 84.55712000000858,
+        "p999_us": 182.9148,
+        "p99_us": 182.85839999999735,
+        "pending_at_cutoff": 2,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "logical_background_bytes": 3932160,
+      "model": "authored mixed resource proxy; no witness admission",
+      "placement": "shared",
+      "resource_bytes_at_cutoff": {
+        "client:cpu": 0,
+        "client:disk": 0,
+        "client:disk_bytes": 0,
+        "client:memory": 0,
+        "client:rx": 0,
+        "client:tx": 0,
+        "durable:cpu": 0,
+        "durable:disk": 512,
+        "durable:disk_bytes": 0,
+        "durable:memory": 0,
+        "durable:rx": 0,
+        "durable:tx": 0,
+        "effect:cpu": 32928,
+        "effect:disk": 0,
+        "effect:disk_bytes": 0,
+        "effect:memory": 0,
+        "effect:rx": 0,
+        "effect:tx": 0,
+        "sink:cpu": 0,
+        "sink:disk": 0,
+        "sink:disk_bytes": 0,
+        "sink:memory": 0,
+        "sink:rx": 0,
+        "sink:tx": 0,
+        "writer:cpu": 0,
+        "writer:disk": 0,
+        "writer:disk_bytes": 0,
+        "writer:memory": 0,
+        "writer:rx": 0,
+        "writer:tx": 0
+      },
+      "resources": {
+        "client:cpu": {
+          "high_bytes": 320,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 423.35999999999706,
+          "service_us": 423.35999999999706
+        },
+        "client:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:rx": {
+          "high_bytes": 320,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 76.80000000000005,
+          "service_us": 76.80000000000005
+        },
+        "client:tx": {
+          "high_bytes": 120,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "durable:cpu": {
+          "high_bytes": 728,
+          "jobs": 2400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 852.0960000000006,
+          "service_us": 852.0960000000006
+        },
+        "durable:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "durable:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "durable:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "durable:rx": {
+          "high_bytes": 728,
+          "jobs": 1200,
+          "mean_wait_us": 0.002107133333335772,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 349.44000000000335,
+          "service_us": 349.44000000000335
+        },
+        "durable:tx": {
+          "high_bytes": 160,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 134.4000000000003,
+          "service_us": 134.4000000000003
+        },
+        "effect:cpu": {
+          "high_bytes": 33208,
+          "jobs": 3768,
+          "mean_wait_us": 13.877561401273661,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 27522.160640000147,
+          "service_us": 27522.160640000147
+        },
+        "effect:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:memory": {
+          "high_bytes": 32768,
+          "jobs": 256,
+          "mean_wait_us": 0.08531249999999185,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 104.8575999999996,
+          "service_us": 104.8575999999996
+        },
+        "effect:rx": {
+          "high_bytes": 280,
+          "jobs": 1456,
+          "mean_wait_us": 6.703296703394299e-06,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 158.9759999999998,
+          "service_us": 158.9759999999998
+        },
+        "effect:tx": {
+          "high_bytes": 704,
+          "jobs": 1456,
+          "mean_wait_us": 0.009380659340592136,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 206.48959999999744,
+          "service_us": 206.48959999999744
+        },
+        "sink:cpu": {
+          "high_bytes": 1080,
+          "jobs": 768,
+          "mean_wait_us": 0.06510197916668732,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 245.61664000000016,
+          "service_us": 245.61664000000016
+        },
+        "sink:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:rx": {
+          "high_bytes": 704,
+          "jobs": 256,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 72.08959999999966,
+          "service_us": 72.08959999999966
+        },
+        "sink:tx": {
+          "high_bytes": 240,
+          "jobs": 256,
+          "mean_wait_us": 0.0022425000000261264,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 24.57600000000002,
+          "service_us": 24.57600000000002
+        },
+        "writer:cpu": {
+          "high_bytes": 608,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 428.7359999999981,
+          "service_us": 428.7359999999981
+        },
+        "writer:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "writer:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "writer:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "writer:rx": {
+          "high_bytes": 120,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "writer:tx": {
+          "high_bytes": 608,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 291.84000000000174,
+          "service_us": 291.84000000000174
+        }
+      },
+      "work": {
+        "background_admitted": 16,
+        "background_compute_input_bytes": 4194304,
+        "background_memory_offered_bytes": 2097152,
+        "background_output_offered_bytes": 65536,
+        "background_refused": 14,
+        "background_scan_bytes": 2097152,
+        "background_submitted_compute_us": 25293.82400000002,
+        "background_submitted_reduce_us": 64.0,
+        "foreground_admitted": 600,
+        "foreground_submitted_application_cpu_us": 1200
+      }
+    },
+    {
+      "application_bytes_at_cutoff": {
+        "background": 0,
+        "foreground": 576
+      },
+      "application_bytes_at_drain": {
+        "background": 0,
+        "foreground": 0
+      },
+      "application_high_bytes": {
+        "background": 270336,
+        "foreground": 10368
+      },
+      "background_read": {
+        "admitted": 30,
+        "completed": 0,
+        "deadline_fraction": 0.0,
+        "deadline_us": 2000,
+        "goodput_per_s": 0.0,
+        "offered": 30,
+        "oldest_unfinished_us": 50000.0,
+        "p50_us": null,
+        "p999_us": null,
+        "p99_us": null,
+        "pending_at_cutoff": 30,
+        "refused": 0,
+        "unfinished": 30
+      },
+      "cancellation": [
+        {
+          "active_chunks": 1,
+          "cancel_us": 50.0,
+          "query": 0,
+          "reserved_query_bytes": 135168,
+          "retired_us": 793.4856
+        },
+        {
+          "active_chunks": 1,
+          "cancel_us": 50.0,
+          "query": 1,
+          "reserved_query_bytes": 135168,
+          "retired_us": 800.0392
+        },
+        {
+          "active_chunks": 1,
+          "cancel_us": 2050.0,
+          "query": 2,
+          "reserved_query_bytes": 135168,
+          "retired_us": 2793.4856
+        },
+        {
+          "active_chunks": 1,
+          "cancel_us": 2050.0,
+          "query": 3,
+          "reserved_query_bytes": 135168,
+          "retired_us": 2800.0392
+        },
+        {
+          "active_chunks": 1,
+          "cancel_us": 4050.0,
+          "query": 4,
+          "reserved_query_bytes": 135168,
+          "retired_us": 4793.4856
+        },
+        {
+          "active_chunks": 1,
+          "cancel_us": 4050.0,
+          "query": 5,
+          "reserved_query_bytes": 135168,
+          "retired_us": 4800.0392
+        },
+        {
+          "active_chunks": 1,
+          "cancel_us": 6050.0,
+          "query": 6,
+          "reserved_query_bytes": 135168,
+          "retired_us": 6793.4856
+        },
+        {
+          "active_chunks": 1,
+          "cancel_us": 6050.0,
+          "query": 7,
+          "reserved_query_bytes": 135168,
+          "retired_us": 6800.0392
+        }
+      ],
+      "client_response": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 0.6266666666666667,
+        "deadline_us": 150,
+        "goodput_per_s": 19966.666666666668,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 93.39152000001195,
+        "p999_us": 879.8096000000041,
+        "p99_us": 879.8096000000041,
+        "pending_at_cutoff": 1,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "completed_tx_wire_bytes_by_class": {
+        "foreground": 810320
+      },
+      "config": {
+        "cancel_after_us": 50,
+        "count": 600,
+        "name": "cancel-large"
+      },
+      "counters": {
+        "bytes:control": 810319.999999402,
+        "delivered_messages": 3734,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_messages": 134,
+        "logical_messages": 3734,
+        "packets": 3868,
+        "persisted_bytes": 614400,
+        "price": 0.0,
+        "received_batches": 3868,
+        "retry_messages": 134,
+        "wire_bytes": 810319.999999402
+      },
+      "cpu_budget": "two effect/background CPU slots total; other hosts fixed",
+      "foreground_effect": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 0.6266666666666667,
+        "deadline_us": 150,
+        "goodput_per_s": 19966.666666666668,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 84.55712000000858,
+        "p999_us": 852.902800000029,
+        "p99_us": 852.902800000029,
+        "pending_at_cutoff": 1,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "logical_background_bytes": 3932160,
+      "model": "authored mixed resource proxy; no witness admission",
+      "placement": "shared",
+      "resource_bytes_at_cutoff": {
+        "client:cpu": 0,
+        "client:disk": 0,
+        "client:disk_bytes": 0,
+        "client:memory": 0,
+        "client:rx": 0,
+        "client:tx": 0,
+        "durable:cpu": 0,
+        "durable:disk": 512,
+        "durable:disk_bytes": 0,
+        "durable:memory": 0,
+        "durable:rx": 0,
+        "durable:tx": 0,
+        "effect:cpu": 0,
+        "effect:disk": 0,
+        "effect:disk_bytes": 0,
+        "effect:memory": 0,
+        "effect:rx": 0,
+        "effect:tx": 0,
+        "sink:cpu": 0,
+        "sink:disk": 0,
+        "sink:disk_bytes": 0,
+        "sink:memory": 0,
+        "sink:rx": 0,
+        "sink:tx": 0,
+        "writer:cpu": 0,
+        "writer:disk": 0,
+        "writer:disk_bytes": 0,
+        "writer:memory": 0,
+        "writer:rx": 0,
+        "writer:tx": 0
+      },
+      "resources": {
+        "client:cpu": {
+          "high_bytes": 1480,
+          "jobs": 1200,
+          "mean_wait_us": 0.3111506666659442,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 423.35999999999706,
+          "service_us": 423.35999999999706
+        },
+        "client:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:rx": {
+          "high_bytes": 320,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 76.80000000000005,
+          "service_us": 76.80000000000005
+        },
+        "client:tx": {
+          "high_bytes": 240,
+          "jobs": 600,
+          "mean_wait_us": 0.0069813333333180105,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "durable:cpu": {
+          "high_bytes": 968,
+          "jobs": 2668,
+          "mean_wait_us": 0.003296581709100959,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 946.646400000001,
+          "service_us": 946.646400000001
+        },
+        "durable:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "durable:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "durable:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "durable:rx": {
+          "high_bytes": 848,
+          "jobs": 1334,
+          "mean_wait_us": 0.007007796101789893,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 362.30400000000367,
+          "service_us": 362.30400000000367
+        },
+        "durable:tx": {
+          "high_bytes": 320,
+          "jobs": 1334,
+          "mean_wait_us": 0.012857571214391728,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 151.5519999999993,
+          "service_us": 151.5519999999993
+        },
+        "effect:cpu": {
+          "high_bytes": 265984,
+          "jobs": 3298,
+          "mean_wait_us": 38.1814832747121,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 25749.230400000222,
+          "service_us": 25749.230400000222
+        },
+        "effect:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:memory": {
+          "high_bytes": 262144,
+          "jobs": 30,
+          "mean_wait_us": 3.276799999999777,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 196.60799999999992,
+          "service_us": 196.60799999999992
+        },
+        "effect:rx": {
+          "high_bytes": 320,
+          "jobs": 1334,
+          "mean_wait_us": 8.522251703269567e-17,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 151.55199999999937,
+          "service_us": 151.55199999999937
+        },
+        "effect:tx": {
+          "high_bytes": 320,
+          "jobs": 1334,
+          "mean_wait_us": 0.00018590704647781974,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 147.2639999999999,
+          "service_us": 147.2639999999999
+        },
+        "sink:cpu": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:rx": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:tx": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "writer:cpu": {
+          "high_bytes": 608,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 428.7359999999981,
+          "service_us": 428.7359999999981
+        },
+        "writer:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "writer:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "writer:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "writer:rx": {
+          "high_bytes": 120,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "writer:tx": {
+          "high_bytes": 608,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 291.84000000000174,
+          "service_us": 291.84000000000174
+        }
+      },
+      "work": {
+        "background_admitted": 30,
+        "background_cancelled": 30,
+        "background_compute_input_bytes": 3932160,
+        "background_computed_after_cancel_bytes": 3932160,
+        "background_memory_offered_bytes": 3932160,
+        "background_scan_bytes": 3932160,
+        "background_submitted_compute_us": 23607.96000000001,
+        "foreground_admitted": 600,
+        "foreground_submitted_application_cpu_us": 1200
+      }
+    },
+    {
+      "application_bytes_at_cutoff": {
+        "background": 0,
+        "foreground": 576
+      },
+      "application_bytes_at_drain": {
+        "background": 0,
+        "foreground": 0
+      },
+      "application_high_bytes": {
+        "background": 270336,
+        "foreground": 2304
+      },
+      "background_read": {
+        "admitted": 30,
+        "completed": 0,
+        "deadline_fraction": 0.0,
+        "deadline_us": 2000,
+        "goodput_per_s": 0.0,
+        "offered": 30,
+        "oldest_unfinished_us": 50000.0,
+        "p50_us": null,
+        "p999_us": null,
+        "p99_us": null,
+        "pending_at_cutoff": 30,
+        "refused": 0,
+        "unfinished": 30
+      },
+      "cancellation": [
+        {
+          "active_chunks": 2,
+          "cancel_us": 50.0,
+          "query": 0,
+          "reserved_query_bytes": 135168,
+          "retired_us": 50.4712
+        },
+        {
+          "active_chunks": 2,
+          "cancel_us": 50.0,
+          "query": 1,
+          "reserved_query_bytes": 135168,
+          "retired_us": 100.1232
+        },
+        {
+          "active_chunks": 2,
+          "cancel_us": 2050.0,
+          "query": 2,
+          "reserved_query_bytes": 135168,
+          "retired_us": 2050.4712
+        },
+        {
+          "active_chunks": 2,
+          "cancel_us": 2050.0,
+          "query": 3,
+          "reserved_query_bytes": 135168,
+          "retired_us": 2103.1248000000005
+        },
+        {
+          "active_chunks": 2,
+          "cancel_us": 4050.0,
+          "query": 4,
+          "reserved_query_bytes": 135168,
+          "retired_us": 4050.4712
+        },
+        {
+          "active_chunks": 2,
+          "cancel_us": 4050.0,
+          "query": 5,
+          "reserved_query_bytes": 135168,
+          "retired_us": 4100.4192
+        },
+        {
+          "active_chunks": 2,
+          "cancel_us": 6050.0,
+          "query": 6,
+          "reserved_query_bytes": 135168,
+          "retired_us": 6050.4712
+        },
+        {
+          "active_chunks": 2,
+          "cancel_us": 6050.0,
+          "query": 7,
+          "reserved_query_bytes": 135168,
+          "retired_us": 6103.124799999999
+        }
+      ],
+      "client_response": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 0.9883333333333333,
+        "deadline_us": 150,
+        "goodput_per_s": 19966.666666666668,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 93.39152000000013,
+        "p999_us": 161.3100000000013,
+        "p99_us": 161.30999999999767,
+        "pending_at_cutoff": 1,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "completed_tx_wire_bytes_by_class": {
+        "foreground": 772800
+      },
+      "config": {
+        "cancel_after_us": 50,
+        "chunk_bytes": 8192,
+        "count": 600,
+        "name": "cancel-small"
+      },
+      "counters": {
+        "bytes:control": 772799.9999994298,
+        "delivered_messages": 3600,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 3600,
+        "packets": 3600,
+        "persisted_bytes": 614400,
+        "price": 0.0,
+        "received_batches": 3600,
+        "wire_bytes": 772799.9999994298
+      },
+      "cpu_budget": "two effect/background CPU slots total; other hosts fixed",
+      "foreground_effect": {
+        "admitted": 600,
+        "completed": 600,
+        "deadline_fraction": 0.9883333333333333,
+        "deadline_us": 150,
+        "goodput_per_s": 19966.666666666668,
+        "offered": 600,
+        "oldest_unfinished_us": 0,
+        "p50_us": 84.55712,
+        "p999_us": 152.12320000000182,
+        "p99_us": 152.12319999999454,
+        "pending_at_cutoff": 1,
+        "refused": 0,
+        "unfinished": 0
+      },
+      "logical_background_bytes": 3932160,
+      "model": "authored mixed resource proxy; no witness admission",
+      "placement": "shared",
+      "resource_bytes_at_cutoff": {
+        "client:cpu": 0,
+        "client:disk": 0,
+        "client:disk_bytes": 0,
+        "client:memory": 0,
+        "client:rx": 0,
+        "client:tx": 0,
+        "durable:cpu": 0,
+        "durable:disk": 512,
+        "durable:disk_bytes": 0,
+        "durable:memory": 0,
+        "durable:rx": 0,
+        "durable:tx": 0,
+        "effect:cpu": 0,
+        "effect:disk": 0,
+        "effect:disk_bytes": 0,
+        "effect:memory": 0,
+        "effect:rx": 0,
+        "effect:tx": 0,
+        "sink:cpu": 0,
+        "sink:disk": 0,
+        "sink:disk_bytes": 0,
+        "sink:memory": 0,
+        "sink:rx": 0,
+        "sink:tx": 0,
+        "writer:cpu": 0,
+        "writer:disk": 0,
+        "writer:disk_bytes": 0,
+        "writer:memory": 0,
+        "writer:rx": 0,
+        "writer:tx": 0
+      },
+      "resources": {
+        "client:cpu": {
+          "high_bytes": 280,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 423.35999999999706,
+          "service_us": 423.35999999999706
+        },
+        "client:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "client:rx": {
+          "high_bytes": 160,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 76.80000000000005,
+          "service_us": 76.80000000000005
+        },
+        "client:tx": {
+          "high_bytes": 120,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "durable:cpu": {
+          "high_bytes": 608,
+          "jobs": 2400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 852.0960000000006,
+          "service_us": 852.0960000000006
+        },
+        "durable:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "durable:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "durable:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "durable:rx": {
+          "high_bytes": 608,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 349.44000000000335,
+          "service_us": 349.44000000000335
+        },
+        "durable:tx": {
+          "high_bytes": 160,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 134.4000000000003,
+          "service_us": 134.4000000000003
+        },
+        "effect:cpu": {
+          "high_bytes": 33048,
+          "jobs": 3060,
+          "mean_wait_us": 1.1903215163397904,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 5025.839999999949,
+          "service_us": 5025.839999999949
+        },
+        "effect:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "effect:memory": {
+          "high_bytes": 32768,
+          "jobs": 60,
+          "mean_wait_us": 0.6143999999997549,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 24.57600000000001,
+          "service_us": 24.57600000000001
+        },
+        "effect:rx": {
+          "high_bytes": 160,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 134.40000000000032,
+          "service_us": 134.40000000000032
+        },
+        "effect:tx": {
+          "high_bytes": 160,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 134.4000000000003,
+          "service_us": 134.4000000000003
+        },
+        "sink:cpu": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:rx": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "sink:tx": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "writer:cpu": {
+          "high_bytes": 608,
+          "jobs": 1200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 428.7359999999981,
+          "service_us": 428.7359999999981
+        },
+        "writer:disk": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 6000.0,
+          "service_us": 6000.0
+        },
+        "writer:disk_bytes": {
+          "high_bytes": 512,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 153.6000000000001,
+          "service_us": 153.6000000000001
+        },
+        "writer:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "writer:rx": {
+          "high_bytes": 120,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 57.5999999999991,
+          "service_us": 57.5999999999991
+        },
+        "writer:tx": {
+          "high_bytes": 608,
+          "jobs": 600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 291.84000000000174,
+          "service_us": 291.84000000000174
+        }
+      },
+      "work": {
+        "background_admitted": 30,
+        "background_cancelled": 30,
+        "background_compute_input_bytes": 491520,
+        "background_computed_after_cancel_bytes": 491520,
+        "background_memory_offered_bytes": 491520,
+        "background_scan_bytes": 491520,
+        "background_submitted_compute_us": 2979.1200000000017,
+        "foreground_admitted": 600,
+        "foreground_submitted_application_cpu_us": 1200
+      }
+    }
+  ],
+  "retention": {
+    "full_input_sha256": "45ea9737a7d9adf170c9819e9dabe4d8078d7d8bbef253002d971e307e406122",
+    "input": "build/workbench/orbital-dissemination/mixed.json",
+    "script_sha256": "e63e73f918fa1f2b8f202ee5ab71c7bb6d2a5c61fbf3a93f43e50a56fc65fdd1",
+    "selection": "Every selected case retained including failure. Edge/proposal resource tables summarized; identical edge tariffs stored once. Other studies unchanged."
+  },
+  "sources": {
+    "check_mixed.py": "73faf7dca950b7ebbe247900a99897261c30d6a90e76b99ae6a7ad3ee984ddfd",
+    "mixed_study.py": "de242fc11b5943c7a85a2452682b5a74d81057ed8e78390823bea04296979dcb",
+    "simulator.py": "a3fd09a8d7985d27af6afd22fa3c43e73f7b8fd0fe9b1a6177f085af943bd3f0"
+  }
+}

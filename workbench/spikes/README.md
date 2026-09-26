@@ -20,6 +20,7 @@ Loose thoughts can stay in the [notebook](../notebook/ideas.md) indefinitely.
 - [Executable placement](executable-placement/README.md): distinguishing changed code from placement effects.
 - [Memory characterisation](memory-characterisation/README.md): automatic MLP, prefetch, cache sharing and host diagnostics.
 - [CFT commit latency](cft-commit-latency/README.md): directional network measurement and host/flow selection; durable quorum latency, storage throughput cliffs and live log preparation.
+- [Orbital dissemination](orbital-dissemination/README.md): many-to-many routing, read scale-out, relay work, finite-resource simulation, delivery faults and changing membership.
 - [Orbital scenarios](orbital-scenarios/README.md): contention comparisons, worked HTAP/ELT histories, extension and recovery probes, and the earlier interactive arbitration model.
 - [Row filter signatures](row-filter-signatures/README.md): per-row Boolean evidence and progressive refinement.
 - [Aggregate maintenance](aggregate-maintenance/README.md): descendant summaries without excessive mutation cost.

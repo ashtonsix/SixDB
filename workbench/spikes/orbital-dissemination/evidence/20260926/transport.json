@@ -1,0 +1,4952 @@
+{
+  "analytic": {
+    "framing_boundaries": [
+      {
+        "mtu": 512,
+        "packets": 1,
+        "size": 64,
+        "wire_bytes": 160
+      },
+      {
+        "mtu": 512,
+        "packets": 4,
+        "size": 1304,
+        "wire_bytes": 1640
+      },
+      {
+        "mtu": 512,
+        "packets": 4,
+        "size": 1305,
+        "wire_bytes": 1641
+      },
+      {
+        "mtu": 512,
+        "packets": 10,
+        "size": 4096,
+        "wire_bytes": 4912
+      },
+      {
+        "mtu": 512,
+        "packets": 152,
+        "size": 65536,
+        "wire_bytes": 77712
+      },
+      {
+        "mtu": 1400,
+        "packets": 1,
+        "size": 64,
+        "wire_bytes": 160
+      },
+      {
+        "mtu": 1400,
+        "packets": 1,
+        "size": 1304,
+        "wire_bytes": 1400
+      },
+      {
+        "mtu": 1400,
+        "packets": 2,
+        "size": 1305,
+        "wire_bytes": 1481
+      },
+      {
+        "mtu": 1400,
+        "packets": 4,
+        "size": 4096,
+        "wire_bytes": 4432
+      },
+      {
+        "mtu": 1400,
+        "packets": 50,
+        "size": 65536,
+        "wire_bytes": 69552
+      },
+      {
+        "mtu": 9000,
+        "packets": 1,
+        "size": 64,
+        "wire_bytes": 160
+      },
+      {
+        "mtu": 9000,
+        "packets": 1,
+        "size": 1304,
+        "wire_bytes": 1400
+      },
+      {
+        "mtu": 9000,
+        "packets": 1,
+        "size": 1305,
+        "wire_bytes": 1401
+      },
+      {
+        "mtu": 9000,
+        "packets": 1,
+        "size": 4096,
+        "wire_bytes": 4192
+      },
+      {
+        "mtu": 9000,
+        "packets": 8,
+        "size": 65536,
+        "wire_bytes": 66192
+      }
+    ],
+    "ideal_codes": [
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 1,
+        "expected_attempts": 1,
+        "expected_cpu_extra_us": 0,
+        "expected_wire_bytes": 11200,
+        "k": 8,
+        "mode": "iid",
+        "no_queue_first_arrival_us": 88.96000000000001,
+        "packet_loss": 0,
+        "packet_loss_pmf": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "parity": 0,
+        "success_by_last_attempt": 1,
+        "success_first_attempt": 1
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 1,
+        "expected_attempts": 1,
+        "expected_cpu_extra_us": 13,
+        "expected_wire_bytes": 12600,
+        "k": 8,
+        "mode": "iid",
+        "no_queue_first_arrival_us": 103.08,
+        "packet_loss": 0,
+        "packet_loss_pmf": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "parity": 1,
+        "success_by_last_attempt": 1,
+        "success_first_attempt": 1
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 1,
+        "expected_attempts": 1,
+        "expected_cpu_extra_us": 13,
+        "expected_wire_bytes": 14000,
+        "k": 8,
+        "mode": "iid",
+        "no_queue_first_arrival_us": 104.2,
+        "packet_loss": 0,
+        "packet_loss_pmf": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "parity": 2,
+        "success_by_last_attempt": 1,
+        "success_first_attempt": 1
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 1,
+        "expected_attempts": 1,
+        "expected_cpu_extra_us": 13,
+        "expected_wire_bytes": 16800,
+        "k": 8,
+        "mode": "iid",
+        "no_queue_first_arrival_us": 106.44,
+        "packet_loss": 0,
+        "packet_loss_pmf": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "parity": 4,
+        "success_by_last_attempt": 1,
+        "success_first_attempt": 1
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 1,
+        "expected_attempts": 1,
+        "expected_cpu_extra_us": 0,
+        "expected_wire_bytes": 11200,
+        "k": 8,
+        "mode": "common_cut",
+        "no_queue_first_arrival_us": 88.96000000000001,
+        "packet_loss": 0,
+        "packet_loss_pmf": [
+          1,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0
+        ],
+        "parity": 0,
+        "success_by_last_attempt": 1,
+        "success_first_attempt": 1
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 1.0,
+        "expected_attempts": 1.0,
+        "expected_cpu_extra_us": 13.0,
+        "expected_wire_bytes": 12600.0,
+        "k": 8,
+        "mode": "common_cut",
+        "no_queue_first_arrival_us": 103.08,
+        "packet_loss": 0,
+        "packet_loss_pmf": [
+          1,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0
+        ],
+        "parity": 1,
+        "success_by_last_attempt": 1.0,
+        "success_first_attempt": 1.0
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 1.0,
+        "expected_attempts": 1.0,
+        "expected_cpu_extra_us": 13.0,
+        "expected_wire_bytes": 14000.0,
+        "k": 8,
+        "mode": "common_cut",
+        "no_queue_first_arrival_us": 104.2,
+        "packet_loss": 0,
+        "packet_loss_pmf": [
+          1,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0
+        ],
+        "parity": 2,
+        "success_by_last_attempt": 1.0,
+        "success_first_attempt": 1.0
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 1.0,
+        "expected_attempts": 1.0,
+        "expected_cpu_extra_us": 13.0,
+        "expected_wire_bytes": 16800.0,
+        "k": 8,
+        "mode": "common_cut",
+        "no_queue_first_arrival_us": 106.44,
+        "packet_loss": 0,
+        "packet_loss_pmf": [
+          1,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0
+        ],
+        "parity": 4,
+        "success_by_last_attempt": 1.0,
+        "success_first_attempt": 1.0
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.9227446944279201,
+        "expected_attempts": 1.0832236878111154,
+        "expected_cpu_extra_us": 0.0,
+        "expected_wire_bytes": 12132.105303484494,
+        "k": 8,
+        "mode": "iid",
+        "no_queue_first_arrival_us": 88.96000000000001,
+        "packet_loss": 0.01,
+        "packet_loss_pmf": [
+          0.9227446944279201,
+          0.0745652278325592,
+          0.0026361444183228,
+          5.32554427944e-05,
+          6.72417207e-07,
+          5.4336744000000005e-09,
+          2.7442800000000005e-11,
+          7.92e-14,
+          1.0000000000000002e-16
+        ],
+        "parity": 0,
+        "success_by_last_attempt": 0.9995389108063524,
+        "success_first_attempt": 0.9227446944279201
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.9965642699821536,
+        "expected_attempts": 1.0034475342586018,
+        "expected_cpu_extra_us": 13.017237346843533,
+        "expected_wire_bytes": 12643.438931658382,
+        "k": 8,
+        "mode": "iid",
+        "no_queue_first_arrival_us": 103.08,
+        "packet_loss": 0.01,
+        "packet_loss_pmf": [
+          0.9135172474836408,
+          0.0830470224985128,
+          0.003355435252465164,
+          7.9084332549684e-05,
+          1.198247462874e-06,
+          1.2103509726000002e-08,
+          8.150511600000002e-11,
+          3.5283600000000005e-13,
+          8.910000000000003e-16,
+          1.0000000000000003e-18
+        ],
+        "parity": 1,
+        "success_by_last_attempt": 0.9999999594438157,
+        "success_first_attempt": 0.9965642699821536
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.9998861508820941,
+        "expected_attempts": 1.0001138620795276,
+        "expected_cpu_extra_us": 13.000569310385831,
+        "expected_wire_bytes": 14001.594069113386,
+        "k": 8,
+        "mode": "iid",
+        "no_queue_first_arrival_us": 104.2,
+        "packet_loss": 0.01,
+        "packet_loss_pmf": [
+          0.9043820750088044,
+          0.09135172474836409,
+          0.0041523511249256405,
+          0.0001118478417488388,
+          1.9771083137421e-06,
+          2.396494925748e-08,
+          2.0172516210000003e-10,
+          1.1643588000000002e-12,
+          4.410450000000001e-15,
+          9.900000000000003e-18,
+          1.0000000000000002e-20
+        ],
+        "parity": 2,
+        "success_by_last_attempt": 0.9999999999985243,
+        "success_first_attempt": 0.9998861508820941
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.9999999253029171,
+        "expected_attempts": 1.0000000746970885,
+        "expected_cpu_extra_us": 13.000000373485442,
+        "expected_wire_bytes": 16800.001254911087,
+        "k": 8,
+        "mode": "iid",
+        "no_queue_first_arrival_us": 106.44,
+        "packet_loss": 0.01,
+        "packet_loss_pmf": [
+          0.8863848717161292,
+          0.10744059051104596,
+          0.0059689216950581095,
+          0.00020097379444640101,
+          4.567586237418204e-06,
+          7.38195755542336e-08,
+          8.699276580465241e-10,
+          7.531841195208e-12,
+          4.7549502495000005e-14,
+          2.1346578000000007e-16,
+          6.468660000000001e-19,
+          1.1880000000000003e-21,
+          1.0000000000000003e-24
+        ],
+        "parity": 4,
+        "success_by_last_attempt": 1.0,
+        "success_first_attempt": 0.9999999253029171
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.9760845633761568,
+        "expected_attempts": 1.0244873847327522,
+        "expected_cpu_extra_us": 0.0,
+        "expected_wire_bytes": 11474.258709006825,
+        "k": 8,
+        "mode": "bursty",
+        "no_queue_first_arrival_us": 88.96000000000001,
+        "packet_loss": 0.01,
+        "packet_loss_pmf": [
+          0.9760845633761568,
+          0.00632761469316445,
+          0.004768538786178331,
+          0.003575431547270377,
+          0.002665460777575372,
+          0.0019739986931368576,
+          0.0014507203689419447,
+          0.0010565197575757579,
+          0.002097152000000001
+        ],
+        "parity": 0,
+        "success_by_last_attempt": 0.9999863216112492,
+        "success_first_attempt": 0.9760845633761568
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.980822682939104,
+        "expected_attempts": 1.0195450865505502,
+        "expected_cpu_extra_us": 13.097669010095885,
+        "expected_wire_bytes": 12846.268090536933,
+        "k": 8,
+        "mode": "bursty",
+        "no_queue_first_arrival_us": 103.08,
+        "packet_loss": 0.01,
+        "packet_loss_pmf": [
+          0.9741126753693362,
+          0.006710007569767796,
+          0.005078087557992146,
+          0.003825743745742697,
+          0.0028676577645317673,
+          0.0021371581916115765,
+          0.001582242720025889,
+          0.001162430507254362,
+          0.0008462749737373741,
+          0.001677721600000001
+        ],
+        "parity": 1,
+        "success_by_last_attempt": 0.9999929471678916,
+        "success_first_attempt": 0.980822682939104
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.9846221267314522,
+        "expected_attempts": 1.0156143522548113,
+        "expected_cpu_extra_us": 13.078042668923004,
+        "expected_wire_bytes": 14218.600931567358,
+        "k": 8,
+        "mode": "bursty",
+        "no_queue_first_arrival_us": 104.2,
+        "packet_loss": 0.01,
+        "packet_loss_pmf": [
+          0.9721447709746507,
+          0.007090829600283885,
+          0.005386526156517596,
+          0.004075287399639074,
+          0.0030693373693353584,
+          0.0022999830591281345,
+          0.001713561745013969,
+          0.0012682307918825027,
+          0.0009314283104173046,
+          0.0006778673131313134,
+          0.0013421772800000008
+        ],
+        "parity": 2,
+        "success_by_last_attempt": 0.9999963634561185,
+        "success_first_attempt": 0.9846221267314522
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.9901119687186865,
+        "expected_attempts": 1.0099858044439338,
+        "expected_cpu_extra_us": 13.049921287946946,
+        "expected_wire_bytes": 16967.761514658087,
+        "k": 8,
+        "mode": "bursty",
+        "no_queue_first_arrival_us": 106.44,
+        "packet_loss": 0.01,
+        "packet_loss_pmf": [
+          0.9682208808471374,
+          0.007847780255026462,
+          0.006000084423176214,
+          0.004572075584672771,
+          0.003471147608673569,
+          0.002624629961495612,
+          0.001975589600001765,
+          0.0014794990391058483,
+          0.0011015953551667533,
+          0.0008147896545938769,
+          0.0005980145436444447,
+          0.00043491966810505064,
+          0.0008589934592000006
+        ],
+        "parity": 4,
+        "success_by_last_attempt": 0.9999990332159095,
+        "success_first_attempt": 0.9901119687186865
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.99,
+        "expected_attempts": 1.0101,
+        "expected_cpu_extra_us": 0.0,
+        "expected_wire_bytes": 11313.12,
+        "k": 8,
+        "mode": "common_cut",
+        "no_queue_first_arrival_us": 88.96000000000001,
+        "packet_loss": 0.01,
+        "packet_loss_pmf": [
+          0.99,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.01
+        ],
+        "parity": 0,
+        "success_by_last_attempt": 0.999999,
+        "success_first_attempt": 0.99
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.99,
+        "expected_attempts": 1.0101,
+        "expected_cpu_extra_us": 13.050491999999998,
+        "expected_wire_bytes": 12727.26,
+        "k": 8,
+        "mode": "common_cut",
+        "no_queue_first_arrival_us": 103.08,
+        "packet_loss": 0.01,
+        "packet_loss_pmf": [
+          0.99,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.01
+        ],
+        "parity": 1,
+        "success_by_last_attempt": 0.999999,
+        "success_first_attempt": 0.99
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.99,
+        "expected_attempts": 1.0101,
+        "expected_cpu_extra_us": 13.050491999999998,
+        "expected_wire_bytes": 14141.4,
+        "k": 8,
+        "mode": "common_cut",
+        "no_queue_first_arrival_us": 104.2,
+        "packet_loss": 0.01,
+        "packet_loss_pmf": [
+          0.99,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.01
+        ],
+        "parity": 2,
+        "success_by_last_attempt": 0.999999,
+        "success_first_attempt": 0.99
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.99,
+        "expected_attempts": 1.0101,
+        "expected_cpu_extra_us": 13.050491999999998,
+        "expected_wire_bytes": 16969.68,
+        "k": 8,
+        "mode": "common_cut",
+        "no_queue_first_arrival_us": 106.44,
+        "packet_loss": 0.01,
+        "packet_loss_pmf": [
+          0.99,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.01
+        ],
+        "parity": 4,
+        "success_by_last_attempt": 0.999999,
+        "success_first_attempt": 0.99
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.6634204312890623,
+        "expected_attempts": 1.4498653747845787,
+        "expected_cpu_extra_us": 0.0,
+        "expected_wire_bytes": 16238.49219758728,
+        "k": 8,
+        "mode": "iid",
+        "no_queue_first_arrival_us": 88.96000000000001,
+        "packet_loss": 0.05,
+        "packet_loss_pmf": [
+          0.6634204312890623,
+          0.2793349184374999,
+          0.05145643234374999,
+          0.0054164665625,
+          0.000356346484375,
+          1.5004062500000003e-05,
+          3.948437500000001e-07,
+          5.937500000000002e-09,
+          3.906250000000002e-11
+        ],
+        "parity": 0,
+        "success_by_last_attempt": 0.961870312250663,
+        "success_first_attempt": 0.6634204312890623
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.9287886038046871,
+        "expected_attempts": 1.0762824591433988,
+        "expected_cpu_extra_us": 13.378523355935174,
+        "expected_wire_bytes": 13561.158985206825,
+        "k": 8,
+        "mode": "iid",
+        "no_queue_first_arrival_us": 103.08,
+        "packet_loss": 0.05,
+        "packet_loss_pmf": [
+          0.6302494097246091,
+          0.298539194080078,
+          0.0628503566484375,
+          0.0077184648515625,
+          0.0006093524882812499,
+          3.2071183593750003e-05,
+          1.1253046875000004e-06,
+          2.5382812500000008e-08,
+          3.3398437500000017e-10,
+          1.953125000000001e-12
+        ],
+        "parity": 1,
+        "success_by_last_attempt": 0.9996388825272725,
+        "success_first_attempt": 0.9287886038046871
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.9884964426207027,
+        "expected_attempts": 1.0116358892116761,
+        "expected_cpu_extra_us": 13.058167267763764,
+        "expected_wire_bytes": 14162.902448963467,
+        "k": 8,
+        "mode": "iid",
+        "no_queue_first_arrival_us": 104.2,
+        "packet_loss": 0.05,
+        "packet_loss_pmf": [
+          0.5987369392383787,
+          0.31512470486230454,
+          0.07463479852001952,
+          0.010475059441406248,
+          0.0009648081064453125,
+          6.0935248828124994e-05,
+          2.672598632812501e-06,
+          8.037890625000001e-08,
+          1.586425781250001e-09,
+          1.8554687500000008e-11,
+          9.765625000000005e-14
+        ],
+        "parity": 2,
+        "success_by_last_attempt": 0.9999984777131731,
+        "success_first_attempt": 0.9884964426207027
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.9998160537295723,
+        "expected_attempts": 1.000183980106658,
+        "expected_cpu_extra_us": 13.000919900483499,
+        "expected_wire_bytes": 16803.090865791855,
+        "k": 8,
+        "mode": "iid",
+        "no_queue_first_arrival_us": 106.44,
+        "packet_loss": 0.05,
+        "packet_loss_pmf": [
+          0.5403600876626367,
+          0.34128005536587586,
+          0.0987915949743325,
+          0.017331858767426753,
+          0.002052456959300537,
+          0.0001728384807832031,
+          1.061288917089844e-05,
+          4.78776955078125e-07,
+          1.5749241943359382e-08,
+          3.6840332031250014e-10,
+          5.816894531250003e-12,
+          5.5664062500000035e-14,
+          2.4414062500000014e-16
+        ],
+        "parity": 4,
+        "success_by_last_attempt": 0.999999999993776,
+        "success_first_attempt": 0.9998160537295723
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.8821721508059112,
+        "expected_attempts": 1.1317112512397938,
+        "expected_cpu_extra_us": 0.0,
+        "expected_wire_bytes": 12675.16601388569,
+        "k": 8,
+        "mode": "bursty",
+        "no_queue_first_arrival_us": 88.96000000000001,
+        "packet_loss": 0.05,
+        "packet_loss_pmf": [
+          0.8821721508059112,
+          0.03015119845443471,
+          0.023186305870179787,
+          0.0176929976913524,
+          0.013387141375526582,
+          0.010033959376002332,
+          0.007440650637119113,
+          0.0054498357894736844,
+          0.010485760000000005
+        ],
+        "parity": 0,
+        "success_by_last_attempt": 0.9983641485974578,
+        "success_first_attempt": 0.8821721508059112
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.9045969076069125,
+        "expected_attempts": 1.1045048424312516,
+        "expected_cpu_extra_us": 13.51557753135762,
+        "expected_wire_bytes": 13916.76101463377,
+        "k": 8,
+        "mode": "bursty",
+        "no_queue_first_arrival_us": 103.08,
+        "packet_loss": 0.05,
+        "packet_loss_pmf": [
+          0.8728861281658489,
+          0.03171077944106354,
+          0.02451989872129478,
+          0.01882499552751476,
+          0.014341492353499595,
+          0.010833418062537886,
+          0.008106316027409244,
+          0.006000900963988919,
+          0.0043874627368421055,
+          0.008388608000000004
+        ],
+        "parity": 1,
+        "success_by_last_attempt": 0.9991316649001702,
+        "success_first_attempt": 0.9045969076069125
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.9227588797731672,
+        "expected_attempts": 1.083207310880729,
+        "expected_cpu_extra_us": 13.412349872406894,
+        "expected_wire_bytes": 15164.902352330206,
+        "k": 8,
+        "mode": "bursty",
+        "no_queue_first_arrival_us": 104.2,
+        "packet_loss": 0.05,
+        "packet_loss_pmf": [
+          0.8636978531325241,
+          0.03323418629074899,
+          0.02582684034989405,
+          0.019937778338329548,
+          0.01528236962598583,
+          0.011623780142947755,
+          0.008766173959254456,
+          0.006548588535938184,
+          0.00483949775069252,
+          0.003532045473684211,
+          0.006710886400000004
+        ],
+        "parity": 2,
+        "success_by_last_attempt": 0.9995391647504062,
+        "success_first_attempt": 0.9227588797731672
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.949378242831827,
+        "expected_attempts": 1.0531843194669663,
+        "expected_cpu_extra_us": 13.264883826083489,
+        "expected_wire_bytes": 17693.496567045033,
+        "k": 8,
+        "mode": "bursty",
+        "no_queue_first_arrival_us": 106.44,
+        "packet_loss": 0.05,
+        "packet_loss_pmf": [
+          0.8456104410281421,
+          0.036174824208763875,
+          0.02836225061727666,
+          0.0221065704199387,
+          0.017124156557705713,
+          0.01317739025564632,
+          0.010068466866677176,
+          0.007633725820460341,
+          0.005738549522918946,
+          0.004272839422469749,
+          0.0031470525170526316,
+          0.0022887654669473687,
+          0.0042949672960000025
+        ],
+        "parity": 4,
+        "success_by_last_attempt": 0.9998702785935821,
+        "success_first_attempt": 0.949378242831827
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.95,
+        "expected_attempts": 1.0525,
+        "expected_cpu_extra_us": 0.0,
+        "expected_wire_bytes": 11788.0,
+        "k": 8,
+        "mode": "common_cut",
+        "no_queue_first_arrival_us": 88.96000000000001,
+        "packet_loss": 0.05,
+        "packet_loss_pmf": [
+          0.95,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.05
+        ],
+        "parity": 0,
+        "success_by_last_attempt": 0.999875,
+        "success_first_attempt": 0.95
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.95,
+        "expected_attempts": 1.0525,
+        "expected_cpu_extra_us": 13.2615,
+        "expected_wire_bytes": 13261.5,
+        "k": 8,
+        "mode": "common_cut",
+        "no_queue_first_arrival_us": 103.08,
+        "packet_loss": 0.05,
+        "packet_loss_pmf": [
+          0.95,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.05
+        ],
+        "parity": 1,
+        "success_by_last_attempt": 0.999875,
+        "success_first_attempt": 0.95
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.95,
+        "expected_attempts": 1.0525,
+        "expected_cpu_extra_us": 13.2615,
+        "expected_wire_bytes": 14735.0,
+        "k": 8,
+        "mode": "common_cut",
+        "no_queue_first_arrival_us": 104.2,
+        "packet_loss": 0.05,
+        "packet_loss_pmf": [
+          0.95,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.05
+        ],
+        "parity": 2,
+        "success_by_last_attempt": 0.999875,
+        "success_first_attempt": 0.95
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.95,
+        "expected_attempts": 1.0525,
+        "expected_cpu_extra_us": 13.2615,
+        "expected_wire_bytes": 17682.0,
+        "k": 8,
+        "mode": "common_cut",
+        "no_queue_first_arrival_us": 106.44,
+        "packet_loss": 0.05,
+        "packet_loss_pmf": [
+          0.95,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.05
+        ],
+        "parity": 4,
+        "success_by_last_attempt": 0.999875,
+        "success_first_attempt": 0.95
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.1677721600000001,
+        "expected_attempts": 2.5248310176710653,
+        "expected_cpu_extra_us": 0.0,
+        "expected_wire_bytes": 28278.10739791593,
+        "k": 8,
+        "mode": "iid",
+        "no_queue_first_arrival_us": 88.96000000000001,
+        "packet_loss": 0.2,
+        "packet_loss_pmf": [
+          0.1677721600000001,
+          0.3355443200000001,
+          0.29360128000000013,
+          0.14680064000000007,
+          0.04587520000000001,
+          0.009175040000000004,
+          0.0011468800000000007,
+          8.192000000000003e-05,
+          2.5600000000000013e-06
+        ],
+        "parity": 0,
+        "success_by_last_attempt": 0.42359635346967295,
+        "success_first_attempt": 0.1677721600000001
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.43620761600000024,
+        "expected_attempts": 1.881654236256403,
+        "expected_cpu_extra_us": 15.974606449551668,
+        "expected_wire_bytes": 23708.84337683068,
+        "k": 8,
+        "mode": "iid",
+        "no_queue_first_arrival_us": 103.08,
+        "packet_loss": 0.2,
+        "packet_loss_pmf": [
+          0.13421772800000006,
+          0.30198988800000015,
+          0.3019898880000002,
+          0.1761607680000001,
+          0.06606028800000002,
+          0.016515072000000006,
+          0.0027525120000000017,
+          0.00029491200000000015,
+          1.8432000000000013e-05,
+          5.120000000000002e-07
+        ],
+        "parity": 1,
+        "success_by_last_attempt": 0.8207919085337068,
+        "success_first_attempt": 0.43620761600000024
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.6777995264000004,
+        "expected_attempts": 1.4260136187880637,
+        "expected_cpu_extra_us": 14.86247893757632,
+        "expected_wire_bytes": 19964.190663032892,
+        "k": 8,
+        "mode": "iid",
+        "no_queue_first_arrival_us": 104.2,
+        "packet_loss": 0.2,
+        "packet_loss_pmf": [
+          0.10737418240000006,
+          0.2684354560000001,
+          0.3019898880000002,
+          0.2013265920000001,
+          0.08808038400000005,
+          0.02642411520000001,
+          0.005505024000000003,
+          0.0007864320000000004,
+          7.372800000000005e-05,
+          4.096000000000002e-06,
+          1.0240000000000006e-07
+        ],
+        "parity": 2,
+        "success_by_last_attempt": 0.9665513554545002,
+        "success_first_attempt": 0.6777995264000004
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.9274445004800007,
+        "expected_attempts": 1.0778198000305959,
+        "expected_cpu_extra_us": 13.386043368527622,
+        "expected_wire_bytes": 18107.37264051401,
+        "k": 8,
+        "mode": "iid",
+        "no_queue_first_arrival_us": 106.44,
+        "packet_loss": 0.2,
+        "packet_loss_pmf": [
+          0.06871947673600004,
+          0.20615843020800015,
+          0.28346784153600024,
+          0.23622320128000018,
+          0.1328755507200001,
+          0.05315022028800003,
+          0.015502147584000012,
+          0.003321888768000002,
+          0.0005190451200000004,
+          5.7671680000000045e-05,
+          4.325376000000003e-06,
+          1.9660800000000014e-07,
+          4.096000000000002e-09
+        ],
+        "parity": 4,
+        "success_by_last_attempt": 0.9996180460468302,
+        "success_first_attempt": 0.9274445004800007
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.5586698368749998,
+        "expected_attempts": 1.6361024760089395,
+        "expected_cpu_extra_us": 0.0,
+        "expected_wire_bytes": 18324.347731300124,
+        "k": 8,
+        "mode": "bursty",
+        "no_queue_first_arrival_us": 88.96000000000001,
+        "packet_loss": 0.2,
+        "packet_loss_pmf": [
+          0.5586698368749998,
+          0.09594883624999995,
+          0.08107766687499997,
+          0.06706600999999998,
+          0.05428404999999999,
+          0.042949760000000003,
+          0.03315712,
+          0.024903680000000004,
+          0.04194304000000002
+        ],
+        "parity": 0,
+        "success_by_last_attempt": 0.9140411033826975,
+        "success_first_attempt": 0.5586698368749998
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.6277684745937497,
+        "expected_attempts": 1.5107878339125143,
+        "expected_cpu_extra_us": 15.141338961003006,
+        "expected_wire_bytes": 19035.92670729768,
+        "k": 8,
+        "mode": "bursty",
+        "no_queue_first_arrival_us": 103.08,
+        "packet_loss": 0.2,
+        "packet_loss_pmf": [
+          0.5307363450312498,
+          0.09703212956249993,
+          0.08292080878124997,
+          0.06941258362499998,
+          0.05691384299999998,
+          0.045681762,
+          0.035849472,
+          0.027451392,
+          0.020447232000000003,
+          0.033554432000000016
+        ],
+        "parity": 1,
+        "success_by_last_attempt": 0.9484249739300543,
+        "success_first_attempt": 0.6277684745937497
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.6864055940374997,
+        "expected_attempts": 1.4119358574134737,
+        "expected_cpu_extra_us": 14.812964654673303,
+        "expected_wire_bytes": 19767.102003788634,
+        "k": 8,
+        "mode": "bursty",
+        "no_queue_first_arrival_us": 104.2,
+        "packet_loss": 0.2,
+        "packet_loss_pmf": [
+          0.5041995277796872,
+          0.09776722145312493,
+          0.08443884480468747,
+          0.07147035131249997,
+          0.059298710249999984,
+          0.04821571079999999,
+          0.038390087999999996,
+          0.02989056,
+          0.022708224000000006,
+          0.016777216000000005,
+          0.026843545600000015
+        ],
+        "parity": 2,
+        "success_by_last_attempt": 0.9691606709507419,
+        "success_first_attempt": 0.6864055940374997
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.7781280345199996,
+        "expected_attempts": 1.271099134545959,
+        "expected_cpu_extra_us": 14.268118642684351,
+        "expected_wire_bytes": 21354.46546037211,
+        "k": 8,
+        "mode": "bursty",
+        "no_queue_first_arrival_us": 106.44,
+        "packet_loss": 0.2,
+        "packet_loss_pmf": [
+          0.45504007382116773,
+          0.09831890791703898,
+          0.08659731640210541,
+          0.07479057029499996,
+          0.06338116608468747,
+          0.052717047416999986,
+          0.04302776507099999,
+          0.03444284707199999,
+          0.027010759680000003,
+          0.020717240320000004,
+          0.015502147584000005,
+          0.011274289152000006,
+          0.01717986918400001
+        ],
+        "parity": 4,
+        "success_by_last_attempt": 0.9890778712443196,
+        "success_first_attempt": 0.7781280345199996
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.8,
+        "expected_attempts": 1.24,
+        "expected_cpu_extra_us": 0.0,
+        "expected_wire_bytes": 13888.0,
+        "k": 8,
+        "mode": "common_cut",
+        "no_queue_first_arrival_us": 88.96000000000001,
+        "packet_loss": 0.2,
+        "packet_loss_pmf": [
+          0.8,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.2
+        ],
+        "parity": 0,
+        "success_by_last_attempt": 0.992,
+        "success_first_attempt": 0.8
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.8,
+        "expected_attempts": 1.24,
+        "expected_cpu_extra_us": 14.136,
+        "expected_wire_bytes": 15624.0,
+        "k": 8,
+        "mode": "common_cut",
+        "no_queue_first_arrival_us": 103.08,
+        "packet_loss": 0.2,
+        "packet_loss_pmf": [
+          0.8,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.2
+        ],
+        "parity": 1,
+        "success_by_last_attempt": 0.992,
+        "success_first_attempt": 0.8
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.8,
+        "expected_attempts": 1.24,
+        "expected_cpu_extra_us": 14.136,
+        "expected_wire_bytes": 17360.0,
+        "k": 8,
+        "mode": "common_cut",
+        "no_queue_first_arrival_us": 104.2,
+        "packet_loss": 0.2,
+        "packet_loss_pmf": [
+          0.8,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.2
+        ],
+        "parity": 2,
+        "success_by_last_attempt": 0.992,
+        "success_first_attempt": 0.8
+      },
+      {
+        "attempts": 3,
+        "deadline_110_fraction": 0.8,
+        "expected_attempts": 1.24,
+        "expected_cpu_extra_us": 14.136,
+        "expected_wire_bytes": 20832.0,
+        "k": 8,
+        "mode": "common_cut",
+        "no_queue_first_arrival_us": 106.44,
+        "packet_loss": 0.2,
+        "packet_loss_pmf": [
+          0.8,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.2
+        ],
+        "parity": 4,
+        "success_by_last_attempt": 0.992,
+        "success_first_attempt": 0.8
+      }
+    ],
+    "parity_congestion_counterexample": {
+      "assumption": "all packets charged equally; no loss, feedback, pacing, or new capacity",
+      "capacity_bytes_us": 1250,
+      "coded_offered_bytes_us": 1328.125,
+      "coded_utilization": 1.0625,
+      "extra_queue_bytes": 262144,
+      "fill_time_us": 3355.4432,
+      "k": 8,
+      "parity": 2,
+      "uncoded_offered_bytes_us": 1062.5,
+      "uncoded_utilization": 0.85
+    }
+  },
+  "comparisons": [
+    {
+      "completed": 400,
+      "config": {
+        "count": 400,
+        "mtu": 512,
+        "name": "tiny_quiet",
+        "rate": 2000,
+        "seed": 11,
+        "size": 64
+      },
+      "counters": {
+        "bytes:control": 47999.99999815533,
+        "bytes:data": 63999.99999873313,
+        "delivered_messages": 800,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 800,
+        "packets": 800,
+        "price": 2.2399999999377826e-06,
+        "received_batches": 800,
+        "wire_bytes": 111999.99999688845
+      },
+      "cpu_service_us": 564.4799999999925,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 250,
+      "framing": {
+        "packets": 1,
+        "wire_bytes": 160
+      },
+      "goodput_per_s": 2000.0,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 0,
+      "on_time": 400,
+      "overflow_events": 0,
+      "p50_us": 80.83439999999882,
+      "p999_us": 80.83440000002156,
+      "p99_us": 80.83440000002156,
+      "pending_at_cutoff": 0,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 0,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 160,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 160,
+          "jobs": 800,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 282.23999999999626,
+          "service_us": 282.23999999999626
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 160,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 51.20000000000004,
+          "service_us": 51.20000000000004
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:cpu": {
+          "high_bytes": 160,
+          "jobs": 800,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 282.23999999999626,
+          "service_us": 282.23999999999626
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:tx": {
+          "high_bytes": 160,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 51.20000000000004,
+          "service_us": 51.20000000000004
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 89.59999999999982,
+      "unacked_transfers": 0,
+      "unfinished": 0
+    },
+    {
+      "completed": 400,
+      "config": {
+        "count": 400,
+        "mtu": 1400,
+        "name": "tiny_quiet",
+        "rate": 2000,
+        "seed": 11,
+        "size": 64
+      },
+      "counters": {
+        "bytes:control": 47999.99999815533,
+        "bytes:data": 63999.99999873313,
+        "delivered_messages": 800,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 800,
+        "packets": 800,
+        "price": 2.2399999999377826e-06,
+        "received_batches": 800,
+        "wire_bytes": 111999.99999688845
+      },
+      "cpu_service_us": 564.4799999999925,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 250,
+      "framing": {
+        "packets": 1,
+        "wire_bytes": 160
+      },
+      "goodput_per_s": 2000.0,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 0,
+      "on_time": 400,
+      "overflow_events": 0,
+      "p50_us": 80.83439999999882,
+      "p999_us": 80.83440000002156,
+      "p99_us": 80.83440000002156,
+      "pending_at_cutoff": 0,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 0,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 160,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 160,
+          "jobs": 800,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 282.23999999999626,
+          "service_us": 282.23999999999626
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 160,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 51.20000000000004,
+          "service_us": 51.20000000000004
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:cpu": {
+          "high_bytes": 160,
+          "jobs": 800,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 282.23999999999626,
+          "service_us": 282.23999999999626
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:tx": {
+          "high_bytes": 160,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 51.20000000000004,
+          "service_us": 51.20000000000004
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 89.59999999999982,
+      "unacked_transfers": 0,
+      "unfinished": 0
+    },
+    {
+      "completed": 400,
+      "config": {
+        "count": 400,
+        "mtu": 9000,
+        "name": "tiny_quiet",
+        "rate": 2000,
+        "seed": 11,
+        "size": 64
+      },
+      "counters": {
+        "bytes:control": 47999.99999815533,
+        "bytes:data": 63999.99999873313,
+        "delivered_messages": 800,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 800,
+        "packets": 800,
+        "price": 2.2399999999377826e-06,
+        "received_batches": 800,
+        "wire_bytes": 111999.99999688845
+      },
+      "cpu_service_us": 564.4799999999925,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 250,
+      "framing": {
+        "packets": 1,
+        "wire_bytes": 160
+      },
+      "goodput_per_s": 2000.0,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 0,
+      "on_time": 400,
+      "overflow_events": 0,
+      "p50_us": 80.83439999999882,
+      "p999_us": 80.83440000002156,
+      "p99_us": 80.83440000002156,
+      "pending_at_cutoff": 0,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 0,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 160,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 160,
+          "jobs": 800,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 282.23999999999626,
+          "service_us": 282.23999999999626
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 160,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 51.20000000000004,
+          "service_us": 51.20000000000004
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:cpu": {
+          "high_bytes": 160,
+          "jobs": 800,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 282.23999999999626,
+          "service_us": 282.23999999999626
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:tx": {
+          "high_bytes": 160,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 51.20000000000004,
+          "service_us": 51.20000000000004
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 89.59999999999982,
+      "unacked_transfers": 0,
+      "unfinished": 0
+    },
+    {
+      "completed": 400,
+      "config": {
+        "count": 400,
+        "cpu_packet_us": 4,
+        "cpu_slots": 1,
+        "mtu": 512,
+        "name": "tiny_packet_cpu",
+        "rate": 400000,
+        "seed": 11,
+        "size": 64
+      },
+      "counters": {
+        "bytes:control": 78119.99999991487,
+        "bytes:data": 104159.99999994322,
+        "delivered_messages": 1051,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_messages": 251,
+        "logical_messages": 1051,
+        "packets": 1302,
+        "price": 3.6455999999971814e-06,
+        "received_batches": 1302,
+        "retry_messages": 251,
+        "wire_bytes": 182279.99999986024
+      },
+      "cpu_service_us": 10423.291200000142,
+      "deadline_170_fraction": 0.0375,
+      "deadline_250_fraction": 0.075,
+      "deadline_us": 250,
+      "framing": {
+        "packets": 1,
+        "wire_bytes": 160
+      },
+      "goodput_per_s": 114000.0,
+      "late_completed": 370,
+      "late_or_unfinished": 370,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 0,
+      "on_time": 30,
+      "overflow_events": 0,
+      "p50_us": 1183.7488000000128,
+      "p999_us": 2284.8688000000147,
+      "p99_us": 2262.846400000015,
+      "pending_at_cutoff": 286,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 0,
+      "resource_bytes_at_cutoff": 44160,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 60880,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 3680,
+          "jobs": 1302,
+          "mean_wait_us": 84.10583225806592,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 5211.645600000068,
+          "service_us": 5211.645600000068
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 160,
+          "jobs": 651,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 83.32800000000006,
+          "service_us": 83.32800000000006
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 651,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 62.49599999999892,
+          "service_us": 62.49599999999892
+        },
+        "s:cpu": {
+          "high_bytes": 60880,
+          "jobs": 1302,
+          "mean_wait_us": 741.0635182795834,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 5211.645600000073,
+          "service_us": 5211.645600000073
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 651,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 62.49599999999892,
+          "service_us": 62.49599999999892
+        },
+        "s:tx": {
+          "high_bytes": 160,
+          "jobs": 651,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 83.32800000000006,
+          "service_us": 83.32800000000006
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 145.823999999999,
+      "unacked_transfers": 0,
+      "unfinished": 0
+    },
+    {
+      "completed": 400,
+      "config": {
+        "count": 400,
+        "cpu_packet_us": 4,
+        "cpu_slots": 1,
+        "mtu": 1400,
+        "name": "tiny_packet_cpu",
+        "rate": 400000,
+        "seed": 11,
+        "size": 64
+      },
+      "counters": {
+        "bytes:control": 78119.99999991487,
+        "bytes:data": 104159.99999994322,
+        "delivered_messages": 1051,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_messages": 251,
+        "logical_messages": 1051,
+        "packets": 1302,
+        "price": 3.6455999999971814e-06,
+        "received_batches": 1302,
+        "retry_messages": 251,
+        "wire_bytes": 182279.99999986024
+      },
+      "cpu_service_us": 10423.291200000142,
+      "deadline_170_fraction": 0.0375,
+      "deadline_250_fraction": 0.075,
+      "deadline_us": 250,
+      "framing": {
+        "packets": 1,
+        "wire_bytes": 160
+      },
+      "goodput_per_s": 114000.0,
+      "late_completed": 370,
+      "late_or_unfinished": 370,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 0,
+      "on_time": 30,
+      "overflow_events": 0,
+      "p50_us": 1183.7488000000128,
+      "p999_us": 2284.8688000000147,
+      "p99_us": 2262.846400000015,
+      "pending_at_cutoff": 286,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 0,
+      "resource_bytes_at_cutoff": 44160,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 60880,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 3680,
+          "jobs": 1302,
+          "mean_wait_us": 84.10583225806592,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 5211.645600000068,
+          "service_us": 5211.645600000068
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 160,
+          "jobs": 651,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 83.32800000000006,
+          "service_us": 83.32800000000006
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 651,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 62.49599999999892,
+          "service_us": 62.49599999999892
+        },
+        "s:cpu": {
+          "high_bytes": 60880,
+          "jobs": 1302,
+          "mean_wait_us": 741.0635182795834,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 5211.645600000073,
+          "service_us": 5211.645600000073
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 651,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 62.49599999999892,
+          "service_us": 62.49599999999892
+        },
+        "s:tx": {
+          "high_bytes": 160,
+          "jobs": 651,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 83.32800000000006,
+          "service_us": 83.32800000000006
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 145.823999999999,
+      "unacked_transfers": 0,
+      "unfinished": 0
+    },
+    {
+      "completed": 400,
+      "config": {
+        "count": 400,
+        "cpu_packet_us": 4,
+        "cpu_slots": 1,
+        "mtu": 9000,
+        "name": "tiny_packet_cpu",
+        "rate": 400000,
+        "seed": 11,
+        "size": 64
+      },
+      "counters": {
+        "bytes:control": 78119.99999991487,
+        "bytes:data": 104159.99999994322,
+        "delivered_messages": 1051,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_messages": 251,
+        "logical_messages": 1051,
+        "packets": 1302,
+        "price": 3.6455999999971814e-06,
+        "received_batches": 1302,
+        "retry_messages": 251,
+        "wire_bytes": 182279.99999986024
+      },
+      "cpu_service_us": 10423.291200000142,
+      "deadline_170_fraction": 0.0375,
+      "deadline_250_fraction": 0.075,
+      "deadline_us": 250,
+      "framing": {
+        "packets": 1,
+        "wire_bytes": 160
+      },
+      "goodput_per_s": 114000.0,
+      "late_completed": 370,
+      "late_or_unfinished": 370,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 0,
+      "on_time": 30,
+      "overflow_events": 0,
+      "p50_us": 1183.7488000000128,
+      "p999_us": 2284.8688000000147,
+      "p99_us": 2262.846400000015,
+      "pending_at_cutoff": 286,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 0,
+      "resource_bytes_at_cutoff": 44160,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 60880,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 3680,
+          "jobs": 1302,
+          "mean_wait_us": 84.10583225806592,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 5211.645600000068,
+          "service_us": 5211.645600000068
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 160,
+          "jobs": 651,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 83.32800000000006,
+          "service_us": 83.32800000000006
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 651,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 62.49599999999892,
+          "service_us": 62.49599999999892
+        },
+        "s:cpu": {
+          "high_bytes": 60880,
+          "jobs": 1302,
+          "mean_wait_us": 741.0635182795834,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 5211.645600000073,
+          "service_us": 5211.645600000073
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 651,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 62.49599999999892,
+          "service_us": 62.49599999999892
+        },
+        "s:tx": {
+          "high_bytes": 160,
+          "jobs": 651,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 83.32800000000006,
+          "service_us": 83.32800000000006
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 145.823999999999,
+      "unacked_transfers": 0,
+      "unfinished": 0
+    },
+    {
+      "completed": 398,
+      "config": {
+        "count": 400,
+        "loss": 0.02,
+        "mtu": 512,
+        "name": "medium_iid_loss",
+        "rate": 2000,
+        "seed": 11,
+        "size": 4096
+      },
+      "counters": {
+        "bytes:control": 47759.99999815533,
+        "bytes:data": 2406879.9999956256,
+        "delivered_messages": 796,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 798,
+        "lost_packets": 103,
+        "packets": 5298,
+        "price": 4.9092799999873736e-05,
+        "reassembly_expired": 92,
+        "received_batches": 796,
+        "retry_exhausted": 2,
+        "retry_messages": 90,
+        "wire_bytes": 2454639.999993776
+      },
+      "cpu_service_us": 3769.730799999832,
+      "deadline_170_fraction": 0.7975,
+      "deadline_250_fraction": 0.7975,
+      "deadline_us": 250,
+      "framing": {
+        "packets": 10,
+        "wire_bytes": 4912
+      },
+      "goodput_per_s": 1984.9999999999998,
+      "late_completed": 79,
+      "late_or_unfinished": 81,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 231500.0,
+      "on_time": 319,
+      "overflow_events": 0,
+      "p50_us": 84.65007999999943,
+      "p999_us": 3088.575520000246,
+      "p99_us": 3088.5755199999694,
+      "pending_at_cutoff": 3,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 4112,
+      "resource_bytes_at_cutoff": 4912,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 9824,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 816,
+          "jobs": 5195,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 1866.3379999999167,
+          "service_us": 1866.3379999999167
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 1024,
+          "jobs": 4797,
+          "mean_wait_us": 1.7594560834798362e-13,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 1885.311999999844,
+          "service_us": 1885.311999999844
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 398,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.2079999999998,
+          "service_us": 38.2079999999998
+        },
+        "s:cpu": {
+          "high_bytes": 9824,
+          "jobs": 5298,
+          "mean_wait_us": 0.9685860324701571,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 1903.392799999915,
+          "service_us": 1903.392799999915
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 398,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.2079999999998,
+          "service_us": 38.2079999999998
+        },
+        "s:tx": {
+          "high_bytes": 6240,
+          "jobs": 4900,
+          "mean_wait_us": 1.4964831020620109,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 1925.5039999998385,
+          "service_us": 1925.5039999998385
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 1963.7119999998383,
+      "unacked_transfers": 2,
+      "unfinished": 2
+    },
+    {
+      "completed": 400,
+      "config": {
+        "count": 400,
+        "loss": 0.02,
+        "mtu": 1400,
+        "name": "medium_iid_loss",
+        "rate": 2000,
+        "seed": 11,
+        "size": 4096
+      },
+      "counters": {
+        "bytes:control": 47999.99999815533,
+        "bytes:data": 1923487.9999934,
+        "delivered_messages": 800,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 800,
+        "lost_packets": 35,
+        "packets": 2136,
+        "price": 3.942975999983271e-05,
+        "reassembly_expired": 34,
+        "received_batches": 800,
+        "retry_messages": 34,
+        "wire_bytes": 1971487.9999915636
+      },
+      "cpu_service_us": 1561.0631200000219,
+      "deadline_170_fraction": 0.9175,
+      "deadline_250_fraction": 0.9175,
+      "deadline_us": 250,
+      "framing": {
+        "packets": 4,
+        "wire_bytes": 4432
+      },
+      "goodput_per_s": 2000.0,
+      "late_completed": 33,
+      "late_or_unfinished": 33,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 0,
+      "on_time": 367,
+      "overflow_events": 0,
+      "p50_us": 84.30159999997704,
+      "p999_us": 3087.823839999968,
+      "p99_us": 1087.8238400000046,
+      "pending_at_cutoff": 0,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 0,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 8864,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 1632,
+          "jobs": 2101,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 774.0333600000104,
+          "service_us": 774.0333600000104
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 2800,
+          "jobs": 1701,
+          "mean_wait_us": 1.420250030325891e-16,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 1508.9343999999662,
+          "service_us": 1508.9343999999662
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:cpu": {
+          "high_bytes": 8864,
+          "jobs": 2136,
+          "mean_wait_us": 0.20099790262057393,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 787.0297600000115,
+          "service_us": 787.0297600000115
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:tx": {
+          "high_bytes": 8864,
+          "jobs": 1736,
+          "mean_wait_us": 1.5009955760319553,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 1538.7903999999637,
+          "service_us": 1538.7903999999637
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 1577.1903999999636,
+      "unacked_transfers": 0,
+      "unfinished": 0
+    },
+    {
+      "completed": 400,
+      "config": {
+        "count": 400,
+        "loss": 0.02,
+        "mtu": 9000,
+        "name": "medium_iid_loss",
+        "rate": 2000,
+        "seed": 11,
+        "size": 4096
+      },
+      "counters": {
+        "bytes:control": 47999.99999815533,
+        "bytes:data": 1706143.9999999397,
+        "delivered_messages": 800,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 800,
+        "lost_packets": 7,
+        "packets": 807,
+        "price": 3.508287999996164e-05,
+        "received_batches": 800,
+        "retry_messages": 7,
+        "wire_bytes": 1754143.999998103
+      },
+      "cpu_service_us": 632.0288799999936,
+      "deadline_170_fraction": 0.9825,
+      "deadline_250_fraction": 0.9825,
+      "deadline_us": 250,
+      "framing": {
+        "packets": 1,
+        "wire_bytes": 4192
+      },
+      "goodput_per_s": 1994.9999999999998,
+      "late_completed": 7,
+      "late_or_unfinished": 7,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 0,
+      "on_time": 393,
+      "overflow_events": 0,
+      "p50_us": 84.22127999999975,
+      "p999_us": 1087.5748800000292,
+      "p99_us": 1087.5748800000001,
+      "pending_at_cutoff": 1,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 0,
+      "resource_bytes_at_cutoff": 4192,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 8384,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 4192,
+          "jobs": 800,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 314.49599999999685,
+          "service_us": 314.49599999999685
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 8384,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 1341.4399999999985,
+          "service_us": 1341.4399999999985
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:cpu": {
+          "high_bytes": 8384,
+          "jobs": 807,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 317.53287999999674,
+          "service_us": 317.53287999999674
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:tx": {
+          "high_bytes": 8384,
+          "jobs": 407,
+          "mean_wait_us": 0.0494388206388529,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 1364.9151999999979,
+          "service_us": 1364.9151999999979
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 1403.3151999999977,
+      "unacked_transfers": 0,
+      "unfinished": 0
+    },
+    {
+      "completed": 400,
+      "config": {
+        "count": 400,
+        "mtu": 512,
+        "name": "large_quiet",
+        "rate": 500,
+        "seed": 11,
+        "size": 65536
+      },
+      "counters": {
+        "bytes:control": 47999.999999163105,
+        "bytes:data": 31084799.99998073,
+        "delivered_messages": 800,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 800,
+        "packets": 61200,
+        "price": 0.0006226559999994387,
+        "received_batches": 800,
+        "wire_bytes": 31132799.99997991
+      },
+      "cpu_service_us": 44085.31200005354,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 250,
+      "framing": {
+        "packets": 152,
+        "wire_bytes": 77712
+      },
+      "goodput_per_s": 500.0,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 0,
+      "on_time": 400,
+      "overflow_events": 0,
+      "p50_us": 142.8900800019037,
+      "p999_us": 142.89008000207832,
+      "p99_us": 142.89008000207832,
+      "pending_at_cutoff": 0,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 0,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 77712,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 912,
+          "jobs": 61200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 22042.65600002677,
+          "service_us": 22042.65600002677
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 1024,
+          "jobs": 60800,
+          "mean_wait_us": 1.554312234475219e-16,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 24867.839999996606,
+          "service_us": 24867.839999996606
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:cpu": {
+          "high_bytes": 77712,
+          "jobs": 61200,
+          "mean_wait_us": 13.420705881879552,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 22042.65600002677,
+          "service_us": 22042.65600002677
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:tx": {
+          "high_bytes": 44432,
+          "jobs": 60800,
+          "mean_wait_us": 17.41522526448166,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 24867.839999996606,
+          "service_us": 24867.839999996606
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 24906.239999996607,
+      "unacked_transfers": 0,
+      "unfinished": 0
+    },
+    {
+      "completed": 400,
+      "config": {
+        "count": 400,
+        "mtu": 1400,
+        "name": "large_quiet",
+        "rate": 500,
+        "seed": 11,
+        "size": 65536
+      },
+      "counters": {
+        "bytes:control": 47999.999999163105,
+        "bytes:data": 27820799.999879092,
+        "delivered_messages": 800,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 800,
+        "packets": 20400,
+        "price": 0.0005573759999978863,
+        "received_batches": 800,
+        "wire_bytes": 27868799.999878217
+      },
+      "cpu_service_us": 15394.75199999569,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 250,
+      "framing": {
+        "packets": 50,
+        "wire_bytes": 69552
+      },
+      "goodput_per_s": 500.0,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 0,
+      "on_time": 400,
+      "overflow_events": 0,
+      "p50_us": 136.39759999979287,
+      "p999_us": 136.3976000001203,
+      "p99_us": 136.3976000001203,
+      "pending_at_cutoff": 0,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 0,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 69552,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 1400,
+          "jobs": 20400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 7697.375999997845,
+          "service_us": 7697.375999997845
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 2800,
+          "jobs": 20000,
+          "mean_wait_us": 1.0430767360958272e-15,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 22256.63999999995,
+          "service_us": 22256.63999999995
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:cpu": {
+          "high_bytes": 69552,
+          "jobs": 20400,
+          "mean_wait_us": 4.447058823724923,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 7697.375999997845,
+          "service_us": 7697.375999997845
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:tx": {
+          "high_bytes": 58352,
+          "jobs": 20000,
+          "mean_wait_us": 22.89701119969827,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 22256.63999999995,
+          "service_us": 22256.63999999995
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 22295.03999999995,
+      "unacked_transfers": 0,
+      "unfinished": 0
+    },
+    {
+      "completed": 400,
+      "config": {
+        "count": 400,
+        "mtu": 9000,
+        "name": "large_quiet",
+        "rate": 500,
+        "seed": 11,
+        "size": 65536
+      },
+      "counters": {
+        "bytes:control": 47999.999999163105,
+        "bytes:data": 26476799.99993651,
+        "delivered_messages": 800,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 800,
+        "packets": 3600,
+        "price": 0.0005304959999987301,
+        "received_batches": 800,
+        "wire_bytes": 26524799.999935664
+      },
+      "cpu_service_us": 3580.99199999985,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 250,
+      "framing": {
+        "packets": 8,
+        "wire_bytes": 66192
+      },
+      "goodput_per_s": 500.0,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 0,
+      "on_time": 400,
+      "overflow_events": 0,
+      "p50_us": 134.01360000000568,
+      "p999_us": 134.0136000001221,
+      "p99_us": 134.0136000001221,
+      "pending_at_cutoff": 0,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 0,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 66192,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 9000,
+          "jobs": 3600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 1790.495999999925,
+          "service_us": 1790.495999999925
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 18000,
+          "jobs": 3200,
+          "mean_wait_us": 1.0169642905566434e-15,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 21181.440000000952,
+          "service_us": 21181.440000000952
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:cpu": {
+          "high_bytes": 66192,
+          "jobs": 3600,
+          "mean_wait_us": 0.7066666666911564,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 1790.495999999925,
+          "service_us": 1790.495999999925
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:tx": {
+          "high_bytes": 66192,
+          "jobs": 3200,
+          "mean_wait_us": 23.838719999936338,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 21181.440000000952,
+          "service_us": 21181.440000000952
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 21219.840000000953,
+      "unacked_transfers": 0,
+      "unfinished": 0
+    },
+    {
+      "completed": 4,
+      "config": {
+        "count": 400,
+        "cpu_packet_us": 4,
+        "deadline_us": 500,
+        "mtu": 512,
+        "name": "large_packet_cpu",
+        "rate": 8000,
+        "seed": 11,
+        "size": 65536
+      },
+      "counters": {
+        "bytes:control": 480,
+        "bytes:data": 13760575.999972746,
+        "delivered_messages": 8,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 404,
+        "overflow:reassembly:r": 279,
+        "overflow:s:cpu": 154459,
+        "packets": 26881,
+        "price": 0.000275221119999562,
+        "reassembly_expired": 141,
+        "received_batches": 8,
+        "retry_exhausted": 396,
+        "retry_messages": 793,
+        "wire_bytes": 13761055.999972746
+      },
+      "cpu_service_us": 215598.44224011616,
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "deadline_us": 500,
+      "framing": {
+        "packets": 152,
+        "wire_bytes": 77712
+      },
+      "goodput_per_s": 80.0,
+      "late_completed": 3,
+      "late_or_unfinished": 399,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 149500.0,
+      "on_time": 1,
+      "overflow_events": 154738,
+      "p50_us": 572.9820799999989,
+      "p999_us": 936.5387199999998,
+      "p99_us": 936.5387199999998,
+      "pending_at_cutoff": 396,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 196656,
+      "resource_bytes_at_cutoff": 264704,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 262144,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 2048,
+          "jobs": 26881,
+          "mean_wait_us": 0.04328062797663261,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 107799.22112005808,
+          "service_us": 107799.22112005808
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 1024,
+          "jobs": 26877,
+          "mean_wait_us": 2.0091992379271352e-16,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 11008.460800005108,
+          "service_us": 11008.460800005108
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 4,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.384,
+          "service_us": 0.384
+        },
+        "s:cpu": {
+          "high_bytes": 262144,
+          "jobs": 26881,
+          "mean_wait_us": 947.3816643622748,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 107799.22112005808,
+          "service_us": 107799.22112005808
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 4,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.384,
+          "service_us": 0.384
+        },
+        "s:tx": {
+          "high_bytes": 1024,
+          "jobs": 26877,
+          "mean_wait_us": 0.18713168285246456,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 11008.460800005108,
+          "service_us": 11008.460800005108
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 11008.844800005108,
+      "unacked_transfers": 396,
+      "unfinished": 396
+    },
+    {
+      "completed": 400,
+      "config": {
+        "count": 400,
+        "cpu_packet_us": 4,
+        "deadline_us": 500,
+        "mtu": 1400,
+        "name": "large_packet_cpu",
+        "rate": 8000,
+        "seed": 11,
+        "size": 65536
+      },
+      "counters": {
+        "bytes:control": 47999.99999955031,
+        "bytes:data": 27820799.999989215,
+        "delivered_messages": 800,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 800,
+        "packets": 20400,
+        "price": 0.0005573759999997895,
+        "received_batches": 800,
+        "wire_bytes": 27868799.999988668
+      },
+      "cpu_service_us": 164314.75200000807,
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 500,
+      "framing": {
+        "packets": 50,
+        "wire_bytes": 69552
+      },
+      "goodput_per_s": 7979.999999999999,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 0,
+      "on_time": 400,
+      "overflow_events": 0,
+      "p50_us": 189.84143999996013,
+      "p999_us": 189.84144000000742,
+      "p99_us": 189.84144000000651,
+      "pending_at_cutoff": 1,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 65552,
+      "resource_bytes_at_cutoff": 4200,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 69552,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 4200,
+          "jobs": 20400,
+          "mean_wait_us": 0.0072391529412008035,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 82157.37600000405,
+          "service_us": 82157.37600000405
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 2800,
+          "jobs": 20000,
+          "mean_wait_us": 3.501554601825774e-15,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 22256.63999999995,
+          "service_us": 22256.63999999995
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:cpu": {
+          "high_bytes": 69552,
+          "jobs": 20400,
+          "mean_wait_us": 48.876603105871325,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 82157.37600000403,
+          "service_us": 82157.37600000403
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:tx": {
+          "high_bytes": 2800,
+          "jobs": 20000,
+          "mean_wait_us": 0.5285053440005043,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 22256.63999999995,
+          "service_us": 22256.63999999995
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 22295.03999999995,
+      "unacked_transfers": 0,
+      "unfinished": 0
+    },
+    {
+      "completed": 400,
+      "config": {
+        "count": 400,
+        "cpu_packet_us": 4,
+        "deadline_us": 500,
+        "mtu": 9000,
+        "name": "large_packet_cpu",
+        "rate": 8000,
+        "seed": 11,
+        "size": 65536
+      },
+      "counters": {
+        "bytes:control": 47999.99999955031,
+        "bytes:data": 26476799.999996327,
+        "delivered_messages": 800,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 800,
+        "packets": 3600,
+        "price": 0.0005304959999998962,
+        "received_batches": 800,
+        "wire_bytes": 26524799.999995735
+      },
+      "cpu_service_us": 29860.992000001104,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 500,
+      "framing": {
+        "packets": 8,
+        "wire_bytes": 66192
+      },
+      "goodput_per_s": 7979.999999999999,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 0,
+      "on_time": 400,
+      "overflow_events": 0,
+      "p50_us": 141.3136000000004,
+      "p999_us": 141.31360000000495,
+      "p99_us": 141.31360000000495,
+      "pending_at_cutoff": 1,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 65552,
+      "resource_bytes_at_cutoff": 9000,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 66192,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 12192,
+          "jobs": 3600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 14930.496000000552,
+          "service_us": 14930.496000000552
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 18000,
+          "jobs": 3200,
+          "mean_wait_us": 8.384404281969182e-15,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 21181.440000000952,
+          "service_us": 21181.440000000952
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:cpu": {
+          "high_bytes": 66192,
+          "jobs": 3600,
+          "mean_wait_us": 5.573333333333682,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 14930.49600000055,
+          "service_us": 14930.49600000055
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:tx": {
+          "high_bytes": 57192,
+          "jobs": 3200,
+          "mean_wait_us": 18.363719999997187,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 21181.440000000952,
+          "service_us": 21181.440000000952
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 21219.840000000953,
+      "unacked_transfers": 0,
+      "unfinished": 0
+    },
+    {
+      "completed": 27,
+      "config": {
+        "count": 400,
+        "loss": 0.02,
+        "mtu": 512,
+        "name": "large_iid_loss",
+        "rate": 2000,
+        "seed": 11,
+        "size": 65536
+      },
+      "counters": {
+        "bytes:control": 3239.9999998301246,
+        "bytes:data": 90845327.99996704,
+        "delivered_messages": 54,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 427,
+        "lost_packets": 3567,
+        "overflow:reassembly:r": 654,
+        "packets": 177715,
+        "price": 0.0018169713600021376,
+        "reassembly_expired": 488,
+        "received_batches": 54,
+        "retry_exhausted": 373,
+        "retry_messages": 769,
+        "wire_bytes": 90848567.99996683
+      },
+      "cpu_service_us": 126749.52040046357,
+      "deadline_170_fraction": 0.0225,
+      "deadline_250_fraction": 0.0225,
+      "deadline_us": 250,
+      "framing": {
+        "packets": 152,
+        "wire_bytes": 77712
+      },
+      "goodput_per_s": 130.0,
+      "late_completed": 18,
+      "late_or_unfinished": 391,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 300000.0,
+      "on_time": 9,
+      "overflow_events": 654,
+      "p50_us": 1267.2292799995776,
+      "p999_us": 3205.057440004137,
+      "p99_us": 3205.057440004137,
+      "pending_at_cutoff": 374,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 131104,
+      "resource_bytes_at_cutoff": 155424,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 233136,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 912,
+          "jobs": 174148,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 62732.2990402286,
+          "service_us": 62732.2990402286
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 1024,
+          "jobs": 174121,
+          "mean_wait_us": 2.847066200165146e-13,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 71217.36959988961,
+          "service_us": 71217.36959988961
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 27,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 2.592000000000001,
+          "service_us": 2.592000000000001
+        },
+        "s:cpu": {
+          "high_bytes": 233136,
+          "jobs": 177715,
+          "mean_wait_us": 39.87303285752443,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 64017.221360234966,
+          "service_us": 64017.221360234966
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 27,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 2.592000000000001,
+          "service_us": 2.592000000000001
+        },
+        "s:tx": {
+          "high_bytes": 131360,
+          "jobs": 177688,
+          "mean_wait_us": 50.92811514369109,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 72676.26239988637,
+          "service_us": 72676.26239988637
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 72678.85439988638,
+      "unacked_transfers": 373,
+      "unfinished": 373
+    },
+    {
+      "completed": 200,
+      "config": {
+        "count": 400,
+        "loss": 0.02,
+        "mtu": 1400,
+        "name": "large_iid_loss",
+        "rate": 2000,
+        "seed": 11,
+        "size": 65536
+      },
+      "counters": {
+        "bytes:control": 23999.9999990132,
+        "bytes:data": 65517983.99976139,
+        "delivered_messages": 400,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 600,
+        "lost_packets": 974,
+        "overflow:reassembly:r": 343,
+        "packets": 47300,
+        "price": 0.0013108396799954849,
+        "reassembly_expired": 399,
+        "received_batches": 400,
+        "retry_exhausted": 200,
+        "retry_messages": 542,
+        "wire_bytes": 65541983.99976014
+      },
+      "cpu_service_us": 35363.60592002461,
+      "deadline_170_fraction": 0.2275,
+      "deadline_250_fraction": 0.2275,
+      "deadline_us": 250,
+      "framing": {
+        "packets": 50,
+        "wire_bytes": 69552
+      },
+      "goodput_per_s": 995.0,
+      "late_completed": 109,
+      "late_or_unfinished": 309,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 299000.0,
+      "on_time": 91,
+      "overflow_events": 343,
+      "p50_us": 1192.030239999527,
+      "p999_us": 3192.0302400002474,
+      "p99_us": 3192.0302400002474,
+      "pending_at_cutoff": 201,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 65552,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 208656,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 1400,
+          "jobs": 46326,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 17497.766240012,
+          "service_us": 17497.766240012
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 2800,
+          "jobs": 46126,
+          "mean_wait_us": 1.1333931476018977e-14,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 51327.44960003295,
+          "service_us": 51327.44960003295
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 19.200000000000014,
+          "service_us": 19.200000000000014
+        },
+        "s:cpu": {
+          "high_bytes": 208656,
+          "jobs": 47300,
+          "mean_wait_us": 11.655876109862024,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 17865.839680012614,
+          "service_us": 17865.839680012614
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 19.200000000000014,
+          "service_us": 19.200000000000014
+        },
+        "s:tx": {
+          "high_bytes": 175056,
+          "jobs": 47100,
+          "mean_wait_us": 57.96369221900947,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 52414.38720003543,
+          "service_us": 52414.38720003543
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 52433.58720003543,
+      "unacked_transfers": 200,
+      "unfinished": 200
+    },
+    {
+      "completed": 400,
+      "config": {
+        "count": 400,
+        "loss": 0.02,
+        "mtu": 9000,
+        "name": "large_iid_loss",
+        "rate": 2000,
+        "seed": 11,
+        "size": 65536
+      },
+      "counters": {
+        "bytes:control": 47999.9999981576,
+        "bytes:data": 31176431.999993827,
+        "delivered_messages": 800,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 800,
+        "lost_packets": 74,
+        "packets": 4168,
+        "price": 0.0006244886399998466,
+        "reassembly_expired": 71,
+        "received_batches": 800,
+        "retry_messages": 71,
+        "wire_bytes": 31224431.99999207
+      },
+      "cpu_service_us": 4128.518879999833,
+      "deadline_170_fraction": 0.8475,
+      "deadline_250_fraction": 0.8475,
+      "deadline_us": 250,
+      "framing": {
+        "packets": 8,
+        "wire_bytes": 66192
+      },
+      "goodput_per_s": 1994.9999999999998,
+      "late_completed": 61,
+      "late_or_unfinished": 61,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 0,
+      "on_time": 339,
+      "overflow_events": 0,
+      "p50_us": 134.01360000000204,
+      "p999_us": 3186.8510400001833,
+      "p99_us": 3186.8510399999577,
+      "pending_at_cutoff": 1,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 65552,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 132384,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 9000,
+          "jobs": 4094,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 2045.2302399999096,
+          "service_us": 2045.2302399999096
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 18000,
+          "jobs": 3694,
+          "mean_wait_us": 1.2023060162810185e-13,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 24454.809600001223,
+          "service_us": 24454.809600001223
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:cpu": {
+          "high_bytes": 132384,
+          "jobs": 4168,
+          "mean_wait_us": 0.9957378118980332,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 2083.2886399999234,
+          "service_us": 2083.2886399999234
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:tx": {
+          "high_bytes": 132384,
+          "jobs": 3768,
+          "mean_wait_us": 31.48855779194735,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 24941.145600001262,
+          "service_us": 24941.145600001262
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 24979.545600001264,
+      "unacked_transfers": 0,
+      "unfinished": 0
+    },
+    {
+      "completed": 400,
+      "config": {
+        "count": 400,
+        "mtu": 512,
+        "name": "large_periodic_blackout",
+        "periodic_blackout": true,
+        "rate": 2000,
+        "seed": 11,
+        "size": 65536
+      },
+      "counters": {
+        "bytes:control": 47999.99999815192,
+        "bytes:data": 34193279.99995819,
+        "delivered_messages": 800,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 800,
+        "lost_packets": 6080,
+        "packets": 67280,
+        "price": 0.0006848255999979708,
+        "received_batches": 800,
+        "retry_messages": 40,
+        "wire_bytes": 34241279.99995646
+      },
+      "cpu_service_us": 46275.48160006435,
+      "deadline_170_fraction": 0.9,
+      "deadline_250_fraction": 0.9,
+      "deadline_us": 250,
+      "framing": {
+        "packets": 152,
+        "wire_bytes": 77712
+      },
+      "goodput_per_s": 2000.0,
+      "late_completed": 40,
+      "late_or_unfinished": 40,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 0,
+      "on_time": 360,
+      "overflow_events": 0,
+      "p50_us": 142.89007999985915,
+      "p999_us": 1205.0574400041369,
+      "p99_us": 1205.0574400041369,
+      "pending_at_cutoff": 0,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 0,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 155424,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 912,
+          "jobs": 61200,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 22042.65600002677,
+          "service_us": 22042.65600002677
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 1024,
+          "jobs": 60800,
+          "mean_wait_us": 2.800681090551088e-12,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 24867.839999996606,
+          "service_us": 24867.839999996606
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:cpu": {
+          "high_bytes": 155424,
+          "jobs": 67280,
+          "mean_wait_us": 15.902717146332943,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 24232.825600037573,
+          "service_us": 24232.825600037573
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:tx": {
+          "high_bytes": 87840,
+          "jobs": 66880,
+          "mean_wait_us": 20.57823157924039,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 27354.62399999083,
+          "service_us": 27354.62399999083
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 27393.02399999083,
+      "unacked_transfers": 0,
+      "unfinished": 0
+    },
+    {
+      "completed": 400,
+      "config": {
+        "count": 400,
+        "mtu": 1400,
+        "name": "large_periodic_blackout",
+        "periodic_blackout": true,
+        "rate": 2000,
+        "seed": 11,
+        "size": 65536
+      },
+      "counters": {
+        "bytes:control": 47999.99999815192,
+        "bytes:data": 30602879.999897566,
+        "delivered_messages": 800,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 800,
+        "lost_packets": 2000,
+        "packets": 22400,
+        "price": 0.0006130175999984169,
+        "received_batches": 800,
+        "retry_messages": 40,
+        "wire_bytes": 30650879.999895774
+      },
+      "cpu_service_us": 16150.393599995692,
+      "deadline_170_fraction": 0.9,
+      "deadline_250_fraction": 0.9,
+      "deadline_us": 250,
+      "framing": {
+        "packets": 50,
+        "wire_bytes": 69552
+      },
+      "goodput_per_s": 2000.0,
+      "late_completed": 40,
+      "late_or_unfinished": 40,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 0,
+      "on_time": 360,
+      "overflow_events": 0,
+      "p50_us": 136.39759999976377,
+      "p999_us": 1192.0302400002474,
+      "p99_us": 1192.0302400002474,
+      "pending_at_cutoff": 0,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 0,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 139104,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 1400,
+          "jobs": 20400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 7697.375999997845,
+          "service_us": 7697.375999997845
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 2800,
+          "jobs": 20000,
+          "mean_wait_us": 1.2931877790833823e-15,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 22256.63999999995,
+          "service_us": 22256.63999999995
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:cpu": {
+          "high_bytes": 139104,
+          "jobs": 22400,
+          "mean_wait_us": 5.298349999965387,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 8453.017599997847,
+          "service_us": 8453.017599997847
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:tx": {
+          "high_bytes": 116704,
+          "jobs": 22000,
+          "mean_wait_us": 27.097306472681748,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 24482.303999998017,
+          "service_us": 24482.303999998017
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 24520.70399999802,
+      "unacked_transfers": 0,
+      "unfinished": 0
+    },
+    {
+      "completed": 400,
+      "config": {
+        "count": 400,
+        "mtu": 9000,
+        "name": "large_periodic_blackout",
+        "periodic_blackout": true,
+        "rate": 2000,
+        "seed": 11,
+        "size": 65536
+      },
+      "counters": {
+        "bytes:control": 47999.99999815192,
+        "bytes:data": 29124479.99999422,
+        "delivered_messages": 800,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 800,
+        "lost_packets": 320,
+        "packets": 3920,
+        "price": 0.0005834495999998577,
+        "received_batches": 800,
+        "retry_messages": 40,
+        "wire_bytes": 29172479.999992464
+      },
+      "cpu_service_us": 3745.94559999984,
+      "deadline_170_fraction": 0.9,
+      "deadline_250_fraction": 0.9,
+      "deadline_us": 250,
+      "framing": {
+        "packets": 8,
+        "wire_bytes": 66192
+      },
+      "goodput_per_s": 2000.0,
+      "late_completed": 40,
+      "late_or_unfinished": 40,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 0,
+      "on_time": 360,
+      "overflow_events": 0,
+      "p50_us": 134.01360000000204,
+      "p999_us": 1186.8510400001833,
+      "p99_us": 1186.8510400001833,
+      "pending_at_cutoff": 0,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 0,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 132384,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 9000,
+          "jobs": 3600,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 1790.495999999925,
+          "service_us": 1790.495999999925
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 18000,
+          "jobs": 3200,
+          "mean_wait_us": 1.3751222383007188e-13,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 21181.440000000952,
+          "service_us": 21181.440000000952
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:cpu": {
+          "high_bytes": 132384,
+          "jobs": 3920,
+          "mean_wait_us": 0.8821975510185345,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 1955.449599999915,
+          "service_us": 1955.449599999915
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 400,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38.39999999999979,
+          "service_us": 38.39999999999979
+        },
+        "s:tx": {
+          "high_bytes": 132384,
+          "jobs": 3520,
+          "mean_wait_us": 28.518036363650353,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 23299.584000001127,
+          "service_us": 23299.584000001127
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 23337.984000001128,
+      "unacked_transfers": 0,
+      "unfinished": 0
+    },
+    {
+      "completed": 400,
+      "config": {
+        "ack_loss": 0.5,
+        "count": 400,
+        "mtu": 512,
+        "name": "large_ack_loss",
+        "rate": 2000,
+        "seed": 11,
+        "size": 65536
+      },
+      "counters": {
+        "bytes:control": 84959.99999658673,
+        "bytes:data": 55020095.999961354,
+        "delivered_messages": 748,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_messages": 308,
+        "logical_messages": 1108,
+        "lost_packets": 360,
+        "packets": 108324,
+        "price": 0.0011021011199973765,
+        "received_batches": 1056,
+        "retry_exhausted": 52,
+        "retry_messages": 308,
+        "wire_bytes": 55105055.99995715
+      },
+      "cpu_service_us": 77904.13824022093,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 250,
+      "framing": {
+        "packets": 152,
+        "wire_bytes": 77712
+      },
+      "goodput_per_s": 2000.0,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 0,
+      "on_time": 400,
+      "overflow_events": 0,
+      "p50_us": 142.89007999985915,
+      "p999_us": 142.89008000207832,
+      "p99_us": 142.89008000207832,
+      "pending_at_cutoff": 0,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 0,
+      "resource_bytes_at_cutoff": 77712,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 233136,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 912,
+          "jobs": 108324,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 39015.50112011065,
+          "service_us": 39015.50112011065
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 1024,
+          "jobs": 107616,
+          "mean_wait_us": 8.77301508936112e-12,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 44016.07679995212,
+          "service_us": 44016.07679995212
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 708,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 67.96799999999902,
+          "service_us": 67.96799999999902
+        },
+        "s:cpu": {
+          "high_bytes": 233136,
+          "jobs": 107964,
+          "mean_wait_us": 27.4953302895179,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38888.63712011027,
+          "service_us": 38888.63712011027
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 348,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 33.40799999999997,
+          "service_us": 33.40799999999997
+        },
+        "s:tx": {
+          "high_bytes": 131360,
+          "jobs": 107616,
+          "mean_wait_us": 35.30308928986015,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 44016.07679995212,
+          "service_us": 44016.07679995212
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 44084.04479995212,
+      "unacked_transfers": 52,
+      "unfinished": 0
+    },
+    {
+      "completed": 400,
+      "config": {
+        "ack_loss": 0.5,
+        "count": 400,
+        "mtu": 1400,
+        "name": "large_ack_loss",
+        "rate": 2000,
+        "seed": 11,
+        "size": 65536
+      },
+      "counters": {
+        "bytes:control": 82319.9999968089,
+        "bytes:data": 47712671.99982803,
+        "delivered_messages": 755,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_messages": 286,
+        "logical_messages": 1086,
+        "lost_packets": 331,
+        "packets": 34986,
+        "price": 0.0009558998399975657,
+        "received_batches": 1041,
+        "retry_exhausted": 45,
+        "retry_messages": 286,
+        "wire_bytes": 47794991.999824144
+      },
+      "cpu_service_us": 26285.355280010066,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 250,
+      "framing": {
+        "packets": 50,
+        "wire_bytes": 69552
+      },
+      "goodput_per_s": 2000.0,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 0,
+      "on_time": 400,
+      "overflow_events": 0,
+      "p50_us": 136.39759999976377,
+      "p999_us": 136.3976000001203,
+      "p99_us": 136.3976000001203,
+      "pending_at_cutoff": 0,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 0,
+      "resource_bytes_at_cutoff": 69552,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 208656,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 1400,
+          "jobs": 34986,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 13200.999840005077,
+          "service_us": 13200.999840005077
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 2800,
+          "jobs": 34300,
+          "mean_wait_us": 1.2313312015621095e-15,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38170.13760000309,
+          "service_us": 38170.13760000309
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 686,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 65.85599999999894,
+          "service_us": 65.85599999999894
+        },
+        "s:cpu": {
+          "high_bytes": 208656,
+          "jobs": 34655,
+          "mean_wait_us": 8.945867897792096,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 13084.355440004987,
+          "service_us": 13084.355440004987
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 355,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 34.07999999999995,
+          "service_us": 34.07999999999995
+        },
+        "s:tx": {
+          "high_bytes": 175056,
+          "jobs": 34300,
+          "mean_wait_us": 44.92013071012813,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 38170.13760000309,
+          "service_us": 38170.13760000309
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 38235.99360000309,
+      "unacked_transfers": 45,
+      "unfinished": 0
+    },
+    {
+      "completed": 400,
+      "config": {
+        "ack_loss": 0.5,
+        "count": 400,
+        "mtu": 9000,
+        "name": "large_ack_loss",
+        "rate": 2000,
+        "seed": 11,
+        "size": 65536
+      },
+      "counters": {
+        "bytes:control": 83639.9999967157,
+        "bytes:data": 46135823.99999106,
+        "delivered_messages": 754,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_messages": 297,
+        "logical_messages": 1097,
+        "lost_packets": 343,
+        "packets": 6273,
+        "price": 0.0009243892799997413,
+        "received_batches": 1051,
+        "retry_exhausted": 46,
+        "retry_messages": 297,
+        "wire_bytes": 46219463.999987155
+      },
+      "cpu_service_us": 6119.005360000615,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 250,
+      "framing": {
+        "packets": 8,
+        "wire_bytes": 66192
+      },
+      "goodput_per_s": 2000.0,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "objective": "first complete usable message at the one receiver",
+      "offered": 400,
+      "oldest_unfinished_us": 0,
+      "on_time": 400,
+      "overflow_events": 0,
+      "p50_us": 134.0135999999984,
+      "p999_us": 134.013600000093,
+      "p99_us": 134.013600000093,
+      "pending_at_cutoff": 0,
+      "pending_reassembly": 0,
+      "reassembly_bytes_at_cutoff": 0,
+      "resource_bytes_at_cutoff": 66192,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 198576,
+      "resources": {
+        "r:cpu": {
+          "high_bytes": 9000,
+          "jobs": 6273,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 3119.939280000336,
+          "service_us": 3119.939280000336
+        },
+        "r:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "r:rx": {
+          "high_bytes": 18000,
+          "jobs": 5576,
+          "mean_wait_us": 8.013994378040298e-14,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 36908.65920000026,
+          "service_us": 36908.65920000026
+        },
+        "r:tx": {
+          "high_bytes": 120,
+          "jobs": 697,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 66.91199999999898,
+          "service_us": 66.91199999999898
+        },
+        "s:cpu": {
+          "high_bytes": 198576,
+          "jobs": 5930,
+          "mean_wait_us": 1.7044390961173008,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 2999.066080000279,
+          "service_us": 2999.066080000279
+        },
+        "s:disk": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:disk_bytes": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:memory": {
+          "high_bytes": 0,
+          "jobs": 0,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 0.0,
+          "service_us": 0.0
+        },
+        "s:rx": {
+          "high_bytes": 120,
+          "jobs": 354,
+          "mean_wait_us": 0.0,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 33.98399999999995,
+          "service_us": 33.98399999999995
+        },
+        "s:tx": {
+          "high_bytes": 198576,
+          "jobs": 5576,
+          "mean_wait_us": 49.16264585368623,
+          "outstanding_bytes": 0,
+          "scheduled_service_us": 36908.65920000026,
+          "service_us": 36908.65920000026
+        }
+      },
+      "synthetic": true,
+      "tx_service_us": 36975.57120000025,
+      "unacked_transfers": 46,
+      "unfinished": 0
+    }
+  ],
+  "retention": {
+    "full_input_sha256": "f2bb760c1cab2e9522435be22785bee61a5078cac8aa492a5b5ecf7afc5e3da7",
+    "input": "build/workbench/orbital-dissemination/transport.json",
+    "script_sha256": "e63e73f918fa1f2b8f202ee5ab71c7bb6d2a5c61fbf3a93f43e50a56fc65fdd1",
+    "selection": "Every selected case retained including failure. Edge/proposal resource tables summarized; identical edge tariffs stored once. Other studies unchanged."
+  },
+  "source_hashes_stable": true,
+  "sources": {
+    "simulator.py": "a3fd09a8d7985d27af6afd22fa3c43e73f7b8fd0fe9b1a6177f085af943bd3f0",
+    "transport_study.py": "1793a2939e85f46cab7becb9a5adb3e83c208f631ce067546f601879d7d19934"
+  },
+  "synthetic": true
+}

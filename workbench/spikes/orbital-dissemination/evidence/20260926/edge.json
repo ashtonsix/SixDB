@@ -1,0 +1,4092 @@
+{
+  "common_edge_tariffs": {
+    "a0x->a0y": 0.0,
+    "a0x->a1x": 0.02,
+    "a0x->a1y": 0.02,
+    "a0x->b0x": 0.09,
+    "a0x->b0y": 0.09,
+    "a0x->b1x": 0.09,
+    "a0x->b1y": 0.09,
+    "a0x->cheap": 0.09,
+    "a0x->edge": 0.09,
+    "a0y->a0x": 0.0,
+    "a0y->a1x": 0.02,
+    "a0y->a1y": 0.02,
+    "a0y->b0x": 0.09,
+    "a0y->b0y": 0.09,
+    "a0y->b1x": 0.09,
+    "a0y->b1y": 0.09,
+    "a0y->cheap": 0.09,
+    "a0y->edge": 0.09,
+    "a1x->a0x": 0.02,
+    "a1x->a0y": 0.02,
+    "a1x->a1y": 0.0,
+    "a1x->b0x": 0.09,
+    "a1x->b0y": 0.09,
+    "a1x->b1x": 0.09,
+    "a1x->b1y": 0.09,
+    "a1x->cheap": 0.09,
+    "a1x->edge": 0.09,
+    "a1y->a0x": 0.02,
+    "a1y->a0y": 0.02,
+    "a1y->a1x": 0.0,
+    "a1y->b0x": 0.09,
+    "a1y->b0y": 0.09,
+    "a1y->b1x": 0.09,
+    "a1y->b1y": 0.09,
+    "a1y->cheap": 0.09,
+    "a1y->edge": 0.09,
+    "b0x->a0x": 0.09,
+    "b0x->a0y": 0.09,
+    "b0x->a1x": 0.09,
+    "b0x->a1y": 0.09,
+    "b0x->b0y": 0.0,
+    "b0x->b1x": 0.02,
+    "b0x->b1y": 0.02,
+    "b0x->cheap": 0.09,
+    "b0x->edge": 0.09,
+    "b0y->a0x": 0.09,
+    "b0y->a0y": 0.09,
+    "b0y->a1x": 0.09,
+    "b0y->a1y": 0.09,
+    "b0y->b0x": 0.0,
+    "b0y->b1x": 0.02,
+    "b0y->b1y": 0.02,
+    "b0y->cheap": 0.09,
+    "b0y->edge": 0.09,
+    "b1x->a0x": 0.09,
+    "b1x->a0y": 0.09,
+    "b1x->a1x": 0.09,
+    "b1x->a1y": 0.09,
+    "b1x->b0x": 0.02,
+    "b1x->b0y": 0.02,
+    "b1x->b1y": 0.0,
+    "b1x->cheap": 0.09,
+    "b1x->edge": 0.09,
+    "b1y->a0x": 0.09,
+    "b1y->a0y": 0.09,
+    "b1y->a1x": 0.09,
+    "b1y->a1y": 0.09,
+    "b1y->b0x": 0.02,
+    "b1y->b0y": 0.02,
+    "b1y->b1x": 0.0,
+    "b1y->cheap": 0.09,
+    "b1y->edge": 0.09,
+    "cheap->a0x": 0.01,
+    "cheap->a0y": 0.01,
+    "cheap->a1x": 0.01,
+    "cheap->a1y": 0.01,
+    "cheap->b0x": 0.01,
+    "cheap->b0y": 0.01,
+    "cheap->b1x": 0.01,
+    "cheap->b1y": 0.01,
+    "cheap->edge": 0.01,
+    "edge->a0x": 0.004,
+    "edge->a0y": 0.004,
+    "edge->a1x": 0.004,
+    "edge->a1y": 0.004,
+    "edge->b0x": 0.004,
+    "edge->b0y": 0.004,
+    "edge->b1x": 0.004,
+    "edge->b1y": 0.004,
+    "edge->cheap": 0.004
+  },
+  "economics": {
+    "caveat": "These are cost-only equal-obligation comparisons, excluding latency, residency retention, CPU, cold setup and failure capacity unless included explicitly.",
+    "interconnect": [
+      {
+        "private": 202.0,
+        "public": 9.0,
+        "volume_gb": 100
+      },
+      {
+        "private": 220.0,
+        "public": 90.0,
+        "volume_gb": 1000
+      },
+      {
+        "private": 260.0,
+        "public": 270.0,
+        "volume_gb": 3000
+      },
+      {
+        "private": 400.0,
+        "public": 900.0,
+        "volume_gb": 10000
+      }
+    ],
+    "interconnect_break_even_gb": 2857.1428571428573,
+    "nat_bypass": [
+      {
+        "assumption": "same horizon; 10 fixed broker/connection cost, extra capacity/auth cost not measured",
+        "baseline": 0.4,
+        "direct": 10.05,
+        "gb": 10
+      },
+      {
+        "assumption": "same horizon; 10 fixed broker/connection cost, extra capacity/auth cost not measured",
+        "baseline": 4.0,
+        "direct": 10.5,
+        "gb": 100
+      },
+      {
+        "assumption": "same horizon; 10 fixed broker/connection cost, extra capacity/auth cost not measured",
+        "baseline": 40.0,
+        "direct": 15.0,
+        "gb": 1000
+      }
+    ],
+    "peer_retrieval": [
+      {
+        "blob": 4e-07,
+        "hit": 0,
+        "peer_then_blob": 4.2e-07,
+        "saved": -2.000000000000002e-08,
+        "size": 128
+      },
+      {
+        "blob": 4e-07,
+        "hit": 0.1,
+        "peer_then_blob": 3.80128e-07,
+        "saved": 1.987199999999998e-08,
+        "size": 128
+      },
+      {
+        "blob": 4e-07,
+        "hit": 0.9,
+        "peer_then_blob": 6.115199999999999e-08,
+        "saved": 3.38848e-07,
+        "size": 128
+      },
+      {
+        "blob": 4e-07,
+        "hit": 1,
+        "peer_then_blob": 2.128e-08,
+        "saved": 3.7872e-07,
+        "size": 128
+      },
+      {
+        "blob": 4e-07,
+        "hit": 0,
+        "peer_then_blob": 4.2e-07,
+        "saved": -2.000000000000002e-08,
+        "size": 4096
+      },
+      {
+        "blob": 4e-07,
+        "hit": 0.1,
+        "peer_then_blob": 3.84096e-07,
+        "saved": 1.590399999999998e-08,
+        "size": 4096
+      },
+      {
+        "blob": 4e-07,
+        "hit": 0.9,
+        "peer_then_blob": 9.686399999999999e-08,
+        "saved": 3.03136e-07,
+        "size": 4096
+      },
+      {
+        "blob": 4e-07,
+        "hit": 1,
+        "peer_then_blob": 6.096000000000001e-08,
+        "saved": 3.3904e-07,
+        "size": 4096
+      },
+      {
+        "blob": 4e-07,
+        "hit": 0,
+        "peer_then_blob": 4.2e-07,
+        "saved": -2.000000000000002e-08,
+        "size": 1048576
+      },
+      {
+        "blob": 4e-07,
+        "hit": 0.1,
+        "peer_then_blob": 1.428576e-06,
+        "saved": -1.028576e-06,
+        "size": 1048576
+      },
+      {
+        "blob": 4e-07,
+        "hit": 0.9,
+        "peer_then_blob": 9.497183999999999e-06,
+        "saved": -9.097184e-06,
+        "size": 1048576
+      },
+      {
+        "blob": 4e-07,
+        "hit": 1,
+        "peer_then_blob": 1.0505760000000001e-05,
+        "saved": -1.0105760000000001e-05,
+        "size": 1048576
+      }
+    ],
+    "unit": "illustrative cost units; no named provider rates"
+  },
+  "results": [
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "edge-64-direct",
+        "origin": "edge",
+        "policy": "direct",
+        "size": 64
+      },
+      "counters": {
+        "bytes:control": 95999.9999973501,
+        "bytes:data": 127999.99999860469,
+        "delivered_messages": 1600,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 1600,
+        "packets": 1600,
+        "price": 9.151999999755942e-06,
+        "received_batches": 1600,
+        "wire_bytes": 223999.9999959548
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 196.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 10002.022000000055,
+      "p999_us": 10002.022000000114,
+      "p99_us": 10002.022000000114,
+      "pending_at_cutoff": 2,
+      "plan": {
+        "edge": [
+          "a0x",
+          "a0y",
+          "a1x",
+          "a1y",
+          "b0x",
+          "b0y",
+          "b1x",
+          "b1y"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 1128.9599999999991,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 179.19999999999942,
+          "tx": 179.20000000000013
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 1280,
+            "jobs": 1600,
+            "mean_wait_us": 0.2960279999983674,
+            "name": "edge:cpu",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 564.4799999999974,
+            "service_us": 564.4799999999974
+          },
+          {
+            "high_bytes": 320,
+            "jobs": 800,
+            "mean_wait_us": 0.06400000000544573,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 102.40000000000008,
+            "service_us": 102.40000000000008
+          },
+          {
+            "high_bytes": 120,
+            "jobs": 800,
+            "mean_wait_us": 0.0,
+            "name": "edge:rx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 76.79999999999936,
+            "service_us": 76.79999999999936
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 1280
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "edge-64-regional",
+        "origin": "edge",
+        "policy": "regional",
+        "size": 64
+      },
+      "counters": {
+        "bytes:control": 95999.9999973501,
+        "bytes:data": 127999.99999860619,
+        "delivered_messages": 1600,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 1600,
+        "packets": 1600,
+        "price": 4.575999999877936e-06,
+        "received_batches": 1600,
+        "wire_bytes": 223999.99999595628
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 196.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 10010.245200000034,
+      "p999_us": 10010.245200000121,
+      "p99_us": 10010.245200000121,
+      "pending_at_cutoff": 2,
+      "plan": {
+        "a0x": [
+          "a0y"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ],
+        "edge": [
+          "a0x",
+          "a1x",
+          "b0x",
+          "b1x"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 1128.9599999999973,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 179.1999999999999,
+          "tx": 179.20000000000013
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 640,
+            "jobs": 800,
+            "mean_wait_us": 0.08830000000213768,
+            "name": "edge:cpu",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 282.23999999999603,
+            "service_us": 282.23999999999603
+          },
+          {
+            "high_bytes": 320,
+            "jobs": 400,
+            "mean_wait_us": 0.06400000000544573,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 51.20000000000004,
+            "service_us": 51.20000000000004
+          },
+          {
+            "high_bytes": 280,
+            "jobs": 200,
+            "mean_wait_us": 0.04759999999389038,
+            "name": "b1x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 22.400000000000016,
+            "service_us": 22.400000000000016
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 640
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "edge-64-edge_relay",
+        "origin": "edge",
+        "policy": "edge_relay",
+        "size": 64
+      },
+      "counters": {
+        "bytes:control": 95999.9999973501,
+        "bytes:data": 127999.99999860619,
+        "delivered_messages": 1600,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 1600,
+        "packets": 1600,
+        "price": 4.575999999877936e-06,
+        "received_batches": 1600,
+        "wire_bytes": 223999.99999595628
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 196.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 10010.245200000034,
+      "p999_us": 10010.245200000121,
+      "p99_us": 10010.245200000121,
+      "pending_at_cutoff": 2,
+      "plan": {
+        "a0x": [
+          "a0y"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ],
+        "edge": [
+          "a0x",
+          "a1x",
+          "b0x",
+          "b1x"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 1128.9599999999973,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 179.1999999999999,
+          "tx": 179.20000000000013
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 640,
+            "jobs": 800,
+            "mean_wait_us": 0.08830000000213768,
+            "name": "edge:cpu",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 282.23999999999603,
+            "service_us": 282.23999999999603
+          },
+          {
+            "high_bytes": 320,
+            "jobs": 400,
+            "mean_wait_us": 0.06400000000544573,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 51.20000000000004,
+            "service_us": 51.20000000000004
+          },
+          {
+            "high_bytes": 280,
+            "jobs": 200,
+            "mean_wait_us": 0.04759999999389038,
+            "name": "b1x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 22.400000000000016,
+            "service_us": 22.400000000000016
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 640
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "edge-64-cheap_relay",
+        "origin": "edge",
+        "policy": "cheap_relay",
+        "size": 64
+      },
+      "counters": {
+        "bytes:control": 107999.99999702789,
+        "bytes:data": 143999.99999843325,
+        "delivered_messages": 1800,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 1800,
+        "packets": 1800,
+        "price": 5.143999999870198e-06,
+        "received_batches": 1800,
+        "wire_bytes": 251999.99999546114
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 192.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 20011.30400000012,
+      "p999_us": 20011.30400000012,
+      "p99_us": 20011.30400000012,
+      "pending_at_cutoff": 4,
+      "plan": {
+        "a0x": [
+          "a0y"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ],
+        "cheap": [
+          "a0x",
+          "a1x",
+          "b0x",
+          "b1x"
+        ],
+        "edge": [
+          "cheap"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 1270.0799999999979,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 201.5999999999996,
+          "tx": 201.6
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 760,
+            "jobs": 1000,
+            "mean_wait_us": 0.14120000000153596,
+            "name": "cheap:cpu",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 352.79999999999643,
+            "service_us": 352.79999999999643
+          },
+          {
+            "high_bytes": 280,
+            "jobs": 200,
+            "mean_wait_us": 0.04759999999370848,
+            "name": "b1x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 22.400000000000016,
+            "service_us": 22.400000000000016
+          },
+          {
+            "high_bytes": 280,
+            "jobs": 200,
+            "mean_wait_us": 0.04759999999370848,
+            "name": "b0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 22.400000000000016,
+            "service_us": 22.400000000000016
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 760
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "edge-16384-direct",
+        "origin": "edge",
+        "policy": "direct",
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 95999.9999973501,
+        "bytes:data": 13951999.999944719,
+        "delivered_messages": 1600,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 1600,
+        "packets": 11200,
+        "price": 6.444799999954297e-05,
+        "received_batches": 1600,
+        "wire_bytes": 14047999.999942036
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 196.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 10112.356799999485,
+      "p999_us": 10112.35680000027,
+      "p99_us": 10112.35680000027,
+      "pending_at_cutoff": 2,
+      "plan": {
+        "edge": [
+          "a0x",
+          "a0y",
+          "a1x",
+          "a1y",
+          "b0x",
+          "b0y",
+          "b1x",
+          "b1y"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 8401.920000000478,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 11238.399999999721,
+          "tx": 11238.400000001444
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 116480,
+            "jobs": 10400,
+            "mean_wait_us": 45.904694768755995,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 11161.600000001445,
+            "service_us": 11161.600000001445
+          },
+          {
+            "high_bytes": 139520,
+            "jobs": 11200,
+            "mean_wait_us": 8.961965143104495,
+            "name": "edge:cpu",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 4200.9600000005785,
+            "service_us": 4200.9600000005785
+          },
+          {
+            "high_bytes": 2800,
+            "jobs": 1300,
+            "mean_wait_us": 5.988672805520204e-13,
+            "name": "b1x:rx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1395.1999999999653,
+            "service_us": 1395.1999999999653
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 139520
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "edge-16384-regional",
+        "origin": "edge",
+        "policy": "regional",
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 95999.9999973501,
+        "bytes:data": 13951999.999944048,
+        "delivered_messages": 1600,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 1600,
+        "packets": 11200,
+        "price": 3.222399999977039e-05,
+        "received_batches": 1600,
+        "wire_bytes": 14047999.999941368
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 196.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 10079.337599999737,
+      "p999_us": 10079.337600000166,
+      "p99_us": 10079.337600000166,
+      "pending_at_cutoff": 2,
+      "plan": {
+        "a0x": [
+          "a0y"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ],
+        "edge": [
+          "a0x",
+          "a1x",
+          "b0x",
+          "b1x"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 8401.91999999998,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 11238.399999999721,
+          "tx": 11238.399999999425
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 58560,
+            "jobs": 5200,
+            "mean_wait_us": 22.93527692284298,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 5580.7999999995645,
+            "service_us": 5580.7999999995645
+          },
+          {
+            "high_bytes": 16040,
+            "jobs": 1400,
+            "mean_wait_us": 5.2986285713887575,
+            "name": "b1x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1404.799999999965,
+            "service_us": 1404.799999999965
+          },
+          {
+            "high_bytes": 16040,
+            "jobs": 1400,
+            "mean_wait_us": 5.2986285713887575,
+            "name": "b0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1404.799999999965,
+            "service_us": 1404.799999999965
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 69760
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "edge-16384-edge_relay",
+        "origin": "edge",
+        "policy": "edge_relay",
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 95999.9999973501,
+        "bytes:data": 13951999.999944048,
+        "delivered_messages": 1600,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 1600,
+        "packets": 11200,
+        "price": 3.222399999977039e-05,
+        "received_batches": 1600,
+        "wire_bytes": 14047999.999941368
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 196.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 10079.337599999737,
+      "p999_us": 10079.337600000166,
+      "p99_us": 10079.337600000166,
+      "pending_at_cutoff": 2,
+      "plan": {
+        "a0x": [
+          "a0y"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ],
+        "edge": [
+          "a0x",
+          "a1x",
+          "b0x",
+          "b1x"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 8401.91999999998,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 11238.399999999721,
+          "tx": 11238.399999999425
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 58560,
+            "jobs": 5200,
+            "mean_wait_us": 22.93527692284298,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 5580.7999999995645,
+            "service_us": 5580.7999999995645
+          },
+          {
+            "high_bytes": 16040,
+            "jobs": 1400,
+            "mean_wait_us": 5.2986285713887575,
+            "name": "b1x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1404.799999999965,
+            "service_us": 1404.799999999965
+          },
+          {
+            "high_bytes": 16040,
+            "jobs": 1400,
+            "mean_wait_us": 5.2986285713887575,
+            "name": "b0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1404.799999999965,
+            "service_us": 1404.799999999965
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 69760
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "edge-16384-cheap_relay",
+        "origin": "edge",
+        "policy": "cheap_relay",
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 107999.99999702789,
+        "bytes:data": 15695999.999935832,
+        "delivered_messages": 1800,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 1800,
+        "packets": 12600,
+        "price": 8.117599999955184e-05,
+        "received_batches": 1800,
+        "wire_bytes": 15803999.999932826
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 192.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 20094.126399999717,
+      "p999_us": 20094.126400000197,
+      "p99_us": 20094.126400000197,
+      "pending_at_cutoff": 4,
+      "plan": {
+        "a0x": [
+          "a0y"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ],
+        "cheap": [
+          "a0x",
+          "a1x",
+          "b0x",
+          "b1x"
+        ],
+        "edge": [
+          "cheap"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 9452.160000000165,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 12643.199999999684,
+          "tx": 12643.199999999379
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 58560,
+            "jobs": 5300,
+            "mean_wait_us": 22.44548830166134,
+            "name": "cheap:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 5590.399999999553,
+            "service_us": 5590.399999999553
+          },
+          {
+            "high_bytes": 15400,
+            "jobs": 1300,
+            "mean_wait_us": 5.67439999994747,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1395.1999999999653,
+            "service_us": 1395.1999999999653
+          },
+          {
+            "high_bytes": 16040,
+            "jobs": 1400,
+            "mean_wait_us": 5.298628571387404,
+            "name": "b1x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1404.799999999965,
+            "service_us": 1404.799999999965
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 69880
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "direct_hashes": true,
+        "name": "edge-hashes-direct",
+        "origin": "edge",
+        "policy": "direct",
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 294399.99998260476,
+        "bytes:data": 13951999.999944719,
+        "delivered_messages": 3200,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 3200,
+        "packets": 12800,
+        "price": 7.349759999924768e-05,
+        "received_batches": 3200,
+        "wire_bytes": 14246399.999927435
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 196.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 10114.814399999479,
+      "p999_us": 10114.814400000301,
+      "p99_us": 10114.814400000301,
+      "pending_at_cutoff": 2,
+      "plan": {
+        "edge": [
+          "a0x",
+          "a0y",
+          "a1x",
+          "a1y",
+          "b0x",
+          "b0y",
+          "b1x",
+          "b1y"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 11004.416000000092,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 11397.11999999971,
+          "tx": 11397.120000001403
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 115080,
+            "jobs": 11200,
+            "mean_wait_us": 40.268432299466994,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 11243.520000001403,
+            "service_us": 11243.520000001403
+          },
+          {
+            "high_bytes": 155904,
+            "jobs": 12900,
+            "mean_wait_us": 10.576904049845606,
+            "name": "edge:cpu",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 4928.768000000032,
+            "service_us": 4928.768000000032
+          },
+          {
+            "high_bytes": 2800,
+            "jobs": 1400,
+            "mean_wait_us": 5.547917680814862e-13,
+            "name": "b1x:rx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1405.4399999999634,
+            "service_us": 1405.4399999999634
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 155904
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "direct_hashes": true,
+        "name": "edge-hashes-edge_relay",
+        "origin": "edge",
+        "policy": "edge_relay",
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 294399.99998260476,
+        "bytes:data": 13951999.999944048,
+        "delivered_messages": 3200,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 3200,
+        "packets": 12800,
+        "price": 4.1273599999485835e-05,
+        "received_batches": 3200,
+        "wire_bytes": 14246399.999926766
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 196.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 10081.795199999673,
+      "p999_us": 10081.795200000197,
+      "p99_us": 10081.795200000197,
+      "pending_at_cutoff": 2,
+      "plan": {
+        "a0x": [
+          "a0y"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ],
+        "edge": [
+          "a0x",
+          "a1x",
+          "b0x",
+          "b1x"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 11004.416000000188,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 11397.119999999708,
+          "tx": 11397.119999999428
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 57160,
+            "jobs": 6000,
+            "mean_wait_us": 17.983920533037033,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 5662.71999999957,
+            "service_us": 5662.71999999957
+          },
+          {
+            "high_bytes": 86144,
+            "jobs": 7300,
+            "mean_wait_us": 5.685303276833956,
+            "name": "edge:cpu",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 2828.2880000001537,
+            "service_us": 2828.2880000001537
+          },
+          {
+            "high_bytes": 14640,
+            "jobs": 1500,
+            "mean_wait_us": 4.293452799963726,
+            "name": "b1x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1414.3999999999646,
+            "service_us": 1414.3999999999646
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 86144
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "edge-small_responses-direct",
+        "origin": "edge",
+        "policy": "direct",
+        "response_size": 32,
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 191999.99999470921,
+        "bytes:data": 14054399.999932295,
+        "delivered_messages": 3200,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 3200,
+        "packets": 12800,
+        "price": 7.404799999838917e-05,
+        "received_batches": 3200,
+        "wire_bytes": 14246399.99992694
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 192.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 20113.93215999962,
+      "p999_us": 20113.932160000273,
+      "p99_us": 20113.932160000273,
+      "pending_at_cutoff": 4,
+      "plan": {
+        "edge": [
+          "a0x",
+          "a0y",
+          "a1x",
+          "a1y",
+          "b0x",
+          "b0y",
+          "b1x",
+          "b1y"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 9529.856000000123,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 11397.11999999972,
+          "tx": 11397.120000001243
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 116480,
+            "jobs": 11200,
+            "mean_wait_us": 42.9580149710041,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 11238.400000001244,
+            "service_us": 11238.400000001244
+          },
+          {
+            "high_bytes": 139520,
+            "jobs": 12800,
+            "mean_wait_us": 7.874356500220988,
+            "name": "edge:cpu",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 4764.928000000173,
+            "service_us": 4764.928000000173
+          },
+          {
+            "high_bytes": 248,
+            "jobs": 200,
+            "mean_wait_us": 0.04791999999148175,
+            "name": "b1y:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 19.839999999999975,
+            "service_us": 19.839999999999975
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 139520
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "edge-small_responses-edge_relay",
+        "origin": "edge",
+        "policy": "edge_relay",
+        "response_size": 32,
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 191999.99999470921,
+        "bytes:data": 14054399.999931626,
+        "delivered_messages": 3200,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 3200,
+        "packets": 12800,
+        "price": 4.182399999862601e-05,
+        "received_batches": 3200,
+        "wire_bytes": 14246399.99992627
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 192.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 20080.797919999808,
+      "p999_us": 20080.797920000165,
+      "p99_us": 20080.797920000165,
+      "pending_at_cutoff": 4,
+      "plan": {
+        "a0x": [
+          "a0y"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ],
+        "edge": [
+          "a0x",
+          "a1x",
+          "b0x",
+          "b1x"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 9529.856000000162,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 11397.11999999972,
+          "tx": 11397.119999999302
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 58560,
+            "jobs": 6000,
+            "mean_wait_us": 20.089003199806264,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 5657.599999999449,
+            "service_us": 5657.599999999449
+          },
+          {
+            "high_bytes": 15520,
+            "jobs": 1500,
+            "mean_wait_us": 4.833685226616561,
+            "name": "a0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1415.0399999999631,
+            "service_us": 1415.0399999999631
+          },
+          {
+            "high_bytes": 15520,
+            "jobs": 1500,
+            "mean_wait_us": 4.8215892266161875,
+            "name": "b0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1415.0399999999631,
+            "service_us": 1415.0399999999631
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 69760
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "edge-large_responses-direct",
+        "origin": "edge",
+        "policy": "direct",
+        "response_size": 65536,
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 191999.99999470921,
+        "bytes:data": 69593599.99969336,
+        "delivered_messages": 3200,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 3200,
+        "packets": 52000,
+        "price": 0.005072575999984593,
+        "received_batches": 3200,
+        "wire_bytes": 69785599.99968906
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 192.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 20461.340639998554,
+      "p999_us": 20461.34064000102,
+      "p99_us": 20461.34064000102,
+      "pending_at_cutoff": 4,
+      "plan": {
+        "edge": [
+          "a0x",
+          "a0y",
+          "a1x",
+          "a1y",
+          "b0x",
+          "b0y",
+          "b1x",
+          "b1y"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 39191.42400001505,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 55828.48000001719,
+          "tx": 55828.47999999761
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 368312,
+            "jobs": 40800,
+            "mean_wait_us": 144.05743686233245,
+            "name": "edge:rx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 44590.08000001747,
+            "service_us": 44590.08000001747
+          },
+          {
+            "high_bytes": 116480,
+            "jobs": 11200,
+            "mean_wait_us": 42.63598242813024,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 11238.400000001242,
+            "service_us": 11238.400000001242
+          },
+          {
+            "high_bytes": 58352,
+            "jobs": 5100,
+            "mean_wait_us": 22.399138823313443,
+            "name": "b1y:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 5573.7599999995455,
+            "service_us": 5573.7599999995455
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 368312
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "edge-large_responses-edge_relay",
+        "origin": "edge",
+        "policy": "edge_relay",
+        "response_size": 65536,
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 191999.99999470921,
+        "bytes:data": 69593599.99969271,
+        "delivered_messages": 3200,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 3200,
+        "packets": 52000,
+        "price": 0.005040351999984238,
+        "received_batches": 3200,
+        "wire_bytes": 69785599.99968842
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 192.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 20460.956639998476,
+      "p999_us": 20460.95664000103,
+      "p99_us": 20460.95664000103,
+      "pending_at_cutoff": 4,
+      "plan": {
+        "a0x": [
+          "a0y"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ],
+        "edge": [
+          "a0x",
+          "a1x",
+          "b0x",
+          "b1x"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 39191.42400001275,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 55828.4800000172,
+          "tx": 55828.47999999522
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 338912,
+            "jobs": 40400,
+            "mean_wait_us": 133.8731691084727,
+            "name": "edge:rx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 44551.680000017484,
+            "service_us": 44551.680000017484
+          },
+          {
+            "high_bytes": 72992,
+            "jobs": 6400,
+            "mean_wait_us": 28.369817499725226,
+            "name": "b1x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 6968.959999999398,
+            "service_us": 6968.959999999398
+          },
+          {
+            "high_bytes": 72992,
+            "jobs": 6400,
+            "mean_wait_us": 28.369817499725226,
+            "name": "b0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 6968.959999999398,
+            "service_us": 6968.959999999398
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 338912
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 0,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "edge-tight_buffers-direct",
+        "origin": "edge",
+        "policy": "direct",
+        "queue_bytes": 262144,
+        "response_size": 65536,
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 98159.9999973143,
+        "bytes:data": 179624863.99968636,
+        "delivered_messages": 1636,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 2418,
+        "overflow:edge:rx": 68520,
+        "overflow:reassembly:edge": 1665,
+        "packets": 130318,
+        "price": 0.014975014399952517,
+        "reassembly_expired": 39,
+        "received_batches": 1636,
+        "retry_exhausted": 782,
+        "retry_messages": 1582,
+        "wire_bytes": 179723023.99968344
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 0.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 1000000.0,
+      "p50_us": null,
+      "p999_us": null,
+      "p99_us": null,
+      "pending_at_cutoff": 100,
+      "plan": {
+        "edge": [
+          "a0x",
+          "a0y",
+          "a1x",
+          "a1y",
+          "b0x",
+          "b0y",
+          "b1x",
+          "b1y"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 72522.8508800138,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 67511.61600004398,
+          "tx": 143778.4192000401
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 261976,
+            "jobs": 51380,
+            "mean_wait_us": 128.337408672226,
+            "name": "edge:rx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 56348.28800004426,
+            "service_us": 56348.28800004426
+          },
+          {
+            "high_bytes": 174104,
+            "jobs": 15100,
+            "mean_wait_us": 59.402517085334715,
+            "name": "a1y:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 16702.08000000474,
+            "service_us": 16702.08000000474
+          },
+          {
+            "high_bytes": 174104,
+            "jobs": 15100,
+            "mean_wait_us": 59.40251708533432,
+            "name": "b0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 16702.08000000474,
+            "service_us": 16702.08000000474
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 261976
+      },
+      "synthetic": true,
+      "unfinished": 100
+    },
+    {
+      "completed": 0,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "edge-tight_buffers-edge_relay",
+        "origin": "edge",
+        "policy": "edge_relay",
+        "queue_bytes": 262144,
+        "response_size": 65536,
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 109559.99999732623,
+        "bytes:data": 180181279.99968582,
+        "delivered_messages": 1826,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 2513,
+        "overflow:edge:rx": 61111,
+        "overflow:reassembly:edge": 1828,
+        "packets": 130813,
+        "price": 0.014992913439951804,
+        "reassembly_expired": 33,
+        "received_batches": 1826,
+        "retry_exhausted": 687,
+        "retry_messages": 1590,
+        "wire_bytes": 180290839.99968296
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 0.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 1000000.0,
+      "p50_us": null,
+      "p999_us": null,
+      "p99_us": null,
+      "pending_at_cutoff": 100,
+      "plan": {
+        "a0x": [
+          "a0y"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ],
+        "edge": [
+          "a0x",
+          "a1x",
+          "b0x",
+          "b1x"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 75691.97560001368,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 76236.35200006353,
+          "tx": 144232.6720000331
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 261912,
+            "jobs": 58789,
+            "mean_wait_us": 130.68314668342472,
+            "name": "edge:rx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 65025.50400006382,
+            "service_us": 65025.50400006382
+          },
+          {
+            "high_bytes": 188296,
+            "jobs": 16400,
+            "mean_wait_us": 64.59199118943326,
+            "name": "b1x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 18097.280000003542,
+            "service_us": 18097.280000003542
+          },
+          {
+            "high_bytes": 188296,
+            "jobs": 16300,
+            "mean_wait_us": 64.3541104384476,
+            "name": "b0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 17985.99680000364,
+            "service_us": 17985.99680000364
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 261912
+      },
+      "synthetic": true,
+      "unfinished": 100
+    },
+    {
+      "completed": 3,
+      "completed_recipient_pairs": 30,
+      "config": {
+        "count": 100,
+        "edge_bytes_us": 10,
+        "name": "edge-edge_slow-direct",
+        "origin": "edge",
+        "policy": "direct",
+        "queue_bytes": 262144,
+        "rate": 2000,
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 3599.9999998136445,
+        "bytes:data": 2008600.0,
+        "delivered_messages": 60,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 830,
+        "overflow:edge:tx": 29302,
+        "overflow:reassembly:a0x": 247,
+        "packets": 1538,
+        "price": 8.358399999983552e-06,
+        "reassembly_expired": 88,
+        "received_batches": 60,
+        "retry_exhausted": 770,
+        "retry_messages": 1570,
+        "wire_bytes": 2012199.9999998144
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 20.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 548500.0,
+      "p50_us": 161744.7408,
+      "p999_us": 175196.7408,
+      "p99_us": 175196.7408,
+      "pending_at_cutoff": 99,
+      "plan": {
+        "edge": [
+          "a0x",
+          "a0y",
+          "a1x",
+          "a1y",
+          "b0x",
+          "b0y",
+          "b1x",
+          "b1y"
+        ]
+      },
+      "queue_bytes_at_cutoff": 257920,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 12199.272000003186,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 201220.0,
+          "tx": 200862.88
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 262120,
+            "jobs": 1508,
+            "mean_wait_us": 22417.459224933886,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 200860.0,
+            "service_us": 200860.0
+          },
+          {
+            "high_bytes": 139520,
+            "jobs": 30840,
+            "mean_wait_us": 9.597242308640102,
+            "name": "edge:cpu",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 11620.728000003197,
+            "service_us": 11620.728000003197
+          },
+          {
+            "high_bytes": 120,
+            "jobs": 30,
+            "mean_wait_us": 0.0,
+            "name": "edge:rx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 360.0,
+            "service_us": 360.0
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 262120
+      },
+      "synthetic": true,
+      "unfinished": 97
+    },
+    {
+      "completed": 7,
+      "completed_recipient_pairs": 62,
+      "config": {
+        "count": 100,
+        "edge_bytes_us": 10,
+        "name": "edge-edge_slow-edge_relay",
+        "origin": "edge",
+        "policy": "edge_relay",
+        "queue_bytes": 262144,
+        "rate": 2000,
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 7439.999999627289,
+        "bytes:data": 2533759.999998493,
+        "delivered_messages": 124,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 493,
+        "overflow:edge:tx": 13712,
+        "overflow:reassembly:a0x": 239,
+        "packets": 1950,
+        "price": 8.307279999983548e-06,
+        "reassembly_expired": 58,
+        "received_batches": 124,
+        "retry_exhausted": 369,
+        "retry_messages": 769,
+        "wire_bytes": 2541199.9999981206
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 60.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 546500.0,
+      "p50_us": 85819.52959999995,
+      "p999_us": 179951.52959999992,
+      "p99_us": 179951.52959999992,
+      "pending_at_cutoff": 97,
+      "plan": {
+        "a0x": [
+          "a0y"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ],
+        "edge": [
+          "a0x",
+          "a1x",
+          "b0x",
+          "b1x"
+        ]
+      },
+      "queue_bytes_at_cutoff": 257400,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 6633.732799999367,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 200119.488,
+          "tx": 199750.464
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 261600,
+            "jobs": 1485,
+            "mean_wait_us": 22244.612843367206,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 199312.0,
+            "service_us": 199312.0
+          },
+          {
+            "high_bytes": 16040,
+            "jobs": 98,
+            "mean_wait_us": 5.301240816309492,
+            "name": "b1x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 98.33600000000008,
+            "service_us": 98.33600000000008
+          },
+          {
+            "high_bytes": 16040,
+            "jobs": 112,
+            "mean_wait_us": 5.29862857141552,
+            "name": "b0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 112.38400000000014,
+            "service_us": 112.38400000000014
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 261600
+      },
+      "synthetic": true,
+      "unfinished": 93
+    },
+    {
+      "completed": 80,
+      "completed_recipient_pairs": 640,
+      "config": {
+        "count": 100,
+        "faults": [
+          {
+            "at_us": 50000,
+            "kind": "crash",
+            "node": "edge",
+            "until_us": 150000
+          }
+        ],
+        "name": "edge-edge_crash-direct",
+        "origin": "edge",
+        "policy": "direct",
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 76799.9999978728,
+        "bytes:data": 11161599.99995356,
+        "crashes": 1,
+        "delivered_messages": 1248,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 1440,
+        "lost_packets": 32,
+        "packets": 8960,
+        "price": 5.155839999962708e-05,
+        "received_batches": 1248,
+        "sender_unavailable": 192,
+        "wire_bytes": 11238399.999951413
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 156.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 950000.0,
+      "p50_us": 10112.356799999485,
+      "p999_us": 10112.35680000027,
+      "p99_us": 10112.35680000027,
+      "pending_at_cutoff": 22,
+      "plan": {
+        "edge": [
+          "a0x",
+          "a0y",
+          "a1x",
+          "a1y",
+          "b0x",
+          "b0y",
+          "b1x",
+          "b1y"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 6710.259200000297,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 8987.64799999994,
+          "tx": 8990.719999999808
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 116480,
+            "jobs": 8320,
+            "mean_wait_us": 45.90693115327422,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 8929.279999999808,
+            "service_us": 8929.279999999808
+          },
+          {
+            "high_bytes": 139520,
+            "jobs": 8928,
+            "mean_wait_us": 8.991835484197093,
+            "name": "edge:cpu",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 3349.4912000003796,
+            "service_us": 3349.4912000003796
+          },
+          {
+            "high_bytes": 2800,
+            "jobs": 1040,
+            "mean_wait_us": 7.485841006900255e-13,
+            "name": "b1x:rx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1116.1599999999926,
+            "service_us": 1116.1599999999926
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 139520
+      },
+      "synthetic": true,
+      "unfinished": 20
+    },
+    {
+      "completed": 80,
+      "completed_recipient_pairs": 640,
+      "config": {
+        "count": 100,
+        "faults": [
+          {
+            "at_us": 50000,
+            "kind": "crash",
+            "node": "edge",
+            "until_us": 150000
+          }
+        ],
+        "name": "edge-edge_crash-edge_relay",
+        "origin": "edge",
+        "policy": "edge_relay",
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 76799.9999978728,
+        "bytes:data": 11161599.999953568,
+        "crashes": 1,
+        "delivered_messages": 1264,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 1360,
+        "lost_packets": 16,
+        "packets": 8960,
+        "price": 2.577919999981077e-05,
+        "received_batches": 1264,
+        "sender_unavailable": 96,
+        "wire_bytes": 11238399.999951424
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 156.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 950000.0,
+      "p50_us": 10079.337599999737,
+      "p999_us": 10079.337600000166,
+      "p99_us": 10079.337600000166,
+      "pending_at_cutoff": 22,
+      "plan": {
+        "a0x": [
+          "a0y"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ],
+        "edge": [
+          "a0x",
+          "a1x",
+          "b0x",
+          "b1x"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 6715.897599999968,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 8989.18399999994,
+          "tx": 8990.719999999661
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 58560,
+            "jobs": 4160,
+            "mean_wait_us": 22.935276922795282,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 4464.639999999692,
+            "service_us": 4464.639999999692
+          },
+          {
+            "high_bytes": 16040,
+            "jobs": 1120,
+            "mean_wait_us": 5.2986285713827455,
+            "name": "b1x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1123.8399999999922,
+            "service_us": 1123.8399999999922
+          },
+          {
+            "high_bytes": 16040,
+            "jobs": 1120,
+            "mean_wait_us": 5.2986285713827455,
+            "name": "b0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1123.8399999999922,
+            "service_us": 1123.8399999999922
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 69760
+      },
+      "synthetic": true,
+      "unfinished": 20
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "a0x-64-direct",
+        "origin": "a0x",
+        "policy": "direct",
+        "size": 64
+      },
+      "counters": {
+        "bytes:control": 83999.99999768077,
+        "bytes:data": 111999.9999987791,
+        "delivered_messages": 1400,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 1400,
+        "packets": 1400,
+        "price": 1.1199999999797696e-05,
+        "received_batches": 1400,
+        "wire_bytes": 195999.99999645987
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 196.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 10001.894000000058,
+      "p999_us": 10001.894000000088,
+      "p99_us": 10001.894000000088,
+      "pending_at_cutoff": 2,
+      "plan": {
+        "a0x": [
+          "a0y",
+          "a1x",
+          "a1y",
+          "b0x",
+          "b0y",
+          "b1x",
+          "b1y"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 987.8399999999987,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 156.79999999999907,
+          "tx": 156.80000000000013
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 1120,
+            "jobs": 1400,
+            "mean_wait_us": 0.22705714286263978,
+            "name": "a0x:cpu",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 493.9199999999972,
+            "service_us": 493.9199999999972
+          },
+          {
+            "high_bytes": 320,
+            "jobs": 700,
+            "mean_wait_us": 0.05485714286181062,
+            "name": "a0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 89.60000000000007,
+            "service_us": 89.60000000000007
+          },
+          {
+            "high_bytes": 0,
+            "jobs": 0,
+            "mean_wait_us": 0.0,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 0.0,
+            "service_us": 0.0
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 1120
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "a0x-64-regional",
+        "origin": "a0x",
+        "policy": "regional",
+        "size": 64
+      },
+      "counters": {
+        "bytes:control": 83999.99999768077,
+        "bytes:data": 111999.99999878023,
+        "delivered_messages": 1400,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 1400,
+        "packets": 1400,
+        "price": 5.59999999989888e-06,
+        "received_batches": 1400,
+        "wire_bytes": 195999.99999646097
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 196.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 10010.245200000034,
+      "p999_us": 10010.245200000121,
+      "p99_us": 10010.245200000121,
+      "pending_at_cutoff": 2,
+      "plan": {
+        "a0x": [
+          "a0y",
+          "a1x",
+          "b0x",
+          "b1x"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 987.8399999999973,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 156.79999999999987,
+          "tx": 156.80000000000013
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 640,
+            "jobs": 800,
+            "mean_wait_us": 0.08830000000213768,
+            "name": "a0x:cpu",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 282.23999999999614,
+            "service_us": 282.23999999999614
+          },
+          {
+            "high_bytes": 320,
+            "jobs": 400,
+            "mean_wait_us": 0.06400000000544573,
+            "name": "a0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 51.20000000000004,
+            "service_us": 51.20000000000004
+          },
+          {
+            "high_bytes": 280,
+            "jobs": 200,
+            "mean_wait_us": 0.0475999999939836,
+            "name": "a1x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 22.400000000000016,
+            "service_us": 22.400000000000016
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 640
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "a0x-64-edge_relay",
+        "origin": "a0x",
+        "policy": "edge_relay",
+        "size": 64
+      },
+      "counters": {
+        "bytes:control": 95999.9999973563,
+        "bytes:data": 127999.99999860693,
+        "delivered_messages": 1600,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 1600,
+        "packets": 1600,
+        "price": 4.919999999891731e-06,
+        "received_batches": 1600,
+        "wire_bytes": 223999.99999596324
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 192.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 20011.046800000127,
+      "p999_us": 20011.046800000127,
+      "p99_us": 20011.046800000127,
+      "pending_at_cutoff": 4,
+      "plan": {
+        "a0x": [
+          "edge",
+          "a0y"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ],
+        "edge": [
+          "a1x",
+          "b0x",
+          "b1x"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 1128.9599999999973,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 179.19999999999987,
+          "tx": 179.20000000000002
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 600,
+            "jobs": 800,
+            "mean_wait_us": 0.08830000000220024,
+            "name": "edge:cpu",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 282.2399999999961,
+            "service_us": 282.2399999999961
+          },
+          {
+            "high_bytes": 320,
+            "jobs": 200,
+            "mean_wait_us": 0.06400000000544573,
+            "name": "a0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 25.60000000000002,
+            "service_us": 25.60000000000002
+          },
+          {
+            "high_bytes": 320,
+            "jobs": 400,
+            "mean_wait_us": 0.055799999999799184,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 47.99999999999992,
+            "service_us": 47.99999999999992
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 600
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "a0x-64-cheap_relay",
+        "origin": "a0x",
+        "policy": "cheap_relay",
+        "size": 64
+      },
+      "counters": {
+        "bytes:control": 95999.9999973563,
+        "bytes:data": 127999.99999860693,
+        "delivered_messages": 1600,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 1600,
+        "packets": 1600,
+        "price": 5.279999999886649e-06,
+        "received_batches": 1600,
+        "wire_bytes": 223999.99999596324
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 192.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 20011.046800000127,
+      "p999_us": 20011.046800000127,
+      "p99_us": 20011.046800000127,
+      "pending_at_cutoff": 4,
+      "plan": {
+        "a0x": [
+          "cheap",
+          "a0y"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ],
+        "cheap": [
+          "a1x",
+          "b0x",
+          "b1x"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 1128.9599999999973,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 179.19999999999987,
+          "tx": 179.20000000000002
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 600,
+            "jobs": 800,
+            "mean_wait_us": 0.08830000000220024,
+            "name": "cheap:cpu",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 282.2399999999961,
+            "service_us": 282.2399999999961
+          },
+          {
+            "high_bytes": 320,
+            "jobs": 200,
+            "mean_wait_us": 0.06400000000544573,
+            "name": "a0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 25.60000000000002,
+            "service_us": 25.60000000000002
+          },
+          {
+            "high_bytes": 320,
+            "jobs": 400,
+            "mean_wait_us": 0.055799999999799184,
+            "name": "cheap:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 47.99999999999992,
+            "service_us": 47.99999999999992
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 600
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "a0x-16384-direct",
+        "origin": "a0x",
+        "policy": "direct",
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 83999.99999768077,
+        "bytes:data": 12207999.999951586,
+        "delivered_messages": 1400,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 1400,
+        "packets": 9800,
+        "price": 0.0007023999999970512,
+        "received_batches": 1400,
+        "wire_bytes": 12291999.99994924
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 196.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 10098.404799999553,
+      "p999_us": 10098.404800000237,
+      "p99_us": 10098.404800000237,
+      "pending_at_cutoff": 2,
+      "plan": {
+        "a0x": [
+          "a0y",
+          "a1x",
+          "a1y",
+          "b0x",
+          "b0y",
+          "b1x",
+          "b1y"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 7351.680000000412,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 9833.599999999757,
+          "tx": 9833.600000000422
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 101840,
+            "jobs": 9100,
+            "mean_wait_us": 40.18818021936482,
+            "name": "a0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 9766.400000000422,
+            "service_us": 9766.400000000422
+          },
+          {
+            "high_bytes": 122080,
+            "jobs": 9800,
+            "mean_wait_us": 7.78977551041745,
+            "name": "a0x:cpu",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 3675.8400000005,
+            "service_us": 3675.8400000005
+          },
+          {
+            "high_bytes": 2800,
+            "jobs": 1300,
+            "mean_wait_us": 5.988672805520204e-13,
+            "name": "b1y:rx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1395.1999999999653,
+            "service_us": 1395.1999999999653
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 122080
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "a0x-16384-regional",
+        "origin": "a0x",
+        "policy": "regional",
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 83999.99999768077,
+        "bytes:data": 12207999.999951167,
+        "delivered_messages": 1400,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 1400,
+        "packets": 9800,
+        "price": 0.0003511999999985036,
+        "received_batches": 1400,
+        "wire_bytes": 12291999.99994882
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 196.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 10079.337599999737,
+      "p999_us": 10079.337600000166,
+      "p99_us": 10079.337600000166,
+      "pending_at_cutoff": 2,
+      "plan": {
+        "a0x": [
+          "a0y",
+          "a1x",
+          "b0x",
+          "b1x"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 7351.679999999949,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 9833.599999999755,
+          "tx": 9833.59999999946
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 58560,
+            "jobs": 5200,
+            "mean_wait_us": 22.93527692284298,
+            "name": "a0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 5580.7999999995645,
+            "service_us": 5580.7999999995645
+          },
+          {
+            "high_bytes": 16040,
+            "jobs": 1400,
+            "mean_wait_us": 5.2986285713893695,
+            "name": "a1x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1404.799999999965,
+            "service_us": 1404.799999999965
+          },
+          {
+            "high_bytes": 16040,
+            "jobs": 1400,
+            "mean_wait_us": 5.2986285713887575,
+            "name": "b1x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1404.799999999965,
+            "service_us": 1404.799999999965
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 69760
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "a0x-16384-edge_relay",
+        "origin": "a0x",
+        "policy": "edge_relay",
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 95999.9999973563,
+        "bytes:data": 13951999.999943206,
+        "delivered_messages": 1600,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 1600,
+        "packets": 11200,
+        "price": 0.0001811759999991766,
+        "received_batches": 1600,
+        "wire_bytes": 14047999.99994053
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 192.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 20080.174399999785,
+      "p999_us": 20080.174400000164,
+      "p99_us": 20080.174400000164,
+      "pending_at_cutoff": 4,
+      "plan": {
+        "a0x": [
+          "edge",
+          "a0y"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ],
+        "edge": [
+          "a1x",
+          "b0x",
+          "b1x"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 8401.91999999998,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 11238.39999999972,
+          "tx": 11238.39999999946
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 43920,
+            "jobs": 4000,
+            "mean_wait_us": 16.703919999836934,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 4195.199999999723,
+            "service_us": 4195.199999999723
+          },
+          {
+            "high_bytes": 29280,
+            "jobs": 2600,
+            "mean_wait_us": 11.432676922963953,
+            "name": "a0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 2790.399999999841,
+            "service_us": 2790.399999999841
+          },
+          {
+            "high_bytes": 16040,
+            "jobs": 1400,
+            "mean_wait_us": 5.298628571387404,
+            "name": "b1x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1404.799999999965,
+            "service_us": 1404.799999999965
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 52440
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "a0x-16384-cheap_relay",
+        "origin": "a0x",
+        "policy": "cheap_relay",
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 95999.9999973563,
+        "bytes:data": 13951999.999943206,
+        "delivered_messages": 1600,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 1600,
+        "packets": 11200,
+        "price": 0.00021263999999904297,
+        "received_batches": 1600,
+        "wire_bytes": 14047999.99994053
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 192.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 20080.174399999785,
+      "p999_us": 20080.174400000164,
+      "p99_us": 20080.174400000164,
+      "pending_at_cutoff": 4,
+      "plan": {
+        "a0x": [
+          "cheap",
+          "a0y"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ],
+        "cheap": [
+          "a1x",
+          "b0x",
+          "b1x"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 8401.91999999998,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 11238.39999999972,
+          "tx": 11238.39999999946
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 43920,
+            "jobs": 4000,
+            "mean_wait_us": 16.703919999836934,
+            "name": "cheap:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 4195.199999999723,
+            "service_us": 4195.199999999723
+          },
+          {
+            "high_bytes": 29280,
+            "jobs": 2600,
+            "mean_wait_us": 11.432676922963953,
+            "name": "a0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 2790.399999999841,
+            "service_us": 2790.399999999841
+          },
+          {
+            "high_bytes": 16040,
+            "jobs": 1400,
+            "mean_wait_us": 5.298628571387404,
+            "name": "b1x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1404.799999999965,
+            "service_us": 1404.799999999965
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 52440
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "direct_hashes": true,
+        "name": "a0x-hashes-direct",
+        "origin": "a0x",
+        "policy": "direct",
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 257599.99998477803,
+        "bytes:data": 12207999.999951586,
+        "delivered_messages": 2800,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 2800,
+        "packets": 11200,
+        "price": 0.0007123199999963099,
+        "received_batches": 2800,
+        "wire_bytes": 12465599.999936463
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 196.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 10100.759999999544,
+      "p999_us": 10100.760000000264,
+      "p99_us": 10100.760000000264,
+      "pending_at_cutoff": 2,
+      "plan": {
+        "a0x": [
+          "a0y",
+          "a1x",
+          "a1y",
+          "b0x",
+          "b0y",
+          "b1x",
+          "b1y"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 9649.344000000467,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 9972.479999999745,
+          "tx": 9972.480000000403
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 100440,
+            "jobs": 9800,
+            "mean_wait_us": 35.67929345257954,
+            "name": "a0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 9838.080000000404,
+            "service_us": 9838.080000000404
+          },
+          {
+            "high_bytes": 138464,
+            "jobs": 11300,
+            "mean_wait_us": 8.839543936501043,
+            "name": "a0x:cpu",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 4333.152000000414,
+            "service_us": 4333.152000000414
+          },
+          {
+            "high_bytes": 2800,
+            "jobs": 1400,
+            "mean_wait_us": 5.677845495353852e-13,
+            "name": "b0x:rx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1405.4399999999634,
+            "service_us": 1405.4399999999634
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 138464
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "direct_hashes": true,
+        "name": "a0x-hashes-edge_relay",
+        "origin": "a0x",
+        "policy": "edge_relay",
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 269599.99998445355,
+        "bytes:data": 13951999.999943206,
+        "delivered_messages": 3000,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 3000,
+        "packets": 12600,
+        "price": 0.00019109599999844227,
+        "received_batches": 3000,
+        "wire_bytes": 14221599.999927755
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 192.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 20082.52959999966,
+      "p999_us": 20082.52960000019,
+      "p99_us": 20082.52960000019,
+      "pending_at_cutoff": 4,
+      "plan": {
+        "a0x": [
+          "edge",
+          "a0y"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ],
+        "edge": [
+          "a1x",
+          "b0x",
+          "b1x"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 10699.583999999915,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 11377.279999999708,
+          "tx": 11377.279999999493
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 43920,
+            "jobs": 4000,
+            "mean_wait_us": 16.703919999836934,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 4195.199999999723,
+            "service_us": 4195.199999999723
+          },
+          {
+            "high_bytes": 27880,
+            "jobs": 3300,
+            "mean_wait_us": 8.119839563453718,
+            "name": "a0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 2862.0799999998762,
+            "service_us": 2862.0799999998762
+          },
+          {
+            "high_bytes": 14640,
+            "jobs": 1500,
+            "mean_wait_us": 4.293469866629171,
+            "name": "b1x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1414.3999999999644,
+            "service_us": 1414.3999999999644
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 52440
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "a0x-small_responses-direct",
+        "origin": "a0x",
+        "policy": "direct",
+        "response_size": 32,
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 179999.99999503652,
+        "bytes:data": 12310399.999939352,
+        "delivered_messages": 3000,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 3000,
+        "packets": 11400,
+        "price": 0.0007119999999959378,
+        "received_batches": 3000,
+        "wire_bytes": 12490399.99993433
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 192.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 20099.385119999526,
+      "p999_us": 20099.385120000254,
+      "p99_us": 20099.385120000254,
+      "pending_at_cutoff": 4,
+      "plan": {
+        "a0x": [
+          "a0y",
+          "a1x",
+          "a1y",
+          "b0x",
+          "b0y",
+          "b1x",
+          "b1y"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 8479.616000000467,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 9992.319999999756,
+          "tx": 9992.320000000418
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 101840,
+            "jobs": 9200,
+            "mean_wait_us": 39.500584695231424,
+            "name": "a0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 9776.64000000042,
+            "service_us": 9776.64000000042
+          },
+          {
+            "high_bytes": 122208,
+            "jobs": 10000,
+            "mean_wait_us": 7.936933824210889,
+            "name": "a0x:cpu",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 3746.3360000005196,
+            "service_us": 3746.3360000005196
+          },
+          {
+            "high_bytes": 248,
+            "jobs": 200,
+            "mean_wait_us": 0.04791999999182304,
+            "name": "a0y:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 19.839999999999975,
+            "service_us": 19.839999999999975
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 122208
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "a0x-small_responses-edge_relay",
+        "origin": "a0x",
+        "policy": "edge_relay",
+        "response_size": 32,
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 191999.99999471317,
+        "bytes:data": 14054399.999930533,
+        "delivered_messages": 3200,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 3200,
+        "packets": 12800,
+        "price": 0.00019077599999801591,
+        "received_batches": 3200,
+        "wire_bytes": 14246399.999925181
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 188.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 30081.615679999813,
+      "p999_us": 30081.61568000017,
+      "p99_us": 30081.61568000017,
+      "pending_at_cutoff": 6,
+      "plan": {
+        "a0x": [
+          "edge",
+          "a0y"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ],
+        "edge": [
+          "a1x",
+          "b0x",
+          "b1x"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 9529.856000000162,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 11397.119999999704,
+          "tx": 11397.11999999943
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 43920,
+            "jobs": 4800,
+            "mean_wait_us": 14.082624799871825,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 4271.999999999694,
+            "service_us": 4271.999999999694
+          },
+          {
+            "high_bytes": 30040,
+            "jobs": 2700,
+            "mean_wait_us": 10.799930429510086,
+            "name": "a0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 2800.6399999998453,
+            "service_us": 2800.6399999998453
+          },
+          {
+            "high_bytes": 15520,
+            "jobs": 1500,
+            "mean_wait_us": 4.821589226614296,
+            "name": "b0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1415.0399999999631,
+            "service_us": 1415.0399999999631
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 52440
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "a0x-large_responses-direct",
+        "origin": "a0x",
+        "policy": "direct",
+        "response_size": 65536,
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 179999.99999503593,
+        "bytes:data": 67849599.99969493,
+        "delivered_messages": 3000,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 3000,
+        "packets": 50600,
+        "price": 0.0057105279999819765,
+        "received_batches": 3000,
+        "wire_bytes": 68029599.99969096
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 192.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 20357.38543999882,
+      "p999_us": 20357.385440000784,
+      "p99_us": 20357.385440000784,
+      "pending_at_cutoff": 4,
+      "plan": {
+        "a0x": [
+          "a0y",
+          "a1x",
+          "a1y",
+          "b0x",
+          "b0y",
+          "b1x",
+          "b1y"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 38141.184000008136,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 54423.680000017244,
+          "tx": 54423.68000000125
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 159432,
+            "jobs": 14100,
+            "mean_wait_us": 63.87108311993146,
+            "name": "a0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 15330.56000000443,
+            "service_us": 15330.56000000443
+          },
+          {
+            "high_bytes": 186256,
+            "jobs": 40000,
+            "mean_wait_us": 47.36568287986592,
+            "name": "edge:rx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 44513.28000001749,
+            "service_us": 44513.28000001749
+          },
+          {
+            "high_bytes": 58352,
+            "jobs": 5100,
+            "mean_wait_us": 22.39913882332119,
+            "name": "a0y:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 5573.7599999995455,
+            "service_us": 5573.7599999995455
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 191632
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "a0x-large_responses-edge_relay",
+        "origin": "a0x",
+        "policy": "edge_relay",
+        "response_size": 65536,
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 191999.99999471317,
+        "bytes:data": 69593599.99968977,
+        "delivered_messages": 3200,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 3200,
+        "packets": 52000,
+        "price": 0.005189303999983464,
+        "received_batches": 3200,
+        "wire_bytes": 69785599.99968556
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 188.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 30475.649439998437,
+      "p999_us": 30475.649440001063,
+      "p99_us": 30475.649440001063,
+      "pending_at_cutoff": 6,
+      "plan": {
+        "a0x": [
+          "edge",
+          "a0y"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ],
+        "edge": [
+          "a1x",
+          "b0x",
+          "b1x"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 39191.42400001274,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 55828.480000020405,
+          "tx": 55828.47999999547
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 287112,
+            "jobs": 41600,
+            "mean_wait_us": 100.09668723041196,
+            "name": "edge:rx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 45937.28000002065,
+            "service_us": 45937.28000002065
+          },
+          {
+            "high_bytes": 87632,
+            "jobs": 7600,
+            "mean_wait_us": 34.7789242101873,
+            "name": "a0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 8354.559999999401,
+            "service_us": 8354.559999999401
+          },
+          {
+            "high_bytes": 72992,
+            "jobs": 6400,
+            "mean_wait_us": 28.369817499715037,
+            "name": "b1x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 6968.959999999398,
+            "service_us": 6968.959999999398
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 287112
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 87,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "a0x-tight_buffers-direct",
+        "origin": "a0x",
+        "policy": "direct",
+        "queue_bytes": 262144,
+        "response_size": 65536,
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 178439.99999504388,
+        "bytes:data": 73900623.999695,
+        "delivered_messages": 2974,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 2987,
+        "overflow:reassembly:edge": 100,
+        "packets": 54937,
+        "price": 0.006255113919980321,
+        "received_batches": 2974,
+        "retry_exhausted": 13,
+        "retry_messages": 87,
+        "wire_bytes": 74079063.99969077
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 134.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 865000.0,
+      "p50_us": 70266.07663999894,
+      "p999_us": 170468.66863999807,
+      "p99_us": 170468.66863999807,
+      "pending_at_cutoff": 33,
+      "plan": {
+        "a0x": [
+          "a0y",
+          "a1x",
+          "a1y",
+          "b0x",
+          "b0y",
+          "b1x",
+          "b1y"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 41419.06256001139,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 59263.25120002824,
+          "tx": 59263.25120000253
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 159432,
+            "jobs": 14100,
+            "mean_wait_us": 63.87108311993146,
+            "name": "a0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 15330.56000000443,
+            "service_us": 15330.56000000443
+          },
+          {
+            "high_bytes": 186256,
+            "jobs": 44350,
+            "mean_wait_us": 54.70775745643362,
+            "name": "edge:rx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 49354.09920002848,
+            "service_us": 49354.09920002848
+          },
+          {
+            "high_bytes": 174104,
+            "jobs": 9450,
+            "mean_wait_us": 46.554223567721564,
+            "name": "b1y:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 10414.57920000083,
+            "service_us": 10414.57920000083
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 208776
+      },
+      "synthetic": true,
+      "unfinished": 13
+    },
+    {
+      "completed": 4,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "name": "a0x-tight_buffers-edge_relay",
+        "origin": "a0x",
+        "policy": "edge_relay",
+        "queue_bytes": 262144,
+        "response_size": 65536,
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 112799.99999727677,
+        "bytes:data": 177677407.9996791,
+        "delivered_messages": 1880,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 2540,
+        "overflow:edge:rx": 54964,
+        "overflow:reassembly:edge": 1774,
+        "packets": 129040,
+        "price": 0.014916529919951323,
+        "reassembly_expired": 33,
+        "received_batches": 1880,
+        "retry_exhausted": 660,
+        "retry_messages": 1554,
+        "wire_bytes": 177790207.9996762
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 0.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 1000000.0,
+      "p50_us": 180442.5175999984,
+      "p999_us": 180442.5175999984,
+      "p99_us": 180442.5175999984,
+      "pending_at_cutoff": 100,
+      "plan": {
+        "a0x": [
+          "edge",
+          "a0y"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ],
+        "edge": [
+          "a1x",
+          "b0x",
+          "b1x"
+        ]
+      },
+      "queue_bytes_at_cutoff": 139104,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 76672.08672001686,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 81027.30240004112,
+          "tx": 142232.1664000335
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 261968,
+            "jobs": 64336,
+            "mean_wait_us": 118.72745931316919,
+            "name": "edge:rx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 71199.46240004138,
+            "service_us": 71199.46240004138
+          },
+          {
+            "high_bytes": 202936,
+            "jobs": 16300,
+            "mean_wait_us": 66.58968975621255,
+            "name": "a0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 18036.198400003643,
+            "service_us": 18036.198400003643
+          },
+          {
+            "high_bytes": 188296,
+            "jobs": 16400,
+            "mean_wait_us": 64.59199118938803,
+            "name": "b1x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 18097.280000003542,
+            "service_us": 18097.280000003542
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 261968
+      },
+      "synthetic": true,
+      "unfinished": 96
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "edge_bytes_us": 10,
+        "name": "a0x-edge_slow-direct",
+        "origin": "a0x",
+        "policy": "direct",
+        "queue_bytes": 262144,
+        "rate": 2000,
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 83999.99999898231,
+        "bytes:data": 12207999.999996684,
+        "delivered_messages": 1400,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 1400,
+        "packets": 9800,
+        "price": 0.0007023999999997313,
+        "received_batches": 1400,
+        "wire_bytes": 12291999.999995403
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 1600.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 10098.404800000011,
+      "p999_us": 10098.404800000237,
+      "p99_us": 10098.404800000237,
+      "pending_at_cutoff": 20,
+      "plan": {
+        "a0x": [
+          "a0y",
+          "a1x",
+          "a1y",
+          "b0x",
+          "b0y",
+          "b1x",
+          "b1y"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 7351.680000000428,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 9833.599999999757,
+          "tx": 9833.600000000422
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 101840,
+            "jobs": 9100,
+            "mean_wait_us": 40.18818021982367,
+            "name": "a0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 9766.400000000422,
+            "service_us": 9766.400000000422
+          },
+          {
+            "high_bytes": 122080,
+            "jobs": 9800,
+            "mean_wait_us": 7.789775510190607,
+            "name": "a0x:cpu",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 3675.8400000005154,
+            "service_us": 3675.8400000005154
+          },
+          {
+            "high_bytes": 2800,
+            "jobs": 1300,
+            "mean_wait_us": 5.689239165244194e-12,
+            "name": "b1y:rx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1395.1999999999653,
+            "service_us": 1395.1999999999653
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 122080
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 42,
+      "completed_recipient_pairs": 452,
+      "config": {
+        "count": 100,
+        "edge_bytes_us": 10,
+        "name": "a0x-edge_slow-edge_relay",
+        "origin": "a0x",
+        "policy": "edge_relay",
+        "queue_bytes": 262144,
+        "rate": 2000,
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 47279.99999865424,
+        "bytes:data": 10697839.999979928,
+        "delivered_messages": 788,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 846,
+        "overflow:edge:rx": 1947,
+        "overflow:edge:tx": 711,
+        "overflow:reassembly:edge": 172,
+        "packets": 8367,
+        "price": 0.00041686511999889265,
+        "reassembly_expired": 48,
+        "received_batches": 788,
+        "retry_exhausted": 58,
+        "retry_messages": 216,
+        "wire_bytes": 10745119.999978645
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 100.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 529000.0,
+      "p50_us": 121064.27039999992,
+      "p999_us": 347988.27040000004,
+      "p99_us": 347988.27040000004,
+      "pending_at_cutoff": 95,
+      "plan": {
+        "a0x": [
+          "edge",
+          "a0y"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ],
+        "edge": [
+          "a1x",
+          "b0x",
+          "b1x"
+        ]
+      },
+      "queue_bytes_at_cutoff": 470120,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 5820.92559999983,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 419726.84799999994,
+          "tx": 231248.51199999964
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 261720,
+            "jobs": 1546,
+            "mean_wait_us": 18983.461064941854,
+            "name": "edge:rx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 192104.0,
+            "service_us": 192104.0
+          },
+          {
+            "high_bytes": 261720,
+            "jobs": 1710,
+            "mean_wait_us": 15090.08286222234,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 224448.0,
+            "service_us": 224448.0
+          },
+          {
+            "high_bytes": 29280,
+            "jobs": 4667,
+            "mean_wait_us": 8.882353717591071,
+            "name": "a0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 5008.76799999963,
+            "service_us": 5008.76799999963
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 261720
+      },
+      "synthetic": true,
+      "unfinished": 58
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "faults": [
+          {
+            "at_us": 50000,
+            "kind": "crash",
+            "node": "edge",
+            "until_us": 150000
+          }
+        ],
+        "name": "a0x-edge_crash-direct",
+        "origin": "a0x",
+        "policy": "direct",
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 83999.99999768077,
+        "bytes:data": 12207999.999951586,
+        "crashes": 1,
+        "delivered_messages": 1400,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 1400,
+        "packets": 9800,
+        "price": 0.0007023999999970512,
+        "received_batches": 1400,
+        "wire_bytes": 12291999.99994924
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 196.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 10098.404799999553,
+      "p999_us": 10098.404800000237,
+      "p99_us": 10098.404800000237,
+      "pending_at_cutoff": 2,
+      "plan": {
+        "a0x": [
+          "a0y",
+          "a1x",
+          "a1y",
+          "b0x",
+          "b0y",
+          "b1x",
+          "b1y"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 7351.680000000412,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 9833.599999999757,
+          "tx": 9833.600000000422
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 101840,
+            "jobs": 9100,
+            "mean_wait_us": 40.18818021936482,
+            "name": "a0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 9766.400000000422,
+            "service_us": 9766.400000000422
+          },
+          {
+            "high_bytes": 122080,
+            "jobs": 9800,
+            "mean_wait_us": 7.78977551041745,
+            "name": "a0x:cpu",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 3675.8400000005,
+            "service_us": 3675.8400000005
+          },
+          {
+            "high_bytes": 2800,
+            "jobs": 1300,
+            "mean_wait_us": 5.988672805520204e-13,
+            "name": "b1y:rx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1395.1999999999653,
+            "service_us": 1395.1999999999653
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 122080
+      },
+      "synthetic": true,
+      "unfinished": 0
+    },
+    {
+      "completed": 100,
+      "completed_recipient_pairs": 800,
+      "config": {
+        "count": 100,
+        "faults": [
+          {
+            "at_us": 50000,
+            "kind": "crash",
+            "node": "edge",
+            "until_us": 150000
+          }
+        ],
+        "name": "a0x-edge_crash-edge_relay",
+        "origin": "a0x",
+        "policy": "edge_relay",
+        "size": 16384
+      },
+      "counters": {
+        "bytes:control": 95999.99999612491,
+        "bytes:data": 14475199.99993819,
+        "crashes": 1,
+        "delivered_messages": 1588,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 1600,
+        "lost_packets": 402,
+        "packets": 11590,
+        "price": 0.00022826399999890915,
+        "received_batches": 1588,
+        "retry_messages": 30,
+        "sender_unavailable": 12,
+        "wire_bytes": 14571199.999934265
+      },
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0,
+      "goodput_per_s": 192.0,
+      "objective": "all eight usable payloads; optional required direct hashes and responses to edge",
+      "offered": 100,
+      "oldest_unfinished_us": 0,
+      "p50_us": 20080.174399999785,
+      "p999_us": 170122.22239999942,
+      "p99_us": 170122.22239999942,
+      "pending_at_cutoff": 4,
+      "plan": {
+        "a0x": [
+          "edge",
+          "a0y"
+        ],
+        "a1x": [
+          "a1y"
+        ],
+        "b0x": [
+          "b0y"
+        ],
+        "b1x": [
+          "b1y"
+        ],
+        "edge": [
+          "a1x",
+          "b0x",
+          "b1x"
+        ]
+      },
+      "queue_bytes_at_cutoff": 0,
+      "required_recipient_pairs": 800,
+      "resource_summary": {
+        "elapsed_service_us_by_kind": {
+          "cpu": 8544.655199999957,
+          "disk": 0.0,
+          "disk_bytes": 0.0,
+          "memory": 0.0,
+          "rx": 11237.24799999972,
+          "tx": 11656.959999999424
+        },
+        "largest_mean_waits": [
+          {
+            "high_bytes": 61360,
+            "jobs": 4000,
+            "mean_wait_us": 19.416315199812896,
+            "name": "edge:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 4195.199999999723,
+            "service_us": 4195.199999999723
+          },
+          {
+            "high_bytes": 43920,
+            "jobs": 2990,
+            "mean_wait_us": 13.682275585171238,
+            "name": "a0x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 3208.9599999998068,
+            "service_us": 3208.9599999998068
+          },
+          {
+            "high_bytes": 16040,
+            "jobs": 1400,
+            "mean_wait_us": 5.298628571384867,
+            "name": "b1x:tx",
+            "outstanding_bytes": 0,
+            "scheduled_service_us": 1404.799999999965,
+            "service_us": 1404.799999999965
+          }
+        ],
+        "outstanding_resource_bytes": 0,
+        "peak_resource_bytes": 61360
+      },
+      "synthetic": true,
+      "unfinished": 0
+    }
+  ],
+  "retention": {
+    "full_input_sha256": "f161e1a580fae8cd7899f21c88135c71ec322ef70542d2f9b6b0b5f274b57788",
+    "input": "build/workbench/orbital-dissemination/edge.json",
+    "script_sha256": "e63e73f918fa1f2b8f202ee5ab71c7bb6d2a5c61fbf3a93f43e50a56fc65fdd1",
+    "selection": "Every selected case retained including failure. Edge/proposal resource tables summarized; identical edge tariffs stored once. Other studies unchanged."
+  },
+  "sources": {
+    "edge_study.py": "656679d909d70f4d25489054a56d64d81504ed9daf10ffe8fecd03be2048d100",
+    "simulator.py": "a3fd09a8d7985d27af6afd22fa3c43e73f7b8fd0fe9b1a6177f085af943bd3f0"
+  }
+}

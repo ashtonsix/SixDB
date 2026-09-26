@@ -1,0 +1,3066 @@
+{
+  "kind": "authored_synthetic_not_measured_performance",
+  "results": [
+    {
+      "accepted_recipient_pairs": 9600,
+      "busiest_cpu": {
+        "node": "source:cpu",
+        "service_us": 6821.898239998921
+      },
+      "case": "route_family",
+      "completed": 600,
+      "config": {
+        "case": "route_family",
+        "count": 600,
+        "name": "small-direct",
+        "policy": "direct",
+        "rate": 20000,
+        "size": 256
+      },
+      "counters": {
+        "bytes:control": 1155711.9999977455,
+        "bytes:data": 3379199.9999911333,
+        "delivered_messages": 19232,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 19232,
+        "packets": 19232,
+        "price": 4.5349119999900244e-05,
+        "received_batches": 19232,
+        "wire_bytes": 4534911.999989167
+      },
+      "cpu_service_us": 13643.796479998819,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 250,
+      "goodput_per_s": 19322.58064516129,
+      "installed_route_state_bytes": 256,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "most_queued": {
+        "high_bytes": 2816,
+        "mean_wait_us": 0.8609996672173785,
+        "node": "source:tx"
+      },
+      "objective": "static normalized unbatched data+ACK byte equivalents; no tail objective",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 600,
+      "overflow_events": 0,
+      "p50_us": 85.21967999999652,
+      "p999_us": 85.21968000000561,
+      "p99_us": 85.21968000000561,
+      "pending_at_cutoff": 1,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "required_recipient_pairs": 9600,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 5632,
+      "route_metrics": [
+        {
+          "depth": 1,
+          "fanout": 16,
+          "propagation_max_us": 80,
+          "wire_byte_equivalent_cost": 15104.0
+        }
+      ],
+      "route_selections": {
+        "0": 600
+      },
+      "rx_service_us": 3627.9296000000118,
+      "setup_cpu_service_us": 22.548479999999998,
+      "setup_wire_bytes": 3711.999999999998,
+      "synthetic": true,
+      "tx_service_us": 3627.9295999996775,
+      "unacked_transfers": 0,
+      "unfinished": 0,
+      "workload_goodput_per_s": 19966.666666666668
+    },
+    {
+      "accepted_recipient_pairs": 9600,
+      "busiest_cpu": {
+        "node": "r0:cpu",
+        "service_us": 6811.331039998932
+      },
+      "case": "route_family",
+      "completed": 600,
+      "config": {
+        "case": "route_family",
+        "count": 600,
+        "name": "small-fixed_cheap",
+        "policy": "fixed_cheap",
+        "rate": 20000,
+        "size": 256
+      },
+      "counters": {
+        "bytes:control": 1155831.9999977509,
+        "bytes:data": 3379199.999991094,
+        "delivered_messages": 19232,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 19232,
+        "packets": 19232,
+        "price": 2.8703199999927913e-06,
+        "received_batches": 19232,
+        "wire_bytes": 4535031.99998913
+      },
+      "cpu_service_us": 13643.80127999883,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 250,
+      "goodput_per_s": 19322.58064516129,
+      "installed_route_state_bytes": 376,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "most_queued": {
+        "high_bytes": 2464,
+        "mean_wait_us": 0.7135156754474202,
+        "node": "r0:tx"
+      },
+      "objective": "static normalized unbatched data+ACK byte equivalents; no tail objective",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 600,
+      "overflow_events": 0,
+      "p50_us": 94.02975999999626,
+      "p999_us": 94.02976000000672,
+      "p99_us": 94.02976000000672,
+      "pending_at_cutoff": 1,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "required_recipient_pairs": 9600,
+      "resource_bytes_at_cutoff": 240,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 5400,
+      "route_metrics": [
+        {
+          "depth": 2,
+          "fanout": 15,
+          "propagation_max_us": 88,
+          "wire_byte_equivalent_cost": 8024.0
+        }
+      ],
+      "route_selections": {
+        "0": 600
+      },
+      "rx_service_us": 3628.0256000000218,
+      "setup_cpu_service_us": 22.553279999999997,
+      "setup_wire_bytes": 3831.9999999999977,
+      "synthetic": true,
+      "tx_service_us": 3628.0255999997653,
+      "unacked_transfers": 0,
+      "unfinished": 0,
+      "workload_goodput_per_s": 19966.666666666668
+    },
+    {
+      "accepted_recipient_pairs": 9600,
+      "busiest_cpu": {
+        "node": "r0:cpu",
+        "service_us": 1958.7624000000828
+      },
+      "case": "route_family",
+      "completed": 600,
+      "config": {
+        "case": "route_family",
+        "count": 600,
+        "name": "small-noise",
+        "policy": "noise",
+        "rate": 20000,
+        "size": 256
+      },
+      "counters": {
+        "bytes:control": 1156959.9999977404,
+        "bytes:data": 3379199.99999108,
+        "delivered_messages": 19232,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 19232,
+        "packets": 19232,
+        "price": 2.8815999999927906e-06,
+        "received_batches": 19232,
+        "wire_bytes": 4536159.999989104
+      },
+      "cpu_service_us": 13643.846399999815,
+      "deadline_170_fraction": 0.74,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 250,
+      "goodput_per_s": 19258.064516129034,
+      "installed_route_state_bytes": 1504,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "most_queued": {
+        "high_bytes": 2464,
+        "mean_wait_us": 0.5969556537460596,
+        "node": "r0:tx"
+      },
+      "objective": "static normalized unbatched data+ACK byte equivalents; no tail objective",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 600,
+      "overflow_events": 0,
+      "p50_us": 163.6313599999703,
+      "p999_us": 181.71120000000883,
+      "p99_us": 181.71120000000883,
+      "pending_at_cutoff": 3,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "required_recipient_pairs": 9600,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 5400,
+      "route_metrics": [
+        {
+          "depth": 2,
+          "fanout": 15,
+          "propagation_max_us": 88,
+          "wire_byte_equivalent_cost": 8024.0
+        },
+        {
+          "depth": 10,
+          "fanout": 2,
+          "propagation_max_us": 152,
+          "wire_byte_equivalent_cost": 8024.0
+        },
+        {
+          "depth": 12,
+          "fanout": 3,
+          "propagation_max_us": 168,
+          "wire_byte_equivalent_cost": 8024.0
+        },
+        {
+          "depth": 10,
+          "fanout": 4,
+          "propagation_max_us": 152,
+          "wire_byte_equivalent_cost": 8024.0
+        }
+      ],
+      "route_selections": {
+        "0": 144,
+        "1": 150,
+        "2": 156,
+        "3": 150
+      },
+      "rx_service_us": 3628.9280000000053,
+      "setup_cpu_service_us": 22.598399999999994,
+      "setup_wire_bytes": 4960.0,
+      "synthetic": true,
+      "tx_service_us": 3628.9280000000426,
+      "unacked_transfers": 0,
+      "unfinished": 0,
+      "workload_goodput_per_s": 19900.0
+    },
+    {
+      "accepted_recipient_pairs": 9600,
+      "busiest_cpu": {
+        "node": "r8:cpu",
+        "service_us": 869.0607999999763
+      },
+      "case": "route_family",
+      "completed": 600,
+      "config": {
+        "case": "route_family",
+        "count": 600,
+        "name": "small-shallow_hash",
+        "policy": "shallow_hash",
+        "rate": 20000,
+        "size": 256
+      },
+      "counters": {
+        "bytes:control": 1156959.9999977443,
+        "bytes:data": 3379199.999991085,
+        "delivered_messages": 19232,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 19232,
+        "packets": 19232,
+        "price": 2.8815999999927906e-06,
+        "received_batches": 19232,
+        "wire_bytes": 4536159.999989114
+      },
+      "cpu_service_us": 13643.846399999642,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 250,
+      "goodput_per_s": 19290.322580645163,
+      "installed_route_state_bytes": 1504,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "most_queued": {
+        "high_bytes": 824,
+        "mean_wait_us": 0.13261740408126999,
+        "node": "r8:tx"
+      },
+      "objective": "static normalized unbatched data+ACK byte equivalents; no tail objective",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 600,
+      "overflow_events": 0,
+      "p50_us": 100.30543999998554,
+      "p999_us": 100.30544000000555,
+      "p99_us": 100.30544000000555,
+      "pending_at_cutoff": 2,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "required_recipient_pairs": 9600,
+      "resource_bytes_at_cutoff": 1424,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 3040,
+      "route_metrics": [
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 8024.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 8024.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 8024.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 8024.0
+        }
+      ],
+      "route_selections": {
+        "0": 144,
+        "1": 150,
+        "2": 156,
+        "3": 150
+      },
+      "rx_service_us": 3628.927999999997,
+      "setup_cpu_service_us": 22.598399999999994,
+      "setup_wire_bytes": 4959.999999999999,
+      "synthetic": true,
+      "tx_service_us": 3628.9279999999985,
+      "unacked_transfers": 0,
+      "unfinished": 0,
+      "workload_goodput_per_s": 19933.333333333336
+    },
+    {
+      "accepted_recipient_pairs": 9600,
+      "busiest_cpu": {
+        "node": "r0:cpu",
+        "service_us": 852.034239999977
+      },
+      "case": "route_family",
+      "completed": 600,
+      "config": {
+        "case": "route_family",
+        "count": 600,
+        "name": "small-shallow_stripes",
+        "policy": "shallow_stripes",
+        "rate": 20000,
+        "size": 256
+      },
+      "counters": {
+        "bytes:control": 1156959.9999977443,
+        "bytes:data": 3379199.999991085,
+        "delivered_messages": 19232,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 19232,
+        "packets": 19232,
+        "price": 2.8815999999927906e-06,
+        "received_batches": 19232,
+        "wire_bytes": 4536159.999989114
+      },
+      "cpu_service_us": 13643.846399999642,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 250,
+      "goodput_per_s": 19290.322580645163,
+      "installed_route_state_bytes": 1504,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "most_queued": {
+        "high_bytes": 824,
+        "mean_wait_us": 0.12813322231431737,
+        "node": "r4:tx"
+      },
+      "objective": "static normalized unbatched data+ACK byte equivalents; no tail objective",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 600,
+      "overflow_events": 0,
+      "p50_us": 100.30543999998554,
+      "p999_us": 100.30544000000555,
+      "p99_us": 100.30544000000555,
+      "pending_at_cutoff": 2,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "required_recipient_pairs": 9600,
+      "resource_bytes_at_cutoff": 1424,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 3040,
+      "route_metrics": [
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 8024.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 8024.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 8024.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 8024.0
+        }
+      ],
+      "route_selections": {
+        "0": 150,
+        "1": 150,
+        "2": 150,
+        "3": 150
+      },
+      "rx_service_us": 3628.927999999997,
+      "setup_cpu_service_us": 22.598399999999994,
+      "setup_wire_bytes": 4959.999999999999,
+      "synthetic": true,
+      "tx_service_us": 3628.927999999999,
+      "unacked_transfers": 0,
+      "unfinished": 0,
+      "workload_goodput_per_s": 19933.333333333336
+    },
+    {
+      "accepted_recipient_pairs": 9600,
+      "busiest_cpu": {
+        "node": "r0:cpu",
+        "service_us": 880.4118399999759
+      },
+      "case": "route_family",
+      "completed": 600,
+      "config": {
+        "case": "route_family",
+        "count": 600,
+        "name": "small-shallow_block_stripes",
+        "policy": "shallow_block_stripes",
+        "rate": 20000,
+        "size": 256
+      },
+      "counters": {
+        "bytes:control": 1156959.9999977443,
+        "bytes:data": 3379199.999991085,
+        "delivered_messages": 19232,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 19232,
+        "packets": 19232,
+        "price": 2.8815999999927906e-06,
+        "received_batches": 19232,
+        "wire_bytes": 4536159.999989114
+      },
+      "cpu_service_us": 13643.846399999642,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 250,
+      "goodput_per_s": 19290.322580645163,
+      "installed_route_state_bytes": 1504,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "most_queued": {
+        "high_bytes": 824,
+        "mean_wait_us": 0.13526124093434996,
+        "node": "r0:tx"
+      },
+      "objective": "static normalized unbatched data+ACK byte equivalents; no tail objective",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 600,
+      "overflow_events": 0,
+      "p50_us": 100.209440000006,
+      "p999_us": 100.30544000000555,
+      "p99_us": 100.30544000000555,
+      "pending_at_cutoff": 2,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "required_recipient_pairs": 9600,
+      "resource_bytes_at_cutoff": 1424,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 3040,
+      "route_metrics": [
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 8024.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 8024.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 8024.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 8024.0
+        }
+      ],
+      "route_selections": {
+        "0": 160,
+        "1": 160,
+        "2": 152,
+        "3": 128
+      },
+      "rx_service_us": 3628.927999999998,
+      "setup_cpu_service_us": 22.598399999999994,
+      "setup_wire_bytes": 4959.999999999999,
+      "synthetic": true,
+      "tx_service_us": 3628.9279999999976,
+      "unacked_transfers": 0,
+      "unfinished": 0,
+      "workload_goodput_per_s": 19933.333333333336
+    },
+    {
+      "accepted_recipient_pairs": 74,
+      "busiest_cpu": {
+        "node": "source:cpu",
+        "service_us": 14481.38968000239
+      },
+      "case": "route_family",
+      "completed": 4,
+      "config": {
+        "case": "route_family",
+        "count": 600,
+        "name": "gateway_load-direct",
+        "policy": "direct",
+        "rate": 100000,
+        "size": 4096
+      },
+      "counters": {
+        "bytes:control": 12591.999999999998,
+        "bytes:data": 9304071.99999851,
+        "delivered_messages": 180,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 9706,
+        "overflow:source:cpu": 75747,
+        "overflow:source:tx": 23980,
+        "packets": 14987,
+        "price": 9.316663999999046e-05,
+        "reassembly_expired": 10099,
+        "received_batches": 180,
+        "retry_exhausted": 9526,
+        "retry_messages": 19052,
+        "wire_bytes": 9316663.999998514
+      },
+      "cpu_service_us": 19913.172960002375,
+      "deadline_170_fraction": 0.0016666666666666668,
+      "deadline_250_fraction": 0.005,
+      "deadline_us": 250,
+      "goodput_per_s": 571.4285714285714,
+      "installed_route_state_bytes": 256,
+      "late_completed": 1,
+      "late_or_unfinished": 597,
+      "most_queued": {
+        "high_bytes": 262144,
+        "mean_wait_us": 206.15327757770328,
+        "node": "source:tx"
+      },
+      "objective": "static normalized unbatched data+ACK byte equivalents; no tail objective",
+      "offered": 600,
+      "oldest_unfinished_us": 25960.0,
+      "on_time": 3,
+      "overflow_events": 99727,
+      "p50_us": 184.19183999999245,
+      "p999_us": 277.6510399999827,
+      "p99_us": 277.6510399999827,
+      "pending_at_cutoff": 596,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "required_recipient_pairs": 9600,
+      "resource_bytes_at_cutoff": 525232,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 262144,
+      "route_metrics": [
+        {
+          "depth": 1,
+          "fanout": 16,
+          "propagation_max_us": 80,
+          "wire_byte_equivalent_cost": 145664.0
+        }
+      ],
+      "route_selections": {
+        "0": 600
+      },
+      "rx_service_us": 7453.331200000106,
+      "setup_cpu_service_us": 22.548479999999998,
+      "setup_wire_bytes": 3711.999999999998,
+      "synthetic": true,
+      "tx_service_us": 7453.3311999980515,
+      "unacked_transfers": 9526,
+      "unfinished": 596,
+      "workload_goodput_per_s": 666.6666666666666
+    },
+    {
+      "accepted_recipient_pairs": 754,
+      "busiest_cpu": {
+        "node": "r0:cpu",
+        "service_us": 14674.870400002375
+      },
+      "case": "route_family",
+      "completed": 10,
+      "config": {
+        "case": "route_family",
+        "count": 600,
+        "name": "gateway_load-fixed_cheap",
+        "policy": "fixed_cheap",
+        "rate": 100000,
+        "size": 4096
+      },
+      "counters": {
+        "bytes:control": 94311.99999977923,
+        "bytes:data": 12654895.99999896,
+        "delivered_messages": 1540,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_messages": 10,
+        "logical_messages": 10351,
+        "overflow:r0:cpu": 70790,
+        "overflow:r0:tx": 21982,
+        "overflow:reassembly:r13": 54,
+        "overflow:reassembly:r14": 191,
+        "overflow:reassembly:r15": 503,
+        "packets": 17670,
+        "price": 3.124687999999543e-05,
+        "reassembly_expired": 8510,
+        "received_batches": 1550,
+        "retry_exhausted": 8801,
+        "retry_messages": 17834,
+        "wire_bytes": 12749207.999998804
+      },
+      "cpu_service_us": 21124.924160002414,
+      "deadline_170_fraction": 0.0016666666666666668,
+      "deadline_250_fraction": 0.005,
+      "deadline_us": 250,
+      "goodput_per_s": 714.2857142857143,
+      "installed_route_state_bytes": 376,
+      "late_completed": 7,
+      "late_or_unfinished": 597,
+      "most_queued": {
+        "high_bytes": 262144,
+        "mean_wait_us": 195.78838245730236,
+        "node": "r0:tx"
+      },
+      "objective": "static normalized unbatched data+ACK byte equivalents; no tail objective",
+      "offered": 600,
+      "oldest_unfinished_us": 25950.0,
+      "on_time": 3,
+      "overflow_events": 93520,
+      "p50_us": 321.16223999997715,
+      "p999_us": 2588.930879997477,
+      "p99_us": 2588.930879997477,
+      "pending_at_cutoff": 595,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "required_recipient_pairs": 9600,
+      "resource_bytes_at_cutoff": 507968,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 262144,
+      "route_metrics": [
+        {
+          "depth": 2,
+          "fanout": 15,
+          "propagation_max_us": 88,
+          "wire_byte_equivalent_cost": 77384.0
+        }
+      ],
+      "route_selections": {
+        "0": 600
+      },
+      "rx_service_us": 10199.366399999904,
+      "setup_cpu_service_us": 22.553279999999997,
+      "setup_wire_bytes": 3831.9999999999977,
+      "synthetic": true,
+      "tx_service_us": 10199.366399997925,
+      "unacked_transfers": 8801,
+      "unfinished": 590,
+      "workload_goodput_per_s": 833.3333333333334
+    },
+    {
+      "accepted_recipient_pairs": 8472,
+      "busiest_cpu": {
+        "node": "r0:cpu",
+        "service_us": 9253.64639999781
+      },
+      "case": "route_family",
+      "completed": 505,
+      "config": {
+        "case": "route_family",
+        "count": 600,
+        "name": "gateway_load-noise",
+        "policy": "noise",
+        "rate": 100000,
+        "size": 4096
+      },
+      "counters": {
+        "bytes:control": 1021599.999997557,
+        "bytes:data": 41885519.99999975,
+        "delivered_messages": 16976,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_messages": 5,
+        "logical_messages": 18109,
+        "overflow:r0:cpu": 183,
+        "overflow:r0:tx": 10886,
+        "packets": 48296,
+        "price": 2.745023999999581e-05,
+        "reassembly_expired": 3900,
+        "received_batches": 16981,
+        "retry_exhausted": 1128,
+        "retry_messages": 3114,
+        "wire_bytes": 42907119.999999754
+      },
+      "cpu_service_us": 39618.693599997845,
+      "deadline_170_fraction": 0.0033333333333333335,
+      "deadline_250_fraction": 0.61,
+      "deadline_us": 250,
+      "goodput_per_s": 67285.71428571428,
+      "installed_route_state_bytes": 1504,
+      "late_completed": 139,
+      "late_or_unfinished": 234,
+      "most_queued": {
+        "high_bytes": 262144,
+        "mean_wait_us": 178.80638224004747,
+        "node": "r0:tx"
+      },
+      "objective": "static normalized unbatched data+ACK byte equivalents; no tail objective",
+      "offered": 600,
+      "oldest_unfinished_us": 25610.0,
+      "on_time": 366,
+      "overflow_events": 11069,
+      "p50_us": 235.00599999901533,
+      "p999_us": 1538.002479998674,
+      "p99_us": 1491.111919999792,
+      "pending_at_cutoff": 129,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "required_recipient_pairs": 9600,
+      "resource_bytes_at_cutoff": 456104,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 262144,
+      "route_metrics": [
+        {
+          "depth": 2,
+          "fanout": 15,
+          "propagation_max_us": 88,
+          "wire_byte_equivalent_cost": 77384.0
+        },
+        {
+          "depth": 10,
+          "fanout": 2,
+          "propagation_max_us": 152,
+          "wire_byte_equivalent_cost": 77384.0
+        },
+        {
+          "depth": 12,
+          "fanout": 3,
+          "propagation_max_us": 168,
+          "wire_byte_equivalent_cost": 77384.0
+        },
+        {
+          "depth": 10,
+          "fanout": 4,
+          "propagation_max_us": 152,
+          "wire_byte_equivalent_cost": 77384.0
+        }
+      ],
+      "route_selections": {
+        "0": 144,
+        "1": 150,
+        "2": 156,
+        "3": 150
+      },
+      "rx_service_us": 34325.69599999861,
+      "setup_cpu_service_us": 22.598399999999994,
+      "setup_wire_bytes": 4960.0,
+      "synthetic": true,
+      "tx_service_us": 34325.695999997624,
+      "unacked_transfers": 1128,
+      "unfinished": 95,
+      "workload_goodput_per_s": 78500.0
+    },
+    {
+      "accepted_recipient_pairs": 9600,
+      "busiest_cpu": {
+        "node": "r9:cpu",
+        "service_us": 2254.139199999992
+      },
+      "case": "route_family",
+      "completed": 600,
+      "config": {
+        "case": "route_family",
+        "count": 600,
+        "name": "gateway_load-shallow_hash",
+        "policy": "shallow_hash",
+        "rate": 100000,
+        "size": 4096
+      },
+      "counters": {
+        "bytes:control": 1156959.9999972966,
+        "bytes:data": 42547199.99999975,
+        "delivered_messages": 19232,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 19232,
+        "packets": 48032,
+        "price": 2.736159999999582e-05,
+        "received_batches": 19232,
+        "wire_bytes": 43704159.999999754
+      },
+      "cpu_service_us": 35370.56639999943,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 250,
+      "goodput_per_s": 83857.14285714286,
+      "installed_route_state_bytes": 1504,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "most_queued": {
+        "high_bytes": 37088,
+        "mean_wait_us": 6.287486884079272,
+        "node": "r8:tx"
+      },
+      "objective": "static normalized unbatched data+ACK byte equivalents; no tail objective",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 600,
+      "overflow_events": 0,
+      "p50_us": 128.43623999999545,
+      "p999_us": 145.0292799999936,
+      "p99_us": 140.9224799999888,
+      "pending_at_cutoff": 13,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "required_recipient_pairs": 9600,
+      "resource_bytes_at_cutoff": 53880,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 37088,
+      "route_metrics": [
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 77384.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 77384.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 77384.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 77384.0
+        }
+      ],
+      "route_selections": {
+        "0": 144,
+        "1": 150,
+        "2": 156,
+        "3": 150
+      },
+      "rx_service_us": 34963.327999998466,
+      "setup_cpu_service_us": 22.598399999999994,
+      "setup_wire_bytes": 4959.999999999999,
+      "synthetic": true,
+      "tx_service_us": 34963.32799999858,
+      "unacked_transfers": 0,
+      "unfinished": 0,
+      "workload_goodput_per_s": 97833.33333333333
+    },
+    {
+      "accepted_recipient_pairs": 9600,
+      "busiest_cpu": {
+        "node": "r0:cpu",
+        "service_us": 2209.9542399999755
+      },
+      "case": "route_family",
+      "completed": 600,
+      "config": {
+        "case": "route_family",
+        "count": 600,
+        "name": "gateway_load-shallow_stripes",
+        "policy": "shallow_stripes",
+        "rate": 100000,
+        "size": 4096
+      },
+      "counters": {
+        "bytes:control": 1156959.9999972978,
+        "bytes:data": 42547199.99999975,
+        "delivered_messages": 19232,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 19232,
+        "packets": 48032,
+        "price": 2.736159999999582e-05,
+        "received_batches": 19232,
+        "wire_bytes": 43704159.999999754
+      },
+      "cpu_service_us": 35370.56639999943,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 250,
+      "goodput_per_s": 83857.14285714286,
+      "installed_route_state_bytes": 1504,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "most_queued": {
+        "high_bytes": 14928,
+        "mean_wait_us": 4.646654395200917,
+        "node": "r14:tx"
+      },
+      "objective": "static normalized unbatched data+ACK byte equivalents; no tail objective",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 600,
+      "overflow_events": 0,
+      "p50_us": 125.86911999999552,
+      "p999_us": 133.09823999999776,
+      "p99_us": 133.09823999999708,
+      "pending_at_cutoff": 13,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "required_recipient_pairs": 9600,
+      "resource_bytes_at_cutoff": 70328,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 18080,
+      "route_metrics": [
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 77384.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 77384.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 77384.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 77384.0
+        }
+      ],
+      "route_selections": {
+        "0": 150,
+        "1": 150,
+        "2": 150,
+        "3": 150
+      },
+      "rx_service_us": 34963.327999998466,
+      "setup_cpu_service_us": 22.598399999999994,
+      "setup_wire_bytes": 4959.999999999999,
+      "synthetic": true,
+      "tx_service_us": 34963.32799999859,
+      "unacked_transfers": 0,
+      "unfinished": 0,
+      "workload_goodput_per_s": 97833.33333333333
+    },
+    {
+      "accepted_recipient_pairs": 9600,
+      "busiest_cpu": {
+        "node": "r0:cpu",
+        "service_us": 2283.5958400000054
+      },
+      "case": "route_family",
+      "completed": 600,
+      "config": {
+        "case": "route_family",
+        "count": 600,
+        "name": "gateway_load-shallow_block_stripes",
+        "policy": "shallow_block_stripes",
+        "rate": 100000,
+        "size": 4096
+      },
+      "counters": {
+        "bytes:control": 1156959.999997253,
+        "bytes:data": 42547199.99999975,
+        "delivered_messages": 19232,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 19232,
+        "packets": 48032,
+        "price": 2.736159999999582e-05,
+        "received_batches": 19232,
+        "wire_bytes": 43704159.999999754
+      },
+      "cpu_service_us": 35370.566399999436,
+      "deadline_170_fraction": 0.34833333333333333,
+      "deadline_250_fraction": 0.91,
+      "deadline_us": 250,
+      "goodput_per_s": 83428.57142857143,
+      "installed_route_state_bytes": 1504,
+      "late_completed": 54,
+      "late_or_unfinished": 54,
+      "most_queued": {
+        "high_bytes": 181712,
+        "mean_wait_us": 59.05626723186391,
+        "node": "r4:tx"
+      },
+      "objective": "static normalized unbatched data+ACK byte equivalents; no tail objective",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 546,
+      "overflow_events": 0,
+      "p50_us": 189.32887999996547,
+      "p999_us": 261.1026399999596,
+      "p99_us": 261.10263999993094,
+      "pending_at_cutoff": 16,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "required_recipient_pairs": 9600,
+      "resource_bytes_at_cutoff": 128768,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 181712,
+      "route_metrics": [
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 77384.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 77384.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 77384.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 77384.0
+        }
+      ],
+      "route_selections": {
+        "0": 160,
+        "1": 160,
+        "2": 152,
+        "3": 128
+      },
+      "rx_service_us": 34963.327999998466,
+      "setup_cpu_service_us": 22.598399999999994,
+      "setup_wire_bytes": 4959.999999999999,
+      "synthetic": true,
+      "tx_service_us": 34963.32799999855,
+      "unacked_transfers": 0,
+      "unfinished": 0,
+      "workload_goodput_per_s": 97333.33333333333
+    },
+    {
+      "accepted_recipient_pairs": 2639,
+      "busiest_cpu": {
+        "node": "source:cpu",
+        "service_us": 29802.46144000366
+      },
+      "case": "route_family",
+      "completed": 78,
+      "config": {
+        "case": "route_family",
+        "count": 600,
+        "cpu_packet_us": 4,
+        "cpu_slots": 1,
+        "name": "packet_cpu_load-direct",
+        "policy": "direct",
+        "rate": 50000,
+        "size": 32
+      },
+      "counters": {
+        "bytes:control": 448911.999999142,
+        "bytes:data": 474879.99999903387,
+        "delivered_messages": 6375,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_messages": 1071,
+        "logical_messages": 13342,
+        "overflow:source:cpu": 24881,
+        "packets": 7452,
+        "price": 9.237919999980865e-06,
+        "received_batches": 7446,
+        "retry_exhausted": 9216,
+        "retry_messages": 18985,
+        "wire_bytes": 923791.9999980647
+      },
+      "cpu_service_us": 59628.93728000348,
+      "deadline_170_fraction": 0.0016666666666666668,
+      "deadline_250_fraction": 0.0033333333333333335,
+      "deadline_us": 250,
+      "goodput_per_s": 4461.538461538461,
+      "installed_route_state_bytes": 256,
+      "late_completed": 76,
+      "late_or_unfinished": 598,
+      "most_queued": {
+        "high_bytes": 262144,
+        "mean_wait_us": 5628.554504024178,
+        "node": "source:cpu"
+      },
+      "objective": "static normalized unbatched data+ACK byte equivalents; no tail objective",
+      "offered": 600,
+      "oldest_unfinished_us": 30440.0,
+      "on_time": 2,
+      "overflow_events": 24881,
+      "p50_us": 6136.328160000032,
+      "p999_us": 16219.058080000847,
+      "p99_us": 16219.058080000847,
+      "pending_at_cutoff": 542,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "required_recipient_pairs": 9600,
+      "resource_bytes_at_cutoff": 262144,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 262144,
+      "route_metrics": [
+        {
+          "depth": 1,
+          "fanout": 16,
+          "propagation_max_us": 80,
+          "wire_byte_equivalent_cost": 7936.0
+        }
+      ],
+      "route_selections": {
+        "0": 600
+      },
+      "rx_service_us": 739.033600000011,
+      "setup_cpu_service_us": 256.1484799999999,
+      "setup_wire_bytes": 3711.9999999999727,
+      "synthetic": true,
+      "tx_service_us": 739.0335999999728,
+      "unacked_transfers": 6963,
+      "unfinished": 522,
+      "workload_goodput_per_s": 4833.333333333334
+    },
+    {
+      "accepted_recipient_pairs": 1942,
+      "busiest_cpu": {
+        "node": "r0:cpu",
+        "service_us": 31923.90207999982
+      },
+      "case": "route_family",
+      "completed": 62,
+      "config": {
+        "case": "route_family",
+        "count": 600,
+        "cpu_packet_us": 4,
+        "cpu_slots": 1,
+        "name": "packet_cpu_load-fixed_cheap",
+        "policy": "fixed_cheap",
+        "rate": 50000,
+        "size": 32
+      },
+      "counters": {
+        "bytes:control": 463431.99999905226,
+        "bytes:data": 605311.999998784,
+        "delivered_messages": 5582,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_messages": 2422,
+        "logical_messages": 13831,
+        "overflow:r0:cpu": 22912,
+        "packets": 8592,
+        "price": 3.324239999994972e-06,
+        "received_batches": 8004,
+        "retry_exhausted": 9055,
+        "retry_messages": 18626,
+        "wire_bytes": 1068743.9999977418
+      },
+      "cpu_service_us": 66429.30783999493,
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0016666666666666668,
+      "deadline_us": 250,
+      "goodput_per_s": 3076.923076923077,
+      "installed_route_state_bytes": 376,
+      "late_completed": 61,
+      "late_or_unfinished": 599,
+      "most_queued": {
+        "high_bytes": 262144,
+        "mean_wait_us": 5762.0380419913645,
+        "node": "r0:cpu"
+      },
+      "objective": "static normalized unbatched data+ACK byte equivalents; no tail objective",
+      "offered": 600,
+      "oldest_unfinished_us": 30880.0,
+      "on_time": 1,
+      "overflow_events": 22912,
+      "p50_us": 5920.194720000015,
+      "p999_us": 27327.039200004034,
+      "p99_us": 27327.039200004034,
+      "pending_at_cutoff": 560,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "required_recipient_pairs": 9600,
+      "resource_bytes_at_cutoff": 262264,
+      "resource_outstanding_bytes": 196848,
+      "resource_peak_bytes": 262144,
+      "route_metrics": [
+        {
+          "depth": 2,
+          "fanout": 15,
+          "propagation_max_us": 88,
+          "wire_byte_equivalent_cost": 4216.0
+        }
+      ],
+      "route_selections": {
+        "0": 600
+      },
+      "rx_service_us": 854.7007999999978,
+      "setup_cpu_service_us": 256.1532799999999,
+      "setup_wire_bytes": 3831.9999999999727,
+      "synthetic": true,
+      "tx_service_us": 855.0540799956378,
+      "unacked_transfers": 7584,
+      "unfinished": 538,
+      "workload_goodput_per_s": 3333.3333333333335
+    },
+    {
+      "accepted_recipient_pairs": 8395,
+      "busiest_cpu": {
+        "node": "r0:cpu",
+        "service_us": 31863.903039999826
+      },
+      "case": "route_family",
+      "completed": 406,
+      "config": {
+        "case": "route_family",
+        "count": 600,
+        "cpu_packet_us": 4,
+        "cpu_slots": 1,
+        "name": "packet_cpu_load-noise",
+        "policy": "noise",
+        "rate": 50000,
+        "size": 32
+      },
+      "counters": {
+        "bytes:control": 1498839.9999964451,
+        "bytes:data": 1649151.9999969024,
+        "delivered_messages": 20832,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_messages": 4130,
+        "logical_messages": 22157,
+        "overflow:r0:cpu": 2530,
+        "packets": 25366,
+        "price": 2.1097599999952577e-06,
+        "received_batches": 24962,
+        "retry_exhausted": 2965,
+        "retry_messages": 6859,
+        "wire_bytes": 3147991.999993207
+      },
+      "cpu_service_us": 201437.04448000406,
+      "deadline_170_fraction": 0.0,
+      "deadline_250_fraction": 0.0016666666666666668,
+      "deadline_us": 250,
+      "goodput_per_s": 15076.923076923076,
+      "installed_route_state_bytes": 1504,
+      "late_completed": 405,
+      "late_or_unfinished": 599,
+      "most_queued": {
+        "high_bytes": 262144,
+        "mean_wait_us": 4526.971575725306,
+        "node": "r0:cpu"
+      },
+      "objective": "static normalized unbatched data+ACK byte equivalents; no tail objective",
+      "offered": 600,
+      "oldest_unfinished_us": 26660.0,
+      "on_time": 1,
+      "overflow_events": 2530,
+      "p50_us": 7880.035360000207,
+      "p999_us": 25743.61840000435,
+      "p99_us": 24167.758880004418,
+      "pending_at_cutoff": 404,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "required_recipient_pairs": 9600,
+      "resource_bytes_at_cutoff": 351352,
+      "resource_outstanding_bytes": 194792,
+      "resource_peak_bytes": 262144,
+      "route_metrics": [
+        {
+          "depth": 2,
+          "fanout": 15,
+          "propagation_max_us": 88,
+          "wire_byte_equivalent_cost": 4216.0
+        },
+        {
+          "depth": 10,
+          "fanout": 2,
+          "propagation_max_us": 152,
+          "wire_byte_equivalent_cost": 4216.0
+        },
+        {
+          "depth": 12,
+          "fanout": 3,
+          "propagation_max_us": 168,
+          "wire_byte_equivalent_cost": 4216.0
+        },
+        {
+          "depth": 10,
+          "fanout": 4,
+          "propagation_max_us": 152,
+          "wire_byte_equivalent_cost": 4216.0
+        }
+      ],
+      "route_selections": {
+        "0": 144,
+        "1": 150,
+        "2": 156,
+        "3": 150
+      },
+      "rx_service_us": 2518.1537599956323,
+      "setup_cpu_service_us": 256.19839999999994,
+      "setup_wire_bytes": 4959.999999999978,
+      "synthetic": true,
+      "tx_service_us": 2518.443039995602,
+      "unacked_transfers": 1205,
+      "unfinished": 194,
+      "workload_goodput_per_s": 16333.333333333332
+    },
+    {
+      "accepted_recipient_pairs": 9600,
+      "busiest_cpu": {
+        "node": "r8:cpu",
+        "service_us": 9806.077280000085
+      },
+      "case": "route_family",
+      "completed": 600,
+      "config": {
+        "case": "route_family",
+        "count": 600,
+        "cpu_packet_us": 4,
+        "cpu_slots": 1,
+        "name": "packet_cpu_load-shallow_hash",
+        "policy": "shallow_hash",
+        "rate": 50000,
+        "size": 32
+      },
+      "counters": {
+        "bytes:control": 1156959.999995869,
+        "bytes:data": 1228799.9999977238,
+        "delivered_messages": 19232,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 19232,
+        "packets": 19232,
+        "price": 1.537599999996128e-06,
+        "received_batches": 19232,
+        "wire_bytes": 2385759.9999942123
+      },
+      "cpu_service_us": 153951.4304000011,
+      "deadline_170_fraction": 0.06333333333333334,
+      "deadline_250_fraction": 0.7916666666666666,
+      "deadline_us": 250,
+      "goodput_per_s": 45461.53846153846,
+      "installed_route_state_bytes": 1504,
+      "late_completed": 125,
+      "late_or_unfinished": 125,
+      "most_queued": {
+        "high_bytes": 2040,
+        "mean_wait_us": 14.25732434285679,
+        "node": "r8:cpu"
+      },
+      "objective": "static normalized unbatched data+ACK byte equivalents; no tail objective",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 475,
+      "overflow_events": 0,
+      "p50_us": 210.54112000004625,
+      "p999_us": 440.7448000000186,
+      "p99_us": 354.49408000004405,
+      "pending_at_cutoff": 9,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "required_recipient_pairs": 9600,
+      "resource_bytes_at_cutoff": 4504,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 3040,
+      "route_metrics": [
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 4216.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 4216.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 4216.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 4216.0
+        }
+      ],
+      "route_selections": {
+        "0": 144,
+        "1": 150,
+        "2": 156,
+        "3": 150
+      },
+      "rx_service_us": 1908.608000000024,
+      "setup_cpu_service_us": 256.19839999999994,
+      "setup_wire_bytes": 4959.999999999973,
+      "synthetic": true,
+      "tx_service_us": 1908.6080000000256,
+      "unacked_transfers": 0,
+      "unfinished": 0,
+      "workload_goodput_per_s": 49250.0
+    },
+    {
+      "accepted_recipient_pairs": 9600,
+      "busiest_cpu": {
+        "node": "r0:cpu",
+        "service_us": 9613.95824000008
+      },
+      "case": "route_family",
+      "completed": 600,
+      "config": {
+        "case": "route_family",
+        "count": 600,
+        "cpu_packet_us": 4,
+        "cpu_slots": 1,
+        "name": "packet_cpu_load-shallow_stripes",
+        "policy": "shallow_stripes",
+        "rate": 50000,
+        "size": 32
+      },
+      "counters": {
+        "bytes:control": 1156959.9999958915,
+        "bytes:data": 1228799.999997735,
+        "delivered_messages": 19232,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 19232,
+        "packets": 19232,
+        "price": 1.5375999999961281e-06,
+        "received_batches": 19232,
+        "wire_bytes": 2385759.9999942486
+      },
+      "cpu_service_us": 153951.4304000011,
+      "deadline_170_fraction": 0.49333333333333335,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 250,
+      "goodput_per_s": 45615.38461538461,
+      "installed_route_state_bytes": 1504,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "most_queued": {
+        "high_bytes": 1000,
+        "mean_wait_us": 8.883095287260506,
+        "node": "r12:cpu"
+      },
+      "objective": "static normalized unbatched data+ACK byte equivalents; no tail objective",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 600,
+      "overflow_events": 0,
+      "p50_us": 172.26351999999906,
+      "p999_us": 180.54944000000614,
+      "p99_us": 180.54944000000614,
+      "pending_at_cutoff": 7,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "required_recipient_pairs": 9600,
+      "resource_bytes_at_cutoff": 4624,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 3040,
+      "route_metrics": [
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 4216.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 4216.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 4216.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 4216.0
+        }
+      ],
+      "route_selections": {
+        "0": 150,
+        "1": 150,
+        "2": 150,
+        "3": 150
+      },
+      "rx_service_us": 1908.6080000000245,
+      "setup_cpu_service_us": 256.19839999999994,
+      "setup_wire_bytes": 4959.999999999973,
+      "synthetic": true,
+      "tx_service_us": 1908.6080000000252,
+      "unacked_transfers": 0,
+      "unfinished": 0,
+      "workload_goodput_per_s": 49416.666666666664
+    },
+    {
+      "accepted_recipient_pairs": 9600,
+      "busiest_cpu": {
+        "node": "r4:cpu",
+        "service_us": 25976.096480002725
+      },
+      "case": "route_family",
+      "completed": 600,
+      "config": {
+        "case": "route_family",
+        "count": 600,
+        "cpu_packet_us": 4,
+        "cpu_slots": 1,
+        "name": "packet_cpu_load-shallow_block_stripes",
+        "policy": "shallow_block_stripes",
+        "rate": 50000,
+        "size": 32
+      },
+      "counters": {
+        "bytes:control": 1930359.9999952344,
+        "bytes:data": 2053759.999996181,
+        "delivered_messages": 25677,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_messages": 6445,
+        "logical_messages": 25677,
+        "packets": 32122,
+        "price": 3.5265599999904417e-06,
+        "received_batches": 32122,
+        "retry_exhausted": 1501,
+        "retry_messages": 6445,
+        "wire_bytes": 3984119.9999906407
+      },
+      "cpu_service_us": 257135.36480000956,
+      "deadline_170_fraction": 0.0033333333333333335,
+      "deadline_250_fraction": 0.008333333333333333,
+      "deadline_us": 250,
+      "goodput_per_s": 22153.846153846152,
+      "installed_route_state_bytes": 1504,
+      "late_completed": 595,
+      "late_or_unfinished": 595,
+      "most_queued": {
+        "high_bytes": 111616,
+        "mean_wait_us": 1763.2686139417126,
+        "node": "r4:cpu"
+      },
+      "objective": "static normalized unbatched data+ACK byte equivalents; no tail objective",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 5,
+      "overflow_events": 0,
+      "p50_us": 6064.315680000234,
+      "p999_us": 16287.684640002932,
+      "p99_us": 15947.391840002798,
+      "pending_at_cutoff": 312,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "required_recipient_pairs": 9600,
+      "resource_bytes_at_cutoff": 305960,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 111616,
+      "route_metrics": [
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 4216.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 4216.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 4216.0
+        },
+        {
+          "depth": 3,
+          "fanout": 4,
+          "propagation_max_us": 96,
+          "wire_byte_equivalent_cost": 4216.0
+        }
+      ],
+      "route_selections": {
+        "0": 160,
+        "1": 160,
+        "2": 152,
+        "3": 128
+      },
+      "rx_service_us": 3187.296000000003,
+      "setup_cpu_service_us": 256.19839999999994,
+      "setup_wire_bytes": 4959.999999999973,
+      "synthetic": true,
+      "tx_service_us": 3187.2959999999935,
+      "unacked_transfers": 0,
+      "unfinished": 0,
+      "workload_goodput_per_s": 24000.0
+    },
+    {
+      "accepted_recipient_pairs": 600,
+      "attempts_by_origin": {
+        "s0": 210,
+        "s1": 200,
+        "s2": 190
+      },
+      "busiest_cpu": {
+        "node": "d0:cpu",
+        "service_us": 1697.3759999999384
+      },
+      "case": "equivalent_senders",
+      "completed": 600,
+      "config": {
+        "case": "equivalent_senders",
+        "count": 600,
+        "name": "healthy-single_ranked",
+        "policy": "single_ranked"
+      },
+      "counters": {
+        "bytes:control": 503999.99999904423,
+        "bytes:data": 364799.9999999192,
+        "delivered_messages": 4800,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 4800,
+        "logical_recipient_effects": 600,
+        "packets": 4800,
+        "price": 0.0,
+        "received_batches": 4800,
+        "wire_bytes": 868799.9999989428
+      },
+      "cpu_service_us": 3394.751999999908,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 120,
+      "goodput_per_s": 19322.58064516129,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "messages_with_multiple_senders": 0,
+      "most_queued": {
+        "high_bytes": 608,
+        "mean_wait_us": 0.0880999999999501,
+        "node": "d0:cpu"
+      },
+      "objective": "delivery after authored equivalent-copy releases; no authority change",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 600,
+      "origin_propagation_us": {
+        "s0": 80,
+        "s1": 10,
+        "s2": 30
+      },
+      "overflow_events": 0,
+      "p50_us": 81.21072000000095,
+      "p999_us": 111.21072000000277,
+      "p99_us": 111.21072000000277,
+      "pending_at_cutoff": 1,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "release_us": {
+        "s0": 0,
+        "s1": 30,
+        "s2": 80
+      },
+      "required_recipient_pairs": 600,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 608,
+      "rx_service_us": 695.0400000000051,
+      "suppressed_by_origin": {},
+      "synthetic": true,
+      "tx_service_us": 695.0400000000093,
+      "unacked_transfers": 0,
+      "unfinished": 0,
+      "workload_goodput_per_s": 19966.666666666668
+    },
+    {
+      "accepted_recipient_pairs": 600,
+      "attempts_by_origin": {
+        "s0": 600,
+        "s1": 495,
+        "s2": 295
+      },
+      "busiest_cpu": {
+        "node": "d0:cpu",
+        "service_us": 2818.6704000003456
+      },
+      "case": "equivalent_senders",
+      "completed": 600,
+      "config": {
+        "case": "equivalent_senders",
+        "count": 600,
+        "name": "healthy-timed_ranked",
+        "policy": "timed_ranked"
+      },
+      "counters": {
+        "bytes:control": 788399.9999984703,
+        "bytes:data": 845119.9999998077,
+        "delivered_messages": 7960,
+        "deliveries_after_logical_completion": 790,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_equivalent_deliveries": 790,
+        "logical_messages": 7960,
+        "logical_recipient_effects": 600,
+        "packets": 7960,
+        "price": 0.0,
+        "received_batches": 7960,
+        "suppressed_sender_attempts": 410,
+        "wire_bytes": 1633519.9999982654
+      },
+      "cpu_service_us": 5637.340800000289,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 120,
+      "goodput_per_s": 19354.83870967742,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "messages_with_multiple_senders": 600,
+      "most_queued": {
+        "high_bytes": 1088,
+        "mean_wait_us": 0.05722017085422796,
+        "node": "d0:cpu"
+      },
+      "objective": "delivery after authored equivalent-copy releases; no authority change",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 600,
+      "origin_propagation_us": {
+        "s0": 80,
+        "s1": 10,
+        "s2": 30
+      },
+      "overflow_events": 0,
+      "p50_us": 71.21072000000277,
+      "p999_us": 111.21072000000277,
+      "p99_us": 111.21072000000277,
+      "pending_at_cutoff": 0,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "release_us": {
+        "s0": 0,
+        "s1": 30,
+        "s2": 80
+      },
+      "required_recipient_pairs": 600,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 1216,
+      "rx_service_us": 1306.8160000000166,
+      "suppressed_by_origin": {
+        "s1": 105,
+        "s2": 305
+      },
+      "synthetic": true,
+      "tx_service_us": 1306.8160000000214,
+      "unacked_transfers": 0,
+      "unfinished": 0,
+      "workload_goodput_per_s": 20000.0
+    },
+    {
+      "accepted_recipient_pairs": 1800,
+      "attempts_by_origin": {
+        "s0": 600,
+        "s1": 495,
+        "s2": 295
+      },
+      "busiest_cpu": {
+        "node": "s0:cpu",
+        "service_us": 3601.47600000079
+      },
+      "case": "equivalent_senders",
+      "completed": 600,
+      "config": {
+        "case": "equivalent_senders",
+        "count": 600,
+        "name": "healthy-few-targets-timed_ranked",
+        "policy": "timed_ranked",
+        "receivers": 3
+      },
+      "counters": {
+        "bytes:control": 2365199.99999546,
+        "bytes:data": 2535359.9999994915,
+        "delivered_messages": 23880,
+        "deliveries_after_logical_completion": 2370,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_equivalent_deliveries": 2370,
+        "logical_messages": 23880,
+        "logical_recipient_effects": 1800,
+        "packets": 23880,
+        "price": 0.0,
+        "received_batches": 23880,
+        "suppressed_sender_attempts": 410,
+        "wire_bytes": 4900559.999995417
+      },
+      "cpu_service_us": 16912.02240000207,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 120,
+      "goodput_per_s": 19354.83870967742,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "messages_with_multiple_senders": 600,
+      "most_queued": {
+        "high_bytes": 1824,
+        "mean_wait_us": 0.15198287153674944,
+        "node": "s1:tx"
+      },
+      "objective": "delivery after authored equivalent-copy releases; no authority change",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 600,
+      "origin_propagation_us": {
+        "s0": 80,
+        "s1": 10,
+        "s2": 30
+      },
+      "overflow_events": 0,
+      "p50_us": 72.18352000000596,
+      "p999_us": 112.18352000000596,
+      "p99_us": 112.18352000000596,
+      "pending_at_cutoff": 0,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "release_us": {
+        "s0": 0,
+        "s1": 30,
+        "s2": 80
+      },
+      "required_recipient_pairs": 1800,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 1824,
+      "rx_service_us": 3920.4480000000713,
+      "suppressed_by_origin": {
+        "s1": 105,
+        "s2": 305
+      },
+      "synthetic": true,
+      "tx_service_us": 3920.4480000000713,
+      "unacked_transfers": 0,
+      "unfinished": 0,
+      "workload_goodput_per_s": 20000.0
+    },
+    {
+      "accepted_recipient_pairs": 600,
+      "attempts_by_origin": {
+        "s0": 600,
+        "s1": 600
+      },
+      "busiest_cpu": {
+        "node": "d0:cpu",
+        "service_us": 2548.992000000195
+      },
+      "case": "equivalent_senders",
+      "completed": 600,
+      "config": {
+        "case": "equivalent_senders",
+        "count": 600,
+        "name": "healthy-readiness_ranked",
+        "policy": "readiness_ranked"
+      },
+      "counters": {
+        "bytes:control": 719999.9999986105,
+        "bytes:data": 729599.9999998354,
+        "delivered_messages": 7200,
+        "deliveries_after_logical_completion": 600,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_equivalent_deliveries": 600,
+        "logical_messages": 7200,
+        "logical_recipient_effects": 600,
+        "packets": 7200,
+        "price": 0.0,
+        "received_batches": 7200,
+        "suppressed_sender_attempts": 600,
+        "wire_bytes": 1449599.9999984298
+      },
+      "cpu_service_us": 5097.98400000014,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 120,
+      "goodput_per_s": 19354.83870967742,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "messages_with_multiple_senders": 600,
+      "most_queued": {
+        "high_bytes": 1216,
+        "mean_wait_us": 0.08082311111122263,
+        "node": "d0:rx"
+      },
+      "objective": "delivery after authored equivalent-copy releases; no authority change",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 600,
+      "origin_propagation_us": {
+        "s0": 80,
+        "s1": 10,
+        "s2": 30
+      },
+      "overflow_events": 0,
+      "p50_us": 41.925280000001294,
+      "p999_us": 41.92528000000311,
+      "p99_us": 41.92528000000311,
+      "pending_at_cutoff": 0,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "release_us": {
+        "s0": 0,
+        "s1": 30,
+        "s2": 80
+      },
+      "required_recipient_pairs": 600,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 1216,
+      "rx_service_us": 1159.6800000000144,
+      "suppressed_by_origin": {
+        "s2": 600
+      },
+      "synthetic": true,
+      "tx_service_us": 1159.6800000000171,
+      "unacked_transfers": 0,
+      "unfinished": 0,
+      "workload_goodput_per_s": 20000.0
+    },
+    {
+      "accepted_recipient_pairs": 600,
+      "attempts_by_origin": {
+        "s0": 600,
+        "s1": 600
+      },
+      "busiest_cpu": {
+        "node": "d0:cpu",
+        "service_us": 2548.992000000195
+      },
+      "case": "equivalent_senders",
+      "completed": 600,
+      "config": {
+        "case": "equivalent_senders",
+        "count": 600,
+        "name": "healthy-eager",
+        "policy": "eager"
+      },
+      "counters": {
+        "bytes:control": 719999.9999986092,
+        "bytes:data": 729599.9999998354,
+        "delivered_messages": 7200,
+        "deliveries_after_logical_completion": 600,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_equivalent_deliveries": 600,
+        "logical_messages": 7200,
+        "logical_recipient_effects": 600,
+        "packets": 7200,
+        "price": 0.0,
+        "received_batches": 7200,
+        "suppressed_sender_attempts": 600,
+        "wire_bytes": 1449599.9999984284
+      },
+      "cpu_service_us": 5097.98400000014,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 120,
+      "goodput_per_s": 19354.83870967742,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "messages_with_multiple_senders": 600,
+      "most_queued": {
+        "high_bytes": 608,
+        "mean_wait_us": 0.05873333333330007,
+        "node": "d0:cpu"
+      },
+      "objective": "delivery after authored equivalent-copy releases; no authority change",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 600,
+      "origin_propagation_us": {
+        "s0": 80,
+        "s1": 10,
+        "s2": 30
+      },
+      "overflow_events": 0,
+      "p50_us": 41.21072000000095,
+      "p999_us": 41.210720000002766,
+      "p99_us": 41.210720000002766,
+      "pending_at_cutoff": 0,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "release_us": {
+        "s0": 0,
+        "s1": 30,
+        "s2": 80
+      },
+      "required_recipient_pairs": 600,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 608,
+      "rx_service_us": 1159.6800000000144,
+      "suppressed_by_origin": {
+        "s2": 600
+      },
+      "synthetic": true,
+      "tx_service_us": 1159.6800000000171,
+      "unacked_transfers": 0,
+      "unfinished": 0,
+      "workload_goodput_per_s": 20000.0
+    },
+    {
+      "accepted_recipient_pairs": 1800,
+      "attempts_by_origin": {
+        "s0": 600,
+        "s1": 600
+      },
+      "busiest_cpu": {
+        "node": "s0:cpu",
+        "service_us": 3823.488000000922
+      },
+      "case": "equivalent_senders",
+      "completed": 600,
+      "config": {
+        "case": "equivalent_senders",
+        "count": 600,
+        "name": "healthy-few-targets-eager",
+        "policy": "eager",
+        "receivers": 3
+      },
+      "counters": {
+        "bytes:control": 2159999.9999957755,
+        "bytes:data": 2188799.9999995576,
+        "delivered_messages": 21600,
+        "deliveries_after_logical_completion": 1800,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_equivalent_deliveries": 1800,
+        "logical_messages": 21600,
+        "logical_recipient_effects": 1800,
+        "packets": 21600,
+        "price": 0.0,
+        "received_batches": 21600,
+        "suppressed_sender_attempts": 600,
+        "wire_bytes": 4348799.999995835
+      },
+      "cpu_service_us": 15293.952000001642,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 120,
+      "goodput_per_s": 19354.83870967742,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "messages_with_multiple_senders": 600,
+      "most_queued": {
+        "high_bytes": 1824,
+        "mean_wait_us": 0.18284000000026682,
+        "node": "s1:tx"
+      },
+      "objective": "delivery after authored equivalent-copy releases; no authority change",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 600,
+      "origin_propagation_us": {
+        "s0": 80,
+        "s1": 10,
+        "s2": 30
+      },
+      "overflow_events": 0,
+      "p50_us": 42.1835200000005,
+      "p999_us": 42.183520000005956,
+      "p99_us": 42.183520000005956,
+      "pending_at_cutoff": 0,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "release_us": {
+        "s0": 0,
+        "s1": 30,
+        "s2": 80
+      },
+      "required_recipient_pairs": 1800,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 1824,
+      "rx_service_us": 3479.0400000000627,
+      "suppressed_by_origin": {
+        "s2": 600
+      },
+      "synthetic": true,
+      "tx_service_us": 3479.040000000061,
+      "unacked_transfers": 0,
+      "unfinished": 0,
+      "workload_goodput_per_s": 20000.0
+    },
+    {
+      "accepted_recipient_pairs": 528,
+      "attempts_by_origin": {
+        "s0": 210,
+        "s1": 200,
+        "s2": 190
+      },
+      "busiest_cpu": {
+        "node": "d0:cpu",
+        "service_us": 1546.903279999947
+      },
+      "case": "equivalent_senders",
+      "completed": 528,
+      "config": {
+        "case": "equivalent_senders",
+        "count": 600,
+        "faults": [
+          {
+            "at_us": 8500.0,
+            "kind": "crash",
+            "node": "s1",
+            "until_us": 19000.0
+          }
+        ],
+        "name": "primary_crash-single_ranked",
+        "policy": "single_ranked"
+      },
+      "counters": {
+        "bytes:control": 461639.999999225,
+        "bytes:data": 321023.9999999363,
+        "crashes": 1,
+        "delivered_messages": 3984,
+        "discarded_stale_batch_messages": 0,
+        "logical_messages": 4176,
+        "logical_recipient_effects": 528,
+        "lost_packets": 391,
+        "packets": 4375,
+        "price": 0.0,
+        "received_batches": 3984,
+        "retry_exhausted": 120,
+        "retry_messages": 271,
+        "sender_unavailable": 72,
+        "wire_bytes": 782663.9999991505
+      },
+      "cpu_service_us": 2956.0181599999232,
+      "deadline_170_fraction": 0.88,
+      "deadline_250_fraction": 0.88,
+      "deadline_us": 120,
+      "goodput_per_s": 17000.0,
+      "late_completed": 0,
+      "late_or_unfinished": 72,
+      "messages_with_multiple_senders": 0,
+      "most_queued": {
+        "high_bytes": 848,
+        "mean_wait_us": 0.09655579428565927,
+        "node": "d0:cpu"
+      },
+      "objective": "delivery after authored equivalent-copy releases; no authority change",
+      "offered": 600,
+      "oldest_unfinished_us": 27500.0,
+      "on_time": 528,
+      "origin_propagation_us": {
+        "s0": 80,
+        "s1": 10,
+        "s2": 30
+      },
+      "overflow_events": 0,
+      "p50_us": 81.21072000000277,
+      "p999_us": 111.21072000000277,
+      "p99_us": 111.21072000000277,
+      "pending_at_cutoff": 73,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "release_us": {
+        "s0": 0,
+        "s1": 30,
+        "s2": 80
+      },
+      "required_recipient_pairs": 600,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 848,
+      "rx_service_us": 588.595200000003,
+      "suppressed_by_origin": {},
+      "synthetic": true,
+      "tx_service_us": 626.1312000000081,
+      "unacked_transfers": 192,
+      "unfinished": 72,
+      "workload_goodput_per_s": 17566.666666666668
+    },
+    {
+      "accepted_recipient_pairs": 600,
+      "attempts_by_origin": {
+        "s0": 600,
+        "s1": 527,
+        "s2": 367
+      },
+      "busiest_cpu": {
+        "node": "d0:cpu",
+        "service_us": 2747.508240000309
+      },
+      "case": "equivalent_senders",
+      "completed": 600,
+      "config": {
+        "case": "equivalent_senders",
+        "count": 600,
+        "faults": [
+          {
+            "at_us": 8500.0,
+            "kind": "crash",
+            "node": "s1",
+            "until_us": 19000.0
+          }
+        ],
+        "name": "primary_crash-timed_ranked",
+        "policy": "timed_ranked"
+      },
+      "counters": {
+        "bytes:control": 777239.9999985308,
+        "bytes:data": 780671.9999998302,
+        "crashes": 1,
+        "delivered_messages": 7166,
+        "deliveries_after_logical_completion": 684,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_equivalent_deliveries": 684,
+        "logical_messages": 7561,
+        "logical_recipient_effects": 600,
+        "lost_packets": 595,
+        "packets": 7761,
+        "price": 0.0,
+        "received_batches": 7166,
+        "retry_exhausted": 185,
+        "retry_messages": 410,
+        "sender_unavailable": 210,
+        "suppressed_sender_attempts": 306,
+        "wire_bytes": 1557911.999998344
+      },
+      "cpu_service_us": 5285.338480000261,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 120,
+      "goodput_per_s": 19354.83870967742,
+      "late_completed": 40,
+      "late_or_unfinished": 40,
+      "messages_with_multiple_senders": 600,
+      "most_queued": {
+        "high_bytes": 1088,
+        "mean_wait_us": 0.07106521324566009,
+        "node": "d0:cpu"
+      },
+      "objective": "delivery after authored equivalent-copy releases; no authority change",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 560,
+      "origin_propagation_us": {
+        "s0": 80,
+        "s1": 10,
+        "s2": 30
+      },
+      "overflow_events": 0,
+      "p50_us": 81.21072000000095,
+      "p999_us": 141.21072000000277,
+      "p99_us": 141.21072000000277,
+      "pending_at_cutoff": 0,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "release_us": {
+        "s0": 0,
+        "s1": 30,
+        "s2": 80
+      },
+      "required_recipient_pairs": 600,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 1216,
+      "rx_service_us": 1189.2096000000138,
+      "suppressed_by_origin": {
+        "s1": 73,
+        "s2": 233
+      },
+      "synthetic": true,
+      "tx_service_us": 1246.3296000000207,
+      "unacked_transfers": 395,
+      "unfinished": 0,
+      "workload_goodput_per_s": 20000.0
+    },
+    {
+      "accepted_recipient_pairs": 1800,
+      "attempts_by_origin": {
+        "s0": 600,
+        "s1": 527,
+        "s2": 367
+      },
+      "busiest_cpu": {
+        "node": "s0:cpu",
+        "service_us": 3434.4384000006894
+      },
+      "case": "equivalent_senders",
+      "completed": 600,
+      "config": {
+        "case": "equivalent_senders",
+        "count": 600,
+        "faults": [
+          {
+            "at_us": 8500.0,
+            "kind": "crash",
+            "node": "s1",
+            "until_us": 19000.0
+          }
+        ],
+        "name": "primary_crash-few-targets-timed_ranked",
+        "policy": "timed_ranked",
+        "receivers": 3
+      },
+      "counters": {
+        "bytes:control": 2331719.999995605,
+        "bytes:data": 2342015.9999995455,
+        "crashes": 1,
+        "delivered_messages": 21498,
+        "deliveries_after_logical_completion": 2052,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_equivalent_deliveries": 2052,
+        "logical_messages": 22683,
+        "logical_recipient_effects": 1800,
+        "lost_packets": 1785,
+        "packets": 23283,
+        "price": 0.0,
+        "received_batches": 21498,
+        "retry_exhausted": 555,
+        "retry_messages": 1230,
+        "sender_unavailable": 630,
+        "suppressed_sender_attempts": 306,
+        "wire_bytes": 4673735.999995656
+      },
+      "cpu_service_us": 15856.015440001724,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 120,
+      "goodput_per_s": 19354.83870967742,
+      "late_completed": 40,
+      "late_or_unfinished": 40,
+      "messages_with_multiple_senders": 600,
+      "most_queued": {
+        "high_bytes": 1824,
+        "mean_wait_us": 0.147456874206184,
+        "node": "s1:tx"
+      },
+      "objective": "delivery after authored equivalent-copy releases; no authority change",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 560,
+      "origin_propagation_us": {
+        "s0": 80,
+        "s1": 10,
+        "s2": 30
+      },
+      "overflow_events": 0,
+      "p50_us": 82.1835200000005,
+      "p999_us": 142.18352000000596,
+      "p99_us": 142.18352000000596,
+      "pending_at_cutoff": 0,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "release_us": {
+        "s0": 0,
+        "s1": 30,
+        "s2": 80
+      },
+      "required_recipient_pairs": 1800,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 1824,
+      "rx_service_us": 3567.6288000000627,
+      "suppressed_by_origin": {
+        "s1": 73,
+        "s2": 233
+      },
+      "synthetic": true,
+      "tx_service_us": 3738.988800000069,
+      "unacked_transfers": 1185,
+      "unfinished": 0,
+      "workload_goodput_per_s": 20000.0
+    },
+    {
+      "accepted_recipient_pairs": 600,
+      "attempts_by_origin": {
+        "s0": 600,
+        "s1": 600,
+        "s2": 210
+      },
+      "busiest_cpu": {
+        "node": "d0:cpu",
+        "service_us": 2627.929600000242
+      },
+      "case": "equivalent_senders",
+      "completed": 600,
+      "config": {
+        "case": "equivalent_senders",
+        "count": 600,
+        "faults": [
+          {
+            "at_us": 8500.0,
+            "kind": "crash",
+            "node": "s1",
+            "until_us": 19000.0
+          }
+        ],
+        "name": "primary_crash-readiness_ranked",
+        "policy": "readiness_ranked"
+      },
+      "counters": {
+        "bytes:control": 746879.9999985457,
+        "bytes:data": 729599.9999998361,
+        "crashes": 1,
+        "delivered_messages": 6831,
+        "deliveries_after_logical_completion": 600,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_equivalent_deliveries": 600,
+        "logical_messages": 7226,
+        "logical_recipient_effects": 600,
+        "lost_packets": 593,
+        "packets": 7424,
+        "price": 0.0,
+        "received_batches": 6831,
+        "retry_exhausted": 184,
+        "retry_messages": 408,
+        "sender_unavailable": 211,
+        "suppressed_sender_attempts": 390,
+        "wire_bytes": 1476479.9999983658
+      },
+      "cpu_service_us": 5046.886000000198,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 120,
+      "goodput_per_s": 19354.83870967742,
+      "late_completed": 210,
+      "late_or_unfinished": 210,
+      "messages_with_multiple_senders": 600,
+      "most_queued": {
+        "high_bytes": 1328,
+        "mean_wait_us": 0.10722825431024433,
+        "node": "d0:cpu"
+      },
+      "objective": "delivery after authored equivalent-copy releases; no authority change",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 390,
+      "origin_propagation_us": {
+        "s0": 80,
+        "s1": 10,
+        "s2": 30
+      },
+      "overflow_events": 0,
+      "p50_us": 41.92528000000311,
+      "p999_us": 141.21072000000277,
+      "p99_us": 141.21072000000277,
+      "pending_at_cutoff": 0,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "release_us": {
+        "s0": 0,
+        "s1": 30,
+        "s2": 80
+      },
+      "required_recipient_pairs": 600,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 1328,
+      "rx_service_us": 1124.2560000000126,
+      "suppressed_by_origin": {
+        "s2": 390
+      },
+      "synthetic": true,
+      "tx_service_us": 1181.1840000000195,
+      "unacked_transfers": 395,
+      "unfinished": 0,
+      "workload_goodput_per_s": 20000.0
+    },
+    {
+      "accepted_recipient_pairs": 600,
+      "attempts_by_origin": {
+        "s0": 600,
+        "s1": 600,
+        "s2": 210
+      },
+      "busiest_cpu": {
+        "node": "d0:cpu",
+        "service_us": 2628.6344000002423
+      },
+      "case": "equivalent_senders",
+      "completed": 600,
+      "config": {
+        "case": "equivalent_senders",
+        "count": 600,
+        "faults": [
+          {
+            "at_us": 8500.0,
+            "kind": "crash",
+            "node": "s1",
+            "until_us": 19000.0
+          }
+        ],
+        "name": "primary_crash-eager",
+        "policy": "eager"
+      },
+      "counters": {
+        "bytes:control": 747119.9999985382,
+        "bytes:data": 729599.9999998357,
+        "crashes": 1,
+        "delivered_messages": 6827,
+        "deliveries_after_logical_completion": 600,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_equivalent_deliveries": 600,
+        "logical_messages": 7224,
+        "logical_recipient_effects": 600,
+        "lost_packets": 599,
+        "packets": 7426,
+        "price": 0.0,
+        "received_batches": 6827,
+        "retry_exhausted": 186,
+        "retry_messages": 412,
+        "sender_unavailable": 211,
+        "suppressed_sender_attempts": 390,
+        "wire_bytes": 1476719.999998358
+      },
+      "cpu_service_us": 5046.181200000198,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 120,
+      "goodput_per_s": 19354.83870967742,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "messages_with_multiple_senders": 600,
+      "most_queued": {
+        "high_bytes": 848,
+        "mean_wait_us": 0.09498750336649098,
+        "node": "d0:cpu"
+      },
+      "objective": "delivery after authored equivalent-copy releases; no authority change",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 600,
+      "origin_propagation_us": {
+        "s0": 80,
+        "s1": 10,
+        "s2": 30
+      },
+      "overflow_events": 0,
+      "p50_us": 41.210720000002766,
+      "p999_us": 81.21072000000277,
+      "p99_us": 81.21072000000277,
+      "pending_at_cutoff": 0,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "release_us": {
+        "s0": 0,
+        "s1": 30,
+        "s2": 80
+      },
+      "required_recipient_pairs": 600,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 848,
+      "rx_service_us": 1123.8720000000126,
+      "suppressed_by_origin": {
+        "s2": 390
+      },
+      "synthetic": true,
+      "tx_service_us": 1181.3760000000195,
+      "unacked_transfers": 397,
+      "unfinished": 0,
+      "workload_goodput_per_s": 20000.0
+    },
+    {
+      "accepted_recipient_pairs": 1800,
+      "attempts_by_origin": {
+        "s0": 600,
+        "s1": 600,
+        "s2": 210
+      },
+      "busiest_cpu": {
+        "node": "s0:cpu",
+        "service_us": 3379.464000000653
+      },
+      "case": "equivalent_senders",
+      "completed": 600,
+      "config": {
+        "case": "equivalent_senders",
+        "count": 600,
+        "faults": [
+          {
+            "at_us": 8500.0,
+            "kind": "crash",
+            "node": "s1",
+            "until_us": 19000.0
+          }
+        ],
+        "name": "primary_crash-few-targets-eager",
+        "policy": "eager",
+        "receivers": 3
+      },
+      "counters": {
+        "bytes:control": 2241359.999995605,
+        "bytes:data": 2188799.999999558,
+        "crashes": 1,
+        "delivered_messages": 20481,
+        "deliveries_after_logical_completion": 1800,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_equivalent_deliveries": 1800,
+        "logical_messages": 21672,
+        "logical_recipient_effects": 1800,
+        "lost_packets": 1797,
+        "packets": 22278,
+        "price": 0.0,
+        "received_batches": 20481,
+        "retry_exhausted": 558,
+        "retry_messages": 1236,
+        "sender_unavailable": 633,
+        "suppressed_sender_attempts": 390,
+        "wire_bytes": 4430159.999995658
+      },
+      "cpu_service_us": 15138.543600001298,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 120,
+      "goodput_per_s": 19354.83870967742,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "messages_with_multiple_senders": 600,
+      "most_queued": {
+        "high_bytes": 1824,
+        "mean_wait_us": 0.17738208955262894,
+        "node": "s1:tx"
+      },
+      "objective": "delivery after authored equivalent-copy releases; no authority change",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 600,
+      "origin_propagation_us": {
+        "s0": 80,
+        "s1": 10,
+        "s2": 30
+      },
+      "overflow_events": 0,
+      "p50_us": 42.183520000005956,
+      "p999_us": 82.18352000000596,
+      "p99_us": 82.18352000000596,
+      "pending_at_cutoff": 0,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "release_us": {
+        "s0": 0,
+        "s1": 30,
+        "s2": 80
+      },
+      "required_recipient_pairs": 1800,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 1824,
+      "rx_service_us": 3371.6160000000586,
+      "suppressed_by_origin": {
+        "s2": 390
+      },
+      "synthetic": true,
+      "tx_service_us": 3544.1280000000643,
+      "unacked_transfers": 1191,
+      "unfinished": 0,
+      "workload_goodput_per_s": 20000.0
+    },
+    {
+      "accepted_recipient_pairs": 600,
+      "attempts_by_origin": {
+        "s0": 210,
+        "s1": 200,
+        "s2": 190
+      },
+      "busiest_cpu": {
+        "node": "d0:cpu",
+        "service_us": 2463.909520000148
+      },
+      "case": "equivalent_senders",
+      "completed": 600,
+      "config": {
+        "case": "equivalent_senders",
+        "count": 600,
+        "name": "lost_receipts-single_ranked",
+        "policy": "single_ranked",
+        "receipt_loss": 0.5
+      },
+      "counters": {
+        "bytes:control": 701879.9999986548,
+        "bytes:data": 676095.9999998459,
+        "delivered_messages": 4305,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_messages": 512,
+        "logical_messages": 5111,
+        "logical_recipient_effects": 600,
+        "lost_packets": 2144,
+        "packets": 6961,
+        "price": 0.0,
+        "received_batches": 4817,
+        "retry_exhausted": 294,
+        "retry_messages": 1850,
+        "wire_bytes": 1377975.9999984838
+      },
+      "cpu_service_us": 4172.273440000125,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 120,
+      "goodput_per_s": 19322.58064516129,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "messages_with_multiple_senders": 0,
+      "most_queued": {
+        "high_bytes": 1576,
+        "mean_wait_us": 0.10308597040647437,
+        "node": "d0:cpu"
+      },
+      "objective": "delivery after authored equivalent-copy releases; no authority change",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 600,
+      "origin_propagation_us": {
+        "s0": 80,
+        "s1": 10,
+        "s2": 30
+      },
+      "overflow_events": 0,
+      "p50_us": 81.21072000000277,
+      "p999_us": 112.63984000000346,
+      "p99_us": 111.92528000000311,
+      "pending_at_cutoff": 1,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "release_us": {
+        "s0": 0,
+        "s1": 30,
+        "s2": 80
+      },
+      "required_recipient_pairs": 600,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 1824,
+      "rx_service_us": 896.5568000000054,
+      "suppressed_by_origin": {},
+      "synthetic": true,
+      "tx_service_us": 1102.3808000000183,
+      "unacked_transfers": 294,
+      "unfinished": 0,
+      "workload_goodput_per_s": 19966.666666666668
+    },
+    {
+      "accepted_recipient_pairs": 600,
+      "attempts_by_origin": {
+        "s0": 600,
+        "s1": 553,
+        "s2": 441
+      },
+      "busiest_cpu": {
+        "node": "d0:cpu",
+        "service_us": 4561.875600000706
+      },
+      "case": "equivalent_senders",
+      "completed": 600,
+      "config": {
+        "case": "equivalent_senders",
+        "count": 600,
+        "name": "lost_receipts-timed_ranked",
+        "policy": "timed_ranked",
+        "receipt_loss": 0.5
+      },
+      "counters": {
+        "bytes:control": 1214279.99999758,
+        "bytes:data": 1671999.999999649,
+        "delivered_messages": 7896,
+        "deliveries_after_logical_completion": 994,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_equivalent_deliveries": 994,
+        "duplicate_messages": 1156,
+        "logical_messages": 9594,
+        "logical_recipient_effects": 600,
+        "lost_packets": 3817,
+        "packets": 12869,
+        "price": 0.0,
+        "received_batches": 9052,
+        "retry_exhausted": 542,
+        "retry_messages": 3275,
+        "suppressed_sender_attempts": 206,
+        "wire_bytes": 2886279.999997382
+      },
+      "cpu_service_us": 7778.640400000658,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 120,
+      "goodput_per_s": 19354.83870967742,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "messages_with_multiple_senders": 600,
+      "most_queued": {
+        "high_bytes": 1576,
+        "mean_wait_us": 0.07813788794770725,
+        "node": "d0:cpu"
+      },
+      "objective": "delivery after authored equivalent-copy releases; no authority change",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 600,
+      "origin_propagation_us": {
+        "s0": 80,
+        "s1": 10,
+        "s2": 30
+      },
+      "overflow_events": 0,
+      "p50_us": 71.21072000000277,
+      "p999_us": 112.27768000000106,
+      "p99_us": 111.92528000000311,
+      "pending_at_cutoff": 0,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "release_us": {
+        "s0": 0,
+        "s1": 30,
+        "s2": 80
+      },
+      "required_recipient_pairs": 600,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 2432,
+      "rx_service_us": 1942.5920000000203,
+      "suppressed_by_origin": {
+        "s1": 47,
+        "s2": 159
+      },
+      "synthetic": true,
+      "tx_service_us": 2309.02400000004,
+      "unacked_transfers": 542,
+      "unfinished": 0,
+      "workload_goodput_per_s": 20000.0
+    },
+    {
+      "accepted_recipient_pairs": 600,
+      "attempts_by_origin": {
+        "s0": 600,
+        "s1": 600,
+        "s2": 293
+      },
+      "busiest_cpu": {
+        "node": "d0:cpu",
+        "service_us": 4347.532720000864
+      },
+      "case": "equivalent_senders",
+      "completed": 600,
+      "config": {
+        "case": "equivalent_senders",
+        "count": 600,
+        "name": "lost_receipts-readiness_ranked",
+        "policy": "readiness_ranked",
+        "receipt_loss": 0.5
+      },
+      "counters": {
+        "bytes:control": 1160159.9999977322,
+        "bytes:data": 1578975.9999996675,
+        "delivered_messages": 7545,
+        "deliveries_after_logical_completion": 893,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_equivalent_deliveries": 893,
+        "duplicate_messages": 1104,
+        "logical_messages": 9153,
+        "logical_recipient_effects": 600,
+        "lost_packets": 3616,
+        "packets": 12265,
+        "price": 0.0,
+        "received_batches": 8649,
+        "retry_exhausted": 504,
+        "retry_messages": 3112,
+        "suppressed_sender_attempts": 307,
+        "wire_bytes": 2739135.99999752
+      },
+      "cpu_service_us": 7420.787040000812,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 120,
+      "goodput_per_s": 19354.83870967742,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "messages_with_multiple_senders": 600,
+      "most_queued": {
+        "high_bytes": 3040,
+        "mean_wait_us": 0.17431418562537118,
+        "node": "d0:rx"
+      },
+      "objective": "delivery after authored equivalent-copy releases; no authority change",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 600,
+      "origin_propagation_us": {
+        "s0": 80,
+        "s1": 10,
+        "s2": 30
+      },
+      "overflow_events": 0,
+      "p50_us": 42.183520000005956,
+      "p999_us": 44.22328000000016,
+      "p99_us": 43.87088000000949,
+      "pending_at_cutoff": 0,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "release_us": {
+        "s0": 0,
+        "s1": 30,
+        "s2": 80
+      },
+      "required_recipient_pairs": 600,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 3040,
+      "rx_service_us": 1844.172800000019,
+      "suppressed_by_origin": {
+        "s2": 307
+      },
+      "synthetic": true,
+      "tx_service_us": 2191.3088000000375,
+      "unacked_transfers": 504,
+      "unfinished": 0,
+      "workload_goodput_per_s": 20000.0
+    },
+    {
+      "accepted_recipient_pairs": 600,
+      "attempts_by_origin": {
+        "s0": 600,
+        "s1": 600,
+        "s2": 309
+      },
+      "busiest_cpu": {
+        "node": "d0:cpu",
+        "service_us": 4397.718880000825
+      },
+      "case": "equivalent_senders",
+      "completed": 600,
+      "config": {
+        "case": "equivalent_senders",
+        "count": 600,
+        "name": "lost_receipts-eager",
+        "policy": "eager",
+        "receipt_loss": 0.5
+      },
+      "counters": {
+        "bytes:control": 1170959.9999976745,
+        "bytes:data": 1609983.9999996612,
+        "delivered_messages": 7551,
+        "deliveries_after_logical_completion": 909,
+        "discarded_stale_batch_messages": 0,
+        "duplicate_equivalent_deliveries": 909,
+        "duplicate_messages": 1139,
+        "logical_messages": 9230,
+        "logical_recipient_effects": 600,
+        "lost_packets": 3716,
+        "packets": 12406,
+        "price": 0.0,
+        "received_batches": 8690,
+        "retry_exhausted": 540,
+        "retry_messages": 3176,
+        "suppressed_sender_attempts": 291,
+        "wire_bytes": 2780943.9999974687
+      },
+      "cpu_service_us": 7485.919360000772,
+      "deadline_170_fraction": 1.0,
+      "deadline_250_fraction": 1.0,
+      "deadline_us": 120,
+      "goodput_per_s": 19354.83870967742,
+      "late_completed": 0,
+      "late_or_unfinished": 0,
+      "messages_with_multiple_senders": 600,
+      "most_queued": {
+        "high_bytes": 1824,
+        "mean_wait_us": 0.13538077519399086,
+        "node": "s1:tx"
+      },
+      "objective": "delivery after authored equivalent-copy releases; no authority change",
+      "offered": 600,
+      "oldest_unfinished_us": 0,
+      "on_time": 600,
+      "origin_propagation_us": {
+        "s0": 80,
+        "s1": 10,
+        "s2": 30
+      },
+      "overflow_events": 0,
+      "p50_us": 41.69712000000072,
+      "p999_us": 42.76408000000083,
+      "p99_us": 42.630079999999,
+      "pending_at_cutoff": 0,
+      "pending_batches": 0,
+      "pending_reassembly": 0,
+      "release_us": {
+        "s0": 0,
+        "s1": 30,
+        "s2": 80
+      },
+      "required_recipient_pairs": 600,
+      "resource_bytes_at_cutoff": 0,
+      "resource_outstanding_bytes": 0,
+      "resource_peak_bytes": 1824,
+      "rx_service_us": 1868.019200000019,
+      "suppressed_by_origin": {
+        "s2": 291
+      },
+      "synthetic": true,
+      "tx_service_us": 2224.7552000000383,
+      "unacked_transfers": 540,
+      "unfinished": 0,
+      "workload_goodput_per_s": 20000.0
+    }
+  ],
+  "retention": {
+    "full_input_sha256": "aeeee96524531654a62baddf6f411d09a74dfcd4a0661f7be3181cd3897cc01a",
+    "input": "build/workbench/orbital-dissemination/adaptation.json",
+    "script_sha256": "e63e73f918fa1f2b8f202ee5ab71c7bb6d2a5c61fbf3a93f43e50a56fc65fdd1",
+    "selection": "Every selected case retained including failure. Edge/proposal resource tables summarized; identical edge tariffs stored once. Other studies unchanged."
+  },
+  "sources": {
+    "adaptation_study.py": "2817a77e76aa9e81031b403aedae2fd220ff847d9d27f2f52f0436efb7e5b9fc",
+    "routing.py": "1e24c82e3d952b86fe9892e021b033a5ae0f0fab6aff075ee62c60e55d47a8a2",
+    "simulator.py": "a3fd09a8d7985d27af6afd22fa3c43e73f7b8fd0fe9b1a6177f085af943bd3f0"
+  }
+}
