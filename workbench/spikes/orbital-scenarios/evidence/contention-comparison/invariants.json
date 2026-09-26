@@ -1,0 +1,2020 @@
+{
+  "assumptions": "Authored logical schedules; point scopes across two shards; complete known potential outputs; failure-free immediate delivery; no latency model.",
+  "limitations": [
+    "Output admission serializes conflicting output keys, not predicates over disjoint outputs.",
+    "Certification still rejects invalidated read dependencies; a fresh retry can commit a business rejection.",
+    "The stale inventory history is a negative control: correct ordered admission evaluates only after acquiring its gate.",
+    "Accepted inventory results must agree with stock accounting; nonnegative stored stock alone is insufficient.",
+    "These programs are conditional operations, not unconditional associative increments.",
+    "No dynamic discovery, predicate indexing, recovery, fairness guarantee or epoch-confluence proof is provided."
+  ],
+  "scenarios": [
+    {
+      "application_invariant_check": true,
+      "both_stale_acceptances_serializable": false,
+      "capture_order": [
+        "A",
+        "B"
+      ],
+      "committed_history": [
+        {
+          "actor": "A",
+          "owner": "A#1",
+          "position": [
+            21,
+            "A#1"
+          ],
+          "program": {
+            "amount": 2,
+            "kind": "on_call",
+            "limit": 10,
+            "read_keys": [
+              "eu/alice",
+              "us/bob"
+            ],
+            "target": "eu/alice"
+          },
+          "reads": {
+            "eu/alice": {
+              "eu/alice": 1
+            },
+            "us/bob": {
+              "us/bob": 1
+            }
+          },
+          "result": {
+            "accepted": true,
+            "on_call_after": 1,
+            "reason": "off_call"
+          },
+          "writes": {
+            "eu/alice": 0
+          }
+        },
+        {
+          "actor": "B",
+          "owner": "B#2",
+          "position": [
+            31,
+            "B#2"
+          ],
+          "program": {
+            "amount": 2,
+            "kind": "on_call",
+            "limit": 10,
+            "read_keys": [
+              "eu/alice",
+              "us/bob"
+            ],
+            "target": "us/bob"
+          },
+          "reads": {
+            "eu/alice": {
+              "eu/alice": 0
+            },
+            "us/bob": {
+              "us/bob": 1
+            }
+          },
+          "result": {
+            "accepted": false,
+            "on_call_after": 1,
+            "reason": "must_keep_one_on_call"
+          },
+          "writes": {}
+        }
+      ],
+      "committed_results": {
+        "A": {
+          "accepted": true,
+          "on_call_after": 1,
+          "reason": "off_call"
+        },
+        "B": {
+          "accepted": false,
+          "on_call_after": 1,
+          "reason": "must_keep_one_on_call"
+        }
+      },
+      "counts": {
+        "accepted": 1,
+        "business_rejections": 1,
+        "committed_transactions": 2,
+        "evaluations": 3,
+        "peak_admitted_keys": 2,
+        "serialization_aborts": 1
+      },
+      "events": [
+        {
+          "actor": "A",
+          "event": "admission",
+          "granted": true,
+          "output": "eu/alice"
+        },
+        {
+          "actor": "B",
+          "event": "admission",
+          "granted": true,
+          "output": "us/bob"
+        },
+        {
+          "event": "private_result",
+          "owner": "A#1",
+          "result": {
+            "accepted": true,
+            "on_call_after": 1,
+            "reason": "off_call"
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "private_result",
+          "owner": "B#1",
+          "result": {
+            "accepted": true,
+            "on_call_after": 1,
+            "reason": "off_call"
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "commit",
+          "owner": "A#1",
+          "position": [
+            21,
+            "A#1"
+          ],
+          "result": {
+            "accepted": true,
+            "on_call_after": 1,
+            "reason": "off_call"
+          }
+        },
+        {
+          "discarded_private_result": {
+            "accepted": true,
+            "on_call_after": 1,
+            "reason": "off_call"
+          },
+          "event": "abort",
+          "owner": "B#1",
+          "reason": "source_changed"
+        },
+        {
+          "actor": "B",
+          "event": "admission",
+          "granted": true,
+          "output": "us/bob"
+        },
+        {
+          "event": "private_result",
+          "owner": "B#2",
+          "result": {
+            "accepted": false,
+            "on_call_after": 1,
+            "reason": "must_keep_one_on_call"
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "commit",
+          "owner": "B#2",
+          "position": [
+            31,
+            "B#2"
+          ],
+          "result": {
+            "accepted": false,
+            "on_call_after": 1,
+            "reason": "must_keep_one_on_call"
+          }
+        }
+      ],
+      "final": {
+        "eu/alice": 0,
+        "us/bob": 1
+      },
+      "finish_order": [
+        "A",
+        "B"
+      ],
+      "first_accepted_actor": "A",
+      "fresh_business_rejection_actor": "B",
+      "name": "disjoint_outputs_share_a_read_invariant",
+      "serial_check": true,
+      "serial_order": [
+        "A#1",
+        "B#2"
+      ],
+      "workload": "on_call"
+    },
+    {
+      "application_invariant_check": true,
+      "both_stale_acceptances_serializable": false,
+      "capture_order": [
+        "A",
+        "B"
+      ],
+      "committed_history": [
+        {
+          "actor": "B",
+          "owner": "B#1",
+          "position": [
+            20,
+            "B#1"
+          ],
+          "program": {
+            "amount": 2,
+            "kind": "on_call",
+            "limit": 10,
+            "read_keys": [
+              "eu/alice",
+              "us/bob"
+            ],
+            "target": "us/bob"
+          },
+          "reads": {
+            "eu/alice": {
+              "eu/alice": 1
+            },
+            "us/bob": {
+              "us/bob": 1
+            }
+          },
+          "result": {
+            "accepted": true,
+            "on_call_after": 1,
+            "reason": "off_call"
+          },
+          "writes": {
+            "us/bob": 0
+          }
+        },
+        {
+          "actor": "A",
+          "owner": "A#2",
+          "position": [
+            31,
+            "A#2"
+          ],
+          "program": {
+            "amount": 2,
+            "kind": "on_call",
+            "limit": 10,
+            "read_keys": [
+              "eu/alice",
+              "us/bob"
+            ],
+            "target": "eu/alice"
+          },
+          "reads": {
+            "eu/alice": {
+              "eu/alice": 1
+            },
+            "us/bob": {
+              "us/bob": 0
+            }
+          },
+          "result": {
+            "accepted": false,
+            "on_call_after": 1,
+            "reason": "must_keep_one_on_call"
+          },
+          "writes": {}
+        }
+      ],
+      "committed_results": {
+        "A": {
+          "accepted": false,
+          "on_call_after": 1,
+          "reason": "must_keep_one_on_call"
+        },
+        "B": {
+          "accepted": true,
+          "on_call_after": 1,
+          "reason": "off_call"
+        }
+      },
+      "counts": {
+        "accepted": 1,
+        "business_rejections": 1,
+        "committed_transactions": 2,
+        "evaluations": 3,
+        "peak_admitted_keys": 2,
+        "serialization_aborts": 1
+      },
+      "events": [
+        {
+          "actor": "A",
+          "event": "admission",
+          "granted": true,
+          "output": "eu/alice"
+        },
+        {
+          "actor": "B",
+          "event": "admission",
+          "granted": true,
+          "output": "us/bob"
+        },
+        {
+          "event": "private_result",
+          "owner": "A#1",
+          "result": {
+            "accepted": true,
+            "on_call_after": 1,
+            "reason": "off_call"
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "private_result",
+          "owner": "B#1",
+          "result": {
+            "accepted": true,
+            "on_call_after": 1,
+            "reason": "off_call"
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "commit",
+          "owner": "B#1",
+          "position": [
+            20,
+            "B#1"
+          ],
+          "result": {
+            "accepted": true,
+            "on_call_after": 1,
+            "reason": "off_call"
+          }
+        },
+        {
+          "discarded_private_result": {
+            "accepted": true,
+            "on_call_after": 1,
+            "reason": "off_call"
+          },
+          "event": "abort",
+          "owner": "A#1",
+          "reason": "source_changed"
+        },
+        {
+          "actor": "A",
+          "event": "admission",
+          "granted": true,
+          "output": "eu/alice"
+        },
+        {
+          "event": "private_result",
+          "owner": "A#2",
+          "result": {
+            "accepted": false,
+            "on_call_after": 1,
+            "reason": "must_keep_one_on_call"
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "commit",
+          "owner": "A#2",
+          "position": [
+            31,
+            "A#2"
+          ],
+          "result": {
+            "accepted": false,
+            "on_call_after": 1,
+            "reason": "must_keep_one_on_call"
+          }
+        }
+      ],
+      "final": {
+        "eu/alice": 1,
+        "us/bob": 0
+      },
+      "finish_order": [
+        "B",
+        "A"
+      ],
+      "first_accepted_actor": "B",
+      "fresh_business_rejection_actor": "A",
+      "name": "disjoint_outputs_share_a_read_invariant",
+      "serial_check": true,
+      "serial_order": [
+        "B#1",
+        "A#2"
+      ],
+      "workload": "on_call"
+    },
+    {
+      "application_invariant_check": true,
+      "both_stale_acceptances_serializable": false,
+      "capture_order": [
+        "B",
+        "A"
+      ],
+      "committed_history": [
+        {
+          "actor": "A",
+          "owner": "A#1",
+          "position": [
+            20,
+            "A#1"
+          ],
+          "program": {
+            "amount": 2,
+            "kind": "on_call",
+            "limit": 10,
+            "read_keys": [
+              "eu/alice",
+              "us/bob"
+            ],
+            "target": "eu/alice"
+          },
+          "reads": {
+            "eu/alice": {
+              "eu/alice": 1
+            },
+            "us/bob": {
+              "us/bob": 1
+            }
+          },
+          "result": {
+            "accepted": true,
+            "on_call_after": 1,
+            "reason": "off_call"
+          },
+          "writes": {
+            "eu/alice": 0
+          }
+        },
+        {
+          "actor": "B",
+          "owner": "B#2",
+          "position": [
+            30,
+            "B#2"
+          ],
+          "program": {
+            "amount": 2,
+            "kind": "on_call",
+            "limit": 10,
+            "read_keys": [
+              "eu/alice",
+              "us/bob"
+            ],
+            "target": "us/bob"
+          },
+          "reads": {
+            "eu/alice": {
+              "eu/alice": 0
+            },
+            "us/bob": {
+              "us/bob": 1
+            }
+          },
+          "result": {
+            "accepted": false,
+            "on_call_after": 1,
+            "reason": "must_keep_one_on_call"
+          },
+          "writes": {}
+        }
+      ],
+      "committed_results": {
+        "A": {
+          "accepted": true,
+          "on_call_after": 1,
+          "reason": "off_call"
+        },
+        "B": {
+          "accepted": false,
+          "on_call_after": 1,
+          "reason": "must_keep_one_on_call"
+        }
+      },
+      "counts": {
+        "accepted": 1,
+        "business_rejections": 1,
+        "committed_transactions": 2,
+        "evaluations": 3,
+        "peak_admitted_keys": 2,
+        "serialization_aborts": 1
+      },
+      "events": [
+        {
+          "actor": "A",
+          "event": "admission",
+          "granted": true,
+          "output": "eu/alice"
+        },
+        {
+          "actor": "B",
+          "event": "admission",
+          "granted": true,
+          "output": "us/bob"
+        },
+        {
+          "event": "private_result",
+          "owner": "B#1",
+          "result": {
+            "accepted": true,
+            "on_call_after": 1,
+            "reason": "off_call"
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "private_result",
+          "owner": "A#1",
+          "result": {
+            "accepted": true,
+            "on_call_after": 1,
+            "reason": "off_call"
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "commit",
+          "owner": "A#1",
+          "position": [
+            20,
+            "A#1"
+          ],
+          "result": {
+            "accepted": true,
+            "on_call_after": 1,
+            "reason": "off_call"
+          }
+        },
+        {
+          "discarded_private_result": {
+            "accepted": true,
+            "on_call_after": 1,
+            "reason": "off_call"
+          },
+          "event": "abort",
+          "owner": "B#1",
+          "reason": "source_changed"
+        },
+        {
+          "actor": "B",
+          "event": "admission",
+          "granted": true,
+          "output": "us/bob"
+        },
+        {
+          "event": "private_result",
+          "owner": "B#2",
+          "result": {
+            "accepted": false,
+            "on_call_after": 1,
+            "reason": "must_keep_one_on_call"
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "commit",
+          "owner": "B#2",
+          "position": [
+            30,
+            "B#2"
+          ],
+          "result": {
+            "accepted": false,
+            "on_call_after": 1,
+            "reason": "must_keep_one_on_call"
+          }
+        }
+      ],
+      "final": {
+        "eu/alice": 0,
+        "us/bob": 1
+      },
+      "finish_order": [
+        "A",
+        "B"
+      ],
+      "first_accepted_actor": "A",
+      "fresh_business_rejection_actor": "B",
+      "name": "disjoint_outputs_share_a_read_invariant",
+      "serial_check": true,
+      "serial_order": [
+        "A#1",
+        "B#2"
+      ],
+      "workload": "on_call"
+    },
+    {
+      "application_invariant_check": true,
+      "both_stale_acceptances_serializable": false,
+      "capture_order": [
+        "B",
+        "A"
+      ],
+      "committed_history": [
+        {
+          "actor": "B",
+          "owner": "B#1",
+          "position": [
+            20,
+            "B#1"
+          ],
+          "program": {
+            "amount": 2,
+            "kind": "on_call",
+            "limit": 10,
+            "read_keys": [
+              "eu/alice",
+              "us/bob"
+            ],
+            "target": "us/bob"
+          },
+          "reads": {
+            "eu/alice": {
+              "eu/alice": 1
+            },
+            "us/bob": {
+              "us/bob": 1
+            }
+          },
+          "result": {
+            "accepted": true,
+            "on_call_after": 1,
+            "reason": "off_call"
+          },
+          "writes": {
+            "us/bob": 0
+          }
+        },
+        {
+          "actor": "A",
+          "owner": "A#2",
+          "position": [
+            31,
+            "A#2"
+          ],
+          "program": {
+            "amount": 2,
+            "kind": "on_call",
+            "limit": 10,
+            "read_keys": [
+              "eu/alice",
+              "us/bob"
+            ],
+            "target": "eu/alice"
+          },
+          "reads": {
+            "eu/alice": {
+              "eu/alice": 1
+            },
+            "us/bob": {
+              "us/bob": 0
+            }
+          },
+          "result": {
+            "accepted": false,
+            "on_call_after": 1,
+            "reason": "must_keep_one_on_call"
+          },
+          "writes": {}
+        }
+      ],
+      "committed_results": {
+        "A": {
+          "accepted": false,
+          "on_call_after": 1,
+          "reason": "must_keep_one_on_call"
+        },
+        "B": {
+          "accepted": true,
+          "on_call_after": 1,
+          "reason": "off_call"
+        }
+      },
+      "counts": {
+        "accepted": 1,
+        "business_rejections": 1,
+        "committed_transactions": 2,
+        "evaluations": 3,
+        "peak_admitted_keys": 2,
+        "serialization_aborts": 1
+      },
+      "events": [
+        {
+          "actor": "A",
+          "event": "admission",
+          "granted": true,
+          "output": "eu/alice"
+        },
+        {
+          "actor": "B",
+          "event": "admission",
+          "granted": true,
+          "output": "us/bob"
+        },
+        {
+          "event": "private_result",
+          "owner": "B#1",
+          "result": {
+            "accepted": true,
+            "on_call_after": 1,
+            "reason": "off_call"
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "private_result",
+          "owner": "A#1",
+          "result": {
+            "accepted": true,
+            "on_call_after": 1,
+            "reason": "off_call"
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "commit",
+          "owner": "B#1",
+          "position": [
+            20,
+            "B#1"
+          ],
+          "result": {
+            "accepted": true,
+            "on_call_after": 1,
+            "reason": "off_call"
+          }
+        },
+        {
+          "discarded_private_result": {
+            "accepted": true,
+            "on_call_after": 1,
+            "reason": "off_call"
+          },
+          "event": "abort",
+          "owner": "A#1",
+          "reason": "source_changed"
+        },
+        {
+          "actor": "A",
+          "event": "admission",
+          "granted": true,
+          "output": "eu/alice"
+        },
+        {
+          "event": "private_result",
+          "owner": "A#2",
+          "result": {
+            "accepted": false,
+            "on_call_after": 1,
+            "reason": "must_keep_one_on_call"
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "commit",
+          "owner": "A#2",
+          "position": [
+            31,
+            "A#2"
+          ],
+          "result": {
+            "accepted": false,
+            "on_call_after": 1,
+            "reason": "must_keep_one_on_call"
+          }
+        }
+      ],
+      "final": {
+        "eu/alice": 1,
+        "us/bob": 0
+      },
+      "finish_order": [
+        "B",
+        "A"
+      ],
+      "first_accepted_actor": "B",
+      "fresh_business_rejection_actor": "A",
+      "name": "disjoint_outputs_share_a_read_invariant",
+      "serial_check": true,
+      "serial_order": [
+        "B#1",
+        "A#2"
+      ],
+      "workload": "on_call"
+    },
+    {
+      "application_invariant_check": true,
+      "both_stale_acceptances_serializable": false,
+      "capture_order": [
+        "A",
+        "B"
+      ],
+      "committed_history": [
+        {
+          "actor": "A",
+          "owner": "A#1",
+          "position": [
+            21,
+            "A#1"
+          ],
+          "program": {
+            "amount": 2,
+            "kind": "quota",
+            "limit": 10,
+            "read_keys": [
+              "eu/allocated",
+              "us/allocated"
+            ],
+            "target": "eu/allocated"
+          },
+          "reads": {
+            "eu/allocated": {
+              "eu/allocated": 4
+            },
+            "us/allocated": {
+              "us/allocated": 4
+            }
+          },
+          "result": {
+            "accepted": true,
+            "allocated": 2,
+            "reason": "allocated",
+            "total_after": 10
+          },
+          "writes": {
+            "eu/allocated": 6
+          }
+        },
+        {
+          "actor": "B",
+          "owner": "B#2",
+          "position": [
+            31,
+            "B#2"
+          ],
+          "program": {
+            "amount": 2,
+            "kind": "quota",
+            "limit": 10,
+            "read_keys": [
+              "eu/allocated",
+              "us/allocated"
+            ],
+            "target": "us/allocated"
+          },
+          "reads": {
+            "eu/allocated": {
+              "eu/allocated": 6
+            },
+            "us/allocated": {
+              "us/allocated": 4
+            }
+          },
+          "result": {
+            "accepted": false,
+            "allocated": 0,
+            "reason": "quota_exceeded",
+            "total_after": 10
+          },
+          "writes": {}
+        }
+      ],
+      "committed_results": {
+        "A": {
+          "accepted": true,
+          "allocated": 2,
+          "reason": "allocated",
+          "total_after": 10
+        },
+        "B": {
+          "accepted": false,
+          "allocated": 0,
+          "reason": "quota_exceeded",
+          "total_after": 10
+        }
+      },
+      "counts": {
+        "accepted": 1,
+        "business_rejections": 1,
+        "committed_transactions": 2,
+        "evaluations": 3,
+        "peak_admitted_keys": 2,
+        "serialization_aborts": 1
+      },
+      "events": [
+        {
+          "actor": "A",
+          "event": "admission",
+          "granted": true,
+          "output": "eu/allocated"
+        },
+        {
+          "actor": "B",
+          "event": "admission",
+          "granted": true,
+          "output": "us/allocated"
+        },
+        {
+          "event": "private_result",
+          "owner": "A#1",
+          "result": {
+            "accepted": true,
+            "allocated": 2,
+            "reason": "allocated",
+            "total_after": 10
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "private_result",
+          "owner": "B#1",
+          "result": {
+            "accepted": true,
+            "allocated": 2,
+            "reason": "allocated",
+            "total_after": 10
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "commit",
+          "owner": "A#1",
+          "position": [
+            21,
+            "A#1"
+          ],
+          "result": {
+            "accepted": true,
+            "allocated": 2,
+            "reason": "allocated",
+            "total_after": 10
+          }
+        },
+        {
+          "discarded_private_result": {
+            "accepted": true,
+            "allocated": 2,
+            "reason": "allocated",
+            "total_after": 10
+          },
+          "event": "abort",
+          "owner": "B#1",
+          "reason": "source_changed"
+        },
+        {
+          "actor": "B",
+          "event": "admission",
+          "granted": true,
+          "output": "us/allocated"
+        },
+        {
+          "event": "private_result",
+          "owner": "B#2",
+          "result": {
+            "accepted": false,
+            "allocated": 0,
+            "reason": "quota_exceeded",
+            "total_after": 10
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "commit",
+          "owner": "B#2",
+          "position": [
+            31,
+            "B#2"
+          ],
+          "result": {
+            "accepted": false,
+            "allocated": 0,
+            "reason": "quota_exceeded",
+            "total_after": 10
+          }
+        }
+      ],
+      "final": {
+        "eu/allocated": 6,
+        "us/allocated": 4
+      },
+      "finish_order": [
+        "A",
+        "B"
+      ],
+      "first_accepted_actor": "A",
+      "fresh_business_rejection_actor": "B",
+      "name": "disjoint_outputs_share_a_read_invariant",
+      "serial_check": true,
+      "serial_order": [
+        "A#1",
+        "B#2"
+      ],
+      "workload": "quota"
+    },
+    {
+      "application_invariant_check": true,
+      "both_stale_acceptances_serializable": false,
+      "capture_order": [
+        "A",
+        "B"
+      ],
+      "committed_history": [
+        {
+          "actor": "B",
+          "owner": "B#1",
+          "position": [
+            20,
+            "B#1"
+          ],
+          "program": {
+            "amount": 2,
+            "kind": "quota",
+            "limit": 10,
+            "read_keys": [
+              "eu/allocated",
+              "us/allocated"
+            ],
+            "target": "us/allocated"
+          },
+          "reads": {
+            "eu/allocated": {
+              "eu/allocated": 4
+            },
+            "us/allocated": {
+              "us/allocated": 4
+            }
+          },
+          "result": {
+            "accepted": true,
+            "allocated": 2,
+            "reason": "allocated",
+            "total_after": 10
+          },
+          "writes": {
+            "us/allocated": 6
+          }
+        },
+        {
+          "actor": "A",
+          "owner": "A#2",
+          "position": [
+            31,
+            "A#2"
+          ],
+          "program": {
+            "amount": 2,
+            "kind": "quota",
+            "limit": 10,
+            "read_keys": [
+              "eu/allocated",
+              "us/allocated"
+            ],
+            "target": "eu/allocated"
+          },
+          "reads": {
+            "eu/allocated": {
+              "eu/allocated": 4
+            },
+            "us/allocated": {
+              "us/allocated": 6
+            }
+          },
+          "result": {
+            "accepted": false,
+            "allocated": 0,
+            "reason": "quota_exceeded",
+            "total_after": 10
+          },
+          "writes": {}
+        }
+      ],
+      "committed_results": {
+        "A": {
+          "accepted": false,
+          "allocated": 0,
+          "reason": "quota_exceeded",
+          "total_after": 10
+        },
+        "B": {
+          "accepted": true,
+          "allocated": 2,
+          "reason": "allocated",
+          "total_after": 10
+        }
+      },
+      "counts": {
+        "accepted": 1,
+        "business_rejections": 1,
+        "committed_transactions": 2,
+        "evaluations": 3,
+        "peak_admitted_keys": 2,
+        "serialization_aborts": 1
+      },
+      "events": [
+        {
+          "actor": "A",
+          "event": "admission",
+          "granted": true,
+          "output": "eu/allocated"
+        },
+        {
+          "actor": "B",
+          "event": "admission",
+          "granted": true,
+          "output": "us/allocated"
+        },
+        {
+          "event": "private_result",
+          "owner": "A#1",
+          "result": {
+            "accepted": true,
+            "allocated": 2,
+            "reason": "allocated",
+            "total_after": 10
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "private_result",
+          "owner": "B#1",
+          "result": {
+            "accepted": true,
+            "allocated": 2,
+            "reason": "allocated",
+            "total_after": 10
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "commit",
+          "owner": "B#1",
+          "position": [
+            20,
+            "B#1"
+          ],
+          "result": {
+            "accepted": true,
+            "allocated": 2,
+            "reason": "allocated",
+            "total_after": 10
+          }
+        },
+        {
+          "discarded_private_result": {
+            "accepted": true,
+            "allocated": 2,
+            "reason": "allocated",
+            "total_after": 10
+          },
+          "event": "abort",
+          "owner": "A#1",
+          "reason": "source_changed"
+        },
+        {
+          "actor": "A",
+          "event": "admission",
+          "granted": true,
+          "output": "eu/allocated"
+        },
+        {
+          "event": "private_result",
+          "owner": "A#2",
+          "result": {
+            "accepted": false,
+            "allocated": 0,
+            "reason": "quota_exceeded",
+            "total_after": 10
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "commit",
+          "owner": "A#2",
+          "position": [
+            31,
+            "A#2"
+          ],
+          "result": {
+            "accepted": false,
+            "allocated": 0,
+            "reason": "quota_exceeded",
+            "total_after": 10
+          }
+        }
+      ],
+      "final": {
+        "eu/allocated": 4,
+        "us/allocated": 6
+      },
+      "finish_order": [
+        "B",
+        "A"
+      ],
+      "first_accepted_actor": "B",
+      "fresh_business_rejection_actor": "A",
+      "name": "disjoint_outputs_share_a_read_invariant",
+      "serial_check": true,
+      "serial_order": [
+        "B#1",
+        "A#2"
+      ],
+      "workload": "quota"
+    },
+    {
+      "application_invariant_check": true,
+      "both_stale_acceptances_serializable": false,
+      "capture_order": [
+        "B",
+        "A"
+      ],
+      "committed_history": [
+        {
+          "actor": "A",
+          "owner": "A#1",
+          "position": [
+            20,
+            "A#1"
+          ],
+          "program": {
+            "amount": 2,
+            "kind": "quota",
+            "limit": 10,
+            "read_keys": [
+              "eu/allocated",
+              "us/allocated"
+            ],
+            "target": "eu/allocated"
+          },
+          "reads": {
+            "eu/allocated": {
+              "eu/allocated": 4
+            },
+            "us/allocated": {
+              "us/allocated": 4
+            }
+          },
+          "result": {
+            "accepted": true,
+            "allocated": 2,
+            "reason": "allocated",
+            "total_after": 10
+          },
+          "writes": {
+            "eu/allocated": 6
+          }
+        },
+        {
+          "actor": "B",
+          "owner": "B#2",
+          "position": [
+            30,
+            "B#2"
+          ],
+          "program": {
+            "amount": 2,
+            "kind": "quota",
+            "limit": 10,
+            "read_keys": [
+              "eu/allocated",
+              "us/allocated"
+            ],
+            "target": "us/allocated"
+          },
+          "reads": {
+            "eu/allocated": {
+              "eu/allocated": 6
+            },
+            "us/allocated": {
+              "us/allocated": 4
+            }
+          },
+          "result": {
+            "accepted": false,
+            "allocated": 0,
+            "reason": "quota_exceeded",
+            "total_after": 10
+          },
+          "writes": {}
+        }
+      ],
+      "committed_results": {
+        "A": {
+          "accepted": true,
+          "allocated": 2,
+          "reason": "allocated",
+          "total_after": 10
+        },
+        "B": {
+          "accepted": false,
+          "allocated": 0,
+          "reason": "quota_exceeded",
+          "total_after": 10
+        }
+      },
+      "counts": {
+        "accepted": 1,
+        "business_rejections": 1,
+        "committed_transactions": 2,
+        "evaluations": 3,
+        "peak_admitted_keys": 2,
+        "serialization_aborts": 1
+      },
+      "events": [
+        {
+          "actor": "A",
+          "event": "admission",
+          "granted": true,
+          "output": "eu/allocated"
+        },
+        {
+          "actor": "B",
+          "event": "admission",
+          "granted": true,
+          "output": "us/allocated"
+        },
+        {
+          "event": "private_result",
+          "owner": "B#1",
+          "result": {
+            "accepted": true,
+            "allocated": 2,
+            "reason": "allocated",
+            "total_after": 10
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "private_result",
+          "owner": "A#1",
+          "result": {
+            "accepted": true,
+            "allocated": 2,
+            "reason": "allocated",
+            "total_after": 10
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "commit",
+          "owner": "A#1",
+          "position": [
+            20,
+            "A#1"
+          ],
+          "result": {
+            "accepted": true,
+            "allocated": 2,
+            "reason": "allocated",
+            "total_after": 10
+          }
+        },
+        {
+          "discarded_private_result": {
+            "accepted": true,
+            "allocated": 2,
+            "reason": "allocated",
+            "total_after": 10
+          },
+          "event": "abort",
+          "owner": "B#1",
+          "reason": "source_changed"
+        },
+        {
+          "actor": "B",
+          "event": "admission",
+          "granted": true,
+          "output": "us/allocated"
+        },
+        {
+          "event": "private_result",
+          "owner": "B#2",
+          "result": {
+            "accepted": false,
+            "allocated": 0,
+            "reason": "quota_exceeded",
+            "total_after": 10
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "commit",
+          "owner": "B#2",
+          "position": [
+            30,
+            "B#2"
+          ],
+          "result": {
+            "accepted": false,
+            "allocated": 0,
+            "reason": "quota_exceeded",
+            "total_after": 10
+          }
+        }
+      ],
+      "final": {
+        "eu/allocated": 6,
+        "us/allocated": 4
+      },
+      "finish_order": [
+        "A",
+        "B"
+      ],
+      "first_accepted_actor": "A",
+      "fresh_business_rejection_actor": "B",
+      "name": "disjoint_outputs_share_a_read_invariant",
+      "serial_check": true,
+      "serial_order": [
+        "A#1",
+        "B#2"
+      ],
+      "workload": "quota"
+    },
+    {
+      "application_invariant_check": true,
+      "both_stale_acceptances_serializable": false,
+      "capture_order": [
+        "B",
+        "A"
+      ],
+      "committed_history": [
+        {
+          "actor": "B",
+          "owner": "B#1",
+          "position": [
+            20,
+            "B#1"
+          ],
+          "program": {
+            "amount": 2,
+            "kind": "quota",
+            "limit": 10,
+            "read_keys": [
+              "eu/allocated",
+              "us/allocated"
+            ],
+            "target": "us/allocated"
+          },
+          "reads": {
+            "eu/allocated": {
+              "eu/allocated": 4
+            },
+            "us/allocated": {
+              "us/allocated": 4
+            }
+          },
+          "result": {
+            "accepted": true,
+            "allocated": 2,
+            "reason": "allocated",
+            "total_after": 10
+          },
+          "writes": {
+            "us/allocated": 6
+          }
+        },
+        {
+          "actor": "A",
+          "owner": "A#2",
+          "position": [
+            31,
+            "A#2"
+          ],
+          "program": {
+            "amount": 2,
+            "kind": "quota",
+            "limit": 10,
+            "read_keys": [
+              "eu/allocated",
+              "us/allocated"
+            ],
+            "target": "eu/allocated"
+          },
+          "reads": {
+            "eu/allocated": {
+              "eu/allocated": 4
+            },
+            "us/allocated": {
+              "us/allocated": 6
+            }
+          },
+          "result": {
+            "accepted": false,
+            "allocated": 0,
+            "reason": "quota_exceeded",
+            "total_after": 10
+          },
+          "writes": {}
+        }
+      ],
+      "committed_results": {
+        "A": {
+          "accepted": false,
+          "allocated": 0,
+          "reason": "quota_exceeded",
+          "total_after": 10
+        },
+        "B": {
+          "accepted": true,
+          "allocated": 2,
+          "reason": "allocated",
+          "total_after": 10
+        }
+      },
+      "counts": {
+        "accepted": 1,
+        "business_rejections": 1,
+        "committed_transactions": 2,
+        "evaluations": 3,
+        "peak_admitted_keys": 2,
+        "serialization_aborts": 1
+      },
+      "events": [
+        {
+          "actor": "A",
+          "event": "admission",
+          "granted": true,
+          "output": "eu/allocated"
+        },
+        {
+          "actor": "B",
+          "event": "admission",
+          "granted": true,
+          "output": "us/allocated"
+        },
+        {
+          "event": "private_result",
+          "owner": "B#1",
+          "result": {
+            "accepted": true,
+            "allocated": 2,
+            "reason": "allocated",
+            "total_after": 10
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "private_result",
+          "owner": "A#1",
+          "result": {
+            "accepted": true,
+            "allocated": 2,
+            "reason": "allocated",
+            "total_after": 10
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "commit",
+          "owner": "B#1",
+          "position": [
+            20,
+            "B#1"
+          ],
+          "result": {
+            "accepted": true,
+            "allocated": 2,
+            "reason": "allocated",
+            "total_after": 10
+          }
+        },
+        {
+          "discarded_private_result": {
+            "accepted": true,
+            "allocated": 2,
+            "reason": "allocated",
+            "total_after": 10
+          },
+          "event": "abort",
+          "owner": "A#1",
+          "reason": "source_changed"
+        },
+        {
+          "actor": "A",
+          "event": "admission",
+          "granted": true,
+          "output": "eu/allocated"
+        },
+        {
+          "event": "private_result",
+          "owner": "A#2",
+          "result": {
+            "accepted": false,
+            "allocated": 0,
+            "reason": "quota_exceeded",
+            "total_after": 10
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "commit",
+          "owner": "A#2",
+          "position": [
+            31,
+            "A#2"
+          ],
+          "result": {
+            "accepted": false,
+            "allocated": 0,
+            "reason": "quota_exceeded",
+            "total_after": 10
+          }
+        }
+      ],
+      "final": {
+        "eu/allocated": 4,
+        "us/allocated": 6
+      },
+      "finish_order": [
+        "B",
+        "A"
+      ],
+      "first_accepted_actor": "B",
+      "fresh_business_rejection_actor": "A",
+      "name": "disjoint_outputs_share_a_read_invariant",
+      "serial_check": true,
+      "serial_order": [
+        "B#1",
+        "A#2"
+      ],
+      "workload": "quota"
+    },
+    {
+      "application_invariant_check": true,
+      "business_rejection_is_committed": true,
+      "committed_history": [
+        {
+          "actor": "A",
+          "owner": "A#1",
+          "position": [
+            10,
+            "A#1"
+          ],
+          "program": {
+            "amount": 2,
+            "kind": "inventory",
+            "limit": 10,
+            "read_keys": [
+              "eu/stock"
+            ],
+            "target": "eu/stock"
+          },
+          "reads": {
+            "eu/stock": {
+              "eu/stock": 3
+            }
+          },
+          "result": {
+            "accepted": true,
+            "reason": "reserved",
+            "remaining": 1,
+            "reserved": 2
+          },
+          "writes": {
+            "eu/stock": 1
+          }
+        },
+        {
+          "actor": "B",
+          "owner": "B#1",
+          "position": [
+            20,
+            "B#1"
+          ],
+          "program": {
+            "amount": 2,
+            "kind": "inventory",
+            "limit": 10,
+            "read_keys": [
+              "eu/stock"
+            ],
+            "target": "eu/stock"
+          },
+          "reads": {
+            "eu/stock": {
+              "eu/stock": 1
+            }
+          },
+          "result": {
+            "accepted": false,
+            "reason": "insufficient_stock",
+            "remaining": 1,
+            "reserved": 0
+          },
+          "writes": {}
+        }
+      ],
+      "committed_results": {
+        "A": {
+          "accepted": true,
+          "reason": "reserved",
+          "remaining": 1,
+          "reserved": 2
+        },
+        "B": {
+          "accepted": false,
+          "reason": "insufficient_stock",
+          "remaining": 1,
+          "reserved": 0
+        }
+      },
+      "counts": {
+        "accepted": 1,
+        "admission_waits": 1,
+        "business_rejections": 1,
+        "committed_transactions": 2,
+        "evaluations": 2,
+        "peak_admitted_keys": 1
+      },
+      "events": [
+        {
+          "actor": "A",
+          "event": "admission",
+          "granted": true,
+          "output": "eu/stock"
+        },
+        {
+          "event": "private_result",
+          "owner": "A#1",
+          "result": {
+            "accepted": true,
+            "reason": "reserved",
+            "remaining": 1,
+            "reserved": 2
+          },
+          "returned_to_client": false
+        },
+        {
+          "actor": "B",
+          "event": "admission",
+          "granted": false,
+          "output": "eu/stock"
+        },
+        {
+          "event": "commit",
+          "owner": "A#1",
+          "position": [
+            10,
+            "A#1"
+          ],
+          "result": {
+            "accepted": true,
+            "reason": "reserved",
+            "remaining": 1,
+            "reserved": 2
+          }
+        },
+        {
+          "actor": "B",
+          "event": "admission",
+          "granted": true,
+          "output": "eu/stock"
+        },
+        {
+          "event": "private_result",
+          "owner": "B#1",
+          "result": {
+            "accepted": false,
+            "reason": "insufficient_stock",
+            "remaining": 1,
+            "reserved": 0
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "commit",
+          "owner": "B#1",
+          "position": [
+            20,
+            "B#1"
+          ],
+          "result": {
+            "accepted": false,
+            "reason": "insufficient_stock",
+            "remaining": 1,
+            "reserved": 0
+          }
+        }
+      ],
+      "final": {
+        "eu/stock": 1
+      },
+      "name": "same_output_gate_then_fresh_inventory_evaluation",
+      "serial_check": true,
+      "serial_order": [
+        "A#1",
+        "B#1"
+      ],
+      "workload": "inventory"
+    },
+    {
+      "application_invariant_check": true,
+      "both_stale_acceptances_serializable": false,
+      "committed_history": [
+        {
+          "actor": "A",
+          "owner": "A#1",
+          "position": [
+            20,
+            "A#1"
+          ],
+          "program": {
+            "amount": 2,
+            "kind": "inventory",
+            "limit": 10,
+            "read_keys": [
+              "eu/stock"
+            ],
+            "target": "eu/stock"
+          },
+          "reads": {
+            "eu/stock": {
+              "eu/stock": 3
+            }
+          },
+          "result": {
+            "accepted": true,
+            "reason": "reserved",
+            "remaining": 1,
+            "reserved": 2
+          },
+          "writes": {
+            "eu/stock": 1
+          }
+        },
+        {
+          "actor": "B",
+          "owner": "B#2",
+          "position": [
+            30,
+            "B#2"
+          ],
+          "program": {
+            "amount": 2,
+            "kind": "inventory",
+            "limit": 10,
+            "read_keys": [
+              "eu/stock"
+            ],
+            "target": "eu/stock"
+          },
+          "reads": {
+            "eu/stock": {
+              "eu/stock": 1
+            }
+          },
+          "result": {
+            "accepted": false,
+            "reason": "insufficient_stock",
+            "remaining": 1,
+            "reserved": 0
+          },
+          "writes": {}
+        }
+      ],
+      "committed_results": {
+        "A": {
+          "accepted": true,
+          "reason": "reserved",
+          "remaining": 1,
+          "reserved": 2
+        },
+        "B": {
+          "accepted": false,
+          "reason": "insufficient_stock",
+          "remaining": 1,
+          "reserved": 0
+        }
+      },
+      "counts": {
+        "accepted": 1,
+        "admission_waits": 1,
+        "business_rejections": 1,
+        "committed_transactions": 2,
+        "evaluations": 3,
+        "peak_admitted_keys": 1,
+        "serialization_aborts": 1
+      },
+      "events": [
+        {
+          "event": "private_result",
+          "owner": "B#1",
+          "result": {
+            "accepted": true,
+            "reason": "reserved",
+            "remaining": 1,
+            "reserved": 2
+          },
+          "returned_to_client": false
+        },
+        {
+          "actor": "A",
+          "event": "admission",
+          "granted": true,
+          "output": "eu/stock"
+        },
+        {
+          "event": "private_result",
+          "owner": "A#1",
+          "result": {
+            "accepted": true,
+            "reason": "reserved",
+            "remaining": 1,
+            "reserved": 2
+          },
+          "returned_to_client": false
+        },
+        {
+          "actor": "B",
+          "event": "admission",
+          "granted": false,
+          "output": "eu/stock"
+        },
+        {
+          "event": "commit",
+          "owner": "A#1",
+          "position": [
+            20,
+            "A#1"
+          ],
+          "result": {
+            "accepted": true,
+            "reason": "reserved",
+            "remaining": 1,
+            "reserved": 2
+          }
+        },
+        {
+          "actor": "B",
+          "event": "admission",
+          "granted": true,
+          "output": "eu/stock"
+        },
+        {
+          "discarded_private_result": {
+            "accepted": true,
+            "reason": "reserved",
+            "remaining": 1,
+            "reserved": 2
+          },
+          "event": "abort",
+          "owner": "B#1",
+          "reason": "source_changed"
+        },
+        {
+          "actor": "B",
+          "event": "admission",
+          "granted": true,
+          "output": "eu/stock"
+        },
+        {
+          "event": "private_result",
+          "owner": "B#2",
+          "result": {
+            "accepted": false,
+            "reason": "insufficient_stock",
+            "remaining": 1,
+            "reserved": 0
+          },
+          "returned_to_client": false
+        },
+        {
+          "event": "commit",
+          "owner": "B#2",
+          "position": [
+            30,
+            "B#2"
+          ],
+          "result": {
+            "accepted": false,
+            "reason": "insufficient_stock",
+            "remaining": 1,
+            "reserved": 0
+          }
+        }
+      ],
+      "final": {
+        "eu/stock": 1
+      },
+      "fresh_business_rejection_is_committed": true,
+      "initial_stock": 3,
+      "name": "same_output_gate_cannot_adopt_stale_inventory_acceptance",
+      "serial_check": true,
+      "serial_order": [
+        "A#1",
+        "B#2"
+      ],
+      "unsafe_accepted_units": 4,
+      "unsafe_stored_stock_would_still_be_nonnegative": true,
+      "workload": "inventory"
+    }
+  ],
+  "schedule_coverage": "Two complete capture orders by two finish orders for each disjoint-output invariant; two authored inventory histories. This is not exhaustive message interleaving.",
+  "source_sha256": {
+    "certification.py": "1f6096bb0930a3a41d5ff5030517918f52218814fa6e74f79264d06f30f0c5d8",
+    "invariant_probe.py": "a2220d1b2c07cad7336709a46a4f26c211919e4e678d3d4dbe8348a5a7330d23",
+    "write_admission.py": "f10b6fbe8bb426b7da7c7ea69b2e2edb05dd2d92cc7e21d9220c2d796dbfebf6"
+  }
+}

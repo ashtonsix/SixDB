@@ -1,15 +1,77 @@
 # Orbital scenario workbench
 
-An executable contention slice of the evolving [Orbital brief](../../../orbital/BRIEF.md).
-Use it to inspect preparation, discovery, retained protection, retries and
-yielding, and to preserve small counterexamples while the design changes.
-[MODEL.md](MODEL.md) owns the original assumptions; [component retry batches](BATCH.md)
-extend them with scoped reservations, delayed verdicts and bounded selection.
-[Initial findings](FINDINGS.md) explain the first policy comparison.
-This is a disposable design instrument, not the
-architecture of the eventual simulator or an Orbital implementation.
+Experiments behind the [current Orbital brief](../../../orbital/BRIEF.md), with
+comparisons against the [archived arbitration brief](../../../orbital/stale-drafts/BRIEF-arbitration.md). Start with the
+[contention recommendation](CONVERGENCE.md): complete mutation envelopes followed
+by fixed-position execution, releasing allocation access before computation.
+[Ordered pending versions](PIPELINING.md) preserve dependencies, with explicit
+backlog and predicate-waiting costs. It combines the [1,783-run comparison](COMPARISON.md),
+[worked SQL/ELT histories](ELT-WORKED.md), [independent audit](ENVELOPE-AUDIT.md),
+[prior art](reconsideration/CONVERGENCE-PRIOR.md) and
+[extension/epoch composition](reconsideration/COMPOSITION.md).
 
-## Open it
+The [recovery study](recovery/README.md) composes normal-path witness selection
+with prefix recovery, terminal handoff, SOS evidence preservation and PITR.
+It keeps ordinary admission at 2-of-3 and connects the
+[measured network frontier](../cft-commit-latency/network/README.md) to the cost
+of changing leaders or witnesses. Its probes use assumed protocol evidence;
+they do not implement consensus or the transport.
+
+The earlier comparison's “BRIEF2” is the former compute/promote/renew proposal,
+preserved with its original evidence. The new brief selects complete conservative
+mutation coverage, not the earlier predicted-footprint or expansion repairs.
+
+The [earlier reconsideration](reconsideration/README.md) supplies 38 SQL/HTAP/ETL
+scenarios, prior art and alternatives. Its fixed-position MVTO probe predates
+BRIEF2's promotion and renewal rules. The aim remains to remove mechanisms with
+explicit tradeoffs, including reconsidering retained C1 protection itself.
+
+The central constraint is [locality of waiting](reconsideration/LOCALITY.md).
+The recommendation removes shard-wide transaction-completion barriers while
+admitting that conservative target/effect domains can still spread WAN delay.
+
+[Findings](FINDINGS.md) report the earlier component and fold comparisons;
+[model boundaries](MODEL.md) explain their assumptions.
+
+The browser and original CLI share the earlier key-protection scheduler; the new
+comparison runs headlessly. A separate integer-delta probe explores epoch folds
+without per-transaction lock transitions. These are revisable design instruments,
+not Orbital's implementation.
+
+## Run the contention comparison
+
+From the repository root, using Linux Python's standard library:
+
+```sh
+orb -m ubuntu python3 workbench/spikes/orbital-scenarios/check_comparison.py
+orb -m ubuntu python3 workbench/spikes/orbital-scenarios/check_output_policies.py
+orb -m ubuntu python3 workbench/spikes/orbital-scenarios/check_fixed_execution.py
+orb -m ubuntu python3 workbench/spikes/orbital-scenarios/check_fixed_simulation.py
+orb -m ubuntu python3 workbench/spikes/orbital-scenarios/comparison.py --output build/orbital-scenarios/comparison.json
+orb -m ubuntu python3 workbench/spikes/orbital-scenarios/comparison.py --case ordinary_distributed_hot --policies arbitration,snapshot-wait,ordered-writes --full --output build/orbital-scenarios/hot-traces.json
+orb -m ubuntu python3 workbench/spikes/orbital-scenarios/comparison_study.py --output build/orbital-scenarios/comparison-sensitivity.json
+orb -m ubuntu python3 workbench/spikes/orbital-scenarios/discovery_probe.py --full
+orb -m ubuntu python3 workbench/spikes/orbital-scenarios/invariant_probe.py --full
+orb -m ubuntu python3 workbench/spikes/orbital-scenarios/index_discovery_probe.py --full
+orb -m ubuntu python3 workbench/spikes/orbital-scenarios/output_policies.py --output build/orbital-scenarios/output-policies.json
+orb -m ubuntu python3 workbench/spikes/orbital-scenarios/fixed_simulation.py --output build/orbital-scenarios/fixed.json
+orb -m ubuntu python3 workbench/spikes/orbital-scenarios/fixed_fold_comparison.py --output build/orbital-scenarios/fixed-fold.json
+orb -m ubuntu python3 workbench/spikes/orbital-scenarios/arbitration_fold_comparison.py --output build/orbital-scenarios/arbitration-fold.json
+```
+
+The shared comparison checks committed observations and effects against a serial
+history. It reports successful, failed and pending requests separately; times
+and service costs are synthetic inputs. The discovery probe additionally tests
+selecting and updating a data-dependent maximum row. Retained evidence and exact
+sweep commands are linked from [the comparison](COMPARISON.md). The fixed-position
+model is distinct from BRIEF2's fixed-position ablation; its stricter output
+coverage requirement, full exchange costs and publication limits are described
+in [the model guide](MODEL.md#fixed-position-execution).
+
+The [convergence report](CONVERGENCE.md#evidence-and-reproduction) gives commands
+for the new dynamic SQL, authority audit, composition and envelope-locality probes.
+
+## Inspect a scenario
 
 From the repository root, using the Linux Python standard library:
 
@@ -17,84 +79,53 @@ From the repository root, using the Linux Python standard library:
 orb -m ubuntu python3 workbench/spikes/orbital-scenarios/serve.py
 ```
 
-Open <http://127.0.0.1:8767>. On Linux directly, omit `orb -m ubuntu`.
-`--port 0` chooses a free port and prints it. Stop the foreground server with
-Ctrl-C. There are no packages to install or cloud resources to provision.
+Open <http://127.0.0.1:8767>. `--port 0` chooses a free port. Stop with Ctrl-C.
+There are no packages to install or cloud resources to provision.
 
-Choose a scenario, run it, and step through its shard epochs. The display shows
-part generations, retained protection, reservations, current wait edges and
-the transition trace. Small runs keep every epoch; longer runs thin the display
-frames to about 300 while preserving the full event trace in the export.
-Policy comparison uses the same workload, horizon and ordinary capacity for all
-policies. Component cuts have additional uncharged retry work; the global cycle
-oracle is instantaneous. Those abstractions limit timing comparisons.
+Start with **Independent contention arriving during arbitration** and compare
+reservation lifetimes. The second group can start while the first verdict is
+pending. **Separate components share a read scope** compares read/write-aware
+reservations with scope-only exclusion and introduces a late writer bridging
+the components. **Three-transaction preparation cycle** still exposes stale
+verdicts when reservations are replaced faster than arbitration can finish.
 
-Start with **Reservation blocks an older contender** and compare policies.
-Age priority resolves the two-transaction example but stalls on this
-three-transaction example. The [finding](FINDINGS.md#reservation-ownership-can-prevent-the-useful-yield-request)
-explains why. **A → B → A discovery** follows the brief's shape. **Slow
-participant, local convoy** makes cross-shard protection visible to local work.
-The generated workloads mix local and cross-shard work with adjustable hotspot
-probability, arrival span and seed.
+Step through shard epochs to inspect parts, granted-lock waits, component
+reservations and the trace. The editor exposes authored DAGs, read/write scopes,
+delays, capacities and equal-time shard order. Unsupported fields are errors.
+The seeded workloads retain completion and pending counts alongside latency;
+unfinished work must not disappear from the comparison.
 
-For the coordinated-retry proposal, choose the three-transaction reservation
-scenario and **Component batch · keep pending round**, then compare with
-**replace every cut**. The batch controls expose cut frequency, aggregate
-arbitration delay, selection heuristic, early retries and local resolution.
-The [batch study](BATCH.md) owns interpretation and its stronger assumptions.
+**Save replay** verifies the displayed run and writes it to ignored
+`build/orbital-scenarios/replays/`. Pending edits are not silently saved. Large
+runs thin browser frames to about 300 while retaining the full trace in exports.
+Restart the server after executable-source changes; a running engine refuses
+to claim source bytes it has not loaded.
 
-Expand the editor for per-shard periods/capacities, DAG dependencies, read/write
-key sets, weights, arrival times and equal-time shard order. Apply JSON edits
-before running. Unsupported fields are errors, so adding a hypothetical loss
-or recovery parameter cannot silently pretend to simulate it.
-
-**Save replay** explicitly writes the displayed run, normalized scenario, source
-hashes, all events and final state to ignored `build/orbital-scenarios/replays/`
-and displays its path. The server reruns and verifies the displayed trace before
-saving. Pending edits are not part of that run. Import either that export or a
-standalone scenario. No session state is silently written to the repository.
-Restart the server after engine/model changes; requests refuse
-to label an old loaded engine with new source hashes.
-
-## Headless run and replay
+## Headless probes and checks
 
 ```sh
-orb -m ubuntu python3 workbench/spikes/orbital-scenarios/run.py \
-  --preset reservation --policy older \
-  --output build/orbital-scenarios/reservation.json
-orb -m ubuntu python3 workbench/spikes/orbital-scenarios/run.py \
-  --replay build/orbital-scenarios/reservation.json
-orb -m ubuntu python3 workbench/spikes/orbital-scenarios/run.py \
-  --preset hotspot --compare
+orb -m ubuntu python3 workbench/spikes/orbital-scenarios/run.py --preset independent --compare
+orb -m ubuntu python3 workbench/spikes/orbital-scenarios/run.py --preset overlap --output build/orbital-scenarios/overlap.json
+orb -m ubuntu python3 workbench/spikes/orbital-scenarios/run.py --replay build/orbital-scenarios/overlap.json
+orb -m ubuntu python3 workbench/spikes/orbital-scenarios/folds.py
+orb -m ubuntu python3 workbench/spikes/orbital-scenarios/study.py --output build/orbital-scenarios/component-study.json
 orb -m ubuntu python3 workbench/spikes/orbital-scenarios/check.py
 orb -m ubuntu python3 workbench/spikes/orbital-scenarios/check_batch.py
+orb -m ubuntu python3 workbench/spikes/orbital-scenarios/check_folds.py
 ```
 
-A positional JSON file replaces `--preset`; exported runs are also accepted as
-scenario inputs after code changes. `--replay` requires unchanged model sources
-and compares the trace digest, summary, stop reason and final state. `--frames`
-includes browser-style snapshots. `--steps` bounds shard epochs (default 2,000);
-the stop reason distinguishes that limit, the time horizon and full completion.
+A positional JSON file replaces `--preset`; exports can supply scenarios for new
+comparisons. Exact replay requires the same executable sources and compares the
+trace, summary, stop reason and final state. Documentation hashes are recorded
+as context, separately from executable identity. `--frames` includes snapshots;
+`--steps` bounds ordinary shard epochs (default 2,000).
 
-## What is useful to carry forward
+Current checks cover dependencies, stale work, C2 fencing, component lifetimes,
+compatible readers, late bridges, repeatability and the finite fold schedules.
+They do not preserve historical policies or claim general confluence, liveness,
+serializability or distributed safety. Complete collection, atomic verdicts and
+uncharged retry work remain major abstractions.
 
-The browser and CLI call the same Python engine. `scenarios.py` authors inputs;
-`model.py` holds logical state, reducers and a deterministic event scheduler;
-`batch.py` supplies the experimental component reservation/selection policy;
-`run.py` supplies replay identity and comparison; `serve.py` and `app.js` project
-that state. There is no second browser implementation of the protocol.
-
-The model checks cover the executable slice: stale generations, transitive
-invalidation, C2 fencing, all-or-none acquisition, compatible readers,
-same-epoch contention, fork/join discovery, replay, and variations of seeded
-workloads and equal-time shard order. They do not establish distributed safety,
-confluence, eventual progress, serializable object semantics or calibrated
-performance. Agreed epochs and atomic invalidation are assumed services.
-
-Git keeps source, small scenarios and the compact comparison that motivates a
-finding. Exploratory replays and full traces belong in ignored
-`build/orbital-scenarios/`. [compare.py](compare.py) regenerates the retained
-comparison from its original presets and records source/scenario/trace hashes.
-The original evidence refers to commit `4b509ee`; regression checks retain all
-28 trace identities. `study_batch.py` regenerates the separate batch comparison.
-Nothing in this spike needs the full historical network experiment archives.
+[History](HISTORY.md) keeps the useful earlier findings and their source commits.
+The old individual-reservation policies, instantaneous cycle oracle and frozen
+trace regressions are retired from the active model; Git can reproduce them.

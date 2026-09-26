@@ -1,0 +1,984 @@
+{
+  "admission_sha256": "f10b6fbe8bb426b7da7c7ea69b2e2edb05dd2d92cc7e21d9220c2d796dbfebf6",
+  "capacity": {
+    "name": "capacity_wait_after_provisional_announcement",
+    "obligation": "reserve capacity before read blockers, or abort; metadata cannot await blocked data",
+    "preflight_dependencies": {
+      "A-data": [],
+      "B-capacity": [
+        "A-data"
+      ]
+    },
+    "unsafe_cycle": {
+      "A-data": [
+        "B-metadata"
+      ],
+      "B-metadata": [
+        "A-data"
+      ]
+    }
+  },
+  "histories": [
+    {
+      "completed_before_predecessor": false,
+      "errors": [],
+      "events": [
+        {
+          "event": "exact_position_everywhere",
+          "owner": "A",
+          "position": 10
+        },
+        {
+          "event": "allocation_wait",
+          "owner": "B",
+          "shard": "eu"
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "A"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "A"
+        },
+        {
+          "event": "exact_position_everywhere",
+          "owner": "B",
+          "position": 20
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "B"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "B"
+        }
+      ],
+      "expected_valid": true,
+      "metadata_pipelined": false,
+      "name": "retain_blind",
+      "serial_valid": true
+    },
+    {
+      "completed_before_predecessor": false,
+      "errors": [],
+      "events": [
+        {
+          "event": "exact_position_everywhere",
+          "owner": "A",
+          "position": 10
+        },
+        {
+          "event": "allocation_wait",
+          "owner": "B",
+          "shard": "eu"
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "A"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "A"
+        },
+        {
+          "event": "exact_position_everywhere",
+          "owner": "B",
+          "position": 20
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "B"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "B"
+        }
+      ],
+      "expected_valid": true,
+      "metadata_pipelined": false,
+      "name": "retain_rmw",
+      "serial_valid": true
+    },
+    {
+      "completed_before_predecessor": true,
+      "errors": [],
+      "events": [
+        {
+          "event": "exact_position_everywhere",
+          "owner": "A",
+          "position": 10
+        },
+        {
+          "event": "exact_position_everywhere",
+          "owner": "B",
+          "position": 20
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "B"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "B"
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "A"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "A"
+        }
+      ],
+      "expected_valid": true,
+      "metadata_pipelined": true,
+      "name": "release_blind",
+      "serial_valid": true
+    },
+    {
+      "completed_before_predecessor": false,
+      "errors": [],
+      "events": [
+        {
+          "event": "exact_position_everywhere",
+          "owner": "A",
+          "position": 10
+        },
+        {
+          "event": "exact_position_everywhere",
+          "owner": "B",
+          "position": 20
+        },
+        {
+          "blocker": "A",
+          "event": "read_wait",
+          "key": "eu/x",
+          "position": 20,
+          "reader": "B"
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "A"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "A"
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "B"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "B"
+        }
+      ],
+      "expected_valid": true,
+      "metadata_pipelined": true,
+      "name": "release_rmw",
+      "serial_valid": true
+    },
+    {
+      "errors": [],
+      "events": [
+        {
+          "event": "exact_position_everywhere",
+          "owner": "A",
+          "position": 10
+        },
+        {
+          "event": "exact_position_everywhere",
+          "owner": "B",
+          "position": 20
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "B"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "no_value",
+          "owner": "B"
+        },
+        {
+          "blocker": "A",
+          "event": "read_wait",
+          "key": "eu/x",
+          "position": 25,
+          "reader": "Q"
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "A"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "A"
+        },
+        {
+          "event": "exact_position_everywhere",
+          "owner": "C",
+          "position": 26
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "C"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "C"
+        }
+      ],
+      "expected_valid": true,
+      "name": "later_noop",
+      "serial_valid": true,
+      "tombstone": false
+    },
+    {
+      "errors": [],
+      "events": [
+        {
+          "event": "exact_position_everywhere",
+          "owner": "A",
+          "position": 10
+        },
+        {
+          "event": "exact_position_everywhere",
+          "owner": "B",
+          "position": 20
+        },
+        {
+          "decision": "abort",
+          "event": "decision",
+          "owner": "B"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "no_value",
+          "owner": "B"
+        },
+        {
+          "blocker": "A",
+          "event": "read_wait",
+          "key": "eu/x",
+          "position": 25,
+          "reader": "Q"
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "A"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "A"
+        },
+        {
+          "event": "exact_position_everywhere",
+          "owner": "C",
+          "position": 26
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "C"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "C"
+        }
+      ],
+      "expected_valid": true,
+      "name": "later_abort",
+      "serial_valid": true,
+      "tombstone": false
+    },
+    {
+      "errors": [],
+      "events": [
+        {
+          "event": "exact_position_everywhere",
+          "owner": "A",
+          "position": 10
+        },
+        {
+          "event": "exact_position_everywhere",
+          "owner": "B",
+          "position": 20
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "B"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "B"
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "A"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "A"
+        },
+        {
+          "event": "exact_position_everywhere",
+          "owner": "C",
+          "position": 26
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "C"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "C"
+        }
+      ],
+      "expected_valid": true,
+      "name": "later_delete",
+      "serial_valid": true,
+      "tombstone": true
+    },
+    {
+      "correct_new_snapshot": 2,
+      "correct_old_snapshot": 1,
+      "errors": [],
+      "events": [
+        {
+          "event": "exact_position_everywhere",
+          "owner": "A",
+          "position": 10
+        },
+        {
+          "event": "exact_position_everywhere",
+          "owner": "B",
+          "position": 20
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "B"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "B"
+        },
+        {
+          "blocker": "B",
+          "event": "read_wait",
+          "key": "us/y",
+          "position": 25,
+          "reader": "Q-y"
+        },
+        {
+          "event": "resolve",
+          "key": "us/y",
+          "kind": "value",
+          "owner": "B"
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "A"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "A"
+        },
+        {
+          "event": "resolve",
+          "key": "us/y",
+          "kind": "value",
+          "owner": "A"
+        }
+      ],
+      "expected_valid": true,
+      "name": "partial_install_and_late_older_version",
+      "serial_valid": true,
+      "unsafe_arrival_head": 1
+    },
+    {
+      "errors": [],
+      "events": [
+        {
+          "event": "exact_position_everywhere",
+          "owner": "range",
+          "position": 10
+        },
+        {
+          "event": "exact_position_everywhere",
+          "owner": "point",
+          "position": 11
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "point"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/1",
+          "kind": "value",
+          "owner": "point"
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "range"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/0",
+          "kind": "no_value",
+          "owner": "range"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/1",
+          "kind": "value",
+          "owner": "range"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/2",
+          "kind": "no_value",
+          "owner": "range"
+        }
+      ],
+      "expected_valid": true,
+      "finite_slot_overlap_only": true,
+      "name": "earlier_range_late_insert_is_shadowed",
+      "serial_valid": true
+    },
+    {
+      "errors": [],
+      "events": [
+        {
+          "event": "exact_position_everywhere",
+          "owner": "delete",
+          "position": 10
+        },
+        {
+          "event": "exact_position_everywhere",
+          "owner": "update",
+          "position": 20
+        },
+        {
+          "blocker": "delete",
+          "event": "read_wait",
+          "key": "eu/x",
+          "position": 20,
+          "reader": "update"
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "delete"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "delete"
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "update"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "no_value",
+          "owner": "update"
+        }
+      ],
+      "expected_valid": true,
+      "name": "update_after_delete_wait",
+      "serial_valid": true
+    },
+    {
+      "errors": [
+        {
+          "actual_result": {
+            "affected": 1
+          },
+          "actual_writes": {
+            "eu/x": 9
+          },
+          "expected_result": {
+            "affected": 0
+          },
+          "expected_writes": {},
+          "kind": "program",
+          "owner": "update"
+        },
+        {
+          "expected": null,
+          "kind": "read",
+          "observed": {
+            "key": "eu/x",
+            "position": 20,
+            "reader": "update",
+            "value": 0
+          }
+        }
+      ],
+      "events": [
+        {
+          "event": "exact_position_everywhere",
+          "owner": "delete",
+          "position": 10
+        },
+        {
+          "event": "exact_position_everywhere",
+          "owner": "update",
+          "position": 20
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "update"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "update"
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "delete"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "delete"
+        }
+      ],
+      "expected_valid": false,
+      "name": "update_after_delete_unsafe",
+      "serial_valid": false
+    },
+    {
+      "errors": [],
+      "events": [
+        {
+          "event": "exact_position_everywhere",
+          "owner": "older",
+          "position": 10
+        },
+        {
+          "event": "exact_position_everywhere",
+          "owner": "newer",
+          "position": 20
+        },
+        {
+          "blocker": "older",
+          "event": "read_wait",
+          "key": "us/b",
+          "position": 20,
+          "reader": "newer"
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "older"
+        },
+        {
+          "event": "resolve",
+          "key": "us/b",
+          "kind": "value",
+          "owner": "older"
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "newer"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/a",
+          "kind": "no_value",
+          "owner": "newer"
+        }
+      ],
+      "expected_valid": true,
+      "name": "unique_full_row_wait",
+      "serial_valid": true,
+      "unique_constraint_valid": true
+    },
+    {
+      "errors": [
+        {
+          "actual_result": {
+            "accepted": true
+          },
+          "actual_writes": {
+            "eu/a": 9
+          },
+          "expected_result": {
+            "accepted": false
+          },
+          "expected_writes": {},
+          "kind": "program",
+          "owner": "newer"
+        },
+        {
+          "expected": 9,
+          "kind": "read",
+          "observed": {
+            "key": "us/b",
+            "position": 20,
+            "reader": "newer",
+            "value": 1
+          }
+        }
+      ],
+      "events": [
+        {
+          "event": "exact_position_everywhere",
+          "owner": "older",
+          "position": 10
+        },
+        {
+          "event": "exact_position_everywhere",
+          "owner": "newer",
+          "position": 20
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "newer"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/a",
+          "kind": "value",
+          "owner": "newer"
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "older"
+        },
+        {
+          "event": "resolve",
+          "key": "us/b",
+          "kind": "value",
+          "owner": "older"
+        }
+      ],
+      "expected_valid": false,
+      "name": "unique_full_row_unsafe",
+      "serial_valid": false,
+      "unique_constraint_valid": false
+    },
+    {
+      "errors": [],
+      "events": [
+        {
+          "event": "exact_position_everywhere",
+          "owner": "older",
+          "position": 10
+        },
+        {
+          "event": "exact_position_everywhere",
+          "owner": "newer",
+          "position": 20
+        },
+        {
+          "blocker": "older",
+          "event": "read_wait",
+          "key": "eu/parent",
+          "position": 20,
+          "reader": "newer"
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "older"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/parent",
+          "kind": "value",
+          "owner": "older"
+        },
+        {
+          "event": "resolve",
+          "key": "us/child",
+          "kind": "value",
+          "owner": "older"
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "newer"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/parent",
+          "kind": "value",
+          "owner": "newer"
+        },
+        {
+          "event": "resolve",
+          "key": "us/child",
+          "kind": "value",
+          "owner": "newer"
+        }
+      ],
+      "expected_valid": true,
+      "foreign_key_valid": true,
+      "name": "cascade_full_row_wait",
+      "serial_valid": true
+    },
+    {
+      "errors": [
+        {
+          "actual_result": {
+            "new": 1,
+            "old": 1
+          },
+          "actual_writes": {
+            "eu/parent": 1
+          },
+          "expected_result": {
+            "new": 1,
+            "old": 2
+          },
+          "expected_writes": {
+            "eu/parent": 1,
+            "us/child": 1
+          },
+          "kind": "program",
+          "owner": "newer"
+        },
+        {
+          "expected": 2,
+          "kind": "read",
+          "observed": {
+            "key": "eu/parent",
+            "position": 20,
+            "reader": "newer",
+            "value": 1
+          }
+        },
+        {
+          "expected": 2,
+          "kind": "read",
+          "observed": {
+            "key": "us/child",
+            "position": 20,
+            "reader": "newer",
+            "value": 1
+          }
+        }
+      ],
+      "events": [
+        {
+          "event": "exact_position_everywhere",
+          "owner": "older",
+          "position": 10
+        },
+        {
+          "event": "exact_position_everywhere",
+          "owner": "newer",
+          "position": 20
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "newer"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/parent",
+          "kind": "value",
+          "owner": "newer"
+        },
+        {
+          "event": "resolve",
+          "key": "us/child",
+          "kind": "no_value",
+          "owner": "newer"
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "older"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/parent",
+          "kind": "value",
+          "owner": "older"
+        },
+        {
+          "event": "resolve",
+          "key": "us/child",
+          "kind": "value",
+          "owner": "older"
+        }
+      ],
+      "expected_valid": false,
+      "foreign_key_valid": false,
+      "name": "cascade_full_row_unsafe",
+      "serial_valid": false
+    },
+    {
+      "errors": [],
+      "events": [
+        {
+          "event": "exact_position_everywhere",
+          "owner": "A",
+          "position": 10
+        },
+        {
+          "event": "exact_position_everywhere",
+          "owner": "B",
+          "position": 20
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "B"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "B"
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "A"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "A"
+        }
+      ],
+      "expected_valid": true,
+      "name": "row_version_filters_late_index_membership",
+      "serial_valid": true,
+      "stale_index_candidate_present": true
+    },
+    {
+      "errors": [],
+      "events": [
+        {
+          "event": "exact_position_everywhere",
+          "owner": "A",
+          "position": 10
+        },
+        {
+          "event": "exact_position_everywhere",
+          "owner": "B",
+          "position": 20
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "B"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "B"
+        },
+        {
+          "blocker": "A",
+          "event": "read_wait",
+          "key": "us/y",
+          "position": 25,
+          "reader": "Q"
+        },
+        {
+          "decision": "commit",
+          "event": "decision",
+          "owner": "A"
+        },
+        {
+          "event": "resolve",
+          "key": "eu/x",
+          "kind": "value",
+          "owner": "A"
+        },
+        {
+          "event": "resolve",
+          "key": "us/y",
+          "kind": "value",
+          "owner": "A"
+        }
+      ],
+      "expected_valid": true,
+      "name": "shadowing_one_row_does_not_resolve_transaction",
+      "serial_valid": true,
+      "unshadowed_row_waited": true
+    }
+  ],
+  "scope": "Finite semantic audit, not a transport or performance model",
+  "source_sha256": "a892ee274e9bb338ecb13dc9c1e4bd4394b11302cd435000bc854c944061ead8"
+}

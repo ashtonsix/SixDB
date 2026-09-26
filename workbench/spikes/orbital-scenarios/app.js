@@ -1,8 +1,6 @@
 'use strict';
 const $ = id => document.getElementById(id);
-let scenario, result, presetData, frameIndex = 0, dirty = false, editorDirty = false;
-const names = {reject: 'Reject all', older: 'Favor older', work: 'Retained work', arbitrate: 'Older + oracle',
-  'batch-reset': 'Batch replace', 'batch-hold': 'Batch keep pending'};
+let scenario, result, presetData, config, names, frameIndex = 0, dirty = false, editorDirty = false;
 const fmt = value => value == null ? '—' : Number(value).toLocaleString();
 const clone = value => JSON.parse(JSON.stringify(value));
 
@@ -25,21 +23,13 @@ function changed() {
   $('status').textContent = 'Scenario changed. Run to update the results below.';
 }
 
-function batchControls() {
-  const active = $('policy').value.startsWith('batch-');
-  $('batch-controls').hidden = !active;
-  $('reserve').parentElement.hidden = active;
-  $('backoff').parentElement.hidden = active;
-}
-
 function loadScenario(value) {
   const candidate = clone(value.scenario || value);
   if (!candidate.shards || !candidate.transactions) throw new Error('Expected a scenario or exported replay.');
   scenario = candidate;
   scenario.policy ||= {};
-  $('policy').value = scenario.policy.yield || 'older';
-  $('reserve').value = scenario.policy.reserve_after ?? 3;
-  $('backoff').value = scenario.policy.backoff ?? 4;
+  $('policy').value = scenario.policy.yield || config.default_policy;
+  $('reservation-mode').value = scenario.policy.reservations ?? 'compatible';
   $('delay').value = scenario.control_delay_us ?? 100;
   $('horizon').value = scenario.horizon_us ?? 8000;
   $('batch-period').value = scenario.policy.batch_us ?? 500;
@@ -47,7 +37,6 @@ function loadScenario(value) {
   $('solver').value = scenario.policy.solver ?? 'age';
   $('fast-retries').checked = scenario.policy.fast_retries ?? true;
   $('local-solver').checked = scenario.policy.local_solver ?? false;
-  batchControls();
   $('scenario').value = JSON.stringify(scenario, null, 2);
   editorDirty = false;
   changed();
@@ -56,7 +45,7 @@ function loadScenario(value) {
 function editedScenario() {
   if (editorDirty) throw new Error('Apply the edited scenario before running. Your JSON edits are still in the editor.');
   const s = clone(scenario);
-  s.policy = {...s.policy, yield: $('policy').value, reserve_after: Number($('reserve').value), backoff: Number($('backoff').value),
+  s.policy = {...s.policy, yield: $('policy').value, reservations: $('reservation-mode').value,
     batch_us: Number($('batch-period').value), arbitration_us: Number($('arbitration-delay').value),
     solver: $('solver').value, fast_retries: $('fast-retries').checked, local_solver: $('local-solver').checked};
   s.control_delay_us = Number($('delay').value);
@@ -68,7 +57,7 @@ function editedScenario() {
 
 async function busy(task) {
   $('error').hidden = true;
-  const controls = ['run', 'compare', 'generate', 'apply', 'preset', 'import', 'policy', 'reserve', 'backoff', 'delay', 'horizon', 'count', 'hot', 'seed', 'span', 'scenario', 'batch-period', 'arbitration-delay', 'solver', 'fast-retries', 'local-solver'];
+  const controls = ['run', 'compare', 'generate', 'apply', 'preset', 'import', 'policy', 'reservation-mode', 'delay', 'horizon', 'count', 'hot', 'seed', 'span', 'scenario', 'batch-period', 'arbitration-delay', 'solver', 'fast-retries', 'local-solver'];
   for (const id of controls) $(id).disabled = true;
   $('status').textContent = 'Running the deterministic model…';
   try { await task(); } catch (error) { showError(error); $('status').textContent = 'Run failed.'; }
@@ -84,7 +73,7 @@ async function runScenario() {
     $('comparison').hidden = true;
     $('export').disabled = false;
     $('scenario-title').textContent = `${result.scenario.name || 'Authored scenario'} · ${names[result.scenario.policy.yield]}`;
-    $('model-id').textContent = `Model ${result.model_files_sha256['model.py'].slice(0, 10)} · scenario ${result.scenario_sha256.slice(0, 10)}`;
+    $('model-id').textContent = `Model ${result.model_sha256.slice(0, 10)} · scenario ${result.scenario_sha256.slice(0, 10)}`;
     $('frame').max = result.frames.length - 1;
     // Offer waiting transactions first, but keep identities stable when stepping.
     const pending = result.final.transactions.filter(t => t.state !== 'complete');
@@ -112,8 +101,8 @@ function render() {
   $('cycle-status').textContent = s.cycles.length ? `Wait cycles: ${s.cycles.map(c => c.join(' ↔ ')).join('; ')}` : 'No wait cycle in this frame';
   $('components-note').hidden = !frame.components;
   if (frame.components) {
-    $('components-note').textContent = `Component batches: ${s.counts.batch_begin || 0} · applied / stale verdicts ${s.counts.verdict_apply || 0} / ${s.counts.verdict_stale || 0} · largest scope ${s.counts.max_component_transactions || 0} transactions. ` +
-      frame.components.map(c => `Round ${c.round}: ${c.members.length} members, ${c.keys.length} keys, ${c.pending ? 'verdict pending' : 'selected ' + c.winners.join(', ')}.`).join(' ');
+    $('components-note').textContent = `Retry epochs: ${s.counts.batch_begin || 0} · applied / stale verdicts ${s.counts.verdict_apply || 0} / ${s.counts.verdict_stale || 0} · largest scope ${s.counts.max_component_transactions || 0} transactions. ` +
+      frame.components.map(c => `Collection ${c.round}: ${c.members.length} members, ${c.keys.length} keys, ${c.pending ? 'verdict pending' : 'selected ' + c.winners.join(', ')}.`).join(' ');
   }
   $('time').textContent = `${fmt(frame.time_us)} µs · epoch ${fmt(frame.step)}`;
   $('frame-note').textContent = `Frames every ${result.frame_stride} shard epochs; ${frame.last_epoch ? `last: ${frame.last_epoch.shard} / ${frame.last_epoch.epoch} / ${frame.last_epoch.kind}` : 'initial state'}. Step buttons move between saved frames.`;
@@ -148,7 +137,6 @@ function renderTransaction(frame) {
     const r = row([p.id, `${p.shard}: ${Object.entries(p.locks).map(([k,v]) => `${k} ${v}`).join(', ')}`, '', p.generation, p.attempts]);
     const badge = document.createElement('span'); badge.className = `state ${p.state}`; badge.textContent = p.state;
     r.children[2].append(badge);
-    if (p.reserved) r.children[2].append(document.createTextNode(' · reserved'));
     if (p.state === 'ready' && p.retry_epoch > frame.epochs[p.shard]) r.children[2].append(document.createTextNode(` · retry ≥ epoch ${p.retry_epoch}`));
     return r;
   }));
@@ -187,7 +175,7 @@ function drawTimeline(frame) {
   for (const e of result.trace.filter(e => e.type === 'batch_begin')) {
     const cut = svgElement('line', {x1: x(e.time_us), x2: x(e.time_us), y1: 4, y2: height - 29,
       stroke: 'var(--text)', 'stroke-dasharray': '2 3', opacity: .45});
-    cut.append(svgElement('title', {}, `Retry cut ${e.round}: ${e.retry_parts} parts at ${e.time_us} µs`));
+    cut.append(svgElement('title', {}, `Retry epoch ${e.round}: ${e.retry_parts} parts at ${e.time_us} µs`));
     nodes.push(cut);
   }
   nodes.push(svgElement('line', {x1: x(frame.time_us), x2: x(frame.time_us), y1: 4, y2: height - 29, class: 'cursor'}));
@@ -199,8 +187,7 @@ function drawTimeline(frame) {
 
 $('run').addEventListener('click', runScenario);
 $('preset').addEventListener('change', () => { loadScenario(presetData[$('preset').value]); runScenario(); });
-for (const id of ['policy', 'reserve', 'backoff', 'delay', 'horizon', 'batch-period', 'arbitration-delay', 'solver', 'fast-retries', 'local-solver']) $(id).addEventListener('change', changed);
-$('policy').addEventListener('change', batchControls);
+for (const id of ['policy', 'reservation-mode', 'delay', 'horizon', 'batch-period', 'arbitration-delay', 'solver', 'fast-retries', 'local-solver']) $(id).addEventListener('change', changed);
 $('scenario').addEventListener('input', () => { editorDirty = true; changed(); });
 $('apply').addEventListener('click', () => { try { loadScenario(JSON.parse($('scenario').value)); } catch (e) { showError(e); } });
 $('generate').addEventListener('click', () => busy(async () => {
@@ -233,8 +220,12 @@ $('frame').oninput = () => { frameIndex = Number($('frame').value); render(); };
 $('transaction').onchange = () => renderTransaction(result.frames[frameIndex]);
 new ResizeObserver(() => { if (result) drawTimeline(result.frames[frameIndex]); }).observe($('timeline-wrap'));
 
-api('/api/presets').then(data => {
-  presetData = data;
+Promise.all([api('/api/presets'), api('/api/config')]).then(([data, settings]) => {
+  presetData = data; config = settings; names = config.policies;
+  $('policy').replaceChildren(...Object.entries(names).map(([id, name]) => {
+    const o = document.createElement('option'); o.value = id; o.textContent = name; return o;
+  }));
   $('preset').replaceChildren(...Object.entries(data).map(([id, s]) => { const o = document.createElement('option'); o.value = id; o.textContent = s.name; return o; }));
-  $('preset').value = 'cycle'; loadScenario(data.cycle); return runScenario();
+  $('preset').value = config.default_preset;
+  loadScenario(data[config.default_preset]); return runScenario();
 }).catch(showError);

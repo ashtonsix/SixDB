@@ -1,0 +1,194 @@
+{
+  "limits": [
+    "Pure semantic core; admission release delivery and scheduling are caller-owned.",
+    "Exact-c publication at every effect authority precedes any admission release.",
+    "Only complete logical-identity versions may shadow older pending writes.",
+    "All pending versions and their needed predecessor history are retained; no memory bound or GC protocol.",
+    "A bounded implementation must reserve pending-version and continuation capacity before publishing any provisional read blockers.",
+    "No throughput, finite-latency, recovery or arbitrary-index-authority proof."
+  ],
+  "scenarios": [
+    {
+      "counters": {
+        "attempts": 2,
+        "capture_calls": 3,
+        "capture_waits": 1,
+        "captured_rows": 2,
+        "captured_scopes": 2,
+        "commit_decisions": 2,
+        "duplicate_installed_keys": 0,
+        "fixed_positions_chosen": 2,
+        "installed_keys": 2,
+        "peak_pending_versions": 2,
+        "peak_versions_per_identity": 2,
+        "position_groups_published": 2,
+        "position_groups_reserved": 2,
+        "read_positions_registered": 3,
+        "unused_outputs_resolved": 0
+      },
+      "final": {
+        "eu/x": 2
+      },
+      "name": "same_row_two_increments",
+      "second_metadata_finished_before_first_computation": true,
+      "serial_check": true
+    },
+    {
+      "counters": {
+        "attempts": 4,
+        "capture_calls": 4,
+        "capture_waits": 1,
+        "captured_rows": 3,
+        "captured_scopes": 3,
+        "commit_decisions": 4,
+        "duplicate_installed_keys": 1,
+        "fixed_positions_chosen": 2,
+        "installed_keys": 2,
+        "peak_pending_versions": 2,
+        "peak_versions_per_identity": 2,
+        "position_groups_published": 2,
+        "position_groups_reserved": 2,
+        "positions_chosen": 2,
+        "read_positions_registered": 4,
+        "unused_outputs_resolved": 0
+      },
+      "final": {
+        "eu/x": 9
+      },
+      "late_older_install_preserved_newer_head": true,
+      "name": "blind_overwrite_hides_earlier_only_at_newer_cuts",
+      "old_reader_waited": true,
+      "serial_check": true
+    },
+    {
+      "counters": {
+        "attempts": 2,
+        "capture_calls": 2,
+        "capture_waits": 1,
+        "captured_rows": 1,
+        "captured_scopes": 1,
+        "commit_decisions": 2,
+        "duplicate_installed_keys": 0,
+        "fixed_positions_chosen": 2,
+        "installed_keys": 1,
+        "peak_pending_versions": 2,
+        "peak_versions_per_identity": 2,
+        "position_groups_published": 2,
+        "position_groups_reserved": 2,
+        "read_positions_registered": 2,
+        "unused_outputs_resolved": 1
+      },
+      "final": {
+        "eu/x": 1
+      },
+      "name": "earlier_no_write_resolves_without_fake_version",
+      "serial_check": true
+    },
+    {
+      "counters": {
+        "attempts": 2,
+        "capture_calls": 3,
+        "capture_waits": 1,
+        "captured_rows": 4,
+        "captured_scopes": 2,
+        "commit_decisions": 2,
+        "duplicate_installed_keys": 0,
+        "fixed_positions_chosen": 2,
+        "installed_keys": 1,
+        "peak_pending_versions": 2,
+        "peak_versions_per_identity": 1,
+        "position_groups_published": 2,
+        "position_groups_reserved": 2,
+        "read_positions_registered": 3,
+        "unused_outputs_resolved": 1
+      },
+      "final": {
+        "eu/a": 0,
+        "us/b": 1
+      },
+      "name": "cross_output_write_skew_becomes_business_no_write",
+      "serial_check": true
+    },
+    {
+      "counters": {
+        "attempts": 4,
+        "capture_calls": 5,
+        "capture_waits": 2,
+        "captured_rows": 5,
+        "captured_scopes": 3,
+        "commit_decisions": 4,
+        "duplicate_installed_keys": 0,
+        "fixed_positions_chosen": 3,
+        "installed_keys": 4,
+        "peak_pending_versions": 4,
+        "peak_versions_per_identity": 2,
+        "position_groups_published": 4,
+        "position_groups_reserved": 4,
+        "positions_chosen": 1,
+        "read_positions_registered": 5,
+        "unused_outputs_resolved": 0
+      },
+      "final": {
+        "eu/a": 3,
+        "eu/outside": 1,
+        "us/b": 2
+      },
+      "name": "broad_envelope_pipelines_narrow_metadata_not_dependent_reads",
+      "outside_completed_before_broad": true,
+      "serial_check": true
+    },
+    {
+      "counters": {
+        "abort_decisions": 1,
+        "attempts": 2,
+        "commit_decisions": 1,
+        "duplicate_installed_keys": 0,
+        "fixed_positions_chosen": 2,
+        "installed_keys": 1,
+        "peak_pending_versions": 3,
+        "peak_versions_per_identity": 2,
+        "position_groups_published": 3,
+        "position_groups_reserved": 3,
+        "released_keys": 2,
+        "unused_outputs_resolved": 0
+      },
+      "final": {
+        "eu/x": 5,
+        "us/y": 0
+      },
+      "name": "abort_releases_only_its_pending_versions",
+      "serial_check": true
+    },
+    {
+      "incorrect_observation": 9,
+      "name": "provisional_floor_is_not_an_exact_shadowable_version",
+      "positions": {
+        "B": [
+          11,
+          "B"
+        ],
+        "Q": [
+          30,
+          "Q"
+        ],
+        "final_A": [
+          21,
+          "A"
+        ],
+        "minimum_A": [
+          10,
+          "A"
+        ]
+      },
+      "serial_expected": 1,
+      "unsafe_variant_rejected": true
+    }
+  ],
+  "source_sha256": {
+    "certification.py": "1f6096bb0930a3a41d5ff5030517918f52218814fa6e74f79264d06f30f0c5d8",
+    "check_position_pipeline.py": "f1e95d6b58f7f8ea3282ace5e9e67beccfa54544e9776a05d22447582e9ffc2b",
+    "fixed_execution.py": "ea82edb8c4b86270a629f5bcc94779605b789c9f1c50da9d22391b91c05516b0",
+    "position_pipeline.py": "634adff1a9d5ba023af25de343cf7a63e2d9244d4e9da10eacf88258aa15c36f",
+    "write_admission.py": "f10b6fbe8bb426b7da7c7ea69b2e2edb05dd2d92cc7e21d9220c2d796dbfebf6"
+  }
+}

@@ -1,0 +1,2032 @@
+{
+  "assumptions": "Complete multishard collection, atomic verdicts/invalidation, authored DAGs, no failures or CPU charge. Synthetic time only.",
+  "comparisons": [
+    {
+      "case": "independent",
+      "completions_us": {
+        "early-1": 1900,
+        "early-2": 2400,
+        "late-1": 2400,
+        "late-2": 2900
+      },
+      "first_components": [
+        {
+          "edges": 1,
+          "keys": 2,
+          "members": [
+            "early-1",
+            "early-2"
+          ],
+          "time_us": 500
+        },
+        {
+          "edges": 1,
+          "keys": 2,
+          "members": [
+            "late-1",
+            "late-2"
+          ],
+          "time_us": 1000
+        }
+      ],
+      "input": {
+        "policy": {
+          "arbitration_us": 1200,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "compatible",
+          "solver": "age",
+          "yield": "batch-independent"
+        },
+        "preset": "independent"
+      },
+      "scenario_sha256": "8757362305ff50aab0f7d1d74a1b81f9e4f62f4f7a2aef65921a260ab7af9de4",
+      "stop_reason": "complete",
+      "summary": {
+        "completed": 4,
+        "completion_fraction": 1.0,
+        "counts": {
+          "apply": 8,
+          "arrival": 4,
+          "authorize": 4,
+          "batch_begin": 5,
+          "batch_isolated_success": 2,
+          "complete": 4,
+          "component": 2,
+          "component_claims": 8,
+          "component_deferred": 4,
+          "component_edges": 2,
+          "component_release": 2,
+          "component_reports": 4,
+          "control_messages": 18,
+          "cycle": 1,
+          "discarded_work": 2,
+          "discover": 6,
+          "epoch": 60,
+          "executed_work": 10,
+          "invalidate": 2,
+          "max_component_transactions": 2,
+          "prepare": 10,
+          "report": 10,
+          "retry": 8,
+          "solver_nodes": 0,
+          "verdict_apply": 2
+        },
+        "cycles": [],
+        "epochs": 60,
+        "first_cycle_us": 100,
+        "future": 0,
+        "oldest_pending_us": 0,
+        "p50_completed_us": 1900,
+        "p99_completed_us": 2400,
+        "pending": 0,
+        "time_us": 2900
+      },
+      "trace_sha256": "a5b49b1b144d5c5722040f5ca7e15db9317823f9fefc741b4d005537ed405a02"
+    },
+    {
+      "case": "independent",
+      "completions_us": {
+        "early-1": 1900,
+        "early-2": 2400,
+        "late-1": 2400,
+        "late-2": 2900
+      },
+      "first_components": [
+        {
+          "edges": 1,
+          "keys": 2,
+          "members": [
+            "early-1",
+            "early-2"
+          ],
+          "time_us": 500
+        },
+        {
+          "edges": 1,
+          "keys": 2,
+          "members": [
+            "late-1",
+            "late-2"
+          ],
+          "time_us": 1000
+        }
+      ],
+      "input": {
+        "policy": {
+          "arbitration_us": 1200,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "scope",
+          "solver": "age",
+          "yield": "batch-independent"
+        },
+        "preset": "independent"
+      },
+      "scenario_sha256": "d9edd36c07833ba014b9cec7f5bc2ff3ecfab14f84d649a5c95610a7681be277",
+      "stop_reason": "complete",
+      "summary": {
+        "completed": 4,
+        "completion_fraction": 1.0,
+        "counts": {
+          "apply": 8,
+          "arrival": 4,
+          "authorize": 4,
+          "batch_begin": 5,
+          "batch_isolated_success": 2,
+          "complete": 4,
+          "component": 2,
+          "component_claims": 8,
+          "component_deferred": 4,
+          "component_edges": 2,
+          "component_release": 2,
+          "component_reports": 4,
+          "control_messages": 18,
+          "cycle": 1,
+          "discarded_work": 2,
+          "discover": 6,
+          "epoch": 60,
+          "executed_work": 10,
+          "invalidate": 2,
+          "max_component_transactions": 2,
+          "prepare": 10,
+          "report": 10,
+          "retry": 8,
+          "solver_nodes": 0,
+          "verdict_apply": 2
+        },
+        "cycles": [],
+        "epochs": 60,
+        "first_cycle_us": 100,
+        "future": 0,
+        "oldest_pending_us": 0,
+        "p50_completed_us": 1900,
+        "p99_completed_us": 2400,
+        "pending": 0,
+        "time_us": 2900
+      },
+      "trace_sha256": "a5b49b1b144d5c5722040f5ca7e15db9317823f9fefc741b4d005537ed405a02"
+    },
+    {
+      "case": "independent",
+      "completions_us": {
+        "early-1": 1900,
+        "early-2": 2400,
+        "late-1": 3400,
+        "late-2": 3900
+      },
+      "first_components": [
+        {
+          "edges": 1,
+          "keys": 2,
+          "members": [
+            "early-1",
+            "early-2"
+          ],
+          "time_us": 500
+        },
+        {
+          "edges": 1,
+          "keys": 2,
+          "members": [
+            "late-1",
+            "late-2"
+          ],
+          "time_us": 2000
+        }
+      ],
+      "input": {
+        "policy": {
+          "arbitration_us": 1200,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "compatible",
+          "solver": "age",
+          "yield": "batch-hold"
+        },
+        "preset": "independent"
+      },
+      "scenario_sha256": "bfa10b9874725d572ea3430d0efadbf0cc9cff8657cede727f0740b2dc09e745",
+      "stop_reason": "complete",
+      "summary": {
+        "completed": 4,
+        "completion_fraction": 1.0,
+        "counts": {
+          "apply": 8,
+          "arrival": 4,
+          "authorize": 4,
+          "batch_begin": 3,
+          "batch_isolated_success": 2,
+          "batch_tick_deferred": 4,
+          "complete": 4,
+          "component": 2,
+          "component_claims": 8,
+          "component_edges": 2,
+          "component_release": 2,
+          "component_reports": 4,
+          "control_messages": 18,
+          "cycle": 1,
+          "discarded_work": 2,
+          "discover": 6,
+          "epoch": 80,
+          "executed_work": 10,
+          "invalidate": 2,
+          "max_component_transactions": 2,
+          "prepare": 10,
+          "report": 10,
+          "retry": 8,
+          "solver_nodes": 0,
+          "verdict_apply": 2
+        },
+        "cycles": [],
+        "epochs": 80,
+        "first_cycle_us": 100,
+        "future": 0,
+        "oldest_pending_us": 0,
+        "p50_completed_us": 2400,
+        "p99_completed_us": 3200,
+        "pending": 0,
+        "time_us": 3900
+      },
+      "trace_sha256": "81b81db51e7ca4aafd528b49f3d7888a7afe251a90442118a1203764acf1babd"
+    },
+    {
+      "case": "independent",
+      "completions_us": {
+        "early-1": 1900,
+        "early-2": 2400,
+        "late-1": 3400,
+        "late-2": 3900
+      },
+      "first_components": [
+        {
+          "edges": 1,
+          "keys": 2,
+          "members": [
+            "early-1",
+            "early-2"
+          ],
+          "time_us": 500
+        },
+        {
+          "edges": 1,
+          "keys": 2,
+          "members": [
+            "late-1",
+            "late-2"
+          ],
+          "time_us": 2000
+        }
+      ],
+      "input": {
+        "policy": {
+          "arbitration_us": 1200,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "scope",
+          "solver": "age",
+          "yield": "batch-hold"
+        },
+        "preset": "independent"
+      },
+      "scenario_sha256": "433b88684c0e19e2a7ea0a47a08ca9f88c53be7f3bad92a97350b852b1284ebb",
+      "stop_reason": "complete",
+      "summary": {
+        "completed": 4,
+        "completion_fraction": 1.0,
+        "counts": {
+          "apply": 8,
+          "arrival": 4,
+          "authorize": 4,
+          "batch_begin": 3,
+          "batch_isolated_success": 2,
+          "batch_tick_deferred": 4,
+          "complete": 4,
+          "component": 2,
+          "component_claims": 8,
+          "component_edges": 2,
+          "component_release": 2,
+          "component_reports": 4,
+          "control_messages": 18,
+          "cycle": 1,
+          "discarded_work": 2,
+          "discover": 6,
+          "epoch": 80,
+          "executed_work": 10,
+          "invalidate": 2,
+          "max_component_transactions": 2,
+          "prepare": 10,
+          "report": 10,
+          "retry": 8,
+          "solver_nodes": 0,
+          "verdict_apply": 2
+        },
+        "cycles": [],
+        "epochs": 80,
+        "first_cycle_us": 100,
+        "future": 0,
+        "oldest_pending_us": 0,
+        "p50_completed_us": 2400,
+        "p99_completed_us": 3200,
+        "pending": 0,
+        "time_us": 3900
+      },
+      "trace_sha256": "81b81db51e7ca4aafd528b49f3d7888a7afe251a90442118a1203764acf1babd"
+    },
+    {
+      "case": "read-overlap",
+      "completions_us": {
+        "left-1": 1900,
+        "left-2": 2400,
+        "reader": 700,
+        "right-1": 1900,
+        "right-2": 2400,
+        "writer": 2000
+      },
+      "first_components": [
+        {
+          "edges": 1,
+          "keys": 3,
+          "members": [
+            "left-1",
+            "left-2"
+          ],
+          "time_us": 500
+        },
+        {
+          "edges": 1,
+          "keys": 3,
+          "members": [
+            "right-1",
+            "right-2"
+          ],
+          "time_us": 500
+        }
+      ],
+      "input": {
+        "policy": {
+          "arbitration_us": 1200,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "compatible",
+          "solver": "age",
+          "yield": "batch-independent"
+        },
+        "preset": "overlap"
+      },
+      "scenario_sha256": "fbd19580bc1b70de42b14c44b4c40906ff33dc1b89252ff48758cdc06e51cb49",
+      "stop_reason": "complete",
+      "summary": {
+        "completed": 6,
+        "completion_fraction": 1.0,
+        "counts": {
+          "apply": 8,
+          "arrival": 6,
+          "authorize": 4,
+          "batch_begin": 4,
+          "batch_isolated_success": 3,
+          "complete": 6,
+          "component": 2,
+          "component_claims": 8,
+          "component_deferred": 2,
+          "component_edges": 2,
+          "component_release": 2,
+          "component_reports": 4,
+          "control_messages": 18,
+          "cycle": 1,
+          "discarded_work": 2,
+          "discover": 6,
+          "epoch": 50,
+          "executed_work": 12,
+          "invalidate": 2,
+          "local": 2,
+          "max_component_transactions": 2,
+          "prepare": 10,
+          "report": 10,
+          "retry": 9,
+          "solver_nodes": 0,
+          "verdict_apply": 2
+        },
+        "cycles": [],
+        "epochs": 50,
+        "first_cycle_us": 100,
+        "future": 0,
+        "oldest_pending_us": 0,
+        "p50_completed_us": 1900,
+        "p99_completed_us": 2400,
+        "pending": 0,
+        "time_us": 2400
+      },
+      "trace_sha256": "7181757b64aca327b9a3f83f9dc5052d7e539ffa4a07abb07214140daf4196ab"
+    },
+    {
+      "case": "read-overlap",
+      "completions_us": {
+        "left-1": 1900,
+        "left-2": 2400,
+        "reader": 3200,
+        "right-1": 1900,
+        "right-2": 2400,
+        "writer": 3300
+      },
+      "first_components": [
+        {
+          "edges": 2,
+          "keys": 5,
+          "members": [
+            "left-1",
+            "left-2",
+            "right-1",
+            "right-2"
+          ],
+          "time_us": 500
+        },
+        {
+          "edges": 1,
+          "keys": 1,
+          "members": [
+            "reader",
+            "writer"
+          ],
+          "time_us": 2000
+        }
+      ],
+      "input": {
+        "policy": {
+          "arbitration_us": 1200,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "scope",
+          "solver": "age",
+          "yield": "batch-independent"
+        },
+        "preset": "overlap"
+      },
+      "scenario_sha256": "e51ec58ba2dbabae6a2ebc17356adec2027e7c7a5ebc79ff5e77875f33dbcf0a",
+      "stop_reason": "complete",
+      "summary": {
+        "completed": 6,
+        "completion_fraction": 1.0,
+        "counts": {
+          "apply": 8,
+          "arrival": 6,
+          "authorize": 4,
+          "batch_begin": 6,
+          "batch_isolated_success": 2,
+          "complete": 6,
+          "component": 2,
+          "component_claims": 10,
+          "component_deferred": 4,
+          "component_edges": 3,
+          "component_release": 2,
+          "component_reports": 3,
+          "control_messages": 18,
+          "cycle": 1,
+          "discarded_work": 2,
+          "discover": 6,
+          "epoch": 67,
+          "executed_work": 12,
+          "invalidate": 2,
+          "local": 2,
+          "max_component_transactions": 4,
+          "prepare": 10,
+          "report": 10,
+          "retry": 12,
+          "solver_nodes": 0,
+          "verdict_apply": 2
+        },
+        "cycles": [],
+        "epochs": 67,
+        "first_cycle_us": 100,
+        "future": 0,
+        "oldest_pending_us": 0,
+        "p50_completed_us": 2400,
+        "p99_completed_us": 2600,
+        "pending": 0,
+        "time_us": 3300
+      },
+      "trace_sha256": "027cea10aec2dedcfba6490a30759182bd92cb1ba3147272f95bbc6b54be9172"
+    },
+    {
+      "case": "read-overlap",
+      "completions_us": {
+        "left-1": 1900,
+        "left-2": 2400,
+        "reader": 700,
+        "right-1": 1900,
+        "right-2": 2400,
+        "writer": 2000
+      },
+      "first_components": [
+        {
+          "edges": 1,
+          "keys": 3,
+          "members": [
+            "left-1",
+            "left-2"
+          ],
+          "time_us": 500
+        },
+        {
+          "edges": 1,
+          "keys": 3,
+          "members": [
+            "right-1",
+            "right-2"
+          ],
+          "time_us": 500
+        }
+      ],
+      "input": {
+        "policy": {
+          "arbitration_us": 1200,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "compatible",
+          "solver": "age",
+          "yield": "batch-hold"
+        },
+        "preset": "overlap"
+      },
+      "scenario_sha256": "7d07c488dd02c383a9f7f1b252683ed33dee3bd4b70c287ba3bdfebb8814ec6b",
+      "stop_reason": "complete",
+      "summary": {
+        "completed": 6,
+        "completion_fraction": 1.0,
+        "counts": {
+          "apply": 8,
+          "arrival": 6,
+          "authorize": 4,
+          "batch_begin": 2,
+          "batch_isolated_success": 3,
+          "batch_tick_deferred": 2,
+          "complete": 6,
+          "component": 2,
+          "component_claims": 8,
+          "component_edges": 2,
+          "component_release": 2,
+          "component_reports": 4,
+          "control_messages": 18,
+          "cycle": 1,
+          "discarded_work": 2,
+          "discover": 6,
+          "epoch": 50,
+          "executed_work": 12,
+          "invalidate": 2,
+          "local": 2,
+          "max_component_transactions": 2,
+          "prepare": 10,
+          "report": 10,
+          "retry": 9,
+          "solver_nodes": 0,
+          "verdict_apply": 2
+        },
+        "cycles": [],
+        "epochs": 50,
+        "first_cycle_us": 100,
+        "future": 0,
+        "oldest_pending_us": 0,
+        "p50_completed_us": 1900,
+        "p99_completed_us": 2400,
+        "pending": 0,
+        "time_us": 2400
+      },
+      "trace_sha256": "2866c9dc6e01a874395acd2bad072942f7070465d0cafd1b55a553dfefced83d"
+    },
+    {
+      "case": "read-overlap",
+      "completions_us": {
+        "left-1": 1900,
+        "left-2": 2400,
+        "reader": 3200,
+        "right-1": 1900,
+        "right-2": 2400,
+        "writer": 3300
+      },
+      "first_components": [
+        {
+          "edges": 2,
+          "keys": 5,
+          "members": [
+            "left-1",
+            "left-2",
+            "right-1",
+            "right-2"
+          ],
+          "time_us": 500
+        },
+        {
+          "edges": 1,
+          "keys": 1,
+          "members": [
+            "reader",
+            "writer"
+          ],
+          "time_us": 2000
+        }
+      ],
+      "input": {
+        "policy": {
+          "arbitration_us": 1200,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "scope",
+          "solver": "age",
+          "yield": "batch-hold"
+        },
+        "preset": "overlap"
+      },
+      "scenario_sha256": "8c08901b0120a28d021c03e56d7ee1e7568bca64f86a7d03fc50ab2e5b820c98",
+      "stop_reason": "complete",
+      "summary": {
+        "completed": 6,
+        "completion_fraction": 1.0,
+        "counts": {
+          "apply": 8,
+          "arrival": 6,
+          "authorize": 4,
+          "batch_begin": 2,
+          "batch_isolated_success": 2,
+          "batch_tick_deferred": 4,
+          "complete": 6,
+          "component": 2,
+          "component_claims": 10,
+          "component_edges": 3,
+          "component_release": 2,
+          "component_reports": 3,
+          "control_messages": 18,
+          "cycle": 1,
+          "discarded_work": 2,
+          "discover": 6,
+          "epoch": 67,
+          "executed_work": 12,
+          "invalidate": 2,
+          "local": 2,
+          "max_component_transactions": 4,
+          "prepare": 10,
+          "report": 10,
+          "retry": 12,
+          "solver_nodes": 0,
+          "verdict_apply": 2
+        },
+        "cycles": [],
+        "epochs": 67,
+        "first_cycle_us": 100,
+        "future": 0,
+        "oldest_pending_us": 0,
+        "p50_completed_us": 2400,
+        "p99_completed_us": 2600,
+        "pending": 0,
+        "time_us": 3300
+      },
+      "trace_sha256": "77d3713236d13cc578e3541f935bcaa294fa669f4a406fe371d9d39651e3a106"
+    },
+    {
+      "case": "verdict-lifetime",
+      "completions_us": {
+        "T1": 1200,
+        "T2": 1800,
+        "T3": 2000
+      },
+      "first_components": [
+        {
+          "edges": 3,
+          "keys": 2,
+          "members": [
+            "T1",
+            "T2",
+            "T3"
+          ],
+          "time_us": 500
+        },
+        {
+          "edges": 3,
+          "keys": 2,
+          "members": [
+            "T1",
+            "T2",
+            "T3"
+          ],
+          "time_us": 1000
+        },
+        {
+          "edges": 1,
+          "keys": 2,
+          "members": [
+            "T2",
+            "T3"
+          ],
+          "time_us": 1500
+        }
+      ],
+      "input": {
+        "policy": {
+          "arbitration_us": 100,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "compatible",
+          "solver": "age",
+          "yield": "batch-reset"
+        },
+        "preset": "reservation"
+      },
+      "scenario_sha256": "2b9f11b585b21ad44e231428ff6eeae2333eb5578da4290d07fe193fb68917e9",
+      "stop_reason": "complete",
+      "summary": {
+        "completed": 3,
+        "completion_fraction": 1.0,
+        "counts": {
+          "apply": 5,
+          "arrival": 3,
+          "authorize": 3,
+          "batch_begin": 3,
+          "batch_isolated_success": 1,
+          "complete": 3,
+          "component": 3,
+          "component_claims": 12,
+          "component_edges": 7,
+          "component_release": 3,
+          "component_reports": 6,
+          "control_messages": 11,
+          "cycle": 1,
+          "discarded_work": 1,
+          "discover": 3,
+          "epoch": 28,
+          "executed_work": 6,
+          "invalidate": 1,
+          "max_component_transactions": 3,
+          "prepare": 6,
+          "report": 6,
+          "retry": 10,
+          "solver_nodes": 0,
+          "verdict_apply": 3
+        },
+        "cycles": [],
+        "epochs": 28,
+        "first_cycle_us": 300,
+        "future": 0,
+        "oldest_pending_us": 0,
+        "p50_completed_us": 1790,
+        "p99_completed_us": 1980,
+        "pending": 0,
+        "time_us": 2000
+      },
+      "trace_sha256": "9a3236279074b0983714d396d00dcd13a1036d44a8567f1033f8c66327a7472e"
+    },
+    {
+      "case": "verdict-lifetime",
+      "completions_us": {
+        "T1": 1200,
+        "T2": 1800,
+        "T3": 2000
+      },
+      "first_components": [
+        {
+          "edges": 3,
+          "keys": 2,
+          "members": [
+            "T1",
+            "T2",
+            "T3"
+          ],
+          "time_us": 500
+        },
+        {
+          "edges": 3,
+          "keys": 2,
+          "members": [
+            "T1",
+            "T2",
+            "T3"
+          ],
+          "time_us": 1000
+        },
+        {
+          "edges": 1,
+          "keys": 2,
+          "members": [
+            "T2",
+            "T3"
+          ],
+          "time_us": 1500
+        }
+      ],
+      "input": {
+        "policy": {
+          "arbitration_us": 100,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "compatible",
+          "solver": "age",
+          "yield": "batch-hold"
+        },
+        "preset": "reservation"
+      },
+      "scenario_sha256": "2a1f6e6079c3d34f9cfa74291981c521ace3b80580ce32f47a4befef20b7ef26",
+      "stop_reason": "complete",
+      "summary": {
+        "completed": 3,
+        "completion_fraction": 1.0,
+        "counts": {
+          "apply": 5,
+          "arrival": 3,
+          "authorize": 3,
+          "batch_begin": 3,
+          "batch_isolated_success": 1,
+          "complete": 3,
+          "component": 3,
+          "component_claims": 12,
+          "component_edges": 7,
+          "component_release": 3,
+          "component_reports": 6,
+          "control_messages": 11,
+          "cycle": 1,
+          "discarded_work": 1,
+          "discover": 3,
+          "epoch": 28,
+          "executed_work": 6,
+          "invalidate": 1,
+          "max_component_transactions": 3,
+          "prepare": 6,
+          "report": 6,
+          "retry": 10,
+          "solver_nodes": 0,
+          "verdict_apply": 3
+        },
+        "cycles": [],
+        "epochs": 28,
+        "first_cycle_us": 300,
+        "future": 0,
+        "oldest_pending_us": 0,
+        "p50_completed_us": 1790,
+        "p99_completed_us": 1980,
+        "pending": 0,
+        "time_us": 2000
+      },
+      "trace_sha256": "9a3236279074b0983714d396d00dcd13a1036d44a8567f1033f8c66327a7472e"
+    },
+    {
+      "case": "verdict-lifetime",
+      "completions_us": {
+        "T1": 1200,
+        "T2": 1800,
+        "T3": 2000
+      },
+      "first_components": [
+        {
+          "edges": 3,
+          "keys": 2,
+          "members": [
+            "T1",
+            "T2",
+            "T3"
+          ],
+          "time_us": 500
+        },
+        {
+          "edges": 3,
+          "keys": 2,
+          "members": [
+            "T1",
+            "T2",
+            "T3"
+          ],
+          "time_us": 1000
+        },
+        {
+          "edges": 1,
+          "keys": 2,
+          "members": [
+            "T2",
+            "T3"
+          ],
+          "time_us": 1500
+        }
+      ],
+      "input": {
+        "policy": {
+          "arbitration_us": 100,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "compatible",
+          "solver": "age",
+          "yield": "batch-independent"
+        },
+        "preset": "reservation"
+      },
+      "scenario_sha256": "64d969d200fb1035870b452c647d5ad0fba03c12b359152c1b0780fe984aefa7",
+      "stop_reason": "complete",
+      "summary": {
+        "completed": 3,
+        "completion_fraction": 1.0,
+        "counts": {
+          "apply": 5,
+          "arrival": 3,
+          "authorize": 3,
+          "batch_begin": 3,
+          "batch_isolated_success": 1,
+          "complete": 3,
+          "component": 3,
+          "component_claims": 12,
+          "component_edges": 7,
+          "component_release": 3,
+          "component_reports": 6,
+          "control_messages": 11,
+          "cycle": 1,
+          "discarded_work": 1,
+          "discover": 3,
+          "epoch": 28,
+          "executed_work": 6,
+          "invalidate": 1,
+          "max_component_transactions": 3,
+          "prepare": 6,
+          "report": 6,
+          "retry": 10,
+          "solver_nodes": 0,
+          "verdict_apply": 3
+        },
+        "cycles": [],
+        "epochs": 28,
+        "first_cycle_us": 300,
+        "future": 0,
+        "oldest_pending_us": 0,
+        "p50_completed_us": 1790,
+        "p99_completed_us": 1980,
+        "pending": 0,
+        "time_us": 2000
+      },
+      "trace_sha256": "9a3236279074b0983714d396d00dcd13a1036d44a8567f1033f8c66327a7472e"
+    },
+    {
+      "case": "verdict-lifetime",
+      "completions_us": {
+        "T1": null,
+        "T2": null,
+        "T3": null
+      },
+      "first_components": [
+        {
+          "edges": 3,
+          "keys": 2,
+          "members": [
+            "T1",
+            "T2",
+            "T3"
+          ],
+          "time_us": 500
+        },
+        {
+          "edges": 3,
+          "keys": 2,
+          "members": [
+            "T1",
+            "T2",
+            "T3"
+          ],
+          "time_us": 1000
+        },
+        {
+          "edges": 3,
+          "keys": 2,
+          "members": [
+            "T1",
+            "T2",
+            "T3"
+          ],
+          "time_us": 1500
+        },
+        {
+          "edges": 3,
+          "keys": 2,
+          "members": [
+            "T1",
+            "T2",
+            "T3"
+          ],
+          "time_us": 2000
+        }
+      ],
+      "input": {
+        "policy": {
+          "arbitration_us": 1200,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "compatible",
+          "solver": "age",
+          "yield": "batch-reset"
+        },
+        "preset": "reservation"
+      },
+      "scenario_sha256": "ce05fd086e01a63a744b6ac7b31c1c5953e1077cc57fc3b970f4889a078a944e",
+      "stop_reason": "horizon",
+      "summary": {
+        "completed": 0,
+        "completion_fraction": 0.0,
+        "counts": {
+          "arrival": 3,
+          "batch_begin": 16,
+          "component": 16,
+          "component_claims": 80,
+          "component_edges": 48,
+          "component_reports": 32,
+          "control_messages": 2,
+          "cycle": 1,
+          "discover": 2,
+          "epoch": 108,
+          "executed_work": 2,
+          "max_component_transactions": 3,
+          "prepare": 2,
+          "report": 2,
+          "retry": 51,
+          "solver_nodes": 0,
+          "verdict_stale": 13
+        },
+        "cycles": [
+          [
+            "T1",
+            "T2"
+          ]
+        ],
+        "epochs": 108,
+        "first_cycle_us": 300,
+        "future": 0,
+        "oldest_pending_us": 8000,
+        "p50_completed_us": null,
+        "p99_completed_us": null,
+        "pending": 3,
+        "time_us": 8000
+      },
+      "trace_sha256": "b6ecda26ae35e7fd9c82b4e19317240866febd1504c14643246cd9693ad018c3"
+    },
+    {
+      "case": "verdict-lifetime",
+      "completions_us": {
+        "T1": 2100,
+        "T2": 3600,
+        "T3": 4900
+      },
+      "first_components": [
+        {
+          "edges": 3,
+          "keys": 2,
+          "members": [
+            "T1",
+            "T2",
+            "T3"
+          ],
+          "time_us": 500
+        },
+        {
+          "edges": 1,
+          "keys": 1,
+          "members": [
+            "T2",
+            "T3"
+          ],
+          "time_us": 2000
+        },
+        {
+          "edges": 1,
+          "keys": 2,
+          "members": [
+            "T2",
+            "T3"
+          ],
+          "time_us": 3500
+        }
+      ],
+      "input": {
+        "policy": {
+          "arbitration_us": 1200,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "compatible",
+          "solver": "age",
+          "yield": "batch-hold"
+        },
+        "preset": "reservation"
+      },
+      "scenario_sha256": "e3c97c6c64c42487c2307376f39e3195e02e49440301486fb515e6b428a6b66c",
+      "stop_reason": "complete",
+      "summary": {
+        "completed": 3,
+        "completion_fraction": 1.0,
+        "counts": {
+          "apply": 5,
+          "arrival": 3,
+          "authorize": 3,
+          "batch_begin": 3,
+          "batch_tick_deferred": 6,
+          "complete": 3,
+          "component": 3,
+          "component_claims": 10,
+          "component_edges": 5,
+          "component_release": 3,
+          "component_reports": 5,
+          "control_messages": 11,
+          "cycle": 1,
+          "discarded_work": 1,
+          "discover": 3,
+          "epoch": 67,
+          "executed_work": 6,
+          "invalidate": 1,
+          "max_component_transactions": 3,
+          "prepare": 6,
+          "report": 6,
+          "retry": 9,
+          "solver_nodes": 0,
+          "verdict_apply": 3
+        },
+        "cycles": [],
+        "epochs": 67,
+        "first_cycle_us": 300,
+        "future": 0,
+        "oldest_pending_us": 0,
+        "p50_completed_us": 3590,
+        "p99_completed_us": 4880,
+        "pending": 0,
+        "time_us": 4900
+      },
+      "trace_sha256": "08eb366ed7349f9fcb2d728974c5d4d33e1d55e874a41275c7f37c2a781b8aae"
+    },
+    {
+      "case": "verdict-lifetime",
+      "completions_us": {
+        "T1": 2100,
+        "T2": 3600,
+        "T3": 4900
+      },
+      "first_components": [
+        {
+          "edges": 3,
+          "keys": 2,
+          "members": [
+            "T1",
+            "T2",
+            "T3"
+          ],
+          "time_us": 500
+        },
+        {
+          "edges": 1,
+          "keys": 1,
+          "members": [
+            "T2",
+            "T3"
+          ],
+          "time_us": 2000
+        },
+        {
+          "edges": 1,
+          "keys": 2,
+          "members": [
+            "T2",
+            "T3"
+          ],
+          "time_us": 3500
+        }
+      ],
+      "input": {
+        "policy": {
+          "arbitration_us": 1200,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "compatible",
+          "solver": "age",
+          "yield": "batch-independent"
+        },
+        "preset": "reservation"
+      },
+      "scenario_sha256": "76eddbc45b97f4817f7f9a76ec913e1f33405723d145b1406f9b53f9cae902fc",
+      "stop_reason": "complete",
+      "summary": {
+        "completed": 3,
+        "completion_fraction": 1.0,
+        "counts": {
+          "apply": 5,
+          "arrival": 3,
+          "authorize": 3,
+          "batch_begin": 9,
+          "complete": 3,
+          "component": 3,
+          "component_claims": 10,
+          "component_deferred": 6,
+          "component_edges": 5,
+          "component_release": 3,
+          "component_reports": 5,
+          "control_messages": 11,
+          "cycle": 1,
+          "discarded_work": 1,
+          "discover": 3,
+          "epoch": 67,
+          "executed_work": 6,
+          "invalidate": 1,
+          "max_component_transactions": 3,
+          "prepare": 6,
+          "report": 6,
+          "retry": 9,
+          "solver_nodes": 0,
+          "verdict_apply": 3
+        },
+        "cycles": [],
+        "epochs": 67,
+        "first_cycle_us": 300,
+        "future": 0,
+        "oldest_pending_us": 0,
+        "p50_completed_us": 3590,
+        "p99_completed_us": 4880,
+        "pending": 0,
+        "time_us": 4900
+      },
+      "trace_sha256": "b6145bff1875cc277ed4b43a62b6e31b225c1af3146fa50b9f3d979e1ca29b23"
+    },
+    {
+      "case": "hotspot-seed-0",
+      "input": {
+        "generator": {
+          "arrival_span_us": 2400,
+          "count": 80,
+          "hot_percent": 80,
+          "seed": 0
+        },
+        "policy": {
+          "arbitration_us": 1200,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "compatible",
+          "solver": "age",
+          "yield": "batch-independent"
+        }
+      },
+      "scenario_sha256": "e9c3a31153a3cebd5e92842f7e920aaf25463a559ddc68ebef2cba74a6cd0525",
+      "stop_reason": "horizon",
+      "summary": {
+        "completed": 23,
+        "completion_fraction": 0.2875,
+        "counts": {
+          "apply": 25,
+          "arrival": 80,
+          "authorize": 11,
+          "batch_begin": 40,
+          "batch_isolated_success": 1,
+          "complete": 23,
+          "component": 20,
+          "component_claims": 926,
+          "component_deferred": 48,
+          "component_edges": 10514,
+          "component_release": 19,
+          "component_reports": 40,
+          "control_messages": 87,
+          "cycle": 1,
+          "discarded_work": 58,
+          "discover": 54,
+          "epoch": 402,
+          "executed_work": 174,
+          "invalidate": 26,
+          "local": 12,
+          "max_component_transactions": 65,
+          "prepare": 65,
+          "report": 65,
+          "retry": 886,
+          "solver_nodes": 0,
+          "verdict_apply": 19
+        },
+        "cycles": [
+          [
+            "T035",
+            "T069"
+          ]
+        ],
+        "epochs": 402,
+        "first_cycle_us": 3300,
+        "future": 0,
+        "oldest_pending_us": 19588,
+        "p50_completed_us": 513,
+        "p99_completed_us": 19327,
+        "pending": 57,
+        "time_us": 20000
+      },
+      "trace_sha256": "780e6361e2d16133abea4b9fa278205d322cca8bea885717947a10bfccd5ab4f"
+    },
+    {
+      "case": "hotspot-seed-0",
+      "input": {
+        "generator": {
+          "arrival_span_us": 2400,
+          "count": 80,
+          "hot_percent": 80,
+          "seed": 0
+        },
+        "policy": {
+          "arbitration_us": 1200,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "compatible",
+          "solver": "age",
+          "yield": "batch-hold"
+        }
+      },
+      "scenario_sha256": "3885657a28eaede53cb3869d8a8361c9045be54ce8597b67b531593cee609d56",
+      "stop_reason": "horizon",
+      "summary": {
+        "completed": 23,
+        "completion_fraction": 0.2875,
+        "counts": {
+          "apply": 25,
+          "arrival": 80,
+          "authorize": 11,
+          "batch_begin": 14,
+          "batch_isolated_success": 1,
+          "batch_tick_deferred": 26,
+          "complete": 23,
+          "component": 20,
+          "component_claims": 926,
+          "component_edges": 10514,
+          "component_release": 19,
+          "component_reports": 40,
+          "control_messages": 87,
+          "cycle": 1,
+          "discarded_work": 58,
+          "discover": 54,
+          "epoch": 402,
+          "executed_work": 174,
+          "invalidate": 26,
+          "local": 12,
+          "max_component_transactions": 65,
+          "prepare": 65,
+          "report": 65,
+          "retry": 885,
+          "solver_nodes": 0,
+          "verdict_apply": 19
+        },
+        "cycles": [
+          [
+            "T035",
+            "T069"
+          ]
+        ],
+        "epochs": 402,
+        "first_cycle_us": 3300,
+        "future": 0,
+        "oldest_pending_us": 19588,
+        "p50_completed_us": 513,
+        "p99_completed_us": 19327,
+        "pending": 57,
+        "time_us": 20000
+      },
+      "trace_sha256": "52b7cc574a2cc76f61fc0bc5d5ea870a1f4bcb7791979deddc599f57bef28f9d"
+    },
+    {
+      "case": "hotspot-seed-1",
+      "input": {
+        "generator": {
+          "arrival_span_us": 2400,
+          "count": 80,
+          "hot_percent": 80,
+          "seed": 1
+        },
+        "policy": {
+          "arbitration_us": 1200,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "compatible",
+          "solver": "age",
+          "yield": "batch-independent"
+        }
+      },
+      "scenario_sha256": "72a705527bff53705a26ef8b1aa3728926cabe6ba36ce4308368d429644b78f5",
+      "stop_reason": "horizon",
+      "summary": {
+        "completed": 24,
+        "completion_fraction": 0.3,
+        "counts": {
+          "apply": 29,
+          "arrival": 80,
+          "authorize": 14,
+          "batch_begin": 40,
+          "complete": 24,
+          "component": 19,
+          "component_claims": 885,
+          "component_deferred": 42,
+          "component_edges": 11761,
+          "component_release": 18,
+          "component_reports": 38,
+          "control_messages": 73,
+          "cycle": 1,
+          "discarded_work": 14,
+          "discover": 31,
+          "epoch": 402,
+          "executed_work": 167,
+          "invalidate": 6,
+          "local": 11,
+          "max_component_transactions": 64,
+          "prepare": 45,
+          "report": 45,
+          "retry": 867,
+          "solver_nodes": 0,
+          "verdict_apply": 18
+        },
+        "cycles": [],
+        "epochs": 402,
+        "first_cycle_us": 300,
+        "future": 0,
+        "oldest_pending_us": 19591,
+        "p50_completed_us": 549,
+        "p99_completed_us": 18222,
+        "pending": 56,
+        "time_us": 20000
+      },
+      "trace_sha256": "c5047aae0cbce367d0964c3bc13e07d3ee9ba3e0491524b539bfb4457db87812"
+    },
+    {
+      "case": "hotspot-seed-1",
+      "input": {
+        "generator": {
+          "arrival_span_us": 2400,
+          "count": 80,
+          "hot_percent": 80,
+          "seed": 1
+        },
+        "policy": {
+          "arbitration_us": 1200,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "compatible",
+          "solver": "age",
+          "yield": "batch-hold"
+        }
+      },
+      "scenario_sha256": "54205040803721e6e9649b7901dd26740d73d909d9ac5ea725efc2cd3df9029e",
+      "stop_reason": "horizon",
+      "summary": {
+        "completed": 24,
+        "completion_fraction": 0.3,
+        "counts": {
+          "apply": 29,
+          "arrival": 80,
+          "authorize": 14,
+          "batch_begin": 14,
+          "batch_tick_deferred": 26,
+          "complete": 24,
+          "component": 19,
+          "component_claims": 885,
+          "component_edges": 11761,
+          "component_release": 18,
+          "component_reports": 38,
+          "control_messages": 73,
+          "cycle": 1,
+          "discarded_work": 14,
+          "discover": 31,
+          "epoch": 402,
+          "executed_work": 167,
+          "invalidate": 6,
+          "local": 11,
+          "max_component_transactions": 64,
+          "prepare": 45,
+          "report": 45,
+          "retry": 867,
+          "solver_nodes": 0,
+          "verdict_apply": 18
+        },
+        "cycles": [],
+        "epochs": 402,
+        "first_cycle_us": 300,
+        "future": 0,
+        "oldest_pending_us": 19591,
+        "p50_completed_us": 549,
+        "p99_completed_us": 18222,
+        "pending": 56,
+        "time_us": 20000
+      },
+      "trace_sha256": "0228a9968f4f535ac6b04786b940cd447c0d0fc657efa7386fe00e409fd9d330"
+    },
+    {
+      "case": "hotspot-seed-7",
+      "input": {
+        "generator": {
+          "arrival_span_us": 2400,
+          "count": 80,
+          "hot_percent": 80,
+          "seed": 7
+        },
+        "policy": {
+          "arbitration_us": 1200,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "compatible",
+          "solver": "age",
+          "yield": "batch-independent"
+        }
+      },
+      "scenario_sha256": "230aeb671e8f4fbac9cad3b49eae78ba4c01447278fe0fb605b151359e2d647b",
+      "stop_reason": "horizon",
+      "summary": {
+        "completed": 16,
+        "completion_fraction": 0.2,
+        "counts": {
+          "apply": 16,
+          "arrival": 80,
+          "authorize": 7,
+          "batch_begin": 40,
+          "batch_isolated_success": 2,
+          "complete": 16,
+          "component": 19,
+          "component_claims": 1038,
+          "component_deferred": 34,
+          "component_edges": 14783,
+          "component_release": 15,
+          "component_reports": 38,
+          "control_messages": 55,
+          "cycle": 1,
+          "discarded_work": 59,
+          "discover": 34,
+          "epoch": 402,
+          "executed_work": 171,
+          "invalidate": 14,
+          "local": 9,
+          "max_component_transactions": 72,
+          "prepare": 41,
+          "report": 41,
+          "retry": 971,
+          "solver_nodes": 0,
+          "verdict_apply": 15,
+          "verdict_stale": 3
+        },
+        "cycles": [],
+        "epochs": 402,
+        "first_cycle_us": 300,
+        "future": 0,
+        "oldest_pending_us": 19737,
+        "p50_completed_us": 2096,
+        "p99_completed_us": 19668,
+        "pending": 64,
+        "time_us": 20000
+      },
+      "trace_sha256": "9e2d659c06150fce48c3d2348ec7a91c321ed30b04b52cacb08da289941b1677"
+    },
+    {
+      "case": "hotspot-seed-7",
+      "input": {
+        "generator": {
+          "arrival_span_us": 2400,
+          "count": 80,
+          "hot_percent": 80,
+          "seed": 7
+        },
+        "policy": {
+          "arbitration_us": 1200,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "compatible",
+          "solver": "age",
+          "yield": "batch-hold"
+        }
+      },
+      "scenario_sha256": "3d14f5dc266c4918abe102e7a3beda246489a7df0bf2f97203b001e442ab18c4",
+      "stop_reason": "horizon",
+      "summary": {
+        "completed": 16,
+        "completion_fraction": 0.2,
+        "counts": {
+          "apply": 16,
+          "arrival": 80,
+          "authorize": 7,
+          "batch_begin": 14,
+          "batch_isolated_success": 2,
+          "batch_tick_deferred": 26,
+          "complete": 16,
+          "component": 19,
+          "component_claims": 1038,
+          "component_edges": 14783,
+          "component_release": 15,
+          "component_reports": 38,
+          "control_messages": 55,
+          "cycle": 1,
+          "discarded_work": 59,
+          "discover": 34,
+          "epoch": 402,
+          "executed_work": 171,
+          "invalidate": 14,
+          "local": 9,
+          "max_component_transactions": 72,
+          "prepare": 41,
+          "report": 41,
+          "retry": 971,
+          "solver_nodes": 0,
+          "verdict_apply": 15,
+          "verdict_stale": 3
+        },
+        "cycles": [],
+        "epochs": 402,
+        "first_cycle_us": 300,
+        "future": 0,
+        "oldest_pending_us": 19737,
+        "p50_completed_us": 2096,
+        "p99_completed_us": 19668,
+        "pending": 64,
+        "time_us": 20000
+      },
+      "trace_sha256": "b11ad59af29ef621e02b5be57bd377b65a795db1685bfc79fac0dd9da113ea1d"
+    },
+    {
+      "case": "hotspot-seed-19",
+      "input": {
+        "generator": {
+          "arrival_span_us": 2400,
+          "count": 80,
+          "hot_percent": 80,
+          "seed": 19
+        },
+        "policy": {
+          "arbitration_us": 1200,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "compatible",
+          "solver": "age",
+          "yield": "batch-independent"
+        }
+      },
+      "scenario_sha256": "6865c404499f8f829451bc6288548724e4c1e2d72058ca6c396755f305249325",
+      "stop_reason": "horizon",
+      "summary": {
+        "completed": 21,
+        "completion_fraction": 0.2625,
+        "counts": {
+          "apply": 24,
+          "arrival": 80,
+          "authorize": 11,
+          "batch_begin": 40,
+          "complete": 21,
+          "component": 19,
+          "component_claims": 949,
+          "component_deferred": 42,
+          "component_edges": 14814,
+          "component_release": 17,
+          "component_reports": 38,
+          "control_messages": 61,
+          "cycle": 1,
+          "discarded_work": 22,
+          "discover": 28,
+          "epoch": 402,
+          "executed_work": 144,
+          "invalidate": 9,
+          "local": 10,
+          "max_component_transactions": 72,
+          "prepare": 39,
+          "report": 39,
+          "retry": 1005,
+          "solver_nodes": 0,
+          "verdict_apply": 17,
+          "verdict_stale": 1
+        },
+        "cycles": [
+          [
+            "T039",
+            "T064"
+          ]
+        ],
+        "epochs": 402,
+        "first_cycle_us": 6300,
+        "future": 0,
+        "oldest_pending_us": 19530,
+        "p50_completed_us": 9487,
+        "p99_completed_us": 19340,
+        "pending": 59,
+        "time_us": 20000
+      },
+      "trace_sha256": "df53110d32976b1af533361dc9a11c6670fadfdd6bf8daefab8855b265db1460"
+    },
+    {
+      "case": "hotspot-seed-19",
+      "input": {
+        "generator": {
+          "arrival_span_us": 2400,
+          "count": 80,
+          "hot_percent": 80,
+          "seed": 19
+        },
+        "policy": {
+          "arbitration_us": 1200,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "compatible",
+          "solver": "age",
+          "yield": "batch-hold"
+        }
+      },
+      "scenario_sha256": "e426ee3304204a4a9c25ebccf78b4a7b5a1edd633c6b7557289ef7851cbd83b0",
+      "stop_reason": "horizon",
+      "summary": {
+        "completed": 21,
+        "completion_fraction": 0.2625,
+        "counts": {
+          "apply": 24,
+          "arrival": 80,
+          "authorize": 11,
+          "batch_begin": 14,
+          "batch_tick_deferred": 26,
+          "complete": 21,
+          "component": 19,
+          "component_claims": 949,
+          "component_edges": 14814,
+          "component_release": 17,
+          "component_reports": 38,
+          "control_messages": 61,
+          "cycle": 1,
+          "discarded_work": 22,
+          "discover": 28,
+          "epoch": 402,
+          "executed_work": 144,
+          "invalidate": 9,
+          "local": 10,
+          "max_component_transactions": 72,
+          "prepare": 39,
+          "report": 39,
+          "retry": 1005,
+          "solver_nodes": 0,
+          "verdict_apply": 17,
+          "verdict_stale": 1
+        },
+        "cycles": [
+          [
+            "T039",
+            "T064"
+          ]
+        ],
+        "epochs": 402,
+        "first_cycle_us": 6300,
+        "future": 0,
+        "oldest_pending_us": 19530,
+        "p50_completed_us": 9487,
+        "p99_completed_us": 19340,
+        "pending": 59,
+        "time_us": 20000
+      },
+      "trace_sha256": "13cdb5f46463044db7f3324b13281748e3cd1d2951fe61074abeac3b911d1810"
+    },
+    {
+      "case": "hotspot-seed-23",
+      "input": {
+        "generator": {
+          "arrival_span_us": 2400,
+          "count": 80,
+          "hot_percent": 80,
+          "seed": 23
+        },
+        "policy": {
+          "arbitration_us": 1200,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "compatible",
+          "solver": "age",
+          "yield": "batch-independent"
+        }
+      },
+      "scenario_sha256": "c37c6ecfa37f6b31e84f280e93593d3845ff628e75c9ea8e1d66330d40d91825",
+      "stop_reason": "horizon",
+      "summary": {
+        "completed": 26,
+        "completion_fraction": 0.325,
+        "counts": {
+          "apply": 26,
+          "arrival": 80,
+          "authorize": 12,
+          "batch_begin": 40,
+          "batch_isolated_success": 1,
+          "complete": 26,
+          "component": 19,
+          "component_claims": 949,
+          "component_deferred": 40,
+          "component_edges": 11587,
+          "component_release": 17,
+          "component_reports": 38,
+          "control_messages": 70,
+          "cycle": 1,
+          "discarded_work": 22,
+          "discover": 34,
+          "epoch": 402,
+          "executed_work": 152,
+          "invalidate": 7,
+          "local": 14,
+          "max_component_transactions": 65,
+          "prepare": 46,
+          "report": 46,
+          "retry": 885,
+          "solver_nodes": 0,
+          "verdict_apply": 17,
+          "verdict_stale": 1
+        },
+        "cycles": [
+          [
+            "T018",
+            "T032"
+          ]
+        ],
+        "epochs": 402,
+        "first_cycle_us": 10900,
+        "future": 0,
+        "oldest_pending_us": 19581,
+        "p50_completed_us": 861,
+        "p99_completed_us": 18030,
+        "pending": 54,
+        "time_us": 20000
+      },
+      "trace_sha256": "fb3b3ce797a4ef19067c57b67fcfaacd893a9277658ab87e7cbd71c1f10f6a66"
+    },
+    {
+      "case": "hotspot-seed-23",
+      "input": {
+        "generator": {
+          "arrival_span_us": 2400,
+          "count": 80,
+          "hot_percent": 80,
+          "seed": 23
+        },
+        "policy": {
+          "arbitration_us": 1200,
+          "batch_us": 500,
+          "fast_retries": true,
+          "local_solver": false,
+          "reservations": "compatible",
+          "solver": "age",
+          "yield": "batch-hold"
+        }
+      },
+      "scenario_sha256": "58660c24629ef1b989002bf0b5801a12cb893495fe1101c5100e353ec49d08e4",
+      "stop_reason": "horizon",
+      "summary": {
+        "completed": 26,
+        "completion_fraction": 0.325,
+        "counts": {
+          "apply": 26,
+          "arrival": 80,
+          "authorize": 12,
+          "batch_begin": 14,
+          "batch_isolated_success": 1,
+          "batch_tick_deferred": 26,
+          "complete": 26,
+          "component": 19,
+          "component_claims": 949,
+          "component_edges": 11587,
+          "component_release": 17,
+          "component_reports": 38,
+          "control_messages": 70,
+          "cycle": 1,
+          "discarded_work": 22,
+          "discover": 34,
+          "epoch": 402,
+          "executed_work": 152,
+          "invalidate": 7,
+          "local": 14,
+          "max_component_transactions": 65,
+          "prepare": 46,
+          "report": 46,
+          "retry": 884,
+          "solver_nodes": 0,
+          "verdict_apply": 17,
+          "verdict_stale": 1
+        },
+        "cycles": [
+          [
+            "T018",
+            "T032"
+          ]
+        ],
+        "epochs": 402,
+        "first_cycle_us": 10900,
+        "future": 0,
+        "oldest_pending_us": 19581,
+        "p50_completed_us": 861,
+        "p99_completed_us": 18030,
+        "pending": 54,
+        "time_us": 20000
+      },
+      "trace_sha256": "04600bfe23d6da3d6cc5b70f5b98c69b97af7d564542f5a64ea57dda76a8365f"
+    }
+  ],
+  "folds": {
+    "completion_only": {
+      "fixpoints": 1,
+      "result": [
+        [
+          [
+            "x",
+            22
+          ],
+          [
+            "y",
+            20
+          ]
+        ],
+        [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e"
+        ],
+        []
+      ],
+      "schedules": 1680
+    },
+    "protected_y": {
+      "fixpoints": 1,
+      "result": [
+        [
+          [
+            "x",
+            24
+          ],
+          [
+            "y",
+            20
+          ]
+        ],
+        [
+          "a",
+          "e"
+        ],
+        [
+          "b",
+          "c",
+          "d"
+        ]
+      ],
+      "schedules": 2
+    },
+    "return_intermediate_value": {
+      "examples": [
+        [
+          6,
+          [
+            [
+              "a",
+              1
+            ],
+            [
+              "b",
+              3
+            ],
+            [
+              "c",
+              6
+            ]
+          ]
+        ],
+        [
+          6,
+          [
+            [
+              "a",
+              1
+            ],
+            [
+              "b",
+              6
+            ],
+            [
+              "c",
+              4
+            ]
+          ]
+        ]
+      ],
+      "fixpoints": 6,
+      "schedules": 6
+    }
+  },
+  "max_steps": 2000,
+  "model_files_sha256": {
+    "batch.py": "003a51cab651d5203b0a98425ce34db839da442d9966e645779dbed33faba6e4",
+    "model.py": "99203c1d53cd690537918bcf2bb939dd5d37c4cf8d4d512e81c62a98fe4b90cf",
+    "run.py": "ff61c12f4dd651cb76c2bdbafc9f31c745a65cb5fb9afaa2c5102337c01ef2a7",
+    "scenarios.py": "5e17561d9f37365952acf5a8e0b047531a746e1d8ee8c712d735eb17f1942225"
+  },
+  "study_files_sha256": {
+    "folds.py": "40301d335a1e52a68f047ea49459d8baba6907e11004bc49f618a505f5852548",
+    "study.py": "ec1ef1707cf99afd2b683a3bf07facf48af9d7389acdcdb2f74418ec970e583d"
+  }
+}

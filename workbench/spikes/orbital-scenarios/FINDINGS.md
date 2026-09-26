@@ -1,120 +1,94 @@
-# First executable contention slice
+# Component independence and fold semantics
 
-2026-09-25. The useful outcome is a small, replayable policy counterexample and
-a model that makes preparation dependencies, protection and unfinished work
-visible. It is enough to iterate on contention policy while the brief develops.
-It neither settles the full simulator architecture nor tests how agreement,
-durability, object folds or recovery are implemented.
+2026-09-25, following the brief revision in `31dba60`. The useful result is that
+preserving a pending decision does not require pausing unrelated collection,
+and read-scope overlap need not enlarge an arbitration component. A separate
+payload probe makes the brief's execution freedom concrete. These observations
+come from deliberately small models, not a distributed implementation.
 
-## Reservation ownership can prevent the useful yield request
+[The retained study](evidence/component-study.json) contains 24 comparisons and
+the fold probe, with source-referenced fixtures, policy inputs and source/trace hashes. Its 500 µs retry
+period and 1,200 µs arbitration delay are synthetic inputs unless noted otherwise.
+[MODEL.md](MODEL.md) owns the assumptions; [HISTORY.md](HISTORY.md) retains the
+predecessor's useful counterexamples and reproduction pointers.
 
-Run preset `reservation` with `older`, or choose **Reservation blocks an older
-contender** in the browser. Three transactions share two keys:
+## Independent components need independent opportunities
 
-| Transaction | Arrival, µs | Preparation order |
-| --- | ---: | --- |
-| T1 | 0 | B.y, then A.x |
-| T2 | 10 | A.x, then B.y |
-| T3 | 20 | A.x |
+Two two-transaction preparation cycles use disjoint keys. The first starts at
+0 µs, the second at 700 µs, while the first arbitration is pending.
 
-Shard A has a 100 µs period, B a 300 µs period, and control reports have 100 µs
-delay. Reservations start after three failures; retries occur every epoch.
-All keys use write protection. These are scenario inputs, not measurements.
+| Collection policy | First / second component collected, µs | All four complete, µs | Discarded work |
+| --- | ---: | ---: | ---: |
+| Keep each component independently | 500 / 1,000 | 2,900 | 2 |
+| Pause all collection for a pending verdict | 500 / 2,000 | 3,900 | 2 |
 
-T1 holds B.y and T2 holds A.x. T3 reaches the reservation threshold on A.x
-before T1's A part does. T1 cannot reserve A.x because T3 already reserved it.
-T2 later reserves B.y. Under the selected age policy, T2 rejects T3's yield
-request and T1 rejects T2's. T1 is older than T2, but cannot emit the useful
-yield request to T2 because T1 has not established a reservation.
+The first verdict arrives at 1,700 µs in both cases. Independent collection starts
+the second decision before that verdict without replacing the first reservation.
+Selection, delays and release behavior are otherwise the same. This isolates
+avoidable coupling in the old global hold; it does not test distributed collection.
 
-At the 8,000 µs horizon, all three remain pending, with 183 failed attempts and
-no discarded work. This is a concrete reservation-lifecycle limitation of this
-age policy. The brief allows rejection and arbitration and does not claim that
-this policy ensures progress; the example is not evidence that the brief is
-inconsistent.
+The stale-verdict control still matters. On the three-transaction preparation
+cycle, replacing reservations every 500 µs with 1,200 µs arbitration completes
+0/3 by 8,000 µs and rejects 13 obsolete verdicts. Both retention policies complete
+3/3 by 4,900 µs. With 100 µs arbitration all three policies complete by 2,000 µs.
 
-The work-based policy completes these three transactions, discarding one work
-unit. The instantaneous global cycle oracle also completes them, but it first
-invalidates T3's reservation repeatedly before resolving the retained-lock
-cycle: four invalidations, one discarded prepared work unit. Even in the
-idealized model, choosing the youngest participant is not automatically the
-most direct way to remove the blocking dependency.
+## Compatible readers need not join or wait
 
-The next useful policy question is who can change an established reservation
-when it blocks the party capable of making progress. Reservation expiry,
-priority-aware transfer, requests without reservations and explicit arbitration
-are different candidate policies with different consequences; this spike has
-not selected or implemented those changes. A reservation blocks access but does
-not itself establish that its owner will make progress.
+Two preparation cycles have separate write keys but share a read scope. At
+700 µs a local reader and writer arrive on that shared key.
 
-## Completion-only latency can reverse the apparent conclusion
+| Reservation semantics | Initial components | Reader completes, µs | All six complete, µs |
+| --- | ---: | ---: | ---: |
+| Read/write compatibility | 2 of size 2 | 700 | 2,400 |
+| Any scope overlap | 1 of size 4 | 3,200 | 3,300 |
 
-The seeded 80-transaction hotspot workload has 35% nominal local transactions,
-otherwise two or three cross-shard parts, arrivals spread over 2,400 µs, and
-80% hot-key probability at each part. At a 20,000 µs horizon:
+Both discard two logical work units. The reader can pass the read reservations;
+the writer cannot pass either existing read protection or those reservations.
+The late writer connects the two active components. This candidate policy makes
+it wait for their decisions rather than restarting them, and it completes in the
+finite fixture. That is an alternative worth retaining, not a proof that deferral
+handles arbitrary dynamic merges or continuous arrivals well.
 
-| Policy | Completed | Pending | Completed p99, synthetic µs | Discarded work units |
-| --- | ---: | ---: | ---: | ---: |
-| Reject all | 7 | 73 | 314 | 0 |
-| Favor older | 7 | 73 | 314 | 0 |
-| Retained work | 7 | 73 | 314 | 0 |
-| Older + cycle oracle | 41 | 39 | 19,328 | 122 |
+## The hotspot remains a problem
 
-The low p99 in the first three rows describes the small subset that completes.
-It gives no latency bound for the 73 unfinished transactions. The oracle gets
-further but still has 39 pending; it does not establish adequate throughput or
-eventual completion. The UI therefore shows completion counts and oldest
-pending age alongside latency, never latency alone.
+Independent collection does not help when most contention joins one component.
+Across the five retained 80-transaction seeds, independent and global collection
+have identical completion counts at 20,000 µs: 23, 24, 16, 21 and 26. Between 54
+and 64 transactions remain unfinished. Moving the lifetime boundary alone has
+not solved that workload. The oldest anchor, choice of what work to preserve,
+and repeated discovery/invalidation remain separate questions.
 
-For the paired 0% hotspot input, arrival times, transaction shapes, work weights
-and cold-key choices are preserved. Only which requests address the hot key
-changes. All 80 complete under `older`, `work` and `arbitrate`; rejection leaves
-13 pending. This is one finite seed and parameter setting, not a workload-wide
-policy ranking or a calibrated prediction for SixDB.
+## A fold can combine writes without a transaction lock lifecycle
 
-## What changed in our understanding
+The integer-delta probe admits whole transactions against boundary protection,
+then combines five contributions in all 120 orders and 14 binary groupings.
+All 1,680 schedules produce the same two counters **and** completion/deferred
+metadata. Protecting one counter defers every transaction touching it, including
+its contribution to the other counter; the two remaining schedules agree too.
 
-The brief is sufficient to model meaningful contention without first inventing
-witness election or recovery. The strongest early outputs are dependencies and
-counterexamples, not estimates of production latency. Keep the following
-distinctions as the model grows:
+Changing the operation to return each intermediate counter value produces six
+different observable results across six orders, even though every order leaves
+the counter at 6. Thus final object equality is insufficient for the brief's
+fixpoint requirement. An object's operation/result semantics determine the
+available freedom; a key-only conflict graph cannot discover that freedom.
 
-- Granted protection and provisional reservations need separate state and
-  wait edges. Looking only at granted locks misses the reservation that prevents
-  the resolving request.
-- Coordinator knowledge differs from the simulator's authored DAG. Successor
-  registration and current-generation completion observation must be considered
-  together before C2 authorization.
-- Invalidation must discard transitive dependent preparation and fence delayed
-  work. A generation number is this model's implementation choice, not a new
-  requirement that the brief prescribe one.
-- Agreed epochs, atomic invalidation, static authored dependencies and an
-  instantaneous cycle oracle are strong abstractions. They need to stay visible
-  when comparing with an eventual implementation or formal model.
+This is a finite algebra check over unbounded integer addition. It is not a
+parallel executor, a model of arbitrary database transactions, or a replacement
+for preparation protection. The scheduler and fold probe remain separate so that
+neither silently supplies missing semantics to the other.
 
-The code keeps scenario generation, logical transitions, deterministic event
-timing and UI projection small enough to replace independently. This is a
-useful starting separation; there is no evidence yet for a larger framework or
-a permanent production module split.
+## What to investigate from here
 
-## Reproduce and inspect
+The [reconsideration](reconsideration/README.md) now goes beyond broad read
+protection: it examines 38 read/write SQL and ETL cases, prior art, and whole
+alternatives that remove component arbitration or preparation locks. Seventeen
+finite histories distinguish valid overlap from cycles, stale bulk results and
+partial visibility. These earlier comparisons justify neither mandatory retained
+read locks nor component-wide reservation; the retained history probe is not a
+performance comparison of the replacement candidates.
 
-[The compact comparison](evidence/comparison.json) retains all four policies
-across seven authored/generated scenarios, with model, scenario and trace
-identities. Full traces are generated on demand rather than checked into Git:
-
-```sh
-orb -m ubuntu python3 workbench/spikes/orbital-scenarios/compare.py \
-  --output build/orbital-scenarios/comparison.json
-orb -m ubuntu python3 workbench/spikes/orbital-scenarios/run.py \
-  --preset reservation --policy older \
-  --output build/orbital-scenarios/reservation.json
-orb -m ubuntu python3 workbench/spikes/orbital-scenarios/run.py \
-  --replay build/orbital-scenarios/reservation.json
-```
-
-The [checks](check.py) exercise this model's invariants and specific races, plus
-48 combinations of policy, seed and equal-time shard order. Replay agreement
-establishes reproducibility under the same sources and input. Neither those
-checks nor the sampled schedule variations prove confluence, serializability
-of real durable objects or distributed protocol correctness.
+Composition with actual object results and the fold remains unresolved. The
+current scheduler also assumes authored DAGs and complete global collection;
+concurrent merging, partial verdict application, authority and recovery remain
+unmodeled. Those are limits of the existing candidate, not a reason to implement
+its distributed arbitration before revisiting protection semantics.

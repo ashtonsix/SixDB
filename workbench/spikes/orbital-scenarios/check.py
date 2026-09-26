@@ -3,40 +3,44 @@
 
 import copy
 import itertools
+from pathlib import Path
+import shutil
+import tempfile
 import unittest
+from unittest.mock import patch
 
-from model import Model, POLICIES, canonical, run, validate
+from model import POLICIES, canonical, run, validate
+from batch import BatchModel as Model
 from scenarios import base, cycle, discovery, part, presets, reservation_cycle, transaction, workload
 
 
 class ModelChecks(unittest.TestCase):
-    def test_rejected_cycle_remains_visible(self):
+    def test_replay_identity_distinguishes_code_from_documentation(self):
+        import run as replay
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for name in [*replay.model_identity(), "MODEL.md"]:
+                shutil.copyfile(replay.ROOT / name, root / name)
+            with patch.object(replay, "ROOT", root):
+                before = replay.execute(discovery())
+                (root / "MODEL.md").write_text("Revised explanation\n")
+                after = replay.execute(discovery())
+                self.assertEqual(before["model_sha256"], after["model_sha256"])
+                self.assertEqual(before["trace_sha256"], after["trace_sha256"])
+                self.assertNotEqual(before["context_files_sha256"], after["context_files_sha256"])
+                with (root / "batch.py").open("a") as source:
+                    source.write("\n# Changed executable source\n")
+                with self.assertRaisesRegex(ValueError, "Model sources changed"):
+                    replay.execute(discovery())
+
+    def test_pending_cycle_remains_visible(self):
         s = cycle()
-        s["policy"]["yield"] = "reject"
+        s["policy"]["arbitration_us"] = 10000
         r = run(s)
         self.assertEqual(r["summary"]["completed"], 0)
         self.assertEqual(r["summary"]["cycles"], [["T1", "T2"]])
         self.assertIsNone(r["summary"]["p99_completed_us"])
         self.assertEqual(r["summary"]["oldest_pending_us"], s["horizon_us"])
-
-    def test_yield_releases_transitive_protection(self):
-        for policy in ("older", "work", "arbitrate"):
-            s = cycle()
-            s["policy"]["yield"] = policy
-            r = run(s)
-            self.assertEqual(r["summary"]["completed"], 2)
-            self.assertGreater(r["summary"]["counts"]["discarded_work"], 0)
-            self.assertFalse(r["final"]["wait_edges"])
-
-    def test_reservation_can_block_an_older_contender(self):
-        s = reservation_cycle()
-        r = run(s)
-        self.assertEqual(r["summary"]["completed"], 0)
-        self.assertTrue(r["summary"]["cycles"])
-        t1 = next(t for t in r["final"]["transactions"] if t["id"] == "T1")
-        self.assertFalse(next(p for p in t1["parts"] if p["id"] == "a")["reserved"])
-        s["policy"]["yield"] = "arbitrate"
-        self.assertEqual(run(s)["summary"]["completed"], 3)
 
     def test_discovery_closure_and_causal_order(self):
         r = run(discovery())
@@ -66,27 +70,12 @@ class ModelChecks(unittest.TestCase):
     def test_c2_authorization_closes_yield_window(self):
         s = base("C2 fence", [transaction("holder", [part("p", "A", "x")]),
                               transaction("request", [part("p", "A", "x")])])
-        s["policy"].update({"yield": "work", "reserve_after": 1, "backoff": 1})
         m = Model(s)
         while m.transactions["holder"].state != "authorized":
             self.assertTrue(m.step())
-        requester = m.transactions["request"].parts["p"]
-        # Drive an otherwise eligible request while the holder's C2 is in flight.
-        requester.reserved = True
-        m.yield_request({"requester": ["request", "p"], "victim": ["holder", "p"],
-                         "request_generation": 0, "victim_generation": 0})
         self.assertEqual(m.transactions["holder"].state, "authorized")
         self.assertFalse(m.invalidate("holder", ["p"], "test"))
         m.check()
-
-    def test_local_conflicts_are_arbitrated_within_epoch(self):
-        s = base("locals", [transaction(t, [part("p", "A", "x")], kind="L") for t in ("a", "b")])
-        m = Model(s)
-        m.step()
-        self.assertEqual(m.summary()["completed"], 1)
-        self.assertEqual(m.transactions["b"].parts["p"].state, "ready")
-        self.assertEqual(m.counts["retry"], 1)
-        self.assertFalse(m.grants)
 
     def test_multi_key_acquisition_leaves_no_partial_grant(self):
         both = part("both", "A", "x")
@@ -97,22 +86,6 @@ class ModelChecks(unittest.TestCase):
         m.step()
         self.assertEqual(m.grants, {("a", "held")})
         self.assertEqual(m.part(("b", "both")).state, "ready")
-
-    def test_reservations_exclude_even_read_overlap(self):
-        left, right = part("p", "A", "x", mode="R"), part("p", "A", "x", mode="R")
-        left["locks"]["y"] = "W"
-        right["locks"]["z"] = "W"
-        s = base("provisional ranges", [
-            transaction("a", [part("p", "A", "y")]),
-            transaction("b", [part("p", "A", "z")]),
-            transaction("c", [left]), transaction("d", [right]),
-            transaction("e", [part("p", "A", "x", mode="R")]),
-        ])
-        s["policy"]["reserve_after"] = 1
-        m = Model(s)
-        m.step()
-        self.assertEqual(m.reservations(), {("c", "p")})
-        self.assertEqual(m.part(("e", "p")).state, "ready")
 
     def test_readers_share_but_writer_waits(self):
         m = Model(presets()["readers"])

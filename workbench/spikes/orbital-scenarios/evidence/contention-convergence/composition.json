@@ -1,0 +1,483 @@
+{
+  "assumptions": [
+    "Every remote reply/cut supplied to a fold is already agreed and read-certified; this probe does not create that authority.",
+    "Available internal calls need no individual witness event; missing remote facts produce an agreed continuation instead of a replica-local timing decision.",
+    "Pure functions stand for hardened WASM or completed Firecracker invocations. Accepted-byte facts abstract BLAKE3 verification; no cryptographic verifier or VM is implemented.",
+    "Reference fold state containing an unverified invocation is tentative and unpublishable; enumerating its pure reference function does not establish agreement of unverified physical VM executions.",
+    "A genuinely slow or unverified FC invocation gates its execution epoch even if the transaction is Pending.",
+    "Execution-owned placement is an explicit architecture option: it moves where the invocation actually runs, not the verification gate after the fact.",
+    "An invocation that emits an unavailable database query returns that query as its complete output; an unbounded synchronous callback needs a different admission/authority contract.",
+    "Candidate write messages are not committed data. Atomic transaction certification, predicates, recovery and retained history remain separate obligations.",
+    "Dependency durations are illustrative logical wait units, not measured timings."
+  ],
+  "passed": true,
+  "scenarios": [
+    {
+      "candidate_values_are_not_committed": true,
+      "epoch_publishable": true,
+      "internal_calls": 2,
+      "internal_witness_events": 0,
+      "logical_state": {
+        "bytes": {
+          "answer": "7b226163636f756e74223a22616c706861222c226578706f73757265223a382c22736e617073686f74223a5b31302c22542f617474656d70742d31225d7d",
+          "query": "7b226163636f756e74223a22616c706861222c226c696d6974223a31302c227175657279223a2253554d286f70656e5f6578706f7375726529222c227368617264223a227573222c22736e617073686f74223a5b31302c22542f617474656d70742d31225d7d",
+          "result": "7b226163636570746564223a747275652c22726561736f6e223a2277697468696e5f6c696d6974222c22777269746573223a7b2275732f6465636973696f6e2f616c706861223a387d7d",
+          "source": "5b7b226163636f756e74223a22616c706861222c2273636f7265223a372c227368617264223a227573227d2c7b226163636f756e74223a2262657461222c2273636f7265223a332c227368617264223a226170227d5d"
+        },
+        "done": [
+          "policy",
+          "policy_verified",
+          "read",
+          "regional/0",
+          "regional/1",
+          "regional/2",
+          "remote",
+          "router",
+          "router_verified"
+        ],
+        "invocations": {
+          "policy": {
+            "epoch": "execution/E10",
+            "input": "5b22376232323631363336333666373536653734323233613232363136633730363836313232326332323663363936643639373432323361333133303263323237313735363537323739323233613232353335353464323836663730363536653566363537383730366637333735373236353239323232633232373336383631373236343232336132323735373332323263323237333665363137303733363836663734323233613562333133303263323235343266363137343734363536643730373432643331323235643764222c2237623232363136333633366637353665373432323361323236313663373036383631323232633232363537383730366637333735373236353232336133383263323237333665363137303733363836663734323233613562333133303263323235343266363137343734363536643730373432643331323235643764225d",
+            "output": "7b226163636570746564223a747275652c22726561736f6e223a2277697468696e5f6c696d6974222c22777269746573223a7b2275732f6465636973696f6e2f616c706861223a387d7d",
+            "runtime": "firecracker"
+          },
+          "router": {
+            "epoch": "execution/E10",
+            "input": "5b7b226163636f756e74223a22616c706861222c2273636f7265223a372c227368617264223a227573227d2c7b226163636f756e74223a2262657461222c2273636f7265223a332c227368617264223a226170227d5d",
+            "output": "7b226163636f756e74223a22616c706861222c226c696d6974223a31302c227175657279223a2253554d286f70656e5f6578706f7375726529222c227368617264223a227573222c22736e617073686f74223a5b31302c22542f617474656d70742d31225d7d",
+            "runtime": "wasm"
+          }
+        },
+        "messages": {
+          "T/attempt-1/candidate/2": "7b226163636570746564223a747275652c22726561736f6e223a2277697468696e5f6c696d6974222c22777269746573223a7b2275732f6465636973696f6e2f616c706861223a387d7d",
+          "T/attempt-1/query/1": "7b226163636f756e74223a22616c706861222c226c696d6974223a31302c227175657279223a2253554d286f70656e5f6578706f7375726529222c227368617264223a227573222c22736e617073686f74223a5b31302c22542f617474656d70742d31225d7d"
+        },
+        "regional": {
+          "eu/regional/0": 1,
+          "eu/regional/1": 1,
+          "eu/regional/2": 1
+        }
+      },
+      "name": "available_query_extension_query_extension_same_epoch",
+      "pending": null,
+      "schedules": 504
+    },
+    {
+      "candidate_values_are_not_committed": true,
+      "epoch_publishable": true,
+      "internal_calls": 2,
+      "internal_witness_events": 0,
+      "logical_state": {
+        "bytes": {
+          "answer": "7b226163636f756e74223a22616c706861222c226578706f73757265223a31322c22736e617073686f74223a5b31302c22542f617474656d70742d31225d7d",
+          "query": "7b226163636f756e74223a22616c706861222c226c696d6974223a31302c227175657279223a2253554d286f70656e5f6578706f7375726529222c227368617264223a227573222c22736e617073686f74223a5b31302c22542f617474656d70742d31225d7d",
+          "result": "7b226163636570746564223a66616c73652c22726561736f6e223a226c696d69745f6578636565646564222c22777269746573223a7b7d7d",
+          "source": "5b7b226163636f756e74223a22616c706861222c2273636f7265223a372c227368617264223a227573227d2c7b226163636f756e74223a2262657461222c2273636f7265223a332c227368617264223a226170227d5d"
+        },
+        "done": [
+          "policy",
+          "policy_verified",
+          "read",
+          "regional/0",
+          "regional/1",
+          "regional/2",
+          "remote",
+          "router",
+          "router_verified"
+        ],
+        "invocations": {
+          "policy": {
+            "epoch": "execution/E10",
+            "input": "5b22376232323631363336333666373536653734323233613232363136633730363836313232326332323663363936643639373432323361333133303263323237313735363537323739323233613232353335353464323836663730363536653566363537383730366637333735373236353239323232633232373336383631373236343232336132323735373332323263323237333665363137303733363836663734323233613562333133303263323235343266363137343734363536643730373432643331323235643764222c22376232323631363336333666373536653734323233613232363136633730363836313232326332323635373837303666373337353732363532323361333133323263323237333665363137303733363836663734323233613562333133303263323235343266363137343734363536643730373432643331323235643764225d",
+            "output": "7b226163636570746564223a66616c73652c22726561736f6e223a226c696d69745f6578636565646564222c22777269746573223a7b7d7d",
+            "runtime": "firecracker"
+          },
+          "router": {
+            "epoch": "execution/E10",
+            "input": "5b7b226163636f756e74223a22616c706861222c2273636f7265223a372c227368617264223a227573227d2c7b226163636f756e74223a2262657461222c2273636f7265223a332c227368617264223a226170227d5d",
+            "output": "7b226163636f756e74223a22616c706861222c226c696d6974223a31302c227175657279223a2253554d286f70656e5f6578706f7375726529222c227368617264223a227573222c22736e617073686f74223a5b31302c22542f617474656d70742d31225d7d",
+            "runtime": "wasm"
+          }
+        },
+        "messages": {
+          "T/attempt-1/candidate/2": "7b226163636570746564223a66616c73652c22726561736f6e223a226c696d69745f6578636565646564222c22777269746573223a7b7d7d",
+          "T/attempt-1/query/1": "7b226163636f756e74223a22616c706861222c226c696d6974223a31302c227175657279223a2253554d286f70656e5f6578706f7375726529222c227368617264223a227573222c22736e617073686f74223a5b31302c22542f617474656d70742d31225d7d"
+        },
+        "regional": {
+          "eu/regional/0": 1,
+          "eu/regional/1": 1,
+          "eu/regional/2": 1
+        }
+      },
+      "name": "conditional_business_rejection_preserves_exact_result",
+      "pending": null,
+      "schedules": 504
+    },
+    {
+      "candidate_values_are_not_committed": true,
+      "epoch_publishable": true,
+      "internal_calls": 1,
+      "internal_witness_events": 0,
+      "logical_state": {
+        "bytes": {
+          "query": "7b226163636f756e74223a22616c706861222c226c696d6974223a31302c227175657279223a2253554d286f70656e5f6578706f7375726529222c227368617264223a227573222c22736e617073686f74223a5b31302c22542f617474656d70742d31225d7d",
+          "source": "5b7b226163636f756e74223a22616c706861222c2273636f7265223a372c227368617264223a227573227d2c7b226163636f756e74223a2262657461222c2273636f7265223a332c227368617264223a226170227d5d"
+        },
+        "done": [
+          "read",
+          "regional/0",
+          "regional/1",
+          "regional/2",
+          "router",
+          "router_verified"
+        ],
+        "invocations": {
+          "router": {
+            "epoch": "execution/E10",
+            "input": "5b7b226163636f756e74223a22616c706861222c2273636f7265223a372c227368617264223a227573227d2c7b226163636f756e74223a2262657461222c2273636f7265223a332c227368617264223a226170227d5d",
+            "output": "7b226163636f756e74223a22616c706861222c226c696d6974223a31302c227175657279223a2253554d286f70656e5f6578706f7375726529222c227368617264223a227573222c22736e617073686f74223a5b31302c22542f617474656d70742d31225d7d",
+            "runtime": "firecracker"
+          }
+        },
+        "messages": {
+          "T/attempt-1/query/1": "7b226163636f756e74223a22616c706861222c226c696d6974223a31302c227175657279223a2253554d286f70656e5f6578706f7375726529222c227368617264223a227573222c22736e617073686f74223a5b31302c22542f617474656d70742d31225d7d"
+        },
+        "regional": {
+          "eu/regional/0": 1,
+          "eu/regional/1": 1,
+          "eu/regional/2": 1
+        }
+      },
+      "name": "verified_query_emitter_closes_with_pending_remote_continuation",
+      "pending": {
+        "kind": "remote_read",
+        "query": "7b226163636f756e74223a22616c706861222c226c696d6974223a31302c227175657279223a2253554d286f70656e5f6578706f7375726529222c227368617264223a227573222c22736e617073686f74223a5b31302c22542f617474656d70742d31225d7d"
+      },
+      "schedules": 120
+    },
+    {
+      "candidate_values_are_not_committed": true,
+      "epoch_publishable": true,
+      "internal_calls": 2,
+      "internal_witness_events": 0,
+      "logical_state": {
+        "bytes": {
+          "answer": "7b226163636f756e74223a22616c706861222c226578706f73757265223a382c22736e617073686f74223a5b31302c22542f617474656d70742d31225d7d",
+          "query": "7b226163636f756e74223a22616c706861222c226c696d6974223a31302c227175657279223a2253554d286f70656e5f6578706f7375726529222c227368617264223a227573222c22736e617073686f74223a5b31302c22542f617474656d70742d31225d7d",
+          "result": "7b226163636570746564223a747275652c22726561736f6e223a2277697468696e5f6c696d6974222c22777269746573223a7b2275732f6465636973696f6e2f616c706861223a387d7d",
+          "source": "5b7b226163636f756e74223a22616c706861222c2273636f7265223a372c227368617264223a227573227d2c7b226163636f756e74223a2262657461222c2273636f7265223a332c227368617264223a226170227d5d"
+        },
+        "done": [
+          "policy",
+          "policy_verified",
+          "read",
+          "regional/0",
+          "regional/1",
+          "regional/2",
+          "remote",
+          "router",
+          "router_verified"
+        ],
+        "invocations": {
+          "policy": {
+            "epoch": "execution/E11",
+            "input": "5b22376232323631363336333666373536653734323233613232363136633730363836313232326332323663363936643639373432323361333133303263323237313735363537323739323233613232353335353464323836663730363536653566363537383730366637333735373236353239323232633232373336383631373236343232336132323735373332323263323237333665363137303733363836663734323233613562333133303263323235343266363137343734363536643730373432643331323235643764222c2237623232363136333633366637353665373432323361323236313663373036383631323232633232363537383730366637333735373236353232336133383263323237333665363137303733363836663734323233613562333133303263323235343266363137343734363536643730373432643331323235643764225d",
+            "output": "7b226163636570746564223a747275652c22726561736f6e223a2277697468696e5f6c696d6974222c22777269746573223a7b2275732f6465636973696f6e2f616c706861223a387d7d",
+            "runtime": "wasm"
+          },
+          "router": {
+            "epoch": "execution/E10",
+            "input": "5b7b226163636f756e74223a22616c706861222c2273636f7265223a372c227368617264223a227573227d2c7b226163636f756e74223a2262657461222c2273636f7265223a332c227368617264223a226170227d5d",
+            "output": "7b226163636f756e74223a22616c706861222c226c696d6974223a31302c227175657279223a2253554d286f70656e5f6578706f7375726529222c227368617264223a227573222c22736e617073686f74223a5b31302c22542f617474656d70742d31225d7d",
+            "runtime": "firecracker"
+          }
+        },
+        "messages": {
+          "T/attempt-1/candidate/2": "7b226163636570746564223a747275652c22726561736f6e223a2277697468696e5f6c696d6974222c22777269746573223a7b2275732f6465636973696f6e2f616c706861223a387d7d",
+          "T/attempt-1/query/1": "7b226163636f756e74223a22616c706861222c226c696d6974223a31302c227175657279223a2253554d286f70656e5f6578706f7375726529222c227368617264223a227573222c22736e617073686f74223a5b31302c22542f617474656d70742d31225d7d"
+        },
+        "regional": {
+          "eu/regional/0": 1,
+          "eu/regional/1": 1,
+          "eu/regional/2": 1
+        }
+      },
+      "name": "later_agreed_remote_fact_resumes_exact_continuation",
+      "pending": null,
+      "schedules": 1
+    },
+    {
+      "candidate_values_are_not_committed": true,
+      "epoch_publishable": false,
+      "internal_calls": 1,
+      "internal_witness_events": 0,
+      "logical_state": {
+        "bytes": {
+          "query": "7b226163636f756e74223a22616c706861222c226c696d6974223a31302c227175657279223a2253554d286f70656e5f6578706f7375726529222c227368617264223a227573222c22736e617073686f74223a5b31302c22542f617474656d70742d31225d7d",
+          "source": "5b7b226163636f756e74223a22616c706861222c2273636f7265223a372c227368617264223a227573227d2c7b226163636f756e74223a2262657461222c2273636f7265223a332c227368617264223a226170227d5d"
+        },
+        "done": [
+          "read",
+          "regional/0",
+          "regional/1",
+          "regional/2",
+          "router"
+        ],
+        "invocations": {
+          "router": {
+            "epoch": "execution/E10",
+            "input": "5b7b226163636f756e74223a22616c706861222c2273636f7265223a372c227368617264223a227573227d2c7b226163636f756e74223a2262657461222c2273636f7265223a332c227368617264223a226170227d5d",
+            "output": "7b226163636f756e74223a22616c706861222c226c696d6974223a31302c227175657279223a2253554d286f70656e5f6578706f7375726529222c227368617264223a227573222c22736e617073686f74223a5b31302c22542f617474656d70742d31225d7d",
+            "runtime": "firecracker"
+          }
+        },
+        "messages": {},
+        "regional": {
+          "eu/regional/0": 1,
+          "eu/regional/1": 1,
+          "eu/regional/2": 1
+        }
+      },
+      "name": "pending_does_not_waive_firecracker_verification",
+      "pending": {
+        "invocations": [
+          "router"
+        ],
+        "kind": "verification"
+      },
+      "schedules": 60
+    },
+    {
+      "messages": {
+        "T/attempt-1/candidate/2": "7b226163636570746564223a747275652c22726561736f6e223a2277697468696e5f6c696d6974222c22777269746573223a7b2275732f6465636973696f6e2f616c706861223a387d7d",
+        "T/attempt-1/query/1": "7b226163636f756e74223a22616c706861222c226c696d6974223a31302c227175657279223a2253554d286f70656e5f6578706f7375726529222c227368617264223a227573222c22736e617073686f74223a5b31302c22542f617474656d70742d31225d7d"
+      },
+      "name": "independent_origins_and_duplicate_routes_preserve_exact_bytes",
+      "route_or_duplicate_order_changes_state": false
+    },
+    {
+      "finish": {
+        "U0_compute": 1,
+        "U0_visible": 201,
+        "U1_compute": 2,
+        "U1_visible": 201,
+        "U2_compute": 3,
+        "U2_visible": 201,
+        "execution_epoch_visible": 201,
+        "fc_execute": 1,
+        "fc_verify": 201
+      },
+      "name": "verification_in_data_epoch_propagates_publication_wait",
+      "nodes": {
+        "U0_compute": {
+          "after": [],
+          "duration": 1
+        },
+        "U0_visible": {
+          "after": [
+            "U0_compute",
+            "execution_epoch_visible"
+          ],
+          "duration": 0
+        },
+        "U1_compute": {
+          "after": [],
+          "duration": 2
+        },
+        "U1_visible": {
+          "after": [
+            "U1_compute",
+            "U0_visible",
+            "execution_epoch_visible"
+          ],
+          "duration": 0
+        },
+        "U2_compute": {
+          "after": [],
+          "duration": 3
+        },
+        "U2_visible": {
+          "after": [
+            "U2_compute",
+            "U1_visible",
+            "execution_epoch_visible"
+          ],
+          "duration": 0
+        },
+        "execution_epoch_visible": {
+          "after": [
+            "fc_verify"
+          ],
+          "duration": 0
+        },
+        "fc_execute": {
+          "after": [],
+          "duration": 1
+        },
+        "fc_verify": {
+          "after": [
+            "fc_execute"
+          ],
+          "duration": 200
+        }
+      },
+      "placement": "data-shard",
+      "unrelated_extra_wait": [
+        200,
+        199,
+        198
+      ],
+      "unrelated_responses_delayed": 3
+    },
+    {
+      "finish": {
+        "U0_compute": 1,
+        "U0_visible": 1,
+        "U1_compute": 2,
+        "U1_visible": 2,
+        "U2_compute": 3,
+        "U2_visible": 3,
+        "execution_epoch_visible": 201,
+        "fc_execute": 1,
+        "fc_verify": 201
+      },
+      "name": "execution_owned_epoch_isolates_verification_publication_wait",
+      "nodes": {
+        "U0_compute": {
+          "after": [],
+          "duration": 1
+        },
+        "U0_visible": {
+          "after": [
+            "U0_compute"
+          ],
+          "duration": 0
+        },
+        "U1_compute": {
+          "after": [],
+          "duration": 2
+        },
+        "U1_visible": {
+          "after": [
+            "U1_compute",
+            "U0_visible"
+          ],
+          "duration": 0
+        },
+        "U2_compute": {
+          "after": [],
+          "duration": 3
+        },
+        "U2_visible": {
+          "after": [
+            "U2_compute",
+            "U1_visible"
+          ],
+          "duration": 0
+        },
+        "execution_epoch_visible": {
+          "after": [
+            "fc_verify"
+          ],
+          "duration": 0
+        },
+        "fc_execute": {
+          "after": [],
+          "duration": 1
+        },
+        "fc_verify": {
+          "after": [
+            "fc_execute"
+          ],
+          "duration": 200
+        }
+      },
+      "placement": "execution-shard",
+      "unrelated_extra_wait": [
+        0,
+        0,
+        0
+      ],
+      "unrelated_responses_delayed": 0
+    },
+    {
+      "finished": {
+        "regional_compute": 1
+      },
+      "name": "synchronous_fc_query_visibility_cycle",
+      "nodes": {
+        "execution_epoch_visible": {
+          "after": [
+            "fc_verify"
+          ],
+          "duration": 0
+        },
+        "fc_return": {
+          "after": [
+            "remote_reply"
+          ],
+          "duration": 1
+        },
+        "fc_verify": {
+          "after": [
+            "fc_return"
+          ],
+          "duration": 1
+        },
+        "query_authoritative": {
+          "after": [
+            "execution_epoch_visible"
+          ],
+          "duration": 0
+        },
+        "regional_compute": {
+          "after": [],
+          "duration": 1
+        },
+        "regional_visible": {
+          "after": [
+            "regional_compute",
+            "execution_epoch_visible"
+          ],
+          "duration": 0
+        },
+        "remote_reply": {
+          "after": [
+            "query_authoritative"
+          ],
+          "duration": 1
+        }
+      },
+      "pending": [
+        "execution_epoch_visible",
+        "fc_return",
+        "fc_verify",
+        "query_authoritative",
+        "regional_visible",
+        "remote_reply"
+      ]
+    },
+    {
+      "actual_outputs": [
+        "us/decision/high"
+      ],
+      "conservative_output_domain": "blocks low decision writer although actual output is high",
+      "disjoint_regional_writer": "passes either output-only gate domain",
+      "fixed_prediction": "whole attempt aborts safely",
+      "name": "dynamic_outputs_compare_contracts",
+      "optimistic_actual_outputs": "quiet history commits without predeclared output identities",
+      "optimistic_progress": "not established; moving sources plus output-order pressure can require retry",
+      "predicted_fixed_outputs": [
+        "us/decision/low"
+      ]
+    }
+  ],
+  "scope": "Small exact-byte logical histories and dependency graphs; no dissemination design or implementation.",
+  "source_sha256": {
+    "certification.py": "1f6096bb0930a3a41d5ff5030517918f52218814fa6e74f79264d06f30f0c5d8",
+    "composition_probe.py": "908c598d8da8be2a2743cf8971a96506d2edddab0dee282ff700185cb67fb306",
+    "fixed_execution.py": "ea82edb8c4b86270a629f5bcc94779605b789c9f1c50da9d22391b91c05516b0",
+    "write_admission.py": "f10b6fbe8bb426b7da7c7ea69b2e2edb05dd2d92cc7e21d9220c2d796dbfebf6"
+  }
+}

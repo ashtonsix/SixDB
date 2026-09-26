@@ -3,13 +3,11 @@
 
 import copy
 import itertools
-import json
-from pathlib import Path
 import unittest
 
 from batch import BatchModel, independent_set
 from model import canonical, run
-from scenarios import base, discovery, local_queue, part, reservation_cycle, transaction, workload
+from scenarios import base, discovery, independent_components, local_queue, part, read_overlap, reservation_cycle, transaction, workload
 
 
 def batch(scenario, mode="batch-hold", delay=1200, period=500, solver="age", fast=True):
@@ -20,6 +18,60 @@ def batch(scenario, mode="batch-hold", delay=1200, period=500, solver="age", fas
 
 
 class BatchChecks(unittest.TestCase):
+    def test_unrelated_component_starts_while_first_verdict_is_pending(self):
+        independent = run(batch(independent_components(), "batch-independent"))
+        global_hold = run(batch(independent_components(), "batch-hold"))
+        def first_late(result):
+            return next(e["time_us"] for e in result["trace"] if e["type"] == "component" and "late-1" in e["members"])
+        first_verdict = next(e["time_us"] for e in independent["trace"] if e["type"] == "verdict_apply")
+        self.assertLess(first_late(independent), first_verdict)
+        self.assertGreaterEqual(first_late(global_hold), first_verdict)
+        self.assertEqual(independent["summary"]["completed"], 4)
+
+    def test_read_overlap_does_not_merge_components_or_block_a_reader(self):
+        s = batch(read_overlap(), "batch-independent")
+        m = BatchModel(s)
+        while m.time < 1000:
+            self.assertTrue(m.step())
+        self.assertEqual(len(m.fences), 2)
+        self.assertTrue(all(f["pending"] for f in m.fences.values()))
+        self.assertEqual(m.transactions["reader"].state, "complete")
+        self.assertNotEqual(m.transactions["writer"].state, "complete")
+        # The late writer bridges both pending components. It waits rather than
+        # replacing their reservations; eventual handoff still admits it.
+        while m.step():
+            pass
+        self.assertEqual(m.summary()["completed"], 6)
+
+    def test_scope_only_reservations_are_an_explicit_comparison(self):
+        s = batch(read_overlap(), "batch-independent")
+        s["policy"]["reservations"] = "scope"
+        m = BatchModel(s)
+        while m.time < 1000:
+            self.assertTrue(m.step())
+        self.assertEqual(len(m.fences), 1)
+        self.assertEqual(len(next(iter(m.fences.values()))["members"]), 4)
+        self.assertNotEqual(m.transactions["reader"].state, "complete")
+
+    def test_verdict_protects_selected_claims_until_they_advance(self):
+        for lifetime in ("batch-independent", "batch-hold"):
+            m = BatchModel(batch(reservation_cycle(), lifetime))
+            while not m.fences:
+                self.assertTrue(m.step())
+            payload = next(event[-1] for event in m.events if event[-2] == "batch_verdict")
+            m.verdict(payload)  # Isolate application from the next shard epoch.
+            self.assertEqual(len(m.fences), 1)
+            key, fence = next(iter(m.fences.items()))
+            selected = list(fence["selected_ready"])
+            self.assertTrue(selected)
+            m.collect()  # Even a new collection must preserve the selected opportunity.
+            self.assertIn(key, m.fences)
+            for ref in selected:
+                m.acquire(ref, set())
+            m.release_finished()
+            self.assertFalse(m.fences)
+            m.check()
+
     def test_reset_can_invalidate_every_returning_verdict(self):
         r = run(batch(reservation_cycle(), "batch-reset"))
         self.assertEqual(r["summary"]["completed"], 0)
@@ -124,21 +176,13 @@ class BatchChecks(unittest.TestCase):
         self.assertLess(b["summary"]["time_us"], a["summary"]["time_us"])
         self.assertGreater(b["summary"]["counts"]["local_component_solves"], 0)
 
-    def test_exact_replay_and_seeded_safety(self):
-        for mode, fast, seed in itertools.product(("batch-reset", "batch-hold"), (False, True), range(4)):
+    def test_repeatability_and_seeded_invariants(self):
+        for mode, fast, seed in itertools.product(("batch-reset", "batch-hold", "batch-independent"), (False, True), range(4)):
             s = batch(workload(count=16, seed=seed), mode, fast=fast)
             s["horizon_us"] = 6000
             a = run(s)
             self.assertEqual(canonical(a), canonical(run(s)))
 
-    def test_initial_comparison_traces_are_unchanged(self):
-        from scenarios import presets
-        old = json.loads((Path(__file__).parent / "evidence/comparison.json").read_text())
-        for row in old["comparisons"]:
-            s = presets()[row["scenario"]]
-            s["policy"]["yield"] = row["policy"]
-            r = run(s)
-            self.assertEqual(r["trace_sha256"], row["trace_sha256"])
 
 
 if __name__ == "__main__":

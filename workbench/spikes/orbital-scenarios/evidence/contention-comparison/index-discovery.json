@@ -1,0 +1,2840 @@
+{
+  "application": "Increment one fixed primary row; delete its old secondary-index entry and insert its new entry; return old/new values.",
+  "assumptions": "Authored sequential histories with immediate failure-free gates/control delivery; a separate partial-install query probe; finite index-key universe; no timing model.",
+  "limits": "A stable primary key is not a stable complete SQL output footprint. The core rejects unreserved entry mutation. Quiet-round success does not establish progress while preceding writers keep changing the discovered index keys. This does not model a full index, uniqueness constraints, new index pages, recovery or epoch confluence.",
+  "packed_storage_scope_observation": {
+    "actual_predicate_effects": [
+      "index:eq:1",
+      "index:eq:2",
+      "index:ge:2"
+    ],
+    "meaning": "Packing entries into one stable physical page does not make exact equality/range read-evidence coverage value-independent. A safe implementation must conservatively cover possible affected scopes before fixing the position, or detect/restart on changed scope coverage; page layout alone is not that proof.",
+    "missing_predicate_effects": [
+      "index:eq:2",
+      "index:ge:2"
+    ],
+    "physical_outputs_before_and_after": [
+      "eu/row/1",
+      "us/index/packed-page"
+    ],
+    "predicted_predicate_effects": [
+      "index:eq:0",
+      "index:eq:1",
+      "index:ge:1"
+    ]
+  },
+  "retained_gate_repair_boundary": {
+    "added_cost": "Transaction-level gate ownership outlives attempt ownership. Expanded coverage keeps unused old outputs; the example holds four keys for three actual writes. Definitive abort acknowledgements, cancellation of in-flight extra acquisition, cleanup of all retained gates, and recovery across the gap are required by a distributed implementation but are not modeled here. The program executes again at a new position.",
+    "conditional_success": "For this same-primary indexed increment, the retained primary gate stabilizes the only value that determines outputs. One successful expansion settles. A report and disjoint writer complete while old promises are resolved and replacement promises do not yet exist.",
+    "mechanism": "Definitively abort and resolve every old fixed-position promise while retaining transaction-level write-only gates. Try additional groups without waiting; on any denial cancel the request and release every gate. On success use conservative expanded coverage in a distinct fresh fixed-position attempt and rerun all reads and computation.",
+    "no_general_progress_claim": "Ungated source values or a moving winner can keep changing output and affected read-evidence scopes. Expansion can repeatedly fail or grow conservatively; the retained primary key does not stabilize arbitrary SQL source data. No bounded completion guarantee follows.",
+    "status": "Distinct bounded counter-probe, not a recommendation or change to the strict-release policy."
+  },
+  "scenarios": [
+    {
+      "committed_history": [
+        {
+          "logical": "discover-T",
+          "owner": "discover-T#1",
+          "position": [
+            10,
+            "discover-T#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 0
+            }
+          },
+          "result": {
+            "affected_predicates": [],
+            "outputs": [
+              "eu/row/1"
+            ],
+            "value": 0
+          },
+          "writes": {}
+        },
+        {
+          "logical": "discover-preceding-U",
+          "owner": "discover-preceding-U#1",
+          "position": [
+            20,
+            "discover-preceding-U#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 0
+            }
+          },
+          "result": {
+            "affected_predicates": [],
+            "outputs": [
+              "eu/row/1"
+            ],
+            "value": 0
+          },
+          "writes": {}
+        },
+        {
+          "logical": "preceding-U",
+          "owner": "preceding-U#1",
+          "position": [
+            30,
+            "preceding-U#1"
+          ],
+          "program": {
+            "op": "increment"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 0
+            }
+          },
+          "result": {
+            "new_value": 1,
+            "old_value": 0
+          },
+          "writes": {
+            "eu/row/1": 1
+          }
+        },
+        {
+          "logical": "T",
+          "owner": "T#1",
+          "position": [
+            40,
+            "T#1"
+          ],
+          "program": {
+            "op": "increment"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 1
+            }
+          },
+          "result": {
+            "new_value": 2,
+            "old_value": 1
+          },
+          "writes": {
+            "eu/row/1": 2
+          }
+        },
+        {
+          "logical": "final-query",
+          "owner": "final-query#1",
+          "position": [
+            50,
+            "final-query#1"
+          ],
+          "program": {
+            "op": "query",
+            "value": 2
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 2
+            }
+          },
+          "result": {
+            "row_value": 2
+          },
+          "writes": {}
+        }
+      ],
+      "counts": {
+        "committed_updates": 2,
+        "discovery_passes": 2,
+        "fresh_evaluations": 2
+      },
+      "final": {
+        "eu/row/1": 2
+      },
+      "index_invariant_check": false,
+      "indexed": false,
+      "manifest_misses": [],
+      "name": "primary_only_stale_prediction",
+      "query_results": [
+        {
+          "row_value": 2
+        }
+      ],
+      "returned_results_check": true,
+      "serial_check": true,
+      "update_results": [
+        {
+          "logical": "preceding-U",
+          "new_value": 1,
+          "old_value": 0
+        },
+        {
+          "logical": "T",
+          "new_value": 2,
+          "old_value": 1
+        }
+      ]
+    },
+    {
+      "committed_history": [
+        {
+          "logical": "discover-T",
+          "owner": "discover-T#1",
+          "position": [
+            10,
+            "discover-T#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 0
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:0",
+              "index:eq:1",
+              "index:ge:1"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/0",
+              "us/index/entry/1"
+            ],
+            "value": 0
+          },
+          "writes": {}
+        },
+        {
+          "logical": "discover-preceding-U",
+          "owner": "discover-preceding-U#1",
+          "position": [
+            20,
+            "discover-preceding-U#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 0
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:0",
+              "index:eq:1",
+              "index:ge:1"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/0",
+              "us/index/entry/1"
+            ],
+            "value": 0
+          },
+          "writes": {}
+        },
+        {
+          "logical": "preceding-U",
+          "owner": "preceding-U#1",
+          "position": [
+            30,
+            "preceding-U#1"
+          ],
+          "program": {
+            "op": "increment"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 0
+            },
+            "us/index/entry/0": {
+              "us/index/entry/0": 1
+            }
+          },
+          "result": {
+            "new_value": 1,
+            "old_value": 0
+          },
+          "writes": {
+            "eu/row/1": 1,
+            "us/index/entry/0": null,
+            "us/index/entry/1": 1
+          }
+        },
+        {
+          "logical": "after-miss-old",
+          "owner": "after-miss-old#1",
+          "position": [
+            50,
+            "after-miss-old#1"
+          ],
+          "program": {
+            "op": "query",
+            "value": 0
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 1
+            },
+            "us/index/all": {
+              "us/index/entry/0": null,
+              "us/index/entry/1": 1,
+              "us/index/entry/2": null,
+              "us/index/entry/3": null,
+              "us/index/entry/4": null,
+              "us/index/entry/5": null,
+              "us/index/entry/6": null,
+              "us/index/entry/7": null
+            },
+            "us/index/eq/0": {
+              "us/index/entry/0": null
+            }
+          },
+          "result": {
+            "equal_lookup": [],
+            "index_values": [
+              1
+            ],
+            "row_value": 1
+          },
+          "writes": {}
+        },
+        {
+          "logical": "after-miss-current",
+          "owner": "after-miss-current#1",
+          "position": [
+            60,
+            "after-miss-current#1"
+          ],
+          "program": {
+            "op": "query",
+            "value": 1
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 1
+            },
+            "us/index/all": {
+              "us/index/entry/0": null,
+              "us/index/entry/1": 1,
+              "us/index/entry/2": null,
+              "us/index/entry/3": null,
+              "us/index/entry/4": null,
+              "us/index/entry/5": null,
+              "us/index/entry/6": null,
+              "us/index/entry/7": null
+            },
+            "us/index/eq/1": {
+              "us/index/entry/1": 1
+            }
+          },
+          "result": {
+            "equal_lookup": [
+              1
+            ],
+            "index_values": [
+              1
+            ],
+            "row_value": 1
+          },
+          "writes": {}
+        },
+        {
+          "logical": "after-miss-unwritten",
+          "owner": "after-miss-unwritten#1",
+          "position": [
+            70,
+            "after-miss-unwritten#1"
+          ],
+          "program": {
+            "op": "query",
+            "value": 2
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 1
+            },
+            "us/index/all": {
+              "us/index/entry/0": null,
+              "us/index/entry/1": 1,
+              "us/index/entry/2": null,
+              "us/index/entry/3": null,
+              "us/index/entry/4": null,
+              "us/index/entry/5": null,
+              "us/index/entry/6": null,
+              "us/index/entry/7": null
+            },
+            "us/index/eq/2": {
+              "us/index/entry/2": null
+            }
+          },
+          "result": {
+            "equal_lookup": [],
+            "index_values": [
+              1
+            ],
+            "row_value": 1
+          },
+          "writes": {}
+        },
+        {
+          "logical": "rediscover-T",
+          "owner": "rediscover-T#1",
+          "position": [
+            80,
+            "rediscover-T#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 1
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:1",
+              "index:eq:2",
+              "index:ge:2"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/1",
+              "us/index/entry/2"
+            ],
+            "value": 1
+          },
+          "writes": {}
+        },
+        {
+          "logical": "T",
+          "owner": "T#2",
+          "position": [
+            90,
+            "T#2"
+          ],
+          "program": {
+            "op": "increment"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 1
+            },
+            "us/index/entry/1": {
+              "us/index/entry/1": 1
+            }
+          },
+          "result": {
+            "new_value": 2,
+            "old_value": 1
+          },
+          "writes": {
+            "eu/row/1": 2,
+            "us/index/entry/1": null,
+            "us/index/entry/2": 1
+          }
+        },
+        {
+          "logical": "final-query",
+          "owner": "final-query#1",
+          "position": [
+            100,
+            "final-query#1"
+          ],
+          "program": {
+            "op": "query",
+            "value": 2
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 2
+            },
+            "us/index/all": {
+              "us/index/entry/0": null,
+              "us/index/entry/1": null,
+              "us/index/entry/2": 1,
+              "us/index/entry/3": null,
+              "us/index/entry/4": null,
+              "us/index/entry/5": null,
+              "us/index/entry/6": null,
+              "us/index/entry/7": null
+            },
+            "us/index/eq/2": {
+              "us/index/entry/2": 1
+            }
+          },
+          "result": {
+            "equal_lookup": [
+              1
+            ],
+            "index_values": [
+              2
+            ],
+            "row_value": 2
+          },
+          "writes": {}
+        }
+      ],
+      "counts": {
+        "committed_updates": 2,
+        "discovery_passes": 3,
+        "fresh_evaluations": 3,
+        "manifest_misses": 1
+      },
+      "final": {
+        "eu/row/1": 2,
+        "us/index/entry/0": null,
+        "us/index/entry/1": null,
+        "us/index/entry/2": 1,
+        "us/index/entry/3": null,
+        "us/index/entry/4": null,
+        "us/index/entry/5": null,
+        "us/index/entry/6": null,
+        "us/index/entry/7": null
+      },
+      "index_invariant_check": true,
+      "indexed": true,
+      "manifest_misses": [
+        {
+          "actual_outputs": [
+            "eu/row/1",
+            "us/index/entry/1",
+            "us/index/entry/2"
+          ],
+          "discovered_value": 0,
+          "event": "manifest_miss",
+          "fresh_value": 1,
+          "logical": "T",
+          "missing_outputs": [
+            "us/index/entry/2"
+          ],
+          "missing_predicates": [
+            "index:eq:2",
+            "index:ge:2"
+          ],
+          "predicted_outputs": [
+            "eu/row/1",
+            "us/index/entry/0",
+            "us/index/entry/1"
+          ],
+          "primary_target": "eu/row/1"
+        }
+      ],
+      "name": "indexed_stale_prediction",
+      "query_results": [
+        {
+          "equal_lookup": [],
+          "index_values": [
+            1
+          ],
+          "row_value": 1
+        },
+        {
+          "equal_lookup": [
+            1
+          ],
+          "index_values": [
+            1
+          ],
+          "row_value": 1
+        },
+        {
+          "equal_lookup": [],
+          "index_values": [
+            1
+          ],
+          "row_value": 1
+        },
+        {
+          "equal_lookup": [
+            1
+          ],
+          "index_values": [
+            2
+          ],
+          "row_value": 2
+        }
+      ],
+      "returned_results_check": true,
+      "serial_check": true,
+      "update_results": [
+        {
+          "logical": "preceding-U",
+          "new_value": 1,
+          "old_value": 0
+        },
+        {
+          "logical": "T",
+          "new_value": 2,
+          "old_value": 1
+        }
+      ]
+    },
+    {
+      "committed_history": [
+        {
+          "logical": "discover-A",
+          "owner": "discover-A#1",
+          "position": [
+            10,
+            "discover-A#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 0
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:0",
+              "index:eq:1",
+              "index:ge:1"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/0",
+              "us/index/entry/1"
+            ],
+            "value": 0
+          },
+          "writes": {}
+        },
+        {
+          "logical": "discover-B",
+          "owner": "discover-B#1",
+          "position": [
+            20,
+            "discover-B#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 0
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:0",
+              "index:eq:1",
+              "index:ge:1"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/0",
+              "us/index/entry/1"
+            ],
+            "value": 0
+          },
+          "writes": {}
+        },
+        {
+          "logical": "discover-C",
+          "owner": "discover-C#1",
+          "position": [
+            30,
+            "discover-C#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 0
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:0",
+              "index:eq:1",
+              "index:ge:1"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/0",
+              "us/index/entry/1"
+            ],
+            "value": 0
+          },
+          "writes": {}
+        },
+        {
+          "logical": "A",
+          "owner": "A#1",
+          "position": [
+            40,
+            "A#1"
+          ],
+          "program": {
+            "op": "increment"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 0
+            },
+            "us/index/entry/0": {
+              "us/index/entry/0": 1
+            }
+          },
+          "result": {
+            "new_value": 1,
+            "old_value": 0
+          },
+          "writes": {
+            "eu/row/1": 1,
+            "us/index/entry/0": null,
+            "us/index/entry/1": 1
+          }
+        },
+        {
+          "logical": "rediscover-B",
+          "owner": "rediscover-B#1",
+          "position": [
+            70,
+            "rediscover-B#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 1
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:1",
+              "index:eq:2",
+              "index:ge:2"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/1",
+              "us/index/entry/2"
+            ],
+            "value": 1
+          },
+          "writes": {}
+        },
+        {
+          "logical": "B",
+          "owner": "B#2",
+          "position": [
+            80,
+            "B#2"
+          ],
+          "program": {
+            "op": "increment"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 1
+            },
+            "us/index/entry/1": {
+              "us/index/entry/1": 1
+            }
+          },
+          "result": {
+            "new_value": 2,
+            "old_value": 1
+          },
+          "writes": {
+            "eu/row/1": 2,
+            "us/index/entry/1": null,
+            "us/index/entry/2": 1
+          }
+        },
+        {
+          "logical": "rediscover-C",
+          "owner": "rediscover-C#1",
+          "position": [
+            90,
+            "rediscover-C#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 2
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:2",
+              "index:eq:3",
+              "index:ge:3"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/2",
+              "us/index/entry/3"
+            ],
+            "value": 2
+          },
+          "writes": {}
+        },
+        {
+          "logical": "C",
+          "owner": "C#2",
+          "position": [
+            100,
+            "C#2"
+          ],
+          "program": {
+            "op": "increment"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 2
+            },
+            "us/index/entry/2": {
+              "us/index/entry/2": 1
+            }
+          },
+          "result": {
+            "new_value": 3,
+            "old_value": 2
+          },
+          "writes": {
+            "eu/row/1": 3,
+            "us/index/entry/2": null,
+            "us/index/entry/3": 1
+          }
+        },
+        {
+          "logical": "query-0",
+          "owner": "query-0#1",
+          "position": [
+            110,
+            "query-0#1"
+          ],
+          "program": {
+            "op": "query",
+            "value": 0
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 3
+            },
+            "us/index/all": {
+              "us/index/entry/0": null,
+              "us/index/entry/1": null,
+              "us/index/entry/2": null,
+              "us/index/entry/3": 1,
+              "us/index/entry/4": null,
+              "us/index/entry/5": null,
+              "us/index/entry/6": null,
+              "us/index/entry/7": null
+            },
+            "us/index/eq/0": {
+              "us/index/entry/0": null
+            }
+          },
+          "result": {
+            "equal_lookup": [],
+            "index_values": [
+              3
+            ],
+            "row_value": 3
+          },
+          "writes": {}
+        },
+        {
+          "logical": "query-1",
+          "owner": "query-1#1",
+          "position": [
+            120,
+            "query-1#1"
+          ],
+          "program": {
+            "op": "query",
+            "value": 1
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 3
+            },
+            "us/index/all": {
+              "us/index/entry/0": null,
+              "us/index/entry/1": null,
+              "us/index/entry/2": null,
+              "us/index/entry/3": 1,
+              "us/index/entry/4": null,
+              "us/index/entry/5": null,
+              "us/index/entry/6": null,
+              "us/index/entry/7": null
+            },
+            "us/index/eq/1": {
+              "us/index/entry/1": null
+            }
+          },
+          "result": {
+            "equal_lookup": [],
+            "index_values": [
+              3
+            ],
+            "row_value": 3
+          },
+          "writes": {}
+        },
+        {
+          "logical": "query-2",
+          "owner": "query-2#1",
+          "position": [
+            130,
+            "query-2#1"
+          ],
+          "program": {
+            "op": "query",
+            "value": 2
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 3
+            },
+            "us/index/all": {
+              "us/index/entry/0": null,
+              "us/index/entry/1": null,
+              "us/index/entry/2": null,
+              "us/index/entry/3": 1,
+              "us/index/entry/4": null,
+              "us/index/entry/5": null,
+              "us/index/entry/6": null,
+              "us/index/entry/7": null
+            },
+            "us/index/eq/2": {
+              "us/index/entry/2": null
+            }
+          },
+          "result": {
+            "equal_lookup": [],
+            "index_values": [
+              3
+            ],
+            "row_value": 3
+          },
+          "writes": {}
+        },
+        {
+          "logical": "query-3",
+          "owner": "query-3#1",
+          "position": [
+            140,
+            "query-3#1"
+          ],
+          "program": {
+            "op": "query",
+            "value": 3
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 3
+            },
+            "us/index/all": {
+              "us/index/entry/0": null,
+              "us/index/entry/1": null,
+              "us/index/entry/2": null,
+              "us/index/entry/3": 1,
+              "us/index/entry/4": null,
+              "us/index/entry/5": null,
+              "us/index/entry/6": null,
+              "us/index/entry/7": null
+            },
+            "us/index/eq/3": {
+              "us/index/entry/3": 1
+            }
+          },
+          "result": {
+            "equal_lookup": [
+              1
+            ],
+            "index_values": [
+              3
+            ],
+            "row_value": 3
+          },
+          "writes": {}
+        }
+      ],
+      "counts": {
+        "committed_updates": 3,
+        "discovery_passes": 5,
+        "fresh_evaluations": 5,
+        "manifest_misses": 2
+      },
+      "final": {
+        "eu/row/1": 3,
+        "us/index/entry/0": null,
+        "us/index/entry/1": null,
+        "us/index/entry/2": null,
+        "us/index/entry/3": 1,
+        "us/index/entry/4": null,
+        "us/index/entry/5": null,
+        "us/index/entry/6": null,
+        "us/index/entry/7": null
+      },
+      "index_invariant_check": true,
+      "indexed": true,
+      "manifest_misses": [
+        {
+          "actual_outputs": [
+            "eu/row/1",
+            "us/index/entry/1",
+            "us/index/entry/2"
+          ],
+          "discovered_value": 0,
+          "event": "manifest_miss",
+          "fresh_value": 1,
+          "logical": "B",
+          "missing_outputs": [
+            "us/index/entry/2"
+          ],
+          "missing_predicates": [
+            "index:eq:2",
+            "index:ge:2"
+          ],
+          "predicted_outputs": [
+            "eu/row/1",
+            "us/index/entry/0",
+            "us/index/entry/1"
+          ],
+          "primary_target": "eu/row/1"
+        },
+        {
+          "actual_outputs": [
+            "eu/row/1",
+            "us/index/entry/1",
+            "us/index/entry/2"
+          ],
+          "discovered_value": 0,
+          "event": "manifest_miss",
+          "fresh_value": 1,
+          "logical": "C",
+          "missing_outputs": [
+            "us/index/entry/2"
+          ],
+          "missing_predicates": [
+            "index:eq:2",
+            "index:ge:2"
+          ],
+          "predicted_outputs": [
+            "eu/row/1",
+            "us/index/entry/0",
+            "us/index/entry/1"
+          ],
+          "primary_target": "eu/row/1"
+        }
+      ],
+      "name": "several_discoveries_of_v0",
+      "query_results": [
+        {
+          "equal_lookup": [],
+          "index_values": [
+            3
+          ],
+          "row_value": 3
+        },
+        {
+          "equal_lookup": [],
+          "index_values": [
+            3
+          ],
+          "row_value": 3
+        },
+        {
+          "equal_lookup": [],
+          "index_values": [
+            3
+          ],
+          "row_value": 3
+        },
+        {
+          "equal_lookup": [
+            1
+          ],
+          "index_values": [
+            3
+          ],
+          "row_value": 3
+        }
+      ],
+      "returned_results_check": true,
+      "serial_check": true,
+      "update_results": [
+        {
+          "logical": "A",
+          "new_value": 1,
+          "old_value": 0
+        },
+        {
+          "logical": "B",
+          "new_value": 2,
+          "old_value": 1
+        },
+        {
+          "logical": "C",
+          "new_value": 3,
+          "old_value": 2
+        }
+      ]
+    },
+    {
+      "before_quiet_round": {
+        "T_commits": 0,
+        "manifest_misses": 4,
+        "row_value": 4
+      },
+      "committed_history": [
+        {
+          "logical": "discover-T-0",
+          "owner": "discover-T-0#1",
+          "position": [
+            10,
+            "discover-T-0#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 0
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:0",
+              "index:eq:1",
+              "index:ge:1"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/0",
+              "us/index/entry/1"
+            ],
+            "value": 0
+          },
+          "writes": {}
+        },
+        {
+          "logical": "discover-preceding-U-0",
+          "owner": "discover-preceding-U-0#1",
+          "position": [
+            20,
+            "discover-preceding-U-0#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 0
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:0",
+              "index:eq:1",
+              "index:ge:1"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/0",
+              "us/index/entry/1"
+            ],
+            "value": 0
+          },
+          "writes": {}
+        },
+        {
+          "logical": "preceding-U-0",
+          "owner": "preceding-U-0#1",
+          "position": [
+            30,
+            "preceding-U-0#1"
+          ],
+          "program": {
+            "op": "increment"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 0
+            },
+            "us/index/entry/0": {
+              "us/index/entry/0": 1
+            }
+          },
+          "result": {
+            "new_value": 1,
+            "old_value": 0
+          },
+          "writes": {
+            "eu/row/1": 1,
+            "us/index/entry/0": null,
+            "us/index/entry/1": 1
+          }
+        },
+        {
+          "logical": "query-current-0",
+          "owner": "query-current-0#1",
+          "position": [
+            50,
+            "query-current-0#1"
+          ],
+          "program": {
+            "op": "query",
+            "value": 1
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 1
+            },
+            "us/index/all": {
+              "us/index/entry/0": null,
+              "us/index/entry/1": 1,
+              "us/index/entry/2": null,
+              "us/index/entry/3": null,
+              "us/index/entry/4": null,
+              "us/index/entry/5": null,
+              "us/index/entry/6": null,
+              "us/index/entry/7": null
+            },
+            "us/index/eq/1": {
+              "us/index/entry/1": 1
+            }
+          },
+          "result": {
+            "equal_lookup": [
+              1
+            ],
+            "index_values": [
+              1
+            ],
+            "row_value": 1
+          },
+          "writes": {}
+        },
+        {
+          "logical": "discover-T-1",
+          "owner": "discover-T-1#1",
+          "position": [
+            60,
+            "discover-T-1#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 1
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:1",
+              "index:eq:2",
+              "index:ge:2"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/1",
+              "us/index/entry/2"
+            ],
+            "value": 1
+          },
+          "writes": {}
+        },
+        {
+          "logical": "discover-preceding-U-1",
+          "owner": "discover-preceding-U-1#1",
+          "position": [
+            70,
+            "discover-preceding-U-1#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 1
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:1",
+              "index:eq:2",
+              "index:ge:2"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/1",
+              "us/index/entry/2"
+            ],
+            "value": 1
+          },
+          "writes": {}
+        },
+        {
+          "logical": "preceding-U-1",
+          "owner": "preceding-U-1#1",
+          "position": [
+            80,
+            "preceding-U-1#1"
+          ],
+          "program": {
+            "op": "increment"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 1
+            },
+            "us/index/entry/1": {
+              "us/index/entry/1": 1
+            }
+          },
+          "result": {
+            "new_value": 2,
+            "old_value": 1
+          },
+          "writes": {
+            "eu/row/1": 2,
+            "us/index/entry/1": null,
+            "us/index/entry/2": 1
+          }
+        },
+        {
+          "logical": "query-current-1",
+          "owner": "query-current-1#1",
+          "position": [
+            100,
+            "query-current-1#1"
+          ],
+          "program": {
+            "op": "query",
+            "value": 2
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 2
+            },
+            "us/index/all": {
+              "us/index/entry/0": null,
+              "us/index/entry/1": null,
+              "us/index/entry/2": 1,
+              "us/index/entry/3": null,
+              "us/index/entry/4": null,
+              "us/index/entry/5": null,
+              "us/index/entry/6": null,
+              "us/index/entry/7": null
+            },
+            "us/index/eq/2": {
+              "us/index/entry/2": 1
+            }
+          },
+          "result": {
+            "equal_lookup": [
+              1
+            ],
+            "index_values": [
+              2
+            ],
+            "row_value": 2
+          },
+          "writes": {}
+        },
+        {
+          "logical": "discover-T-2",
+          "owner": "discover-T-2#1",
+          "position": [
+            110,
+            "discover-T-2#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 2
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:2",
+              "index:eq:3",
+              "index:ge:3"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/2",
+              "us/index/entry/3"
+            ],
+            "value": 2
+          },
+          "writes": {}
+        },
+        {
+          "logical": "discover-preceding-U-2",
+          "owner": "discover-preceding-U-2#1",
+          "position": [
+            120,
+            "discover-preceding-U-2#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 2
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:2",
+              "index:eq:3",
+              "index:ge:3"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/2",
+              "us/index/entry/3"
+            ],
+            "value": 2
+          },
+          "writes": {}
+        },
+        {
+          "logical": "preceding-U-2",
+          "owner": "preceding-U-2#1",
+          "position": [
+            130,
+            "preceding-U-2#1"
+          ],
+          "program": {
+            "op": "increment"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 2
+            },
+            "us/index/entry/2": {
+              "us/index/entry/2": 1
+            }
+          },
+          "result": {
+            "new_value": 3,
+            "old_value": 2
+          },
+          "writes": {
+            "eu/row/1": 3,
+            "us/index/entry/2": null,
+            "us/index/entry/3": 1
+          }
+        },
+        {
+          "logical": "query-current-2",
+          "owner": "query-current-2#1",
+          "position": [
+            150,
+            "query-current-2#1"
+          ],
+          "program": {
+            "op": "query",
+            "value": 3
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 3
+            },
+            "us/index/all": {
+              "us/index/entry/0": null,
+              "us/index/entry/1": null,
+              "us/index/entry/2": null,
+              "us/index/entry/3": 1,
+              "us/index/entry/4": null,
+              "us/index/entry/5": null,
+              "us/index/entry/6": null,
+              "us/index/entry/7": null
+            },
+            "us/index/eq/3": {
+              "us/index/entry/3": 1
+            }
+          },
+          "result": {
+            "equal_lookup": [
+              1
+            ],
+            "index_values": [
+              3
+            ],
+            "row_value": 3
+          },
+          "writes": {}
+        },
+        {
+          "logical": "discover-T-3",
+          "owner": "discover-T-3#1",
+          "position": [
+            160,
+            "discover-T-3#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 3
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:3",
+              "index:eq:4",
+              "index:ge:4"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/3",
+              "us/index/entry/4"
+            ],
+            "value": 3
+          },
+          "writes": {}
+        },
+        {
+          "logical": "discover-preceding-U-3",
+          "owner": "discover-preceding-U-3#1",
+          "position": [
+            170,
+            "discover-preceding-U-3#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 3
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:3",
+              "index:eq:4",
+              "index:ge:4"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/3",
+              "us/index/entry/4"
+            ],
+            "value": 3
+          },
+          "writes": {}
+        },
+        {
+          "logical": "preceding-U-3",
+          "owner": "preceding-U-3#1",
+          "position": [
+            180,
+            "preceding-U-3#1"
+          ],
+          "program": {
+            "op": "increment"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 3
+            },
+            "us/index/entry/3": {
+              "us/index/entry/3": 1
+            }
+          },
+          "result": {
+            "new_value": 4,
+            "old_value": 3
+          },
+          "writes": {
+            "eu/row/1": 4,
+            "us/index/entry/3": null,
+            "us/index/entry/4": 1
+          }
+        },
+        {
+          "logical": "query-current-3",
+          "owner": "query-current-3#1",
+          "position": [
+            200,
+            "query-current-3#1"
+          ],
+          "program": {
+            "op": "query",
+            "value": 4
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 4
+            },
+            "us/index/all": {
+              "us/index/entry/0": null,
+              "us/index/entry/1": null,
+              "us/index/entry/2": null,
+              "us/index/entry/3": null,
+              "us/index/entry/4": 1,
+              "us/index/entry/5": null,
+              "us/index/entry/6": null,
+              "us/index/entry/7": null
+            },
+            "us/index/eq/4": {
+              "us/index/entry/4": 1
+            }
+          },
+          "result": {
+            "equal_lookup": [
+              1
+            ],
+            "index_values": [
+              4
+            ],
+            "row_value": 4
+          },
+          "writes": {}
+        },
+        {
+          "logical": "discover-T-quiet",
+          "owner": "discover-T-quiet#1",
+          "position": [
+            210,
+            "discover-T-quiet#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 4
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:4",
+              "index:eq:5",
+              "index:ge:5"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/4",
+              "us/index/entry/5"
+            ],
+            "value": 4
+          },
+          "writes": {}
+        },
+        {
+          "logical": "T",
+          "owner": "T#5",
+          "position": [
+            220,
+            "T#5"
+          ],
+          "program": {
+            "op": "increment"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 4
+            },
+            "us/index/entry/4": {
+              "us/index/entry/4": 1
+            }
+          },
+          "result": {
+            "new_value": 5,
+            "old_value": 4
+          },
+          "writes": {
+            "eu/row/1": 5,
+            "us/index/entry/4": null,
+            "us/index/entry/5": 1
+          }
+        },
+        {
+          "logical": "query-final",
+          "owner": "query-final#1",
+          "position": [
+            230,
+            "query-final#1"
+          ],
+          "program": {
+            "op": "query",
+            "value": 5
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 5
+            },
+            "us/index/all": {
+              "us/index/entry/0": null,
+              "us/index/entry/1": null,
+              "us/index/entry/2": null,
+              "us/index/entry/3": null,
+              "us/index/entry/4": null,
+              "us/index/entry/5": 1,
+              "us/index/entry/6": null,
+              "us/index/entry/7": null
+            },
+            "us/index/eq/5": {
+              "us/index/entry/5": 1
+            }
+          },
+          "result": {
+            "equal_lookup": [
+              1
+            ],
+            "index_values": [
+              5
+            ],
+            "row_value": 5
+          },
+          "writes": {}
+        }
+      ],
+      "counts": {
+        "committed_updates": 5,
+        "discovery_passes": 9,
+        "fresh_evaluations": 9,
+        "manifest_misses": 4
+      },
+      "final": {
+        "eu/row/1": 5,
+        "us/index/entry/0": null,
+        "us/index/entry/1": null,
+        "us/index/entry/2": null,
+        "us/index/entry/3": null,
+        "us/index/entry/4": null,
+        "us/index/entry/5": 1,
+        "us/index/entry/6": null,
+        "us/index/entry/7": null
+      },
+      "four_attempt_budget_outcome": "failure",
+      "index_invariant_check": true,
+      "indexed": true,
+      "manifest_misses": [
+        {
+          "actual_outputs": [
+            "eu/row/1",
+            "us/index/entry/1",
+            "us/index/entry/2"
+          ],
+          "discovered_value": 0,
+          "event": "manifest_miss",
+          "fresh_value": 1,
+          "logical": "T",
+          "missing_outputs": [
+            "us/index/entry/2"
+          ],
+          "missing_predicates": [
+            "index:eq:2",
+            "index:ge:2"
+          ],
+          "predicted_outputs": [
+            "eu/row/1",
+            "us/index/entry/0",
+            "us/index/entry/1"
+          ],
+          "primary_target": "eu/row/1"
+        },
+        {
+          "actual_outputs": [
+            "eu/row/1",
+            "us/index/entry/2",
+            "us/index/entry/3"
+          ],
+          "discovered_value": 1,
+          "event": "manifest_miss",
+          "fresh_value": 2,
+          "logical": "T",
+          "missing_outputs": [
+            "us/index/entry/3"
+          ],
+          "missing_predicates": [
+            "index:eq:3",
+            "index:ge:3"
+          ],
+          "predicted_outputs": [
+            "eu/row/1",
+            "us/index/entry/1",
+            "us/index/entry/2"
+          ],
+          "primary_target": "eu/row/1"
+        },
+        {
+          "actual_outputs": [
+            "eu/row/1",
+            "us/index/entry/3",
+            "us/index/entry/4"
+          ],
+          "discovered_value": 2,
+          "event": "manifest_miss",
+          "fresh_value": 3,
+          "logical": "T",
+          "missing_outputs": [
+            "us/index/entry/4"
+          ],
+          "missing_predicates": [
+            "index:eq:4",
+            "index:ge:4"
+          ],
+          "predicted_outputs": [
+            "eu/row/1",
+            "us/index/entry/2",
+            "us/index/entry/3"
+          ],
+          "primary_target": "eu/row/1"
+        },
+        {
+          "actual_outputs": [
+            "eu/row/1",
+            "us/index/entry/4",
+            "us/index/entry/5"
+          ],
+          "discovered_value": 3,
+          "event": "manifest_miss",
+          "fresh_value": 4,
+          "logical": "T",
+          "missing_outputs": [
+            "us/index/entry/5"
+          ],
+          "missing_predicates": [
+            "index:eq:5",
+            "index:ge:5"
+          ],
+          "predicted_outputs": [
+            "eu/row/1",
+            "us/index/entry/3",
+            "us/index/entry/4"
+          ],
+          "primary_target": "eu/row/1"
+        }
+      ],
+      "name": "repeated_pre_admission_changes",
+      "query_results": [
+        {
+          "equal_lookup": [
+            1
+          ],
+          "index_values": [
+            1
+          ],
+          "row_value": 1
+        },
+        {
+          "equal_lookup": [
+            1
+          ],
+          "index_values": [
+            2
+          ],
+          "row_value": 2
+        },
+        {
+          "equal_lookup": [
+            1
+          ],
+          "index_values": [
+            3
+          ],
+          "row_value": 3
+        },
+        {
+          "equal_lookup": [
+            1
+          ],
+          "index_values": [
+            4
+          ],
+          "row_value": 4
+        },
+        {
+          "equal_lookup": [
+            1
+          ],
+          "index_values": [
+            5
+          ],
+          "row_value": 5
+        }
+      ],
+      "returned_results_check": true,
+      "serial_check": true,
+      "update_results": [
+        {
+          "logical": "preceding-U-0",
+          "new_value": 1,
+          "old_value": 0
+        },
+        {
+          "logical": "preceding-U-1",
+          "new_value": 2,
+          "old_value": 1
+        },
+        {
+          "logical": "preceding-U-2",
+          "new_value": 3,
+          "old_value": 2
+        },
+        {
+          "logical": "preceding-U-3",
+          "new_value": 4,
+          "old_value": 3
+        },
+        {
+          "logical": "T",
+          "new_value": 5,
+          "old_value": 4
+        }
+      ]
+    },
+    {
+      "committed_history": [
+        {
+          "logical": "discover-T",
+          "owner": "discover-T#1",
+          "position": [
+            10,
+            "discover-T#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 0
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:0",
+              "index:eq:1",
+              "index:ge:1"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/0",
+              "us/index/entry/1"
+            ],
+            "value": 0
+          },
+          "writes": {}
+        },
+        {
+          "logical": "T",
+          "owner": "T#1",
+          "position": [
+            20,
+            "T#1"
+          ],
+          "program": {
+            "op": "increment"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 0
+            },
+            "us/index/entry/0": {
+              "us/index/entry/0": 1
+            }
+          },
+          "result": {
+            "new_value": 1,
+            "old_value": 0
+          },
+          "writes": {
+            "eu/row/1": 1,
+            "us/index/entry/0": null,
+            "us/index/entry/1": 1
+          }
+        },
+        {
+          "logical": "concurrent-point-index-query",
+          "owner": "concurrent-point-index-query#1",
+          "position": [
+            30,
+            "concurrent-point-index-query#1"
+          ],
+          "program": {
+            "op": "query",
+            "value": 1
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 1
+            },
+            "us/index/all": {
+              "us/index/entry/0": null,
+              "us/index/entry/1": 1,
+              "us/index/entry/2": null,
+              "us/index/entry/3": null,
+              "us/index/entry/4": null,
+              "us/index/entry/5": null,
+              "us/index/entry/6": null,
+              "us/index/entry/7": null
+            },
+            "us/index/eq/1": {
+              "us/index/entry/1": 1
+            }
+          },
+          "result": {
+            "equal_lookup": [
+              1
+            ],
+            "index_values": [
+              1
+            ],
+            "row_value": 1
+          },
+          "writes": {}
+        }
+      ],
+      "counts": {
+        "committed_updates": 1,
+        "discovery_passes": 1,
+        "fresh_evaluations": 1,
+        "query_waits": 1
+      },
+      "final": {
+        "eu/row/1": 1,
+        "us/index/entry/0": null,
+        "us/index/entry/1": 1,
+        "us/index/entry/2": null,
+        "us/index/entry/3": null,
+        "us/index/entry/4": null,
+        "us/index/entry/5": null,
+        "us/index/entry/6": null,
+        "us/index/entry/7": null
+      },
+      "index_invariant_check": true,
+      "indexed": true,
+      "manifest_misses": [],
+      "name": "query_cannot_observe_partial_index_install",
+      "query_results": [
+        {
+          "equal_lookup": [
+            1
+          ],
+          "index_values": [
+            1
+          ],
+          "row_value": 1
+        }
+      ],
+      "returned_results_check": true,
+      "serial_check": true,
+      "update_results": [
+        {
+          "logical": "T",
+          "new_value": 1,
+          "old_value": 0
+        }
+      ]
+    },
+    {
+      "committed_history": [
+        {
+          "logical": "discover-T",
+          "owner": "discover-T#1",
+          "position": [
+            10,
+            "discover-T#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 0
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:0",
+              "index:eq:1",
+              "index:ge:1"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/0",
+              "us/index/entry/1"
+            ],
+            "value": 0
+          },
+          "writes": {}
+        },
+        {
+          "logical": "discover-preceding-U",
+          "owner": "discover-preceding-U#1",
+          "position": [
+            20,
+            "discover-preceding-U#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 0
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:0",
+              "index:eq:1",
+              "index:ge:1"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/0",
+              "us/index/entry/1"
+            ],
+            "value": 0
+          },
+          "writes": {}
+        },
+        {
+          "logical": "preceding-U",
+          "owner": "preceding-U#1",
+          "position": [
+            30,
+            "preceding-U#1"
+          ],
+          "program": {
+            "op": "increment"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 0
+            },
+            "us/index/entry/0": {
+              "us/index/entry/0": 1
+            }
+          },
+          "result": {
+            "new_value": 1,
+            "old_value": 0
+          },
+          "writes": {
+            "eu/row/1": 1,
+            "us/index/entry/0": null,
+            "us/index/entry/1": 1
+          }
+        },
+        {
+          "logical": "report-between-attempts",
+          "owner": "report-between-attempts#1",
+          "position": [
+            50,
+            "report-between-attempts#1"
+          ],
+          "program": {
+            "op": "query",
+            "value": 1
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 1
+            },
+            "us/index/all": {
+              "us/index/entry/0": null,
+              "us/index/entry/1": 1,
+              "us/index/entry/2": null,
+              "us/index/entry/3": null,
+              "us/index/entry/4": null,
+              "us/index/entry/5": null,
+              "us/index/entry/6": null,
+              "us/index/entry/7": null
+            },
+            "us/index/eq/1": {
+              "us/index/entry/1": 1
+            }
+          },
+          "result": {
+            "equal_lookup": [
+              1
+            ],
+            "index_values": [
+              1
+            ],
+            "row_value": 1
+          },
+          "writes": {}
+        },
+        {
+          "logical": "unwritten-index-between-attempts",
+          "owner": "unwritten-index-between-attempts#1",
+          "position": [
+            60,
+            "unwritten-index-between-attempts#1"
+          ],
+          "program": {
+            "op": "query",
+            "value": 2
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 1
+            },
+            "us/index/all": {
+              "us/index/entry/0": null,
+              "us/index/entry/1": 1,
+              "us/index/entry/2": null,
+              "us/index/entry/3": null,
+              "us/index/entry/4": null,
+              "us/index/entry/5": null,
+              "us/index/entry/6": null,
+              "us/index/entry/7": null
+            },
+            "us/index/eq/2": {
+              "us/index/entry/2": null
+            }
+          },
+          "result": {
+            "equal_lookup": [],
+            "index_values": [
+              1
+            ],
+            "row_value": 1
+          },
+          "writes": {}
+        },
+        {
+          "logical": "disjoint-during-retention",
+          "owner": "disjoint-during-retention#1",
+          "position": [
+            70,
+            "disjoint-during-retention#1"
+          ],
+          "program": {
+            "op": "disjoint_increment"
+          },
+          "reads": {
+            "eu/unrelated/1": {
+              "eu/unrelated/1": 0
+            }
+          },
+          "result": {
+            "new_value": 1,
+            "old_value": 0
+          },
+          "writes": {
+            "eu/unrelated/1": 1
+          }
+        },
+        {
+          "logical": "T",
+          "owner": "T#2",
+          "position": [
+            80,
+            "T#2"
+          ],
+          "program": {
+            "op": "increment"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 1
+            },
+            "us/index/entry/1": {
+              "us/index/entry/1": 1
+            }
+          },
+          "result": {
+            "new_value": 2,
+            "old_value": 1
+          },
+          "writes": {
+            "eu/row/1": 2,
+            "us/index/entry/1": null,
+            "us/index/entry/2": 1
+          }
+        },
+        {
+          "logical": "repair-final",
+          "owner": "repair-final#1",
+          "position": [
+            90,
+            "repair-final#1"
+          ],
+          "program": {
+            "op": "query",
+            "value": 2
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 2
+            },
+            "us/index/all": {
+              "us/index/entry/0": null,
+              "us/index/entry/1": null,
+              "us/index/entry/2": 1,
+              "us/index/entry/3": null,
+              "us/index/entry/4": null,
+              "us/index/entry/5": null,
+              "us/index/entry/6": null,
+              "us/index/entry/7": null
+            },
+            "us/index/eq/2": {
+              "us/index/entry/2": 1
+            }
+          },
+          "result": {
+            "equal_lookup": [
+              1
+            ],
+            "index_values": [
+              2
+            ],
+            "row_value": 2
+          },
+          "writes": {}
+        }
+      ],
+      "conservative_coverage_key_count": 4,
+      "counts": {
+        "committed_updates": 2,
+        "discovery_passes": 2,
+        "disjoint_committed_updates": 1,
+        "expanded_output_keys": 1,
+        "expansion_attempts": 1,
+        "extra_retained_coverage_keys": 1,
+        "fresh_evaluations": 3,
+        "manifest_misses": 1,
+        "repair_reruns": 1,
+        "retained_gate_cycles": 1,
+        "retained_gate_keys": 3
+      },
+      "disjoint_writer_completed": true,
+      "final": {
+        "eu/row/1": 2,
+        "eu/unrelated/1": 1,
+        "us/index/entry/0": null,
+        "us/index/entry/1": null,
+        "us/index/entry/2": 1,
+        "us/index/entry/3": null,
+        "us/index/entry/4": null,
+        "us/index/entry/5": null,
+        "us/index/entry/6": null,
+        "us/index/entry/7": null
+      },
+      "fresh_output_key_count": 3,
+      "gap_report_completed": true,
+      "index_invariant_check": true,
+      "indexed": true,
+      "logical_T_discoveries": 1,
+      "logical_T_fixed_evaluations": 2,
+      "manifest_misses": [
+        {
+          "actual_outputs": [
+            "eu/row/1",
+            "us/index/entry/1",
+            "us/index/entry/2"
+          ],
+          "discovered_value": 0,
+          "event": "manifest_miss",
+          "fresh_value": 1,
+          "logical": "T",
+          "missing_outputs": [
+            "us/index/entry/2"
+          ],
+          "missing_predicates": [
+            "index:eq:2",
+            "index:ge:2"
+          ],
+          "predicted_outputs": [
+            "eu/row/1",
+            "us/index/entry/0",
+            "us/index/entry/1"
+          ],
+          "primary_target": "eu/row/1"
+        }
+      ],
+      "name": "retained_gates_no_wait_expansion_settles",
+      "query_results": [
+        {
+          "equal_lookup": [
+            1
+          ],
+          "index_values": [
+            1
+          ],
+          "row_value": 1
+        },
+        {
+          "equal_lookup": [],
+          "index_values": [
+            1
+          ],
+          "row_value": 1
+        },
+        {
+          "equal_lookup": [
+            1
+          ],
+          "index_values": [
+            2
+          ],
+          "row_value": 2
+        }
+      ],
+      "repair_events": [
+        {
+          "aborted_owner": "T#1",
+          "aborted_position": [
+            40,
+            "T#1"
+          ],
+          "event": "abort_resolved_gates_retained",
+          "held_outputs": [
+            "eu/row/1",
+            "us/index/entry/0",
+            "us/index/entry/1"
+          ],
+          "logical": "T",
+          "remaining_promises": 0
+        },
+        {
+          "disjoint_value": 1,
+          "event": "gap_read_and_disjoint_writer_completed",
+          "read_blocking_promises": 0,
+          "report": {
+            "equal_lookup": [
+              1
+            ],
+            "index_values": [
+              1
+            ],
+            "row_value": 1
+          },
+          "retained_primary_gate": true
+        },
+        {
+          "event": "expanded_before_fresh_attempt",
+          "held_outputs": [
+            "eu/row/1",
+            "us/index/entry/0",
+            "us/index/entry/1",
+            "us/index/entry/2"
+          ],
+          "logical": "T",
+          "new_outputs": [
+            "us/index/entry/2"
+          ],
+          "unused_old_outputs": [
+            "us/index/entry/0"
+          ]
+        },
+        {
+          "event": "fresh_attempt_committed",
+          "fresh_result": {
+            "new_value": 2,
+            "old_value": 1
+          },
+          "logical": "T",
+          "owner": "T#2",
+          "position": [
+            80,
+            "T#2"
+          ]
+        }
+      ],
+      "returned_results_check": true,
+      "serial_check": true,
+      "strategy": "retain transaction gates; resolve old promises; try extra gates; rerun",
+      "update_results": [
+        {
+          "logical": "preceding-U",
+          "new_value": 1,
+          "old_value": 0
+        },
+        {
+          "logical": "T",
+          "new_value": 2,
+          "old_value": 1
+        }
+      ]
+    },
+    {
+      "committed_history": [
+        {
+          "logical": "discover-T",
+          "owner": "discover-T#1",
+          "position": [
+            10,
+            "discover-T#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 0
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:0",
+              "index:eq:1",
+              "index:ge:1"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/0",
+              "us/index/entry/1"
+            ],
+            "value": 0
+          },
+          "writes": {}
+        },
+        {
+          "logical": "discover-preceding-U",
+          "owner": "discover-preceding-U#1",
+          "position": [
+            20,
+            "discover-preceding-U#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 0
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:0",
+              "index:eq:1",
+              "index:ge:1"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/0",
+              "us/index/entry/1"
+            ],
+            "value": 0
+          },
+          "writes": {}
+        },
+        {
+          "logical": "preceding-U",
+          "owner": "preceding-U#1",
+          "position": [
+            30,
+            "preceding-U#1"
+          ],
+          "program": {
+            "op": "increment"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 0
+            },
+            "us/index/entry/0": {
+              "us/index/entry/0": 1
+            }
+          },
+          "result": {
+            "new_value": 1,
+            "old_value": 0
+          },
+          "writes": {
+            "eu/row/1": 1,
+            "us/index/entry/0": null,
+            "us/index/entry/1": 1
+          }
+        },
+        {
+          "logical": "after-denied-expansion",
+          "owner": "after-denied-expansion#1",
+          "position": [
+            50,
+            "after-denied-expansion#1"
+          ],
+          "program": {
+            "op": "query",
+            "value": 1
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 1
+            },
+            "us/index/all": {
+              "us/index/entry/0": null,
+              "us/index/entry/1": 1,
+              "us/index/entry/2": null,
+              "us/index/entry/3": null,
+              "us/index/entry/4": null,
+              "us/index/entry/5": null,
+              "us/index/entry/6": null,
+              "us/index/entry/7": null
+            },
+            "us/index/eq/1": {
+              "us/index/entry/1": 1
+            }
+          },
+          "result": {
+            "equal_lookup": [
+              1
+            ],
+            "index_values": [
+              1
+            ],
+            "row_value": 1
+          },
+          "writes": {}
+        },
+        {
+          "logical": "rediscover-T",
+          "owner": "rediscover-T#1",
+          "position": [
+            60,
+            "rediscover-T#1"
+          ],
+          "program": {
+            "op": "discover"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 1
+            }
+          },
+          "result": {
+            "affected_predicates": [
+              "index:eq:1",
+              "index:eq:2",
+              "index:ge:2"
+            ],
+            "outputs": [
+              "eu/row/1",
+              "us/index/entry/1",
+              "us/index/entry/2"
+            ],
+            "value": 1
+          },
+          "writes": {}
+        },
+        {
+          "logical": "T",
+          "owner": "T#2",
+          "position": [
+            70,
+            "T#2"
+          ],
+          "program": {
+            "op": "increment"
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 1
+            },
+            "us/index/entry/1": {
+              "us/index/entry/1": 1
+            }
+          },
+          "result": {
+            "new_value": 2,
+            "old_value": 1
+          },
+          "writes": {
+            "eu/row/1": 2,
+            "us/index/entry/1": null,
+            "us/index/entry/2": 1
+          }
+        },
+        {
+          "logical": "denied-then-restarted-final",
+          "owner": "denied-then-restarted-final#1",
+          "position": [
+            80,
+            "denied-then-restarted-final#1"
+          ],
+          "program": {
+            "op": "query",
+            "value": 2
+          },
+          "reads": {
+            "eu/row/1": {
+              "eu/row/1": 2
+            },
+            "us/index/all": {
+              "us/index/entry/0": null,
+              "us/index/entry/1": null,
+              "us/index/entry/2": 1,
+              "us/index/entry/3": null,
+              "us/index/entry/4": null,
+              "us/index/entry/5": null,
+              "us/index/entry/6": null,
+              "us/index/entry/7": null
+            },
+            "us/index/eq/2": {
+              "us/index/entry/2": 1
+            }
+          },
+          "result": {
+            "equal_lookup": [
+              1
+            ],
+            "index_values": [
+              2
+            ],
+            "row_value": 2
+          },
+          "writes": {}
+        }
+      ],
+      "counts": {
+        "committed_updates": 2,
+        "denied_expansions": 1,
+        "discovery_passes": 3,
+        "expansion_attempts": 1,
+        "fresh_evaluations": 3,
+        "manifest_misses": 1,
+        "release_all_restarts": 1,
+        "retained_gate_cycles": 1,
+        "retained_gate_keys": 3
+      },
+      "denied_extra_request_left_waiting": false,
+      "final": {
+        "eu/row/1": 2,
+        "us/index/entry/0": null,
+        "us/index/entry/1": null,
+        "us/index/entry/2": 1,
+        "us/index/entry/3": null,
+        "us/index/entry/4": null,
+        "us/index/entry/5": null,
+        "us/index/entry/6": null,
+        "us/index/entry/7": null
+      },
+      "index_invariant_check": true,
+      "indexed": true,
+      "logical_T_discoveries": 2,
+      "logical_T_fixed_evaluations": 2,
+      "manifest_misses": [
+        {
+          "actual_outputs": [
+            "eu/row/1",
+            "us/index/entry/1",
+            "us/index/entry/2"
+          ],
+          "discovered_value": 0,
+          "event": "manifest_miss",
+          "fresh_value": 1,
+          "logical": "T",
+          "missing_outputs": [
+            "us/index/entry/2"
+          ],
+          "missing_predicates": [
+            "index:eq:2",
+            "index:ge:2"
+          ],
+          "predicted_outputs": [
+            "eu/row/1",
+            "us/index/entry/0",
+            "us/index/entry/1"
+          ],
+          "primary_target": "eu/row/1"
+        }
+      ],
+      "name": "denied_retained_expansion_releases_all",
+      "query_results": [
+        {
+          "equal_lookup": [
+            1
+          ],
+          "index_values": [
+            1
+          ],
+          "row_value": 1
+        },
+        {
+          "equal_lookup": [
+            1
+          ],
+          "index_values": [
+            2
+          ],
+          "row_value": 2
+        }
+      ],
+      "repair_events": [
+        {
+          "aborted_owner": "T#1",
+          "aborted_position": [
+            40,
+            "T#1"
+          ],
+          "event": "abort_resolved_gates_retained",
+          "held_outputs": [
+            "eu/row/1",
+            "us/index/entry/0",
+            "us/index/entry/1"
+          ],
+          "logical": "T",
+          "remaining_promises": 0
+        },
+        {
+          "denied_group": [
+            "us/index/entry/2"
+          ],
+          "event": "expansion_denied_release_all",
+          "logical": "T",
+          "queued_extra_request": false,
+          "remaining_gates": 0
+        },
+        {
+          "event": "rival_acquired_released_primary_then_cancelled",
+          "potential_wait_cycle": [
+            "T -> rival entry(2)",
+            "rival -> T primary"
+          ],
+          "rival_data_effects": {},
+          "rival_extra_acquisition_waited": false
+        }
+      ],
+      "returned_results_check": true,
+      "rival_acquired_released_primary": true,
+      "serial_check": true,
+      "strategy": "retain transaction gates; resolve old promises; deny extra gates; release all",
+      "update_results": [
+        {
+          "logical": "preceding-U",
+          "new_value": 1,
+          "old_value": 0
+        },
+        {
+          "logical": "T",
+          "new_value": 2,
+          "old_value": 1
+        }
+      ]
+    }
+  ],
+  "source_sha256": {
+    "certification.py": "1f6096bb0930a3a41d5ff5030517918f52218814fa6e74f79264d06f30f0c5d8",
+    "fixed_execution.py": "ea82edb8c4b86270a629f5bcc94779605b789c9f1c50da9d22391b91c05516b0",
+    "index_discovery_probe.py": "63192c9a8d9348c952cdc2e51249b70caf63ced9ec017c048742248cecbf27f5",
+    "write_admission.py": "f10b6fbe8bb426b7da7c7ea69b2e2edb05dd2d92cc7e21d9220c2d796dbfebf6"
+  }
+}

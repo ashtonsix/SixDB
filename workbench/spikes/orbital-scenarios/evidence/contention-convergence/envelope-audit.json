@@ -1,0 +1,1171 @@
+{
+  "gate_state_search": [
+    {
+      "age_orders": 6,
+      "incomplete_terminal_states": 0,
+      "local_fifo_searches": 1,
+      "name": "overlapping_ranges",
+      "states": 612,
+      "transitions": 1040
+    },
+    {
+      "age_orders": 6,
+      "incomplete_terminal_states": 0,
+      "local_fifo_searches": 1,
+      "name": "cross_participant_bridge",
+      "states": 612,
+      "transitions": 1040
+    },
+    {
+      "age_orders": 6,
+      "incomplete_terminal_states": 0,
+      "local_fifo_searches": 1,
+      "name": "broad_and_absent_slots",
+      "states": 481,
+      "transitions": 867
+    }
+  ],
+  "histories": [
+    {
+      "events": [
+        {
+          "authorities": [
+            "index-even"
+          ],
+          "event": "announce",
+          "exclusive_row_count": 1,
+          "owner": "T",
+          "position": 10,
+          "predicate_authority_count": 1,
+          "rows": [
+            "row/a"
+          ]
+        },
+        {
+          "event": "lookup",
+          "overlay": {},
+          "owner": "Q",
+          "position": 20,
+          "rows": [],
+          "value": 7
+        },
+        {
+          "event": "resolve",
+          "owner": "T",
+          "position": 10,
+          "writes": {
+            "row/a": 7
+          }
+        }
+      ],
+      "expected_serial_valid": false,
+      "name": "unknown_destination_omitted",
+      "replay_errors": [
+        {
+          "expected": [
+            "row/a"
+          ],
+          "observation": {
+            "overlay": {},
+            "owner": "Q",
+            "position": 20,
+            "rows": [],
+            "value": 7
+          }
+        }
+      ],
+      "serial_valid": false
+    },
+    {
+      "events": [
+        {
+          "authorities": [
+            "index-even",
+            "index-odd"
+          ],
+          "event": "announce",
+          "exclusive_row_count": 1,
+          "owner": "T",
+          "position": 10,
+          "predicate_authority_count": 2,
+          "rows": [
+            "row/a"
+          ]
+        },
+        {
+          "blockers": [
+            "T"
+          ],
+          "event": "wait",
+          "owner": "Q",
+          "position": 20,
+          "value": 7
+        },
+        {
+          "event": "resolve",
+          "owner": "T",
+          "position": 10,
+          "writes": {
+            "row/a": 7
+          }
+        },
+        {
+          "event": "lookup",
+          "overlay": {},
+          "owner": "Q",
+          "position": 20,
+          "rows": [
+            "row/a"
+          ],
+          "value": 7
+        }
+      ],
+      "expected_serial_valid": true,
+      "name": "unknown_destination_covered",
+      "replay_errors": [],
+      "serial_valid": true
+    },
+    {
+      "events": [
+        {
+          "event": "lookup",
+          "overlay": {},
+          "owner": "Q",
+          "position": 20,
+          "rows": [],
+          "value": 7
+        },
+        {
+          "authorities": [
+            "index-even",
+            "index-odd"
+          ],
+          "event": "announce",
+          "exclusive_row_count": 1,
+          "owner": "T",
+          "position": 10,
+          "predicate_authority_count": 2,
+          "rows": [
+            "row/a"
+          ]
+        },
+        {
+          "event": "resolve",
+          "owner": "T",
+          "position": 10,
+          "writes": {
+            "row/a": 7
+          }
+        }
+      ],
+      "expected_serial_valid": false,
+      "name": "predicate_read_bound_omitted",
+      "replay_errors": [
+        {
+          "expected": [
+            "row/a"
+          ],
+          "observation": {
+            "overlay": {},
+            "owner": "Q",
+            "position": 20,
+            "rows": [],
+            "value": 7
+          }
+        }
+      ],
+      "serial_valid": false,
+      "writer_position": 10
+    },
+    {
+      "events": [
+        {
+          "event": "lookup",
+          "overlay": {},
+          "owner": "Q",
+          "position": 20,
+          "rows": [],
+          "value": 7
+        },
+        {
+          "authorities": [
+            "index-even",
+            "index-odd"
+          ],
+          "event": "announce",
+          "exclusive_row_count": 1,
+          "owner": "T",
+          "position": 21,
+          "predicate_authority_count": 2,
+          "rows": [
+            "row/a"
+          ]
+        },
+        {
+          "event": "resolve",
+          "owner": "T",
+          "position": 21,
+          "writes": {
+            "row/a": 7
+          }
+        }
+      ],
+      "expected_serial_valid": true,
+      "name": "predicate_read_bound_honored",
+      "replay_errors": [],
+      "serial_valid": true,
+      "writer_position": 21
+    },
+    {
+      "disjoint_primary_writer_completed_first": true,
+      "events": [
+        {
+          "authorities": [
+            "index-even"
+          ],
+          "event": "announce",
+          "exclusive_row_count": 1,
+          "owner": "WAN",
+          "position": 10,
+          "predicate_authority_count": 1,
+          "rows": [
+            "row/a"
+          ]
+        },
+        {
+          "event": "lookup",
+          "overlay": {},
+          "owner": "local_query",
+          "position": 20,
+          "rows": [],
+          "value": 7
+        },
+        {
+          "authorities": [
+            "index-even",
+            "index-odd"
+          ],
+          "event": "announce",
+          "exclusive_row_count": 1,
+          "owner": "local_writer",
+          "position": 30,
+          "predicate_authority_count": 2,
+          "rows": [
+            "row/b"
+          ]
+        },
+        {
+          "event": "resolve",
+          "owner": "local_writer",
+          "position": 30,
+          "writes": {
+            "row/b": 4
+          }
+        },
+        {
+          "event": "resolve",
+          "owner": "WAN",
+          "position": 10,
+          "writes": {
+            "row/a": 2
+          }
+        }
+      ],
+      "exclusive_row_count": 1,
+      "expected_serial_valid": true,
+      "name": "predicate_locality_exact",
+      "predicate_authority_count": 1,
+      "replay_errors": [],
+      "serial_valid": true,
+      "unnecessary_query_wait": false
+    },
+    {
+      "disjoint_primary_writer_completed_first": true,
+      "events": [
+        {
+          "authorities": [
+            "index-even",
+            "index-odd"
+          ],
+          "event": "announce",
+          "exclusive_row_count": 1,
+          "owner": "WAN",
+          "position": 10,
+          "predicate_authority_count": 2,
+          "rows": [
+            "row/a"
+          ]
+        },
+        {
+          "blockers": [
+            "WAN"
+          ],
+          "event": "wait",
+          "owner": "local_query",
+          "position": 20,
+          "value": 7
+        },
+        {
+          "authorities": [
+            "index-even",
+            "index-odd"
+          ],
+          "event": "announce",
+          "exclusive_row_count": 1,
+          "owner": "local_writer",
+          "position": 30,
+          "predicate_authority_count": 2,
+          "rows": [
+            "row/b"
+          ]
+        },
+        {
+          "event": "resolve",
+          "owner": "local_writer",
+          "position": 30,
+          "writes": {
+            "row/b": 4
+          }
+        },
+        {
+          "event": "resolve",
+          "owner": "WAN",
+          "position": 10,
+          "writes": {
+            "row/a": 2
+          }
+        },
+        {
+          "event": "lookup",
+          "overlay": {},
+          "owner": "local_query",
+          "position": 20,
+          "rows": [],
+          "value": 7
+        }
+      ],
+      "exclusive_row_count": 1,
+      "expected_serial_valid": true,
+      "name": "predicate_locality_unknown",
+      "predicate_authority_count": 2,
+      "replay_errors": [],
+      "serial_valid": true,
+      "unnecessary_query_wait": true
+    },
+    {
+      "accepted": "A",
+      "business_rejected": "B",
+      "events": [
+        {
+          "authorities": [
+            "index-even",
+            "index-odd"
+          ],
+          "event": "announce",
+          "exclusive_row_count": 1,
+          "owner": "A",
+          "position": 10,
+          "predicate_authority_count": 2,
+          "rows": [
+            "row/a"
+          ]
+        },
+        {
+          "authorities": [
+            "index-even",
+            "index-odd"
+          ],
+          "event": "announce",
+          "exclusive_row_count": 1,
+          "owner": "B",
+          "position": 20,
+          "predicate_authority_count": 2,
+          "rows": [
+            "row/b"
+          ]
+        },
+        {
+          "event": "lookup",
+          "overlay": {},
+          "owner": "A",
+          "position": 10,
+          "rows": [],
+          "value": 7
+        },
+        {
+          "blockers": [
+            "A"
+          ],
+          "event": "wait",
+          "owner": "B",
+          "position": 20,
+          "value": 7
+        },
+        {
+          "event": "resolve",
+          "owner": "A",
+          "position": 10,
+          "writes": {
+            "row/a": 7
+          }
+        },
+        {
+          "event": "lookup",
+          "overlay": {},
+          "owner": "B",
+          "position": 20,
+          "rows": [
+            "row/a"
+          ],
+          "value": 7
+        },
+        {
+          "event": "resolve",
+          "owner": "B",
+          "position": 20,
+          "writes": {}
+        }
+      ],
+      "expected_serial_valid": true,
+      "name": "unique_A_first_visit_AB",
+      "replay_errors": [],
+      "serial_valid": true
+    },
+    {
+      "accepted": "A",
+      "business_rejected": "B",
+      "events": [
+        {
+          "authorities": [
+            "index-even",
+            "index-odd"
+          ],
+          "event": "announce",
+          "exclusive_row_count": 1,
+          "owner": "A",
+          "position": 10,
+          "predicate_authority_count": 2,
+          "rows": [
+            "row/a"
+          ]
+        },
+        {
+          "authorities": [
+            "index-even",
+            "index-odd"
+          ],
+          "event": "announce",
+          "exclusive_row_count": 1,
+          "owner": "B",
+          "position": 20,
+          "predicate_authority_count": 2,
+          "rows": [
+            "row/b"
+          ]
+        },
+        {
+          "blockers": [
+            "A"
+          ],
+          "event": "wait",
+          "owner": "B",
+          "position": 20,
+          "value": 7
+        },
+        {
+          "event": "lookup",
+          "overlay": {},
+          "owner": "A",
+          "position": 10,
+          "rows": [],
+          "value": 7
+        },
+        {
+          "event": "resolve",
+          "owner": "A",
+          "position": 10,
+          "writes": {
+            "row/a": 7
+          }
+        },
+        {
+          "event": "lookup",
+          "overlay": {},
+          "owner": "B",
+          "position": 20,
+          "rows": [
+            "row/a"
+          ],
+          "value": 7
+        },
+        {
+          "event": "resolve",
+          "owner": "B",
+          "position": 20,
+          "writes": {}
+        }
+      ],
+      "expected_serial_valid": true,
+      "name": "unique_A_first_visit_BA",
+      "replay_errors": [],
+      "serial_valid": true
+    },
+    {
+      "accepted": "B",
+      "business_rejected": "A",
+      "events": [
+        {
+          "authorities": [
+            "index-even",
+            "index-odd"
+          ],
+          "event": "announce",
+          "exclusive_row_count": 1,
+          "owner": "A",
+          "position": 20,
+          "predicate_authority_count": 2,
+          "rows": [
+            "row/a"
+          ]
+        },
+        {
+          "authorities": [
+            "index-even",
+            "index-odd"
+          ],
+          "event": "announce",
+          "exclusive_row_count": 1,
+          "owner": "B",
+          "position": 10,
+          "predicate_authority_count": 2,
+          "rows": [
+            "row/b"
+          ]
+        },
+        {
+          "blockers": [
+            "B"
+          ],
+          "event": "wait",
+          "owner": "A",
+          "position": 20,
+          "value": 7
+        },
+        {
+          "event": "lookup",
+          "overlay": {},
+          "owner": "B",
+          "position": 10,
+          "rows": [],
+          "value": 7
+        },
+        {
+          "event": "resolve",
+          "owner": "B",
+          "position": 10,
+          "writes": {
+            "row/b": 7
+          }
+        },
+        {
+          "event": "lookup",
+          "overlay": {},
+          "owner": "A",
+          "position": 20,
+          "rows": [
+            "row/b"
+          ],
+          "value": 7
+        },
+        {
+          "event": "resolve",
+          "owner": "A",
+          "position": 20,
+          "writes": {}
+        }
+      ],
+      "expected_serial_valid": true,
+      "name": "unique_B_first_visit_AB",
+      "replay_errors": [],
+      "serial_valid": true
+    },
+    {
+      "accepted": "B",
+      "business_rejected": "A",
+      "events": [
+        {
+          "authorities": [
+            "index-even",
+            "index-odd"
+          ],
+          "event": "announce",
+          "exclusive_row_count": 1,
+          "owner": "A",
+          "position": 20,
+          "predicate_authority_count": 2,
+          "rows": [
+            "row/a"
+          ]
+        },
+        {
+          "authorities": [
+            "index-even",
+            "index-odd"
+          ],
+          "event": "announce",
+          "exclusive_row_count": 1,
+          "owner": "B",
+          "position": 10,
+          "predicate_authority_count": 2,
+          "rows": [
+            "row/b"
+          ]
+        },
+        {
+          "event": "lookup",
+          "overlay": {},
+          "owner": "B",
+          "position": 10,
+          "rows": [],
+          "value": 7
+        },
+        {
+          "blockers": [
+            "B"
+          ],
+          "event": "wait",
+          "owner": "A",
+          "position": 20,
+          "value": 7
+        },
+        {
+          "event": "resolve",
+          "owner": "B",
+          "position": 10,
+          "writes": {
+            "row/b": 7
+          }
+        },
+        {
+          "event": "lookup",
+          "overlay": {},
+          "owner": "A",
+          "position": 20,
+          "rows": [
+            "row/b"
+          ],
+          "value": 7
+        },
+        {
+          "event": "resolve",
+          "owner": "A",
+          "position": 20,
+          "writes": {}
+        }
+      ],
+      "expected_serial_valid": true,
+      "name": "unique_B_first_visit_BA",
+      "replay_errors": [],
+      "serial_valid": true
+    },
+    {
+      "accepted": true,
+      "constraint_valid": false,
+      "events": [
+        {
+          "authorities": [
+            "index-even",
+            "index-odd"
+          ],
+          "event": "announce",
+          "exclusive_row_count": 2,
+          "owner": "T",
+          "position": 10,
+          "predicate_authority_count": 2,
+          "rows": [
+            "row/a",
+            "row/b"
+          ]
+        },
+        {
+          "event": "lookup",
+          "overlay": {},
+          "owner": "T",
+          "position": 10,
+          "rows": [],
+          "value": 7
+        },
+        {
+          "event": "lookup",
+          "overlay": {},
+          "owner": "T",
+          "position": 10,
+          "rows": [],
+          "value": 7
+        },
+        {
+          "event": "resolve",
+          "owner": "T",
+          "position": 10,
+          "writes": {
+            "row/a": 7,
+            "row/b": 7
+          }
+        }
+      ],
+      "expected_constraint_valid": false,
+      "expected_serial_valid": true,
+      "name": "own_unique_effects_omitted",
+      "replay_errors": [],
+      "serial_valid": true
+    },
+    {
+      "accepted": false,
+      "constraint_valid": true,
+      "events": [
+        {
+          "authorities": [
+            "index-even",
+            "index-odd"
+          ],
+          "event": "announce",
+          "exclusive_row_count": 2,
+          "owner": "T",
+          "position": 10,
+          "predicate_authority_count": 2,
+          "rows": [
+            "row/a",
+            "row/b"
+          ]
+        },
+        {
+          "event": "lookup",
+          "overlay": {},
+          "owner": "T",
+          "position": 10,
+          "rows": [],
+          "value": 7
+        },
+        {
+          "event": "lookup",
+          "overlay": {
+            "row/a": 7
+          },
+          "owner": "T",
+          "position": 10,
+          "rows": [
+            "row/a"
+          ],
+          "value": 7
+        },
+        {
+          "event": "resolve",
+          "owner": "T",
+          "position": 10,
+          "writes": {}
+        }
+      ],
+      "expected_constraint_valid": true,
+      "expected_serial_valid": true,
+      "name": "own_unique_effects_visible",
+      "replay_errors": [],
+      "serial_valid": true
+    },
+    {
+      "insert_waited": true,
+      "name": "range_owns_absent_identifier",
+      "outside_writer_passed": true
+    },
+    {
+      "deadlocked_before_execution": false,
+      "name": "future_fairness_claim_absent"
+    },
+    {
+      "deadlocked_before_execution": true,
+      "name": "future_fairness_claim_unsafe"
+    },
+    {
+      "name": "fair_waiter_spreads_WAN_delay",
+      "point_key_was_unheld": true,
+      "wait_chain": [
+        "point(y)",
+        "wide(x,y)",
+        "WAN(x)"
+      ]
+    },
+    {
+      "name": "late_source_earlier",
+      "serial_valid": true,
+      "target_result": 9,
+      "target_waited": true
+    },
+    {
+      "name": "late_source_later",
+      "serial_valid": true,
+      "target_result": 2,
+      "target_waited": false
+    },
+    {
+      "name": "bound_order_abc_read_after_0",
+      "reader_before_writer": true,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        50,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_abc_read_after_1",
+      "reader_before_writer": true,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        50,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_abc_read_after_2",
+      "reader_before_writer": true,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        50,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_abc_read_after_3",
+      "reader_before_writer": false,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        1,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_acb_read_after_0",
+      "reader_before_writer": true,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        50,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_acb_read_after_1",
+      "reader_before_writer": true,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        50,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_acb_read_after_2",
+      "reader_before_writer": true,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        50,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_acb_read_after_3",
+      "reader_before_writer": false,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        1,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_bac_read_after_0",
+      "reader_before_writer": true,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        50,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_bac_read_after_1",
+      "reader_before_writer": true,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        50,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_bac_read_after_2",
+      "reader_before_writer": true,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        50,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_bac_read_after_3",
+      "reader_before_writer": false,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        1,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_bca_read_after_0",
+      "reader_before_writer": true,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        50,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_bca_read_after_1",
+      "reader_before_writer": true,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        50,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_bca_read_after_2",
+      "reader_before_writer": true,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        50,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_bca_read_after_3",
+      "reader_before_writer": false,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        1,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_cab_read_after_0",
+      "reader_before_writer": true,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        50,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_cab_read_after_1",
+      "reader_before_writer": true,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        50,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_cab_read_after_2",
+      "reader_before_writer": true,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        50,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_cab_read_after_3",
+      "reader_before_writer": false,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        1,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_cba_read_after_0",
+      "reader_before_writer": true,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        50,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_cba_read_after_1",
+      "reader_before_writer": true,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        50,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_cba_read_after_2",
+      "reader_before_writer": true,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        50,
+        "T"
+      ]
+    },
+    {
+      "name": "bound_order_cba_read_after_3",
+      "reader_before_writer": false,
+      "reader_position": [
+        50,
+        "Q"
+      ],
+      "serial_valid": true,
+      "writer_position": [
+        1,
+        "T"
+      ]
+    }
+  ],
+  "predicate_competitor": {
+    "blocked_transitions": 312,
+    "finite_states": 64,
+    "known_marker": {
+      "fixed_position_physical_commit_order": [
+        "V",
+        "T"
+      ],
+      "fixed_position_serial_order": [
+        "T",
+        "V"
+      ],
+      "retained_MAX_predicate_blocks_challenger": true,
+      "serial_valid": true
+    },
+    "name": "indexed_max_predicate_competitor",
+    "permitted_preserving_max": 264,
+    "row_transitions": 576,
+    "unknown_winner": {
+      "predicate_locks": {
+        "challenger_60_to_101": "waits",
+        "loser_50_to_60": "passes"
+      },
+      "serial_witness": [
+        "loser_50_to_60",
+        "mark_max_a",
+        "challenger_60_to_101"
+      ],
+      "target_collection_envelope": {
+        "challenger_60_to_101": "waits",
+        "loser_50_to_60": "waits"
+      }
+    },
+    "unprotected_distributed_gather_valid_serial_orders": []
+  },
+  "scope": "Finite semantic and gate-admission audit; no measured performance or recovery",
+  "source_retention": {
+    "completion_requires": "retention coverage or an explicit abort/expiration contract",
+    "fixed_position": 10,
+    "historical_value": 2,
+    "incorrect_latest_fallback": 9,
+    "name": "late_source_history_expired",
+    "safe_expiration_result": "history unavailable; refuse the read"
+  },
+  "sources": {
+    "certification.py": "1f6096bb0930a3a41d5ff5030517918f52218814fa6e74f79264d06f30f0c5d8",
+    "envelope_audit.py": "31483c6f1c20089c7d17b976e89652ad12217fb4c6c8df5aecee8760b6593c3c",
+    "fixed_execution.py": "ea82edb8c4b86270a629f5bcc94779605b789c9f1c50da9d22391b91c05516b0",
+    "write_admission.py": "f10b6fbe8bb426b7da7c7ea69b2e2edb05dd2d92cc7e21d9220c2d796dbfebf6"
+  }
+}

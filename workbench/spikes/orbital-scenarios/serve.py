@@ -8,7 +8,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
 
-from model import canonical, integer
+from model import POLICY_NAMES, POLICIES, canonical, integer
 from run import compare, execute
 from scenarios import presets, workload
 
@@ -32,6 +32,8 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == "/api/presets":
             self.reply(200, presets())
+        elif self.path == "/api/config":
+            self.reply(200, {"policies": POLICY_NAMES, "default_policy": POLICIES[0], "default_preset": "independent"})
         elif self.path in STATIC:
             file, content_type = STATIC[self.path]
             self.reply(200, (ROOT / file).read_bytes(), content_type)

@@ -1,0 +1,41 @@
+{
+  "commands_from_replay_root": [
+    "python3 -m unittest discover -s workbench/spikes/orbital-scenarios -p check*.py",
+    "python3 workbench/spikes/orbital-scenarios/pipeline_simulation.py --seeds 0,7,19 --output build/repeated/sweep.json",
+    "python3 workbench/spikes/orbital-scenarios/pipeline_contrasts.py --output build/repeated/contrasts.json",
+    "python3 workbench/spikes/orbital-scenarios/position_pipeline.py --output build/repeated/semantic.json",
+    "python3 workbench/spikes/orbital-scenarios/release_after_position_audit.py --output build/repeated/release-audit.json",
+    "python3 workbench/spikes/orbital-scenarios/pipeline_export.py --input build/orbital-pipeline --output build/repeated/export"
+  ],
+  "raw_sha256": {
+    "contrasts.json": "0e32619766360828eb5e5137cb4dc322bdeb9e496fcc1e0d9f878065d63253d5",
+    "release-audit.json": "b313c2ce5f3e4081157284e5b7011bdb712d266a43850dcbca8bde069ca19752",
+    "semantic.json": "4510923c35a96ab79d1e06939a2db23411e77fb1d3f02add888cf98a21854d0a",
+    "sweep.json": "a2697597dd8d516c87133c4c6cb1b16a9e1ea4aa9ff7f5858c4081c31670231e"
+  },
+  "run_count": 148,
+  "selection": "All 132 sweep and 16 contrast outcomes/counters, all 7 semantic-core and 17 independent audit histories, including expected invalid controls. Only repeated timing inputs omitted; complete inputs are in the replay bundle.",
+  "source_sha256": {
+    "arbitration.py": "80866cd123a56cb3c706a1173bbce3de01b897b74438a4e9de25853a80ad10f4",
+    "batch.py": "003a51cab651d5203b0a98425ce34db839da442d9966e645779dbed33faba6e4",
+    "certification.py": "1f6096bb0930a3a41d5ff5030517918f52218814fa6e74f79264d06f30f0c5d8",
+    "check_pipeline_simulation.py": "a2f9251e8ff423d52fcd061b578fdb9a900cd78a4fd713099a4d1685c59bbced",
+    "check_position_pipeline.py": "f1e95d6b58f7f8ea3282ace5e9e67beccfa54544e9776a05d22447582e9ffc2b",
+    "comparison.py": "6b6329846b3d4e80f0d41c6df46d9413e68dea54f22757957ba12acbf32334bf",
+    "comparison_inputs.py": "b1bbb895f4dca5e008053690912cea9baad3c764a7654b68b8e638d93a9fba50",
+    "discovery_probe.py": "9d12351a076d8b6fce3fcccd4f6044755926dad9c9020097a006f1e84d580995",
+    "envelope_locality.py": "8b621d7ac127c8166c24e0cb910be3579502b8d9fa4ce074845e3c49017c68f3",
+    "fixed_execution.py": "ea82edb8c4b86270a629f5bcc94779605b789c9f1c50da9d22391b91c05516b0",
+    "fixed_simulation.py": "e16314e3b9d392b6037d7893a19aead25f46abc2011a90b1306726c9d434ece2",
+    "model.py": "99203c1d53cd690537918bcf2bb939dd5d37c4cf8d4d512e81c62a98fe4b90cf",
+    "output_policies.py": "4a5bc41c2f1a8a7c7d51b20f789a760db00a5a968aa1cdc9abcadcb46767eb7d",
+    "pipeline_contrasts.py": "2254e3f68f68bfd41ebefd26a9013fceacd09f4acecafaffc9599b92656ed04d",
+    "pipeline_export.py": "5eab76cd6dde9e126f29e6c6ca2af7ac7882ef2fb8393ffcce11add35cbd6dfe",
+    "pipeline_simulation.py": "61e9b82d8e130d25b5f00dadcca734503cdd53796ac67f0c0618c6683eccbf3d",
+    "position_pipeline.py": "634adff1a9d5ba023af25de343cf7a63e2d9244d4e9da10eacf88258aa15c36f",
+    "priority_locks.py": "817127d1ac025501dda86274a0972f0dbc0f5e820c05e7901ba8eb63c96903a8",
+    "release_after_position_audit.py": "a892ee274e9bb338ecb13dc9c1e4bd4394b11302cd435000bc854c944061ead8",
+    "write_admission.py": "f10b6fbe8bb426b7da7c7ea69b2e2edb05dd2d92cc7e21d9220c2d796dbfebf6"
+  },
+  "units": "Synthetic service/latency units and logical histories; no measured performance."
+}

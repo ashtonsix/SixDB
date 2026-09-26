@@ -1,7 +1,7 @@
 """Component-owned reservations under an atomic multishard retry cut.
 
 Collection/closure and verdict application are idealized; arbitration_us charges
-an explicit aggregate collection, solving and return delay. See BATCH.md.
+an explicit aggregate collection, solving and return delay. See MODEL.md.
 """
 
 from collections import defaultdict
@@ -58,27 +58,25 @@ class BatchModel(Model):
         p = self.part(ref).spec
         return {(p["shard"], key) for key in p["locks"]}
 
+    def scope_modes(self, refs):
+        modes = {}
+        for ref in sorted(refs):
+            p = self.part(ref).spec
+            for key, mode in p["locks"].items():
+                resource = p["shard"], key
+                modes[resource] = "W" if mode == "W" or modes.get(resource) == "W" else "R"
+        return modes
+
+    def scopes_conflict(self, left, right):
+        return any(key in right and (self.scenario["policy"]["reservations"] == "scope"
+                   or mode == "W" or right[key] == "W") for key, mode in left.items())
+
     def fence_blockers(self, ref):
         blocked = set()
-        for fence in self.fences.values():
-            if self.scope(ref) & fence["scope"] and ref[0] not in fence["winners"]:
-                # A real representative is for trace compatibility only. These
-                # are arbitration fences, not edges in the granted-lock wait graph.
-                blocked.add(fence["representative"])
+        for key, fence in self.fences.items():
+            if self.scopes_conflict(self.scope_modes([ref]), fence["modes"]) and ref[0] not in fence["winners"]:
+                blocked.add(key)
         return blocked
-
-    def blockers(self, ref, epoch_grants=()):
-        return super().blockers(ref, epoch_grants) | self.fence_blockers(ref)
-
-    def wait_blockers(self, ref):
-        return super().blockers(ref)
-
-    def retry(self, ref, blockers):
-        p = self.part(ref)
-        p.failures += 1
-        p.retry_epoch = self.epochs[p.spec["shard"]] + 1
-        self.note("retry", transaction=ref[0], part=ref[1],
-                  blockers=[list(b) for b in sorted(blockers)], next_epoch=p.retry_epoch)
 
     def eligible(self, ref):
         p = self.part(ref)
@@ -111,21 +109,30 @@ class BatchModel(Model):
 
     def release_finished(self):
         for key, fence in list(self.fences.items()):
-            owners = fence["members"] if fence["pending"] else fence["winners"]
-            if all(self.transactions[tid].state == "complete" for tid in owners):
+            # A verdict protects the ready claims it selected until those claims
+            # advance. Future discovery does not keep the whole reservation alive.
+            done = all(self.transactions[tid].state == "complete" for tid in fence["members"])
+            if not fence["pending"]:
+                done |= all(self.part(ref).state != "ready" or self.part(ref).generation != generation
+                            for ref, generation in fence["selected_ready"].items())
+            if done:
                 del self.fences[key]
                 self.note("component_release", round=fence["round"], members=fence["members"])
+        self.waiting_rounds = {f["round"] for f in self.fences.values() if f["pending"]}
 
     def complete(self, tid):
         super().complete(tid)
         self.release_finished()
 
     def collect(self):
+        self.release_finished()
         candidates = [ref for ref in self.ready() if self.part(ref).attempts > 0]
         if not candidates:
             return
         self.round += 1
-        self.fences.clear()
+        retain = self.scenario["policy"]["yield"] != "batch-reset"
+        if not retain:
+            self.fences.clear()
         self.note("batch_begin", round=self.round, retry_parts=len(candidates))
         # Synchronous retry input is a strong abstraction, not extra free ordinary
         # epoch capacity: count every attempt and expose the uncharged batch work.
@@ -133,7 +140,10 @@ class BatchModel(Model):
         retry_set = set(candidates)
         isolated = {ref for ref in candidates if not any(
             self.conflict(ref, other) for other in retry_set | self.grants if other != ref)}
+        active_members = {tid for fence in self.fences.values() for tid in fence["members"]}
         for ref in candidates:
+            if ref[0] in active_members or self.fence_blockers(ref):
+                continue
             if ref in isolated:
                 self.acquire(ref, epoch_grants)
                 self.counts["batch_isolated_success"] += 1
@@ -165,7 +175,8 @@ class BatchModel(Model):
                 if a < b and any(self.conflict(x, y) for x in by_tx[a] for y in by_tx[b]):
                     adjacency[a].add(b)
                     adjacency[b].add(a)
-        remaining = set(scope_graph)
+        graph = scope_graph if self.scenario["policy"]["reservations"] == "scope" else adjacency
+        remaining = set(graph)
         components = []
         while remaining:
             stack, component = [min(remaining)], set()
@@ -174,7 +185,7 @@ class BatchModel(Model):
                 if v in component:
                     continue
                 component.add(v)
-                stack.extend(scope_graph[v] - component)
+                stack.extend(graph[v] - component)
             remaining -= component
             if component & failed:
                 components.append(component)
@@ -182,12 +193,20 @@ class BatchModel(Model):
         for index, vertices in enumerate(components):
             refs = set().union(*(by_tx[v] for v in vertices))
             scope = set().union(*(self.scope(ref) for ref in refs))
+            modes = self.scope_modes(refs)
+            # A newly discovered bridge waits behind the existing decisions.
+            # This bounded policy avoids a global pause but does not implement
+            # concurrent distributed component merging.
+            if retain and any(vertices & set(f["members"]) or self.scopes_conflict(modes, f["modes"])
+                              for f in self.fences.values()):
+                self.counts["component_deferred"] += 1
+                continue
             mandatory = {v for v in vertices if self.transactions[v].state == "authorized"}
             winners, search_nodes = independent_set(vertices, adjacency, self.priority,
                 {v: self.work(v) for v in vertices}, mandatory, self.scenario["policy"]["solver"])
             key = self.round, index
-            fence = {"round": self.round, "members": sorted(vertices), "scope": scope,
-                     "representative": min(refs), "winners": set(), "pending": True}
+            fence = {"round": self.round, "members": sorted(vertices), "scope": scope, "modes": modes,
+                     "winners": set(), "pending": True, "selected_ready": {}}
             self.fences[key] = fence
             selected_refs = set().union(*(by_tx[v] for v in winners)) if winners else set()
             victims = defaultdict(list)
@@ -199,6 +218,8 @@ class BatchModel(Model):
                 self.transactions[v].spec["coordinator"] in shard_set for v in vertices)
             plan = {"key": key, "members": sorted(vertices), "winners": sorted(winners),
                           "victims": dict(victims),
+                          "selected_ready": {ref: self.part(ref).generation for ref in selected_refs
+                                             if self.part(ref).state == "ready"},
                           "generations": {ref: self.part(ref).generation for ref in refs},
                           "known": {v: set(self.transactions[v].known) for v in vertices}}
             if local:
@@ -231,7 +252,6 @@ class BatchModel(Model):
             changed = any(self.part(ref).generation != generation for ref, generation in plan["generations"].items())
             changed |= any(self.transactions[tid].known != known for tid, known in plan["known"].items())
             winners = set(plan["winners"])
-            losers = set(plan["members"]) - winners
             changed |= any(self.transactions[tid].state == "authorized" for tid in plan["victims"])
             if changed:
                 del self.fences[key]
@@ -245,6 +265,7 @@ class BatchModel(Model):
                 invalidated.append(tid)
             self.fences[key]["winners"] = winners
             self.fences[key]["pending"] = False
+            self.fences[key]["selected_ready"] = plan["selected_ready"]
             self.note("verdict_apply", round=round_id, members=plan["members"], winners=sorted(winners),
                       invalidated=invalidated)
         if not any(f["round"] == round_id and f["pending"] for f in self.fences.values()):
@@ -253,15 +274,19 @@ class BatchModel(Model):
 
     def check(self):
         super().check()
-        occupied = set()
+        occupied = []
+        members = set()
         for fence in getattr(self, "fences", {}).values():
-            assert not (fence["scope"] & occupied), "component reservations overlap"
+            assert not any(self.scopes_conflict(fence["modes"], modes) for modes in occupied), "incompatible reservations"
+            assert not (members & set(fence["members"])), "transaction belongs to multiple active components"
             assert fence["winners"] <= set(fence["members"])
-            occupied |= fence["scope"]
+            occupied.append(fence["modes"])
+            members.update(fence["members"])
 
     def snapshot(self):
         result = super().snapshot()
         result["components"] = [{"round": f["round"], "members": f["members"],
             "winners": sorted(f["winners"]), "pending": f["pending"],
-            "keys": [list(key) for key in sorted(f["scope"])]} for f in self.fences.values()]
+            "keys": [list(key) for key in sorted(f["scope"])],
+            "claims": [[*key, mode] for key, mode in sorted(f["modes"].items())]} for f in self.fences.values()]
         return result

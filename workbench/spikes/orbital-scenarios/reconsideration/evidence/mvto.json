@@ -1,0 +1,666 @@
+{
+  "model": "Committed-only MV timestamp-order rule with atomic point-key certification.\n\nExplicit tombstones model known absent keys. General predicates, distributed\ncertification, failures, resource costs and epoch scheduling are not implemented.\nEvery step is an authored agreed event, NOT a replica-local permitted schedule.\n",
+  "source_sha256": "a91a577b249c81a674378b5570b468ec18cac2346a4707d2d7052b2c33635daf",
+  "cases": [
+    {
+      "name": "old_max_and_new_insert_both_commit",
+      "final": {
+        "a": 100,
+        "b": 101,
+        "out": 100
+      },
+      "committed": 2,
+      "aborted": 0,
+      "sample_transactions": [
+        {
+          "name": "scan",
+          "ts": 10,
+          "observed": [
+            [
+              "a",
+              100
+            ],
+            [
+              "b",
+              null
+            ]
+          ],
+          "blockers": []
+        },
+        {
+          "name": "new_max",
+          "ts": 20,
+          "observed": [],
+          "blockers": []
+        }
+      ],
+      "wait_events": []
+    },
+    {
+      "name": "back_edge_rejects_old_output",
+      "final": {
+        "a": 100,
+        "b": 101,
+        "out": null
+      },
+      "committed": 1,
+      "aborted": 1,
+      "sample_transactions": [
+        {
+          "name": "scan",
+          "ts": 10,
+          "observed": [
+            [
+              "a",
+              100
+            ],
+            [
+              "b",
+              null
+            ]
+          ],
+          "blockers": [
+            {
+              "key": "out",
+              "predecessor": 0,
+              "reader": 20
+            }
+          ]
+        },
+        {
+          "name": "marker_then_insert",
+          "ts": 20,
+          "observed": [
+            [
+              "out",
+              null
+            ]
+          ],
+          "blockers": []
+        }
+      ],
+      "wait_events": []
+    },
+    {
+      "name": "one_conflict_rejects_whole_broad_update",
+      "final": {
+        "x": 0,
+        "y": 1,
+        "z": 0
+      },
+      "committed": 1,
+      "aborted": 1,
+      "sample_transactions": [
+        {
+          "name": "broad_update",
+          "ts": 10,
+          "observed": [
+            [
+              "x",
+              0
+            ],
+            [
+              "y",
+              0
+            ],
+            [
+              "z",
+              0
+            ]
+          ],
+          "blockers": [
+            {
+              "key": "y",
+              "predecessor": 0,
+              "reader": 20
+            }
+          ]
+        },
+        {
+          "name": "point_update",
+          "ts": 20,
+          "observed": [
+            [
+              "y",
+              0
+            ]
+          ],
+          "blockers": []
+        }
+      ],
+      "wait_events": []
+    },
+    {
+      "name": "blind_batch_can_complete_out_of_timestamp_order",
+      "final": {
+        "x": 9,
+        "y": 4
+      },
+      "committed": 2,
+      "aborted": 0,
+      "sample_transactions": [
+        {
+          "name": "old_blind_batch",
+          "ts": 10,
+          "observed": [],
+          "blockers": []
+        },
+        {
+          "name": "new_blind_point",
+          "ts": 20,
+          "observed": [],
+          "blockers": []
+        }
+      ],
+      "wait_events": []
+    },
+    {
+      "name": "intermediate_version_cannot_hide_reader",
+      "final": {
+        "x": 0
+      },
+      "committed": 1,
+      "aborted": 2,
+      "sample_transactions": [
+        {
+          "name": "new_reader",
+          "ts": 30,
+          "observed": [
+            [
+              "x",
+              0
+            ]
+          ],
+          "blockers": []
+        },
+        {
+          "name": "old_writer_10",
+          "ts": 10,
+          "observed": [],
+          "blockers": [
+            {
+              "key": "x",
+              "predecessor": 0,
+              "reader": 30
+            }
+          ]
+        },
+        {
+          "name": "old_writer_20",
+          "ts": 20,
+          "observed": [],
+          "blockers": [
+            {
+              "key": "x",
+              "predecessor": 0,
+              "reader": 30
+            }
+          ]
+        }
+      ],
+      "wait_events": []
+    },
+    {
+      "name": "successor_reader_does_not_block_older_insertion",
+      "final": {
+        "x": 25
+      },
+      "committed": 3,
+      "aborted": 0,
+      "sample_transactions": [
+        {
+          "name": "writer25",
+          "ts": 25,
+          "observed": [],
+          "blockers": []
+        },
+        {
+          "name": "reader30",
+          "ts": 30,
+          "observed": [
+            [
+              "x",
+              25
+            ]
+          ],
+          "blockers": []
+        },
+        {
+          "name": "writer20",
+          "ts": 20,
+          "observed": [],
+          "blockers": []
+        }
+      ],
+      "wait_events": []
+    },
+    {
+      "name": "explicit_absence_rejects_backdated_insert",
+      "final": {
+        "absent": null
+      },
+      "committed": 1,
+      "aborted": 1,
+      "sample_transactions": [
+        {
+          "name": "absence_reader",
+          "ts": 30,
+          "observed": [
+            [
+              "absent",
+              null
+            ]
+          ],
+          "blockers": []
+        },
+        {
+          "name": "old_insert",
+          "ts": 20,
+          "observed": [],
+          "blockers": [
+            {
+              "key": "absent",
+              "predecessor": 0,
+              "reader": 30
+            }
+          ]
+        }
+      ],
+      "wait_events": []
+    },
+    {
+      "name": "read_own_buffered_write",
+      "final": {
+        "x": 4,
+        "y": 5
+      },
+      "committed": 1,
+      "aborted": 0,
+      "sample_transactions": [
+        {
+          "name": "self",
+          "ts": 10,
+          "observed": [
+            [
+              "x",
+              4
+            ]
+          ],
+          "blockers": []
+        }
+      ],
+      "wait_events": []
+    },
+    {
+      "name": "aborted_reader_evidence_can_cause_false_abort",
+      "final": {
+        "x": 0,
+        "y": 0
+      },
+      "committed": 1,
+      "aborted": 2,
+      "sample_transactions": [
+        {
+          "name": "reader40",
+          "ts": 40,
+          "observed": [
+            [
+              "y",
+              0
+            ]
+          ],
+          "blockers": []
+        },
+        {
+          "name": "aborted_reader30",
+          "ts": 30,
+          "observed": [
+            [
+              "x",
+              0
+            ]
+          ],
+          "blockers": [
+            {
+              "key": "y",
+              "predecessor": 0,
+              "reader": 40
+            }
+          ]
+        },
+        {
+          "name": "writer20",
+          "ts": 20,
+          "observed": [],
+          "blockers": [
+            {
+              "key": "x",
+              "predecessor": 0,
+              "reader": 30
+            }
+          ]
+        }
+      ],
+      "wait_events": []
+    },
+    {
+      "name": "fresh_attempts_can_keep_losing",
+      "final": {
+        "x": 3,
+        "y": 0
+      },
+      "committed": 3,
+      "aborted": 3,
+      "sample_transactions": [
+        {
+          "name": "broad_attempt0",
+          "ts": 10,
+          "observed": [
+            [
+              "x",
+              0
+            ],
+            [
+              "y",
+              0
+            ]
+          ],
+          "blockers": [
+            {
+              "key": "x",
+              "predecessor": 0,
+              "reader": 20
+            }
+          ]
+        },
+        {
+          "name": "point0",
+          "ts": 20,
+          "observed": [
+            [
+              "x",
+              0
+            ]
+          ],
+          "blockers": []
+        },
+        {
+          "name": "broad_attempt1",
+          "ts": 30,
+          "observed": [
+            [
+              "x",
+              1
+            ],
+            [
+              "y",
+              0
+            ]
+          ],
+          "blockers": [
+            {
+              "key": "x",
+              "predecessor": 20,
+              "reader": 40
+            }
+          ]
+        }
+      ],
+      "wait_events": []
+    },
+    {
+      "name": "100_unrelated_completions_while_wan_pending",
+      "final": {
+        "remote_input": 7,
+        "x": 7,
+        "unrelated": 100
+      },
+      "committed": 101,
+      "aborted": 0,
+      "sample_transactions": [
+        {
+          "name": "wan",
+          "ts": 10,
+          "observed": [
+            [
+              "remote_input",
+              7
+            ]
+          ],
+          "blockers": []
+        },
+        {
+          "name": "local0",
+          "ts": 20,
+          "observed": [
+            [
+              "unrelated",
+              0
+            ]
+          ],
+          "blockers": []
+        },
+        {
+          "name": "local1",
+          "ts": 21,
+          "observed": [
+            [
+              "unrelated",
+              1
+            ]
+          ],
+          "blockers": []
+        }
+      ],
+      "wait_events": []
+    },
+    {
+      "name": "rejected_bridge_does_not_reserve_y",
+      "final": {
+        "x": 10,
+        "remote_target": 10,
+        "y": 1
+      },
+      "committed": 2,
+      "aborted": 1,
+      "sample_transactions": [
+        {
+          "name": "wan_writer",
+          "ts": 10,
+          "observed": [],
+          "blockers": []
+        },
+        {
+          "name": "bridge",
+          "ts": 20,
+          "observed": [],
+          "blockers": [
+            {
+              "key": "x",
+              "claim": "wan_writer"
+            }
+          ]
+        },
+        {
+          "name": "local_y",
+          "ts": 30,
+          "observed": [
+            [
+              "y",
+              0
+            ]
+          ],
+          "blockers": []
+        }
+      ],
+      "wait_events": []
+    },
+    {
+      "name": "prepared_write_wait_is_key_and_timestamp_scoped",
+      "final": {
+        "x": 10,
+        "y": 1
+      },
+      "committed": 4,
+      "aborted": 0,
+      "sample_transactions": [
+        {
+          "name": "prepared_writer",
+          "ts": 10,
+          "observed": [],
+          "blockers": []
+        },
+        {
+          "name": "new_reader",
+          "ts": 20,
+          "observed": [
+            [
+              "x",
+              10
+            ]
+          ],
+          "blockers": []
+        },
+        {
+          "name": "old_reader",
+          "ts": 5,
+          "observed": [
+            [
+              "x",
+              0
+            ]
+          ],
+          "blockers": []
+        }
+      ],
+      "wait_events": [
+        {
+          "tx": "new_reader",
+          "op": "read_wait",
+          "key": "x",
+          "for": "prepared_writer"
+        }
+      ]
+    },
+    {
+      "name": "partial_write_promises_still_delay_their_keys",
+      "final": {
+        "x": 10,
+        "y": 1,
+        "z": 1
+      },
+      "committed": 3,
+      "aborted": 1,
+      "sample_transactions": [
+        {
+          "name": "holder",
+          "ts": 10,
+          "observed": [],
+          "blockers": []
+        },
+        {
+          "name": "cross_shard_bridge",
+          "ts": 20,
+          "observed": [],
+          "blockers": [
+            {
+              "key": "x",
+              "claim": "holder"
+            }
+          ]
+        },
+        {
+          "name": "local_y",
+          "ts": 30,
+          "observed": [
+            [
+              "y",
+              0
+            ]
+          ],
+          "blockers": []
+        }
+      ],
+      "wait_events": [
+        {
+          "tx": "local_y",
+          "op": "read_wait",
+          "key": "y",
+          "for": "cross_shard_bridge"
+        }
+      ]
+    },
+    {
+      "name": "schedule_counterexample_read_first_False",
+      "final": {
+        "x": 1
+      },
+      "committed": 2,
+      "aborted": 0,
+      "sample_transactions": [
+        {
+          "name": "writer10",
+          "ts": 10,
+          "observed": [],
+          "blockers": []
+        },
+        {
+          "name": "reader20",
+          "ts": 20,
+          "observed": [
+            [
+              "x",
+              1
+            ]
+          ],
+          "blockers": []
+        }
+      ],
+      "wait_events": []
+    },
+    {
+      "name": "schedule_counterexample_read_first_True",
+      "final": {
+        "x": 0
+      },
+      "committed": 1,
+      "aborted": 1,
+      "sample_transactions": [
+        {
+          "name": "writer10",
+          "ts": 10,
+          "observed": [],
+          "blockers": [
+            {
+              "key": "x",
+              "predecessor": 0,
+              "reader": 20
+            }
+          ]
+        },
+        {
+          "name": "reader20",
+          "ts": 20,
+          "observed": [
+            [
+              "x",
+              0
+            ]
+          ],
+          "blockers": []
+        }
+      ],
+      "wait_events": []
+    }
+  ],
+  "interleavings": {
+    "authored_event_interleavings": 1680,
+    "outcome_counts": {
+      "aborted,aborted,committed": 1513,
+      "aborted,committed,committed": 83,
+      "committed,aborted,committed": 83,
+      "committed,committed,committed": 1
+    },
+    "scope": "Three point-key programs forming x->y->z->x; check committed observations and final state against timestamp serial order. Not a confluence test or distributed proof."
+  }
+}

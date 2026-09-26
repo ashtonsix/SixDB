@@ -11,8 +11,10 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 
 
-LEGACY_POLICIES = ("reject", "older", "work", "arbitrate")
-POLICIES = (*LEGACY_POLICIES, "batch-reset", "batch-hold")
+POLICIES = ("batch-independent", "batch-hold", "batch-reset")
+POLICY_NAMES = {"batch-independent": "Keep each component independently",
+                "batch-hold": "Pause all collection for pending verdicts",
+                "batch-reset": "Replace reservations at every retry epoch"}
 
 
 def canonical(value):
@@ -53,20 +55,19 @@ def validate(raw):
         integer(config.setdefault("offset_us", 0), "offset_us", 0, 1000000)
         integer(config.setdefault("capacity", 8), "capacity", 1, 1000)
     p = s.setdefault("policy", {})
-    fields(p, "yield reserve_after backoff batch_us arbitration_us solver fast_retries local_solver", "policy")
-    if p.setdefault("yield", "older") not in POLICIES:
+    fields(p, "yield batch_us arbitration_us solver fast_retries local_solver reservations", "policy")
+    if p.setdefault("yield", "batch-independent") not in POLICIES:
         raise ValueError(f"yield must be one of {POLICIES}")
-    integer(p.setdefault("reserve_after", 3), "reserve_after", 0, 1000)
-    integer(p.setdefault("backoff", 4), "backoff", 1, 128)
-    if p["yield"].startswith("batch-"):
-        integer(p.setdefault("batch_us", 500), "batch_us", 1, 1000000)
-        integer(p.setdefault("arbitration_us", 1200), "arbitration_us", 0, 1000000)
-        if p.setdefault("solver", "age") not in ("age", "work", "bounded"):
-            raise ValueError("solver must be age, work or bounded")
-        if type(p.setdefault("fast_retries", True)) is not bool:
-            raise ValueError("fast_retries must be boolean")
-        if type(p.setdefault("local_solver", False)) is not bool:
-            raise ValueError("local_solver must be boolean")
+    integer(p.setdefault("batch_us", 500), "batch_us", 1, 1000000)
+    integer(p.setdefault("arbitration_us", 1200), "arbitration_us", 0, 1000000)
+    if p.setdefault("solver", "age") not in ("age", "work", "bounded"):
+        raise ValueError("solver must be age, work or bounded")
+    if type(p.setdefault("fast_retries", True)) is not bool:
+        raise ValueError("fast_retries must be boolean")
+    if type(p.setdefault("local_solver", False)) is not bool:
+        raise ValueError("local_solver must be boolean")
+    if p.setdefault("reservations", "compatible") not in ("compatible", "scope"):
+        raise ValueError("reservations must be compatible or scope")
     integer(s.setdefault("control_delay_us", 100), "control_delay_us", 0, 1000000)
     integer(s.setdefault("horizon_us", 10000), "horizon_us", 1, 10000000)
     order = s.setdefault("shard_order", sorted(s["shards"]))
@@ -132,7 +133,6 @@ class Part:
     attempts: int = 0
     failures: int = 0
     retry_epoch: int = 0
-    reserved: bool = False
     applied: int = 0
     inputs: dict = field(default_factory=dict)
 
@@ -201,18 +201,11 @@ class Model:
             for key, mode in pa["locks"].items()
         )
 
-    def reservations(self):
-        return {(tid, pid) for tid, tx in self.transactions.items()
-                for pid, p in tx.parts.items() if p.reserved}
-
-    def overlap(self, a, b):
-        pa, pb = self.part(a).spec, self.part(b).spec
-        return pa["shard"] == pb["shard"] and bool(pa["locks"].keys() & pb["locks"].keys())
-
     def blockers(self, ref, epoch_grants=()):
-        grants = {b for b in self.grants | set(epoch_grants) if self.conflict(ref, b)}
-        reservations = {b for b in self.reservations() if b != ref and self.overlap(ref, b)}
-        return grants | reservations
+        return {b for b in self.grants | set(epoch_grants) if self.conflict(ref, b)}
+
+    def fence_blockers(self, ref):
+        return set()
 
     def descendants(self, tid, roots):
         result = set(roots)
@@ -243,7 +236,6 @@ class Model:
             p = tx.parts[pid]
             p.generation += 1
             p.state = "ready" if pid in roots else "hidden"
-            p.reserved = False
             p.inputs.clear()
             p.retry_epoch = self.epochs[p.spec["shard"]] + 1
             self.grants.discard((tid, pid))
@@ -252,26 +244,6 @@ class Model:
         tx.known |= roots
         self.note("invalidate", transaction=tid, parts=sorted(affected), discarded_work=discarded, reason=reason)
         return True
-
-    def yield_request(self, msg):
-        requester = tuple(msg["requester"])
-        victim = tuple(msg["victim"])
-        rp, vp = self.part(requester), self.part(victim)
-        if (rp.generation != msg["request_generation"] or not rp.reserved
-                or vp.generation != msg["victim_generation"] or victim not in self.grants
-                or requester[0] == victim[0] or not self.overlap(requester, victim)):
-            self.note("stale_yield", requester=list(requester), victim=list(victim))
-            return
-        tx = self.transactions[victim[0]]
-        policy = self.scenario["policy"]["yield"]
-        affected = self.descendants(victim[0], [victim[1]])
-        accept = (policy in ("older", "arbitrate") and self.priority(requester[0]) < self.priority(victim[0]))
-        if policy == "work":
-            accept = self.work(victim[0], affected) <= self.work(requester[0])
-        accept = accept and tx.state == "preparing"
-        self.note("yield_accept" if accept else "yield_reject", requester=list(requester), victim=list(victim))
-        if accept:
-            self.invalidate(victim[0], [victim[1]], "yield")
 
     def report(self, msg):
         tid, pid = msg["transaction"], msg["part"]
@@ -298,26 +270,12 @@ class Model:
                 self.send(shard, "c2", transaction=tid)
 
     def retry(self, ref, blockers):
-        tid, pid = ref
         p = self.part(ref)
         p.failures += 1
-        window = min(self.scenario["policy"]["backoff"], 2 ** min(p.failures - 1, 7))
-        jitter = int(hashlib.sha256(f"{tid}/{pid}/{p.attempts}".encode()).hexdigest()[:8], 16) % window
-        p.retry_epoch = self.epochs[p.spec["shard"]] + 1 + jitter
-        self.note("retry", transaction=tid, part=pid, blockers=[list(b) for b in sorted(blockers)], next_epoch=p.retry_epoch)
-        threshold = self.scenario["policy"]["reserve_after"]
-        if threshold and p.failures >= threshold and not p.reserved:
-            # Provisional ranges cannot overlap, including R/R and same-transaction
-            # ranges; conversion of this part's own reservation is the exception.
-            if not any(self.overlap(ref, b) for b in self.reservations() if b != ref):
-                p.reserved = True
-                self.note("reserve", transaction=tid, part=pid)
-        if p.reserved:
-            for victim in sorted(self.grants):
-                if ref[0] != victim[0] and self.overlap(ref, victim):
-                    self.send(self.transactions[victim[0]].spec["coordinator"], "yield",
-                              requester=list(ref), victim=list(victim),
-                              request_generation=p.generation, victim_generation=self.part(victim).generation)
+        p.retry_epoch = self.epochs[p.spec["shard"]] + 1
+        self.note("retry", transaction=ref[0], part=ref[1],
+                  blockers=[list(b) for b in sorted(blockers)],
+                  reservations=[list(key) for key in sorted(self.fence_blockers(ref))], next_epoch=p.retry_epoch)
 
     def complete(self, tid):
         tx = self.transactions[tid]
@@ -327,14 +285,18 @@ class Model:
             self.note("complete", transaction=tid, latency_us=self.time - tx.spec["arrival_us"])
 
     def acquire(self, ref, epoch_grants):
+        """One conservative key-protection realization, not a required L lifecycle.
+
+        L attempts leave only epoch-local conflict accounting, never retained
+        grants. folds.py separately probes a payload fold that combines L work.
+        """
         tid, pid = ref
         tx, p = self.transactions[tid], self.part(ref)
         p.attempts += 1
         blocked = self.blockers(ref, epoch_grants)
-        if blocked:
+        if blocked or self.fence_blockers(ref):
             self.retry(ref, blocked)
             return
-        p.reserved = False
         p.failures = 0
         p.inputs = {d: tx.parts[d].generation for d in p.spec["after"]}
         epoch_grants.add(ref)
@@ -409,8 +371,6 @@ class Model:
         for msg in messages:
             if msg["kind"] == "report":
                 self.report(msg)
-            elif msg["kind"] == "yield":
-                self.yield_request(msg)
             elif msg["kind"] == "c2":
                 tx = self.transactions[msg["transaction"]]
                 if tx.state == "authorized":
@@ -437,9 +397,8 @@ class Model:
                 break
         attempted = []
         if kind != "idle":
-            # One C2 transaction consumes one slot and applies all its shard-local
-            # parts together. Splitting those parts across epochs would change the
-            # brief's transaction execution unit.
+            # This model charges one slot per C2 transaction on this shard;
+            # it is a capacity assumption, not an Orbital execution mechanism.
             ordered = sorted(queues[kind], key=lambda ref: (self.priority(ref[0]), ref[1]))
             capacity = self.scenario["shards"][shard]["capacity"]
             epoch_grants = set()
@@ -462,12 +421,6 @@ class Model:
         if cycles and self.initial_cycle_us is None:
             self.initial_cycle_us = self.time
             self.note("cycle", components=cycles)
-        if self.scenario["policy"]["yield"] == "arbitrate":
-            for cycle in cycles:
-                victim = max(cycle, key=self.priority)
-                roots = [pid for pid, p in self.transactions[victim].parts.items() if not p.spec["after"]]
-                self.note("arbitrate", participants=cycle, victim=victim)
-                self.invalidate(victim, roots, "cycle oracle")
         self.last_epoch = {"shard": shard, "epoch": self.epochs[shard], "kind": kind, "attempted": attempted}
         self.note("epoch", **self.last_epoch)
         period = self.scenario["shards"][shard]["period_us"]
@@ -514,7 +467,6 @@ class Model:
                         assert grants and (ref[0] == other[0] or mode == other_mode == "R"), (ref, other, key)
                     by_key[p.spec["shard"], key].append((ref, mode))
         exclusive(self.grants, True)
-        exclusive(self.reservations(), False)
         for tid, tx in self.transactions.items():
             assert set(tx.reported) <= tx.known
             if tx.state in ("authorized", "complete") and tx.spec["kind"] == "C":
@@ -523,13 +475,12 @@ class Model:
             for pid, p in tx.parts.items():
                 assert ((tid, pid) in self.grants) == (p.state == "prepared")
                 assert p.applied == (1 if p.state == "applied" else 0)
-                assert not p.reserved or (p.state == "ready" and tx.state == "preparing")
                 if p.state in ("prepared", "applied"):
                     assert all(p.inputs.get(d) == tx.parts[d].generation for d in p.spec["after"])
                 if p.state == "ready":
                     assert all(tx.reported.get(d) == tx.parts[d].generation for d in p.spec["after"])
                 if tx.state == "complete":
-                    assert p.state == "applied" and not p.reserved
+                    assert p.state == "applied"
 
     def summary(self):
         states = Counter(t.state for t in self.transactions.values())
@@ -558,7 +509,7 @@ class Model:
                               "completed_us": tx.completed_us,
                               "parts": [{"id": pid, "shard": p.spec["shard"], "state": p.state,
                                          "generation": p.generation, "attempts": p.attempts,
-                                         "reserved": p.reserved, "retry_epoch": p.retry_epoch,
+                                         "retry_epoch": p.retry_epoch,
                                          "locks": p.spec["locks"]} for pid, p in sorted(tx.parts.items())]}
                              for tid, tx in sorted(self.transactions.items())],
         }
@@ -566,11 +517,8 @@ class Model:
 
 def run(scenario, max_steps=2000, frames=False):
     integer(max_steps, "max_steps", 1, 10000)
-    if scenario.get("policy", {}).get("yield", "").startswith("batch-"):
-        from batch import BatchModel
-        model = BatchModel(scenario)
-    else:
-        model = Model(scenario)
+    from batch import BatchModel
+    model = BatchModel(scenario)
     history = [model.snapshot()] if frames else []
     stride = 1
     while model.steps < max_steps and model.step():

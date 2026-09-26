@@ -1,0 +1,48 @@
+{
+  "export_command": [
+    "python3",
+    "workbench/spikes/orbital-scenarios/convergence_export.py",
+    "--input",
+    "build/orbital-convergence",
+    "--output",
+    "build/orbital-convergence/evidence"
+  ],
+  "raw_sha256": {
+    "composition": "54225a734f76c30d82e75a55626b397ecc1370eb3a04d910ca611da68d66a911",
+    "dynamic-sql": "cf87c50ceccacda1f1be08c6dd1320398fd4a1b1b04a54a882a6ffd21a6164f9",
+    "envelope-audit": "458808ad107d8922b6d3ec8d1266701301beaa0f0e0ac6e56e2f890beefc92fe",
+    "envelope-locality": "c2e02fa3859333d4a83da15778854fe29a7deca1fc6c88823e428c607f52e951"
+  },
+  "regenerate_from_replay_root": [
+    "python3 workbench/spikes/orbital-scenarios/check_dynamic_sql.py",
+    "python3 workbench/spikes/orbital-scenarios/check_envelope_audit.py",
+    "python3 workbench/spikes/orbital-scenarios/dynamic_sql.py --output build/repeated/dynamic-sql.json",
+    "python3 workbench/spikes/orbital-scenarios/envelope_audit.py --output build/repeated/envelope-audit.json",
+    "python3 workbench/spikes/orbital-scenarios/composition_probe.py --output build/repeated/composition.json",
+    "python3 workbench/spikes/orbital-scenarios/envelope_locality.py --output build/repeated/envelope-locality.json",
+    "python3 workbench/spikes/orbital-scenarios/convergence_export.py --input build/orbital-convergence --output build/repeated/export"
+  ],
+  "selection": "All 13 application, 42 audit and 10 composition histories, including expected invalid controls; all 9 locality runs and every cohort. Repeated locality inputs are in replay/build/orbital-convergence.",
+  "source_sha256": {
+    "arbitration.py": "80866cd123a56cb3c706a1173bbce3de01b897b74438a4e9de25853a80ad10f4",
+    "batch.py": "003a51cab651d5203b0a98425ce34db839da442d9966e645779dbed33faba6e4",
+    "certification.py": "1f6096bb0930a3a41d5ff5030517918f52218814fa6e74f79264d06f30f0c5d8",
+    "check_dynamic_sql.py": "1f913230f3ae6b497e7c219b7e25984ef84141d39544bf29a3ea71e9fa90721c",
+    "check_envelope_audit.py": "7cefc869bf53dba183d9b2a900e7fe5231d1cff0b7cb23c3080fe05ff5917029",
+    "comparison.py": "6b6329846b3d4e80f0d41c6df46d9413e68dea54f22757957ba12acbf32334bf",
+    "comparison_inputs.py": "b1bbb895f4dca5e008053690912cea9baad3c764a7654b68b8e638d93a9fba50",
+    "composition_probe.py": "908c598d8da8be2a2743cf8971a96506d2edddab0dee282ff700185cb67fb306",
+    "convergence_export.py": "361e0fbaf6fa6da1b1271cb997c7d5326bb321ae028cd3430f66124b410ce9ac",
+    "discovery_probe.py": "9d12351a076d8b6fce3fcccd4f6044755926dad9c9020097a006f1e84d580995",
+    "dynamic_sql.py": "418883875037f7f57e63baf1f6947f27c5c5a486dbc928fc15b0d388a867b666",
+    "envelope_audit.py": "31483c6f1c20089c7d17b976e89652ad12217fb4c6c8df5aecee8760b6593c3c",
+    "envelope_locality.py": "8b621d7ac127c8166c24e0cb910be3579502b8d9fa4ce074845e3c49017c68f3",
+    "fixed_execution.py": "ea82edb8c4b86270a629f5bcc94779605b789c9f1c50da9d22391b91c05516b0",
+    "fixed_simulation.py": "e16314e3b9d392b6037d7893a19aead25f46abc2011a90b1306726c9d434ece2",
+    "model.py": "99203c1d53cd690537918bcf2bb939dd5d37c4cf8d4d512e81c62a98fe4b90cf",
+    "output_policies.py": "4a5bc41c2f1a8a7c7d51b20f789a760db00a5a968aa1cdc9abcadcb46767eb7d",
+    "priority_locks.py": "817127d1ac025501dda86274a0972f0dbc0f5e820c05e7901ba8eb63c96903a8",
+    "write_admission.py": "f10b6fbe8bb426b7da7c7ea69b2e2edb05dd2d92cc7e21d9220c2d796dbfebf6"
+  },
+  "units": "Authored logical histories and synthetic ticks/service costs, not measured database performance."
+}

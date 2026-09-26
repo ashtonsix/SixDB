@@ -1,0 +1,443 @@
+{
+  "model": "finite serial-history enumeration",
+  "source_sha256": "89b43df3c9aaea1d76486bf52f9d5fbd83ff42be94da974c43d9f5ea30d0f323",
+  "limits": "No concurrency protocol, costs, failure model or epoch-fixpoint proof. Only declared operations, final state, outputs and precedence are checked.",
+  "cases": [
+    {
+      "name": "max_with_independent_insert",
+      "question": "A changed maximum need not prevent an overlapping select-and-act.",
+      "initial": {
+        "rows": {
+          "a": 100
+        },
+        "chosen": null
+      },
+      "observed": {
+        "R": "a",
+        "W": "ok"
+      },
+      "final": {
+        "rows": {
+          "a": 100,
+          "b": 101
+        },
+        "chosen": "a"
+      },
+      "required_precedence": [],
+      "serial_orders_checked": 2,
+      "admissible": true,
+      "witness_count": 1,
+      "first_witness": [
+        "R",
+        "W"
+      ]
+    },
+    {
+      "name": "max_with_dependency_cycle",
+      "question": "An extra read closes the cycle despite disjoint write locations.",
+      "initial": {
+        "rows": {
+          "a": 100
+        },
+        "chosen": null
+      },
+      "observed": {
+        "R": "a",
+        "W": null
+      },
+      "final": {
+        "rows": {
+          "a": 100,
+          "b": 101
+        },
+        "chosen": "a"
+      },
+      "required_precedence": [],
+      "serial_orders_checked": 2,
+      "admissible": false,
+      "witness_count": 0,
+      "first_witness": null
+    },
+    {
+      "name": "old_max_after_completed_insert",
+      "question": "A serial witness must also respect promised real-time precedence.",
+      "initial": {
+        "rows": {
+          "a": 100
+        },
+        "chosen": null
+      },
+      "observed": {
+        "R": "a",
+        "W": "ok"
+      },
+      "final": {
+        "rows": {
+          "a": 100,
+          "b": 101
+        },
+        "chosen": "a"
+      },
+      "required_precedence": [
+        [
+          "W",
+          "R"
+        ]
+      ],
+      "serial_orders_checked": 1,
+      "admissible": false,
+      "witness_count": 0,
+      "first_witness": null
+    },
+    {
+      "name": "empty_predicate_two_inserts",
+      "question": "No initial keys does not mean no read dependency.",
+      "initial": {
+        "rows": {}
+      },
+      "observed": {
+        "T": true,
+        "U": true
+      },
+      "final": {
+        "rows": {
+          "a": 1,
+          "b": 1
+        }
+      },
+      "required_precedence": [],
+      "serial_orders_checked": 2,
+      "admissible": false,
+      "witness_count": 0,
+      "first_witness": null
+    },
+    {
+      "name": "stale_root_loses_disjoint_write",
+      "question": "A private whole-root image can overwrite an unrelated live update.",
+      "initial": {
+        "a": 10,
+        "b": 20
+      },
+      "observed": {
+        "B": "ok",
+        "P": "ok"
+      },
+      "final": {
+        "a": 11,
+        "b": 20
+      },
+      "required_precedence": [],
+      "serial_orders_checked": 2,
+      "admissible": false,
+      "witness_count": 0,
+      "first_witness": null
+    },
+    {
+      "name": "staged_read_modify_write_loses_increment",
+      "question": "Applying a stale bulk result is not applying the ordered program.",
+      "initial": {
+        "a": 10,
+        "b": 20
+      },
+      "observed": {
+        "B": "ok",
+        "P": "ok"
+      },
+      "final": {
+        "a": 20,
+        "b": 40
+      },
+      "required_precedence": [],
+      "serial_orders_checked": 2,
+      "admissible": false,
+      "witness_count": 0,
+      "first_witness": null
+    },
+    {
+      "name": "ordered_bulk_program_after_increment",
+      "question": "A bulk program evaluated at its serial position includes earlier writes.",
+      "initial": {
+        "a": 10,
+        "b": 20
+      },
+      "observed": {
+        "B": "ok",
+        "P": "ok"
+      },
+      "final": {
+        "a": 20,
+        "b": 46
+      },
+      "required_precedence": [],
+      "serial_orders_checked": 2,
+      "admissible": true,
+      "witness_count": 1,
+      "first_witness": [
+        "P",
+        "B"
+      ]
+    },
+    {
+      "name": "blind_bulk_assignment",
+      "question": "An overlapping blind overwrite can be valid at the later serial position.",
+      "initial": {
+        "a": 10,
+        "b": 20
+      },
+      "observed": {
+        "B": "ok",
+        "P": "ok"
+      },
+      "final": {
+        "a": 100,
+        "b": 100
+      },
+      "required_precedence": [],
+      "serial_orders_checked": 2,
+      "admissible": true,
+      "witness_count": 1,
+      "first_witness": [
+        "P",
+        "B"
+      ]
+    },
+    {
+      "name": "bulk_assignment_returning_old_value",
+      "question": "Returning an old value removes the blind operation's reorder freedom.",
+      "initial": {
+        "a": 10,
+        "b": 20
+      },
+      "observed": {
+        "B": 20,
+        "P": "ok"
+      },
+      "final": {
+        "a": 100,
+        "b": 100
+      },
+      "required_precedence": [],
+      "serial_orders_checked": 2,
+      "admissible": false,
+      "witness_count": 0,
+      "first_witness": null
+    },
+    {
+      "name": "chunked_publication_partial_reader",
+      "question": "A reader between chunks distinguishes chunked and atomic bulk updates.",
+      "initial": {
+        "a": 0,
+        "b": 0
+      },
+      "observed": {
+        "B": "ok",
+        "R": 1
+      },
+      "final": {
+        "a": 1,
+        "b": 1
+      },
+      "required_precedence": [],
+      "serial_orders_checked": 2,
+      "admissible": false,
+      "witness_count": 0,
+      "first_witness": null
+    },
+    {
+      "name": "commuting_bulk_deltas",
+      "question": "Exact deltas with completion-only results permit either order.",
+      "initial": {
+        "a": 10,
+        "b": 20
+      },
+      "observed": {
+        "B": "ok",
+        "P": "ok"
+      },
+      "final": {
+        "a": 11,
+        "b": 24
+      },
+      "required_precedence": [],
+      "serial_orders_checked": 2,
+      "admissible": true,
+      "witness_count": 2,
+      "first_witness": [
+        "B",
+        "P"
+      ]
+    },
+    {
+      "name": "deltas_returning_intermediate_values",
+      "question": "Commuting final state does not ensure compatible returned values.",
+      "initial": {
+        "a": 10,
+        "b": 20
+      },
+      "observed": {
+        "B": 21,
+        "P": 23
+      },
+      "final": {
+        "a": 11,
+        "b": 24
+      },
+      "required_precedence": [],
+      "serial_orders_checked": 2,
+      "admissible": false,
+      "witness_count": 0,
+      "first_witness": null
+    },
+    {
+      "name": "maximum_unchanged_by_loser_update",
+      "question": "A scanned version can change while the query result remains admissible.",
+      "initial": {
+        "rows": {
+          "a": 100,
+          "b": 1
+        },
+        "chosen": null
+      },
+      "observed": {
+        "R": "a",
+        "W": "ok"
+      },
+      "final": {
+        "rows": {
+          "a": 100,
+          "b": 2
+        },
+        "chosen": "a"
+      },
+      "required_precedence": [],
+      "serial_orders_checked": 2,
+      "admissible": true,
+      "witness_count": 2,
+      "first_witness": [
+        "R",
+        "W"
+      ]
+    },
+    {
+      "name": "incoherent_cross_shard_cut",
+      "question": "Combining two locally committed versions can tear a transfer.",
+      "initial": {
+        "x": 10,
+        "y": 10
+      },
+      "observed": {
+        "T": "ok",
+        "R": 21
+      },
+      "final": {
+        "x": 9,
+        "y": 11
+      },
+      "required_precedence": [],
+      "serial_orders_checked": 2,
+      "admissible": false,
+      "witness_count": 0,
+      "first_witness": null
+    },
+    {
+      "name": "independent_point_read_modify_writes",
+      "question": "Coarse table validation can reject point transactions that admit every order.",
+      "initial": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "observed": {
+        "T0": "ok",
+        "T1": "ok",
+        "T2": "ok",
+        "T3": "ok"
+      },
+      "final": {
+        "0": 1,
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "required_precedence": [],
+      "serial_orders_checked": 24,
+      "admissible": true,
+      "witness_count": 24,
+      "first_witness": [
+        "T0",
+        "T1",
+        "T2",
+        "T3"
+      ]
+    },
+    {
+      "name": "broad_report_2_independent_writers",
+      "question": "All reader-to-writer dependencies point forward; writers remain independent.",
+      "initial": {
+        "0": 0,
+        "1": 0
+      },
+      "observed": {
+        "R": {
+          "0": 0,
+          "1": 0
+        },
+        "W0": "ok",
+        "W1": "ok"
+      },
+      "final": {
+        "0": 1,
+        "1": 1
+      },
+      "required_precedence": [],
+      "serial_orders_checked": 6,
+      "admissible": true,
+      "witness_count": 2,
+      "first_witness": [
+        "R",
+        "W0",
+        "W1"
+      ]
+    },
+    {
+      "name": "broad_report_4_independent_writers",
+      "question": "All reader-to-writer dependencies point forward; writers remain independent.",
+      "initial": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "observed": {
+        "R": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0
+        },
+        "W0": "ok",
+        "W1": "ok",
+        "W2": "ok",
+        "W3": "ok"
+      },
+      "final": {
+        "0": 1,
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "required_precedence": [],
+      "serial_orders_checked": 120,
+      "admissible": true,
+      "witness_count": 24,
+      "first_witness": [
+        "R",
+        "W0",
+        "W1",
+        "W2",
+        "W3"
+      ]
+    }
+  ]
+}

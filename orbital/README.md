@@ -12,9 +12,11 @@ Successor to Calico's `xmem` and `omachine`; see the
 [Calico reference map](../workbench/notebook/calico.md).
 
 The evolving [brief](BRIEF.md) sets the current direction. The
-[scenario workbench](../workbench/spikes/orbital-scenarios/README.md) is an
-interactive contention model for preparation, retained protection and yielding,
-with explicit assumptions and replayable counterexamples.
+[mining list](MINING.md) collects ideas and evidence worth revisiting, with a
+[source map](stale-drafts/README.md) for the older drafts. These are reference
+material, not additional requirements. The
+[scenario workbench](../workbench/spikes/orbital-scenarios/README.md) retains the
+contention comparisons, worked workloads and recovery probes behind the brief.
 
 ## Provisional scope and seams
 

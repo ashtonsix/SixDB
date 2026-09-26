@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parent
 
 
 def model_identity():
-    files = ["model.py", "batch.py", "scenarios.py", "run.py", "MODEL.md", "BATCH.md"]
+    files = ["model.py", "batch.py", "scenarios.py", "run.py"]
     return {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in files}
 
 
@@ -29,6 +29,8 @@ def execute(scenario, max_steps=2000, frames=False):
     if model_identity() != LOADED_IDENTITY:
         raise ValueError("Model sources changed during this run. Restart the server and rerun.")
     result["model_files_sha256"] = LOADED_IDENTITY
+    result["model_sha256"] = hashlib.sha256(canonical(LOADED_IDENTITY).encode()).hexdigest()
+    result["context_files_sha256"] = {"MODEL.md": hashlib.sha256((ROOT / "MODEL.md").read_bytes()).hexdigest()}
     return result
 
 
@@ -47,7 +49,7 @@ def compare(scenario, max_steps=2000, policies=POLICIES):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("scenario", nargs="?", type=Path)
-    parser.add_argument("--preset", choices=presets(), default="cycle")
+    parser.add_argument("--preset", choices=presets(), default="independent")
     parser.add_argument("--policy", choices=POLICIES)
     parser.add_argument("--steps", type=int, default=2000)
     parser.add_argument("--compare", action="store_true")

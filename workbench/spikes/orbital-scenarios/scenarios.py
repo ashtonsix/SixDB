@@ -18,7 +18,7 @@ def base(name, txs, **extra):
     return {"version": 1, "name": name,
             "shards": {s: {"period_us": 100, "capacity": 8} for s in ("A", "B")},
             "control_delay_us": 100, "horizon_us": 8000,
-            "policy": {"yield": "older", "reserve_after": 3, "backoff": 4},
+            "policy": {"yield": "batch-independent"},
             "transactions": txs, **extra}
 
 
@@ -38,13 +38,12 @@ def discovery():
 
 
 def reservation_cycle():
-    s = base("Reservation blocks an older contender", [
+    s = base("Three-transaction preparation cycle", [
         transaction("T1", [part("b", "B", "y"), part("a", "A", "x", ["b"])]),
         transaction("T2", [part("a", "A", "x"), part("b", "B", "y", ["a"])], arrival=10),
         transaction("T3", [part("a", "A", "x")], arrival=20),
     ])
     s["shards"]["B"]["period_us"] = 300
-    s["policy"]["backoff"] = 1
     return s
 
 
@@ -66,6 +65,30 @@ def convoy():
 def local_queue(count=40):
     return base("Local hot-key retry queue", [transaction(f"L{i:03}", [part("p", "A", "hot")], kind="L")
                                              for i in range(count)], horizon_us=20000)
+
+
+def independent_components():
+    txs = []
+    for group, arrival in (("early", 0), ("late", 700)):
+        txs.extend([
+            transaction(group + "-1", [part("a", "A", group), part("b", "B", group, ["a"])], arrival),
+            transaction(group + "-2", [part("b", "B", group), part("a", "A", group, ["b"])], arrival),
+        ])
+    return base("Independent contention arriving during arbitration", txs)
+
+
+def read_overlap():
+    txs = []
+    for group in ("left", "right"):
+        read = part("a", "A", "shared", mode="R")
+        read["locks"][group] = "W"
+        txs.extend([
+            transaction(group + "-1", [read, part("b", "B", group, ["a"])]),
+            transaction(group + "-2", [part("b", "B", group), part("a", "A", group, ["b"])]),
+        ])
+    txs.append(transaction("reader", [part("p", "A", "shared", mode="R")], 700, "L"))
+    txs.append(transaction("writer", [part("p", "A", "shared")], 700, "L"))
+    return base("Separate components share a read scope; late writer bridges them", txs)
 
 
 def workload(count=80, hot_percent=80, seed=7, arrival_span_us=2400):
@@ -98,5 +121,6 @@ def workload(count=80, hot_percent=80, seed=7, arrival_span_us=2400):
 
 
 def presets():
-    return {"discovery": discovery(), "cycle": cycle(), "reservation": reservation_cycle(), "readers": readers(),
+    return {"independent": independent_components(), "overlap": read_overlap(),
+            "discovery": discovery(), "cycle": cycle(), "reservation": reservation_cycle(), "readers": readers(),
             "convoy": convoy(), "hotspot": workload(), "spread": workload(hot_percent=0), "local": local_queue()}

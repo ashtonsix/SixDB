@@ -1,0 +1,859 @@
+{
+  "cohort_count": 5160,
+  "commands": [
+    "python3 workbench/spikes/orbital-scenarios/comparison.py --output build/orbital-scenarios/comparison-sweep.json --seeds 0,7,19 --widths 16,64,256 --quiet",
+    "python3 workbench/spikes/orbital-scenarios/comparison_study.py --output build/orbital-scenarios/comparison-sensitivity.json",
+    "python3 workbench/spikes/orbital-scenarios/comparison_export.py --sweep build/orbital-scenarios/comparison-sweep.json --sensitivity build/orbital-scenarios/comparison-sensitivity.json --output build/orbital-scenarios/contention-evidence"
+  ],
+  "export_command": [
+    "python3",
+    "workbench/spikes/orbital-scenarios/comparison_export.py",
+    "--sweep",
+    "build/orbital-scenarios/comparison-sweep.json",
+    "--sensitivity",
+    "build/orbital-scenarios/comparison-sensitivity.json",
+    "--extra",
+    "output-admission=build/workbench/orbital-output-policies/sweep.json",
+    "--extra",
+    "fixed=build/workbench/orbital-fixed-execution/sweep.json",
+    "--extra",
+    "fixed-sensitivity=build/workbench/orbital-fixed-execution/sensitivities.json",
+    "--extra",
+    "folds=build/orbital-scenarios/fold-comparison.json",
+    "--extra",
+    "folds25=build/orbital-scenarios/fold-comparison-hot-25.json",
+    "--extra",
+    "folds128=build/orbital-scenarios/fold-comparison-hot-128.json",
+    "--extra",
+    "fixed-fold=build/orbital-scenarios/fixed-fold-read-scenarios.json",
+    "--extra",
+    "fixed-fold-scoped=build/orbital-scenarios/fixed-fold-cross-shard-only.json",
+    "--extra",
+    "arbitration-fold=build/orbital-scenarios/arbitration-fold-read-scenarios.json",
+    "--output",
+    "build/orbital-scenarios/contention-evidence"
+  ],
+  "exporter_sha256": "251cd237039acca0ad9ddb5e11ba1a3c1bbc29f0e13dcbf337a8e9b1341f2682",
+  "inputs": {
+    "arbitration-fold": {
+      "checks": {
+        "checks": [
+          "additive payload without Store attempts",
+          "independent original-member replay and contribution totals",
+          "observed-payload corruption rejected",
+          "committed but partly uninstalled outputs",
+          "original arrival and local control preserved",
+          "exact ungrouped backend equivalence",
+          "conditional/value-result grouping exclusion"
+        ],
+        "passed": true
+      },
+      "contract": "The same completion-only, unconditional, identical-footprint additive groups as fixed_fold_comparison.py. Only cross-shard participants enter fixed arrival windows; local work remains unchanged. Original-member serial blocks and all original outcomes are checked in old backend decision order.",
+      "cost": "One shared computation plus one synthetic service unit per extra contribution; original latency includes window and protocol waits. Existing arbitration/wait-die transport, control, restarts, protection and queue costs are unchanged.",
+      "limits": "Synthetic fixed-window grouping, not native/adaptive folds or measured throughput. Group admission age starts at window seal. No per-member value results, conditions or changing footprints. Pending originals remain visible; completed-only latency and horizon-limited cost must be read with completion counts. The frozen old backend idealizes complete collectors and atomic verdict application; wait-die verdict restarts do not enforce the new backend's finite retry budget.",
+      "parameters": {
+        "output": "build/orbital-scenarios/arbitration-fold-read-scenarios.json",
+        "seed": 7,
+        "width": 64
+      },
+      "sha256": "481edcff804f2a8562c7bd8615456e0cbfbe37b14888398ee5d26ed2818ec1c7",
+      "source_sha256": {
+        "arbitration.py": "80866cd123a56cb3c706a1173bbce3de01b897b74438a4e9de25853a80ad10f4",
+        "arbitration_fold_comparison.py": "e9037a620ac7148f17be2cb057c30374fb05d1b087cf04f77e2b6f159c159c39",
+        "batch.py": "003a51cab651d5203b0a98425ce34db839da442d9966e645779dbed33faba6e4",
+        "certification.py": "1f6096bb0930a3a41d5ff5030517918f52218814fa6e74f79264d06f30f0c5d8",
+        "check_comparison.py": "4c6ea17f9fe1becaef87be972ac6d554593c3113ee24efe3d795a6b9500857b8",
+        "comparison.py": "6b6329846b3d4e80f0d41c6df46d9413e68dea54f22757957ba12acbf32334bf",
+        "comparison_inputs.py": "b1bbb895f4dca5e008053690912cea9baad3c764a7654b68b8e638d93a9fba50",
+        "discovery_probe.py": "9d12351a076d8b6fce3fcccd4f6044755926dad9c9020097a006f1e84d580995",
+        "fixed_execution.py": "ea82edb8c4b86270a629f5bcc94779605b789c9f1c50da9d22391b91c05516b0",
+        "fixed_fold_comparison.py": "b08433af3af18699572f0bf7ee8296d3986672ca9195f603d2a9163e35b12597",
+        "fixed_simulation.py": "e16314e3b9d392b6037d7893a19aead25f46abc2011a90b1306726c9d434ece2",
+        "fold_comparison.py": "a0334bd836c6b830b42060502d8668782633d810c3ca0f4f291e4e429802a5d2",
+        "model.py": "99203c1d53cd690537918bcf2bb939dd5d37c4cf8d4d512e81c62a98fe4b90cf",
+        "output_policies.py": "4a5bc41c2f1a8a7c7d51b20f789a760db00a5a968aa1cdc9abcadcb46767eb7d",
+        "priority_locks.py": "817127d1ac025501dda86274a0972f0dbc0f5e820c05e7901ba8eb63c96903a8",
+        "write_admission.py": "f10b6fbe8bb426b7da7c7ea69b2e2edb05dd2d92cc7e21d9220c2d796dbfebf6"
+      }
+    },
+    "fixed": {
+      "assumptions": [
+        "Synthetic service units and failure-free messages; no measured latency or throughput.",
+        "The shared workloads have fixed outputs; fixed-known has an explicit predeclared-coverage advantage.",
+        "No read-blocking position promise exists until all canonical output gates are held.",
+        "Separate reserve/reply and publish/reply rounds precede captured inputs and computation.",
+        "Separate final-value payload staging/reply follows computation and precedes the commit decision.",
+        "Conditional no-write outputs resolve their full reserved coverage on commit or abort.",
+        "The default shared capture deadline is retained; admission waiting is bounded only by the run horizon.",
+        "This is an exploratory protocol model, not a recovery or general SQL correctness proof."
+      ],
+      "parameters": {
+        "case_filter": "",
+        "drain_cases": [
+          "ordinary_distributed_hot",
+          "narrow_conflicting_wan"
+        ],
+        "drain_horizon": 20000,
+        "policies": [
+          "fixed-known",
+          "fixed-discovered"
+        ],
+        "read_wait_ticks": null,
+        "seeds": "0,7,19",
+        "widths": "64"
+      },
+      "sha256": "c7a854ae9f0cc5c5c8d18688c62398f5bcf599ed40298d73ef4b4824c4a6ac01",
+      "source_sha256": {
+        "arbitration.py": "80866cd123a56cb3c706a1173bbce3de01b897b74438a4e9de25853a80ad10f4",
+        "batch.py": "003a51cab651d5203b0a98425ce34db839da442d9966e645779dbed33faba6e4",
+        "certification.py": "1f6096bb0930a3a41d5ff5030517918f52218814fa6e74f79264d06f30f0c5d8",
+        "comparison.py": "6b6329846b3d4e80f0d41c6df46d9413e68dea54f22757957ba12acbf32334bf",
+        "comparison_inputs.py": "b1bbb895f4dca5e008053690912cea9baad3c764a7654b68b8e638d93a9fba50",
+        "discovery_probe.py": "9d12351a076d8b6fce3fcccd4f6044755926dad9c9020097a006f1e84d580995",
+        "fixed_execution.py": "ea82edb8c4b86270a629f5bcc94779605b789c9f1c50da9d22391b91c05516b0",
+        "fixed_simulation.py": "e16314e3b9d392b6037d7893a19aead25f46abc2011a90b1306726c9d434ece2",
+        "model.py": "99203c1d53cd690537918bcf2bb939dd5d37c4cf8d4d512e81c62a98fe4b90cf",
+        "output_policies.py": "4a5bc41c2f1a8a7c7d51b20f789a760db00a5a968aa1cdc9abcadcb46767eb7d",
+        "priority_locks.py": "817127d1ac025501dda86274a0972f0dbc0f5e820c05e7901ba8eb63c96903a8",
+        "write_admission.py": "f10b6fbe8bb426b7da7c7ea69b2e2edb05dd2d92cc7e21d9220c2d796dbfebf6"
+      }
+    },
+    "fixed-fold": {
+      "checks": {
+        "checks": [
+          "combined results and original serial replay",
+          "backend execution counters and contribution cost",
+          "original arrival latency",
+          "pre-window pending requests",
+          "conditional/value-result eligibility exclusion",
+          "identical-cap deduplication",
+          "exact ungrouped backend equivalence",
+          "cross-shard scope derives from participants and leaves local requests unchanged"
+        ],
+        "passed": true
+      },
+      "contract": "Completion-only unconditional integer increments with identical declared reads, writes, coordinator and cohort, and no private delay. Each agreed arrival window produces a deterministic serial block at one fixed group position; all original request outcomes remain counted.",
+      "cost": "One shared read/write computation plus one synthetic service unit per extra contribution. Reserve, exact-position publication, final-value staging and installation use the fixed-known backend. Every member latency includes its original arrival, window seal and all protocol waiting. Oversized local groups use the non-fast path.",
+      "limits": "Fixed arrival windows, not adaptive batching, native associative-fold implementation, measured latency, or a general SQL result adapter. Groups have one shared outcome and no intermediate member versions. Conditional programs, per-member value results and changed footprints are ineligible. Group admission age starts at the window seal, so relative queue order can change. Cross-shard-only grouping selects by the union of read/write owners and coordinator, never by cohort. The inherited blocked-capture timeout uses attempt age, including gate and metadata waits; admission itself has no deadline.",
+      "parameters": {
+        "caps": "8,32",
+        "case": "",
+        "grouping_scope": "all-eligible",
+        "output": "build/orbital-scenarios/fixed-fold-read-scenarios.json",
+        "pairs": "",
+        "seed": 7,
+        "width": 64,
+        "windows": "1,5,25,128"
+      },
+      "sha256": "04a36431fb546e13ceda1757cf07f5d3bd1030a6a0ea0dbc27d56074168f49e6",
+      "source_sha256": {
+        "arbitration.py": "80866cd123a56cb3c706a1173bbce3de01b897b74438a4e9de25853a80ad10f4",
+        "batch.py": "003a51cab651d5203b0a98425ce34db839da442d9966e645779dbed33faba6e4",
+        "certification.py": "1f6096bb0930a3a41d5ff5030517918f52218814fa6e74f79264d06f30f0c5d8",
+        "comparison.py": "6b6329846b3d4e80f0d41c6df46d9413e68dea54f22757957ba12acbf32334bf",
+        "comparison_inputs.py": "b1bbb895f4dca5e008053690912cea9baad3c764a7654b68b8e638d93a9fba50",
+        "discovery_probe.py": "9d12351a076d8b6fce3fcccd4f6044755926dad9c9020097a006f1e84d580995",
+        "fixed_execution.py": "ea82edb8c4b86270a629f5bcc94779605b789c9f1c50da9d22391b91c05516b0",
+        "fixed_fold_comparison.py": "b08433af3af18699572f0bf7ee8296d3986672ca9195f603d2a9163e35b12597",
+        "fixed_simulation.py": "e16314e3b9d392b6037d7893a19aead25f46abc2011a90b1306726c9d434ece2",
+        "fold_comparison.py": "a0334bd836c6b830b42060502d8668782633d810c3ca0f4f291e4e429802a5d2",
+        "model.py": "99203c1d53cd690537918bcf2bb939dd5d37c4cf8d4d512e81c62a98fe4b90cf",
+        "output_policies.py": "4a5bc41c2f1a8a7c7d51b20f789a760db00a5a968aa1cdc9abcadcb46767eb7d",
+        "priority_locks.py": "817127d1ac025501dda86274a0972f0dbc0f5e820c05e7901ba8eb63c96903a8",
+        "write_admission.py": "f10b6fbe8bb426b7da7c7ea69b2e2edb05dd2d92cc7e21d9220c2d796dbfebf6"
+      }
+    },
+    "fixed-fold-scoped": {
+      "checks": {
+        "checks": [
+          "combined results and original serial replay",
+          "backend execution counters and contribution cost",
+          "original arrival latency",
+          "pre-window pending requests",
+          "conditional/value-result eligibility exclusion",
+          "identical-cap deduplication",
+          "exact ungrouped backend equivalence",
+          "cross-shard scope derives from participants and leaves local requests unchanged"
+        ],
+        "passed": true
+      },
+      "contract": "Completion-only unconditional integer increments with identical declared reads, writes, coordinator and cohort, and no private delay. Each agreed arrival window produces a deterministic serial block at one fixed group position; all original request outcomes remain counted.",
+      "cost": "One shared read/write computation plus one synthetic service unit per extra contribution. Reserve, exact-position publication, final-value staging and installation use the fixed-known backend. Every member latency includes its original arrival, window seal and all protocol waiting. Oversized local groups use the non-fast path.",
+      "limits": "Fixed arrival windows, not adaptive batching, native associative-fold implementation, measured latency, or a general SQL result adapter. Groups have one shared outcome and no intermediate member versions. Conditional programs, per-member value results and changed footprints are ineligible. Group admission age starts at the window seal, so relative queue order can change. Cross-shard-only grouping selects by the union of read/write owners and coordinator, never by cohort. The inherited blocked-capture timeout uses attempt age, including gate and metadata waits; admission itself has no deadline.",
+      "parameters": {
+        "caps": "8,32",
+        "case": "ordinary_distributed_hot,ordinary_hot_local,rare_wan_saturated_local",
+        "grouping_scope": "cross-shard-only",
+        "output": "build/orbital-scenarios/fixed-fold-cross-shard-only.json",
+        "pairs": "25:8,128:32",
+        "seed": 7,
+        "width": 64,
+        "windows": "1,5,25,128"
+      },
+      "sha256": "b1cf9588302cca90f9d08d9411affc63db5eff2f9d12125e8cf2510098f4cb1c",
+      "source_sha256": {
+        "arbitration.py": "80866cd123a56cb3c706a1173bbce3de01b897b74438a4e9de25853a80ad10f4",
+        "batch.py": "003a51cab651d5203b0a98425ce34db839da442d9966e645779dbed33faba6e4",
+        "certification.py": "1f6096bb0930a3a41d5ff5030517918f52218814fa6e74f79264d06f30f0c5d8",
+        "comparison.py": "6b6329846b3d4e80f0d41c6df46d9413e68dea54f22757957ba12acbf32334bf",
+        "comparison_inputs.py": "b1bbb895f4dca5e008053690912cea9baad3c764a7654b68b8e638d93a9fba50",
+        "discovery_probe.py": "9d12351a076d8b6fce3fcccd4f6044755926dad9c9020097a006f1e84d580995",
+        "fixed_execution.py": "ea82edb8c4b86270a629f5bcc94779605b789c9f1c50da9d22391b91c05516b0",
+        "fixed_fold_comparison.py": "b08433af3af18699572f0bf7ee8296d3986672ca9195f603d2a9163e35b12597",
+        "fixed_simulation.py": "e16314e3b9d392b6037d7893a19aead25f46abc2011a90b1306726c9d434ece2",
+        "fold_comparison.py": "a0334bd836c6b830b42060502d8668782633d810c3ca0f4f291e4e429802a5d2",
+        "model.py": "99203c1d53cd690537918bcf2bb939dd5d37c4cf8d4d512e81c62a98fe4b90cf",
+        "output_policies.py": "4a5bc41c2f1a8a7c7d51b20f789a760db00a5a968aa1cdc9abcadcb46767eb7d",
+        "priority_locks.py": "817127d1ac025501dda86274a0972f0dbc0f5e820c05e7901ba8eb63c96903a8",
+        "write_admission.py": "f10b6fbe8bb426b7da7c7ea69b2e2edb05dd2d92cc7e21d9220c2d796dbfebf6"
+      }
+    },
+    "fixed-sensitivity": {
+      "assumptions": [
+        "Logical modeled ticks/work, not measured performance.",
+        "Sources are copied beside this artifact; each row retains its exact input.",
+        "No arrival traffic is added to longer drains; capacity and horizon vary separately.",
+        "The shared fixtures declare fixed output manifests; this does not establish general SQL safety."
+      ],
+      "runner_sha256": "c96c18f6aa34158616357283e570240dab08c9ca52e018af46e9b12c6ce8e336",
+      "sha256": "bfa9677f69cec00588da9944b0810d4b48e03c25a1c92806daa914d187b8032f",
+      "source_sha256": {
+        "arbitration.py": "80866cd123a56cb3c706a1173bbce3de01b897b74438a4e9de25853a80ad10f4",
+        "batch.py": "003a51cab651d5203b0a98425ce34db839da442d9966e645779dbed33faba6e4",
+        "certification.py": "1f6096bb0930a3a41d5ff5030517918f52218814fa6e74f79264d06f30f0c5d8",
+        "comparison.py": "6b6329846b3d4e80f0d41c6df46d9413e68dea54f22757957ba12acbf32334bf",
+        "comparison_inputs.py": "b1bbb895f4dca5e008053690912cea9baad3c764a7654b68b8e638d93a9fba50",
+        "discovery_probe.py": "9d12351a076d8b6fce3fcccd4f6044755926dad9c9020097a006f1e84d580995",
+        "fixed_execution.py": "ea82edb8c4b86270a629f5bcc94779605b789c9f1c50da9d22391b91c05516b0",
+        "fixed_simulation.py": "e16314e3b9d392b6037d7893a19aead25f46abc2011a90b1306726c9d434ece2",
+        "model.py": "99203c1d53cd690537918bcf2bb939dd5d37c4cf8d4d512e81c62a98fe4b90cf",
+        "output_policies.py": "4a5bc41c2f1a8a7c7d51b20f789a760db00a5a968aa1cdc9abcadcb46767eb7d",
+        "priority_locks.py": "817127d1ac025501dda86274a0972f0dbc0f5e820c05e7901ba8eb63c96903a8",
+        "write_admission.py": "f10b6fbe8bb426b7da7c7ea69b2e2edb05dd2d92cc7e21d9220c2d796dbfebf6"
+      }
+    },
+    "folds": {
+      "checks": {
+        "checks": 5,
+        "passed": true
+      },
+      "contract": "Completion-only, unconditional integer increments with identical declared reads, writes and coordinator; zero private delay. Fixed agreed-input windows; one group-owned serialization position with a deterministic serial block of original requests. No intermediate member versions.",
+      "cost": "One shared read/write execution plus one synthetic service unit per additional contribution; every member includes window and protocol waiting in its latency. Oversized local groups use the existing non-fast path.",
+      "limits": "Synthetic shared queues/protocol, not a native fold executor benchmark. Group outcome is shared; all original failures/pending requests remain counted. Counterexamples include per-request value results, conditional effects and distinct footprints.",
+      "parameters": {
+        "caps": "8,32",
+        "case": "",
+        "output": "build/orbital-scenarios/fold-comparison.json",
+        "policy": "snapshot-wait",
+        "seeds": "7",
+        "width": 64,
+        "windows": "1,5"
+      },
+      "sha256": "d6a2080f27ec1e60d696cdae663794c769d1e70874fdcdd1505a12b157ed866c",
+      "source_sha256": {
+        "arbitration.py": "80866cd123a56cb3c706a1173bbce3de01b897b74438a4e9de25853a80ad10f4",
+        "batch.py": "003a51cab651d5203b0a98425ce34db839da442d9966e645779dbed33faba6e4",
+        "certification.py": "1f6096bb0930a3a41d5ff5030517918f52218814fa6e74f79264d06f30f0c5d8",
+        "comparison.py": "6b6329846b3d4e80f0d41c6df46d9413e68dea54f22757957ba12acbf32334bf",
+        "comparison_inputs.py": "b1bbb895f4dca5e008053690912cea9baad3c764a7654b68b8e638d93a9fba50",
+        "fold_comparison.py": "a0334bd836c6b830b42060502d8668782633d810c3ca0f4f291e4e429802a5d2",
+        "model.py": "99203c1d53cd690537918bcf2bb939dd5d37c4cf8d4d512e81c62a98fe4b90cf",
+        "priority_locks.py": "817127d1ac025501dda86274a0972f0dbc0f5e820c05e7901ba8eb63c96903a8",
+        "write_admission.py": "f10b6fbe8bb426b7da7c7ea69b2e2edb05dd2d92cc7e21d9220c2d796dbfebf6"
+      }
+    },
+    "folds128": {
+      "checks": {
+        "checks": 5,
+        "passed": true
+      },
+      "contract": "Completion-only, unconditional integer increments with identical declared reads, writes and coordinator; zero private delay. Fixed agreed-input windows; one group-owned serialization position with a deterministic serial block of original requests. No intermediate member versions.",
+      "cost": "One shared read/write execution plus one synthetic service unit per additional contribution; every member includes window and protocol waiting in its latency. Oversized local groups use the existing non-fast path.",
+      "limits": "Synthetic shared queues/protocol, not a native fold executor benchmark. Group outcome is shared; all original failures/pending requests remain counted. Counterexamples include per-request value results, conditional effects and distinct footprints.",
+      "parameters": {
+        "caps": "32",
+        "case": "ordinary_distributed_hot",
+        "output": "build/orbital-scenarios/fold-comparison-hot-128.json",
+        "policy": "snapshot-wait",
+        "seeds": "7",
+        "width": 64,
+        "windows": "128"
+      },
+      "sha256": "f19665756ac76d39a45054728274cb8861770cc380236406029eb7db487b8669",
+      "source_sha256": {
+        "arbitration.py": "80866cd123a56cb3c706a1173bbce3de01b897b74438a4e9de25853a80ad10f4",
+        "batch.py": "003a51cab651d5203b0a98425ce34db839da442d9966e645779dbed33faba6e4",
+        "certification.py": "1f6096bb0930a3a41d5ff5030517918f52218814fa6e74f79264d06f30f0c5d8",
+        "comparison.py": "6b6329846b3d4e80f0d41c6df46d9413e68dea54f22757957ba12acbf32334bf",
+        "comparison_inputs.py": "b1bbb895f4dca5e008053690912cea9baad3c764a7654b68b8e638d93a9fba50",
+        "fold_comparison.py": "a0334bd836c6b830b42060502d8668782633d810c3ca0f4f291e4e429802a5d2",
+        "model.py": "99203c1d53cd690537918bcf2bb939dd5d37c4cf8d4d512e81c62a98fe4b90cf",
+        "priority_locks.py": "817127d1ac025501dda86274a0972f0dbc0f5e820c05e7901ba8eb63c96903a8",
+        "write_admission.py": "f10b6fbe8bb426b7da7c7ea69b2e2edb05dd2d92cc7e21d9220c2d796dbfebf6"
+      }
+    },
+    "folds25": {
+      "checks": {
+        "checks": 5,
+        "passed": true
+      },
+      "contract": "Completion-only, unconditional integer increments with identical declared reads, writes and coordinator; zero private delay. Fixed agreed-input windows; one group-owned serialization position with a deterministic serial block of original requests. No intermediate member versions.",
+      "cost": "One shared read/write execution plus one synthetic service unit per additional contribution; every member includes window and protocol waiting in its latency. Oversized local groups use the existing non-fast path.",
+      "limits": "Synthetic shared queues/protocol, not a native fold executor benchmark. Group outcome is shared; all original failures/pending requests remain counted. Counterexamples include per-request value results, conditional effects and distinct footprints.",
+      "parameters": {
+        "caps": "8,32",
+        "case": "ordinary_distributed_hot",
+        "output": "build/orbital-scenarios/fold-comparison-hot-25.json",
+        "policy": "snapshot-wait",
+        "seeds": "7",
+        "width": 64,
+        "windows": "25"
+      },
+      "sha256": "5d32ef84c8f5e38dc1f3ff4b1abe83455cf5a359b11b111cf034b5e8cd8debb8",
+      "source_sha256": {
+        "arbitration.py": "80866cd123a56cb3c706a1173bbce3de01b897b74438a4e9de25853a80ad10f4",
+        "batch.py": "003a51cab651d5203b0a98425ce34db839da442d9966e645779dbed33faba6e4",
+        "certification.py": "1f6096bb0930a3a41d5ff5030517918f52218814fa6e74f79264d06f30f0c5d8",
+        "comparison.py": "6b6329846b3d4e80f0d41c6df46d9413e68dea54f22757957ba12acbf32334bf",
+        "comparison_inputs.py": "b1bbb895f4dca5e008053690912cea9baad3c764a7654b68b8e638d93a9fba50",
+        "fold_comparison.py": "a0334bd836c6b830b42060502d8668782633d810c3ca0f4f291e4e429802a5d2",
+        "model.py": "99203c1d53cd690537918bcf2bb939dd5d37c4cf8d4d512e81c62a98fe4b90cf",
+        "priority_locks.py": "817127d1ac025501dda86274a0972f0dbc0f5e820c05e7901ba8eb63c96903a8",
+        "write_admission.py": "f10b6fbe8bb426b7da7c7ea69b2e2edb05dd2d92cc7e21d9220c2d796dbfebf6"
+      }
+    },
+    "output-admission": {
+      "assumptions": [
+        "Synthetic ticks, service work and failure-free transport; not measured latency or throughput.",
+        "Shared workload outputs are fixed and authored; compute-first gating does not validate general dynamic SQL.",
+        "Canonical groups queue only actual discovered outputs; large queued groups still convoy covered point writers.",
+        "Short fixed-output local work can combine gating, capture, compute and commit in one logical step.",
+        "All writer paths respect gates; gate releases occur with participant install or delivered abort.",
+        "Admission waiting has no deadline; pending work at the horizon is reported.",
+        "Discovery and refreshed program execution are charged separately; refresh uses a distinct core owner.",
+        "Any refreshed output-key change aborts and releases gates; held sets never grow in place."
+      ],
+      "dynamic_discovery": {
+        "application": "Select max(score,key); subtract100 from that selected row; return key and old score.",
+        "assumptions": "Authored logical histories; integer scores; one fixed collection; whole-participant admission; failure-free immediate decisions/install; no time model.",
+        "limitations": [
+          "An old maximum is permitted only when the complete history can place T before the competing change.",
+          "The explicit backedge makes the optimistic stale attempt unserializable and forces a restart.",
+          "Narrow discovery is speculative extra work, not an earlier application read silently moved to a fresh snapshot.",
+          "Narrow rediscovery has no guaranteed completion under continued winner changes.",
+          "Broad admission excludes competing writes from a conservative domain larger than the actual output.",
+          "Read admission is absent, but later certification write promises can still delay readers.",
+          "This does not test dynamic indexes, absence, multishard discovery, recovery or epoch confluence."
+        ],
+        "scenarios": [
+          {
+            "application_results": [
+              {
+                "old_score": 10,
+                "selected": "eu/a"
+              }
+            ],
+            "captured_rows": 3,
+            "counts": {
+              "application_evaluations": 1,
+              "committed_point": 1,
+              "committed_take": 1
+            },
+            "final": {
+              "eu/a": -90,
+              "eu/b": 11,
+              "eu/c": 0,
+              "us/outside": 0
+            },
+            "name": "moving_winner",
+            "old_max_valid_if_competitor_must_precede_T": false,
+            "original_observations_serializable": true,
+            "physical_commit_order": [
+              "U#1",
+              "T#1"
+            ],
+            "serial_check": true,
+            "serial_order": [
+              "T#1",
+              "U#1"
+            ],
+            "strategy": "optimistic"
+          },
+          {
+            "application_results": [
+              {
+                "old_score": 11,
+                "selected": "eu/b"
+              }
+            ],
+            "captured_rows": 12,
+            "counts": {
+              "aborted_application_attempts": 1,
+              "application_evaluations": 2,
+              "committed_discover": 2,
+              "committed_point": 1,
+              "committed_take": 1,
+              "discovery_passes": 2,
+              "manifest_restarts": 1,
+              "peak_admitted_keys": 1,
+              "peak_application_admitted_keys": 1
+            },
+            "final": {
+              "eu/a": 10,
+              "eu/b": -89,
+              "eu/c": 0,
+              "us/outside": 0
+            },
+            "name": "moving_winner",
+            "physical_commit_order": [
+              "D1#1",
+              "U#1",
+              "D2#1",
+              "T#2"
+            ],
+            "serial_check": true,
+            "serial_order": [
+              "D1#1",
+              "U#1",
+              "D2#1",
+              "T#2"
+            ],
+            "strategy": "narrow-rediscovery"
+          },
+          {
+            "application_results": [
+              {
+                "old_score": 10,
+                "selected": "eu/a"
+              }
+            ],
+            "captured_rows": 3,
+            "counts": {
+              "application_evaluations": 1,
+              "blocked_admission_requests": 1,
+              "committed_point": 1,
+              "committed_take": 1,
+              "peak_admitted_keys": 3,
+              "peak_application_admitted_keys": 3
+            },
+            "final": {
+              "eu/a": -90,
+              "eu/b": 11,
+              "eu/c": 0,
+              "us/outside": 0
+            },
+            "name": "moving_winner",
+            "physical_commit_order": [
+              "T#1",
+              "U#1"
+            ],
+            "serial_check": true,
+            "serial_order": [
+              "T#1",
+              "U#1"
+            ],
+            "strategy": "broad-admission"
+          },
+          {
+            "application_results": [
+              {
+                "old_score": 11,
+                "selected": "eu/b"
+              }
+            ],
+            "captured_rows": 7,
+            "counts": {
+              "aborted_application_attempts": 1,
+              "application_evaluations": 2,
+              "committed_point": 1,
+              "committed_take": 1
+            },
+            "final": {
+              "eu/a": 10,
+              "eu/b": -89,
+              "eu/c": 0,
+              "us/outside": 0
+            },
+            "name": "moving_winner_backedge",
+            "original_observations_serializable": false,
+            "physical_commit_order": [
+              "U#1",
+              "T#2"
+            ],
+            "serial_check": true,
+            "serial_order": [
+              "U#1",
+              "T#2"
+            ],
+            "strategy": "optimistic"
+          },
+          {
+            "application_results": [
+              {
+                "old_score": 11,
+                "selected": "eu/b"
+              }
+            ],
+            "captured_rows": 13,
+            "counts": {
+              "aborted_application_attempts": 1,
+              "application_evaluations": 2,
+              "committed_discover": 2,
+              "committed_point": 1,
+              "committed_take": 1,
+              "discovery_passes": 2,
+              "manifest_restarts": 1,
+              "peak_admitted_keys": 1,
+              "peak_application_admitted_keys": 1
+            },
+            "final": {
+              "eu/a": 10,
+              "eu/b": -89,
+              "eu/c": 0,
+              "us/outside": 0
+            },
+            "name": "moving_winner_backedge",
+            "physical_commit_order": [
+              "D1#1",
+              "U#1",
+              "D2#1",
+              "T#2"
+            ],
+            "serial_check": true,
+            "serial_order": [
+              "D1#1",
+              "U#1",
+              "D2#1",
+              "T#2"
+            ],
+            "strategy": "narrow-rediscovery"
+          },
+          {
+            "application_results": [
+              {
+                "old_score": 10,
+                "selected": "eu/a"
+              }
+            ],
+            "captured_rows": 4,
+            "counts": {
+              "application_evaluations": 1,
+              "blocked_admission_requests": 1,
+              "committed_point": 1,
+              "committed_take": 1,
+              "peak_admitted_keys": 3,
+              "peak_application_admitted_keys": 3
+            },
+            "final": {
+              "eu/a": -90,
+              "eu/b": 11,
+              "eu/c": 0,
+              "us/outside": 0
+            },
+            "name": "moving_winner_backedge",
+            "physical_commit_order": [
+              "T#1",
+              "U#1"
+            ],
+            "serial_check": true,
+            "serial_order": [
+              "T#1",
+              "U#1"
+            ],
+            "strategy": "broad-admission"
+          },
+          {
+            "application_results": [
+              {
+                "old_score": 14,
+                "selected": "eu/a"
+              }
+            ],
+            "before_quiet_round": {
+              "committed_application_updates": 0,
+              "manifest_restarts": 4,
+              "moves": 4
+            },
+            "captured_rows": 30,
+            "counts": {
+              "aborted_application_attempts": 4,
+              "application_evaluations": 5,
+              "committed_discover": 5,
+              "committed_point": 4,
+              "committed_take": 1,
+              "discovery_passes": 5,
+              "manifest_restarts": 4,
+              "peak_admitted_keys": 1,
+              "peak_application_admitted_keys": 1
+            },
+            "final": {
+              "eu/a": -86,
+              "eu/b": 13,
+              "eu/c": 0,
+              "us/outside": 0
+            },
+            "four_round_budget_outcome": "failure",
+            "name": "repeated_moves_then_quiet",
+            "physical_commit_order": [
+              "D1#1",
+              "U1#1",
+              "D2#1",
+              "U2#1",
+              "D3#1",
+              "U3#1",
+              "D4#1",
+              "U4#1",
+              "D5#1",
+              "T#5"
+            ],
+            "serial_check": true,
+            "serial_order": [
+              "D1#1",
+              "U1#1",
+              "D2#1",
+              "U2#1",
+              "D3#1",
+              "U3#1",
+              "D4#1",
+              "U4#1",
+              "D5#1",
+              "T#5"
+            ],
+            "strategy": "narrow-rediscovery"
+          },
+          {
+            "actual_application_write_keys": [
+              "eu/a"
+            ],
+            "application_results": [
+              {
+                "old_score": 10,
+                "selected": "eu/a"
+              }
+            ],
+            "captured_rows": 6,
+            "counts": {
+              "application_evaluations": 1,
+              "committed_point": 2,
+              "committed_report": 1,
+              "committed_take": 1
+            },
+            "final": {
+              "eu/a": -90,
+              "eu/b": 9,
+              "eu/c": 1,
+              "us/outside": 1
+            },
+            "loser_write_progressed_before_T": true,
+            "name": "conservative_output_coverage",
+            "outside_write_progressed_before_T": true,
+            "physical_commit_order": [
+              "loser#1",
+              "outside#1",
+              "reader#1",
+              "T#1"
+            ],
+            "read_only_report_completed_while_T_admitted": false,
+            "serial_check": true,
+            "serial_order": [
+              "loser#1",
+              "outside#1",
+              "reader#1",
+              "T#1"
+            ],
+            "strategy": "optimistic"
+          },
+          {
+            "actual_application_write_keys": [
+              "eu/a"
+            ],
+            "application_results": [
+              {
+                "old_score": 10,
+                "selected": "eu/a"
+              }
+            ],
+            "captured_rows": 9,
+            "counts": {
+              "application_evaluations": 1,
+              "committed_discover": 1,
+              "committed_point": 2,
+              "committed_report": 1,
+              "committed_take": 1,
+              "discovery_passes": 1,
+              "peak_admitted_keys": 2,
+              "peak_application_admitted_keys": 1
+            },
+            "final": {
+              "eu/a": -90,
+              "eu/b": 9,
+              "eu/c": 1,
+              "us/outside": 1
+            },
+            "loser_write_progressed_before_T": true,
+            "name": "conservative_output_coverage",
+            "outside_write_progressed_before_T": true,
+            "physical_commit_order": [
+              "D1#1",
+              "loser#1",
+              "outside#1",
+              "reader#1",
+              "T#1"
+            ],
+            "read_only_report_completed_while_T_admitted": true,
+            "serial_check": true,
+            "serial_order": [
+              "D1#1",
+              "loser#1",
+              "outside#1",
+              "reader#1",
+              "T#1"
+            ],
+            "strategy": "narrow-rediscovery"
+          },
+          {
+            "actual_application_write_keys": [
+              "eu/a"
+            ],
+            "application_results": [
+              {
+                "old_score": 10,
+                "selected": "eu/a"
+              }
+            ],
+            "captured_rows": 6,
+            "counts": {
+              "application_evaluations": 1,
+              "blocked_admission_requests": 1,
+              "committed_point": 2,
+              "committed_report": 1,
+              "committed_take": 1,
+              "peak_admitted_keys": 4,
+              "peak_application_admitted_keys": 3
+            },
+            "final": {
+              "eu/a": -90,
+              "eu/b": 9,
+              "eu/c": 1,
+              "us/outside": 1
+            },
+            "loser_write_progressed_before_T": false,
+            "name": "conservative_output_coverage",
+            "outside_write_progressed_before_T": true,
+            "physical_commit_order": [
+              "outside#1",
+              "reader#1",
+              "T#1",
+              "loser#1"
+            ],
+            "read_only_report_completed_while_T_admitted": true,
+            "serial_check": true,
+            "serial_order": [
+              "outside#1",
+              "reader#1",
+              "T#1",
+              "loser#1"
+            ],
+            "strategy": "broad-admission"
+          }
+        ],
+        "source_sha256": {
+          "certification.py": "1f6096bb0930a3a41d5ff5030517918f52218814fa6e74f79264d06f30f0c5d8",
+          "discovery_probe.py": "9d12351a076d8b6fce3fcccd4f6044755926dad9c9020097a006f1e84d580995",
+          "write_admission.py": "f10b6fbe8bb426b7da7c7ea69b2e2edb05dd2d92cc7e21d9220c2d796dbfebf6"
+        }
+      },
+      "parameters": {
+        "case_filter": "",
+        "drain_cases": [
+          "ordinary_distributed_hot",
+          "narrow_conflicting_wan"
+        ],
+        "drain_horizon": 20000,
+        "policies": [
+          "output-wait",
+          "output-refresh"
+        ],
+        "seeds": "0,7,19",
+        "widths": "64"
+      },
+      "sha256": "ef7ad9f6054968634366ce32f8240a0e9ab15fdf70ee88c6590edac886679d41",
+      "source_sha256": {
+        "arbitration.py": "80866cd123a56cb3c706a1173bbce3de01b897b74438a4e9de25853a80ad10f4",
+        "batch.py": "003a51cab651d5203b0a98425ce34db839da442d9966e645779dbed33faba6e4",
+        "certification.py": "1f6096bb0930a3a41d5ff5030517918f52218814fa6e74f79264d06f30f0c5d8",
+        "comparison.py": "6b6329846b3d4e80f0d41c6df46d9413e68dea54f22757957ba12acbf32334bf",
+        "comparison_inputs.py": "b1bbb895f4dca5e008053690912cea9baad3c764a7654b68b8e638d93a9fba50",
+        "discovery_probe.py": "9d12351a076d8b6fce3fcccd4f6044755926dad9c9020097a006f1e84d580995",
+        "model.py": "99203c1d53cd690537918bcf2bb939dd5d37c4cf8d4d512e81c62a98fe4b90cf",
+        "output_policies.py": "4a5bc41c2f1a8a7c7d51b20f789a760db00a5a968aa1cdc9abcadcb46767eb7d",
+        "priority_locks.py": "817127d1ac025501dda86274a0972f0dbc0f5e820c05e7901ba8eb63c96903a8",
+        "write_admission.py": "f10b6fbe8bb426b7da7c7ea69b2e2edb05dd2d92cc7e21d9220c2d796dbfebf6"
+      }
+    },
+    "sensitivity": {
+      "assumptions": "Synthetic shared simulator; contrasts against corresponding seed7 width64/256 defaults; all changed parameters recorded; not calibrated system performance.",
+      "runner_sha256": "33034318d6c4438c5ef955d5a803cd01978026fb318a4ef2e698ff1417cc2e09",
+      "sha256": "13052054982bf629880aa7af0ad0eedb9777c4b59d1f41afd068981eea63e283",
+      "source_sha256": {
+        "arbitration.py": "80866cd123a56cb3c706a1173bbce3de01b897b74438a4e9de25853a80ad10f4",
+        "batch.py": "003a51cab651d5203b0a98425ce34db839da442d9966e645779dbed33faba6e4",
+        "certification.py": "1f6096bb0930a3a41d5ff5030517918f52218814fa6e74f79264d06f30f0c5d8",
+        "comparison.py": "6b6329846b3d4e80f0d41c6df46d9413e68dea54f22757957ba12acbf32334bf",
+        "comparison_inputs.py": "b1bbb895f4dca5e008053690912cea9baad3c764a7654b68b8e638d93a9fba50",
+        "model.py": "99203c1d53cd690537918bcf2bb939dd5d37c4cf8d4d512e81c62a98fe4b90cf",
+        "priority_locks.py": "817127d1ac025501dda86274a0972f0dbc0f5e820c05e7901ba8eb63c96903a8",
+        "write_admission.py": "f10b6fbe8bb426b7da7c7ea69b2e2edb05dd2d92cc7e21d9220c2d796dbfebf6"
+      }
+    },
+    "sweep": {
+      "assumptions": "Synthetic ticks and queue work units; authored scopes and linear read dependencies; failure-free transport; ideal complete arbitration collection; no measured latency/throughput.",
+      "parameters": {
+        "case_filter": "",
+        "overrides": {},
+        "policies": "arbitration,wound-wait,wait-die,occ,certification,snapshot-wait,ordered-writes",
+        "reserve_writes": null,
+        "seeds": "0,7,19",
+        "solver": null,
+        "widths": "16,64,256"
+      },
+      "sha256": "f4683e0399153a2efaba01a76c45c448e574546020e207b2423b285f38c83da7",
+      "source_sha256": {
+        "arbitration.py": "80866cd123a56cb3c706a1173bbce3de01b897b74438a4e9de25853a80ad10f4",
+        "batch.py": "003a51cab651d5203b0a98425ce34db839da442d9966e645779dbed33faba6e4",
+        "certification.py": "1f6096bb0930a3a41d5ff5030517918f52218814fa6e74f79264d06f30f0c5d8",
+        "comparison.py": "6b6329846b3d4e80f0d41c6df46d9413e68dea54f22757957ba12acbf32334bf",
+        "comparison_inputs.py": "b1bbb895f4dca5e008053690912cea9baad3c764a7654b68b8e638d93a9fba50",
+        "model.py": "99203c1d53cd690537918bcf2bb939dd5d37c4cf8d4d512e81c62a98fe4b90cf",
+        "priority_locks.py": "817127d1ac025501dda86274a0972f0dbc0f5e820c05e7901ba8eb63c96903a8",
+        "write_admission.py": "f10b6fbe8bb426b7da7c7ea69b2e2edb05dd2d92cc7e21d9220c2d796dbfebf6"
+      }
+    }
+  },
+  "linux_prefix_from_macos": "orb -m ubuntu",
+  "run_count": 1783,
+  "selection": "All runs and cohort outcomes, including failures and pending work. No event traces, per-attempt payloads or measured wall-clock times.",
+  "series_paths": {
+    "arbitration-fold": "build/orbital-scenarios/arbitration-fold-read-scenarios.json",
+    "fixed": "build/workbench/orbital-fixed-execution/sweep.json",
+    "fixed-fold": "build/orbital-scenarios/fixed-fold-read-scenarios.json",
+    "fixed-fold-scoped": "build/orbital-scenarios/fixed-fold-cross-shard-only.json",
+    "fixed-sensitivity": "build/workbench/orbital-fixed-execution/sensitivities.json",
+    "folds": "build/orbital-scenarios/fold-comparison.json",
+    "folds128": "build/orbital-scenarios/fold-comparison-hot-128.json",
+    "folds25": "build/orbital-scenarios/fold-comparison-hot-25.json",
+    "output-admission": "build/workbench/orbital-output-policies/sweep.json",
+    "sensitivity": "build/orbital-scenarios/comparison-sensitivity.json",
+    "sweep": "build/orbital-scenarios/comparison-sweep.json"
+  },
+  "source_sha256": {
+    "arbitration.py": "80866cd123a56cb3c706a1173bbce3de01b897b74438a4e9de25853a80ad10f4",
+    "batch.py": "003a51cab651d5203b0a98425ce34db839da442d9966e645779dbed33faba6e4",
+    "certification.py": "1f6096bb0930a3a41d5ff5030517918f52218814fa6e74f79264d06f30f0c5d8",
+    "comparison.py": "6b6329846b3d4e80f0d41c6df46d9413e68dea54f22757957ba12acbf32334bf",
+    "comparison_inputs.py": "b1bbb895f4dca5e008053690912cea9baad3c764a7654b68b8e638d93a9fba50",
+    "model.py": "99203c1d53cd690537918bcf2bb939dd5d37c4cf8d4d512e81c62a98fe4b90cf",
+    "priority_locks.py": "817127d1ac025501dda86274a0972f0dbc0f5e820c05e7901ba8eb63c96903a8",
+    "write_admission.py": "f10b6fbe8bb426b7da7c7ea69b2e2edb05dd2d92cc7e21d9220c2d796dbfebf6"
+  }
+}

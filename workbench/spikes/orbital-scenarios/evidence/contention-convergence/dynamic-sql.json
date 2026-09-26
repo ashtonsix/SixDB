@@ -1,0 +1,2310 @@
+{
+  "assumptions": [
+    "Authored logical histories with immediate failure-free admission/control delivery.",
+    "Finite predeclared key universe, including absent rows; no claim about general predicate/range implementation.",
+    "Generation payloads are retained privately and immutably before publication; no durability, byte transport or reclamation model.",
+    "Every writer honors the compared representation's admission domain; sources are captured at the chosen serial position.",
+    "No timings, throughput, arbitrary triggers, full SQL errors or recovery proof."
+  ],
+  "scenarios": [
+    {
+      "committed": [
+        {
+          "images": {},
+          "logical": "discover-T",
+          "position": [
+            10,
+            "discover-T#10"
+          ],
+          "program": {
+            "op": "report"
+          },
+          "reads": {
+            "eu/customer/1/seq": {
+              "eu/customer/1/seq": 0
+            },
+            "eu/customers": {
+              "eu/customer/1/email": 1,
+              "eu/customer/2/email": 4
+            }
+          },
+          "result": {
+            "status": "report",
+            "values": {
+              "eu/customer/1/email": 1,
+              "eu/customer/1/seq": 0,
+              "eu/customer/2/email": 4
+            }
+          },
+          "scopes": [
+            "eu/customers",
+            "eu/customer/1/seq"
+          ],
+          "writes": {}
+        },
+        {
+          "images": {},
+          "logical": "discover-U",
+          "position": [
+            20,
+            "discover-U#20"
+          ],
+          "program": {
+            "op": "report"
+          },
+          "reads": {
+            "eu/customer/1/seq": {
+              "eu/customer/1/seq": 0
+            },
+            "eu/customers": {
+              "eu/customer/1/email": 1,
+              "eu/customer/2/email": 4
+            }
+          },
+          "result": {
+            "status": "report",
+            "values": {
+              "eu/customer/1/email": 1,
+              "eu/customer/1/seq": 0,
+              "eu/customer/2/email": 4
+            }
+          },
+          "scopes": [
+            "eu/customers",
+            "eu/customer/1/seq"
+          ],
+          "writes": {}
+        },
+        {
+          "images": {},
+          "logical": "U",
+          "position": [
+            30,
+            "U#30"
+          ],
+          "program": {
+            "email": 3,
+            "indexed": true,
+            "op": "merge",
+            "row": 1,
+            "seq": 1
+          },
+          "reads": {
+            "eu/customer/1/seq": {
+              "eu/customer/1/seq": 0
+            },
+            "eu/customers": {
+              "eu/customer/1/email": 1,
+              "eu/customer/2/email": 4
+            }
+          },
+          "result": {
+            "new": 3,
+            "old": 1,
+            "row": 1,
+            "status": "merged"
+          },
+          "scopes": [
+            "eu/customers",
+            "eu/customer/1/seq"
+          ],
+          "writes": {
+            "eu/customer/1/email": 3,
+            "eu/customer/1/seq": 1,
+            "us/email/1": null,
+            "us/email/3": 1
+          }
+        },
+        {
+          "images": {},
+          "logical": "rediscover-T",
+          "position": [
+            50,
+            "rediscover-T#50"
+          ],
+          "program": {
+            "op": "report"
+          },
+          "reads": {
+            "eu/customer/1/seq": {
+              "eu/customer/1/seq": 1
+            },
+            "eu/customers": {
+              "eu/customer/1/email": 3,
+              "eu/customer/2/email": 4
+            }
+          },
+          "result": {
+            "status": "report",
+            "values": {
+              "eu/customer/1/email": 3,
+              "eu/customer/1/seq": 1,
+              "eu/customer/2/email": 4
+            }
+          },
+          "scopes": [
+            "eu/customers",
+            "eu/customer/1/seq"
+          ],
+          "writes": {}
+        },
+        {
+          "images": {},
+          "logical": "T-retry",
+          "position": [
+            60,
+            "T-retry#60"
+          ],
+          "program": {
+            "email": 2,
+            "indexed": true,
+            "op": "merge",
+            "row": 1,
+            "seq": 10
+          },
+          "reads": {
+            "eu/customer/1/seq": {
+              "eu/customer/1/seq": 1
+            },
+            "eu/customers": {
+              "eu/customer/1/email": 3,
+              "eu/customer/2/email": 4
+            }
+          },
+          "result": {
+            "new": 2,
+            "old": 3,
+            "row": 1,
+            "status": "merged"
+          },
+          "scopes": [
+            "eu/customers",
+            "eu/customer/1/seq"
+          ],
+          "writes": {
+            "eu/customer/1/email": 2,
+            "eu/customer/1/seq": 10,
+            "us/email/2": 1,
+            "us/email/3": null
+          }
+        },
+        {
+          "images": {},
+          "logical": "duplicate",
+          "position": [
+            70,
+            "duplicate#70"
+          ],
+          "program": {
+            "email": 2,
+            "indexed": true,
+            "op": "merge",
+            "row": 1,
+            "seq": 10
+          },
+          "reads": {
+            "eu/customer/1/seq": {
+              "eu/customer/1/seq": 10
+            },
+            "eu/customers": {
+              "eu/customer/1/email": 2,
+              "eu/customer/2/email": 4
+            }
+          },
+          "result": {
+            "row": 1,
+            "seq": 10,
+            "status": "duplicate_or_old"
+          },
+          "scopes": [
+            "eu/customers",
+            "eu/customer/1/seq"
+          ],
+          "writes": {}
+        }
+      ],
+      "counts": {
+        "application_evaluations": 4,
+        "business_rejections": 0,
+        "captured_cells": 12,
+        "committed_transactions": 3,
+        "discovery_passes": 3,
+        "footprint_failures": 1,
+        "max_transaction_coverage": 4
+      },
+      "events": [
+        {
+          "event": "footprint_failure",
+          "logical": "T",
+          "missing": [
+            "us/email/3"
+          ],
+          "private_result": {
+            "new": 2,
+            "old": 3,
+            "row": 1,
+            "status": "merged"
+          }
+        }
+      ],
+      "final": {
+        "eu/customer/1/email": 2,
+        "eu/customer/1/seq": 10,
+        "eu/customer/2/email": 4,
+        "eu/customer/2/seq": 0,
+        "us/email/1": null,
+        "us/email/2": 1,
+        "us/email/3": null,
+        "us/email/4": 2,
+        "us/email/5": null,
+        "us/email/6": null,
+        "us/email/7": null,
+        "us/email/8": null
+      },
+      "generations": {},
+      "limit": "The derived-index control removes stored index outputs and pays row-scan work; it is not a free maintained-index implementation.",
+      "name": "merge_materialized_index",
+      "representation": "maintained entries",
+      "serial_check": true
+    },
+    {
+      "committed": [
+        {
+          "images": {},
+          "logical": "discover-T",
+          "position": [
+            10,
+            "discover-T#10"
+          ],
+          "program": {
+            "op": "report"
+          },
+          "reads": {
+            "eu/customer/1/seq": {
+              "eu/customer/1/seq": 0
+            },
+            "eu/customers": {
+              "eu/customer/1/email": 1,
+              "eu/customer/2/email": 4
+            }
+          },
+          "result": {
+            "status": "report",
+            "values": {
+              "eu/customer/1/email": 1,
+              "eu/customer/1/seq": 0,
+              "eu/customer/2/email": 4
+            }
+          },
+          "scopes": [
+            "eu/customers",
+            "eu/customer/1/seq"
+          ],
+          "writes": {}
+        },
+        {
+          "images": {},
+          "logical": "discover-U",
+          "position": [
+            20,
+            "discover-U#20"
+          ],
+          "program": {
+            "op": "report"
+          },
+          "reads": {
+            "eu/customer/1/seq": {
+              "eu/customer/1/seq": 0
+            },
+            "eu/customers": {
+              "eu/customer/1/email": 1,
+              "eu/customer/2/email": 4
+            }
+          },
+          "result": {
+            "status": "report",
+            "values": {
+              "eu/customer/1/email": 1,
+              "eu/customer/1/seq": 0,
+              "eu/customer/2/email": 4
+            }
+          },
+          "scopes": [
+            "eu/customers",
+            "eu/customer/1/seq"
+          ],
+          "writes": {}
+        },
+        {
+          "images": {},
+          "logical": "U",
+          "position": [
+            30,
+            "U#30"
+          ],
+          "program": {
+            "email": 3,
+            "indexed": false,
+            "op": "merge",
+            "row": 1,
+            "seq": 1
+          },
+          "reads": {
+            "eu/customer/1/seq": {
+              "eu/customer/1/seq": 0
+            },
+            "eu/customers": {
+              "eu/customer/1/email": 1,
+              "eu/customer/2/email": 4
+            }
+          },
+          "result": {
+            "new": 3,
+            "old": 1,
+            "row": 1,
+            "status": "merged"
+          },
+          "scopes": [
+            "eu/customers",
+            "eu/customer/1/seq"
+          ],
+          "writes": {
+            "eu/customer/1/email": 3,
+            "eu/customer/1/seq": 1
+          }
+        },
+        {
+          "images": {},
+          "logical": "T",
+          "position": [
+            40,
+            "T#40"
+          ],
+          "program": {
+            "email": 2,
+            "indexed": false,
+            "op": "merge",
+            "row": 1,
+            "seq": 10
+          },
+          "reads": {
+            "eu/customer/1/seq": {
+              "eu/customer/1/seq": 1
+            },
+            "eu/customers": {
+              "eu/customer/1/email": 3,
+              "eu/customer/2/email": 4
+            }
+          },
+          "result": {
+            "new": 2,
+            "old": 3,
+            "row": 1,
+            "status": "merged"
+          },
+          "scopes": [
+            "eu/customers",
+            "eu/customer/1/seq"
+          ],
+          "writes": {
+            "eu/customer/1/email": 2,
+            "eu/customer/1/seq": 10
+          }
+        },
+        {
+          "images": {},
+          "logical": "duplicate",
+          "position": [
+            50,
+            "duplicate#50"
+          ],
+          "program": {
+            "email": 2,
+            "indexed": false,
+            "op": "merge",
+            "row": 1,
+            "seq": 10
+          },
+          "reads": {
+            "eu/customer/1/seq": {
+              "eu/customer/1/seq": 10
+            },
+            "eu/customers": {
+              "eu/customer/1/email": 2,
+              "eu/customer/2/email": 4
+            }
+          },
+          "result": {
+            "row": 1,
+            "seq": 10,
+            "status": "duplicate_or_old"
+          },
+          "scopes": [
+            "eu/customers",
+            "eu/customer/1/seq"
+          ],
+          "writes": {}
+        }
+      ],
+      "counts": {
+        "application_evaluations": 3,
+        "business_rejections": 0,
+        "captured_cells": 9,
+        "committed_transactions": 3,
+        "discovery_passes": 2,
+        "max_transaction_coverage": 2
+      },
+      "events": [],
+      "final": {
+        "eu/customer/1/email": 2,
+        "eu/customer/1/seq": 10,
+        "eu/customer/2/email": 4,
+        "eu/customer/2/seq": 0
+      },
+      "generations": {},
+      "limit": "The derived-index control removes stored index outputs and pays row-scan work; it is not a free maintained-index implementation.",
+      "name": "merge_derived_index",
+      "representation": "derive lookup by scanning rows",
+      "serial_check": true
+    },
+    {
+      "committed": [
+        {
+          "images": {},
+          "logical": "A",
+          "position": [
+            10,
+            "A#10"
+          ],
+          "program": {
+            "email": 2,
+            "indexed": false,
+            "op": "merge",
+            "row": 1,
+            "seq": 10
+          },
+          "reads": {
+            "eu/customer/1/seq": {
+              "eu/customer/1/seq": 0
+            },
+            "eu/customers": {
+              "eu/customer/1/email": 1,
+              "eu/customer/2/email": 4
+            }
+          },
+          "result": {
+            "new": 2,
+            "old": 1,
+            "row": 1,
+            "status": "merged"
+          },
+          "scopes": [
+            "eu/customers",
+            "eu/customer/1/seq"
+          ],
+          "writes": {
+            "eu/customer/1/email": 2,
+            "eu/customer/1/seq": 10
+          }
+        },
+        {
+          "images": {},
+          "logical": "B",
+          "position": [
+            20,
+            "B#20"
+          ],
+          "program": {
+            "email": 2,
+            "indexed": false,
+            "op": "merge",
+            "row": 2,
+            "seq": 10
+          },
+          "reads": {
+            "eu/customer/2/seq": {
+              "eu/customer/2/seq": 0
+            },
+            "eu/customers": {
+              "eu/customer/1/email": 2,
+              "eu/customer/2/email": 4
+            }
+          },
+          "result": {
+            "email": 2,
+            "owner": 1,
+            "status": "unique_rejection"
+          },
+          "scopes": [
+            "eu/customers",
+            "eu/customer/2/seq"
+          ],
+          "writes": {}
+        }
+      ],
+      "counts": {
+        "application_evaluations": 2,
+        "business_rejections": 1,
+        "captured_cells": 6,
+        "committed_transactions": 2,
+        "max_transaction_coverage": 2,
+        "read_waits": 1
+      },
+      "events": [],
+      "final": {
+        "eu/customer/1/email": 2,
+        "eu/customer/1/seq": 10,
+        "eu/customer/2/email": 4,
+        "eu/customer/2/seq": 0
+      },
+      "generations": {},
+      "name": "unique_business_rejection_after_ordered_read",
+      "result": "One accepted merge, one committed constraint rejection; no serialization abort.",
+      "serial_check": true
+    },
+    {
+      "accepted_source_contract": "One source supplies monotone per-key sequence numbers; deletion retains its sequence tombstone. This does not reconcile independent unordered sources.",
+      "committed": [
+        {
+          "images": {},
+          "logical": "insert",
+          "position": [
+            10,
+            "insert#10"
+          ],
+          "program": {
+            "email": 2,
+            "indexed": true,
+            "op": "merge",
+            "row": 2,
+            "seq": 1
+          },
+          "reads": {
+            "eu/customer/2/seq": {
+              "eu/customer/2/seq": null
+            },
+            "eu/customers": {
+              "eu/customer/1/email": 1,
+              "eu/customer/2/email": null
+            }
+          },
+          "result": {
+            "new": 2,
+            "old": null,
+            "row": 2,
+            "status": "merged"
+          },
+          "scopes": [
+            "eu/customers",
+            "eu/customer/2/seq"
+          ],
+          "writes": {
+            "eu/customer/2/email": 2,
+            "eu/customer/2/seq": 1,
+            "us/email/2": 2
+          }
+        },
+        {
+          "images": {},
+          "logical": "delete",
+          "position": [
+            20,
+            "delete#20"
+          ],
+          "program": {
+            "indexed": true,
+            "op": "delete_customer",
+            "row": 2,
+            "seq": 5
+          },
+          "reads": {
+            "eu/customer/2/seq": {
+              "eu/customer/2/seq": 1
+            },
+            "eu/customers": {
+              "eu/customer/1/email": 1,
+              "eu/customer/2/email": 2
+            }
+          },
+          "result": {
+            "old": 2,
+            "row": 2,
+            "status": "deleted"
+          },
+          "scopes": [
+            "eu/customers",
+            "eu/customer/2/seq"
+          ],
+          "writes": {
+            "eu/customer/2/email": null,
+            "eu/customer/2/seq": 5,
+            "us/email/2": null
+          }
+        },
+        {
+          "images": {},
+          "logical": "late-replay",
+          "position": [
+            30,
+            "late-replay#30"
+          ],
+          "program": {
+            "email": 2,
+            "indexed": true,
+            "op": "merge",
+            "row": 2,
+            "seq": 4
+          },
+          "reads": {
+            "eu/customer/2/seq": {
+              "eu/customer/2/seq": 5
+            },
+            "eu/customers": {
+              "eu/customer/1/email": 1,
+              "eu/customer/2/email": null
+            }
+          },
+          "result": {
+            "row": 2,
+            "seq": 5,
+            "status": "duplicate_or_old"
+          },
+          "scopes": [
+            "eu/customers",
+            "eu/customer/2/seq"
+          ],
+          "writes": {}
+        },
+        {
+          "images": {},
+          "logical": "reinsert",
+          "position": [
+            40,
+            "reinsert#40"
+          ],
+          "program": {
+            "email": 3,
+            "indexed": true,
+            "op": "merge",
+            "row": 2,
+            "seq": 6
+          },
+          "reads": {
+            "eu/customer/2/seq": {
+              "eu/customer/2/seq": 5
+            },
+            "eu/customers": {
+              "eu/customer/1/email": 1,
+              "eu/customer/2/email": null
+            }
+          },
+          "result": {
+            "new": 3,
+            "old": null,
+            "row": 2,
+            "status": "merged"
+          },
+          "scopes": [
+            "eu/customers",
+            "eu/customer/2/seq"
+          ],
+          "writes": {
+            "eu/customer/2/email": 3,
+            "eu/customer/2/seq": 6,
+            "us/email/3": 2
+          }
+        },
+        {
+          "images": {},
+          "logical": "unique-conflict",
+          "position": [
+            50,
+            "unique-conflict#50"
+          ],
+          "program": {
+            "email": 3,
+            "indexed": true,
+            "op": "merge",
+            "row": 1,
+            "seq": 10
+          },
+          "reads": {
+            "eu/customer/1/seq": {
+              "eu/customer/1/seq": 0
+            },
+            "eu/customers": {
+              "eu/customer/1/email": 1,
+              "eu/customer/2/email": 3
+            }
+          },
+          "result": {
+            "email": 3,
+            "owner": 2,
+            "status": "unique_rejection"
+          },
+          "scopes": [
+            "eu/customers",
+            "eu/customer/1/seq"
+          ],
+          "writes": {}
+        }
+      ],
+      "counts": {
+        "application_evaluations": 5,
+        "business_rejections": 1,
+        "captured_cells": 15,
+        "committed_transactions": 5,
+        "max_transaction_coverage": 10
+      },
+      "events": [],
+      "final": {
+        "eu/customer/1/email": 1,
+        "eu/customer/1/seq": 0,
+        "eu/customer/2/email": 3,
+        "eu/customer/2/seq": 6,
+        "us/email/1": 1,
+        "us/email/2": null,
+        "us/email/3": 2,
+        "us/email/4": null,
+        "us/email/5": null,
+        "us/email/6": null,
+        "us/email/7": null,
+        "us/email/8": null
+      },
+      "generations": {},
+      "name": "upsert_delete_reinsert_and_late_feed_replay",
+      "serial_check": true
+    },
+    {
+      "actual_writes": 4,
+      "committed": [
+        {
+          "images": {},
+          "logical": "T",
+          "position": [
+            10,
+            "T#10"
+          ],
+          "program": {
+            "email": 2,
+            "indexed": true,
+            "op": "merge",
+            "row": 1,
+            "seq": 10
+          },
+          "reads": {
+            "eu/customer/1/seq": {
+              "eu/customer/1/seq": 0
+            },
+            "eu/customers": {
+              "eu/customer/1/email": 1,
+              "eu/customer/2/email": 4
+            }
+          },
+          "result": {
+            "new": 2,
+            "old": 1,
+            "row": 1,
+            "status": "merged"
+          },
+          "scopes": [
+            "eu/customers",
+            "eu/customer/1/seq"
+          ],
+          "writes": {
+            "eu/customer/1/email": 2,
+            "eu/customer/1/seq": 10,
+            "us/email/1": null,
+            "us/email/2": 1
+          }
+        }
+      ],
+      "counts": {
+        "application_evaluations": 1,
+        "blocked_admission_requests": 1,
+        "business_rejections": 0,
+        "captured_cells": 3,
+        "committed_transactions": 1,
+        "max_transaction_coverage": 10
+      },
+      "covered_cells": 10,
+      "events": [],
+      "excluded_disjoint_customer": true,
+      "final": {
+        "eu/customer/1/email": 2,
+        "eu/customer/1/seq": 10,
+        "eu/customer/2/email": 4,
+        "eu/customer/2/seq": 0,
+        "us/email/1": null,
+        "us/email/2": 1,
+        "us/email/3": null,
+        "us/email/4": 2,
+        "us/email/5": null,
+        "us/email/6": null,
+        "us/email/7": null,
+        "us/email/8": null
+      },
+      "generations": {},
+      "name": "merge_full_index_domain",
+      "progress_rule": "One admitted evaluation if finite predecessors finish; every index writer honors the declared namespace exclusion.",
+      "serial_check": true
+    },
+    {
+      "before_quiet": {
+        "eu/other_tenant": 0,
+        "eu/parent/1": 1,
+        "eu/parent/2": 0,
+        "us/child/1": 1,
+        "us/child/2": 2,
+        "us/child/3": 1,
+        "us/child/4": 1,
+        "us/child/5": 1,
+        "us/child/6": 1,
+        "us/child/7": null
+      },
+      "committed": [
+        {
+          "images": {},
+          "logical": "discover-3",
+          "position": [
+            10,
+            "discover-3#10"
+          ],
+          "program": {
+            "op": "report"
+          },
+          "reads": {
+            "eu/family": {
+              "eu/parent/1": 1,
+              "eu/parent/2": 0,
+              "us/child/1": 1,
+              "us/child/2": 2,
+              "us/child/3": null,
+              "us/child/4": null,
+              "us/child/5": null,
+              "us/child/6": null,
+              "us/child/7": null
+            }
+          },
+          "result": {
+            "status": "report",
+            "values": {
+              "eu/parent/1": 1,
+              "eu/parent/2": 0,
+              "us/child/1": 1,
+              "us/child/2": 2,
+              "us/child/3": null,
+              "us/child/4": null,
+              "us/child/5": null,
+              "us/child/6": null,
+              "us/child/7": null
+            }
+          },
+          "scopes": [
+            "eu/family"
+          ],
+          "writes": {}
+        },
+        {
+          "images": {},
+          "logical": "insert-3",
+          "position": [
+            20,
+            "insert-3#20"
+          ],
+          "program": {
+            "child": "us/child/3",
+            "op": "insert_child",
+            "parent": 1
+          },
+          "reads": {
+            "eu/parent/1": {
+              "eu/parent/1": 1
+            },
+            "us/child/3": {
+              "us/child/3": null
+            }
+          },
+          "result": {
+            "child": "us/child/3",
+            "status": "inserted"
+          },
+          "scopes": [
+            "eu/parent/1",
+            "us/child/3"
+          ],
+          "writes": {
+            "us/child/3": 1
+          }
+        },
+        {
+          "images": {},
+          "logical": "discover-4",
+          "position": [
+            40,
+            "discover-4#40"
+          ],
+          "program": {
+            "op": "report"
+          },
+          "reads": {
+            "eu/family": {
+              "eu/parent/1": 1,
+              "eu/parent/2": 0,
+              "us/child/1": 1,
+              "us/child/2": 2,
+              "us/child/3": 1,
+              "us/child/4": null,
+              "us/child/5": null,
+              "us/child/6": null,
+              "us/child/7": null
+            }
+          },
+          "result": {
+            "status": "report",
+            "values": {
+              "eu/parent/1": 1,
+              "eu/parent/2": 0,
+              "us/child/1": 1,
+              "us/child/2": 2,
+              "us/child/3": 1,
+              "us/child/4": null,
+              "us/child/5": null,
+              "us/child/6": null,
+              "us/child/7": null
+            }
+          },
+          "scopes": [
+            "eu/family"
+          ],
+          "writes": {}
+        },
+        {
+          "images": {},
+          "logical": "insert-4",
+          "position": [
+            50,
+            "insert-4#50"
+          ],
+          "program": {
+            "child": "us/child/4",
+            "op": "insert_child",
+            "parent": 1
+          },
+          "reads": {
+            "eu/parent/1": {
+              "eu/parent/1": 1
+            },
+            "us/child/4": {
+              "us/child/4": null
+            }
+          },
+          "result": {
+            "child": "us/child/4",
+            "status": "inserted"
+          },
+          "scopes": [
+            "eu/parent/1",
+            "us/child/4"
+          ],
+          "writes": {
+            "us/child/4": 1
+          }
+        },
+        {
+          "images": {},
+          "logical": "discover-5",
+          "position": [
+            70,
+            "discover-5#70"
+          ],
+          "program": {
+            "op": "report"
+          },
+          "reads": {
+            "eu/family": {
+              "eu/parent/1": 1,
+              "eu/parent/2": 0,
+              "us/child/1": 1,
+              "us/child/2": 2,
+              "us/child/3": 1,
+              "us/child/4": 1,
+              "us/child/5": null,
+              "us/child/6": null,
+              "us/child/7": null
+            }
+          },
+          "result": {
+            "status": "report",
+            "values": {
+              "eu/parent/1": 1,
+              "eu/parent/2": 0,
+              "us/child/1": 1,
+              "us/child/2": 2,
+              "us/child/3": 1,
+              "us/child/4": 1,
+              "us/child/5": null,
+              "us/child/6": null,
+              "us/child/7": null
+            }
+          },
+          "scopes": [
+            "eu/family"
+          ],
+          "writes": {}
+        },
+        {
+          "images": {},
+          "logical": "insert-5",
+          "position": [
+            80,
+            "insert-5#80"
+          ],
+          "program": {
+            "child": "us/child/5",
+            "op": "insert_child",
+            "parent": 1
+          },
+          "reads": {
+            "eu/parent/1": {
+              "eu/parent/1": 1
+            },
+            "us/child/5": {
+              "us/child/5": null
+            }
+          },
+          "result": {
+            "child": "us/child/5",
+            "status": "inserted"
+          },
+          "scopes": [
+            "eu/parent/1",
+            "us/child/5"
+          ],
+          "writes": {
+            "us/child/5": 1
+          }
+        },
+        {
+          "images": {},
+          "logical": "discover-6",
+          "position": [
+            100,
+            "discover-6#100"
+          ],
+          "program": {
+            "op": "report"
+          },
+          "reads": {
+            "eu/family": {
+              "eu/parent/1": 1,
+              "eu/parent/2": 0,
+              "us/child/1": 1,
+              "us/child/2": 2,
+              "us/child/3": 1,
+              "us/child/4": 1,
+              "us/child/5": 1,
+              "us/child/6": null,
+              "us/child/7": null
+            }
+          },
+          "result": {
+            "status": "report",
+            "values": {
+              "eu/parent/1": 1,
+              "eu/parent/2": 0,
+              "us/child/1": 1,
+              "us/child/2": 2,
+              "us/child/3": 1,
+              "us/child/4": 1,
+              "us/child/5": 1,
+              "us/child/6": null,
+              "us/child/7": null
+            }
+          },
+          "scopes": [
+            "eu/family"
+          ],
+          "writes": {}
+        },
+        {
+          "images": {},
+          "logical": "insert-6",
+          "position": [
+            110,
+            "insert-6#110"
+          ],
+          "program": {
+            "child": "us/child/6",
+            "op": "insert_child",
+            "parent": 1
+          },
+          "reads": {
+            "eu/parent/1": {
+              "eu/parent/1": 1
+            },
+            "us/child/6": {
+              "us/child/6": null
+            }
+          },
+          "result": {
+            "child": "us/child/6",
+            "status": "inserted"
+          },
+          "scopes": [
+            "eu/parent/1",
+            "us/child/6"
+          ],
+          "writes": {
+            "us/child/6": 1
+          }
+        },
+        {
+          "images": {},
+          "logical": "quiet-discovery",
+          "position": [
+            130,
+            "quiet-discovery#130"
+          ],
+          "program": {
+            "op": "report"
+          },
+          "reads": {
+            "eu/family": {
+              "eu/parent/1": 1,
+              "eu/parent/2": 0,
+              "us/child/1": 1,
+              "us/child/2": 2,
+              "us/child/3": 1,
+              "us/child/4": 1,
+              "us/child/5": 1,
+              "us/child/6": 1,
+              "us/child/7": null
+            }
+          },
+          "result": {
+            "status": "report",
+            "values": {
+              "eu/parent/1": 1,
+              "eu/parent/2": 0,
+              "us/child/1": 1,
+              "us/child/2": 2,
+              "us/child/3": 1,
+              "us/child/4": 1,
+              "us/child/5": 1,
+              "us/child/6": 1,
+              "us/child/7": null
+            }
+          },
+          "scopes": [
+            "eu/family"
+          ],
+          "writes": {}
+        },
+        {
+          "images": {},
+          "logical": "quiet-delete",
+          "position": [
+            140,
+            "quiet-delete#140"
+          ],
+          "program": {
+            "op": "cascade"
+          },
+          "reads": {
+            "eu/family": {
+              "eu/parent/1": 1,
+              "eu/parent/2": 0,
+              "us/child/1": 1,
+              "us/child/2": 2,
+              "us/child/3": 1,
+              "us/child/4": 1,
+              "us/child/5": 1,
+              "us/child/6": 1,
+              "us/child/7": null
+            }
+          },
+          "result": {
+            "children": [
+              "us/child/1",
+              "us/child/3",
+              "us/child/4",
+              "us/child/5",
+              "us/child/6"
+            ],
+            "parents": [
+              "eu/parent/1"
+            ],
+            "status": "deleted"
+          },
+          "scopes": [
+            "eu/family"
+          ],
+          "writes": {
+            "eu/parent/1": null,
+            "us/child/1": null,
+            "us/child/3": null,
+            "us/child/4": null,
+            "us/child/5": null,
+            "us/child/6": null
+          }
+        }
+      ],
+      "counts": {
+        "application_evaluations": 9,
+        "business_rejections": 0,
+        "captured_cells": 53,
+        "committed_transactions": 5,
+        "discovery_passes": 5,
+        "footprint_failures": 4,
+        "max_transaction_coverage": 6
+      },
+      "events": [
+        {
+          "event": "footprint_failure",
+          "logical": "delete-3",
+          "missing": [
+            "us/child/3"
+          ],
+          "private_result": {
+            "children": [
+              "us/child/1",
+              "us/child/3"
+            ],
+            "parents": [
+              "eu/parent/1"
+            ],
+            "status": "deleted"
+          }
+        },
+        {
+          "event": "footprint_failure",
+          "logical": "delete-4",
+          "missing": [
+            "us/child/4"
+          ],
+          "private_result": {
+            "children": [
+              "us/child/1",
+              "us/child/3",
+              "us/child/4"
+            ],
+            "parents": [
+              "eu/parent/1"
+            ],
+            "status": "deleted"
+          }
+        },
+        {
+          "event": "footprint_failure",
+          "logical": "delete-5",
+          "missing": [
+            "us/child/5"
+          ],
+          "private_result": {
+            "children": [
+              "us/child/1",
+              "us/child/3",
+              "us/child/4",
+              "us/child/5"
+            ],
+            "parents": [
+              "eu/parent/1"
+            ],
+            "status": "deleted"
+          }
+        },
+        {
+          "event": "footprint_failure",
+          "logical": "delete-6",
+          "missing": [
+            "us/child/6"
+          ],
+          "private_result": {
+            "children": [
+              "us/child/1",
+              "us/child/3",
+              "us/child/4",
+              "us/child/5",
+              "us/child/6"
+            ],
+            "parents": [
+              "eu/parent/1"
+            ],
+            "status": "deleted"
+          }
+        }
+      ],
+      "final": {
+        "eu/other_tenant": 0,
+        "eu/parent/1": null,
+        "eu/parent/2": 0,
+        "us/child/1": null,
+        "us/child/2": 2,
+        "us/child/3": null,
+        "us/child/4": null,
+        "us/child/5": null,
+        "us/child/6": null,
+        "us/child/7": null
+      },
+      "finite_four_attempt_outcome": "failure",
+      "generations": {},
+      "name": "cascade_growing_children",
+      "quiet_round_is_progress_guarantee": false,
+      "serial_check": true
+    },
+    {
+      "committed": [
+        {
+          "images": {},
+          "logical": "insert-3",
+          "position": [
+            10,
+            "insert-3#10"
+          ],
+          "program": {
+            "child": "us/child/3",
+            "op": "insert_child",
+            "parent": 1
+          },
+          "reads": {
+            "eu/parent/1": {
+              "eu/parent/1": 1
+            },
+            "us/child/3": {
+              "us/child/3": null
+            }
+          },
+          "result": {
+            "child": "us/child/3",
+            "status": "inserted"
+          },
+          "scopes": [
+            "eu/parent/1",
+            "us/child/3"
+          ],
+          "writes": {
+            "us/child/3": 1
+          }
+        },
+        {
+          "images": {},
+          "logical": "other-tenant",
+          "position": [
+            30,
+            "other-tenant#30"
+          ],
+          "program": {
+            "op": "assign",
+            "values": {
+              "eu/other_tenant": 1
+            }
+          },
+          "reads": {},
+          "result": {
+            "status": "applied"
+          },
+          "scopes": [],
+          "writes": {
+            "eu/other_tenant": 1
+          }
+        },
+        {
+          "images": {},
+          "logical": "delete",
+          "position": [
+            20,
+            "delete#20"
+          ],
+          "program": {
+            "op": "cascade"
+          },
+          "reads": {
+            "eu/family": {
+              "eu/parent/1": 1,
+              "eu/parent/2": 0,
+              "us/child/1": 1,
+              "us/child/2": 2,
+              "us/child/3": 1,
+              "us/child/4": null,
+              "us/child/5": null,
+              "us/child/6": null,
+              "us/child/7": null
+            }
+          },
+          "result": {
+            "children": [
+              "us/child/1",
+              "us/child/3"
+            ],
+            "parents": [
+              "eu/parent/1"
+            ],
+            "status": "deleted"
+          },
+          "scopes": [
+            "eu/family"
+          ],
+          "writes": {
+            "eu/parent/1": null,
+            "us/child/1": null,
+            "us/child/3": null
+          }
+        },
+        {
+          "images": {},
+          "logical": "insert-4",
+          "position": [
+            40,
+            "insert-4#40"
+          ],
+          "program": {
+            "child": "us/child/4",
+            "op": "insert_child",
+            "parent": 1
+          },
+          "reads": {
+            "eu/parent/1": {
+              "eu/parent/1": null
+            },
+            "us/child/4": {
+              "us/child/4": null
+            }
+          },
+          "result": {
+            "parent": 1,
+            "status": "foreign_key_rejection"
+          },
+          "scopes": [
+            "eu/parent/1",
+            "us/child/4"
+          ],
+          "writes": {}
+        }
+      ],
+      "counts": {
+        "application_evaluations": 4,
+        "blocked_admission_requests": 2,
+        "business_rejections": 1,
+        "captured_cells": 13,
+        "committed_transactions": 4,
+        "max_transaction_coverage": 9
+      },
+      "covered_cells": 9,
+      "delete_writes": 3,
+      "events": [],
+      "final": {
+        "eu/other_tenant": 1,
+        "eu/parent/1": null,
+        "eu/parent/2": 0,
+        "us/child/1": null,
+        "us/child/2": 2,
+        "us/child/3": null,
+        "us/child/4": null,
+        "us/child/5": null,
+        "us/child/6": null,
+        "us/child/7": null
+      },
+      "generations": {},
+      "name": "cascade_declared_family_domain",
+      "nonmatching_inside_target_writer_excluded": true,
+      "other_tenant_completed_during_delete": true,
+      "progress_rule": "Declared family domain excludes matching and nonmatching covered writes. Outside-domain work continues; later child insertion observes the deleted parent.",
+      "serial_check": true
+    },
+    {
+      "committed": [
+        {
+          "images": {},
+          "logical": "discover",
+          "position": [
+            10,
+            "discover#10"
+          ],
+          "program": {
+            "op": "report"
+          },
+          "reads": {
+            "eu/sources": {
+              "eu/source/a": 10,
+              "us/source/b": null
+            }
+          },
+          "result": {
+            "status": "report",
+            "values": {
+              "eu/source/a": 10,
+              "us/source/b": null
+            }
+          },
+          "scopes": [
+            "eu/sources"
+          ],
+          "writes": {}
+        },
+        {
+          "images": {},
+          "logical": "new-source",
+          "position": [
+            20,
+            "new-source#20"
+          ],
+          "program": {
+            "op": "assign",
+            "values": {
+              "us/source/b": 20
+            }
+          },
+          "reads": {},
+          "result": {
+            "status": "applied"
+          },
+          "scopes": [],
+          "writes": {
+            "us/source/b": 20
+          }
+        },
+        {
+          "images": {},
+          "logical": "rediscover",
+          "position": [
+            40,
+            "rediscover#40"
+          ],
+          "program": {
+            "op": "report"
+          },
+          "reads": {
+            "eu/sources": {
+              "eu/source/a": 10,
+              "us/source/b": 20
+            }
+          },
+          "result": {
+            "status": "report",
+            "values": {
+              "eu/source/a": 10,
+              "us/source/b": 20
+            }
+          },
+          "scopes": [
+            "eu/sources"
+          ],
+          "writes": {}
+        },
+        {
+          "images": {},
+          "logical": "copy-retry",
+          "position": [
+            50,
+            "copy-retry#50"
+          ],
+          "program": {
+            "op": "insert_select_rows"
+          },
+          "reads": {
+            "eu/sources": {
+              "eu/source/a": 10,
+              "us/source/b": 20
+            }
+          },
+          "result": {
+            "keys": [
+              "eu/dest/a",
+              "us/dest/b"
+            ],
+            "status": "copied"
+          },
+          "scopes": [
+            "eu/sources"
+          ],
+          "writes": {
+            "eu/dest/a": 10,
+            "us/dest/b": 20
+          }
+        }
+      ],
+      "counts": {
+        "application_evaluations": 3,
+        "business_rejections": 0,
+        "captured_cells": 4,
+        "committed_transactions": 2,
+        "discovery_passes": 2,
+        "footprint_failures": 1,
+        "max_transaction_coverage": 2
+      },
+      "events": [
+        {
+          "event": "footprint_failure",
+          "logical": "copy",
+          "missing": [
+            "us/dest/b"
+          ],
+          "private_result": {
+            "keys": [
+              "eu/dest/a",
+              "us/dest/b"
+            ],
+            "status": "copied"
+          }
+        }
+      ],
+      "final": {
+        "eu/dest/a": 10,
+        "eu/source/a": 10,
+        "us/dest/b": 20,
+        "us/source/b": 20
+      },
+      "generations": {},
+      "limit": "A later qualifying source row changes destination coverage even when every destination was initially absent.",
+      "name": "insert_select_new_destination_key",
+      "serial_check": true
+    },
+    {
+      "committed": [
+        {
+          "images": {},
+          "logical": "new-source-before-cut",
+          "position": [
+            10,
+            "new-source-before-cut#10"
+          ],
+          "program": {
+            "op": "assign",
+            "values": {
+              "us/source/b": 20
+            }
+          },
+          "reads": {},
+          "result": {
+            "status": "applied"
+          },
+          "scopes": [],
+          "writes": {
+            "us/source/b": 20
+          }
+        },
+        {
+          "images": {},
+          "logical": "source-continues",
+          "position": [
+            30,
+            "source-continues#30"
+          ],
+          "program": {
+            "op": "assign",
+            "values": {
+              "us/source/b": 30
+            }
+          },
+          "reads": {},
+          "result": {
+            "status": "applied"
+          },
+          "scopes": [],
+          "writes": {
+            "us/source/b": 30
+          }
+        },
+        {
+          "images": {},
+          "logical": "outside-destination",
+          "position": [
+            40,
+            "outside-destination#40"
+          ],
+          "program": {
+            "op": "assign",
+            "values": {
+              "eu/outside_dest": 1
+            }
+          },
+          "reads": {},
+          "result": {
+            "status": "applied"
+          },
+          "scopes": [],
+          "writes": {
+            "eu/outside_dest": 1
+          }
+        },
+        {
+          "images": {},
+          "logical": "insert-select",
+          "position": [
+            20,
+            "insert-select#20"
+          ],
+          "program": {
+            "op": "insert_select_rows"
+          },
+          "reads": {
+            "eu/sources": {
+              "eu/source/a": 10,
+              "us/source/b": 20
+            }
+          },
+          "result": {
+            "keys": [
+              "eu/dest/a",
+              "us/dest/b"
+            ],
+            "status": "copied"
+          },
+          "scopes": [
+            "eu/sources"
+          ],
+          "writes": {
+            "eu/dest/a": 10,
+            "us/dest/b": 20
+          }
+        }
+      ],
+      "counts": {
+        "application_evaluations": 4,
+        "blocked_admission_requests": 1,
+        "business_rejections": 0,
+        "captured_cells": 2,
+        "committed_transactions": 4,
+        "max_transaction_coverage": 2
+      },
+      "discovery_passes": 0,
+      "events": [],
+      "final": {
+        "eu/dest/a": 10,
+        "eu/outside_dest": 1,
+        "eu/source/a": 10,
+        "us/dest/b": 20,
+        "us/source/b": 30
+      },
+      "generations": {},
+      "inside_target_writer_excluded": true,
+      "name": "insert_select_declared_destination_envelope",
+      "outside_target_writer_completed": true,
+      "restriction": "A target relation/range covers new identities. This finite universe models coverage semantics, not a general range admission implementation.",
+      "serial_check": true,
+      "source_writer_completed_during_computation": true
+    },
+    {
+      "admitted_logical_keys_for_A": [
+        "eu/row/a"
+      ],
+      "committed": [
+        {
+          "images": {},
+          "logical": "indexed-A",
+          "position": [
+            10,
+            "indexed-A#10"
+          ],
+          "program": {
+            "op": "assign",
+            "values": {
+              "eu/row/a": 2
+            }
+          },
+          "reads": {
+            "eu/row/a": {
+              "eu/row/a": 1
+            }
+          },
+          "result": {
+            "status": "applied"
+          },
+          "scopes": [
+            "eu/row/a"
+          ],
+          "writes": {
+            "eu/row/a": 2
+          }
+        },
+        {
+          "images": {},
+          "logical": "indexed-B",
+          "position": [
+            40,
+            "indexed-B#40"
+          ],
+          "program": {
+            "op": "assign",
+            "values": {
+              "eu/row/b": 11
+            }
+          },
+          "reads": {
+            "eu/row/b": {
+              "eu/row/b": 10
+            }
+          },
+          "result": {
+            "status": "applied"
+          },
+          "scopes": [
+            "eu/row/b"
+          ],
+          "writes": {
+            "eu/row/b": 11
+          }
+        }
+      ],
+      "counts": {
+        "application_evaluations": 2,
+        "business_rejections": 0,
+        "captured_cells": 2,
+        "committed_transactions": 2,
+        "max_transaction_coverage": 1
+      },
+      "discovered_index_gate_requests": 0,
+      "events": [],
+      "final": {
+        "eu/row/a": 2,
+        "eu/row/b": 11
+      },
+      "generations": {},
+      "matching_lookup_waited": true,
+      "name": "row_owned_versioned_index_outcome",
+      "nonmatching_lookup_waited": true,
+      "restriction": "This probe uses one known row-partition authority. A collection-wide read bound and pending-row check cover predicate visibility. One row promise lasts through row plus index availability; old index versions are retained. Remotely routed index authorities must receive conservative unknown-effect promises and contribute bounds before c, or queries must visit the known row authorities. No late invisible index authority is permitted.",
+      "returned": [
+        {
+          "matches": [
+            "eu/row/a"
+          ],
+          "position": [
+            20,
+            "lookup-2#20"
+          ],
+          "row_image": {
+            "eu/row/a": 2,
+            "eu/row/b": 10
+          },
+          "wanted": 2
+        },
+        {
+          "matches": [],
+          "position": [
+            30,
+            "lookup-999#30"
+          ],
+          "row_image": {
+            "eu/row/a": 2,
+            "eu/row/b": 10
+          },
+          "wanted": 999
+        }
+      ],
+      "serial_check": true,
+      "unrelated_primary_writer_completed_during_partial_install": true
+    },
+    {
+      "committed": [
+        {
+          "images": {
+            "3": {
+              "a": 0,
+              "correction": 7
+            }
+          },
+          "logical": "correction",
+          "position": [
+            10,
+            "correction#10"
+          ],
+          "program": {
+            "key": "correction",
+            "op": "object_correction",
+            "root": "eu/dest_root",
+            "token": 3,
+            "value": 7
+          },
+          "reads": {
+            "eu/dest_root": {
+              "eu/dest_root": 1
+            }
+          },
+          "result": {
+            "key": "correction",
+            "status": "corrected"
+          },
+          "scopes": [
+            "eu/dest_root"
+          ],
+          "writes": {
+            "eu/dest_root": 3
+          }
+        },
+        {
+          "images": {
+            "4": {
+              "a": 10,
+              "correction": 7
+            },
+            "5": {
+              "b": 20
+            }
+          },
+          "logical": "refresh",
+          "position": [
+            20,
+            "refresh#20"
+          ],
+          "program": {
+            "op": "object_insert_select",
+            "tokens": {
+              "eu": 4,
+              "us": 5
+            }
+          },
+          "reads": {
+            "eu/roots": {
+              "eu/dest_root": 3,
+              "us/dest_root": 2
+            },
+            "eu/sources": {
+              "eu/source/a": 10,
+              "us/source/b": 20
+            }
+          },
+          "result": {
+            "roots": [
+              "eu/dest_root",
+              "us/dest_root"
+            ],
+            "status": "merged_image"
+          },
+          "scopes": [
+            "eu/sources",
+            "eu/roots"
+          ],
+          "writes": {
+            "eu/dest_root": 4,
+            "us/dest_root": 5
+          }
+        }
+      ],
+      "counts": {
+        "application_evaluations": 2,
+        "blocked_admission_requests": 1,
+        "business_rejections": 0,
+        "captured_cells": 5,
+        "committed_transactions": 2,
+        "max_transaction_coverage": 2,
+        "private_generation_cells": 5
+      },
+      "events": [],
+      "final": {
+        "eu/dest_root": 4,
+        "eu/source/a": 10,
+        "us/dest_root": 5,
+        "us/source/b": 20
+      },
+      "final_images": {
+        "eu": {
+          "a": 10,
+          "correction": 7
+        },
+        "us": {
+          "b": 20
+        }
+      },
+      "generations": {
+        "1": {
+          "a": 0,
+          "correction": 0
+        },
+        "2": {
+          "b": 0
+        },
+        "3": {
+          "a": 0,
+          "correction": 7
+        },
+        "4": {
+          "a": 10,
+          "correction": 7
+        },
+        "5": {
+          "b": 20
+        }
+      },
+      "name": "generation_objects_preserve_correction_and_atomic_visibility",
+      "partial_publication_reader_waited": true,
+      "restriction": "Every destination mutation owns its partition object. This is coarse write exclusion; logical publication is small but construction and same-partition queueing remain.",
+      "same_partition_point_writer_excluded": true,
+      "serial_check": true,
+      "stale_merge_would_lose_correction": true
+    },
+    {
+      "accepted_tradeoff": "Published job image is stale to current source and intentionally discards destination corrections. It is not the preserving INSERT SELECT/merge contract.",
+      "committed": [
+        {
+          "images": {
+            "3": {
+              "a": 0,
+              "correction": 7
+            }
+          },
+          "logical": "correction",
+          "position": [
+            10,
+            "correction#10"
+          ],
+          "program": {
+            "key": "correction",
+            "op": "object_correction",
+            "root": "eu/dest_root",
+            "token": 3,
+            "value": 7
+          },
+          "reads": {
+            "eu/dest_root": {
+              "eu/dest_root": 1
+            }
+          },
+          "result": {
+            "key": "correction",
+            "status": "corrected"
+          },
+          "scopes": [
+            "eu/dest_root"
+          ],
+          "writes": {
+            "eu/dest_root": 3
+          }
+        },
+        {
+          "images": {},
+          "logical": "source-moves",
+          "position": [
+            20,
+            "source-moves#20"
+          ],
+          "program": {
+            "op": "assign",
+            "values": {
+              "eu/source/a": 99
+            }
+          },
+          "reads": {},
+          "result": {
+            "status": "applied"
+          },
+          "scopes": [],
+          "writes": {
+            "eu/source/a": 99
+          }
+        },
+        {
+          "images": {
+            "4": {
+              "a": 10
+            },
+            "5": {
+              "b": 20
+            }
+          },
+          "logical": "publish-job",
+          "position": [
+            30,
+            "publish-job#30"
+          ],
+          "program": {
+            "images": {
+              "eu": {
+                "a": 10
+              },
+              "us": {
+                "b": 20
+              }
+            },
+            "input_cut": "explicit-source-cut-before-source-moves",
+            "op": "publish_job",
+            "tokens": {
+              "eu": 4,
+              "us": 5
+            }
+          },
+          "reads": {},
+          "result": {
+            "input_cut": "explicit-source-cut-before-source-moves",
+            "status": "authoritative_replacement"
+          },
+          "scopes": [],
+          "writes": {
+            "eu/dest_root": 4,
+            "us/dest_root": 5
+          }
+        }
+      ],
+      "counts": {
+        "application_evaluations": 3,
+        "business_rejections": 0,
+        "captured_cells": 1,
+        "committed_transactions": 3,
+        "max_transaction_coverage": 2,
+        "private_generation_cells": 4
+      },
+      "events": [],
+      "final": {
+        "eu/dest_root": 4,
+        "eu/source/a": 99,
+        "us/dest_root": 5,
+        "us/source/b": 20
+      },
+      "generations": {
+        "1": {
+          "a": 0,
+          "correction": 0
+        },
+        "2": {
+          "b": 0
+        },
+        "3": {
+          "a": 0,
+          "correction": 7
+        },
+        "4": {
+          "a": 10
+        },
+        "5": {
+          "b": 20
+        }
+      },
+      "name": "explicit_snapshot_job_authoritative_replacement",
+      "serial_check": true
+    },
+    {
+      "committed": [
+        {
+          "images": {
+            "3": {
+              "a": 12
+            },
+            "4": {
+              "d": 4
+            }
+          },
+          "logical": "activate",
+          "position": [
+            10,
+            "activate#10"
+          ],
+          "program": {
+            "images": {
+              "eu": {
+                "a": 12
+              },
+              "us": {
+                "d": 4
+              }
+            },
+            "op": "activate_feed",
+            "through": 104,
+            "tokens": {
+              "eu": 3,
+              "us": 4
+            }
+          },
+          "reads": {
+            "eu/feed_checkpoint": {
+              "eu/feed_checkpoint": 100
+            }
+          },
+          "result": {
+            "status": "feed_activated",
+            "through": 104
+          },
+          "scopes": [
+            "eu/feed_checkpoint"
+          ],
+          "writes": {
+            "eu/dest_root": 3,
+            "eu/feed_checkpoint": 104,
+            "us/dest_root": 4
+          }
+        },
+        {
+          "images": {},
+          "logical": "duplicate-activation",
+          "position": [
+            30,
+            "duplicate-activation#30"
+          ],
+          "program": {
+            "images": {
+              "eu": {
+                "a": 12
+              },
+              "us": {
+                "d": 4
+              }
+            },
+            "op": "activate_feed",
+            "through": 104,
+            "tokens": {
+              "eu": 3,
+              "us": 4
+            }
+          },
+          "reads": {
+            "eu/feed_checkpoint": {
+              "eu/feed_checkpoint": 104
+            }
+          },
+          "result": {
+            "status": "duplicate_activation",
+            "through": 104
+          },
+          "scopes": [
+            "eu/feed_checkpoint"
+          ],
+          "writes": {}
+        }
+      ],
+      "contract": "Trusted source cut plus total ordered immutable event IDs; source-owned target image. Live target edits require ordinary reconciliation under their mutation envelope. This does not obtain the source cut, implement connector catch-up windows, or prove crash recovery.",
+      "counts": {
+        "application_evaluations": 2,
+        "business_rejections": 0,
+        "captured_cells": 2,
+        "committed_transactions": 2,
+        "max_transaction_coverage": 3,
+        "private_generation_cells": 2
+      },
+      "duplicate_events": 1,
+      "events": [],
+      "events_before_cut_ignored": 1,
+      "final": {
+        "eu/dest_root": 3,
+        "eu/feed_checkpoint": 104,
+        "eu/source_frontier": 105,
+        "us/dest_root": 4
+      },
+      "generations": {
+        "1": {
+          "a": 10
+        },
+        "2": {
+          "b": 20
+        },
+        "3": {
+          "a": 12
+        },
+        "4": {
+          "d": 4
+        }
+      },
+      "name": "ordered_feed_idempotence_and_atomic_activation",
+      "partial_activation_reader_waited": true,
+      "published_cut": 104,
+      "serial_check": true,
+      "source_already_at": 105
+    }
+  ],
+  "source_sha256": {
+    "certification.py": "1f6096bb0930a3a41d5ff5030517918f52218814fa6e74f79264d06f30f0c5d8",
+    "check_dynamic_sql.py": "1f913230f3ae6b497e7c219b7e25984ef84141d39544bf29a3ea71e9fa90721c",
+    "dynamic_sql.py": "418883875037f7f57e63baf1f6947f27c5c5a486dbc928fc15b0d388a867b666",
+    "fixed_execution.py": "ea82edb8c4b86270a629f5bcc94779605b789c9f1c50da9d22391b91c05516b0",
+    "write_admission.py": "f10b6fbe8bb426b7da7c7ea69b2e2edb05dd2d92cc7e21d9220c2d796dbfebf6"
+  }
+}
