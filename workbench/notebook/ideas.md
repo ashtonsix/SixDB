@@ -13,6 +13,11 @@ and repair once the consensus and durability obligations are clearer. It keeps
 useful counterexamples and archive recovery pointers; the measured CFT/PLP work
 remains an independent source of evidence.
 
+The [future Orbital simulator note](orbital-simulation.md) seeds a programmatic
+laboratory for protocol, placement and disaster experiments, with actor-local
+knowledge and connections to formal verification. Its learning spike waits until
+current networking and other Orbital design work settles.
+
 ## Sketches, filters, and histograms have different jobs
 
 Ashton's [secondary-summary question](secondary-summaries.md) is deliberately
