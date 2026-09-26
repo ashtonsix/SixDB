@@ -2,9 +2,11 @@
 
 This is a consultable list of questions, useful examples and evidence from older
 drafts, SixDB studies and Calico. Inclusion does not select a mechanism or add a
-requirement to the [brief](BRIEF.md). Networking in particular still awaits
-Ashton's further input. Engine owns application semantics; Orbital must be usable
-by applications with entirely different data structures.
+requirement to the [brief](BRIEF.md). The later
+[dissemination catalog](../workbench/spikes/orbital-dissemination/CATALOG.md)
+provides the systematic networking survey and records what has been explored;
+this list remains a curated starting point. Engine owns application semantics;
+Orbital must be usable by applications with entirely different data structures.
 
 The [draft map](stale-drafts/README.md) distinguishes the older proposals and the
 different historical meanings of “BRIEF2”. The [Calico map](../workbench/notebook/calico.md)
@@ -14,6 +16,11 @@ intended adoption model. Check implementation headers and measurement reports
 alongside design prose: some attractive descriptions were never implemented.
 
 ## Durable objects, memory and local execution
+
+The [object/OS investigation](../workbench/spikes/orbital-objects/README.md) now
+revisits these items, including a source audit and focused mapping probes.
+Its proposed physical boundary is summarized in the draft physical brief;
+the studies still own their experimental limits.
 
 - **Make durable memory usable by ordinary programs.** The
   [early narrative](stale-drafts/BRIEF.md), in its memory and closing design-lessons
@@ -115,6 +122,11 @@ alongside design prose: some attractive descriptions were never implemented.
   failed and pending requests as well as completed latency.
 
 ## Extensions, determinism and reusable work
+
+The [dataflow study](../workbench/spikes/orbital-dataflow/README.md) broadens this
+material into distributed extension applications, including reuse, iteration
+and explicit completion/publication boundaries. Its source survey and probes
+retain the alternatives rather than making every mechanism an Orbital feature.
 
 - **Capabilities for fast I/O.** The [early narrative](stale-drafts/BRIEF.md),
   sandboxing paragraphs, explores broker-created restricted io_uring rings,

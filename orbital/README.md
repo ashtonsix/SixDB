@@ -11,27 +11,24 @@ thread spawning, and related system services.
 Successor to Calico's `xmem` and `omachine`; see the
 [Calico reference map](../workbench/notebook/calico.md).
 
-The evolving [brief](BRIEF.md) sets the current direction. The
-[mining list](MINING.md) collects ideas and evidence worth revisiting, with a
-[source map](stale-drafts/README.md) for the older drafts. These are reference
-material, not additional requirements. The
-[scenario workbench](../workbench/spikes/orbital-scenarios/README.md) retains the
-contention comparisons, worked workloads and recovery probes behind the brief.
+The [design brief](BRIEF.md) explains durable objects, deterministic execution,
+transactions, dissemination and recovery. The [physical brief](PHYSICAL.md)
+develops memory views, protection and OS services: Orbital provides the machinery,
+[Loom](../loom/README.md) directs its use, and [Engine](../engine/README.md)
+supplies application meaning and legal plans. These are evolving designs;
+no runtime services are implemented here yet.
 
-## Provisional scope and seams
+The supporting studies retain alternatives, worked cases and experimental
+evidence at greater depth:
 
-- Storage services for durable bytes, recovery and the lifetimes of backing
-  objects. Versioning, replication and their guarantees need concrete contracts.
-- Transport and I/O submission, completion, failure and cancellation mechanics.
-- Thread lifecycle and other machine services used by the execution runtime.
+| Area | Study |
+| --- | --- |
+| Contention, transactions and recovery | [Scenario workbench](../workbench/spikes/orbital-scenarios/README.md) |
+| Relaying, work placement and delivery | [Dissemination](../workbench/spikes/orbital-dissemination/README.md) |
+| Object views, OS bindings and mapping prototypes | [Objects and physical services](../workbench/spikes/orbital-objects/README.md) |
+| Distributed extension applications, exchanges and reusable state | [Dataflow](../workbench/spikes/orbital-dataflow/README.md) |
 
-[Loom](../loom/README.md) binds these services to database task scheduling and
-the buffer pool. The working boundary gives [Engine](../engine/README.md)
-authority over database meaning and the unit of coordinated publication, while
-Orbital supplies the durability mechanisms. The placement of transaction and
-recovery adapters remains open.
-
-Distributed and durable operation come first; local and other operating modes
-also need explicit guarantees. Backends, recovery/replication design and the
-meaning of successful completion will develop through
-[Workbench](../workbench/README.md). No services are implemented here yet.
+The [mining list](MINING.md) collects ideas worth revisiting, with a
+[source map](stale-drafts/README.md) for older drafts and a
+[networking catalog](../workbench/spikes/orbital-dissemination/CATALOG.md).
+These are reference material, not additional requirements.
