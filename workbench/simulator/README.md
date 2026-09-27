@@ -6,6 +6,9 @@ resources. Models and application bindings live above that boundary. A campaign
 executable, native checks and Python experiment clients use the same library.
 The [initial findings](FINDINGS.md) retain the validation results and construction
 lessons, including the limits of the first captured campaign.
+The [composed experiments](experiments/README.md) investigate regional reservation
+convoys, the fairness tradeoff of granting eligible writers, and recovery and
+retention under shared memory pressure.
 
 Start with [the public runtime](include/sixdb/sim/runtime.hpp) and
 [the Orbital composition](models/orbital.hpp). The [learning spike](../spikes/orbital-simulator/README.md)
@@ -45,6 +48,9 @@ gauntlet` varies delay, offered load, failures, physical sharing and memory.
 `--binary PATH` runs an already-built executable without a source-capture claim.
 Python callers can import `evaluate`, `grid`, `ramp` and `pareto`; custom native
 clients can assemble actors and advance the library directly.
+`campaign.run_cases` also accepts an ordinary iterable of CLI argument mappings;
+`investigate.py` captures the regional, ordering, hosted-recovery and retention
+experiments through the same receipt machinery.
 [The interactive example](examples/interactive.cpp) pauses at an actual private
 read, restarts a checker and resumes the same experiment.
 Each campaign trial retains its exact arguments, stdout/stderr and streamed choice

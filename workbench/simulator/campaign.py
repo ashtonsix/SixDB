@@ -108,14 +108,19 @@ def cases(suite):
         raise ValueError(f"unknown suite {suite}")
 
 
-def run_suite(binary, suite, output):
+def run_cases(binary, authored_cases, output, *, suite="custom"):
+    """Run an ordinary iterable of argument mappings with durable trial receipts.
+
+    The executable owns model meaning. This client only checks result accounting
+    and preserves evidence, including failures and censored observations.
+    """
     output.mkdir(parents=True, exist_ok=False)
     trials, errors = [], []
     with (output / "trials.jsonl").open("w") as journal:
-        for index, case in enumerate(cases(suite)):
+        for index, case in enumerate(authored_cases):
             artifact = output / "cases" / str(index)
             try:
-                trial = evaluate(binary, dict(case, name=f"{suite}-{index}"), artifacts=artifact)
+                trial = evaluate(binary, case, artifacts=artifact)
                 row = {"case": trial.case, "result": trial.result, "artifacts": str(artifact)}
                 trials.append(row)
             except Exception as error:
@@ -132,6 +137,11 @@ def run_suite(binary, suite, output):
     print(json.dumps({"histories": len(trials), "errors": len(errors),
                       "unsafe": sum(bool(t["result"]["violations"]) for t in trials)}))
     return bool(errors or any(t["result"]["violations"] for t in trials))
+
+
+def run_suite(binary, suite, output):
+    return run_cases(binary, (dict(case, name=f"{suite}-{index}")
+                             for index, case in enumerate(cases(suite))), output, suite=suite)
 
 
 def captured(suite, output, workspace):

@@ -169,6 +169,19 @@ class ClientChecks(unittest.TestCase):
                 if not unsafe:
                     self.assertEqual(choices, self.choices_path.read_text())
 
+    def test_custom_case_iterator_preserves_errors_and_following_trials(self):
+        destination = self.directory / "custom-cases"
+        cases = [{"points": -1}, dict(self.case, events=1)]
+        failed = campaign.run_cases(BINARY, iter(cases), destination)
+        self.assertTrue(failed)
+        result = json.loads((destination / "summary.json").read_text())
+        self.assertEqual(len(result["errors"]), 1)
+        self.assertEqual(result["errors"][0]["case"], cases[0])
+        self.assertEqual(len(result["trials"]), 1)
+        self.assertEqual(result["trials"][0]["case"], cases[1])
+        self.assertTrue(result["trials"][0]["result"]["execution"]["budget_exhausted"])
+        self.assertEqual(len((destination / "trials.jsonl").read_text().splitlines()), 2)
+
     def test_replay_input_cannot_be_truncated_through_path_aliases(self):
         for alias in ("relative", "symlink"):
             with self.subTest(alias=alias):

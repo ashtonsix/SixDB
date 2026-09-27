@@ -253,7 +253,7 @@ struct Records {
 
 struct Ticket { Scopes writes; std::optional<Position> minimum, cut; bool released{}, resolved{}; };
 struct Fold {
-  std::uint32_t shard; bool skip_pending;
+  std::uint32_t shard; bool skip_pending; QueuePolicy queue_policy;
   std::map<Tx, Ticket> tickets;
   std::map<Scope, Position> bounds;
   std::map<Scope, std::vector<std::pair<Position, Bytes>>> versions;
@@ -261,7 +261,7 @@ struct Fold {
   std::map<std::uint64_t, Response> replies;
   std::vector<std::uint64_t> waiting, reads;
   std::map<Tx, ReadContext> contexts;
-  explicit Fold(std::uint32_t s, bool skip) : shard(s), skip_pending(skip) {
+  explicit Fold(std::uint32_t s, bool skip, QueuePolicy policy) : shard(s), skip_pending(skip), queue_policy(policy) {
     for (const auto& [scope, value] : initial()) if (shard_of(scope) == shard) versions[scope].push_back({{}, value});
   }
   Position floor(const Scopes& scopes) const {
@@ -285,7 +285,7 @@ struct Fold {
   void settle() {
     Scopes earlier; std::vector<std::uint64_t> still;
     for (auto id : waiting) {
-      const auto& r = requests.at(id); bool blocked = intersects(earlier, r.writes);
+      const auto& r = requests.at(id); bool blocked = queue_policy == QueuePolicy::no_overtaking && intersects(earlier, r.writes);
       for (const auto& [tx, t] : tickets) if (tx != r.tx && !t.released && !t.resolved && intersects(t.writes, r.writes)) blocked = true;
       if (blocked) { still.push_back(id); earlier.insert(earlier.end(), r.writes.begin(), r.writes.end()); }
       else { tickets[r.tx] = Ticket{r.writes, {}, {}, false, false}; replies[id] = Response{r, {}, {}}; }
@@ -340,6 +340,7 @@ struct Fold {
 struct ActorOptions {
   Time retry_ns, checker_delay_ns;
   Negative negative;
+  QueuePolicy queue_policy;
 };
 
 struct Witness final : Actor {
@@ -440,7 +441,7 @@ struct Consumer final : Actor {
   std::map<std::uint64_t, Buffer> metadata;
   std::uint64_t applied{};
   bool writing{}, running{};
-  Consumer(std::uint32_t s, std::uint32_t c, ActorOptions cfg) : shard(s), copy(c), config(std::move(cfg)), records(config.retry_ns), fold(s, config.negative == Negative::skip_pending) {}
+  Consumer(std::uint32_t s, std::uint32_t c, ActorOptions cfg) : shard(s), copy(c), config(std::move(cfg)), records(config.retry_ns), fold(s, config.negative == Negative::skip_pending, config.queue_policy) {}
   void fetch(Context& ctx) {
     auto index = epochs.empty() ? 1 : epochs.rbegin()->first + 1; Encoder e; e.number(index);
     send(ctx, leader(shard), Wire::fetch, e.bytes); for (std::uint32_t i = 0; i < 2; ++i) send(ctx, follower(shard, i), Wire::fetch, e.bytes);
@@ -1015,6 +1016,7 @@ std::vector<Transaction> transactions(const Case& c) {
   return out;
 }
 std::string_view name(Incident i) { constexpr std::array names{"none", "one-follower", "quorum-pause", "consumer-reset", "coordinator-reset", "checker-reset"}; return names.at(static_cast<unsigned>(i)); }
+std::string_view name(QueuePolicy p) { constexpr std::array names{"no-overtaking", "eligible-first"}; return names.at(static_cast<unsigned>(p)); }
 std::string_view name(Negative n) { constexpr std::array names{"none", "skip-pending", "skip-verification", "corrupt-checker"}; return names.at(static_cast<unsigned>(n)); }
 Experiment::Experiment(std::shared_ptr<State> state) : state_(std::move(state)) {}
 Experiment::~Experiment() = default;
@@ -1022,6 +1024,7 @@ Experiment::Experiment(Experiment&&) noexcept = default;
 Experiment& Experiment::operator=(Experiment&&) noexcept = default;
 
 Experiment assemble(Simulation& simulation, const Case& config, std::ostream* trace) {
+  require(config.queue_policy == QueuePolicy::no_overtaking || config.queue_policy == QueuePolicy::eligible_first, "unknown reservation queue policy");
   require(config.retry_ns > 0 && config.until_ns > 0, "positive retry and observation horizon required");
   auto ids = roles(); auto state = std::make_shared<Experiment::State>(config);
   std::set<ActorId> valid(ids.begin(), ids.end());
@@ -1058,7 +1061,7 @@ Experiment assemble(Simulation& simulation, const Case& config, std::ostream* tr
   for (const auto& [id, host] : hosts) { simulation.add_host(host); state->hosts.push_back(id); }
   for (const auto& link : links) simulation.add_link(link);
   for (auto id : ids) simulation.add_process(id, state->placement.at(id));
-  const ActorOptions options{config.retry_ns, config.checker_delay_ns, config.negative};
+  const ActorOptions options{config.retry_ns, config.checker_delay_ns, config.negative, config.queue_policy};
   simulation.add_actor(client, client, [options] { return std::make_unique<Client>(options); });
   for (std::uint32_t s = 0; s < 2; ++s) {
     simulation.add_actor(coordinator(s), coordinator(s), [options] { return std::make_unique<Coordinator>(options); });

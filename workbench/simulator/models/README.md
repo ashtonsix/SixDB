@@ -24,6 +24,14 @@ and wait for overlapping unresolved predecessors. A durable outcome resolves
 all declared outputs, including no-change/abort outcomes, before client success
 or failure. A two-shard transfer exercises this composition.
 
+The default reservation policy preserves the brief's no-overtaking rule.
+`QueuePolicy::eligible_first` is an explicit counterfactual: an earlier blocked
+waiter no longer excludes otherwise eligible writers. Live reservations still
+exclude conflicting grants, and all other transaction rules remain the same.
+The policy is fixed for the complete run, including recovery. The
+[ordering experiment](../experiments/README.md) tests both its locality benefit
+and its loss of broad-writer progress; it is not a change to the brief.
+
 The integer-cell application owns read/write declarations, its canonical value
 bytes and the meaning of put, sum and transfer. The ordering fold treats scopes
 and effect bytes as opaque. This small fixture is not an Engine plan format.
@@ -87,3 +95,10 @@ offers finish. Fault receipts mean the action actually ran. A fault scheduled at
 durable write's timestamp precedes its callback under FIFO ordering; seeded ties
 may deliver that callback first. Exact write-before-callback recovery is tested
 under FIFO, while seeded cases explore both tie orders.
+
+The separate [retention-pressure model](retention_pressure.hpp) composes an old
+reader, replay consumer, overwrite stream and small independent writer. Its
+serialized root authority reconstructs actual bytes through the runtime's ports;
+independent receipt checks guard reclamation and terminal results. The
+[experiment guide](../experiments/README.md#old-readers-replay-and-reclamation-under-pressure)
+owns the matched cases, negative controls and limits of this fixture.

@@ -1,0 +1,40 @@
+{
+  "commands": [
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "regional",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "config": {
+    "investigations": [
+      "regional"
+    ]
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+  ],
+  "files_sha256": {
+    "regional/summary.json": "a05c5745f64e58ba52e1357e8cc4a72fb8ad5005b8f9850de1221d3c243c4138"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {},
+  "platform": "Linux-7.0.14-orbstack-00380-ga7e0a2dc9535-aarch64-with-glibc2.42",
+  "regenerate": [],
+  "source_archive_sha256": "db443b393777b96e07885cb1ef23f3fc43de8500f4839bc9c36d7baaa1977ac8",
+  "source_digest": "07850df30c29e29c4c300256c0acff3e1118fa528622deb727c2bf69de3797fb",
+  "source_unchanged": true,
+  "started_utc": "2026-09-27T13:08:32.638104+00:00",
+  "status": "complete"
+}

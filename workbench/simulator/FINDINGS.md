@@ -4,6 +4,8 @@
 resources, two executable model families, independent checks, an interactive
 client, and captured batch experiments. These findings concern simulator
 construction and bounded protocol experiments, not measured SixDB performance.
+The later [composed experiments](experiments/README.md) retain the WAN convoy,
+queue fairness, hosted recovery and competing retention-root comparisons.
 
 ## What closed the initial prototype exercise
 

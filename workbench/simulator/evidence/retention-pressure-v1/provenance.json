@@ -1,0 +1,45 @@
+{
+  "commands": [
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "retention",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "select-retention",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "config": {
+    "investigations": [
+      "retention"
+    ]
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+  ],
+  "files_sha256": {
+    "retention/selected.json": "445a640bca421e889420e8c64ca1a267dd1001dc7ac7b9d56e4643b88732ef18"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {},
+  "platform": "Linux-7.0.14-orbstack-00380-ga7e0a2dc9535-aarch64-with-glibc2.42",
+  "regenerate": [],
+  "source_archive_sha256": "ba0c6aa65764e6225aaa3ddb42f97193813a8ec6e0f84d87cb9bc03ff30019e3",
+  "source_digest": "072e78a5c887fef4dcacd2537ca9379c4fbe7f7e6a65fbdedb043943cb7b5a02",
+  "source_unchanged": true,
+  "started_utc": "2026-09-27T13:24:41.438945+00:00",
+  "status": "complete"
+}

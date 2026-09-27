@@ -37,6 +37,9 @@ inline constexpr ActorId checker(std::uint32_t copy) { return 60 + copy; }
 inline constexpr Scope cell(std::uint32_t shard, std::uint32_t key) { return shard * 1000 + key; }
 
 enum class Incident { none, one_follower, quorum_pause, consumer_reset, coordinator_reset, checker_reset };
+/// eligible_first is a counterfactual: younger eligible reservations may pass a
+/// blocked overlapping waiter. It gives up the brief's no-overtaking guarantee.
+enum class QueuePolicy { no_overtaking, eligible_first };
 enum class Negative { none, skip_pending, skip_verification, corrupt_checker };
 struct Case {
   std::string name{"checked-old-cut"};
@@ -48,6 +51,7 @@ struct Case {
   std::uint64_t max_events{1'000'000};
   Incident incident{Incident::none};
   Negative negative{Negative::none};
+  QueuePolicy queue_policy{QueuePolicy::no_overtaking};
   /// Empty selects the common checked-transform plus continuing-writes fixture.
   std::vector<Transaction> transactions;
   /// Omitted roles each get their own host/process. Placement changes real
@@ -82,6 +86,7 @@ std::vector<Transaction> transactions(const Case&);
 std::vector<ActorId> roles();
 std::string_view name(Incident);
 std::string_view name(Negative);
+std::string_view name(QueuePolicy);
 
 /// Installs the actors, physical composition, authored arrivals, observers and
 /// selected incident. The caller owns start/run/staged faults and replay.

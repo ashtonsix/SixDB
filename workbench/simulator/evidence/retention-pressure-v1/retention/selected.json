@@ -1,0 +1,1075 @@
+{
+  "format": 1,
+  "suite": "retention",
+  "trials": [
+    {
+      "case": {
+        "memory": 4096,
+        "storage": 8192,
+        "seed": 1,
+        "incident": "none"
+      },
+      "result": {
+        "cohorts": {
+          "independent": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "old-reader": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "replay": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "source": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          }
+        },
+        "violations": [],
+        "missing_incidents": [],
+        "execution": {
+          "events": 5699,
+          "budget_exhausted": false,
+          "pending": false
+        },
+        "reconstruction_refusals": 10,
+        "independent_during_pressure": 7,
+        "reclaimed_bytes": 8712,
+        "source_restarts": 2,
+        "memory_peak": 4044,
+        "durable_bytes": 338,
+        "pressure_released": true,
+        "reader_root_released": true,
+        "replay_root_advanced": true,
+        "current_recovered_after_gc": true,
+        "trace_hash": 14260843798543101347
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/retention-pressure-v1/retention/cases/0"
+    },
+    {
+      "case": {
+        "memory": 4096,
+        "storage": 8192,
+        "seed": 1,
+        "incident": "checkpoint-reset"
+      },
+      "result": {
+        "cohorts": {
+          "independent": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "old-reader": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "replay": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "source": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          }
+        },
+        "violations": [],
+        "missing_incidents": [],
+        "execution": {
+          "events": 5672,
+          "budget_exhausted": false,
+          "pending": false
+        },
+        "reconstruction_refusals": 10,
+        "independent_during_pressure": 7,
+        "reclaimed_bytes": 8712,
+        "source_restarts": 2,
+        "memory_peak": 4054,
+        "durable_bytes": 338,
+        "pressure_released": true,
+        "reader_root_released": true,
+        "replay_root_advanced": true,
+        "current_recovered_after_gc": true,
+        "trace_hash": 1982659166377319429
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/retention-pressure-v1/retention/cases/1"
+    },
+    {
+      "case": {
+        "memory": 4096,
+        "storage": 8192,
+        "seed": 1,
+        "incident": "cursor-reset"
+      },
+      "result": {
+        "cohorts": {
+          "independent": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "old-reader": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "replay": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "source": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          }
+        },
+        "violations": [],
+        "missing_incidents": [],
+        "execution": {
+          "events": 4820,
+          "budget_exhausted": false,
+          "pending": false
+        },
+        "reconstruction_refusals": 10,
+        "independent_during_pressure": 7,
+        "reclaimed_bytes": 8712,
+        "source_restarts": 2,
+        "memory_peak": 4044,
+        "durable_bytes": 338,
+        "pressure_released": true,
+        "reader_root_released": true,
+        "replay_root_advanced": true,
+        "current_recovered_after_gc": true,
+        "trace_hash": 3829633547667747529
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/retention-pressure-v1/retention/cases/2"
+    },
+    {
+      "case": {
+        "memory": 4096,
+        "storage": 8192,
+        "seed": 7,
+        "incident": "none"
+      },
+      "result": {
+        "cohorts": {
+          "independent": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "old-reader": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "replay": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "source": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          }
+        },
+        "violations": [],
+        "missing_incidents": [],
+        "execution": {
+          "events": 5699,
+          "budget_exhausted": false,
+          "pending": false
+        },
+        "reconstruction_refusals": 10,
+        "independent_during_pressure": 7,
+        "reclaimed_bytes": 8712,
+        "source_restarts": 2,
+        "memory_peak": 4044,
+        "durable_bytes": 338,
+        "pressure_released": true,
+        "reader_root_released": true,
+        "replay_root_advanced": true,
+        "current_recovered_after_gc": true,
+        "trace_hash": 7692209192128085031
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/retention-pressure-v1/retention/cases/3"
+    },
+    {
+      "case": {
+        "memory": 4096,
+        "storage": 8192,
+        "seed": 7,
+        "incident": "checkpoint-reset"
+      },
+      "result": {
+        "cohorts": {
+          "independent": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "old-reader": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "replay": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "source": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          }
+        },
+        "violations": [],
+        "missing_incidents": [],
+        "execution": {
+          "events": 5672,
+          "budget_exhausted": false,
+          "pending": false
+        },
+        "reconstruction_refusals": 10,
+        "independent_during_pressure": 7,
+        "reclaimed_bytes": 8712,
+        "source_restarts": 2,
+        "memory_peak": 4054,
+        "durable_bytes": 338,
+        "pressure_released": true,
+        "reader_root_released": true,
+        "replay_root_advanced": true,
+        "current_recovered_after_gc": true,
+        "trace_hash": 14539900710103298612
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/retention-pressure-v1/retention/cases/4"
+    },
+    {
+      "case": {
+        "memory": 4096,
+        "storage": 8192,
+        "seed": 7,
+        "incident": "cursor-reset"
+      },
+      "result": {
+        "cohorts": {
+          "independent": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "old-reader": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "replay": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "source": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          }
+        },
+        "violations": [],
+        "missing_incidents": [],
+        "execution": {
+          "events": 4820,
+          "budget_exhausted": false,
+          "pending": false
+        },
+        "reconstruction_refusals": 10,
+        "independent_during_pressure": 7,
+        "reclaimed_bytes": 8712,
+        "source_restarts": 2,
+        "memory_peak": 4044,
+        "durable_bytes": 338,
+        "pressure_released": true,
+        "reader_root_released": true,
+        "replay_root_advanced": true,
+        "current_recovered_after_gc": true,
+        "trace_hash": 8206555432237592930
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/retention-pressure-v1/retention/cases/5"
+    },
+    {
+      "case": {
+        "memory": 4096,
+        "storage": 8192,
+        "seed": 19,
+        "incident": "none"
+      },
+      "result": {
+        "cohorts": {
+          "independent": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "old-reader": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "replay": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "source": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          }
+        },
+        "violations": [],
+        "missing_incidents": [],
+        "execution": {
+          "events": 5691,
+          "budget_exhausted": false,
+          "pending": false
+        },
+        "reconstruction_refusals": 10,
+        "independent_during_pressure": 7,
+        "reclaimed_bytes": 8712,
+        "source_restarts": 2,
+        "memory_peak": 4044,
+        "durable_bytes": 338,
+        "pressure_released": true,
+        "reader_root_released": true,
+        "replay_root_advanced": true,
+        "current_recovered_after_gc": true,
+        "trace_hash": 836604823889098314
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/retention-pressure-v1/retention/cases/6"
+    },
+    {
+      "case": {
+        "memory": 4096,
+        "storage": 8192,
+        "seed": 19,
+        "incident": "checkpoint-reset"
+      },
+      "result": {
+        "cohorts": {
+          "independent": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "old-reader": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "replay": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "source": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          }
+        },
+        "violations": [],
+        "missing_incidents": [],
+        "execution": {
+          "events": 5614,
+          "budget_exhausted": false,
+          "pending": false
+        },
+        "reconstruction_refusals": 10,
+        "independent_during_pressure": 6,
+        "reclaimed_bytes": 8712,
+        "source_restarts": 2,
+        "memory_peak": 4025,
+        "durable_bytes": 338,
+        "pressure_released": true,
+        "reader_root_released": true,
+        "replay_root_advanced": true,
+        "current_recovered_after_gc": true,
+        "trace_hash": 8992590043724164482
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/retention-pressure-v1/retention/cases/7"
+    },
+    {
+      "case": {
+        "memory": 4096,
+        "storage": 8192,
+        "seed": 19,
+        "incident": "cursor-reset"
+      },
+      "result": {
+        "cohorts": {
+          "independent": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "old-reader": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "replay": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "source": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          }
+        },
+        "violations": [],
+        "missing_incidents": [],
+        "execution": {
+          "events": 4812,
+          "budget_exhausted": false,
+          "pending": false
+        },
+        "reconstruction_refusals": 10,
+        "independent_during_pressure": 7,
+        "reclaimed_bytes": 8712,
+        "source_restarts": 2,
+        "memory_peak": 4044,
+        "durable_bytes": 338,
+        "pressure_released": true,
+        "reader_root_released": true,
+        "replay_root_advanced": true,
+        "current_recovered_after_gc": true,
+        "trace_hash": 3570682898289527873
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/retention-pressure-v1/retention/cases/8"
+    },
+    {
+      "case": {
+        "memory": 8192,
+        "storage": 16384,
+        "seed": 1,
+        "incident": "none"
+      },
+      "result": {
+        "cohorts": {
+          "independent": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "old-reader": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "replay": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "source": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          }
+        },
+        "violations": [],
+        "missing_incidents": [],
+        "execution": {
+          "events": 5699,
+          "budget_exhausted": false,
+          "pending": false
+        },
+        "reconstruction_refusals": 10,
+        "independent_during_pressure": 7,
+        "reclaimed_bytes": 8712,
+        "source_restarts": 2,
+        "memory_peak": 8140,
+        "durable_bytes": 338,
+        "pressure_released": true,
+        "reader_root_released": true,
+        "replay_root_advanced": true,
+        "current_recovered_after_gc": true,
+        "trace_hash": 5841410682306899574
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/retention-pressure-v1/retention/cases/9"
+    },
+    {
+      "case": {
+        "memory": 8192,
+        "storage": 16384,
+        "seed": 1,
+        "incident": "checkpoint-reset"
+      },
+      "result": {
+        "cohorts": {
+          "independent": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "old-reader": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "replay": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "source": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          }
+        },
+        "violations": [],
+        "missing_incidents": [],
+        "execution": {
+          "events": 5672,
+          "budget_exhausted": false,
+          "pending": false
+        },
+        "reconstruction_refusals": 10,
+        "independent_during_pressure": 7,
+        "reclaimed_bytes": 8712,
+        "source_restarts": 2,
+        "memory_peak": 8150,
+        "durable_bytes": 338,
+        "pressure_released": true,
+        "reader_root_released": true,
+        "replay_root_advanced": true,
+        "current_recovered_after_gc": true,
+        "trace_hash": 7750730193895899337
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/retention-pressure-v1/retention/cases/10"
+    },
+    {
+      "case": {
+        "memory": 8192,
+        "storage": 16384,
+        "seed": 1,
+        "incident": "cursor-reset"
+      },
+      "result": {
+        "cohorts": {
+          "independent": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "old-reader": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "replay": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "source": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          }
+        },
+        "violations": [],
+        "missing_incidents": [],
+        "execution": {
+          "events": 4820,
+          "budget_exhausted": false,
+          "pending": false
+        },
+        "reconstruction_refusals": 10,
+        "independent_during_pressure": 7,
+        "reclaimed_bytes": 8712,
+        "source_restarts": 2,
+        "memory_peak": 8140,
+        "durable_bytes": 338,
+        "pressure_released": true,
+        "reader_root_released": true,
+        "replay_root_advanced": true,
+        "current_recovered_after_gc": true,
+        "trace_hash": 15584158238499793120
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/retention-pressure-v1/retention/cases/11"
+    },
+    {
+      "case": {
+        "memory": 8192,
+        "storage": 16384,
+        "seed": 7,
+        "incident": "none"
+      },
+      "result": {
+        "cohorts": {
+          "independent": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "old-reader": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "replay": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "source": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          }
+        },
+        "violations": [],
+        "missing_incidents": [],
+        "execution": {
+          "events": 5699,
+          "budget_exhausted": false,
+          "pending": false
+        },
+        "reconstruction_refusals": 10,
+        "independent_during_pressure": 7,
+        "reclaimed_bytes": 8712,
+        "source_restarts": 2,
+        "memory_peak": 8140,
+        "durable_bytes": 338,
+        "pressure_released": true,
+        "reader_root_released": true,
+        "replay_root_advanced": true,
+        "current_recovered_after_gc": true,
+        "trace_hash": 2557751247062708493
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/retention-pressure-v1/retention/cases/12"
+    },
+    {
+      "case": {
+        "memory": 8192,
+        "storage": 16384,
+        "seed": 7,
+        "incident": "checkpoint-reset"
+      },
+      "result": {
+        "cohorts": {
+          "independent": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "old-reader": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "replay": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "source": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          }
+        },
+        "violations": [],
+        "missing_incidents": [],
+        "execution": {
+          "events": 5672,
+          "budget_exhausted": false,
+          "pending": false
+        },
+        "reconstruction_refusals": 10,
+        "independent_during_pressure": 7,
+        "reclaimed_bytes": 8712,
+        "source_restarts": 2,
+        "memory_peak": 8150,
+        "durable_bytes": 338,
+        "pressure_released": true,
+        "reader_root_released": true,
+        "replay_root_advanced": true,
+        "current_recovered_after_gc": true,
+        "trace_hash": 556133776125076004
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/retention-pressure-v1/retention/cases/13"
+    },
+    {
+      "case": {
+        "memory": 8192,
+        "storage": 16384,
+        "seed": 7,
+        "incident": "cursor-reset"
+      },
+      "result": {
+        "cohorts": {
+          "independent": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "old-reader": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "replay": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "source": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          }
+        },
+        "violations": [],
+        "missing_incidents": [],
+        "execution": {
+          "events": 4820,
+          "budget_exhausted": false,
+          "pending": false
+        },
+        "reconstruction_refusals": 10,
+        "independent_during_pressure": 7,
+        "reclaimed_bytes": 8712,
+        "source_restarts": 2,
+        "memory_peak": 8140,
+        "durable_bytes": 338,
+        "pressure_released": true,
+        "reader_root_released": true,
+        "replay_root_advanced": true,
+        "current_recovered_after_gc": true,
+        "trace_hash": 18255351925644571685
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/retention-pressure-v1/retention/cases/14"
+    },
+    {
+      "case": {
+        "memory": 8192,
+        "storage": 16384,
+        "seed": 19,
+        "incident": "none"
+      },
+      "result": {
+        "cohorts": {
+          "independent": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "old-reader": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "replay": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "source": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          }
+        },
+        "violations": [],
+        "missing_incidents": [],
+        "execution": {
+          "events": 5691,
+          "budget_exhausted": false,
+          "pending": false
+        },
+        "reconstruction_refusals": 10,
+        "independent_during_pressure": 7,
+        "reclaimed_bytes": 8712,
+        "source_restarts": 2,
+        "memory_peak": 8140,
+        "durable_bytes": 338,
+        "pressure_released": true,
+        "reader_root_released": true,
+        "replay_root_advanced": true,
+        "current_recovered_after_gc": true,
+        "trace_hash": 7346381351609088124
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/retention-pressure-v1/retention/cases/15"
+    },
+    {
+      "case": {
+        "memory": 8192,
+        "storage": 16384,
+        "seed": 19,
+        "incident": "checkpoint-reset"
+      },
+      "result": {
+        "cohorts": {
+          "independent": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "old-reader": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "replay": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "source": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          }
+        },
+        "violations": [],
+        "missing_incidents": [],
+        "execution": {
+          "events": 5614,
+          "budget_exhausted": false,
+          "pending": false
+        },
+        "reconstruction_refusals": 10,
+        "independent_during_pressure": 6,
+        "reclaimed_bytes": 8712,
+        "source_restarts": 2,
+        "memory_peak": 8121,
+        "durable_bytes": 338,
+        "pressure_released": true,
+        "reader_root_released": true,
+        "replay_root_advanced": true,
+        "current_recovered_after_gc": true,
+        "trace_hash": 3439908357440252968
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/retention-pressure-v1/retention/cases/16"
+    },
+    {
+      "case": {
+        "memory": 8192,
+        "storage": 16384,
+        "seed": 19,
+        "incident": "cursor-reset"
+      },
+      "result": {
+        "cohorts": {
+          "independent": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "old-reader": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "replay": {
+            "offered": 1,
+            "arrived": 1,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0
+          },
+          "source": {
+            "offered": 24,
+            "arrived": 24,
+            "completed": 24,
+            "failed": 0,
+            "unfinished": 0
+          }
+        },
+        "violations": [],
+        "missing_incidents": [],
+        "execution": {
+          "events": 4812,
+          "budget_exhausted": false,
+          "pending": false
+        },
+        "reconstruction_refusals": 10,
+        "independent_during_pressure": 7,
+        "reclaimed_bytes": 8712,
+        "source_restarts": 2,
+        "memory_peak": 8140,
+        "durable_bytes": 338,
+        "pressure_released": true,
+        "reader_root_released": true,
+        "replay_root_advanced": true,
+        "current_recovered_after_gc": true,
+        "trace_hash": 518498717371794356
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/retention-pressure-v1/retention/cases/17"
+    }
+  ],
+  "errors": [],
+  "units": "authored modeled nanoseconds and bytes; no production calibration",
+  "selection": {
+    "input_sha256": "bab1c3c915d01b4d50044449e177f860fa6db610dc3a47ececb8bd14ac7c912b",
+    "selector_sha256": "7e42f2961df2143c01c487190674d05cd3164b91115840e0354b752525d100b1",
+    "rule": "Keep every trial, parameter, cohort, failure and execution status. For ordering cases, keep per-cohort phase maxima, initial holders/broad waiter/WAN/first local wave and slowest completed member of each cohort; archive all other per-transaction rows."
+  }
+}

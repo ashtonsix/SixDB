@@ -1,0 +1,5975 @@
+{
+  "format": 1,
+  "suite": "hosted",
+  "trials": [
+    {
+      "case": {
+        "seed": 1,
+        "mode": "none",
+        "memory": 16384
+      },
+      "result": {
+        "name": "hosted-recovery-none",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 0,
+            "failed": 0,
+            "unfinished": 1,
+            "max_latency_ns": 0
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 0,
+            "failed": 0,
+            "unfinished": 1,
+            "max_latency_ns": 0
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542020
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "2": 636905,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043258,
+          "6": 657142,
+          "7": 872028,
+          "8": 1070196,
+          "9": 1162020
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 0,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 0
+        },
+        "wire_bytes": 259131,
+        "durable_bytes": 61628,
+        "memory_peak": 508053,
+        "records": 38243,
+        "trace_hash": 9312160508668845482,
+        "accepted": 10,
+        "admitted_unfinished": 2,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 16967,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "none",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 16384,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7588,
+            "cause": 7587,
+            "time": 646285,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": false,
+          "action_at_ns": 646285,
+          "return_at_ns": 5646285,
+          "returned": true,
+          "selected_callback_delivered": true,
+          "memory_before_action": 9359,
+          "memory_after_action": 9359,
+          "host_memory_peak": 16347,
+          "host_memory_final": 16182,
+          "host_refused": 177,
+          "host_dropped": 192,
+          "incarnations": {
+            "41": 1,
+            "61": 1
+          },
+          "actions": [],
+          "first_recovered_source_read_ns": null,
+          "first_source_read_ns": 2522821,
+          "first_required_checker_report_ns": null,
+          "before_return": {
+            "observed_until_ns": 5646284,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/0"
+    },
+    {
+      "case": {
+        "seed": 1,
+        "mode": "none",
+        "memory": 24576
+      },
+      "result": {
+        "name": "hosted-recovery-none",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 2765772
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 2144631
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542020
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "1": 2865772,
+          "2": 636905,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043258,
+          "6": 657142,
+          "7": 872028,
+          "8": 1070196,
+          "9": 1162020,
+          "10": 2894631
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 405,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 1
+        },
+        "wire_bytes": 242309,
+        "durable_bytes": 69194,
+        "memory_peak": 523958,
+        "records": 37926,
+        "trace_hash": 5804283078690767994,
+        "accepted": 10,
+        "admitted_unfinished": 0,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 16877,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "none",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 24576,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7588,
+            "cause": 7587,
+            "time": 646285,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": false,
+          "action_at_ns": 646285,
+          "return_at_ns": 5646285,
+          "returned": true,
+          "selected_callback_delivered": true,
+          "memory_before_action": 9359,
+          "memory_after_action": 9359,
+          "host_memory_peak": 24555,
+          "host_memory_final": 24140,
+          "host_refused": 53,
+          "host_dropped": 94,
+          "incarnations": {
+            "41": 1,
+            "61": 1
+          },
+          "actions": [],
+          "first_recovered_source_read_ns": null,
+          "first_source_read_ns": 2522821,
+          "first_required_checker_report_ns": 2531428,
+          "before_return": {
+            "observed_until_ns": 5646284,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 1,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 1,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/1"
+    },
+    {
+      "case": {
+        "seed": 1,
+        "mode": "none",
+        "memory": 65536
+      },
+      "result": {
+        "name": "hosted-recovery-none",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 2763532
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 2142391
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542020
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "1": 2863532,
+          "2": 636905,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043258,
+          "6": 657142,
+          "7": 872028,
+          "8": 1070196,
+          "9": 1162020,
+          "10": 2892391
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 405,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 1
+        },
+        "wire_bytes": 217769,
+        "durable_bytes": 69929,
+        "memory_peak": 526915,
+        "records": 35518,
+        "trace_hash": 10669204137815000646,
+        "accepted": 10,
+        "admitted_unfinished": 0,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 15861,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "none",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 65536,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7588,
+            "cause": 7587,
+            "time": 646285,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": false,
+          "action_at_ns": 646285,
+          "return_at_ns": 5646285,
+          "returned": true,
+          "selected_callback_delivered": true,
+          "memory_before_action": 9359,
+          "memory_after_action": 9359,
+          "host_memory_peak": 27512,
+          "host_memory_final": 26681,
+          "host_refused": 0,
+          "host_dropped": 0,
+          "incarnations": {
+            "41": 1,
+            "61": 1
+          },
+          "actions": [],
+          "first_recovered_source_read_ns": null,
+          "first_source_read_ns": 2522821,
+          "first_required_checker_report_ns": 2529188,
+          "before_return": {
+            "observed_until_ns": 5646284,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 1,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 1,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/2"
+    },
+    {
+      "case": {
+        "seed": 1,
+        "mode": "process",
+        "memory": 16384
+      },
+      "result": {
+        "name": "hosted-recovery-process",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 0,
+            "failed": 0,
+            "unfinished": 1,
+            "max_latency_ns": 0
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 0,
+            "failed": 0,
+            "unfinished": 1,
+            "max_latency_ns": 0
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542020
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary",
+          "hosted-process"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "2": 636905,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043258,
+          "6": 657142,
+          "7": 872028,
+          "8": 1070196,
+          "9": 1162020
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 0,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 0
+        },
+        "wire_bytes": 265303,
+        "durable_bytes": 59474,
+        "memory_peak": 467930,
+        "records": 35490,
+        "trace_hash": 17775616763993846885,
+        "accepted": 10,
+        "admitted_unfinished": 2,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 15664,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "process",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 16384,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7588,
+            "cause": 7587,
+            "time": 646285,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": true,
+          "action_at_ns": 646285,
+          "return_at_ns": 5646285,
+          "returned": true,
+          "selected_callback_delivered": false,
+          "memory_before_action": 9359,
+          "memory_after_action": 2703,
+          "host_memory_peak": 12336,
+          "host_memory_final": 4245,
+          "host_refused": 35,
+          "host_dropped": 0,
+          "incarnations": {
+            "41": 2,
+            "61": 1
+          },
+          "actions": [
+            {
+              "id": 7591,
+              "cause": 0,
+              "time": 646285,
+              "kind": "process.crash",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 21629,
+              "cause": 21628,
+              "time": 5646285,
+              "kind": "process.restart",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            }
+          ],
+          "first_recovered_source_read_ns": null,
+          "first_source_read_ns": null,
+          "first_required_checker_report_ns": null,
+          "before_return": {
+            "observed_until_ns": 5646284,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/3"
+    },
+    {
+      "case": {
+        "seed": 1,
+        "mode": "process",
+        "memory": 24576
+      },
+      "result": {
+        "name": "hosted-recovery-process",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 12274007
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 11652866
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542020
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary",
+          "hosted-process"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "1": 12374007,
+          "2": 636905,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043258,
+          "6": 657142,
+          "7": 872028,
+          "8": 1070196,
+          "9": 1162020,
+          "10": 12402866
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 405,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 1
+        },
+        "wire_bytes": 255804,
+        "durable_bytes": 68752,
+        "memory_peak": 492160,
+        "records": 38380,
+        "trace_hash": 8056406798547711290,
+        "accepted": 10,
+        "admitted_unfinished": 0,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 17038,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "process",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 24576,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7588,
+            "cause": 7587,
+            "time": 646285,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": true,
+          "action_at_ns": 646285,
+          "return_at_ns": 5646285,
+          "returned": true,
+          "selected_callback_delivered": false,
+          "memory_before_action": 9359,
+          "memory_after_action": 2703,
+          "host_memory_peak": 24529,
+          "host_memory_final": 23842,
+          "host_refused": 57,
+          "host_dropped": 1,
+          "incarnations": {
+            "41": 2,
+            "61": 1
+          },
+          "actions": [
+            {
+              "id": 7591,
+              "cause": 0,
+              "time": 646285,
+              "kind": "process.crash",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 21629,
+              "cause": 21628,
+              "time": 5646285,
+              "kind": "process.restart",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            }
+          ],
+          "first_recovered_source_read_ns": 12033296,
+          "first_source_read_ns": 12033296,
+          "first_required_checker_report_ns": 12039663,
+          "before_return": {
+            "observed_until_ns": 5646284,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/4"
+    },
+    {
+      "case": {
+        "seed": 1,
+        "mode": "process",
+        "memory": 65536
+      },
+      "result": {
+        "name": "hosted-recovery-process",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 6274007
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 5652866
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542020
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary",
+          "hosted-process"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "1": 6374007,
+          "2": 636905,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043258,
+          "6": 657142,
+          "7": 872028,
+          "8": 1070196,
+          "9": 1162020,
+          "10": 6402866
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 405,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 1
+        },
+        "wire_bytes": 235818,
+        "durable_bytes": 69929,
+        "memory_peak": 505736,
+        "records": 37068,
+        "trace_hash": 16724302353653109598,
+        "accepted": 10,
+        "admitted_unfinished": 0,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 16506,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "process",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 65536,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7588,
+            "cause": 7587,
+            "time": 646285,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": true,
+          "action_at_ns": 646285,
+          "return_at_ns": 5646285,
+          "returned": true,
+          "selected_callback_delivered": false,
+          "memory_before_action": 9359,
+          "memory_after_action": 2703,
+          "host_memory_peak": 37993,
+          "host_memory_final": 26681,
+          "host_refused": 0,
+          "host_dropped": 0,
+          "incarnations": {
+            "41": 2,
+            "61": 1
+          },
+          "actions": [
+            {
+              "id": 7591,
+              "cause": 0,
+              "time": 646285,
+              "kind": "process.crash",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 21629,
+              "cause": 21628,
+              "time": 5646285,
+              "kind": "process.restart",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            }
+          ],
+          "first_recovered_source_read_ns": 6033296,
+          "first_source_read_ns": 6033296,
+          "first_required_checker_report_ns": 6039663,
+          "before_return": {
+            "observed_until_ns": 5646284,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/5"
+    },
+    {
+      "case": {
+        "seed": 1,
+        "mode": "host",
+        "memory": 16384
+      },
+      "result": {
+        "name": "hosted-recovery-host",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 0,
+            "failed": 0,
+            "unfinished": 1,
+            "max_latency_ns": 0
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 0,
+            "failed": 0,
+            "unfinished": 1,
+            "max_latency_ns": 0
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542020
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary",
+          "hosted-host"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "2": 636905,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043258,
+          "6": 657142,
+          "7": 872028,
+          "8": 1070196,
+          "9": 1162020
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 0,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 0
+        },
+        "wire_bytes": 258043,
+        "durable_bytes": 59474,
+        "memory_peak": 468138,
+        "records": 35011,
+        "trace_hash": 8280899553327569394,
+        "accepted": 10,
+        "admitted_unfinished": 2,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 15479,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "host",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 16384,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7588,
+            "cause": 7587,
+            "time": 646285,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": true,
+          "action_at_ns": 646285,
+          "return_at_ns": 5646285,
+          "returned": true,
+          "selected_callback_delivered": false,
+          "memory_before_action": 9359,
+          "memory_after_action": 0,
+          "host_memory_peak": 12544,
+          "host_memory_final": 4245,
+          "host_refused": 35,
+          "host_dropped": 2,
+          "incarnations": {
+            "41": 2,
+            "61": 2
+          },
+          "actions": [
+            {
+              "id": 7591,
+              "cause": 0,
+              "time": 646285,
+              "kind": "process.crash",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 7606,
+              "cause": 0,
+              "time": 646285,
+              "kind": "process.crash",
+              "actor": 61,
+              "peer": 0,
+              "process": 61,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 7613,
+              "cause": 0,
+              "time": 646285,
+              "kind": "host.reset",
+              "actor": 0,
+              "peer": 0,
+              "process": 0,
+              "host": 0,
+              "incarnation": 0,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "41",
+              "parents": []
+            },
+            {
+              "id": 21305,
+              "cause": 21304,
+              "time": 5646285,
+              "kind": "process.restart",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 21306,
+              "cause": 21304,
+              "time": 5646285,
+              "kind": "process.restart",
+              "actor": 61,
+              "peer": 0,
+              "process": 61,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            }
+          ],
+          "first_recovered_source_read_ns": null,
+          "first_source_read_ns": null,
+          "first_required_checker_report_ns": null,
+          "before_return": {
+            "observed_until_ns": 5646284,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/6"
+    },
+    {
+      "case": {
+        "seed": 1,
+        "mode": "host",
+        "memory": 24576
+      },
+      "result": {
+        "name": "hosted-recovery-host",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 12558628
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 11937487
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542020
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary",
+          "hosted-host"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "1": 12658628,
+          "2": 636905,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043258,
+          "6": 657142,
+          "7": 872028,
+          "8": 1070196,
+          "9": 1162020,
+          "10": 12687487
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 405,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 1
+        },
+        "wire_bytes": 248251,
+        "durable_bytes": 68752,
+        "memory_peak": 492160,
+        "records": 37888,
+        "trace_hash": 6217925009384617336,
+        "accepted": 10,
+        "admitted_unfinished": 0,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 16847,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "host",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 24576,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7588,
+            "cause": 7587,
+            "time": 646285,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": true,
+          "action_at_ns": 646285,
+          "return_at_ns": 5646285,
+          "returned": true,
+          "selected_callback_delivered": false,
+          "memory_before_action": 9359,
+          "memory_after_action": 0,
+          "host_memory_peak": 24529,
+          "host_memory_final": 23842,
+          "host_refused": 57,
+          "host_dropped": 3,
+          "incarnations": {
+            "41": 2,
+            "61": 2
+          },
+          "actions": [
+            {
+              "id": 7591,
+              "cause": 0,
+              "time": 646285,
+              "kind": "process.crash",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 7606,
+              "cause": 0,
+              "time": 646285,
+              "kind": "process.crash",
+              "actor": 61,
+              "peer": 0,
+              "process": 61,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 7613,
+              "cause": 0,
+              "time": 646285,
+              "kind": "host.reset",
+              "actor": 0,
+              "peer": 0,
+              "process": 0,
+              "host": 0,
+              "incarnation": 0,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "41",
+              "parents": []
+            },
+            {
+              "id": 21305,
+              "cause": 21304,
+              "time": 5646285,
+              "kind": "process.restart",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 21306,
+              "cause": 21304,
+              "time": 5646285,
+              "kind": "process.restart",
+              "actor": 61,
+              "peer": 0,
+              "process": 61,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            }
+          ],
+          "first_recovered_source_read_ns": 12317917,
+          "first_source_read_ns": 12317917,
+          "first_required_checker_report_ns": 12324284,
+          "before_return": {
+            "observed_until_ns": 5646284,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/7"
+    },
+    {
+      "case": {
+        "seed": 1,
+        "mode": "host",
+        "memory": 65536
+      },
+      "result": {
+        "name": "hosted-recovery-host",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 8558628
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 7937487
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542020
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary",
+          "hosted-host"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "1": 8658628,
+          "2": 636905,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043258,
+          "6": 657142,
+          "7": 872028,
+          "8": 1070196,
+          "9": 1162020,
+          "10": 8687487
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 405,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 1
+        },
+        "wire_bytes": 232725,
+        "durable_bytes": 69929,
+        "memory_peak": 505587,
+        "records": 36882,
+        "trace_hash": 13930603846639554186,
+        "accepted": 10,
+        "admitted_unfinished": 0,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 16439,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "host",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 65536,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7588,
+            "cause": 7587,
+            "time": 646285,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": true,
+          "action_at_ns": 646285,
+          "return_at_ns": 5646285,
+          "returned": true,
+          "selected_callback_delivered": false,
+          "memory_before_action": 9359,
+          "memory_after_action": 0,
+          "host_memory_peak": 37844,
+          "host_memory_final": 26681,
+          "host_refused": 0,
+          "host_dropped": 2,
+          "incarnations": {
+            "41": 2,
+            "61": 2
+          },
+          "actions": [
+            {
+              "id": 7591,
+              "cause": 0,
+              "time": 646285,
+              "kind": "process.crash",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 7606,
+              "cause": 0,
+              "time": 646285,
+              "kind": "process.crash",
+              "actor": 61,
+              "peer": 0,
+              "process": 61,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 7613,
+              "cause": 0,
+              "time": 646285,
+              "kind": "host.reset",
+              "actor": 0,
+              "peer": 0,
+              "process": 0,
+              "host": 0,
+              "incarnation": 0,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "41",
+              "parents": []
+            },
+            {
+              "id": 21305,
+              "cause": 21304,
+              "time": 5646285,
+              "kind": "process.restart",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 21306,
+              "cause": 21304,
+              "time": 5646285,
+              "kind": "process.restart",
+              "actor": 61,
+              "peer": 0,
+              "process": 61,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            }
+          ],
+          "first_recovered_source_read_ns": 8317917,
+          "first_source_read_ns": 8317917,
+          "first_required_checker_report_ns": 8324284,
+          "before_return": {
+            "observed_until_ns": 5646284,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/8"
+    },
+    {
+      "case": {
+        "seed": 7,
+        "mode": "none",
+        "memory": 16384
+      },
+      "result": {
+        "name": "hosted-recovery-none",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 0,
+            "failed": 0,
+            "unfinished": 1,
+            "max_latency_ns": 0
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 0,
+            "failed": 0,
+            "unfinished": 1,
+            "max_latency_ns": 0
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542206
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "2": 636714,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043134,
+          "6": 657328,
+          "7": 872214,
+          "8": 1070382,
+          "9": 1162206
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 0,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 0
+        },
+        "wire_bytes": 259131,
+        "durable_bytes": 61628,
+        "memory_peak": 508053,
+        "records": 38243,
+        "trace_hash": 7162220268557110345,
+        "accepted": 10,
+        "admitted_unfinished": 2,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 16967,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "none",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 16384,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7582,
+            "cause": 7581,
+            "time": 646285,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": false,
+          "action_at_ns": 646285,
+          "return_at_ns": 5646285,
+          "returned": true,
+          "selected_callback_delivered": true,
+          "memory_before_action": 9359,
+          "memory_after_action": 9359,
+          "host_memory_peak": 16347,
+          "host_memory_final": 16182,
+          "host_refused": 177,
+          "host_dropped": 192,
+          "incarnations": {
+            "41": 1,
+            "61": 1
+          },
+          "actions": [],
+          "first_recovered_source_read_ns": null,
+          "first_source_read_ns": 2522821,
+          "first_required_checker_report_ns": null,
+          "before_return": {
+            "observed_until_ns": 5646284,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/9"
+    },
+    {
+      "case": {
+        "seed": 7,
+        "mode": "none",
+        "memory": 24576
+      },
+      "result": {
+        "name": "hosted-recovery-none",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 2765772
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 2144631
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542206
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "1": 2865772,
+          "2": 636714,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043134,
+          "6": 657328,
+          "7": 872214,
+          "8": 1070382,
+          "9": 1162206,
+          "10": 2894631
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 405,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 1
+        },
+        "wire_bytes": 242309,
+        "durable_bytes": 69194,
+        "memory_peak": 523958,
+        "records": 37926,
+        "trace_hash": 17517363269529395618,
+        "accepted": 10,
+        "admitted_unfinished": 0,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 16877,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "none",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 24576,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7582,
+            "cause": 7581,
+            "time": 646285,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": false,
+          "action_at_ns": 646285,
+          "return_at_ns": 5646285,
+          "returned": true,
+          "selected_callback_delivered": true,
+          "memory_before_action": 9359,
+          "memory_after_action": 9359,
+          "host_memory_peak": 24555,
+          "host_memory_final": 24140,
+          "host_refused": 53,
+          "host_dropped": 94,
+          "incarnations": {
+            "41": 1,
+            "61": 1
+          },
+          "actions": [],
+          "first_recovered_source_read_ns": null,
+          "first_source_read_ns": 2522821,
+          "first_required_checker_report_ns": 2531428,
+          "before_return": {
+            "observed_until_ns": 5646284,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 1,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 1,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/10"
+    },
+    {
+      "case": {
+        "seed": 7,
+        "mode": "none",
+        "memory": 65536
+      },
+      "result": {
+        "name": "hosted-recovery-none",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 2763532
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 2142391
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542206
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "1": 2863532,
+          "2": 636714,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043134,
+          "6": 657328,
+          "7": 872214,
+          "8": 1070382,
+          "9": 1162206,
+          "10": 2892391
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 405,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 1
+        },
+        "wire_bytes": 217769,
+        "durable_bytes": 69929,
+        "memory_peak": 526915,
+        "records": 35518,
+        "trace_hash": 15529012499882260100,
+        "accepted": 10,
+        "admitted_unfinished": 0,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 15861,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "none",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 65536,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7582,
+            "cause": 7581,
+            "time": 646285,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": false,
+          "action_at_ns": 646285,
+          "return_at_ns": 5646285,
+          "returned": true,
+          "selected_callback_delivered": true,
+          "memory_before_action": 9359,
+          "memory_after_action": 9359,
+          "host_memory_peak": 27512,
+          "host_memory_final": 26681,
+          "host_refused": 0,
+          "host_dropped": 0,
+          "incarnations": {
+            "41": 1,
+            "61": 1
+          },
+          "actions": [],
+          "first_recovered_source_read_ns": null,
+          "first_source_read_ns": 2522821,
+          "first_required_checker_report_ns": 2529188,
+          "before_return": {
+            "observed_until_ns": 5646284,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 1,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 1,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/11"
+    },
+    {
+      "case": {
+        "seed": 7,
+        "mode": "process",
+        "memory": 16384
+      },
+      "result": {
+        "name": "hosted-recovery-process",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 0,
+            "failed": 0,
+            "unfinished": 1,
+            "max_latency_ns": 0
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 0,
+            "failed": 0,
+            "unfinished": 1,
+            "max_latency_ns": 0
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542206
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary",
+          "hosted-process"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "2": 636714,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043134,
+          "6": 657328,
+          "7": 872214,
+          "8": 1070382,
+          "9": 1162206
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 0,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 0
+        },
+        "wire_bytes": 265303,
+        "durable_bytes": 59474,
+        "memory_peak": 467930,
+        "records": 35490,
+        "trace_hash": 18368184662916231566,
+        "accepted": 10,
+        "admitted_unfinished": 2,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 15664,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "process",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 16384,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7582,
+            "cause": 7581,
+            "time": 646285,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": true,
+          "action_at_ns": 646285,
+          "return_at_ns": 5646285,
+          "returned": true,
+          "selected_callback_delivered": false,
+          "memory_before_action": 9359,
+          "memory_after_action": 2703,
+          "host_memory_peak": 12336,
+          "host_memory_final": 4245,
+          "host_refused": 35,
+          "host_dropped": 0,
+          "incarnations": {
+            "41": 2,
+            "61": 1
+          },
+          "actions": [
+            {
+              "id": 7585,
+              "cause": 0,
+              "time": 646285,
+              "kind": "process.crash",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 21629,
+              "cause": 21628,
+              "time": 5646285,
+              "kind": "process.restart",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            }
+          ],
+          "first_recovered_source_read_ns": null,
+          "first_source_read_ns": null,
+          "first_required_checker_report_ns": null,
+          "before_return": {
+            "observed_until_ns": 5646284,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/12"
+    },
+    {
+      "case": {
+        "seed": 7,
+        "mode": "process",
+        "memory": 24576
+      },
+      "result": {
+        "name": "hosted-recovery-process",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 12274007
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 11652866
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542206
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary",
+          "hosted-process"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "1": 12374007,
+          "2": 636714,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043134,
+          "6": 657328,
+          "7": 872214,
+          "8": 1070382,
+          "9": 1162206,
+          "10": 12402866
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 405,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 1
+        },
+        "wire_bytes": 255804,
+        "durable_bytes": 68752,
+        "memory_peak": 492160,
+        "records": 38380,
+        "trace_hash": 7062200448791660643,
+        "accepted": 10,
+        "admitted_unfinished": 0,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 17038,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "process",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 24576,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7582,
+            "cause": 7581,
+            "time": 646285,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": true,
+          "action_at_ns": 646285,
+          "return_at_ns": 5646285,
+          "returned": true,
+          "selected_callback_delivered": false,
+          "memory_before_action": 9359,
+          "memory_after_action": 2703,
+          "host_memory_peak": 24529,
+          "host_memory_final": 23842,
+          "host_refused": 57,
+          "host_dropped": 1,
+          "incarnations": {
+            "41": 2,
+            "61": 1
+          },
+          "actions": [
+            {
+              "id": 7585,
+              "cause": 0,
+              "time": 646285,
+              "kind": "process.crash",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 21629,
+              "cause": 21628,
+              "time": 5646285,
+              "kind": "process.restart",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            }
+          ],
+          "first_recovered_source_read_ns": 12033296,
+          "first_source_read_ns": 12033296,
+          "first_required_checker_report_ns": 12039663,
+          "before_return": {
+            "observed_until_ns": 5646284,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/13"
+    },
+    {
+      "case": {
+        "seed": 7,
+        "mode": "process",
+        "memory": 65536
+      },
+      "result": {
+        "name": "hosted-recovery-process",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 6274007
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 5652866
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542206
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary",
+          "hosted-process"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "1": 6374007,
+          "2": 636714,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043134,
+          "6": 657328,
+          "7": 872214,
+          "8": 1070382,
+          "9": 1162206,
+          "10": 6402866
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 405,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 1
+        },
+        "wire_bytes": 235818,
+        "durable_bytes": 69929,
+        "memory_peak": 505736,
+        "records": 37068,
+        "trace_hash": 7193995271328999997,
+        "accepted": 10,
+        "admitted_unfinished": 0,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 16506,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "process",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 65536,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7582,
+            "cause": 7581,
+            "time": 646285,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": true,
+          "action_at_ns": 646285,
+          "return_at_ns": 5646285,
+          "returned": true,
+          "selected_callback_delivered": false,
+          "memory_before_action": 9359,
+          "memory_after_action": 2703,
+          "host_memory_peak": 37993,
+          "host_memory_final": 26681,
+          "host_refused": 0,
+          "host_dropped": 0,
+          "incarnations": {
+            "41": 2,
+            "61": 1
+          },
+          "actions": [
+            {
+              "id": 7585,
+              "cause": 0,
+              "time": 646285,
+              "kind": "process.crash",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 21629,
+              "cause": 21628,
+              "time": 5646285,
+              "kind": "process.restart",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            }
+          ],
+          "first_recovered_source_read_ns": 6033296,
+          "first_source_read_ns": 6033296,
+          "first_required_checker_report_ns": 6039663,
+          "before_return": {
+            "observed_until_ns": 5646284,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/14"
+    },
+    {
+      "case": {
+        "seed": 7,
+        "mode": "host",
+        "memory": 16384
+      },
+      "result": {
+        "name": "hosted-recovery-host",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 0,
+            "failed": 0,
+            "unfinished": 1,
+            "max_latency_ns": 0
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 0,
+            "failed": 0,
+            "unfinished": 1,
+            "max_latency_ns": 0
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542206
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary",
+          "hosted-host"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "2": 636714,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043134,
+          "6": 657328,
+          "7": 872214,
+          "8": 1070382,
+          "9": 1162206
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 0,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 0
+        },
+        "wire_bytes": 258043,
+        "durable_bytes": 59474,
+        "memory_peak": 468138,
+        "records": 35011,
+        "trace_hash": 2170780726701279350,
+        "accepted": 10,
+        "admitted_unfinished": 2,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 15479,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "host",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 16384,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7582,
+            "cause": 7581,
+            "time": 646285,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": true,
+          "action_at_ns": 646285,
+          "return_at_ns": 5646285,
+          "returned": true,
+          "selected_callback_delivered": false,
+          "memory_before_action": 9359,
+          "memory_after_action": 0,
+          "host_memory_peak": 12544,
+          "host_memory_final": 4245,
+          "host_refused": 35,
+          "host_dropped": 2,
+          "incarnations": {
+            "41": 2,
+            "61": 2
+          },
+          "actions": [
+            {
+              "id": 7585,
+              "cause": 0,
+              "time": 646285,
+              "kind": "process.crash",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 7600,
+              "cause": 0,
+              "time": 646285,
+              "kind": "process.crash",
+              "actor": 61,
+              "peer": 0,
+              "process": 61,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 7607,
+              "cause": 0,
+              "time": 646285,
+              "kind": "host.reset",
+              "actor": 0,
+              "peer": 0,
+              "process": 0,
+              "host": 0,
+              "incarnation": 0,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "41",
+              "parents": []
+            },
+            {
+              "id": 21305,
+              "cause": 21304,
+              "time": 5646285,
+              "kind": "process.restart",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 21306,
+              "cause": 21304,
+              "time": 5646285,
+              "kind": "process.restart",
+              "actor": 61,
+              "peer": 0,
+              "process": 61,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            }
+          ],
+          "first_recovered_source_read_ns": null,
+          "first_source_read_ns": null,
+          "first_required_checker_report_ns": null,
+          "before_return": {
+            "observed_until_ns": 5646284,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/15"
+    },
+    {
+      "case": {
+        "seed": 7,
+        "mode": "host",
+        "memory": 24576
+      },
+      "result": {
+        "name": "hosted-recovery-host",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 12558628
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 11937487
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542206
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary",
+          "hosted-host"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "1": 12658628,
+          "2": 636714,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043134,
+          "6": 657328,
+          "7": 872214,
+          "8": 1070382,
+          "9": 1162206,
+          "10": 12687487
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 405,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 1
+        },
+        "wire_bytes": 248251,
+        "durable_bytes": 68752,
+        "memory_peak": 492160,
+        "records": 37888,
+        "trace_hash": 17045939501504061554,
+        "accepted": 10,
+        "admitted_unfinished": 0,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 16847,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "host",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 24576,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7582,
+            "cause": 7581,
+            "time": 646285,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": true,
+          "action_at_ns": 646285,
+          "return_at_ns": 5646285,
+          "returned": true,
+          "selected_callback_delivered": false,
+          "memory_before_action": 9359,
+          "memory_after_action": 0,
+          "host_memory_peak": 24529,
+          "host_memory_final": 23842,
+          "host_refused": 57,
+          "host_dropped": 3,
+          "incarnations": {
+            "41": 2,
+            "61": 2
+          },
+          "actions": [
+            {
+              "id": 7585,
+              "cause": 0,
+              "time": 646285,
+              "kind": "process.crash",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 7600,
+              "cause": 0,
+              "time": 646285,
+              "kind": "process.crash",
+              "actor": 61,
+              "peer": 0,
+              "process": 61,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 7607,
+              "cause": 0,
+              "time": 646285,
+              "kind": "host.reset",
+              "actor": 0,
+              "peer": 0,
+              "process": 0,
+              "host": 0,
+              "incarnation": 0,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "41",
+              "parents": []
+            },
+            {
+              "id": 21305,
+              "cause": 21304,
+              "time": 5646285,
+              "kind": "process.restart",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 21306,
+              "cause": 21304,
+              "time": 5646285,
+              "kind": "process.restart",
+              "actor": 61,
+              "peer": 0,
+              "process": 61,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            }
+          ],
+          "first_recovered_source_read_ns": 12317917,
+          "first_source_read_ns": 12317917,
+          "first_required_checker_report_ns": 12324284,
+          "before_return": {
+            "observed_until_ns": 5646284,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/16"
+    },
+    {
+      "case": {
+        "seed": 7,
+        "mode": "host",
+        "memory": 65536
+      },
+      "result": {
+        "name": "hosted-recovery-host",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 8559711
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 7938570
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542206
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary",
+          "hosted-host"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "1": 8659711,
+          "2": 636714,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043134,
+          "6": 657328,
+          "7": 872214,
+          "8": 1070382,
+          "9": 1162206,
+          "10": 8688570
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 405,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 1
+        },
+        "wire_bytes": 234205,
+        "durable_bytes": 69929,
+        "memory_peak": 505587,
+        "records": 36974,
+        "trace_hash": 13539527453155883330,
+        "accepted": 10,
+        "admitted_unfinished": 0,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 16471,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "host",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 65536,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7582,
+            "cause": 7581,
+            "time": 646285,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": true,
+          "action_at_ns": 646285,
+          "return_at_ns": 5646285,
+          "returned": true,
+          "selected_callback_delivered": false,
+          "memory_before_action": 9359,
+          "memory_after_action": 0,
+          "host_memory_peak": 37844,
+          "host_memory_final": 26681,
+          "host_refused": 0,
+          "host_dropped": 2,
+          "incarnations": {
+            "41": 2,
+            "61": 2
+          },
+          "actions": [
+            {
+              "id": 7585,
+              "cause": 0,
+              "time": 646285,
+              "kind": "process.crash",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 7600,
+              "cause": 0,
+              "time": 646285,
+              "kind": "process.crash",
+              "actor": 61,
+              "peer": 0,
+              "process": 61,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 7607,
+              "cause": 0,
+              "time": 646285,
+              "kind": "host.reset",
+              "actor": 0,
+              "peer": 0,
+              "process": 0,
+              "host": 0,
+              "incarnation": 0,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "41",
+              "parents": []
+            },
+            {
+              "id": 21305,
+              "cause": 21304,
+              "time": 5646285,
+              "kind": "process.restart",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 21306,
+              "cause": 21304,
+              "time": 5646285,
+              "kind": "process.restart",
+              "actor": 61,
+              "peer": 0,
+              "process": 61,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            }
+          ],
+          "first_recovered_source_read_ns": 8317917,
+          "first_source_read_ns": 8317917,
+          "first_required_checker_report_ns": 8325344,
+          "before_return": {
+            "observed_until_ns": 5646284,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/17"
+    },
+    {
+      "case": {
+        "seed": 19,
+        "mode": "none",
+        "memory": 16384
+      },
+      "result": {
+        "name": "hosted-recovery-none",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 0,
+            "failed": 0,
+            "unfinished": 1,
+            "max_latency_ns": 0
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 0,
+            "failed": 0,
+            "unfinished": 1,
+            "max_latency_ns": 0
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542020
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "2": 636905,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043258,
+          "6": 657142,
+          "7": 872028,
+          "8": 1070196,
+          "9": 1162020
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 0,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 0
+        },
+        "wire_bytes": 259131,
+        "durable_bytes": 61628,
+        "memory_peak": 508053,
+        "records": 38244,
+        "trace_hash": 17814347307949363058,
+        "accepted": 10,
+        "admitted_unfinished": 2,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 16967,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "none",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 16384,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7922,
+            "cause": 7921,
+            "time": 654381,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": false,
+          "action_at_ns": 654381,
+          "return_at_ns": 5654381,
+          "returned": true,
+          "selected_callback_delivered": true,
+          "memory_before_action": 9359,
+          "memory_after_action": 9359,
+          "host_memory_peak": 16347,
+          "host_memory_final": 16182,
+          "host_refused": 178,
+          "host_dropped": 192,
+          "incarnations": {
+            "41": 1,
+            "61": 1
+          },
+          "actions": [],
+          "first_recovered_source_read_ns": null,
+          "first_source_read_ns": 2522821,
+          "first_required_checker_report_ns": null,
+          "before_return": {
+            "observed_until_ns": 5654380,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/18"
+    },
+    {
+      "case": {
+        "seed": 19,
+        "mode": "none",
+        "memory": 24576
+      },
+      "result": {
+        "name": "hosted-recovery-none",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 2765772
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 2144631
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542020
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "1": 2865772,
+          "2": 636905,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043258,
+          "6": 657142,
+          "7": 872028,
+          "8": 1070196,
+          "9": 1162020,
+          "10": 2894631
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 405,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 1
+        },
+        "wire_bytes": 242309,
+        "durable_bytes": 69194,
+        "memory_peak": 523958,
+        "records": 37926,
+        "trace_hash": 17300163823175852349,
+        "accepted": 10,
+        "admitted_unfinished": 0,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 16877,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "none",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 24576,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7922,
+            "cause": 7921,
+            "time": 654381,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": false,
+          "action_at_ns": 654381,
+          "return_at_ns": 5654381,
+          "returned": true,
+          "selected_callback_delivered": true,
+          "memory_before_action": 9359,
+          "memory_after_action": 9359,
+          "host_memory_peak": 24555,
+          "host_memory_final": 24140,
+          "host_refused": 53,
+          "host_dropped": 94,
+          "incarnations": {
+            "41": 1,
+            "61": 1
+          },
+          "actions": [],
+          "first_recovered_source_read_ns": null,
+          "first_source_read_ns": 2522821,
+          "first_required_checker_report_ns": 2531428,
+          "before_return": {
+            "observed_until_ns": 5654380,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 1,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 1,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/19"
+    },
+    {
+      "case": {
+        "seed": 19,
+        "mode": "none",
+        "memory": 65536
+      },
+      "result": {
+        "name": "hosted-recovery-none",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 2763532
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 2142391
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542020
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "1": 2863532,
+          "2": 636905,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043258,
+          "6": 657142,
+          "7": 872028,
+          "8": 1070196,
+          "9": 1162020,
+          "10": 2892391
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 405,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 1
+        },
+        "wire_bytes": 217769,
+        "durable_bytes": 69929,
+        "memory_peak": 526915,
+        "records": 35518,
+        "trace_hash": 8451480364754919061,
+        "accepted": 10,
+        "admitted_unfinished": 0,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 15861,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "none",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 65536,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7922,
+            "cause": 7921,
+            "time": 654381,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": false,
+          "action_at_ns": 654381,
+          "return_at_ns": 5654381,
+          "returned": true,
+          "selected_callback_delivered": true,
+          "memory_before_action": 9359,
+          "memory_after_action": 9359,
+          "host_memory_peak": 27512,
+          "host_memory_final": 26681,
+          "host_refused": 0,
+          "host_dropped": 0,
+          "incarnations": {
+            "41": 1,
+            "61": 1
+          },
+          "actions": [],
+          "first_recovered_source_read_ns": null,
+          "first_source_read_ns": 2522821,
+          "first_required_checker_report_ns": 2529188,
+          "before_return": {
+            "observed_until_ns": 5654380,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 1,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 1,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/20"
+    },
+    {
+      "case": {
+        "seed": 19,
+        "mode": "process",
+        "memory": 16384
+      },
+      "result": {
+        "name": "hosted-recovery-process",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 0,
+            "failed": 0,
+            "unfinished": 1,
+            "max_latency_ns": 0
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 0,
+            "failed": 0,
+            "unfinished": 1,
+            "max_latency_ns": 0
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542020
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary",
+          "hosted-process"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "2": 636905,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043258,
+          "6": 657142,
+          "7": 872028,
+          "8": 1070196,
+          "9": 1162020
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 0,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 0
+        },
+        "wire_bytes": 265303,
+        "durable_bytes": 59474,
+        "memory_peak": 467882,
+        "records": 35490,
+        "trace_hash": 15845505575341869315,
+        "accepted": 10,
+        "admitted_unfinished": 2,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 15664,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "process",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 16384,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7922,
+            "cause": 7921,
+            "time": 654381,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": true,
+          "action_at_ns": 654381,
+          "return_at_ns": 5654381,
+          "returned": true,
+          "selected_callback_delivered": false,
+          "memory_before_action": 9359,
+          "memory_after_action": 2703,
+          "host_memory_peak": 12288,
+          "host_memory_final": 4245,
+          "host_refused": 35,
+          "host_dropped": 0,
+          "incarnations": {
+            "41": 2,
+            "61": 1
+          },
+          "actions": [
+            {
+              "id": 7925,
+              "cause": 0,
+              "time": 654381,
+              "kind": "process.crash",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 21629,
+              "cause": 21628,
+              "time": 5654381,
+              "kind": "process.restart",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            }
+          ],
+          "first_recovered_source_read_ns": null,
+          "first_source_read_ns": null,
+          "first_required_checker_report_ns": null,
+          "before_return": {
+            "observed_until_ns": 5654380,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/21"
+    },
+    {
+      "case": {
+        "seed": 19,
+        "mode": "process",
+        "memory": 24576
+      },
+      "result": {
+        "name": "hosted-recovery-process",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 12265911
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 11644770
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542020
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary",
+          "hosted-process"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "1": 12365911,
+          "2": 636905,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043258,
+          "6": 657142,
+          "7": 872028,
+          "8": 1070196,
+          "9": 1162020,
+          "10": 12394770
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 405,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 1
+        },
+        "wire_bytes": 255804,
+        "durable_bytes": 68752,
+        "memory_peak": 492160,
+        "records": 38380,
+        "trace_hash": 10770513157454141729,
+        "accepted": 10,
+        "admitted_unfinished": 0,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 17038,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "process",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 24576,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7922,
+            "cause": 7921,
+            "time": 654381,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": true,
+          "action_at_ns": 654381,
+          "return_at_ns": 5654381,
+          "returned": true,
+          "selected_callback_delivered": false,
+          "memory_before_action": 9359,
+          "memory_after_action": 2703,
+          "host_memory_peak": 24529,
+          "host_memory_final": 23842,
+          "host_refused": 57,
+          "host_dropped": 1,
+          "incarnations": {
+            "41": 2,
+            "61": 1
+          },
+          "actions": [
+            {
+              "id": 7925,
+              "cause": 0,
+              "time": 654381,
+              "kind": "process.crash",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 21629,
+              "cause": 21628,
+              "time": 5654381,
+              "kind": "process.restart",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            }
+          ],
+          "first_recovered_source_read_ns": 12025200,
+          "first_source_read_ns": 12025200,
+          "first_required_checker_report_ns": 12031567,
+          "before_return": {
+            "observed_until_ns": 5654380,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/22"
+    },
+    {
+      "case": {
+        "seed": 19,
+        "mode": "process",
+        "memory": 65536
+      },
+      "result": {
+        "name": "hosted-recovery-process",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 6265911
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 5644770
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542020
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary",
+          "hosted-process"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "1": 6365911,
+          "2": 636905,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043258,
+          "6": 657142,
+          "7": 872028,
+          "8": 1070196,
+          "9": 1162020,
+          "10": 6394770
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 405,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 1
+        },
+        "wire_bytes": 235818,
+        "durable_bytes": 69929,
+        "memory_peak": 505736,
+        "records": 37068,
+        "trace_hash": 11466554421900869610,
+        "accepted": 10,
+        "admitted_unfinished": 0,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 16506,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "process",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 65536,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7922,
+            "cause": 7921,
+            "time": 654381,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": true,
+          "action_at_ns": 654381,
+          "return_at_ns": 5654381,
+          "returned": true,
+          "selected_callback_delivered": false,
+          "memory_before_action": 9359,
+          "memory_after_action": 2703,
+          "host_memory_peak": 37993,
+          "host_memory_final": 26681,
+          "host_refused": 0,
+          "host_dropped": 0,
+          "incarnations": {
+            "41": 2,
+            "61": 1
+          },
+          "actions": [
+            {
+              "id": 7925,
+              "cause": 0,
+              "time": 654381,
+              "kind": "process.crash",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 21629,
+              "cause": 21628,
+              "time": 5654381,
+              "kind": "process.restart",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            }
+          ],
+          "first_recovered_source_read_ns": 6025200,
+          "first_source_read_ns": 6025200,
+          "first_required_checker_report_ns": 6031567,
+          "before_return": {
+            "observed_until_ns": 5654380,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/23"
+    },
+    {
+      "case": {
+        "seed": 19,
+        "mode": "host",
+        "memory": 16384
+      },
+      "result": {
+        "name": "hosted-recovery-host",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 0,
+            "failed": 0,
+            "unfinished": 1,
+            "max_latency_ns": 0
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 0,
+            "failed": 0,
+            "unfinished": 1,
+            "max_latency_ns": 0
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542020
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary",
+          "hosted-host"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "2": 636905,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043258,
+          "6": 657142,
+          "7": 872028,
+          "8": 1070196,
+          "9": 1162020
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 0,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 0
+        },
+        "wire_bytes": 258703,
+        "durable_bytes": 59474,
+        "memory_peak": 468138,
+        "records": 35055,
+        "trace_hash": 17460304732466142496,
+        "accepted": 10,
+        "admitted_unfinished": 2,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 15495,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "host",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 16384,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7922,
+            "cause": 7921,
+            "time": 654381,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": true,
+          "action_at_ns": 654381,
+          "return_at_ns": 5654381,
+          "returned": true,
+          "selected_callback_delivered": false,
+          "memory_before_action": 9359,
+          "memory_after_action": 0,
+          "host_memory_peak": 12544,
+          "host_memory_final": 4245,
+          "host_refused": 35,
+          "host_dropped": 2,
+          "incarnations": {
+            "41": 2,
+            "61": 2
+          },
+          "actions": [
+            {
+              "id": 7925,
+              "cause": 0,
+              "time": 654381,
+              "kind": "process.crash",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 7940,
+              "cause": 0,
+              "time": 654381,
+              "kind": "process.crash",
+              "actor": 61,
+              "peer": 0,
+              "process": 61,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 7947,
+              "cause": 0,
+              "time": 654381,
+              "kind": "host.reset",
+              "actor": 0,
+              "peer": 0,
+              "process": 0,
+              "host": 0,
+              "incarnation": 0,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "41",
+              "parents": []
+            },
+            {
+              "id": 21305,
+              "cause": 21304,
+              "time": 5654381,
+              "kind": "process.restart",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 21306,
+              "cause": 21304,
+              "time": 5654381,
+              "kind": "process.restart",
+              "actor": 61,
+              "peer": 0,
+              "process": 61,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            }
+          ],
+          "first_recovered_source_read_ns": null,
+          "first_source_read_ns": null,
+          "first_required_checker_report_ns": null,
+          "before_return": {
+            "observed_until_ns": 5654380,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/24"
+    },
+    {
+      "case": {
+        "seed": 19,
+        "mode": "host",
+        "memory": 24576
+      },
+      "result": {
+        "name": "hosted-recovery-host",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 12558628
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 11937487
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542020
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary",
+          "hosted-host"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "1": 12658628,
+          "2": 636905,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043258,
+          "6": 657142,
+          "7": 872028,
+          "8": 1070196,
+          "9": 1162020,
+          "10": 12687487
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 405,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 1
+        },
+        "wire_bytes": 248251,
+        "durable_bytes": 68752,
+        "memory_peak": 492160,
+        "records": 37888,
+        "trace_hash": 2548692824624057661,
+        "accepted": 10,
+        "admitted_unfinished": 0,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 16847,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "host",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 24576,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7922,
+            "cause": 7921,
+            "time": 654381,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": true,
+          "action_at_ns": 654381,
+          "return_at_ns": 5654381,
+          "returned": true,
+          "selected_callback_delivered": false,
+          "memory_before_action": 9359,
+          "memory_after_action": 0,
+          "host_memory_peak": 24529,
+          "host_memory_final": 23842,
+          "host_refused": 57,
+          "host_dropped": 3,
+          "incarnations": {
+            "41": 2,
+            "61": 2
+          },
+          "actions": [
+            {
+              "id": 7925,
+              "cause": 0,
+              "time": 654381,
+              "kind": "process.crash",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 7940,
+              "cause": 0,
+              "time": 654381,
+              "kind": "process.crash",
+              "actor": 61,
+              "peer": 0,
+              "process": 61,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 7947,
+              "cause": 0,
+              "time": 654381,
+              "kind": "host.reset",
+              "actor": 0,
+              "peer": 0,
+              "process": 0,
+              "host": 0,
+              "incarnation": 0,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "41",
+              "parents": []
+            },
+            {
+              "id": 21305,
+              "cause": 21304,
+              "time": 5654381,
+              "kind": "process.restart",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 21306,
+              "cause": 21304,
+              "time": 5654381,
+              "kind": "process.restart",
+              "actor": 61,
+              "peer": 0,
+              "process": 61,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            }
+          ],
+          "first_recovered_source_read_ns": 12317917,
+          "first_source_read_ns": 12317917,
+          "first_required_checker_report_ns": 12324284,
+          "before_return": {
+            "observed_until_ns": 5654380,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/25"
+    },
+    {
+      "case": {
+        "seed": 19,
+        "mode": "host",
+        "memory": 65536
+      },
+      "result": {
+        "name": "hosted-recovery-host",
+        "cohorts": {
+          "checked": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 8559711
+          },
+          "dependent": {
+            "offered": 1,
+            "arrived": 1,
+            "not_yet_offered": 0,
+            "completed": 1,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 7938570
+          },
+          "independent": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 542020
+          },
+          "source": {
+            "offered": 4,
+            "arrived": 4,
+            "not_yet_offered": 0,
+            "completed": 4,
+            "failed": 0,
+            "unfinished": 0,
+            "max_latency_ns": 438857
+          }
+        },
+        "violations": [],
+        "triggered_incidents": [
+          "hosted-receive-boundary",
+          "hosted-host"
+        ],
+        "missing_incidents": [],
+        "completed_at": {
+          "1": 8659711,
+          "2": 636905,
+          "3": 809076,
+          "4": 1018857,
+          "5": 1043258,
+          "6": 657142,
+          "7": 872028,
+          "8": 1070196,
+          "9": 1162020,
+          "10": 8688570
+        },
+        "latest_values": {
+          "0": 1000,
+          "1": 1001,
+          "2": 1002,
+          "3": 1003,
+          "99": 405,
+          "1000": 2000,
+          "1001": 2001,
+          "1002": 2002,
+          "1003": 2003,
+          "1099": 1
+        },
+        "wire_bytes": 234205,
+        "durable_bytes": 69929,
+        "memory_peak": 505587,
+        "records": 36974,
+        "trace_hash": 1839580553583124749,
+        "accepted": 10,
+        "admitted_unfinished": 0,
+        "observed_until_ns": 40000000,
+        "execution": {
+          "events": 16471,
+          "budget_exhausted": false,
+          "pending": true,
+          "paused": false
+        },
+        "hosted_recovery": {
+          "mode": "host",
+          "consumer": 41,
+          "required_checker": 61,
+          "host": 41,
+          "memory_budget": 65536,
+          "armed": {
+            "id": 3335,
+            "cause": 3333,
+            "time": 522291,
+            "kind": "operation.submit",
+            "actor": 61,
+            "peer": 0,
+            "process": 61,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 328,
+            "tag": 103,
+            "size": 1,
+            "detail": "compute",
+            "parents": []
+          },
+          "boundary": {
+            "id": 7922,
+            "cause": 7921,
+            "time": 654381,
+            "kind": "network.arrive",
+            "actor": 41,
+            "peer": 20,
+            "process": 41,
+            "host": 41,
+            "incarnation": 1,
+            "operation": 255,
+            "tag": 100,
+            "size": 253,
+            "detail": "",
+            "parents": []
+          },
+          "fired": true,
+          "action_at_ns": 654381,
+          "return_at_ns": 5654381,
+          "returned": true,
+          "selected_callback_delivered": false,
+          "memory_before_action": 9359,
+          "memory_after_action": 0,
+          "host_memory_peak": 37844,
+          "host_memory_final": 26681,
+          "host_refused": 0,
+          "host_dropped": 2,
+          "incarnations": {
+            "41": 2,
+            "61": 2
+          },
+          "actions": [
+            {
+              "id": 7925,
+              "cause": 0,
+              "time": 654381,
+              "kind": "process.crash",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 7940,
+              "cause": 0,
+              "time": 654381,
+              "kind": "process.crash",
+              "actor": 61,
+              "peer": 0,
+              "process": 61,
+              "host": 41,
+              "incarnation": 1,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 7947,
+              "cause": 0,
+              "time": 654381,
+              "kind": "host.reset",
+              "actor": 0,
+              "peer": 0,
+              "process": 0,
+              "host": 0,
+              "incarnation": 0,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "41",
+              "parents": []
+            },
+            {
+              "id": 21305,
+              "cause": 21304,
+              "time": 5654381,
+              "kind": "process.restart",
+              "actor": 41,
+              "peer": 0,
+              "process": 41,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            },
+            {
+              "id": 21306,
+              "cause": 21304,
+              "time": 5654381,
+              "kind": "process.restart",
+              "actor": 61,
+              "peer": 0,
+              "process": 61,
+              "host": 41,
+              "incarnation": 2,
+              "operation": 0,
+              "tag": 0,
+              "size": 0,
+              "detail": "",
+              "parents": []
+            }
+          ],
+          "first_recovered_source_read_ns": 8317917,
+          "first_source_read_ns": 8317917,
+          "first_required_checker_report_ns": 8325344,
+          "before_return": {
+            "observed_until_ns": 5654380,
+            "cohorts": {
+              "checked": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "dependent": {
+                "offered": 1,
+                "arrived": 1,
+                "completed": 0,
+                "failed": 0,
+                "unfinished": 1
+              },
+              "independent": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              },
+              "source": {
+                "offered": 4,
+                "arrived": 4,
+                "completed": 4,
+                "failed": 0,
+                "unfinished": 0
+              }
+            }
+          }
+        }
+      },
+      "artifacts": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/experiments/simulator/hosted-recovery-v1/hosted/cases/26"
+    }
+  ],
+  "errors": [],
+  "units": "authored modeled nanoseconds and bytes; no production calibration"
+}

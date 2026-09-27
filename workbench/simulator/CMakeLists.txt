@@ -22,9 +22,14 @@ add_library(simulator_orbital STATIC models/orbital.cpp)
 sixdb_target(simulator_orbital)
 target_link_libraries(simulator_orbital PUBLIC sixdb::simulator)
 target_include_directories(simulator_orbital PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/models")
+add_library(simulator_experiment_client STATIC experiments/client.cpp)
+sixdb_target(simulator_experiment_client)
+target_link_libraries(simulator_experiment_client PUBLIC sixdb::simulator)
+target_include_directories(simulator_experiment_client PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/experiments")
+
 add_executable(simulator_run src/main.cpp)
 sixdb_target(simulator_run)
-target_link_libraries(simulator_run PRIVATE simulator_orbital)
+target_link_libraries(simulator_run PRIVATE simulator_orbital simulator_experiment_client)
 add_executable(simulator_orbital_check test/orbital.cpp)
 sixdb_target(simulator_orbital_check)
 target_link_libraries(simulator_orbital_check PRIVATE simulator_orbital)
@@ -36,8 +41,37 @@ add_test(NAME simulator_interactive COMMAND simulator_interactive)
 add_test(NAME simulator_clients COMMAND python3 "${CMAKE_CURRENT_SOURCE_DIR}/test/clients.py"
   --binary $<TARGET_FILE:simulator_run>)
 
+add_library(simulator_regional STATIC experiments/regional.cpp)
+sixdb_target(simulator_regional)
+target_link_libraries(simulator_regional PUBLIC simulator_orbital)
+target_include_directories(simulator_regional PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/experiments")
+add_executable(simulator_regional_run experiments/regional_main.cpp)
+sixdb_target(simulator_regional_run)
+target_link_libraries(simulator_regional_run PRIVATE simulator_regional simulator_experiment_client)
+add_executable(simulator_regional_check test/regional.cpp)
+sixdb_target(simulator_regional_check)
+target_link_libraries(simulator_regional_check PRIVATE simulator_regional)
+add_test(NAME simulator_regional COMMAND simulator_regional_check)
+
+add_executable(simulator_hosted_recovery_run experiments/hosted_recovery.cpp)
+sixdb_target(simulator_hosted_recovery_run)
+target_link_libraries(simulator_hosted_recovery_run PRIVATE simulator_orbital simulator_experiment_client)
+add_test(NAME simulator_hosted_recovery COMMAND simulator_hosted_recovery_run --self-test)
+
+add_library(simulator_retention_pressure STATIC models/retention_pressure.cpp)
+sixdb_target(simulator_retention_pressure)
+target_link_libraries(simulator_retention_pressure PUBLIC sixdb::simulator)
+target_include_directories(simulator_retention_pressure PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/models")
+add_executable(simulator_retention_pressure_run experiments/retention_pressure.cpp)
+sixdb_target(simulator_retention_pressure_run)
+target_link_libraries(simulator_retention_pressure_run PRIVATE simulator_retention_pressure simulator_experiment_client)
+add_executable(simulator_retention_pressure_check test/retention_pressure.cpp)
+sixdb_target(simulator_retention_pressure_check)
+target_link_libraries(simulator_retention_pressure_check PRIVATE simulator_retention_pressure)
+add_test(NAME simulator_retention_pressure COMMAND simulator_retention_pressure_check)
+
 add_custom_target(simulator_validate
   COMMAND "${CMAKE_CTEST_COMMAND}" --test-dir "${PROJECT_BINARY_DIR}"
     --output-on-failure --no-tests=error -R "^simulator_"
-  DEPENDS simulator_runtime_check simulator_retained_view_check simulator_orbital_check simulator_run simulator_interactive
+  DEPENDS simulator_runtime_check simulator_retained_view_check simulator_orbital_check simulator_run simulator_interactive simulator_regional_check simulator_hosted_recovery_run simulator_retention_pressure_check
   USES_TERMINAL)
