@@ -18,7 +18,7 @@ scope. This is a starting description, not an exhaustive list of constraints.
 | Module | Scope |
 | --- | --- |
 | [ikea](ikea/README.md) | Composition-ready containers and kernel stages |
-| [orbital](orbital/README.md) | Durability, network transport, thread spawning, and other OS-like services |
+| [orbital](orbital/README.md) | Durable objects, transactions and recovery, with memory, transport and OS services |
 | [loom](loom/README.md) | Binding to Orbital, task scheduling/routing, latency hiding, and the buffer pool |
 | [engine](engine/README.md) | Database core: SQL interface, planning, execution, and core data structures |
 | [shore](shore/README.md) | UI, shell, bindings, connectors, formats, and external utilities |

@@ -1,8 +1,8 @@
 # Loom
 
-Binds Orbital to SixDB proper. Schedules tasks, routes them to the right
-threads, and interleaves work while requested bytes arrive from disk, network,
-DRAM, or other sources. Owns the buffer pool.
+Binds database work to Orbital's durable-object and execution services. Schedules
+tasks, routes them to the right threads, and interleaves work while requested
+bytes arrive from disk, network, DRAM, or other sources. Owns buffer-pool policy.
 
 Successor to Calico's `loom` and parts of `arbor`; see the
 [Calico reference map](../workbench/notebook/calico.md).
@@ -14,12 +14,14 @@ Successor to Calico's `loom` and parts of `arbor`; see the
 - Buffer-pool partitions, residency and byte-access leases, with admission and
   resource budgets for inputs, outputs and retained work.
 - Drivers for prefetching, suspension, resumption and cancellation, using
-  [Orbital](../orbital/README.md) for threads, transport and durable storage.
+  [Orbital](../orbital/README.md)'s version-bound views, transport and physical
+  completion services.
 
-The working division gives [Engine](../engine/README.md) database routing,
-identity and structural mutation, and Loom task routing and resource mechanics.
-Arbor's ancestry does not settle those boundaries. Bindings must preserve both
-the intended data version and the shorter lifetime of its resident addresses.
+The working division gives [Engine](../engine/README.md) database meaning and
+legal execution plans, Orbital the shared transaction and recovery semantics,
+and Loom task routing and resource policy. Arbor's ancestry does not settle
+those boundaries. Bindings must preserve both the intended data version and
+the shorter lifetime of its resident addresses.
 [Ikea](../ikea/README.md) supplies local access requirements and computational
 work; a kernel stage need not be a scheduler task.
 

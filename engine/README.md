@@ -12,15 +12,16 @@ from `arbor`; see the [Calico reference map](../workbench/notebook/calico.md).
   inspectable compositions can support improvement as evidence accumulates.
 - Core data structures: logical keys and identity, routing, record membership,
   columns, indexes and the mapping to actual representations.
-- Transactional reads and mutations, including coordinated visibility of data,
+- Database access and effect scopes, including atomic visibility of data,
   structural changes and required summary/index effects across shards.
 - Bulk ingestion, transformation and result production using the same database
   semantics as other operations.
 
 Engine composes [Ikea](../ikea/README.md) parts and binds their work through
-[Loom](../loom/README.md). [Shore](../shore/README.md) supplies external protocols
-and formats. This division is a working proposal: representation schemas,
-publication/recovery protocols and concrete integration interfaces remain open.
+[Loom](../loom/README.md). The current [Orbital design](../orbital/BRIEF.md) supplies
+shared transaction and recovery semantics; Engine defines their database meaning.
+[Shore](../shore/README.md) supplies external protocols and formats. Representation
+schemas and concrete integration interfaces remain open.
 
 The [layout-analyser investigation](../workbench/spikes/layout-analyser/README.md)
 explores workload objectives, plane organization and hardware fitting, with
