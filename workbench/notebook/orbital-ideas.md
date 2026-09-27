@@ -1,24 +1,24 @@
-# Orbital material worth revisiting
+# Orbital research questions
 
 This is a consultable list of questions, useful examples and evidence from older
 drafts, SixDB studies and Calico. Inclusion does not select a mechanism or add a
-requirement to the [brief](BRIEF.md). The later
-[dissemination catalog](../workbench/notebook/dissemination/README.md)
+requirement to the [brief](../../orbital/BRIEF.md). The later
+[dissemination catalog](dissemination/README.md)
 preserves the systematic networking survey and records what was explored;
 this list remains a curated starting point. Engine owns application semantics;
 Orbital must be usable by applications with entirely different data structures.
 
-The [draft map](../workbench/notebook/retired-spikes.md#earlier-orbital-drafts) distinguishes the older proposals and the
-different historical meanings of “BRIEF2”. The [Calico map](../workbench/notebook/calico.md)
+The [draft map](retired-spikes.md#earlier-orbital-drafts) distinguishes the older proposals and the
+different historical meanings of “BRIEF2”. The [Calico map](calico.md)
 provides broader navigation. Calico and Consurgent links below assume sibling
-checkouts; the [pitch script](../../consurgent/pitch/SCRIPT.md) explains the
+checkouts; the [pitch script](../../../consurgent/pitch/SCRIPT.md) explains the
 intended adoption model. Check implementation headers and measurement reports
 alongside design prose: some attractive descriptions were never implemented.
 
 ## Durable objects, memory and local execution
 
-The [physical brief](PHYSICAL.md) owns provisional object/view boundaries.
-The focused [Linux mapping probes](../workbench/spikes/orbital-objects/README.md)
+The [physical brief](../../orbital/PHYSICAL.md) owns provisional object/view boundaries.
+The focused [Linux mapping probes](../spikes/orbital-objects/README.md)
 retain real UFFD/COW checks. First-touch policy, late-reader reconstruction,
 delayed backend borrows, extension protection transitions and allocator hints
 still need composed native experiments; feature availability does not settle them.
@@ -27,8 +27,8 @@ still need composed native experiments; feature availability does not settle the
   [early narrative](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/BRIEF.md), in its memory and closing design-lessons
   paragraphs, starts with durable objects and projects them into memory. Mine
   stable pointers, lazy materialisation, copy avoidance and page-remapped growth.
-  Compare [xmem DESIGN §3 and §12](../../calico/xmem/DESIGN.md) with the five paths
-  in [fault.h](../../calico/xmem/include/xmem/fault.h). Calico's page claims and
+  Compare [xmem DESIGN §3 and §12](../../../calico/xmem/DESIGN.md) with the five paths
+  in [fault.h](../../../calico/xmem/include/xmem/fault.h). Calico's page claims and
   single-writer rules are not SixDB contracts; remote faults and facade wiring
   were incomplete.
 
@@ -39,30 +39,30 @@ still need composed native experiments; feature availability does not settle the
   atomic publication units need not coincide.
 
 - **Bound resident memory without accidentally pinning a shard.**
-  [ServingImage](../../calico/xmem/include/xmem/serving_image.h),
-  [pins.h](../../calico/xmem/include/xmem/pins.h) and
-  [Loom residency admission](../../calico/loom/spec/IO.md) distinguish discardable
+  [ServingImage](../../../calico/xmem/include/xmem/serving_image.h),
+  [pins.h](../../../calico/xmem/include/xmem/pins.h) and
+  [Loom residency admission](../../../calico/loom/spec/IO.md) distinguish discardable
   serving images, readiness, session pins and exceptional range/version pins.
   Mine reclamation and source-incarnation checks. Local residency holds do not
   establish semantic retention or distributed retirement.
 
 - **Keep durable versions independent of resident addresses.**
-  [Ikea integration, “A sealed local change”](../workbench/spikes/ikea-composition/semantics-and-integration.md)
+  [Ikea integration, “A sealed local change”](../spikes/ikea-composition/semantics-and-integration.md)
   distinguishes physical coverage, logical effects, derived-state validity and
   visibility. Its lifecycle is illustrative, not six compulsory API calls or a
   reason to reinstate the old validation protocol.
 
 - **Share one transaction across local workers.**
-  [omachine CONTRACT, opened-handle sharing](../../calico/omachine/CONTRACT.md)
-  and [Xmem::attach](../../calico/xmem/include/xmem/xmem.h) explore several workers
+  [omachine CONTRACT, opened-handle sharing](../../../calico/omachine/CONTRACT.md)
+  and [Xmem::attach](../../../calico/xmem/include/xmem/xmem.h) explore several workers
   contributing to one outcome without copying whole working sets. Existing
   partitions are disjoint, page-bounded and local to one machine; shared mutation
   and capability carriage across processes or VMs remain separate questions.
 
 - **Account for work until it actually releases resources.**
-  [Loom's concrete situations](../workbench/notebook/loom-objectives-and-architecture.md),
-  [Calico DISK](../../calico/loom/spec/DISK.md) and
-  [completion attribution](../../calico/arbor/include/arbor/completion_attribution.h)
+  [Loom's concrete situations](loom-objectives-and-architecture.md),
+  [Calico DISK](../../../calico/loom/spec/DISK.md) and
+  [completion attribution](../../../calico/arbor/include/arbor/completion_attribution.h)
   cover output growth, slow consumers, completed-but-undrained work and
   cancellation. Requesting cancellation does not free a backend's active buffer.
   Reuse the cases before selecting queue structures or concurrency limits.
@@ -70,14 +70,14 @@ still need composed native experiments; feature availability does not settle the
 ## Contention, preparation and application boundaries
 
 - **Keep the workload's promise fixed.**
-  [Large reads](../workbench/notebook/transactions/reads.md) and
-  [worked ELT histories](../workbench/notebook/transactions/elt.md)
+  [Large reads](transactions/reads.md) and
+  [worked ELT histories](transactions/elt.md)
   distinguish coherent reports, actions on current state, and historical data
   products. MERGE, cascades, refresh and CDC expose different obligations.
   Finite authored examples do not establish unrestricted SQL support.
 
 - **Distinguish broad effects from broad physical footprints.**
-  [Large writes](../workbench/notebook/transactions/writes.md)
+  [Large writes](transactions/writes.md)
   separates private construction, logical effect description, source dependence
   and atomic visibility. The
   [envelope audit](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/ENVELOPE-AUDIT.md) tests
@@ -124,7 +124,7 @@ still need composed native experiments; feature availability does not settle the
 
 ## Extensions, determinism and reusable work
 
-The [dataflow repertoire](../workbench/notebook/dataflow-workloads.md) keeps the
+The [dataflow repertoire](dataflow-workloads.md) keeps the
 application questions from the completed study. Dynamic child/source closure,
 cyclic incremental progress, legal exchange representations, shared retained
 outputs and cancellation before backend retirement remain useful discriminators.
@@ -141,14 +141,14 @@ four toy frameworks are recoverable, not parallel maintained execution runtimes.
   [Composition](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/reconsideration/COMPOSITION.md)
   and the [local-context probe](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/extension_context_probe.py)
   retain the “same final OK, different requests” counterexample. Compare with
-  [rollup.h](../../calico/xmem/include/xmem/rollup.h)'s directive chains and hashing
+  [rollup.h](../../../calico/xmem/include/xmem/rollup.h)'s directive chains and hashing
   fused with copying. Keep today's transaction-wide all-match rule distinct from
   Calico's majority/hash policy and the older probe's epoch-wide gate.
 
 - **Keep logical identity across movement and restarts.**
-  [omachine SCOPE](../../calico/omachine/SCOPE.md) distinguishes actor, instance,
+  [omachine SCOPE](../../../calico/omachine/SCOPE.md) distinguishes actor, instance,
   invocation, workflow and locator lifetimes; its
-  [CONTRACT](../../calico/omachine/CONTRACT.md) discusses buffered host directives
+  [CONTRACT](../../../calico/omachine/CONTRACT.md) discusses buffered host directives
   and quiescence. Mine identities and lifecycle cases, not the ILNP layout,
   CIDR-derived trust or assumed future hypervisor. Much of that runtime was unbuilt.
 
@@ -162,7 +162,7 @@ four toy frameworks are recoverable, not parallel maintained execution runtimes.
 - **Share analysis without letting arrival order select semantics.** The final
   notes in the [early structured brief](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/BRIEF2.md) suggest carrying
   partial analysis with propagation. Compare
-  [Ikea's curated regions and execution grain](../workbench/spikes/ikea-composition/design.md):
+  [Ikea's curated regions and execution grain](../spikes/ikea-composition/design.md):
   storage tiles, working width, scheduling stops and output representation are
   separate choices. Versioned hints may save repeated work; they must not alter
   agreed outcomes merely because one consumer receives them first.
@@ -186,25 +186,25 @@ outside the model. The user still has networking input outstanding.
 
 - **Name the completion event before comparing latency.**
   [CONSENSUS §§1 and 8](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/CONSENSUS.md), the
-  [CFT commit study](../workbench/spikes/cft-commit-latency/commit/README.md) and
-  [Calico's measurement corrections](../../calico/xmem/MEASUREMENT_NOTES.md)
+  [CFT commit study](../spikes/cft-commit-latency/commit/README.md) and
+  [Calico's measurement corrections](../../../calico/xmem/MEASUREMENT_NOTES.md)
   distinguish payload durability, witness admission, follower propagation start,
   leader acknowledgement and caller-visible completion. Test leader, follower
   and external origins. Serial 4 KiB measurements are not saturated throughput;
   neither RTT/2 nor sums of per-leg percentiles establish a directional tail.
 
 - **Stage and prepare outside the latency-sensitive path, but charge the work.**
-  [Calico DESIGN §5](../../calico/xmem/DESIGN.md), its
-  [commit report](../../calico/xmem/REPORT.md), and
-  [CFT persistence findings](../workbench/spikes/cft-commit-latency/persistence/FINDINGS.md)
+  [Calico DESIGN §5](../../../calico/xmem/DESIGN.md), its
+  [commit report](../../../calico/xmem/REPORT.md), and
+  [CFT persistence findings](../spikes/cft-commit-latency/persistence/FINDINGS.md)
   explore staging, batching and prepared log space. Writing and synchronizing
   prepared space can matter beyond allocation. Include concurrent preparation,
   hashing and sustained device limits in the comparison.
 
 - **Choose paths using repeatable evidence.**
-  [Network selection](../workbench/spikes/cft-commit-latency/network/selection.md),
-  [port sampling](../workbench/spikes/cft-commit-latency/network/studies/port-sampling.md)
-  and [clock limits](../workbench/spikes/cft-commit-latency/network/clocks.md)
+  [Network selection](../spikes/cft-commit-latency/network/selection.md),
+  [port sampling](../spikes/cft-commit-latency/network/studies/port-sampling.md)
+  and [clock limits](../spikes/cft-commit-latency/network/clocks.md)
   support screening, held-out validation and rechecking host/flow tuples. They
   do not justify arbitrary leader rotation or a permanent AZ ranking. Joint
   fanout and persistence need their own measurements.
@@ -212,45 +212,45 @@ outside the model. The user still has networking input outstanding.
 - **Keep routing policy separate from logical connection identity.** The
   [early narrative](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/BRIEF.md)'s networking paragraphs discuss local
   versus tunneled connections and graph costs including bandwidth, egress, NAT
-  and requests. The [retired propagation study](../workbench/notebook/consensus-networking.md)
+  and requests. The [retired propagation study](consensus-networking.md)
   retains lessons on chain depth, shared-NIC concentration, bursts and repair
   traffic. Its all-recipient synthetic latency was not durable-commit latency;
   its optimizer and proposed graph algorithms are not selected networking design.
 
 - **Make independently produced delivery duplicate-safe.**
-  [Calico DESIGN §7](../../calico/xmem/DESIGN.md) and
-  [EgressLane](../../calico/xmem/include/xmem/fold.h) use contiguous per-recipient
+  [Calico DESIGN §7](../../../calico/xmem/DESIGN.md) and
+  [EgressLane](../../../calico/xmem/include/xmem/fold.h) use contiguous per-recipient
   acceptance rather than treating any higher sequence number as complete.
   Mine gap, resend and recipient-isolation histories. Deduplicated lane acceptance
   does not establish exactly-once external effects or select Calico's sender policy.
 
 - **Do not let background obligations become a hidden quorum barrier.**
-  [CFT results](../workbench/spikes/cft-commit-latency/RESULTS.md),
-  [throughput](../workbench/spikes/cft-commit-latency/commit/throughput.md) and
-  [the sustained-load cliff](../workbench/spikes/cft-commit-latency/commit/cliff.md)
+  [CFT results](../spikes/cft-commit-latency/RESULTS.md),
+  [throughput](../spikes/cft-commit-latency/commit/throughput.md) and
+  [the sustained-load cliff](../spikes/cft-commit-latency/commit/cliff.md)
   expose lagging-replica buffer pressure and overload. Retain completion fraction,
   backlog and unfinished work: improving completed p99 alone can hide a worse
   service. Catch-up and repair still need real capacity.
 
 - **Compress what is actually expensive.**
   [CONSENSUS §4](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/CONSENSUS.md) gives frontier/range metadata arithmetic;
-  [omachine's compression discussion](../../calico/omachine/CONTRACT.md) considers
+  [omachine's compression discussion](../../../calico/omachine/CONTRACT.md) considers
   raw, XOR/runs, alignment and shared dictionaries. Count framing, authentication,
   CPU and recovery costs. A specific source conflict matters: xmem DESIGN says
   its single-gap aligner is enabled, while
-  [BACKLOG](../../calico/xmem/BACKLOG.md) and rollup.h say it is unbuilt and staging
+  [BACKLOG](../../../calico/xmem/BACKLOG.md) and rollup.h say it is unbuilt and staging
   sends full dirty pages. The design claim is not implementation evidence.
 
 - **Replicate inputs and derive local state where that pays.**
-  [Calico's cross-AZ indexed-ingest report](../../calico/xmem/REPORT.md) and
-  [its harness](../../calico/xmem/tools/xmem_clickbench_ingest.cpp) test canonical
+  [Calico's cross-AZ indexed-ingest report](../../../calico/xmem/REPORT.md) and
+  [its harness](../../../calico/xmem/tools/xmem_clickbench_ingest.cpp) test canonical
   inputs with locally derived indexes. The experiment used a million projected
   ClickBench rows and two indexes. It does not establish arbitrary extension
   determinism, economical cold recovery or a universal network saving.
 
 - **Require saved work to repay its bookkeeping.**
-  [Aggregate-maintenance conclusions](../workbench/spikes/aggregate-maintenance/CONCLUSIONS.md)
-  and [dirty-buffer findings](../workbench/spikes/aggregate-maintenance/dirty-buffer/FINDINGS.md)
+  [Aggregate-maintenance conclusions](../spikes/aggregate-maintenance/CONCLUSIONS.md)
+  and [dirty-buffer findings](../spikes/aggregate-maintenance/dirty-buffer/FINDINGS.md)
   show that fewer logical updates can still mean more CPU. Filters, coalescing
   and dirty-state tracking must repay construction, replay and reset costs.
   These measurements suggest comparisons, not an Orbital metadata policy.
@@ -266,7 +266,7 @@ outside the model. The user still has networking input outstanding.
 - **Recover ordering obligations as well as application pages.**
   [PITR's reopening frontier](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/recovery/PITR.md)
   includes pending outcomes and completed-reader bounds. Compare the
-  [Calico reopen ledger](../../calico/workbench/science/systems/recovery/XMEM_REGION_OPEN.md)
+  [Calico reopen ledger](../../../calico/workbench/science/systems/recovery/XMEM_REGION_OPEN.md)
   and its interruption cases. That ledger explicitly excludes general PITR,
   reconfiguration and multiregion reopen; its LAND/rollback authority rules do
   not carry into SixDB.
@@ -287,7 +287,7 @@ outside the model. The user still has networking input outstanding.
   and fast prefix restoration in view; historical incidents demonstrate possible
   dependencies, not their frequency.
 
-For historical studies, the [retirement record](../workbench/notebook/retired-spikes.md)
+For historical studies, the [retirement record](retired-spikes.md)
 recovers their complete source and evidence. The live
-[CFT evidence guide](../workbench/spikes/cft-commit-latency/evidence.md) owns hardware
+[CFT evidence guide](../spikes/cft-commit-latency/evidence.md) owns hardware
 recovery. Successful probes establish their stated cases, not the composed system.

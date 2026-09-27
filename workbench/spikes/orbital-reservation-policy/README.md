@@ -155,9 +155,10 @@ The original TLA baseline had a binding gap that bypass exposed: ordinary
 snapshot replay drained them using minimum Tx ID. The maintained binding now
 uses one canonical enqueue-order closure in normal folding, replay and direct
 `CommitAndFold` calls. Grant evidence, floors, stable command identity and
-emitted facts remain in the actual semantic kernel. Promotion changes 213
-baseline cases importing TxKernel; those require fresh dependency-matched
-results, whereas the isolated study itself did not invalidate them.
+emitted facts remain in the actual semantic kernel. Integrating the policy changed
+the baseline cases importing TxKernel; the [current formal results](../../../orbital/spec/RESULTS.md)
+own their replacement coverage. This study's isolated comparisons retain their
+own selected inputs and outcomes.
 
 [PolicyTxBinding](../../../orbital/spec/PolicyTxBinding.tla) adds eight actual
 Tx/DurableLog checks. It holds a real remote reservation request from X, lets B

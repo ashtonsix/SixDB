@@ -4,7 +4,7 @@ September 26, 2026: 223 source-linked entries across writes, reads, extensions,
 representation, placement, transport, economics, observation and recovery.
 This is the durable survey from the retired dissemination spike. Its five detailed
 source guides retain the full breadth and original identifiers; [Orbital's mining
-guide](../../../orbital/MINING.md) remains the shorter starting point.
+guide](../orbital-ideas.md) remains the shorter starting point.
 
 The survey was expanded after missing an important old idea: edge-origin broadcast
 can avoid the first expensive cloud-egress leg. Preserve that breadth when returning

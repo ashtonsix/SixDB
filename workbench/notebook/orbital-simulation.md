@@ -13,14 +13,13 @@ to investigate, with physical experiments improving its predictive value.
 Durability comes from revisable models and useful counterexamples, not preserving
 the behavior of the first simulator.
 
-## Relation to the next Orbital work
+## Current home
 
-The prototype exercise and first native simulator are complete. Ashton's intended
-continuation is to formalize the most critical guarantees in TLA+, sketch Orbital's
-internal divisions and module relationships, then develop a small starter with
-real consumers. Durable objects are the leading candidate. These activities can
-inform one another; simulation and native experiments still address resource and
-performance questions. Retiring the prototype does not close unresolved policy.
+[Orbital's architecture](../../orbital/ARCHITECTURE.md) now connects the intended
+system and provisional implementation boundaries. [Formal results](../../orbital/spec/RESULTS.md)
+own verification status; [native model assumptions](../simulator/models/README.md)
+own simulator scope. This notebook preserves research motivations and unported
+questions, rather than another current design or sequence of required work.
 
 ## What should it help us decide?
 
@@ -226,7 +225,7 @@ public through actual admission; partition completeness, relay filtering and
 full/window/demand object preparation remain distinct cases. Reuse their obligations
 when these boundaries return, without porting every toy framework.
 
-[Orbital's mining guide](../../orbital/MINING.md) owns recovery and integration
+[Orbital research questions](orbital-ideas.md) owns recovery and integration
 questions; the [transaction repertoire](transactions/README.md),
 [dataflow workloads](dataflow-workloads.md) and [dissemination survey](dissemination/README.md)
 retain broader application and routing alternatives. None is fully implemented by

@@ -28,7 +28,7 @@ source or artifact was restored into the current spike.
 | BA | `orbital/stale-drafts/BRIEF-arbitration.md`, all 95 lines. |
 | C | `orbital/stale-drafts/CONSENSUS.md`, all 231 lines. |
 | SR | `orbital/stale-drafts/README.md`, all 27 lines. These are **all five files** in that directory. |
-| M | `orbital/MINING.md`, all 271 lines; networking pointers followed below, other owner areas cross-referenced. |
+| M | [Orbital research questions](../orbital-ideas.md), formerly `orbital/MINING.md` (271 lines at survey time); networking pointers followed below, other owner areas cross-referenced. |
 | N | `workbench/notebook/consensus-networking.md`, all 68 lines; `workbench/notebook/calico.md` also read in full for provenance. |
 | O | `../calico/omachine/README.md`, `SCOPE.md`, `CONTRACT.md`, `BACKLOG.md`, `PLAN.md`, each read in full. |
 | X | `../calico/xmem/README.md`, `DESIGN.md`, `BACKLOG.md`, `REPORT.md`, `MEASUREMENT_NOTES.md`, each read in full. |

@@ -1,157 +1,67 @@
 # Reference simulator
 
-A maintained, embeddable laboratory for Orbital and its consumers. The native
-library runs actors against controlled time, messages, storage and finite
-resources. Models and application bindings live above that boundary. A campaign
-executable, native checks and Python experiment clients use the same library.
-The [initial findings](FINDINGS.md) retain the validation results and construction
-lessons, including the limits of the first captured campaign.
-The [composed experiments](experiments/README.md) investigate regional reservation
-convoys, the fairness tradeoff of granting eligible writers, and recovery and
-retention under shared memory pressure.
+A programmatic laboratory for Orbital and its consumers. Actors run against
+controlled time, messages, storage and finite resources. Experiments compose
+models, placement, workload and incidents, with independent observers checking
+what actually happened.
 
-Start with [the public runtime](include/sixdb/sim/runtime.hpp) and
-[the Orbital composition](models/orbital.hpp). The Python learning runtime is
-[retired](../notebook/retired-spikes.md); [its lessons and unported questions](../notebook/orbital-simulation.md#lessons-from-the-learning-spike)
-remain research context. This implementation starts afresh from those boundaries;
-its formats are laboratory formats, not production ABIs.
-The [model guide](models/README.md) owns protocol assumptions and observation
-limits. [The retained-view fixture](models/retained_view.hpp) separately tests
-byte reconstruction, reader/replay roots, checkpoint publication and reclamation
-through the same runtime. It is an experimental retention policy, not Orbital GC.
+The [Orbital model guide](models/README.md) states what the native models execute.
+Their prepared journal path and local coordinator records are narrower than the
+[formal models](../../orbital/spec/README.md). Retention fixtures are separate
+experiments. The [Orbital walkthrough](../../orbital/ARCHITECTURE.md) explains the
+intended system; this laboratory is not its production implementation. Authored
+service costs do not predict production latency or throughput.
 
-## Build and exercise
+## Start with one experiment
 
-From the repository root, using the pinned Linux toolchain:
+From the repository root, using the [pinned Linux toolchain](../../BUILDING.md):
 
 ```sh
 orb -m ubuntu cmake --preset dev
-orb -m ubuntu cmake --build --preset dev --target simulator_validate simulator_run -j 4
-orb -m ubuntu build/clang/dev/workbench/simulator/simulator_run --help
-orb -m ubuntu build/clang/dev/workbench/simulator/simulator_run --seed 7 --incident consumer-reset
+orb -m ubuntu cmake --build --preset dev --target simulator_interactive -j 2
+orb -m ubuntu build/clang/dev/workbench/simulator/simulator_interactive
 ```
 
-The default repository build does not build this laboratory. Shared code compiles
-once into ordinary C++ libraries. `simulator_validate` builds its checks and runs
-only the `simulator_` CTest group.
+[interactive.cpp](examples/interactive.cpp) assembles an Orbital case in a
+caller-owned simulation, pauses after a private read, restarts the checker,
+and resumes. Its observer is outside the protocol: actors do not receive the
+fault schedule or another actor's state. The result separates failed and
+unfinished work from safety violations and event-budget exhaustion.
 
-Capture a campaign while development continues:
+To change the experiment, start with [Case and assemble](models/orbital.hpp)
+and the [model assumptions](models/README.md). To change a service or add a model,
+use the [runtime reference](runtime.md) and its [actor ports](include/sixdb/sim/runtime.hpp).
+Production logic can be hosted through controlled services as it develops;
+the current integer fixture and diagnostic formats are laboratory choices.
+
+## Run cases and retain comparisons
 
 ```sh
+orb -m ubuntu cmake --build --preset dev --target simulator_validate simulator_run -j 2
+orb -m ubuntu build/clang/dev/workbench/simulator/simulator_run --seed 7 --incident consumer-reset
 orb -m ubuntu python3 workbench/simulator/campaign.py \
   --suite smoke --output build/experiments/simulator/smoke-1
 ```
 
-This uses the existing Workbench capture/build receipt helper and a reusable
-incremental build workspace. Choose a new output directory each time. `--suite
-gauntlet` varies delay, offered load, failures, physical sharing and memory.
-`--binary PATH` runs an already-built executable without a source-capture claim.
-Python callers can import `evaluate`, `grid`, `ramp` and `pareto`; custom native
-clients can assemble actors and advance the library directly.
-`campaign.run_cases` also accepts an ordinary iterable of CLI argument mappings;
-`investigate.py` captures the regional, ordering, hosted-recovery and retention
-experiments through the same receipt machinery.
-[The interactive example](examples/interactive.cpp) pauses at an actual private
-read, restarts a checker and resumes the same experiment.
-Each campaign trial retains its exact arguments, stdout/stderr and streamed choice
-transcript. An append-only receipt preserves finished trials if the campaign is
-interrupted; the final summary is replaced atomically. Detailed trace reruns are
-diagnostics of the recorded case, not replacements for the original observation.
+The default repository build excludes this laboratory. Shared code compiles
+once into ordinary libraries. `simulator_validate` runs only its native/client
+checks. Choose a fresh campaign output directory; capture and build use the
+existing Workbench helpers and an incremental build workspace.
 
-## Components and evidence
+`--suite gauntlet` varies delays, offered load, failures, sharing and memory.
+`--binary PATH` runs an existing executable without claiming source capture.
+Python clients can import `evaluate`, `grid`, `ramp` and `pareto`, or pass an
+iterable of CLI argument mappings to `campaign.run_cases`. Each trial retains
+arguments, stdout/stderr and choices as it runs; an append-only receipt preserves
+completed trials if collection is interrupted.
 
-| Boundary | Responsibility |
-| --- | --- |
-| Event engine | Integer virtual time, event identity, seeded same-time ordering, streamed exact replay, bounded run/advance |
-| Physical services | Shared host CPU, NIC and disk queues; directed links; finite resident and durable bytes; submitted-operation lifetimes |
-| Actor ports | Local input, immutable message bytes, timers, explicitly charged computation, bounded storage operations and buffer ownership |
-| Model components | Protocol transitions, authority assumptions, ordering, recovery and publication; application bindings interpret opaque values and scopes |
-| Assemblies and clients | Roles, processes, placement, topologies, offered work and incidents; observations never become protocol evidence implicitly |
-| Independent observers | Safety checks, all-offer accounting, causal explanations and selected telemetry |
+The [experiment guide](experiments/README.md) owns regional reservation,
+hosted recovery and retention-pressure comparisons and their `investigate.py`
+commands. [Replay and trace slicing](runtime.md#reproduce-and-diagnose) diagnose
+captured cases; a diagnostic rerun does not replace the original observation.
 
-An actor receives `Context`; it cannot inspect the environment or another actor.
-A factory constructs a fresh actor on restart. Recovery must read retained records
-or exchange messages. Actors, processes and hosts are separate identities: several
-actors can die together while another process on their host remains alive.
+## Earlier findings
 
-`Simulation::run(deadline, event_budget)` supports repeated calls. Budget exhaustion
-does not advance time past pending work. An observer may call `pause()` to stop
-after the current atomic event, or schedule an incident with `at()`. Immediate
-lifecycle mutation and recursive `run()` from an observer are rejected. Faults inside
-an actor handler require that handler to expose another transition first. Observers
-remain active when verbose trace output is disabled; trace saving never controls
-fault injection, safety checks or offered-work accounting.
-
-The runtime emits causal records without retaining a complete history. Each actor
-delivery links to the prior local delivery; a storage read links to the write whose
-bytes it returned. Asynchronous storage and buffer records retain the submitting
-incarnation, even if a newer process exists when they finish. Large payload histories
-are optional; small tests can retain records in memory.
-
-## Physical semantics
-
-The initial physical model is deliberately small and explicit:
-
-- A host has one FIFO service queue each for CPU, transmit, receive and disk. A
-  directed link adds shared serialization and propagation. Queue byte limits,
-  rates and service delays are authored inputs. There is no implicit remote link.
-  Same-host messages currently consume the host's transmit and receive queues.
-- `compute(duration)` charges modeled CPU service. Actual native computation
-  produces bytes and decisions, but its wall time never changes virtual time.
-  Handler execution is atomic. The initial local clock is ideal monotonic time.
-- Successful send completion means local departure, not remote delivery. Lost
-  traffic retains work already incurred; receiving bytes consumes destination
-  capacity. Protocols must acquire their own remote acknowledgements.
-- A process crash discards actors, timers and queued callbacks, and stops that
-  process's remaining CPU work so healthy colocated work can run. Submitted writes
-  and already submitted sends can still complete. Power loss also cancels the
-  host's incomplete disk, CPU and NIC work. Packets already in flight survive the
-  sender's loss. Completed durable records survive reset; destruction removes them.
-  Reset stops processes; the harness explicitly restarts each one.
-  This is an instantaneous reset, not a sustained host-offline interval; model a
-  longer outage with stopped processes and explicit link incidents.
-- Storage is an actor-namespaced ordered map of atomic records on a host. Reads
-  reserve their declared maximum destination bytes until callback retirement.
-  Writes reserve the new value in addition to any prior value until replacement
-  completes. Deletion frees capacity only when durable. Keys and directory
-  bookkeeping are not included in the durable-byte counter.
-- Listing has bounded key count and reply bytes, with a lexicographic cursor.
-  Separate pages are not a snapshot. A protocol must discover and validate its
-  durable root before interpreting children; the environment never supplies a
-  hidden recovery inventory.
-- Immutable `Buffer` capabilities carry backend borrows through send/write.
-  Releasing ownership, cancelling a logical operation or losing a process does
-  not retire a surviving backend borrow. Receive/read/timer payloads also consume
-  capacity for their physical lifetime.
-
-STL metadata and actor-held model state are not automatically priced by their
-native allocator. Models must declare those allowances and any retained payload
-ownership. Object pages, mappings/COW, kernel rings, worker pools, multi-device
-layouts and protocol-specific completion reserves can be added as measured or
-experimental components; the current host model does not claim to represent them.
-
-## Reproduce and diagnose
-
-```sh
-orb -m ubuntu build/clang/dev/workbench/simulator/simulator_run \
-  --seed 7 --trace build/orbital-trace.jsonl --choices build/orbital-choices.txt
-orb -m ubuntu build/clang/dev/workbench/simulator/simulator_run \
-  --seed 7 --replay build/orbital-choices.txt
-orb -m ubuntu python3 workbench/simulator/trace.py build/orbital-trace.jsonl
-```
-
-Exact replay checks every scheduled event, cancellation and chosen dispatch, including payload
-fingerprints. It rejects missing/unused choices and new events. Use the captured
-source, case and cost model; this is not a cross-version replay format. The
-64-bit fingerprints detect accidental divergence and are not cryptographic
-verification. Semantic case identity and its obligations can outlive these bytes.
-Cancelled events are removed from the queue, including their retained native
-payloads; they do not accumulate as no-op dispatches until old deadlines.
-
-`trace.py --slice RECORD_ID ...` follows incoming, local-state and durable-evidence
-ancestry. Its diagnostic index is proportional to trace length, while the normal
-runtime streams records. Trace checking and finite seeded runs are evidence about
-observed histories, not liveness or refinement proofs. An unfinished offer, a
-missing required incident and a violated safety property must remain different
-results. Authored nanoseconds and byte allowances are not production performance
-predictions.
+The [initial campaign](FINDINGS.md) retains its dated results and construction
+lessons. The [simulator notebook](../notebook/orbital-simulation.md) keeps prior-art
+lessons and unported questions; the learning runtime is [retired](../notebook/retired-spikes.md).

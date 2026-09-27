@@ -12,7 +12,11 @@ questions about a first buyer, adoption within a team, expansion, customer
 economics and distribution. These are hypotheses to investigate, with current
 implementation evidence kept distinct from the earlier hypothetical database.
 
-## Networking around the consensus obligation
+## Orbital and distributed execution
+
+The [Orbital research questions](orbital-ideas.md) curate object, execution,
+networking and recovery ideas from Calico and earlier SixDB work.
+[Orbital](../../orbital/README.md) owns the current design and entry points.
 
 The [consensus-networking note](consensus-networking.md) replaces the retired
 synthetic routing spike. Revisit routing, propagation/write overlap, scheduling

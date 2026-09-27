@@ -180,7 +180,7 @@ and candidate-protocol findings, not evidence that an implementation exists.
 
 ## Composition boundaries
 
-The [architectural account](ARCHITECTURE.md#the-foundation-worth-sharing)
+The [architectural account](../ARCHITECTURE.md)
 collects the shared mechanisms and their distinct completion meanings. The
 following boundaries belong to these particular compositions.
 

@@ -1,4 +1,10 @@
-# Native reference models
+# Orbital experiment models
+
+The [Orbital walkthrough](../../../orbital/ARCHITECTURE.md) explains the intended
+system. This guide owns the narrower native models' assumptions and observation
+limits; [runtime services](../runtime.md) are shared machinery beneath them.
+
+## Transaction assembly
 
 `orbital.hpp` exposes a bounded composition that remains useful as the simulator
 grows: `assemble` installs actors into a caller-owned `Simulation`; `run_case` is
@@ -41,6 +47,8 @@ behind a younger WAN holder and the remaining cost of actual broad reservations.
 Native response serialization is deterministic but is not claimed identical to
 the formal queue projection's grant-event sequence.
 
+## Application and checked execution
+
 The integer-cell application owns read/write declarations, its canonical value
 bytes and the meaning of put, sum and transfer. The ordering fold treats scopes
 and effect bytes as opaque. This small fixture is not an Engine plan format.
@@ -54,6 +62,8 @@ a general extension interaction/status transcript, a WASM runtime or Firecracker
 execution. Fingerprints are accidental-corruption checks, not BLAKE3 or a security
 claim.
 
+## Recovery boundary
+
 Recovery reads an actor's durable root, pages through bounded directory listings
 and loads individual actual records. A destroyed consumer rebuilds from available
 witness messages and folds the retained prefix. The coordinator can recover its
@@ -65,6 +75,8 @@ model. Witness process restart can replay its own surviving local records, but
 permanent loss of leader storage is not automatically repaired. There are no
 claims about elections, network adaptation or sustained throughput.
 
+## Resource costs
+
 Each immutable retained record owns a charged buffer. Consumers additionally
 charge a per-command allowance for logical metadata; recovery pays the same
 allowance. Requests and private checker projections hold explicit buffers until
@@ -75,6 +87,8 @@ are not measured exactly. Record recovery/fetch reserves a 16 KiB destination;
 root reads reserve 256 bytes. Service delays and these allowances are authored
 model costs, not measurements. Both protocol and observer retain growing history:
 these finite experiments cannot establish sustainable throughput or reclamation.
+
+## Observation and interpretation
 
 The always-attached observer joins submitted record bytes to actual
 `storage.write` commits. It checks actual quorum evidence, prefix agreement of
@@ -109,6 +123,12 @@ offers finish. Fault receipts mean the action actually ran. A fault scheduled at
 durable write's timestamp precedes its callback under FIFO ordering; seeded ties
 may deliver that callback first. Exact write-before-callback recovery is tested
 under FIFO, while seeded cases explore both tie orders.
+
+## Retention fixtures
+
+The [retained-view fixture](retained_view.hpp) tests byte reconstruction, reader
+and replay roots, checkpoint publication and reclamation through the runtime.
+It is an experimental policy, not distributed Orbital GC.
 
 The separate [retention-pressure model](retention_pressure.hpp) composes an old
 reader, replay consumer, overwrite stream and small independent writer. Its

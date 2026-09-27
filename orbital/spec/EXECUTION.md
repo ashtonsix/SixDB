@@ -287,8 +287,8 @@ TLC checks or establish an unbounded theorem.
 
 ## What changes the architecture
 
-The [architectural account](ARCHITECTURE.md#classifying-what-changed) distinguishes
-protocol findings, model defects and abstraction limits across the families.
+The [campaign retrospective](https://github.com/ashtonsix/SixDB/blob/e40e87c/orbital/spec/ARCHITECTURE.md#classifying-what-changed)
+distinguishes protocol findings, model defects and abstraction limits across the families.
 These source-view and scope-movement findings retain their specific boundaries:
 
 | Finding | Classification and consequence |

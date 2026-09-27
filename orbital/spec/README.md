@@ -1,24 +1,22 @@
-# Orbital models and evidence
+# Orbital formal models
 
-The models explore whether Orbital's contracts compose under concurrency,
-failure and resource pressure. Start with [current work and coverage](RESULTS.md)
-for what is settled, what remains open and who owns it. The
-[historical baseline](evidence/baseline-before-design/README.md) preserves the
-incomplete pre-revision selection; the [design revision](DESIGN-CHANGES.md)
-explains the subsequent changes and which evidence needs replacement.
+These TLA+ models check how Orbital's contracts compose under concurrency,
+failure and resource pressure. For the system itself, start with the
+[architecture walkthrough](../ARCHITECTURE.md). Model conveniences and candidate
+mechanisms do not amend [BRIEF](../BRIEF.md) or [PHYSICAL](../PHYSICAL.md) implicitly.
 
-The [architectural account](ARCHITECTURE.md) explains shared concepts and
-consequential findings. The [verification plan](PLAN.md) owns required behavior,
-assumptions and composition. [BRIEF](../BRIEF.md) and [PHYSICAL](../PHYSICAL.md)
-describe the intended system; model conveniences and candidate mechanisms do
-not amend them implicitly.
+- [Results](RESULTS.md): current coverage, limitations and unfinished work.
+- [Verification obligations](PLAN.md): guarantees, assumptions and required compositions.
 
-The family reports explain the modeled mechanisms and the limits of their checks:
+Each selection linked from Results identifies exact inputs, outcomes and recovery
+of its full evidence. Earlier selections describe their own snapshots.
+
+For a particular mechanism, use the family reports:
 [journal authority](JOURNAL.md), [material and recovery](MATERIAL.md),
 [execution and restoration](EXECUTION.md), [delivery](DELIVERY.md), and
 [physical views and capacity](RUNTIME.md). These are views of a composed system,
-not independent subsystem specifications. The reports distinguish unrestricted
-finite families from joined cases with authored service schedules.
+not independent subsystem specifications or C++ module definitions. They distinguish
+unrestricted finite families from joined cases with authored service schedules.
 
 ## Find and run a check
 

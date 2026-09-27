@@ -24,7 +24,7 @@ A global index can introduce predicate waits outside the primary row's owner.
 Replacing a published generation from an old snapshot can lose live destination
 corrections unless that replacement is the intended application semantics.
 
-Recovery questions stay in [Orbital's mining guide](../../../orbital/MINING.md#failure-recovery-and-retained-evidence):
+Recovery questions stay in [Orbital research questions](../orbital-ideas.md#failure-recovery-and-retained-evidence):
 revoking old authority, preserving possibly chosen suffixes, exporting evidence
 under distress, and retaining enough dependencies to reopen. Neither the old
 tiny probes nor the current prepared-authority model settles those protocols.

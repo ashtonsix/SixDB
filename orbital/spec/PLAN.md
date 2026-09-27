@@ -1,36 +1,13 @@
-# Orbital verification plan
+# Orbital verification obligations
 
-This is a ground-up restart, dated 2026-09-27. The earlier investigation is now
-a [spike](../../workbench/spikes/orbital-formal-first-pass/README.md). Its tools,
-counterexamples and sizing observations are useful inputs; its passing cases
-do not discharge the obligations below. Independent ground-up audits and review
-of the integrated plan preceded replacement model implementation. The review
-covered transactions/epochs/dataflow, authority/admission/recovery and physical
-views/capacity, with Orbital ASSISTANT separately challenging the whole composition.
+This document maps the correctness-critical design in [BRIEF](../BRIEF.md) and
+[PHYSICAL](../PHYSICAL.md) to maintained model obligations and their assumptions.
+[RESULTS](RESULTS.md) owns current evidence and open work; the family reports map
+the requirement IDs below to concrete models, configurations and properties.
+The implementation-facing [architecture](../ARCHITECTURE.md) explains how these
+concepts fit together without treating formal modules as runtime components.
 
-## Destination
-
-The deliverable is a maintained, executable account of the correctness-critical
-design in [BRIEF](../BRIEF.md) and [PHYSICAL](../PHYSICAL.md): its observable
-guarantees, the mechanisms that establish them, the assumptions those mechanisms
-need, and the ways the mechanisms compose. It is not a collection of independently
-interesting checks or a promise that more cases will eventually cover the design.
-
-For every requirement below, completion means an identified model and property,
-a completed distinguishing configuration, an independent review of its abstraction
-and assumptions, and a retained result. A relevant deliberate defect must be caught
-by the intended property; a reachability case must show the promised path actually
-occurs. Mechanisms that are still unspecified must receive an explicit candidate
-design before their models can establish anything about them. An unresolved
-internal dependency keeps the corresponding requirement incomplete.
-
-TLC establishes properties of the complete reachable graphs of the stated finite
-instances. It does not prove arbitrary-size correctness or that future C++ code
-implements these specifications. The final report will state that qualification
-alongside the checked guarantees. It will not substitute that general caveat for
-identifying a missing mechanism or composition check.
-
-The destination has six observable guarantees:
+## Observable guarantees
 
 1. Admitted history has one recoverable authority and interpretation. Failure,
    retransmission, relocation and restoration cannot silently choose another.
@@ -48,8 +25,11 @@ The destination has six observable guarantees:
    complete or reach an agreed failure. Resources and recovery must not introduce
    a circular wait that those assumptions merely conceal.
 
-These are the acceptance criteria for the whole exercise. No model count, case
-count or elapsed-time target substitutes for them.
+Evidence for each requirement needs a distinguishing completed configuration,
+reviewed abstraction and assumptions, and a retained result. Deliberate defects
+must fail the intended property; witnesses establish that the named path occurs.
+An unresolved internal dependency remains a gap even when its consumers pass.
+TLC checks configured finite graphs, not arbitrary-size implementations.
 
 ## Boundary of the verification
 
@@ -84,11 +64,13 @@ the forbidden histories and conditional progress underlying those measurements.
 Detailed route/placement optimizers, OS syscall implementations and arbitrary
 application algebra are not silently made part of the TLA proof obligation.
 
-## Design choices the models must make explicit
+## Protocol bindings used in verification
 
-The briefs intentionally leave some protocol choices open. The following are
-candidate bindings for this verification, subject to review and counterexamples;
-they do not edit either brief by implication.
+These bindings make the modeled mechanisms explicit. Some restate the briefs;
+others select candidate mechanics where the briefs leave a choice open, including
+scope enrollment, root messages, early dispatch ranges and the SOS pause policy.
+Checking a candidate does not promote it into the production architecture. The
+family reports own the exact fault boundaries and finite configuration limits.
 
 - A crash-fault journal uses durable promises and accepted prefixes, explicit
   prepare/recovery and quorum acceptance. Prepared leadership survives ordinary
@@ -108,8 +90,8 @@ they do not edit either brief by implication.
   with explicit holder reservations and transfer/release acknowledgements.
   Physical writes can outlive their submitter. Immutable material/checkpoint
   writes cannot themselves create a logical root or publish a new registry;
-  only an agreed record does that. The spike's drain candidate is not imported
-  as an unimplemented service assumption.
+  only an agreed record does that. Acquisition may be derived from an existing
+  same-owner record under the rule below.
 - Data protection names its fault interval. Historical receipts do not reset a
   destruction allowance. Repair, storage incarnation and the closure needed to
   renew protection are explicit. No actor can consult the observer's live-copy
@@ -125,9 +107,7 @@ they do not edit either brief by implication.
   failure requests an agreed outcome or preserves recovery; it does not invent
   an outcome privately.
 
-The bindings also settle these less visible choices:
-
-**Reservation policy revision.** The post-campaign design comparison selects
+**Reservation policy.** The current design uses
 original enqueue order with protection after older conflicts release. Waiting or
 held requests retain their local age until durable fixation or cancellation.
 A waiter excludes younger conflicts only after its older live conflicts are gone;
@@ -135,14 +115,15 @@ actual holders always exclude conflicts. Every agreed local record performs the
 canonical grant closure before exposing its state and outputs. Replay preserves
 that interpretation, live order and full reply evidence. Continuing-arrival
 progress, the admitted-younger-WAN boundary and the actual Tx/journal binding are
-additional obligations; the previous ordered/eligible projection remains a
+maintained obligations; the previous ordered/eligible projection remains a
 counterfactual comparison. No in-place change of old journal interpretation is
 assumed.
 
-**Scope changes.** Plans bind a versioned scope/authority map before acquiring
+**Scope changes.** The modeled enrollment protocol binds a versioned scope/authority map before acquiring
 any reservations. Migration closes enrollment of new plans touching the moved
-scopes, drains enrolled old plans, transfers versions, reader floors and retention
-obligations, then opens the new map. It never retargets a partially acquired plan.
+scopes, drains enrolled old plans, transfers ordering/version state and preserves
+outstanding retention obligations, moving their ownership only when needed, then
+opens the new map. It never retargets a partially acquired plan.
 Closing only the destination reservation gate can deadlock: a new-map waiter may
 hold another shard needed by an old-map transaction whose completion migration
 requires. That cycle is a required control.
@@ -179,6 +160,8 @@ ambiguous range. A retry cannot assign the same event to a fresh range/generatio
 Each range grants dispatch to one named driver incarnation; replacement never
 reuses that grant or assigns the same range to another live driver. A delayed old
 driver can finish its already authorized dispatch, but no replacement repeats it.
+Within a live range, claim-before-dispatch is atomic: one volatile claim creates
+one pending attempt, which may arrive after driver death.
 Retired events are not replayed to that processor. This
 accepts missed early effects and amortizes registration; it adds no synchronous
 per-event persistence before early execution. Stable event identity survives retries.
@@ -256,11 +239,22 @@ bytes and future suffix obligations. This prevents no-effect resolution revealin
 a fallback that GC already removed. Recipe graphs are well-founded; a cycle of
 references with no retained base cannot count as reconstructible.
 
-Every attempt first journals `Begin(g, holders, recipe-or-coverage)` under the
-owner, making its destinations and obligation discoverable before any hold request.
+An attempt's destinations and obligation must be discoverable from agreed owner
+state before any hold request. The explicit path journals
+`Begin(g, holders, recipe-or-coverage)`. A prepared acquisition may instead be
+derived from an existing chosen operation and its retained prefix when they fully
+define that obligation under the same owner. Normal folding and replay use the
+same derivation. The modeled shortcut covers a complete prepared acquisition;
+later recipe or holder choices still need recoverable ownership. This removes
+the separate Begin append, not the durable success/abandonment distinction.
 `Register(g)` and `Abort(g)` are mutually exclusive terminal registration choices;
-subsequent registered-root release has its own ordered record. Recovery reads Begin
-and actual replies, then completes registration or records justified abandonment.
+subsequent registered-root release has its own ordered record. Recovery reconstructs
+the attempt from the actual agreed history and repeats correlated requests to
+surviving holders, then completes registration or records justified abandonment.
+Owner reset erases its volatile replies without resetting surviving peers. Holders
+regenerate replies from durable state; idempotence suppresses duplicate effects,
+not valid repeated answers. Recorded successful acquisition permits serving any
+surviving complete valid copy without recollecting every original acknowledgement.
 Holders persist terminal abort/release tombstones and reject crossed old requests.
 Late submitted hold/cache writes cannot supersede a later terminal journal record.
 A tombstone can compact into a contiguous terminal-generation floor, never a maximum
@@ -286,9 +280,10 @@ warning times and cost-optimal evacuation remains empirical networking work.
 
 ## Coverage map
 
-Each row names a requirement family, not one assertion that can restate its own
-guard. The model descriptions below specify distinguishing interactions. The
-final case catalog will map these identifiers to exact configurations/properties.
+Each row names a requirement family. The names in the final column are conceptual
+families, not proposed runtime modules. The reports for [journal](JOURNAL.md),
+[execution](EXECUTION.md), [material](MATERIAL.md), [delivery](DELIVERY.md) and
+[runtime](RUNTIME.md) map these IDs to the actual catalog entries and properties.
 
 | ID | Required behavior | Owning model / composition |
 | --- | --- | --- |
@@ -306,7 +301,7 @@ final case catalog will map these identifiers to exact configurations/properties
 | A4 | Unknown durable tails remain discoverable after producer loss; C1/C2 do not inherit L-stream ordering | AdmissionMaterial + TransactionMachine |
 | A5 | Early pre-persistence dispatch is at most once per stable event/processor despite ambiguous generation recovery | AdmissionMaterial + DeliveryDataflow |
 | T1 | Effect reservation and read invalidation are separate opaque relations | TransactionMachine |
-| T2 | Atomic local group grants, common shard order, no overtaking, local release after final durable c | TransactionMachine |
+| T2 | Atomic local group grants, common shard order, protection after older conflicts drain, canonical per-record grant closure and local release after final durable c | TransactionMachine |
 | T3 | Generated unique immutable positions respect relevant bounds, conflicts, known causality and requested freshness | TransactionMachine |
 | T4 | Bounds register before reading/waiting; late discovered reads retain c; own tentative effects are included | TransactionMachine |
 | T5 | Actual observations and outputs agree with independent serial evaluation for multiple overlapping writers and readers | TransactionMachine |
@@ -356,172 +351,91 @@ final case catalog will map these identifiers to exact configurations/properties
 | P4 | Finite admitted obligations finish or agree failure under explicit service/fault assumptions | CapacityProgress + protocol progress configs |
 | P5 | Isolated alarms trigger bounded probes only; catch-up/repair/SOS use counted capacity without blocking the healthy admission pair | CapacityProgress + JournalAuthority + RecoveryMaterial |
 
-## Model structure and integration
+## Shared model structure
 
-Kernels are variable-free modules over explicit state records. A transition is
-`[tag, next, emissions]`; wrapper specifications own variables and choose enabled
-transitions. Shared commands are `[owner, id, kind, body]`; emissions are ordered
-sequences of `[id, src, dst, kind, body]` events. Body records carry the context/evidence needed by their
-consumer, not an observer's conclusion. Journal input occurrences are a finite
-authored workload including explicit duplicate submissions; retries preserve their
-identity and remain deliverable. There is no arbitrary maximum log length that
-silently disables an otherwise valid retry.
+Kernels use explicit state records; wrappers own variables and choose enabled
+transitions. A transition carries `[tag, next, emissions]`; commands identify
+`[owner, id, kind, body]`, and ordered emissions identify their source, destination
+and evidence. These are model representations, not a proposed implementation ABI.
+Actual records and bytes produced by one component feed the next. Observer state
+can check global truth but cannot authorize a protocol action.
 
-The shared vocabulary includes lineage, stable transaction/context, source/command
-identity, scope-map revision, cut/position, parent/call/emission slot, root and
-enrollment generation, recipe/interpretation, physical-copy/storage incarnation,
-view/resource slot and submitting incarnation. The cut interface separates
-`RetainCut(context,c,scope,map)` → `CutProtected(root,evidence)` from
-`ExactRecipeReady`/`ViewGrant`. The first protects fallback and pending/future
-qualifying results; the second supplies actual bytes after visibility resolves.
-Read-bound and coverage registration share the source owner's agreed order.
+Shared identities distinguish lineage, transaction/context, command, scope-map
+revision, cut/position, call/emission slot, retention/enrollment generation,
+recipe/interpretation, physical copy, storage incarnation, view and submitting
+incarnation. Journal inputs can repeat an identical command; idempotence belongs
+to the fold. Finite authored workloads and any retry reduction must preserve the
+particular duplicate, delayed-receipt and recovery interactions being checked.
 
-The code is divided by these responsibilities, not by unrelated copies of the
-protocol. JournalKernel produces the delivered records used by joined models;
-the transaction semantic kernel is shared by its own specification and the
-independently scheduled epoch executors. ViewsRuntime and CapacityProgress consume
-the same root/publication and operation-retirement events used in recovery cases.
+The cut interface separates `RetainCut(context,c,scope,map)` and
+`CutProtected(root,evidence)` from `ExactRecipeReady` and `ViewGrant`. Protection
+preserves fallback and pending/future qualifying results before actual bytes are
+available. Read bounds and coverage registration share the source owner's order.
+Independent implementations of similar-looking state flags do not establish this
+connection; composed models reuse the actual providers or a checked mapping.
 
-The models share identity, durable-record and outcome vocabulary. They must not
-copy each other's assumed conclusions into unrelated state flags. Every exported
-event records its evidence, and the consumer's next action uses that event.
-Observer histories may check truth independently but cannot authorize a protocol
-transition. Delayed receipt is distinct from durable completion wherever recovery
-or custody depends on the distinction.
+Each family retains distinguishing obligations beyond simple state invariants:
 
-**JournalAuthority.** Explicit per-witness durable promises/accepted prefix,
-leader recovery replies, proposals, durable accept replies and learned prefix.
-Unique ballots belong to one leader/configuration. Promise persistence precedes
-the reply. A promise quorum selects the highest accepted ballot's prefix, longest
-among equal-ballot reports, before extension. Accept persistence precedes evidence.
-Full-prefix messages bind configuration, ballot, absolute length and exact content;
-there is no hidden FIFO/session assumption. A follower can learn from its persisted
-acceptance plus matching leader evidence. A terminal suffix remains terminal after
-recovery; successor voters persist its certified base before voting. An erased
-voter cannot reuse its old storage incarnation.
-Start with three voters, two competing ballots and two entries; add a terminal
-transfer, two candidate successor identities and old/new configurations. Check
-prefix agreement and immutable terminal successor independently of leader guards.
-Model restart from durable state and messages from earlier incarnations. A
-refinement mapping exposes the chosen prefix as the abstract durable log; choosing
-and learning are separate. Progress requires an eventual stable eligible leader,
-a communicating surviving quorum and available recovery material, not universal
-network delivery or a third witness. Controls omit promise durability, highest
-accepted-prefix recovery, old closure or successor binding.
-
-**TransactionMachine.** One composed kernel contains actual reservation queues,
-generated positions, read bounds, pending outputs, multiple logical versions,
-tentative effects, durable owner records, decisions and participant installation.
-The minimum acceptance case has two overlapping writers and a reader on two
-shards. Programs include reads that affect writes, late source discovery, a
-no-change/abort, complete replacement, and a checked updating transaction. Check
-actual observations and published effects against a separate serial evaluator;
-do not define eligibility by asking the evaluator. Distinguish local release,
-all-fix acknowledgement, verification, commit and installation. Include read-only
-context selection, pre-c cancellation with crossed messages, post-c owner loss,
-late older installation and retained causal/freshness constraints. Its durable
-service is the same abstract interface refined by JournalAuthority. Dedicated
-seam cases drive an owner change between one participant's fix and the next, and
-between durable decision and receipt. Reservation progress and read progress
-must be checked in this kernel, not only in separate noninteracting fixtures.
-One required four-transaction configuration joins an earlier pending/no-effect
-writer, an RMW, a later complete replacement and a bound-registering reader.
-The replacement can serve the reader while the RMW still owes its real predecessor;
-late installation cannot clobber the replacement.
-Independent outcome semantics additionally require valid work with all matching
-required checks, retained inputs and no authorized failure/cancellation to commit.
-An abort must cite actual modeled program/envelope/check/retention/resource/cancel
-evidence. An always-abort mutant must fail even if other successful witnesses exist.
-
-**EpochExecution.** Two replicas consume identical agreed epochs with independent
-physical readiness/schedules. The state transition semantics are shared with the
-transaction kernel; a second simplified transaction protocol would not establish
-composition. A legal dependency relation is derived from declared operations and
-reference order before execution, not from comparing the eventual results. Check
-the full fold projection, including observations, bounds, resolutions, generated
-messages and persisted continuations. Include overlapping writers and conditional
-reads, a pending checked transaction across two epochs, speculative preparation,
-and independent publication. Controls remove a noncommuting dependency, compare
-only final deltas, close an epoch by losing its continuation, or publish speculative
-effects. Branch-specific witnesses establish actual alternative schedules and
-useful progress; deterministic scheduling by fiat is insufficient.
-Dynamic branches derive calls/dependencies from captured input and parent/call
-identity, so the complete DAG need not exist at admission. A third epoch exercises
-pending → resumed → published work. The reference interpreter skips blocked
-continuations while processing other enabled work; it is not a shard-wide barrier.
-
-Closure uses **logical readiness under agreed input**, never local CPU, page or
-network readiness. Plans select in-epoch work or deterministic stopping points.
-In-epoch work must reach its logical normal form before closure even if one replica
-is waiting for disk. Deferred work emits a stable continuation and resumes through
-later agreed input. A remote fact absent from that input can cause carryover;
-physical slowness alone cannot. The suite must detect a mutant that chooses
-carryover from local readiness. Shared semantic operators expose node identity,
-dependencies, local evidence and authoritative application; capture/compute can
-stutter. The abstract transaction frontier also admits the declared independent
-steps, rather than imposing strict physical log order and pretending reordered
-execution refines it. A separate serial application oracle still checks meaning.
-
-**AdmissionMaterial.** Explicit producer stream packages, independent holder
-incarnations, separate payload/decoder persistence, receipts, journaled contiguous
-frontiers, loss and repair. At least two LSNs and three failure domains expose a
-hole and correlated material destruction; a repair case adds a replacement holder
-and second incident. Actors see evidence messages, not global survivor counts.
-Checks distinguish historical eligibility, present reconstructibility, the stated
-failure allowance and renewed protection. The historical-noncoexistence trace is
-retained as a boundary requirement, not made unreachable by an omniscient guard.
-Controls count relay copies twice, admit across a hole, acknowledge before material
-durability, omit interpretation dependencies, or renew protection on stale evidence.
-At least two producer streams distinguish per-stream contiguity from accidental
-global ordering. A discoverable tail and early-dispatch generation cover A4/A5.
-
-**RecoveryMaterial.** Durable logical roots reference actual symbolic base,
-suffix, accepted-result, decoder and executable tokens. Local caches, live physical
-borrows and recovery discovery are separate. Check reader/replay/head/checker and
-delivery obligations together through checkpoint publication, root transfer,
-registry restart, late submitted writes and GC. An immutable representation
-conversion supplies another complete recipe, not a new logical version. Include
-authority/material separation, partial SOS exports, normal restoration and explicit
-fenced PITR. A chosen prefix alone does not authorize serving missing material.
-Controls drop dependencies, publish before persistence, advance replay/checkpoint
-past recoverable effects, collect during transfer, publish a stale root cache, or reopen
-an unfenced lineage. Progress conditions must identify eventual access to an
-actual surviving recipe, not a magical restore transition.
-
-**DeliveryDataflow.** Logical obligations and complete contribution identities
-outlive particular messages/routes/workers. Explicit local/remote receipt,
-durable custody, processing/commit, completion and cancellation messages permit
-duplicate delivery and rerouting while work is in flight. Application fixtures
-cover a two-part aggregate, dynamic discovery with one child, a shared result,
-and a checkpoint plus output transaction. A tentative result may travel but cannot
-discharge publication. Check exactly the application-declared coverage and effects;
-the protocol cannot infer closure from an empty transport queue. Two origins can
-produce the same logical contribution without counting twice. Controls release
-on transport receipt, identify work by route/worker, count duplicate partitions,
-close before child registration, or cancel another subscriber's root.
-
-**ViewsRuntime.** Concrete symbolic bytes distinguish versions and disjoint
-logical items sharing a physical page. Track view mappings/rights, tentative
-representations, submitted backend users, physical completion, callback delivery,
-incarnations and accounting. Race no-COW selection against a late old view and
-checker; materialize from retained tokens; install or undo two writers sharing
-a page; cancel/restart while hashing/sending/persisting; replace a binding.
-Check actual read/observed bytes and permitted extents, not only pin counters.
-Model validated async operations separately from CPU read-only mappings. Controls
-allow new access after exclusivity was tested, reuse after cancellation, accept an
-old callback, restore a whole stale page, or expose an adjacent unauthorized item.
-
-**CapacityProgress.** Bounded workers, ordinary bytes, completion/fault-service
-bytes, metadata and backend capacity form an explicit resource graph. Put one
-worker at a first-touch wait while admitted work owns ordinary capacity; resolution
-must still run. Couple an output/decision obligation to the capacity needed to
-resolve it, including cancellation and owner restart. Check accounting and temporal
-completion/refusal under concrete fair service. The positive policy reserves an
-escape path; defective variants let ordinary admission consume it or hold a latch
-needed by the resolver. Independently runnable unrelated work remains present in
-temporal controls so excluding a bad behavior through contradictory fairness
-cannot look like success. Unbounded application demand remains an admission or
-application policy question, not a claimed arbitrary-resource progress theorem.
+- **JournalAuthority:** durable promises and accepted prefixes, highest accepted
+  prefix recovery before extension, and evidence of persistence before replies.
+  Messages bind configuration, ballot and exact prefix; choosing and learning
+  are separate. Successors persist certified state before voting, and erased
+  voters cannot reuse old storage incarnations. Check prefix/successor agreement
+  independently of leader guards. Progress needs a stable eligible leader,
+  communicating quorum and recovery material, not delivery from every witness.
+- **TransactionMachine:** actual queues, generated positions, bounds, versions,
+  tentative effects, decisions and installation feed an independent program
+  evaluator. Local release, all-fix acknowledgement, checks, commitment and
+  installation remain separate. The pending/no-effect, RMW, replacement and reader
+  chain must preserve each real dependency through late installation. Valid work
+  with matching checks and no authorized failure must commit; an always-abort
+  implementation is a defect. Claimed failures need actual program, envelope,
+  verification, retention, resource or cancellation evidence.
+- **EpochExecution:** independently scheduled consumers use the transaction
+  semantics and compare complete logical state and outputs. Dependencies come
+  from declared operations and reference order, not eventual matching results.
+  Closure uses logical readiness under agreed input. A missing remote fact can
+  leave a continuation; local CPU, disk or page readiness cannot choose carryover.
+  In-epoch work reaches its normal form before closure, while deferred work resumes
+  through later agreed input. Dynamic calls use captured inputs and stable parent
+  identity. Independent work and alternative legal schedules must be reachable;
+  final-value agreement and one imposed physical schedule are insufficient.
+- **AdmissionMaterial:** independent holder incarnations and separate payload and
+  interpretation persistence supply actual receipts for contiguous frontiers.
+  Historical eligibility, present reconstructibility, the failure allowance and
+  renewed protection are distinct. Actors never consult global survivor counts.
+  Histories include noncoexistent receipts, holes, correlated loss, repair and
+  renewed incidents; controls reject duplicate-domain evidence, early replies,
+  missing interpretation and stale renewal. Unknown tails remain discoverable.
+  Early-dispatch observations count immutable event/processor identity, excluding
+  generation or driver, so reassigning an old event cannot evade at-most-once.
+- **RecoveryMaterial:** reader, replay, head, checker and delivery roots refer to
+  actual base, suffix, result, decoder and executable material through transfer,
+  checkpointing, restart and deletion. Conversion creates another recipe for the
+  same version. Cold-owner loss removes its volatile knowledge while survivors
+  retain theirs. Progress reacquires actual evidence and a surviving recipe.
+  Controls expose missing dependencies, premature publication/collection, stale
+  caches, forgotten pending-source duties and unfenced restoration.
+- **DeliveryDataflow:** stable contributions and recipient obligations survive
+  duplicate origins, retries, reassignment and representation changes. Two-part
+  aggregation, dynamic children/feedback, shared results and checkpoint-plus-output
+  cases check application-defined completion. An empty network queue, tentative
+  result or transport receipt cannot discharge that completion. Cancelling one
+  subscriber cannot release another's retention or rewrite enrolled coverage.
+- **ViewsRuntime:** symbolic bytes distinguish versions and independent items on
+  one page. Exercise late readers/checkers against no-COW reuse, reconstruction,
+  two-writer installation/undo, stale bindings and callbacks after cancellation
+  or restart. Check actual bytes and permitted extents, including asynchronous
+  operations, independently of CPU mapping rights. Pin counts alone are not
+  evidence of correct access or safe reclamation.
+- **CapacityProgress:** explicit worker, memory, metadata and backend resources
+  connect admission to resolution, recovery and retirement. Ordinary work can
+  occupy capacity while fault/completion service remains runnable. Controls
+  exhaust that path or retain a latch its resolver needs. Unrelated activity
+  stays enabled in liveness controls so contradictory fairness cannot conceal
+  the target's stall. SOS progress additionally needs valid reconciliation/unpause;
+  capacity cannot enable an action the pause policy forbids. Arbitrary application
+  demand is outside these finite completion claims.
 
 ## Composition evidence
 
@@ -547,15 +461,15 @@ definition and checked mapping, or an executable composed configuration:
   and completion are represented, with no progress assumption that requires the
   very capacity being checked.
 
-This is not an automatic assume-guarantee proof. The final report must distinguish
-machine-checked refinement, executable seam coverage, reviewed abstraction
-arguments and remaining implementation obligations. All critical internal arrows
-need actual evidence before this plan is complete.
+The assessment distinguishes machine-checked correspondence, executable joined
+histories, reviewed abstraction arguments and implementation obligations. These
+connections do not constitute an automatic assume-guarantee or arbitrary-size
+composition proof. A missing connection remains explicit in RESULTS.
 
-## Tractability and evidence
+## Required joined histories
 
-The following joined histories are mandatory. A cross-reference is not their
-implementation: the preceding transition must create the records/bytes consumed
+These histories define required interactions. A cross-reference alone does not
+exercise them: the preceding transition must create the records/bytes consumed
 next, through shared operators or an explicit checked refinement.
 
 | Case | Joined execution and independent observation |
@@ -576,12 +490,12 @@ conditions. A mapping of final states does not establish trace compatibility;
 safety refinement alone does not transfer liveness. Joined cases must retain the
 three-way authority/material/capacity dependencies, not assume one service ready.
 
-### Planned finite families
+## Finite dimensions
 
-These dimensions define the intended complete campaign before performance tuning.
-Configs may factor irrelevant interleavings only with a stated justification;
-each named interaction remains mandatory. A costly case remains unfinished until
-a justified representation makes it tractable.
+These dimensions distinguish the required mechanisms. The catalog and family
+reports specify the actual bounds, reductions and authored schedules. Factoring
+irrelevant interleavings needs a justification preserving the named interaction;
+a stopped graph supplies no completed evidence.
 
 | Family | Distinguishing instance | Larger required instance |
 | --- | --- | --- |
@@ -594,59 +508,44 @@ a justified representation makes it tractable.
 | Views/runtime | 2 versions, 2 items/page, reader + writer + backend user | 2 writers + late reader/checker, two incarnations, queued/active/undrained users and two-page materialization |
 | Capacity | 1 ordinary worker plus resolver/completion service, finite bytes and metadata | 2 admitted obligations plus repair/shared subscriber; cyclic demand across two resource kinds |
 
-Every family has safety, applicable conditional-progress cases, intended defects
-and successful-path witnesses. C1–C9 must name exact configs and properties rather
-than disappear under a family label.
+Every family needs safety, applicable conditional-progress checks, intended
+defects and successful-path witnesses. C1–C9 map to exact configurations and
+properties in the family reports. Enlargements should add a meaningful interaction,
+such as another overlapping writer, independent domain or outstanding backend
+user; a larger checker count cannot substitute for missing writer overlap.
 
-A5's observer counts applications by stable logical processor and immutable event,
-excluding generation/driver/route. A mutant reassigns the same event to a fresh
-generation without reusing the retired one; the correct case includes delayed old
-dispatch and lost replies. Volatile claim-before-dispatch is atomic within a live
-range. SOS transaction progress requires eventual valid reconciliation/unpause;
-reserved capacity alone cannot enable an action the pause policy forbids.
+Joined histories allocate enough distinct records for context, position, outcome,
+decision and transfer/cancellation. A compacted representation cannot merge the
+persistence and receipt boundaries those histories are meant to exercise. Authored
+service schedules remain restrictions on the explored composition even when local
+provider families explore broader interleavings.
 
-Joined configurations allocate enough distinct records for context, c, complete
-outcome, decision and transfer/cancellation. The two-entry journal pilot is not a
-cap on those histories. A compacted-state refinement may reduce representation,
-but cannot merge persistence/receipt boundaries that the seam is meant to test.
+## Maintaining models and evidence
 
-Select distinguishing finite families from this coverage map before running them.
-Small cases expose each protocol interaction; adjacent larger instances add a
-writer, shard, log entry, checker, domain/incarnation, reader or outstanding user
-where that dimension tests a different obligation. Do not substitute a large
-checker-count graph for overlapping-writer coverage. The final catalog records
-exact family bounds and what each enlargement adds.
+Review the requirement/property mapping, actor knowledge, fault boundaries,
+fairness and reachable successful/adverse paths when a mechanism or abstraction
+changes. A deliberate defect should fail its intended property, not an unrelated
+error. A witness establishes existence, and a completed safety graph does not by
+itself establish conditional progress. Every claimed abort must have independent
+evidence; matching a fabricated result against itself proves nothing.
 
-Run complete local pilots first using the shared pinned TLC/JVM tooling. Capture
-generated/distinct/queued states over time, depth, peak RSS, metadata size,
-temporal-check cost and total elapsed time. A growing queue is not a finish-time
-estimate. Stops are incomplete; no arbitrary queue/clock/retry constraints prune
-an inconvenient behavior. Idempotent pending obligations can abstract redundant
-retries only with the identity/recovery argument stated. No symmetry for temporal
-checks; terminal stuttering requires discharged obligations independently defined.
+Measure tractability on complete small cases before spending resources on larger
+ones. Retain generated/distinct/queued states, depth, memory and temporal-check
+cost; a growing queue does not estimate completion time. Stops are incomplete.
+Do not prune inconvenient histories with arbitrary queue, retry or clock limits.
+Retry and representation reductions need explicit identity/recovery and enabled-step
+arguments, including preservation of fairness. Temporal checks do not use symmetry;
+terminal stuttering needs independently established discharged obligations.
 
-After each model's distinguishing cases finish, complete adjacent sizes and test
-worker scaling on an unchanged graph. Select the full larger suite against the
-roughly one-hour aggregate target, including temporal runs and controls. Record
-any uncovered combination explicitly rather than cutting it silently to fit.
-Bare metal follows measured useful work and a credible full-suite budget; reusable
-checkpoint tooling already exists and should not be reimplemented.
+Use the pinned runner and existing checkpoint tooling described in
+[README](README.md). Exact parsed dependencies, configuration, checker and tool
+identity determine whether a receipt applies. Changing an imported kernel requires
+replacement evidence even if a particular case seems unlikely to visit the changed
+branch; an unrelated edit does not. Preserve raw outcomes, sources and useful
+counterexamples through the existing evidence collector and artifact tools.
+Dated retained selections stay immutable; current status belongs in RESULTS.
 
-Independent review examines the requirement-to-property map, protocol knowledge,
-fairness, abstraction/refinement and reachable successful/adverse paths before
-reviewing a green result count. Models and their counterexamples receive review
-again after implementation. The report accounts for every coverage row, every
-internal dependency and every proposed design change. Only then is this stage
-complete; architecture sketch and starter implementation are subsequent work.
-
-Primary methodological references: [TLA refinement tutorial](https://lamport.azurewebsites.net/tla/tutorial/session11-1.html),
-[model checking and refinement](https://lamport.org/pubs/yuanyu-model-checking.pdf),
-and [Paxos safety](https://lamport.azurewebsites.net/pubs/paxos-simple.pdf).
-These explain methods and prior algorithms; they do not establish this design.
-
-The consequential review corrections are part of the bindings above: logical epoch
-closure; independent outcome justification; immutable early-dispatch ranges;
-bootstrap custody before authority; distinct authority/readiness/redundancy;
-discoverable terminal hold attempts; pending-cut roots; physical-copy deletion
-generations; non-atomic scope enrollment; and sufficient records in composed runs.
-Agreement on this plan is not verification of the models that implement it.
+A source-matched selection records what was checked, not an implementation proof
+or a clean benchmark of full-suite wall time. Physical performance and native
+refinement remain separate investigations. The earlier campaign's sizing and
+review history can be recovered from its retained evidence and Git history.

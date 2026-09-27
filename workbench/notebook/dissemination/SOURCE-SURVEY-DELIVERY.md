@@ -11,7 +11,7 @@ Calico and Consurgent are idea and evidence sources, not inherited contracts.
 
 | Source | Inspected scope and interpretation |
 | --- | --- |
-| [Orbital MINING](../../../orbital/MINING.md#failure-recovery-and-retained-evidence) | Failure/recovery pointers and their stated evidence limits. Older Orbital consensus drafts are inventoried by the networking survey. |
+| [Orbital research questions](../orbital-ideas.md#failure-recovery-and-retained-evidence) | Failure/recovery pointers and their stated evidence limits. Older Orbital consensus drafts are inventoried by the networking survey. |
 | Recovery [README](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/recovery/README.md), [DETECTION](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/recovery/DETECTION.md) | Recovery scope; detection, evidence, repair recipes, correlated failures and resource reserves. |
 | Recovery [QUORUM](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/recovery/QUORUM.md) | Vulnerability after loss, counterexamples, protection predicates, relocation and recovery-state requirements. |
 | Recovery [HANDOFF](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/recovery/HANDOFF.md) | Any-witness ingress, protocol/transport separation, terminal transfer, interruption histories, constraint frontiers and limits. |
@@ -310,7 +310,7 @@ long-lived pins, ejection authority and interrupted source deletion remain open.
 
 ### D25 — Discover unknown durable tails; known-ID lookup is insufficient
 
-[MINING](../../../orbital/MINING.md#failure-recovery-and-retained-evidence) and
+[Orbital research questions](../orbital-ideas.md#failure-recovery-and-retained-evidence) and
 the [reopen ledger](../../../../calico/workbench/science/systems/recovery/XMEM_REGION_OPEN.md)
 require bounded enumeration beyond a certified base, including accepted but
 unlearned/unadmitted work. This prevents recovery from erasing outcomes whose

@@ -13,7 +13,7 @@ with their current owners instead of preserving parallel implementations.
 | `bec-packed-metadata/` | Whole-consumer versus refill lesson in SeriesPack history; prepared windows and further comparison in [Bec256 composition](../spikes/bec256-composition/README.md). |
 | `ikea-composition/{native-regions,call-boundaries,seriespack-predecessor}/`, `seriespack-{assessment,decisions}.md` | SeriesPack history, current module contracts, replacement campaign and [executable placement](../spikes/executable-placement/README.md). Frozen controls actually used by current benchmarks remain live. |
 | `orbital-simulator/` | [Native simulator](../simulator/README.md), [research lessons and unported questions](orbital-simulation.md#lessons-from-the-learning-spike). The hardware calibration script and result moved to [local handoff](../spikes/orbital-local-handoff/calibration.md). |
-| `orbital-scenarios/` | [Transaction workload repertoire](transactions/README.md), counterexamples and recovery questions in [Orbital's mining guide](../../orbital/MINING.md). Old arbitration/MVTO runtimes and browser are archived. |
+| `orbital-scenarios/` | [Transaction workload repertoire](transactions/README.md), counterexamples and recovery questions in [Orbital research questions](orbital-ideas.md). Old arbitration/MVTO runtimes and browser are archived. |
 | `orbital-dataflow/` | [Distributed workload repertoire](dataflow-workloads.md), retained-state and progress questions in the mining guide. Four toy frameworks are archived; their unanswered questions are not declared solved. |
 | `orbital-dissemination/` | The full [223-entry source survey](dissemination/README.md) remains browsable in the notebook. Specialized routing, transport and resource comparisons remain recoverable from the checkpoint. |
 | `orbital-objects/{DESIGN,SCENARIOS,SOURCES}.md`, `probe.py`, `evidence/probe.json` | [Physical brief](../../orbital/PHYSICAL.md) owns provisional scope. The smaller [Linux mapping probe](../spikes/orbital-objects/README.md) retains real UFFD/COW evidence and executable sources. |
@@ -31,12 +31,12 @@ cover. Their dated observations are research context, not current contracts.
 The former `orbital/stale-drafts/` is archived at commit
 `1957910` rather than kept beside the live module. [BRIEF](../../orbital/BRIEF.md)
 and [PHYSICAL](../../orbital/PHYSICAL.md) own current direction;
-[MINING](../../orbital/MINING.md) and the [dissemination survey](dissemination/README.md)
+[research questions](orbital-ideas.md) and the [dissemination survey](dissemination/README.md)
 retain the useful questions, counterexamples and source references.
 
 | Archived source | Historical role |
 | --- | --- |
-| [BRIEF.md](https://github.com/ashtonsix/SixDB/blob/1957910/orbital/stale-drafts/BRIEF.md) | Early broad narrative: witness hierarchy, extensions, networking and durable memory. Useful memory, sandboxing and compression ideas remain in MINING. |
+| [BRIEF.md](https://github.com/ashtonsix/SixDB/blob/1957910/orbital/stale-drafts/BRIEF.md) | Early broad narrative: witness hierarchy, extensions, networking and durable memory. Useful memory, sandboxing and compression ideas remain in the research questions. |
 | [BRIEF2.md](https://github.com/ashtonsix/SixDB/blob/1957910/orbital/stale-drafts/BRIEF2.md) | Retained-lock C1/C2 preparation, retries and working notes, including A→B→A discovery and shared analysis. |
 | [CONSENSUS.md](https://github.com/ashtonsix/SixDB/blob/1957910/orbital/stale-drafts/CONSENSUS.md) | September 18–19 specification, before the contention redesign. Its model-building instructions and completion criteria are historical. |
 | [BRIEF-arbitration.md](https://github.com/ashtonsix/SixDB/blob/1957910/orbital/stale-drafts/BRIEF-arbitration.md) | Component-owned protection and dynamic preparation: baseline for the retired scenario workbench. |
