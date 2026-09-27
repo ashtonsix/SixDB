@@ -1,12 +1,89 @@
 #!/usr/bin/env python3
 """Receipt controls: stale/corrupt/misclassified evidence cannot establish a case."""
 import csv
+import errno
 import json
+import os
 from pathlib import Path
+import sys
 import tempfile
 import unittest
+from unittest import mock
 import evidence
 import recover
+
+
+class CopyTests(unittest.TestCase):
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.source, self.destination = (Path(temporary.name) / name for name in ('source', 'copy'))
+        self.payload = bytes(range(256)) * 4096
+        self.source.write_bytes(self.payload)
+
+    def independent_copy(self):
+        self.assertEqual(self.destination.read_bytes(), self.payload)
+        self.assertNotEqual(self.source.stat().st_ino, self.destination.stat().st_ino)
+        self.source.write_bytes(b'changed source')
+        self.assertEqual(self.destination.read_bytes(), self.payload)
+        self.source.unlink()
+        self.assertEqual(self.destination.read_bytes(), self.payload)
+
+    def test_copy_survives_original_overwrite_and_removal(self):
+        evidence.copy_file(self.source, self.destination)
+        self.independent_copy()
+
+    def test_portable_copy_without_linux_ioctl(self):
+        with mock.patch.object(evidence.sys, 'platform', 'darwin'):
+            evidence.copy_file(self.source, self.destination)
+        self.independent_copy()
+
+    @unittest.skipUnless(sys.platform.startswith('linux'), 'Linux reflink failure paths')
+    def test_unsupported_clone_rewinds_and_truncates_before_fallback(self):
+        for code in (errno.EXDEV, errno.EOPNOTSUPP):
+            with self.subTest(errno=code):
+                def unsupported(writer, operation, reader):
+                    os.write(writer, b'x' * (len(self.payload) + 17))
+                    os.lseek(reader, 23, os.SEEK_SET)
+                    raise OSError(code, 'unsupported clone')
+                with mock.patch('fcntl.ioctl', side_effect=unsupported):
+                    evidence.copy_file(self.source, self.destination)
+                self.assertEqual(self.destination.read_bytes(), self.payload)
+                self.assertNotEqual(self.source.stat().st_ino, self.destination.stat().st_ino)
+                self.destination.unlink()
+
+    @unittest.skipUnless(sys.platform.startswith('linux'), 'Linux reflink failure paths')
+    def test_storage_failure_never_falls_back_or_leaves_partial_file(self):
+        for code in (errno.ENOSPC, errno.EIO):
+            with self.subTest(errno=code):
+                error = OSError(code, 'storage failure')
+                with mock.patch('fcntl.ioctl', side_effect=error), \
+                        mock.patch.object(evidence.shutil, 'copyfileobj') as fallback:
+                    with self.assertRaises(OSError) as caught:
+                        evidence.copy_file(self.source, self.destination)
+                self.assertIs(caught.exception, error)
+                fallback.assert_not_called()
+                self.assertFalse(self.destination.exists())
+                self.assertEqual(self.source.read_bytes(), self.payload)
+
+    def test_failed_ordinary_copy_removes_partial_file(self):
+        error = OSError(errno.ENOSPC, 'copy out of space')
+        def fail(reader, writer, **kwargs):
+            writer.write(reader.read(17))
+            raise error
+        with mock.patch.object(evidence.sys, 'platform', 'darwin'), \
+                mock.patch.object(evidence.shutil, 'copyfileobj', side_effect=fail):
+            with self.assertRaises(OSError) as caught:
+                evidence.copy_file(self.source, self.destination)
+        self.assertIs(caught.exception, error)
+        self.assertFalse(self.destination.exists())
+        self.assertEqual(self.source.read_bytes(), self.payload)
+
+    def test_existing_destination_is_preserved(self):
+        self.destination.write_bytes(b'earlier evidence')
+        with self.assertRaises(FileExistsError):
+            evidence.copy_file(self.source, self.destination)
+        self.assertEqual(self.destination.read_bytes(), b'earlier evidence')
 
 
 class SelectionTests(unittest.TestCase):
@@ -285,6 +362,19 @@ class SelectionTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'changed before bundling'):
             evidence.bundle(report, self.root / 'bundle')
 
+    def test_bundle_rejects_copy_that_differs_from_selected_log(self):
+        self.receipt()
+        report = evidence.collect([self.case], [self.runs], self.spec)
+        copy_file = evidence.copy_file
+        def corrupt(source, destination):
+            copy_file(source, destination)
+            if source.name == 'tlc.log':
+                destination.write_bytes(b'wrong captured log')
+        with mock.patch.object(evidence, 'copy_file', side_effect=corrupt):
+            with self.assertRaisesRegex(ValueError, 'changed before bundling'):
+                evidence.bundle(report, self.root / 'bundle')
+        self.assertNotIn('bundle_result', report['cases'][0]['selected'])
+
     def test_incomplete_does_not_mask_completed_and_bundle_survives_original_removal(self):
         self.receipt('good', stamp='1')
         self.receipt('later', status='incomplete_timeout', stamp='2')
@@ -294,6 +384,9 @@ class SelectionTests(unittest.TestCase):
         self.assertEqual(row['other_current_runs'][0]['status'], 'incomplete_timeout')
         output = self.root / 'bundle'
         evidence.bundle(report, output)
+        for source in (self.runs / 'good').rglob('*'):
+            if source.is_file():
+                source.write_bytes(b'original overwritten after collection')
         evidence.shutil.rmtree(self.runs)
         run = output / row['selected']['bundle_result']
         self.assertEqual(self.inspect(run)['status'], 'complete')
@@ -384,6 +477,18 @@ class SelectionTests(unittest.TestCase):
         self.assertEqual(self.inspect(bundled)['status'], 'complete')
         self.assertFalse((bundled.parent / 'source.tar.gz').exists())
         self.assertEqual(json.loads((bundled.parent / 'lineage/original/result.json').read_bytes())['status'], 'running')
+
+    def test_recovery_bundle_streams_logs_including_lineage(self):
+        self.resume_receipt()
+        report = evidence.collect([self.case], [self.runs], self.spec)
+        read_bytes = Path.read_bytes
+        def bounded(path):
+            if path.name == 'tlc.log':
+                raise AssertionError('bundler must stream logs')
+            return read_bytes(path)
+        with mock.patch.object(Path, 'read_bytes', bounded):
+            evidence.bundle(report, self.root / 'bundle')
+        self.assertIn('bundle_result', report['cases'][0]['selected'])
 
     def test_recovery_missing_generation_and_wrong_seed_cannot_be_green(self):
         for mutation in ('absent', 'generation', 'seed'):

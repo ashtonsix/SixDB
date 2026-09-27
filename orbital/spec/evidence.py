@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 from collections import Counter
 import csv
+import errno
 import hashlib
 import json
 import os
@@ -37,6 +38,39 @@ def receipts(root: Path):
 
 def sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+def file_sha(path: Path) -> str:
+    with path.open("rb") as source:
+        return hashlib.file_digest(source, "sha256").hexdigest()
+
+
+def copy_file(source: Path, destination: Path) -> None:
+    """Independent copy: Linux reflink when available, bounded ordinary copy otherwise."""
+    created = False
+    try:
+        with source.open("rb") as reader, destination.open("xb") as writer:
+            created = True
+            if sys.platform.startswith("linux"):
+                import fcntl
+                try:
+                    fcntl.ioctl(writer.fileno(), 0x40049409, reader.fileno())  # Linux FICLONE
+                    return
+                except OSError as error:
+                    if error.errno not in {errno.EXDEV, errno.EOPNOTSUPP, errno.ENOTTY,
+                                         errno.EINVAL, errno.ENOSYS}:
+                        raise
+                    reader.seek(0)
+                    writer.seek(0)
+                    writer.truncate()
+            shutil.copyfileobj(reader, writer, length=1024 * 1024)
+    except BaseException:
+        if created:
+            try:
+                destination.unlink()
+            except OSError:
+                pass  # Preserve the original storage error.
+        raise
 
 
 def write_json(path: Path, data: object) -> None:
@@ -170,7 +204,7 @@ def inspect_receipt(path: Path, case: dict, current: dict[str, str], pin: str) -
         result["classifier_sha256"] = current["check.py"]
         paths = [p for p in path.parent.iterdir() if p.name in recover.BUNDLE_FILES and p.is_file()]
         paths.extend(p for p in (path.parent / "lineage").rglob("*") if p.is_file())
-        result["recovery_inputs_sha256"] = {p.relative_to(path.parent).as_posix(): sha(p.read_bytes()) for p in paths}
+        result["recovery_inputs_sha256"] = {p.relative_to(path.parent).as_posix(): file_sha(p) for p in paths}
     if expected and expected.startswith("temporal:") and 2116 in parsed.ids:
         result["temporal_property_matches"] = expected_temporal_violation(parsed, expected)
         if counterexample_oom(parsed, expected, data):
@@ -299,7 +333,8 @@ def bundle(report: dict, output: Path) -> None:
                  sum(p.stat().st_size for p in source.iterdir() if p.is_file()))
         size += sum((source / "sources" / name).stat().st_size
                     for name in run["dependency_sha256"])
-    print(f"Bundling about {size / (1 << 30):.2f} GiB; original runs remain in place.", file=sys.stderr)
+    print(f"Bundling about {size / (1 << 30):.2f} GiB logical bytes; reflinking where supported; "
+          "original runs remain in place.", file=sys.stderr)
     for run, destination in retained:
         source = Path(run["result"]).parent
         destination.mkdir(parents=True)
@@ -307,31 +342,29 @@ def bundle(report: dict, output: Path) -> None:
         # Solver scratch/checkpoints and unparsed sibling models are not this bundle.
         if "recovery_inputs_sha256" in run:
             for name, digest in run["recovery_inputs_sha256"].items():
-                data = (source / name).read_bytes()
-                if sha(data) != digest:
-                    raise ValueError("Selected recovery input changed before bundling: " + name)
                 target = destination / name
                 target.parent.mkdir(parents=True, exist_ok=True)
-                target.write_bytes(data)
+                copy_file(source / name, target)
+                if file_sha(target) != digest:
+                    raise ValueError("Selected recovery input changed before bundling: " + name)
         else:
             for path in source.iterdir():
                 if path.is_file() and not path.is_symlink():
-                    shutil.copyfile(path, destination / path.name)
+                    copy_file(path, destination / path.name)
         for name, digest in run["dependency_sha256"].items():
-            data = (source / "sources" / name).read_bytes()
-            if sha(data) != digest:
-                raise ValueError("Selected evidence changed before bundling: " + name)
             target = destination / "sources" / name
             target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(data)
+            copy_file(source / "sources" / name, target)
+            if file_sha(target) != digest:
+                raise ValueError("Selected evidence changed before bundling: " + name)
         for path in (source / "sources").glob("*_TTrace*"):
-            if path.is_file() and not path.is_symlink():
-                shutil.copyfile(path, destination / "sources" / path.name)
+            if path.is_file() and not path.is_symlink() and path.name not in run["dependency_sha256"]:
+                copy_file(path, destination / "sources" / path.name)
         receipt_name = run.get("receipt_name", "result.json")
-        if (sha((destination / receipt_name).read_bytes()) != run["receipt_sha256"] or
-                sha((destination / "tlc.log").read_bytes()) != run["log_sha256"] or
-                sha((destination / run.get("runner_file", "check.py")).read_bytes()) != run["runner_sha256"] or
-                sha((destination / "tool-source.json").read_bytes()) != run["tool_source_sha256"]):
+        if (file_sha(destination / receipt_name) != run["receipt_sha256"] or
+                file_sha(destination / "tlc.log") != run["log_sha256"] or
+                file_sha(destination / run.get("runner_file", "check.py")) != run["runner_sha256"] or
+                file_sha(destination / "tool-source.json") != run["tool_source_sha256"]):
             raise ValueError("Selected receipt/log/tool changed before bundling")
         run["bundle_result"] = (destination / receipt_name).relative_to(output).as_posix()
 
