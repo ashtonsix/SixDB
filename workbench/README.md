@@ -8,6 +8,7 @@ Design develops here first. Successor to Calico's `workbench`.
 | --- | --- |
 | Questions and earlier work | [Notebook](notebook/ideas.md), [Calico reference map](notebook/calico.md) |
 | An investigation or prototype | [Spikes](spikes/README.md): questions, code, reading and findings |
+| Executable reference models and fault experiments | [Simulator](simulator/README.md): native library, Orbital cases and experiment clients |
 | Recurring workloads and measurement conventions | [Benchmarks](benchmarks/README.md) |
 | Reusable input data | [Datasets](datasets/README.md) |
 | Commands for running, capturing or recovering experiments | [Tools](tools/README.md) |

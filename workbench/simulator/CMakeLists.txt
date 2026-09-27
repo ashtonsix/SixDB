@@ -1,0 +1,43 @@
+add_library(simulator_core STATIC src/runtime.cpp)
+sixdb_target(simulator_core)
+target_include_directories(simulator_core PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_compile_features(simulator_core PUBLIC cxx_std_23)
+add_library(sixdb::simulator ALIAS simulator_core)
+
+add_executable(simulator_runtime_check test/runtime.cpp)
+sixdb_target(simulator_runtime_check)
+target_link_libraries(simulator_runtime_check PRIVATE sixdb::simulator)
+add_test(NAME simulator_runtime COMMAND simulator_runtime_check)
+
+add_library(simulator_retained_view STATIC models/retained_view.cpp)
+sixdb_target(simulator_retained_view)
+target_link_libraries(simulator_retained_view PUBLIC sixdb::simulator)
+target_include_directories(simulator_retained_view PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/models")
+add_executable(simulator_retained_view_check test/retained_view.cpp)
+sixdb_target(simulator_retained_view_check)
+target_link_libraries(simulator_retained_view_check PRIVATE simulator_retained_view)
+add_test(NAME simulator_retained_view COMMAND simulator_retained_view_check)
+
+add_library(simulator_orbital STATIC models/orbital.cpp)
+sixdb_target(simulator_orbital)
+target_link_libraries(simulator_orbital PUBLIC sixdb::simulator)
+target_include_directories(simulator_orbital PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/models")
+add_executable(simulator_run src/main.cpp)
+sixdb_target(simulator_run)
+target_link_libraries(simulator_run PRIVATE simulator_orbital)
+add_executable(simulator_orbital_check test/orbital.cpp)
+sixdb_target(simulator_orbital_check)
+target_link_libraries(simulator_orbital_check PRIVATE simulator_orbital)
+add_test(NAME simulator_orbital COMMAND simulator_orbital_check)
+add_executable(simulator_interactive examples/interactive.cpp)
+sixdb_target(simulator_interactive)
+target_link_libraries(simulator_interactive PRIVATE simulator_orbital)
+add_test(NAME simulator_interactive COMMAND simulator_interactive)
+add_test(NAME simulator_clients COMMAND python3 "${CMAKE_CURRENT_SOURCE_DIR}/test/clients.py"
+  --binary $<TARGET_FILE:simulator_run>)
+
+add_custom_target(simulator_validate
+  COMMAND "${CMAKE_CTEST_COMMAND}" --test-dir "${PROJECT_BINARY_DIR}"
+    --output-on-failure --no-tests=error -R "^simulator_"
+  DEPENDS simulator_runtime_check simulator_retained_view_check simulator_orbital_check simulator_run simulator_interactive
+  USES_TERMINAL)

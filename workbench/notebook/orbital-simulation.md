@@ -1,9 +1,11 @@
 # Toward a durable Orbital simulator
 
-2026-09-26. Preparation for Ashton's proposed all-Orbital simulator. Start the
-learning spike **after current networking and other Orbital design work settles**;
-then use that experience to build a lasting home directly under `workbench/`.
-This note seeds questions and examples, not an architecture, API or tool choice.
+2026-09-27. Research context for Ashton's all-Orbital simulator. The
+[reference simulator](../simulator/README.md) now owns the maintained native
+library, executable models and experiment clients. The
+[learning spike](../spikes/orbital-simulator/README.md) retains the experiments
+that informed those boundaries and remains available for quick probes. This
+note retains questions and prior-art lessons rather than operating instructions.
 
 The ambition is a programmatic laboratory for repeated design experiments,
 distress, disaster response and implementation checking over many years. Like
@@ -11,6 +13,30 @@ CAD before a wind tunnel, it should make expensive or elusive situations cheap
 to investigate, with physical experiments improving its predictive value.
 Durability comes from revisable models and useful counterexamples, not preserving
 the behavior of the first simulator.
+
+## Order of work
+
+Ashton's intended sequence is:
+
+1. Exercise the proposed architecture in the current prototype, using the demanding
+   case and poorly understood areas. Record awkward construction, misleading
+   shortcuts and missing protocol behavior as findings in their own right.
+2. Build the lasting simulator directly under Workbench, carrying forward useful
+   cases and evidence rather than inheriting all prototype interfaces.
+3. Express the most correctness-critical Orbital guarantees and assumptions in
+   TLA+ specifications. Counterexamples can still require a design change.
+4. Sketch Orbital's internal divisions and relationships with other modules, as
+   provisional guidance for their work.
+5. Implement a small Orbital starter that unblocks real consumers, then develop
+   the modules together. Durable objects are the leading candidate for that start.
+
+The first boundary-validation exercise has led into the reference implementation.
+Ashton explicitly allows these activities to overlap: an uncertainty encountered
+in the maintained library can go back to a focused spike. Checked old-cut reads
+and a separate checkpoint/reconstruction probe established useful caller
+obligations; they did not settle every Orbital policy. The formal work will
+concern authority, ordering, publication and lifetime rules; simulation and native
+experiments continue to address resource and performance questions.
 
 ## What should it help us decide?
 
@@ -143,19 +169,100 @@ implementation share code. The xmem sources above were inspected, not rerun,
 for this note. Their techniques and counterexamples are prior art; their custody,
 page, quorum and retention policies do not become SixDB requirements.
 
-## What to learn in the first spike, later
+## Lessons from the learning spike
 
-Choose a narrow end-to-end obligation from the settled design, with one adverse
-case and one alternative policy. Programmatically build its topology, submit
-work, inject a failure, inspect its causal history and recover a small replay.
-Then try a materially different topology or obligation: does reuse save work,
-or does the first fixture's protocol leak into the simulator's core?
+The [spike's findings](../spikes/orbital-simulator/FINDINGS.md) support keeping
+actors, discrete events and shared physical resources. Actual acknowledgements
+and retry timers exposed a replication feedback loop that inflated modeled MAN
+scan traffic roughly eighteenfold. Faults between persistence and callbacks
+exposed useful recovery boundaries. Neither would appear in a fixed replication
+latency charge. These are model findings, not measured production improvements.
 
-The present [dissemination study](../spikes/orbital-dissemination/README.md) will
-supply useful cases and lessons, without becoming the durable implementation by
-default. Counterexample slicing, actor-local feedback and explicit ownership of
-shared resources emerged as useful opportunities in both task consultations.
-Existing [capture and run helpers](../tools/README.md) and
-[artifact retention](../tools/artifacts.md) suffice meanwhile. Learn which seams
-deserve to endure before choosing a runtime, universal trace format, UI or formal
-tool integration. No new framework or simulator implementation starts here.
+Sharing an event engine proved weaker than sharing executable components. Early
+epoch experiments supplied positions; object experiments supplied read contexts.
+The later contention composition reused one deterministic transaction fold behind
+both standalone and actual prepared-quorum admission. That boundary paid off:
+agreement, application transitions and physical scheduling could change separately.
+The later checked-old-cut case joins extension verification to that fold. The
+producer-payload/frontier path, physical object reconstruction and replacement
+authority remain outside that composition. More isolated scenarios cannot
+establish that their boundaries fit together.
+
+Workload and evaluator reuse worked better than construction reuse. The same
+campaign machinery handled flow, traffic and adversity, including refusals and
+unfinished work by cohort. The original builders coupled role names, placement and topology:
+in replicated contention, powering off a coordinator's machine also removed its
+colocated leader. Explicit assembly seams were needed to separate those failures. Make
+offered programs, role placement, network/failure domains, strategies and incident
+recipes independently composable inputs. Reject unsupported combinations rather
+than silently ignoring an option. Ordinary programmatic builders remain suitable;
+this does not call for a universal scenario language.
+
+The original storage boundary made recovery experimentation awkward: whole-prefix
+reads required one large buffer, and the streaming alternative inferred the end
+of a contiguous journal through missing records. The subsequent
+[retirement probe](../spikes/orbital-simulator/RETIREMENT-PROBE.md) needed an adapter
+to add bounded enumeration and durable deletion. Long-lived retention,
+checkpointing and disaster restoration need bounded
+enumeration, reads and reclamation with explicit durability and lifetime semantics.
+Process membership also needs to be distinct from actors and machines if a process
+crash is to kill several roles without cancelling the machine's submitted I/O.
+These are environment capabilities; recovery policy still belongs to actors.
+
+Full in-memory JSON traces, repeated state snapshots and ready-set hashing are
+poor defaults for long load searches. Use compact online observations with bounded
+or streamed diagnostics, retaining detailed replay evidence for failures and
+selected comparisons. Simultaneous-event shuffling is useful but does not explore
+all relevant delivery orders. Small correctness searches need deliberate schedule
+variation and reduction of workloads and incident sequences; large load searches
+need efficient queues and accounting. They can share components without recording
+every experiment at the same detail.
+
+Exact replay and semantic reproducibility serve different purposes. Preserve a
+source-specific execution for diagnosis, but also retain the offered work,
+required outcomes and fault intent so a revised implementation can face the same
+question. A seed alone does not match histories across changed protocols. Launching
+from immutable [source captures](../tools/README.md#captured-experiment-runs) would
+avoid the mixed-source attempts detected by campaign hash guards; recording hashes
+after a run is too late to isolate it. Keep source capture and artifact retention
+in shared Workbench tooling rather than duplicating them in each campaign.
+
+Independent observers deserve more investment. Replica agreement missed fabricated
+client completions, and checking only completed transactions missed reads that
+skipped still-pending predecessors. Check temporal obligations, durable evidence
+and public outcomes separately from agreement, and preserve deliberately faulty
+controls. More reuse of production code makes this independence more valuable.
+
+## Connecting to implementation
+
+Real plans, codecs and journals should eventually cross the simulator boundary in
+both directions. A versioned adapter can decode implementation artifacts, preserve
+identities, scope/visibility constraints and interpretation dependencies, and bind
+them to simulated resources. Generated cases can in turn exercise native components.
+An adapter must not silently flatten away an unsupported property. Engine or another
+application owns plan meaning; Orbital and the physical environment consume opaque
+requests and declared constraints. Prepared pointers and local bindings are rebuilt,
+not treated as durable plan identity. Today's Python dictionaries need not become
+a production format or universal intermediate representation.
+
+Where practical, run the real deterministic interpreter, protocol transitions and
+codec under controlled time, randomness and I/O. Compare their observable decisions
+and results against independent semantics, not event-by-event timing equality.
+Sharing these transitions prevents more model drift than format conversion alone.
+Keep separate native checks for races and hardware behavior that atomic actor
+handlers do not exercise.
+
+Physical modeling must preserve when work becomes ready and how long it owns
+resources, as well as bytes and service costs. The native handoff experiment's
+low-load scalar fit failed badly with batching and sleeping consumers. Real codecs
+can supply byte counts and measured work, but hiding serialization, batch assembly,
+wakeup or retained buffers inside a free converter would still misrank strategies.
+Use coarse and detailed resource models at the same component boundary, increasing
+detail where measurements or sensitivity change the answer.
+
+The old-cut transform and retained-view/checkpoint cases now provide related
+semantic obligations for the native reference models. Reuse those obligations
+across placement, admission and retention alternatives. Sustainable reclamation,
+replacement authority and completion under exhausted budgets remain protocol
+questions; the runtime should expose their failures without choosing a policy
+on an actor's behalf.

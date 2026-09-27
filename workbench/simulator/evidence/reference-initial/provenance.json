@@ -1,0 +1,38 @@
+{
+  "commands": [
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "campaign",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "config": {
+    "suite": "gauntlet"
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+  ],
+  "files_sha256": {
+    "campaign/summary.json": "1e0e1701d7d66d6b9ab4217c8993ab67151f1171ff57084524db7eda10278024"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {},
+  "platform": "Linux-7.0.14-orbstack-00380-ga7e0a2dc9535-aarch64-with-glibc2.42",
+  "regenerate": [],
+  "source_archive_sha256": "70d83787276d9216503f112c432307dc236df04bf62767169210bbe2d0bb155d",
+  "source_digest": "33acb8a6f591e31f588707664fe0cb7d7e05266e00b5c0c481fd6fe0c67bfe32",
+  "source_unchanged": true,
+  "started_utc": "2026-09-27T12:35:50.932354+00:00",
+  "status": "complete"
+}

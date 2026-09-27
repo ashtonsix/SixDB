@@ -23,6 +23,7 @@ evidence at greater depth:
 
 | Area | Study |
 | --- | --- |
+| Executable models, fault experiments and reference simulation | [Maintained simulator](../workbench/simulator/README.md) |
 | Contention, transactions and recovery | [Scenario workbench](../workbench/spikes/orbital-scenarios/README.md) |
 | Relaying, work placement and delivery | [Dissemination](../workbench/spikes/orbital-dissemination/README.md) |
 | Object views, OS bindings and mapping prototypes | [Objects and physical services](../workbench/spikes/orbital-objects/README.md) |
