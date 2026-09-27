@@ -1,0 +1,1979 @@
+{
+  "schema": 1,
+  "selection": [
+    {
+      "name": "Transactions",
+      "module": "Transactions",
+      "config": "configs/Transactions.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "TransactionsLive",
+      "module": "Transactions",
+      "config": "configs/TransactionsLive.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "TransactionsReset",
+      "module": "Transactions",
+      "config": "configs/TransactionsReset.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "TransactionsResetLive",
+      "module": "Transactions",
+      "config": "configs/TransactionsResetLive.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "TransactionsShardReset",
+      "module": "Transactions",
+      "config": "configs/TransactionsShardReset.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "TransactionsSkipPending",
+      "module": "Transactions",
+      "config": "configs/TransactionsSkipPending.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoSkippedPending"
+    },
+    {
+      "name": "TransactionsEarlyExecution",
+      "module": "Transactions",
+      "config": "configs/TransactionsEarlyExecution.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoEarlyExecution"
+    },
+    {
+      "name": "TransactionsLostBounds",
+      "module": "Transactions",
+      "config": "configs/TransactionsLostBounds.cfg",
+      "tier": "quick",
+      "expect": "invariant:BoundSurvivesRead"
+    },
+    {
+      "name": "TransactionsLostBoundsSerial",
+      "module": "Transactions",
+      "config": "configs/TransactionsLostBoundsSerial.cfg",
+      "tier": "quick",
+      "expect": "invariant:SerialObservations"
+    },
+    {
+      "name": "TransactionsReach",
+      "module": "Transactions",
+      "config": "configs/TransactionsReach.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPartialInstall",
+      "witness": "Reach"
+    },
+    {
+      "name": "TransactionsReachFix",
+      "module": "Transactions",
+      "config": "configs/TransactionsReachFix.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPartialFix",
+      "witness": "ReachFix"
+    },
+    {
+      "name": "TransactionsReachLate",
+      "module": "Transactions",
+      "config": "configs/TransactionsReachLate.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoReadBeforeAnnouncement",
+      "witness": "ReachLate"
+    },
+    {
+      "name": "TransactionsReachAbort",
+      "module": "Transactions",
+      "config": "configs/TransactionsReachAbort.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoAbort",
+      "witness": "ReachAbort"
+    },
+    {
+      "name": "TransactionsReachRecovery",
+      "module": "Transactions",
+      "config": "configs/TransactionsReachRecovery.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoOutcomeRecovery",
+      "witness": "ReachRecovery"
+    },
+    {
+      "name": "TransactionsReachPublication",
+      "module": "Transactions",
+      "config": "configs/TransactionsReachPublication.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPublication",
+      "witness": "ReachPublication"
+    },
+    {
+      "name": "TransactionsReachPositionRecovery",
+      "module": "Transactions",
+      "config": "configs/TransactionsReachPositionRecovery.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPositionRecoveryComplete",
+      "witness": "ReachPositionRecovery"
+    },
+    {
+      "name": "TransactionsReachDecisionRecovery",
+      "module": "Transactions",
+      "config": "configs/TransactionsReachDecisionRecovery.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoDecisionRecoveryComplete",
+      "witness": "ReachDecisionRecovery"
+    },
+    {
+      "name": "TransactionsReachReadPartial",
+      "module": "Transactions",
+      "config": "configs/TransactionsReachReadPartial.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoReadAcrossPartialInstall",
+      "witness": "ReachReadPartial"
+    },
+    {
+      "name": "BorrowLifetimeOne",
+      "module": "BorrowLifetime",
+      "config": "configs/BorrowLifetimeOne.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "BorrowLifetime",
+      "module": "BorrowLifetime",
+      "config": "configs/BorrowLifetime.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "BorrowLifetimeLive",
+      "module": "BorrowLifetime",
+      "config": "configs/BorrowLifetimeLive.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "BorrowLifetimeDropOnDeath",
+      "module": "BorrowLifetime",
+      "config": "configs/BorrowLifetimeDropOnDeath.cfg",
+      "tier": "quick",
+      "expect": "invariant:LiveUsersCharged"
+    },
+    {
+      "name": "BorrowLifetimeDropOnFirst",
+      "module": "BorrowLifetime",
+      "config": "configs/BorrowLifetimeDropOnFirst.cfg",
+      "tier": "quick",
+      "expect": "invariant:LiveUsersCharged"
+    },
+    {
+      "name": "BorrowLifetimeDropOnCancel",
+      "module": "BorrowLifetime",
+      "config": "configs/BorrowLifetimeDropOnCancel.cfg",
+      "tier": "quick",
+      "expect": "invariant:LiveUsersCharged"
+    },
+    {
+      "name": "BorrowLifetimeStaleCallback",
+      "module": "BorrowLifetime",
+      "config": "configs/BorrowLifetimeStaleCallback.cfg",
+      "tier": "quick",
+      "expect": "invariant:CallbackIncarnation"
+    },
+    {
+      "name": "BorrowLifetimePrematureReuse",
+      "module": "BorrowLifetime",
+      "config": "configs/BorrowLifetimePrematureReuse.cfg",
+      "tier": "quick",
+      "expect": "invariant:SealedBytesStable"
+    },
+    {
+      "name": "BorrowLifetimeOmitService",
+      "module": "BorrowLifetime",
+      "config": "configs/BorrowLifetimeOmitService.cfg",
+      "tier": "quick",
+      "expect": "temporal:EventuallyRetired"
+    },
+    {
+      "name": "BorrowLifetimeReachability",
+      "module": "BorrowLifetime",
+      "config": "configs/BorrowLifetimeReachability.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoRecoveryWitness",
+      "witness": "crash-cancel-reuse"
+    },
+    {
+      "name": "CheckedReplay-one",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-one.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CheckedReplay-small",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-small.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CheckedReplay-live",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-live.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CheckedReplay-final-only",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-final-only.cfg",
+      "tier": "quick",
+      "expect": "invariant:AllEvidence"
+    },
+    {
+      "name": "CheckedReplay-missing-checker",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-missing-checker.cfg",
+      "tier": "quick",
+      "expect": "invariant:AllEvidence"
+    },
+    {
+      "name": "CheckedReplay-current-cut",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-current-cut.cfg",
+      "tier": "quick",
+      "expect": "invariant:ReadsAtCut"
+    },
+    {
+      "name": "CheckedReplay-forget-root",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-forget-root.cfg",
+      "tier": "quick",
+      "expect": "invariant:RootRecoverable"
+    },
+    {
+      "name": "CheckedReplay-unbound-context",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-unbound-context.cfg",
+      "tier": "quick",
+      "expect": "invariant:AllEvidence"
+    },
+    {
+      "name": "CheckedReplay-always-abort",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-always-abort.cfg",
+      "tier": "quick",
+      "expect": "invariant:DecisionMeaning"
+    },
+    {
+      "name": "CheckedReplay-wrong-result",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-wrong-result.cfg",
+      "tier": "quick",
+      "expect": "invariant:PublicationEvidence"
+    },
+    {
+      "name": "CheckedReplay-lost-recovery",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-lost-recovery.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "CheckedReplay-reached",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-reached.cfg",
+      "tier": "quick",
+      "expect": "invariant:NotRecoveredPublication",
+      "witness": "reached"
+    },
+    {
+      "name": "CheckedReplay-commit-reached",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-commit-reached.cfg",
+      "tier": "quick",
+      "expect": "invariant:NotCommit",
+      "witness": "commit-reached"
+    },
+    {
+      "name": "CheckedReplay-abort-reached",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-abort-reached.cfg",
+      "tier": "quick",
+      "expect": "invariant:NotAbort",
+      "witness": "abort-reached"
+    },
+    {
+      "name": "CheckedReplay-decision-recovered",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-decision-recovered.cfg",
+      "tier": "quick",
+      "expect": "invariant:NotDecisionRecovery",
+      "witness": "decision-recovered"
+    },
+    {
+      "name": "CheckedReplay-retired-reached",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-retired-reached.cfg",
+      "tier": "quick",
+      "expect": "invariant:NotRetired",
+      "witness": "retired-reached"
+    },
+    {
+      "name": "AdmissionCoverage-one",
+      "module": "AdmissionCoverage",
+      "config": "configs/AdmissionCoverage-one.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "AdmissionCoverage-small",
+      "module": "AdmissionCoverage",
+      "config": "configs/AdmissionCoverage-small.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "AdmissionCoverage-hole",
+      "module": "AdmissionCoverage",
+      "config": "configs/AdmissionCoverage-hole.cfg",
+      "tier": "quick",
+      "expect": "invariant:ContiguousAdmission"
+    },
+    {
+      "name": "AdmissionCoverage-relay",
+      "module": "AdmissionCoverage",
+      "config": "configs/AdmissionCoverage-relay.cfg",
+      "tier": "quick",
+      "expect": "invariant:DistinctEligibility"
+    },
+    {
+      "name": "AdmissionCoverage-intent",
+      "module": "AdmissionCoverage",
+      "config": "configs/AdmissionCoverage-intent.cfg",
+      "tier": "quick",
+      "expect": "invariant:ReceiptsAreDurable"
+    },
+    {
+      "name": "AdmissionCoverage-decoder",
+      "module": "AdmissionCoverage",
+      "config": "configs/AdmissionCoverage-decoder.cfg",
+      "tier": "quick",
+      "expect": "invariant:AdmittedRecoverable"
+    },
+    {
+      "name": "AdmissionCoverage-reached",
+      "module": "AdmissionCoverage",
+      "config": "configs/AdmissionCoverage-reached.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoLossWitness",
+      "witness": "reached"
+    },
+    {
+      "name": "AdmissionCoverage-hole-reached",
+      "module": "AdmissionCoverage",
+      "config": "configs/AdmissionCoverage-hole-reached.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoHoleWitness",
+      "witness": "hole-reached"
+    },
+    {
+      "name": "AdmissionCoverage-historical-boundary",
+      "module": "AdmissionCoverage",
+      "config": "configs/AdmissionCoverage-historical-boundary.cfg",
+      "tier": "quick",
+      "expect": "invariant:SimultaneousCopiesAtEligibility",
+      "witness": "historical-boundary"
+    },
+    {
+      "name": "RetentionClosurePreRegistered",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosurePreRegistered.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RetentionClosure",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosure.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RetentionClosureForgetReplay",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosureForgetReplay.cfg",
+      "tier": "quick",
+      "expect": "invariant:LiveRootsReconstructible"
+    },
+    {
+      "name": "RetentionClosureMissingReplayRead",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosureMissingReplayRead.cfg",
+      "tier": "quick",
+      "expect": "invariant:ReplayReadable"
+    },
+    {
+      "name": "RetentionClosureDropCodec",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosureDropCodec.cfg",
+      "tier": "quick",
+      "expect": "invariant:HeadReconstructible"
+    },
+    {
+      "name": "RetentionClosurePublishEarly",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosurePublishEarly.cfg",
+      "tier": "quick",
+      "expect": "invariant:HeadReconstructible"
+    },
+    {
+      "name": "RetentionClosureGrantEarly",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosureGrantEarly.cfg",
+      "tier": "quick",
+      "expect": "invariant:GrantHasDurableRoot"
+    },
+    {
+      "name": "RetentionClosureReadLatest",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosureReadLatest.cfg",
+      "tier": "quick",
+      "expect": "invariant:VersionBound"
+    },
+    {
+      "name": "RetentionClosureSkipDrain",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosureSkipDrain.cfg",
+      "tier": "quick",
+      "expect": "invariant:ServingRegistryCurrent"
+    },
+    {
+      "name": "RetentionClosureLateRootLoss",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosureLateRootLoss.cfg",
+      "tier": "quick",
+      "expect": "invariant:LiveRootsReconstructible"
+    },
+    {
+      "name": "RetentionClosureReachability",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosureReachability.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoRecoveryWitness",
+      "witness": "Reachability"
+    },
+    {
+      "name": "RetentionClosureRegistrationCrash",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosureRegistrationCrash.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoDurableRegistrationCrash",
+      "witness": "RegistrationCrash"
+    },
+    {
+      "name": "RetentionClosureCheckpointCrash",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosureCheckpointCrash.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoDurableCheckpointCrash",
+      "witness": "CheckpointCrash"
+    },
+    {
+      "name": "Reservations",
+      "module": "Reservations",
+      "config": "configs/Reservations.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ReservationsLive",
+      "module": "Reservations",
+      "config": "configs/ReservationsLive.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ReservationsCycle",
+      "module": "Reservations",
+      "config": "configs/ReservationsCycle.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ReservationsCycleLive",
+      "module": "Reservations",
+      "config": "configs/ReservationsCycleLive.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ReservationsEarlyRelease",
+      "module": "Reservations",
+      "config": "configs/ReservationsEarlyRelease.cfg",
+      "tier": "quick",
+      "expect": "invariant:ConflictingPositionsFollowGrants"
+    },
+    {
+      "name": "ReservationsSkipWaiter",
+      "module": "Reservations",
+      "config": "configs/ReservationsSkipWaiter.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoOvertaking"
+    },
+    {
+      "name": "ReservationsReversed",
+      "module": "Reservations",
+      "config": "configs/ReservationsReversed.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoReservationCycle"
+    },
+    {
+      "name": "ReservationsReachRelease",
+      "module": "Reservations",
+      "config": "configs/ReservationsReachRelease.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoLocalReleaseBenefit",
+      "witness": "local-release-successor"
+    },
+    {
+      "name": "ReservationsReachConvoy",
+      "module": "Reservations",
+      "config": "configs/ReservationsReachConvoy.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoIndirectConvoy",
+      "witness": "indirect-convoy"
+    }
+  ],
+  "source_sha256": {
+    "AdmissionCoverage.tla": "b6031142de774aeebec91bb7506fe7582728252321ea800c9c28dc6ef0a71e46",
+    "BorrowLifetime.tla": "da0807e69a790f53382ca6c259c8e7c6f8f39397265cc6fdd922b58503655131",
+    "CheckedReplay.tla": "a821331047d8fb023753cb76f0e481391aab0dc0aa41c0eb6473c1af555a940a",
+    "PLAN.md": "ea3b1b8596c10621318d02757422300cf3f724ee4c3021c9d685b747491e957e",
+    "README.md": "6628776306ca71fc239ff60c66cf4b6adc64c2ad23d21bb105c8722f92a506d2",
+    "Reservations.tla": "4706edf7fdc37617bd37394ceeb5ea99dd75996bdb29e094acb50e14bad5a450",
+    "RetentionClosure.tla": "c157637c65a4c45205b5286a072ab41777fbb00c316a136b931fec53c94f9f6d",
+    "Transactions.tla": "a7756685bdd098e050257b11b93e8b1a3d53d46f85a97c1ba91395d28a04b3e5",
+    "cases.json": "2c5658fc4b2846de883a444d9079c2597096b973725cbff90af164a9aeedd478",
+    "check.py": "2d9ac3b8035e31c72d5560b9646105cd387fed776739afdc04b4aa4a0130fc3f",
+    "configs/AdmissionCoverage-decoder.cfg": "0dcf8f6ae9aa62d868ba87e6422e114600b221fcc689c5e1516ae93773fa5dfb",
+    "configs/AdmissionCoverage-grow.cfg": "90026ce683d2e20e0d484decf581f0b5f3bc45d22016d0231005141c5f1e3be4",
+    "configs/AdmissionCoverage-historical-boundary.cfg": "46e6dce014ebd1d1816de5604ad85d0009b2771f66a1a41c9eee8d34d451aa9b",
+    "configs/AdmissionCoverage-hole-reached.cfg": "196cbb44fff0fb9a1b28c6983dc29b2ee35640f231ec5e477e315b05aef6329f",
+    "configs/AdmissionCoverage-hole.cfg": "20b60cbe85a783ebd7127a633c419ee2f6fb934cc0e224e95dd13baa782dcd3b",
+    "configs/AdmissionCoverage-intent.cfg": "c088a5469969a575c5067dbc876e28c0bd7a7980b4b37f9d4e193ca66a44f842",
+    "configs/AdmissionCoverage-one.cfg": "804c9fb81a63585d8f0f649fb0e118862862a221d0836a4f1831f2d0b7c9988c",
+    "configs/AdmissionCoverage-reached.cfg": "6eff7e60edc4fe756a8dcce232b451ccfd7ddd726d7f3543883a37f822125188",
+    "configs/AdmissionCoverage-relay.cfg": "99c6efd50f77052d5451d99be42846fc743f50e994459e00bd685a3a6d7ac73c",
+    "configs/AdmissionCoverage-small.cfg": "0af9222c33f41a4d5712fb454152ee0c2a6887fee7271603f0b129ab38533a3d",
+    "configs/BorrowLifetime.cfg": "b406e0342306f507aeda76d3371bd4ab9265a18c4c886649debcabb56184a84f",
+    "configs/BorrowLifetimeDropOnCancel.cfg": "fdb0a142f7fe1e322ad05c66d1427cbc902e7dd0eaa2009d8edadd59a026291e",
+    "configs/BorrowLifetimeDropOnDeath.cfg": "02bdc37eb0ce4bb40be865b25594fbf3463351c25a22018a090158000882cf73",
+    "configs/BorrowLifetimeDropOnFirst.cfg": "7163ebba1a4e9e9cd11beb4b00969a8b62f520a6f34bb05ee58f327a35c223b7",
+    "configs/BorrowLifetimeLive.cfg": "e9637fec9855d85b471f34226bf03b7e8aa69d3132c52e0f6413fcef67462302",
+    "configs/BorrowLifetimeOmitService.cfg": "ba77e7ceb531dc868088cc3ad71b6423a8a29131bdd7675e6b5fcd0b7c2de00c",
+    "configs/BorrowLifetimeOne.cfg": "810b7c8602caf04d71a0854966cea3e76f36e82f954e58cd5a50877923bd0b3a",
+    "configs/BorrowLifetimePrematureReuse.cfg": "7e2e7ef95902471242e5e7a5ca5a63373813d7bbae1ff02e282c3c505c654441",
+    "configs/BorrowLifetimeReachability.cfg": "9ab2a56804d463f02db63499084a14498313f010a3e15353364cc963d5f67b2f",
+    "configs/BorrowLifetimeStaleCallback.cfg": "9191d2272c3958351ae67a05d07c9c7490937de6a368ef58798fa78b52528698",
+    "configs/BorrowLifetimeThree.cfg": "53693d372213a262a58dd5336fe68ba017db7cc85a0529ecaada1618e4e3c0cc",
+    "configs/CheckedReplay-abort-reached.cfg": "becfd18a0d601897c8cff818f1164bb3c66ae8796bd46d2325c3c66aa659ef93",
+    "configs/CheckedReplay-always-abort.cfg": "7b50397ecf813d23f53c896c94c85b68b39ef82c71f716cd9dbadbbe5d26ec89",
+    "configs/CheckedReplay-commit-reached.cfg": "919f219f6a98ed59d18d9985668da5244181f5f5721cd2e43f0844f2d590f18f",
+    "configs/CheckedReplay-current-cut.cfg": "e287e7edc0bcb255305dbcba6ccb07a00e1a6f6054b340a1a8e5938dcfa3fe00",
+    "configs/CheckedReplay-decision-recovered.cfg": "afc33902d152853d21b3c754df49b5bebea94aa069177497532bd05e6fbd7242",
+    "configs/CheckedReplay-final-only.cfg": "b6e66c707b704030e63fa545d00198f4f71a68506c5d3e7923f3e1d856d848fa",
+    "configs/CheckedReplay-forget-root.cfg": "48c8f806b043957c621720199fb6a32c8490de7c28e9976b85a3cdf46f4c0235",
+    "configs/CheckedReplay-four.cfg": "ff66764276af07e7c71d5280e419ef5bbfb7722c255c6f2743f7737e04cbfd9f",
+    "configs/CheckedReplay-grow.cfg": "5e9dd817c6042137f187ad5891cd4ace43bf258362c6ecffa39e84169422d095",
+    "configs/CheckedReplay-live.cfg": "1248fd2c9726658fc410d9a1f3cdf47bd34314832e88727dad39b4cb97db17bf",
+    "configs/CheckedReplay-lost-recovery.cfg": "89e0ae82df42aa027bb75cb129a20e07ca680f7c0f19188008bfe182ce89c391",
+    "configs/CheckedReplay-missing-checker.cfg": "e8a375a4e43ad773f853027c1e3a62e0e12f508728e94a184c91812fe8cf4a4c",
+    "configs/CheckedReplay-one.cfg": "13d5012bff783234c20529324018a9547a6d14555a79fd03e1aef7fe5505428b",
+    "configs/CheckedReplay-reached.cfg": "99f9edbba4eb5f9b0ecd663991285317e3d629c3a59b406c91c7ff7b102ed10a",
+    "configs/CheckedReplay-retired-reached.cfg": "c6e808faf2aeec926c3be68dfd5b85fea7ce55c3a03dff016238fbeb7c0da09a",
+    "configs/CheckedReplay-small.cfg": "d8c082914be4f134331cb9539fdb5516fa682fa38459dc87e4b0800837189742",
+    "configs/CheckedReplay-unbound-context.cfg": "db47c56fb47fe0575a501476906ebe2fe042675c99054d036455e8156146d2fd",
+    "configs/CheckedReplay-wrong-result.cfg": "e9a9c63f3fe951d89b65d9ad192d41eb1137d6c36ed9b78a6b60d1ece36cf62d",
+    "configs/Reservations.cfg": "d34b953c1881b015dff9d379d85b7daa045d6ef3e6facc3b22f9d89a5cd24b43",
+    "configs/ReservationsCycle.cfg": "e6cf577c4966c2680f808b87e49a53d2c8ee7ba96208b559af7f975cbe900266",
+    "configs/ReservationsCycleLive.cfg": "0e26f23f7ad4374ec5ad4c28a74720438790a5f9eaade348cf236806dbd23af5",
+    "configs/ReservationsEarlyRelease.cfg": "c81ae2c64c5bb7d36232dd7c01213a165f2ba7343286bb1499c5c924a737a8eb",
+    "configs/ReservationsLive.cfg": "fb6521ac18d9f5ccaa333a2fc4fa44b7c1bd34d1018d5c6ddd89d57d6a54f9eb",
+    "configs/ReservationsReachConvoy.cfg": "351a736576666a2bc35d84f7175fd7620acaeaa912b1194f74d0cf7716f6ab0b",
+    "configs/ReservationsReachRelease.cfg": "dca19386d5706f675ab036574c8bcf91b31cdf1a46591b5aea8c4f87062580df",
+    "configs/ReservationsReversed.cfg": "8544d63440180f721d295a753b2a00a57911aef182fdcdb41acd744e67dac985",
+    "configs/ReservationsSkipWaiter.cfg": "dfefa19ca3b201b9822458248835a881b2527d405b1b9c3d2ee029aa3fa1adc2",
+    "configs/RetentionClosure.cfg": "b4dbef40e1db900ba8268e41bbfe4e86c0ea5d3ed9ef7fea20f0379cb1653e4b",
+    "configs/RetentionClosureCheckpointCrash.cfg": "a217b06f0d3c29b15dd4e12f7e08bf0a8ccd4e884f6f733cff68f7eed3601737",
+    "configs/RetentionClosureDropCodec.cfg": "c0866c4efa8078e95260a17d5f3abded417f072410f769394e7a15814500f0d6",
+    "configs/RetentionClosureForgetReplay.cfg": "f09790bd089e714e9d0dff6e0ae149eef3b5c7a6134009c40f41952f580f1ea2",
+    "configs/RetentionClosureGrantEarly.cfg": "f216d1c72967c125bbe0b12d4f94ad6810efac0558bee06637966d68e887970e",
+    "configs/RetentionClosureLateRootLoss.cfg": "6a584b296d0da0ea17bb497189ca80eb80a434f85e78f6fd167d73584a4c0d5c",
+    "configs/RetentionClosureMissingReplayRead.cfg": "e7ee25e4ee19ed67181b25952e9d11e8718a83cd92c0a39dd0c1dfecd402ef9a",
+    "configs/RetentionClosurePreRegistered.cfg": "83a5847d987b97b12ee35cbd9eb1d42d5b2c123fad126e59a218367a5e2a7cbe",
+    "configs/RetentionClosurePublishEarly.cfg": "db997118c85ea6b6770c57c8863daea8ed1216a01819c727a678271608de3041",
+    "configs/RetentionClosureReachability.cfg": "72b69701976e80c1d206c8a5a495482daddef9e8619213f4dad3be1d5144a24e",
+    "configs/RetentionClosureReadLatest.cfg": "78c28dd1f7fe0d68c5df230043f8034bde83c37e73a1f4736621262cbb417a36",
+    "configs/RetentionClosureRegistrationCrash.cfg": "b27b0de540740c4e7949f96bd6aa05b182503ec1513ce06d6d56c03005c7431a",
+    "configs/RetentionClosureSkipDrain.cfg": "1009d2f80b6fbeed6deb4893bab205a634f10bd26d5c0082341b7fd473f9848a",
+    "configs/Transactions.cfg": "47ca68c57740c9821891a92f0977524c541d0f9b1448f430513dcaa0f1831913",
+    "configs/TransactionsEarlyExecution.cfg": "9a5e884ee5cc0cd1a686821865c87043bb8557f1acfbb99301017a1c24aa87c5",
+    "configs/TransactionsLive.cfg": "e8e296820b728e3e360cfbcb959de615a463c8930d6f34673c41c4f3d553e008",
+    "configs/TransactionsLostBounds.cfg": "d3ba7ae9d2fc5fa38faad3cb0e1a42f902368c38a6739cc0bd839ee07e0fa4ff",
+    "configs/TransactionsLostBoundsSerial.cfg": "fb530d22e957df2ac830392f135f529a1f5c0b5ce481728a28e62ffdd4917c7d",
+    "configs/TransactionsReach.cfg": "77cd57b9ac315e44d09ab0ec3b58b167952ce189db3b51acab0da572f53e203a",
+    "configs/TransactionsReachAbort.cfg": "1007d5b2fea8259ac33b1942b0c77ca92a002b98878b2fbcbe58e93f8b4ec393",
+    "configs/TransactionsReachDecisionRecovery.cfg": "f4957b1a8d277a10c87534d4fecd6f0acdb26661a9612d1e90c01839a09696cd",
+    "configs/TransactionsReachFix.cfg": "846b78706a31b95b597b294ec16b564b9838875fd7ac8e9bdfc4c2636f4004e0",
+    "configs/TransactionsReachLate.cfg": "4256fbab8b46e8c8efd2625a906dc792f259348983db368aac59c21a289d271b",
+    "configs/TransactionsReachPositionRecovery.cfg": "e387f62902aea7fa563bfcbf2c0d6d209e0d08f90dbb3908dd7d7cbb41798fe9",
+    "configs/TransactionsReachPublication.cfg": "3341389364945afba7a0b6c17dba5c79b3334a99be56f8cb489af1ef17de12b6",
+    "configs/TransactionsReachReadPartial.cfg": "8e7ec9a6eee10dfcfb32865ce0802bc5aa9df31c04be935e131fc8f9c0138363",
+    "configs/TransactionsReachRecovery.cfg": "139631b7aa95cc8017de8aa71faddc36cb1a283b205ef1e6a494620f51f0bc07",
+    "configs/TransactionsReset.cfg": "a6014df733cbdc7cbdd746e7444788693758f1d8b034be49482cae6c3bdcd472",
+    "configs/TransactionsResetLive.cfg": "d99bfcbb149bba277c3c055076279fcc9063ba74c2f4dbd00f47969797e2e0a8",
+    "configs/TransactionsShardReset.cfg": "f92e656f49f21385c780ae0485cb5a49873a06fa226a3d032accd05114d057d4",
+    "configs/TransactionsSkipPending.cfg": "56189bc50760e8e23ad099d3ba3dfefb90c82fb42979359b72c1ccc7bc962c73",
+    "suite.py": "b7042288eaeb7a2e3026435f09ed0d65d453ced496818de72b39ccb91fbc917a",
+    "test_check.py": "c6f6289dca2c435bc88a9f6763540d35348bc2fefd922d43bd97fb4531153fb7"
+  },
+  "cases": [
+    {
+      "name": "Transactions",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.56551359500736, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144654Z-Transactions-jyte8htp/result.json\", \"states\": {\"distinct\": 626, \"generated\": 1365, \"queue\": 0}, \"status\": \"complete\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144654Z-Transactions-jyte8htp/result.json",
+      "status": "complete",
+      "states": {
+        "distinct": 626,
+        "generated": 1365,
+        "queue": 0
+      },
+      "depth": 33,
+      "elapsed_seconds": 0.56551359500736,
+      "peak_rss_bytes": 190689280,
+      "expectation": "complete",
+      "purpose": "check"
+    },
+    {
+      "name": "TransactionsLive",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.7306426391005516, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144654Z-TransactionsLive-hvgnitf_/result.json\", \"states\": {\"distinct\": 626, \"generated\": 1365, \"queue\": 0}, \"status\": \"complete\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144654Z-TransactionsLive-hvgnitf_/result.json",
+      "status": "complete",
+      "states": {
+        "distinct": 626,
+        "generated": 1365,
+        "queue": 0
+      },
+      "depth": 33,
+      "elapsed_seconds": 0.7306426391005516,
+      "peak_rss_bytes": 196046848,
+      "expectation": "complete",
+      "purpose": "check"
+    },
+    {
+      "name": "TransactionsReset",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 1.7554625049233437, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144655Z-TransactionsReset-lt0wc20t/result.json\", \"states\": {\"distinct\": 23981, \"generated\": 75158, \"queue\": 0}, \"status\": \"complete\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144655Z-TransactionsReset-lt0wc20t/result.json",
+      "status": "complete",
+      "states": {
+        "distinct": 23981,
+        "generated": 75158,
+        "queue": 0
+      },
+      "depth": 38,
+      "elapsed_seconds": 1.7554625049233437,
+      "peak_rss_bytes": 325722112,
+      "expectation": "complete",
+      "purpose": "check"
+    },
+    {
+      "name": "TransactionsResetLive",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 6.57949035987258, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144657Z-TransactionsResetLive-36avnhg8/result.json\", \"states\": {\"distinct\": 23981, \"generated\": 75158, \"queue\": 0}, \"status\": \"complete\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144657Z-TransactionsResetLive-36avnhg8/result.json",
+      "status": "complete",
+      "states": {
+        "distinct": 23981,
+        "generated": 75158,
+        "queue": 0
+      },
+      "depth": 38,
+      "elapsed_seconds": 6.57949035987258,
+      "peak_rss_bytes": 318988288,
+      "expectation": "complete",
+      "purpose": "check"
+    },
+    {
+      "name": "TransactionsShardReset",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.6870073520112783, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144704Z-TransactionsShardReset-h56ze0le/result.json\", \"states\": {\"distinct\": 1783, \"generated\": 4869, \"queue\": 0}, \"status\": \"complete\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144704Z-TransactionsShardReset-h56ze0le/result.json",
+      "status": "complete",
+      "states": {
+        "distinct": 1783,
+        "generated": 4869,
+        "queue": 0
+      },
+      "depth": 35,
+      "elapsed_seconds": 0.6870073520112783,
+      "peak_rss_bytes": 203739136,
+      "expectation": "complete",
+      "purpose": "check"
+    },
+    {
+      "name": "TransactionsSkipPending",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.4712076410651207, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144704Z-TransactionsSkipPending-g03hlevr/result.json\", \"states\": {\"distinct\": 85, \"generated\": 162, \"queue\": 17}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144704Z-TransactionsSkipPending-g03hlevr/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 85,
+        "generated": 162,
+        "queue": 17
+      },
+      "depth": 11,
+      "elapsed_seconds": 0.4712076410651207,
+      "peak_rss_bytes": 137785344,
+      "expectation": "invariant:NoSkippedPending",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "TransactionsEarlyExecution",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.4582351390272379, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144705Z-TransactionsEarlyExecution-gqxu30r9/result.json\", \"states\": {\"distinct\": 33, \"generated\": 53, \"queue\": 9}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144705Z-TransactionsEarlyExecution-gqxu30r9/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 33,
+        "generated": 53,
+        "queue": 9
+      },
+      "depth": 7,
+      "elapsed_seconds": 0.4582351390272379,
+      "peak_rss_bytes": 145821696,
+      "expectation": "invariant:NoEarlyExecution",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "TransactionsLostBounds",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.459197019925341, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144705Z-TransactionsLostBounds-00mxzpgg/result.json\", \"states\": {\"distinct\": 60, \"generated\": 106, \"queue\": 14}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144705Z-TransactionsLostBounds-00mxzpgg/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 60,
+        "generated": 106,
+        "queue": 14
+      },
+      "depth": 9,
+      "elapsed_seconds": 0.459197019925341,
+      "peak_rss_bytes": 141332480,
+      "expectation": "invariant:BoundSurvivesRead",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "TransactionsLostBoundsSerial",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.6131071988493204, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144706Z-TransactionsLostBoundsSerial-qdqbrjsa/result.json\", \"states\": {\"distinct\": 993, \"generated\": 2300, \"queue\": 134}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144706Z-TransactionsLostBoundsSerial-qdqbrjsa/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 993,
+        "generated": 2300,
+        "queue": 134
+      },
+      "depth": 22,
+      "elapsed_seconds": 0.6131071988493204,
+      "peak_rss_bytes": 174927872,
+      "expectation": "invariant:SerialObservations",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "TransactionsReach",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.459266979014501, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144707Z-TransactionsReach-wojiklx1/result.json\", \"states\": {\"distinct\": 180, \"generated\": 348, \"queue\": 25}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144707Z-TransactionsReach-wojiklx1/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 180,
+        "generated": 348,
+        "queue": 25
+      },
+      "depth": 15,
+      "elapsed_seconds": 0.459266979014501,
+      "peak_rss_bytes": 144760832,
+      "expectation": "invariant:NoPartialInstall",
+      "purpose": "reachability"
+    },
+    {
+      "name": "TransactionsReachFix",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.42367711989209056, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144707Z-TransactionsReachFix-_autqo0c/result.json\", \"states\": {\"distinct\": 31, \"generated\": 50, \"queue\": 7}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144707Z-TransactionsReachFix-_autqo0c/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 31,
+        "generated": 50,
+        "queue": 7
+      },
+      "depth": 7,
+      "elapsed_seconds": 0.42367711989209056,
+      "peak_rss_bytes": 135020544,
+      "expectation": "invariant:NoPartialFix",
+      "purpose": "reachability"
+    },
+    {
+      "name": "TransactionsReachLate",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.45679250499233603, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144708Z-TransactionsReachLate-ywbop2be/result.json\", \"states\": {\"distinct\": 45, \"generated\": 76, \"queue\": 11}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144708Z-TransactionsReachLate-ywbop2be/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 45,
+        "generated": 76,
+        "queue": 11
+      },
+      "depth": 8,
+      "elapsed_seconds": 0.45679250499233603,
+      "peak_rss_bytes": 157773824,
+      "expectation": "invariant:NoReadBeforeAnnouncement",
+      "purpose": "reachability"
+    },
+    {
+      "name": "TransactionsReachAbort",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.4623978741001338, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144708Z-TransactionsReachAbort-lgoau53r/result.json\", \"states\": {\"distinct\": 132, \"generated\": 253, \"queue\": 21}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144708Z-TransactionsReachAbort-lgoau53r/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 132,
+        "generated": 253,
+        "queue": 21
+      },
+      "depth": 13,
+      "elapsed_seconds": 0.4623978741001338,
+      "peak_rss_bytes": 132841472,
+      "expectation": "invariant:NoAbort",
+      "purpose": "reachability"
+    },
+    {
+      "name": "TransactionsReachRecovery",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.46186695504002273, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144709Z-TransactionsReachRecovery-ekah20qq/result.json\", \"states\": {\"distinct\": 513, \"generated\": 1057, \"queue\": 123}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144709Z-TransactionsReachRecovery-ekah20qq/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 513,
+        "generated": 1057,
+        "queue": 123
+      },
+      "depth": 14,
+      "elapsed_seconds": 0.46186695504002273,
+      "peak_rss_bytes": 155303936,
+      "expectation": "invariant:NoOutcomeRecovery",
+      "purpose": "reachability"
+    },
+    {
+      "name": "TransactionsReachPublication",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.4585592250805348, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144709Z-TransactionsReachPublication-fxxqv3ia/result.json\", \"states\": {\"distinct\": 213, \"generated\": 417, \"queue\": 29}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144709Z-TransactionsReachPublication-fxxqv3ia/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 213,
+        "generated": 417,
+        "queue": 29
+      },
+      "depth": 16,
+      "elapsed_seconds": 0.4585592250805348,
+      "peak_rss_bytes": 142798848,
+      "expectation": "invariant:NoPublication",
+      "purpose": "reachability"
+    },
+    {
+      "name": "TransactionsReachPositionRecovery",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.6740231418516487, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144710Z-TransactionsReachPositionRecovery-xtq0376u/result.json\", \"states\": {\"distinct\": 2201, \"generated\": 5260, \"queue\": 411}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144710Z-TransactionsReachPositionRecovery-xtq0376u/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 2201,
+        "generated": 5260,
+        "queue": 411
+      },
+      "depth": 20,
+      "elapsed_seconds": 0.6740231418516487,
+      "peak_rss_bytes": 235225088,
+      "expectation": "invariant:NoPositionRecoveryComplete",
+      "purpose": "reachability"
+    },
+    {
+      "name": "TransactionsReachDecisionRecovery",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.556213908130303, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144710Z-TransactionsReachDecisionRecovery-f9rgcqbi/result.json\", \"states\": {\"distinct\": 1420, \"generated\": 3133, \"queue\": 308}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144710Z-TransactionsReachDecisionRecovery-f9rgcqbi/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 1420,
+        "generated": 3133,
+        "queue": 308
+      },
+      "depth": 18,
+      "elapsed_seconds": 0.556213908130303,
+      "peak_rss_bytes": 171044864,
+      "expectation": "invariant:NoDecisionRecoveryComplete",
+      "purpose": "reachability"
+    },
+    {
+      "name": "TransactionsReachReadPartial",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.509504018118605, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144711Z-TransactionsReachReadPartial-qrvcwoge/result.json\", \"states\": {\"distinct\": 411, \"generated\": 858, \"queue\": 33}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144711Z-TransactionsReachReadPartial-qrvcwoge/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 411,
+        "generated": 858,
+        "queue": 33
+      },
+      "depth": 23,
+      "elapsed_seconds": 0.509504018118605,
+      "peak_rss_bytes": 189734912,
+      "expectation": "invariant:NoReadAcrossPartialInstall",
+      "purpose": "reachability"
+    },
+    {
+      "name": "BorrowLifetimeOne",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.35501895984634757, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144712Z-BorrowLifetimeOne-zujyj8zp/result.json\", \"states\": {\"distinct\": 235, \"generated\": 478, \"queue\": 0}, \"status\": \"complete\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144712Z-BorrowLifetimeOne-zujyj8zp/result.json",
+      "status": "complete",
+      "states": {
+        "distinct": 235,
+        "generated": 478,
+        "queue": 0
+      },
+      "depth": 13,
+      "elapsed_seconds": 0.35501895984634757,
+      "peak_rss_bytes": 106024960,
+      "expectation": "complete",
+      "purpose": "check"
+    },
+    {
+      "name": "BorrowLifetime",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.42060247506015, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144712Z-BorrowLifetime-bcrv0jb6/result.json\", \"states\": {\"distinct\": 3219, \"generated\": 8042, \"queue\": 0}, \"status\": \"complete\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144712Z-BorrowLifetime-bcrv0jb6/result.json",
+      "status": "complete",
+      "states": {
+        "distinct": 3219,
+        "generated": 8042,
+        "queue": 0
+      },
+      "depth": 18,
+      "elapsed_seconds": 0.42060247506015,
+      "peak_rss_bytes": 139239424,
+      "expectation": "complete",
+      "purpose": "check"
+    },
+    {
+      "name": "BorrowLifetimeLive",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.3592799468897283, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144712Z-BorrowLifetimeLive-2j808jm2/result.json\", \"states\": {\"distinct\": 34, \"generated\": 87, \"queue\": 0}, \"status\": \"complete\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144712Z-BorrowLifetimeLive-2j808jm2/result.json",
+      "status": "complete",
+      "states": {
+        "distinct": 34,
+        "generated": 87,
+        "queue": 0
+      },
+      "depth": 9,
+      "elapsed_seconds": 0.3592799468897283,
+      "peak_rss_bytes": 108077056,
+      "expectation": "complete",
+      "purpose": "check"
+    },
+    {
+      "name": "BorrowLifetimeDropOnDeath",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.36751000094227493, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144713Z-BorrowLifetimeDropOnDeath-ajjcc63d/result.json\", \"states\": {\"distinct\": 10, \"generated\": 10, \"queue\": 7}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144713Z-BorrowLifetimeDropOnDeath-ajjcc63d/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 10,
+        "generated": 10,
+        "queue": 7
+      },
+      "depth": 3,
+      "elapsed_seconds": 0.36751000094227493,
+      "peak_rss_bytes": 103776256,
+      "expectation": "invariant:LiveUsersCharged",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "BorrowLifetimeDropOnFirst",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.364824399119243, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144713Z-BorrowLifetimeDropOnFirst-v3teh3yb/result.json\", \"states\": {\"distinct\": 95, \"generated\": 172, \"queue\": 49}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144713Z-BorrowLifetimeDropOnFirst-v3teh3yb/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 95,
+        "generated": 172,
+        "queue": 49
+      },
+      "depth": 6,
+      "elapsed_seconds": 0.364824399119243,
+      "peak_rss_bytes": 105099264,
+      "expectation": "invariant:LiveUsersCharged",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "BorrowLifetimeDropOnCancel",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.36862275819294155, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144714Z-BorrowLifetimeDropOnCancel-26yvk2q7/result.json\", \"states\": {\"distinct\": 7, \"generated\": 7, \"queue\": 4}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144714Z-BorrowLifetimeDropOnCancel-26yvk2q7/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 7,
+        "generated": 7,
+        "queue": 4
+      },
+      "depth": 3,
+      "elapsed_seconds": 0.36862275819294155,
+      "peak_rss_bytes": 100876288,
+      "expectation": "invariant:LiveUsersCharged",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "BorrowLifetimeStaleCallback",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.35471224994398654, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144714Z-BorrowLifetimeStaleCallback-ztgouxsq/result.json\", \"states\": {\"distinct\": 194, \"generated\": 390, \"queue\": 92}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144714Z-BorrowLifetimeStaleCallback-ztgouxsq/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 194,
+        "generated": 390,
+        "queue": 92
+      },
+      "depth": 7,
+      "elapsed_seconds": 0.35471224994398654,
+      "peak_rss_bytes": 110256128,
+      "expectation": "invariant:CallbackIncarnation",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "BorrowLifetimePrematureReuse",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.4167858250439167, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144715Z-BorrowLifetimePrematureReuse-kkbfxs87/result.json\", \"states\": {\"distinct\": 920, \"generated\": 2165, \"queue\": 327}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144715Z-BorrowLifetimePrematureReuse-kkbfxs87/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 920,
+        "generated": 2165,
+        "queue": 327
+      },
+      "depth": 10,
+      "elapsed_seconds": 0.4167858250439167,
+      "peak_rss_bytes": 133013504,
+      "expectation": "invariant:SealedBytesStable",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "BorrowLifetimeOmitService",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.4096182358916849, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144715Z-BorrowLifetimeOmitService-pq5d87xk/result.json\", \"states\": {\"distinct\": 8, \"generated\": 17, \"queue\": 0}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144715Z-BorrowLifetimeOmitService-pq5d87xk/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 8,
+        "generated": 17,
+        "queue": 0
+      },
+      "depth": 4,
+      "elapsed_seconds": 0.4096182358916849,
+      "peak_rss_bytes": 103194624,
+      "expectation": "temporal:EventuallyRetired",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "BorrowLifetimeReachability",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.463184546912089, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144716Z-BorrowLifetimeReachability-mplm7zyk/result.json\", \"states\": {\"distinct\": 1734, \"generated\": 4251, \"queue\": 397}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144716Z-BorrowLifetimeReachability-mplm7zyk/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 1734,
+        "generated": 4251,
+        "queue": 397
+      },
+      "depth": 13,
+      "elapsed_seconds": 0.463184546912089,
+      "peak_rss_bytes": 139980800,
+      "expectation": "invariant:NoRecoveryWitness",
+      "purpose": "reachability"
+    },
+    {
+      "name": "CheckedReplay-one",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.4156919848173857, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144716Z-CheckedReplay-one-iy6fq_41/result.json\", \"states\": {\"distinct\": 548, \"generated\": 1037, \"queue\": 0}, \"status\": \"complete\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144716Z-CheckedReplay-one-iy6fq_41/result.json",
+      "status": "complete",
+      "states": {
+        "distinct": 548,
+        "generated": 1037,
+        "queue": 0
+      },
+      "depth": 17,
+      "elapsed_seconds": 0.4156919848173857,
+      "peak_rss_bytes": 134844416,
+      "expectation": "complete",
+      "purpose": "check"
+    },
+    {
+      "name": "CheckedReplay-small",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.6205302900634706, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144717Z-CheckedReplay-small-lxc4w4az/result.json\", \"states\": {\"distinct\": 5326, \"generated\": 13339, \"queue\": 0}, \"status\": \"complete\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144717Z-CheckedReplay-small-lxc4w4az/result.json",
+      "status": "complete",
+      "states": {
+        "distinct": 5326,
+        "generated": 13339,
+        "queue": 0
+      },
+      "depth": 22,
+      "elapsed_seconds": 0.6205302900634706,
+      "peak_rss_bytes": 155406336,
+      "expectation": "complete",
+      "purpose": "check"
+    },
+    {
+      "name": "CheckedReplay-live",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 1.020542296115309, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144717Z-CheckedReplay-live-3f3b4bid/result.json\", \"states\": {\"distinct\": 5326, \"generated\": 13339, \"queue\": 0}, \"status\": \"complete\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144717Z-CheckedReplay-live-3f3b4bid/result.json",
+      "status": "complete",
+      "states": {
+        "distinct": 5326,
+        "generated": 13339,
+        "queue": 0
+      },
+      "depth": 22,
+      "elapsed_seconds": 1.020542296115309,
+      "peak_rss_bytes": 216547328,
+      "expectation": "complete",
+      "purpose": "check"
+    },
+    {
+      "name": "CheckedReplay-final-only",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.46760670095682144, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144718Z-CheckedReplay-final-only-cprq5phr/result.json\", \"states\": {\"distinct\": 2162, \"generated\": 5838, \"queue\": 530}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144718Z-CheckedReplay-final-only-cprq5phr/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 2162,
+        "generated": 5838,
+        "queue": 530
+      },
+      "depth": 12,
+      "elapsed_seconds": 0.46760670095682144,
+      "peak_rss_bytes": 139546624,
+      "expectation": "invariant:AllEvidence",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "CheckedReplay-missing-checker",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.4181390011217445, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144719Z-CheckedReplay-missing-checker-t75yb4ts/result.json\", \"states\": {\"distinct\": 380, \"generated\": 784, \"queue\": 214}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144719Z-CheckedReplay-missing-checker-t75yb4ts/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 380,
+        "generated": 784,
+        "queue": 214
+      },
+      "depth": 8,
+      "elapsed_seconds": 0.4181390011217445,
+      "peak_rss_bytes": 132255744,
+      "expectation": "invariant:AllEvidence",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "CheckedReplay-current-cut",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.3630807208828628, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144719Z-CheckedReplay-current-cut-wk4o3wai/result.json\", \"states\": {\"distinct\": 22, \"generated\": 31, \"queue\": 13}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144719Z-CheckedReplay-current-cut-wk4o3wai/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 22,
+        "generated": 31,
+        "queue": 13
+      },
+      "depth": 5,
+      "elapsed_seconds": 0.3630807208828628,
+      "peak_rss_bytes": 107864064,
+      "expectation": "invariant:ReadsAtCut",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "CheckedReplay-forget-root",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.3664982859045267, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144720Z-CheckedReplay-forget-root-mkaepzvv/result.json\", \"states\": {\"distinct\": 17, \"generated\": 18, \"queue\": 12}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144720Z-CheckedReplay-forget-root-mkaepzvv/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 17,
+        "generated": 18,
+        "queue": 12
+      },
+      "depth": 4,
+      "elapsed_seconds": 0.3664982859045267,
+      "peak_rss_bytes": 119934976,
+      "expectation": "invariant:RootRecoverable",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "CheckedReplay-unbound-context",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.45477615809068084, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144720Z-CheckedReplay-unbound-context-voce2oyo/result.json\", \"states\": {\"distinct\": 406, \"generated\": 934, \"queue\": 209}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144720Z-CheckedReplay-unbound-context-voce2oyo/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 406,
+        "generated": 934,
+        "queue": 209
+      },
+      "depth": 8,
+      "elapsed_seconds": 0.45477615809068084,
+      "peak_rss_bytes": 134389760,
+      "expectation": "invariant:AllEvidence",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "CheckedReplay-always-abort",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.5130978329107165, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144721Z-CheckedReplay-always-abort-fr8h7nq6/result.json\", \"states\": {\"distinct\": 2160, \"generated\": 5832, \"queue\": 530}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144721Z-CheckedReplay-always-abort-fr8h7nq6/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 2160,
+        "generated": 5832,
+        "queue": 530
+      },
+      "depth": 12,
+      "elapsed_seconds": 0.5130978329107165,
+      "peak_rss_bytes": 139640832,
+      "expectation": "invariant:DecisionMeaning",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "CheckedReplay-wrong-result",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.5069959601387382, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144721Z-CheckedReplay-wrong-result-l1z4i269/result.json\", \"states\": {\"distinct\": 3090, \"generated\": 8120, \"queue\": 424}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144721Z-CheckedReplay-wrong-result-l1z4i269/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 3090,
+        "generated": 8120,
+        "queue": 424
+      },
+      "depth": 14,
+      "elapsed_seconds": 0.5069959601387382,
+      "peak_rss_bytes": 141443072,
+      "expectation": "invariant:PublicationEvidence",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "CheckedReplay-lost-recovery",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.8249878850765526, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144722Z-CheckedReplay-lost-recovery-bjyfza10/result.json\", \"states\": {\"distinct\": 1986, \"generated\": 8177, \"queue\": 0}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144722Z-CheckedReplay-lost-recovery-bjyfza10/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 1986,
+        "generated": 8177,
+        "queue": 0
+      },
+      "depth": 19,
+      "elapsed_seconds": 0.8249878850765526,
+      "peak_rss_bytes": 199561216,
+      "expectation": "temporal:Completes",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "CheckedReplay-reached",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.5611847329419106, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144723Z-CheckedReplay-reached-ja64p1e5/result.json\", \"states\": {\"distinct\": 4047, \"generated\": 10130, \"queue\": 416}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144723Z-CheckedReplay-reached-ja64p1e5/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 4047,
+        "generated": 10130,
+        "queue": 416
+      },
+      "depth": 16,
+      "elapsed_seconds": 0.5611847329419106,
+      "peak_rss_bytes": 151920640,
+      "expectation": "invariant:NotRecoveredPublication",
+      "purpose": "reachability"
+    },
+    {
+      "name": "CheckedReplay-commit-reached",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.5067590828984976, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144723Z-CheckedReplay-commit-reached-i542fd6w/result.json\", \"states\": {\"distinct\": 3090, \"generated\": 8120, \"queue\": 424}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144723Z-CheckedReplay-commit-reached-i542fd6w/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 3090,
+        "generated": 8120,
+        "queue": 424
+      },
+      "depth": 14,
+      "elapsed_seconds": 0.5067590828984976,
+      "peak_rss_bytes": 143249408,
+      "expectation": "invariant:NotCommit",
+      "purpose": "reachability"
+    },
+    {
+      "name": "CheckedReplay-abort-reached",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.4584230149630457, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144724Z-CheckedReplay-abort-reached-r2rrcycb/result.json\", \"states\": {\"distinct\": 1171, \"generated\": 3091, \"queue\": 437}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144724Z-CheckedReplay-abort-reached-r2rrcycb/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 1171,
+        "generated": 3091,
+        "queue": 437
+      },
+      "depth": 10,
+      "elapsed_seconds": 0.4584230149630457,
+      "peak_rss_bytes": 138280960,
+      "expectation": "invariant:NotAbort",
+      "purpose": "reachability"
+    },
+    {
+      "name": "CheckedReplay-decision-recovered",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.5600438499823213, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144724Z-CheckedReplay-decision-recovered-4zfx1q7q/result.json\", \"states\": {\"distinct\": 3964, \"generated\": 9907, \"queue\": 431}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144724Z-CheckedReplay-decision-recovered-4zfx1q7q/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 3964,
+        "generated": 9907,
+        "queue": 431
+      },
+      "depth": 16,
+      "elapsed_seconds": 0.5600438499823213,
+      "peak_rss_bytes": 159408128,
+      "expectation": "invariant:NotDecisionRecovery",
+      "purpose": "reachability"
+    },
+    {
+      "name": "CheckedReplay-retired-reached",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.5703719600569457, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144725Z-CheckedReplay-retired-reached-wltickdi/result.json\", \"states\": {\"distinct\": 2989, \"generated\": 7883, \"queue\": 454}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144725Z-CheckedReplay-retired-reached-wltickdi/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 2989,
+        "generated": 7883,
+        "queue": 454
+      },
+      "depth": 14,
+      "elapsed_seconds": 0.5703719600569457,
+      "peak_rss_bytes": 143515648,
+      "expectation": "invariant:NotRetired",
+      "purpose": "reachability"
+    },
+    {
+      "name": "AdmissionCoverage-one",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.40451620193198323, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144726Z-AdmissionCoverage-one-95rjoe6c/result.json\", \"states\": {\"distinct\": 401, \"generated\": 1063, \"queue\": 0}, \"status\": \"complete\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144726Z-AdmissionCoverage-one-95rjoe6c/result.json",
+      "status": "complete",
+      "states": {
+        "distinct": 401,
+        "generated": 1063,
+        "queue": 0
+      },
+      "depth": 15,
+      "elapsed_seconds": 0.40451620193198323,
+      "peak_rss_bytes": 127574016,
+      "expectation": "complete",
+      "purpose": "check"
+    },
+    {
+      "name": "AdmissionCoverage-small",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.9403852268587798, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144726Z-AdmissionCoverage-small-vjseqpdt/result.json\", \"states\": {\"distinct\": 18687, \"generated\": 77766, \"queue\": 0}, \"status\": \"complete\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144726Z-AdmissionCoverage-small-vjseqpdt/result.json",
+      "status": "complete",
+      "states": {
+        "distinct": 18687,
+        "generated": 77766,
+        "queue": 0
+      },
+      "depth": 25,
+      "elapsed_seconds": 0.9403852268587798,
+      "peak_rss_bytes": 284160000,
+      "expectation": "complete",
+      "purpose": "check"
+    },
+    {
+      "name": "AdmissionCoverage-hole",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.5100280630867928, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144727Z-AdmissionCoverage-hole-s2q0lk5z/result.json\", \"states\": {\"distinct\": 2140, \"generated\": 7112, \"queue\": 891}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144727Z-AdmissionCoverage-hole-s2q0lk5z/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 2140,
+        "generated": 7112,
+        "queue": 891
+      },
+      "depth": 10,
+      "elapsed_seconds": 0.5100280630867928,
+      "peak_rss_bytes": 143118336,
+      "expectation": "invariant:ContiguousAdmission",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "AdmissionCoverage-relay",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.3673889581114054, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144728Z-AdmissionCoverage-relay-sfctxi62/result.json\", \"states\": {\"distinct\": 22, \"generated\": 35, \"queue\": 9}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144728Z-AdmissionCoverage-relay-sfctxi62/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 22,
+        "generated": 35,
+        "queue": 9
+      },
+      "depth": 5,
+      "elapsed_seconds": 0.3673889581114054,
+      "peak_rss_bytes": 102793216,
+      "expectation": "invariant:DistinctEligibility",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "AdmissionCoverage-intent",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.35876765102148056, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144728Z-AdmissionCoverage-intent-fnuwpe3q/result.json\", \"states\": {\"distinct\": 3, \"generated\": 3, \"queue\": 1}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144728Z-AdmissionCoverage-intent-fnuwpe3q/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 3,
+        "generated": 3,
+        "queue": 1
+      },
+      "depth": 2,
+      "elapsed_seconds": 0.35876765102148056,
+      "peak_rss_bytes": 100880384,
+      "expectation": "invariant:ReceiptsAreDurable",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "AdmissionCoverage-decoder",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.4085464789532125, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144729Z-AdmissionCoverage-decoder-5mty57qw/result.json\", \"states\": {\"distinct\": 702, \"generated\": 2461, \"queue\": 162}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144729Z-AdmissionCoverage-decoder-5mty57qw/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 702,
+        "generated": 2461,
+        "queue": 162
+      },
+      "depth": 12,
+      "elapsed_seconds": 0.4085464789532125,
+      "peak_rss_bytes": 135954432,
+      "expectation": "invariant:AdmittedRecoverable",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "AdmissionCoverage-reached",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.5617516948841512, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144729Z-AdmissionCoverage-reached-8pwq08ic/result.json\", \"states\": {\"distinct\": 3334, \"generated\": 11719, \"queue\": 1245}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144729Z-AdmissionCoverage-reached-8pwq08ic/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 3334,
+        "generated": 11719,
+        "queue": 1245
+      },
+      "depth": 11,
+      "elapsed_seconds": 0.5617516948841512,
+      "peak_rss_bytes": 182157312,
+      "expectation": "invariant:NoLossWitness",
+      "purpose": "reachability"
+    },
+    {
+      "name": "AdmissionCoverage-hole-reached",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.46275329403579235, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144730Z-AdmissionCoverage-hole-reached-ejk15gry/result.json\", \"states\": {\"distinct\": 1248, \"generated\": 3810, \"queue\": 587}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144730Z-AdmissionCoverage-hole-reached-ejk15gry/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 1248,
+        "generated": 3810,
+        "queue": 587
+      },
+      "depth": 9,
+      "elapsed_seconds": 0.46275329403579235,
+      "peak_rss_bytes": 136474624,
+      "expectation": "invariant:NoHoleWitness",
+      "purpose": "reachability"
+    },
+    {
+      "name": "AdmissionCoverage-historical-boundary",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.5103551491629332, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144730Z-AdmissionCoverage-historical-boundary-8fpr2_lx/result.json\", \"states\": {\"distinct\": 2077, \"generated\": 6911, \"queue\": 886}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144730Z-AdmissionCoverage-historical-boundary-8fpr2_lx/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 2077,
+        "generated": 6911,
+        "queue": 886
+      },
+      "depth": 10,
+      "elapsed_seconds": 0.5103551491629332,
+      "peak_rss_bytes": 143753216,
+      "expectation": "invariant:SimultaneousCopiesAtEligibility",
+      "purpose": "reachability"
+    },
+    {
+      "name": "RetentionClosurePreRegistered",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.4086037289816886, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144731Z-RetentionClosurePreRegistered-qjx5hs89/result.json\", \"states\": {\"distinct\": 203, \"generated\": 381, \"queue\": 0}, \"status\": \"complete\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144731Z-RetentionClosurePreRegistered-qjx5hs89/result.json",
+      "status": "complete",
+      "states": {
+        "distinct": 203,
+        "generated": 381,
+        "queue": 0
+      },
+      "depth": 21,
+      "elapsed_seconds": 0.4086037289816886,
+      "peak_rss_bytes": 129077248,
+      "expectation": "complete",
+      "purpose": "check"
+    },
+    {
+      "name": "RetentionClosure",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.47288402705453336, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144731Z-RetentionClosure-11n5ymcd/result.json\", \"states\": {\"distinct\": 1380, \"generated\": 3100, \"queue\": 0}, \"status\": \"complete\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144731Z-RetentionClosure-11n5ymcd/result.json",
+      "status": "complete",
+      "states": {
+        "distinct": 1380,
+        "generated": 3100,
+        "queue": 0
+      },
+      "depth": 26,
+      "elapsed_seconds": 0.47288402705453336,
+      "peak_rss_bytes": 136097792,
+      "expectation": "complete",
+      "purpose": "check"
+    },
+    {
+      "name": "RetentionClosureForgetReplay",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.4051147070713341, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144732Z-RetentionClosureForgetReplay-a48y6rll/result.json\", \"states\": {\"distinct\": 86, \"generated\": 137, \"queue\": 36}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144732Z-RetentionClosureForgetReplay-a48y6rll/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 86,
+        "generated": 137,
+        "queue": 36
+      },
+      "depth": 6,
+      "elapsed_seconds": 0.4051147070713341,
+      "peak_rss_bytes": 114655232,
+      "expectation": "invariant:LiveRootsReconstructible",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "RetentionClosureMissingReplayRead",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.3600493259727955, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144732Z-RetentionClosureMissingReplayRead-4ev4uyg1/result.json\", \"states\": {\"distinct\": 144, \"generated\": 241, \"queue\": 57}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144732Z-RetentionClosureMissingReplayRead-4ev4uyg1/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 144,
+        "generated": 241,
+        "queue": 57
+      },
+      "depth": 7,
+      "elapsed_seconds": 0.3600493259727955,
+      "peak_rss_bytes": 115023872,
+      "expectation": "invariant:ReplayReadable",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "RetentionClosureDropCodec",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.366516618989408, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144733Z-RetentionClosureDropCodec-iwh_ftn5/result.json\", \"states\": {\"distinct\": 4, \"generated\": 4, \"queue\": 2}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144733Z-RetentionClosureDropCodec-iwh_ftn5/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 4,
+        "generated": 4,
+        "queue": 2
+      },
+      "depth": 2,
+      "elapsed_seconds": 0.366516618989408,
+      "peak_rss_bytes": 108134400,
+      "expectation": "invariant:HeadReconstructible",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "RetentionClosurePublishEarly",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.35973399109207094, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144733Z-RetentionClosurePublishEarly-j50rgitz/result.json\", \"states\": {\"distinct\": 25, \"generated\": 33, \"queue\": 14}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144733Z-RetentionClosurePublishEarly-j50rgitz/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 25,
+        "generated": 33,
+        "queue": 14
+      },
+      "depth": 4,
+      "elapsed_seconds": 0.35973399109207094,
+      "peak_rss_bytes": 109699072,
+      "expectation": "invariant:HeadReconstructible",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "RetentionClosureGrantEarly",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.3623752580024302, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144733Z-RetentionClosureGrantEarly-dxes4q01/result.json\", \"states\": {\"distinct\": 16, \"generated\": 21, \"queue\": 9}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144733Z-RetentionClosureGrantEarly-dxes4q01/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 16,
+        "generated": 21,
+        "queue": 9
+      },
+      "depth": 4,
+      "elapsed_seconds": 0.3623752580024302,
+      "peak_rss_bytes": 109473792,
+      "expectation": "invariant:GrantHasDurableRoot",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "RetentionClosureReadLatest",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.4047211620490998, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144734Z-RetentionClosureReadLatest-ql_0dwvr/result.json\", \"states\": {\"distinct\": 810, \"generated\": 1685, \"queue\": 113}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144734Z-RetentionClosureReadLatest-ql_0dwvr/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 810,
+        "generated": 1685,
+        "queue": 113
+      },
+      "depth": 15,
+      "elapsed_seconds": 0.4047211620490998,
+      "peak_rss_bytes": 134467584,
+      "expectation": "invariant:VersionBound",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "RetentionClosureSkipDrain",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.3700134758837521, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144734Z-RetentionClosureSkipDrain-uol9tj1l/result.json\", \"states\": {\"distinct\": 163, \"generated\": 305, \"queue\": 55}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144734Z-RetentionClosureSkipDrain-uol9tj1l/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 163,
+        "generated": 305,
+        "queue": 55
+      },
+      "depth": 8,
+      "elapsed_seconds": 0.3700134758837521,
+      "peak_rss_bytes": 126652416,
+      "expectation": "invariant:ServingRegistryCurrent",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "RetentionClosureLateRootLoss",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.4634211310185492, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144735Z-RetentionClosureLateRootLoss-1k4lrsc6/result.json\", \"states\": {\"distinct\": 896, \"generated\": 1959, \"queue\": 128}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144735Z-RetentionClosureLateRootLoss-1k4lrsc6/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 896,
+        "generated": 1959,
+        "queue": 128
+      },
+      "depth": 15,
+      "elapsed_seconds": 0.4634211310185492,
+      "peak_rss_bytes": 133222400,
+      "expectation": "invariant:LiveRootsReconstructible",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "RetentionClosureReachability",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.4598524000030011, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144735Z-RetentionClosureReachability-ie2mrjyu/result.json\", \"states\": {\"distinct\": 1372, \"generated\": 3069, \"queue\": 10}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144735Z-RetentionClosureReachability-ie2mrjyu/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 1372,
+        "generated": 3069,
+        "queue": 10
+      },
+      "depth": 25,
+      "elapsed_seconds": 0.4598524000030011,
+      "peak_rss_bytes": 142102528,
+      "expectation": "invariant:NoRecoveryWitness",
+      "purpose": "reachability"
+    },
+    {
+      "name": "RetentionClosureRegistrationCrash",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.4105597420129925, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144736Z-RetentionClosureRegistrationCrash-bfqkhcoy/result.json\", \"states\": {\"distinct\": 105, \"generated\": 180, \"queue\": 41}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144736Z-RetentionClosureRegistrationCrash-bfqkhcoy/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 105,
+        "generated": 180,
+        "queue": 41
+      },
+      "depth": 7,
+      "elapsed_seconds": 0.4105597420129925,
+      "peak_rss_bytes": 114618368,
+      "expectation": "invariant:NoDurableRegistrationCrash",
+      "purpose": "reachability"
+    },
+    {
+      "name": "RetentionClosureCheckpointCrash",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.361476669088006, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144736Z-RetentionClosureCheckpointCrash-uo1i_fae/result.json\", \"states\": {\"distinct\": 51, \"generated\": 73, \"queue\": 26}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144736Z-RetentionClosureCheckpointCrash-uo1i_fae/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 51,
+        "generated": 73,
+        "queue": 26
+      },
+      "depth": 5,
+      "elapsed_seconds": 0.361476669088006,
+      "peak_rss_bytes": 110493696,
+      "expectation": "invariant:NoDurableCheckpointCrash",
+      "purpose": "reachability"
+    },
+    {
+      "name": "Reservations",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.6117001071106642, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144737Z-Reservations-6dix3vhy/result.json\", \"states\": {\"distinct\": 730, \"generated\": 1554, \"queue\": 0}, \"status\": \"complete\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144737Z-Reservations-6dix3vhy/result.json",
+      "status": "complete",
+      "states": {
+        "distinct": 730,
+        "generated": 1554,
+        "queue": 0
+      },
+      "depth": 20,
+      "elapsed_seconds": 0.6117001071106642,
+      "peak_rss_bytes": 182587392,
+      "expectation": "complete",
+      "purpose": "check"
+    },
+    {
+      "name": "ReservationsLive",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.720442864112556, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144737Z-ReservationsLive-ik5_o3aj/result.json\", \"states\": {\"distinct\": 730, \"generated\": 1554, \"queue\": 0}, \"status\": \"complete\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144737Z-ReservationsLive-ik5_o3aj/result.json",
+      "status": "complete",
+      "states": {
+        "distinct": 730,
+        "generated": 1554,
+        "queue": 0
+      },
+      "depth": 20,
+      "elapsed_seconds": 0.720442864112556,
+      "peak_rss_bytes": 257437696,
+      "expectation": "complete",
+      "purpose": "check"
+    },
+    {
+      "name": "ReservationsCycle",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.7694107280112803, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144738Z-ReservationsCycle-aaxgunco/result.json\", \"states\": {\"distinct\": 1960, \"generated\": 4286, \"queue\": 0}, \"status\": \"complete\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144738Z-ReservationsCycle-aaxgunco/result.json",
+      "status": "complete",
+      "states": {
+        "distinct": 1960,
+        "generated": 4286,
+        "queue": 0
+      },
+      "depth": 24,
+      "elapsed_seconds": 0.7694107280112803,
+      "peak_rss_bytes": 264294400,
+      "expectation": "complete",
+      "purpose": "check"
+    },
+    {
+      "name": "ReservationsCycleLive",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.9946868349798024, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144739Z-ReservationsCycleLive-zx0u7cwe/result.json\", \"states\": {\"distinct\": 1960, \"generated\": 4286, \"queue\": 0}, \"status\": \"complete\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144739Z-ReservationsCycleLive-zx0u7cwe/result.json",
+      "status": "complete",
+      "states": {
+        "distinct": 1960,
+        "generated": 4286,
+        "queue": 0
+      },
+      "depth": 24,
+      "elapsed_seconds": 0.9946868349798024,
+      "peak_rss_bytes": 281358336,
+      "expectation": "complete",
+      "purpose": "check"
+    },
+    {
+      "name": "ReservationsEarlyRelease",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.5553653200622648, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144740Z-ReservationsEarlyRelease-cp6fixem/result.json\", \"states\": {\"distinct\": 650, \"generated\": 1440, \"queue\": 152}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144740Z-ReservationsEarlyRelease-cp6fixem/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 650,
+        "generated": 1440,
+        "queue": 152
+      },
+      "depth": 13,
+      "elapsed_seconds": 0.5553653200622648,
+      "peak_rss_bytes": 155308032,
+      "expectation": "invariant:ConflictingPositionsFollowGrants",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "ReservationsSkipWaiter",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.4068642589263618, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144741Z-ReservationsSkipWaiter-9kcmfwtt/result.json\", \"states\": {\"distinct\": 46, \"generated\": 64, \"queue\": 16}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144741Z-ReservationsSkipWaiter-9kcmfwtt/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 46,
+        "generated": 64,
+        "queue": 16
+      },
+      "depth": 6,
+      "elapsed_seconds": 0.4068642589263618,
+      "peak_rss_bytes": 121077760,
+      "expectation": "invariant:NoOvertaking",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "ReservationsReversed",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.46049948688596487, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144741Z-ReservationsReversed-_22mlux9/result.json\", \"states\": {\"distinct\": 113, \"generated\": 179, \"queue\": 51}, \"status\": \"expected_violation\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144741Z-ReservationsReversed-_22mlux9/result.json",
+      "status": "expected_violation",
+      "states": {
+        "distinct": 113,
+        "generated": 179,
+        "queue": 51
+      },
+      "depth": 7,
+      "elapsed_seconds": 0.46049948688596487,
+      "peak_rss_bytes": 132767744,
+      "expectation": "invariant:NoReservationCycle",
+      "purpose": "negative_control"
+    },
+    {
+      "name": "ReservationsReachRelease",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.40657442389056087, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144742Z-ReservationsReachRelease-vddp9ti8/result.json\", \"states\": {\"distinct\": 296, \"generated\": 567, \"queue\": 62}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144742Z-ReservationsReachRelease-vddp9ti8/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 296,
+        "generated": 567,
+        "queue": 62
+      },
+      "depth": 11,
+      "elapsed_seconds": 0.40657442389056087,
+      "peak_rss_bytes": 137891840,
+      "expectation": "invariant:NoLocalReleaseBenefit",
+      "purpose": "reachability"
+    },
+    {
+      "name": "ReservationsReachConvoy",
+      "returncode": 0,
+      "stdout": "{\"elapsed_seconds\": 0.3662362420000136, \"result\": \"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-spec/quick-v1/runs/20260927T144742Z-ReservationsReachConvoy-pt435qmw/result.json\", \"states\": {\"distinct\": 31, \"generated\": 37, \"queue\": 16}, \"status\": \"witnessed\"}\n",
+      "stderr": "",
+      "result": "runs/20260927T144742Z-ReservationsReachConvoy-pt435qmw/result.json",
+      "status": "witnessed",
+      "states": {
+        "distinct": 31,
+        "generated": 37,
+        "queue": 16
+      },
+      "depth": 5,
+      "elapsed_seconds": 0.3662362420000136,
+      "peak_rss_bytes": 104579072,
+      "expectation": "invariant:NoIndirectConvoy",
+      "purpose": "reachability"
+    }
+  ]
+}

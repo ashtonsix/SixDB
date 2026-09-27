@@ -1,0 +1,565 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "Transactions",
+      "module": "Transactions",
+      "config": "configs/Transactions.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "TransactionsLive",
+      "module": "Transactions",
+      "config": "configs/TransactionsLive.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "TransactionsReset",
+      "module": "Transactions",
+      "config": "configs/TransactionsReset.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "TransactionsResetLive",
+      "module": "Transactions",
+      "config": "configs/TransactionsResetLive.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "TransactionsShardReset",
+      "module": "Transactions",
+      "config": "configs/TransactionsShardReset.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "TransactionsSkipPending",
+      "module": "Transactions",
+      "config": "configs/TransactionsSkipPending.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoSkippedPending"
+    },
+    {
+      "name": "TransactionsEarlyExecution",
+      "module": "Transactions",
+      "config": "configs/TransactionsEarlyExecution.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoEarlyExecution"
+    },
+    {
+      "name": "TransactionsLostBounds",
+      "module": "Transactions",
+      "config": "configs/TransactionsLostBounds.cfg",
+      "tier": "quick",
+      "expect": "invariant:BoundSurvivesRead"
+    },
+    {
+      "name": "TransactionsLostBoundsSerial",
+      "module": "Transactions",
+      "config": "configs/TransactionsLostBoundsSerial.cfg",
+      "tier": "quick",
+      "expect": "invariant:SerialObservations"
+    },
+    {
+      "name": "TransactionsReach",
+      "module": "Transactions",
+      "config": "configs/TransactionsReach.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPartialInstall",
+      "witness": "Reach"
+    },
+    {
+      "name": "TransactionsReachFix",
+      "module": "Transactions",
+      "config": "configs/TransactionsReachFix.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPartialFix",
+      "witness": "ReachFix"
+    },
+    {
+      "name": "TransactionsReachLate",
+      "module": "Transactions",
+      "config": "configs/TransactionsReachLate.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoReadBeforeAnnouncement",
+      "witness": "ReachLate"
+    },
+    {
+      "name": "TransactionsReachAbort",
+      "module": "Transactions",
+      "config": "configs/TransactionsReachAbort.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoAbort",
+      "witness": "ReachAbort"
+    },
+    {
+      "name": "TransactionsReachRecovery",
+      "module": "Transactions",
+      "config": "configs/TransactionsReachRecovery.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoOutcomeRecovery",
+      "witness": "ReachRecovery"
+    },
+    {
+      "name": "TransactionsReachPublication",
+      "module": "Transactions",
+      "config": "configs/TransactionsReachPublication.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPublication",
+      "witness": "ReachPublication"
+    },
+    {
+      "name": "TransactionsReachPositionRecovery",
+      "module": "Transactions",
+      "config": "configs/TransactionsReachPositionRecovery.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPositionRecoveryComplete",
+      "witness": "ReachPositionRecovery"
+    },
+    {
+      "name": "TransactionsReachDecisionRecovery",
+      "module": "Transactions",
+      "config": "configs/TransactionsReachDecisionRecovery.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoDecisionRecoveryComplete",
+      "witness": "ReachDecisionRecovery"
+    },
+    {
+      "name": "TransactionsReachReadPartial",
+      "module": "Transactions",
+      "config": "configs/TransactionsReachReadPartial.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoReadAcrossPartialInstall",
+      "witness": "ReachReadPartial"
+    },
+    {
+      "name": "BorrowLifetimeOne",
+      "module": "BorrowLifetime",
+      "config": "configs/BorrowLifetimeOne.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "BorrowLifetime",
+      "module": "BorrowLifetime",
+      "config": "configs/BorrowLifetime.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "BorrowLifetimeLive",
+      "module": "BorrowLifetime",
+      "config": "configs/BorrowLifetimeLive.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "BorrowLifetimeThree",
+      "module": "BorrowLifetime",
+      "config": "configs/BorrowLifetimeThree.cfg",
+      "tier": "growth"
+    },
+    {
+      "name": "BorrowLifetimeDropOnDeath",
+      "module": "BorrowLifetime",
+      "config": "configs/BorrowLifetimeDropOnDeath.cfg",
+      "tier": "quick",
+      "expect": "invariant:LiveUsersCharged"
+    },
+    {
+      "name": "BorrowLifetimeDropOnFirst",
+      "module": "BorrowLifetime",
+      "config": "configs/BorrowLifetimeDropOnFirst.cfg",
+      "tier": "quick",
+      "expect": "invariant:LiveUsersCharged"
+    },
+    {
+      "name": "BorrowLifetimeDropOnCancel",
+      "module": "BorrowLifetime",
+      "config": "configs/BorrowLifetimeDropOnCancel.cfg",
+      "tier": "quick",
+      "expect": "invariant:LiveUsersCharged"
+    },
+    {
+      "name": "BorrowLifetimeStaleCallback",
+      "module": "BorrowLifetime",
+      "config": "configs/BorrowLifetimeStaleCallback.cfg",
+      "tier": "quick",
+      "expect": "invariant:CallbackIncarnation"
+    },
+    {
+      "name": "BorrowLifetimePrematureReuse",
+      "module": "BorrowLifetime",
+      "config": "configs/BorrowLifetimePrematureReuse.cfg",
+      "tier": "quick",
+      "expect": "invariant:SealedBytesStable"
+    },
+    {
+      "name": "BorrowLifetimeOmitService",
+      "module": "BorrowLifetime",
+      "config": "configs/BorrowLifetimeOmitService.cfg",
+      "tier": "quick",
+      "expect": "temporal:EventuallyRetired"
+    },
+    {
+      "name": "BorrowLifetimeReachability",
+      "module": "BorrowLifetime",
+      "config": "configs/BorrowLifetimeReachability.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoRecoveryWitness",
+      "witness": "crash-cancel-reuse"
+    },
+    {
+      "name": "CheckedReplay-one",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-one.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CheckedReplay-small",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-small.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CheckedReplay-live",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-live.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CheckedReplay-grow",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-grow.cfg",
+      "tier": "growth"
+    },
+    {
+      "name": "CheckedReplay-four",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-four.cfg",
+      "tier": "growth"
+    },
+    {
+      "name": "CheckedReplay-four-workers4",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-four.cfg",
+      "tier": "scaling",
+      "workers": 4
+    },
+    {
+      "name": "CheckedReplay-final-only",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-final-only.cfg",
+      "tier": "quick",
+      "expect": "invariant:AllEvidence"
+    },
+    {
+      "name": "CheckedReplay-missing-checker",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-missing-checker.cfg",
+      "tier": "quick",
+      "expect": "invariant:AllEvidence"
+    },
+    {
+      "name": "CheckedReplay-current-cut",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-current-cut.cfg",
+      "tier": "quick",
+      "expect": "invariant:ReadsAtCut"
+    },
+    {
+      "name": "CheckedReplay-forget-root",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-forget-root.cfg",
+      "tier": "quick",
+      "expect": "invariant:RootRecoverable"
+    },
+    {
+      "name": "CheckedReplay-unbound-context",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-unbound-context.cfg",
+      "tier": "quick",
+      "expect": "invariant:AllEvidence"
+    },
+    {
+      "name": "CheckedReplay-always-abort",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-always-abort.cfg",
+      "tier": "quick",
+      "expect": "invariant:DecisionMeaning"
+    },
+    {
+      "name": "CheckedReplay-wrong-result",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-wrong-result.cfg",
+      "tier": "quick",
+      "expect": "invariant:PublicationEvidence"
+    },
+    {
+      "name": "CheckedReplay-lost-recovery",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-lost-recovery.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "CheckedReplay-reached",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-reached.cfg",
+      "tier": "quick",
+      "expect": "invariant:NotRecoveredPublication",
+      "witness": "reached"
+    },
+    {
+      "name": "CheckedReplay-commit-reached",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-commit-reached.cfg",
+      "tier": "quick",
+      "expect": "invariant:NotCommit",
+      "witness": "commit-reached"
+    },
+    {
+      "name": "CheckedReplay-abort-reached",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-abort-reached.cfg",
+      "tier": "quick",
+      "expect": "invariant:NotAbort",
+      "witness": "abort-reached"
+    },
+    {
+      "name": "CheckedReplay-decision-recovered",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-decision-recovered.cfg",
+      "tier": "quick",
+      "expect": "invariant:NotDecisionRecovery",
+      "witness": "decision-recovered"
+    },
+    {
+      "name": "CheckedReplay-retired-reached",
+      "module": "CheckedReplay",
+      "config": "configs/CheckedReplay-retired-reached.cfg",
+      "tier": "quick",
+      "expect": "invariant:NotRetired",
+      "witness": "retired-reached"
+    },
+    {
+      "name": "AdmissionCoverage-one",
+      "module": "AdmissionCoverage",
+      "config": "configs/AdmissionCoverage-one.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "AdmissionCoverage-small",
+      "module": "AdmissionCoverage",
+      "config": "configs/AdmissionCoverage-small.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "AdmissionCoverage-grow",
+      "module": "AdmissionCoverage",
+      "config": "configs/AdmissionCoverage-grow.cfg",
+      "tier": "growth"
+    },
+    {
+      "name": "AdmissionCoverage-hole",
+      "module": "AdmissionCoverage",
+      "config": "configs/AdmissionCoverage-hole.cfg",
+      "tier": "quick",
+      "expect": "invariant:ContiguousAdmission"
+    },
+    {
+      "name": "AdmissionCoverage-relay",
+      "module": "AdmissionCoverage",
+      "config": "configs/AdmissionCoverage-relay.cfg",
+      "tier": "quick",
+      "expect": "invariant:DistinctEligibility"
+    },
+    {
+      "name": "AdmissionCoverage-intent",
+      "module": "AdmissionCoverage",
+      "config": "configs/AdmissionCoverage-intent.cfg",
+      "tier": "quick",
+      "expect": "invariant:ReceiptsAreDurable"
+    },
+    {
+      "name": "AdmissionCoverage-decoder",
+      "module": "AdmissionCoverage",
+      "config": "configs/AdmissionCoverage-decoder.cfg",
+      "tier": "quick",
+      "expect": "invariant:AdmittedRecoverable"
+    },
+    {
+      "name": "AdmissionCoverage-reached",
+      "module": "AdmissionCoverage",
+      "config": "configs/AdmissionCoverage-reached.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoLossWitness",
+      "witness": "reached"
+    },
+    {
+      "name": "AdmissionCoverage-hole-reached",
+      "module": "AdmissionCoverage",
+      "config": "configs/AdmissionCoverage-hole-reached.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoHoleWitness",
+      "witness": "hole-reached"
+    },
+    {
+      "name": "AdmissionCoverage-historical-boundary",
+      "module": "AdmissionCoverage",
+      "config": "configs/AdmissionCoverage-historical-boundary.cfg",
+      "tier": "quick",
+      "expect": "invariant:SimultaneousCopiesAtEligibility",
+      "witness": "historical-boundary"
+    },
+    {
+      "name": "RetentionClosurePreRegistered",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosurePreRegistered.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RetentionClosure",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosure.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RetentionClosureForgetReplay",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosureForgetReplay.cfg",
+      "tier": "quick",
+      "expect": "invariant:LiveRootsReconstructible"
+    },
+    {
+      "name": "RetentionClosureMissingReplayRead",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosureMissingReplayRead.cfg",
+      "tier": "quick",
+      "expect": "invariant:ReplayReadable"
+    },
+    {
+      "name": "RetentionClosureDropCodec",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosureDropCodec.cfg",
+      "tier": "quick",
+      "expect": "invariant:HeadReconstructible"
+    },
+    {
+      "name": "RetentionClosurePublishEarly",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosurePublishEarly.cfg",
+      "tier": "quick",
+      "expect": "invariant:HeadReconstructible"
+    },
+    {
+      "name": "RetentionClosureGrantEarly",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosureGrantEarly.cfg",
+      "tier": "quick",
+      "expect": "invariant:GrantHasDurableRoot"
+    },
+    {
+      "name": "RetentionClosureReadLatest",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosureReadLatest.cfg",
+      "tier": "quick",
+      "expect": "invariant:VersionBound"
+    },
+    {
+      "name": "RetentionClosureSkipDrain",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosureSkipDrain.cfg",
+      "tier": "quick",
+      "expect": "invariant:ServingRegistryCurrent"
+    },
+    {
+      "name": "RetentionClosureLateRootLoss",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosureLateRootLoss.cfg",
+      "tier": "quick",
+      "expect": "invariant:LiveRootsReconstructible"
+    },
+    {
+      "name": "RetentionClosureReachability",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosureReachability.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoRecoveryWitness",
+      "witness": "Reachability"
+    },
+    {
+      "name": "RetentionClosureRegistrationCrash",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosureRegistrationCrash.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoDurableRegistrationCrash",
+      "witness": "RegistrationCrash"
+    },
+    {
+      "name": "RetentionClosureCheckpointCrash",
+      "module": "RetentionClosure",
+      "config": "configs/RetentionClosureCheckpointCrash.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoDurableCheckpointCrash",
+      "witness": "CheckpointCrash"
+    },
+    {
+      "name": "Reservations",
+      "module": "Reservations",
+      "config": "configs/Reservations.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ReservationsLive",
+      "module": "Reservations",
+      "config": "configs/ReservationsLive.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ReservationsCycle",
+      "module": "Reservations",
+      "config": "configs/ReservationsCycle.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ReservationsCycleLive",
+      "module": "Reservations",
+      "config": "configs/ReservationsCycleLive.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ReservationsEarlyRelease",
+      "module": "Reservations",
+      "config": "configs/ReservationsEarlyRelease.cfg",
+      "tier": "quick",
+      "expect": "invariant:ConflictingPositionsFollowGrants"
+    },
+    {
+      "name": "ReservationsSkipWaiter",
+      "module": "Reservations",
+      "config": "configs/ReservationsSkipWaiter.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoOvertaking"
+    },
+    {
+      "name": "ReservationsReversed",
+      "module": "Reservations",
+      "config": "configs/ReservationsReversed.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoReservationCycle"
+    },
+    {
+      "name": "ReservationsReachRelease",
+      "module": "Reservations",
+      "config": "configs/ReservationsReachRelease.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoLocalReleaseBenefit",
+      "witness": "local-release-successor"
+    },
+    {
+      "name": "ReservationsReachConvoy",
+      "module": "Reservations",
+      "config": "configs/ReservationsReachConvoy.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoIndirectConvoy",
+      "witness": "indirect-convoy"
+    }
+  ]
+}
