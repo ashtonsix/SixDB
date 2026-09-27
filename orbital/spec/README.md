@@ -75,10 +75,13 @@ opportunity, and an interrupted final liveness search may need to repeat that ph
 python3 orbital/spec/evidence.py --output build/orbital-evidence/current
 ```
 
-The collector searches the existing Orbital run roots under `build`, including
-the assistant's probes. Only cases selected by the catalog are eligible;
-`--search PATH` overrides them and can be repeated. `--manifest` narrows the
-selection; a collected worker's `results` directory can be a search root.
+The collector searches the usual Orbital run roots under `build`, plus retained
+bundles in `build/orbital-evidence`, printing the searched paths. Only cases selected by the
+catalog are eligible; `--search PATH` overrides the roots and can be repeated.
+`--manifest` narrows the selection; a collected worker's `results` directory can
+be a search root. An archive reference alone supplies no receipts: use
+[artifact recovery](../../workbench/tools/artifacts.md) to fetch absent evidence
+before selecting it.
 It matches actual parsed local dependencies, configuration, runner,
 tool pin and expected property/witness, verifies the captured bytes, and rechecks
 the raw outcome. An unrelated model edit does not invalidate a receipt. Legacy
@@ -91,7 +94,8 @@ earlier edit history.
 a compact outcome index and exact input hashes for retention in Git. Reconciled
 diagnostic failures remain linked to the later complete receipt; a tool failure
 alone never supplies completed evidence. `missing.json` is a runnable catalog
-of cases lacking current evidence. Check active suites before dispatching it.
+of cases lacking usable current receipts in the searched paths. Check retained
+archives and active suites before dispatching it.
 Completed checks, detected deliberate defects, witnessed paths and incomplete
 runs have different meanings; their counts do not establish architectural coverage.
 

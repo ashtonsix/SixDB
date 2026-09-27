@@ -20,7 +20,8 @@ from catalog import read_catalog
 SPEC = Path(__file__).resolve().parent
 ROOT = SPEC.parents[1]
 SEARCH = [ROOT / "build" / name for name in
-          ("orbital-formal", "orbital-spec", "orbital-spec-restart", "orbital-tla", "orbital-assistant")]
+          ("orbital-formal", "orbital-spec", "orbital-spec-restart", "orbital-tla",
+           "orbital-assistant", "orbital-evidence")]
 ACCEPTED = {"complete", "expected_violation", "witnessed"}
 CONTRADICTIONS = {"unexpected_violation", "missing_expected_violation"}
 PARSED = re.compile(r"^Parsing file (.+?\.tla)(?:\s|$)")
@@ -372,7 +373,7 @@ def bundle(report: dict, output: Path) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, default=SPEC / "cases.json")
-    parser.add_argument("--search", type=Path, action="append", help="Repeat to search other run roots")
+    parser.add_argument("--search", type=Path, action="append", help="Override default run and retained-bundle roots; repeat for several")
     parser.add_argument("--output", type=Path, required=True, help="New ignored output directory")
     parser.add_argument("--bundle", action="store_true", help="Copy selected input closure, raw logs and receipts")
     args = parser.parse_args()
@@ -383,7 +384,9 @@ def main() -> int:
         parser.error("Keep generated evidence outside the model directory")
     if output.exists():
         parser.error("Use a new output directory; earlier selections remain evidence of their snapshot")
-    report = collect(cases, args.search or SEARCH)
+    searches = args.search or SEARCH
+    print("Searching receipts in:\n" + "\n".join(f"  {p.resolve()}" for p in searches), file=sys.stderr)
+    report = collect(cases, searches)
     output.mkdir(parents=True, exist_ok=False)
     if args.bundle:
         bundle(report, output)
@@ -402,6 +405,8 @@ def main() -> int:
     counts = Counter(r["selected"]["status"] if r["selected"] else r["disposition"] for r in report["cases"])
     lines = ["# Selected Orbital checks", "", report["limitations"], "",
              "; ".join(f"{name}: {count}" for name, count in sorted(counts.items())), "",
+             "Searched: " + ", ".join(f"`{p}`" for p in report["search_roots"]) + ".", "",
+             "Missing means no usable current receipt was found in these paths. Archived evidence must be recovered locally before it can be selected.", "",
              "Elapsed time is for the selected attempt; recovered states belong to its checkpoint, not work repeated in that time.", "",
              "| Case | Disposition | States | Recovered states | Attempt seconds |", "| --- | --- | ---: | ---: | ---: |"]
     for row in report["cases"]:
