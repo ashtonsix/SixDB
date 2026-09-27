@@ -70,11 +70,11 @@
     },
     {
       "name": "Admission-renewal-capability",
-      "module": "AdmissionCapabilities",
-      "config": "configs/Admission-renewal-capability.cfg",
+      "module": "AdmissionInertNetwork",
+      "config": "configs/renewal-loss2.cfg",
       "tier": "growth",
       "workers": 4,
-      "heap": "2g"
+      "heap": "1g"
     },
     {
       "name": "Admission-correspondence-capability",
@@ -770,6 +770,119 @@
       "tier": "quick",
       "expect": "invariant:NoBridgeBypass",
       "witness": "neighbour-completes-across-waiter-bridge"
+    },
+    {
+      "name": "Admission-inert-no-loss",
+      "module": "AdmissionInertNetwork",
+      "config": "configs/renewal-loss0.cfg",
+      "tier": "quick",
+      "workers": 1,
+      "heap": "256m"
+    },
+    {
+      "name": "Admission-inert-one-loss",
+      "module": "AdmissionInertNetwork",
+      "config": "configs/renewal-loss1.cfg",
+      "tier": "growth",
+      "workers": 1,
+      "heap": "256m"
+    },
+    {
+      "name": "Admission-inert-correspondence-renewal",
+      "module": "AdmissionInertCorrespondence",
+      "config": "configs/network-correspondence-loss0.cfg",
+      "tier": "quick",
+      "workers": 1,
+      "heap": "256m"
+    },
+    {
+      "name": "Admission-inert-correspondence-loss",
+      "module": "AdmissionInertCorrespondence",
+      "config": "configs/network-correspondence-one-generation-loss.cfg",
+      "tier": "quick",
+      "workers": 1,
+      "heap": "256m"
+    },
+    {
+      "name": "Admission-inert-two-loss-audit",
+      "module": "AdmissionInertLossAudit",
+      "config": "configs/loss-audit.cfg",
+      "tier": "quick",
+      "workers": 1,
+      "heap": "256m"
+    },
+    {
+      "name": "Admission-inert-two-loss-reach",
+      "module": "AdmissionInertLossAudit",
+      "config": "configs/loss-audit-witness.cfg",
+      "tier": "quick",
+      "workers": 1,
+      "heap": "256m",
+      "expect": "invariant:NoAuditCut",
+      "witness": "renewal-between-two-losses"
+    },
+    {
+      "name": "Admission-inert-forget-send",
+      "module": "AdmissionUnsafeSendCorrespondence",
+      "config": "configs/network-correspondence-one-generation-loss.cfg",
+      "tier": "quick",
+      "workers": 1,
+      "heap": "256m",
+      "expect": "invariant:ExactRepresentation"
+    },
+    {
+      "name": "Admission-inert-forget-producer",
+      "module": "AdmissionUnsafeProducerCorrespondence",
+      "config": "configs/network-correspondence-loss0.cfg",
+      "tier": "quick",
+      "workers": 1,
+      "heap": "256m",
+      "expect": "invariant:ExactRepresentation"
+    },
+    {
+      "name": "Admission-inert-forget-inbox",
+      "module": "AdmissionInertCorrespondence",
+      "config": "configs/forget-inbox.cfg",
+      "tier": "quick",
+      "workers": 1,
+      "heap": "256m",
+      "expect": "invariant:ExactRepresentation"
+    },
+    {
+      "name": "Admission-inert-forget-evidence",
+      "module": "AdmissionInertCorrespondence",
+      "config": "configs/forget-current-evidence.cfg",
+      "tier": "quick",
+      "workers": 1,
+      "heap": "256m",
+      "expect": "invariant:ExactRepresentation"
+    },
+    {
+      "name": "Admission-inert-stale-renewal",
+      "module": "AdmissionInertNetwork",
+      "config": "configs/stale-renewal.cfg",
+      "tier": "quick",
+      "workers": 1,
+      "heap": "256m",
+      "expect": "invariant:CertificateEvidence"
+    },
+    {
+      "name": "Admission-inert-one-copy",
+      "module": "AdmissionInertNetwork",
+      "config": "configs/one-copy.cfg",
+      "tier": "quick",
+      "workers": 1,
+      "heap": "256m",
+      "expect": "invariant:CertificateEvidence"
+    },
+    {
+      "name": "Admission-inert-unsafe-payload",
+      "module": "AdmissionUnsafeNetworkProbe",
+      "config": "configs/unsafe-network.cfg",
+      "tier": "quick",
+      "workers": 1,
+      "heap": "512m",
+      "expect": "invariant:UnsafeStable"
     }
   ]
 }

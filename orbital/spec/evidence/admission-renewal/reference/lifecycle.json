@@ -1,0 +1,78 @@
+{
+  "observed_at_utc": "2026-09-27T21:42:50.227983+00:00",
+  "job": "20260927T192649Z-c5d316d5",
+  "original_job": "20260927T181604Z-83f74fa7",
+  "instance": "i-05bf466c67a4c9576",
+  "instance_state_observed": "terminated",
+  "temporary_security_group": "sg-0f6bbd6a1b81235ed",
+  "temporary_group_observed": "InvalidGroup.NotFound",
+  "ephemeral_keys_remaining": [],
+  "original_artifact": {
+    "bucket": "calico-fleet-artifacts",
+    "bytes": 6587115,
+    "files": 577,
+    "format": 1,
+    "key": "sixdb/artifacts/sha256/d44b4248dd87007120f635636970afe72ba924636edd6abe3d07ae23272335e9.tar.gz",
+    "kind": "files",
+    "region": "us-east-1",
+    "sha256": "d44b4248dd87007120f635636970afe72ba924636edd6abe3d07ae23272335e9",
+    "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/d44b4248dd87007120f635636970afe72ba924636edd6abe3d07ae23272335e9.tar.gz"
+  },
+  "final_artifact": {
+    "bucket": "calico-fleet-artifacts",
+    "bytes": 6653880,
+    "files": 47,
+    "format": 1,
+    "key": "sixdb/artifacts/sha256/bb97edcdda8d199818913efd3e3fcb11be1c14ca4ede8804e19b4b4b9191095d.tar.gz",
+    "kind": "files",
+    "region": "us-east-1",
+    "sha256": "bb97edcdda8d199818913efd3e3fcb11be1c14ca4ede8804e19b4b4b9191095d",
+    "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/bb97edcdda8d199818913efd3e3fcb11be1c14ca4ede8804e19b4b4b9191095d.tar.gz"
+  },
+  "latest_checkpoint": {
+    "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260927T192649Z-c5d316d5/checkpoints/generations/51173730a3cd42e7bc83803db269c8e0.json",
+    "sha256": "39d04732c2a6a52e59e02359b1858f1fd0244a341705a6c599fb4a791d410e73",
+    "created_at": 1790544931.2359455,
+    "reason": "periodic",
+    "bytes": 3759564918,
+    "uploaded_bytes": 1058462720,
+    "files": 742
+  },
+  "rescue_reference": {
+    "bucket": "calico-fleet-artifacts",
+    "bytes": 530796270,
+    "files": 865,
+    "format": 1,
+    "key": "sixdb/artifacts/sha256/4aec6b2a4b53bc919a214469ba3d1df4b0a46c4f5b08c0208f9d01a23d7bd75c.tar.gz",
+    "region": "us-east-1",
+    "sha256": "4aec6b2a4b53bc919a214469ba3d1df4b0a46c4f5b08c0208f9d01a23d7bd75c",
+    "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/4aec6b2a4b53bc919a214469ba3d1df4b0a46c4f5b08c0208f9d01a23d7bd75c.tar.gz"
+  },
+  "final_status": "incomplete_interrupted",
+  "elapsed_seconds": 7954.898101899001,
+  "states": {
+    "distinct": 30579796,
+    "generated": 144983284,
+    "queue": 5855956
+  },
+  "depth": 50,
+  "source_applicability": {
+    "compared_at": "2026-09-27T21:41:52.997253+00:00",
+    "source_sha256": {
+      "AdmissionCapabilities.tla": "11beab06175f7a17a88381a34f17487374bfd51ff547e8a47207e19c5c5cd2ca",
+      "AdmissionCapability.tla": "baecd4f646676dba1902625e9ae21bab9d891dd55c2cee53389a1c255b8bb0cf",
+      "AdmissionKernel.tla": "94b42c2236eaa162be4dec723226c39399019d7174c40d615cd2fff56337b370",
+      "AdmissionQuotient.tla": "dc88cae8a227f53cce6af4aa9240a5f3d3b90911025939945456073cc9cf1585",
+      "CertificateInterface.tla": "8df80cedd1e0cef6521a860597b757b32b5c1dcd54772dd5eb0af0316a7fbb47",
+      "Contracts.tla": "05a7b0b8e8a403aca0d5c34a5e3996a3828803b74a87a4e4fb2b81abe0be4115",
+      "DurableLog.tla": "4ea9cdf99129aaa0eb4ac11e7274b385aa95d26b1ece29718a476aae0305dbb4",
+      "configs/Admission-renewal-capability.cfg": "d587ad0d3c6e7021d67b5bec9d099522a337f2469d78caa9cf6957b1804de282"
+    },
+    "changed_current_dependencies": [],
+    "producer_matches_current": true,
+    "classifier_matches_current": true,
+    "final_log_sha_matches_receipt": true,
+    "scope": "Individual original reference case only; independently completed reduced target is separate evidence."
+  },
+  "relaunches": 0
+}

@@ -135,6 +135,30 @@ per key/generation currently makes message normalization injective; reissue sema
 would require revisiting this argument. Fairness is unchanged because retained
 certificate identity still changes on issuance and actual input envelopes retire.
 
+`AdmissionInertNetwork` finishes the two-generation/two-loss renewal family with
+an additional representation map. An atomic inbox entry retires after persistence
+of the same/newer complete package; loss clears that inbox and cannot reactivate
+it. Receipt proof retires only after its immutable certificate has been validated
+and issued. A queued delivery retires only when its effect is permanently inert.
+In particular, a duplicate payload remains useful while its destination can lose
+storage again: removal requires a complete same/newer copy and exhaustion of that
+destination's permitted loss or the total fault budget. This is a finite-model
+representation, not an implementation packet-dropping policy.
+
+The map also forgets send-suppression IDs whose enabled sends produce only those
+inert deliveries. It retains the producer submission ID because that identity
+omits protection generation. Correspondence checks complete non-stuttering
+successors in both directions, separately for kernel and input fairness families.
+Finite concrete hidden work and whole-variable abstract stutters preserve the
+original weak-fairness completion obligation; an inert resend cannot satisfy a
+non-stuttering service obligation. `Completes` remains checked even though raw
+deadlock diagnostics need not be identical. The reviewed source argument is
+bounded to atomic publication, folded journal and the stated finite faults;
+cold knowledge loss, repeated destruction of one domain or changed receipt reuse
+requires renewed reasoning. The [reduction evidence](evidence/admission-renewal/reduction.md)
+distinguishes complete fine audits, the authored two-loss crossing, unsafe
+controls and the complete unrestricted reduced graph.
+
 `AdmissionBypass` holds a real L-stream hole open while actual transaction execution
 finishes. Updating and checked read-only cases use the transaction kernel and serial
 oracle. The missing L input is not a reservation or eligibility condition for those
@@ -374,7 +398,7 @@ fault cuts remain explicit; loss of the first request precedes its first retry.
 | --- | --- |
 | A1 | `Admission-two-keys`, `Admission-independent-keys`, `Frontiers-small`, `Frontiers-growth`, `Frontiers-three-lsns`: `Contiguous`, `RefinesCertificateService` / `InterfaceRefinement`, `Completes`; `Frontiers-hole` and the three `Frontiers-reach-*` cases distinguish holes and independent progress. |
 | A2 | `Admission-physical` and `Admission-journal`: `CertificateEvidence`, `ExactCopies`, physical-emission correspondence; `Admission-bad-one-copy`, `-decoder`, `-receipt-alias` test the evidence boundary. |
-| A3 | `Admission-domain-loss`, `Admission-shared-loss-compact`, `Admission-renewal-capability`: `Protection` and `Completes`. `Admission-history-repair` / `-reach`, stale-renewal and the two `Admission-reach-*` boundary witnesses distinguish repair from historical evidence. `Admission-correspondence`, `-renewal`, `-keys`, `-live-send`, their three capability counterparts and `Admission-capability-one-copy` check both representation changes. The three `Admission-observer-probe-*` cases check the observer bridge and its bypass control. |
+| A3 | `Admission-domain-loss`, `Admission-shared-loss-compact`, `Admission-renewal-capability`: `Protection` and `Completes`. `Admission-history-repair` / `-reach`, stale-renewal and the two `Admission-reach-*` boundary witnesses distinguish repair from historical evidence. `Admission-correspondence`, `-renewal`, `-keys`, `-live-send`, their three capability counterparts and `Admission-capability-one-copy` check the earlier representation maps. The three `Admission-observer-probe-*` cases check the observer bridge and its bypass control. The 13 `Admission-inert-*` cases add complete smaller graphs, exact successor/permanence audits, an authored renewal-between-losses witness and seven unsafe-reduction/certification controls. |
 | A4 | `Admission-discovery-reset`: actual namespace discovery/rescan and `Completes`; `Admission-history-tail` / `-reach` and `Admission-no-resumption` expose discovery and retry. `Bypass-single`, `Bypass-readonly-check`, `Bypass-global-order`, `Bypass-reach` check `Serial`, `SourceContiguous`, `Completes` and `SourceIndependent` across a persistent L hole. |
 | A5 | `Early-full`, `Early-overlap`: `AtMostOnce`, `DisjointRanges`, `Completes`; the three `Early-bad-*` and three `Early-reach-*` cases cover volatile loss, a fresh reassignment, delayed attempts and actual recovered grant ownership. |
 | R1 | `Recovery-pilot`, `Recovery-two-holders`: `LiveRetained`, `ExactBytes`; `Recipes-chain`, `Recipes-cycle`, `Recipes-cyclic-declaration` and their witnesses check grounded bytes and decoder dependencies. `Transfer-conversion` checks a changed representation. `PendingCutTransfer` carries fallback plus future-result responsibility through owner movement and replay. Actual checker/head/read roots are joined in C5, listed in [RUNTIME](RUNTIME.md). |

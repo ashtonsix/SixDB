@@ -1,23 +1,21 @@
 # Orbital verification assessment
 
-The [historical baseline](evidence/baseline-before-design/README.md) is retained
-at its original inputs: 485 of 486 accepted cases (200 complete graphs, 151
-expected violations and 134 witnesses). Admission renewal was unfinished.
-Later review found that its root-owner reset retained consumed replies and
-reset surviving-holder history; those results establish that narrower reset,
-not cold-owner recovery. This snapshot remains explicitly incomplete.
+The [current source-matched selection](evidence/admission-renewal/README.md)
+accepts **613 of 613 maintained cases**: 254 complete graphs, 195 expected defects
+and 164 witnesses, with no conflicting result. The final Admission renewal case
+completed 925,794 states, including its five safety properties and conditional
+completion property. Its [reviewed representation reduction](evidence/admission-renewal/reduction.md)
+preserves the original two-loss configuration and adds 13 supporting audits,
+comparisons and controls. This closes the outstanding finite campaign case;
+the broader coverage and assumptions are assessed below.
 
-The [design revision](DESIGN-CHANGES.md) has a
-[source-matched selection](evidence/design-revision/README.md) of **599 of 600**
-maintained cases: 248 complete graphs, 188 expected defects and 163 witnesses,
-with no conflicting result. All 276 baseline checks invalidated by the design
-changes have accepted replacements; 209 retain unchanged dependencies.
-
-**Admission renewal is the sole open campaign item.**
-`Admission-renewal-capability` remains incomplete under Orbital ASSISTANT's
-investigation. Its original reference run and isolated representation experiments
-are separate from the completed design revision. This selection does not claim
-that the entire verification plan is finished.
+The dated [design-revision selection](evidence/design-revision/README.md) remains
+599/600 at its captured inputs. All 276 baseline checks invalidated by those
+design changes have accepted replacements; 209 retained unchanged dependencies.
+The older [baseline](evidence/baseline-before-design/README.md) remains 485/486
+and predates the cold-owner reset correction. Its reset retained consumed replies
+and reset surviving-holder history, so its recovery results establish that
+narrower reset. Neither historical archive is rewritten by the current closure.
 
 | Design revision | Current evidence |
 | --- | --- |
@@ -26,8 +24,9 @@ that the entire verification plan is finished.
 | Prepared retention from an existing owner record | All 31 explicit/derived comparisons are accepted and retained; 16 belong to the maintained catalog. A complete same-owner prepared acquisition needs one fewer chosen Begin append. This establishes neither a measured latency saving nor whole-trace equivalence. |
 
 The Tx and recovery dependency sets overlap in 55 baseline cases. The
-[design account](DESIGN-CHANGES.md#evidence-replacement) explains the invalidation,
-accepted tradeoffs and limits. Final dispositions come from parsed dependencies,
+[retained design evidence](evidence/design-revision/README.md) records the invalidation;
+the [current architecture](../ARCHITECTURE.md) explains the design tradeoffs.
+Final dispositions come from parsed dependencies,
 exact captured inputs and raw outcomes. A stopped graph is sizing evidence only.
 
 ## Assessment against the destination
@@ -72,7 +71,7 @@ explore wider local interleavings.
 
 ## Consequences for the design
 
-The [architectural account](ARCHITECTURE.md) classifies the findings. The core
+The [architectural account](../ARCHITECTURE.md) classifies the findings. The core
 contention design survives this campaign: each shard releases its reservation
 when it durably fixes the position; reads create retention obligations rather
 than arbitrating over the entire read set. The useful common machinery is durable
