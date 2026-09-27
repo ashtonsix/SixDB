@@ -32,7 +32,7 @@ if ((!native)); then exit 0; fi
 "$build/workbench/spikes/bec256-composition/bec_casing_check" >> "$SIXDB_RESULTS/checks.log"
 "$build/workbench/spikes/bec256-composition/bec_algebra_check" >> "$SIXDB_RESULTS/checks.log"
 export BEC_WINDOWS
-BEC_WINDOWS=$(python3 workbench/tools/datasets.py fetch workbench/spikes/bec-packed-metadata/windows.json)
+BEC_WINDOWS=$(python3 workbench/tools/datasets.py fetch workbench/spikes/bec256-composition/windows.json)
 cp "$build/workbench/spikes/bec256-composition/bec_composition_bench" "$SIXDB_RESULTS/"
 cp "$build/compile_commands.json" "$SIXDB_RESULTS/"
 llvm-size-21 "$SIXDB_RESULTS/bec_composition_bench" "$build/ikea/libikea_bec256.a" > "$SIXDB_RESULTS/size.txt"

@@ -6,7 +6,7 @@ Design develops here first. Successor to Calico's `workbench`.
 
 | Looking for… | Start here |
 | --- | --- |
-| Questions and earlier work | [Notebook](notebook/ideas.md), [Calico reference map](notebook/calico.md) |
+| Questions and earlier work | [Notebook](notebook/ideas.md), [Calico](notebook/calico.md), [retired studies and recovery](notebook/retired-spikes.md) |
 | An investigation or prototype | [Spikes](spikes/README.md): questions, code, reading and findings |
 | Executable reference models and fault experiments | [Simulator](simulator/README.md): native library, Orbital cases and experiment clients |
 | Recurring workloads and measurement conventions | [Benchmarks](benchmarks/README.md) |

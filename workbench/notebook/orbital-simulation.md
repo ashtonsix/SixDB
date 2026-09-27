@@ -2,10 +2,9 @@
 
 2026-09-27. Research context for Ashton's all-Orbital simulator. The
 [reference simulator](../simulator/README.md) now owns the maintained native
-library, executable models and experiment clients. The
-[learning spike](../spikes/orbital-simulator/README.md) retains the experiments
-that informed those boundaries and remains available for quick probes. This
-note retains questions and prior-art lessons rather than operating instructions.
+library, executable models and experiment clients. The Python learning runtime
+is [retired](retired-spikes.md); this note keeps the lessons and questions that
+still matter, rather than its operating instructions.
 
 The ambition is a programmatic laboratory for repeated design experiments,
 distress, disaster response and implementation checking over many years. Like
@@ -14,29 +13,14 @@ to investigate, with physical experiments improving its predictive value.
 Durability comes from revisable models and useful counterexamples, not preserving
 the behavior of the first simulator.
 
-## Order of work
+## Relation to the next Orbital work
 
-Ashton's intended sequence is:
-
-1. Exercise the proposed architecture in the current prototype, using the demanding
-   case and poorly understood areas. Record awkward construction, misleading
-   shortcuts and missing protocol behavior as findings in their own right.
-2. Build the lasting simulator directly under Workbench, carrying forward useful
-   cases and evidence rather than inheriting all prototype interfaces.
-3. Express the most correctness-critical Orbital guarantees and assumptions in
-   TLA+ specifications. Counterexamples can still require a design change.
-4. Sketch Orbital's internal divisions and relationships with other modules, as
-   provisional guidance for their work.
-5. Implement a small Orbital starter that unblocks real consumers, then develop
-   the modules together. Durable objects are the leading candidate for that start.
-
-The first boundary-validation exercise has led into the reference implementation.
-Ashton explicitly allows these activities to overlap: an uncertainty encountered
-in the maintained library can go back to a focused spike. Checked old-cut reads
-and a separate checkpoint/reconstruction probe established useful caller
-obligations; they did not settle every Orbital policy. The formal work will
-concern authority, ordering, publication and lifetime rules; simulation and native
-experiments continue to address resource and performance questions.
+The prototype exercise and first native simulator are complete. Ashton's intended
+continuation is to formalize the most critical guarantees in TLA+, sketch Orbital's
+internal divisions and module relationships, then develop a small starter with
+real consumers. Durable objects are the leading candidate. These activities can
+inform one another; simulation and native experiments still address resource and
+performance questions. Retiring the prototype does not close unresolved policy.
 
 ## What should it help us decide?
 
@@ -81,7 +65,7 @@ place faults at causal boundaries as well as times.
 
 ## Make results explainable and challenge the model
 
-The [networking model](../spikes/orbital-dissemination/MODEL.md) records concrete
+The [networking model](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-dissemination/MODEL.md) records concrete
 lessons: omitted receive capacity, completion slots multiplying device bandwidth,
 and dropped traffic losing its already-incurred cost all made early results too
 optimistic. Small conservation and causal checks are valuable simulator tests.
@@ -99,7 +83,7 @@ finite storage where they can change the conclusion; add detail when sensitivity
 or measurements justify it. Calibration should compare matched causal traces
 and resource counters under held-out loads/faults, preserving clock uncertainty
 and correlated time windows. Marginal stage percentiles do not compose into an
-end-to-end tail. The current networking model owns the concrete calibration gaps.
+end-to-end tail. The archived networking model records the earlier calibration gaps.
 
 Useful telemetry would let a researcher ask “why did this obligation not finish?”
 and slice backward through its evidence and resource dependencies. Prefer such
@@ -171,7 +155,7 @@ page, quorum and retention policies do not become SixDB requirements.
 
 ## Lessons from the learning spike
 
-The [spike's findings](../spikes/orbital-simulator/FINDINGS.md) support keeping
+The [spike's findings](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-simulator/FINDINGS.md) support keeping
 actors, discrete events and shared physical resources. Actual acknowledgements
 and retry timers exposed a replication feedback loop that inflated modeled MAN
 scan traffic roughly eighteenfold. Faults between persistence and callbacks
@@ -201,7 +185,7 @@ this does not call for a universal scenario language.
 The original storage boundary made recovery experimentation awkward: whole-prefix
 reads required one large buffer, and the streaming alternative inferred the end
 of a contiguous journal through missing records. The subsequent
-[retirement probe](../spikes/orbital-simulator/RETIREMENT-PROBE.md) needed an adapter
+[retirement probe](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-simulator/RETIREMENT-PROBE.md) needed an adapter
 to add bounded enumeration and durable deletion. Long-lived retention,
 checkpointing and disaster restoration need bounded
 enumeration, reads and reclamation with explicit durability and lifetime semantics.
@@ -232,6 +216,23 @@ client completions, and checking only completed transactions missed reads that
 skipped still-pending predecessors. Check temporal obligations, durable evidence
 and public outcomes separately from agreement, and preserve deliberately faulty
 controls. More reuse of production code makes this independence more valuable.
+
+## Questions not replaced by the native model
+
+The archive is more than a predecessor implementation. Its producer-payload/frontier
+admission and follower propagation differ from the native model's full-body prepared
+quorum path. Its composed durable outbox tests private dataflow results becoming
+public through actual admission; partition completeness, relay filtering and
+full/window/demand object preparation remain distinct cases. Reuse their obligations
+when these boundaries return, without porting every toy framework.
+
+[Orbital's mining guide](../../orbital/MINING.md) owns recovery and integration
+questions; the [transaction repertoire](transactions/README.md),
+[dataflow workloads](dataflow-workloads.md) and [dissemination survey](dissemination/README.md)
+retain broader application and routing alternatives. None is fully implemented by
+the current simulator. The [native handoff calibration challenge](../spikes/orbital-local-handoff/calibration.md)
+remains executable beside its measurements: batching, readiness, polling and
+wakeup refute a size-only latency fit. The old actor runtime is unnecessary for it.
 
 ## Connecting to implementation
 

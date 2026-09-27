@@ -134,45 +134,13 @@ stack pressure but lost throughput in the affected dense/mixed cases. The
 [grain comparison](probes/ikea-heterogeneous/operations/measurements.md#native-grain-the-smaller-kernel-loses-throughput-here)
 supports the local default, not a universal grain or a rule based on spill count.
 
-SeriesPack makes further choices concrete: physical packet size, native working
-width, output-store width and reduction finalization need not move together.
-[Grouping and deferred sums](native-regions/spectrum.md) improve
-the same authored consumer without changing its representation; selected
-[short output stores](../seriespack-range-execution/stores.md) remove large
-losses while keeping the native working values. An admitted read window can
-also exceed the selected logical output, provided a
-[partial sink](native-regions/partial-materialization.md) preserves original
-coordinates and exact writes. These are contextual implementation choices,
-not reasons to specialize the semantic operation or introduce a second graph.
-
-The [BEC length-child substitution](../bec-packed-metadata/findings.md) puts a
-current SeriesPack native region inside an existing metadata/body consumer.
-Admission retains the owner, child placement and true logical length; the
-enclosing cursor supplies required checkpoint predecessors and retains native
-metadata lanes across body operations. On Zen this broadly preserves the specialized
-provider's whole-count performance and modestly improves on ordinary
-materialization, with larger gains at the partial logical tail. The much larger
-isolated refill gain reinforces measuring the enclosing operation. This is
-evidence for composing a known-geometry child; schema-driven discovery and
-arbitrary nested rewrites remain open.
-
-The [shared head-projection experiment](../seriespack-head-projection/findings.md) raises
-the corresponding output question. Its shared pass improves dense encodes but
-regresses some independently strided head placements. Producing an owned group
-once while each child sink maps that group through its own placement is a
-promising response; it has not been measured. Sharing computation need not
-require all consumers to adopt the same contiguous traversal region.
-
-Driver boundaries also have to preserve facts already established about the
-work. The [ordinary-reader integration](../seriespack-range-execution/integration.md)
-improves many shifted reads but shows how combining edge traversal and complete
-runs can add register preservation and return-side work to previously cheap
-calls, even without vector spills. Separating those paths recovers much of the
-complete-request loss; tiny suffixes remain costly, and generated Local edge
-code still tests larger regions that the caller has already excluded. Making
-those facts useful to shared expression evaluation remains an implementation
-question. Compare ordinary calls and code/build cost when selecting a boundary;
-a fast body or a diagnostic with stronger admissions does not settle it.
+The [SeriesPack retrospective](seriespack-history.md) separates the useful lessons
+from the retired implementation: physical tile, working grain, output width and
+reduction finalization can vary independently; a faster child need not substantially
+improve its enclosing operation; shared computation must respect each child's
+placement. Ordinary short calls and code growth exposed costs that inner-kernel
+comparisons missed. Those measurements motivate choices to test against current
+consumers, rather than prescribe a driver or a geometry.
 
 ## Performance and maintenance
 
@@ -183,17 +151,14 @@ need. Establish useful facts at admission or binding and preserve them through
 shared native bodies and expression evaluation. This should reduce the context
 a kernel author must manage while preserving arbitrary legal ranges, independent
 child placement, exact output and effect obligations. The
-[ordinary-reader experiments](../seriespack-range-execution/integration.md)
+[ordinary-reader experiments](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/seriespack-range-execution/integration.md)
 show why more dispatch paths and good isolated bodies are insufficient.
 
-The retained [decode](call-boundaries/decoder.md) and
-[encode](call-boundaries/encoder.md) callback changes demonstrate
-a useful separation: checked facades keep capacity and validation obligations,
-while trusted endpoints receive only the arguments their work consumes. Removing
-unused capacity from those boundaries eliminates caller aggregate copies across
-whole operation families without changing the wire or the ordinary facade.
-The measured effect varies by caller and machine; that evidence supports the
-simplification without assigning every timing change to an additive ABI cost.
+The retired trusted-callback experiments illustrate a smaller boundary: the
+checked facade retains validation and capacity obligations, while the admitted
+endpoint receives only arguments it consumes. This removed aggregate copies in
+that implementation. [Historical findings](seriespack-history.md#candidates-are-clues-not-pending-patches)
+keep the scope and contrary cases; today's interface must earn its own costs.
 
 The [checked-point layout comparison](../executable-placement/evidence/checked-point-layout-20260911/summary.md)
 also shows that unchanged kernel and timed caller instructions can have different
@@ -208,7 +173,7 @@ recovers more than it costs. Ashton's example of roughly 40% is an illustration,
 not a universal cutoff, a performance target or evidence of that recovery.
 Compare equivalent compound work with the strongest practical alternative,
 including materialization where useful; count traversal, masks, joins, output
-and required effects. The [current all-profile composition review](native-regions/evidence/delivery-composition-20260911/review.md)
+and required effects. The [current all-profile composition review](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/ikea-composition/native-regions/evidence/delivery-composition-20260911/review.md)
 finds 48 wins and 96 losses for basic tile-authored compare-and-sum against
 reused-scratch materialization. Selecting the fastest registered native
 grain/carrier alternative gives 110 wins and 34 losses; it is measured selection,

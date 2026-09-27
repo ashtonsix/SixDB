@@ -130,6 +130,6 @@ unchanged-build control. Do not edit those sources concurrently. It measures the
 current boundaries, not a pre/post refactor speedup. `IKEA_INCREMENTAL=1` runs it
 on the worker after timing has finished.
 
-The [retired predecessor suite](../../spikes/ikea-composition/seriespack-predecessor/README.md)
+The [retired predecessor suite](../../spikes/ikea-composition/seriespack-history.md)
 preserves additional resident-footprint, dependent-point and Calico workloads.
 Replacing its active entry does not establish that coverage for this suite.

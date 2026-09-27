@@ -48,7 +48,7 @@ The final placed-consumer comparison strengthens materialized controls to use th
 same native read grain and prepared physical bulk writer. Earlier placed ratios
 must not be treated as measurements against those strengthened controls.
 
-[Retirement and recovery](../seriespack-predecessor/README.md) identifies the old
+[Retirement and recovery](../seriespack-history.md) identifies the old
 source checkpoints and the relocated predecessor workload findings. The active
 comparator uses current/predecessor labels; historical CSV/JSON case names remain
 unchanged and the analyzer understands both.

@@ -2,7 +2,7 @@
 
 How much can unchanged instructions move in performance when a program is
 relinked? The [checked-get placement study](evidence/checked-point-layout-20260911/summary.md)
-and [call-boundary findings](../ikea-composition/call-boundaries/checked-get.md)
+and [call-boundary findings](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/ikea-composition/call-boundaries/checked-get.md)
 separate instruction changes from linked placement, without claiming the latter
 explains every residual loss.
 

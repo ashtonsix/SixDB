@@ -14,7 +14,7 @@ completion criteria and implementation claims are historical material. Use the
 
 The names are historical, not version numbers to follow in order. There is a
 second naming trap: “BRIEF2” in the
-[contention comparison](../../workbench/spikes/orbital-scenarios/COMPARISON.md)
+[contention comparison](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/COMPARISON.md)
 means the former compute/promote/renew candidate. The current brief instead
 fixes transaction positions before execution and releases allocation access
 before computation. Historical policy names and evidence remain unchanged.
@@ -22,6 +22,6 @@ before computation. Historical policy names and evidence remain unchanged.
 Automatic data-member elections, emergency quorum reductions, the global witness
 hierarchy, epoch-wide publication gates and expanding retry reservations must
 not be inferred as current requirements from these sources. The
-[experiment history](../../workbench/spikes/orbital-scenarios/HISTORY.md) gives
+[experiment history](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/HISTORY.md) gives
 Git recovery points for retired models; retained evidence bundles have their own
 recovery instructions.

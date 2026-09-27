@@ -102,10 +102,11 @@ strides allow different placements; a plane need not have its own allocation.
 Recovery uses the resolved versioned descriptor, not today's preset policy.
 Compound ownership identities and cross-child interpretation remain external.
 
-Read [head projection](../seriespack-head-projection/README.md) and its
-[reader experiment](../seriespack-head-projection/reader/README.md) for independently
-accessing pieces. Then read the later
-[placement study](../ikea-composition/placement/README.md). Its centered 12-bit
+The [SeriesPack retrospective](../ikea-composition/seriespack-history.md) condenses
+these lessons. The historical [head projection](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/seriespack-head-projection/README.md) and its
+[reader experiment](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/seriespack-head-projection/reader/README.md) studied independently
+accessing pieces. In the later
+[placement study](../ikea-composition/placement/README.md), a centered 12-bit
 candidate rearranged `body64 + tail32` into `body32 + tail32 + body32`, improving
 single-line incidence without changing the information. Tight 96B tiles improved
 from 25% to 50% single-line incidence in that geometry. Consumer results did not

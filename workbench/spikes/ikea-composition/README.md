@@ -7,10 +7,9 @@ and heterogeneous probes and the experiments that informed both Ikea implementat
 For current use, start with [Ikea](../../../ikea/README.md),
 [SeriesPack](../../../ikea/docs/seriespack/usage.md), or the
 [maintained benchmarks](../../benchmarks/seriespack/README.md).
-The [replacement campaign](ikea2-campaign/README.md) records its evidence and limits;
-the [predecessor account](seriespack-predecessor/README.md) preserves earlier findings,
-workload definitions and source recovery. Neither historical implementation is a
-second supported module.
+The [replacement campaign](ikea2-campaign/README.md) keeps its comparative evidence
+and the frozen controls still used by benchmarks. [SeriesPack history](seriespack-history.md)
+consolidates the first implementation's useful findings and recovery pointers.
 
 The [composition design](design.md) develops the organising principles and open
 choices. [Value semantics and owner integration](semantics-and-integration.md)
@@ -24,12 +23,11 @@ explore the Engine/Loom/Orbital seams; module guides own implemented contracts.
 | Can format, placement and native grain vary independently? | [Packed integers](probes/ikea-integers/README.md), [body/tail composition](probes/ikea-integers/composition/README.md), [locality](probes/ikea-integers/locality/README.md) |
 | Should striped12 also centre its residual? | [Ordinary access and mutation comparison](placement/README.md) |
 | How do dependent metadata, independent sources and selected regions fit together? | [Heterogeneous structures](probes/ikea-heterogeneous/README.md), [masked operations](probes/ikea-heterogeneous/operations/README.md), [closing assessment](probes/ikea-heterogeneous/closing.md) |
-| Where should traversal and call boundaries sit? | [Native regions](native-regions/README.md), [call boundaries](call-boundaries/README.md) |
+| Where should traversal and call boundaries sit? | [Surviving SeriesPack lessons](seriespack-history.md#composition-lessons), then the historical sources it identifies |
 
-Codec grains, range execution, head projection, metadata substitution and executable
-placement have [separate study homes](../README.md). The
-[predecessor assessment](seriespack-assessment.md) reconciles the first implementation;
-[initial inclusion decisions](seriespack-decisions.md) preserve its rationale.
+[Executable placement](../executable-placement/README.md) remains an independent
+measurement question. The retired kernel, range, head and metadata experiments
+are absorbed into the history above.
 
 ## Rationale and recovery
 

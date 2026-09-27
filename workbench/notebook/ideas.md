@@ -15,10 +15,10 @@ remains an independent source of evidence.
 
 The [Orbital simulator note](orbital-simulation.md) records the motivation and
 prior-art lessons for a programmatic laboratory with actor-local knowledge.
-The [reference simulator](../simulator/README.md) now develops the maintained
-native library and executable models. The [learning spike](../spikes/orbital-simulator/README.md)
-retains protocol, placement, recovery and composition experiments, and remains
-available for focused probes as questions arise.
+The [reference simulator](../simulator/README.md) owns the maintained native
+library and models. Earlier frameworks are [retired](retired-spikes.md); the
+[transaction repertoire](transactions/README.md), [dataflow workloads](dataflow-workloads.md)
+and [dissemination survey](dissemination/README.md) retain their useful questions.
 
 ## Sketches, filters, and histograms have different jobs
 
@@ -88,7 +88,7 @@ begin/end; how semantic laws, borrowed resources and mutation effects survive
 substitution; and which evidence remains valid when a retained plan changes.
 Their probes and chronology live with the investigation.
 
-The [SeriesPack findings](../spikes/ikea-composition/native-regions/findings.md)
+The [SeriesPack retrospective](../spikes/ikea-composition/seriespack-history.md)
 add a useful separation: physical tile size, execution grain, working lanes and
 result representation can vary independently. An authored and direct body can
 match while both lose to materialization. Revisit these choices when a new

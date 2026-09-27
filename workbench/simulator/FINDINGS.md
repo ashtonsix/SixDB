@@ -9,10 +9,10 @@ queue fairness, hosted recovery and competing retention-root comparisons.
 
 ## What closed the initial prototype exercise
 
-The spike's [checked-old-cut composition](../spikes/orbital-simulator/FINDINGS.md)
+The spike's [checked-old-cut composition](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-simulator/FINDINGS.md)
 established actual position assignment, agreed context, private reads, matching
 reports and checked publication across selected restarts. Its final
-[retirement probe](../spikes/orbital-simulator/RETIREMENT-PROBE.md) added 30 histories
+[retirement probe](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-simulator/RETIREMENT-PROBE.md) added 30 histories
 and nine targeted tests: reconstruct old bytes after reclamation/restart, retain
 both reader and replay dependencies, publish a durable checkpoint before retiring
 its predecessor, and keep backend borrows alive after their owner's death.

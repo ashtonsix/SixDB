@@ -1,5 +1,9 @@
 # Recovering the former validation directory
 
+Some studies located by this September 11 inventory were subsequently retired.
+The [September 27 curation](../../../notebook/retired-spikes.md) records their
+successors and complete Git recovery; this inventory keeps its original meaning.
+
 The September 11 curation separated recurring workloads from studies of native
 composition, call boundaries, range execution, head projection, codec kernels,
 BEC metadata and executable placement. The [file inventory](validation-20260911.csv)
@@ -31,6 +35,6 @@ artifact references beside each study's evidence recover measured sources,
 objects and binaries; historical paths and hashes inside those records remain
 unchanged. Removed members are also identified in their retained provenance.
 The latest baseline's full table has its own
-[analysis artifact](../seriespack-predecessor/evidence/delivery-baseline-20260911/full-analysis-artifact.json).
+[analysis artifact](predecessor-baseline.json).
 The final store campaign arrived after this archive and retains its own
-[verified artifact](../../seriespack-range-execution/evidence/delivery-store-20260911/artifact.json).
+[verified artifact](predecessor-stores.json).

@@ -2,7 +2,8 @@
 
 How much do colocated actors pay for payload transfer, queue pressure and their
 choice of waiting policy? This native fixture supplies measurement evidence to
-[Orbital's simulator](../orbital-simulator/README.md); it defines neither an
+[Orbital's simulator](../../simulator/README.md); the [calibration challenge](calibration.md)
+rejects a size-only latency fit. It defines neither an
 Orbital transport API nor a second simulator. Orbital LEAD owns model integration.
 
 Existing [memory characterisation](../memory-characterisation/METHOD.md) times

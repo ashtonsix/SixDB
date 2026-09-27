@@ -1,7 +1,7 @@
 # Ikea2 replacement candidate — 11 September 2026
 
 This is the pre-switchover assessment and measurement account. The implementation
-now lives in [Ikea](../../../../ikea/README.md); [retirement and recovery](../seriespack-predecessor/README.md)
+now lives in [Ikea](../../../../ikea/README.md); [retirement and recovery](../seriespack-history.md)
 own the source checkpoints and transition. Historical case names and source
 identities below describe the measured candidate, before its namespace change.
 
@@ -214,7 +214,7 @@ the change using the candidate documents and targets, without this conversation.
 
 ## Switchover
 
-The [retirement and recovery note](../seriespack-predecessor/README.md) owns the
+The [retirement and recovery note](../seriespack-history.md) owns the
 authored-source checkpoints, retained references and historical workload routing.
 The final active-name change preserves the measured kernel bodies; original
 campaign artifacts remain authoritative for original performance numbers.

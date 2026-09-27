@@ -6,26 +6,20 @@ question, so a different candidate answer does not require moving it.
 
 A spike can begin with one README. Add files or subdirectories when they help;
 there is no required template. Several implementations or measurement campaigns
-can share the same home, which remains useful after adoption or abandonment.
+can share the same home while the question remains useful. When another home
+takes over, carry the surviving findings there and retire the redundant machinery;
+the [September curation](../notebook/retired-spikes.md) is an example with recovery pointers.
 Loose thoughts can stay in the [notebook](../notebook/ideas.md) indefinitely.
 
 - [Ikea composition](ikea-composition/README.md): reusable stages, ergonomics and interface seams.
 - [Layout analyser](layout-analyser/README.md): workload objectives, plane splitting, hardware fitting and reusable layout selection.
 - [Tuple layout](tuple-layout/README.md): physical layout, bound operations and native batching.
-- [Packed integer kernels](packed-integer-kernels/README.md): grain, coalescing and width/ISA costs.
-- [SeriesPack range execution](seriespack-range-execution/README.md): ranges, clipping, stores and alignment.
-- [SeriesPack head projection](seriespack-head-projection/README.md): independent planes under varied placements.
-- [BEC packed metadata](bec-packed-metadata/README.md): packed lengths as a concrete SeriesPack consumer.
 - [Bec256 with current Ikea](bec256-composition/README.md): exact codec operations, native pairs and larger-bitset population/length directories built with SeriesPack and TuplePack.
 - [Executable placement](executable-placement/README.md): distinguishing changed code from placement effects.
 - [Memory characterisation](memory-characterisation/README.md): automatic MLP, prefetch, cache sharing and host diagnostics.
 - [CFT commit latency](cft-commit-latency/README.md): directional network measurement and host/flow selection; durable quorum latency, storage throughput cliffs and live log preparation.
-- [Orbital simulator](orbital-simulator/README.md): ground-up actor laboratory with shared physical constraints, causal replay, fault injection and composed protocol/application experiments.
 - [Local message handoff](orbital-local-handoff/README.md): native Zen 5 measurements of batching, payload readiness, polling CPU, queue admission and instrumentation sensitivity.
-- [Orbital dissemination](orbital-dissemination/README.md): many-to-many routing, read scale-out, relay work, finite-resource simulation, delivery faults and changing membership.
-- [Orbital dataflow](orbital-dataflow/README.md): exchanges, recursive/incremental work, Spark-like extension applications, lineage and finite resource lifetimes.
-- [Orbital objects and OS services](orbital-objects/README.md): durable memory views, COW/reconstruction, protection, allocation and module boundaries, with focused mapping prototypes.
-- [Orbital scenarios](orbital-scenarios/README.md): contention comparisons, worked HTAP/ELT histories, extension and recovery probes, and the earlier interactive arbitration model.
+- [Linux object mappings](orbital-objects/README.md): native protection, UFFD preparation, COW and late-reader probes.
 - [Row filter signatures](row-filter-signatures/README.md): per-row Boolean evidence and progressive refinement.
 - [Aggregate maintenance](aggregate-maintenance/README.md): descendant summaries without excessive mutation cost.
 - [Trie remapping](trie-remapping/README.md): natural-key tries with difficult suffixes remapped to physical positions.

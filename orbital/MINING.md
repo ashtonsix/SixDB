@@ -3,8 +3,8 @@
 This is a consultable list of questions, useful examples and evidence from older
 drafts, SixDB studies and Calico. Inclusion does not select a mechanism or add a
 requirement to the [brief](BRIEF.md). The later
-[dissemination catalog](../workbench/spikes/orbital-dissemination/CATALOG.md)
-provides the systematic networking survey and records what has been explored;
+[dissemination catalog](../workbench/notebook/dissemination/README.md)
+preserves the systematic networking survey and records what was explored;
 this list remains a curated starting point. Engine owns application semantics;
 Orbital must be usable by applications with entirely different data structures.
 
@@ -17,10 +17,11 @@ alongside design prose: some attractive descriptions were never implemented.
 
 ## Durable objects, memory and local execution
 
-The [object/OS investigation](../workbench/spikes/orbital-objects/README.md) now
-revisits these items, including a source audit and focused mapping probes.
-Its proposed physical boundary is summarized in the draft physical brief;
-the studies still own their experimental limits.
+The [physical brief](PHYSICAL.md) owns provisional object/view boundaries.
+The focused [Linux mapping probes](../workbench/spikes/orbital-objects/README.md)
+retain real UFFD/COW checks. First-touch policy, late-reader reconstruction,
+delayed backend borrows, extension protection transitions and allocator hints
+still need composed native experiments; feature availability does not settle them.
 
 - **Make durable memory usable by ordinary programs.** The
   [early narrative](stale-drafts/BRIEF.md), in its memory and closing design-lessons
@@ -69,31 +70,31 @@ the studies still own their experimental limits.
 ## Contention, preparation and application boundaries
 
 - **Keep the workload's promise fixed.**
-  [Large reads](../workbench/spikes/orbital-scenarios/reconsideration/READS.md) and
-  [worked ELT histories](../workbench/spikes/orbital-scenarios/ELT-WORKED.md)
+  [Large reads](../workbench/notebook/transactions/reads.md) and
+  [worked ELT histories](../workbench/notebook/transactions/elt.md)
   distinguish coherent reports, actions on current state, and historical data
   products. MERGE, cascades, refresh and CDC expose different obligations.
   Finite authored examples do not establish unrestricted SQL support.
 
 - **Distinguish broad effects from broad physical footprints.**
-  [Large writes](../workbench/spikes/orbital-scenarios/reconsideration/WRITES.md)
+  [Large writes](../workbench/notebook/transactions/writes.md)
   separates private construction, logical effect description, source dependence
   and atomic visibility. The
-  [envelope audit](../workbench/spikes/orbital-scenarios/ENVELOPE-AUDIT.md) tests
+  [envelope audit](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/ENVELOPE-AUDIT.md) tests
   complete ownership and evidence coverage. Index examples belong to the Engine
   binding: logical ownership can avoid unstable physical footprints, but cannot
   make unknown routing or global predicates free.
 
 - **Retain the small examples that spread a large wait.**
-  [Locality](../workbench/spikes/orbital-scenarios/reconsideration/LOCALITY.md)
+  [Locality](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/reconsideration/LOCALITY.md)
   follows a blocked `x`, a queued `(x,y)` transaction, and an otherwise local `y`
   writer. It separates real dependencies, future claims and resource pressure.
-  [History](../workbench/spikes/orbital-scenarios/HISTORY.md) retains the large
+  [History](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/HISTORY.md) retains the large
   arbitration components and stale-verdict failures that motivated replacement.
 
 - **Separate allocation serialization from computation dependencies.**
-  [Pipelining](../workbench/spikes/orbital-scenarios/PIPELINING.md) and
-  [release after position](../workbench/spikes/orbital-scenarios/RELEASE-AFTER-POSITION.md)
+  [Pipelining](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/PIPELINING.md) and
+  [release after position](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/RELEASE-AFTER-POSITION.md)
   compare blind replacement with dependent read-modify-write and retain negative
   provisional-position and capacity-cycle examples. Synthetic ticks and small
   histories do not establish production throughput, bounded backlog or recovery.
@@ -106,27 +107,29 @@ the studies still own their experimental limits.
   retained locks, invalidation or expanding protection sets.
 
 - **Fold only when all observable results agree.**
-  [Findings, “A fold can combine writes”](../workbench/spikes/orbital-scenarios/FINDINGS.md)
+  [Findings, “A fold can combine writes”](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/FINDINGS.md)
   compares integer contributions with operations that return intermediate values.
   Equal final deltas are insufficient; output and execution metadata matter.
   Integer laws do not automatically extend to floating arithmetic or arbitrary
   native programs.
 
 - **Revisit alternatives by the tradeoff they accept.**
-  The [prior-art survey](../workbench/spikes/orbital-scenarios/reconsideration/PRIOR-ART.md)
-  and [convergence comparison](../workbench/spikes/orbital-scenarios/reconsideration/CONVERGENCE-PRIOR.md)
+  The [prior-art survey](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/reconsideration/PRIOR-ART.md)
+  and [convergence comparison](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/reconsideration/CONVERGENCE-PRIOR.md)
   compare snapshots, validation, predetermined order, multiversion execution and
   coarse ownership. Preserve counterexamples and limits, rather than assembling
   every mechanism into Orbital. The
-  [comparison report](../workbench/spikes/orbital-scenarios/COMPARISON.md) includes
+  [comparison report](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/COMPARISON.md) includes
   failed and pending requests as well as completed latency.
 
 ## Extensions, determinism and reusable work
 
-The [dataflow study](../workbench/spikes/orbital-dataflow/README.md) broadens this
-material into distributed extension applications, including reuse, iteration
-and explicit completion/publication boundaries. Its source survey and probes
-retain the alternatives rather than making every mechanism an Orbital feature.
+The [dataflow repertoire](../workbench/notebook/dataflow-workloads.md) keeps the
+application questions from the completed study. Dynamic child/source closure,
+cyclic incremental progress, legal exchange representations, shared retained
+outputs and cancellation before backend retirement remain useful discriminators.
+Engine or another application owns their meaning; Loom owns scheduling. The old
+four toy frameworks are recoverable, not parallel maintained execution runtimes.
 
 - **Capabilities for fast I/O.** The [early narrative](stale-drafts/BRIEF.md),
   sandboxing paragraphs, explores broker-created restricted io_uring rings,
@@ -135,8 +138,8 @@ retain the alternatives rather than making every mechanism an Orbital feature.
   syscall allowlist or an assumption of zero sandbox cost.
 
 - **Verify complete interactions, not just a final return value.**
-  [Composition](../workbench/spikes/orbital-scenarios/reconsideration/COMPOSITION.md)
-  and the [local-context probe](../workbench/spikes/orbital-scenarios/extension_context_probe.py)
+  [Composition](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/reconsideration/COMPOSITION.md)
+  and the [local-context probe](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/extension_context_probe.py)
   retain the “same final OK, different requests” counterexample. Compare with
   [rollup.h](../../calico/xmem/include/xmem/rollup.h)'s directive chains and hashing
   fused with copying. Keep today's transaction-wide all-match rule distinct from
@@ -171,6 +174,15 @@ retain the alternatives rather than making every mechanism an Orbital feature.
   assuming emulation, a particular accumulator or an unmeasured cost.
 
 ## Dissemination, latency and resource costs
+
+The [archived comparisons](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-dissemination/FINDINGS.md)
+and notebook survey preserve directed routing and sender choice, edge-origin
+costs, reply incast, custody/branch obligations, receiver joins, representation
+choice, credits, false health and early-proposal holes. The native simulator's
+directed links and fixed retry do not replace those algorithms or establish
+adaptive delivery. Its prepared authority also leaves elections and replacement
+outside the model. The user still has networking input outstanding.
+
 
 - **Name the completion event before comparing latency.**
   [CONSENSUS §§1 and 8](stale-drafts/CONSENSUS.md), the
@@ -252,7 +264,7 @@ retain the alternatives rather than making every mechanism an Orbital feature.
   stream ownership or the old witness hierarchy.
 
 - **Recover ordering obligations as well as application pages.**
-  [PITR's reopening frontier](../workbench/spikes/orbital-scenarios/recovery/PITR.md)
+  [PITR's reopening frontier](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/recovery/PITR.md)
   includes pending outcomes and completed-reader bounds. Compare the
   [Calico reopen ledger](../../calico/workbench/science/systems/recovery/XMEM_REGION_OPEN.md)
   and its interruption cases. That ledger explicitly excludes general PITR,
@@ -260,24 +272,22 @@ retain the alternatives rather than making every mechanism an Orbital feature.
   not carry into SixDB.
 
 - **Prove who stopped admitting and who may now admit.**
-  [Handoff](../workbench/spikes/orbital-scenarios/recovery/HANDOFF.md) retains
+  [Handoff](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/recovery/HANDOFF.md) retains
   possibly chosen suffixes, terminal promises, successor authority and partial
   installs. Calico's evaluate-before-revoke cases offer further counterexamples.
   The bounded probes assume certificates and receipts; they do not implement
   consensus, transfer or finite-resource recovery.
 
 - **Judge distress response by outcomes and false-alarm cost.**
-  [Detection](../workbench/spikes/orbital-scenarios/recovery/DETECTION.md),
-  [failure scenarios](../workbench/spikes/orbital-scenarios/recovery/SCENARIOS.md)
-  and [SOS](../workbench/spikes/orbital-scenarios/recovery/SOS.md) connect probes,
+  [Detection](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/recovery/DETECTION.md),
+  [failure scenarios](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/recovery/SCENARIOS.md)
+  and [SOS](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/recovery/SOS.md) connect probes,
   proportional action and evidence preservation. Witness health does not imply
   payload or consumer health. Keep independent recovery copies, retrieval paths
   and fast prefix restoration in view; historical incidents demonstrate possible
   dependencies, not their frequency.
 
-For reproduction, use each study's evidence and recovery notes. The
-[contention workbench](../workbench/spikes/orbital-scenarios/README.md) and
-[CFT evidence guide](../workbench/spikes/cft-commit-latency/evidence.md) distinguish
-current sources, frozen historical sources, retained results and larger archived
-artifacts. Successful probes are evidence for their stated cases, not proofs of
-the composed system.
+For historical studies, the [retirement record](../workbench/notebook/retired-spikes.md)
+recovers their complete source and evidence. The live
+[CFT evidence guide](../workbench/spikes/cft-commit-latency/evidence.md) owns hardware
+recovery. Successful probes establish their stated cases, not the composed system.

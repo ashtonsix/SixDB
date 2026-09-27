@@ -18,18 +18,17 @@ develops memory views, protection and OS services: Orbital provides the machiner
 supplies application meaning and legal plans. These are evolving designs;
 no runtime services are implemented here yet.
 
-The supporting studies retain alternatives, worked cases and experimental
-evidence at greater depth:
+Supporting research and evidence:
 
 | Area | Study |
 | --- | --- |
 | Executable models, fault experiments and reference simulation | [Maintained simulator](../workbench/simulator/README.md) |
-| Contention, transactions and recovery | [Scenario workbench](../workbench/spikes/orbital-scenarios/README.md) |
-| Relaying, work placement and delivery | [Dissemination](../workbench/spikes/orbital-dissemination/README.md) |
-| Object views, OS bindings and mapping prototypes | [Objects and physical services](../workbench/spikes/orbital-objects/README.md) |
-| Distributed extension applications, exchanges and reusable state | [Dataflow](../workbench/spikes/orbital-dataflow/README.md) |
+| Transaction and ELT workload repertoire | [Worked situations](../workbench/notebook/transactions/README.md) |
+| Relaying, work placement and delivery | [Research survey](../workbench/notebook/dissemination/README.md) |
+| Real Linux mapping and protection probes | [Object mappings](../workbench/spikes/orbital-objects/README.md) |
+| Distributed applications, exchanges and reusable state | [Dataflow workloads](../workbench/notebook/dataflow-workloads.md) |
 
 The [mining list](MINING.md) collects ideas worth revisiting, with a
-[source map](stale-drafts/README.md) for older drafts and a
-[networking catalog](../workbench/spikes/orbital-dissemination/CATALOG.md).
+[source map](stale-drafts/README.md) for older drafts and
+[recovery pointers](../workbench/notebook/retired-spikes.md) for retired prototypes.
 These are reference material, not additional requirements.

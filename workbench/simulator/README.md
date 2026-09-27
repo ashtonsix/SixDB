@@ -11,10 +11,10 @@ convoys, the fairness tradeoff of granting eligible writers, and recovery and
 retention under shared memory pressure.
 
 Start with [the public runtime](include/sixdb/sim/runtime.hpp) and
-[the Orbital composition](models/orbital.hpp). The [learning spike](../spikes/orbital-simulator/README.md)
-retains earlier experiments and remains useful for quickly testing an uncertain
-design choice. This implementation starts afresh from the boundaries those
-experiments exposed; its formats are laboratory formats, not production ABIs.
+[the Orbital composition](models/orbital.hpp). The Python learning runtime is
+[retired](../notebook/retired-spikes.md); [its lessons and unported questions](../notebook/orbital-simulation.md#lessons-from-the-learning-spike)
+remain research context. This implementation starts afresh from those boundaries;
+its formats are laboratory formats, not production ABIs.
 The [model guide](models/README.md) owns protocol assumptions and observation
 limits. [The retained-view fixture](models/retained_view.hpp) separately tests
 byte reconstruction, reader/replay roots, checkpoint publication and reclamation

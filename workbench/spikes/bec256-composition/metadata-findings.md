@@ -295,5 +295,5 @@ python3 workbench/tools/worker.py run workbench/spikes/bec256-composition/run.sh
 ```
 
 Use `--machine neoverse-v2 --instance-type c8g.medium --arg neon` for V2.
-The [prepared windows reference](../bec-packed-metadata/windows.json) identifies
+The [prepared windows reference](windows.json) identifies
 the reused input; the runner fetches it through the shared dataset helper.
