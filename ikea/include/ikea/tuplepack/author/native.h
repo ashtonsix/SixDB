@@ -90,9 +90,14 @@ template <bool Left>
 }
 [[gnu::always_inline]] inline native_packet read_body(const detail::read64 &p, const byte *row) {
     using namespace native_detail;
+#if defined(__aarch64__) && SIXDB_TUNE_NEOVERSE_V3
+    return apply_read(join(load_chunk<0>(p, row), load_chunk<1>(p, row),
+                           load_chunk<2>(p, row), load_chunk<3>(p, row)), p.operation);
+#else
     return transform<false>(join(load_chunk<0>(p, row), load_chunk<1>(p, row),
                                  load_chunk<2>(p, row), load_chunk<3>(p, row)),
                             p.operation);
+#endif
 }
 
 [[gnu::always_inline]] inline native_packet bit_or(native_packet a, native_packet b) {
