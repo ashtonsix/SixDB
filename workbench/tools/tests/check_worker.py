@@ -179,6 +179,28 @@ class LogTests(unittest.TestCase):
         self.assertTrue(logs.call_args.kwargs['console'])
         self.assertEqual(logs.call_args.kwargs['file'], 'setup.log')
 
+    def test_named_live_file_reads_only_that_object_through_cli(self):
+        for name in ['progress.jsonl', 'checkpoint.log', 'restore.log', 'case/tlc.log']:
+            with self.subTest(name=name):
+                aws = Mock(spec=worker.Aws)
+                aws.get_bytes.return_value = b'partial work\n'
+                output = io.StringIO()
+                with patch.object(worker.sys, 'argv', ['worker.py', 'logs', 'test-worker', '--file', name]), \
+                        patch.object(worker, 'locate', return_value=(Path('unused'), job())), \
+                        patch.object(worker, 'Aws', return_value=aws), patch('sys.stdout', output):
+                    self.assertEqual(worker.main(), 0)
+                self.assertEqual(output.getvalue(), 'partial work\n')
+                aws.get_bytes.assert_called_once_with('test-bucket', 'sixdb/workers/test-worker/live/' + name)
+                aws.call.assert_not_called()
+                aws.upload.assert_not_called()
+
+    def test_live_file_path_stays_relative_to_job_output(self):
+        aws = Mock(spec=worker.Aws)
+        for name in ['', '/script.log', '../script.log', 'case/../script.log', './script.log', 'case//log', 'case\\log']:
+            with self.subTest(name=name), self.assertRaises(ValueError):
+                worker.logs(job(), aws, file=name)
+        aws.get_bytes.assert_not_called()
+
 
 class RuntimeTests(unittest.TestCase):
     def fixture(self, directory, script):

@@ -626,8 +626,8 @@ def wait(job, directory, aws, interval=10, *, stop=None):
 
 
 def logs(job, aws, *, console=False, file='script.log'):
-    if file not in {'script.log', 'setup.log', 'bootstrap.log'}:
-        raise ValueError('choose script.log, setup.log or bootstrap.log')
+    if '\\' in file or any(part in {'', '.', '..'} for part in file.split('/')):
+        raise ValueError('choose a relative live-output path without empty, . or .. components')
     if console:
         found = False
         for item in instances(job, aws):
@@ -801,7 +801,8 @@ def main():
         cmd = commands.add_parser(name, help=help_text)
         cmd.add_argument('job')
         if name == 'logs':
-            cmd.add_argument('--file', choices=['script.log', 'setup.log', 'bootstrap.log', 'checkpoint.log', 'restore.log'], default='script.log')
+            cmd.add_argument('--file', metavar='PATH', default='script.log',
+                             help='read one uploaded live text file (default: script.log)')
             cmd.add_argument('--console', action='store_true', help='show instance boot diagnostics instead of script output')
         if name == 'fetch':
             selection = cmd.add_mutually_exclusive_group()

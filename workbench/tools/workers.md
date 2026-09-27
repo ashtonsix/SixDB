@@ -80,6 +80,7 @@ python3 workbench/tools/worker.py run workbench/tools/worker-smoke.sh --detach
 python3 workbench/tools/worker.py status JOB
 python3 workbench/tools/worker.py wait JOB    # resume observation and collect
 python3 workbench/tools/worker.py logs JOB
+python3 workbench/tools/worker.py logs JOB --file progress.jsonl
 python3 workbench/tools/worker.py fetch JOB  # collect or repair local output
 python3 workbench/tools/worker.py cancel JOB
 python3 workbench/tools/worker.py list
@@ -94,8 +95,10 @@ boots needs controller cleanup through `wait` or `cancel`.
 Completion requires a verified uploaded bundle; nonzero script exits remain
 failures with output available. Vanished workers or failed uploads are incomplete.
 Scripts can opt into `--sync-seconds N` for partial-output recovery; by default
-uploads happen after measurement. `logs JOB --file setup.log` shows toolchain
-setup output; status preserves the phase where failure occurred. `logs JOB
+uploads happen after measurement. `logs JOB --file PATH` reads one uploaded live
+text file without collecting the result tree or taking over the worker. Use
+`setup.log` for setup, or a script's own `progress.jsonl` or `tlc.log` when present.
+Status preserves the phase where failure occurred. `logs JOB
 --console` shows instance-wide boot diagnostics, possibly including earlier jobs
 on a reused worker.
 
