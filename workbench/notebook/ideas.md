@@ -5,6 +5,13 @@ and a few sentences can be enough, especially why something caught our
 attention. Longer thoughts may get their own file. Notes can remain notes
 indefinitely, inform several investigations, or acquire a link to a spike.
 
+## Customer value and adoption
+
+The [commercial note](commercial.md) records the database-first intent and
+questions about a first buyer, adoption within a team, expansion, customer
+economics and distribution. These are hypotheses to investigate, with current
+implementation evidence kept distinct from the earlier hypothetical database.
+
 ## Networking around the consensus obligation
 
 The [consensus-networking note](consensus-networking.md) replaces the retired
