@@ -1,0 +1,208 @@
+{
+  "cases": [
+    {
+      "name": "explicit-healthy",
+      "module": "PreparedRootFusion",
+      "config": "configs/explicit-healthy.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "explicit-missing",
+      "module": "PreparedRootFusion",
+      "config": "configs/explicit-missing.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "explicit-cancel-before",
+      "module": "PreparedRootFusion",
+      "config": "configs/explicit-cancel-before.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "explicit-cancel-after",
+      "module": "PreparedRootFusion",
+      "config": "configs/explicit-cancel-after.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "explicit-cancel-race",
+      "module": "PreparedRootFusion",
+      "config": "configs/explicit-cancel-race.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "explicit-recover-acquire",
+      "module": "PreparedRootFusion",
+      "config": "configs/explicit-recover-acquire.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "explicit-recover-hold-reply",
+      "module": "PreparedRootFusion",
+      "config": "configs/explicit-recover-hold-reply.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "explicit-recover-registered",
+      "module": "PreparedRootFusion",
+      "config": "configs/explicit-recover-registered.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "explicit-shared-late",
+      "module": "PreparedRootFusion",
+      "config": "configs/explicit-shared-late.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "fused-healthy",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-healthy.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "fused-missing",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-missing.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "fused-cancel-before",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-cancel-before.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "fused-cancel-after",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-cancel-after.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "fused-cancel-race",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-cancel-race.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "fused-recover-acquire",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-recover-acquire.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "fused-recover-hold-reply",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-recover-hold-reply.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "fused-recover-registered",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-recover-registered.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "fused-shared-late",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-shared-late.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "fused-skip-projection",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-skip-projection.cfg",
+      "expect": "invariant:RecoveredInventory",
+      "tier": "quick"
+    },
+    {
+      "name": "explicit-skip-discovery",
+      "module": "PreparedRootFusion",
+      "config": "configs/explicit-skip-discovery.cfg",
+      "expect": "invariant:RecoveredInventory",
+      "tier": "quick"
+    },
+    {
+      "name": "fused-wrong-descriptor",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-wrong-descriptor.cfg",
+      "expect": "invariant:DefinitionEvidence",
+      "tier": "quick"
+    },
+    {
+      "name": "fused-early-retire",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-early-retire.cfg",
+      "expect": "invariant:BorrowDebt",
+      "tier": "quick"
+    },
+    {
+      "name": "fused-recovery-witness",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-recovery-witness.cfg",
+      "expect": "invariant:NoRecoveredRead",
+      "witness": "Chosen bound and Register rebuilt after actor/driver loss, then exact read completes",
+      "tier": "quick"
+    },
+    {
+      "name": "fused-lost-reply-witness",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-lost-reply-witness.cfg",
+      "expect": "invariant:NoLostReplyRecovery",
+      "witness": "Actual lost durable-hold receipt recovered after actor cache loss",
+      "tier": "quick"
+    },
+    {
+      "name": "fused-shared-late-witness",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-shared-late-witness.cfg",
+      "expect": "invariant:NoLateSharedBorrow",
+      "witness": "One root serves main and two checkers; cancelled physical borrower completes after logical release",
+      "tier": "quick"
+    },
+    {
+      "name": "fused-success-race",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-success-race.cfg",
+      "expect": "invariant:NoSuccessRace",
+      "witness": "Register wins crossing cancellation request",
+      "tier": "quick"
+    },
+    {
+      "name": "fused-abort-race",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-abort-race.cfg",
+      "expect": "invariant:NoAbortRace",
+      "witness": "Abort wins crossing cancellation request",
+      "tier": "quick"
+    },
+    {
+      "name": "explicit-recover-aborted",
+      "module": "PreparedRootFusion",
+      "config": "configs/explicit-recover-aborted.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "fused-recover-aborted",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-recover-aborted.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "explicit-success-race",
+      "module": "PreparedRootFusion",
+      "config": "configs/explicit-success-race.cfg",
+      "expect": "invariant:NoSuccessRace",
+      "witness": "Register wins crossing cancellation request",
+      "tier": "quick"
+    },
+    {
+      "name": "explicit-abort-race",
+      "module": "PreparedRootFusion",
+      "config": "configs/explicit-abort-race.cfg",
+      "expect": "invariant:NoAbortRace",
+      "witness": "Abort wins crossing cancellation request",
+      "tier": "quick"
+    }
+  ]
+}

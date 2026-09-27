@@ -114,6 +114,6 @@ Growing evidence of danger can justify stronger protection for new work and copy
 
 Severe distress may justify an SOS: stop all local admission and immediately export useful state and evidence through surviving flows, without waiting for quorum or a complete snapshot. This supports both salvage and investigation when orderly relocation is no longer possible.
 
-Recovery replays agreed owner records and resumes unfinished work under the same identities. Holders answer repeated requests from retained state; discovery revisits changing inventories and resumes interrupted copies. A recovered reader can use any complete valid copy without waiting for every former holder.
+Recovery replays agreed owner records and resumes unfinished work under the same identities. Holders answer repeated requests from retained state; discovery revisits changing inventories and resumes interrupted copies. A recovered reader can use any complete valid copy without waiting for every former holder. When an existing agreed record fully defines a retention obligation under the same owner, derive it from that record instead of adding another journal step.
 
 Restoration must recover a consistent prefix and its ordering constraints. Abandoning a suffix requires explicit point-in-time restore with old authority fenced; replay must not repeat external effects. Recovering a readable prefix, resuming writes and restoring redundancy are separate milestones. Their timings, and the tolerance for false alarms, remain unmeasured.

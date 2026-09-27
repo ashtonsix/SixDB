@@ -1,16 +1,17 @@
 # Orbital models and evidence
 
-This is an explicitly incomplete verification baseline. The larger admission
-renewal case and the subsequently identified cold-root-owner correction remain
-outstanding; see [RESULTS](RESULTS.md) and the [retained selection](evidence/baseline-before-design/README.md).
-
 The models explore whether Orbital's contracts compose under concurrency,
-failure and resource pressure. Start with the [verification assessment](RESULTS.md)
-for coverage and limits, and the [architectural account](ARCHITECTURE.md)
-for the shared concepts and consequential findings. The [verification plan](PLAN.md)
-owns the required behavior, assumptions and composition map. [BRIEF](../BRIEF.md)
-and [PHYSICAL](../PHYSICAL.md) describe the intended system; model conveniences
-and candidate mechanisms do not amend them implicitly.
+failure and resource pressure. Start with [current work and coverage](RESULTS.md)
+for what is settled, what remains open and who owns it. The
+[historical baseline](evidence/baseline-before-design/README.md) preserves the
+incomplete pre-revision selection; the [design revision](DESIGN-CHANGES.md)
+explains the subsequent changes and which evidence needs replacement.
+
+The [architectural account](ARCHITECTURE.md) explains shared concepts and
+consequential findings. The [verification plan](PLAN.md) owns required behavior,
+assumptions and composition. [BRIEF](../BRIEF.md) and [PHYSICAL](../PHYSICAL.md)
+describe the intended system; model conveniences and candidate mechanisms do
+not amend them implicitly.
 
 The family reports explain the modeled mechanisms and the limits of their checks:
 [journal authority](JOURNAL.md), [material and recovery](MATERIAL.md),

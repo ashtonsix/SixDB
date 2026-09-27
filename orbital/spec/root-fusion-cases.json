@@ -1,0 +1,109 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "PreparedRoot-explicit-healthy",
+      "module": "PreparedRootFusion",
+      "config": "configs/explicit-healthy.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "PreparedRoot-explicit-recover-acquire",
+      "module": "PreparedRootFusion",
+      "config": "configs/explicit-recover-acquire.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "PreparedRoot-explicit-recover-registered",
+      "module": "PreparedRootFusion",
+      "config": "configs/explicit-recover-registered.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "PreparedRoot-fused-healthy",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-healthy.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "PreparedRoot-fused-missing",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-missing.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "PreparedRoot-fused-recover-acquire",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-recover-acquire.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "PreparedRoot-fused-recover-registered",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-recover-registered.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "PreparedRoot-fused-shared-late",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-shared-late.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "PreparedRoot-fused-skip-projection",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-skip-projection.cfg",
+      "expect": "invariant:RecoveredInventory",
+      "tier": "quick"
+    },
+    {
+      "name": "PreparedRoot-explicit-skip-discovery",
+      "module": "PreparedRootFusion",
+      "config": "configs/explicit-skip-discovery.cfg",
+      "expect": "invariant:RecoveredInventory",
+      "tier": "quick"
+    },
+    {
+      "name": "PreparedRoot-fused-wrong-descriptor",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-wrong-descriptor.cfg",
+      "expect": "invariant:DefinitionEvidence",
+      "tier": "quick"
+    },
+    {
+      "name": "PreparedRoot-fused-early-retire",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-early-retire.cfg",
+      "expect": "invariant:BorrowDebt",
+      "tier": "quick"
+    },
+    {
+      "name": "PreparedRoot-fused-success-race",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-success-race.cfg",
+      "expect": "invariant:NoSuccessRace",
+      "witness": "Register wins crossing cancellation request",
+      "tier": "quick"
+    },
+    {
+      "name": "PreparedRoot-fused-abort-race",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-abort-race.cfg",
+      "expect": "invariant:NoAbortRace",
+      "witness": "Abort wins crossing cancellation request",
+      "tier": "quick"
+    },
+    {
+      "name": "PreparedRoot-explicit-recover-aborted",
+      "module": "PreparedRootFusion",
+      "config": "configs/explicit-recover-aborted.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "PreparedRoot-fused-recover-aborted",
+      "module": "PreparedRootFusion",
+      "config": "configs/fused-recover-aborted.cfg",
+      "tier": "quick"
+    }
+  ]
+}

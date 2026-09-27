@@ -46,6 +46,16 @@ retention, recipient coverage and sink ambiguity as separate semantic folds. The
 models should continue to reuse the actual kernels across compositions; independent
 near-copies of a protocol would undermine the reference value of this work.
 
+One retention append can also disappear when an already chosen operation under
+the same owner fully defines the prepared obligation: derive the acquisition
+from that operation on both normal folding and replay. This is the narrow
+[same-owner comparison](../../workbench/spikes/orbital-root-fusion/README.md), not
+permission to infer later-selected holders or unknown future recipes from a cut.
+Keep the durable distinction between successful acquisition and abandonment.
+Removing that distinction globally loses recoverable success evidence and changes
+custody withdrawal and availability after failure. Shared machinery and fewer
+records are useful where the obligations coincide; erasing their meaning is not.
+
 ## Classifying what changed
 
 | Finding | Architectural significance |
@@ -58,6 +68,7 @@ near-copies of a protocol would undermine the reference value of this work.
 | Migration carried a payload that its receiver did not consume; its initial floor was zero. | A hollow composition check. The revised case preserves a positive source-owned bound. Same-owner authority movement can recover it from the certified prefix; this does not require a second production metadata-transfer mechanism. |
 | A one-accept scenario actually delayed failure until all voters accepted. | Authored-history coverage defect. The cut must independently demonstrate the acceptance count it claims. |
 | Directory discovery could miss a later completed package; one-shot forwarding could strand a lost destination inbox. | Necessary recovery services: persistent discovery/rescan and message-driven copy resumption. These make eventual-service contracts concrete; they do not alter contention order. |
+| A root-owner reset retained consumed replies and reset reply suppression in surviving holders. | A model loss-boundary defect. Cold recovery must replay decisions and obtain fresh correlated responses from durable peer state. Chosen registration does not require recollecting all original acknowledgements to serve a surviving complete copy. |
 | A root's terminal owner record preceded holder tombstone persistence and physical retirement. | Logical and physical completion are distinct existing obligations; sharing the registry/lease substrate makes this distinction enforceable. |
 | New subscribers could evade completion checks or inherit an already-retired source obligation. | Separate captured-cut debt and real retention acquisition are required. Membership changes cannot rewrite historical completion. |
 | Transferring a complete recipe did not exercise transfer of a read still awaiting a source result. | Missing composition evidence for the existing coverage-root contract. The joined case now transfers actual fallback custody and chosen pending-source responsibility, then recovers and finishes the same cut after old material is deleted. |
@@ -106,19 +117,31 @@ promise at a storage/capacity cost. A surviving witness quorum does not conjure
 missing material, and an external system without deduplication cannot be given an
 exactly-once promise by Orbital's local log alone.
 
-Local release also does not remove reservation convoys. The simulator's broad
-waiter can link a small writer to a WAN holder it does not directly conflict with.
-`ReservationPolicies` uses the actual grant predicate and the simulator's ordered
-scan to isolate the policy tradeoff. Under continuing younger narrow arrivals,
-no overtaking lets the broad request progress after its older holders release.
-Eligible-first removes the waiter-only bridge, but admits an infinite execution
-in which both narrow streams keep completing and the broad request never grants.
-Weak fairness applies to actual arrivals, local releases and the grant scan; it
-does not assume the broad request eventually acquires a reservation. This small
-queue projection does not recycle full transaction identities or establish a
-full-protocol infinite-workload theorem. The actual finite transaction families
-and the simulator comparison have their separate roles. No new queue policy is
-promoted from these results.
+The revised reservation policy retains original local enqueue order while a
+request waits or holds reservations. A waiter protects its scopes once no older
+live request conflicts with it; before then, eligible younger work may pass.
+Actual holders remain exclusive. This removes the original broad-waiter bridge
+while preserving conditional progress: after older conflicts release, only the
+finite already-held younger cohort remains ahead of the waiter. It adds no timer,
+revocation, retry or global age service.
+
+The rule is not an unrestricted locality guarantee. A younger WAN holder admitted
+during bypass can extend the later drain, making new requests wait indirectly.
+The [policy comparison](../../workbench/spikes/orbital-reservation-policy/README.md)
+checks that boundary, continuing narrow arrivals, an unrelated older holder and
+common-order distributed acquisition. The [native study](../../workbench/spikes/orbital-reservation-policy/NATIVE.md)
+exercises both the benefit and the regression. Actual broad holders still delay
+overlapping writers; more enabled work can also congest shared physical services.
+Its operation counts do not establish a measured CPU or throughput advantage.
+
+Determinism is part of this change. Each agreed owner record closes the local
+grant queue in enqueue order before exposing logical state and outputs. Deferring
+grants past later records can select another winner. Replay therefore uses the
+same closure and reconstructs the full cached reply sequence, including grants
+to other transactions enabled by a release. `PolicyTxBinding` connects the shared
+policy operator to actual transactions, durable records, independent client
+results and owner recovery. The old seven ordered/eligible projection cases stay
+as counterfactual controls, not evidence for the new binding.
 
 The strongest remaining caution is about composition evidence. Local providers
 have unrestricted finite-state families; several large joined failures use authored

@@ -1,24 +1,29 @@
 # Orbital verification assessment
 
-The first attempt had an incomplete plan. It is preserved in the
-[superseded spike](../../workbench/spikes/orbital-formal-first-pass/README.md).
-The replacement [plan](PLAN.md) defined the six guarantees, protocol bindings,
-internal service boundaries, distinguishing failures and required larger cases
-before replacement implementation. Independent reviewers challenged that plan
-and later the mechanisms, observers and composition evidence.
+The [historical baseline](evidence/baseline-before-design/README.md) is retained
+at its original inputs: 485 of 486 accepted cases (200 complete graphs, 151
+expected violations and 134 witnesses). Admission renewal was unfinished.
+Later review found that its root-owner reset retained consumed replies and
+reset surviving-holder history; those results establish that narrower reset,
+not cold-owner recovery. This snapshot remains explicitly incomplete.
 
-Current evidence accepts 485 of 486 selected cases: 200 complete graphs, 151
-expected property violations in negative controls and 134 reached histories
-(successful paths and explicit boundaries). The larger
-admission-renewal graph is still running; the campaign is not yet complete.
-A subsequent source review found that root-owner reset retained consumed volatile
-replies and cleared reply suppression in surviving holders. This captured model
-does not yet establish cold-owner recovery; the correction is still outstanding.
-The [retained baseline](evidence/baseline-before-design/README.md) records the exact
-pre-revision selection and its limits.
+The working sources now include the [design revision](DESIGN-CHANGES.md).
+Its current verification is separate from that historical selection. The
+following work remains open as of 2026-09-27:
 
-Final acceptance requires current captured inputs and the intended outcome for
-every selected case. A stopped graph is sizing evidence only.
+| Work | Settled | Outstanding | Owner |
+| --- | --- | --- | --- |
+| Original admission-renewal question | Smaller checks and reduction audits are available; the reference cloud run continues. | Complete the full target using the reference or justified reduced model, then retain and reconcile its exact inputs. The reduced candidate remains isolated from maintained sources. | Orbital ASSISTANT |
+| Revised reservation policy | Older-conflicts-drain and canonical grant closure are adopted provisionally. The policy comparison, actual-Tx binding and native workload study are complete. | 157 of 158 transaction-only replacements are accepted; the larger chain is still being completed. Recovery joins are running against the corrected provider. | Orbital LEAD |
+| Cold-root-owner recovery | The owner/holder loss boundary is corrected; targeted cold-restart, repeated-query and acquisition-result loss checks pass. The corrected provider is frozen. This repairs a baseline coverage gap. | Replace checks that depend on that corrected provider. | Orbital LEAD |
+| Prepared-root record fusion | The narrow same-owner Begin-elision design and pilots are developed. | Complete its joined comparison against the settled recovery provider. | Orbital LEAD |
+
+The [design account](DESIGN-CHANGES.md#evidence-replacement) identifies the
+affected dependencies. Unchanged leaf evidence remains reusable. The tables
+below describe coverage and limits; they do not claim that every changed
+composition already has a current accepted receipt. Final dispositions come
+from the dependency-matched evidence selection. A stopped graph is sizing
+evidence only.
 
 ## Assessment against the destination
 
@@ -33,7 +38,7 @@ configurations, properties, controls and limits.
 | Complete logical confluence and independent work | Independently scheduled epoch consumers compare full logical state, bounds, continuations and canonical logical output sequences; physical delivery order may differ. Actual transaction folds consume the same agreed batches. Small unrestricted products check the independence reduction used for larger cases. A separate actual transaction completes while a remote fact for another is withheld forever. These checks distinguish absent agreed input from local physical slowness; they do not establish real-time scheduling performance. |
 | Complete reconstruction for live obligations | [Material](MATERIAL.md), [delivery](DELIVERY.md) and journal recovery connect roots to actual base/code/patch bytes, pending source results, holder persistence and successor custody. Old copies really disappear in transfer cases. Discovery starts from empty inventories; recovery and late joins consume real exported records. Pending-cut transfer includes both result and no-effect resolution after controller recovery. Its authored transfer assumes the source transaction owner and retained holder survive. |
 | Correct physical version, access and lifetime | [Runtime](RUNTIME.md) models actual symbolic page bytes, scoped writes/undo, read-only and asynchronous extents, no-COW reuse, reconstruction, callbacks and backend retirement. Checked execution and reopened writers use those same views and retained recipes. The platform must actually enforce the specified mapping and capability operations; syscall or runtime-hardening implementations are not proved here. |
-| Conditional completion without a concealed resource cycle | Protocol progress configurations state surviving material, stable authority and eventual service assumptions. Counted capacity joins exercise journal/root work, faults, decisions, delivery retirement, bootstrap and SOS while ordinary resources are occupied. Controls retain unrelated activity while the target stalls. Finite-work completion is not a promise of broad-writer fairness under endless narrow arrivals, nor a throughput or disaster-recovery-time bound. |
+| Conditional completion without a concealed resource cycle | Protocol progress configurations state surviving material, stable authority and eventual service assumptions. Counted capacity joins exercise journal/root work, faults, decisions, delivery retirement, bootstrap and SOS while ordinary resources are occupied. Controls retain unrelated activity while the target stalls. The separate continuing-arrival reservation checks state their conditional progress assumptions; finite-work completion alone establishes neither that fairness nor a throughput or disaster-recovery-time bound. |
 
 ## Evidence at the internal boundaries
 
@@ -79,10 +84,13 @@ and journaled versions; a replay cannot consume its own installed output as its
 original input. These clarify existing contracts or repair model/adaptor defects;
 they do not silently amend BRIEF or PHYSICAL.
 
-There are accepted limits rather than universal solutions. Ordered reservation
-queues can transmit a WAN wait through a broad waiter. Eligible-first removes that
-particular bridge but admits starvation under continuing narrow arrivals; the
-small policy model witnesses both. Late source discovery can fail after history
+There are accepted limits rather than universal solutions. The revised queue rule
+lets eligible work pass a broad waiter while older conflicts remain, then protects
+the waiter while already-held younger conflicts drain. It removes the original
+waiter bridge and retains conditional broad progress, but an admitted younger WAN
+holder can extend a later indirect wait. Canonical grant closure after each agreed
+record is required for replay agreement. The alternative policies and both sides
+of this boundary have explicit formal and native comparisons. Late source discovery can fail after history
 collection. Historical reads are a checked candidate read-only entry adapter;
 they consume already retained old material or fail, rather than recreate lost
 history. Approved native execution trusts its program/runtime: asynchronous

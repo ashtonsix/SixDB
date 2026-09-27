@@ -22,6 +22,7 @@ Loose thoughts can stay in the [notebook](../notebook/ideas.md) indefinitely.
 - [Local message handoff](orbital-local-handoff/README.md): native Zen 5 measurements of batching, payload readiness, polling CPU, queue admission and instrumentation sensitivity.
 - [Orbital first formal investigation](orbital-formal-first-pass/README.md): superseded bounded checks, counterexamples and sizing evidence; incomplete design coverage.
 - [Orbital reservation policies](orbital-reservation-policy/README.md): broad-waiter progress, WAN convoys and deterministic bypass, with formal and native comparisons.
+- [Orbital prepared retention](orbital-root-fusion/README.md): deriving a prepared root from an existing same-owner record, with acquisition and recovery comparisons.
 - [Linux object mappings](orbital-objects/README.md): native protection, UFFD preparation, COW and late-reader probes.
 - [Row filter signatures](row-filter-signatures/README.md): per-row Boolean evidence and progressive refinement.
 - [Aggregate maintenance](aggregate-maintenance/README.md): descendant summaries without excessive mutation cost.
