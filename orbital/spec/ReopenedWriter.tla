@@ -60,6 +60,8 @@ Input(e) ==
        {Event("physical-outcome",A("writer"),T!Driver(1),"execution.result",[tx|->1,context|->ctx,cut|->run.tx.position[1],outcome|->outcome])} \cup
        {Event(<<"report",r>>,r,1,"journal.submit",Command(1,T!CID(1,"report",r),"report",[tx|->1,key|->r,
          data|->[context|->ctx,request|->IF Abort /\ r=2 THEN "different-call" ELSE "same-call",outcome|->outcome]])):r \in {1,2}}],<<>>):tr \in V!RegistryRegister(run.cache,req)}
+ ELSE IF e.kind="RootFailure" THEN
+ {Transition("input.root-failure",[run EXCEPT !.network=@ \ {e}],<<>>)}
  ELSE IF e.kind \in {"ViewGrant","Material"} THEN
  IF e.body.root="reopened" THEN
  {Transition("input.reopened",[run EXCEPT !.reader=tr.next,!.network=(@ \ {e}) \cup Elements(tr.emissions)],<<>>):tr \in V!Receive(VP,run.reader,e)}

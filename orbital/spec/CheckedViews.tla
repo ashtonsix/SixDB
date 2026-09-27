@@ -169,7 +169,7 @@ Adapt(e) ==
  [] e.kind="ViewClosed" ->
     [next |-> [binding EXCEPT !.closed=@ \cup {e.body.view}],emissions |-> <<>>]
  [] OTHER -> [next |-> binding,emissions |-> <<>>]
-AdapterKinds == {"root.retain-cut","root.source","tx.open-view","Sealed","Installed",
+AdapterKinds == {"RootFailure","root.retain-cut","root.source","tx.open-view","Sealed","Installed",
                  "Observe","ViewClosed","tx.published","BackendRetired","BackendCompleted","BorrowStarted","BorrowRetired"}
 CopiedClosure == \A t \in DOMAIN Data:R!CopyId(12,t,2) \in DOMAIN roots.copies[12]
 Deliver == \E e \in network:
@@ -188,7 +188,7 @@ Deliver == \E e \in network:
        /\ tx'=tr.next /\ network'=(network \ {e}) \cup Elements(tr.emissions)
        /\ UNCHANGED <<roots,views,journal,stage,binding,seen>>
  \/ /\ e.kind \in {"root.acquire","root.hold","root.receipt","root.fetch","root.bytes",
-                     "root.close","root.terminal","root.refused","root.custody"}
+                     "root.close","root.terminal","root.refused","root.custody","root.custody-query"}
     /\ (IF e.kind="root.hold" THEN e.dst#12 \/ CopiedClosure ELSE TRUE)
     /\ \E tr \in R!Receive(RP,roots,e):
        /\ roots'=tr.next /\ network'=(network \ {e}) \cup Elements(tr.emissions)

@@ -55,7 +55,7 @@ Input(e) ==
  IF e.kind \in {"journal.submit","journal.recover"}
  THEN {Transition("input",[root|->root,journal|->tr.next,network|->(network \ {e}) \cup Elements(tr.emissions),observed|->observed,granted|->grantSeen],<<>>):
        tr \in D!Receive(DP,journal,e)}
- ELSE IF e.kind \in {"Material","ViewGrant"}
+ ELSE IF e.kind \in {"Material","ViewGrant","RootFailure"}
  THEN {Transition("input",[root|->root,journal|->journal,network|->network \ {e},
       observed|->IF e.kind="Material" THEN observed \cup {e.body} ELSE observed,
       granted|->grantSeen \/ (e.kind="ViewGrant" /\ e.body.root="old-cut" /\

@@ -96,7 +96,7 @@ Input(e) ==
  ELSE IF e.kind="journal.deliver" /\ e.dst="bootstrap" /\
          e.body.owner="control" /\ e.body.command.kind="control.activate"
  THEN {Transition("input.journal.deliver",[run EXCEPT !.authority=TRUE,!.network=@ \ {e}],<<>>)}
- ELSE IF e.kind \in {"ViewGrant","Material"}
+ ELSE IF e.kind \in {"ViewGrant","Material","RootFailure"}
  THEN {Transition("consume.root.output",[run EXCEPT !.network=@ \ {e}],<<>>)}
  ELSE {Transition("input." \o e.kind,[run EXCEPT !.roots=tr.next,!.network=(@ \ {e}) \cup Elements(tr.emissions)],<<>>):tr \in R!Receive(RP,run.roots,e)}
 RootSteps == {Transition(tr.tag,[run EXCEPT !.roots=tr.next,!.network=@ \cup Elements(tr.emissions)],<<>>):

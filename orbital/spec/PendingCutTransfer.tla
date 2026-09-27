@@ -33,11 +33,11 @@ Facts(s,es) == IF es= <<>> THEN s ELSE
  LET e==Head(es) ts==IF e.kind="tx.fact" THEN T!Receive(P,s,e) ELSE {}
  IN Facts(IF ts={} THEN s ELSE (CHOOSE z \in ts:TRUE).next,Tail(es))
 Submit(owner,id,kind,body) == Wire(Event(id,owner,owner,"journal.submit",Command(owner,id,kind,body)))
-Packet(site,e) == [site|->IF e.kind="root.custody" THEN e.dst ELSE site,event|->Wire(e)]
+Packet(site,e) == [site|->IF e.kind \in {"root.custody","root.custody-query"} THEN e.dst ELSE site,event|->Wire(e)]
 Packets(site,es) == {Packet(site,es[i]):i \in 1..Len(es)}
 Request(site,b) == [root|->site,holders|->{1},recipe|->C!Recipe(1,0),cut|->b.cut,context|->b.context,
  generation|->1,requester|->site,view|->site,rights|->[read|->{1},write|->{}],waitForMaterial|->TRUE,
- successor|->IF site="old" THEN "new" ELSE "",predecessor|->IF site="new" THEN "old" ELSE "",predecessorOwner|->"old"]
+ successor|->IF site="old" THEN "new" ELSE "",predecessor|->IF site="new" THEN "old" ELSE "",predecessorOwner|->"old",successorOwner|->"new"]
 VARIABLE x
 vars == <<x>>
 Init == x=[tx|->T!Init(P),old|->C!Init(CP),current|->EmptyMaterial,roots|->[s \in Sites|->R!Init(RP(s))],
@@ -172,7 +172,7 @@ Input(pkt) ==
        {Packet(ev.dst,ev):ev \in Elements(tr.emissions)}],<<>>):tr \in D!Receive(DP,x.journal,e)}
  ELSE IF site \in {Control("old"),Control("new")}
  THEN {Transition("input",[ControlInput(e) EXCEPT !.network=(@ \ {pkt})],<<>>)}
- ELSE IF e.kind \in {"Material","ViewGrant"}
+ ELSE IF e.kind \in {"Material","ViewGrant","RootFailure"}
  THEN LET grants==IF e.kind="ViewGrant" /\ site="new" THEN x.grants \cup {e.body} ELSE x.grants
           materials==IF e.kind="Material" /\ site="new" THEN x.materials \cup {e.body} ELSE x.materials
       IN {Transition("input",[x EXCEPT !.network=remaining,!.grants=grants,!.materials=materials,

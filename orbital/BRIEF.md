@@ -14,7 +14,7 @@ Engine supplies analysers and legal plans describing access, effects, alternativ
 
 A durable object has a stable identity and application-defined versions. Its owner defines interpretation, conflict scopes and overlap rules: a scope may cover a row, a byte range or a set of items. Pointer traversal and internal allocation can remain within that declared coverage. Object boundaries, transaction boundaries and physical pages need not coincide.
 
-An object may have several losslessly convertible representations. Retaining a version means retaining enough to reconstruct it: saved bytes or a base with admitted operations or accepted results, plus interpretation dependencies such as code and dictionaries.
+An object may have several losslessly convertible representations. Retaining a version means retaining enough to reconstruct it: saved bytes or a base with admitted operations or accepted results, plus interpretation dependencies such as code and dictionaries. A read awaiting an earlier writer retains both its fallback and responsibility for the writer’s eventual result, including a no-effect result. Moving that read transfers these unfinished obligations along with the bytes.
 
 Programs access objects through ordinary memory views bound to a version or transaction position, access rights and a lifetime. Loom can prepare a whole view or selected parts; first-touch faults supply remaining bytes at that same version. The application declares logical read dependencies separately from paging. Read-only extension views are hardware-protected and expose only permitted bytes.
 
@@ -26,7 +26,7 @@ Producers supply events, witnesses admit them into ordered shard epochs, and con
 
 `State[epoch] = Fold(State[epoch−1], Input[epoch])`
 
-Consumers fold epochs in sequence and expose each fold's completed results in that order. Within an epoch, work may be reordered or run concurrently provided every permitted schedule reaches the same logical fixpoint, including ordering metadata and protocol outputs. When order matters, it is derived from agreed state and input. Plans may allow operations to combine if their complete observable results and transaction atomicity are preserved. Transactions can read preceding logical changes within the same epoch.
+Consumers fold epochs in sequence and expose each fold's completed results in that order. Within an epoch, work may be reordered or run concurrently provided every permitted schedule reaches the same logical fixpoint, including ordering metadata and logical protocol outputs. When order matters, it is derived from agreed state and input. Plans may allow operations to combine if their complete observable results and transaction atomicity are preserved. Transactions can read preceding logical changes within the same epoch.
 
 A transaction waiting for another shard or verification leaves a continuation. The epoch can finish and independent transactions can publish; later agreed input resumes the transaction. Ordering and resolution metadata must progress even while computation is blocked. Consumers may prepare later epochs speculatively.
 
@@ -48,7 +48,7 @@ The leader durably accepts new journal entries and replicates them with that evi
 
 ## Transactions and Contention
 
-Transactions have stable IDs and producer-assigned coordinators. A producer has one stream per shard for local transactions; cross-shard submissions impose no producer-stream ordering. Each shard chooses how to batch local execution (L), cross-shard preparation (C1) and installation (C2).
+Transactions have stable IDs and an owner shard whose replicated journal preserves their context, position, outcome and decision. A producer assigns a replaceable coordinator to drive progress. A producer has one stream per shard for local transactions; cross-shard submissions impose no producer-stream ordering. Each shard chooses how to batch local execution (L), cross-shard preparation (C1) and installation (C2).
 
 Before execution, the application declares its **effect envelope**: the scopes of every possible effect and the shards responsible for ordering them. Separate rules govern which output reservations conflict and which possible effects a read must account for. These rules must be deterministic and usable without waiting for execution.
 
@@ -113,5 +113,7 @@ On an unusually slow response, use health probes to locate the problem and choos
 Growing evidence of danger can justify stronger protection for new work and copying exposed history to independent holders. Usable recovery capacity, verified checkpoints and journal tails outside threatened domains shorten both evacuation and later restoration. For relocation, copy while serving, then transfer the remaining suffix and an old-quorum certificate fixing the final prefix, closing old admission and naming the successor. Sudden regional destruction can preserve only the complete history already copied elsewhere.
 
 Severe distress may justify an SOS: stop all local admission and immediately export useful state and evidence through surviving flows, without waiting for quorum or a complete snapshot. This supports both salvage and investigation when orderly relocation is no longer possible.
+
+Recovery replays agreed owner records and resumes unfinished work under the same identities. Holders answer repeated requests from retained state; discovery revisits changing inventories and resumes interrupted copies. A recovered reader can use any complete valid copy without waiting for every former holder.
 
 Restoration must recover a consistent prefix and its ordering constraints. Abandoning a suffix requires explicit point-in-time restore with old authority fenced; replay must not repeat external effects. Recovering a readable prefix, resuming writes and restoring redundancy are separate milestones. Their timings, and the tolerance for false alarms, remain unmeasured.

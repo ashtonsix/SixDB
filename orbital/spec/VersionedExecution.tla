@@ -82,10 +82,8 @@ Input(e) ==
  IF e.kind \in {"journal.submit","journal.recover"} THEN
  {Transition("input.journal",[run EXCEPT !.journal=tr.next,!.network=(@ \ {e}) \cup Elements(tr.emissions)],<<>>):tr \in J!Receive(JP,run.journal,e)}
  ELSE IF e.kind="journal.deliver" /\ e.body.owner=7 THEN
- {Transition("input.root",[run EXCEPT !.roots=tr.next,!.network=(@ \ {e}) \cup Elements(tr.emissions) \cup
-   (IF e.body.command.kind="root.abort" THEN
-      {Event(<<"code-unavailable",e.body.command.id>>,A("roots"),A("binding"),"code.unavailable",e.body.command.body)} ELSE {})],<<>>):tr \in R!Receive(RP,run.roots,e)}
- ELSE IF e.kind="code.unavailable" THEN
+ {Transition("input.root",[run EXCEPT !.roots=tr.next,!.network=(@ \ {e}) \cup Elements(tr.emissions)],<<>>):tr \in R!Receive(RP,run.roots,e)}
+ ELSE IF e.kind="RootFailure" THEN
  IF e.body.root="main" /\ e.body.context=CodeContext
  THEN {Transition("input.unavailable",[run EXCEPT !.unavailable=e.body,!.network=@ \ {e}],<<>>)} ELSE {}
  ELSE IF e.kind \in {"journal.deliver","tx.fact","execution.result"} THEN
@@ -131,7 +129,9 @@ RootClosure == R!HeldExists(RP,run.roots) /\ R!LiveRetained(RP,run.roots)
 OutcomeJustified == O!OutcomeJustified(P,run.tx)
 MissingProvenance == run.tx.cancelled[1] =>
  /\ run.unavailable#TxNone
- /\ \E c \in Elements(run.journal.log[7]):c.kind="root.abort" /\ c.body=run.unavailable
+ /\ \E c \in Elements(run.journal.log[7]):c.kind="root.abort" /\ c.body.root=run.unavailable.root /\
+    c.body.context=run.unavailable.context /\ c.body.cut=run.unavailable.cut /\
+    c.body.generation=run.unavailable.generation /\ c.body.reason=run.unavailable.reason
 SerialOutcomes == O!ResultSemantics(P,run.tx)
 JournaledProfile == \A v \in DOMAIN run.executions:
  \E c \in Elements(run.journal.log[1]):c.kind="begin" /\ c.body.data.profile=run.executions[v].profile

@@ -176,11 +176,66 @@ after actual replies. Begin/Register/Abort/Release folds are idempotent and term
 outcomes reject delayed requests. Owner recovery consumes the actual prefix of its
 matching barrier query, not an arbitrary cached snapshot.
 
+Cold owner loss clears loaded roots, definitions, received hold/refusal/custody
+receipts, fetched bytes, close requests and local send suppression. It leaves
+separately owned holder ledgers, inboxes and reply suppression intact. Replay
+rediscovers every chosen Begin and terminal decision. Ordinary hold and fetch
+requests carry the owner's current recovery incarnation and a query identity;
+an already-held recipe answers a new query without another hold write. Stale
+responses cannot enter the replacement's caches. A replayed Register already
+establishes adoption, so reads can use a surviving declared holder without
+reacquiring every registration receipt.
+
+Recovery queries include the logical actor as well as its recovery incarnation.
+`RootRecoveryIdentity` resets two independent owners sharing the same journal
+service and requires both actual recovery barriers to be chosen and delivered.
+Removing the actor identity makes the service deduplicate one owner's query as
+the other's; the corresponding completion control fails. Snapshot consumption
+also checks that exact query identity. This is a request-identity rule, not an
+additional recovery record or protocol phase.
+
+`RootOwnerRecovery` checks six authored cuts: after both old hold replies were
+consumed, after registration with the first fetch sent to a now-unreachable
+holder, after bytes were fetched but before delivery, after Close was received,
+after a refusal, and after Abort was chosen. Real barrier replay and surviving
+requester retries must recover the obligation. Controls suppress requery, replay,
+alternate-holder fetching or add an all-holder read barrier. Independent observers
+check exact bytes, current response correlation, surviving-peer state, fresh
+receipts and actual chosen-prefix provenance. The requester survives and retries
+under the same root identity; this is an authored retry condition, not automatic
+failure detection. The unreachable holder may retain its safe over-retention.
+
+Custody follows the same request/reply rule. The source's durable definition names
+the successor and its route. The destination answers from its adopted root after
+checking predecessor, requester, cut and context; a released successor still has
+its prior adoption in the journal. Failed acquisition cannot authorize custody.
+`RootCustodyRecovery` consumes the old receipt before losing only the source owner,
+preserves the surviving destination's suppression, and requires a fresh answer
+before source release. A delayed duplicate of the old reply is rejected; disabling
+resumption stalls. The complementary cut loses the destination's consumed query
+while the source survives. A later ordinary query under the same source
+incarnation must obtain custody. This is an explicit one-fault, post-stability
+retry history; finite sends that can all precede the fault do not imply general
+liveness. Fresh query IDs distinguish modeled envelopes, not new logical
+acquisitions or durable per-attempt records.
+
+The provider also supports identical-query retransmission: a reply consumes its
+pending inbox request, and receiving the request again can regenerate the response
+from durable state. First and repeated replies share the same material/authority
+checks and resource-charged service actions. Durable effects remain idempotent;
+reply history cannot permanently suppress an answer. Root IDs are immutable here:
+the echoed predecessor generation
+binds the query but does not independently authenticate mutable root generations.
+These checks use real held bytes at both sites; copying into an empty destination
+remains the separate transfer composition below. Together these
+models repair the initial owner's overly generous retained-cache abstraction;
+they are not evidence for arbitrary repeated failures or physical storage loss.
+
 Holder metadata, imports and deletions use the shared `ViewsKernel` backend
 registry. Physical completion changes the actual ledger/copies in that same step;
 callback retirement occurs later. Process reset clears loaded metadata, closes
 admission to the registry, drains submitted work, then reloads durable holds before
-serving or collecting. A logical root's terminal state is not completion until
+serving or collecting. Physical retirement is complete only when
 holder tombstones are durable and backend debt is empty. Immutable physical-copy
 IDs identify deletion targets independently of logical recipes.
 
@@ -197,7 +252,8 @@ tail bytes. A lost hold/registration-custody reply, process death while an impor
 is active, real backend completion/drain and source GC all occur through the shared
 kernels. A conversion variant builds a flat snapshot by reconstructing the held
 source recipe; this changes representation while preserving the cut and bytes.
-Only a received same-cut/context successor custody receipt permits old release.
+Only a received current-query successor custody receipt with the same cut,
+context and predecessor generation permits old release.
 The destination stays live at the end: this checks one transfer, not arbitrary
 chains of transfers or subsequent destination retirement.
 
@@ -249,6 +305,60 @@ recovery loads the durable floor before accepting delayed holds. It checks this
 metadata substitution; it is not an implementation of a distributed garbage collector
 or a proof that every future namespace can use one global counter.
 
+## Pending requests through lost replies and cold callers
+
+`RootRPCRecovery` binds a caller's pending immutable request to the actual
+`RecoveryKernel` handlers. Sending once records a logical submission; it does
+not forbid retransmitting the same envelope. The receiver consumes a queued
+request when it replies. A repeated request can therefore regenerate that reply
+from the same durable hold, material or adopted root, without repeating the
+durable effect. The pending caller retires its intent only after accepting the
+matching response. Neither retry eligibility nor response construction reads
+another process's failure or recovery state.
+
+The `RootRPC-custody-*` positive cases cover a lost request, lost response,
+receiver reset after consuming the request, and sender reset after consuming the
+response. A sender reset clears its root-owner caches and uses an actual barrier
+snapshot before issuing a query under its new correlation incarnation. The
+surviving peer keeps its own state. `RootRPC-hold-reply-loss`,
+`RootRPC-fetch-reply-loss` and `RootRPC-refuse-reply-loss` exercise the other three
+real receiver paths with repeated identical queries. `RetirementEvidence`,
+`AcceptedByProtocol`, `CapturedIdentity`, `ReplyAuthority`, `DeliverySound` and
+`NoRetryJournalRecord` independently check the service boundaries; `Completes`
+checks resumption. The one-shot caller and each `*-suppress-repeat` control stall.
+`RootRPC-premature-retire` detects retirement at request delivery, and
+`RootRPC-premature-stall` shows the resulting loss of progress. Seven `*-reach`
+cases witness completed faults, actual repeated replies and stale-reply rejection.
+
+`RootAcquireRPC-success` and `RootAcquireRPC-failure` close the final requester
+boundary. After consuming both grant and material, or the chosen failure, the
+reader loses its entire local input, pending intent and result caches. Its actual
+journal barrier returns the existing `root.begin` descriptor; the reader then
+reissues the same acquisition to the unchanged owner and holder. Success replays
+both results; failure comes from the actual chosen abort. `RecoveredInput`,
+`OwnerUnaffected`, `ResultAuthority`, `SameIdentity` and `NoNewRootDecision` check
+this against the actual prefix, bytes and retained state. For each outcome,
+`-one-shot` and `-suppress` stall, `-forget` detects lost reconstructed input, and
+`-reach` witnesses the recovered result. This models an owning continuation
+recovering an already-admitted, still-owed acquisition: no parent terminal
+completion has superseded the continuation, and the root remains live or failed.
+A loss before `Begin` still needs the original transaction or client-owned input;
+it cannot recover a nonexistent record.
+
+All 32 selected checks in `root-rpc-cases.json` completed as expected: ten positive
+graphs, thirteen defect controls and nine witnesses. They retain unlimited
+repetition of a stable request in finite coalesced channels, with one authored
+loss/reset per history. Normal finite R/journal bootstrap and replay use
+`JournalSchedule`; request delivery, each response handler and response delivery
+are separately weakly fair. The success acquisition needs independent fairness
+for grant and material: an initial pilot found that continually receiving material
+could otherwise satisfy generic delivery fairness while starving a queued grant.
+This is conditional eventual service, not a latency guarantee or a proof for an
+arbitrary failure budget, simultaneous endpoint failures or every R scheduling
+product. Unlike the earlier finite post-fault retry histories, these models impose
+no attempt budget and do not require the caller to observe peer recovery. The
+fault cuts remain explicit; loss of the first request precedes its first retry.
+
 ## Requirement map and limits
 
 | Requirements | Models and independent observations |
@@ -259,7 +369,7 @@ or a proof that every future namespace can use one global counter.
 | A4 | `Admission-discovery-reset`: actual namespace discovery/rescan and `Completes`; `Admission-history-tail` / `-reach` and `Admission-no-resumption` expose discovery and retry. `Bypass-single`, `Bypass-readonly-check`, `Bypass-global-order`, `Bypass-reach` check `Serial`, `SourceContiguous`, `Completes` and `SourceIndependent` across a persistent L hole. |
 | A5 | `Early-full`, `Early-overlap`: `AtMostOnce`, `DisjointRanges`, `Completes`; the three `Early-bad-*` and three `Early-reach-*` cases cover volatile loss, a fresh reassignment, delayed attempts and actual recovered grant ownership. |
 | R1 | `Recovery-pilot`, `Recovery-two-holders`: `LiveRetained`, `ExactBytes`; `Recipes-chain`, `Recipes-cycle`, `Recipes-cyclic-declaration` and their witnesses check grounded bytes and decoder dependencies. `Transfer-conversion` checks a changed representation. `PendingCutTransfer` carries fallback plus future-result responsibility through owner movement and replay. Actual checker/head/read roots are joined in C5, listed in [RUNTIME](RUNTIME.md). |
-| R2 | `Recovery-reset`, `Recovery-crossed-abort`, `Recovery-gc` and three `Recovery-bad-*` cases: `HeldExists`, `LiveRetained`, `NoResurrection`, `Completes`. `Recovery-reach-*` witnesses grant, recovery and retirement. `TerminalFloor-holes` / `-skip-unresolved` / `-forget-floor` and both witnesses check `RefinesUncompressed` and durable terminal-floor recovery. |
+| R2 | `RootOwnerRecovery-*` / `RootCustodyRecovery` in `owner-recovery-cases.json` check cold owner loss, actual requery and surviving peer state. The 32 `root-rpc-cases.json` configurations and independent properties are mapped above, including consumer-only loss and indefinitely repeatable requests. `Recovery-reset`, `Recovery-crossed-abort`, `Recovery-gc` and three `Recovery-bad-*` cases: `HeldExists`, `LiveRetained`, `NoResurrection`, `Completes`. `Recovery-reach-*` witnesses grant, recovery and retirement. `TerminalFloor-holes` / `-skip-unresolved` / `-forget-floor` and both witnesses check `RefinesUncompressed` and durable terminal-floor recovery. |
 | R3, R6 | Actual checkpoint bytes, replay cursors, fenced normal/PITR reconstruction, external effects and restored-material milestones have their exact configs in [EXECUTION](EXECUTION.md). |
 | R4 / C4 | `Transfer-crossed`, `Transfer-conversion`, `Transfer-hold-reply`: `HeldExists`, `LiveRetained`, `ExactBytes`, `TransferBeforeRelease`, `Completes`; `Transfer-early-release` and the three `Transfer-reach-*` cases test real source retirement, lost receipts and late physical writes. `PendingCutTransfer` additionally checks `CustodyControl`, `NoPrematureRead`, `SourceTerminal` and `Completes` across actual pending-tail transfer; its exact configurations are in [JOURNAL](JOURNAL.md). Delivery-driven retention configs are in [DELIVERY](DELIVERY.md). |
 | R5 | `Admission-domain-loss`, `Admission-renewal-capability` and `Admission-history-resumption` destroy and restore actual packages independently of witness state. `Admission-cold-holder`, `Admission-cold-reach` and `Admission-cold-no-authority` check actual authorization recovery and new-incarnation copying. Bootstrap authority, scope readiness and redundancy cases are in [JOURNAL](JOURNAL.md). |

@@ -22,41 +22,47 @@ P == [roots |-> Roots,holders |-> 1..HolderCount,requests |-> [r \in Roots |-> R
 JP == [owners |-> {P.owner},actors |-> {P.actor},
        subscribers |-> [o \in {P.owner} |-> {P.actor}],
        initialConfig |-> [o \in {P.owner} |-> 1]]
-VARIABLES state,journal,network,inputs,outputs
-vars == <<state,journal,network,inputs,outputs>>
+VARIABLES state,journal,network,inputs,outputs,closes
+vars == <<state,journal,network,inputs,outputs,closes>>
 Init == /\ state=R!Init(P) /\ journal=J!Init(JP) /\ network={}
-        /\ inputs={} /\ outputs={}
-Acquire == \E r \in Roots \ inputs:
- /\ inputs'=inputs \cup {r} /\ UNCHANGED <<state,journal,outputs>>
- /\ network'=network \cup {Event(<<"acquire",r>>,"reader",P.actor,"root.acquire",Request(r))}
+        /\ inputs={} /\ outputs={} /\ closes={}
+\* The requester survives the root-owner restart. Its acquisition/close intent
+\* is not an owner cache; it repeats the same identities in the new incarnation.
+Acquire == \E r \in Roots:
+ /\ <<r,state.resets>> \notin inputs /\ state.up
+ /\ inputs'=inputs \cup {<<r,state.resets>>}
+ /\ UNCHANGED <<state,journal,outputs,closes>>
+ /\ network'=network \cup {Event(<<"acquire",r,state.resets>>,"reader",P.actor,"root.acquire",Request(r))}
 Close == \E r \in Roots:
- /\ r \in state.granted /\ \E b \in outputs:b.kind="Material" /\ b.body.root=r
- /\ r \notin state.closed
- /\ state'=[state EXCEPT !.closed=@ \cup {r}] /\ UNCHANGED <<journal,network,inputs,outputs>>
+ /\ \E b \in outputs:b.kind="Material" /\ b.body.root=r
+ /\ <<r,state.resets>> \notin closes /\ state.up
+ /\ closes'=closes \cup {<<r,state.resets>>}
+ /\ network'=network \cup {Event(<<"close",r,state.resets>>,"reader",P.actor,"root.close",[root |-> r])}
+ /\ UNCHANGED <<state,journal,inputs,outputs>>
 \* Holder acquisition families start with each declared physical replica;
 \* cross-owner copying/representation change is checked by MaterialTransfer.
 KernelStep == \E t \in {tr \in R!Actions(P,state):tr.tag#"copy-immutable-material"}:
  /\ state'=t.next /\ network'=network \cup Elements(t.emissions)
- /\ UNCHANGED <<journal,inputs,outputs>>
+ /\ UNCHANGED <<journal,inputs,outputs,closes>>
 JournalStep == /\ Service="full"
                /\ \E t \in J!Actions(JP,journal):
                     /\ journal'=t.next /\ network'=network \cup Elements(t.emissions)
-                    /\ UNCHANGED <<state,inputs,outputs>>
+                    /\ UNCHANGED <<state,inputs,outputs,closes>>
 InputStep == \E e \in network:
  \/ /\ Service="full" /\ e.kind \in {"journal.submit","journal.recover"}
     /\ \E t \in J!Receive(JP,journal,e):
          /\ journal'=t.next /\ network'=(network \ {e}) \cup Elements(t.emissions)
-         /\ UNCHANGED <<state,inputs,outputs>>
+         /\ UNCHANGED <<state,inputs,outputs,closes>>
  \/ /\ Service="folded" /\ e.kind="journal.submit"
     /\ state'=R!Apply(P,state,e.body) /\ network'=network \ {e}
-    /\ UNCHANGED <<journal,inputs,outputs>>
- \/ /\ e.kind \in {"ViewGrant","Material"}
+    /\ UNCHANGED <<journal,inputs,outputs,closes>>
+ \/ /\ e.kind \in {"ViewGrant","Material","RootFailure"}
     /\ outputs'=outputs \cup {e} /\ network'=network \ {e}
-    /\ UNCHANGED <<state,journal,inputs>>
- \/ /\ e.kind \notin {"journal.submit","journal.recover","ViewGrant","Material"}
+    /\ UNCHANGED <<state,journal,inputs,closes>>
+ \/ /\ e.kind \notin {"journal.submit","journal.recover","ViewGrant","Material","RootFailure"}
     /\ \E t \in R!Receive(P,state,e):
          /\ state'=t.next /\ network'=(network \ {e}) \cup Elements(t.emissions)
-         /\ UNCHANGED <<journal,inputs,outputs>>
+         /\ UNCHANGED <<journal,inputs,outputs,closes>>
 Done == \A r \in Roots:state.roots[r].phase \in {"released","aborted"}
 Retired == Done /\ \A h \in P.holders:
  /\ \A r \in Roots:state.holds[h][r].phase="terminal"

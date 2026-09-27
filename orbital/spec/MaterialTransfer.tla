@@ -17,13 +17,13 @@ Request(site) == [root |-> site,holders |-> {1},recipe |-> IF site="old" THEN Re
  context |-> "captured",generation |-> 1,requester |-> "reader",view |-> site,
  rights |-> [read |-> {1,2},write |-> {}],waitForMaterial |-> TRUE,
  successor |-> IF site="old" THEN "new" ELSE "",
- predecessor |-> IF site="new" THEN "old" ELSE "",predecessorOwner |-> "old"]
+ predecessor |-> IF site="new" THEN "old" ELSE "",predecessorOwner |-> "old",successorOwner |-> "new"]
 P(site) == [roots |-> {site},holders |-> {1},requests |-> [r \in {site} |-> Request(site)],
  data |-> Data,initial |-> [h \in {1} |-> IF site="old" THEN M!Needed(Recipe) ELSE {}],
  reset |-> TRUE,gc |-> FALSE,abort |-> FALSE,bad |-> Bug,retries |-> 2,owner |-> site,actor |-> site]
 JP == [owners |-> Sites,actors |-> Sites,subscribers |-> [o \in Sites |-> {o}],
  initialConfig |-> [o \in Sites |-> 1]]
-Packet(site,e) == [site |-> IF e.kind="root.custody" THEN e.dst ELSE site,event |-> e]
+Packet(site,e) == [site |-> IF e.kind \in {"root.custody","root.custody-query"} THEN e.dst ELSE site,event |-> e]
 Packets(site,es) == {Packet(site,e):e \in Elements(es)}
 VARIABLES states,journal,network,phase,copied,observed,dropped,resetSeen,joinedWhileIncomplete
 vars == <<states,journal,network,phase,copied,observed,dropped,resetSeen,joinedWhileIncomplete>>
@@ -67,7 +67,7 @@ Local(site) ==
      moves == {tr \in R!Actions(P(site),s):
        /\ tr.tag \notin {"root-owner-reset","holder-process-reset"}
        /\ (tr.tag#"send-root-transfer-receipt" \/ DropKind#"root.custody" \/ ~LoseReceipt \/ dropped \/
-             ToString(<<"custody",site,1>>) \notin s.sent)
+             ToString(<<"custody","old",ToString(<<"custody-query","old",0,1>>)>>) \notin s.sent)
        /\ (~ResetDuringCopy \/ site#"new" \/ resetSeen \/ ~PendingTail \/ tr.tag#"backend-complete")}
  IN { [site |-> site,move |-> tr]:tr \in moves }
 Locals == UNION {Local(site):site \in Sites}
@@ -85,7 +85,7 @@ LocalStep == \E item \in SelectedLocals:
 Deliverable == {pkt \in network:
  LET e == pkt.event IN
  IF e.kind \in {"journal.submit","journal.recover"} THEN J!Receive(JP,journal,e)#{}
- ELSE IF e.kind \in {"Material","ViewGrant"} THEN TRUE
+ ELSE IF e.kind \in {"Material","ViewGrant","RootFailure"} THEN TRUE
  ELSE IF e.kind=DropKind /\ LoseReceipt /\ ~dropped /\ (DropKind="root.custody" \/ pkt.site="new") THEN FALSE
  ELSE R!Receive(P(pkt.site),states[pkt.site],e)#{}}
 Deliver == \E pkt \in Deliverable:
@@ -93,10 +93,10 @@ Deliver == \E pkt \in Deliverable:
  /\ network'=(network \ {pkt}) \cup
        (IF e.kind \in {"journal.submit","journal.recover"}
         THEN {Packet(trEvent.body.owner,trEvent):trEvent \in Elements((CHOOSE tr \in J!Receive(JP,journal,e):TRUE).emissions)}
-        ELSE IF e.kind \in {"Material","ViewGrant"} THEN {}
+        ELSE IF e.kind \in {"Material","ViewGrant","RootFailure"} THEN {}
         ELSE Packets(pkt.site,(CHOOSE tr \in R!Receive(P(pkt.site),states[pkt.site],e):TRUE).emissions))
  /\ journal'=(IF e.kind \in {"journal.submit","journal.recover"} THEN (CHOOSE tr \in J!Receive(JP,journal,e):TRUE).next ELSE journal)
- /\ states'=(IF e.kind \in {"journal.submit","journal.recover","Material","ViewGrant"} THEN states
+ /\ states'=(IF e.kind \in {"journal.submit","journal.recover","Material","ViewGrant","RootFailure"} THEN states
              ELSE [states EXCEPT ![pkt.site]=(CHOOSE tr \in R!Receive(P(pkt.site),states[pkt.site],e):TRUE).next])
  /\ observed'=(IF e.kind="Material" THEN observed \cup {e.body.root} ELSE observed)
  /\ UNCHANGED <<phase,copied,dropped,resetSeen,joinedWhileIncomplete>>

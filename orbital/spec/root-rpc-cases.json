@@ -1,0 +1,227 @@
+{
+  "cases": [
+    {
+      "name": "RootRPC-custody-none",
+      "module": "RootRPCRecovery",
+      "config": "configs/RootRPC-custody-none.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RootRPC-custody-request-loss",
+      "module": "RootRPCRecovery",
+      "config": "configs/RootRPC-custody-request-loss.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RootRPC-custody-reply-loss",
+      "module": "RootRPCRecovery",
+      "config": "configs/RootRPC-custody-reply-loss.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RootRPC-custody-receiver-reset",
+      "module": "RootRPCRecovery",
+      "config": "configs/RootRPC-custody-receiver-reset.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RootRPC-custody-sender-reset",
+      "module": "RootRPCRecovery",
+      "config": "configs/RootRPC-custody-sender-reset.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RootRPC-hold-reply-loss",
+      "module": "RootRPCRecovery",
+      "config": "configs/RootRPC-hold-reply-loss.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RootRPC-fetch-reply-loss",
+      "module": "RootRPCRecovery",
+      "config": "configs/RootRPC-fetch-reply-loss.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RootRPC-refuse-reply-loss",
+      "module": "RootRPCRecovery",
+      "config": "configs/RootRPC-refuse-reply-loss.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RootRPC-one-shot",
+      "module": "RootRPCRecovery",
+      "config": "configs/RootRPC-one-shot.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "RootRPC-custody-suppress-repeat",
+      "module": "RootRPCRecovery",
+      "config": "configs/RootRPC-custody-suppress-repeat.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "RootRPC-hold-suppress-repeat",
+      "module": "RootRPCRecovery",
+      "config": "configs/RootRPC-hold-suppress-repeat.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "RootRPC-fetch-suppress-repeat",
+      "module": "RootRPCRecovery",
+      "config": "configs/RootRPC-fetch-suppress-repeat.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "RootRPC-refuse-suppress-repeat",
+      "module": "RootRPCRecovery",
+      "config": "configs/RootRPC-refuse-suppress-repeat.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "RootRPC-premature-retire",
+      "module": "RootRPCRecovery",
+      "config": "configs/RootRPC-premature-retire.cfg",
+      "tier": "quick",
+      "expect": "invariant:RetirementEvidence"
+    },
+    {
+      "name": "RootRPC-premature-stall",
+      "module": "RootRPCRecovery",
+      "config": "configs/RootRPC-premature-stall.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "RootRPC-custody-request-loss-reach",
+      "module": "RootRPCRecovery",
+      "config": "configs/RootRPC-custody-request-loss-reach.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCompletedFault",
+      "witness": "NoCompletedFault"
+    },
+    {
+      "name": "RootRPC-custody-reply-loss-reach",
+      "module": "RootRPCRecovery",
+      "config": "configs/RootRPC-custody-reply-loss-reach.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoRepeatReply",
+      "witness": "NoRepeatReply"
+    },
+    {
+      "name": "RootRPC-custody-receiver-reset-reach",
+      "module": "RootRPCRecovery",
+      "config": "configs/RootRPC-custody-receiver-reset-reach.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCompletedFault",
+      "witness": "NoCompletedFault"
+    },
+    {
+      "name": "RootRPC-custody-sender-reset-reach",
+      "module": "RootRPCRecovery",
+      "config": "configs/RootRPC-custody-sender-reset-reach.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoStaleRejection",
+      "witness": "NoStaleRejection"
+    },
+    {
+      "name": "RootRPC-hold-reply-loss-reach",
+      "module": "RootRPCRecovery",
+      "config": "configs/RootRPC-hold-reply-loss-reach.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoRepeatReply",
+      "witness": "NoRepeatReply"
+    },
+    {
+      "name": "RootRPC-fetch-reply-loss-reach",
+      "module": "RootRPCRecovery",
+      "config": "configs/RootRPC-fetch-reply-loss-reach.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoRepeatReply",
+      "witness": "NoRepeatReply"
+    },
+    {
+      "name": "RootRPC-refuse-reply-loss-reach",
+      "module": "RootRPCRecovery",
+      "config": "configs/RootRPC-refuse-reply-loss-reach.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoRepeatReply",
+      "witness": "NoRepeatReply"
+    },
+    {
+      "name": "RootAcquireRPC-success",
+      "module": "RootAcquireRPC",
+      "config": "configs/RootAcquireRPC-success.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RootAcquireRPC-success-one-shot",
+      "module": "RootAcquireRPC",
+      "config": "configs/RootAcquireRPC-success-one-shot.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "RootAcquireRPC-success-suppress",
+      "module": "RootAcquireRPC",
+      "config": "configs/RootAcquireRPC-success-suppress.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "RootAcquireRPC-success-forget",
+      "module": "RootAcquireRPC",
+      "config": "configs/RootAcquireRPC-success-forget.cfg",
+      "tier": "quick",
+      "expect": "invariant:RecoveredInput"
+    },
+    {
+      "name": "RootAcquireRPC-success-reach",
+      "module": "RootAcquireRPC",
+      "config": "configs/RootAcquireRPC-success-reach.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoRecoveredResult",
+      "witness": "NoRecoveredResult"
+    },
+    {
+      "name": "RootAcquireRPC-failure",
+      "module": "RootAcquireRPC",
+      "config": "configs/RootAcquireRPC-failure.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RootAcquireRPC-failure-one-shot",
+      "module": "RootAcquireRPC",
+      "config": "configs/RootAcquireRPC-failure-one-shot.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "RootAcquireRPC-failure-suppress",
+      "module": "RootAcquireRPC",
+      "config": "configs/RootAcquireRPC-failure-suppress.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "RootAcquireRPC-failure-forget",
+      "module": "RootAcquireRPC",
+      "config": "configs/RootAcquireRPC-failure-forget.cfg",
+      "tier": "quick",
+      "expect": "invariant:RecoveredInput"
+    },
+    {
+      "name": "RootAcquireRPC-failure-reach",
+      "module": "RootAcquireRPC",
+      "config": "configs/RootAcquireRPC-failure-reach.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoRecoveredResult",
+      "witness": "NoRecoveredResult"
+    }
+  ]
+}

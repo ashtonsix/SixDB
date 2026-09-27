@@ -1,0 +1,178 @@
+{
+  "cases": [
+    {
+      "name": "RootOwnerRecovery-hold",
+      "module": "RootOwnerRecovery",
+      "config": "configs/RootOwnerRecovery-hold.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RootOwnerRecovery-registered",
+      "module": "RootOwnerRecovery",
+      "config": "configs/RootOwnerRecovery-registered.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RootOwnerRecovery-fetched",
+      "module": "RootOwnerRecovery",
+      "config": "configs/RootOwnerRecovery-fetched.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RootOwnerRecovery-close",
+      "module": "RootOwnerRecovery",
+      "config": "configs/RootOwnerRecovery-close.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RootOwnerRecovery-no-requery",
+      "module": "RootOwnerRecovery",
+      "config": "configs/RootOwnerRecovery-no-requery.cfg",
+      "expect": "temporal:Completes",
+      "tier": "quick"
+    },
+    {
+      "name": "RootOwnerRecovery-no-replay",
+      "module": "RootOwnerRecovery",
+      "config": "configs/RootOwnerRecovery-no-replay.cfg",
+      "expect": "invariant:RecoveredInventory",
+      "tier": "quick"
+    },
+    {
+      "name": "RootOwnerRecovery-fixed-holder",
+      "module": "RootOwnerRecovery",
+      "config": "configs/RootOwnerRecovery-fixed-holder.cfg",
+      "expect": "temporal:Completes",
+      "tier": "quick"
+    },
+    {
+      "name": "RootOwnerRecovery-all-holder-barrier",
+      "module": "RootOwnerRecovery",
+      "config": "configs/RootOwnerRecovery-all-holder-barrier.cfg",
+      "expect": "temporal:Completes",
+      "tier": "quick"
+    },
+    {
+      "name": "RootOwnerRecovery-reach-fresh",
+      "module": "RootOwnerRecovery",
+      "config": "configs/RootOwnerRecovery-reach-fresh.cfg",
+      "expect": "invariant:NoFreshHold",
+      "witness": "NoFreshHold",
+      "tier": "quick"
+    },
+    {
+      "name": "RootOwnerRecovery-reach-stale",
+      "module": "RootOwnerRecovery",
+      "config": "configs/RootOwnerRecovery-reach-stale.cfg",
+      "expect": "invariant:NoStaleRejection",
+      "witness": "NoStaleRejection",
+      "tier": "quick"
+    },
+    {
+      "name": "RootOwnerRecovery-reach-survivor",
+      "module": "RootOwnerRecovery",
+      "config": "configs/RootOwnerRecovery-reach-survivor.cfg",
+      "expect": "invariant:NoRecoveredRead",
+      "witness": "NoRecoveredRead",
+      "tier": "quick"
+    },
+    {
+      "name": "RootOwnerRecovery-reach-close",
+      "module": "RootOwnerRecovery",
+      "config": "configs/RootOwnerRecovery-reach-close.cfg",
+      "expect": "invariant:NoRecoveredRead",
+      "witness": "NoRecoveredRead",
+      "tier": "quick"
+    },
+    {
+      "name": "RootOwnerRecovery-custody",
+      "module": "RootCustodyRecovery",
+      "config": "configs/RootOwnerRecovery-custody.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RootOwnerRecovery-custody-no-requery",
+      "module": "RootCustodyRecovery",
+      "config": "configs/RootOwnerRecovery-custody-no-requery.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "RootOwnerRecovery-custody-reach-fresh",
+      "module": "RootCustodyRecovery",
+      "config": "configs/RootOwnerRecovery-custody-reach-fresh.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoFreshCustody",
+      "witness": "NoFreshCustody"
+    },
+    {
+      "name": "RootOwnerRecovery-custody-reach-stale",
+      "module": "RootCustodyRecovery",
+      "config": "configs/RootOwnerRecovery-custody-reach-stale.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoStaleCustody",
+      "witness": "NoStaleCustody"
+    },
+    {
+      "name": "RootOwnerRecovery-refused",
+      "module": "RootOwnerRecovery",
+      "config": "configs/RootOwnerRecovery-refused.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RootOwnerRecovery-aborted",
+      "module": "RootOwnerRecovery",
+      "config": "configs/RootOwnerRecovery-aborted.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RootOwnerRecovery-refusal-no-requery",
+      "module": "RootOwnerRecovery",
+      "config": "configs/RootOwnerRecovery-refusal-no-requery.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "RootOwnerRecovery-custody-peer-loss",
+      "module": "RootCustodyRecovery",
+      "config": "configs/RootOwnerRecovery-custody-peer-loss.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RootOwnerRecovery-custody-peer-no-retry",
+      "module": "RootCustodyRecovery",
+      "config": "configs/RootOwnerRecovery-custody-peer-no-retry.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "RootOwnerRecovery-custody-peer-reach",
+      "module": "RootCustodyRecovery",
+      "config": "configs/RootOwnerRecovery-custody-peer-reach.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoFreshCustody",
+      "witness": "NoFreshCustody"
+    },
+    {
+      "name": "RootOwnerRecovery-identity",
+      "module": "RootRecoveryIdentity",
+      "config": "configs/RootOwnerRecovery-identity.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RootOwnerRecovery-identity-unscoped",
+      "module": "RootRecoveryIdentity",
+      "config": "configs/RootOwnerRecovery-identity-unscoped.cfg",
+      "tier": "quick",
+      "expect": "temporal:BothBarriers"
+    },
+    {
+      "name": "RootOwnerRecovery-identity-reach",
+      "module": "RootRecoveryIdentity",
+      "config": "configs/RootOwnerRecovery-identity-reach.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoTwoRecoveries",
+      "witness": "NoTwoRecoveries"
+    }
+  ]
+}

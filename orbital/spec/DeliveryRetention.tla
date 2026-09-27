@@ -38,6 +38,8 @@ Input(e) ==
  IF e.kind \in {"journal.submit","journal.recover"}
  THEN {Transition("input.journal",[run EXCEPT !.journal=tr.next,
         !.network=(@ \ {e}) \cup Elements(tr.emissions)],<<>>):tr \in J!Receive(JP,run.journal,e)}
+ ELSE IF e.kind="RootFailure" THEN
+ {Transition("input.root-failure",[run EXCEPT !.network=@ \ {e}],<<>>)}
  ELSE IF e.kind="ViewGrant"
  THEN {Transition("input.grant",[run EXCEPT !.grants=@ \cup {e.body},!.network=@ \ {e}],<<>>)}
  ELSE IF e.kind="Material"
