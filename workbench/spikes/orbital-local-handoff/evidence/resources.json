@@ -1,0 +1,44 @@
+{
+  "checked_utc": "2026-09-27T01:03:35.444665+00:00",
+  "region": "us-east-1",
+  "instances": [
+    {
+      "InstanceId": "i-0aa1f86d94e2f3806",
+      "InstanceType": "c8a.xlarge",
+      "State": {
+        "Code": 48,
+        "Name": "terminated"
+      },
+      "LaunchTime": "2026-09-27T00:48:47+00:00",
+      "Placement": {
+        "AvailabilityZoneId": "use1-az6",
+        "GroupName": "",
+        "Tenancy": "default",
+        "AvailabilityZone": "us-east-1b"
+      },
+      "StateTransitionReason": "User initiated"
+    },
+    {
+      "InstanceId": "i-042ef04d2081d644c",
+      "InstanceType": "c8a.xlarge",
+      "State": {
+        "Code": 48,
+        "Name": "terminated"
+      },
+      "LaunchTime": "2026-09-27T00:57:11+00:00",
+      "Placement": {
+        "AvailabilityZoneId": "use1-az6",
+        "GroupName": "",
+        "Tenancy": "default",
+        "AvailabilityZone": "us-east-1b"
+      },
+      "StateTransitionReason": "User initiated"
+    }
+  ],
+  "jobs": [
+    "20260927T004823Z-2768706b",
+    "20260927T005646Z-82377596"
+  ],
+  "workload_cross_az_bytes": 0,
+  "traffic_scope": "Workload uses shared memory only; worker setup/source/result traffic excluded; no billing claim."
+}

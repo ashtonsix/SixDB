@@ -1,0 +1,1426 @@
+{
+  "commands": [
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "lscpu",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "correctness",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-sparse-b1-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-sparse-b1-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-sparse-b1-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-sparse-b32-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-sparse-b32-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-sparse-b32-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-steady-b1-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-steady-b1-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-steady-b1-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-steady-b32-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-steady-b32-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-steady-b32-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-burst-b1-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-burst-b1-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-burst-b1-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-burst-b32-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-burst-b32-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-burst-b32-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-pressure-b1-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-pressure-b1-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-pressure-b1-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-pressure-b32-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-pressure-b32-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-pressure-b32-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-sparse-b1-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-sparse-b1-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-sparse-b1-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-sparse-b32-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-sparse-b32-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-sparse-b32-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-steady-b1-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-steady-b1-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-steady-b1-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-steady-b32-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-steady-b32-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-steady-b32-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-burst-b1-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-burst-b1-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-burst-b1-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-burst-b32-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-burst-b32-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-burst-b32-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-pressure-b1-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-pressure-b1-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-pressure-b1-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-pressure-b32-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-pressure-b32-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "wait-pressure-b32-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-sparse-b1-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-sparse-b1-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-sparse-b1-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-sparse-b32-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-sparse-b32-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-sparse-b32-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-steady-b1-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-steady-b1-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-steady-b1-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-steady-b32-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-steady-b32-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-steady-b32-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-burst-b1-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-burst-b1-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-burst-b1-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-burst-b32-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-burst-b32-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-burst-b32-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-pressure-b1-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-pressure-b1-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-pressure-b1-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-pressure-b32-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-pressure-b32-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "work-pressure-b32-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload1024-steady-b1-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload1024-steady-b1-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload1024-steady-b1-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload1024-steady-b32-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload1024-steady-b32-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload1024-steady-b32-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload1024-burst-b1-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload1024-burst-b1-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload1024-burst-b1-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload1024-burst-b32-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload1024-burst-b32-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload1024-burst-b32-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload16384-steady-b1-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload16384-steady-b1-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload16384-steady-b1-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload16384-steady-b32-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload16384-steady-b32-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload16384-steady-b32-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload16384-burst-b1-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload16384-burst-b1-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload16384-burst-b1-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload16384-burst-b32-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload16384-burst-b32-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "payload16384-burst-b32-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-burst-b8-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-burst-b8-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "spin-burst-b8-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "pause-spin-q16-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "pause-spin-q16-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "pause-spin-q16-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "pause-spin-q256-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "pause-spin-q256-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "pause-spin-q256-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "pause-wait-q16-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "pause-wait-q16-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "pause-wait-q16-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "pause-wait-q256-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "pause-wait-q256-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "pause-wait-q256-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neighbour-spin-steady-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neighbour-spin-steady-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neighbour-spin-steady-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neighbour-spin-burst-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neighbour-spin-burst-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neighbour-spin-burst-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neighbour-work-steady-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neighbour-work-steady-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neighbour-work-steady-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neighbour-work-burst-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neighbour-work-burst-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "neighbour-work-burst-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "reverse-spin-burst-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "reverse-spin-burst-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "reverse-spin-burst-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "reverse-wait-burst-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "reverse-wait-burst-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "reverse-wait-burst-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "reverse-work-burst-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "reverse-work-burst-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "reverse-work-burst-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "reduced-pressure-b1-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "reduced-pressure-b1-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "reduced-pressure-b1-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "reduced-pressure-b32-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "reduced-pressure-b32-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "reduced-pressure-b32-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "reduced-burst-b32-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "reduced-burst-b32-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "reduced-burst-b32-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "analyse",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "config": {
+    "panel": [
+      {
+        "background": "none",
+        "batch": 1,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 200,
+        "interval": 1000000,
+        "name": "spin-sparse-b1",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 200,
+        "interval": 1000000,
+        "name": "spin-sparse-b32",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 1,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 20000,
+        "interval": 10000,
+        "name": "spin-steady-b1",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 20000,
+        "interval": 10000,
+        "name": "spin-steady-b32",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 1,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 200000,
+        "interval": 32000,
+        "name": "spin-burst-b1",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 200000,
+        "interval": 32000,
+        "name": "spin-burst-b32",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 1,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 800000,
+        "interval": 250,
+        "name": "spin-pressure-b1",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 800000,
+        "interval": 250,
+        "name": "spin-pressure-b32",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 1,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 200,
+        "interval": 1000000,
+        "name": "wait-sparse-b1",
+        "pause_ns": 0,
+        "policy": "wait",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 200,
+        "interval": 1000000,
+        "name": "wait-sparse-b32",
+        "pause_ns": 0,
+        "policy": "wait",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 1,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 20000,
+        "interval": 10000,
+        "name": "wait-steady-b1",
+        "pause_ns": 0,
+        "policy": "wait",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 20000,
+        "interval": 10000,
+        "name": "wait-steady-b32",
+        "pause_ns": 0,
+        "policy": "wait",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 1,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 200000,
+        "interval": 32000,
+        "name": "wait-burst-b1",
+        "pause_ns": 0,
+        "policy": "wait",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 200000,
+        "interval": 32000,
+        "name": "wait-burst-b32",
+        "pause_ns": 0,
+        "policy": "wait",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 1,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 800000,
+        "interval": 250,
+        "name": "wait-pressure-b1",
+        "pause_ns": 0,
+        "policy": "wait",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 800000,
+        "interval": 250,
+        "name": "wait-pressure-b32",
+        "pause_ns": 0,
+        "policy": "wait",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 1,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 200,
+        "interval": 1000000,
+        "name": "work-sparse-b1",
+        "pause_ns": 0,
+        "policy": "work",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 200,
+        "interval": 1000000,
+        "name": "work-sparse-b32",
+        "pause_ns": 0,
+        "policy": "work",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 1,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 20000,
+        "interval": 10000,
+        "name": "work-steady-b1",
+        "pause_ns": 0,
+        "policy": "work",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 20000,
+        "interval": 10000,
+        "name": "work-steady-b32",
+        "pause_ns": 0,
+        "policy": "work",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 1,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 200000,
+        "interval": 32000,
+        "name": "work-burst-b1",
+        "pause_ns": 0,
+        "policy": "work",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 200000,
+        "interval": 32000,
+        "name": "work-burst-b32",
+        "pause_ns": 0,
+        "policy": "work",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 1,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 800000,
+        "interval": 250,
+        "name": "work-pressure-b1",
+        "pause_ns": 0,
+        "policy": "work",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 800000,
+        "interval": 250,
+        "name": "work-pressure-b32",
+        "pause_ns": 0,
+        "policy": "work",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 1,
+        "burst": 1,
+        "bytes": 1024,
+        "capacity": 256,
+        "count": 20000,
+        "interval": 10000,
+        "name": "payload1024-steady-b1",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 1,
+        "bytes": 1024,
+        "capacity": 256,
+        "count": 20000,
+        "interval": 10000,
+        "name": "payload1024-steady-b32",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 1,
+        "burst": 32,
+        "bytes": 1024,
+        "capacity": 256,
+        "count": 200000,
+        "interval": 32000,
+        "name": "payload1024-burst-b1",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 32,
+        "bytes": 1024,
+        "capacity": 256,
+        "count": 200000,
+        "interval": 32000,
+        "name": "payload1024-burst-b32",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 1,
+        "burst": 1,
+        "bytes": 16384,
+        "capacity": 256,
+        "count": 20000,
+        "interval": 10000,
+        "name": "payload16384-steady-b1",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 1,
+        "bytes": 16384,
+        "capacity": 256,
+        "count": 20000,
+        "interval": 10000,
+        "name": "payload16384-steady-b32",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 1,
+        "burst": 32,
+        "bytes": 16384,
+        "capacity": 256,
+        "count": 200000,
+        "interval": 32000,
+        "name": "payload16384-burst-b1",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 32,
+        "bytes": 16384,
+        "capacity": 256,
+        "count": 200000,
+        "interval": 32000,
+        "name": "payload16384-burst-b32",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 8,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 200000,
+        "interval": 32000,
+        "name": "spin-burst-b8",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 16,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 16,
+        "count": 200000,
+        "interval": 32000,
+        "name": "pause-spin-q16",
+        "pause_ns": 5000000,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 200000,
+        "interval": 32000,
+        "name": "pause-spin-q256",
+        "pause_ns": 5000000,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 16,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 16,
+        "count": 200000,
+        "interval": 32000,
+        "name": "pause-wait-q16",
+        "pause_ns": 5000000,
+        "policy": "wait",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 200000,
+        "interval": 32000,
+        "name": "pause-wait-q256",
+        "pause_ns": 5000000,
+        "policy": "wait",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "stream",
+        "batch": 32,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 20000,
+        "interval": 10000,
+        "name": "neighbour-spin-steady",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "stream",
+        "batch": 32,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 200000,
+        "interval": 32000,
+        "name": "neighbour-spin-burst",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "stream",
+        "batch": 32,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 20000,
+        "interval": 10000,
+        "name": "neighbour-work-steady",
+        "pause_ns": 0,
+        "policy": "work",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "stream",
+        "batch": 32,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 200000,
+        "interval": 32000,
+        "name": "neighbour-work-burst",
+        "pause_ns": 0,
+        "policy": "work",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 200000,
+        "interval": 32000,
+        "name": "reverse-spin-burst",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": true,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 200000,
+        "interval": 32000,
+        "name": "reverse-wait-burst",
+        "pause_ns": 0,
+        "policy": "wait",
+        "reverse": true,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 200000,
+        "interval": 32000,
+        "name": "reverse-work-burst",
+        "pause_ns": 0,
+        "policy": "work",
+        "reverse": true,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 1,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 800000,
+        "interval": 250,
+        "name": "reduced-pressure-b1",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "reduced"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 800000,
+        "interval": 250,
+        "name": "reduced-pressure-b32",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "reduced"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 200000,
+        "interval": 32000,
+        "name": "reduced-burst-b32",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "reduced"
+      }
+    ],
+    "quick": false,
+    "reps": 3
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=orbital-local-handoff",
+    "-DSIXDB_TUNE=generic",
+    "-DSIXDB_MARCH="
+  ],
+  "files_sha256": {
+    "environment.json": "3abef9eea80748415c4107f6a9dde4f2050edff44d13e3825525d63719a735af",
+    "executions.json": "08b8099beb2c06b5fc6694a09935aa938a7c2513015ec63086b12d87b7919819",
+    "hardware.json": "fe3401e83eae20aeb7bebfbc763d780a2d6be010b8addbd824c7489dd5a1cf86",
+    "summary.csv": "1090bc3771a1667886dd17b50ef36cd0f467147241c605762866105212faa778"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {},
+  "platform": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39",
+  "regenerate": [],
+  "source_archive_sha256": "9cd926d4552f22b398541d84ac9972eac7e29cc210349d8dea6de13b6b6e5e4e",
+  "source_digest": "12c570ca95502ac6242b41517ef013addc1fcc636322ff6d2a8256cb6c5e32f6",
+  "source_unchanged": true,
+  "started_utc": "2026-09-27T00:49:49.290062+00:00",
+  "status": "complete"
+}

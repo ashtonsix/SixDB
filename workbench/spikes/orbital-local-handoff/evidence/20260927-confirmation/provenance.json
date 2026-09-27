@@ -1,0 +1,587 @@
+{
+  "commands": [
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "lscpu",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "correctness",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i125-b1-full-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i125-b1-full-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i125-b1-full-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i125-b1-reduced-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i125-b1-reduced-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i125-b1-reduced-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i125-b32-full-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i125-b32-full-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i125-b32-full-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i125-b32-reduced-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i125-b32-reduced-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i125-b32-reduced-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i64-b1-full-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i64-b1-full-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i64-b1-full-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i64-b1-reduced-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i64-b1-reduced-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i64-b1-reduced-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i64-b32-full-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i64-b32-full-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i64-b32-full-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i64-b32-reduced-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i64-b32-reduced-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "cliff-i64-b32-reduced-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-spin-q16-pause0-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-spin-q16-pause0-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-spin-q16-pause0-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-spin-q16-pause5000000-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-spin-q16-pause5000000-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-spin-q16-pause5000000-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-spin-q256-pause0-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-spin-q256-pause0-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-spin-q256-pause0-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-spin-q256-pause5000000-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-spin-q256-pause5000000-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-spin-q256-pause5000000-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-wait-q16-pause0-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-wait-q16-pause0-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-wait-q16-pause0-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-wait-q16-pause5000000-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-wait-q16-pause5000000-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-wait-q16-pause5000000-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-wait-q256-pause0-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-wait-q256-pause0-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-wait-q256-pause0-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-wait-q256-pause5000000-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-wait-q256-pause5000000-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "queue-wait-q256-pause5000000-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "large-burst-b1-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "large-burst-b1-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "large-burst-b1-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "large-burst-b32-r0",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "large-burst-b32-r1",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "large-burst-b32-r2",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "analyse",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "config": {
+    "panel": [
+      {
+        "background": "none",
+        "batch": 1,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 800000,
+        "interval": 125,
+        "name": "cliff-i125-b1-full",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 1,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 800000,
+        "interval": 125,
+        "name": "cliff-i125-b1-reduced",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "reduced"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 800000,
+        "interval": 125,
+        "name": "cliff-i125-b32-full",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 800000,
+        "interval": 125,
+        "name": "cliff-i125-b32-reduced",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "reduced"
+      },
+      {
+        "background": "none",
+        "batch": 1,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 1562500,
+        "interval": 64,
+        "name": "cliff-i64-b1-full",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 1,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 1562500,
+        "interval": 64,
+        "name": "cliff-i64-b1-reduced",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "reduced"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 1562500,
+        "interval": 64,
+        "name": "cliff-i64-b32-full",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 1,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 1562500,
+        "interval": 64,
+        "name": "cliff-i64-b32-reduced",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "reduced"
+      },
+      {
+        "background": "none",
+        "batch": 16,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 16,
+        "count": 100000,
+        "interval": 32000,
+        "name": "queue-spin-q16-pause0",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 16,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 16,
+        "count": 100000,
+        "interval": 32000,
+        "name": "queue-spin-q16-pause5000000",
+        "pause_ns": 5000000,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 100000,
+        "interval": 32000,
+        "name": "queue-spin-q256-pause0",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 100000,
+        "interval": 32000,
+        "name": "queue-spin-q256-pause5000000",
+        "pause_ns": 5000000,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 16,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 16,
+        "count": 100000,
+        "interval": 32000,
+        "name": "queue-wait-q16-pause0",
+        "pause_ns": 0,
+        "policy": "wait",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 16,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 16,
+        "count": 100000,
+        "interval": 32000,
+        "name": "queue-wait-q16-pause5000000",
+        "pause_ns": 5000000,
+        "policy": "wait",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 100000,
+        "interval": 32000,
+        "name": "queue-wait-q256-pause0",
+        "pause_ns": 0,
+        "policy": "wait",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 32,
+        "bytes": 64,
+        "capacity": 256,
+        "count": 100000,
+        "interval": 32000,
+        "name": "queue-wait-q256-pause5000000",
+        "pause_ns": 5000000,
+        "policy": "wait",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 1,
+        "burst": 32,
+        "bytes": 16384,
+        "capacity": 256,
+        "count": 100000,
+        "interval": 32000,
+        "name": "large-burst-b1",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      },
+      {
+        "background": "none",
+        "batch": 32,
+        "burst": 32,
+        "bytes": 16384,
+        "capacity": 256,
+        "count": 100000,
+        "interval": 32000,
+        "name": "large-burst-b32",
+        "pause_ns": 0,
+        "policy": "spin",
+        "reverse": false,
+        "timing": "full"
+      }
+    ],
+    "panel_name": "confirmation",
+    "quick": false,
+    "reps": 3
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_SPIKES=orbital-local-handoff",
+    "-DSIXDB_TUNE=generic",
+    "-DSIXDB_MARCH="
+  ],
+  "files_sha256": {
+    "correctness.txt": "1f548e6687f775def1245d56c8d7930d80ea18cf3ccce9bb4c162860f5551dfe",
+    "environment.json": "9d82874005d426f8e2ba5efce6f50014edae1e458c46190634aac492f1d0563a",
+    "executions.json": "c7b8114f0333a3d1c51dbecc2f728cb50b11db1ebc354d1cb55098f4950af212",
+    "hardware.json": "8f4c1c063add51fb93025dcbe9ce32a42f2be66d31626bc98cf863a4c25dea3f",
+    "summary.csv": "ac0fdb16e7aaacd132b5c2df0e84da37ec3edc82221d93ee6267452b2d4345a2"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "inputs": {},
+  "platform": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39",
+  "regenerate": [],
+  "source_archive_sha256": "a34f76996ef0b3e128bd1ca9b34867b8a70e3ee8e6558859d774d3ce5571bff7",
+  "source_digest": "e663d32f44c8c1d15102ba48f85bf956e507892acb21ec6bfd574132efbe267a",
+  "source_unchanged": true,
+  "started_utc": "2026-09-27T00:58:15.104664+00:00",
+  "status": "complete"
+}
