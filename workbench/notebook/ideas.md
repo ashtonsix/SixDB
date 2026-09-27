@@ -83,6 +83,14 @@ candidate without attributing payload-layout or hash-map implementation gains
 to it. Ashton's enclosing-box option uses natural prefix names to discover
 remapped segments, with exact fences distinguishing ownership from enclosure.
 
+## Choosing residual bounds
+
+The [bounds-estimation note](pfor-bounds.md) preserves promising extrema-based
+proposals, cheap refinement and proof opportunities, and the failure modes
+that prevent a recommendation. Exception budgets and logical widths do not
+settle physical cost or mutation value. Return with a concrete SixDB parent
+and caller objective; Calico supplies a baseline, not inherited encoding policy.
+
 ## Plans that keep improving
 
 Ashton's proposed Engine model retains query plans and equivalence graphs
