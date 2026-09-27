@@ -109,7 +109,12 @@ template <unsigned I> [[gnu::always_inline]] inline block part(pair value) {
 }
 [[gnu::always_inline]] inline pair decode_pair_unchecked(const byte *a, unsigned population_a,
                                                          const byte *b, unsigned population_b) {
+#if SIXDB_TUNE_NEOVERSE_V2
+    return detail::neon::decode2(reinterpret_cast<const std::uint8_t *>(a), population_a,
+                               reinterpret_cast<const std::uint8_t *>(b), population_b);
+#else
     return join(decode_unchecked(a, population_a), decode_unchecked(b, population_b));
+#endif
 }
 [[gnu::always_inline]] inline unsigned encode_unchecked(block value, unsigned population,
                                                         byte *writable64) {
