@@ -5,11 +5,11 @@ an existing chosen operation under the same logical owner. It keeps the root's
 Register/Abort decision, holder persistence and physical lifetime rules. It is
 an eligible path, not a replacement for generic root acquisition.
 
-The first pilots support the narrow saving: one fewer chosen Begin record for
-the prepared acquisition, with the same successful value or justified failure.
-The shared provider's full actor-cache-loss recovery correction is being checked
-separately; final study evidence must use that corrected source. Pilot receipts
-are diagnostics, not a final recommendation.
+The completed comparison supports the narrow saving: one fewer chosen Begin
+record for the prepared acquisition, with the same successful value or justified
+failure. All 31 selected checks use the maintained transaction kernel and the
+corrected cold-owner recovery provider: 20 positive finite graphs, four defect
+controls and seven witnesses. Earlier pilots remain diagnostics.
 
 ## What is actually joined
 
@@ -95,6 +95,22 @@ The independent controls omit replayed projection/discovery, alter the recorded
 descriptor, or retire a cancelled physical borrower early. They must expose the
 named failure rather than merely end with a successful TLC process.
 
+## Retained comparison
+
+The [selected checks](evidence/comparison/SUMMARY.md) retain both explicit and
+fused acquisitions across success, missing material, cancellation and owner loss,
+including all controls and witnesses. [Inputs](evidence/comparison/inputs.json)
+identify exact shared model/configuration, runner, collector and pinned TLC bytes;
+[checks](evidence/comparison/checks.csv) include each receipt and raw-log digest.
+The adjacent artifact reference recovers the download-verified full archive of
+31 raw results and their actual source closures. Solver scratch is not evidence.
+
+The comparison counts a chosen append, not elapsed application latency. The
+successful explicit path chooses one root Begin; the fused path chooses none.
+Register/Abort, holder persistence and physical retirement are present in both.
+Cancellation can legally reach either outcome, so the two paths are checked
+against the same allowed behavior rather than forced to take identical schedules.
+
 ## Running
 
 From the repository root on Linux (prefix with orb -m ubuntu from macOS):
@@ -111,7 +127,7 @@ root-fusion-cases.json selection participates in aggregate maintained verificati
 There are no copied shared kernels or competing model sources. Each receipt
 retains exact inputs, diagnostics and completed/negative/witness/incomplete status.
 
-The provisional implementation direction is to reuse an existing complete
+The supported implementation direction is to reuse an existing complete
 same-owner obligation record. Removing Register/Abort globally is a different
 proposal: it loses the durable acquisition-success distinction and changes
 abandonment, source-custody withdrawal and recovery availability.

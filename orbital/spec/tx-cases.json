@@ -41,7 +41,9 @@
       "name": "Transaction-chain",
       "module": "TransactionMachine",
       "config": "configs/Transaction-chain.cfg",
-      "tier": "full"
+      "tier": "full",
+      "workers": 4,
+      "heap": "1g"
     },
     {
       "name": "Transaction-own-read",

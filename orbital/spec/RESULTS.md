@@ -7,23 +7,28 @@ Later review found that its root-owner reset retained consumed replies and
 reset surviving-holder history; those results establish that narrower reset,
 not cold-owner recovery. This snapshot remains explicitly incomplete.
 
-The working sources now include the [design revision](DESIGN-CHANGES.md).
-Its current verification is separate from that historical selection. The
-following work remains open as of 2026-09-27:
+The [design revision](DESIGN-CHANGES.md) has a
+[source-matched selection](evidence/design-revision/README.md) of **599 of 600**
+maintained cases: 248 complete graphs, 188 expected defects and 163 witnesses,
+with no conflicting result. All 276 baseline checks invalidated by the design
+changes have accepted replacements; 209 retain unchanged dependencies.
 
-| Work | Settled | Outstanding | Owner |
-| --- | --- | --- | --- |
-| Original admission-renewal question | Smaller checks and reduction audits are available; the reference cloud run continues. | Complete the full target using the reference or justified reduced model, then retain and reconcile its exact inputs. The reduced candidate remains isolated from maintained sources. | Orbital ASSISTANT |
-| Revised reservation policy | Older-conflicts-drain and canonical grant closure are adopted provisionally. The policy comparison, actual-Tx binding and native workload study are complete. | 157 of 158 transaction-only replacements are accepted; the larger chain is still being completed. Recovery joins are running against the corrected provider. | Orbital LEAD |
-| Cold-root-owner recovery | The owner/holder loss boundary is corrected; targeted cold-restart, repeated-query and acquisition-result loss checks pass. The corrected provider is frozen. This repairs a baseline coverage gap. | Replace checks that depend on that corrected provider. | Orbital LEAD |
-| Prepared-root record fusion | The narrow same-owner Begin-elision design and pilots are developed. | Complete its joined comparison against the settled recovery provider. | Orbital LEAD |
+**Admission renewal is the sole open campaign item.**
+`Admission-renewal-capability` remains incomplete under Orbital ASSISTANT's
+investigation. Its original reference run and isolated representation experiments
+are separate from the completed design revision. This selection does not claim
+that the entire verification plan is finished.
 
-The [design account](DESIGN-CHANGES.md#evidence-replacement) identifies the
-affected dependencies. Unchanged leaf evidence remains reusable. The tables
-below describe coverage and limits; they do not claim that every changed
-composition already has a current accepted receipt. Final dispositions come
-from the dependency-matched evidence selection. A stopped graph is sizing
-evidence only.
+| Design revision | Current evidence |
+| --- | --- |
+| Reservation policy and canonical grant closure | All 213 affected baseline checks, 33 maintained policy checks and eight actual transaction/replay bindings are accepted. The unchanged larger chain completed 2,450,956 states in 604 seconds with four workers. The separate comparison retains all 69 policy checks and 420 native histories, including the younger-WAN regression boundary. |
+| Cold-owner recovery and repeated ordinary requests | All 118 affected baseline checks, 25 owner/custody/identity checks and 32 ordinary-RPC checks are accepted. The owner loses its volatile replies while surviving peers retain their state. Consumer-only loss reconstructs the existing success or failure without another root decision. |
+| Prepared retention from an existing owner record | All 31 explicit/derived comparisons are accepted and retained; 16 belong to the maintained catalog. A complete same-owner prepared acquisition needs one fewer chosen Begin append. This establishes neither a measured latency saving nor whole-trace equivalence. |
+
+The Tx and recovery dependency sets overlap in 55 baseline cases. The
+[design account](DESIGN-CHANGES.md#evidence-replacement) explains the invalidation,
+accepted tradeoffs and limits. Final dispositions come from parsed dependencies,
+exact captured inputs and raw outcomes. A stopped graph is sizing evidence only.
 
 ## Assessment against the destination
 

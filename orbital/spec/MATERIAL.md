@@ -176,6 +176,15 @@ after actual replies. Begin/Register/Abort/Release folds are idempotent and term
 outcomes reject delayed requests. Owner recovery consumes the actual prefix of its
 matching barrier query, not an arbitrary cached snapshot.
 
+`PreparedRootFusion` checks the eligible same-owner path: a chosen transaction
+bound whose recorded profile already contains the complete prepared acquisition
+can apply that Begin directly. Replay derives it at the same prefix position,
+before subsequent Register or terminal records. This removes a separate Begin
+append; it preserves the adoption decision and holder protocol. The
+[comparison study](../../workbench/spikes/orbital-root-fusion/README.md) states the
+required descriptor, fault cuts and limits. A cut alone does not define a future
+recipe or a holder set chosen later.
+
 Cold owner loss clears loaded roots, definitions, received hold/refusal/custody
 receipts, fetched bytes, close requests and local send suppression. It leaves
 separately owned holder ledgers, inboxes and reply suppression intact. Replay
