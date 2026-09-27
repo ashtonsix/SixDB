@@ -9,15 +9,23 @@ in-place mutation with explicit retained state.
 
 | Owner | Responsibility |
 | --- | --- |
-| Engine | Field semantics, segment schema and representation choices; summary validity and publication policy |
-| Loom | Buffer leases, queueing, prefetch scheduling, cancellation and retained work |
-| Orbital | OS-facing services, including the intended UFFD page-COW version mechanism |
+| Engine | Logical identity, declared effects/read dependencies, representations and coordinated visibility of data, indexes and summaries |
+| Loom | Version-bound buffer leases, queueing, prefetch, retained work and resources for completion |
+| Orbital | Durable objects, transaction ordering, retained logical inputs and recovery; physical access and operation lifetimes |
 | Ikea | Admitted operations, composition, physical descriptions and issued-byte coverage |
 
-In-place and private-copy mutation are both valid. Orbital’s UFFD COW mechanism
-can preserve page versions during in-place writes. Maintenance may separately
-need current old values to compute a replacement delta. The owner’s isolation
-and versioning protocol determines which data editions readers can observe.
+This working division follows Orbital's [logical](../../orbital/BRIEF.md) and
+[physical](../../orbital/PHYSICAL.md) briefs; it does not prescribe binding APIs.
+Engine declares a mutation's semantic effects and dependencies. Orbital establishes
+its position and retained logical inputs; Loom prepares the corresponding storage
+and completion resources. Ikea performs bounded local work. The enclosing owner
+then coordinates verification, installation and publication through Orbital.
+
+In-place and private-copy mutation are both valid. Page COW is one way to preserve
+older data; Orbital also considers no-COW reuse backed by retained reconstruction.
+A resident byte lease alone does not retain a logical cut: unresolved predecessors
+may require both an old fallback and future results. A newly discovered historical
+input can be unavailable. Maintenance may separately need old values for a delta.
 
 ![The owner acquires and prepares work, invokes Ikea, then either retains a completed frontier across a wait or coordinates publication.](images/mutation-lifetime.svg)
 
@@ -51,6 +59,10 @@ before continuing or rebinding. It must also release resources carried by stale
 replies. An OS write-protection fault preserves machine state through the OS;
 explicit Loom suspension occurs at the returned work frontier.
 
+Loom can reorder physical work around waits; local readiness does not choose
+replicated outcomes or epoch membership. Completion capacity must remain available
+under pressure, without implying a separate thread or pool for each kind of work.
+
 Selections retain original coordinates. Keep predicate evidence alongside the
 selection when needed: an inactive row only means this operation excludes it.
 
@@ -70,6 +82,9 @@ Coverage hooks run before their associated local write group. A bulk call may
 contain several groups; the journal supplies neither beforeimages nor a
 transaction-wide pre-notification barrier. Hooks must have admitted capacity
 and cannot fail or suspend mid-group.
+
+This local effect journal is not Orbital's durable log. Issued-byte coverage
+cannot substitute for Engine's prior semantic envelope or logical read dependencies.
 
 SeriesPack’s `sum_change` supplies a modulo-u64 replacement delta.
 TuplePack’s [observation](tuplepack/extending.md#observe-the-dependencies-of-the-summary)
