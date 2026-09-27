@@ -1,6 +1,7 @@
 #include "regional.hpp"
 
 #include <algorithm>
+#include <array>
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
@@ -16,7 +17,12 @@ void complete(const regional::Observation& o) {
   check(!o.result.execution.budget_exhausted, "regional case censored by dispatch budget");
   std::uint64_t offers{};
   for (const auto& [name, c] : o.result.cohorts) { check(c.offered == c.arrived && c.offered == c.completed && !c.failed && !c.unfinished, "regional offers not fully accounted and completed"); offers += c.offered; }
-  check(offers == (o.spec.progress_rounds ? 3 + 2 * o.spec.progress_rounds : o.spec.points + 1 + (o.spec.bridge || o.spec.bridge_cut)), "regional denominator differs from complete plan population");
+  std::uint64_t expected = o.spec.points;
+  if (o.spec.shape == "regional") expected = o.spec.progress_rounds ? 3 + 2 * o.spec.progress_rounds : o.spec.points + 1 + (o.spec.bridge || o.spec.bridge_cut);
+  else if (o.spec.shape == "chain" || o.spec.shape == "unrelated-old") expected += 4;
+  else if (o.spec.shape == "younger-wan") expected += 3;
+  else if (o.spec.shape == "held-broad") expected += 1;
+  check(offers == expected && o.plans.size() == expected, "regional denominator differs from complete plan population");
 }
 Time delay(const Case& c, HostId from, HostId to) {
   auto link = std::ranges::find_if(*c.links, [&](const Link& l) { return l.from == from && l.to == to; });
@@ -26,6 +32,12 @@ Time delay(const Case& c, HostId from, HostId to) {
 int main() {
   try {
     regional::Spec spec; spec.points = 12;
+    check(spec.queue_policy == QueuePolicy::older_conflicts_drain, "regional default differs from provisional drain policy");
+    spec.queue_policy = QueuePolicy::no_overtaking; // Historical convoy expectations.
+    auto invalid = spec; invalid.shape = "hot"; invalid.bridge = true;
+    bool rejected{};
+    try { (void)regional::make_case(invalid); } catch (const std::invalid_argument&) { rejected = true; }
+    check(rejected, "policy workload silently ignored incompatible regional flags");
     const auto topology = regional::make_case(spec);
     for (std::uint32_t shard = 0; shard < 2; ++shard) {
       check(delay(topology, leader(shard), follower(shard, 0)) == 1'000, "regional witness quorum accidentally crosses WAN");
@@ -82,7 +94,7 @@ int main() {
     std::ostringstream left, right; regional::write_json(left, recorded); regional::write_json(right, repeated);
     check(left.str() == right.str(), "regional replay changed result or attribution");
     std::cout << "regional capture + replay attribution passed\n";
-    regional::Spec progress; progress.progress_rounds = 32; progress.until_ns = 10'000'000;
+    regional::Spec progress; progress.queue_policy = QueuePolicy::no_overtaking; progress.progress_rounds = 32; progress.until_ns = 10'000'000;
     Options progress_options; progress_options.seed = 7;
     auto fair = regional::run(progress, progress_options);
     check(fair.result.violations.empty() && fair.result.cohorts.at("broad").completed == 1, "non-overtaking broad waiter failed to advance");
@@ -112,6 +124,59 @@ int main() {
     progress.progress_rounds = 8; auto shorter = regional::run(progress, progress_options); complete(shorter);
     check(*shorter.milestones.at(3).participants.at(0).granted < broad_granted, "more younger work did not extend broad waiting in falsifier");
     std::cout << "actual alternating-holder prefix + finite drainage passed\n";
+    // Candidate policies keep the same physical services and immutable commands.
+    // Check both the bridge improvement and the later younger-holder cost.
+    const std::array policies{QueuePolicy::no_overtaking, QueuePolicy::eligible_first,
+      QueuePolicy::older_conflicts_drain, QueuePolicy::oldest_live};
+    std::map<QueuePolicy, Time> unrelated_wait, middle_wait;
+    for (auto policy : policies) {
+      regional::Spec candidate; candidate.queue_policy = policy; candidate.points = 32;
+      candidate.shape = "younger-wan"; auto young = regional::run(candidate, progress_options); complete(young);
+      const auto& x = young.milestones.at(1).participants.at(0);
+      const auto& b = young.milestones.at(2).participants.at(0);
+      const auto& y = young.milestones.at(3).participants.at(0);
+      bool middle{};
+      for (const auto& plan : young.plans) if (plan.cohort == "z-only" && *x.fixed < plan.at && plan.at < 130'000'000) {
+        middle = true; const auto& phase = young.milestones.at(plan.id).participants.at(0);
+        middle_wait[policy] = std::max(middle_wait[policy], *phase.granted - *phase.acquire_input);
+        if (policy == QueuePolicy::older_conflicts_drain || policy == QueuePolicy::oldest_live)
+          check(*y.granted < *x.fixed && *phase.granted >= *b.fixed, "younger-holder indirect drain boundary missing");
+        else check(*phase.granted < *y.fixed, "comparison z-only writer joined unintended younger-holder wait");
+      }
+      check(middle, "younger-holder case missed its middle wave");
+      candidate.shape = "unrelated-old"; candidate.points = 128;
+      auto independent = regional::run(candidate, progress_options); complete(independent);
+      const auto& old = independent.milestones.at(1).participants.at(0);
+      const auto& broad = independent.milestones.at(4).participants.at(0);
+      check(*old.granted < *broad.acquire_input && *broad.granted < *old.fixed, "unrelated older holder geometry missing");
+      unrelated_wait[policy] = *broad.granted - *broad.acquire_input;
+      candidate.shape = "held-broad"; candidate.points = 16;
+      auto held = regional::run(candidate, progress_options); complete(held);
+      const auto fixed = *held.milestones.at(1).participants.at(0).fixed;
+      bool local_progress{};
+      for (const auto& plan : held.plans) {
+        if (plan.cohort == "overlap") check(*held.milestones.at(plan.id).participants.at(0).granted >= fixed, "policy bypassed an actual broad holder");
+        if (plan.cohort == "disjoint" && held.result.completed_at.at(plan.id) < fixed) local_progress = true;
+      }
+      check(local_progress, "actual held-broad control did not expose independent progress");
+    }
+    check(middle_wait[QueuePolicy::older_conflicts_drain] > middle_wait[QueuePolicy::no_overtaking] + 30'000'000, "drain tradeoff was hidden by aggregate results");
+    check(unrelated_wait[QueuePolicy::no_overtaking] < unrelated_wait[QueuePolicy::older_conflicts_drain] &&
+      unrelated_wait[QueuePolicy::older_conflicts_drain] < unrelated_wait[QueuePolicy::oldest_live] &&
+      unrelated_wait[QueuePolicy::oldest_live] == unrelated_wait[QueuePolicy::eligible_first], "unrelated holder did not distinguish head from drain");
+    std::cout << "drain/head comparisons + actual held-broad control passed\n";
+    regional::Spec drain_replay; drain_replay.shape = "chain"; drain_replay.points = 12;
+    std::ostringstream drain_choices; Options recording; recording.seed = 19; recording.decisions_out = &drain_choices;
+    auto drained_recording = regional::run(drain_replay, recording); complete(drained_recording);
+    check(drained_recording.spec.queue_policy == QueuePolicy::older_conflicts_drain && drained_recording.policy_probes > 0, "default drain or policy work missing");
+    std::istringstream drain_log(drain_choices.str()); Options repeating; repeating.seed = 19; repeating.decisions_in = &drain_log;
+    auto drained_replay = regional::run(drain_replay, repeating); complete(drained_replay);
+    std::ostringstream expected_json, actual_json; regional::write_json(expected_json, drained_recording); regional::write_json(actual_json, drained_replay);
+    check(expected_json.str() == actual_json.str(), "drain replay changed full state, output or policy attribution");
+    drain_replay.incident = Incident::consumer_reset; drain_replay.until_ns = 1'000'000'000;
+    auto recovered_drain = regional::run(drain_replay, progress_options); complete(recovered_drain);
+    check(!recovered_drain.result.triggered_incidents.empty() && recovered_drain.result.missing_incidents.empty(), "drain consumer reset missed authored cut");
+    std::cout << "default drain replay + actual consumer reconstruction passed\n";
     return EXIT_SUCCESS;
   } catch (const std::exception& e) { std::cerr << "regional check: " << e.what() << '\n'; return EXIT_FAILURE; }
 }

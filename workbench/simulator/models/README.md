@@ -7,6 +7,12 @@ faults are assembled independently. Supplying an empty link vector creates no
 inter-host connectivity. Actors receive local options and authenticated message
 senders, never the case's future traffic, fault schedule, topology or observer.
 
+The [Orbital brief](../../../orbital/BRIEF.md) owns the intended contracts;
+the [formal models](../../../orbital/spec/README.md) examine broader authority
+and recovery bindings. This laboratory's prepared journal path and local
+coordinator records, described below, remain narrower. Formal results do not
+extend this simulator's coverage implicitly.
+
 The composition includes two shards. Each has a prepared leader, two followers
 and three consumers. Every metadata command carries its full body, is written
 by the leader, replicated and written by a follower, and reaches each consumer
@@ -16,21 +22,24 @@ at least one follower**, on distinct hosts. It is a particular 2-of-3 path, not
 a leader election or general consensus implementation. No harness supplies
 agreed epochs or durable outcomes.
 
-Transactions discover source frontiers, reserve output scopes in shard order,
-announce inclusive minima after all reservations, persist an immutable position,
-and fix each participant. A participant releases its reservation after its own
-fix; the coordinator waits for every fix before execution. Reads register bounds
-and wait for overlapping unresolved predecessors. A durable outcome resolves
-all declared outputs, including no-change/abort outcomes, before client success
-or failure. A two-shard transfer exercises this composition.
+Two-shard transfers exercise the brief's
+[transaction sequence](../../../orbital/BRIEF.md#transactions-and-contention).
+A participant releases its reservation after its own durable position fix;
+execution waits for every fix. Client completion follows resolution of all
+declared outputs, including no-change/abort outcomes.
 
-The default reservation policy preserves the brief's no-overtaking rule.
-`QueuePolicy::eligible_first` is an explicit counterfactual: an earlier blocked
-waiter no longer excludes otherwise eligible writers. Live reservations still
-exclude conflicting grants, and all other transaction rules remain the same.
-The policy is fixed for the complete run, including recovery. The
-[ordering experiment](../experiments/README.md) tests both its locality benefit
-and its loss of broad-writer progress; it is not a change to the brief.
+The provisional default is `QueuePolicy::older_conflicts_drain`: a waiting
+request protects its scopes once no older live request conflicts with it.
+Conflicting holders always exclude new grants. Original local enqueue order is
+retained through held state, and each agreed command settles the queue before
+the next command is folded. The policy is fixed for the entire lineage,
+including replay; changing interpretation of an old journal is unsupported.
+`no_overtaking`, `eligible_first` and `oldest_live` are explicit experimental
+comparisons. The [policy study](../../spikes/orbital-reservation-policy/NATIVE.md)
+retains both locality benefits and counterexamples, including indirect delay
+behind a younger WAN holder and the remaining cost of actual broad reservations.
+Native response serialization is deterministic but is not claimed identical to
+the formal queue projection's grant-event sequence.
 
 The integer-cell application owns read/write declarations, its canonical value
 bytes and the meaning of put, sum and transfer. The ordering fold treats scopes
@@ -76,6 +85,11 @@ after all participant resolutions. A finite-prefix read negative is caught while
 the skipped predecessor is still unfinished. Trace output is a separate sink;
 turning it off does not remove safety checks or fault coverage. Safety checks
 observe executions; they do not constitute a proof of progress or refinement.
+
+`orbital.policy-work` records count the naive queue implementation's conflict
+probes and scans independently of modeled CPU time. Regional results retain these
+counts and queue/live-holder maxima; consumer CPU still has a fixed per-record
+cost. Do not infer throughput improvement from reduced modeled waiting alone.
 
 `orbital.*` records use JSON details with a `bytes` hex field containing typed,
 length-bounded little-endian model values. Additional fields expose transaction,

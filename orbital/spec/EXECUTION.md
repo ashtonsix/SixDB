@@ -106,7 +106,7 @@ its actual owner rather than silently assuming it here.
 | T8 | `Transaction-chain.cfg`: `SerialReads`, `SerialOutcomes`; `Transaction-witness-replacement.cfg` returns 9 while the earlier no-effect transaction and RMW remain unresolved. Replacement must cover the opaque read dependency. |
 | T9 | `Transaction-undeclared.cfg`: `Envelope`, `JustifiedOutcome`; `Transaction-migration.cfg`: `MapTransferSafe`. C8's exact authority/migration configurations are in [JOURNAL.md](JOURNAL.md): `ScopeReopening` additionally imports into a different logical owner, activates its new map, rejects stale plans and executes new work; `ScopeRetention` preserves an outstanding old-cut view across that move. |
 | T10 | `Transaction-cancel.cfg`: `NoLocalResurrection`; `Transaction-witness-crossed-cancel.cfg` reaches cancel with a crossed reservation; `Transaction-resurrect.cfg` breaks the fence. Post-position mismatch resolves outputs in `Transaction-mismatch.cfg`. C1 supplies actual owner/driver loss, snapshot replay and the replay-drop-bound control. |
-| T11 | `Transaction-progress.cfg`: finite `Completes`; missing-resolver is a temporal control. `IndependentTransactions-basic.cfg`: `IndependentCompletes`, `RemoteStillPending`, `IndependentMeaning` require a real client commit while a genuine remote read remains withheld forever; barrier is a temporal failure and witness reaches that client result. `Reservation-{ordered-progress,eligible-starvation,eligible-narrow,ordered-bridge,eligible-bridge,broad-witness,bridge-witness}.cfg` separately checks continuing local arrivals using the shared grant predicate. Actual capacity pressure belongs to P/C7. |
+| T11 | `Transaction-progress.cfg`: finite `Completes`; missing-resolver is a temporal control. `IndependentTransactions-basic.cfg`: `IndependentCompletes`, `RemoteStillPending`, `IndependentMeaning` require a real client commit while a genuine remote read remains withheld forever; barrier is a temporal failure and witness reaches that client result. `Reservation-{ordered-progress,eligible-starvation,eligible-narrow,ordered-bridge,eligible-bridge,broad-witness,bridge-witness}.cfg` separately checks continuing local arrivals using the shared grant predicate. `reservation-cases.json` adds the revised drain rule and alternative-policy boundaries; `policy-binding-cases.json` checks its actual transaction/replay binding. Actual capacity pressure belongs to P/C7. |
 | T12 | `Transaction-three-shard.cfg` and `Transaction-witness-late-input.cfg` retain c. Core source material is explicitly unreclaimed; `Retained-late-source.cfg` checks actual exact-cut data or evidence-backed failure. `HistoricalSnapshot-{retained,missing}.cfg` consumes actual old bytes or reaches an agreed unavailable outcome at the selected cut; latest-material control breaks `ExactMaterial`, old/missing witnesses distinguish both paths. C5 supplies physical views. |
 | E1 | `Epoch-{basic,three,mismatch}.cfg`: `Deterministic` compares full semantic projections under arbitrary permitted consumer schedules. `EpochTransactionFolds-{basic,remote,mismatch,any-order,any-mismatch}.cfg`: `ClosedAgreement`, `UniqueOutputSlots`, `SerialMeaning` compare complete actual kernel state and serialized logical events. `EpochTransactionFolds-correspondence.cfg`: `ProductCorrespondence` checks the unreduced product; `EpochTransactionFolds-drop-bound.cfg` breaks agreement. |
 | E2 | `Epoch-basic.cfg`: `CorrectPrograms`, `OrderingMetadata`, `OutboxSemantics`; `Epoch-commuting.cfg` breaks independent program semantics despite compatible final deltas. Actual fold cases additionally check `SerialMeaning`. |
@@ -165,14 +165,34 @@ barrier mutant fails that temporal requirement. This is useful transaction work,
 not a heartbeat, and it does not claim progress for the genuinely dependent work.
 
 Finite workload drain does not establish fairness under continuing arrivals.
-`ReservationPolicies` uses the same grant predicate on a bounded cyclic local
-queue projection. Ordered no-overtaking gives broad-request progress while narrow
-requests keep completing; an eligible-first alternative permits a real starvation
-cycle. The bridge cases expose the accompanying interference cost and independent
-progress. Slots denote fresh local requests only after local release; no full
-transaction identity, history, delayed-message or end-to-end fairness refinement
-is claimed by this separate policy model. Its release/grant/arrival fairness is
-explicit. The finite transaction families do not silently inherit this result.
+The maintained `ReservationKernel` preserves original enqueue order through both
+waiting and holding. A waiter becomes a barrier only after all older conflicting
+requests have locally fixed or cancelled. `TxKernel` closes eligible grants in
+that order after each agreed record; replay uses exactly the same fold. Physical
+delivery can lag without changing the chosen grants.
+
+The [33 policy checks](reservation-cases.json) exercise continuing narrow arrivals,
+original and chained waiter bridges, an unrelated older holder, the younger-WAN
+drain boundary, replay/duplicate/cancellation histories and common-order
+acquisition on two shards. Weak fairness applies to actual arrivals, releases and
+service, not an assumed eventual broad grant. Eligible-first has a starvation
+cycle; protecting only the oldest live request makes an unrelated old holder
+suppress useful protection. Drain requires a finite older conflict prefix and
+eventual release of that prefix and any already-held younger conflicts. The cyclic
+local slots are fresh requests after local release, not recycled full transaction
+identities. These finite checks support that conditional argument rather than an
+unbounded full-protocol theorem.
+
+`PolicyTxBinding` adds actual Tx/DurableLog composition: X retains its local group
+while a real remote request is delayed; B queues broadly behind it; C must commit
+on B's other scope before X's remote request is released. An owner-cache-loss cut
+recovers through a real barrier snapshot. Full cached replies and logical outputs
+match replay of the locally delivered prefix, and an independent oracle checks
+client value and installed version. Ordered is a deliberate stalled comparator;
+deferred grants, missing cached grants and missing replayed grants fail separate
+properties. The authored service history complements the wider transaction/epoch
+families. The seven older `ReservationPolicies` checks retain their explicitly
+ordered/eligible policies as historical controls.
 
 ## Joined restoration and external effects
 

@@ -6,7 +6,14 @@ between packet receipt and callback delivery, and multiple durable retention
 obligations sharing finite resources. Costs are authored nanoseconds and bytes.
 The comparisons test mechanisms; they are not production latency estimates.
 
-Captured on 2026-09-27:
+The current provisional default is older-conflicts-drain. The
+[420-history policy study](../../spikes/orbital-reservation-policy/NATIVE.md)
+compares it with ordered, eligible-first and oldest-live admission, including
+its younger-WAN regression and operation-count overhead. `regional_main` accepts
+`--policy drain|ordered|eligible|head`; policy stays fixed through replay.
+
+The following captures used the explicitly ordered historical baseline unless
+an eligible-first comparison is named (2026-09-27):
 
 | Comparison | Histories | Completed / offered | Unfinished |
 | --- | ---: | ---: | ---: |
@@ -31,7 +38,7 @@ hosts. One European client retains and retries all offers.
 
 The decisive case is a chain of reservation conflicts. The WAN transaction holds
 key 0. An earlier broad writer requests keys 0/1/2 and waits. A later small writer
-needs only key 2. The current rule prevents it from overtaking the broad waiter,
+needs only key 2. The historical ordered rule prevents it from overtaking the broad waiter,
 so the delay spreads beyond the WAN transaction's own coverage. Key 3 is a separate
 control. A second control changes the broad writer to keys 1/2/99: the same put,
 arrival, operation count and declaration width, cutting only its connection to the
@@ -73,8 +80,9 @@ The [84-history comparison](../evidence/ordering-v1/ordering/selected.json) chan
 one rule: visit waiters in agreed order and grant an entire local group whenever
 no **live reservation** conflicts. A blocked waiter no longer excludes otherwise
 eligible writers. Canonical shard order, position assignment, local release,
-pending reads and publication stay unchanged. The default remains no overtaking;
-`--eligible-first` deliberately gives up that guarantee.
+pending reads and publication stay unchanged. These historical cases explicitly
+select ordered or eligible-first; `--eligible-first` remains a compatibility alias
+for the latter, and the current provisional default is drain.
 
 This restores the bridge-connected key-2 writer from 70.338 ms to 0.104 ms in the
 matched case above. The counterexample is also executable: two initial holders
@@ -99,8 +107,9 @@ All 84 histories have no reported safety violations or dispatch-budget exhaustio
 They contain 2,988 offers: 2,913 complete and 75 remain unfinished in six short-window
 cases. The experiment establishes a locality/fairness tradeoff, not a replacement
 recommendation. Removing waiter exclusion alone is insufficient if broad work
-must make dependable progress under continuing narrow traffic. No brief change
-is promoted from this comparison.
+must make dependable progress under continuing narrow traffic. This earlier two-policy comparison did not promote a replacement; the later
+[four-policy study](../../spikes/orbital-reservation-policy/NATIVE.md) informed the
+provisional drain default.
 
 ### Retry pressure needs a common observation window
 

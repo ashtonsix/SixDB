@@ -15,27 +15,31 @@ Tx == IF Bridge THEN 0..4 ELSE 0..2
 Writes == [t \in Tx |-> CASE t=0 -> {1,2}
  [] t=1 -> {1} [] t=2 -> {2} [] t=3 -> {3} [] OTHER -> {1}]
 P == [transactions |-> Tx,writes |-> Writes,home |-> [k \in 1..3 |-> 1],
-      bug |-> IF Policy="eligible" THEN "overtake" ELSE "none"]
-VARIABLES queue,held,finished,ticks
-vars == <<queue,held,finished,ticks>>
+      bug |-> "none",queuePolicy |-> Policy]
+VARIABLES queue,held,finished,ticks,order
+vars == <<queue,held,finished,ticks,order>>
 Init == /\ queue=IF Bridge THEN <<0,2,3,4>> ELSE <<0>>
         /\ held=IF Bridge THEN {1} ELSE Narrow
+        /\ order=(IF Bridge THEN <<1>> ELSE <<1,2>>) \o queue
         /\ finished={} /\ ticks=[t \in Narrow |-> FALSE]
 Projected == [foldUp |-> [a \in {1} |-> TRUE],queue |-> [a \in {1} |-> queue],
- ticket |-> [t \in Tx |-> [a \in {1} |-> IF t \in held THEN "held" ELSE "none"]]]
+ requestOrder |-> [a \in {1} |-> order],
+ ticket |-> [t \in Tx |-> [a \in {1} |-> IF t \in held THEN "held" ELSE IF t \in Elements(queue) THEN "queued" ELSE "none"]]]
 Eligible == {t \in Elements(queue):K!CanGrant(P,Projected,t,1)}
 First == CHOOSE t \in Eligible: \A u \in Eligible:K!At(queue,t)<=K!At(queue,u)
 Grant == /\ Eligible#{}
          /\ held'=held \cup {First} /\ queue'=K!Remove(queue,First)
-         /\ UNCHANGED <<finished,ticks>>
+         /\ UNCHANGED <<finished,ticks,order>>
 Release(t) == /\ t \in held /\ ~(Bridge /\ t=1)
               /\ held'=held \ {t}
+              /\ order'=K!Remove(order,t)
               /\ finished'=finished \cup {t}
               /\ ticks'=IF t \in Narrow THEN [ticks EXCEPT ![t]=~@] ELSE ticks
               /\ UNCHANGED queue
 Arrive(t) == /\ ~Bridge /\ t \in Narrow
              /\ t \notin held /\ t \notin Elements(queue)
-             /\ queue'=Append(queue,t) /\ UNCHANGED <<held,finished,ticks>>
+             /\ queue'=Append(queue,t) /\ order'=Append(order,t)
+             /\ UNCHANGED <<held,finished,ticks>>
 Terminal == Bridge /\ Eligible={} /\ held={1} /\ UNCHANGED vars
 Next == Grant \/ (\E t \in Tx:Release(t)) \/ (\E t \in Narrow:Arrive(t)) \/ Terminal
 Spec == Init /\ [][Next]_vars /\ WF_vars(Grant)

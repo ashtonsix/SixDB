@@ -55,6 +55,15 @@ class ClientChecks(unittest.TestCase):
             self.assertEqual(cohort["failed"] + cohort["unfinished"], 0)
         self.assertEqual(sum(c["offered"] for c in plain.result["cohorts"].values()), 4)
 
+    def test_queue_policy_is_explicit_and_default_is_drain(self):
+        self.assertEqual(self.traced.result["queue_policy"], "older-conflicts-drain")
+        for policy in ("no-overtaking", "eligible-first", "oldest-live"):
+            trial = campaign.evaluate(BINARY, dict(self.case, **{"queue-policy": policy}))
+            self.assertEqual(trial.result["queue_policy"], policy)
+            self.assertFalse(trial.result["violations"])
+        with self.assertRaisesRegex(RuntimeError, "unknown choice"):
+            campaign.evaluate(BINARY, dict(self.case, **{"queue-policy": "unknown"}))
+
     def test_exact_choice_replay_reproduces_json_and_causal_trace(self):
         replay_path = self.directory / "replayed.jsonl"
         replayed = campaign.evaluate(BINARY, self.case, trace=replay_path, replay=self.choices_path)

@@ -259,7 +259,8 @@ struct Fold {
   std::map<Scope, std::vector<std::pair<Position, Bytes>>> versions;
   std::map<std::uint64_t, Request> requests;
   std::map<std::uint64_t, Response> replies;
-  std::vector<std::uint64_t> waiting, reads;
+  std::vector<std::uint64_t> waiting, reads, live_order;
+  std::uint64_t policy_probes{}, holder_visits{}, waiter_visits{}, barrier_visits{}, settle_calls{}, max_waiting{}, max_live{}, max_holders{};
   std::map<Tx, ReadContext> contexts;
   explicit Fold(std::uint32_t s, bool skip, QueuePolicy policy) : shard(s), skip_pending(skip), queue_policy(policy) {
     for (const auto& [scope, value] : initial()) if (shard_of(scope) == shard) versions[scope].push_back({{}, value});
@@ -282,15 +283,44 @@ struct Fold {
       require(chosen.has_value(), "no retained value at cut"); out[k] = chosen->second; }
     return out;
   }
+  bool conflict(const Scopes& a, const Scopes& b) { ++policy_probes; return intersects(a, b); }
+  // Queued requests retain original age while held; alternate policies are
+  // experimental controls. No policy change is supported within a lineage.
+  // Only a durable local fix removes them; no holder is revoked.
+  bool barrier(std::uint64_t waiter) {
+    if (queue_policy == QueuePolicy::no_overtaking) return true;
+    if (queue_policy == QueuePolicy::eligible_first) return false;
+    if (queue_policy == QueuePolicy::oldest_live) return !live_order.empty() && live_order.front() == waiter;
+    const auto& coverage = requests.at(waiter).writes;
+    for (auto older : live_order) {
+      ++barrier_visits;
+      if (older == waiter) return true;
+      if (conflict(requests.at(older).writes, coverage)) return false;
+    }
+    throw std::logic_error("waiting request missing from live order");
+  }
   void settle() {
-    Scopes earlier; std::vector<std::uint64_t> still;
+    ++settle_calls; max_waiting = std::max<std::uint64_t>(max_waiting, waiting.size());
+    max_live = std::max<std::uint64_t>(max_live, live_order.size());
+    std::vector<std::uint64_t> still;
+    // Granting adds a holder; it cannot enable an earlier blocked waiter.
+    // This forward scan therefore closes grants before the next agreed record.
     for (auto id : waiting) {
-      const auto& r = requests.at(id); bool blocked = queue_policy == QueuePolicy::no_overtaking && intersects(earlier, r.writes);
-      for (const auto& [tx, t] : tickets) if (tx != r.tx && !t.released && !t.resolved && intersects(t.writes, r.writes)) blocked = true;
-      if (blocked) { still.push_back(id); earlier.insert(earlier.end(), r.writes.begin(), r.writes.end()); }
+      const auto& r = requests.at(id); bool blocked = false;
+      for (const auto& [tx, t] : tickets) {
+        ++holder_visits;
+        if (tx != r.tx && !t.released && !t.resolved && conflict(t.writes, r.writes)) { blocked = true; break; }
+      }
+      if (!blocked && queue_policy != QueuePolicy::eligible_first) for (auto older : still) {
+        ++waiter_visits;
+        if (conflict(requests.at(older).writes, r.writes) && barrier(older)) { blocked = true; break; }
+      }
+      if (blocked) still.push_back(id);
       else { tickets[r.tx] = Ticket{r.writes, {}, {}, false, false}; replies[id] = Response{r, {}, {}}; }
     }
     waiting = std::move(still);
+    std::uint64_t holders{}; for (const auto& [tx, ticket] : tickets) if (!ticket.released && !ticket.resolved) ++holders;
+    max_holders = std::max(max_holders, holders);
     for (auto id : reads) if (!replies.contains(id)) { const auto& r = requests.at(id); auto v = observe(r.tx, r.cut, r.reads); if (v) replies[id] = Response{r, {}, std::move(*v)}; }
   }
   std::vector<Response> apply(const Request& r) {
@@ -300,14 +330,14 @@ struct Fold {
     requests[id] = r;
     Response out{r, {}, {}};
     switch (r.command) {
-      case Command::acquire: waiting.push_back(id); break;
+      case Command::acquire: waiting.push_back(id); live_order.push_back(id); break;
       case Command::floor: out.minimum = floor(r.reads); replies[id] = out; break;
       case Command::announce: {
         auto& t = tickets.at(r.tx); auto after = floor(t.writes);
         for (auto k : t.writes) after = std::max(after, bounds[k]);
         t.minimum = Position{after.round + 1, 0}; out.minimum = *t.minimum; replies[id] = out; break;
       }
-      case Command::fix: { auto& t = tickets.at(r.tx); require(t.minimum && r.cut >= *t.minimum, "position below announced minimum"); t.cut = r.cut; t.released = true; replies[id] = out; break; }
+      case Command::fix: { auto& t = tickets.at(r.tx); require(t.minimum && r.cut >= *t.minimum, "position below announced minimum"); t.cut = r.cut; t.released = true; std::erase_if(live_order, [&](auto acquire) { return requests.at(acquire).tx == r.tx; }); replies[id] = out; break; }
       case Command::read: for (auto k : r.reads) bounds[k] = std::max(bounds[k], r.cut); reads.push_back(id); break;
       case Command::register_context: {
         require(tickets.at(r.tx).cut == r.context.cut, "context before fixed position");
@@ -332,6 +362,7 @@ struct Fold {
     e.number(replies.size()); for (const auto& [id, r] : replies) { e.number(id); put(e, r); }
     e.number(waiting.size()); for (auto id : waiting) e.number(id);
     e.number(reads.size()); for (auto id : reads) e.number(id);
+    e.number(live_order.size()); for (auto id : live_order) e.number(id);
     e.number(contexts.size()); for (const auto& [tx, c] : contexts) { e.number(tx); put(e, c); }
     return e.bytes;
   }
@@ -465,7 +496,10 @@ struct Consumer final : Actor {
   void apply(Context& ctx) {
     auto index = applied + 1; const auto& b = epochs.at(index).batch;
     require(b.previous == (index == 1 ? 0 : identity(epochs.at(index - 1).batch)), "consumer history gap/fork");
+    auto before_probes = fold.policy_probes; auto before_settles = fold.settle_calls;
+    auto before_holders=fold.holder_visits, before_waiters=fold.waiter_visits, before_barriers=fold.barrier_visits;
     auto outputs = fold.apply(b.request);
+    ctx.note("orbital.policy-work", "{\"shard\":" + std::to_string(shard) + ",\"copy\":" + std::to_string(copy) + ",\"epoch\":" + std::to_string(index) + ",\"probes\":" + std::to_string(fold.policy_probes-before_probes) + ",\"settles\":" + std::to_string(fold.settle_calls-before_settles) + ",\"holder_visits\":" + std::to_string(fold.holder_visits-before_holders) + ",\"waiter_visits\":" + std::to_string(fold.waiter_visits-before_waiters) + ",\"barrier_visits\":" + std::to_string(fold.barrier_visits-before_barriers) + ",\"max_waiting\":" + std::to_string(fold.max_waiting) + ",\"max_live\":" + std::to_string(fold.max_live) + ",\"max_holders\":" + std::to_string(fold.max_holders) + '}');
     note(ctx, "orbital.applied", encoded(b.request), ",\"shard\":" + std::to_string(shard) + ",\"copy\":" + std::to_string(copy) + ",\"epoch\":" + std::to_string(index) + ",\"tx\":" + std::to_string(b.request.tx) + ",\"command\":" + quote(name(b.request.command)) + ",\"position\":" + json(b.request.cut) + ",\"effects\":" + json(b.request.effects));
     Encoder emitted;
     for (const auto& out : outputs) {
@@ -1016,7 +1050,7 @@ std::vector<Transaction> transactions(const Case& c) {
   return out;
 }
 std::string_view name(Incident i) { constexpr std::array names{"none", "one-follower", "quorum-pause", "consumer-reset", "coordinator-reset", "checker-reset"}; return names.at(static_cast<unsigned>(i)); }
-std::string_view name(QueuePolicy p) { constexpr std::array names{"no-overtaking", "eligible-first"}; return names.at(static_cast<unsigned>(p)); }
+std::string_view name(QueuePolicy p) { constexpr std::array names{"no-overtaking", "eligible-first", "older-conflicts-drain", "oldest-live"}; return names.at(static_cast<unsigned>(p)); }
 std::string_view name(Negative n) { constexpr std::array names{"none", "skip-pending", "skip-verification", "corrupt-checker"}; return names.at(static_cast<unsigned>(n)); }
 Experiment::Experiment(std::shared_ptr<State> state) : state_(std::move(state)) {}
 Experiment::~Experiment() = default;
@@ -1024,7 +1058,7 @@ Experiment::Experiment(Experiment&&) noexcept = default;
 Experiment& Experiment::operator=(Experiment&&) noexcept = default;
 
 Experiment assemble(Simulation& simulation, const Case& config, std::ostream* trace) {
-  require(config.queue_policy == QueuePolicy::no_overtaking || config.queue_policy == QueuePolicy::eligible_first, "unknown reservation queue policy");
+  require(config.queue_policy == QueuePolicy::no_overtaking || config.queue_policy == QueuePolicy::eligible_first || config.queue_policy == QueuePolicy::older_conflicts_drain || config.queue_policy == QueuePolicy::oldest_live, "unknown reservation queue policy");
   require(config.retry_ns > 0 && config.until_ns > 0, "positive retry and observation horizon required");
   auto ids = roles(); auto state = std::make_shared<Experiment::State>(config);
   std::set<ActorId> valid(ids.begin(), ids.end());
@@ -1104,7 +1138,7 @@ Experiment assemble(Simulation& simulation, const Case& config, std::ostream* tr
 }
 
 Result Experiment::result(const Simulation& simulation, Run execution) const {
-  Result out; out.name = state_->config.name; out.execution = execution; out.observed_until_ns = simulation.now();
+  Result out; out.name = state_->config.name; out.queue_policy = state_->config.queue_policy; out.execution = execution; out.observed_until_ns = simulation.now();
   out.violations.assign(state_->errors.begin(), state_->errors.end()); out.triggered_incidents.assign(state_->triggered.begin(), state_->triggered.end());
   if (state_->config.incident != Incident::none && !state_->triggered.contains(std::string(name(state_->config.incident)))) out.missing_incidents.emplace_back(name(state_->config.incident));
   for (const auto& [tx, p] : state_->authored) {
@@ -1129,7 +1163,7 @@ Result run_case(const Case& config, Options options, std::ostream* trace) {
 }
 void write_json(std::ostream& out, const Result& r) {
   auto strings = [&](const std::vector<std::string>& list) { out << '['; bool comma{}; for (const auto& s : list) { if (comma) out << ','; comma = true; out << quote(s); } out << ']'; };
-  out << "{\"name\":" << quote(r.name) << ",\"cohorts\":{"; bool comma{};
+  out << "{\"name\":" << quote(r.name) << ",\"queue_policy\":" << quote(name(r.queue_policy)) << ",\"cohorts\":{"; bool comma{};
   for (const auto& [name, c] : r.cohorts) { if (comma) out << ','; comma = true; out << quote(name) << ":{\"offered\":" << c.offered << ",\"arrived\":" << c.arrived << ",\"not_yet_offered\":" << c.not_yet_offered << ",\"completed\":" << c.completed << ",\"failed\":" << c.failed << ",\"unfinished\":" << c.unfinished << ",\"max_latency_ns\":" << c.max_latency_ns << '}'; }
   out << "},\"violations\":"; strings(r.violations); out << ",\"triggered_incidents\":"; strings(r.triggered_incidents); out << ",\"missing_incidents\":"; strings(r.missing_incidents);
   out << ",\"completed_at\":{"; comma = false; for (const auto& [tx, time] : r.completed_at) { if (comma) out << ','; comma = true; out << quote(std::to_string(tx)) << ':' << time; }

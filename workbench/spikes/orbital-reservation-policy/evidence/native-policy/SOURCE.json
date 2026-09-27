@@ -1,0 +1,42 @@
+{
+  "format": 1,
+  "study": "Native reservation policy comparison, frozen corrected v2",
+  "created_unix_ns": 1790540417058666064,
+  "original_path": "build/orbital-design-study/native",
+  "source_digest": "e1fd9b64a5375125c5e92098d723c7b2d34337048c6c00ba924d20044c6f5586",
+  "source_commit": "e5ce81422a513826eba9e3949e70621ec8c79357",
+  "source_capture": "source-v2.capture.json",
+  "regional_binary": "final-build-v2/workbench/simulator/simulator_regional_run",
+  "regional_binary_sha256": "0a797e09ec67331ebc715989eba85c6dacbdc6ec15609850b7ab6f25b9388742",
+  "held_broad_provenance": "held-broad-provenance.json",
+  "results": {
+    "main": {
+      "directory": "campaign-v2",
+      "histories": 360,
+      "recorded_scheduler_choices": true
+    },
+    "long": {
+      "directory": "long-stream-v2",
+      "histories": 24,
+      "recorded_scheduler_choices": true
+    },
+    "held": {
+      "file": "held-broad-v2.jsonl",
+      "histories": 36,
+      "recorded_scheduler_choices": false,
+      "reproduction": "exact executable, wrapper, seed, source, build argv and linked-library hashes retained"
+    }
+  },
+  "finding_companions_sha256": {
+    "NATIVE.md": "fad49a493c77c297602e1465f77cbdd8e55cb96ad330d3d2496bf30d3ab813f5",
+    "native-selected.json": "b1406bd37a6e5765b706395ffa18bce3fac99498bb63572de417c0d6d485379a",
+    "native-provenance.json": "efcb1bd53c68372473baa5f61ae2324c760302951458f2ad49717cf26ebb2896",
+    "native.py": "9b481e50a542cdce5763254a35f26de2a9a75ba8a749026cb41c75898fdab047"
+  },
+  "superseded_v1": {
+    "rows": 110,
+    "source_digest": "f695b164c95468edac18ac603c5b060b1c048d80fdfec15cd10ca44314d46f58",
+    "selection": "partial results, correction rationale, source receipt, original patch, exact regional.cpp overlay; per-case choice streams and old binary omitted"
+  },
+  "excluded": "Compiler object files/caches; duplicate baseline/work snapshots; v1 case bulk. Originals remain untouched."
+}

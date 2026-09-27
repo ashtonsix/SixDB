@@ -2,6 +2,7 @@
 EXTENDS Contracts, Integers
 CONSTANT TxNone
 Program == INSTANCE TxProgram
+Reservations == INSTANCE ReservationKernel
 
 (* Shared logical state machine. Commands enter only through JournalRecord;
    receipt of a submission is not admission. Every driver guard uses its own
@@ -99,12 +100,18 @@ LocalFloor(p,s,t,a) ==
        {IF s.fixed[u][a]>0 THEN s.fixed[u][a] ELSE s.minimum[u][a] :
           u \in {v \in p.transactions \ {t} : Conflict(p,t,v,a)}})
 Holds(s,t,a) == s.ticket[t][a] \in {"held","announced"}
+ReservationPolicy(p) ==
+  IF "queuePolicy" \in DOMAIN p THEN p.queuePolicy
+  ELSE IF p.bug="overtake" THEN "eligible" ELSE "drain"
+ReservationState(p,s,a) ==
+  [order |-> SelectSeq(s.requestOrder[a],LAMBDA t:
+                s.ticket[t][a]="queued" \/ Holds(s,t,a)),
+   held |-> {t \in p.transactions:Holds(s,t,a)}]
+ReservationWrites(p,a) == [t \in p.transactions |-> LocalWrites(p,t,a)]
 CanGrant(p,s,t,a) ==
   /\ s.foldUp[a]
-  /\ t \in Elements(s.queue[a])
-  /\ \A u \in p.transactions \ {t} : Holds(s,u,a) => ~Conflict(p,t,u,a)
-  /\ p.bug="overtake" \/
-       \A i \in 1..(At(s.queue[a],t)-1) : ~Conflict(p,t,s.queue[a][i],a)
+  /\ Reservations!CanGrant(ReservationPolicy(p),ReservationWrites(p,a),
+                           ReservationState(p,s,a),t)
 
 (* Granting is a deterministic closure of a delivered durable input. A local
    enabled queue transition is independent of application execution. *)
@@ -113,6 +120,16 @@ Grant(p,s,t,a) ==
     [s EXCEPT !.queue[a]=Remove(@,t), !.ticket[t][a]="held",
               !.grantOrder[a]=Append(@,t)],
     <<Fact(t,"grant",a,TRUE,Fold(a))>>)
+
+RECURSIVE DrainGrants(_,_,_)
+DrainGrants(p,s,a) ==
+  LET enabled=={t \in p.transactions:CanGrant(p,s,t,a)}
+  IN IF enabled={} THEN [next |-> s,emissions |-> <<>>]
+     ELSE LET t==Reservations!First(ReservationPolicy(p),ReservationWrites(p,a),
+                                    ReservationState(p,s,a))
+              step==Grant(p,s,t,a)
+              rest==DrainGrants(p,step.next,a)
+          IN [next |-> rest.next,emissions |-> step.emissions \o rest.emissions]
 
 WriteEffect(p,s,t) ==
   CASE p.program[t]="put" -> [k \in p.writes[t] |-> p.value[t]]
@@ -158,7 +175,7 @@ ReadValue(p,s,t,k) ==
 
 (* Durable command application; each branch uses only the target owner's
    logical state plus the immutable command/evidence it has received. *)
-Apply(p,s,c) ==
+ApplyCommand(p,s,c) ==
   LET t==c.body.tx k==c.body.key d==c.body.data a==c.owner
   IN CASE c.kind="begin" ->
        [next |-> [s EXCEPT !.begun=@ \cup {t}, !.profiles[t]=
@@ -247,6 +264,14 @@ Apply(p,s,c) ==
         emissions |-> <<Fact(t,"installed",a,TRUE,Fold(a))>>]
   [] OTHER -> [next |-> s, emissions |-> <<>>]
 
+(* A chosen local record closes its reservation queue before a later record
+   can affect the logical order. Physical grant delivery remains independent.
+   Normal delivery, direct compositions and replay share this same boundary. *)
+Apply(p,s,c) ==
+  LET applied==ApplyCommand(p,s,c)
+      grants==DrainGrants(p,applied.next,c.owner)
+  IN [next |-> grants.next,emissions |-> applied.emissions \o grants.emissions]
+
 CommitAndFold(p,s,c) ==
   LET old==c.id \in DOMAIN s.replies
   IN IF c.id \in s.recorded
@@ -263,14 +288,6 @@ CommitAndFold(p,s,c) ==
                  [step.next EXCEPT !.recorded=@ \cup {c.id}, !.commandClash=@ \/ (c.id \in DOMAIN s.commands /\ s.commands[c.id]#c), !.commands=@ @@ (c.id :> c),
                     !.replies=@ @@ (c.id :> step.emissions)],step.emissions)}
 
-RECURSIVE DrainGrants(_,_,_)
-DrainGrants(p,s,a) ==
-  LET enabled=={t \in p.transactions:CanGrant(p,s,t,a)}
-  IN IF enabled={} THEN [next |-> s,emissions |-> <<>>]
-     ELSE LET t==CHOOSE x \in enabled: \A y \in enabled:x<=y
-              step==Grant(p,s,t,a)
-              rest==DrainGrants(p,step.next,a)
-          IN [next |-> rest.next,emissions |-> step.emissions \o rest.emissions]
 
 (* Erase a replaced logical owner's application cache. The provider's durable
    prefix and other owners remain. Snapshot replay must rebuild every erased
@@ -307,9 +324,8 @@ ReplayCommands(p,s,commands) ==
   ELSE LET first==IF p.bug="replay-drop-bound" /\ Head(commands).kind="bound"
                   THEN Transition("tx.drop-replayed-bound",s,<<>>)
                   ELSE CHOOSE step \in CommitAndFold(p,s,Head(commands)):TRUE
-           grants==DrainGrants(p,first.next,Head(commands).owner)
-           rest==ReplayCommands(p,grants.next,Tail(commands))
-       IN [next |-> rest.next,emissions |-> first.emissions \o grants.emissions \o rest.emissions]
+           rest==ReplayCommands(p,first.next,Tail(commands))
+       IN [next |-> rest.next,emissions |-> first.emissions \o rest.emissions]
 
 ExecutionReady(p,s,t) ==
   /\ Knows(s,t,"position",0)
@@ -460,7 +476,6 @@ CrashActions(p,s) ==
 Actions(p,s) ==
   UNION {SubmitActions(p,s,t) \cup ReadActions(p,s,t) \cup ComputeActions(p,s,t) \cup
          ReportActions(p,s,t) \cup PublishActions(p,s,t):t \in {x \in p.transactions:s.up[x]}}
-  \cup UNION {{Grant(p,s,t,a): a \in {x \in p.shards:CanGrant(p,s,t,x)}} : t \in p.transactions}
   \cup CrashActions(p,s)
   \cup {Transition("tx.driver-recover",[s EXCEPT !.up[t]=TRUE],
           [a \in 1..Cardinality(p.shards) |-> Event(<<"recover",t,s.incarnation[t],a>>,

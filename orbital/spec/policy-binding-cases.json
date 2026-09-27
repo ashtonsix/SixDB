@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "PolicyTxBinding",
+      "module": "PolicyTxBinding",
+      "config": "configs/PolicyTxBinding.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "PolicyTxBinding-recovery",
+      "module": "PolicyTxBinding",
+      "config": "configs/PolicyTxBinding-recovery.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "PolicyTxBinding-ordered",
+      "module": "PolicyTxBinding",
+      "config": "configs/PolicyTxBinding-ordered.cfg",
+      "tier": "quick",
+      "expect": "temporal:IndependentCompletes"
+    },
+    {
+      "name": "PolicyTxBinding-deferred",
+      "module": "PolicyTxBinding",
+      "config": "configs/PolicyTxBinding-deferred.cfg",
+      "tier": "quick",
+      "expect": "invariant:Closed"
+    },
+    {
+      "name": "PolicyTxBinding-reply-cache",
+      "module": "PolicyTxBinding",
+      "config": "configs/PolicyTxBinding-reply-cache.cfg",
+      "tier": "quick",
+      "expect": "invariant:CacheAgreement"
+    },
+    {
+      "name": "PolicyTxBinding-lost-replay-grant",
+      "module": "PolicyTxBinding",
+      "config": "configs/PolicyTxBinding-lost-replay-grant.cfg",
+      "tier": "quick",
+      "expect": "invariant:ReplayOutput"
+    },
+    {
+      "name": "PolicyTxBinding-witness",
+      "module": "PolicyTxBinding",
+      "config": "configs/PolicyTxBinding-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoBypass",
+      "witness": "NoBypass"
+    },
+    {
+      "name": "PolicyTxBinding-recovery-witness",
+      "module": "PolicyTxBinding",
+      "config": "configs/PolicyTxBinding-recovery-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoRecoveredCompletion",
+      "witness": "NoRecoveredCompletion"
+    }
+  ]
+}

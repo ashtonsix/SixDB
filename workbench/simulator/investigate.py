@@ -24,6 +24,14 @@ BINARIES = {
 
 
 def cases(suite):
+    # These named grids reproduce the historical ordered-policy comparisons.
+    for case in historical_cases(suite):
+        if suite in {"regional", "ordering"}:
+            case["policy"] = "eligible" if case.pop("eligible-first", False) else "ordered"
+        yield case
+
+
+def historical_cases(suite):
     if suite == "regional":
         # A WAN transaction does not move local replicas across the ocean.
         # Keep the local offered population identical in every matched pair.

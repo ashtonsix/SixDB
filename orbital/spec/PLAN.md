@@ -127,6 +127,18 @@ they do not edit either brief by implication.
 
 The bindings also settle these less visible choices:
 
+**Reservation policy revision.** The post-campaign design comparison selects
+original enqueue order with protection after older conflicts release. Waiting or
+held requests retain their local age until durable fixation or cancellation.
+A waiter excludes younger conflicts only after its older live conflicts are gone;
+actual holders always exclude conflicts. Every agreed local record performs the
+canonical grant closure before exposing its state and outputs. Replay preserves
+that interpretation, live order and full reply evidence. Continuing-arrival
+progress, the admitted-younger-WAN boundary and the actual Tx/journal binding are
+additional obligations; the previous ordered/eligible projection remains a
+counterfactual comparison. No in-place change of old journal interpretation is
+assumed.
+
 **Scope changes.** Plans bind a versioned scope/authority map before acquiring
 any reservations. Migration closes enrollment of new plans touching the moved
 scopes, drains enrolled old plans, transfers versions, reader floors and retention

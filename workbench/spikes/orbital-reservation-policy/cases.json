@@ -1,0 +1,460 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "cycle-ordered",
+      "module": "ReservationCycle",
+      "config": "configs/cycle-ordered.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "cycle-ordered-unrelated",
+      "module": "ReservationCycle",
+      "config": "configs/cycle-ordered-unrelated.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "bridge-ordered",
+      "module": "ReservationShapes",
+      "config": "configs/bridge-ordered.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "bridge-ordered-blocks",
+      "module": "ReservationShapes",
+      "config": "configs/bridge-ordered-blocks.cfg",
+      "tier": "quick",
+      "expect": "temporal:Bypass"
+    },
+    {
+      "name": "chain-ordered",
+      "module": "ReservationShapes",
+      "config": "configs/chain-ordered.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "chain-ordered-blocks",
+      "module": "ReservationShapes",
+      "config": "configs/chain-ordered-blocks.cfg",
+      "tier": "quick",
+      "expect": "temporal:Bypass"
+    },
+    {
+      "name": "cancel-ordered",
+      "module": "ReservationShapes",
+      "config": "configs/cancel-ordered.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "replay-delay-ordered",
+      "module": "ReservationReplay",
+      "config": "configs/replay-delay-ordered.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "replay-compete-ordered",
+      "module": "ReservationReplay",
+      "config": "configs/replay-compete-ordered.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "cycle-eligible",
+      "module": "ReservationCycle",
+      "config": "configs/cycle-eligible.cfg",
+      "tier": "quick",
+      "expect": "temporal:BroadProgress"
+    },
+    {
+      "name": "cycle-eligible-unrelated",
+      "module": "ReservationCycle",
+      "config": "configs/cycle-eligible-unrelated.cfg",
+      "tier": "quick",
+      "expect": "temporal:BroadProgress"
+    },
+    {
+      "name": "bridge-eligible",
+      "module": "ReservationShapes",
+      "config": "configs/bridge-eligible.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "chain-eligible",
+      "module": "ReservationShapes",
+      "config": "configs/chain-eligible.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "cancel-eligible",
+      "module": "ReservationShapes",
+      "config": "configs/cancel-eligible.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "replay-delay-eligible",
+      "module": "ReservationReplay",
+      "config": "configs/replay-delay-eligible.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "replay-compete-eligible",
+      "module": "ReservationReplay",
+      "config": "configs/replay-compete-eligible.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "deferred-eligible",
+      "module": "ReservationReplay",
+      "config": "configs/deferred-eligible.cfg",
+      "tier": "quick",
+      "expect": "invariant:Deterministic"
+    },
+    {
+      "name": "id-order-eligible",
+      "module": "ReservationReplay",
+      "config": "configs/id-order-eligible.cfg",
+      "tier": "quick",
+      "expect": "invariant:Deterministic"
+    },
+    {
+      "name": "cycle-drain",
+      "module": "ReservationCycle",
+      "config": "configs/cycle-drain.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "cycle-drain-unrelated",
+      "module": "ReservationCycle",
+      "config": "configs/cycle-drain-unrelated.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "bridge-drain",
+      "module": "ReservationShapes",
+      "config": "configs/bridge-drain.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "chain-drain",
+      "module": "ReservationShapes",
+      "config": "configs/chain-drain.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "cancel-drain",
+      "module": "ReservationShapes",
+      "config": "configs/cancel-drain.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "replay-delay-drain",
+      "module": "ReservationReplay",
+      "config": "configs/replay-delay-drain.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "replay-compete-drain",
+      "module": "ReservationReplay",
+      "config": "configs/replay-compete-drain.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "deferred-drain",
+      "module": "ReservationReplay",
+      "config": "configs/deferred-drain.cfg",
+      "tier": "quick",
+      "expect": "invariant:Deterministic"
+    },
+    {
+      "name": "id-order-drain",
+      "module": "ReservationReplay",
+      "config": "configs/id-order-drain.cfg",
+      "tier": "quick",
+      "expect": "invariant:Deterministic"
+    },
+    {
+      "name": "cycle-head",
+      "module": "ReservationCycle",
+      "config": "configs/cycle-head.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "cycle-head-unrelated",
+      "module": "ReservationCycle",
+      "config": "configs/cycle-head-unrelated.cfg",
+      "tier": "quick",
+      "expect": "temporal:BroadProgress"
+    },
+    {
+      "name": "bridge-head",
+      "module": "ReservationShapes",
+      "config": "configs/bridge-head.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "chain-head",
+      "module": "ReservationShapes",
+      "config": "configs/chain-head.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "cancel-head",
+      "module": "ReservationShapes",
+      "config": "configs/cancel-head.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "replay-delay-head",
+      "module": "ReservationReplay",
+      "config": "configs/replay-delay-head.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "replay-compete-head",
+      "module": "ReservationReplay",
+      "config": "configs/replay-compete-head.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "deferred-head",
+      "module": "ReservationReplay",
+      "config": "configs/deferred-head.cfg",
+      "tier": "quick",
+      "expect": "invariant:Deterministic"
+    },
+    {
+      "name": "id-order-head",
+      "module": "ReservationReplay",
+      "config": "configs/id-order-head.cfg",
+      "tier": "quick",
+      "expect": "invariant:Deterministic"
+    },
+    {
+      "name": "younger-drain",
+      "module": "ReservationShapes",
+      "config": "configs/younger-drain.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "younger-witness-drain",
+      "module": "ReservationShapes",
+      "config": "configs/younger-witness-drain.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoYoungerBoundary",
+      "witness": "NoYoungerBoundary"
+    },
+    {
+      "name": "cycle-witness-drain",
+      "module": "ReservationCycle",
+      "config": "configs/cycle-witness-drain.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoBroad",
+      "witness": "NoBroad"
+    },
+    {
+      "name": "replay-witness-drain",
+      "module": "ReservationReplay",
+      "config": "configs/replay-witness-drain.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoReplay",
+      "witness": "NoReplay"
+    },
+    {
+      "name": "younger-head",
+      "module": "ReservationShapes",
+      "config": "configs/younger-head.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "younger-witness-head",
+      "module": "ReservationShapes",
+      "config": "configs/younger-witness-head.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoYoungerBoundary",
+      "witness": "NoYoungerBoundary"
+    },
+    {
+      "name": "cycle-witness-head",
+      "module": "ReservationCycle",
+      "config": "configs/cycle-witness-head.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoBroad",
+      "witness": "NoBroad"
+    },
+    {
+      "name": "replay-witness-head",
+      "module": "ReservationReplay",
+      "config": "configs/replay-witness-head.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoReplay",
+      "witness": "NoReplay"
+    },
+    {
+      "name": "cycle-independent-witness",
+      "module": "ReservationCycle",
+      "config": "configs/cycle-independent-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoBroad",
+      "witness": "NoBroad"
+    },
+    {
+      "name": "cancel-witness",
+      "module": "ReservationShapes",
+      "config": "configs/cancel-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCancellationCompletion",
+      "witness": "NoCancellationCompletion"
+    },
+    {
+      "name": "cycle-narrow-eligible",
+      "module": "ReservationCycle",
+      "config": "configs/cycle-narrow-eligible.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "cycle-narrow-head",
+      "module": "ReservationCycle",
+      "config": "configs/cycle-narrow-head.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "dynamic-ordered",
+      "module": "ReservationDynamic",
+      "config": "configs/dynamic-ordered.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "dynamic-eligible",
+      "module": "ReservationDynamic",
+      "config": "configs/dynamic-eligible.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "dynamic-drain",
+      "module": "ReservationDynamic",
+      "config": "configs/dynamic-drain.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "dynamic-head",
+      "module": "ReservationDynamic",
+      "config": "configs/dynamic-head.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "dynamic-drop-cancel",
+      "module": "ReservationDynamic",
+      "config": "configs/dynamic-drop-cancel.cfg",
+      "tier": "quick",
+      "expect": "invariant:Agreement"
+    },
+    {
+      "name": "dynamic-cancel-witness",
+      "module": "ReservationDynamic",
+      "config": "configs/dynamic-cancel-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCancelReplay",
+      "witness": "NoCancelReplay"
+    },
+    {
+      "name": "acquisition-ordered",
+      "module": "ReservationAcquisition",
+      "config": "configs/acquisition-ordered.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "acquisition-eligible",
+      "module": "ReservationAcquisition",
+      "config": "configs/acquisition-eligible.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "acquisition-drain",
+      "module": "ReservationAcquisition",
+      "config": "configs/acquisition-drain.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "acquisition-head",
+      "module": "ReservationAcquisition",
+      "config": "configs/acquisition-head.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "acquisition-cancel",
+      "module": "ReservationAcquisition",
+      "config": "configs/acquisition-cancel.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "acquisition-cycle",
+      "module": "ReservationAcquisition",
+      "config": "configs/acquisition-cycle.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "acquisition-cycle-traffic",
+      "module": "ReservationAcquisition",
+      "config": "configs/acquisition-cycle-traffic.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "acquisition-partial",
+      "module": "ReservationAcquisition",
+      "config": "configs/acquisition-partial.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPartialHold",
+      "witness": "NoPartialHold"
+    },
+    {
+      "name": "acquisition-crossed-cancel",
+      "module": "ReservationAcquisition",
+      "config": "configs/acquisition-crossed-cancel.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCrossedCancel",
+      "witness": "NoCrossedCancel"
+    },
+    {
+      "name": "acquisition-cancelled-completion",
+      "module": "ReservationAcquisition",
+      "config": "configs/acquisition-cancelled-completion.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCancelledCompletion",
+      "witness": "NoCancelledCompletion"
+    },
+    {
+      "name": "acquisition-wide-drain",
+      "module": "ReservationAcquisition",
+      "config": "configs/acquisition-wide-drain.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "acquisition-wide-ordered",
+      "module": "ReservationAcquisition",
+      "config": "configs/acquisition-wide-ordered.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "acquisition-wide-cancel",
+      "module": "ReservationAcquisition",
+      "config": "configs/acquisition-wide-cancel.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "acquisition-bypass-witness",
+      "module": "ReservationAcquisition",
+      "config": "configs/acquisition-bypass-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoDistributedBypass",
+      "witness": "NoDistributedBypass"
+    },
+    {
+      "name": "acquisition-wide-cancel-witness",
+      "module": "ReservationAcquisition",
+      "config": "configs/acquisition-wide-cancel-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCancelledCompletion",
+      "witness": "NoCancelledCompletion"
+    }
+  ]
+}

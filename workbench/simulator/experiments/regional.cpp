@@ -62,6 +62,46 @@ void collect(std::map<Tx, Milestones>& milestones, const Record& record) {
     if (command == "announce") first(participant.announced, record.time);
   }
 }
+void plans(Case& c, const Spec& s) {
+  auto put = [&](Tx id, Time at, std::vector<Scope> scopes, std::string cohort) {
+    c.transactions.push_back({id, at, 0, Program::put, {}, std::move(scopes), static_cast<std::int64_t>(id + 10), std::move(cohort)});
+  };
+  auto wan = [&](Tx id, Time at, Scope key, std::string cohort) { put(id, at, {cell(0,key),cell(1,key)}, std::move(cohort)); };
+  if (s.shape == "ordinary" || s.shape == "hot") {
+    for (std::uint32_t i=0; i<s.points; ++i) put(100+i, add(100'000,multiply(i,s.interval_ns)), {cell(0,s.shape=="hot"?0:i%4)}, "local");
+  } else if (s.shape == "held-broad") {
+    c.transactions.push_back({1,100'000,0,Program::put,{}, {0,1,2,1000},10,"held-broad-wan"});
+    for(std::uint32_t i=0;i<s.points;++i)
+      c.transactions.push_back({100+i,add(add(multiply(2,s.region_ns),1'000'000),multiply(i,s.interval_ns)),0,
+        Program::put,{}, {i%4},100+i,i%4==3?"disjoint":"overlap"});
+  } else if (s.shape == "chain") {
+    wan(1,100'000,0,"regional");
+    put(2,45'000'000,{0,1},"broad-1"); put(3,45'010'000,{1,2},"broad-2"); put(4,45'020'000,{2,3},"broad-3");
+    for (std::uint32_t i=0;i<s.points;++i) put(100+i,add(50'000'000,multiply(i,s.interval_ns)),{i%3==0?99U:i%3==1?2U:3U},i%3==0?"independent":"chain-local");
+  } else if (s.shape == "younger-wan") {
+    wan(1,100'000,0,"older-wan"); put(2,45'000'000,{0,1,2},"broad"); wan(3,50'000'000,1,"younger-wan");
+    // X fixes locally after roughly 4*region; Y after 50ms+4*region.
+    // The middle wave enters between them, when drain makes B a barrier.
+    const auto wave_size=(s.points+2)/3;
+    for(std::uint32_t i=0;i<s.points;++i) {
+      const auto wave=i/wave_size;
+      const Time base=wave==0?55'000'000:wave==1?add(multiply(4,s.region_ns),15'000'000):add(multiply(4,s.region_ns),65'000'000);
+      const auto key=i%3==0?2U:i%3==1?3U:1U;
+      put(100+i,add(base,multiply(i%wave_size,s.interval_ns)),{key},key==2?"z-only":key==3?"independent":"direct-younger");
+    }
+  } else if (s.shape == "unrelated-old") {
+    wan(1,100'000,99,"unrelated-wan");
+    put(2,1'100'000,{0},"initial"); put(3,1'110'000,{2},"initial"); put(4,1'140'000,{0,2},"broad");
+    for(std::uint32_t i=0;i<s.points;++i) put(100+i,1'145'000+(i/2)*16'000+(i%2)*4'000,{2*(i%2)},"stream");
+  } else if (s.shape == "sparse-wan") {
+    for(std::uint32_t i=0;i<s.points;++i) {
+      auto at=add(100'000,multiply(i,s.interval_ns));
+      if(i%16==0) wan(100+i,at,0,"regional");
+      else if(i%16==1) put(100+i,at,{0,2},"broad");
+      else put(100+i,at,{i%3==0?0U:i%3==1?2U:3U},i%3==0?"direct-overlap":i%3==1?"bridge-scope":"independent");
+    }
+  } else throw std::invalid_argument("unknown policy study shape");
+}
 void validate(Observation& observation) {
   const auto& result = observation.result;
   auto error = [&](bool valid, const char* message) { if (!valid) observation.result.violations.emplace_back(message); };
@@ -99,12 +139,14 @@ void validate(Observation& observation) {
 } // namespace
 
 orbital::Case make_case(const Spec& spec) {
+  require(spec.shape == "regional" || (!spec.progress_rounds && !spec.bridge && !spec.bridge_cut), "regional flags require the regional shape");
   require(spec.progress_rounds <= 64, "progress rounds exceed finite fixture bound");
   if (!spec.progress_rounds) require(spec.points > 0 && spec.points <= 192, "regional points must be in [1,192] for this finite experiment");
   else require(!spec.bridge && !spec.bridge_cut, "bridge flags do not apply to alternating-holder progress fixture");
   require(spec.interval_ns > 0 && spec.retry_ns > 0 && spec.until_ns > 0, "regional durations must be positive");
-  Case c; c.name = spec.name; c.queue_policy = spec.queue_policy; c.until_ns = spec.until_ns; c.retry_ns = spec.retry_ns; c.max_events = spec.max_events;
-  if (spec.progress_rounds) {
+  Case c; c.name = spec.name; c.incident = spec.incident; c.queue_policy = spec.queue_policy; c.until_ns = spec.until_ns; c.retry_ns = spec.retry_ns; c.max_events = spec.max_events;
+  if (spec.shape != "regional") plans(c,spec);
+  else if (spec.progress_rounds) {
     // B is queued after x/y have live holders. Each younger narrow grant can
     // keep the other half of B's group occupied when a holder releases. All
     // arrivals are finite and the caller chooses the observation/drain window.
@@ -151,9 +193,21 @@ orbital::Case make_case(const Spec& spec) {
 Observation run(const Spec& spec, Options options, std::ostream* trace) {
   auto c = make_case(spec); Observation out{spec, {}, c.transactions, {}};
   Simulation sim(options); auto experiment = orbital::assemble(sim, c, trace);
-  sim.observe([&](const Record& record) { collect(out.milestones, record); });
+  sim.observe([&](const Record& record) {
+    collect(out.milestones, record);
+    if(record.kind == "orbital.policy-work") {
+      out.holder_visits+=number(record.detail,"holder_visits"); out.waiter_visits+=number(record.detail,"waiter_visits"); out.barrier_visits+=number(record.detail,"barrier_visits");
+      out.policy_probes += number(record.detail,"probes"); out.settles += number(record.detail,"settles");
+      if(number(record.detail,"copy")==0) out.primary_probes += number(record.detail,"probes");
+      out.max_waiting=std::max(out.max_waiting,number(record.detail,"max_waiting"));
+      out.max_live=std::max(out.max_live,number(record.detail,"max_live"));
+      out.max_holders=std::max(out.max_holders,number(record.detail,"max_holders"));
+    }
+  });
   sim.start(); auto execution = sim.run(spec.until_ns, spec.max_events); sim.finish_replay();
-  out.result = experiment.result(sim, execution); validate(out); return out;
+  out.result = experiment.result(sim, execution);
+  for(const auto& host:c.hosts) { auto usage=sim.usage(host.id); out.operation_refused+=usage.refused; out.operation_dropped+=usage.dropped; }
+  validate(out); return out;
 }
 void write_json(std::ostream& out, const Observation& observation) {
   std::ostringstream core; orbital::write_json(core, observation.result); auto body = core.str();
@@ -161,6 +215,7 @@ void write_json(std::ostream& out, const Observation& observation) {
   require(!body.empty() && body.back() == '}', "invalid core result JSON"); body.pop_back(); out << body;
   const auto& p = observation.spec;
   out << ",\"experiment\":" << quote(p.progress_rounds ? "alternating-holder-progress-v1" : "regional-localisation-v1") << ",\"parameters\":{\"region_ns\":" << p.region_ns << ",\"interval_ns\":" << p.interval_ns << ",\"retry_ns\":" << p.retry_ns << ",\"until_ns\":" << p.until_ns << ",\"points\":" << p.points << ",\"progress_rounds\":" << p.progress_rounds << ",\"max_events\":" << p.max_events << ",\"bridge\":" << (p.bridge ? "true" : "false") << ",\"bridge_cut\":" << (p.bridge_cut ? "true" : "false") << ",\"shared\":" << (p.shared ? "true" : "false") << ",\"queue_policy\":" << quote(name(p.queue_policy)) << '}';
+  out << ",\"policy_study\":{\"shape\":" << quote(p.shape) << ",\"incident\":" << quote(name(p.incident)) << ",\"conflict_probes_all_consumers\":" << observation.policy_probes << ",\"conflict_probes_primary\":" << observation.primary_probes << ",\"holder_record_visits_all_consumers\":" << observation.holder_visits << ",\"older_waiter_visits_all_consumers\":" << observation.waiter_visits << ",\"barrier_live_visits_all_consumers\":" << observation.barrier_visits << ",\"settles_all_consumers\":" << observation.settles << ",\"max_waiting\":" << observation.max_waiting << ",\"max_live\":" << observation.max_live << ",\"max_holders\":" << observation.max_holders << ",\"operation_refused\":" << observation.operation_refused << ",\"operation_dropped\":" << observation.operation_dropped << '}';
   out << ",\"plans\":["; bool comma{};
   for (const auto& plan : observation.plans) {
     if (comma) out << ','; comma = true;
@@ -184,7 +239,7 @@ void write_json(std::ostream& out, const Observation& observation) {
     std::vector<Time> latencies;
     for (const auto& plan : observation.plans) if (plan.cohort == cohort && observation.result.completed_at.contains(plan.id)) latencies.push_back(observation.result.completed_at.at(plan.id) - plan.at);
     std::ranges::sort(latencies); if (comma) out << ','; comma = true; out << quote(cohort) << ":{\"samples\":" << latencies.size();
-    if (!latencies.empty()) out << ",\"p50\":" << latencies[(latencies.size() - 1) / 2] << ",\"p95\":" << latencies[(95 * latencies.size() + 99) / 100 - 1] << ",\"max\":" << latencies.back();
+    if (!latencies.empty()) out << ",\"p50\":" << latencies[(latencies.size() - 1) / 2] << ",\"p95\":" << latencies[(95 * latencies.size() + 99) / 100 - 1] << ",\"p99\":" << latencies[(99 * latencies.size() + 99) / 100 - 1] << ",\"max\":" << latencies.back();
     out << '}';
   }
   out << '}';

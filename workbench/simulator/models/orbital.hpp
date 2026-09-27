@@ -37,9 +37,10 @@ inline constexpr ActorId checker(std::uint32_t copy) { return 60 + copy; }
 inline constexpr Scope cell(std::uint32_t shard, std::uint32_t key) { return shard * 1000 + key; }
 
 enum class Incident { none, one_follower, quorum_pause, consumer_reset, coordinator_reset, checker_reset };
-/// eligible_first is a counterfactual: younger eligible reservations may pass a
-/// blocked overlapping waiter. It gives up the brief's no-overtaking guarantee.
-enum class QueuePolicy { no_overtaking, eligible_first };
+/// Provisional default: a waiting request protects its scopes once no older
+/// live request conflicts. The other policies are explicit experimental controls.
+/// Policy and per-record closure stay fixed through replay of the whole lineage.
+enum class QueuePolicy { no_overtaking, eligible_first, older_conflicts_drain, oldest_live };
 enum class Negative { none, skip_pending, skip_verification, corrupt_checker };
 struct Case {
   std::string name{"checked-old-cut"};
@@ -51,7 +52,7 @@ struct Case {
   std::uint64_t max_events{1'000'000};
   Incident incident{Incident::none};
   Negative negative{Negative::none};
-  QueuePolicy queue_policy{QueuePolicy::no_overtaking};
+  QueuePolicy queue_policy{QueuePolicy::older_conflicts_drain};
   /// Empty selects the common checked-transform plus continuing-writes fixture.
   std::vector<Transaction> transactions;
   /// Omitted roles each get their own host/process. Placement changes real
@@ -70,6 +71,7 @@ struct Cohort {
 };
 struct Result {
   std::string name;
+  QueuePolicy queue_policy{QueuePolicy::older_conflicts_drain};
   std::map<std::string, Cohort> cohorts;
   std::vector<std::string> violations;
   std::vector<std::string> triggered_incidents, missing_incidents;

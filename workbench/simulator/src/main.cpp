@@ -20,6 +20,7 @@ void help() {
       "  --until NS --link NS --disk NS --retry NS --memory BYTES --storage BYTES\n"
       "  --events N --incident none|one-follower|quorum-pause|consumer-reset|coordinator-reset|checker-reset\n"
       "  --negative none|skip-pending|skip-verification|corrupt-checker\n"
+      "  --queue-policy older-conflicts-drain|no-overtaking|eligible-first|oldest-live\n"
       "  --placement isolated|shared --name NAME\n"
       "  --trace PATH --choices PATH --replay PATH\n"
       "Output is one JSON result. Exit 2 means observed violation; unfinished work is reported separately.\n";
@@ -53,6 +54,8 @@ int main(int argc, char** argv) {
       else if (key == "--events") spec.max_events = number(value);
       else if (key == "--incident") spec.incident = choice(value, {orbital::Incident::none, orbital::Incident::one_follower,
           orbital::Incident::quorum_pause, orbital::Incident::consumer_reset, orbital::Incident::coordinator_reset, orbital::Incident::checker_reset});
+      else if (key == "--queue-policy") spec.queue_policy = choice(value, {orbital::QueuePolicy::older_conflicts_drain,
+          orbital::QueuePolicy::no_overtaking, orbital::QueuePolicy::eligible_first, orbital::QueuePolicy::oldest_live});
       else if (key == "--negative") spec.negative = choice(value, {orbital::Negative::none, orbital::Negative::skip_pending,
           orbital::Negative::skip_verification, orbital::Negative::corrupt_checker});
       else if (key == "--placement") {

@@ -17,7 +17,9 @@ struct Spec {
   std::uint32_t progress_rounds{};
   std::uint64_t max_events{1'000'000};
   bool bridge{}, bridge_cut{}, shared{};
-  orbital::QueuePolicy queue_policy{orbital::QueuePolicy::no_overtaking};
+  std::string shape{"regional"};
+  orbital::Incident incident{orbital::Incident::none};
+  orbital::QueuePolicy queue_policy{orbital::QueuePolicy::older_conflicts_drain};
   std::string name{"regional-localisation"};
 };
 struct Participant {
@@ -32,6 +34,7 @@ struct Observation {
   orbital::Result result;
   std::vector<orbital::Transaction> plans;
   std::map<orbital::Tx, Milestones> milestones;
+  std::uint64_t policy_probes{}, primary_probes{}, holder_visits{}, waiter_visits{}, barrier_visits{}, settles{}, max_waiting{}, max_live{}, max_holders{}, operation_refused{}, operation_dropped{};
 };
 /// The exact same application plans and local costs are used for the LAN and
 /// WAN controls. Only directed cross-region propagation and authored sharing vary.
