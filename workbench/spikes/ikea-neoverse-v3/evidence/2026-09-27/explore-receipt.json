@@ -1,0 +1,292 @@
+{
+  "bucket": "calico-fleet-artifacts",
+  "control_error": null,
+  "format": 2,
+  "id": "20260927T181709Z-5bb3452a",
+  "launch_complete": true,
+  "launch_started": true,
+  "members": {
+    "c8g": {
+      "args": [],
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790533280.2006783
+      },
+      "config": {
+        "ami": "ami-0246d714afcc1d494",
+        "architecture": "arm64",
+        "bucket": "calico-fleet-artifacts",
+        "capacity": "spot",
+        "checkpoint_seconds": 300,
+        "checkpoint_timeout": 90,
+        "data_volumes": [],
+        "deadline_seconds": 1800,
+        "disk_gb": 32,
+        "env": {
+          "SIXDB_BUILD_JOBS": "2",
+          "SIXDB_GROUP_MEMBER": "c8g",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260927T181709Z-5bb3452a"
+        },
+        "fresh": false,
+        "hardware": {
+          "EbsInfo": {
+            "AttachmentLimitType": "dedicated",
+            "EbsOptimizedInfo": {
+              "BaselineBandwidthInMbps": 1250,
+              "BaselineIops": 6000,
+              "BaselineThroughputInMBps": 156.25,
+              "MaximumBandwidthInMbps": 10000,
+              "MaximumIops": 40000,
+              "MaximumThroughputInMBps": 1250.0
+            },
+            "EbsOptimizedSupport": "default",
+            "EncryptionSupport": "supported",
+            "MaximumEbsAttachments": 32,
+            "NvmeSupport": "required"
+          },
+          "Hypervisor": "nitro",
+          "MemoryInfo": {
+            "SizeInMiB": 8192
+          },
+          "NetworkInfo": {
+            "BandwidthWeightings": [
+              "default",
+              "ebs-1",
+              "vpc-1"
+            ],
+            "DefaultNetworkCardIndex": 0,
+            "EfaSupported": false,
+            "EnaSrdSupported": false,
+            "EnaSupport": "required",
+            "EncryptionInTransitSupported": true,
+            "FlexibleEnaQueuesSupport": "unsupported",
+            "Ipv4AddressesPerInterface": 15,
+            "Ipv6AddressesPerInterface": 15,
+            "Ipv6Supported": true,
+            "MaximumNetworkCards": 1,
+            "MaximumNetworkInterfaces": 4,
+            "NetworkCards": [
+              {
+                "BaselineBandwidthInGbps": 1.875,
+                "DefaultEnaQueueCountPerInterface": 4,
+                "MaximumNetworkInterfaces": 4,
+                "NetworkCardIndex": 0,
+                "NetworkPerformance": "Up to 12.5 Gigabit",
+                "PeakBandwidthInGbps": 12.5
+              }
+            ],
+            "NetworkPerformance": "Up to 12.5 Gigabit"
+          },
+          "ProcessorInfo": {
+            "Manufacturer": "AWS",
+            "SupportedArchitectures": [
+              "arm64"
+            ],
+            "SustainedClockSpeedInGhz": 2.8
+          },
+          "VCpuInfo": {
+            "DefaultCores": 4,
+            "DefaultThreadsPerCore": 1,
+            "DefaultVCpus": 4,
+            "ValidCores": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "ValidThreadsPerCore": [
+              1
+            ]
+          }
+        },
+        "idle_seconds": 900,
+        "image_name": "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-20260904",
+        "instance_store_mappings": [],
+        "instance_store_nvme": false,
+        "instance_type": "c8g.xlarge",
+        "machine": "neoverse-v2",
+        "max_age_seconds": 10800,
+        "region": "us-east-1",
+        "root_device": "/dev/sda1",
+        "setup": "toolchain",
+        "subnets": [
+          {
+            "id": "subnet-75288838",
+            "zone": "us-east-1a"
+          },
+          {
+            "id": "subnet-c29a879e",
+            "zone": "us-east-1b"
+          },
+          {
+            "id": "subnet-800010e7",
+            "zone": "us-east-1c"
+          },
+          {
+            "id": "subnet-d1aeb1ff",
+            "zone": "us-east-1d"
+          },
+          {
+            "id": "subnet-0912d807",
+            "zone": "us-east-1f"
+          }
+        ],
+        "sync_seconds": 0,
+        "vpc_id": "vpc-5e2d0124"
+      },
+      "instances": [
+        {
+          "id": "i-07f282894a6dc54d8",
+          "state": "running"
+        }
+      ],
+      "job": "20260927T181717Z-adf152ec",
+      "job_created_at": 1790533054.6447334,
+      "phase": "submitted",
+      "resource_observed_at": 1790533853.1426456,
+      "script": "workbench/spikes/ikea-neoverse-v3/explore.sh"
+    },
+    "c9g": {
+      "args": [],
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790533291.6986613
+      },
+      "config": {
+        "ami": "ami-0246d714afcc1d494",
+        "architecture": "arm64",
+        "bucket": "calico-fleet-artifacts",
+        "capacity": "spot",
+        "checkpoint_seconds": 300,
+        "checkpoint_timeout": 90,
+        "data_volumes": [],
+        "deadline_seconds": 1800,
+        "disk_gb": 32,
+        "env": {
+          "SIXDB_BUILD_JOBS": "2",
+          "SIXDB_GROUP_MEMBER": "c9g",
+          "SIXDB_GROUP_URI": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260927T181709Z-5bb3452a"
+        },
+        "fresh": false,
+        "hardware": {
+          "EbsInfo": {
+            "AttachmentLimitType": "dedicated",
+            "EbsOptimizedInfo": {
+              "BaselineBandwidthInMbps": 1500,
+              "BaselineIops": 6000,
+              "BaselineThroughputInMBps": 187.5,
+              "MaximumBandwidthInMbps": 12000,
+              "MaximumIops": 48000,
+              "MaximumThroughputInMBps": 1500.0
+            },
+            "EbsOptimizedSupport": "default",
+            "EncryptionSupport": "supported",
+            "MaximumEbsAttachments": 32,
+            "NvmeSupport": "required"
+          },
+          "Hypervisor": "nitro",
+          "MemoryInfo": {
+            "SizeInMiB": 8192
+          },
+          "NetworkInfo": {
+            "BandwidthWeightings": [
+              "default",
+              "ebs-1",
+              "vpc-1"
+            ],
+            "DefaultNetworkCardIndex": 0,
+            "EfaSupported": false,
+            "EnaSrdSupported": false,
+            "EnaSupport": "required",
+            "EncryptionInTransitSupported": true,
+            "FlexibleEnaQueuesSupport": "supported",
+            "Ipv4AddressesPerInterface": 30,
+            "Ipv6AddressesPerInterface": 30,
+            "Ipv6Supported": true,
+            "MaximumNetworkCards": 1,
+            "MaximumNetworkInterfaces": 4,
+            "NetworkCards": [
+              {
+                "BaselineBandwidthInGbps": 2.1,
+                "DefaultEnaQueueCountPerInterface": 4,
+                "MaximumEnaQueueCount": 16,
+                "MaximumEnaQueueCountPerInterface": 4,
+                "MaximumNetworkInterfaces": 4,
+                "NetworkCardIndex": 0,
+                "NetworkPerformance": "Up to 15 Gigabit",
+                "PeakBandwidthInGbps": 15.0
+              }
+            ],
+            "NetworkPerformance": "Up to 15 Gigabit"
+          },
+          "ProcessorInfo": {
+            "Manufacturer": "AWS",
+            "SupportedArchitectures": [
+              "arm64"
+            ],
+            "SustainedClockSpeedInGhz": 3.3
+          },
+          "VCpuInfo": {
+            "DefaultCores": 4,
+            "DefaultThreadsPerCore": 1,
+            "DefaultVCpus": 4,
+            "ValidCores": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "ValidThreadsPerCore": [
+              1
+            ]
+          }
+        },
+        "idle_seconds": 900,
+        "image_name": "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-20260904",
+        "instance_store_mappings": [],
+        "instance_store_nvme": false,
+        "instance_type": "c9g.xlarge",
+        "machine": "neoverse-v2",
+        "max_age_seconds": 10800,
+        "region": "us-east-1",
+        "root_device": "/dev/sda1",
+        "setup": "toolchain",
+        "subnets": [
+          {
+            "id": "subnet-75288838",
+            "zone": "us-east-1a"
+          },
+          {
+            "id": "subnet-c29a879e",
+            "zone": "us-east-1b"
+          },
+          {
+            "id": "subnet-800010e7",
+            "zone": "us-east-1c"
+          },
+          {
+            "id": "subnet-d1aeb1ff",
+            "zone": "us-east-1d"
+          }
+        ],
+        "sync_seconds": 0,
+        "vpc_id": "vpc-5e2d0124"
+      },
+      "instances": [
+        {
+          "id": "i-02cdf2117e22cffcd",
+          "state": "running"
+        }
+      ],
+      "job": "20260927T181723Z-3a3f74b9",
+      "job_created_at": 1790533078.225406,
+      "phase": "submitted",
+      "resource_observed_at": 1790533853.128844,
+      "script": "workbench/spikes/ikea-neoverse-v3/explore.sh"
+    }
+  },
+  "network": null,
+  "region": "us-east-1",
+  "source": "/home/ashtonsix/sixdb-worktrees/ikea-neoverse-v3/build/ikea-neoverse-v3/explore-group/source",
+  "uri": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260927T181709Z-5bb3452a"
+}

@@ -1,0 +1,119 @@
+{
+  "bucket": "calico-fleet-artifacts",
+  "format": 1,
+  "group": "20260927T180848Z-db63592a",
+  "members": {
+    "c8g": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 41802220,
+        "files": 40,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/b774f427ba7d55c9b75cc09b0aad4620b11c3a402d960447131c8cdd2ae28088.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "b774f427ba7d55c9b75cc09b0aad4620b11c3a402d960447131c8cdd2ae28088",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/b774f427ba7d55c9b75cc09b0aad4620b11c3a402d960447131c8cdd2ae28088.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790533029.2312734
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-07f282894a6dc54d8",
+          "state": "running"
+        }
+      ],
+      "job": "20260927T180855Z-55dddb30",
+      "phase": "submitted",
+      "resource_observed_at": 1790533209.9172692,
+      "results": "/home/ashtonsix/sixdb-worktrees/ikea-neoverse-v3/build/workers/20260927T180855Z-55dddb30/results",
+      "session": {
+        "capacity": "spot",
+        "idle_until": 1790533851.8852124,
+        "instance_id": "i-07f282894a6dc54d8",
+        "job_id": "20260927T181717Z-adf152ec",
+        "job_sha256": "24079accb131f8a7fadd84563ef242ba043d7284e73b0c1a8c4be502b8d2e1f5",
+        "job_uri": "s3://calico-fleet-artifacts/sixdb/workers/20260927T181717Z-adf152ec",
+        "max_end": 1790543353.897976,
+        "profile": "840ef2f6d81e7596eea04e83a936cb6a65d521e2b16402780e810aeeab60d8b6",
+        "reuse_count": 1,
+        "revision": "ab9666190b7c47f985967324affb0238",
+        "state": "busy",
+        "subnet_id": "subnet-75288838",
+        "worker_id": "20260927T180855Z-55dddb30"
+      },
+      "source_commit": "03f015217072aa6f31cfaf95f911adeb8a988848",
+      "source_sha256": "1b32418a5ee879491f45ab93a0d7e5151c6098a6237f879ed22441f664f5e747",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260927T180855Z-55dddb30",
+      "worker": {
+        "id": "20260927T180855Z-55dddb30",
+        "instance_id": "i-07f282894a6dc54d8",
+        "max_end": 1790543353.897976,
+        "reuse_count": 0,
+        "reused": false
+      }
+    },
+    "c9g": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 41802378,
+        "files": 38,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/e18e8a8d2e9b399a5e095e973351d97d5a144839c3ffd9b070d2bc4c20a38268.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "e18e8a8d2e9b399a5e095e973351d97d5a144839c3ffd9b070d2bc4c20a38268",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/e18e8a8d2e9b399a5e095e973351d97d5a144839c3ffd9b070d2bc4c20a38268.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790533026.297311
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-02cdf2117e22cffcd",
+          "state": "running"
+        }
+      ],
+      "job": "20260927T180902Z-d0ff2b2d",
+      "phase": "submitted",
+      "resource_observed_at": 1790533209.950349,
+      "results": "/home/ashtonsix/sixdb-worktrees/ikea-neoverse-v3/build/workers/20260927T180902Z-d0ff2b2d/results",
+      "session": {
+        "capacity": "spot",
+        "idle_until": 1790533848.8692954,
+        "instance_id": "i-02cdf2117e22cffcd",
+        "job_id": "20260927T181723Z-3a3f74b9",
+        "job_sha256": "128f61cf4a2a580d870c8299b102ea0afd6213139825e2a1e1fb07198a9ff53c",
+        "job_uri": "s3://calico-fleet-artifacts/sixdb/workers/20260927T181723Z-3a3f74b9",
+        "max_end": 1790543379.0045307,
+        "profile": "db5070b952bebc486914f01e6794f7764a64923340b72b5010fdb66468aba95e",
+        "reuse_count": 1,
+        "revision": "eb4f65fe79324d0584c379e8cfff983d",
+        "state": "busy",
+        "subnet_id": "subnet-75288838",
+        "worker_id": "20260927T180902Z-d0ff2b2d"
+      },
+      "source_commit": "03f015217072aa6f31cfaf95f911adeb8a988848",
+      "source_sha256": "1b32418a5ee879491f45ab93a0d7e5151c6098a6237f879ed22441f664f5e747",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260927T180902Z-d0ff2b2d",
+      "worker": {
+        "id": "20260927T180902Z-d0ff2b2d",
+        "instance_id": "i-02cdf2117e22cffcd",
+        "max_end": 1790543379.0045307,
+        "reuse_count": 0,
+        "reused": false
+      }
+    }
+  },
+  "network": null,
+  "network_removed": false,
+  "region": "us-east-1",
+  "uri": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260927T180848Z-db63592a"
+}
