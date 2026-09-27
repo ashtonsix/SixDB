@@ -8,6 +8,13 @@ worker command. `TLC_JAVA_OPTS` sets JVM options, for example
 memory. Set `-workers` explicitly; its value is preserved across recovery.
 Deadlock checking remains enabled unless explicitly disabled by the caller.
 
+For current Orbital working checks, start with a modest Zen 5 Spot instance and
+four TLC workers. The [September hardware pilot](evidence/20260927-workers/README.md)
+compares completed graphs on C8a and C9g, including prices and limits. C8a.2xlarge
+was faster and cheaper at the measured Spot quotes; M8a.2xlarge buys twice the RAM
+with the same core count when needed, but was not measured. Large final graphs
+need their own memory, metadata and scaling evidence before choosing a large host.
+
 The [source reference](source.json) pins exact jar bytes, retained in the existing
 S3 bucket and cached by the shared input helper. `TLC_JAR` can point to a local
 copy with the same hash. Models, configs and custom modules should be in the

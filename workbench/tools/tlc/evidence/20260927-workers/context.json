@@ -1,0 +1,192 @@
+{
+  "date": "2026-09-27",
+  "question": "TLC completed-check wall time and compute cost on equal-size fresh Zen5 and Graviton5 VMs",
+  "workers": {
+    "zen5": {
+      "job": "20260927T175808Z-0f1649de",
+      "worker_uri": "s3://calico-fleet-artifacts/sixdb/workers/20260927T175808Z-0f1649de",
+      "artifact_reference": "workers/zen5.json",
+      "artifact_sha256": "b2d3da91235ba6a36c81306c63f1de434b31084600e497870b79699af5133ae9",
+      "instance_type": "c8a.2xlarge",
+      "availability_zone": "us-east-1a",
+      "availability_zone_id": "use1-az4",
+      "region": "us-east-1",
+      "capacity": "spot",
+      "fresh_vm": true,
+      "cpu_model": "AMD EPYC 9R45",
+      "cpu_bios_model": "AMD EPYC 9R45  CPU @ 2.6GHz",
+      "cores": 8,
+      "threads_per_core": 1,
+      "memory_mib": 16384,
+      "allowed_cpus": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "kernel": "Linux ip-172-31-16-78 7.0.0-1012-aws #12~24.04.1-Ubuntu SMP PREEMPT Wed Aug 12 14:00:57 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux",
+      "ami": "ami-025d99823a4caad37",
+      "spot_usd_per_hour": 0.172,
+      "spot_quote_timestamp": "2026-09-27T17:00:00+00:00",
+      "on_demand_usd_per_hour": 0.43108,
+      "on_demand_effective_date": "2026-09-01T00:00:00Z",
+      "price_receipt_sha256": "acdd51480c0b977bdcbf2213b52e8c72964a44e2a7a4b2dab4e6b4d6ee8162bb",
+      "spot_receipt_sha256": "6aee9936ae5c30a512b3084916847b188718207e0e5e8e2b51eca75259a7febc",
+      "worker_result": {
+        "state": "complete",
+        "script_returncode": 0,
+        "script_seconds": 666.3295080661774,
+        "worker_seconds_before_collection": 669.0527544021606
+      }
+    },
+    "graviton5": {
+      "job": "20260927T175816Z-8c75b2e0",
+      "worker_uri": "s3://calico-fleet-artifacts/sixdb/workers/20260927T175816Z-8c75b2e0",
+      "artifact_reference": "workers/graviton5.json",
+      "artifact_sha256": "b6c67638b876da54f320e046dfdbfdcd8f983ee4dc53bb6220a60edfbc0751af",
+      "instance_type": "c9g.2xlarge",
+      "availability_zone": "us-east-1a",
+      "availability_zone_id": "use1-az4",
+      "region": "us-east-1",
+      "capacity": "spot",
+      "fresh_vm": true,
+      "cpu_model": "Neoverse-V3",
+      "cpu_bios_model": "AWS Graviton5 AWS Graviton5 CPU @ 3.3GHz",
+      "cores": 8,
+      "threads_per_core": 1,
+      "memory_mib": 16384,
+      "allowed_cpus": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "kernel": "Linux ip-172-31-18-215 7.0.0-1012-aws #12~24.04.1-Ubuntu SMP PREEMPT Wed Aug 12 13:54:00 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux",
+      "ami": "ami-0246d714afcc1d494",
+      "spot_usd_per_hour": 0.1643,
+      "spot_quote_timestamp": "2026-09-27T12:00:00+00:00",
+      "on_demand_usd_per_hour": 0.34776,
+      "on_demand_effective_date": "2026-09-01T00:00:00Z",
+      "price_receipt_sha256": "64310c43aaffbd30f7c25104941b85e52d342780cf30ccd6a789320f39f4f13d",
+      "spot_receipt_sha256": "e99f1cab937f4f188386cfd71263328056f44b60a5b367eb63af116de59d374b",
+      "worker_result": {
+        "state": "failed",
+        "script_returncode": 1,
+        "script_seconds": 796.0226459503174,
+        "failure_phase": "running",
+        "worker_seconds_before_collection": 799.0355594158173
+      }
+    }
+  },
+  "common": {
+    "source_commit": "03f015217072aa6f31cfaf95f911adeb8a988848",
+    "source_archive_sha256": "8287a61323cb3804fe7e153497b20d7af4e15c94e0f45f468921fea0f5f796ea",
+    "runner_sha256": "ce9170db5050c1ac42b8e28ce5ee7f913d213547aaeb75ef15aa7e09f773e57c",
+    "jar_sha256": "ab4694601923fd5ac06452abbf847c366a5054a3d739552085edd6ed986c29ec",
+    "jar_source_sha256": "0155b68c00f193f8f30f3091e63c79aabbd45b529bb7ae608a11b6ef4c97298a",
+    "java_version": "openjdk version \"21.0.12.1\" 2026-08-18\nOpenJDK Runtime Environment (build 21.0.12.1+1-1-24.04.4-Ubuntu)\nOpenJDK 64-Bit Server VM (build 21.0.12.1+1-1-24.04.4-Ubuntu, mixed mode, sharing)",
+    "normalized_argv": [
+      "{platform_java}",
+      "-Xmx512m",
+      "-XX:+UseParallelGC",
+      "-Duser.language=en",
+      "-Duser.country=US",
+      "-cp",
+      "/opt/sixdb/datasets/downloads/ab4694601923fd5ac06452abbf847c366a5054a3d739552085edd6ed986c29ec",
+      "tlc2.TLC",
+      "-tool",
+      "-workers",
+      "{workers}",
+      "-fp",
+      "0",
+      "-metadir",
+      "{metadir}",
+      "-config",
+      "{config}",
+      "{module}"
+    ],
+    "heap": "512m",
+    "locale": "C",
+    "timeout_seconds": 180.0,
+    "pilot_catalog_sha256": "01840cac7730cbfccba2a7f535b230b83d07ed54f5c3693c7461f06a8329cf70"
+  },
+  "models": {
+    "JournalConcreteRecovery": {
+      "module": "JournalAuthority.tla",
+      "config": "configs/journal/abstract-two-ballots.cfg",
+      "parsed_source_sha256": {
+        "Contracts.tla": "05a7b0b8e8a403aca0d5c34a5e3996a3828803b74a87a4e4fb2b81abe0be4115",
+        "DurableLog.tla": "4ea9cdf99129aaa0eb4ac11e7274b385aa95d26b1ece29718a476aae0305dbb4",
+        "JournalAuthority.tla": "6fbc06f98e9ae911844b09fa4cc45b49cde8c9447e388fdc3149f26aa71c5fbb",
+        "JournalKernel.tla": "33573e55bcd4da366d6e47e8ecf8cce9d517a594e5717f08de91fa2e7ae4b684",
+        "JournalOrderContract.tla": "11c31f7374fd241fdd83faaf5f5a607d6e843fe09b8eeb9aa651f5fff653c254",
+        "configs/journal/abstract-two-ballots.cfg": "91c0dc4a6ff7822da59bc743ac88dd11afb38673d90984337fd6964f66c07712"
+      }
+    },
+    "Admission-domain-loss": {
+      "module": "AdmissionMaterial.tla",
+      "config": "configs/Admission-domain-loss.cfg",
+      "parsed_source_sha256": {
+        "AdmissionKernel.tla": "94b42c2236eaa162be4dec723226c39399019d7174c40d615cd2fff56337b370",
+        "AdmissionMaterial.tla": "6d3c06246fa15f498744237feced08e4234b54c9bfc78239c5a02552a3ff964d",
+        "CertificateInterface.tla": "8df80cedd1e0cef6521a860597b757b32b5c1dcd54772dd5eb0af0316a7fbb47",
+        "Contracts.tla": "05a7b0b8e8a403aca0d5c34a5e3996a3828803b74a87a4e4fb2b81abe0be4115",
+        "DurableLog.tla": "4ea9cdf99129aaa0eb4ac11e7274b385aa95d26b1ece29718a476aae0305dbb4",
+        "configs/Admission-domain-loss.cfg": "c7b9468527dfdfd4e5eb994a609e5f325a150a8e282ae97b260c60a725ff1c8c"
+      }
+    }
+  },
+  "completed_graph_counts": {
+    "JournalConcreteRecovery": {
+      "distinct": 214989,
+      "generated": 2092799,
+      "queue": 0
+    },
+    "Admission-domain-loss": {
+      "distinct": 318860,
+      "generated": 1657545,
+      "queue": 0
+    }
+  },
+  "method": {
+    "repetitions": 2,
+    "tlc_workers": [
+      1,
+      4
+    ],
+    "order": [
+      "JournalConcreteRecovery-w1-r1",
+      "Admission-domain-loss-w1-r1",
+      "JournalConcreteRecovery-w4-r1",
+      "Admission-domain-loss-w4-r1",
+      "JournalConcreteRecovery-w4-r2",
+      "Admission-domain-loss-w4-r2",
+      "JournalConcreteRecovery-w1-r2",
+      "Admission-domain-loss-w1-r2"
+    ],
+    "cpu_pinning": false,
+    "background_result_sync": false,
+    "checkpoint_adapter": false,
+    "fresh_jvm_per_case": true,
+    "cost_formula": "elapsed_seconds * quoted USD per instance-hour / 3600; incomplete-row costs represent time spent only",
+    "cost_excludes": [
+      "startup",
+      "Java installation",
+      "collection",
+      "EBS",
+      "S3",
+      "network",
+      "minimum billing",
+      "interruption or rerun costs"
+    ],
+    "limitations": "Two models and two repetitions on one VM per architecture; no large-state, heap, 8-worker, checkpoint, or availability sweep. Native JDK binaries and kernels differ by architecture."
+  }
+}
