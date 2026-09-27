@@ -69,39 +69,12 @@ bytes. Their tables give the exact configurations. Authored service cuts remain
 restrictions on the explored joined histories, even where the component families
 explore wider local interleavings.
 
-## Consequences for the design
-
-The [architectural account](../ARCHITECTURE.md) classifies the findings. The core
-contention design survives this campaign: each shard releases its reservation
-when it durably fixes the position; reads create retention obligations rather
-than arbitrating over the entire read set. The useful common machinery is durable
-owner replay, stable identity, explicit obligations and physical-operation
-accounting. The evidence does not justify combining different acknowledgements
-or obligations into one generic protocol.
-
-Several implementation obligations became concrete. Recovery must regenerate
-grant evidence, discovery must revisit a changed namespace, and copy resumption
-must use learned storage incarnations. A transferred pending read needs its future
-source obligation as well as its fallback. Reordered source notices must not undo
-a complete authoritative resolution. Execution must use captured logical inputs
-and journaled versions; a replay cannot consume its own installed output as its
-original input. These clarify existing contracts or repair model/adaptor defects;
-they do not silently amend BRIEF or PHYSICAL.
-
-There are accepted limits rather than universal solutions. The revised queue rule
-lets eligible work pass a broad waiter while older conflicts remain, then protects
-the waiter while already-held younger conflicts drain. It removes the original
-waiter bridge and retains conditional broad progress, but an admitted younger WAN
-holder can extend a later indirect wait. Canonical grant closure after each agreed
-record is required for replay agreement. The alternative policies and both sides
-of this boundary have explicit formal and native comparisons. Late source discovery can fail after history
-collection. Historical reads are a checked candidate read-only entry adapter;
-they consume already retained old material or fail, rather than recreate lost
-history. Approved native execution trusts its program/runtime: asynchronous
-audit detects a breach but cannot repair already committed divergence. The early
-pre-persistence path remains optional and explicitly lossy; its range/incarnation
-bookkeeping must earn its latency benefit experimentally. A sink without its own
-deduplication contract can leave an external effect Unknown.
+The [architecture walkthrough](../ARCHITECTURE.md) carries the current design
+consequences and accepted tradeoffs into provisional implementation boundaries.
+The family reports above retain each finding and its model assumptions;
+[retired campaign accounts](../../workbench/notebook/retired-spikes.md#orbital-verification-campaign-accounts)
+preserve how the design arrived here. These checks do not silently amend BRIEF
+or PHYSICAL.
 
 ## What these results establish
 

@@ -51,6 +51,17 @@ The verified local copy is Linux `~/sixdb-archive/orbital-drafts-20260927/`, wit
 `orbital-drafts-1957910.tar.gz` and a hash receipt. The four drafts and their old
 source-map README retain their exact bytes; Git supplies shared recovery.
 
+## Orbital verification campaign accounts
+
+The September 27 [architecture retrospective](https://github.com/ashtonsix/SixDB/blob/e40e87c/orbital/spec/ARCHITECTURE.md)
+and [design-change account](https://github.com/ashtonsix/SixDB/blob/e40e87c/orbital/spec/DESIGN-CHANGES.md)
+remain recoverable at `e40e87c`. Their current design substance is consolidated in
+[Orbital's architecture](../../orbital/ARCHITECTURE.md); the family reports retain
+specific model findings. The dated [baseline](../../orbital/spec/evidence/baseline-before-design/README.md)
+and [design selection](../../orbital/spec/evidence/design-revision/README.md) preserve
+exact evidence. [RESULTS](../../orbital/spec/RESULTS.md) owns current coverage.
+These two retired narratives are history, not additional current specifications.
+
 ## Recovery
 
 Browse the [complete checkpoint](https://github.com/ashtonsix/SixDB/tree/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes)
