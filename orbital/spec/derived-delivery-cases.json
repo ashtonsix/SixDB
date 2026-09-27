@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "DerivedDelivery-basic",
+      "module": "DerivedDelivery",
+      "config": "configs/DerivedDelivery-basic.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "DerivedDelivery-join",
+      "module": "DerivedDelivery",
+      "config": "configs/DerivedDelivery-join.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "DerivedDelivery-mismatch",
+      "module": "DerivedDelivery",
+      "config": "configs/DerivedDelivery-mismatch.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "DerivedDelivery-tentative",
+      "module": "DerivedDelivery",
+      "config": "configs/DerivedDelivery-tentative.cfg",
+      "tier": "quick",
+      "expect": "invariant:OnlyCommitted"
+    },
+    {
+      "name": "DerivedDelivery-dedup",
+      "module": "DerivedDelivery",
+      "config": "configs/DerivedDelivery-dedup.cfg",
+      "tier": "quick",
+      "expect": "invariant:EffectMultiplicity"
+    },
+    {
+      "name": "DerivedDelivery-checkpoint",
+      "module": "DerivedDelivery",
+      "config": "configs/DerivedDelivery-checkpoint.cfg",
+      "tier": "quick",
+      "expect": "invariant:Checkpoints"
+    },
+    {
+      "name": "DerivedDelivery-reach",
+      "module": "DerivedDelivery",
+      "config": "configs/DerivedDelivery-reach.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoC3Seam",
+      "witness": "NoC3Seam"
+    },
+    {
+      "name": "DerivedDelivery-reach-join",
+      "module": "DerivedDelivery",
+      "config": "configs/DerivedDelivery-reach-join.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoLateJoin",
+      "witness": "NoLateJoin"
+    },
+    {
+      "name": "DerivedDelivery-reach-abort",
+      "module": "DerivedDelivery",
+      "config": "configs/DerivedDelivery-reach-abort.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoMismatchAbort",
+      "witness": "NoMismatchAbort"
+    },
+    {
+      "name": "DerivedDelivery-source-reset",
+      "module": "DerivedDelivery",
+      "config": "configs/DerivedDelivery-source-reset.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "DerivedDelivery-reach-source-reset",
+      "module": "DerivedDelivery",
+      "config": "configs/DerivedDelivery-reach-source-reset.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoSourceReplacement",
+      "witness": "NoSourceReplacement"
+    },
+    {
+      "name": "DerivedDelivery-source-reset-identity",
+      "module": "DerivedDelivery",
+      "config": "configs/DerivedDelivery-source-reset-identity.cfg",
+      "tier": "quick",
+      "expect": "invariant:SourceCheckpointOutbox"
+    }
+  ]
+}

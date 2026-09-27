@@ -1,0 +1,708 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "JournalPersistence",
+      "module": "JournalPersistence",
+      "config": "configs/journal/persistence.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "JournalPersistenceFolded",
+      "module": "JournalPersistence",
+      "config": "configs/journal/persistence-folded.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "JournalPersistenceSuffix",
+      "module": "JournalPersistence",
+      "config": "configs/journal/persistence-suffix.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "JournalPersistenceOvertake",
+      "module": "JournalPersistence",
+      "config": "configs/journal/persistence-overtake.cfg",
+      "tier": "quick",
+      "expect": "invariant:RefinesAcceptor"
+    },
+    {
+      "name": "JournalPersistenceEarly",
+      "module": "JournalPersistence",
+      "config": "configs/journal/persistence-early.cfg",
+      "tier": "quick",
+      "expect": "invariant:RepliesFromDurableSnapshots"
+    },
+    {
+      "name": "JournalJointPendingResetWitness",
+      "module": "JournalPersistence",
+      "config": "configs/journal/persistence-joint-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoJointAmbiguousCompletion",
+      "witness": "both voters reset with pending writes"
+    },
+    {
+      "name": "JournalOrderCore",
+      "module": "JournalOrder",
+      "config": "configs/journal/order-core.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "JournalOrderOverlap",
+      "module": "JournalOrder",
+      "config": "configs/journal/order-overlap.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "JournalOrderDisjoint",
+      "module": "JournalOrder",
+      "config": "configs/journal/order-disjoint.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "JournalOrderTwoTransfers",
+      "module": "JournalOrder",
+      "config": "configs/journal/order-two-transfers.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "JournalOrderCompaction",
+      "module": "JournalOrder",
+      "config": "configs/journal/order-compaction.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "JournalOrderLoss",
+      "module": "JournalOrder",
+      "config": "configs/journal/order-loss.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "JournalOrderWrongRecovery",
+      "module": "JournalOrder",
+      "config": "configs/journal/order-wrong-recovery.cfg",
+      "tier": "quick",
+      "expect": "invariant:Agreement"
+    },
+    {
+      "name": "JournalOrderVolatile",
+      "module": "JournalOrder",
+      "config": "configs/journal/order-volatile.cfg",
+      "tier": "quick",
+      "expect": "invariant:Agreement"
+    },
+    {
+      "name": "JournalOrderExtendTerminal",
+      "module": "JournalOrder",
+      "config": "configs/journal/order-extend-terminal.cfg",
+      "tier": "quick",
+      "expect": "invariant:Closure"
+    },
+    {
+      "name": "JournalOrderWrongSuccessor",
+      "module": "JournalOrder",
+      "config": "configs/journal/order-wrong-successor.cfg",
+      "tier": "quick",
+      "expect": "invariant:NamedSuccessor"
+    },
+    {
+      "name": "JournalOrderDiscardSuffix",
+      "module": "JournalOrder",
+      "config": "configs/journal/order-discard-suffix.cfg",
+      "tier": "quick",
+      "expect": "invariant:Retained"
+    },
+    {
+      "name": "JournalRepeatedTransferWitness",
+      "module": "JournalOrder",
+      "config": "configs/journal/order-transfer-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoSecondTransfer",
+      "witness": "two terminal transfers preserve inherited prefix"
+    },
+    {
+      "name": "JournalCompactionWitness",
+      "module": "JournalOrder",
+      "config": "configs/journal/order-compaction-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCompaction",
+      "witness": "actual certified-prefix compaction"
+    },
+    {
+      "name": "JournalConcreteExplicitVoters",
+      "module": "JournalAuthority",
+      "config": "configs/journal/pilot.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "JournalSignerCertificates",
+      "module": "JournalAuthority",
+      "config": "configs/journal/signer-certificates.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "JournalFollowerIngress",
+      "module": "JournalAuthority",
+      "config": "configs/journal/follower-ingress.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "JournalSlowThird",
+      "module": "JournalAuthority",
+      "config": "configs/journal/slow-third.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "JournalEarlyFollower",
+      "module": "JournalAuthority",
+      "config": "configs/journal/early-follower.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoEarlyFollower",
+      "witness": "follower learns before leader"
+    },
+    {
+      "name": "JournalLostLeader",
+      "module": "JournalAuthority",
+      "config": "configs/journal/lost-leader.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoLostLeaderCompletion",
+      "witness": "surviving pair completes after leader media loss"
+    },
+    {
+      "name": "JournalEarlyEvidence",
+      "module": "JournalAuthority",
+      "config": "configs/journal/early-evidence.cfg",
+      "tier": "quick",
+      "expect": "invariant:LearnedEvidence"
+    },
+    {
+      "name": "JournalOrderedWriteControl",
+      "module": "JournalAuthority",
+      "config": "configs/journal/ordered-write-control.cfg",
+      "tier": "quick",
+      "expect": "invariant:PromiseDurable"
+    },
+    {
+      "name": "JournalErasedReuse",
+      "module": "JournalAuthority",
+      "config": "configs/journal/erased-reuse.cfg",
+      "tier": "quick",
+      "expect": "invariant:OrderRefinement"
+    },
+    {
+      "name": "JournalMissingQuorumProgressControl",
+      "module": "JournalAuthority",
+      "config": "configs/journal/omitted-quorum.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "DurableLogDuplicateService",
+      "module": "DurableLogService",
+      "config": "configs/journal/duplicate-service.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "DurableLogDuplicateWitness",
+      "module": "DurableLogService",
+      "config": "configs/journal/duplicate-service-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoDuplicatePositions",
+      "witness": "identical commands occupy distinct positions"
+    },
+    {
+      "name": "DurableLogRecoveryWitness",
+      "module": "DurableLogService",
+      "config": "configs/journal/recovery-service-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoRecoverySnapshot",
+      "witness": "snapshot ends at actual recovery barrier"
+    },
+    {
+      "name": "JournalTxC1",
+      "module": "JournalTransactionCuts",
+      "config": "configs/journal/c1.cfg",
+      "tier": "growth"
+    },
+    {
+      "name": "JournalTxC1OneAcceptOverlap",
+      "module": "JournalTransactionCuts",
+      "config": "configs/journal/c1-one-accept-overlap.cfg",
+      "tier": "growth"
+    },
+    {
+      "name": "JournalTxC1OneAcceptDisjoint",
+      "module": "JournalTransactionCuts",
+      "config": "configs/journal/c1-one-accept-disjoint.cfg",
+      "tier": "growth"
+    },
+    {
+      "name": "JournalTxC1QuorumAcceptOverlap",
+      "module": "JournalTransactionCuts",
+      "config": "configs/journal/c1-quorum-accept-overlap.cfg",
+      "tier": "growth"
+    },
+    {
+      "name": "JournalTxC8",
+      "module": "JournalTransactionCuts",
+      "config": "configs/journal/c8.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "JournalTxC8OldPlanDisjoint",
+      "module": "JournalTransactionCuts",
+      "config": "configs/journal/c8-old-plan-disjoint.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "JournalTxC1DropBound",
+      "module": "JournalTransactionCuts",
+      "config": "configs/journal/c1-drop-bound.cfg",
+      "tier": "growth",
+      "expect": "invariant:RestoredBounds"
+    },
+    {
+      "name": "JournalTxC8LateEnroll",
+      "module": "JournalTransactionCuts",
+      "config": "configs/journal/c8-late-enroll.cfg",
+      "tier": "quick",
+      "expect": "invariant:EnrollmentFence"
+    },
+    {
+      "name": "JournalTxC1Witness",
+      "module": "JournalTransactionCuts",
+      "config": "configs/journal/c1-witness.cfg",
+      "tier": "growth",
+      "expect": "invariant:NoCompletion",
+      "witness": "recover across partial durable fix and handoff"
+    },
+    {
+      "name": "JournalTxC8Witness",
+      "module": "JournalTransactionCuts",
+      "config": "configs/journal/c8-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCompletion",
+      "witness": "replay migration close and drain old plan"
+    },
+    {
+      "name": "AuthorityBootstrapSos",
+      "module": "AuthorityBootstrapSOS",
+      "config": "configs/journal/bootstrap-sos.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "AuthoritySosRestart",
+      "module": "AuthorityBootstrapSOS",
+      "config": "configs/journal/sos-restart.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "AuthorityBootstrapExportAuthority",
+      "module": "AuthorityBootstrapSOS",
+      "config": "configs/journal/bootstrap-export-authority.cfg",
+      "tier": "quick",
+      "expect": "invariant:AdmissionAuthority"
+    },
+    {
+      "name": "AuthorityBootstrapQuorumPause",
+      "module": "AuthorityBootstrapSOS",
+      "config": "configs/journal/bootstrap-quorum-pause.cfg",
+      "tier": "quick",
+      "expect": "temporal:SOSWithoutQuorum"
+    },
+    {
+      "name": "AuthoritySosLosePause",
+      "module": "AuthorityBootstrapSOS",
+      "config": "configs/journal/sos-lose-pause.cfg",
+      "tier": "quick",
+      "expect": "invariant:AdmissionAuthority"
+    },
+    {
+      "name": "AuthorityBootstrapWitness",
+      "module": "AuthorityBootstrapSOS",
+      "config": "configs/journal/bootstrap-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoBootstrap",
+      "witness": "material acquired before admission authority"
+    },
+    {
+      "name": "AuthoritySosWitness",
+      "module": "AuthorityBootstrapSOS",
+      "config": "configs/journal/sos-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoSOS",
+      "witness": "local durable pause exports without quorum"
+    },
+    {
+      "name": "JournalTxC1Decision",
+      "module": "JournalTransactionCuts",
+      "config": "configs/journal/c1-decision.cfg",
+      "tier": "growth"
+    },
+    {
+      "name": "BootstrapDiscovery",
+      "module": "BootstrapDiscovery",
+      "config": "configs/journal/bootstrap-discovery.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "BootstrapDiscoveryRestart",
+      "module": "BootstrapDiscovery",
+      "config": "configs/journal/bootstrap-discovery-restart.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "BootstrapDiscoveryStale",
+      "module": "BootstrapDiscovery",
+      "config": "configs/journal/discovery-stale.cfg",
+      "tier": "quick",
+      "expect": "invariant:InventoryComplete"
+    },
+    {
+      "name": "BootstrapDiscoveryEarly",
+      "module": "BootstrapDiscovery",
+      "config": "configs/journal/discovery-early.cfg",
+      "tier": "quick",
+      "expect": "invariant:ReadinessSound"
+    },
+    {
+      "name": "BootstrapDiscoveryAuthority",
+      "module": "BootstrapDiscovery",
+      "config": "configs/journal/discovery-authority.cfg",
+      "tier": "quick",
+      "expect": "invariant:AuthorityEvidence"
+    },
+    {
+      "name": "BootstrapDiscoveryWitness",
+      "module": "BootstrapDiscovery",
+      "config": "configs/journal/discovery-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoLateDiscovery",
+      "witness": "late root discovered during live transfer after observer restart"
+    },
+    {
+      "name": "BootstrapDiscoveryPartial",
+      "module": "BootstrapDiscovery",
+      "config": "configs/journal/discovery-partial.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPartialWithoutAuthority",
+      "witness": "incomplete evidence retained without serving or authority"
+    },
+    {
+      "name": "BootstrapIndependentScope",
+      "module": "BootstrapDiscovery",
+      "config": "configs/journal/discovery-independent.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoIndependentScope",
+      "witness": "ordering authority and ready scope proceed while another scope awaits bytes"
+    },
+    {
+      "name": "BootstrapPressure",
+      "module": "BootstrapUnderPressure",
+      "config": "configs/journal/bootstrap-pressure.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "BootstrapPressureShortReserve",
+      "module": "BootstrapUnderPressure",
+      "config": "configs/journal/bootstrap-pressure-short-reserve.cfg",
+      "tier": "quick",
+      "expect": "temporal:PressureCompletes"
+    },
+    {
+      "name": "BootstrapPressureEarlyRetire",
+      "module": "BootstrapUnderPressure",
+      "config": "configs/journal/bootstrap-pressure-early-retire.cfg",
+      "tier": "quick",
+      "expect": "invariant:PhysicalLifetime"
+    },
+    {
+      "name": "BootstrapPressureWitness",
+      "module": "BootstrapUnderPressure",
+      "config": "configs/journal/bootstrap-pressure-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPressureCompletion",
+      "witness": "reserved service completes while ordinary resources are saturated"
+    },
+    {
+      "name": "SosPressure",
+      "module": "SOSUnderPressure",
+      "config": "configs/journal/sos-pressure.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "SosPressureShortReserve",
+      "module": "SOSUnderPressure",
+      "config": "configs/journal/sos-pressure-short-reserve.cfg",
+      "tier": "quick",
+      "expect": "temporal:PressureCompletes"
+    },
+    {
+      "name": "SosPressureEarlyRetire",
+      "module": "SOSUnderPressure",
+      "config": "configs/journal/sos-pressure-early-retire.cfg",
+      "tier": "quick",
+      "expect": "invariant:PhysicalLifetime"
+    },
+    {
+      "name": "SosPressureWitness",
+      "module": "SOSUnderPressure",
+      "config": "configs/journal/sos-pressure-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPressureSOS",
+      "witness": "reserved service completes while ordinary resources are saturated"
+    },
+    {
+      "name": "JournalTxC1MediaLoss",
+      "module": "JournalTransactionCuts",
+      "config": "configs/journal/c1-media-loss.cfg",
+      "tier": "growth"
+    },
+    {
+      "name": "JournalThirdBallot",
+      "module": "JournalOrder",
+      "config": "configs/journal/order-three-ballots-single.cfg",
+      "tier": "growth"
+    },
+    {
+      "name": "JournalConcreteProvider",
+      "module": "JournalAuthority",
+      "config": "configs/journal/abstract-two-ballots.cfg",
+      "tier": "growth"
+    },
+    {
+      "name": "JournalTxC8PositiveFloor",
+      "module": "JournalTransactionCuts",
+      "config": "configs/journal/c8-floor-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPositiveTransferredFloor",
+      "witness": "completed reader floor survives actual replay and scoped transfer"
+    },
+    {
+      "name": "JournalTxC8DropFloor",
+      "module": "JournalTransactionCuts",
+      "config": "configs/journal/c8-drop-floor.cfg",
+      "tier": "quick",
+      "expect": "invariant:RestoredBounds"
+    },
+    {
+      "name": "ScopeReopen",
+      "module": "ScopeReopening",
+      "config": "configs/journal/scope-reopen.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ScopeReopenBefore",
+      "module": "ScopeReopening",
+      "config": "configs/journal/scope-reopen-before.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ScopeReopenRestart",
+      "module": "ScopeReopening",
+      "config": "configs/journal/scope-reopen-restart.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ScopeReopenRestartBefore",
+      "module": "ScopeReopening",
+      "config": "configs/journal/scope-reopen-restart-before.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ScopeReopenWrongTarget",
+      "module": "ScopeReopening",
+      "config": "configs/journal/scope-reopen-wrong-target.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ScopeReopenDropFloor",
+      "module": "ScopeReopening",
+      "config": "configs/journal/scope-reopen-drop-floor.cfg",
+      "tier": "quick",
+      "expect": "invariant:ImportedClosure"
+    },
+    {
+      "name": "ScopeReopenDropData",
+      "module": "ScopeReopening",
+      "config": "configs/journal/scope-reopen-drop-data.cfg",
+      "tier": "quick",
+      "expect": "invariant:ImportedClosure"
+    },
+    {
+      "name": "ScopeReopenStaleMap",
+      "module": "ScopeReopening",
+      "config": "configs/journal/scope-reopen-stale-map.cfg",
+      "tier": "quick",
+      "expect": "invariant:StaleFence"
+    },
+    {
+      "name": "ScopeReopenStaleBegin",
+      "module": "ScopeReopening",
+      "config": "configs/journal/scope-reopen-stale-begin.cfg",
+      "tier": "quick",
+      "expect": "invariant:StaleBeginFence"
+    },
+    {
+      "name": "ScopeReopenEarly",
+      "module": "ScopeReopening",
+      "config": "configs/journal/scope-reopen-early.cfg",
+      "tier": "quick",
+      "expect": "invariant:ActivationEvidence"
+    },
+    {
+      "name": "ScopeReopenAcceptWrongTarget",
+      "module": "ScopeReopening",
+      "config": "configs/journal/scope-reopen-accept-wrong-target.cfg",
+      "tier": "quick",
+      "expect": "invariant:RejectedUntouched"
+    },
+    {
+      "name": "ScopeReopenWitness",
+      "module": "ScopeReopening",
+      "config": "configs/journal/scope-reopen-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoReopening",
+      "witness": "different logical owner replays and opens map2, preserving positive floor and value"
+    },
+    {
+      "name": "ScopeRetainedRead",
+      "module": "ScopeRetention",
+      "config": "configs/journal/scope-retention.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ScopeLostRetention",
+      "module": "ScopeRetention",
+      "config": "configs/journal/scope-retention-omitted.cfg",
+      "tier": "quick",
+      "expect": "invariant:PhysicalClosure"
+    },
+    {
+      "name": "ScopeLostRetentionStall",
+      "module": "ScopeRetention",
+      "config": "configs/journal/scope-retention-stall.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes",
+      "heap": "1g"
+    },
+    {
+      "name": "ScopeRetainedReadWitness",
+      "module": "ScopeRetention",
+      "config": "configs/journal/scope-retention-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoRetainedRead",
+      "witness": "actual old-cut bytes read after new-map increment has published"
+    },
+    {
+      "name": "JournalDuplicateIngress",
+      "module": "JournalIngress",
+      "config": "configs/journal/duplicate-ingress.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "JournalDuplicateIngressWitness",
+      "module": "JournalIngress",
+      "config": "configs/journal/duplicate-ingress-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoDuplicateIngress",
+      "witness": "two different follower ingress envelopes carry one immutable frontier command"
+    },
+    {
+      "name": "PendingCutValue",
+      "module": "PendingCutTransfer",
+      "config": "configs/journal/pending-cut-value.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "PendingCutNone",
+      "module": "PendingCutTransfer",
+      "config": "configs/journal/pending-cut-none.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "PendingCutEarly",
+      "module": "PendingCutTransfer",
+      "config": "configs/journal/pending-cut-early.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "PendingCutEarlyNone",
+      "module": "PendingCutTransfer",
+      "config": "configs/journal/pending-cut-early-none.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "PendingCutLate",
+      "module": "PendingCutTransfer",
+      "config": "configs/journal/pending-cut-late.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "PendingCutLateNone",
+      "module": "PendingCutTransfer",
+      "config": "configs/journal/pending-cut-late-none.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "PendingCutOmit",
+      "module": "PendingCutTransfer",
+      "config": "configs/journal/pending-cut-omit.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPrematureRead"
+    },
+    {
+      "name": "PendingCutTail",
+      "module": "PendingCutTransfer",
+      "config": "configs/journal/pending-cut-tail.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "PendingCutPremature",
+      "module": "PendingCutTransfer",
+      "config": "configs/journal/pending-cut-premature.cfg",
+      "tier": "quick",
+      "expect": "invariant:CustodyControl"
+    },
+    {
+      "name": "PendingCutValueWitness",
+      "module": "PendingCutTransfer",
+      "config": "configs/journal/pending-cut-value-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCompletedTransfer",
+      "witness": "same retained root after old physical deletion, successor replay, tail crossing, newer head and exact read"
+    },
+    {
+      "name": "PendingCutEarlyWitness",
+      "module": "PendingCutTransfer",
+      "config": "configs/journal/pending-cut-early-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCompletedTransfer",
+      "witness": "same retained root after old physical deletion, successor replay, tail crossing, newer head and exact read"
+    },
+    {
+      "name": "PendingCutLateNoneWitness",
+      "module": "PendingCutTransfer",
+      "config": "configs/journal/pending-cut-late-none-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCompletedTransfer",
+      "witness": "same retained root after old physical deletion, successor replay, tail crossing, newer head and exact read"
+    },
+    {
+      "name": "PendingCutArrivalOrder",
+      "module": "PendingCutTransfer",
+      "config": "configs/journal/pending-cut-arrival.cfg",
+      "tier": "quick",
+      "expect": "invariant:SourceTerminal"
+    },
+    {
+      "name": "PendingCutReverseTail",
+      "module": "PendingCutTransfer",
+      "config": "configs/journal/pending-cut-reverse-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoReverseTail",
+      "witness": "reverse source-phase tail arrival preserves terminal fact and exact old-cut completion"
+    }
+  ]
+}

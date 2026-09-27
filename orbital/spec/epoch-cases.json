@@ -1,0 +1,174 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "Epoch-basic",
+      "module": "EpochExecution",
+      "config": "configs/Epoch-basic.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Epoch-three",
+      "module": "EpochExecution",
+      "config": "configs/Epoch-three.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Epoch-mismatch",
+      "module": "EpochExecution",
+      "config": "configs/Epoch-mismatch.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Epoch-progress",
+      "module": "EpochExecution",
+      "config": "configs/Epoch-progress.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Epoch-physical-close",
+      "module": "EpochExecution",
+      "config": "configs/Epoch-physical-close.cfg",
+      "tier": "quick",
+      "expect": "invariant:LogicalClosure"
+    },
+    {
+      "name": "Epoch-commuting",
+      "module": "EpochExecution",
+      "config": "configs/Epoch-commuting.cfg",
+      "tier": "quick",
+      "expect": "invariant:CorrectPrograms"
+    },
+    {
+      "name": "Epoch-early",
+      "module": "EpochExecution",
+      "config": "configs/Epoch-early.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoSpeculativePublication"
+    },
+    {
+      "name": "Epoch-drop-continuation",
+      "module": "EpochExecution",
+      "config": "configs/Epoch-drop-continuation.cfg",
+      "tier": "quick",
+      "expect": "invariant:ContinuationRetained"
+    },
+    {
+      "name": "TransactionEpoch-basic",
+      "module": "TransactionEpoch",
+      "config": "configs/TransactionEpoch-basic.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "TransactionEpoch-reverse",
+      "module": "TransactionEpoch",
+      "config": "configs/TransactionEpoch-reverse.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "TransactionEpoch-progress",
+      "module": "TransactionEpoch",
+      "config": "configs/TransactionEpoch-progress.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoUnrelatedProgress",
+      "witness": "C2-unrelated-publication"
+    },
+    {
+      "name": "Epoch-witness-resume",
+      "module": "EpochExecution",
+      "config": "configs/Epoch-witness-resume.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPendingThenResume",
+      "witness": "resume"
+    },
+    {
+      "name": "Epoch-witness-dynamic",
+      "module": "EpochExecution",
+      "config": "configs/Epoch-witness-dynamic.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoDynamicBranch",
+      "witness": "dynamic"
+    },
+    {
+      "name": "Epoch-witness-skew",
+      "module": "EpochExecution",
+      "config": "configs/Epoch-witness-skew.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPhysicalSkew",
+      "witness": "skew"
+    },
+    {
+      "name": "EpochTransactionFolds-basic",
+      "module": "EpochTransactionFolds",
+      "config": "configs/EpochTransactionFolds-basic.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "EpochTransactionFolds-remote",
+      "module": "EpochTransactionFolds",
+      "config": "configs/EpochTransactionFolds-remote.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "EpochTransactionFolds-mismatch",
+      "module": "EpochTransactionFolds",
+      "config": "configs/EpochTransactionFolds-mismatch.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "EpochTransactionFolds-self-source",
+      "module": "EpochTransactionFolds",
+      "config": "configs/EpochTransactionFolds-self-source.cfg",
+      "tier": "quick",
+      "expect": "invariant:SerialMeaning"
+    },
+    {
+      "name": "EpochTransactionFolds-drop-bound",
+      "module": "EpochTransactionFolds",
+      "config": "configs/EpochTransactionFolds-drop-bound.cfg",
+      "tier": "quick",
+      "expect": "invariant:ClosedAgreement"
+    },
+    {
+      "name": "EpochTransactionFolds-physical-close",
+      "module": "EpochTransactionFolds",
+      "config": "configs/EpochTransactionFolds-physical-close.cfg",
+      "tier": "quick",
+      "expect": "invariant:LogicalClosure"
+    },
+    {
+      "name": "EpochTransactionFolds-witness-skew",
+      "module": "EpochTransactionFolds",
+      "config": "configs/EpochTransactionFolds-witness-skew.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPhysicalSkew",
+      "witness": "independent-real-folds"
+    },
+    {
+      "name": "EpochTransactionFolds-witness-resume",
+      "module": "EpochTransactionFolds",
+      "config": "configs/EpochTransactionFolds-witness-resume.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoResumption",
+      "witness": "real-fold-resumption"
+    },
+    {
+      "name": "EpochTransactionFolds-correspondence",
+      "module": "EpochTransactionFolds",
+      "config": "configs/EpochTransactionFolds-correspondence.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "EpochTransactionFolds-any-order",
+      "module": "EpochTransactionFolds",
+      "config": "configs/EpochTransactionFolds-any-order.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "EpochTransactionFolds-any-mismatch",
+      "module": "EpochTransactionFolds",
+      "config": "configs/EpochTransactionFolds-any-mismatch.cfg",
+      "tier": "quick"
+    }
+  ]
+}

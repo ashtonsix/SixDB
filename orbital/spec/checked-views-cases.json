@@ -1,0 +1,73 @@
+{
+  "cases": [
+    {
+      "name": "CheckedViews-basic",
+      "module": "CheckedViews",
+      "config": "configs/CheckedViews-basic.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CheckedViews-prepared",
+      "module": "CheckedViews",
+      "config": "configs/CheckedViews-prepared.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CheckedViews-mismatch",
+      "module": "CheckedViews",
+      "config": "configs/CheckedViews-mismatch.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CheckedViews-main-divergence",
+      "module": "CheckedViews",
+      "config": "configs/CheckedViews-main-divergence.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CheckedViews-late-user",
+      "module": "CheckedViews",
+      "config": "configs/CheckedViews-late-user.cfg",
+      "tier": "quick",
+      "expect": "invariant:OldBytes"
+    },
+    {
+      "name": "CheckedViews-cancel-debt",
+      "module": "CheckedViews",
+      "config": "configs/CheckedViews-cancel-debt.cfg",
+      "tier": "quick",
+      "expect": "invariant:PhysicalDebt"
+    },
+    {
+      "name": "CheckedViews-unverified-main",
+      "module": "CheckedViews",
+      "config": "configs/CheckedViews-unverified-main.cfg",
+      "tier": "quick",
+      "expect": "invariant:VerifiedOutcome"
+    },
+    {
+      "name": "CheckedViews-reach-old",
+      "module": "CheckedViews",
+      "config": "configs/CheckedViews-reach-old.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoLateRead",
+      "witness": "NoLateRead"
+    },
+    {
+      "name": "CheckedViews-reach-debt",
+      "module": "CheckedViews",
+      "config": "configs/CheckedViews-reach-debt.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoReleasedBorrow",
+      "witness": "NoReleasedBorrow"
+    },
+    {
+      "name": "CheckedViews-reach-mismatch",
+      "module": "CheckedViews",
+      "config": "configs/CheckedViews-reach-mismatch.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoMismatchAbort",
+      "witness": "NoMismatchAbort"
+    }
+  ]
+}

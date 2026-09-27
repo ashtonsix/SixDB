@@ -1,0 +1,249 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "ViewsReuse",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsReuse.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ViewsSharing",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsSharing.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ViewsUndo",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsUndo.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ViewsRights",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsRights.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ViewsLifetime",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsLifetime.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ViewsHostReset",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsHostReset.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ViewsRepresentation",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsRepresentation.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ViewsCombined",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsCombined.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ViewsTwoPages",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsTwoPages.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ViewsPrepared",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsPrepared.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ViewsLateUser",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsLateUser.cfg",
+      "tier": "quick",
+      "expect": "invariant:ExactObserved"
+    },
+    {
+      "name": "ViewsAdjacent",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsAdjacent.cfg",
+      "tier": "quick",
+      "expect": "invariant:ExactObserved"
+    },
+    {
+      "name": "ViewsAsyncExtent",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsAsyncExtent.cfg",
+      "tier": "quick",
+      "expect": "invariant:AuthorizedAsync"
+    },
+    {
+      "name": "ViewsCancelRetires",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsCancelRetires.cfg",
+      "tier": "quick",
+      "expect": "invariant:PhysicalCharges"
+    },
+    {
+      "name": "ViewsOldCallback",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsOldCallback.cfg",
+      "tier": "quick",
+      "expect": "invariant:CallbacksFenced"
+    },
+    {
+      "name": "ViewsLiveRebind",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsLiveRebind.cfg",
+      "tier": "quick",
+      "expect": "invariant:BindingsHeld"
+    },
+    {
+      "name": "ViewsWholeInstall",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsWholeInstall.cfg",
+      "tier": "quick",
+      "expect": "invariant:PublishedBytes"
+    },
+    {
+      "name": "ViewsWholeUndo",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsWholeUndo.cfg",
+      "tier": "quick",
+      "expect": "invariant:PublishedBytes"
+    },
+    {
+      "name": "ViewsEarlyDrain",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsEarlyDrain.cfg",
+      "tier": "quick",
+      "expect": "invariant:RegistryDrainSound"
+    },
+    {
+      "name": "ViewsWrongInterpretation",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsWrongInterpretation.cfg",
+      "tier": "quick",
+      "expect": "invariant:ExactObserved"
+    },
+    {
+      "name": "ViewsReachReuse",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsReachReuse.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoReuseWitness",
+      "witness": "NoReuseWitness"
+    },
+    {
+      "name": "ViewsReachLateOld",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsReachLateOld.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoLateOldWitness",
+      "witness": "NoLateOldWitness"
+    },
+    {
+      "name": "ViewsReachCancelDebt",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsReachCancelDebt.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCancelDebtWitness",
+      "witness": "NoCancelDebtWitness"
+    },
+    {
+      "name": "ViewsReachRestart",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsReachRestart.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoRestartRetirementWitness",
+      "witness": "NoRestartRetirementWitness"
+    },
+    {
+      "name": "ViewsReachSharedPage",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsReachSharedPage.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoTwoWriterWitness",
+      "witness": "NoTwoWriterWitness"
+    },
+    {
+      "name": "ViewsReachDenied",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsReachDenied.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoDeniedWitness",
+      "witness": "NoDeniedWitness"
+    },
+    {
+      "name": "ViewsReachTwoPages",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsReachTwoPages.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoTwoPageWitness",
+      "witness": "NoTwoPageWitness"
+    },
+    {
+      "name": "ViewsReachHostCancel",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsReachHostCancel.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoHostCancellationWitness",
+      "witness": "NoHostCancellationWitness"
+    },
+    {
+      "name": "ViewsReachDrain",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsReachDrain.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoDrainWitness",
+      "witness": "NoDrainWitness"
+    },
+    {
+      "name": "ViewsReuseAbort",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsReuseAbort.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ViewsSkipRestore",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsSkipRestore.cfg",
+      "tier": "quick",
+      "expect": "invariant:ExactObserved"
+    },
+    {
+      "name": "ViewsReachRestore",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsReachRestore.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoRestoreWitness",
+      "witness": "Actual material restores abandoned reused page"
+    },
+    {
+      "name": "ViewsReadOnly",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsReadOnly.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ViewsCPUWrites",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsCPUWrites.cfg",
+      "tier": "quick",
+      "expect": "invariant:ReadOnlyProjection"
+    },
+    {
+      "name": "ViewsReachCPUProtect",
+      "module": "ViewsRuntime",
+      "config": "configs/ViewsReachCPUProtect.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCPUWriteDenialWitness",
+      "witness": "Hardware-protected view refuses actual CPU write attempt"
+    }
+  ]
+}

@@ -1,0 +1,366 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "Transaction-small",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-small.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Transaction-full-single",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-full-single.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Transaction-pair",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-pair.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Transaction-checked",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-checked.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Transaction-mismatch",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-mismatch.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Transaction-three-shard",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-three-shard.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Transaction-chain",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-chain.cfg",
+      "tier": "full"
+    },
+    {
+      "name": "Transaction-own-read",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-own-read.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Transaction-undeclared",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-undeclared.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Transaction-invalidation",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-invalidation.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Transaction-readonly-check",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-readonly-check.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Transaction-tombstone",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-tombstone.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Transaction-causal",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-causal.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Transaction-cancel",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-cancel.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Transaction-migration",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-migration.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Transaction-async",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-async.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Transaction-progress",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-progress.cfg",
+      "tier": "full"
+    },
+    {
+      "name": "Transaction-refinement",
+      "module": "TransactionRefinement",
+      "config": "configs/Transaction-refinement.cfg",
+      "tier": "full"
+    },
+    {
+      "name": "Transaction-skip-pending",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-skip-pending.cfg",
+      "tier": "quick",
+      "expect": "invariant:SerialReads"
+    },
+    {
+      "name": "Transaction-always-abort",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-always-abort.cfg",
+      "tier": "quick",
+      "expect": "invariant:JustifiedOutcome"
+    },
+    {
+      "name": "Transaction-early-execution",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-early-execution.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoEarlyExecution"
+    },
+    {
+      "name": "Transaction-final-only",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-final-only.cfg",
+      "tier": "quick",
+      "expect": "invariant:AllChecks"
+    },
+    {
+      "name": "Transaction-missing-checker",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-missing-checker.cfg",
+      "tier": "quick",
+      "expect": "invariant:AllChecks"
+    },
+    {
+      "name": "Transaction-last-arrival",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-last-arrival.cfg",
+      "tier": "quick",
+      "expect": "invariant:SerialReads"
+    },
+    {
+      "name": "Transaction-early-release",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-early-release.cfg",
+      "tier": "quick",
+      "expect": "invariant:GrantOrderPositions"
+    },
+    {
+      "name": "Transaction-resurrect",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-resurrect.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoLocalResurrection"
+    },
+    {
+      "name": "Transaction-missing-resolver",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-missing-resolver.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "Transaction-witness-publication",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-witness-publication.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPublication",
+      "witness": "publication"
+    },
+    {
+      "name": "Transaction-witness-partial-fix",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-witness-partial-fix.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPartialFix",
+      "witness": "partial-fix"
+    },
+    {
+      "name": "Transaction-witness-partial-install",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-witness-partial-install.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPartialInstall",
+      "witness": "partial-install"
+    },
+    {
+      "name": "Transaction-witness-replacement",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-witness-replacement.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoReplacementBenefit",
+      "witness": "replacement"
+    },
+    {
+      "name": "Transaction-witness-late-input",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-witness-late-input.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoLateRead",
+      "witness": "late-input"
+    },
+    {
+      "name": "Transaction-witness-mismatch-abort",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-witness-mismatch-abort.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoMismatchAbort",
+      "witness": "mismatch-abort"
+    },
+    {
+      "name": "Transaction-witness-crossed-cancel",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-witness-crossed-cancel.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCrossedCancellation",
+      "witness": "crossed-cancel"
+    },
+    {
+      "name": "Transaction-witness-async-incident",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-witness-async-incident.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoAsyncIncident",
+      "witness": "async-incident"
+    },
+    {
+      "name": "Transaction-witness-map-transfer",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-witness-map-transfer.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoMapTransfer",
+      "witness": "map-transfer"
+    },
+    {
+      "name": "Transaction-approved",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-approved.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Transaction-source-profile",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-source-profile.cfg",
+      "tier": "quick",
+      "expect": "invariant:JournaledProfile"
+    },
+    {
+      "name": "Transaction-private-bound",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-private-bound.cfg",
+      "tier": "quick",
+      "expect": "invariant:OnlyDeclaredBounds"
+    },
+    {
+      "name": "Transaction-witness-approved",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-witness-approved.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoApprovedPublication",
+      "witness": "approved-without-check-gate"
+    },
+    {
+      "name": "Transaction-spurious-mismatch",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-spurious-mismatch.cfg",
+      "tier": "quick",
+      "expect": "invariant:JustifiedOutcome"
+    },
+    {
+      "name": "Transaction-fabricated-mismatch",
+      "module": "TransactionMachine",
+      "config": "configs/Transaction-fabricated-mismatch.cfg",
+      "tier": "quick",
+      "expect": "invariant:JustifiedOutcome"
+    },
+    {
+      "name": "IndependentTransactions-basic",
+      "module": "IndependentTransactions",
+      "config": "configs/IndependentTransactions-basic.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "IndependentTransactions-barrier",
+      "module": "IndependentTransactions",
+      "config": "configs/IndependentTransactions-barrier.cfg",
+      "tier": "quick",
+      "expect": "temporal:IndependentCompletes"
+    },
+    {
+      "name": "IndependentTransactions-witness",
+      "module": "IndependentTransactions",
+      "config": "configs/IndependentTransactions-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoIndependentCompletion",
+      "witness": "actual independent client result with remote read permanently withheld"
+    },
+    {
+      "name": "HistoricalSnapshot-retained",
+      "module": "HistoricalSnapshot",
+      "config": "configs/HistoricalSnapshot-retained.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "HistoricalSnapshot-missing",
+      "module": "HistoricalSnapshot",
+      "config": "configs/HistoricalSnapshot-missing.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "HistoricalSnapshot-refuse",
+      "module": "HistoricalSnapshot",
+      "config": "configs/HistoricalSnapshot-refuse.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "HistoricalSnapshot-upgrade",
+      "module": "HistoricalSnapshot",
+      "config": "configs/HistoricalSnapshot-upgrade.cfg",
+      "tier": "quick",
+      "expect": "invariant:RequestedCutPreserved"
+    },
+    {
+      "name": "HistoricalSnapshot-downgrade",
+      "module": "HistoricalSnapshot",
+      "config": "configs/HistoricalSnapshot-downgrade.cfg",
+      "tier": "quick",
+      "expect": "invariant:RequestedFreshness"
+    },
+    {
+      "name": "HistoricalSnapshot-latest",
+      "module": "HistoricalSnapshot",
+      "config": "configs/HistoricalSnapshot-latest.cfg",
+      "tier": "quick",
+      "expect": "invariant:ExactMaterial"
+    },
+    {
+      "name": "HistoricalSnapshot-witness-old",
+      "module": "HistoricalSnapshot",
+      "config": "configs/HistoricalSnapshot-witness-old.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoHistoricalResult",
+      "witness": "selected retained old snapshot after newer publication"
+    },
+    {
+      "name": "HistoricalSnapshot-witness-missing",
+      "module": "HistoricalSnapshot",
+      "config": "configs/HistoricalSnapshot-witness-missing.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoExactFailure",
+      "witness": "unavailable selected snapshot aborts without upgrading cut"
+    }
+  ]
+}

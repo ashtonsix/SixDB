@@ -1,0 +1,79 @@
+{
+  "cases": [
+    {
+      "name": "VersionedExecution-checked",
+      "module": "VersionedExecution",
+      "config": "configs/VersionedExecution-checked.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "VersionedExecution-checked-disagree",
+      "module": "VersionedExecution",
+      "config": "configs/VersionedExecution-checked-disagree.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "VersionedExecution-approved-audit",
+      "module": "VersionedExecution",
+      "config": "configs/VersionedExecution-approved-audit.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "VersionedExecution-approved-incident",
+      "module": "VersionedExecution",
+      "config": "configs/VersionedExecution-approved-incident.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "VersionedExecution-missing",
+      "module": "VersionedExecution",
+      "config": "configs/VersionedExecution-missing.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "VersionedExecution-wrong-version",
+      "module": "VersionedExecution",
+      "config": "configs/VersionedExecution-wrong-version.cfg",
+      "tier": "quick",
+      "expect": "invariant:CodeVersion"
+    },
+    {
+      "name": "VersionedExecution-missing-fallback",
+      "module": "VersionedExecution",
+      "config": "configs/VersionedExecution-missing-fallback.cfg",
+      "tier": "quick",
+      "expect": "invariant:CodeVersion"
+    },
+    {
+      "name": "VersionedExecution-early-release",
+      "module": "VersionedExecution",
+      "config": "configs/VersionedExecution-early-release.cfg",
+      "tier": "quick",
+      "expect": "invariant:CodeRetention"
+    },
+    {
+      "name": "VersionedExecution-reach-incident",
+      "module": "VersionedExecution",
+      "config": "configs/VersionedExecution-reach-incident.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoAuditIncident",
+      "witness": "NoAuditIncident"
+    },
+    {
+      "name": "VersionedExecution-reach-retained",
+      "module": "VersionedExecution",
+      "config": "configs/VersionedExecution-reach-retained.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoProtectedPublication",
+      "witness": "NoProtectedPublication"
+    },
+    {
+      "name": "VersionedExecution-reach-missing",
+      "module": "VersionedExecution",
+      "config": "configs/VersionedExecution-reach-missing.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoMissingAbort",
+      "witness": "NoMissingAbort"
+    }
+  ]
+}

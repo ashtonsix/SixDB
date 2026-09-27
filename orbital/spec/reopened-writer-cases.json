@@ -1,0 +1,66 @@
+{
+  "cases": [
+    {
+      "name": "ReopenedWriter-commit",
+      "module": "ReopenedWriter",
+      "config": "configs/ReopenedWriter-commit.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ReopenedWriter-abort",
+      "module": "ReopenedWriter",
+      "config": "configs/ReopenedWriter-abort.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ReopenedWriter-commit-early",
+      "module": "ReopenedWriter",
+      "config": "configs/ReopenedWriter-commit-early.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ReopenedWriter-abort-early",
+      "module": "ReopenedWriter",
+      "config": "configs/ReopenedWriter-abort-early.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "ReopenedWriter-trust-cache",
+      "module": "ReopenedWriter",
+      "config": "configs/ReopenedWriter-trust-cache.cfg",
+      "tier": "quick",
+      "expect": "invariant:ReopenedBytes"
+    },
+    {
+      "name": "ReopenedWriter-skip-replay",
+      "module": "ReopenedWriter",
+      "config": "configs/ReopenedWriter-skip-replay.cfg",
+      "tier": "quick",
+      "expect": "invariant:ReopenedBytes"
+    },
+    {
+      "name": "ReopenedWriter-reach-commit",
+      "module": "ReopenedWriter",
+      "config": "configs/ReopenedWriter-reach-commit.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoReopened",
+      "witness": "NoReopened"
+    },
+    {
+      "name": "ReopenedWriter-reach-abort",
+      "module": "ReopenedWriter",
+      "config": "configs/ReopenedWriter-reach-abort.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoReopened",
+      "witness": "NoReopened"
+    },
+    {
+      "name": "ReopenedWriter-reach-early",
+      "module": "ReopenedWriter",
+      "config": "configs/ReopenedWriter-reach-early.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoEarlyReset",
+      "witness": "NoEarlyReset"
+    }
+  ]
+}

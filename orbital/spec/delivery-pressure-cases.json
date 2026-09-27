@@ -1,0 +1,85 @@
+{
+  "cases": [
+    {
+      "name": "DeliveryPressure-plain",
+      "module": "DeliveryUnderPressure",
+      "config": "configs/DeliveryPressure-plain.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "DeliveryPressure-duplicate",
+      "module": "DeliveryUnderPressure",
+      "config": "configs/DeliveryPressure-duplicate.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "DeliveryPressure-child",
+      "module": "DeliveryUnderPressure",
+      "config": "configs/DeliveryPressure-child.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "DeliveryPressure-join",
+      "module": "DeliveryUnderPressure",
+      "config": "configs/DeliveryPressure-join.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "DeliveryPressure-cancel",
+      "module": "DeliveryUnderPressure",
+      "config": "configs/DeliveryPressure-cancel.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "DeliveryPressure-reset",
+      "module": "DeliveryUnderPressure",
+      "config": "configs/DeliveryPressure-reset.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "DeliveryPressure-short-recipient",
+      "module": "DeliveryUnderPressure",
+      "config": "configs/DeliveryPressure-short-recipient.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "DeliveryPressure-no-worker",
+      "module": "DeliveryUnderPressure",
+      "config": "configs/DeliveryPressure-no-worker.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "DeliveryPressure-cancel-debt",
+      "module": "DeliveryUnderPressure",
+      "config": "configs/DeliveryPressure-cancel-debt.cfg",
+      "tier": "quick",
+      "expect": "invariant:PhysicalLifetime"
+    },
+    {
+      "name": "DeliveryPressure-NoComplete",
+      "module": "DeliveryUnderPressure",
+      "config": "configs/DeliveryPressure-NoComplete.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoComplete",
+      "witness": "NoComplete"
+    },
+    {
+      "name": "DeliveryPressure-NoCancelledDebt",
+      "module": "DeliveryUnderPressure",
+      "config": "configs/DeliveryPressure-NoCancelledDebt.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCancelledDebt",
+      "witness": "NoCancelledDebt"
+    },
+    {
+      "name": "DeliveryPressure-NoPhysicalAfterLogical",
+      "module": "DeliveryUnderPressure",
+      "config": "configs/DeliveryPressure-NoPhysicalAfterLogical.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPhysicalAfterLogical",
+      "witness": "NoPhysicalAfterLogical"
+    }
+  ]
+}

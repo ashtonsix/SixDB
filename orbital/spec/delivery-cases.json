@@ -1,0 +1,173 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "Delivery-leaf-full",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-leaf-full.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Delivery-leaf-duplicates",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-leaf-duplicates.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Delivery-ordinary",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-ordinary.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Delivery-two-part",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-two-part.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Delivery-route",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-route.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Delivery-transform-branch",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-transform-branch.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Delivery-custody-restart",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-custody-restart.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Delivery-child",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-child.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Delivery-shared-cancel",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-shared-cancel.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Delivery-late-join",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-late-join.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Delivery-child-cancel",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-child-cancel.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Delivery-joined",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-joined.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Delivery-bad-duplicate",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-bad-duplicate.cfg",
+      "tier": "quick",
+      "expect": "invariant:EffectMultiplicity"
+    },
+    {
+      "name": "Delivery-bad-transport",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-bad-transport.cfg",
+      "tier": "quick",
+      "expect": "invariant:ProcessedBeforeRelease"
+    },
+    {
+      "name": "Delivery-bad-child",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-bad-child.cfg",
+      "tier": "quick",
+      "expect": "invariant:Coverage"
+    },
+    {
+      "name": "Delivery-bad-cancel",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-bad-cancel.cfg",
+      "tier": "quick",
+      "expect": "invariant:CancellationAuthority"
+    },
+    {
+      "name": "Delivery-bad-checkpoint",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-bad-checkpoint.cfg",
+      "tier": "quick",
+      "expect": "invariant:Checkpoints"
+    },
+    {
+      "name": "Delivery-bad-output",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-bad-output.cfg",
+      "tier": "quick",
+      "expect": "invariant:EffectMultiplicity"
+    },
+    {
+      "name": "Delivery-bad-identity",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-bad-identity.cfg",
+      "tier": "quick",
+      "expect": "invariant:Canonical"
+    },
+    {
+      "name": "Delivery-bad-transform",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-bad-transform.cfg",
+      "tier": "quick",
+      "expect": "invariant:Canonical"
+    },
+    {
+      "name": "Delivery-reach-route",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-reach-route.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoReroutedCompletion",
+      "witness": "NoReroutedCompletion"
+    },
+    {
+      "name": "Delivery-reach-restart",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-reach-restart.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoRestartCompletion",
+      "witness": "NoRestartCompletion"
+    },
+    {
+      "name": "Delivery-reach-transform",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-reach-transform.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoTransformedUse",
+      "witness": "NoTransformedUse"
+    },
+    {
+      "name": "Delivery-reach-join",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-reach-join.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoJoinedService",
+      "witness": "NoJoinedService"
+    },
+    {
+      "name": "Delivery-reach-cancel",
+      "module": "DeliveryDataflow",
+      "config": "configs/Delivery-reach-cancel.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoSharedCancel",
+      "witness": "NoSharedCancel"
+    }
+  ]
+}

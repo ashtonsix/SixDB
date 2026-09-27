@@ -1,0 +1,775 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "Admission-physical",
+      "module": "AdmissionMaterial",
+      "config": "configs/Admission-physical.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Admission-journal",
+      "module": "AdmissionMaterial",
+      "config": "configs/Admission-journal.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Admission-domain-loss",
+      "module": "AdmissionMaterial",
+      "config": "configs/Admission-domain-loss.cfg",
+      "tier": "growth"
+    },
+    {
+      "name": "Admission-two-keys",
+      "module": "AdmissionMaterial",
+      "config": "configs/Admission-two-keys.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Admission-independent-keys",
+      "module": "AdmissionMaterial",
+      "config": "configs/Admission-independent-keys.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Admission-discovery-reset",
+      "module": "AdmissionMaterial",
+      "config": "configs/Admission-discovery-reset.cfg",
+      "tier": "growth"
+    },
+    {
+      "name": "Admission-shared-loss-compact",
+      "module": "AdmissionCompact",
+      "config": "configs/Admission-shared-loss-compact.cfg",
+      "tier": "growth"
+    },
+    {
+      "name": "Admission-correspondence",
+      "module": "AdmissionCorrespondence",
+      "config": "configs/Admission-correspondence.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Admission-correspondence-renewal",
+      "module": "AdmissionCorrespondence",
+      "config": "configs/Admission-correspondence-renewal.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Admission-correspondence-keys",
+      "module": "AdmissionCorrespondence",
+      "config": "configs/Admission-correspondence-keys.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Admission-correspondence-live-send",
+      "module": "AdmissionCorrespondence",
+      "config": "configs/Admission-correspondence-live-send.cfg",
+      "tier": "quick",
+      "expect": "invariant:ExactRepresentation"
+    },
+    {
+      "name": "Admission-renewal-capability",
+      "module": "AdmissionCapabilities",
+      "config": "configs/Admission-renewal-capability.cfg",
+      "tier": "growth",
+      "workers": 4,
+      "heap": "2g"
+    },
+    {
+      "name": "Admission-correspondence-capability",
+      "module": "AdmissionCapabilityCorrespondence",
+      "config": "configs/Admission-correspondence-capability.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Admission-correspondence-renewal-capability",
+      "module": "AdmissionCapabilityCorrespondence",
+      "config": "configs/Admission-correspondence-renewal-capability.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Admission-correspondence-keys-capability",
+      "module": "AdmissionCapabilityCorrespondence",
+      "config": "configs/Admission-correspondence-keys-capability.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Admission-capability-one-copy",
+      "module": "AdmissionCapabilities",
+      "config": "configs/Admission-capability-one-copy.cfg",
+      "tier": "quick",
+      "expect": "invariant:CertificateEvidence"
+    },
+    {
+      "name": "Admission-history-same",
+      "module": "AdmissionHistories",
+      "config": "configs/Admission-history-same.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Admission-history-same-reach",
+      "module": "AdmissionHistories",
+      "config": "configs/Admission-history-same-reach.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoSeam",
+      "witness": "same-seam"
+    },
+    {
+      "name": "Admission-history-independent",
+      "module": "AdmissionHistories",
+      "config": "configs/Admission-history-independent.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Admission-history-independent-reach",
+      "module": "AdmissionHistories",
+      "config": "configs/Admission-history-independent-reach.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoSeam",
+      "witness": "independent-seam"
+    },
+    {
+      "name": "Admission-history-repair",
+      "module": "AdmissionHistories",
+      "config": "configs/Admission-history-repair.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Admission-history-repair-reach",
+      "module": "AdmissionHistories",
+      "config": "configs/Admission-history-repair-reach.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoSeam",
+      "witness": "repair-seam"
+    },
+    {
+      "name": "Admission-history-tail",
+      "module": "AdmissionHistories",
+      "config": "configs/Admission-history-tail.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Admission-history-tail-reach",
+      "module": "AdmissionHistories",
+      "config": "configs/Admission-history-tail-reach.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoSeam",
+      "witness": "tail-seam"
+    },
+    {
+      "name": "Admission-history-resumption",
+      "module": "AdmissionHistories",
+      "config": "configs/Admission-history-resumption.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Admission-history-resumption-reach",
+      "module": "AdmissionHistories",
+      "config": "configs/Admission-history-resumption-reach.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoSeam",
+      "witness": "resumption-seam"
+    },
+    {
+      "name": "Admission-no-resumption",
+      "module": "AdmissionHistories",
+      "config": "configs/Admission-no-resumption.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "Admission-bad-one-copy",
+      "module": "AdmissionMaterial",
+      "config": "configs/Admission-bad-one-copy.cfg",
+      "tier": "quick",
+      "expect": "invariant:CertificateEvidence"
+    },
+    {
+      "name": "Admission-bad-decoder",
+      "module": "AdmissionMaterial",
+      "config": "configs/Admission-bad-decoder.cfg",
+      "tier": "quick",
+      "expect": "invariant:RefinesCertificateService"
+    },
+    {
+      "name": "Admission-bad-receipt-alias",
+      "module": "AdmissionMaterial",
+      "config": "configs/Admission-bad-receipt-alias.cfg",
+      "tier": "quick",
+      "expect": "invariant:RefinesCertificateService"
+    },
+    {
+      "name": "Admission-bad-stale-renewal",
+      "module": "AdmissionHistories",
+      "config": "configs/Admission-bad-stale-renewal.cfg",
+      "tier": "quick",
+      "expect": "invariant:CertificateEvidence"
+    },
+    {
+      "name": "Frontiers-small",
+      "module": "AdmissionFrontiers",
+      "config": "configs/Frontiers-small.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Frontiers-growth",
+      "module": "AdmissionFrontiers",
+      "config": "configs/Frontiers-growth.cfg",
+      "tier": "growth"
+    },
+    {
+      "name": "Frontiers-hole",
+      "module": "AdmissionFrontiers",
+      "config": "configs/Frontiers-hole.cfg",
+      "tier": "quick",
+      "expect": "invariant:Contiguous"
+    },
+    {
+      "name": "Frontiers-reach-NoIndependentStream",
+      "module": "AdmissionFrontiers",
+      "config": "configs/Frontiers-reach-NoIndependentStream.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoIndependentStream",
+      "witness": "NoIndependentStream"
+    },
+    {
+      "name": "Frontiers-reach-NoOutOfOrderCertificate",
+      "module": "AdmissionFrontiers",
+      "config": "configs/Frontiers-reach-NoOutOfOrderCertificate.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoOutOfOrderCertificate",
+      "witness": "NoOutOfOrderCertificate"
+    },
+    {
+      "name": "Frontiers-reach-NoTwoGenerations",
+      "module": "AdmissionFrontiers",
+      "config": "configs/Frontiers-reach-NoTwoGenerations.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoTwoGenerations",
+      "witness": "NoTwoGenerations"
+    },
+    {
+      "name": "Admission-reach-NoHistoricalOnlyCertificate",
+      "module": "AdmissionEvidence",
+      "config": "configs/Admission-reach-NoHistoricalOnlyCertificate.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoHistoricalOnlyCertificate",
+      "witness": "NoHistoricalOnlyCertificate"
+    },
+    {
+      "name": "Admission-reach-NoExhaustedProtection",
+      "module": "AdmissionEvidence",
+      "config": "configs/Admission-reach-NoExhaustedProtection.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoExhaustedProtection",
+      "witness": "NoExhaustedProtection"
+    },
+    {
+      "name": "Frontiers-three-lsns",
+      "module": "AdmissionFrontiers",
+      "config": "configs/Frontiers-three-lsns.cfg",
+      "tier": "growth"
+    },
+    {
+      "name": "Admission-cold-holder",
+      "module": "AdmissionCold",
+      "config": "configs/Admission-cold-holder.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Admission-cold-no-authority",
+      "module": "AdmissionCold",
+      "config": "configs/Admission-cold-no-authority.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "Admission-cold-reach",
+      "module": "AdmissionCold",
+      "config": "configs/Admission-cold-reach.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoReinstalled",
+      "witness": "cold-holder-reinstalled"
+    },
+    {
+      "name": "Admission-observer-probe-good",
+      "module": "AdmissionCapabilityObserverProbe",
+      "config": "configs/Admission-observer-probe-good.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Admission-observer-probe-invalid",
+      "module": "AdmissionCapabilityObserverProbe",
+      "config": "configs/Admission-observer-probe-invalid.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Admission-observer-probe-bypass",
+      "module": "AdmissionCapabilityObserverProbe",
+      "config": "configs/Admission-observer-probe-bypass.cfg",
+      "tier": "quick",
+      "expect": "invariant:ObserverAgreement"
+    },
+    {
+      "name": "Early-full",
+      "module": "EarlyDispatch",
+      "config": "configs/Early-full.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Early-overlap",
+      "module": "EarlyDispatch",
+      "config": "configs/Early-overlap.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Early-bad-reuse-retired-range",
+      "module": "EarlyDispatch",
+      "config": "configs/Early-bad-reuse-retired-range.cfg",
+      "tier": "quick",
+      "expect": "invariant:AtMostOnce"
+    },
+    {
+      "name": "Early-bad-fresh-generation-relabel",
+      "module": "EarlyDispatch",
+      "config": "configs/Early-bad-fresh-generation-relabel.cfg",
+      "tier": "quick",
+      "expect": "invariant:DisjointRanges"
+    },
+    {
+      "name": "Early-bad-reassigned-effect",
+      "module": "EarlyDispatch",
+      "config": "configs/Early-bad-reassigned-effect.cfg",
+      "tier": "quick",
+      "expect": "invariant:AtMostOnce"
+    },
+    {
+      "name": "Early-reach-NoEarlyUse",
+      "module": "EarlyDispatch",
+      "config": "configs/Early-reach-NoEarlyUse.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoEarlyUse",
+      "witness": "NoEarlyUse"
+    },
+    {
+      "name": "Early-reach-NoDelayedOldUse",
+      "module": "EarlyDispatch",
+      "config": "configs/Early-reach-NoDelayedOldUse.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoDelayedOldUse",
+      "witness": "NoDelayedOldUse"
+    },
+    {
+      "name": "Early-reach-NoForgottenRecovery",
+      "module": "EarlyDispatch",
+      "config": "configs/Early-reach-NoForgottenRecovery.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoForgottenRecovery",
+      "witness": "NoForgottenRecovery"
+    },
+    {
+      "name": "Recovery-pilot",
+      "module": "RecoveryMaterial",
+      "config": "configs/Recovery-pilot.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Recovery-gc",
+      "module": "RecoveryMaterial",
+      "config": "configs/Recovery-gc.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Recovery-reset",
+      "module": "RecoveryMaterial",
+      "config": "configs/Recovery-reset.cfg",
+      "tier": "growth"
+    },
+    {
+      "name": "Recovery-transfer",
+      "module": "RecoveryMaterial",
+      "config": "configs/Recovery-transfer.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Recovery-crossed-abort",
+      "module": "RecoveryMaterial",
+      "config": "configs/Recovery-crossed-abort.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Recovery-two-holders",
+      "module": "RecoveryMaterial",
+      "config": "configs/Recovery-two-holders.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Recovery-bad-unheld-register",
+      "module": "RecoveryMaterial",
+      "config": "configs/Recovery-bad-unheld-register.cfg",
+      "tier": "quick",
+      "expect": "invariant:LiveRetained"
+    },
+    {
+      "name": "Recovery-bad-collect-held",
+      "module": "RecoveryMaterial",
+      "config": "configs/Recovery-bad-collect-held.cfg",
+      "tier": "quick",
+      "expect": "invariant:HeldExists"
+    },
+    {
+      "name": "Recovery-bad-resurrect-hold",
+      "module": "RecoveryMaterial",
+      "config": "configs/Recovery-bad-resurrect-hold.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoResurrection"
+    },
+    {
+      "name": "Recovery-reach-NoGrant",
+      "module": "RecoveryMaterial",
+      "config": "configs/Recovery-reach-NoGrant.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoGrant",
+      "witness": "NoGrant"
+    },
+    {
+      "name": "Recovery-reach-NoRetirement",
+      "module": "RecoveryMaterial",
+      "config": "configs/Recovery-reach-NoRetirement.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoRetirement",
+      "witness": "NoRetirement"
+    },
+    {
+      "name": "Recovery-reach-NoRecovery",
+      "module": "RecoveryMaterial",
+      "config": "configs/Recovery-reach-NoRecovery.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoRecovery",
+      "witness": "NoRecovery"
+    },
+    {
+      "name": "Transfer-crossed",
+      "module": "MaterialTransfer",
+      "config": "configs/Transfer-crossed.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Transfer-conversion",
+      "module": "MaterialTransfer",
+      "config": "configs/Transfer-conversion.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Transfer-hold-reply",
+      "module": "MaterialTransfer",
+      "config": "configs/Transfer-hold-reply.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Transfer-early-release",
+      "module": "MaterialTransfer",
+      "config": "configs/Transfer-early-release.cfg",
+      "tier": "quick",
+      "expect": "invariant:TransferBeforeRelease"
+    },
+    {
+      "name": "Transfer-reach-NoLateCopy",
+      "module": "MaterialTransfer",
+      "config": "configs/Transfer-reach-NoLateCopy.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoLateCopy",
+      "witness": "NoLateCopy"
+    },
+    {
+      "name": "Transfer-reach-NoLostReceiptRecovery",
+      "module": "MaterialTransfer",
+      "config": "configs/Transfer-reach-NoLostReceiptRecovery.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoLostReceiptRecovery",
+      "witness": "NoLostReceiptRecovery"
+    },
+    {
+      "name": "Transfer-reach-NoIncompleteJoin",
+      "module": "MaterialTransfer",
+      "config": "configs/Transfer-reach-NoIncompleteJoin.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoIncompleteJoin",
+      "witness": "NoIncompleteJoin"
+    },
+    {
+      "name": "Recipes-chain",
+      "module": "RecipeDependencies",
+      "config": "configs/Recipes-chain.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Recipes-reach-chain",
+      "module": "RecipeDependencies",
+      "config": "configs/Recipes-reach-chain.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoDerivedSuccess",
+      "witness": "NoDerivedSuccess"
+    },
+    {
+      "name": "Recipes-cycle",
+      "module": "RecipeDependencies",
+      "config": "configs/Recipes-cycle.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Recipes-reach-cycle",
+      "module": "RecipeDependencies",
+      "config": "configs/Recipes-reach-cycle.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCycleFailure",
+      "witness": "NoCycleFailure"
+    },
+    {
+      "name": "Recipes-cyclic-declaration",
+      "module": "RecipeDependencies",
+      "config": "configs/Recipes-cyclic-declaration.cfg",
+      "tier": "quick",
+      "expect": "invariant:GroundedRoots"
+    },
+    {
+      "name": "Retained-pair",
+      "module": "RetainedTransactions",
+      "config": "configs/Retained-pair.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Retained-readonly-check",
+      "module": "RetainedTransactions",
+      "config": "configs/Retained-readonly-check.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Retained-late-source",
+      "module": "RetainedTransactions",
+      "config": "configs/Retained-late-source.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Retained-bad-latest-substitution",
+      "module": "RetainedTransactions",
+      "config": "configs/Retained-bad-latest-substitution.cfg",
+      "tier": "quick",
+      "expect": "invariant:ExactMaterial"
+    },
+    {
+      "name": "Retained-bad-drop-pending-coverage",
+      "module": "RetainedTransactions",
+      "config": "configs/Retained-bad-drop-pending-coverage.cfg",
+      "tier": "quick",
+      "expect": "invariant:RetainedCoverage"
+    },
+    {
+      "name": "Retained-reach-NoMaterialRead",
+      "module": "RetainedTransactions",
+      "config": "configs/Retained-reach-NoMaterialRead.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoMaterialRead",
+      "witness": "NoMaterialRead"
+    },
+    {
+      "name": "Retained-reach-NoPendingCut",
+      "module": "RetainedTransactions",
+      "config": "configs/Retained-reach-NoPendingCut.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPendingCut",
+      "witness": "NoPendingCut"
+    },
+    {
+      "name": "Retained-reach-NoLateFailure",
+      "module": "RetainedTransactions",
+      "config": "configs/Retained-reach-NoLateFailure.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoLateFailure",
+      "witness": "NoLateFailure"
+    },
+    {
+      "name": "Retained-reach-NoAgreedLateFailure",
+      "module": "RetainedTransactions",
+      "config": "configs/Retained-reach-NoAgreedLateFailure.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoAgreedLateFailure",
+      "witness": "NoAgreedLateFailure"
+    },
+    {
+      "name": "Retained-reach-NoPendingCompletion",
+      "module": "RetainedTransactions",
+      "config": "configs/Retained-reach-NoPendingCompletion.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPendingCompletion",
+      "witness": "NoPendingCompletion"
+    },
+    {
+      "name": "TerminalFloor-holes",
+      "module": "TerminalFloor",
+      "config": "configs/TerminalFloor-holes.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "TerminalFloor-skip-unresolved",
+      "module": "TerminalFloor",
+      "config": "configs/TerminalFloor-skip-unresolved.cfg",
+      "tier": "quick",
+      "expect": "invariant:RefinesUncompressed"
+    },
+    {
+      "name": "TerminalFloor-forget-floor",
+      "module": "TerminalFloor",
+      "config": "configs/TerminalFloor-forget-floor.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoResurrection"
+    },
+    {
+      "name": "TerminalFloor-reach-NoHole",
+      "module": "TerminalFloor",
+      "config": "configs/TerminalFloor-reach-NoHole.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoHole",
+      "witness": "NoHole"
+    },
+    {
+      "name": "TerminalFloor-reach-NoCompactedRecovery",
+      "module": "TerminalFloor",
+      "config": "configs/TerminalFloor-reach-NoCompactedRecovery.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCompactedRecovery",
+      "witness": "NoCompactedRecovery"
+    },
+    {
+      "name": "Bypass-single",
+      "module": "AdmissionBypass",
+      "config": "configs/Bypass-single.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Bypass-readonly-check",
+      "module": "AdmissionBypass",
+      "config": "configs/Bypass-readonly-check.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Bypass-global-order",
+      "module": "AdmissionBypass",
+      "config": "configs/Bypass-global-order.cfg",
+      "tier": "quick",
+      "expect": "temporal:SourceIndependent"
+    },
+    {
+      "name": "Bypass-reach",
+      "module": "AdmissionBypass",
+      "config": "configs/Bypass-reach.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoBypass",
+      "witness": "C transaction while L has hole"
+    },
+    {
+      "name": "Retention-race-chain",
+      "module": "RetentionRaceProbe",
+      "config": "configs/Retention-race-chain.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Retention-race-invalidation",
+      "module": "RetentionRaceProbe",
+      "config": "configs/Retention-race-invalidation.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Retention-race-chain-witness",
+      "module": "RetentionRaceProbe",
+      "config": "configs/Retention-race-chain-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCausalHistory",
+      "witness": "same-root-retained-fallback"
+    },
+    {
+      "name": "Retention-race-invalidation-witness",
+      "module": "RetentionRaceProbe",
+      "config": "configs/Retention-race-invalidation-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCausalHistory",
+      "witness": "same-root-cross-key-invalidation"
+    },
+    {
+      "name": "Retention-race-drop-coverage",
+      "module": "RetentionRaceProbe",
+      "config": "configs/Retention-race-drop-coverage.cfg",
+      "tier": "quick",
+      "expect": "invariant:RetainedCoverage"
+    },
+    {
+      "name": "Retention-race-latest-substitution",
+      "module": "RetentionRaceProbe",
+      "config": "configs/Retention-race-latest-substitution.cfg",
+      "tier": "quick",
+      "expect": "invariant:ExactMaterial"
+    },
+    {
+      "name": "Retention-race-last-arrival",
+      "module": "RetentionRaceProbe",
+      "config": "configs/Retention-race-last-arrival.cfg",
+      "tier": "quick",
+      "expect": "invariant:ReplacementSurvives"
+    },
+    {
+      "name": "Retention-race-key-only",
+      "module": "RetentionRaceProbe",
+      "config": "configs/Retention-race-key-only.cfg",
+      "tier": "quick",
+      "expect": "invariant:CrossKeyBlocked"
+    },
+    {
+      "name": "Reservation-ordered-progress",
+      "module": "ReservationPolicies",
+      "config": "configs/Reservation-ordered-progress.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Reservation-eligible-starvation",
+      "module": "ReservationPolicies",
+      "config": "configs/Reservation-eligible-starvation.cfg",
+      "tier": "quick",
+      "expect": "temporal:BroadProgress"
+    },
+    {
+      "name": "Reservation-eligible-narrow",
+      "module": "ReservationPolicies",
+      "config": "configs/Reservation-eligible-narrow.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Reservation-ordered-bridge",
+      "module": "ReservationPolicies",
+      "config": "configs/Reservation-ordered-bridge.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Reservation-eligible-bridge",
+      "module": "ReservationPolicies",
+      "config": "configs/Reservation-eligible-bridge.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Reservation-broad-witness",
+      "module": "ReservationPolicies",
+      "config": "configs/Reservation-broad-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoBroadCompletion",
+      "witness": "broad-grant-under-continuing-arrivals"
+    },
+    {
+      "name": "Reservation-bridge-witness",
+      "module": "ReservationPolicies",
+      "config": "configs/Reservation-bridge-witness.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoBridgeBypass",
+      "witness": "neighbour-completes-across-waiter-bridge"
+    }
+  ]
+}

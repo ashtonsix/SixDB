@@ -129,6 +129,9 @@ def checkpoint(destination):
         (destination / 'metadir.txt').write_text(generations[0] + '\n')
         for name in ('invocation.json', 'tlc.log'):
             shutil.copyfile(results / name, destination / name)
+        if (state / 'lineage').exists():
+            # Preserve links for the shared publisher to reject, never follow them.
+            shutil.copytree(state / 'lineage', destination / 'lineage', symlinks=True)
     finally:
         try:
             os.kill(pid, signal.SIGCONT)

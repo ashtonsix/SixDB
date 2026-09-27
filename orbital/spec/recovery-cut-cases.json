@@ -1,0 +1,132 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "RecoveryCut-normal",
+      "module": "RecoveryCut",
+      "config": "configs/RecoveryCut-normal.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RecoveryCut-pitr",
+      "module": "RecoveryCut",
+      "config": "configs/RecoveryCut-pitr.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RecoveryCut-unpersisted",
+      "module": "RecoveryCut",
+      "config": "configs/RecoveryCut-unpersisted.cfg",
+      "tier": "quick",
+      "expect": "invariant:CheckpointDurable"
+    },
+    {
+      "name": "RecoveryCut-cursor",
+      "module": "RecoveryCut",
+      "config": "configs/RecoveryCut-cursor.cfg",
+      "tier": "quick",
+      "expect": "invariant:NormalRestoration"
+    },
+    {
+      "name": "RecoveryCut-torn",
+      "module": "RecoveryCut",
+      "config": "configs/RecoveryCut-torn.cfg",
+      "tier": "quick",
+      "expect": "invariant:ClosedCut"
+    },
+    {
+      "name": "RecoveryCut-fence",
+      "module": "RecoveryCut",
+      "config": "configs/RecoveryCut-fence.cfg",
+      "tier": "quick",
+      "expect": "invariant:PhysicalFence"
+    },
+    {
+      "name": "RecoveryCut-old-lineage",
+      "module": "RecoveryCut",
+      "config": "configs/RecoveryCut-old-lineage.cfg",
+      "tier": "quick",
+      "expect": "invariant:ClosedCut"
+    },
+    {
+      "name": "RecoveryCut-witness-partial",
+      "module": "RecoveryCut",
+      "config": "configs/RecoveryCut-witness-partial.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPartialCheckpoint",
+      "witness": "partial"
+    },
+    {
+      "name": "RecoveryCut-witness-restore",
+      "module": "RecoveryCut",
+      "config": "configs/RecoveryCut-witness-restore.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoRestoration",
+      "witness": "restore"
+    },
+    {
+      "name": "RecoveryCut-abandonment",
+      "module": "RecoveryCut",
+      "config": "configs/RecoveryCut-abandonment.cfg",
+      "tier": "quick",
+      "expect": "invariant:Abandonment"
+    },
+    {
+      "name": "RecoveryCut-reemit",
+      "module": "RecoveryCut",
+      "config": "configs/RecoveryCut-reemit.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoHistoricalEmission"
+    },
+    {
+      "name": "RestorationMaterial-normal",
+      "module": "RestorationMaterial",
+      "config": "configs/RestorationMaterial-normal.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RestorationMaterial-pitr",
+      "module": "RestorationMaterial",
+      "config": "configs/RestorationMaterial-pitr.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RestorationMaterial-early-write",
+      "module": "RestorationMaterial",
+      "config": "configs/RestorationMaterial-early-write.cfg",
+      "tier": "quick",
+      "expect": "invariant:ReadBeforeWrite"
+    },
+    {
+      "name": "RestorationMaterial-early-redundancy",
+      "module": "RestorationMaterial",
+      "config": "configs/RestorationMaterial-early-redundancy.cfg",
+      "tier": "quick",
+      "expect": "invariant:ActualRedundancy"
+    },
+    {
+      "name": "RestorationMaterial-witness-readable",
+      "module": "RestorationMaterial",
+      "config": "configs/RestorationMaterial-witness-readable.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoReadOnlyMilestone",
+      "witness": "restored-readable-before-authority"
+    },
+    {
+      "name": "RestorationMaterial-witness-degraded",
+      "module": "RestorationMaterial",
+      "config": "configs/RestorationMaterial-witness-degraded.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoWritableDegraded",
+      "witness": "restored-writable-before-redundancy"
+    },
+    {
+      "name": "RestorationMaterial-witness-repaired",
+      "module": "RestorationMaterial",
+      "config": "configs/RestorationMaterial-witness-repaired.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoRepaired",
+      "witness": "restored-two-holder-redundancy"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "cases": [
+    {
+      "name": "CompletionPressure-basic",
+      "module": "CompletionUnderPressure",
+      "config": "configs/CompletionPressure-basic.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CompletionPressure-cancel",
+      "module": "CompletionUnderPressure",
+      "config": "configs/CompletionPressure-cancel.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CompletionPressure-alarm",
+      "module": "CompletionUnderPressure",
+      "config": "configs/CompletionPressure-alarm.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CompletionPressure-both",
+      "module": "CompletionUnderPressure",
+      "config": "configs/CompletionPressure-both.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CompletionPressure-cancel-debt",
+      "module": "CompletionUnderPressure",
+      "config": "configs/CompletionPressure-cancel-debt.cfg",
+      "tier": "quick",
+      "expect": "invariant:PhysicalDebt"
+    },
+    {
+      "name": "CompletionPressure-early-quorum",
+      "module": "CompletionUnderPressure",
+      "config": "configs/CompletionPressure-early-quorum.cfg",
+      "tier": "quick",
+      "expect": "invariant:DeliveredEvidence"
+    },
+    {
+      "name": "CompletionPressure-short-record-reservation",
+      "module": "CompletionUnderPressure",
+      "config": "configs/CompletionPressure-short-record-reservation.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "CompletionPressure-no-control-worker",
+      "module": "CompletionUnderPressure",
+      "config": "configs/CompletionPressure-no-control-worker.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "CompletionPressure-no-fault-worker",
+      "module": "CompletionUnderPressure",
+      "config": "configs/CompletionPressure-no-fault-worker.cfg",
+      "tier": "quick",
+      "expect": "temporal:Completes"
+    },
+    {
+      "name": "CompletionPressure-reach-fault",
+      "module": "CompletionUnderPressure",
+      "config": "configs/CompletionPressure-reach-fault.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPressure",
+      "witness": "NoPressure"
+    },
+    {
+      "name": "CompletionPressure-reach-retained",
+      "module": "CompletionUnderPressure",
+      "config": "configs/CompletionPressure-reach-retained.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoReleasedBorrow",
+      "witness": "NoReleasedBorrow"
+    },
+    {
+      "name": "CompletionPressure-reach-cancel",
+      "module": "CompletionUnderPressure",
+      "config": "configs/CompletionPressure-reach-cancel.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCancelledDebt",
+      "witness": "NoCancelledDebt"
+    },
+    {
+      "name": "CompletionPressure-reach-done",
+      "module": "CompletionUnderPressure",
+      "config": "configs/CompletionPressure-reach-done.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCompletion",
+      "witness": "NoCompletion"
+    }
+  ]
+}

@@ -5,8 +5,8 @@
 
 # Orbital
 
-The OS-like layer underneath SixDB. Owns data durability, network transport,
-thread spawning, and related system services.
+Durable objects, deterministic execution and transactional recovery, backed by
+memory, transport and other OS-like services.
 
 Successor to Calico's `xmem` and `omachine`; see the
 [Calico reference map](../workbench/notebook/calico.md).
@@ -23,6 +23,7 @@ Supporting research and evidence:
 | Area | Study |
 | --- | --- |
 | Executable models, fault experiments and reference simulation | [Maintained simulator](../workbench/simulator/README.md) |
+| Formal concepts, composition and executable evidence | [Models and evidence](spec/README.md) |
 | Transaction and ELT workload repertoire | [Worked situations](../workbench/notebook/transactions/README.md) |
 | Relaying, work placement and delivery | [Research survey](../workbench/notebook/dissemination/README.md) |
 | Real Linux mapping and protection probes | [Object mappings](../workbench/spikes/orbital-objects/README.md) |

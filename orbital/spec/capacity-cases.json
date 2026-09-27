@@ -1,0 +1,194 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "CapacityFault",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityFault.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CapacityPressure",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityPressure.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CapacityShared",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityShared.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CapacitySlowThird",
+      "module": "CapacityProgress",
+      "config": "configs/CapacitySlowThird.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CapacityCancel",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityCancel.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CapacityAlarms",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityAlarms.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CapacityDriver",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityDriver.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CapacityDependent",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityDependent.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CapacitySharedDependent",
+      "module": "CapacityProgress",
+      "config": "configs/CapacitySharedDependent.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "CapacityEarlyAck",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityEarlyAck.cfg",
+      "tier": "quick",
+      "expect": "invariant:OutcomeDurable"
+    },
+    {
+      "name": "CapacityOneAck",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityOneAck.cfg",
+      "tier": "quick",
+      "expect": "invariant:OutcomeDurable"
+    },
+    {
+      "name": "CapacityStealControl",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityStealControl.cfg",
+      "tier": "quick",
+      "expect": "invariant:ReservedCompletion"
+    },
+    {
+      "name": "CapacityCancelDebt",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityCancelDebt.cfg",
+      "tier": "quick",
+      "expect": "invariant:PhysicalLeases"
+    },
+    {
+      "name": "CapacityDuplicateProbe",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityDuplicateProbe.cfg",
+      "tier": "quick",
+      "expect": "invariant:BoundedInvestigation"
+    },
+    {
+      "name": "CapacityNoFaultMemory",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityNoFaultMemory.cfg",
+      "tier": "quick",
+      "expect": "temporal:TasksComplete"
+    },
+    {
+      "name": "CapacityNoResolver",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityNoResolver.cfg",
+      "tier": "quick",
+      "expect": "temporal:TasksComplete"
+    },
+    {
+      "name": "CapacityHeldLatch",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityHeldLatch.cfg",
+      "tier": "quick",
+      "expect": "temporal:TasksComplete"
+    },
+    {
+      "name": "CapacityNoControlProgress",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityNoControlProgress.cfg",
+      "tier": "quick",
+      "expect": "temporal:TasksComplete"
+    },
+    {
+      "name": "CapacityReachPressure",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityReachPressure.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoPressureWitness",
+      "witness": "NoPressureWitness"
+    },
+    {
+      "name": "CapacityReachFault",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityReachFault.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoFaultAtCapacityWitness",
+      "witness": "NoFaultAtCapacityWitness"
+    },
+    {
+      "name": "CapacityReachQuorum",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityReachQuorum.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoQuorumBeforeThirdWitness",
+      "witness": "NoQuorumBeforeThirdWitness"
+    },
+    {
+      "name": "CapacityReachCancel",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityReachCancel.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoSharedCancelWitness",
+      "witness": "NoSharedCancelWitness"
+    },
+    {
+      "name": "CapacityReachFailure",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityReachFailure.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoFailureDecisionWitness",
+      "witness": "NoFailureDecisionWitness"
+    },
+    {
+      "name": "CapacityReachDriverDebt",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityReachDriverDebt.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoDriverDebtWitness",
+      "witness": "NoDriverDebtWitness"
+    },
+    {
+      "name": "CapacityReachTwo",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityReachTwo.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoTwoCompletionWitness",
+      "witness": "NoTwoCompletionWitness"
+    },
+    {
+      "name": "CapacityReachDependentPressure",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityReachDependentPressure.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoDependentPressureWitness",
+      "witness": "Both workers parked; actual predecessor fault still receives service"
+    },
+    {
+      "name": "CapacityReachBorrowPressure",
+      "module": "CapacityProgress",
+      "config": "configs/CapacityReachBorrowPressure.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoBorrowBlocksFaultWitness",
+      "witness": "Shared physical I/O debt holds the resolver while both admitted workers are parked"
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "Effects-dedup",
+      "module": "ExternalEffects",
+      "config": "configs/Effects-dedup.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Effects-unknown",
+      "module": "ExternalEffects",
+      "config": "configs/Effects-unknown.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "Effects-retry-unknown",
+      "module": "ExternalEffects",
+      "config": "configs/Effects-retry-unknown.cfg",
+      "tier": "quick",
+      "expect": "invariant:AtMostOnce"
+    },
+    {
+      "name": "Effects-witness-lost-reply",
+      "module": "ExternalEffects",
+      "config": "configs/Effects-witness-lost-reply.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoAppliedLostReplyRecovery",
+      "witness": "applied-lost-reply-owner-replay"
+    },
+    {
+      "name": "Effects-witness-unknown",
+      "module": "ExternalEffects",
+      "config": "configs/Effects-witness-unknown.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoUnknown",
+      "witness": "ambiguous-nondeduplicating-sink"
+    },
+    {
+      "name": "RestoredEffects-normal-dedup",
+      "module": "RestoredEffects",
+      "config": "configs/RestoredEffects-normal-dedup.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RestoredEffects-normal-unknown",
+      "module": "RestoredEffects",
+      "config": "configs/RestoredEffects-normal-unknown.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RestoredEffects-pitr-dedup",
+      "module": "RestoredEffects",
+      "config": "configs/RestoredEffects-pitr-dedup.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RestoredEffects-pitr-unknown",
+      "module": "RestoredEffects",
+      "config": "configs/RestoredEffects-pitr-unknown.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "RestoredEffects-new-identity",
+      "module": "RestoredEffects",
+      "config": "configs/RestoredEffects-new-identity.cfg",
+      "tier": "quick",
+      "expect": "invariant:AtMostOnce"
+    },
+    {
+      "name": "RestoredEffects-retry-unknown",
+      "module": "RestoredEffects",
+      "config": "configs/RestoredEffects-retry-unknown.cfg",
+      "tier": "quick",
+      "expect": "invariant:AtMostOnce"
+    },
+    {
+      "name": "RestoredEffects-witness-dedup",
+      "module": "RestoredEffects",
+      "config": "configs/RestoredEffects-witness-dedup.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoAppliedLostReplyRecovery",
+      "witness": "applied-lost-reply-actual-cut-recovery"
+    },
+    {
+      "name": "RestoredEffects-witness-unknown",
+      "module": "RestoredEffects",
+      "config": "configs/RestoredEffects-witness-unknown.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoUnknownAfterRestore",
+      "witness": "ambiguous-after-actual-cut-recovery"
+    }
+  ]
+}

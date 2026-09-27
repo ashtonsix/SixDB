@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "DeliveryRetention-basic",
+      "module": "DeliveryRetention",
+      "config": "configs/DeliveryRetention-basic.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "DeliveryRetention-cancel",
+      "module": "DeliveryRetention",
+      "config": "configs/DeliveryRetention-cancel.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "DeliveryRetention-late",
+      "module": "DeliveryRetention",
+      "config": "configs/DeliveryRetention-late.cfg",
+      "tier": "quick"
+    },
+    {
+      "name": "DeliveryRetention-transport",
+      "module": "DeliveryRetention",
+      "config": "configs/DeliveryRetention-transport.cfg",
+      "tier": "quick",
+      "expect": "invariant:RetainedWhileNeeded"
+    },
+    {
+      "name": "DeliveryRetention-cancel-release",
+      "module": "DeliveryRetention",
+      "config": "configs/DeliveryRetention-cancel-release.cfg",
+      "tier": "quick",
+      "expect": "invariant:RetainedWhileNeeded"
+    },
+    {
+      "name": "DeliveryRetention-reach-gc",
+      "module": "DeliveryRetention",
+      "config": "configs/DeliveryRetention-reach-gc.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoCollected",
+      "witness": "NoCollected"
+    },
+    {
+      "name": "DeliveryRetention-reach-late",
+      "module": "DeliveryRetention",
+      "config": "configs/DeliveryRetention-reach-late.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoLateDebt",
+      "witness": "NoLateDebt"
+    },
+    {
+      "name": "DeliveryRetention-reach-cancel",
+      "module": "DeliveryRetention",
+      "config": "configs/DeliveryRetention-reach-cancel.cfg",
+      "tier": "quick",
+      "expect": "invariant:NoSharedCancel",
+      "witness": "NoSharedCancel"
+    }
+  ]
+}
