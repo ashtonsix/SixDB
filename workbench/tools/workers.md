@@ -56,7 +56,8 @@ not secrets. Local AWS credentials are not copied to the worker.
 | `SIXDB_JOB`, `SIXDB_SOURCE_COMMIT` | Job ID and original local HEAD |
 | `SIXDB_WORKER_ID`, `SIXDB_WORKER_REUSED` | Instance session and `0`/`1` reuse indicator |
 | `SIXDB_DEVICES` | [Requested data-disk identities](#data-disks), when configured |
-| `SIXDB_RESULTS_S3` | Mutable `live/` prefix for optional script checkpoints |
+| `SIXDB_RESULTS_S3` | Mutable `live/` prefix for optional partial-output uploads |
+| `SIXDB_CHECKPOINT_STATE`, `SIXDB_RESUME` | Job-private state and verified recovery input for [resumable jobs](checkpoints.md) |
 
 Setup installs pinned Clang, LLVM tools, CMake, Ninja, Git, Python/PyYAML and a C++
 standard library. Script-specific dependencies belong in the script. Reuse keeps
@@ -98,9 +99,12 @@ setup output; status preserves the phase where failure occurred. `logs JOB
 --console` shows instance-wide boot diagnostics, possibly including earlier jobs
 on a reused worker.
 
-Spot workers poll interruption notices every five seconds and attempt early
-collection when warned; output can still be lost. On-demand with sync disabled
-has no such observer. Keep this context with timing comparisons. Fresh instances
+For long-running work, [resumable checkpoints](checkpoints.md) add periodic saves,
+a bounded application checkpoint on Spot notice, and `resume JOB` from exact
+saved sources/state. A [TLC runner](tlc/README.md) supplies the first producer.
+Without this opt-in, Spot workers poll notices every five seconds and attempt
+early output collection; output can still be lost. On-demand with sync disabled
+has no background observer. Keep this context with timing comparisons. Fresh instances
 do not establish cold hardware caches; the benchmark controls cache residence.
 
 Ordinary fetch keeps measurements and metadata locally. Use `fetch JOB --list`,

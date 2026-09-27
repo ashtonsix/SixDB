@@ -21,6 +21,10 @@ inputs and fake cloud clients. `--list` derives descriptions from the scripts th
 `results` also needs Node for the viewer's data-handling checks; it can run on
 macOS directly as well as Linux, and does not launch a browser.
 
+The opt-in `tlc` check uses `TLC_TEST_JAR` for real checkpoint/kill/restore checks;
+see the [TLC guide](../tlc/README.md#exercised-recovery). Without that variable it
+skips; it never downloads tools or allocates compute.
+
 Research-facing [navigation checks](../check_docs.py) and
 [editor diagnostics](../editors.md) remain ordinary tools. Dataset-specific
 checks live with their adapters, such as [keyset windows](../../datasets/keyset-windows.md).

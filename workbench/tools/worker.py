@@ -27,6 +27,7 @@ import artifacts
 import worker_pool as pool
 import storage
 import worker_cache
+import worker_checkpoint
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
@@ -35,7 +36,7 @@ CAPACITY_ERRORS = {'InsufficientInstanceCapacity', 'InsufficientFreeAddressesInS
                    'UnfulfillableCapacity', 'Unsupported', 'SpotMaxPriceTooLow'}
 FINAL = {'complete', 'failed', 'timeout', 'interrupted', 'upload-failed'}
 RESERVED = {'SIXDB_RESULTS', 'SIXDB_SOURCE', 'SIXDB_JOB', 'SIXDB_RESULTS_S3',
-            'SIXDB_SOURCE_COMMIT', 'SIXDB_WORKER_ID', 'SIXDB_WORKER_REUSED', 'SIXDB_DEVICES', 'AWS_REGION', 'AWS_DEFAULT_REGION'}
+            'SIXDB_RESUME', 'SIXDB_CHECKPOINT_STATE', 'SIXDB_CHECKPOINT_REASON', 'SIXDB_SOURCE_COMMIT', 'SIXDB_WORKER_ID', 'SIXDB_WORKER_REUSED', 'SIXDB_DEVICES', 'AWS_REGION', 'AWS_DEFAULT_REGION'}
 
 
 class AwsError(RuntimeError):
@@ -106,7 +107,8 @@ def environment(values):
 
 def configuration(args, defaults):
     config = dict(defaults)
-    for key in ('machine', 'capacity', 'deadline_seconds', 'disk_gb', 'setup', 'sync_seconds', 'idle_seconds', 'max_age_seconds'):
+    for key in ('machine', 'capacity', 'deadline_seconds', 'disk_gb', 'setup', 'sync_seconds', 'idle_seconds', 'max_age_seconds',
+                'checkpoint_script', 'checkpoint_seconds', 'checkpoint_timeout'):
         if getattr(args, key, None) is not None:
             config[key] = getattr(args, key)
     config.update(config['machines'][config['machine']])
@@ -120,6 +122,12 @@ def configuration(args, defaults):
     config['env'] = dict(config.get('env', {})) | environment(getattr(args, 'env', []))
     environment([f'{k}={v}' for k, v in config['env'].items()])
     config['env'] = {k: str(v) for k, v in config['env'].items()}
+    config.setdefault('checkpoint_seconds', 300)
+    config.setdefault('checkpoint_timeout', 90)
+    if type(config['checkpoint_seconds']) is not int or config['checkpoint_seconds'] < 0:
+        raise ValueError('checkpoint interval must be a nonnegative integer; zero disables periodic saves')
+    if type(config['checkpoint_timeout']) is not int or not 1 <= config['checkpoint_timeout'] <= 3600:
+        raise ValueError('checkpoint timeout must be 1..3600 seconds')
     volumes = config.get('data_volumes', [])
     if not isinstance(volumes, list):
         raise ValueError('data_volumes must be a list of named new gp3/io2 volumes')
@@ -285,10 +293,13 @@ def snapshot(directory, root=None):
     # Study sources remain exact; the controller's lifecycle tools stay current.
     runtime = (HERE / 'worker_runtime.py').read_bytes()
     worker_pool = (HERE / 'worker_pool.py').read_bytes()
+    checkpoint = (HERE / 'worker_checkpoint.py').read_bytes()
+    (directory / 'worker_checkpoint.py').write_bytes(checkpoint)
     (directory / 'runtime.py').write_bytes(runtime)
     (directory / 'worker_pool.py').write_bytes(worker_pool)
     return {'sha256': artifacts.sha256(path), 'files': hashes,
             'pool_sha256': hashlib.sha256(worker_pool).hexdigest(),
+            'checkpoint_sha256': hashlib.sha256(checkpoint).hexdigest(),
             'setup_sha256': hashes['workbench/tools/worker-setup.sh'],
             'digest': hashlib.sha256(json.dumps(hashes, sort_keys=True).encode()).hexdigest(),
             'runtime_sha256': hashlib.sha256(runtime).hexdigest()}
@@ -303,6 +314,10 @@ def boot_script(job):
     pool_uri = shlex.quote(job['uri'] + '/worker_pool.py')
     max_age = config.get('max_age_seconds', config['deadline_seconds'])
     disk_package = ' amazon-ec2-utils' if config.get('data_volumes') else ''
+    checkpoint_boot = ''
+    if job['source'].get('checkpoint_sha256'):
+        checkpoint_boot = (f"aws s3 cp --only-show-errors {shlex.quote(job['uri'] + '/worker_checkpoint.py')} /opt/sixdb/worker_checkpoint.py\n"
+            f"echo {shlex.quote(job['source']['checkpoint_sha256'] + '  /opt/sixdb/worker_checkpoint.py')} | sha256sum -c -\n")
     script = f'''#!/bin/bash
 set -euo pipefail
 mkdir -p /opt/sixdb
@@ -324,7 +339,7 @@ aws s3 cp --only-show-errors {uri} /opt/sixdb/runtime.py
 echo {shlex.quote(job['source']['runtime_sha256'] + '  /opt/sixdb/runtime.py')} | sha256sum -c -
 aws s3 cp --only-show-errors {pool_uri} /opt/sixdb/worker_pool.py
 echo {shlex.quote(job['source'].get('pool_sha256', '') + '  /opt/sixdb/worker_pool.py')} | sha256sum -c -
-python3 /opt/sixdb/runtime.py /opt/sixdb/job.json
+{checkpoint_boot}python3 /opt/sixdb/runtime.py /opt/sixdb/job.json
 '''
     if len(script.encode()) > 16384:
         raise ValueError('job parameters exceed EC2 user-data size; keep large inputs in files')
@@ -583,6 +598,8 @@ def wait(job, directory, aws, interval=10, *, stop=None):
         if state and state['state'] in FINAL:
             save(directory / 'status.json', state)
             fetch(job, directory, state, aws)
+            if state['state'] != 'complete':
+                checkpoint_hint(job, aws)
             # Old workers were job-scoped. Sessions own their idle/lifetime cleanup;
             # a completed job must never terminate a worker serving a newer job.
             if job.get('format', 1) < 2:
@@ -592,6 +609,7 @@ def wait(job, directory, aws, interval=10, *, stop=None):
             stopped_since = stopped_since or time.monotonic()
             if time.monotonic() - stopped_since > 30:
                 fetch(job, directory, state, aws)
+                checkpoint_hint(job, aws)
                 print('Worker ended without a completed upload; inspect logs/partial output.', flush=True)
                 return 1
         else:
@@ -659,6 +677,8 @@ def prepare(config, source_root, script, arguments, directory, aws):
     source = snapshot(directory, source_root)
     if name not in source['files']:
         raise ValueError('script is ignored/excluded from source capture; use a non-ignored repository file')
+    if config.get('checkpoint_script') and config['checkpoint_script'] not in source['files']:
+        raise ValueError('checkpoint script must be a captured repository file')
     ensure_infrastructure(config, aws)
     prefix = 'sixdb/workers/' + directory.name
     # Per-file hashes live separately: EC2 user-data has a small fixed size limit.
@@ -672,17 +692,68 @@ def prepare(config, source_root, script, arguments, directory, aws):
     return job
 
 
+def checkpoint_hint(job, aws):
+    if job['config'].get('checkpoint_script'):
+        reference = checkpoint_status(job, aws)
+        if reference:
+            age = max(0, int(time.time() - reference['created_at']))
+            print(f"Saved checkpoint ({age}s old). Restart work: python3 workbench/tools/worker.py resume {job['id']}", flush=True)
+
+
+def checkpoint_status(job, aws):
+    return (aws.get_json(job['config']['bucket'], job['prefix'] + '/checkpoints/latest.json')
+            or job.get('resume', {}).get('checkpoint'))
+
+
+def prepare_resume(prior, config, directory, aws):
+    if config['bucket'] != prior['config']['bucket'] or config['region'] != prior['config']['region']:
+        raise ValueError('resume keeps the original bucket and region')
+    if prior['config']['env'].get('SIXDB_GROUP_URI'):
+        raise ValueError('resume currently supports standalone jobs, not coordinated worker groups')
+    state = status(prior, aws)
+    if not state or state['state'] not in FINAL:
+        if any(i['State']['Name'] in {'pending', 'running', 'stopping'} for i in instances(prior, aws)):
+            raise ValueError('original job may still be running; wait or cancel it before resuming')
+    reference = checkpoint_status(prior, aws)
+    if not reference:
+        raise ValueError('no committed resumable checkpoint exists; live output alone is not a checkpoint')
+    manifest = worker_checkpoint.load(worker_checkpoint.Store(config['region']), reference)
+    if manifest['identity'] != worker_checkpoint.identity(prior):
+        raise ValueError('checkpoint does not match the original job')
+    for name in ('source.tar.gz', 'source-manifest.json'):
+        subprocess.run(['aws', 's3', 'cp', '--only-show-errors', prior['uri'] + '/' + name,
+                        str(directory / name), '--region', config['region']], check=True)
+    if artifacts.sha256(directory / 'source.tar.gz') != prior['source']['sha256']:
+        raise ValueError('original source archive checksum mismatch')
+    source = dict(prior['source'])
+    for name, key in (('worker_runtime.py', 'runtime'), ('worker_pool.py', 'pool'),
+                      ('worker_checkpoint.py', 'checkpoint')):
+        data = (HERE / name).read_bytes()
+        (directory / ('runtime.py' if key == 'runtime' else name)).write_bytes(data)
+        source[key + '_sha256'] = hashlib.sha256(data).hexdigest()
+    ensure_infrastructure(config, aws)
+    prefix = 'sixdb/workers/' + directory.name
+    job = prior | {'id': directory.name, 'created_at': time.time(), 'config': config,
+        'source': source, 'profile': pool.profile(config, source), 'format': 2,
+        'prefix': prefix, 'uri': f"s3://{config['bucket']}/{prefix}",
+        'resume': {'job': prior['id'], 'checkpoint': reference}}
+    job.pop('worker', None)
+    save(directory / 'job.json', job)
+    boot_script(job)
+    return job
+
+
 def dispatch(job, directory, aws):
     """Submit one prepared job. An uncertain outcome is recovered by job ID."""
     config = job['config']
-    for filename in ('source.tar.gz', 'source-manifest.json', 'runtime.py', 'worker_pool.py', 'job.json'):
+    for filename in ('source.tar.gz', 'source-manifest.json', 'runtime.py', 'worker_pool.py', 'worker_checkpoint.py', 'job.json'):
         aws.upload(directory / filename, job['uri'] + '/' + filename)
     cpu = config['hardware']['VCpuInfo']
     vcpus = cpu['DefaultCores'] * config.get('threads_per_core', cpu['DefaultThreadsPerCore'])
     memory = config['hardware']['MemoryInfo']['SizeInMiB'] / 1024
     print(f"Job: {job['id']}\nWorker: {config['instance_type']}, {vcpus} vCPU, {memory:g} GiB; "
           f"capacity={config['capacity']}; {config['deadline_seconds']}s job deadline, {config['idle_seconds']}s idle window\nS3: {job['uri']}\n"
-          f"Resume: python3 workbench/tools/worker.py wait {job['id']}", flush=True)
+          f"Observe: python3 workbench/tools/worker.py wait {job['id']}", flush=True)
     if not reuse(job, directory, aws):
         # Replace a rejected reuse candidate's routing with this new session.
         save(directory / 'assignment.json', {'worker_id': job['id'], 'reused': False})
@@ -695,13 +766,20 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config', type=Path, default=HERE / 'worker.json', help='JSON settings overlay')
     commands = parser.add_subparsers(dest='command', required=True)
-    for name in ('run', 'plan'):
-        cmd = commands.add_parser(name, help='run a script' if name == 'run' else 'resolve settings without creating anything')
+    for name in ('run', 'resume', 'plan'):
+        cmd = commands.add_parser(name, help={'run': 'run a script', 'resume': 'restart from a committed checkpoint',
+                                            'plan': 'resolve settings without creating anything'}[name])
         if name == 'run':
             cmd.add_argument('script', type=Path)
             cmd.add_argument('--source', type=Path, help='capture study sources from this checkout; use current controller tools')
             cmd.add_argument('--arg', action='append', default=[], help='script argument; repeat, use --arg=--flag for flags')
             cmd.add_argument('--detach', action='store_true', help='submit and return; wait JOB resumes collection')
+        if name == 'resume':
+            cmd.add_argument('job')
+            cmd.add_argument('--detach', action='store_true')
+        cmd.add_argument('--checkpoint-script', help='repository shell script writing a consistent snapshot to its directory argument')
+        cmd.add_argument('--checkpoint-seconds', type=int, help='periodic checkpoint interval when opted in; default 300, zero means only interruption/deadline')
+        cmd.add_argument('--checkpoint-timeout', type=int, help='total checkpoint and upload budget; default 90 seconds, clipped by interruption/deadline')
         cmd.add_argument('--machine', choices=['zen5', 'granite-rapids', 'neoverse-v2'])
         cmd.add_argument('--instance-type', help='override the machine preset with an exact EC2 instance type')
         cmd.add_argument('--ami', help='override the pinned regional image; target architecture is checked')
@@ -723,7 +801,7 @@ def main():
         cmd = commands.add_parser(name, help=help_text)
         cmd.add_argument('job')
         if name == 'logs':
-            cmd.add_argument('--file', choices=['script.log', 'setup.log', 'bootstrap.log'], default='script.log')
+            cmd.add_argument('--file', choices=['script.log', 'setup.log', 'bootstrap.log', 'checkpoint.log', 'restore.log'], default='script.log')
             cmd.add_argument('--console', action='store_true', help='show instance boot diagnostics instead of script output')
         if name == 'fetch':
             selection = cmd.add_mutually_exclusive_group()
@@ -748,13 +826,31 @@ def main():
     if arguments and args.command != 'run':
         parser.error('arguments after -- are for run scripts')
     base = settings(json.loads(args.config.read_text()) if args.config != HERE / 'worker.json' else None)
-    if args.command in {'run', 'plan'}:
+    if args.command in {'run', 'resume', 'plan'}:
+        prior = None
+        if args.command == 'resume':
+            _, prior = locate(args.job, base)
+            base = settings(prior['config'])
+            # Preserve the exact original instance and image unless explicitly overridden.
+            base['machines'][base['machine']] |= {k: prior['config'][k] for k in ('instance_type', 'ami')}
+            if args.env or args.checkpoint_script:
+                parser.error('resume preserves recorded environment and checkpoint script')
         config = configuration(args, base)
         aws = Aws(config['region'])
         config = resolve(config, aws)
         if args.command == 'plan':
             print(json.dumps(config, indent=2))
             return 0
+        if prior:
+            directory = JOBS / (datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ') + '-' + uuid.uuid4().hex[:8])
+            directory.mkdir(parents=True)
+            job = prepare_resume(prior, config, directory, aws)
+            try:
+                dispatch(job, directory, aws)
+                return 0 if args.detach else wait(job, directory, aws)
+            except (KeyboardInterrupt, Exception) as error:
+                print(f"Controller stopped: {error}\nObserve this attempt with wait/status/cancel {job['id']}.", file=sys.stderr)
+                return 1
         source_root = args.source.resolve() if args.source else ROOT
         script = (source_root / args.script).resolve()
         if not script.is_relative_to(source_root) or not script.is_file():
@@ -802,7 +898,10 @@ def main():
     elif args.command == 'status':
         assignment = aws.get_json(job['config']['bucket'], job['prefix'] + '/assignment.json')
         session, _ = pool.Store(job['config']['bucket'], aws.region).read(pool.state_key(assignment['worker_id'])) if assignment else (None, None)
-        print(json.dumps({'worker': status(job, aws), 'session': session, 'instances': [
+        checkpoint = checkpoint_status(job, aws)
+        if checkpoint:
+            checkpoint = checkpoint | {'age_seconds': max(0, int(time.time() - checkpoint['created_at']))}
+        print(json.dumps({'worker': status(job, aws), 'checkpoint': checkpoint, 'session': session, 'instances': [
             {'id': i['InstanceId'], 'state': i['State']['Name']} for i in instances(job, aws)]}, indent=2))
     else:
         logs(job, aws, console=args.console, file=args.file)

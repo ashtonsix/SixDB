@@ -71,6 +71,8 @@ def profile(config, source):
     if config.get('data_volumes') or config.get('instance_store_count'):
         settings.update({key: config.get(key) for key in ('data_volumes', 'instance_store_count', 'instance_store_mappings')})
     settings['code'] = {key: source[key] for key in ('runtime_sha256', 'pool_sha256', 'setup_sha256')}
+    if source.get('checkpoint_sha256'):
+        settings['code']['checkpoint_sha256'] = source['checkpoint_sha256']
     return hashlib.sha256(json.dumps(settings, sort_keys=True).encode()).hexdigest()
 
 

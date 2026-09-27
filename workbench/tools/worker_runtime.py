@@ -2,6 +2,7 @@
 """Worker-side lifecycle. The script owns its experiment; this owns collection."""
 from __future__ import annotations
 
+from datetime import datetime
 import hashlib
 import json
 import os
@@ -147,6 +148,7 @@ def data_devices(config):
 
 def terminate_group(process):
     try:
+        os.killpg(process.pid, signal.SIGCONT)
         os.killpg(process.pid, signal.SIGTERM)
     except ProcessLookupError:
         return
@@ -177,6 +179,7 @@ class Worker:
         self.state = {'state': 'starting', 'job': job['id'], 'worker': job.get('worker')}
         self.process = None
         self.capacity = self.config.get('actual_capacity', self.config['capacity'])
+        self.interruption_end = None
 
     def aws(self, *args, timeout=45):
         return subprocess.run(['aws', *args, '--region', self.config['region'], '--no-cli-pager'],
@@ -200,6 +203,12 @@ class Worker:
                 try:
                     notice = metadata('meta-data/spot/instance-action')
                     (self.results / 'interruption.json').write_text(json.dumps(notice) + '\n')
+                    self.interruption_end = time.time() + 105
+                    try:
+                        self.interruption_end = min(self.interruption_end,
+                            datetime.fromisoformat(notice['time'].replace('Z', '+00:00')).timestamp() - 10)
+                    except (KeyError, TypeError, ValueError):
+                        pass
                     self.interrupted.set()
                     return
                 except Exception:
@@ -216,26 +225,85 @@ class Worker:
         self.aws('s3', 'sync', '--only-show-errors', '--no-follow-symlinks',
                  str(self.results), self.job['uri'] + '/live/', timeout=45)
 
+    def checkpoint(self, reason, env):
+        if self.config.get('checkpoint_script'):
+            try:
+                self._checkpoint(reason, env)
+            except Exception as error:
+                # Even staging/logging can fail (for example, a full disk).
+                print(f'Checkpoint failed ({reason}); prior generation retained: {error}', flush=True)
+
+    def _checkpoint(self, reason, env):
+        limit = min(time.time() + self.config.get('checkpoint_timeout', 90),
+                    self.job['created_at'] + self.config['deadline_seconds'] - 10)
+        if self.interruption_end is not None:
+            limit = min(limit, self.interruption_end)
+        if limit <= time.time():
+            return
+        job_file = self.job_base / 'checkpoint-job.json'
+        job_file.write_text(json.dumps(self.job) + '\n')
+        helper = Path(__file__).with_name('worker_checkpoint.py')
+        event = {'reason': reason, 'started_at': time.time()}
+        with tempfile.TemporaryDirectory(dir=self.job_base) as staging, (self.results / 'checkpoint.log').open('ab') as log:
+            process = subprocess.Popen([sys.executable, str(helper), 'save', str(job_file),
+                staging, reason, str(self.results / 'checkpoint.json')],
+                cwd=self.source, env=env | {'TMPDIR': staging}, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
+            try:
+                while process.poll() is None:
+                    # A notice can arrive during a periodic checkpoint or upload.
+                    if self.interruption_end is not None:
+                        limit = min(limit, self.interruption_end)
+                    if time.time() >= limit:
+                        raise TimeoutError('checkpoint budget exhausted; previous saved generation retained')
+                    try:
+                        process.wait(timeout=min(0.5, max(0.01, limit - time.time())))
+                    except subprocess.TimeoutExpired:
+                        pass
+                if process.returncode:
+                    raise RuntimeError(f'checkpoint exited {process.returncode}; see checkpoint.log')
+                event['state'] = 'saved'
+            except Exception as error:
+                event |= {'state': 'failed', 'error': str(error)}
+            finally:
+                terminate_group(process)
+                # A timed-out producer may have paused its workload to copy files.
+                if self.process:
+                    try:
+                        os.killpg(self.process.pid, signal.SIGCONT)
+                    except ProcessLookupError:
+                        pass
+        event['seconds'] = time.time() - event['started_at']
+        with (self.results / 'checkpoint-events.jsonl').open('a') as log:
+            log.write(json.dumps(event) + '\n')
+        print('Checkpoint: ' + json.dumps(event), flush=True)
+
     def execute(self, argv, logfile, env=None):
-        remaining = self.execution_end - time.time()
-        if remaining <= 0:
+        if self.interrupted.is_set():
+            raise InterruptedError('Spot interruption notice received')
+        if self.execution_end <= time.time():
             raise TimeoutError('worker execution deadline elapsed during setup')
+        last_attempt = time.monotonic()
         with logfile.open('wb') as output:
             self.process = subprocess.Popen(argv, cwd=self.source, env=env,
                 stdout=output, stderr=subprocess.STDOUT, start_new_session=True)
             try:
                 while True:
                     try:
-                        code = self.process.wait(timeout=1)
-                        return code
+                        return self.process.wait(timeout=1)
                     except subprocess.TimeoutExpired:
                         if self.interrupted.is_set():
+                            if env:
+                                self.checkpoint('spot-interruption', env)
                             raise InterruptedError('Spot interruption notice received')
                         if time.time() >= self.execution_end:
+                            if env:
+                                self.checkpoint('deadline', env)
                             raise TimeoutError('worker execution deadline elapsed')
+                        interval = self.config.get('checkpoint_seconds', 300)
+                        if env and self.config.get('checkpoint_script') and interval and time.monotonic() - last_attempt >= interval:
+                            self.checkpoint('periodic', env)
+                            last_attempt = time.monotonic()
             finally:
-                # Terminate descendants too: a script ending is not permission to keep
-                # a background load alive while collection or another command proceeds.
                 terminate_group(self.process)
                 self.process = None
 
@@ -303,6 +371,18 @@ class Worker:
                     'SIXDB_RESULTS': str(self.results), 'SIXDB_SOURCE': str(self.source),
                     'SIXDB_JOB': self.job['id'], 'SIXDB_RESULTS_S3': self.job['uri'] + '/live/',
                     'SIXDB_SOURCE_COMMIT': self.job['source_commit']}
+            env['SIXDB_CHECKPOINT_STATE'] = str(self.job_base / 'checkpoint-state')
+            Path(env['SIXDB_CHECKPOINT_STATE']).mkdir(exist_ok=True)
+            if self.job.get('resume'):
+                self.status('restoring')
+                resume = self.job_base / 'resume'
+                job_file = self.job_base / 'checkpoint-job.json'
+                job_file.write_text(json.dumps(self.job) + '\n')
+                code = self.execute([sys.executable, str(Path(__file__).with_name('worker_checkpoint.py')),
+                    'restore', str(job_file), str(resume)], self.results / 'restore.log')
+                if code:
+                    raise RuntimeError('checkpoint restore failed; see restore.log')
+                env['SIXDB_RESUME'] = str(resume)
             if self.config.get('data_volumes') or self.config.get('instance_store_count'):
                 devices = self.results / 'devices.json'
                 devices.write_text(json.dumps(data_devices(self.config), indent=2) + '\n')
@@ -328,6 +408,8 @@ class Worker:
             self.stop.set()
             if monitor:
                 monitor.join(timeout=50)
+        if (self.results / 'checkpoint.json').exists():
+            result['checkpoint'] = json.loads((self.results / 'checkpoint.json').read_text())
         result['worker_seconds_before_collection'] = time.time() - started
         (self.results / 'worker-result.json').write_text(json.dumps(result, indent=2) + '\n')
         if (self.base / 'bootstrap.log').exists():
@@ -376,6 +458,14 @@ class Worker:
             except Exception:
                 print(f'Collection failed: {error}', flush=True)
             return 1
+        # Recovery uses committed S3 generations; mutable job state is not a reuse cache.
+        for name in ('checkpoint-state', 'resume'):
+            try:
+                shutil.rmtree(self.job_base / name)
+            except FileNotFoundError:
+                pass
+            except OSError as error:
+                print(f'Checkpoint scratch cleanup: {error}', flush=True)
         return 0 if result['state'] == 'complete' else 1
 
 
