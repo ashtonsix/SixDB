@@ -3,7 +3,7 @@
 [Transaction repertoire](README.md) · Preserved research record; prototype names and results below refer to the archived source.
 
 This is a design probe for Ashton's 2026-09-25 reconsideration, not an amendment
-to the [then-current brief](../../../orbital/stale-drafts/BRIEF-arbitration.md) or a measured implementation. It
+to the [then-current brief](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/BRIEF-arbitration.md) or a measured implementation. It
 challenges the retained-lock premise used by the then-current scheduler. Its
 conclusion is narrower than “add multiversioning”: **many physical writes can
 share one logical ordering/publication decision, but an arbitrary broad SQL

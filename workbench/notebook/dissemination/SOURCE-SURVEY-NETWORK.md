@@ -7,7 +7,7 @@ condition and counterexample; **coverage** names evidence or a concrete missing
 comparison. A historical assertion is not implementation evidence. Historical
 prices, product claims and latency estimates have not been revalidated here.
 
-The omission that prompted this audit is substantive: [old BRIEF](../../../orbital/stale-drafts/BRIEF.md)
+The omission that prompted this audit is substantive: [old BRIEF](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/BRIEF.md)
 lines 7 and 76–82 records origin-sensitive cross-provider broadcast, direct
 database-to-destination traffic, NAT processing, cheap bulk plus direct hash
 verification, private-link fixed costs and small-object peer fetching. These

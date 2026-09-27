@@ -5,7 +5,7 @@
 2026-09-25. Read-side investigation for Ashton's request to reconsider preparation
 and contention from the ground up. These are authored workload cases and design
 alternatives, not measured results or selected architecture. The
-[then-current brief](../../../orbital/stale-drafts/BRIEF-arbitration.md) and [protection question](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/PROTECTION.md)
+[then-current brief](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/BRIEF-arbitration.md) and [protection question](https://github.com/ashtonsix/SixDB/blob/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes/orbital-scenarios/PROTECTION.md)
 are the candidate being challenged.
 
 The broad-reader problem is not principally how to represent a large read set.

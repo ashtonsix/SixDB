@@ -28,7 +28,7 @@ Supporting research and evidence:
 | Real Linux mapping and protection probes | [Object mappings](../workbench/spikes/orbital-objects/README.md) |
 | Distributed applications, exchanges and reusable state | [Dataflow workloads](../workbench/notebook/dataflow-workloads.md) |
 
-The [mining list](MINING.md) collects ideas worth revisiting, with a
-[source map](stale-drafts/README.md) for older drafts and
-[recovery pointers](../workbench/notebook/retired-spikes.md) for retired prototypes.
-These are reference material, not additional requirements.
+The [mining list](MINING.md) collects ideas worth revisiting. The
+[retirement record](../workbench/notebook/retired-spikes.md#earlier-orbital-drafts)
+identifies earlier drafts and prototype recovery. These are reference material,
+not additional requirements.

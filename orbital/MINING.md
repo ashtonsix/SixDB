@@ -8,7 +8,7 @@ preserves the systematic networking survey and records what was explored;
 this list remains a curated starting point. Engine owns application semantics;
 Orbital must be usable by applications with entirely different data structures.
 
-The [draft map](stale-drafts/README.md) distinguishes the older proposals and the
+The [draft map](../workbench/notebook/retired-spikes.md#earlier-orbital-drafts) distinguishes the older proposals and the
 different historical meanings of “BRIEF2”. The [Calico map](../workbench/notebook/calico.md)
 provides broader navigation. Calico and Consurgent links below assume sibling
 checkouts; the [pitch script](../../consurgent/pitch/SCRIPT.md) explains the
@@ -24,7 +24,7 @@ delayed backend borrows, extension protection transitions and allocator hints
 still need composed native experiments; feature availability does not settle them.
 
 - **Make durable memory usable by ordinary programs.** The
-  [early narrative](stale-drafts/BRIEF.md), in its memory and closing design-lessons
+  [early narrative](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/BRIEF.md), in its memory and closing design-lessons
   paragraphs, starts with durable objects and projects them into memory. Mine
   stable pointers, lazy materialisation, copy avoidance and page-remapped growth.
   Compare [xmem DESIGN §3 and §12](../../calico/xmem/DESIGN.md) with the five paths
@@ -100,9 +100,9 @@ still need composed native experiments; feature availability does not settle the
   histories do not establish production throughput, bounded backlog or recovery.
 
 - **Distinguish discovering more work from discovering another shard.**
-  The [early structured brief](stale-drafts/BRIEF2.md), “Consensus — Multiple
+  The [early structured brief](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/BRIEF2.md), “Consensus — Multiple
   Shards” and its worked example, follows A→B→A. The
-  [arbitration brief](stale-drafts/BRIEF-arbitration.md), “Preparation and
+  [arbitration brief](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/BRIEF-arbitration.md), “Preparation and
   Execution”, develops the same issue. Keep the scenario without inheriting
   retained locks, invalidation or expanding protection sets.
 
@@ -131,7 +131,7 @@ outputs and cancellation before backend retirement remain useful discriminators.
 Engine or another application owns their meaning; Loom owns scheduling. The old
 four toy frameworks are recoverable, not parallel maintained execution runtimes.
 
-- **Capabilities for fast I/O.** The [early narrative](stale-drafts/BRIEF.md),
+- **Capabilities for fast I/O.** The [early narrative](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/BRIEF.md),
   sandboxing paragraphs, explores broker-created restricted io_uring rings,
   registered-file slots and brokered opens/connects. Reconsider where this saves
   overhead while keeping ordinary syscalls available; do not inherit an old
@@ -153,14 +153,14 @@ four toy frameworks are recoverable, not parallel maintained execution runtimes.
   CIDR-derived trust or assumed future hypervisor. Much of that runtime was unbuilt.
 
 - **Retain the versions needed to interpret compact inputs.** The
-  [early narrative](stale-drafts/BRIEF.md)'s closing compression ideas and
-  [CONSENSUS §§3–4](stale-drafts/CONSENSUS.md) suggest operation/plan identifiers,
+  [early narrative](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/BRIEF.md)'s closing compression ideas and
+  [CONSENSUS §§3–4](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/CONSENSUS.md) suggest operation/plan identifiers,
   parameters and shared dictionaries instead of repeated descriptions. Ask what
   must remain available for replay and what compression costs. Planning and the
   meaning of those identifiers stay application-owned.
 
 - **Share analysis without letting arrival order select semantics.** The final
-  notes in the [early structured brief](stale-drafts/BRIEF2.md) suggest carrying
+  notes in the [early structured brief](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/BRIEF2.md) suggest carrying
   partial analysis with propagation. Compare
   [Ikea's curated regions and execution grain](../workbench/spikes/ikea-composition/design.md):
   storage tiles, working width, scheduling stops and output representation are
@@ -168,8 +168,8 @@ four toy frameworks are recoverable, not parallel maintained execution runtimes.
   agreed outcomes merely because one consumer receives them first.
 
 - **Make numerical determinism explicit.** The
-  [early narrative](stale-drafts/BRIEF.md)'s determinism paragraphs and
-  [CONSENSUS §5](stale-drafts/CONSENSUS.md) raise reduction order, FMA, architecture
+  [early narrative](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/BRIEF.md)'s determinism paragraphs and
+  [CONSENSUS §5](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/CONSENSUS.md) raise reduction order, FMA, architecture
   differences and captured time/entropy. Preserve the obligations without
   assuming emulation, a particular accumulator or an unmeasured cost.
 
@@ -185,7 +185,7 @@ outside the model. The user still has networking input outstanding.
 
 
 - **Name the completion event before comparing latency.**
-  [CONSENSUS §§1 and 8](stale-drafts/CONSENSUS.md), the
+  [CONSENSUS §§1 and 8](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/CONSENSUS.md), the
   [CFT commit study](../workbench/spikes/cft-commit-latency/commit/README.md) and
   [Calico's measurement corrections](../../calico/xmem/MEASUREMENT_NOTES.md)
   distinguish payload durability, witness admission, follower propagation start,
@@ -210,7 +210,7 @@ outside the model. The user still has networking input outstanding.
   fanout and persistence need their own measurements.
 
 - **Keep routing policy separate from logical connection identity.** The
-  [early narrative](stale-drafts/BRIEF.md)'s networking paragraphs discuss local
+  [early narrative](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/BRIEF.md)'s networking paragraphs discuss local
   versus tunneled connections and graph costs including bandwidth, egress, NAT
   and requests. The [retired propagation study](../workbench/notebook/consensus-networking.md)
   retains lessons on chain depth, shared-NIC concentration, bursts and repair
@@ -233,7 +233,7 @@ outside the model. The user still has networking input outstanding.
   service. Catch-up and repair still need real capacity.
 
 - **Compress what is actually expensive.**
-  [CONSENSUS §4](stale-drafts/CONSENSUS.md) gives frontier/range metadata arithmetic;
+  [CONSENSUS §4](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/CONSENSUS.md) gives frontier/range metadata arithmetic;
   [omachine's compression discussion](../../calico/omachine/CONTRACT.md) considers
   raw, XOR/runs, alignment and shared dictionaries. Count framing, authentication,
   CPU and recovery costs. A specific source conflict matters: xmem DESIGN says
@@ -258,7 +258,7 @@ outside the model. The user still has networking input outstanding.
 ## Failure, recovery and retained evidence
 
 - **Find durable work that has not yet been admitted.**
-  [CONSENSUS §3](stale-drafts/CONSENSUS.md) discusses stream registration,
+  [CONSENSUS §3](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/CONSENSUS.md) discusses stream registration,
   discoverable holders, complete tails and torn records. Revisit acceptance,
   cancellation, discoverability and ownership without inheriting permanent
   stream ownership or the old witness hierarchy.

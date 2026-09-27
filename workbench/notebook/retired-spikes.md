@@ -26,6 +26,31 @@ a simulator cannot replace CFT, memory or local-handoff measurements. The remain
 Orbital records retain scenarios and mechanisms the native models do not yet
 cover. Their dated observations are research context, not current contracts.
 
+## Earlier Orbital drafts
+
+The former `orbital/stale-drafts/` is archived at commit
+`1957910` rather than kept beside the live module. [BRIEF](../../orbital/BRIEF.md)
+and [PHYSICAL](../../orbital/PHYSICAL.md) own current direction;
+[MINING](../../orbital/MINING.md) and the [dissemination survey](dissemination/README.md)
+retain the useful questions, counterexamples and source references.
+
+| Archived source | Historical role |
+| --- | --- |
+| [BRIEF.md](https://github.com/ashtonsix/SixDB/blob/1957910/orbital/stale-drafts/BRIEF.md) | Early broad narrative: witness hierarchy, extensions, networking and durable memory. Useful memory, sandboxing and compression ideas remain in MINING. |
+| [BRIEF2.md](https://github.com/ashtonsix/SixDB/blob/1957910/orbital/stale-drafts/BRIEF2.md) | Retained-lock C1/C2 preparation, retries and working notes, including A→B→A discovery and shared analysis. |
+| [CONSENSUS.md](https://github.com/ashtonsix/SixDB/blob/1957910/orbital/stale-drafts/CONSENSUS.md) | September 18–19 specification, before the contention redesign. Its model-building instructions and completion criteria are historical. |
+| [BRIEF-arbitration.md](https://github.com/ashtonsix/SixDB/blob/1957910/orbital/stale-drafts/BRIEF-arbitration.md) | Component-owned protection and dynamic preparation: baseline for the retired scenario workbench. |
+
+The names are not a version sequence. In particular, “BRIEF2” in the historical
+contention comparison names a later compute/promote/renew candidate, not the
+`BRIEF2.md` above. Neither is the current fixed-position design. Old witness
+hierarchies, emergency quorum reductions, epoch-wide publication gates and
+expanding retry reservations are not inherited requirements.
+
+The verified local copy is Linux `~/sixdb-archive/orbital-drafts-20260927/`, with
+`orbital-drafts-1957910.tar.gz` and a hash receipt. The four drafts and their old
+source-map README retain their exact bytes; Git supplies shared recovery.
+
 ## Recovery
 
 Browse the [complete checkpoint](https://github.com/ashtonsix/SixDB/tree/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes)
