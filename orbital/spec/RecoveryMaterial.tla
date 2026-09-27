@@ -1,4 +1,6 @@
 ------------------------- MODULE RecoveryMaterial -------------------------
+(* Explores root acquisition, holder persistence and collection with actual
+   recipe bytes, including reset, abort and transfer variants. *)
 EXTENDS Contracts, Integers
 CONSTANTS Reset, Collect, Abort, Bug, Service, Transfer, HolderCount
 R == INSTANCE RecoveryKernel

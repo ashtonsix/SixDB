@@ -1,4 +1,7 @@
 ------------------------------ MODULE RecoveryCut ------------------------------
+(* Exercises transaction restoration from durable checkpoints and journal
+   cursors, including point-in-time recovery, lineage fencing and abandoned
+   future work. *)
 EXTENDS Contracts, TxFixtures, Integers
 CONSTANTS TxNone, Bug, Mode
 RestoreActor == <<"restore",0>>

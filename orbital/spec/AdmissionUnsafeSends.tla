@@ -1,4 +1,6 @@
 ------------------------- MODULE AdmissionUnsafeSends -------------------------
+(* Deliberately unsound variant of the inert-send reduction that erases
+   every packet suppression flag, used to test the correspondence check. *)
 EXTENDS Contracts, Integers
 A == INSTANCE AdmissionKernel
 Q == INSTANCE AdmissionRelevant

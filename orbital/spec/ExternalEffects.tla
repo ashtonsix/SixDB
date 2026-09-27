@@ -1,4 +1,7 @@
 --------------------------- MODULE ExternalEffects ---------------------------
+(* Connects committed transaction intents to the effect journal and external
+   sink, exercising driver reset and lost replies with and without sink
+   deduplication. *)
 EXTENDS Contracts, TxFixtures, Integers
 CONSTANTS TxNone, Dedup, Reset, LoseReply, Bug
 T == INSTANCE TxKernel

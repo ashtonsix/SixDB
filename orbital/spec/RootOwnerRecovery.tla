@@ -1,4 +1,7 @@
 --------------------------- MODULE RootOwnerRecovery ---------------------------
+(* Crashes a root owner at selected acquisition or retirement cuts, checking
+   reconstruction from chosen records while surviving holders keep their
+   state. *)
 EXTENDS Contracts, JournalSchedule
 CONSTANTS Cut, Bug
 R == INSTANCE RecoveryKernel

@@ -1,4 +1,6 @@
 -------------------------- MODULE BootstrapUnderPressure ------------------------
+(* Runs bootstrap discovery through counted recovery resources and backend
+   retirement while ordinary capacity is occupied. *)
 EXTENDS BootstrapDiscovery
 CONSTANT PressureBug
 VARIABLES staged,service,noise,delivered

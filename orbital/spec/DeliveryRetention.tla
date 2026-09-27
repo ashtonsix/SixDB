@@ -1,4 +1,7 @@
 ---------------------------- MODULE DeliveryRetention ----------------------------
+(* Connects delivery coverage and application completion to actual retained
+   roots, custody transfer and collection, including cancellation and late
+   enrollment. *)
 EXTENDS Contracts, Integers
 CONSTANTS Bug, Cancel, LateJoin
 D == INSTANCE DeliveryKernel

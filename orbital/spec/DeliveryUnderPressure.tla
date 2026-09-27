@@ -1,4 +1,7 @@
 ------------------------- MODULE DeliveryUnderPressure -------------------------
+(* Charges delivery work to resource leases and backend operations, checking
+   progress and physical lifetime through replay, cancellation and dynamic
+   recipients. *)
 EXTENDS Contracts, Integers
 CONSTANTS Mode, Bug
 D == INSTANCE DeliveryKernel

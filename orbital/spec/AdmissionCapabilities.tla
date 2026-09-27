@@ -1,4 +1,7 @@
 ------------------------- MODULE AdmissionCapabilities -------------------------
+(* Runs physical admission with compact certificate identities, checking
+   full receipt evidence at emission before discarding the certificate's
+   proof payload. *)
 EXTENDS Contracts, Integers
 CONSTANTS Streams, Entries, Holders, Generations, Losses, Reset, Bug, Service, Atomic
 A == INSTANCE AdmissionKernel

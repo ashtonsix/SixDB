@@ -1,4 +1,7 @@
 ------------------------- MODULE ReservationDynamic -------------------------
+(* Checks reservation folds under dynamic enqueue/fix/cancel histories,
+   duplicate commands and replica reset, comparing reconstructed state and
+   outputs. *)
 EXTENDS Naturals, FiniteSets, Sequences
 CONSTANTS Policy, Bug
 K == INSTANCE ReservationKernel

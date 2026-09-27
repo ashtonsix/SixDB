@@ -1,4 +1,7 @@
 ------------------------- MODULE AdmissionHistories -------------------------
+(* Drives selected admission histories through frontier holes, independent
+   streams, repair and producer rediscovery. The causal schedule is
+   authored. *)
 EXTENDS Contracts, Integers
 CONSTANTS Shape, Bug
 A == INSTANCE AdmissionKernel

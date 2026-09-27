@@ -1,8 +1,13 @@
 # Orbital verification assessment
 
-The [current source-matched selection](evidence/admission-renewal/README.md)
-accepts **613 of 613 maintained cases**: 254 complete graphs, 195 expected defects
-and 164 witnesses, with no conflicting result. The final Admission renewal case
+The [retained selection](evidence/admission-renewal/README.md)
+accepts **613 of 613 maintained cases** at its captured sources: 254 complete
+graphs, 195 expected defects and 164 witnesses, with no conflicting result.
+The current modules add only [audited purpose headers](evidence/module-headers/README.md)
+to those checked sources. This is verified comment-only correspondence, not a
+new TLC execution or an exact-byte match by the ordinary evidence collector.
+
+The final Admission renewal case
 completed 925,794 states, including its five safety properties and conditional
 completion property. Its [reviewed representation reduction](evidence/admission-renewal/reduction.md)
 preserves the original two-loss configuration and adds 13 supporting audits,

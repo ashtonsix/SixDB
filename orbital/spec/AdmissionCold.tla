@@ -1,4 +1,7 @@
 ----------------------------- MODULE AdmissionCold -----------------------------
+(* Exercises a holder that loses both stored payloads and local
+   authorization, then recovers authority from the journal before rebuilding
+   a valid copy. *)
 EXTENDS Contracts, Integers
 CONSTANT Bug
 A == INSTANCE AdmissionKernel

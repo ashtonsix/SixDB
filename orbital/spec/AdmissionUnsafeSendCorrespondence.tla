@@ -1,4 +1,6 @@
 ------------------------- MODULE AdmissionUnsafeSendCorrespondence -------------------------
+(* Negative correspondence check for erasing all send-suppression flags,
+   including flags whose deliveries still change protocol state. *)
 EXTENDS Contracts, Integers
 CONSTANTS Streams, Entries, Holders, Generations, Losses, Reset, Bug, Service, Atomic
 A == INSTANCE AdmissionKernel

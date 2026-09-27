@@ -1,4 +1,7 @@
 --------------------------- MODULE MaterialTransfer ---------------------------
+(* Exercises retained-byte custody transfer and actual source deletion,
+   including representation conversion, reset during copying and lost hold
+   receipts. *)
 EXTENDS Contracts, Integers
 CONSTANTS Bug, ResetDuringCopy, LoseReceipt, Convert, DropKind
 R == INSTANCE RecoveryKernel

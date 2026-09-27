@@ -1,4 +1,7 @@
 -------------------------- MODULE IndependentTransactions --------------------------
+(* Requires a real transaction to commit while another transaction's remote
+   read remains withheld forever, detecting unnecessary global progress
+   barriers. *)
 EXTENDS Contracts, TxFixtures, Integers
 CONSTANTS TxNone, Bug
 K == INSTANCE TxKernel

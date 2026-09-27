@@ -1,4 +1,7 @@
 ------------------------- MODULE ReservationShapes -------------------------
+(* Compares reservation policies on authored bridge, chain, younger-request
+   and cancellation histories, checking which independent work may bypass a
+   waiter. *)
 EXTENDS Naturals, FiniteSets, Sequences
 CONSTANTS Policy, Scene
 K == INSTANCE ReservationKernel

@@ -1,4 +1,6 @@
 ------------------------- MODULE AdmissionCompact -------------------------
+(* Runs the admission protocol with obsolete send-suppression flags removed,
+   retaining physical copies, messages and certificate evidence. *)
 EXTENDS Contracts, Integers
 CONSTANTS Streams, Entries, Holders, Generations, Losses, Reset, Bug, Service, Atomic
 A == INSTANCE AdmissionKernel

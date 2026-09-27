@@ -1,4 +1,7 @@
 ------------------------- MODULE CompletionUnderPressure -------------------------
+(* Joins journal persistence and retained-material work with capacity
+   leases, checking that completion paths keep their resources through
+   physical retirement. *)
 EXTENDS Contracts, Integers
 CONSTANTS Bug, Crossing, JournalNone
 C == INSTANCE CapacityKernel

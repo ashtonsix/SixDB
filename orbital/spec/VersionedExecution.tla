@@ -1,4 +1,7 @@
 -------------------------- MODULE VersionedExecution --------------------------
+(* Connects journal-selected execution profiles to actual retained code and
+   physical views, including synchronous checking and delayed audit
+   retention. *)
 EXTENDS Contracts, Integers, TxFixtures
 CONSTANTS TxNone, Async, Diverge, Missing, Bug
 T == INSTANCE TxKernel

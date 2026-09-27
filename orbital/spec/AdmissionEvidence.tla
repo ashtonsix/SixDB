@@ -1,4 +1,7 @@
 -------------------------- MODULE AdmissionEvidence --------------------------
+(* Distinguishes historical certificate evidence from simultaneous copy
+   survival, including histories whose losses exceed the promised protection
+   allowance. *)
 EXTENDS Contracts, Integers
 CONSTANT Bug
 VARIABLES state,journal,network,refines,everTogether

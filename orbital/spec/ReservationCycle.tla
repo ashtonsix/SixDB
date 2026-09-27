@@ -1,4 +1,7 @@
 ------------------------- MODULE ReservationCycle -------------------------
+(* Explores continuing narrow arrivals around a broad reservation,
+   distinguishing starvation from useful progress without recycling full
+   transaction identities. *)
 EXTENDS Naturals, FiniteSets, Sequences
 CONSTANTS Policy, Independent
 K == INSTANCE ReservationKernel

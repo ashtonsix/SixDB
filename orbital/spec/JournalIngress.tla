@@ -1,4 +1,6 @@
 ----------------------------- MODULE JournalIngress -----------------------------
+(* Checks concrete follower ingress and command deduplication when two
+   different submission envelopes carry the same immutable frontier command. *)
 EXTENDS Contracts
 CONSTANT JournalNone
 J == INSTANCE JournalKernel

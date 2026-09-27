@@ -1,4 +1,6 @@
 ------------------------- MODULE RootRecoveryIdentity -------------------------
+(* Checks that concurrent root-owner recovery requests remain distinct when
+   different owners share the same local recovery counter. *)
 EXTENDS Contracts, JournalSchedule
 CONSTANT Bug
 R == INSTANCE RecoveryKernel

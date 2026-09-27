@@ -1,4 +1,7 @@
 --------------------------- MODULE ViewsKernel ---------------------------
+(* Shared physical-view operations for scoped reads/writes, version
+   reconstruction and backend lifetimes; compositions supply retained
+   material and decisions. *)
 EXTENDS Naturals, Integers, Sequences, FiniteSets, TLC, Contracts
 
 \* Backend registry survives execution-context death. Root's physical completion

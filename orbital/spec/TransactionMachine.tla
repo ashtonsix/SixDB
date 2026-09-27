@@ -1,4 +1,7 @@
 ------------------------ MODULE TransactionMachine ------------------------
+(* Explores the shared transaction kernel with selectable journal service
+   and delivery scheduling, comparing reads, outcomes and publication with a
+   serial oracle. *)
 EXTENDS Contracts, Integers, TxFixtures
 CONSTANTS Scenario, Bug, Crash, TxNone, Service
 K == INSTANCE TxKernel

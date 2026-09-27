@@ -1,4 +1,7 @@
 ---------------------------- MODULE TxFixtures ----------------------------
+(* Defines finite transaction workloads and their parameters for shared
+   protocol models, including conflicts, programs, checks and fault
+   variants. *)
 EXTENDS Contracts, Integers
 
 Params(scenario, bug, crash) ==

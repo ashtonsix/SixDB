@@ -1,4 +1,6 @@
 -------------------------- MODULE RootCustodyRecovery --------------------------
+(* Exercises custody transfer with cold loss of either root owner, requiring
+   replay and surviving holder evidence before old custody can retire. *)
 EXTENDS Contracts, JournalSchedule
 CONSTANTS Bug, FaultOwner
 R == INSTANCE RecoveryKernel

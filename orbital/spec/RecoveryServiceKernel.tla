@@ -1,4 +1,6 @@
 -------------------------- MODULE RecoveryServiceKernel -------------------------
+(* Shared counted recovery-service path using capacity leases and backend
+   completion/retirement, with ordinary resources already occupied. *)
 EXTENDS Contracts, Integers
 C == INSTANCE CapacityKernel
 V == INSTANCE ViewsKernel

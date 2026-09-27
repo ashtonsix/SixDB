@@ -1,4 +1,6 @@
 --------------------------- MODULE TerminalFloor ---------------------------
+(* Checks terminal-attempt compaction against an uncompressed reference,
+   preserving unresolved holes and rejection of delayed work after recovery. *)
 EXTENDS Contracts, Integers
 CONSTANTS Attempts, Bug
 Ids == 1..Attempts

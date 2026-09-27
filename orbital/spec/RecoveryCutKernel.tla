@@ -1,4 +1,7 @@
 --------------------------- MODULE RecoveryCutKernel ---------------------------
+(* Models checkpoint publication, closed recovery cuts and restoration
+   fences, distinguishing durable reconstruction data from authority to
+   resume effects. *)
 EXTENDS Contracts, Integers
 CONSTANT TxNone
 RestoreActor == <<"restore",0>>

@@ -1,4 +1,6 @@
 ------------------------- MODULE AdmissionCapabilityCorrespondence -------------------------
+(* Checks the certificate-capability reduction against reachable fine
+   admission states, comparing normalized actions and message deliveries. *)
 EXTENDS Contracts, Integers
 CONSTANTS Streams, Entries, Holders, Generations, Losses, Reset, Bug, Service, Atomic
 A == INSTANCE AdmissionKernel

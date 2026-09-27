@@ -1,0 +1,343 @@
+{
+  "base_commit": "44a0234092998b8050b37ff822d39d90cfca5585",
+  "evidence_inputs_sha256": "a073233ae7807d4cbc89534ecca08e587001dbf98fbde92b43f2e857945640d2",
+  "files": {
+    "AdmissionBypass.tla": {
+      "after_sha256": "4077085bdc61808adda315d14c48f60017f9fa9f2f16af6e15faef9f3baa7e24",
+      "before_sha256": "098c7660dfa699765e80ae39edd7fe491bf4ab89936bd0d78ff208c84f834b12",
+      "inserted_header": "(* Checks that transactions using the early channel can complete while a\n   producer's contiguous admission frontier remains blocked by a missing\n   entry. *)\n"
+    },
+    "AdmissionCapabilities.tla": {
+      "after_sha256": "1631a7251088e1e2d8814355d6c306533af997e480b6e6d6ed3775af68af4a19",
+      "before_sha256": "11beab06175f7a17a88381a34f17487374bfd51ff547e8a47207e19c5c5cd2ca",
+      "inserted_header": "(* Runs physical admission with compact certificate identities, checking\n   full receipt evidence at emission before discarding the certificate's\n   proof payload. *)\n"
+    },
+    "AdmissionCapabilityCorrespondence.tla": {
+      "after_sha256": "ccbdec5a72d0b6d08a94706d38501e7456a1e2c9e9abf3e0b177e0283d607cc7",
+      "before_sha256": "308211f74ae8bfcfa12cbe3b764e371644b9e7ca78b32515d941ab117b46e2a9",
+      "inserted_header": "(* Checks the certificate-capability reduction against reachable fine\n   admission states, comparing normalized actions and message deliveries. *)\n"
+    },
+    "AdmissionCold.tla": {
+      "after_sha256": "a76466fc93e44fd151581c81e256282ec10613312be938af3b4cdad46132caca",
+      "before_sha256": "8cd5c8c5b1455fded5f74a9b58f9f5ff9643d8df2db5a04a0bc1e5dadbed2c01",
+      "inserted_header": "(* Exercises a holder that loses both stored payloads and local\n   authorization, then recovers authority from the journal before rebuilding\n   a valid copy. *)\n"
+    },
+    "AdmissionCompact.tla": {
+      "after_sha256": "c6974b5d5e46a9dc6251081252e2d281614cd45f4ca123d7a555d2b1428a73c5",
+      "before_sha256": "79a8c5f98b88fab1fa2690d68935c8ff317e65ca9fa5b9e014fd070d62aa6a3d",
+      "inserted_header": "(* Runs the admission protocol with obsolete send-suppression flags removed,\n   retaining physical copies, messages and certificate evidence. *)\n"
+    },
+    "AdmissionCorrespondence.tla": {
+      "after_sha256": "06a86619a1771d20aec86541b576c32ac21c8aaabf82291c546d073fbcf712c0",
+      "before_sha256": "8de3e5d84d3f129591d5291d35bc54c626cae3d527d37a560763d0295053f683",
+      "inserted_header": "(* Checks that forgetting obsolete admission send flags preserves the\n   normalized successors of each fine protocol action and message delivery. *)\n"
+    },
+    "AdmissionEvidence.tla": {
+      "after_sha256": "e682732a75b81281ca191a684a5bffcb4687be2c052a8e30868447489812421e",
+      "before_sha256": "604942f31a895bba573ac1b4c05788eaa054b98100a6e56da4b9a8cea1be89c9",
+      "inserted_header": "(* Distinguishes historical certificate evidence from simultaneous copy\n   survival, including histories whose losses exceed the promised protection\n   allowance. *)\n"
+    },
+    "AdmissionFrontiers.tla": {
+      "after_sha256": "0fc92361d35672f2589ab228c8ef8555b0287591f4ff005233cb681b3ed9478a",
+      "before_sha256": "ccb5d791ff8bd44bc5bcdac85c202d466bbb83bc29d27f5a6226d94ef08af3b9",
+      "inserted_header": "(* Explores the abstract certificate service: out-of-order certification,\n   contiguous per-stream frontiers, generation renewal and bounded loss. *)\n"
+    },
+    "AdmissionHistories.tla": {
+      "after_sha256": "fab288ef20e4d88f8f34dc5c13f8241fdceefdd9c54473fe92061805d4bee9bb",
+      "before_sha256": "948e2ba12ff23f7730377928fa66f7fd9f57de9f2993fcc8d10a2ffd894180b4",
+      "inserted_header": "(* Drives selected admission histories through frontier holes, independent\n   streams, repair and producer rediscovery. The causal schedule is\n   authored. *)\n"
+    },
+    "AdmissionInertCorrespondence.tla": {
+      "after_sha256": "a66cce1a8d92e008badbc8395e7c2b7ca4b6ae400147f7174acd093e6e4e10b3",
+      "before_sha256": "1d300096a3db10664905b16763895a44d14e08025c37b274d7e43c92c41aeb84",
+      "inserted_header": "(* Audits the inert-message/send reduction against fine admission states,\n   checking exact normalized successors and permanence of discarded\n   deliveries. *)\n"
+    },
+    "AdmissionInertNetwork.tla": {
+      "after_sha256": "55976f5bbfc139544dde65b9e2876233b8576664c48e07b00742aa0a9a3aac81",
+      "before_sha256": "7d870ce213126edec5023970f529c517ccde1e2a782e4c861f21422833b86434",
+      "inserted_header": "(* Runs folded-journal admission after removing permanently inert messages\n   and send flags. Correspondence audits justify this smaller\n   representation. *)\n"
+    },
+    "AdmissionMaterial.tla": {
+      "after_sha256": "6d89ec7f59e403bd77047259cc0e4934d46f9a40a5b32b8d1ee020007068fbfa",
+      "before_sha256": "6d3c06246fa15f498744237feced08e4234b54c9bfc78239c5a02552a3ff964d",
+      "inserted_header": "(* Composes physical payload admission with journal service and an\n   independent certificate observer, checking custody, frontiers, renewal\n   and recovery. *)\n"
+    },
+    "AdmissionUnsafeNetworkProbe.tla": {
+      "after_sha256": "894f36de23619bd528a5909c229254cba77bfaed8f08f977f06e9089ed3aaef4",
+      "before_sha256": "08c36e1e543ba29693de947d4bd4c8f0687a7b8f8822adc965879710bc5be4fa",
+      "inserted_header": "(* Negative control: exposes why a duplicate payload cannot be discarded\n   merely because its destination has a copy now; a later loss may need it. *)\n"
+    },
+    "AdmissionUnsafeProducer.tla": {
+      "after_sha256": "605e474362b96a8cde0c84aeb1e2246362a04813ba8418a81ac12db2e1ae1efb",
+      "before_sha256": "7b74ebbb4ef252499386f016fd027bed7c1859759970b84ec593e524c163ecaa",
+      "inserted_header": "(* Deliberately unsound reduction that also forgets producer submission\n   flags. Their identities omit the generation, so forgetting can enable new\n   work. *)\n"
+    },
+    "AdmissionUnsafeProducerCorrespondence.tla": {
+      "after_sha256": "6b71a1412337cb5d6f4db63bdc3cb04e95357702288c4ed84c73eab4fd84b44d",
+      "before_sha256": "4d25f18ee2319a00db3be33e8d95050e533a8497b75dabb5074039908b27ee88",
+      "inserted_header": "(* Negative correspondence check for forgetting producer submission flags;\n   renewal exposes newly enabled submissions absent from the fine state. *)\n"
+    },
+    "AdmissionUnsafeSendCorrespondence.tla": {
+      "after_sha256": "120f5951132958c10b5bfbc487d8774630b1317235c0075b92e1248cc606859e",
+      "before_sha256": "04623b4376fb9c16befd3e0acd0820109c02e3054541e73edb84eff7fc928792",
+      "inserted_header": "(* Negative correspondence check for erasing all send-suppression flags,\n   including flags whose deliveries still change protocol state. *)\n"
+    },
+    "AdmissionUnsafeSends.tla": {
+      "after_sha256": "8d44d4cf9f956aeecbf95e1a5feff4142d7f009896fb429bd3585c70fbc9f73c",
+      "before_sha256": "f13c9040fb4f0fa54c433bdf5f689d1916519f0e9568828416645b7aa4dd0a04",
+      "inserted_header": "(* Deliberately unsound variant of the inert-send reduction that erases\n   every packet suppression flag, used to test the correspondence check. *)\n"
+    },
+    "AuthorityBootstrapSOS.tla": {
+      "after_sha256": "9209bd6a5a754846b618a92b1d6f430bc37a3ff2f3752c85f98a5c7c881eaa75",
+      "before_sha256": "3c4b72f9ebe0a934c1d99fe89dbecfb7b68ecd4da9fb03238fae6445d75e270a",
+      "inserted_header": "(* Joins journal authority, retained material and SOS export/reconciliation\n   in authored histories, separating recoverable bytes from permission to\n   serve. *)\n"
+    },
+    "BootstrapDiscovery.tla": {
+      "after_sha256": "ad3ebbce135ff11ad07c62f002559300968ed34bb81a9123dd17d42c4127e4c1",
+      "before_sha256": "b74cef8ee3c5cb45f36b173a1f92e618e810e2a39bed6a063f49da217c61590b",
+      "inserted_header": "(* Exercises bootstrap from empty inventories using journal snapshots and\n   holder exports, including a root created during discovery and observer\n   restart. *)\n"
+    },
+    "BootstrapUnderPressure.tla": {
+      "after_sha256": "7854fa3dc4134a2b6395451b40d22c467a67455d720640555396ec9a20b3e50a",
+      "before_sha256": "7226caf05bd34aea690dace980ad0c58e3d50d93b4dbbae7004747c59ceab547",
+      "inserted_header": "(* Runs bootstrap discovery through counted recovery resources and backend\n   retirement while ordinary capacity is occupied. *)\n"
+    },
+    "CheckedViews.tla": {
+      "after_sha256": "b8e6dad0f05789c3b2193920cdc20c8a922010b0339308c3b51dbdd9cb1bd5fb",
+      "before_sha256": "e5a9bbe37aeeaa6a83d8169a7924f271ef42a45be619f019bba93e30ac88a351",
+      "inserted_header": "(* Joins transactions, retention roots and physical views to check captured\n   reads, independent verification and publication of the correct bytes. *)\n"
+    },
+    "CompletionUnderPressure.tla": {
+      "after_sha256": "f8b5f82f619cb2fa144f85ec70f677e2ae8a6b8a077bc3bc658db471a9ef4f2f",
+      "before_sha256": "58fc749d2b0e2c1c18f5fd50d655f45752b7f4cd8a8af20f1eeb9e1483589a54",
+      "inserted_header": "(* Joins journal persistence and retained-material work with capacity\n   leases, checking that completion paths keep their resources through\n   physical retirement. *)\n"
+    },
+    "DeliveryDataflow.tla": {
+      "after_sha256": "f4fd56f06485e7924ae87960b60af90b3d308ea4f685293abd5a4b1238af73e1",
+      "before_sha256": "0713b3cd009e08a124d68a63878611d9e2b8973c5d32c623140c09b1402d7e68",
+      "inserted_header": "(* Explores logical delivery across duplicate routes, representations,\n   dynamic children, late recipients, cancellation and source/recipient\n   recovery. *)\n"
+    },
+    "DeliveryRetention.tla": {
+      "after_sha256": "0db72954e9c2cc0163b4324f42743e9df01a46607400a25c9c54bb090f659d4b",
+      "before_sha256": "7133330b06c4a037e9f0fe9344420ae038b10281f53b5b5190f1b141df4cc468",
+      "inserted_header": "(* Connects delivery coverage and application completion to actual retained\n   roots, custody transfer and collection, including cancellation and late\n   enrollment. *)\n"
+    },
+    "DeliveryUnderPressure.tla": {
+      "after_sha256": "55ef4fa6994ac4347751401169dd9420381b40808ac23d8d4c0c317ca13318fd",
+      "before_sha256": "080436e136cb5d6a181abf931b82c86eaf37509395e27f399810d3864b7d1163",
+      "inserted_header": "(* Charges delivery work to resource leases and backend operations, checking\n   progress and physical lifetime through replay, cancellation and dynamic\n   recipients. *)\n"
+    },
+    "DerivedDelivery.tla": {
+      "after_sha256": "268b925527565d794fd90b4ba75ae80d8a8bf6fa73685ea26496ed4a4590f806",
+      "before_sha256": "1362c6caa0baa50269b124fcd3aa71a18b8ef73f101bbfa55154ba7694e8a2f6",
+      "inserted_header": "(* Derives delivery contributions from actual transaction/interpreter\n   outputs and chosen outcomes, checking stable identity through replay and\n   late enrollment. *)\n"
+    },
+    "DurableLogService.tla": {
+      "after_sha256": "60c82828fd31ecf5c5a25a75055d9efb6173db88545048762024f6381f2836b4",
+      "before_sha256": "33e7f0d0953ffe031c08456f9e9ffe8e59f14a29b60b185029634da30db47d6c",
+      "inserted_header": "(* Checks the abstract journal service's duplicate-command handling, local\n   delivery and recovery snapshots using distinct envelopes for one\n   immutable command. *)\n"
+    },
+    "EarlyDispatch.tla": {
+      "after_sha256": "7e778772cb0b55299ad94b214f1c9f2a191902b01c4e7f1b1e6953032d6a1cf1",
+      "before_sha256": "f788f8a91fa63f7496f0666750b3fd89fd89985af84379fd24b0f89cc29ef421",
+      "inserted_header": "(* Checks at-most-once early dispatch using durably assigned disjoint\n   ranges, including driver loss, replacement and delayed attempts from an\n   old driver. *)\n"
+    },
+    "EffectKernel.tla": {
+      "after_sha256": "7ec380baa7a11ac237842b7dd856aa483a3959c4121decb63d3bf7ca2919bea7",
+      "before_sha256": "5d7930f37a6f933d38751ad4236960f44bbb876237b2c89c8ac4ecab359075fd",
+      "inserted_header": "(* Models journaled external-effect intents and sink delivery, preserving\n   stable identity and explicit uncertainty when a non-deduplicating sink\n   loses its reply. *)\n"
+    },
+    "EpochExecution.tla": {
+      "after_sha256": "4085dcc663ab92c3cf638064567438c705bed1d449a563a0b270aef147373f89",
+      "before_sha256": "ed6bac01b735b6dcce23c7712e5fd219c648d1b9cb32b386671d929f651fd262",
+      "inserted_header": "(* Compares independently scheduled consumers of agreed epochs using the\n   application interpreter, including dynamic continuations and logical\n   output closure. *)\n"
+    },
+    "EpochTransactionFolds.tla": {
+      "after_sha256": "b6835a7def9bc6abe2358a472041abbc4c3204ea0356b7fb9999c34f5bf4e67c",
+      "before_sha256": "8746cf101198ab7cdd57182139f8ea20ba7891b5e6e8d117d1717f777c15481e",
+      "inserted_header": "(* Compares complete transaction folds over agreed batches, including\n   logical outputs and independent progress; smaller products audit the\n   scheduling reduction. *)\n"
+    },
+    "ExternalEffects.tla": {
+      "after_sha256": "cb445ae3c1371bc6e0c47d8174cf3ee40cef6de0126478744f46756ef023f015",
+      "before_sha256": "55a8a1c2b6582fe449f286583acfc04d1f8389fc188796283e5518e0aa6d6d9b",
+      "inserted_header": "(* Connects committed transaction intents to the effect journal and external\n   sink, exercising driver reset and lost replies with and without sink\n   deduplication. *)\n"
+    },
+    "HistoricalSnapshot.tla": {
+      "after_sha256": "4a3557e74e6a3de548fdd74f4d35b7abee33df6ad7fadb316d91feaf38312082",
+      "before_sha256": "8dbb88c13876a5c61bb355efffb04caccec5a46a72f5739fd6ad73ecfd6e976f",
+      "inserted_header": "(* Checks reads at an explicitly requested historical cut against retained\n   bytes and supplied freshness requirements, including agreed\n   unavailability. *)\n"
+    },
+    "IndependentTransactions.tla": {
+      "after_sha256": "4d40f1dda08bbbba7173cf89810471545fa7aead10c9c0acf66bc2ed49c0fb1e",
+      "before_sha256": "123c1cf3c204a33ed163e51d76ad9dc39105ae787621729db4ec5967df8f3808",
+      "inserted_header": "(* Requires a real transaction to commit while another transaction's remote\n   read remains withheld forever, detecting unnecessary global progress\n   barriers. *)\n"
+    },
+    "JournalAuthority.tla": {
+      "after_sha256": "0ad8e229a6f5149d5ad8fe52ce2cd212d4acebcd13705cd7f436b0be7cbcf2f2",
+      "before_sha256": "6fbc06f98e9ae911844b09fa4cc45b49cde8c9447e388fdc3149f26aa71c5fbb",
+      "inserted_header": "(* Exercises the concrete journal provider across persistence, recovery and\n   authority transfer, comparing its observations with the abstract service\n   and order contracts. *)\n"
+    },
+    "JournalIngress.tla": {
+      "after_sha256": "4e9c210b046690ad3426cb2a96b7278a4a80270643cbfb3b5ffcbda00fac471b",
+      "before_sha256": "63f69d9047117ae749e6b57887df03e90ef0cd7a7916f78ed493da57e4f4b257",
+      "inserted_header": "(* Checks concrete follower ingress and command deduplication when two\n   different submission envelopes carry the same immutable frontier command. *)\n"
+    },
+    "JournalKernel.tla": {
+      "after_sha256": "c6085097a5f183c7ed56da5f6e9d02752cfac7ada3b7bfffcd6e986620ba146c",
+      "before_sha256": "33573e55bcd4da366d6e47e8ecf8cce9d517a594e5717f08de91fa2e7ae4b684",
+      "inserted_header": "(* Shared concrete journal protocol: quorum persistence, local learning,\n   replay, compaction and authority handoff, with explicit storage and\n   process failures. *)\n"
+    },
+    "MaterialTransfer.tla": {
+      "after_sha256": "af1b39d537973cb9451d050b4791046be4f9cd3d7e78869bf6387b7b1a94f282",
+      "before_sha256": "ae255be1c4fb60e31a443566cdffd1fbdc38f32ed48d0ba17d9b8d2a810fadf8",
+      "inserted_header": "(* Exercises retained-byte custody transfer and actual source deletion,\n   including representation conversion, reset during copying and lost hold\n   receipts. *)\n"
+    },
+    "PendingCutTransfer.tla": {
+      "after_sha256": "4853926639d2f40baaf13ac49c9bc459bccc2204c099dc598201f2a98739e0b9",
+      "before_sha256": "945484c9a6d482bfe22bd49b07ed28db5dac982443a66aba5234acc4db659479",
+      "inserted_header": "(* Transfers a retained cut's fallback bytes and pending source obligation\n   between owners, then checks the same read after source resolution and\n   replay. *)\n"
+    },
+    "PolicyTxBinding.tla": {
+      "after_sha256": "8139ef3fc360df2c282d9e8a6c13396c272a192de68c11a3d69d84f62e64b02a",
+      "before_sha256": "56fcef7ad6d10e2295f6b590ee0cd9cbcc5b1522d6f04ac63903766627ae27e4",
+      "inserted_header": "(* Binds reservation policies to the actual transaction kernel and journal\n   replay, checking serial meaning and deterministic grant closure in\n   selected histories. *)\n"
+    },
+    "PreparedRootFusion.tla": {
+      "after_sha256": "85c6750d883cd020190b49756f17f185f44c3601263ae372dcbe75606782cd4f",
+      "before_sha256": "bb86bca631cb7bf8304367093dc7b052f97a331f46beade0aa5fc745e5a28703",
+      "inserted_header": "(* Compares explicit root acquisition with acquisition from an existing\n   same-owner prepared record, including cancellation, missing material and\n   recovery cuts. *)\n"
+    },
+    "RecipeDependencies.tla": {
+      "after_sha256": "d4812d0997c8801105a2f5570a3205fb8a36ef54d220d4bc360d4d830889dd20",
+      "before_sha256": "e139979a6dcd43a81a28898ba734b6756c2603a8db30ef70c724f0d08502250c",
+      "inserted_header": "(* Checks that retention recipes are grounded in reconstructible bytes;\n   dependency declarations and cycles alone cannot create material. *)\n"
+    },
+    "RecoveryCut.tla": {
+      "after_sha256": "1199a3d80e089abbc3e65bf9d2c8c7acff15785c15887c1a97109fceccc9de2e",
+      "before_sha256": "f0ccb9fba182b4cf453c77a8275bdb4930c4b3b9c3fbc3bdc8401e49bfe08f40",
+      "inserted_header": "(* Exercises transaction restoration from durable checkpoints and journal\n   cursors, including point-in-time recovery, lineage fencing and abandoned\n   future work. *)\n"
+    },
+    "RecoveryCutKernel.tla": {
+      "after_sha256": "8fc25a9b6a45d60728bab8cfa1c92f8e6c0a798185a72d1adecd4ddbc10fdcbd",
+      "before_sha256": "80dd16693aa39ff680d7a1631bc9701f13d987ef374a51e71ba523ef26ee272d",
+      "inserted_header": "(* Models checkpoint publication, closed recovery cuts and restoration\n   fences, distinguishing durable reconstruction data from authority to\n   resume effects. *)\n"
+    },
+    "RecoveryMaterial.tla": {
+      "after_sha256": "1a7816deb98e804107afb02a3ebd45f3db4cc252f236c45952026cf9d699c9a5",
+      "before_sha256": "20b3732cc84eb407b9d4641d6c2c0083a73f870561e0ed716d4291548874838d",
+      "inserted_header": "(* Explores root acquisition, holder persistence and collection with actual\n   recipe bytes, including reset, abort and transfer variants. *)\n"
+    },
+    "RecoveryServiceKernel.tla": {
+      "after_sha256": "7a5d92b18e163d584db76dbe0416a9c0633ce4d2c2af1712c5fb191f03e079b0",
+      "before_sha256": "23b9868dda3d539421c825da735f6760af55493271b361c854009dcffa115c5b",
+      "inserted_header": "(* Shared counted recovery-service path using capacity leases and backend\n   completion/retirement, with ordinary resources already occupied. *)\n"
+    },
+    "ReopenedWriter.tla": {
+      "after_sha256": "b2a433908d530f986ae6e5ccec91a1f6fba5edc05c969b3f4d2ef6646b64a14f",
+      "before_sha256": "04307080b8a47d7bc85ee8996416b038e3f3a296ee1b1a6f331495c6d508421e",
+      "inserted_header": "(* Exercises a writer reopened from retained data and replayed decisions,\n   checking commit or undo bytes when a private physical image has been\n   lost. *)\n"
+    },
+    "ReservationAcquisition.tla": {
+      "after_sha256": "09406f5983200727077a9b36e948d6ebd4e9796dd5b2e18249361e882a222fc3",
+      "before_sha256": "ccb74be9a1e22820df5dba3ceb68b265e3afc0a353775bc3279ed02d99056b63",
+      "inserted_header": "(* Checks multi-shard reservation acquisition and cancellation under\n   competing local policies, including reversed acquisition order as a\n   deadlock control. *)\n"
+    },
+    "ReservationCycle.tla": {
+      "after_sha256": "778a5c30e872e620a8ab19502c3c3f489b1599039420109d9bd2cd992b372dd6",
+      "before_sha256": "93497b646e7cdd44fc6e4077f5e694af06679d0cd9657244241898cda72a3c14",
+      "inserted_header": "(* Explores continuing narrow arrivals around a broad reservation,\n   distinguishing starvation from useful progress without recycling full\n   transaction identities. *)\n"
+    },
+    "ReservationDynamic.tla": {
+      "after_sha256": "c723bd7f46f2bd3ec1787fa59dc5f4fbb677f149255a12f85a00af61e5ab69a8",
+      "before_sha256": "ee108f99e267ab585140913f19754887daa496391cdb48089b1a136c64f0be4d",
+      "inserted_header": "(* Checks reservation folds under dynamic enqueue/fix/cancel histories,\n   duplicate commands and replica reset, comparing reconstructed state and\n   outputs. *)\n"
+    },
+    "ReservationReplay.tla": {
+      "after_sha256": "f75f28d842663fe87f759842d187aa095aa514380a6587c4fc5d3430a43c2575",
+      "before_sha256": "01d2779d916d32c40b3a7ec2815569e4d8d1fcae9d48b599c71815c95d69d98c",
+      "inserted_header": "(* Compares reservation state and emitted grants after replicas consume the\n   same authored command history, with duplicate delivery and reset\n   variants. *)\n"
+    },
+    "ReservationShapes.tla": {
+      "after_sha256": "a8a9d85b08e6caba68397345ec65896a75ee5bf19d2299592dd997dbd21f5fd6",
+      "before_sha256": "fc1d71b7977d54149c902826ee3363059b3d00385ee0a0e898a4d1ea10740afd",
+      "inserted_header": "(* Compares reservation policies on authored bridge, chain, younger-request\n   and cancellation histories, checking which independent work may bypass a\n   waiter. *)\n"
+    },
+    "RestorationMaterial.tla": {
+      "after_sha256": "4202b7b875adb88ea37b8ad72f3d855f990996a75139b4643acf0c9b99299d75",
+      "before_sha256": "1d4bbdf85a07a9d8fa65361b179e044768b5a8c7456ea14ef8a7573193341f8c",
+      "inserted_header": "(* Extends recovery-cut restoration with actual retained checkpoint\n   material, separating readable state, permission to write and restored\n   redundancy. *)\n"
+    },
+    "RestoredEffects.tla": {
+      "after_sha256": "652bc676659a1b259f48498b9f84ed7e17efcf47e451a440143a8817f9d74d97",
+      "before_sha256": "52e44a18743d046f8a30842a0ab2bafb987dfc524c58ae0a9e9eb807d3eecdd6",
+      "inserted_header": "(* Joins restored transaction state with external-effect replay, preserving\n   intent identity and uncertainty across normal and point-in-time recovery. *)\n"
+    },
+    "RetainedTransactions.tla": {
+      "after_sha256": "9c6022ae8391d754e0ec6d67d01d7bc4334a9a07999bebc3e4a565ad9e06b35a",
+      "before_sha256": "a97115d20376fe211dbd20aa7f09a7f88ad498d3e3189b79f97be8cffc8d5c48",
+      "inserted_header": "(* Connects transaction reads to retained versions and pending source\n   obligations, checking exact-cut bytes or justified failure under\n   collection. *)\n"
+    },
+    "RootCustodyRecovery.tla": {
+      "after_sha256": "025e6a501951b8b01793fc6acd63862677386818fda901da84b57d8119d9ffc7",
+      "before_sha256": "2316a34a99a1ebb999d8745a1992697ac6af791f4c35a0cf5a97ce3adbc712a5",
+      "inserted_header": "(* Exercises custody transfer with cold loss of either root owner, requiring\n   replay and surviving holder evidence before old custody can retire. *)\n"
+    },
+    "RootOwnerRecovery.tla": {
+      "after_sha256": "62255f6350488f6e09fd038cbe808fbb09e288aaf0e87344d0f9b40971c286c3",
+      "before_sha256": "b0f18b68b81b4bde179c5aa70a63a314a092630a10980e5542aa02cc18e1d97f",
+      "inserted_header": "(* Crashes a root owner at selected acquisition or retirement cuts, checking\n   reconstruction from chosen records while surviving holders keep their\n   state. *)\n"
+    },
+    "RootRecoveryIdentity.tla": {
+      "after_sha256": "071ad6d505d9c4d991dae0290d6de39e3f56890f297d2c5e839c82d4b1bae255",
+      "before_sha256": "23148726a00cb21ed4974b6ec97146805bb7cbb3624f7dccdcf55479b25258aa",
+      "inserted_header": "(* Checks that concurrent root-owner recovery requests remain distinct when\n   different owners share the same local recovery counter. *)\n"
+    },
+    "SOSUnderPressure.tla": {
+      "after_sha256": "3e1c68c73caf1d5a7a96d05f6ed65477408e9a015ea1dcaf38a77d248c342992",
+      "before_sha256": "9abcdbd3224d336e503da5f8edad459e3e56ebd7f62f61a7ca0bfd36e043a850",
+      "inserted_header": "(* Runs SOS pause, export and reconciliation through reserved recovery\n   resources, checking physical completion and retirement under ordinary\n   load. *)\n"
+    },
+    "ScopeRetention.tla": {
+      "after_sha256": "b03c8c063f1747657d0882fd3351ec6bfd283d1439bb8344e328c1832f441953",
+      "before_sha256": "04c67e40ed627d04a23b3a0da764e079bc5a91d691c20b72d0bc824495e3a0f8",
+      "inserted_header": "(* Keeps an old-cut retention obligation through scope migration and new-map\n   execution, then checks that the original reader still observes its\n   captured bytes. *)\n"
+    },
+    "TerminalFloor.tla": {
+      "after_sha256": "e61177c30f9311ded3a1f636eab070093aa379a24b52ecbc5407925250993647",
+      "before_sha256": "1c8b1f07fe166634e50cdb75302bb94b3dfd6b0319d925ebb09f4c7b9ab51461",
+      "inserted_header": "(* Checks terminal-attempt compaction against an uncompressed reference,\n   preserving unresolved holes and rejection of delayed work after recovery. *)\n"
+    },
+    "TransactionEpoch.tla": {
+      "after_sha256": "8ab4d3256fe322a1e81e7777dab42bf9f5ff0b05c508d679744d600ee924eae9",
+      "before_sha256": "be593c66dc6a775369b3d3f845384edd17b053909cc1a03a32e85bb88239cb13",
+      "inserted_header": "(* Connects the transaction protocol to independently stepped application\n   interpreters, checking shared context, reports and verified publication\n   across epochs. *)\n"
+    },
+    "TransactionMachine.tla": {
+      "after_sha256": "647f624fd3c2ccd8ca4619aba592752a010edb2d21569d9229edf529331c7284",
+      "before_sha256": "5a7e6958a35414fc9891c6637a1770ae3172c23f33140b01c98731e570045541",
+      "inserted_header": "(* Explores the shared transaction kernel with selectable journal service\n   and delivery scheduling, comparing reads, outcomes and publication with a\n   serial oracle. *)\n"
+    },
+    "TransactionRefinement.tla": {
+      "after_sha256": "70829f7aebcfa0ffb09eb16278c690aceba2f84fec7b5963f7cfddf0f5a439a8",
+      "before_sha256": "16c45caa384c2bd98bbf3e5acb4d048228558db18ca6ce13b19556591096f754",
+      "inserted_header": "(* Checks a small concrete transaction model against eager delivery of\n   positive facts, preserving observable protocol steps while hiding\n   delivery-only differences. *)\n"
+    },
+    "TxFixtures.tla": {
+      "after_sha256": "d937b7674973c0607c9220a38628bd8da5f154208d6a8b86c82e7944e993f07c",
+      "before_sha256": "a527ebc259969d967eb9e561560a60d8409b75a9e01631be4aaf679a9602e077",
+      "inserted_header": "(* Defines finite transaction workloads and their parameters for shared\n   protocol models, including conflicts, programs, checks and fault\n   variants. *)\n"
+    },
+    "VersionedExecution.tla": {
+      "after_sha256": "f2f159bc95a9f968506257ac2ab5bcc9a17575d38b58cb594c3cff9124c8def7",
+      "before_sha256": "c699feacc61b3bdaea910a9580497fa56cfcd2f3a5b48a160db22e23908417df",
+      "inserted_header": "(* Connects journal-selected execution profiles to actual retained code and\n   physical views, including synchronous checking and delayed audit\n   retention. *)\n"
+    },
+    "ViewsKernel.tla": {
+      "after_sha256": "a6fe3e2eb5edecb1e83805289950abddfd7f8748c10b522acc379297d6a04ff8",
+      "before_sha256": "00b14016bb035965996ec9565a6b536c4c88a627b15bcbf75a1272834ce42df3",
+      "inserted_header": "(* Shared physical-view operations for scoped reads/writes, version\n   reconstruction and backend lifetimes; compositions supply retained\n   material and decisions. *)\n"
+    }
+  },
+  "schema": 1,
+  "transformation": "insert-purpose-block-after-module-declaration"
+}

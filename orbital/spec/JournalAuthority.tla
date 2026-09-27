@@ -1,4 +1,7 @@
 ---------------------------- MODULE JournalAuthority ---------------------------
+(* Exercises the concrete journal provider across persistence, recovery and
+   authority transfer, comparing its observations with the abstract service
+   and order contracts. *)
 EXTENDS Contracts
 CONSTANTS JournalNone, Mode, NumBallots, NumCommands, Transfers, Topology, AllowReset,
           AllowDestruction, Compaction, RequireRecovery, ExplicitVoters, OpaqueCertificates, AbstractVoters, Ingress, SlowVoter

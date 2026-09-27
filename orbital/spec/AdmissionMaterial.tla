@@ -1,4 +1,7 @@
 ------------------------- MODULE AdmissionMaterial -------------------------
+(* Composes physical payload admission with journal service and an
+   independent certificate observer, checking custody, frontiers, renewal
+   and recovery. *)
 EXTENDS Contracts, Integers
 CONSTANTS Streams, Entries, Holders, Generations, Losses, Reset, Bug, Service, Atomic
 A == INSTANCE AdmissionKernel

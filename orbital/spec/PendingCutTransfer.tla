@@ -1,4 +1,7 @@
 --------------------------- MODULE PendingCutTransfer ---------------------------
+(* Transfers a retained cut's fallback bytes and pending source obligation
+   between owners, then checks the same read after source resolution and
+   replay. *)
 EXTENDS Contracts, Integers, TxFixtures
 CONSTANTS TxNone, Bug, Result, Crossing
 T == INSTANCE TxKernel

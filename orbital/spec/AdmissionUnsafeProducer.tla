@@ -1,4 +1,7 @@
 ------------------------- MODULE AdmissionUnsafeProducer -------------------------
+(* Deliberately unsound reduction that also forgets producer submission
+   flags. Their identities omit the generation, so forgetting can enable new
+   work. *)
 EXTENDS Contracts, Integers
 A == INSTANCE AdmissionKernel
 Q == INSTANCE AdmissionRelevant

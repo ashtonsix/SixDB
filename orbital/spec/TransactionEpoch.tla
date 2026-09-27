@@ -1,4 +1,7 @@
 ---------------------------- MODULE TransactionEpoch ----------------------------
+(* Connects the transaction protocol to independently stepped application
+   interpreters, checking shared context, reports and verified publication
+   across epochs. *)
 EXTENDS Contracts, TxFixtures
 CONSTANTS TxNone, Bug, LastEpoch, Mismatch, Schedule
 K == INSTANCE TxKernel

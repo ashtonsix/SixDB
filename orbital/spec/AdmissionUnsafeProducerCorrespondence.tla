@@ -1,4 +1,6 @@
 ------------------------- MODULE AdmissionUnsafeProducerCorrespondence -------------------------
+(* Negative correspondence check for forgetting producer submission flags;
+   renewal exposes newly enabled submissions absent from the fine state. *)
 EXTENDS Contracts, Integers
 CONSTANTS Streams, Entries, Holders, Generations, Losses, Reset, Bug, Service, Atomic
 A == INSTANCE AdmissionKernel

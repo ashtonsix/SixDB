@@ -1,4 +1,7 @@
 --------------------------- MODULE AdmissionBypass ---------------------------
+(* Checks that transactions using the early channel can complete while a
+   producer's contiguous admission frontier remains blocked by a missing
+   entry. *)
 EXTENDS Contracts, Integers
 CONSTANTS Scenario, Bug, TxNone
 VARIABLES admission,anet,aphase,arefines,early,repair,tail,tx,journal,tnet,bypassed,apulse

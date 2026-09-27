@@ -1,4 +1,7 @@
 ------------------------- MODULE TransactionRefinement -------------------------
+(* Checks a small concrete transaction model against eager delivery of
+   positive facts, preserving observable protocol steps while hiding
+   delivery-only differences. *)
 EXTENDS Contracts, TxFixtures
 CONSTANT TxNone
 K == INSTANCE TxKernel

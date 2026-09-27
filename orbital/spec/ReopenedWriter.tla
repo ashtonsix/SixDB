@@ -1,4 +1,7 @@
 ---------------------------- MODULE ReopenedWriter ----------------------------
+(* Exercises a writer reopened from retained data and replayed decisions,
+   checking commit or undo bytes when a private physical image has been
+   lost. *)
 EXTENDS Contracts, Integers, TxFixtures
 CONSTANTS TxNone, Abort, BeforeDecision, Bug
 T == INSTANCE TxKernel

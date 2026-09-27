@@ -1,4 +1,7 @@
 ---------------------------- MODULE EffectKernel ----------------------------
+(* Models journaled external-effect intents and sink delivery, preserving
+   stable identity and explicit uncertainty when a non-deduplicating sink
+   loses its reply. *)
 EXTENDS Contracts, Integers
 
 Init(p) == [intents |-> [id \in {} |-> id],received |-> {},

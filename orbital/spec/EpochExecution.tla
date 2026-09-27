@@ -1,4 +1,7 @@
 ---------------------------- MODULE EpochExecution ----------------------------
+(* Compares independently scheduled consumers of agreed epochs using the
+   application interpreter, including dynamic continuations and logical
+   output closure. *)
 EXTENDS Contracts, Integers
 CONSTANTS TxNone, Bug, LastEpoch, Mismatch
 C == INSTANCE TxProgram

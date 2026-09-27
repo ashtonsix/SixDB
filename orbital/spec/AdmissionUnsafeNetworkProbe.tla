@@ -1,4 +1,6 @@
 ------------------------- MODULE AdmissionUnsafeNetworkProbe -------------------------
+(* Negative control: exposes why a duplicate payload cannot be discarded
+   merely because its destination has a copy now; a later loss may need it. *)
 EXTENDS Contracts, Integers
 CONSTANTS Streams, Entries, Holders, Generations, Losses, Reset, Bug, Service, Atomic
 A == INSTANCE AdmissionKernel

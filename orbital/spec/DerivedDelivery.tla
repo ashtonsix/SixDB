@@ -1,4 +1,7 @@
 ----------------------------- MODULE DerivedDelivery -----------------------------
+(* Derives delivery contributions from actual transaction/interpreter
+   outputs and chosen outcomes, checking stable identity through replay and
+   late enrollment. *)
 EXTENDS Contracts, Integers, TxFixtures
 CONSTANTS TxNone, Bug, LateJoin
 T == INSTANCE TxKernel

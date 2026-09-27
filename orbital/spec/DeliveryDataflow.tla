@@ -1,4 +1,7 @@
 ------------------------ MODULE DeliveryDataflow ------------------------
+(* Explores logical delivery across duplicate routes, representations,
+   dynamic children, late recipients, cancellation and source/recipient
+   recovery. *)
 EXTENDS Contracts, Integers
 CONSTANTS Contributions, Recipients, Origins, Routes, Duplicates, Transform,
           Dynamic, Reset, Cancel, Join, Bug, Service

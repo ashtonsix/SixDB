@@ -1,4 +1,7 @@
 ------------------------- MODULE AdmissionInertCorrespondence -------------------------
+(* Audits the inert-message/send reduction against fine admission states,
+   checking exact normalized successors and permanence of discarded
+   deliveries. *)
 EXTENDS Contracts, Integers
 CONSTANTS Streams, Entries, Holders, Generations, Losses, Reset, Bug, Service, Atomic
 A == INSTANCE AdmissionKernel

@@ -1,4 +1,7 @@
 ----------------------------- MODULE ScopeRetention -----------------------------
+(* Keeps an old-cut retention obligation through scope migration and new-map
+   execution, then checks that the original reader still observes its
+   captured bytes. *)
 EXTENDS Contracts, Integers
 CONSTANTS JournalNone, TxNone, Bug
 VARIABLES scope,root,journal,network,started,closedEarly,observed,definition,otherWork,grantSeen

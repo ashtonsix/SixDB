@@ -1,4 +1,7 @@
 ------------------------- MODULE ReservationReplay -------------------------
+(* Compares reservation state and emitted grants after replicas consume the
+   same authored command history, with duplicate delivery and reset
+   variants. *)
 EXTENDS Naturals, FiniteSets, Sequences
 CONSTANTS Policy, Scene, Bug, Reset
 K == INSTANCE ReservationKernel

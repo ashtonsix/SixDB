@@ -1,4 +1,7 @@
 ------------------------------ MODULE PolicyTxBinding ------------------------------
+(* Binds reservation policies to the actual transaction kernel and journal
+   replay, checking serial meaning and deterministic grant closure in
+   selected histories. *)
 EXTENDS Contracts, TxFixtures, Integers
 CONSTANTS TxNone, Policy, Reset, Bug
 K == INSTANCE TxKernel

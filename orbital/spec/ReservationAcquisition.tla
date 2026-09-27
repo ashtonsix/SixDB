@@ -1,4 +1,7 @@
 ------------------------- MODULE ReservationAcquisition -------------------------
+(* Checks multi-shard reservation acquisition and cancellation under
+   competing local policies, including reversed acquisition order as a
+   deadlock control. *)
 EXTENDS Naturals, FiniteSets, Sequences
 CONSTANTS Policy, WrongOrder, AllowCancel, Wide
 K == INSTANCE ReservationKernel

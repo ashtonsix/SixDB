@@ -1,4 +1,7 @@
 ------------------------- MODULE AuthorityBootstrapSOS -------------------------
+(* Joins journal authority, retained material and SOS export/reconciliation
+   in authored histories, separating recoverable bytes from permission to
+   serve. *)
 EXTENDS Contracts, JournalSchedule
 CONSTANTS JournalNone, Bug, Restart
 J == INSTANCE JournalKernel

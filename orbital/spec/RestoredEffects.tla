@@ -1,4 +1,6 @@
 ---------------------------- MODULE RestoredEffects ----------------------------
+(* Joins restored transaction state with external-effect replay, preserving
+   intent identity and uncertainty across normal and point-in-time recovery. *)
 EXTENDS RecoveryCut
 CONSTANT Dedup
 E == INSTANCE EffectKernel

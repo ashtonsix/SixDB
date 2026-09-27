@@ -1,4 +1,7 @@
 ---------------------------- MODULE HistoricalSnapshot ----------------------------
+(* Checks reads at an explicitly requested historical cut against retained
+   bytes and supplied freshness requirements, including agreed
+   unavailability. *)
 EXTENDS Contracts, TxFixtures, Integers
 CONSTANTS TxNone, Bug, Missing, Requirement
 K == INSTANCE TxKernel

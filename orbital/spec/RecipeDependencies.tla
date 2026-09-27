@@ -1,4 +1,6 @@
 --------------------------- MODULE RecipeDependencies ---------------------------
+(* Checks that retention recipes are grounded in reconstructible bytes;
+   dependency declarations and cycles alone cannot create material. *)
 EXTENDS Contracts, Integers
 CONSTANTS Cycle, Bug
 M == INSTANCE MaterialCore

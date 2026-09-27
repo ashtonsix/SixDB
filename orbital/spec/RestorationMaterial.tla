@@ -1,4 +1,7 @@
 ---------------------------- MODULE RestorationMaterial ----------------------------
+(* Extends recovery-cut restoration with actual retained checkpoint
+   material, separating readable state, permission to write and restored
+   redundancy. *)
 EXTENDS RecoveryCut
 R == INSTANCE RecoveryKernel
 M == INSTANCE MaterialCore

@@ -1,4 +1,6 @@
 ------------------------- MODULE AdmissionFrontiers -------------------------
+(* Explores the abstract certificate service: out-of-order certification,
+   contiguous per-stream frontiers, generation renewal and bounded loss. *)
 EXTENDS Contracts, Integers
 CONSTANTS Streams, Entries, Generations, Losses, Bug
 A == INSTANCE AdmissionKernel

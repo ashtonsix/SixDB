@@ -1,4 +1,7 @@
 --------------------------- MODULE PreparedRootFusion ---------------------------
+(* Compares explicit root acquisition with acquisition from an existing
+   same-owner prepared record, including cancellation, missing material and
+   recovery cuts. *)
 EXTENDS Contracts, Integers, TxFixtures
 CONSTANTS Mode, Fault, CancelAt, Missing, LateBorrow, Bug, TxNone
 T == INSTANCE TxKernel

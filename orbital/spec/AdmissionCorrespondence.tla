@@ -1,4 +1,6 @@
 ------------------------- MODULE AdmissionCorrespondence -------------------------
+(* Checks that forgetting obsolete admission send flags preserves the
+   normalized successors of each fine protocol action and message delivery. *)
 EXTENDS Contracts, Integers
 CONSTANTS Streams, Entries, Holders, Generations, Losses, Reset, Bug, Service, Atomic
 A == INSTANCE AdmissionKernel

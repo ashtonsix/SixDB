@@ -1,4 +1,7 @@
 ----------------------------- MODULE JournalKernel ----------------------------
+(* Shared concrete journal protocol: quorum persistence, local learning,
+   replay, compaction and authority handoff, with explicit storage and
+   process failures. *)
 EXTENDS Contracts
 CONSTANT JournalNone
 

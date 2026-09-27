@@ -89,6 +89,11 @@ receipts did not hash logs at production; the collector cross-checks parsing and
 semantic module lists and hashes the selected logs, but cannot authenticate their
 earlier edit history.
 
+The current modules include [audited purpose-header insertions](evidence/module-headers/README.md)
+since the retained 613-case selection. The separate audit connects them to the
+checked sources; this collector still reports exact-source mismatches for affected
+receipts and does not apply annotation equivalence.
+
 `selection.json` records the selected receipts and rejected/stale input reasons;
 `SUMMARY.md` presents their dispositions. `checks.csv` and `inputs.json` provide
 a compact outcome index and exact input hashes for retention in Git. Reconciled

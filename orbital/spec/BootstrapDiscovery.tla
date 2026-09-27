@@ -1,4 +1,7 @@
 --------------------------- MODULE BootstrapDiscovery --------------------------
+(* Exercises bootstrap from empty inventories using journal snapshots and
+   holder exports, including a root created during discovery and observer
+   restart. *)
 EXTENDS Contracts, JournalSchedule
 CONSTANTS JournalNone, Bug, Restart
 R == INSTANCE RecoveryKernel

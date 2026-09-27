@@ -1,4 +1,7 @@
 ------------------------- MODULE AdmissionInertNetwork -------------------------
+(* Runs folded-journal admission after removing permanently inert messages
+   and send flags. Correspondence audits justify this smaller
+   representation. *)
 EXTENDS Contracts, Integers
 CONSTANTS Streams, Entries, Holders, Generations, Losses, Reset, Bug, Service, Atomic
 ASSUME Service="folded"

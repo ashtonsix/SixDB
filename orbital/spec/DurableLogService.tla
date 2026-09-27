@@ -1,4 +1,7 @@
 -------------------------- MODULE DurableLogService ---------------------------
+(* Checks the abstract journal service's duplicate-command handling, local
+   delivery and recovery snapshots using distinct envelopes for one
+   immutable command. *)
 EXTENDS Contracts
 CONSTANT Mode
 D == INSTANCE DurableLog

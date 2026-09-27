@@ -1,4 +1,7 @@
 ------------------------ MODULE RetainedTransactions ------------------------
+(* Connects transaction reads to retained versions and pending source
+   obligations, checking exact-cut bytes or justified failure under
+   collection. *)
 EXTENDS Contracts, Integers, TxFixtures
 CONSTANTS Scenario, Bug, TxNone
 K == INSTANCE TxKernel

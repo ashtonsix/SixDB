@@ -1,4 +1,7 @@
 ------------------------- MODULE EpochTransactionFolds -------------------------
+(* Compares complete transaction folds over agreed batches, including
+   logical outputs and independent progress; smaller products audit the
+   scheduling reduction. *)
 EXTENDS Contracts, TxFixtures, Integers
 CONSTANTS TxNone, Bug, LastEpoch, Mismatch, RemoteRead, Reduced, Small, AnyOrder
 K == INSTANCE TxKernel

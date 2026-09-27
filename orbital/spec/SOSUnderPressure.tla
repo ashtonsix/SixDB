@@ -1,4 +1,7 @@
 ---------------------------- MODULE SOSUnderPressure ----------------------------
+(* Runs SOS pause, export and reconciliation through reserved recovery
+   resources, checking physical completion and retirement under ordinary
+   load. *)
 EXTENDS AuthorityBootstrapSOS
 CONSTANT PressureBug
 VARIABLES staged,service,delivered

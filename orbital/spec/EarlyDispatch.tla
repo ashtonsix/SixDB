@@ -1,4 +1,7 @@
 -------------------------- MODULE EarlyDispatch --------------------------
+(* Checks at-most-once early dispatch using durably assigned disjoint
+   ranges, including driver loss, replacement and delayed attempts from an
+   old driver. *)
 EXTENDS Contracts, Integers
 CONSTANTS Events, Generations, Bug, OldSurvives, ReplacementCut
 J == INSTANCE DurableLog

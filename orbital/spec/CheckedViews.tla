@@ -1,4 +1,6 @@
 ----------------------------- MODULE CheckedViews -----------------------------
+(* Joins transactions, retention roots and physical views to check captured
+   reads, independent verification and publication of the correct bytes. *)
 EXTENDS Contracts, Integers, TxFixtures
 CONSTANTS Bug, Prepared, TxNone
 T == INSTANCE TxKernel
