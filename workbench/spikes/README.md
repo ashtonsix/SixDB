@@ -20,6 +20,8 @@ Loose thoughts can stay in the [notebook](../notebook/ideas.md) indefinitely.
 - [Executable placement](executable-placement/README.md): distinguishing changed code from placement effects.
 - [Memory characterisation](memory-characterisation/README.md): automatic MLP, prefetch, cache sharing and host diagnostics.
 - [CFT commit latency](cft-commit-latency/README.md): directional network measurement and host/flow selection; durable quorum latency, storage throughput cliffs and live log preparation.
+- [Orbital simulator](orbital-simulator/README.md): ground-up actor laboratory with shared physical constraints, causal replay, fault injection and composed protocol/application experiments.
+- [Local message handoff](orbital-local-handoff/README.md): native Zen 5 measurements of batching, payload readiness, polling CPU, queue admission and instrumentation sensitivity.
 - [Orbital dissemination](orbital-dissemination/README.md): many-to-many routing, read scale-out, relay work, finite-resource simulation, delivery faults and changing membership.
 - [Orbital dataflow](orbital-dataflow/README.md): exchanges, recursive/incremental work, Spark-like extension applications, lineage and finite resource lifetimes.
 - [Orbital objects and OS services](orbital-objects/README.md): durable memory views, COW/reconstruction, protection, allocation and module boundaries, with focused mapping prototypes.

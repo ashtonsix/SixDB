@@ -1,0 +1,4820 @@
+{
+  "limits": "Synthetic serialized checkpoint fixture, not Orbital GC or capacity evidence; hex bytes and synthetic charged working envelope, no native aliasing; bounded listing and atomic deletion supplied by probe-only adapter.",
+  "source_sha256": {
+    "retirement_probe.py": "d48344752a3797c5ac5967c5c18cf41aebdcb4ebf26fc218b301326682820a22",
+    "retirement_ports.py": "58ca14768f502ddee8c92ed245aeb045f576d694d5023fcef0ece11ffc686564",
+    "sim.py": "637609957668efd3b1439215e5820a51cb4e5510d4c688862bf3ed50f43df71e",
+    "kernel.py": "d09ad69eb3e7001d72e1d4a88a42535ac45fd89fee517006f03ad2bb80a40ac2",
+    "scenario.py": "8b81bbea4a7d21ba65ac588e2e5116a0f1df6fc51d96492f45a7bd6ac6923447"
+  },
+  "storage_rows": [
+    {
+      "case": {
+        "root": "reader",
+        "fault": "none",
+        "negative": "none",
+        "listing": "paged"
+      },
+      "seed": 1,
+      "errors": [],
+      "coverage": {
+        "fired": {
+          "collected-before-first-access": {
+            "event": 601,
+            "time": 692042
+          },
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          },
+          "old-dependencies-retired": {
+            "event": 905,
+            "time": 1033540
+          }
+        },
+        "missing": []
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "11d68f58aadb2381b8ab50af6c1c3abb94ca04e464b7566a0bf08500edb82098",
+        "choices_hash": "ffec0498ee099ba2045fc2b48d38171b8305839f46e1adfbc43ec8dd5f0a37c0",
+        "counts": {
+          "process_start": 3,
+          "schedule": 168,
+          "dispatch": 168,
+          "mailbox_enqueue": 57,
+          "resource_queue": 107,
+          "resource_start": 107,
+          "resource_done": 107,
+          "actor_step": 57,
+          "memory_acquire": 53,
+          "retirement_boot": 3,
+          "disk_submit": 50,
+          "durable_write": 13,
+          "memory_release": 52,
+          "retirement_initialized": 1,
+          "scenario_trigger": 3,
+          "scenario_input_scheduled": 3,
+          "durable_retire": 9,
+          "bytes_reconstructed": 3,
+          "directory_page": 10,
+          "retirement_collected": 2,
+          "process_crash": 2,
+          "resource_reset": 10,
+          "power_loss": 2,
+          "power_on": 2,
+          "delayed_first_access": 1,
+          "old_read_complete": 1,
+          "checkpoint_read_complete": 1
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6262,
+            "durable_used": 2192,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 57,
+            "completed": 57,
+            "cancelled": 0,
+            "busy_ns": 57000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 50,
+            "completed": 50,
+            "cancelled": 0,
+            "busy_ns": 26924,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        },
+        {
+          "root": "roots/reader",
+          "version": 2,
+          "incarnation": 2
+        },
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 3
+        }
+      ],
+      "reclaimed_bytes": 3171,
+      "inventory": [
+        "data/checkpoint/4",
+        "data/codec/raw-v1",
+        "head"
+      ]
+    },
+    {
+      "case": {
+        "root": "reader",
+        "fault": "none",
+        "negative": "none",
+        "listing": "paged"
+      },
+      "seed": 7,
+      "errors": [],
+      "coverage": {
+        "fired": {
+          "collected-before-first-access": {
+            "event": 601,
+            "time": 692042
+          },
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          },
+          "old-dependencies-retired": {
+            "event": 905,
+            "time": 1033540
+          }
+        },
+        "missing": []
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "11d68f58aadb2381b8ab50af6c1c3abb94ca04e464b7566a0bf08500edb82098",
+        "choices_hash": "ffec0498ee099ba2045fc2b48d38171b8305839f46e1adfbc43ec8dd5f0a37c0",
+        "counts": {
+          "process_start": 3,
+          "schedule": 168,
+          "dispatch": 168,
+          "mailbox_enqueue": 57,
+          "resource_queue": 107,
+          "resource_start": 107,
+          "resource_done": 107,
+          "actor_step": 57,
+          "memory_acquire": 53,
+          "retirement_boot": 3,
+          "disk_submit": 50,
+          "durable_write": 13,
+          "memory_release": 52,
+          "retirement_initialized": 1,
+          "scenario_trigger": 3,
+          "scenario_input_scheduled": 3,
+          "durable_retire": 9,
+          "bytes_reconstructed": 3,
+          "directory_page": 10,
+          "retirement_collected": 2,
+          "process_crash": 2,
+          "resource_reset": 10,
+          "power_loss": 2,
+          "power_on": 2,
+          "delayed_first_access": 1,
+          "old_read_complete": 1,
+          "checkpoint_read_complete": 1
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6262,
+            "durable_used": 2192,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 57,
+            "completed": 57,
+            "cancelled": 0,
+            "busy_ns": 57000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 50,
+            "completed": 50,
+            "cancelled": 0,
+            "busy_ns": 26924,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        },
+        {
+          "root": "roots/reader",
+          "version": 2,
+          "incarnation": 2
+        },
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 3
+        }
+      ],
+      "reclaimed_bytes": 3171,
+      "inventory": [
+        "data/checkpoint/4",
+        "data/codec/raw-v1",
+        "head"
+      ]
+    },
+    {
+      "case": {
+        "root": "reader",
+        "fault": "none",
+        "negative": "none",
+        "listing": "paged"
+      },
+      "seed": 19,
+      "errors": [],
+      "coverage": {
+        "fired": {
+          "collected-before-first-access": {
+            "event": 601,
+            "time": 692042
+          },
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          },
+          "old-dependencies-retired": {
+            "event": 905,
+            "time": 1033540
+          }
+        },
+        "missing": []
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "1961d326f7170b6c5d2c2dad66bad913832aafa1fd65b07c6cd2efbcafdf14a5",
+        "choices_hash": "c2ce179ab3587ea4f5f2e4ca9e475a3cce842e87bf6d974850b54dfe61268d38",
+        "counts": {
+          "process_start": 3,
+          "schedule": 168,
+          "dispatch": 168,
+          "mailbox_enqueue": 57,
+          "resource_queue": 107,
+          "resource_start": 107,
+          "resource_done": 107,
+          "actor_step": 57,
+          "memory_acquire": 53,
+          "retirement_boot": 3,
+          "disk_submit": 50,
+          "durable_write": 13,
+          "memory_release": 52,
+          "retirement_initialized": 1,
+          "scenario_trigger": 3,
+          "scenario_input_scheduled": 3,
+          "durable_retire": 9,
+          "bytes_reconstructed": 3,
+          "directory_page": 10,
+          "retirement_collected": 2,
+          "process_crash": 2,
+          "resource_reset": 10,
+          "power_loss": 2,
+          "power_on": 2,
+          "delayed_first_access": 1,
+          "old_read_complete": 1,
+          "checkpoint_read_complete": 1
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6262,
+            "durable_used": 2192,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 57,
+            "completed": 57,
+            "cancelled": 0,
+            "busy_ns": 57000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 50,
+            "completed": 50,
+            "cancelled": 0,
+            "busy_ns": 26924,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        },
+        {
+          "root": "roots/reader",
+          "version": 2,
+          "incarnation": 2
+        },
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 3
+        }
+      ],
+      "reclaimed_bytes": 3171,
+      "inventory": [
+        "data/checkpoint/4",
+        "data/codec/raw-v1",
+        "head"
+      ]
+    },
+    {
+      "case": {
+        "root": "reader",
+        "fault": "checkpoint-reset",
+        "negative": "none",
+        "listing": "paged"
+      },
+      "seed": 1,
+      "errors": [],
+      "coverage": {
+        "fired": {
+          "checkpoint-durable-before-callback": {
+            "event": 379,
+            "time": 437568
+          },
+          "collected-before-first-access": {
+            "event": 792,
+            "time": 909946
+          },
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          },
+          "old-dependencies-retired": {
+            "event": 1096,
+            "time": 1251444
+          }
+        },
+        "missing": []
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "8b84ee8f3c495079e176413cbf5b805977c446a7115eaf384a1543ab817b55e1",
+        "choices_hash": "d3db4a748ede000dbaeb0d1a7e7714c803fae2b9384b8a647a7422b0a7217ccd",
+        "counts": {
+          "process_start": 4,
+          "schedule": 201,
+          "dispatch": 201,
+          "mailbox_enqueue": 68,
+          "resource_queue": 127,
+          "resource_start": 127,
+          "resource_done": 126,
+          "actor_step": 67,
+          "memory_acquire": 63,
+          "retirement_boot": 4,
+          "disk_submit": 59,
+          "durable_write": 14,
+          "memory_release": 62,
+          "retirement_initialized": 1,
+          "scenario_trigger": 4,
+          "scenario_input_scheduled": 4,
+          "durable_retire": 10,
+          "bytes_reconstructed": 4,
+          "process_crash": 3,
+          "resource_reset": 15,
+          "power_loss": 3,
+          "retired_service_completion": 1,
+          "power_on": 3,
+          "directory_page": 10,
+          "retirement_collected": 2,
+          "delayed_first_access": 1,
+          "old_read_complete": 1,
+          "checkpoint_read_complete": 1
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6262,
+            "durable_used": 2192,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 68,
+            "completed": 67,
+            "cancelled": 1,
+            "busy_ns": 67000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 59,
+            "completed": 59,
+            "cancelled": 0,
+            "busy_ns": 35828,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        },
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 2
+        },
+        {
+          "root": "roots/reader",
+          "version": 2,
+          "incarnation": 3
+        },
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 4
+        }
+      ],
+      "reclaimed_bytes": 3171,
+      "inventory": [
+        "data/checkpoint/4",
+        "data/codec/raw-v1",
+        "head"
+      ]
+    },
+    {
+      "case": {
+        "root": "reader",
+        "fault": "checkpoint-reset",
+        "negative": "none",
+        "listing": "paged"
+      },
+      "seed": 7,
+      "errors": [],
+      "coverage": {
+        "fired": {
+          "checkpoint-durable-before-callback": {
+            "event": 379,
+            "time": 437568
+          },
+          "collected-before-first-access": {
+            "event": 792,
+            "time": 909946
+          },
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          },
+          "old-dependencies-retired": {
+            "event": 1096,
+            "time": 1251444
+          }
+        },
+        "missing": []
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "8b84ee8f3c495079e176413cbf5b805977c446a7115eaf384a1543ab817b55e1",
+        "choices_hash": "d3db4a748ede000dbaeb0d1a7e7714c803fae2b9384b8a647a7422b0a7217ccd",
+        "counts": {
+          "process_start": 4,
+          "schedule": 201,
+          "dispatch": 201,
+          "mailbox_enqueue": 68,
+          "resource_queue": 127,
+          "resource_start": 127,
+          "resource_done": 126,
+          "actor_step": 67,
+          "memory_acquire": 63,
+          "retirement_boot": 4,
+          "disk_submit": 59,
+          "durable_write": 14,
+          "memory_release": 62,
+          "retirement_initialized": 1,
+          "scenario_trigger": 4,
+          "scenario_input_scheduled": 4,
+          "durable_retire": 10,
+          "bytes_reconstructed": 4,
+          "process_crash": 3,
+          "resource_reset": 15,
+          "power_loss": 3,
+          "retired_service_completion": 1,
+          "power_on": 3,
+          "directory_page": 10,
+          "retirement_collected": 2,
+          "delayed_first_access": 1,
+          "old_read_complete": 1,
+          "checkpoint_read_complete": 1
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6262,
+            "durable_used": 2192,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 68,
+            "completed": 67,
+            "cancelled": 1,
+            "busy_ns": 67000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 59,
+            "completed": 59,
+            "cancelled": 0,
+            "busy_ns": 35828,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        },
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 2
+        },
+        {
+          "root": "roots/reader",
+          "version": 2,
+          "incarnation": 3
+        },
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 4
+        }
+      ],
+      "reclaimed_bytes": 3171,
+      "inventory": [
+        "data/checkpoint/4",
+        "data/codec/raw-v1",
+        "head"
+      ]
+    },
+    {
+      "case": {
+        "root": "reader",
+        "fault": "checkpoint-reset",
+        "negative": "none",
+        "listing": "paged"
+      },
+      "seed": 19,
+      "errors": [],
+      "coverage": {
+        "fired": {
+          "checkpoint-durable-before-callback": {
+            "event": 379,
+            "time": 437568
+          },
+          "collected-before-first-access": {
+            "event": 792,
+            "time": 909946
+          },
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          },
+          "old-dependencies-retired": {
+            "event": 1096,
+            "time": 1251444
+          }
+        },
+        "missing": []
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "db0fa46d9f39e626f0a3e4fb883b5bd3f5b990358ba7d1d736d995b79f1bca93",
+        "choices_hash": "17f41b1f09861099afce996f68b5bffe5be032ce4f6e97179e92bf42213ce078",
+        "counts": {
+          "process_start": 4,
+          "schedule": 201,
+          "dispatch": 201,
+          "mailbox_enqueue": 68,
+          "resource_queue": 127,
+          "resource_start": 127,
+          "resource_done": 126,
+          "actor_step": 67,
+          "memory_acquire": 63,
+          "retirement_boot": 4,
+          "disk_submit": 59,
+          "durable_write": 14,
+          "memory_release": 62,
+          "retirement_initialized": 1,
+          "scenario_trigger": 4,
+          "scenario_input_scheduled": 4,
+          "durable_retire": 10,
+          "bytes_reconstructed": 4,
+          "process_crash": 3,
+          "resource_reset": 15,
+          "power_loss": 3,
+          "retired_service_completion": 1,
+          "power_on": 3,
+          "directory_page": 10,
+          "retirement_collected": 2,
+          "delayed_first_access": 1,
+          "old_read_complete": 1,
+          "checkpoint_read_complete": 1
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6262,
+            "durable_used": 2192,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 68,
+            "completed": 67,
+            "cancelled": 1,
+            "busy_ns": 67000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 59,
+            "completed": 59,
+            "cancelled": 0,
+            "busy_ns": 35828,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        },
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 2
+        },
+        {
+          "root": "roots/reader",
+          "version": 2,
+          "incarnation": 3
+        },
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 4
+        }
+      ],
+      "reclaimed_bytes": 3171,
+      "inventory": [
+        "data/checkpoint/4",
+        "data/codec/raw-v1",
+        "head"
+      ]
+    },
+    {
+      "case": {
+        "root": "replay",
+        "fault": "none",
+        "negative": "none",
+        "listing": "paged"
+      },
+      "seed": 1,
+      "errors": [],
+      "coverage": {
+        "fired": {
+          "collected-before-first-access": {
+            "event": 565,
+            "time": 649966
+          },
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          },
+          "old-dependencies-retired": {
+            "event": 957,
+            "time": 1096864
+          }
+        },
+        "missing": []
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "4843d8db3cfcaea71114b773bc54b83be72c1f8882425420422b0e9e51a491b8",
+        "choices_hash": "0667c9d31715c993b9dcd61b93fa446353cbaf1a53464348da98226eb36c6a33",
+        "counts": {
+          "process_start": 3,
+          "schedule": 177,
+          "dispatch": 177,
+          "mailbox_enqueue": 60,
+          "resource_queue": 113,
+          "resource_start": 113,
+          "resource_done": 113,
+          "actor_step": 60,
+          "memory_acquire": 56,
+          "retirement_boot": 3,
+          "disk_submit": 53,
+          "durable_write": 13,
+          "memory_release": 55,
+          "retirement_initialized": 1,
+          "scenario_trigger": 3,
+          "scenario_input_scheduled": 3,
+          "durable_retire": 9,
+          "bytes_reconstructed": 3,
+          "directory_page": 11,
+          "retirement_collected": 2,
+          "process_crash": 2,
+          "resource_reset": 10,
+          "power_loss": 2,
+          "power_on": 2,
+          "delayed_first_access": 1,
+          "old_read_complete": 1,
+          "checkpoint_read_complete": 1
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6262,
+            "durable_used": 2192,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 60,
+            "completed": 60,
+            "cancelled": 0,
+            "busy_ns": 60000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 53,
+            "completed": 53,
+            "cancelled": 0,
+            "busy_ns": 27248,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        },
+        {
+          "root": "roots/replay",
+          "version": 4,
+          "incarnation": 2
+        },
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 3
+        }
+      ],
+      "reclaimed_bytes": 3171,
+      "inventory": [
+        "data/checkpoint/4",
+        "data/codec/raw-v1",
+        "head"
+      ]
+    },
+    {
+      "case": {
+        "root": "replay",
+        "fault": "none",
+        "negative": "none",
+        "listing": "paged"
+      },
+      "seed": 7,
+      "errors": [],
+      "coverage": {
+        "fired": {
+          "collected-before-first-access": {
+            "event": 565,
+            "time": 649966
+          },
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          },
+          "old-dependencies-retired": {
+            "event": 957,
+            "time": 1096864
+          }
+        },
+        "missing": []
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "4843d8db3cfcaea71114b773bc54b83be72c1f8882425420422b0e9e51a491b8",
+        "choices_hash": "0667c9d31715c993b9dcd61b93fa446353cbaf1a53464348da98226eb36c6a33",
+        "counts": {
+          "process_start": 3,
+          "schedule": 177,
+          "dispatch": 177,
+          "mailbox_enqueue": 60,
+          "resource_queue": 113,
+          "resource_start": 113,
+          "resource_done": 113,
+          "actor_step": 60,
+          "memory_acquire": 56,
+          "retirement_boot": 3,
+          "disk_submit": 53,
+          "durable_write": 13,
+          "memory_release": 55,
+          "retirement_initialized": 1,
+          "scenario_trigger": 3,
+          "scenario_input_scheduled": 3,
+          "durable_retire": 9,
+          "bytes_reconstructed": 3,
+          "directory_page": 11,
+          "retirement_collected": 2,
+          "process_crash": 2,
+          "resource_reset": 10,
+          "power_loss": 2,
+          "power_on": 2,
+          "delayed_first_access": 1,
+          "old_read_complete": 1,
+          "checkpoint_read_complete": 1
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6262,
+            "durable_used": 2192,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 60,
+            "completed": 60,
+            "cancelled": 0,
+            "busy_ns": 60000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 53,
+            "completed": 53,
+            "cancelled": 0,
+            "busy_ns": 27248,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        },
+        {
+          "root": "roots/replay",
+          "version": 4,
+          "incarnation": 2
+        },
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 3
+        }
+      ],
+      "reclaimed_bytes": 3171,
+      "inventory": [
+        "data/checkpoint/4",
+        "data/codec/raw-v1",
+        "head"
+      ]
+    },
+    {
+      "case": {
+        "root": "replay",
+        "fault": "none",
+        "negative": "none",
+        "listing": "paged"
+      },
+      "seed": 19,
+      "errors": [],
+      "coverage": {
+        "fired": {
+          "collected-before-first-access": {
+            "event": 565,
+            "time": 649966
+          },
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          },
+          "old-dependencies-retired": {
+            "event": 957,
+            "time": 1096864
+          }
+        },
+        "missing": []
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "34b349bdbccf2230fc26354b83664eb3ff8dc0fc917f49cb8e002520ad199abd",
+        "choices_hash": "72bab0d7cd8da507f9f01be6ad530442a08e106c745643568d44734a88ff4e04",
+        "counts": {
+          "process_start": 3,
+          "schedule": 177,
+          "dispatch": 177,
+          "mailbox_enqueue": 60,
+          "resource_queue": 113,
+          "resource_start": 113,
+          "resource_done": 113,
+          "actor_step": 60,
+          "memory_acquire": 56,
+          "retirement_boot": 3,
+          "disk_submit": 53,
+          "durable_write": 13,
+          "memory_release": 55,
+          "retirement_initialized": 1,
+          "scenario_trigger": 3,
+          "scenario_input_scheduled": 3,
+          "durable_retire": 9,
+          "bytes_reconstructed": 3,
+          "directory_page": 11,
+          "retirement_collected": 2,
+          "process_crash": 2,
+          "resource_reset": 10,
+          "power_loss": 2,
+          "power_on": 2,
+          "delayed_first_access": 1,
+          "old_read_complete": 1,
+          "checkpoint_read_complete": 1
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6262,
+            "durable_used": 2192,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 60,
+            "completed": 60,
+            "cancelled": 0,
+            "busy_ns": 60000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 53,
+            "completed": 53,
+            "cancelled": 0,
+            "busy_ns": 27248,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        },
+        {
+          "root": "roots/replay",
+          "version": 4,
+          "incarnation": 2
+        },
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 3
+        }
+      ],
+      "reclaimed_bytes": 3171,
+      "inventory": [
+        "data/checkpoint/4",
+        "data/codec/raw-v1",
+        "head"
+      ]
+    },
+    {
+      "case": {
+        "root": "replay",
+        "fault": "checkpoint-reset",
+        "negative": "none",
+        "listing": "paged"
+      },
+      "seed": 1,
+      "errors": [],
+      "coverage": {
+        "fired": {
+          "checkpoint-durable-before-callback": {
+            "event": 379,
+            "time": 437568
+          },
+          "collected-before-first-access": {
+            "event": 756,
+            "time": 867870
+          },
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          },
+          "old-dependencies-retired": {
+            "event": 1148,
+            "time": 1314768
+          }
+        },
+        "missing": []
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "eb568d365d98ed4289d426c1e39d72d6e187c32e29d0ed774a5036c5ea33a90f",
+        "choices_hash": "7ad09dd941dc2e4d32e46eb712bb11885e207a52e76e3ee1d996073fc5c11284",
+        "counts": {
+          "process_start": 4,
+          "schedule": 210,
+          "dispatch": 210,
+          "mailbox_enqueue": 71,
+          "resource_queue": 133,
+          "resource_start": 133,
+          "resource_done": 132,
+          "actor_step": 70,
+          "memory_acquire": 66,
+          "retirement_boot": 4,
+          "disk_submit": 62,
+          "durable_write": 14,
+          "memory_release": 65,
+          "retirement_initialized": 1,
+          "scenario_trigger": 4,
+          "scenario_input_scheduled": 4,
+          "durable_retire": 10,
+          "bytes_reconstructed": 4,
+          "process_crash": 3,
+          "resource_reset": 15,
+          "power_loss": 3,
+          "retired_service_completion": 1,
+          "power_on": 3,
+          "directory_page": 11,
+          "retirement_collected": 2,
+          "delayed_first_access": 1,
+          "old_read_complete": 1,
+          "checkpoint_read_complete": 1
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6262,
+            "durable_used": 2192,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 71,
+            "completed": 70,
+            "cancelled": 1,
+            "busy_ns": 70000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 62,
+            "completed": 62,
+            "cancelled": 0,
+            "busy_ns": 36152,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        },
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 2
+        },
+        {
+          "root": "roots/replay",
+          "version": 4,
+          "incarnation": 3
+        },
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 4
+        }
+      ],
+      "reclaimed_bytes": 3171,
+      "inventory": [
+        "data/checkpoint/4",
+        "data/codec/raw-v1",
+        "head"
+      ]
+    },
+    {
+      "case": {
+        "root": "replay",
+        "fault": "checkpoint-reset",
+        "negative": "none",
+        "listing": "paged"
+      },
+      "seed": 7,
+      "errors": [],
+      "coverage": {
+        "fired": {
+          "checkpoint-durable-before-callback": {
+            "event": 379,
+            "time": 437568
+          },
+          "collected-before-first-access": {
+            "event": 756,
+            "time": 867870
+          },
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          },
+          "old-dependencies-retired": {
+            "event": 1148,
+            "time": 1314768
+          }
+        },
+        "missing": []
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "eb568d365d98ed4289d426c1e39d72d6e187c32e29d0ed774a5036c5ea33a90f",
+        "choices_hash": "7ad09dd941dc2e4d32e46eb712bb11885e207a52e76e3ee1d996073fc5c11284",
+        "counts": {
+          "process_start": 4,
+          "schedule": 210,
+          "dispatch": 210,
+          "mailbox_enqueue": 71,
+          "resource_queue": 133,
+          "resource_start": 133,
+          "resource_done": 132,
+          "actor_step": 70,
+          "memory_acquire": 66,
+          "retirement_boot": 4,
+          "disk_submit": 62,
+          "durable_write": 14,
+          "memory_release": 65,
+          "retirement_initialized": 1,
+          "scenario_trigger": 4,
+          "scenario_input_scheduled": 4,
+          "durable_retire": 10,
+          "bytes_reconstructed": 4,
+          "process_crash": 3,
+          "resource_reset": 15,
+          "power_loss": 3,
+          "retired_service_completion": 1,
+          "power_on": 3,
+          "directory_page": 11,
+          "retirement_collected": 2,
+          "delayed_first_access": 1,
+          "old_read_complete": 1,
+          "checkpoint_read_complete": 1
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6262,
+            "durable_used": 2192,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 71,
+            "completed": 70,
+            "cancelled": 1,
+            "busy_ns": 70000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 62,
+            "completed": 62,
+            "cancelled": 0,
+            "busy_ns": 36152,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        },
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 2
+        },
+        {
+          "root": "roots/replay",
+          "version": 4,
+          "incarnation": 3
+        },
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 4
+        }
+      ],
+      "reclaimed_bytes": 3171,
+      "inventory": [
+        "data/checkpoint/4",
+        "data/codec/raw-v1",
+        "head"
+      ]
+    },
+    {
+      "case": {
+        "root": "replay",
+        "fault": "checkpoint-reset",
+        "negative": "none",
+        "listing": "paged"
+      },
+      "seed": 19,
+      "errors": [],
+      "coverage": {
+        "fired": {
+          "checkpoint-durable-before-callback": {
+            "event": 379,
+            "time": 437568
+          },
+          "collected-before-first-access": {
+            "event": 756,
+            "time": 867870
+          },
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          },
+          "old-dependencies-retired": {
+            "event": 1148,
+            "time": 1314768
+          }
+        },
+        "missing": []
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "08dc2520c1c2aa26ad3de07dd99d50a721169514f356ecdae2240b2f99f285d9",
+        "choices_hash": "55e07e0475c4d44f2a0861bc83c64dc39329c8487861975f3956d4203088d365",
+        "counts": {
+          "process_start": 4,
+          "schedule": 210,
+          "dispatch": 210,
+          "mailbox_enqueue": 71,
+          "resource_queue": 133,
+          "resource_start": 133,
+          "resource_done": 132,
+          "actor_step": 70,
+          "memory_acquire": 66,
+          "retirement_boot": 4,
+          "disk_submit": 62,
+          "durable_write": 14,
+          "memory_release": 65,
+          "retirement_initialized": 1,
+          "scenario_trigger": 4,
+          "scenario_input_scheduled": 4,
+          "durable_retire": 10,
+          "bytes_reconstructed": 4,
+          "process_crash": 3,
+          "resource_reset": 15,
+          "power_loss": 3,
+          "retired_service_completion": 1,
+          "power_on": 3,
+          "directory_page": 11,
+          "retirement_collected": 2,
+          "delayed_first_access": 1,
+          "old_read_complete": 1,
+          "checkpoint_read_complete": 1
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6262,
+            "durable_used": 2192,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 71,
+            "completed": 70,
+            "cancelled": 1,
+            "busy_ns": 70000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 62,
+            "completed": 62,
+            "cancelled": 0,
+            "busy_ns": 36152,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        },
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 2
+        },
+        {
+          "root": "roots/replay",
+          "version": 4,
+          "incarnation": 3
+        },
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 4
+        }
+      ],
+      "reclaimed_bytes": 3171,
+      "inventory": [
+        "data/checkpoint/4",
+        "data/codec/raw-v1",
+        "head"
+      ]
+    },
+    {
+      "case": {
+        "root": "reader",
+        "fault": "none",
+        "negative": "ignore-root",
+        "listing": "paged"
+      },
+      "seed": 1,
+      "errors": [
+        "required reconstruction unavailable: data/codec/xor-v1",
+        "retired live dependency data/base/0 of roots/reader",
+        "retired live dependency data/codec/xor-v1 of roots/reader",
+        "retired live dependency data/op/1 of roots/reader",
+        "retired live dependency data/op/2 of roots/reader"
+      ],
+      "coverage": {
+        "fired": {
+          "collected-before-first-access": {
+            "event": 673,
+            "time": 776298
+          },
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          }
+        },
+        "missing": []
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "316d4cce6656ca8f0e2a2af349f37485501c7af36def684ba39d475bb9c7cdee",
+        "choices_hash": "9fe6f94a083e9037ca7dc1a337e447c56f1f889917072eb1dc6d9a5b5668a649",
+        "counts": {
+          "process_start": 2,
+          "schedule": 126,
+          "dispatch": 126,
+          "mailbox_enqueue": 43,
+          "resource_queue": 81,
+          "resource_start": 81,
+          "resource_done": 81,
+          "actor_step": 43,
+          "memory_acquire": 40,
+          "retirement_boot": 2,
+          "disk_submit": 38,
+          "durable_write": 13,
+          "memory_release": 39,
+          "retirement_initialized": 1,
+          "scenario_trigger": 2,
+          "scenario_input_scheduled": 2,
+          "durable_retire": 8,
+          "bytes_reconstructed": 1,
+          "directory_page": 6,
+          "retirement_collected": 1,
+          "process_crash": 1,
+          "resource_reset": 5,
+          "power_loss": 1,
+          "power_on": 1,
+          "delayed_first_access": 1,
+          "reconstruction_failed": 1
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6262,
+            "durable_used": 2301,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 43,
+            "completed": 43,
+            "cancelled": 0,
+            "busy_ns": 43000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 38,
+            "completed": 38,
+            "cancelled": 0,
+            "busy_ns": 17518,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        }
+      ],
+      "reclaimed_bytes": 3062,
+      "inventory": [
+        "data/checkpoint/4",
+        "data/codec/raw-v1",
+        "head",
+        "roots/reader"
+      ]
+    },
+    {
+      "case": {
+        "root": "reader",
+        "fault": "none",
+        "negative": "ignore-root",
+        "listing": "paged"
+      },
+      "seed": 7,
+      "errors": [
+        "required reconstruction unavailable: data/codec/xor-v1",
+        "retired live dependency data/base/0 of roots/reader",
+        "retired live dependency data/codec/xor-v1 of roots/reader",
+        "retired live dependency data/op/1 of roots/reader",
+        "retired live dependency data/op/2 of roots/reader"
+      ],
+      "coverage": {
+        "fired": {
+          "collected-before-first-access": {
+            "event": 673,
+            "time": 776298
+          },
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          }
+        },
+        "missing": []
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "316d4cce6656ca8f0e2a2af349f37485501c7af36def684ba39d475bb9c7cdee",
+        "choices_hash": "9fe6f94a083e9037ca7dc1a337e447c56f1f889917072eb1dc6d9a5b5668a649",
+        "counts": {
+          "process_start": 2,
+          "schedule": 126,
+          "dispatch": 126,
+          "mailbox_enqueue": 43,
+          "resource_queue": 81,
+          "resource_start": 81,
+          "resource_done": 81,
+          "actor_step": 43,
+          "memory_acquire": 40,
+          "retirement_boot": 2,
+          "disk_submit": 38,
+          "durable_write": 13,
+          "memory_release": 39,
+          "retirement_initialized": 1,
+          "scenario_trigger": 2,
+          "scenario_input_scheduled": 2,
+          "durable_retire": 8,
+          "bytes_reconstructed": 1,
+          "directory_page": 6,
+          "retirement_collected": 1,
+          "process_crash": 1,
+          "resource_reset": 5,
+          "power_loss": 1,
+          "power_on": 1,
+          "delayed_first_access": 1,
+          "reconstruction_failed": 1
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6262,
+            "durable_used": 2301,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 43,
+            "completed": 43,
+            "cancelled": 0,
+            "busy_ns": 43000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 38,
+            "completed": 38,
+            "cancelled": 0,
+            "busy_ns": 17518,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        }
+      ],
+      "reclaimed_bytes": 3062,
+      "inventory": [
+        "data/checkpoint/4",
+        "data/codec/raw-v1",
+        "head",
+        "roots/reader"
+      ]
+    },
+    {
+      "case": {
+        "root": "reader",
+        "fault": "none",
+        "negative": "ignore-root",
+        "listing": "paged"
+      },
+      "seed": 19,
+      "errors": [
+        "required reconstruction unavailable: data/codec/xor-v1",
+        "retired live dependency data/base/0 of roots/reader",
+        "retired live dependency data/codec/xor-v1 of roots/reader",
+        "retired live dependency data/op/1 of roots/reader",
+        "retired live dependency data/op/2 of roots/reader"
+      ],
+      "coverage": {
+        "fired": {
+          "collected-before-first-access": {
+            "event": 673,
+            "time": 776298
+          },
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          }
+        },
+        "missing": []
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "d64c6508cfbeced1436d90b73ab7de6f232724a9eaa13ddb6b96a557a08ed5e1",
+        "choices_hash": "5c85b956a947514770da2f544f0e7c4f807245075ec557dbd5869e3aa33019f1",
+        "counts": {
+          "process_start": 2,
+          "schedule": 126,
+          "dispatch": 126,
+          "mailbox_enqueue": 43,
+          "resource_queue": 81,
+          "resource_start": 81,
+          "resource_done": 81,
+          "actor_step": 43,
+          "memory_acquire": 40,
+          "retirement_boot": 2,
+          "disk_submit": 38,
+          "durable_write": 13,
+          "memory_release": 39,
+          "retirement_initialized": 1,
+          "scenario_trigger": 2,
+          "scenario_input_scheduled": 2,
+          "durable_retire": 8,
+          "bytes_reconstructed": 1,
+          "directory_page": 6,
+          "retirement_collected": 1,
+          "process_crash": 1,
+          "resource_reset": 5,
+          "power_loss": 1,
+          "power_on": 1,
+          "delayed_first_access": 1,
+          "reconstruction_failed": 1
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6262,
+            "durable_used": 2301,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 43,
+            "completed": 43,
+            "cancelled": 0,
+            "busy_ns": 43000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 38,
+            "completed": 38,
+            "cancelled": 0,
+            "busy_ns": 17518,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        }
+      ],
+      "reclaimed_bytes": 3062,
+      "inventory": [
+        "data/checkpoint/4",
+        "data/codec/raw-v1",
+        "head",
+        "roots/reader"
+      ]
+    },
+    {
+      "case": {
+        "root": "replay",
+        "fault": "none",
+        "negative": "ignore-root",
+        "listing": "paged"
+      },
+      "seed": 1,
+      "errors": [
+        "required reconstruction unavailable: data/codec/xor-v1",
+        "retired live dependency data/base/0 of roots/replay",
+        "retired live dependency data/codec/xor-v1 of roots/replay",
+        "retired live dependency data/op/1 of roots/replay",
+        "retired live dependency data/op/2 of roots/replay",
+        "retired live dependency data/op/3 of roots/replay",
+        "retired live dependency data/op/4 of roots/replay"
+      ],
+      "coverage": {
+        "fired": {
+          "collected-before-first-access": {
+            "event": 673,
+            "time": 776350
+          },
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          }
+        },
+        "missing": []
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "fcf8f96dc315cc4f2122cc8e755fab5be5a34bced420a71572110509c8458c3c",
+        "choices_hash": "413e3c68983910da500b3303e03de18423e5c9368a74d2ba1e0d17e7e84a9d8b",
+        "counts": {
+          "process_start": 2,
+          "schedule": 126,
+          "dispatch": 126,
+          "mailbox_enqueue": 43,
+          "resource_queue": 81,
+          "resource_start": 81,
+          "resource_done": 81,
+          "actor_step": 43,
+          "memory_acquire": 40,
+          "retirement_boot": 2,
+          "disk_submit": 38,
+          "durable_write": 13,
+          "memory_release": 39,
+          "retirement_initialized": 1,
+          "scenario_trigger": 2,
+          "scenario_input_scheduled": 2,
+          "durable_retire": 8,
+          "bytes_reconstructed": 1,
+          "directory_page": 6,
+          "retirement_collected": 1,
+          "process_crash": 1,
+          "resource_reset": 5,
+          "power_loss": 1,
+          "power_on": 1,
+          "delayed_first_access": 1,
+          "reconstruction_failed": 1
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6262,
+            "durable_used": 2327,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 43,
+            "completed": 43,
+            "cancelled": 0,
+            "busy_ns": 43000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 38,
+            "completed": 38,
+            "cancelled": 0,
+            "busy_ns": 17622,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        }
+      ],
+      "reclaimed_bytes": 3036,
+      "inventory": [
+        "data/checkpoint/4",
+        "data/codec/raw-v1",
+        "head",
+        "roots/replay"
+      ]
+    },
+    {
+      "case": {
+        "root": "replay",
+        "fault": "none",
+        "negative": "ignore-root",
+        "listing": "paged"
+      },
+      "seed": 7,
+      "errors": [
+        "required reconstruction unavailable: data/codec/xor-v1",
+        "retired live dependency data/base/0 of roots/replay",
+        "retired live dependency data/codec/xor-v1 of roots/replay",
+        "retired live dependency data/op/1 of roots/replay",
+        "retired live dependency data/op/2 of roots/replay",
+        "retired live dependency data/op/3 of roots/replay",
+        "retired live dependency data/op/4 of roots/replay"
+      ],
+      "coverage": {
+        "fired": {
+          "collected-before-first-access": {
+            "event": 673,
+            "time": 776350
+          },
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          }
+        },
+        "missing": []
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "fcf8f96dc315cc4f2122cc8e755fab5be5a34bced420a71572110509c8458c3c",
+        "choices_hash": "413e3c68983910da500b3303e03de18423e5c9368a74d2ba1e0d17e7e84a9d8b",
+        "counts": {
+          "process_start": 2,
+          "schedule": 126,
+          "dispatch": 126,
+          "mailbox_enqueue": 43,
+          "resource_queue": 81,
+          "resource_start": 81,
+          "resource_done": 81,
+          "actor_step": 43,
+          "memory_acquire": 40,
+          "retirement_boot": 2,
+          "disk_submit": 38,
+          "durable_write": 13,
+          "memory_release": 39,
+          "retirement_initialized": 1,
+          "scenario_trigger": 2,
+          "scenario_input_scheduled": 2,
+          "durable_retire": 8,
+          "bytes_reconstructed": 1,
+          "directory_page": 6,
+          "retirement_collected": 1,
+          "process_crash": 1,
+          "resource_reset": 5,
+          "power_loss": 1,
+          "power_on": 1,
+          "delayed_first_access": 1,
+          "reconstruction_failed": 1
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6262,
+            "durable_used": 2327,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 43,
+            "completed": 43,
+            "cancelled": 0,
+            "busy_ns": 43000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 38,
+            "completed": 38,
+            "cancelled": 0,
+            "busy_ns": 17622,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        }
+      ],
+      "reclaimed_bytes": 3036,
+      "inventory": [
+        "data/checkpoint/4",
+        "data/codec/raw-v1",
+        "head",
+        "roots/replay"
+      ]
+    },
+    {
+      "case": {
+        "root": "replay",
+        "fault": "none",
+        "negative": "ignore-root",
+        "listing": "paged"
+      },
+      "seed": 19,
+      "errors": [
+        "required reconstruction unavailable: data/codec/xor-v1",
+        "retired live dependency data/base/0 of roots/replay",
+        "retired live dependency data/codec/xor-v1 of roots/replay",
+        "retired live dependency data/op/1 of roots/replay",
+        "retired live dependency data/op/2 of roots/replay",
+        "retired live dependency data/op/3 of roots/replay",
+        "retired live dependency data/op/4 of roots/replay"
+      ],
+      "coverage": {
+        "fired": {
+          "collected-before-first-access": {
+            "event": 673,
+            "time": 776350
+          },
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          }
+        },
+        "missing": []
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "38683de5cafbb5bf5f8222635a1c4aafc9f40055b49c53498c9b8914faa048f3",
+        "choices_hash": "b59b83a9138f22d1cf6ebcd8ffe837fb322a3872399d321bb8b3c6e0ec89c532",
+        "counts": {
+          "process_start": 2,
+          "schedule": 126,
+          "dispatch": 126,
+          "mailbox_enqueue": 43,
+          "resource_queue": 81,
+          "resource_start": 81,
+          "resource_done": 81,
+          "actor_step": 43,
+          "memory_acquire": 40,
+          "retirement_boot": 2,
+          "disk_submit": 38,
+          "durable_write": 13,
+          "memory_release": 39,
+          "retirement_initialized": 1,
+          "scenario_trigger": 2,
+          "scenario_input_scheduled": 2,
+          "durable_retire": 8,
+          "bytes_reconstructed": 1,
+          "directory_page": 6,
+          "retirement_collected": 1,
+          "process_crash": 1,
+          "resource_reset": 5,
+          "power_loss": 1,
+          "power_on": 1,
+          "delayed_first_access": 1,
+          "reconstruction_failed": 1
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6262,
+            "durable_used": 2327,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 43,
+            "completed": 43,
+            "cancelled": 0,
+            "busy_ns": 43000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 38,
+            "completed": 38,
+            "cancelled": 0,
+            "busy_ns": 17622,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        }
+      ],
+      "reclaimed_bytes": 3036,
+      "inventory": [
+        "data/checkpoint/4",
+        "data/codec/raw-v1",
+        "head",
+        "roots/replay"
+      ]
+    },
+    {
+      "case": {
+        "root": "reader",
+        "fault": "none",
+        "negative": "premature-checkpoint",
+        "listing": "paged"
+      },
+      "seed": 1,
+      "errors": [
+        "head published before matching checkpoint durable",
+        "required reconstruction unavailable: data/checkpoint/4"
+      ],
+      "coverage": {
+        "fired": {
+          "collected-before-first-access": {
+            "event": 639,
+            "time": 729852
+          },
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          }
+        },
+        "missing": []
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "1dd7b2144d28dd1fba6b65a72743114d718b34b11aacb2493fd22ad9268b4471",
+        "choices_hash": "11f337b30b4b8c0a8fef53b8fa6efaf5cdcc6731b40de78c6f4cb039c793c104",
+        "counts": {
+          "process_start": 2,
+          "schedule": 124,
+          "dispatch": 124,
+          "mailbox_enqueue": 42,
+          "resource_queue": 79,
+          "resource_start": 79,
+          "resource_done": 79,
+          "actor_step": 42,
+          "memory_acquire": 39,
+          "retirement_boot": 2,
+          "disk_submit": 37,
+          "durable_write": 12,
+          "memory_release": 38,
+          "retirement_initialized": 1,
+          "scenario_trigger": 2,
+          "scenario_input_scheduled": 2,
+          "durable_retire": 9,
+          "bytes_reconstructed": 1,
+          "directory_page": 5,
+          "retirement_collected": 1,
+          "process_crash": 1,
+          "resource_reset": 5,
+          "power_loss": 1,
+          "power_on": 1,
+          "delayed_first_access": 1,
+          "reconstruction_failed": 1,
+          "stale_completion": 1
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6201,
+            "durable_used": 117,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 42,
+            "completed": 42,
+            "cancelled": 0,
+            "busy_ns": 42000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 37,
+            "completed": 37,
+            "cancelled": 0,
+            "busy_ns": 13088,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        }
+      ],
+      "reclaimed_bytes": 3171,
+      "inventory": [
+        "data/codec/raw-v1",
+        "head"
+      ]
+    },
+    {
+      "case": {
+        "root": "reader",
+        "fault": "none",
+        "negative": "premature-checkpoint",
+        "listing": "paged"
+      },
+      "seed": 7,
+      "errors": [
+        "head published before matching checkpoint durable",
+        "required reconstruction unavailable: data/checkpoint/4"
+      ],
+      "coverage": {
+        "fired": {
+          "collected-before-first-access": {
+            "event": 639,
+            "time": 729852
+          },
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          }
+        },
+        "missing": []
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "1dd7b2144d28dd1fba6b65a72743114d718b34b11aacb2493fd22ad9268b4471",
+        "choices_hash": "11f337b30b4b8c0a8fef53b8fa6efaf5cdcc6731b40de78c6f4cb039c793c104",
+        "counts": {
+          "process_start": 2,
+          "schedule": 124,
+          "dispatch": 124,
+          "mailbox_enqueue": 42,
+          "resource_queue": 79,
+          "resource_start": 79,
+          "resource_done": 79,
+          "actor_step": 42,
+          "memory_acquire": 39,
+          "retirement_boot": 2,
+          "disk_submit": 37,
+          "durable_write": 12,
+          "memory_release": 38,
+          "retirement_initialized": 1,
+          "scenario_trigger": 2,
+          "scenario_input_scheduled": 2,
+          "durable_retire": 9,
+          "bytes_reconstructed": 1,
+          "directory_page": 5,
+          "retirement_collected": 1,
+          "process_crash": 1,
+          "resource_reset": 5,
+          "power_loss": 1,
+          "power_on": 1,
+          "delayed_first_access": 1,
+          "reconstruction_failed": 1,
+          "stale_completion": 1
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6201,
+            "durable_used": 117,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 42,
+            "completed": 42,
+            "cancelled": 0,
+            "busy_ns": 42000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 37,
+            "completed": 37,
+            "cancelled": 0,
+            "busy_ns": 13088,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        }
+      ],
+      "reclaimed_bytes": 3171,
+      "inventory": [
+        "data/codec/raw-v1",
+        "head"
+      ]
+    },
+    {
+      "case": {
+        "root": "reader",
+        "fault": "none",
+        "negative": "premature-checkpoint",
+        "listing": "paged"
+      },
+      "seed": 19,
+      "errors": [
+        "head published before matching checkpoint durable",
+        "required reconstruction unavailable: data/checkpoint/4"
+      ],
+      "coverage": {
+        "fired": {
+          "collected-before-first-access": {
+            "event": 639,
+            "time": 729852
+          },
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          }
+        },
+        "missing": []
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "0734ea364581c8931bbb93959d3a110015cab21f41ce4664c859681e3f3629c4",
+        "choices_hash": "6381cc8a371adac98f52eadb599635fb5ee0a8df9fa9852241ab3d70d00580e1",
+        "counts": {
+          "process_start": 2,
+          "schedule": 124,
+          "dispatch": 124,
+          "mailbox_enqueue": 42,
+          "resource_queue": 79,
+          "resource_start": 79,
+          "resource_done": 79,
+          "actor_step": 42,
+          "memory_acquire": 39,
+          "retirement_boot": 2,
+          "disk_submit": 37,
+          "durable_write": 12,
+          "memory_release": 38,
+          "retirement_initialized": 1,
+          "scenario_trigger": 2,
+          "scenario_input_scheduled": 2,
+          "durable_retire": 9,
+          "bytes_reconstructed": 1,
+          "directory_page": 5,
+          "retirement_collected": 1,
+          "process_crash": 1,
+          "resource_reset": 5,
+          "power_loss": 1,
+          "power_on": 1,
+          "delayed_first_access": 1,
+          "reconstruction_failed": 1,
+          "stale_completion": 1
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6201,
+            "durable_used": 117,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 42,
+            "completed": 42,
+            "cancelled": 0,
+            "busy_ns": 42000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 37,
+            "completed": 37,
+            "cancelled": 0,
+            "busy_ns": 13088,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        }
+      ],
+      "reclaimed_bytes": 3171,
+      "inventory": [
+        "data/codec/raw-v1",
+        "head"
+      ]
+    },
+    {
+      "case": {
+        "root": "reader",
+        "fault": "none",
+        "negative": "none",
+        "listing": "whole-prefix"
+      },
+      "seed": 1,
+      "errors": [],
+      "coverage": {
+        "fired": {
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          }
+        },
+        "missing": [
+          "collected-before-first-access"
+        ]
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "fcc5121ededda7beddbf175cfd94db27519f3acf0e049cf33d8da2c7d5d0314b",
+        "choices_hash": "8a09fd8fd26156a54aff9eb0f36f5ff6bff698ab1f0867983b59868a11103270",
+        "counts": {
+          "process_start": 1,
+          "schedule": 78,
+          "dispatch": 78,
+          "mailbox_enqueue": 27,
+          "resource_queue": 51,
+          "resource_start": 51,
+          "resource_done": 51,
+          "actor_step": 27,
+          "memory_acquire": 25,
+          "retirement_boot": 1,
+          "disk_submit": 24,
+          "durable_write": 13,
+          "memory_release": 24,
+          "retirement_initialized": 1,
+          "scenario_trigger": 1,
+          "scenario_input_scheduled": 1,
+          "durable_retire": 1,
+          "bytes_reconstructed": 1,
+          "memory_refused": 1,
+          "wait": 1
+        },
+        "waits": [
+          {
+            "actor": "owner",
+            "op": "retirement",
+            "incarnation": 1,
+            "reason": "physical port refused",
+            "trace": 457,
+            "operation": "scan",
+            "reporting_incarnation_alive": true
+          }
+        ],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6262,
+            "durable_used": 5228,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 27,
+            "completed": 27,
+            "cancelled": 0,
+            "busy_ns": 27000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 24,
+            "completed": 24,
+            "cancelled": 0,
+            "busy_ns": 16368,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        }
+      ],
+      "reclaimed_bytes": 135,
+      "inventory": [
+        "data/base/0",
+        "data/checkpoint/4",
+        "data/codec/raw-v1",
+        "data/codec/xor-v1",
+        "data/garbage",
+        "data/op/1",
+        "data/op/2",
+        "data/op/3",
+        "data/op/4",
+        "head",
+        "roots/reader"
+      ]
+    },
+    {
+      "case": {
+        "root": "reader",
+        "fault": "none",
+        "negative": "none",
+        "listing": "whole-prefix"
+      },
+      "seed": 7,
+      "errors": [],
+      "coverage": {
+        "fired": {
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          }
+        },
+        "missing": [
+          "collected-before-first-access"
+        ]
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "fcc5121ededda7beddbf175cfd94db27519f3acf0e049cf33d8da2c7d5d0314b",
+        "choices_hash": "8a09fd8fd26156a54aff9eb0f36f5ff6bff698ab1f0867983b59868a11103270",
+        "counts": {
+          "process_start": 1,
+          "schedule": 78,
+          "dispatch": 78,
+          "mailbox_enqueue": 27,
+          "resource_queue": 51,
+          "resource_start": 51,
+          "resource_done": 51,
+          "actor_step": 27,
+          "memory_acquire": 25,
+          "retirement_boot": 1,
+          "disk_submit": 24,
+          "durable_write": 13,
+          "memory_release": 24,
+          "retirement_initialized": 1,
+          "scenario_trigger": 1,
+          "scenario_input_scheduled": 1,
+          "durable_retire": 1,
+          "bytes_reconstructed": 1,
+          "memory_refused": 1,
+          "wait": 1
+        },
+        "waits": [
+          {
+            "actor": "owner",
+            "op": "retirement",
+            "incarnation": 1,
+            "reason": "physical port refused",
+            "trace": 457,
+            "operation": "scan",
+            "reporting_incarnation_alive": true
+          }
+        ],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6262,
+            "durable_used": 5228,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 27,
+            "completed": 27,
+            "cancelled": 0,
+            "busy_ns": 27000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 24,
+            "completed": 24,
+            "cancelled": 0,
+            "busy_ns": 16368,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        }
+      ],
+      "reclaimed_bytes": 135,
+      "inventory": [
+        "data/base/0",
+        "data/checkpoint/4",
+        "data/codec/raw-v1",
+        "data/codec/xor-v1",
+        "data/garbage",
+        "data/op/1",
+        "data/op/2",
+        "data/op/3",
+        "data/op/4",
+        "head",
+        "roots/reader"
+      ]
+    },
+    {
+      "case": {
+        "root": "reader",
+        "fault": "none",
+        "negative": "none",
+        "listing": "whole-prefix"
+      },
+      "seed": 19,
+      "errors": [],
+      "coverage": {
+        "fired": {
+          "initialized": {
+            "event": 219,
+            "time": 239664
+          }
+        },
+        "missing": [
+          "collected-before-first-access"
+        ]
+      },
+      "report": {
+        "time": 8000000,
+        "pending_events": 0,
+        "trace_hash": "bd9fa260f98b7377ce691adbb8b584847caac9a9501f19911fc8050a12e83cd7",
+        "choices_hash": "c3b20b4485fcd1d2ee98240410b8bb8cd7c7e6d1e42ad176c6293308d9c5bd43",
+        "counts": {
+          "process_start": 1,
+          "schedule": 78,
+          "dispatch": 78,
+          "mailbox_enqueue": 27,
+          "resource_queue": 51,
+          "resource_start": 51,
+          "resource_done": 51,
+          "actor_step": 27,
+          "memory_acquire": 25,
+          "retirement_boot": 1,
+          "disk_submit": 24,
+          "durable_write": 13,
+          "memory_release": 24,
+          "retirement_initialized": 1,
+          "scenario_trigger": 1,
+          "scenario_input_scheduled": 1,
+          "durable_retire": 1,
+          "bytes_reconstructed": 1,
+          "memory_refused": 1,
+          "wait": 1
+        },
+        "waits": [
+          {
+            "actor": "owner",
+            "op": "retirement",
+            "incarnation": 1,
+            "reason": "physical port refused",
+            "trace": 457,
+            "operation": "scan",
+            "reporting_incarnation_alive": true
+          }
+        ],
+        "retired_waits": [],
+        "hosts": {
+          "storage": {
+            "memory_used": 4096,
+            "memory_peak": 6262,
+            "durable_used": 5228,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "storage/workers": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/control": {
+            "submitted": 27,
+            "completed": 27,
+            "cancelled": 0,
+            "busy_ns": 27000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "storage/disk_bytes": {
+            "submitted": 24,
+            "completed": 24,
+            "cancelled": 0,
+            "busy_ns": 16368,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      },
+      "hosts": {
+        "storage": {
+          "name": "storage",
+          "domain": "local",
+          "workers": 2,
+          "control": 1,
+          "handler_ns": 1000,
+          "memory_bytes": 8192,
+          "durable_bytes": 16384,
+          "nic_bytes_per_ns": 1,
+          "disk_bytes_per_ns": 0.5,
+          "disk_latency": 20000,
+          "io_slots": 4,
+          "queue_limit": 1024,
+          "clock_offset": 0,
+          "clock_ppm": 0
+        }
+      },
+      "reads": [
+        {
+          "root": "head",
+          "version": 4,
+          "incarnation": 1
+        }
+      ],
+      "reclaimed_bytes": 135,
+      "inventory": [
+        "data/base/0",
+        "data/checkpoint/4",
+        "data/codec/raw-v1",
+        "data/codec/xor-v1",
+        "data/garbage",
+        "data/op/1",
+        "data/op/2",
+        "data/op/3",
+        "data/op/4",
+        "head",
+        "roots/reader"
+      ]
+    }
+  ],
+  "borrower_rows": [
+    {
+      "omit_second_pin": false,
+      "seed": 1,
+      "errors": [],
+      "probes": [
+        {
+          "phase": "both-running",
+          "available": false,
+          "time": 13000
+        },
+        {
+          "phase": "second-running",
+          "available": false,
+          "time": 103000
+        },
+        {
+          "phase": "both-retired",
+          "available": true,
+          "time": 203000
+        }
+      ],
+      "report": {
+        "time": 300000,
+        "pending_events": 0,
+        "trace_hash": "364ce981bde5ecbeb6f1a67b0b947f5962e0af2e4f3ad86d4db8490d2ea5f28f",
+        "choices_hash": "0d9d3c7551fcb0088ca7b35cefd848f57722e7958187b072329d573147cab871",
+        "counts": {
+          "process_start": 2,
+          "schedule": 16,
+          "dispatch": 16,
+          "mailbox_enqueue": 6,
+          "resource_queue": 8,
+          "resource_start": 8,
+          "resource_done": 8,
+          "actor_step": 6,
+          "memory_acquire": 2,
+          "backend_borrow_submitted": 2,
+          "view_cancelled": 1,
+          "scenario_trigger": 1,
+          "scenario_input_scheduled": 3,
+          "process_crash": 1,
+          "memory_refused": 2,
+          "reuse_probe": 3,
+          "stale_completion": 2,
+          "memory_release": 2
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "backend": {
+            "memory_used": 0,
+            "memory_peak": 4096,
+            "durable_used": 0,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "backend/workers": {
+            "submitted": 2,
+            "completed": 2,
+            "cancelled": 0,
+            "busy_ns": 240000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/control": {
+            "submitted": 6,
+            "completed": 6,
+            "cancelled": 0,
+            "busy_ns": 6000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/disk_bytes": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      }
+    },
+    {
+      "omit_second_pin": false,
+      "seed": 7,
+      "errors": [],
+      "probes": [
+        {
+          "phase": "both-running",
+          "available": false,
+          "time": 13000
+        },
+        {
+          "phase": "second-running",
+          "available": false,
+          "time": 103000
+        },
+        {
+          "phase": "both-retired",
+          "available": true,
+          "time": 203000
+        }
+      ],
+      "report": {
+        "time": 300000,
+        "pending_events": 0,
+        "trace_hash": "364ce981bde5ecbeb6f1a67b0b947f5962e0af2e4f3ad86d4db8490d2ea5f28f",
+        "choices_hash": "0d9d3c7551fcb0088ca7b35cefd848f57722e7958187b072329d573147cab871",
+        "counts": {
+          "process_start": 2,
+          "schedule": 16,
+          "dispatch": 16,
+          "mailbox_enqueue": 6,
+          "resource_queue": 8,
+          "resource_start": 8,
+          "resource_done": 8,
+          "actor_step": 6,
+          "memory_acquire": 2,
+          "backend_borrow_submitted": 2,
+          "view_cancelled": 1,
+          "scenario_trigger": 1,
+          "scenario_input_scheduled": 3,
+          "process_crash": 1,
+          "memory_refused": 2,
+          "reuse_probe": 3,
+          "stale_completion": 2,
+          "memory_release": 2
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "backend": {
+            "memory_used": 0,
+            "memory_peak": 4096,
+            "durable_used": 0,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "backend/workers": {
+            "submitted": 2,
+            "completed": 2,
+            "cancelled": 0,
+            "busy_ns": 240000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/control": {
+            "submitted": 6,
+            "completed": 6,
+            "cancelled": 0,
+            "busy_ns": 6000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/disk_bytes": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      }
+    },
+    {
+      "omit_second_pin": false,
+      "seed": 19,
+      "errors": [],
+      "probes": [
+        {
+          "phase": "both-running",
+          "available": false,
+          "time": 13000
+        },
+        {
+          "phase": "second-running",
+          "available": false,
+          "time": 103000
+        },
+        {
+          "phase": "both-retired",
+          "available": true,
+          "time": 203000
+        }
+      ],
+      "report": {
+        "time": 300000,
+        "pending_events": 0,
+        "trace_hash": "f167f2f485935666deb84112660c47496f237327211272d3d8838574be1eea0d",
+        "choices_hash": "6d69c5d9b91917c6b88fd3d9a88e5ef1502dc059b7e7e444d249a080deb1af8c",
+        "counts": {
+          "process_start": 2,
+          "schedule": 16,
+          "dispatch": 16,
+          "mailbox_enqueue": 6,
+          "resource_queue": 8,
+          "resource_start": 8,
+          "resource_done": 8,
+          "actor_step": 6,
+          "memory_acquire": 2,
+          "backend_borrow_submitted": 2,
+          "view_cancelled": 1,
+          "scenario_trigger": 1,
+          "scenario_input_scheduled": 3,
+          "process_crash": 1,
+          "memory_refused": 2,
+          "reuse_probe": 3,
+          "stale_completion": 2,
+          "memory_release": 2
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "backend": {
+            "memory_used": 0,
+            "memory_peak": 4096,
+            "durable_used": 0,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "backend/workers": {
+            "submitted": 2,
+            "completed": 2,
+            "cancelled": 0,
+            "busy_ns": 240000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/control": {
+            "submitted": 6,
+            "completed": 6,
+            "cancelled": 0,
+            "busy_ns": 6000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/disk_bytes": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      }
+    },
+    {
+      "omit_second_pin": true,
+      "seed": 1,
+      "errors": [
+        "backend borrower lacks physical pin: B",
+        "frame reuse violates backend lifetime: second-running"
+      ],
+      "probes": [
+        {
+          "phase": "both-running",
+          "available": false,
+          "time": 13000
+        },
+        {
+          "phase": "second-running",
+          "available": true,
+          "time": 103000
+        },
+        {
+          "phase": "both-retired",
+          "available": true,
+          "time": 203000
+        }
+      ],
+      "report": {
+        "time": 300000,
+        "pending_events": 0,
+        "trace_hash": "fc4caeef00f648c2b449c9c38a8a86c91edd37ba106ab2543ebec499da9c9d00",
+        "choices_hash": "0d9d3c7551fcb0088ca7b35cefd848f57722e7958187b072329d573147cab871",
+        "counts": {
+          "process_start": 2,
+          "schedule": 16,
+          "dispatch": 16,
+          "mailbox_enqueue": 6,
+          "resource_queue": 8,
+          "resource_start": 8,
+          "resource_done": 8,
+          "actor_step": 6,
+          "memory_acquire": 3,
+          "backend_borrow_submitted": 2,
+          "view_cancelled": 1,
+          "scenario_trigger": 1,
+          "scenario_input_scheduled": 3,
+          "process_crash": 1,
+          "memory_refused": 1,
+          "reuse_probe": 3,
+          "memory_release": 3,
+          "stale_completion": 2
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "backend": {
+            "memory_used": 0,
+            "memory_peak": 4096,
+            "durable_used": 0,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "backend/workers": {
+            "submitted": 2,
+            "completed": 2,
+            "cancelled": 0,
+            "busy_ns": 240000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/control": {
+            "submitted": 6,
+            "completed": 6,
+            "cancelled": 0,
+            "busy_ns": 6000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/disk_bytes": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      }
+    },
+    {
+      "omit_second_pin": true,
+      "seed": 7,
+      "errors": [
+        "backend borrower lacks physical pin: B",
+        "frame reuse violates backend lifetime: second-running"
+      ],
+      "probes": [
+        {
+          "phase": "both-running",
+          "available": false,
+          "time": 13000
+        },
+        {
+          "phase": "second-running",
+          "available": true,
+          "time": 103000
+        },
+        {
+          "phase": "both-retired",
+          "available": true,
+          "time": 203000
+        }
+      ],
+      "report": {
+        "time": 300000,
+        "pending_events": 0,
+        "trace_hash": "fc4caeef00f648c2b449c9c38a8a86c91edd37ba106ab2543ebec499da9c9d00",
+        "choices_hash": "0d9d3c7551fcb0088ca7b35cefd848f57722e7958187b072329d573147cab871",
+        "counts": {
+          "process_start": 2,
+          "schedule": 16,
+          "dispatch": 16,
+          "mailbox_enqueue": 6,
+          "resource_queue": 8,
+          "resource_start": 8,
+          "resource_done": 8,
+          "actor_step": 6,
+          "memory_acquire": 3,
+          "backend_borrow_submitted": 2,
+          "view_cancelled": 1,
+          "scenario_trigger": 1,
+          "scenario_input_scheduled": 3,
+          "process_crash": 1,
+          "memory_refused": 1,
+          "reuse_probe": 3,
+          "memory_release": 3,
+          "stale_completion": 2
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "backend": {
+            "memory_used": 0,
+            "memory_peak": 4096,
+            "durable_used": 0,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "backend/workers": {
+            "submitted": 2,
+            "completed": 2,
+            "cancelled": 0,
+            "busy_ns": 240000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/control": {
+            "submitted": 6,
+            "completed": 6,
+            "cancelled": 0,
+            "busy_ns": 6000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/disk_bytes": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      }
+    },
+    {
+      "omit_second_pin": true,
+      "seed": 19,
+      "errors": [
+        "backend borrower lacks physical pin: B",
+        "frame reuse violates backend lifetime: second-running"
+      ],
+      "probes": [
+        {
+          "phase": "both-running",
+          "available": false,
+          "time": 13000
+        },
+        {
+          "phase": "second-running",
+          "available": true,
+          "time": 103000
+        },
+        {
+          "phase": "both-retired",
+          "available": true,
+          "time": 203000
+        }
+      ],
+      "report": {
+        "time": 300000,
+        "pending_events": 0,
+        "trace_hash": "2dd43c1e901bb9b8f778ad273e36a2949b2a2bce8bd5b886babcf950bc0059e9",
+        "choices_hash": "6d69c5d9b91917c6b88fd3d9a88e5ef1502dc059b7e7e444d249a080deb1af8c",
+        "counts": {
+          "process_start": 2,
+          "schedule": 16,
+          "dispatch": 16,
+          "mailbox_enqueue": 6,
+          "resource_queue": 8,
+          "resource_start": 8,
+          "resource_done": 8,
+          "actor_step": 6,
+          "memory_acquire": 3,
+          "backend_borrow_submitted": 2,
+          "view_cancelled": 1,
+          "scenario_trigger": 1,
+          "scenario_input_scheduled": 3,
+          "process_crash": 1,
+          "memory_refused": 1,
+          "reuse_probe": 3,
+          "memory_release": 3,
+          "stale_completion": 2
+        },
+        "waits": [],
+        "retired_waits": [],
+        "hosts": {
+          "backend": {
+            "memory_used": 0,
+            "memory_peak": 4096,
+            "durable_used": 0,
+            "durable_reserved": 0,
+            "disk_pending": 0,
+            "up": true
+          }
+        },
+        "resources": {
+          "backend/workers": {
+            "submitted": 2,
+            "completed": 2,
+            "cancelled": 0,
+            "busy_ns": 240000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/control": {
+            "submitted": 6,
+            "completed": 6,
+            "cancelled": 0,
+            "busy_ns": 6000,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/tx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/rx": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          },
+          "backend/disk_bytes": {
+            "submitted": 0,
+            "completed": 0,
+            "cancelled": 0,
+            "busy_ns": 0,
+            "active_busy_ns": 0,
+            "active": 0,
+            "queued": 0,
+            "paused": false,
+            "factor": 1
+          }
+        }
+      }
+    }
+  ]
+}

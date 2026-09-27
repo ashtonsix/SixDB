@@ -1,0 +1,416 @@
+{
+  "errors": [],
+  "frontier": [
+    {
+      "case": {
+        "enhance": true,
+        "period_ns": 800,
+        "placement": "destination",
+        "retry_ns": 80000,
+        "window": 2
+      },
+      "records": [
+        "ac115060ecc6352dcfff125235867529ced1422f19be43034cf904d929a76e59",
+        "f581c47097c711d074cb015f911e973143c7dc529e5bee35e2544f182c7ef84f"
+      ],
+      "vector": [
+        1100,
+        5120,
+        34196
+      ]
+    },
+    {
+      "case": {
+        "enhance": true,
+        "period_ns": 800,
+        "placement": "source",
+        "retry_ns": 80000,
+        "window": 4
+      },
+      "records": [
+        "506fbd89cea9ee81b785355bf914dc1c49de24889719094c1b73af317d24fca4",
+        "47f904f635e41eb98fe723a87621f2dbf80145e05938606c46a35ddd08b58dba"
+      ],
+      "vector": [
+        1100,
+        7232,
+        24594
+      ]
+    },
+    {
+      "case": {
+        "enhance": true,
+        "period_ns": 800,
+        "placement": "destination",
+        "retry_ns": 80000,
+        "window": 4
+      },
+      "records": [
+        "4eae8950f7a0ae26e0b32ea91f90449ccbb434d77ffee17ec8f5196a68c3053e",
+        "5cfa160a97e73d53c42b89939dfd566321fc9bbc75c7b711fff2da136f506c32"
+      ],
+      "vector": [
+        1167,
+        5120,
+        28596
+      ]
+    },
+    {
+      "case": {
+        "enhance": true,
+        "period_ns": 800,
+        "placement": "destination",
+        "retry_ns": 40000,
+        "window": 2
+      },
+      "records": [
+        "349bed05334f10e6ba9e6c17d1c78ecb9ee4a583512bc6b1919338b4677ac5af",
+        "443d963d309dfd3953465ae69e13600cce784013836384d4d731a33fc758a09a"
+      ],
+      "vector": [
+        1100,
+        5120,
+        34196
+      ]
+    },
+    {
+      "case": {
+        "enhance": true,
+        "period_ns": 800,
+        "placement": "destination",
+        "retry_ns": 160000,
+        "window": 2
+      },
+      "records": [
+        "0bec9d15b07ed3b8d2b0cb1c7bda38dcaad653591a82cbb61feaab3710c9051c",
+        "2625e02bcc09e3ba4871869e1b635e3a20487fe533d9f824e6682e561288e60d"
+      ],
+      "vector": [
+        1100,
+        5120,
+        34196
+      ]
+    },
+    {
+      "case": {
+        "enhance": true,
+        "period_ns": 800,
+        "placement": "source",
+        "retry_ns": 40000,
+        "window": 4
+      },
+      "records": [
+        "ad7734fd557c7e43da716766032f3ac16034754f051ea9987bff8ef022ad67a7",
+        "46d2178afe67cd19dcd9bdd466d70148e906ccb359312eb6544e04554f2b075a"
+      ],
+      "vector": [
+        1100,
+        7232,
+        24594
+      ]
+    },
+    {
+      "case": {
+        "enhance": true,
+        "period_ns": 800,
+        "placement": "source",
+        "retry_ns": 160000,
+        "window": 4
+      },
+      "records": [
+        "8a6679f621f6a51cc2886783e00165125b8d826c16f8d9ddebca92c9b0c32cc0",
+        "55e2ef4b4a2a7b094deabfe8bf231dded05b7710bb52793c502997e151b27dc6"
+      ],
+      "vector": [
+        1100,
+        7232,
+        24594
+      ]
+    },
+    {
+      "case": {
+        "enhance": true,
+        "period_ns": 800,
+        "placement": "destination",
+        "retry_ns": 40000,
+        "window": 4
+      },
+      "records": [
+        "c4a0c7be52102a9e3aabf01437c2207f29bcb7e51b470edb3f6c6ff5f927c6cd",
+        "a0e309ac43ec8517f41432705bbbc6103c8ff81b95f4fecc2c55c3c2400819eb"
+      ],
+      "vector": [
+        1167,
+        5120,
+        28596
+      ]
+    },
+    {
+      "case": {
+        "enhance": true,
+        "period_ns": 800,
+        "placement": "destination",
+        "retry_ns": 160000,
+        "window": 4
+      },
+      "records": [
+        "d1438337ad2cc1c2b1ec1837afd1ba66de8d2004d641ae4d1833de402bc6884d",
+        "00ba66937cfea436b019a395eaa243be838bec41102fecd72d13e509ddccf9ff"
+      ],
+      "vector": [
+        1167,
+        5120,
+        28596
+      ]
+    }
+  ],
+  "runs": 298,
+  "selected_horizon": [
+    {
+      "case": {
+        "enhance": false,
+        "offer_window_ns": 1000000,
+        "period_ns": 400,
+        "placement": "source"
+      },
+      "cohorts": {
+        "foreground": {
+          "completed": 1738,
+          "offered": 2500,
+          "refused": 762,
+          "unfinished": 0
+        },
+        "materializations": {
+          "completed": 2,
+          "offered": 2,
+          "refused": 0,
+          "unfinished": 0
+        },
+        "sources": {
+          "completed": 2,
+          "offered": 2,
+          "refused": 0,
+          "unfinished": 0
+        }
+      },
+      "metrics": {
+        "finalization_ns": 94836,
+        "foreground_backlog_end": 127,
+        "foreground_backlog_mid": 128,
+        "foreground_drain_ns": null,
+        "foreground_late_throughput_per_model_ms": 1668.0,
+        "foreground_max_ns": 79340,
+        "foreground_throughput_per_model_ms": 1611.0,
+        "offered_per_model_ms": 2500.0,
+        "pre_resume_work_drain_ns": null,
+        "refused": 762,
+        "since_last_foreground_completion_ns": 323860,
+        "unfinished": 0,
+        "wan_bytes": 8864,
+        "wire_bytes": 8864,
+        "worker_ns": 1109760
+      },
+      "record": "d69c3fb623aa32a85a9dedbcf53471670596cc9b2c5a0f2abdfd4c7d21ae8453",
+      "seed": 1
+    },
+    {
+      "case": {
+        "enhance": true,
+        "offer_window_ns": 1000000,
+        "period_ns": 400,
+        "placement": "source"
+      },
+      "cohorts": {
+        "foreground": {
+          "completed": 1789,
+          "offered": 2500,
+          "refused": 711,
+          "unfinished": 0
+        },
+        "materializations": {
+          "completed": 2,
+          "offered": 2,
+          "refused": 0,
+          "unfinished": 0
+        },
+        "sources": {
+          "completed": 2,
+          "offered": 2,
+          "refused": 0,
+          "unfinished": 0
+        }
+      },
+      "metrics": {
+        "finalization_ns": 61116,
+        "foreground_backlog_end": 127,
+        "foreground_backlog_mid": 128,
+        "foreground_drain_ns": null,
+        "foreground_late_throughput_per_model_ms": 1668.0,
+        "foreground_max_ns": 76820,
+        "foreground_throughput_per_model_ms": 1662.0,
+        "offered_per_model_ms": 2500.0,
+        "pre_resume_work_drain_ns": null,
+        "refused": 711,
+        "since_last_foreground_completion_ns": 323980,
+        "unfinished": 0,
+        "wan_bytes": 7232,
+        "wire_bytes": 7232,
+        "worker_ns": 1109560
+      },
+      "record": "43e3a6a4c5d674858704d548421f6c6715eefe7c470af1a688afe9e7f69126c3",
+      "seed": 1
+    }
+  ],
+  "source": {
+    "kind": "synthetic-model-campaign",
+    "sources": {
+      "campaigns.py": "30904ccb474b16367900de27d9c34988b5de18c2a72a6f8fc932be98d07036e0",
+      "dataflow_scenario.py": "54bf2cde70db8011fc205ba677a833abfadeb601a5fe5e2e11ae83c1f1171ab6",
+      "flow_campaign.py": "fd65755be9368fcf05bda187afe19a915e4c05a7957763c1b8f551b9e1c6f672",
+      "kernel.py": "d09ad69eb3e7001d72e1d4a88a42535ac45fd89fee517006f03ad2bb80a40ac2",
+      "sim.py": "637609957668efd3b1439215e5820a51cb4e5510d4c688862bf3ed50f43df71e"
+    }
+  },
+  "validation": [
+    {
+      "feasible": false,
+      "strategy": {
+        "enhance": false,
+        "period_ns": 800,
+        "placement": "source",
+        "retry_ns": 80000,
+        "window": 2
+      }
+    },
+    {
+      "feasible": true,
+      "strategy": {
+        "enhance": true,
+        "period_ns": 800,
+        "placement": "source",
+        "retry_ns": 80000,
+        "window": 2
+      }
+    },
+    {
+      "feasible": false,
+      "strategy": {
+        "enhance": false,
+        "period_ns": 800,
+        "placement": "destination",
+        "retry_ns": 80000,
+        "window": 2
+      }
+    },
+    {
+      "feasible": true,
+      "strategy": {
+        "enhance": true,
+        "period_ns": 800,
+        "placement": "destination",
+        "retry_ns": 80000,
+        "window": 2
+      }
+    },
+    {
+      "feasible": false,
+      "strategy": {
+        "enhance": false,
+        "period_ns": 800,
+        "placement": "consumer",
+        "retry_ns": 80000,
+        "window": 2
+      }
+    },
+    {
+      "feasible": false,
+      "strategy": {
+        "enhance": true,
+        "period_ns": 800,
+        "placement": "consumer",
+        "retry_ns": 80000,
+        "window": 2
+      }
+    },
+    {
+      "feasible": true,
+      "strategy": {
+        "enhance": true,
+        "period_ns": 800,
+        "placement": "source",
+        "retry_ns": 80000,
+        "window": 4
+      }
+    },
+    {
+      "feasible": true,
+      "strategy": {
+        "enhance": true,
+        "period_ns": 800,
+        "placement": "destination",
+        "retry_ns": 80000,
+        "window": 4
+      }
+    },
+    {
+      "feasible": true,
+      "strategy": {
+        "enhance": true,
+        "period_ns": 800,
+        "placement": "destination",
+        "retry_ns": 40000,
+        "window": 2
+      }
+    },
+    {
+      "feasible": true,
+      "strategy": {
+        "enhance": true,
+        "period_ns": 800,
+        "placement": "destination",
+        "retry_ns": 160000,
+        "window": 2
+      }
+    },
+    {
+      "feasible": true,
+      "strategy": {
+        "enhance": true,
+        "period_ns": 800,
+        "placement": "source",
+        "retry_ns": 40000,
+        "window": 4
+      }
+    },
+    {
+      "feasible": true,
+      "strategy": {
+        "enhance": true,
+        "period_ns": 800,
+        "placement": "source",
+        "retry_ns": 160000,
+        "window": 4
+      }
+    },
+    {
+      "feasible": true,
+      "strategy": {
+        "enhance": true,
+        "period_ns": 800,
+        "placement": "destination",
+        "retry_ns": 40000,
+        "window": 4
+      }
+    },
+    {
+      "feasible": true,
+      "strategy": {
+        "enhance": true,
+        "period_ns": 800,
+        "placement": "destination",
+        "retry_ns": 160000,
+        "window": 4
+      }
+    }
+  ]
+}

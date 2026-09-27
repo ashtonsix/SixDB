@@ -1,0 +1,336 @@
+{
+  "candidate": "preparation-to-consumption median = intercept + slope * payload bytes",
+  "disposition": "rejected as a general same-host transport model",
+  "coefficients": {
+    "intercept_ns": 171.0,
+    "ns_per_byte": 0.05305631868131868,
+    "usage": "diagnostic fit only; do not install as simulator constants"
+  },
+  "training": [
+    {
+      "name": "spin-steady-b1",
+      "bytes": 64,
+      "batch_cap": 1,
+      "policy": "spin",
+      "offered": 60000,
+      "completed": 60000,
+      "refused": 0,
+      "unfinished": 0,
+      "prepare_to_done_p50_ns": {
+        "median": 170.0,
+        "minimum": 160.0,
+        "maximum": 170.0
+      },
+      "offer_to_done_p50_ns": {
+        "median": 243.0,
+        "minimum": 235.0,
+        "maximum": 243.0
+      },
+      "consumer_cpu_ns": {
+        "median": 199980327.0,
+        "minimum": 199807517.0,
+        "maximum": 199981797.0
+      },
+      "offer_window_ns": 200000000,
+      "mean_publication_items": {
+        "median": 1.0,
+        "minimum": 1.0,
+        "maximum": 1.0
+      },
+      "scalar_prediction_ns": 174.3956043956044,
+      "measured_to_prediction": 0.974795211090107,
+      "absolute_relative_error": 0.025856496444731814
+    },
+    {
+      "name": "payload1024-steady-b1",
+      "bytes": 1024,
+      "batch_cap": 1,
+      "policy": "spin",
+      "offered": 60000,
+      "completed": 60000,
+      "refused": 0,
+      "unfinished": 0,
+      "prepare_to_done_p50_ns": {
+        "median": 230.0,
+        "minimum": 220.0,
+        "maximum": 230.0
+      },
+      "offer_to_done_p50_ns": {
+        "median": 300.0,
+        "minimum": 295.0,
+        "maximum": 305.0
+      },
+      "consumer_cpu_ns": {
+        "median": 199975977.0,
+        "minimum": 199939697.0,
+        "maximum": 199981977.0
+      },
+      "offer_window_ns": 200000000,
+      "mean_publication_items": {
+        "median": 1.0,
+        "minimum": 1.0,
+        "maximum": 1.0
+      },
+      "scalar_prediction_ns": 225.32967032967034,
+      "measured_to_prediction": 1.0207266520360887,
+      "absolute_relative_error": 0.020305781175346368
+    },
+    {
+      "name": "payload16384-steady-b1",
+      "bytes": 16384,
+      "batch_cap": 1,
+      "policy": "spin",
+      "offered": 60000,
+      "completed": 60000,
+      "refused": 0,
+      "unfinished": 0,
+      "prepare_to_done_p50_ns": {
+        "median": 1040.0,
+        "minimum": 1000.0,
+        "maximum": 1040.0
+      },
+      "offer_to_done_p50_ns": {
+        "median": 1112.0,
+        "minimum": 1073.0,
+        "maximum": 1113.0
+      },
+      "consumer_cpu_ns": {
+        "median": 199981916.0,
+        "minimum": 199972447.0,
+        "maximum": 199983277.0
+      },
+      "offer_window_ns": 200000000,
+      "mean_publication_items": {
+        "median": 1.0,
+        "minimum": 1.0,
+        "maximum": 1.0
+      },
+      "scalar_prediction_ns": 1040.2747252747254,
+      "measured_to_prediction": 0.9997359108435007,
+      "absolute_relative_error": 0.00026415891800516317
+    }
+  ],
+  "heldout": [
+    {
+      "name": "spin-sparse-b1",
+      "bytes": 64,
+      "batch_cap": 1,
+      "policy": "spin",
+      "offered": 600,
+      "completed": 600,
+      "refused": 0,
+      "unfinished": 0,
+      "prepare_to_done_p50_ns": {
+        "median": 180.0,
+        "minimum": 170.0,
+        "maximum": 200.0
+      },
+      "offer_to_done_p50_ns": {
+        "median": 5327.0,
+        "minimum": 5322.0,
+        "maximum": 5333.0
+      },
+      "consumer_cpu_ns": {
+        "median": 198998987.0,
+        "minimum": 198992157.0,
+        "maximum": 198999127.0
+      },
+      "offer_window_ns": 200000000,
+      "mean_publication_items": {
+        "median": 1.0,
+        "minimum": 1.0,
+        "maximum": 1.0
+      },
+      "scalar_prediction_ns": 174.3956043956044,
+      "measured_to_prediction": 1.0321361058601133,
+      "absolute_relative_error": 0.031135531135531063
+    },
+    {
+      "name": "spin-burst-b1",
+      "bytes": 64,
+      "batch_cap": 1,
+      "policy": "spin",
+      "offered": 600000,
+      "completed": 599968,
+      "refused": 32,
+      "unfinished": 0,
+      "prepare_to_done_p50_ns": {
+        "median": 170.0,
+        "minimum": 170.0,
+        "maximum": 170.0
+      },
+      "offer_to_done_p50_ns": {
+        "median": 2762.0,
+        "minimum": 2749.0,
+        "maximum": 2772.0
+      },
+      "consumer_cpu_ns": {
+        "median": 199954516.0,
+        "minimum": 199684366.0,
+        "maximum": 199966227.0
+      },
+      "offer_window_ns": 200000000,
+      "mean_publication_items": {
+        "median": 1.0,
+        "minimum": 1.0,
+        "maximum": 1.0
+      },
+      "scalar_prediction_ns": 174.3956043956044,
+      "measured_to_prediction": 0.974795211090107,
+      "absolute_relative_error": 0.025856496444731814
+    },
+    {
+      "name": "spin-burst-b32",
+      "bytes": 64,
+      "batch_cap": 32,
+      "policy": "spin",
+      "offered": 600000,
+      "completed": 600000,
+      "refused": 0,
+      "unfinished": 0,
+      "prepare_to_done_p50_ns": {
+        "median": 1260.0,
+        "minimum": 1260.0,
+        "maximum": 1260.0
+      },
+      "offer_to_done_p50_ns": {
+        "median": 1705.0,
+        "minimum": 1704.0,
+        "maximum": 1707.0
+      },
+      "consumer_cpu_ns": {
+        "median": 199970417.0,
+        "minimum": 199851327.0,
+        "maximum": 199971517.0
+      },
+      "offer_window_ns": 200000000,
+      "mean_publication_items": {
+        "median": 32.0,
+        "minimum": 32.0,
+        "maximum": 32.0
+      },
+      "scalar_prediction_ns": 174.3956043956044,
+      "measured_to_prediction": 7.224952741020793,
+      "absolute_relative_error": 0.8615907901622188
+    },
+    {
+      "name": "wait-sparse-b1",
+      "bytes": 64,
+      "batch_cap": 1,
+      "policy": "wait",
+      "offered": 600,
+      "completed": 600,
+      "refused": 0,
+      "unfinished": 0,
+      "prepare_to_done_p50_ns": {
+        "median": 5840.0,
+        "minimum": 5840.0,
+        "maximum": 5880.0
+      },
+      "offer_to_done_p50_ns": {
+        "median": 10670.0,
+        "minimum": 10630.0,
+        "maximum": 11006.0
+      },
+      "consumer_cpu_ns": {
+        "median": 633031.0,
+        "minimum": 622110.0,
+        "maximum": 637180.0
+      },
+      "offer_window_ns": 200000000,
+      "mean_publication_items": {
+        "median": 1.0,
+        "minimum": 1.0,
+        "maximum": 1.0
+      },
+      "scalar_prediction_ns": 174.3956043956044,
+      "measured_to_prediction": 33.48708254568368,
+      "absolute_relative_error": 0.9701377389733554
+    },
+    {
+      "name": "payload1024-burst-b32",
+      "bytes": 1024,
+      "batch_cap": 32,
+      "policy": "spin",
+      "offered": 600000,
+      "completed": 600000,
+      "refused": 0,
+      "unfinished": 0,
+      "prepare_to_done_p50_ns": {
+        "median": 1920.0,
+        "minimum": 1890.0,
+        "maximum": 1940.0
+      },
+      "offer_to_done_p50_ns": {
+        "median": 2754.0,
+        "minimum": 2728.0,
+        "maximum": 2780.0
+      },
+      "consumer_cpu_ns": {
+        "median": 199954377.0,
+        "minimum": 199949557.0,
+        "maximum": 199961597.0
+      },
+      "offer_window_ns": 200000000,
+      "mean_publication_items": {
+        "median": 32.0,
+        "minimum": 32.0,
+        "maximum": 32.0
+      },
+      "scalar_prediction_ns": 225.32967032967034,
+      "measured_to_prediction": 8.520848573518654,
+      "absolute_relative_error": 0.8826407967032968
+    },
+    {
+      "name": "payload16384-burst-b32",
+      "bytes": 16384,
+      "batch_cap": 32,
+      "policy": "spin",
+      "offered": 600000,
+      "completed": 600000,
+      "refused": 0,
+      "unfinished": 0,
+      "prepare_to_done_p50_ns": {
+        "median": 15130.0,
+        "minimum": 14910.0,
+        "maximum": 15150.0
+      },
+      "offer_to_done_p50_ns": {
+        "median": 23098.0,
+        "minimum": 22714.0,
+        "maximum": 23100.0
+      },
+      "consumer_cpu_ns": {
+        "median": 199987257.0,
+        "minimum": 199982157.0,
+        "maximum": 199987706.0
+      },
+      "offer_window_ns": 200000000,
+      "mean_publication_items": {
+        "median": 32.0,
+        "minimum": 32.0,
+        "maximum": 32.0
+      },
+      "scalar_prediction_ns": 1040.2747252747254,
+      "measured_to_prediction": 14.54423493371362,
+      "absolute_relative_error": 0.9312442349454908
+    }
+  ],
+  "same_size_repeat_range_intersection_ns": [
+    5840.0,
+    170.0
+  ],
+  "independent_native_totals": {
+    "offered": 63873600,
+    "completed": 61780606,
+    "refused": 2092994,
+    "unfinished": 0,
+    "errors": 0
+  },
+  "sources": {
+    "orbital-local-handoff/evidence/20260927-main/summary.csv": "1090bc3771a1667886dd17b50ef36cd0f467147241c605762866105212faa778",
+    "orbital-local-handoff/evidence/20260927-confirmation/summary.csv": "ac0fdb16e7aaacd132b5c2df0e84da37ec3edc82221d93ee6267452b2d4345a2"
+  },
+  "analysis_source_sha256": "822cacf7501dd8a9a10cdb581f98a1b0b1ce99c6e1faff1fae921316e01075a0",
+  "interpretation": "Native conditional quantiles, repeat ranges and offered cohorts remain separate. This does not identify active service, polling occupancy, wakeup cost or instrumentation-free capacity."
+}
