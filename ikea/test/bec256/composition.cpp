@@ -6,6 +6,8 @@
 #include <cstdio>
 #include <random>
 #include <cstring>
+#include <sys/mman.h>
+#include <unistd.h>
 
 namespace bc = ikea::bec256;
 #if defined(IKEA_BEC256_AVX512) || defined(__aarch64__)
@@ -15,7 +17,7 @@ struct context {
     std::array<bc::byte, 64> mask, output;
     unsigned calls = 0;
 };
-chain::result read(void *p, std::size_t, std::uint64_t active, bc::pipeline_bits, unsigned) {
+chain::result read_stage(void *p, std::size_t, std::uint64_t active, bc::pipeline_bits, unsigned) {
     auto &c = *static_cast<context *>(p);
     if (!active)
         return {{}, 0, true};
@@ -34,14 +36,89 @@ void done(void *p, std::size_t, std::uint64_t active, bc::pipeline_bits v) {
     if (active)
         bc::native::store_pair(c.output.data(), v.get());
 }
+
+// Native paired reads must respect each source independently, including empty
+// bodies at inaccessible addresses. Ordinary single reads can shortcut those
+// populations and therefore do not establish this property for native pairs.
+void guarded_pairs(const chain &pipeline) {
+    const auto page = static_cast<std::size_t>(sysconf(_SC_PAGESIZE));
+    auto allocate = [&] {
+        auto *p = static_cast<bc::byte *>(
+            mmap(nullptr, 3 * page, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
+        assert(p != MAP_FAILED && mprotect(p + page, page, PROT_READ | PROT_WRITE) == 0);
+        return p;
+    };
+    auto *left = allocate(), *right = allocate();
+    auto verify = [&](const bc::plain_block &a, const bc::plain_block &b) {
+        std::array<bc::byte, 64> ea{}, eb{}, expected{}, actual{};
+        const unsigned na = bec_reference::encode(a.data(), ea.data()),
+                       nb = bec_reference::encode(b.data(), eb.data());
+        const unsigned pa = bec_reference::population(a.data()),
+                       pb = bec_reference::population(b.data());
+        std::copy(a.begin(), a.end(), expected.begin());
+        std::copy(b.begin(), b.end(), expected.begin() + 32);
+        for (bool end_a : {false, true})
+            for (bool end_b : {false, true}) {
+                auto *ap = left + (end_a ? 2 * page - na : page);
+                auto *bp = right + (end_b ? 2 * page - nb : page);
+                std::copy_n(ea.data(), na, ap);
+                std::copy_n(eb.data(), nb, bp);
+                auto sa = bc::source::admit({ap, na}, na, pa);
+                auto sb = bc::source::admit({bp, nb}, nb, pb);
+                assert(sa && sb);
+                bc::native::store_pair(actual.data(), bc::native::read_pair(*sa, *sb));
+                assert(actual == expected);
+                bc::decode_pair(*sa, *sb, actual);
+                assert(actual == expected);
+                context c{&*sa, &*sb, {}, {}};
+                c.mask.fill(bc::byte{255});
+                pipeline.run(&c, 0, 3, {});
+                assert(c.output == expected && c.calls == 2);
+                if (!na) {
+                    auto empty = bc::source::admit({}, 0, pa);
+                    assert(empty);
+                    bc::native::store_pair(actual.data(), bc::native::read_pair(*empty, *sb));
+                    assert(actual == expected);
+                }
+                if (!nb) {
+                    auto empty = bc::source::admit({}, 0, pb);
+                    assert(empty);
+                    bc::native::store_pair(actual.data(), bc::native::read_pair(*sa, *empty));
+                    assert(actual == expected);
+                }
+            }
+    };
+    bc::plain_block empty{}, full{}, maximum{};
+    full.fill(bc::byte{255});
+    maximum.fill(bc::byte{15});
+    std::array<bc::byte, 64> encoded{};
+    assert(bec_reference::encode(maximum.data(), encoded.data()) == 47);
+    std::mt19937_64 rng(0xbec25a);
+    for (unsigned population = 0; population <= 256; ++population) {
+        bc::plain_block value{};
+        std::array<unsigned, 256> bits{};
+        for (unsigned i = 0; i < bits.size(); ++i)
+            bits[i] = i;
+        std::shuffle(bits.begin(), bits.end(), rng);
+        for (unsigned i = 0; i < population; ++i)
+            value[bits[i] / 8] |= bc::byte(1u << (bits[i] % 8));
+        for (const auto &other : {empty, full, maximum}) {
+            verify(value, other);
+            verify(other, value);
+        }
+    }
+    verify(maximum, maximum);
+    assert(munmap(left, 3 * page) == 0 && munmap(right, 3 * page) == 0);
+}
 #endif
 int main() {
     std::mt19937_64 rng(0xbec2512);
 #if defined(IKEA_BEC256_AVX512) || defined(__aarch64__)
     auto pipeline =
-        chain::prepare(std::array<chain::function, 2>{chain::stage<read>, chain::stage<filter>},
+        chain::prepare(std::array<chain::function, 2>{chain::stage<read_stage>, chain::stage<filter>},
                        chain::completion<done>);
     assert(pipeline);
+    guarded_pairs(*pipeline);
     context stopped{nullptr, nullptr, {}, {}};
     stopped.output.fill(bc::byte{0xa5});
     pipeline->run(&stopped, 0, 0, {});
@@ -82,7 +159,7 @@ int main() {
             context c{&*sa, &*sb, {}, {}};
             for (auto &v : c.mask)
                 v = bc::byte(rng());
-            auto inline_value = filter(&c, 0, 3, read(&c, 0, 3, {}, 0).values, 1).values;
+            auto inline_value = filter(&c, 0, 3, read_stage(&c, 0, 3, {}, 0).values, 1).values;
             std::array<bc::byte, 64> expected;
             bc::native::store_pair(expected.data(), inline_value.get());
             pipeline->run(&c, 0, 3, {});
@@ -120,7 +197,7 @@ int main() {
     }
 #if defined(IKEA_BEC256_AVX512) || defined(__aarch64__)
     std::puts("Bec256 composition: 2048 dense/scattered pairs, native encoding and inline/CPS "
-              "equivalence passed");
+              "equivalence, independently guarded exact pairs passed");
 #else
     std::puts("Bec256 composition: 2048 dense/scattered ordinary pairs passed; "
               "native/CPS sections unavailable in this profile");

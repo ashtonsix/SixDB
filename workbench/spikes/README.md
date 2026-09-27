@@ -15,6 +15,7 @@ Loose thoughts can stay in the [notebook](../notebook/ideas.md) indefinitely.
 - [Layout analyser](layout-analyser/README.md): workload objectives, plane splitting, hardware fitting and reusable layout selection.
 - [Tuple layout](tuple-layout/README.md): physical layout, bound operations and native batching.
 - [Bec256 with current Ikea](bec256-composition/README.md): exact codec operations, native pairs and larger-bitset population/length directories built with SeriesPack and TuplePack.
+- [Ikea on Neoverse V3](ikea-neoverse-v3/README.md): C8g/C9g comparisons, compiler scheduling, lookup and exact-span experiments.
 - [Executable placement](executable-placement/README.md): distinguishing changed code from placement effects.
 - [Memory characterisation](memory-characterisation/README.md): automatic MLP, prefetch, cache sharing and host diagnostics.
 - [CFT commit latency](cft-commit-latency/README.md): directional network measurement and host/flow selection; durable quorum latency, storage throughput cliffs and live log preparation.

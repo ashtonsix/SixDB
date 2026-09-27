@@ -32,7 +32,7 @@ run scripts on EC2.
 
 Floating-point settings disable fast-math and implicit contraction.
 `SIXDB_MARCH` selects the ISA; `SIXDB_TUNE` independently selects `generic`,
-`granite-rapids`, `zen5`, or `neoverse-v2`. See [tuning flags](workbench/design/tuning.md)
+`granite-rapids`, `zen5`, `neoverse-v2`, or `neoverse-v3`. See [tuning flags](workbench/design/tuning.md)
 for compiler options and source-level flags. [Build conventions](workbench/design/conventions.md)
 cover other settings and remaining decisions.
 

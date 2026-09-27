@@ -384,6 +384,17 @@ template <unsigned Rows, class Address>
 #endif
     scatter_grain<Rows>(p, address, active, value);
 }
+// Packet fallbacks consume only 16/32 decoded bytes. Retain per-part dispatch
+// so their callers can eliminate unused outputs without full-packet branching.
+[[gnu::always_inline]] inline packet point_read(const detail::read64 &p, const byte *row) {
+#if defined(__aarch64__)
+    return native::transform<false>(
+        join(load_chunk<0>(p, row), load_chunk<1>(p, row),
+             load_chunk<2>(p, row), load_chunk<3>(p, row)), p.operation);
+#else
+    return native::read_body(p, row);
+#endif
+}
 [[gnu::always_inline]] inline void point_write(const detail::packet_write &p, byte *row,
                                                packet input) {
     store_selected(row, encode(p, row, input), p.writes);
@@ -401,9 +412,9 @@ template <unsigned Rows, class Address>
                                             p.tight_route);
     if constexpr (Rows == 2) {
         if (!p.place.contiguous && p.place.count > 8) {
-            auto a = active & 1 ? native::read_body(p.point, address(0))
+            auto a = active & 1 ? point_read(p.point, address(0))
                                 : join(zero16(), zero16(), zero16(), zero16());
-            auto b = active & 2 ? native::read_body(p.point, address(1))
+            auto b = active & 2 ? point_read(p.point, address(1))
                                 : join(zero16(), zero16(), zero16(), zero16());
             const auto value = join(split<0>(a), split<1>(a), split<0>(b), split<1>(b));
             return p.ordering.row_major() ? value : native::transform<false>(value, p.route);
@@ -413,7 +424,7 @@ template <unsigned Rows, class Address>
         if (!p.place.contiguous && p.place.count > 8) {
             auto part = [&](unsigned row) __attribute__((always_inline)) {
                 return active & (std::uint64_t(1) << row)
-                           ? split<0>(native::read_body(p.point, address(row)))
+                           ? split<0>(point_read(p.point, address(row)))
                            : zero16();
             };
             const auto value = join(part(0), part(1), part(2), part(3));

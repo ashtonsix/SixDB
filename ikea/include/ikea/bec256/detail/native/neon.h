@@ -182,17 +182,8 @@ inline __attribute__((always_inline)) uint8x16_t ranks16(uint8x16x4_t body, uint
         half(vget_low_u8(low), vget_low_u8(high), vget_low_u8(shift), vget_low_u8(widths)),
         half(vget_high_u8(low), vget_high_u8(high), vget_high_u8(shift), vget_high_u8(widths)));
 }
-inline __attribute__((always_inline)) Bits256 decode(const std::uint8_t *readable64,
-                                                     unsigned population, unsigned &used_bits) {
-    auto body = vld1q_u8_x4(readable64);
-    unsigned n = std::bit_width(std::min(population, 256 - population));
-    unsigned left = (readable64[0] & ((1u << n) - 1)) + (population > 128 ? population - 128 : 0);
-    unsigned pos = n;
-    auto p2 = vsetq_lane_u16(left, vdupq_n_u16(0), 0);
-    p2 = vsetq_lane_u16(population - left, p2, 1);
-    auto p4 = split<64>(body, p2, pos).val[0];
-    auto p8 = split<32>(body, p4, pos).val[0];
-    auto p16 = split<16>(body, p8, pos);
+inline __attribute__((always_inline)) Bits256 decode_leaves(uint8x16x4_t body, uint16x8x2_t p16,
+                                                            unsigned pos, unsigned &used_bits) {
     auto first = split<8>(body, p16.val[0], pos);
     auto second = split<8>(body, p16.val[1], pos);
     auto b0 = vcombine_u8(vmovn_u16(first.val[0]), vmovn_u16(first.val[1]));
@@ -211,4 +202,47 @@ inline __attribute__((always_inline)) Bits256 decode(const std::uint8_t *readabl
     return {{lookup256(::ikea::bec256::detail::codes.value.data(), s0),
              lookup256(::ikea::bec256::detail::codes.value.data(), s1)}};
 }
+inline __attribute__((always_inline)) Bits256 decode(const std::uint8_t *readable64,
+                                                     unsigned population, unsigned &used_bits) {
+    auto body = vld1q_u8_x4(readable64);
+    unsigned n = std::bit_width(std::min(population, 256 - population));
+    unsigned left = (readable64[0] & ((1u << n) - 1)) + (population > 128 ? population - 128 : 0);
+    unsigned pos = n;
+    auto p2 = vsetq_lane_u16(left, vdupq_n_u16(0), 0);
+    p2 = vsetq_lane_u16(population - left, p2, 1);
+    auto p4 = split<64>(body, p2, pos).val[0];
+    auto p8 = split<32>(body, p4, pos).val[0];
+    auto p16 = split<16>(body, p8, pos);
+    return decode_leaves(body, p16, pos, used_bits);
+}
+
+#if SIXDB_TUNE_NEOVERSE_V2
+inline __attribute__((always_inline)) uint8x16x4_t decode2(const std::uint8_t *a, unsigned population_a,
+                                                          const std::uint8_t *b, unsigned population_b) {
+    const auto body_a = vld1q_u8_x4(a), body_b = vld1q_u8_x4(b);
+    auto root = [](unsigned first, unsigned population, unsigned &pos) {
+        pos = std::bit_width(std::min(population, 256 - population));
+        const unsigned left = (first & ((1u << pos) - 1)) + (population > 128 ? population - 128 : 0);
+        auto p = vsetq_lane_u16(left, vdupq_n_u16(0), 0);
+        return vsetq_lane_u16(population - left, p, 1);
+    };
+    unsigned pos_a, pos_b;
+    auto a2 = root(a[0], population_a, pos_a), b2 = root(b[0], population_b, pos_b);
+    auto a4 = split<64>(body_a, a2, pos_a).val[0];
+    auto b4 = split<64>(body_b, b2, pos_b).val[0];
+    // Clang 21's V2 cost model serializes the independent trees without these
+    // joint register dependencies. No instruction or memory barrier is emitted.
+    // V3 scheduling already interleaves them and does not benefit from constraints.
+    asm("" : "+w"(a4), "+w"(b4));
+    auto a8 = split<32>(body_a, a4, pos_a).val[0];
+    auto b8 = split<32>(body_b, b4, pos_b).val[0];
+    asm("" : "+w"(a8), "+w"(b8));
+    auto a16 = split<16>(body_a, a8, pos_a), b16 = split<16>(body_b, b8, pos_b);
+    asm("" : "+w"(a16.val[0]), "+w"(a16.val[1]), "+w"(b16.val[0]), "+w"(b16.val[1]));
+    unsigned used_a, used_b;
+    const auto first = decode_leaves(body_a, a16, pos_a, used_a);
+    const auto second = decode_leaves(body_b, b16, pos_b, used_b);
+    return {{first.val[0], first.val[1], second.val[0], second.val[1]}};
+}
+#endif
 } // namespace ikea::bec256::detail::neon

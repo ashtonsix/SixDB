@@ -24,6 +24,40 @@ template <unsigned I>
         value = vandq_u8(value, vld1q_u8(p.mask.data() + 16 * I));
     return value;
 }
+// Full one-row reads use one table width for all four output parts. Dispatch
+// once here; packet gathers and writes retain their independent controls.
+template <unsigned I, unsigned Registers>
+[[gnu::always_inline]] inline vector16 read_part(native_packet source, const detail::shuffle& p) {
+    const auto index = vld1q_u8(p.index.data() + 16 * I);
+    uint8x16_t value;
+    if constexpr (Registers == 1)
+        value = vqtbl1q_u8(source.a, index);
+    else if constexpr (Registers == 2)
+        value = vqtbl2q_u8({{source.a, source.b}}, index);
+    else if constexpr (Registers == 3)
+        value = vqtbl3q_u8({{source.a, source.b, source.c}}, index);
+    else
+        value = vqtbl4q_u8({{source.a, source.b, source.c, source.d}}, index);
+    if (p.shifting)
+        value = vshlq_u8(value, vld1q_s8(p.shift.data() + 16 * I));
+    if (p.masking)
+        value = vandq_u8(value, vld1q_u8(p.mask.data() + 16 * I));
+    return value;
+}
+[[gnu::always_inline]] inline native_packet apply_read(native_packet source,
+                                                       const detail::shuffle& p) {
+    auto parts = [&]<unsigned Registers>() -> native_packet {
+        return {read_part<0, Registers>(source, p), read_part<1, Registers>(source, p),
+                read_part<2, Registers>(source, p), read_part<3, Registers>(source, p)};
+    };
+    if (p.routes <= 1)
+        return parts.template operator()<1>();
+    if (p.routes <= 3)
+        return parts.template operator()<2>();
+    if (p.routes <= 7)
+        return parts.template operator()<3>();
+    return parts.template operator()<4>();
+}
 #endif
 #if defined(__AVX2__) && !defined(__AVX512VBMI__)
 template <unsigned I, bool Left>

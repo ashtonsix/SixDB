@@ -16,8 +16,9 @@ Two independent build settings apply to first-party targets:
 | `granite-rapids` | `-mtune=graniterapids` | `SIXDB_TUNE_GRANITE_RAPIDS` |
 | `zen5` | `-mtune=znver5` | `SIXDB_TUNE_ZEN5` |
 | `neoverse-v2` | `-mtune=neoverse-v2` | `SIXDB_TUNE_NEOVERSE_V2` |
+| `neoverse-v3` | `-mtune=neoverse-v3` | `SIXDB_TUNE_NEOVERSE_V3` |
 
-All four flags are defined as `0` or `1`; exactly one is `1`. Use `#if` for
+All five flags are defined as `0` or `1`; exactly one is `1`. Use `#if` for
 them, not `#ifdef`. They arrive through `sixdb_target(name)` and its build-options
 dependency, with no generated header to include. Unsupported tuning choices
 for the configured compiler target fail at configuration. There is no host CPU

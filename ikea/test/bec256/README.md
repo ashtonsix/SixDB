@@ -6,7 +6,7 @@ for the change; `ikea_validate` includes these targets and the three examples.
 | Target | Behavior |
 | --- | --- |
 | `ikea_bec256_check` | Independent wire comparison, every population, singleton/complement positions, exhaustive 16-bit patterns, checked replacement and rejection, overlap, neighbour preservation and exact page-boundary access |
-| `ikea_bec256_composition_check` | Two independent bodies, native and ordinary pair reads, shared inline/CPS bodies, early completion, exact native pair writes and source/destination byte overlap |
+| `ikea_bec256_composition_check` | Two independently guarded bodies (including empty/null and maximum-length inputs), native and ordinary pair reads, shared inline/CPS bodies, early completion, exact native pair writes and source/destination byte overlap |
 | `ikea_example_bec256_{ordinary,native,integration}` | Executable caller, native composition and coordinated body/metadata examples |
 
 `reference.h` is a bit-at-a-time transcription of the fixed wire law, carried

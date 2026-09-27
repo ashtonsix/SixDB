@@ -1,0 +1,44 @@
+{
+  "neoverse-v2": {
+    "assembly_path": "build/workers/20260927T181723Z-3a3f74b9/results/neoverse-v2/kernels.asm",
+    "assembly_sha256": "f5e443cd2b9c54f6b414428a0fee704e6caf06a5494ade34c82381f3f4befec1",
+    "symbol": "v3_spike::maintained",
+    "instruction_count": 644,
+    "tbl_count": 42,
+    "first_12_tbl_instructions": [
+      "7bf0: 4e022122     \ttbl\tv2.16b, { v9.16b, v10.16b }, v2.16b",
+      "7c78: 4e102130     \ttbl\tv16.16b, { v9.16b, v10.16b }, v16.16b",
+      "7cec: 4e102130     \ttbl\tv16.16b, { v9.16b, v10.16b }, v16.16b",
+      "7d64: 4e112131     \ttbl\tv17.16b, { v9.16b, v10.16b }, v17.16b",
+      "7df0: 4e122132     \ttbl\tv18.16b, { v9.16b, v10.16b }, v18.16b",
+      "7e1c: 4e000106     \ttbl\tv6.16b, { v8.16b }, v0.16b",
+      "7e28: 4e070110     \ttbl\tv16.16b, { v8.16b }, v7.16b",
+      "7e9c: 4e136138     \ttbl\tv24.16b, { v9.16b, v10.16b, v11.16b, v12.16b }, v19.16b",
+      "7ea0: 4e116139     \ttbl\tv25.16b, { v9.16b, v10.16b, v11.16b, v12.16b }, v17.16b",
+      "7eac: 4e0d613b     \ttbl\tv27.16b, { v9.16b, v10.16b, v11.16b, v12.16b }, v13.16b",
+      "7ebc: 4e0d6129     \ttbl\tv9.16b, { v9.16b, v10.16b, v11.16b, v12.16b }, v13.16b",
+      "7f1c: 4e002140     \ttbl\tv0.16b, { v10.16b, v11.16b }, v0.16b"
+    ]
+  },
+  "neoverse-v3": {
+    "assembly_path": "build/workers/20260927T181723Z-3a3f74b9/results/neoverse-v3/kernels.asm",
+    "assembly_sha256": "02c8b3185703e747e72ccd58db491b5588219742a25f6a6a426132917eb97be3",
+    "symbol": "v3_spike::maintained",
+    "instruction_count": 640,
+    "tbl_count": 42,
+    "first_12_tbl_instructions": [
+      "7c80: 4e092209     \ttbl\tv9.16b, { v16.16b, v17.16b }, v9.16b",
+      "7c94: 4e0a228a     \ttbl\tv10.16b, { v20.16b, v21.16b }, v10.16b",
+      "7d70: 4e0a220a     \ttbl\tv10.16b, { v16.16b, v17.16b }, v10.16b",
+      "7d7c: 4e0c228c     \ttbl\tv12.16b, { v20.16b, v21.16b }, v12.16b",
+      "7e58: 4e0a220a     \ttbl\tv10.16b, { v16.16b, v17.16b }, v10.16b",
+      "7e64: 4e0c228a     \ttbl\tv10.16b, { v20.16b, v21.16b }, v12.16b",
+      "7fc4: 4e092209     \ttbl\tv9.16b, { v16.16b, v17.16b }, v9.16b",
+      "8004: 4e0e2289     \ttbl\tv9.16b, { v20.16b, v21.16b }, v14.16b",
+      "8018: 4e0f220d     \ttbl\tv13.16b, { v16.16b, v17.16b }, v15.16b",
+      "805c: 4e072287     \ttbl\tv7.16b, { v20.16b, v21.16b }, v7.16b",
+      "8074: 4e18013e     \ttbl\tv30.16b, { v9.16b }, v24.16b",
+      "8094: 4e1c013d     \ttbl\tv29.16b, { v9.16b }, v28.16b"
+    ]
+  }
+}

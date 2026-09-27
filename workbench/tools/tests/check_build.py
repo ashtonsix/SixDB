@@ -33,7 +33,7 @@ add_library(tuning_probe OBJECT probe.cpp)
 sixdb_target(tuning_probe)
 ''')
     names = ("SIXDB_TUNE_GENERIC", "SIXDB_TUNE_GRANITE_RAPIDS",
-             "SIXDB_TUNE_ZEN5", "SIXDB_TUNE_NEOVERSE_V2")
+             "SIXDB_TUNE_ZEN5", "SIXDB_TUNE_NEOVERSE_V2", "SIXDB_TUNE_NEOVERSE_V3")
     (study / "probe.cpp").write_text(
         "\n".join(f"#ifndef {name}\n#error Missing {name}\n#endif" for name in names)
         + "\nstatic_assert(" + " + ".join(names) + " == 1);\n"
@@ -64,12 +64,12 @@ sixdb_target(tuning_probe)
         defines = {parts[1]: parts[2] if len(parts) > 2 else ""
                    for line in lines if line.startswith("#define ")
                    for parts in [line.split(maxsplit=2)]}
-        expected = names[("generic", "granite-rapids", "zen5", "neoverse-v2").index(tune)]
+        expected = names[("generic", "granite-rapids", "zen5", "neoverse-v2", "neoverse-v3").index(tune)]
         require(all(defines[name] == str(int(name == expected)) for name in names),
                 f"Incorrect tuning definitions for {tune}")
         ir = run(*preprocess, "-S", "-emit-llvm", "-o", "-")
         cpu = {"generic": "generic", "granite-rapids": "graniterapids",
-               "zen5": "znver5", "neoverse-v2": "neoverse-v2"}[tune]
+               "zen5": "znver5", "neoverse-v2": "neoverse-v2", "neoverse-v3": "neoverse-v3"}[tune]
         require(f'"tune-cpu"="{cpu}"' in ir, "Compiler did not apply the requested tuning")
         return {name: value for name, value in defines.items() if name not in names}
 
@@ -83,12 +83,14 @@ sixdb_target(tuning_probe)
     require("__AVX512F__" in macros(x86, "x86-64-v4", "zen5"),
             "Explicit ISA selection did not enable AVX-512")
     baseline = macros(arm, "armv8-a", "generic")
-    require(macros(arm, "armv8-a", "neoverse-v2") == baseline,
-            "Neoverse V2 tuning changed compiler feature macros")
+    for tune in ("neoverse-v2", "neoverse-v3"):
+        require(macros(arm, "armv8-a", tune) == baseline,
+                f"{tune} tuning changed compiler feature macros")
     require("__ARM_FEATURE_SVE2" not in baseline, "Unexpected SVE2 in baseline")
     require("__ARM_FEATURE_SVE2" in macros(arm, "armv9-a", "neoverse-v2"),
             "Explicit ISA selection did not enable SVE2")
     for triple, march, tune in ((x86, "x86-64-v3", "neoverse-v2"),
+                               (x86, "x86-64-v3", "neoverse-v3"),
                                (arm, "armv8-a", "zen5")):
         _, message = configure(triple, march, tune, success=False)
         require("unsupported by the configured compiler target" in message,
