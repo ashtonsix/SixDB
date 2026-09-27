@@ -47,11 +47,12 @@ instead of maintaining a separate technical specification or task roster here.
 
 **An entry point can be narrow even when the engine is general.** Analytics and
 application teams may need distinct explanations, examples and adoption paths
-around one coherent product. Their concerns include accountable ownership,
-migration effort, support and failure containment; resistance need not imply
-job protection. Test which first workload solves a problem for a team that can
-actually choose and operate it. Consolidation and collaboration can follow
-without being prerequisites for that team's benefit.
+around one coherent product. The [Team Topologies interpretation](team-topologies.md)
+also suggests a team owning both needs within one business capability. Test
+which first workload it can adopt and operate with less cognitive load and
+waiting on other teams. Existing ownership matters; preserving technology
+silos indefinitely is not the objective. Consolidation can follow without
+being a prerequisite for that team's benefit.
 
 **Connected teams need explicit operating boundaries.** Separate landing pages,
 shards or deployments do not by themselves establish independence. The
@@ -60,7 +61,10 @@ how an overlapping writer can transmit WAN delay to otherwise local work;
 relaxing its queue rule introduces a starvation risk. Shared results also
 create [retention obligations to slow consumers](dataflow-workloads.md#f18--shared-work-and-demand-dependent-pruning).
 These are modeled or conceptual limits to investigate, not predictions of
-customer latency. Expansion should preserve the first team's useful service.
+customer latency. A pipeline may also carry schema, freshness, access and
+ownership agreements that must survive removal of its copying machinery.
+Expansion should preserve the first team's useful service and ability to
+change its own systems.
 
 **Faster work must turn into a benefit someone can capture.** Candidate benefits
 include fresher decisions, predictable application latency during analytics,
