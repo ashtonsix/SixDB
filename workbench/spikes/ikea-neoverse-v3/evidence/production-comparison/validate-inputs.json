@@ -1,0 +1,5897 @@
+{
+  "receipt": "build/ikea-neoverse-v3/final-validation-group/group.json",
+  "retained_receipt": "validate-receipt.json",
+  "receipt_sha256": "b5dfa5df057b69e13e5e2e7f08611913ebf70597050862f01ca93cb5e591b492",
+  "analysis_sha256": "04170c9c8a0855a2219c543be6e6fc2d43d01a26c52f5308aa06497a949318d9",
+  "selection": "All iteration rows in the named inputs; per-case median CPU ns. Trials remain separate; suite summaries are unweighted descriptions.",
+  "inputs": {
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/stock/maintained-1.json": {
+      "sha256": "2605ab793abaa42dd2a7f62a641e690c55a7e01ad7fedb2145bb21584e765435",
+      "context": {
+        "date": "2026-09-27T19:31:28+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/stock/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.66016,
+          1.55029,
+          1.18359
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/promoted/maintained-1.json": {
+      "sha256": "c8a67d9abb7e672b598c6dc4a2d685ddf8b4dbf3a78c564e1e4adac0ec601c77",
+      "context": {
+        "date": "2026-09-27T19:32:47+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/promoted/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.18604,
+          1.4248,
+          1.16797
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/stock/maintained-2.json": {
+      "sha256": "885913f3c846a345a9b46ccd05020076d4e115ee707e3a89b97c79819782a126",
+      "context": {
+        "date": "2026-09-27T19:40:37+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/stock/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.0835,
+          1.08643
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/promoted/maintained-2.json": {
+      "sha256": "8dd6859fb9abecb4151213ab6816e95b2d1fb89b64b2b207ba551d1c2e4f1038",
+      "context": {
+        "date": "2026-09-27T19:39:19+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/promoted/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.00098,
+          1.11133,
+          1.09668
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/stock/maintained-3.json": {
+      "sha256": "8d351e1e54bad0b0be782f7d2883b0afc32951df0c34b894aee768dfd83d1f71",
+      "context": {
+        "date": "2026-09-27T19:41:57+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/stock/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.06006,
+          1.07861
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/promoted/maintained-3.json": {
+      "sha256": "083e14cb0ac29f76b89c031986f2ea7b0c910b4d0c133bafe57b93cbdb486212",
+      "context": {
+        "date": "2026-09-27T19:43:16+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/promoted/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.04395,
+          1.0708
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/stock/maintained-4.json": {
+      "sha256": "c01ebb0a57de89491053c88a75cdf6c635ef0a7acbad139fa3466a29fb0a3c6c",
+      "context": {
+        "date": "2026-09-27T19:51:06+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/stock/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1.0249
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/promoted/maintained-4.json": {
+      "sha256": "675e3ce1ce6651541c88a3ed234e5953749608ba87e8bb0e42705bf602d1ff9a",
+      "context": {
+        "date": "2026-09-27T19:49:48+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/promoted/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1.03223
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/stock/maintained-1.json": {
+      "sha256": "5193eaa2ee8557a91f2830659cc07ae9749ce9c80ab5bdef589d93f05322198f",
+      "context": {
+        "date": "2026-09-27T19:29:36+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/stock/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.7666,
+          1.33252,
+          0.95459
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/promoted/maintained-1.json": {
+      "sha256": "7c6f389ca204dd5bf20bdd1e96d1c3779bce9e030e0068d3f75c934787ace19c",
+      "context": {
+        "date": "2026-09-27T19:30:55+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/promoted/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.19971,
+          1.25146,
+          0.962402
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/stock/maintained-2.json": {
+      "sha256": "6b2875bff2658c4344be295b0d82ef8d841640dbe2090bac37ef31d94aa80e08",
+      "context": {
+        "date": "2026-09-27T19:38:45+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/stock/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.0415,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/promoted/maintained-2.json": {
+      "sha256": "cffeec70abaade1c9c18fffd27f201dba15ee19d9c40aac6414988fc9cc81a46",
+      "context": {
+        "date": "2026-09-27T19:37:27+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/promoted/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.05615,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/stock/maintained-3.json": {
+      "sha256": "0ed773ecf244243ab831d375f854421f62b3f38bce27a1c8c9bfa07be8e7a844",
+      "context": {
+        "date": "2026-09-27T19:40:04+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/stock/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.02734,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/promoted/maintained-3.json": {
+      "sha256": "594430ec0f3c762134422f9a27e7cd49fb4f6e9b9c4ffe6fe78816367b302fc3",
+      "context": {
+        "date": "2026-09-27T19:41:23+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/promoted/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.01953,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/stock/maintained-4.json": {
+      "sha256": "ca24c4b75cb9c1116689b21c1b284d5d5ed0fd90d9b18d6d0e8832f030652a88",
+      "context": {
+        "date": "2026-09-27T19:49:13+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/stock/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/promoted/maintained-4.json": {
+      "sha256": "e90d2dddaff229dead5fb9f659d5a0b90c1c6b848cfbfd05419de3d2c4c8ce6a",
+      "context": {
+        "date": "2026-09-27T19:47:55+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/promoted/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/stock/shapes-1.json": {
+      "sha256": "f2232538fb0417b2cb52876b8743d8a2a55787aa9241b98c58d232860e8d6cb6",
+      "context": {
+        "date": "2026-09-27T19:31:46+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/stock/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.51318,
+          1.52246,
+          1.17969
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/promoted/shapes-1.json": {
+      "sha256": "85cab5a0d8b6d9d444e2bef8cd8e72153ddb9314272bc3d89475c64f48e82c75",
+      "context": {
+        "date": "2026-09-27T19:33:05+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/promoted/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.13232,
+          1.39648,
+          1.16406
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/stock/shapes-2.json": {
+      "sha256": "ff24816f2f16ad805d0b26261589c54afa6cc9baa053335abe30f5480dba430b",
+      "context": {
+        "date": "2026-09-27T19:40:56+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/stock/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.07764,
+          1.08447
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/promoted/shapes-2.json": {
+      "sha256": "f57ac22faf202573ee15e7f3855f508a5c8b7bc758d95e3d734cf2c84547d6cb",
+      "context": {
+        "date": "2026-09-27T19:39:37+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/promoted/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.10547,
+          1.09375
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/stock/shapes-3.json": {
+      "sha256": "51c5bac84aeab05a7f5f51a05f08fb2ab4242f2a356c41c8cf9fdf6f88cffe55",
+      "context": {
+        "date": "2026-09-27T19:42:15+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/stock/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.05566,
+          1.07666
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/promoted/shapes-3.json": {
+      "sha256": "df2274f8f5af7d36aaf3add6b2df6b2e684c0ad94dd58db7e683e0767f4c0fcc",
+      "context": {
+        "date": "2026-09-27T19:43:34+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/promoted/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.04004,
+          1.06885
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/stock/shapes-4.json": {
+      "sha256": "40ffaefdc1e0446ec2c660181bd81a68adfe256d000be8db2f9069a6168d1691",
+      "context": {
+        "date": "2026-09-27T19:51:25+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/stock/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1.02295
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/promoted/shapes-4.json": {
+      "sha256": "86be8fc66e1f5af83eeeb06cd5a7d675a3b7d062ec72e0aefea903d4127ad23c",
+      "context": {
+        "date": "2026-09-27T19:50:06+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/promoted/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1.03076
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/stock/shapes-1.json": {
+      "sha256": "c049f0cf421fea15fc35013670386e2583ac7f4c4e206a6919df60d38f2e610d",
+      "context": {
+        "date": "2026-09-27T19:29:54+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/stock/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.54834,
+          1.31006,
+          0.956543
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/promoted/shapes-1.json": {
+      "sha256": "52a47e1d25af89845533bf8771789119d891b918547e8dfefbc7d1de6a9f46df",
+      "context": {
+        "date": "2026-09-27T19:31:12+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/promoted/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.14209,
+          1.23389,
+          0.964355
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/stock/shapes-2.json": {
+      "sha256": "31dc9ab85721defd125f92fe099ca6d24b6247b259fbae20396cff6fbd1c9add",
+      "context": {
+        "date": "2026-09-27T19:39:03+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/stock/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.0376,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/promoted/shapes-2.json": {
+      "sha256": "64418a34cd9dc7104fcd96b531895bfe205655f1e7d3542e59a07d0323b6434b",
+      "context": {
+        "date": "2026-09-27T19:37:44+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/promoted/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.05322,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/stock/shapes-3.json": {
+      "sha256": "f025e3a9750baf0226facd343c47efc586c8d668b69481a90bfb046a6d4d56f4",
+      "context": {
+        "date": "2026-09-27T19:40:22+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/stock/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.02539,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/promoted/shapes-3.json": {
+      "sha256": "d8942823d1020b838fca28d61272a48f8fec555603dbaa78069a343f7eaff081",
+      "context": {
+        "date": "2026-09-27T19:41:40+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/promoted/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.01807,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/stock/shapes-4.json": {
+      "sha256": "cb81551e1d60c423bd13d3457c40a5eca5e483170178b85498eea3458b09f6f2",
+      "context": {
+        "date": "2026-09-27T19:49:31+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/stock/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/promoted/shapes-4.json": {
+      "sha256": "e100df9df39b91efdbf41bc89dae85a9b9f6cd16fcde2a0c2a5b8c44d9c735f6",
+      "context": {
+        "date": "2026-09-27T19:48:12+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/promoted/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/stock/tuple-1.json": {
+      "sha256": "1cd8abe399f96f2c78224cc2a25629302647b66bae1c41ee739a8b6db8f90633",
+      "context": {
+        "date": "2026-09-27T19:31:50+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/stock/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.47168,
+          1.51367,
+          1.17871
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/promoted/tuple-1.json": {
+      "sha256": "7170e7e7771f03fc5ca071f7bf1acb88259b5b489167589ced67ef9799bf4b47",
+      "context": {
+        "date": "2026-09-27T19:33:09+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/promoted/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.12158,
+          1.38965,
+          1.16309
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/stock/tuple-2.json": {
+      "sha256": "20fbc37c4cc62f0609ed1f362528971346f5c85cfd613cfbcfbf28c216d793f5",
+      "context": {
+        "date": "2026-09-27T19:41:00+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/stock/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.07617,
+          1.08398
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/promoted/tuple-2.json": {
+      "sha256": "9a8dcad08b69b3b24e9828f34d80b85d61915bd462a66ddfdae14c6fd5df339c",
+      "context": {
+        "date": "2026-09-27T19:39:41+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/promoted/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.10352,
+          1.09277
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/stock/tuple-3.json": {
+      "sha256": "90aa44b9e1aa6679192e459c36a049522bb8d36cba06c55b0594248273b6140a",
+      "context": {
+        "date": "2026-09-27T19:42:19+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/stock/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.05469,
+          1.07617
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/promoted/tuple-3.json": {
+      "sha256": "c9807e9787fdd54bc2d1ba808b59407cbca022e23bcc40ae9e63d3f5e26cf64a",
+      "context": {
+        "date": "2026-09-27T19:43:38+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/promoted/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.03906,
+          1.06836
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/stock/tuple-4.json": {
+      "sha256": "ea3ec0547def02643a320eb6d2c869638601968fa1513855a7ef15e65d94a6cc",
+      "context": {
+        "date": "2026-09-27T19:51:29+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/stock/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1.02246
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/promoted/tuple-4.json": {
+      "sha256": "d9501354b44330371154f4740e01d524f0040c81e57dae39c7ec952dd0c1cf1e",
+      "context": {
+        "date": "2026-09-27T19:50:10+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/promoted/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1.03027
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/stock/tuple-1.json": {
+      "sha256": "f09fa6f014ff5735010143c86d672b1919195249001e0bb91eb707f2017efdcf",
+      "context": {
+        "date": "2026-09-27T19:29:58+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/stock/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.50439,
+          1.30469,
+          0.957031
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/promoted/tuple-1.json": {
+      "sha256": "0b3a3235a8f75a185d228dd9ca72c98d224f2add3ea241ac208b88d2481ea25b",
+      "context": {
+        "date": "2026-09-27T19:31:16+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/promoted/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.13037,
+          1.22998,
+          0.964844
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/stock/tuple-2.json": {
+      "sha256": "e78e29e09ffb0ccbb551880ed08e8b6fcbbbf9fc0b72c92bd403d342dab07e77",
+      "context": {
+        "date": "2026-09-27T19:39:07+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/stock/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.03662,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/promoted/tuple-2.json": {
+      "sha256": "03bb358ae05153eab32a751b2651a6a3724fc5f7142ce4099f151b532c2d4f8c",
+      "context": {
+        "date": "2026-09-27T19:37:48+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/promoted/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.05225,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/stock/tuple-3.json": {
+      "sha256": "6d48b9900f6cbee80873c05d67a6072bb25db86843bb2355c0ffc080bccb946b",
+      "context": {
+        "date": "2026-09-27T19:40:26+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/stock/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.02539,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/promoted/tuple-3.json": {
+      "sha256": "dea3646e2ed7567f37189a3c4363f9a2d7af736de0aaf6953947b7338cdd2758",
+      "context": {
+        "date": "2026-09-27T19:41:44+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/promoted/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.01758,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/stock/tuple-4.json": {
+      "sha256": "8557770b96692c57d57f79e0afa576fdbf31561e5e26ca5678f4635937cf1a34",
+      "context": {
+        "date": "2026-09-27T19:49:35+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/stock/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/promoted/tuple-4.json": {
+      "sha256": "791c2bb90d793493c5b461cf09b76edcb5d9aa22d0ad63fb1315c2b7f6457a6f",
+      "context": {
+        "date": "2026-09-27T19:48:16+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/promoted/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/stock/words-1.json": {
+      "sha256": "eaebc8e0747287b39cb465091bc461a958a12da7908f623cd9c0b68106417274",
+      "context": {
+        "date": "2026-09-27T19:32:04+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/stock/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.36621,
+          1.48779,
+          1.17578
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/promoted/words-1.json": {
+      "sha256": "294d9c301a21d68167c454bd8fdc40a14faa8251b20689b10ee7845d3f0575ca",
+      "context": {
+        "date": "2026-09-27T19:33:22+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/promoted/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.09424,
+          1.36963,
+          1.16016
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/stock/words-2.json": {
+      "sha256": "bfd12a734bc24ccab67408b871ae490d133c0719d0ccf8af0841522efc318f56",
+      "context": {
+        "date": "2026-09-27T19:41:14+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/stock/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.07178,
+          1.08252
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/promoted/words-2.json": {
+      "sha256": "a960e18c18718a219487a2416788703106be8f288d1601ea18a3e42c37c92095",
+      "context": {
+        "date": "2026-09-27T19:39:55+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/promoted/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.09766,
+          1.09033
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/stock/words-3.json": {
+      "sha256": "670321f92761da4407db9503fa2c2c700b192cc26adfa9a2e18bcd3d3e21e1c8",
+      "context": {
+        "date": "2026-09-27T19:42:33+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/stock/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.05176,
+          1.07471
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/promoted/words-3.json": {
+      "sha256": "95510a4b69d849b1a240b7decc694c3dc3ed208c128dcdccbef967dc35c44815",
+      "context": {
+        "date": "2026-09-27T19:43:52+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/promoted/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.03711,
+          1.06738
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/stock/words-4.json": {
+      "sha256": "c06c28b0cd279cb076978a05633772cd09feccca5d11b565ea5b2eab0f581fbe",
+      "context": {
+        "date": "2026-09-27T19:51:43+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/stock/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1.02148
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v2-neon/promoted/words-4.json": {
+      "sha256": "caad9cb0dc03700a212d628318626691ace53de6655d2f4ccd14ba9c640665de",
+      "context": {
+        "date": "2026-09-27T19:50:24+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v2-neon/promoted/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1.02881
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/stock/words-1.json": {
+      "sha256": "51a47ed43eed4e14d139e5ead03581a9c61f7152994de9d2bc959be1b2a43798",
+      "context": {
+        "date": "2026-09-27T19:30:12+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/stock/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.39209,
+          1.28906,
+          0.958496
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/promoted/words-1.json": {
+      "sha256": "698b21d210d8c8fdd589d56392669bcd4efb2ad1541d18dc2701645f7b5d36ec",
+      "context": {
+        "date": "2026-09-27T19:31:30+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/promoted/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.10986,
+          1.22217,
+          0.96582
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/stock/words-2.json": {
+      "sha256": "0c560b06290c1aebf2f42d5741d5ca5f87706e2143e337ae696d808bda2616e8",
+      "context": {
+        "date": "2026-09-27T19:39:21+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/stock/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.03467,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/promoted/words-2.json": {
+      "sha256": "f4dd00d6e8e499a241168e074836de75eb1bdd48743dbca078a44811310fcfa8",
+      "context": {
+        "date": "2026-09-27T19:38:02+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/promoted/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.04932,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/stock/words-3.json": {
+      "sha256": "a5c3f3f1cd37dec30f6bc91a543eaf3eb3956305f0d820abbeb084d84a15a7d1",
+      "context": {
+        "date": "2026-09-27T19:40:40+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/stock/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.02393,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/promoted/words-3.json": {
+      "sha256": "f019ad55360680f1b4ef5e960959901ccf3ba6feb67d6853f78fdf0ef027c403",
+      "context": {
+        "date": "2026-09-27T19:41:58+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/promoted/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.01611,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/stock/words-4.json": {
+      "sha256": "d341a22374d55143a1b37e6ddcc5f0fed16b1be5d5c13a6e9dcd175de6705efd",
+      "context": {
+        "date": "2026-09-27T19:49:49+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/stock/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v2-neon/promoted/words-4.json": {
+      "sha256": "5df1efd19f83f710a7ebe8b47df9209bcf6a5bf0128c4e555a200fedccb5b76e",
+      "context": {
+        "date": "2026-09-27T19:48:30+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v2-neon/promoted/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/stock/maintained-1.json": {
+      "sha256": "50cbba235e54eef4322308c81a3108969db5e6b47ddfdfd827ffaed99bdfdccc",
+      "context": {
+        "date": "2026-09-27T19:34:05+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/stock/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.04688,
+          1.32129,
+          1.15234
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/promoted/maintained-1.json": {
+      "sha256": "c9230ad8f88a71a31d42edabfaed0665cd1f527e543283f09ffc5f846e8588bf",
+      "context": {
+        "date": "2026-09-27T19:35:23+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/promoted/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.00977,
+          1.24268,
+          1.13672
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/stock/maintained-2.json": {
+      "sha256": "46b393ddcaf85e614b49e6d67e7a28f20458b16008df86be575894c2ef87c5b5",
+      "context": {
+        "date": "2026-09-27T19:38:01+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/stock/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.01221,
+          1.1499,
+          1.1123
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/promoted/maintained-2.json": {
+      "sha256": "e40e30a5b44fd191f347e8ecba606a14bf60f1fb6f71f98d0be2c2e246780aee",
+      "context": {
+        "date": "2026-09-27T19:36:43+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/promoted/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.0498,
+          1.19727,
+          1.12695
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/stock/maintained-3.json": {
+      "sha256": "1ad8306cabae19884d60ba074ffc0ada376c55aead3cb7636412c9c7681769d9",
+      "context": {
+        "date": "2026-09-27T19:44:34+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/stock/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.02881,
+          1.06299
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/promoted/maintained-3.json": {
+      "sha256": "2a0c646e9b4814a348d3dabe535b81af29eb7199087a3291748b08237571b821",
+      "context": {
+        "date": "2026-09-27T19:45:52+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/promoted/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.02148,
+          1.05566
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/stock/maintained-4.json": {
+      "sha256": "81ce481c8a812a6a627a8de0f6720cfb4ffd9c532c24ca79e9acfc84b38a1859",
+      "context": {
+        "date": "2026-09-27T19:48:30+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/stock/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.00586,
+          1.04004
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/promoted/maintained-4.json": {
+      "sha256": "66aec0705b8061909dd4499d3f15ea83897e1dfb9d02dc172efd68341598953d",
+      "context": {
+        "date": "2026-09-27T19:47:12+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/promoted/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.01367,
+          1.04785
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/stock/maintained-1.json": {
+      "sha256": "1a5fc3e1da084fcffc5dbfeeabcc35a8148e024df9330016249a41148976bfdf",
+      "context": {
+        "date": "2026-09-27T19:32:13+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/stock/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.05029,
+          1.18896,
+          0.970215
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/promoted/maintained-1.json": {
+      "sha256": "2c40d4af19392306634213399626249769f3fb8ee1caa213f6ad26ec9e5b2249",
+      "context": {
+        "date": "2026-09-27T19:33:31+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/promoted/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.01221,
+          1.14355,
+          0.977539
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/stock/maintained-2.json": {
+      "sha256": "cd628373592003a631b2452648bc09c56b5139be130933da2d91544c5c65b482",
+      "context": {
+        "date": "2026-09-27T19:36:08+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/stock/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.07861,
+          0.993164
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/promoted/maintained-2.json": {
+      "sha256": "d56290273ec580d87cbb88bd2d3d021de7079387389a2c102fd3680084f3daff",
+      "context": {
+        "date": "2026-09-27T19:34:50+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/promoted/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.00098,
+          1.10693,
+          0.985352
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/stock/maintained-3.json": {
+      "sha256": "9f95e09355e066f9fff0c903644facc44247794d7810be589a70e5035ad520e0",
+      "context": {
+        "date": "2026-09-27T19:42:41+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/stock/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.01221,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/promoted/maintained-3.json": {
+      "sha256": "b84d18ee49e615355c8ebf11f82d9d345ddf9e5234a7749cca1e6a0dd3ea75d3",
+      "context": {
+        "date": "2026-09-27T19:43:59+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/promoted/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.00439,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/stock/maintained-4.json": {
+      "sha256": "b23394e45c5e15ac37dce9eccab9ad7ce14f48c30844720467e6fc8732ee59ca",
+      "context": {
+        "date": "2026-09-27T19:46:36+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/stock/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/promoted/maintained-4.json": {
+      "sha256": "dc949c60c975666a71dc1c825b443c5a80d389c0920b621ef164dd4510bc2ff7",
+      "context": {
+        "date": "2026-09-27T19:45:18+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/promoted/ikea_bec256_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/stock/shapes-1.json": {
+      "sha256": "9612429c73c02695d16c0012f9e618379028fada67f7f2123cd66db4573ce8b1",
+      "context": {
+        "date": "2026-09-27T19:34:23+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/stock/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.03271,
+          1.2998,
+          1.14844
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/promoted/shapes-1.json": {
+      "sha256": "c0de1f749f01b2ef522f33d91a05e3b620c5bf0f597e357830739db539f0a8a3",
+      "context": {
+        "date": "2026-09-27T19:35:41+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/promoted/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.00684,
+          1.22998,
+          1.13379
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/stock/shapes-2.json": {
+      "sha256": "6bbb4f9490262593fa76160ce422e100afa4fdb80d2b7a881447c4769a60b43e",
+      "context": {
+        "date": "2026-09-27T19:38:19+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/stock/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.00781,
+          1.13965,
+          1.1084
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/promoted/shapes-2.json": {
+      "sha256": "f6d27ee28e2bcfe744a2ffd4331e45ce0e84d3b14c2e594e4ec8e570fee154ea",
+      "context": {
+        "date": "2026-09-27T19:37:01+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/promoted/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.03809,
+          1.18701,
+          1.12402
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/stock/shapes-3.json": {
+      "sha256": "3244098ecb2d6bf409891bf0b2c6efa84bd916f4769f2f5d2f7661de803a5413",
+      "context": {
+        "date": "2026-09-27T19:44:52+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/stock/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.02734,
+          1.06152
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/promoted/shapes-3.json": {
+      "sha256": "dbf622e93631ebaa25dc176a4ebc78abfcaf6e5a96be62e4036bdb3c1092408f",
+      "context": {
+        "date": "2026-09-27T19:46:10+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/promoted/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.01953,
+          1.05371
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/stock/shapes-4.json": {
+      "sha256": "a3a5fb75dac397710cbdf214aabf86d65ab5c83401bf1d847a7f3eab3896d0c2",
+      "context": {
+        "date": "2026-09-27T19:48:48+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/stock/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.00391,
+          1.03809
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/promoted/shapes-4.json": {
+      "sha256": "60c16c43e910ec3d7d7b2eb28128ce5eb09cdff3a80f2b0a8500ba36d061996e",
+      "context": {
+        "date": "2026-09-27T19:47:29+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/promoted/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.01172,
+          1.0459
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/stock/shapes-1.json": {
+      "sha256": "6bf3146becb04cdf6d442bb0af36a36cfb94b99bd2101ea1df663c6599b539dc",
+      "context": {
+        "date": "2026-09-27T19:32:31+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/stock/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.03857,
+          1.17871,
+          0.97168
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/promoted/shapes-1.json": {
+      "sha256": "ad834e0074672436192ce95bc7edc2cc6172eb17340aaa77acce025503785921",
+      "context": {
+        "date": "2026-09-27T19:33:49+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/promoted/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.00781,
+          1.13379,
+          0.979492
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/stock/shapes-2.json": {
+      "sha256": "fea09756fc3883d3ac397cd404f29f2a4fea436dd564473277ca6798efeb481b",
+      "context": {
+        "date": "2026-09-27T19:36:26+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/stock/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.07422,
+          0.994629
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/promoted/shapes-2.json": {
+      "sha256": "62a5d3bb9f3e2d6b263948b47037ceb275719a8198c1577196ff1daa2caaa1a1",
+      "context": {
+        "date": "2026-09-27T19:35:08+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/promoted/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.09912,
+          0.987305
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/stock/shapes-3.json": {
+      "sha256": "aef6a067222a6df9a9f01e35b350385a205cfcaf4f11b722b1b8785fcfd666b8",
+      "context": {
+        "date": "2026-09-27T19:42:59+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/stock/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.01025,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/promoted/shapes-3.json": {
+      "sha256": "6227cd6b72bbe18f568033fe74e347044d7dbe20dd1999b9f4e23fcb4461c953",
+      "context": {
+        "date": "2026-09-27T19:44:17+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/promoted/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.00244,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/stock/shapes-4.json": {
+      "sha256": "89ee80be52297b57e8d65cb0e48b583dacc271e50aaef20b7b76da22d6a901df",
+      "context": {
+        "date": "2026-09-27T19:46:54+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/stock/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/promoted/shapes-4.json": {
+      "sha256": "5c34b6c5e53305ae554878c0348c4510faf466c24d0d6172947eba5a28b983d0",
+      "context": {
+        "date": "2026-09-27T19:45:36+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/promoted/ikea_v3_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/stock/tuple-1.json": {
+      "sha256": "d8824d4b8295ccec5d6a5058255db3b5c015587aa1d8223b1ddcefd2bddc6cc9",
+      "context": {
+        "date": "2026-09-27T19:34:27+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/stock/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.03271,
+          1.2998,
+          1.14844
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/promoted/tuple-1.json": {
+      "sha256": "9098db889908d12eb4a7320d5e737af771320f67b518c5e31c8ae7b5c8ffa3ed",
+      "context": {
+        "date": "2026-09-27T19:35:45+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/promoted/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.00586,
+          1.22607,
+          1.13281
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/stock/tuple-2.json": {
+      "sha256": "8f7bbf0850dd67b4a927e3ff1db66a00bc14b068ad3210b1a51e3bf744ee7326",
+      "context": {
+        "date": "2026-09-27T19:38:23+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/stock/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.00684,
+          1.13721,
+          1.10742
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/promoted/tuple-2.json": {
+      "sha256": "502f69ed58e8f026302cdf9459ee840d01cd83656f1861bfcc2ebcb6b1684eaa",
+      "context": {
+        "date": "2026-09-27T19:37:05+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/promoted/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.03467,
+          1.18359,
+          1.12305
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/stock/tuple-3.json": {
+      "sha256": "4c2d8941114b3b823b5fede59299a3abc6440e12a723d92ff17c799a3d1da111",
+      "context": {
+        "date": "2026-09-27T19:44:56+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/stock/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.02686,
+          1.06104
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/promoted/tuple-3.json": {
+      "sha256": "2f1bb57ebc3473f24e63c72d68b2fe61e9a2ba71f83faec4f6c92c27b91e9730",
+      "context": {
+        "date": "2026-09-27T19:46:14+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/promoted/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.01904,
+          1.05322
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/stock/tuple-4.json": {
+      "sha256": "cfc0e37023cdf2e87a44d9215d40b26943d896c476c7d05a986a62ecf9a850c5",
+      "context": {
+        "date": "2026-09-27T19:48:52+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/stock/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.00391,
+          1.03809
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/promoted/tuple-4.json": {
+      "sha256": "4de2311b67aebcf43b26794ac988b770fd9dada17140f84e034b84fabced1bfc",
+      "context": {
+        "date": "2026-09-27T19:47:34+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/promoted/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.01123,
+          1.04541
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/stock/tuple-1.json": {
+      "sha256": "eae7ac1eeb5a0a1ece20c601aa11a2c065216e65d50015458679a140d1c2ee61",
+      "context": {
+        "date": "2026-09-27T19:32:35+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/stock/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.03516,
+          1.17529,
+          0.972168
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/promoted/tuple-1.json": {
+      "sha256": "8e17c603874468d0e48a0ab57c944a77604c6f4c1f8582013bdf89adf00332e6",
+      "context": {
+        "date": "2026-09-27T19:33:53+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/promoted/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.00684,
+          1.13135,
+          0.97998
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/stock/tuple-2.json": {
+      "sha256": "4db030509c33b52ce9a9b3028fd4539417ad4bcdc9c0b8691d55e90251b4bf2c",
+      "context": {
+        "date": "2026-09-27T19:36:30+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/stock/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.07275,
+          0.995117
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/promoted/tuple-2.json": {
+      "sha256": "42ed0af0789a654d2aee4edbe13e81c7da107bb1966f9381f2bbcbb74181d3a0",
+      "context": {
+        "date": "2026-09-27T19:35:12+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/promoted/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.09717,
+          0.987793
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/stock/tuple-3.json": {
+      "sha256": "31a9e5cb0abac2c4cf7bae7855caad54bbc7ba0b0bc57ff9c911ae8ee3877c2b",
+      "context": {
+        "date": "2026-09-27T19:43:03+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/stock/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.00977,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/promoted/tuple-3.json": {
+      "sha256": "4b962ab04a195e258319293d9d1e0988e3e6c5df673a7bceca7c624cc0a3a5d7",
+      "context": {
+        "date": "2026-09-27T19:44:21+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/promoted/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.00244,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/stock/tuple-4.json": {
+      "sha256": "7a49afe6033887bcabbdbe6af973be5a5f4dae2151a83ef51366a94362c45b38",
+      "context": {
+        "date": "2026-09-27T19:46:58+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/stock/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/promoted/tuple-4.json": {
+      "sha256": "8f2d4c67e5dbcf210b190efc2ff55f606d8d7429aae5e39bf9424fb0882eda46",
+      "context": {
+        "date": "2026-09-27T19:45:40+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/promoted/ikea_tuplepack_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": true,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/stock/words-1.json": {
+      "sha256": "152b7273440b964e34690ec68752541c1facefd8f63b7112b82431f32a8a4775",
+      "context": {
+        "date": "2026-09-27T19:34:41+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/stock/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.0249,
+          1.28418,
+          1.14551
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/promoted/words-1.json": {
+      "sha256": "7a699440a0061818fc429a17bbdb81ffb30259c01fa8fb0e903175ac6010e044",
+      "context": {
+        "date": "2026-09-27T19:35:59+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/promoted/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.00439,
+          1.21436,
+          1.12988
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/stock/words-2.json": {
+      "sha256": "1a2fbdd3c872fc4c34f3c587dd319d87f9f6eec44774e4099cbaba5a49af1700",
+      "context": {
+        "date": "2026-09-27T19:38:37+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/stock/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.00537,
+          1.13232,
+          1.10547
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/promoted/words-2.json": {
+      "sha256": "82a963d7a0f2328490210b52123057da9d194f86b1990526f3964147d78933d8",
+      "context": {
+        "date": "2026-09-27T19:37:18+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/promoted/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.02637,
+          1.17334,
+          1.12012
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/stock/words-3.json": {
+      "sha256": "1c03ba3ea12fd27ca3e26009bb2921c85450b4189cf0edfa3c47fb45658f9669",
+      "context": {
+        "date": "2026-09-27T19:45:10+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/stock/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.02539,
+          1.05957
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/promoted/words-3.json": {
+      "sha256": "135abc973aa8ee2369455f0f3d8e00c6344ee630254cd8941f0008c1211ff2b8",
+      "context": {
+        "date": "2026-09-27T19:46:28+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/promoted/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.01758,
+          1.05176
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/stock/words-4.json": {
+      "sha256": "8ee470f4b1cbc268561caec0a141e3abab1b76b377ae1ff5687592f8943b39a1",
+      "context": {
+        "date": "2026-09-27T19:49:06+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/stock/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.00244,
+          1.03662
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192253Z-a4633393/results/v3-neon/promoted/words-4.json": {
+      "sha256": "54d68fefc0c186376aea7d8edb740605dbbe520913176546c24410f14b06ce8c",
+      "context": {
+        "date": "2026-09-27T19:47:47+00:00",
+        "host_name": "ip-172-31-30-178",
+        "executable": "/opt/sixdb/jobs/20260927T192253Z-a4633393/results/v3-neon/promoted/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 37748736,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.01025,
+          1.04443
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/stock/words-1.json": {
+      "sha256": "10a03346948d3cd6bd3c6a390d5718ae215b69e27151e1c41ca844833d9f51c0",
+      "context": {
+        "date": "2026-09-27T19:32:49+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/stock/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.02686,
+          1.1665,
+          0.973633
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/promoted/words-1.json": {
+      "sha256": "2f161bbad45e87ad7a21ddf2b79d2749dcbebebd706e2d5fc53cbdf68f37bae5",
+      "context": {
+        "date": "2026-09-27T19:34:07+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/promoted/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1.00488,
+          1.12402,
+          0.981445
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/stock/words-2.json": {
+      "sha256": "5e045430e4268b0ad582bc16434ff53c69d52a97da8eae7113ede38e6c529638",
+      "context": {
+        "date": "2026-09-27T19:36:44+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/stock/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.06836,
+          0.996582
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/promoted/words-2.json": {
+      "sha256": "45f9d1388bbb25cfbd6e381072be5aba3c09dec2deea85b7955d480febf31575",
+      "context": {
+        "date": "2026-09-27T19:35:26+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/promoted/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.09326,
+          0.98877
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/stock/words-3.json": {
+      "sha256": "18dd822523d3ed5f449899cf84b5957030b4e7970c69031c7ee1ffa56c077434",
+      "context": {
+        "date": "2026-09-27T19:43:16+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/stock/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.00879,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/promoted/words-3.json": {
+      "sha256": "ced719b4540e4a6bcb0ce341f774d6d365bb96854da8ca8340ea8bb30d20e5ce",
+      "context": {
+        "date": "2026-09-27T19:44:35+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/promoted/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1.00098,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/stock/words-4.json": {
+      "sha256": "532d9805229f6c66ffc1d65a7f0fd09379d5c42251b79f65eab533d91f354dcd",
+      "context": {
+        "date": "2026-09-27T19:47:12+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/stock/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    },
+    "build/workers/20260927T192300Z-9bcbd793/results/v3-neon/promoted/words-4.json": {
+      "sha256": "b9bbcfd9b9e8148f455ef9a87cea546e94a02c6397e8c9adfd68e0d666d0d00c",
+      "context": {
+        "date": "2026-09-27T19:45:54+00:00",
+        "host_name": "ip-172-31-20-141",
+        "executable": "/opt/sixdb/jobs/20260927T192300Z-9bcbd793/results/v3-neon/promoted/ikea_tuplepack_word_bench",
+        "num_cpus": 4,
+        "mhz_per_cpu": 2000,
+        "cpu_scaling_enabled": false,
+        "aslr_enabled": false,
+        "caches": [
+          {
+            "type": "Data",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Instruction",
+            "level": 1,
+            "size": 65536,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 2,
+            "size": 2097152,
+            "num_sharing": 1
+          },
+          {
+            "type": "Unified",
+            "level": 3,
+            "size": 50331648,
+            "num_sharing": 4
+          }
+        ],
+        "load_avg": [
+          1,
+          1,
+          1
+        ],
+        "library_version": "v1.9.4",
+        "library_build_type": "release",
+        "json_schema_version": 1
+      }
+    }
+  }
+}

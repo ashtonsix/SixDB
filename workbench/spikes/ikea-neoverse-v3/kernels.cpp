@@ -14,9 +14,13 @@ template <unsigned Method>
                                       const bc::byte* qa, const bc::byte* qb) {
     return finish(interleaved(start(load_scratch(a), a), start(load_scratch(b), b)), qa, qb);
 }
-const std::array<candidate, 7> candidates{{
+[[gnu::noinline]] std::uint64_t constrained(const bc::source& a, const bc::source& b,
+                                           const bc::byte* qa, const bc::byte* qb) {
+    return finish(interleaved<true>(start(load_scratch(a), a), start(load_scratch(b), b)), qa, qb);
+}
+const std::array<candidate, 8> candidates{{
     {"maintained", maintained, false}, {"factored", factored<0>, false},
     {"tbl2", factored<1>, false}, {"tbx4", factored<2>, false},
     {"interleaved", paired, false}, {"sve", consume_sve, true},
-    {"sve_interleaved", consume_sve_interleaved, true}}};
+    {"sve_interleaved", consume_sve_interleaved, true}, {"constrained", constrained, false}}};
 }

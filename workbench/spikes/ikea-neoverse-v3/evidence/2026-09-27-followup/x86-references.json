@@ -1,0 +1,63 @@
+{
+  "bucket": "calico-fleet-artifacts",
+  "format": 1,
+  "group": "20260927T190736Z-5d8ee361",
+  "members": {
+    "x86": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 6077331,
+        "files": 17,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/34878d6741d53880a017a7e943e62331ca2d25279ddb03690ec9e81e61c93b66.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "34878d6741d53880a017a7e943e62331ca2d25279ddb03690ec9e81e61c93b66",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/34878d6741d53880a017a7e943e62331ca2d25279ddb03690ec9e81e61c93b66.tar.gz"
+      },
+      "collection": {
+        "exit_code": 0,
+        "utc": 1790536237.8815017
+      },
+      "error": null,
+      "instances": [
+        {
+          "id": "i-0f67896b1ef19a83a",
+          "state": "terminated"
+        }
+      ],
+      "job": "20260927T190742Z-5a01b8de",
+      "phase": "submitted",
+      "resource_observed_at": 1790536388.8006444,
+      "results": "/home/ashtonsix/sixdb-worktrees/ikea-neoverse-v3/build/workers/20260927T190742Z-5a01b8de/results",
+      "session": {
+        "capacity": "spot",
+        "idle_until": 1790536164.5864635,
+        "instance_id": "i-0f67896b1ef19a83a",
+        "job_id": "20260927T190742Z-5a01b8de",
+        "max_end": 1790550472.8583143,
+        "profile": "3f60058618bba1e9c7be38f56efb0da89c884b5695210f3d7406b36183156950",
+        "reuse_count": 0,
+        "revision": "bb0b846f32114c7487c47b5d3f1546ef",
+        "state": "retiring",
+        "subnet_id": "subnet-c29a879e",
+        "worker_id": "20260927T190742Z-5a01b8de"
+      },
+      "source_commit": "72191a345e2290b6203c68e704605cac01ecd84b",
+      "source_sha256": "f3ac2159581c012bab62726ac51cd9f1ac1b282ffdb15bb41f8f355ed09af0da",
+      "state": "complete",
+      "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260927T190742Z-5a01b8de",
+      "worker": {
+        "id": "20260927T190742Z-5a01b8de",
+        "instance_id": "i-0f67896b1ef19a83a",
+        "max_end": 1790550472.8583143,
+        "reuse_count": 0,
+        "reused": false
+      }
+    }
+  },
+  "network": null,
+  "network_removed": false,
+  "region": "us-east-1",
+  "uri": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260927T190736Z-5d8ee361"
+}

@@ -1,0 +1,82 @@
+{
+  "build/workers/20260927T200008Z-95b9f4f8/results/v2-neon/stock/tuple-kernels.asm": {
+    "sha256": "1b05c7d8bbd9d0741e489c2024eb5df1ff9c8ab12767ac937fd79da68a333da5",
+    "symbols": {
+      "ikea::tuplepack::native::read(ikea::tuplepack::detail::read64 const&, unsigned char const*)": {
+        "instructions": 369,
+        "bytes": 1476,
+        "machine_words_sha256": "255672fa0ce72c2bcaf1bec745121d03f873beeee053c44104eca92ee163b073"
+      },
+      "ikea::tuplepack::native::read(ikea::tuplepack::detail::packet_read const&, unsigned int, unsigned char const*, unsigned long, unsigned long)": {
+        "instructions": 13139,
+        "bytes": 52556,
+        "machine_words_sha256": "644e6f5557ded796591d04c79b649039c32fe4ec8c24a6f6649000deb9f271e6"
+      },
+      "ikea::tuplepack::native::write(ikea::tuplepack::detail::packet_write const&, unsigned int, unsigned char*, unsigned long, ikea::tuplepack::native::native_packet, unsigned long)": {
+        "instructions": 25208,
+        "bytes": 100832,
+        "machine_words_sha256": "c41a63a371d5cb2e954c9f6ff998180494c3d6b0b43cde13825c810391f79499"
+      }
+    }
+  },
+  "build/workers/20260927T200008Z-95b9f4f8/results/v2-neon/promoted/tuple-kernels.asm": {
+    "sha256": "dc7e13cb5abc3fb8a48681622c8ec7a5485b0a4bc588bdbd5b2466faa0bea2c6",
+    "symbols": {
+      "ikea::tuplepack::native::read(ikea::tuplepack::detail::read64 const&, unsigned char const*)": {
+        "instructions": 430,
+        "bytes": 1720,
+        "machine_words_sha256": "9e3f63f545d2a2f597bd4ddd5167386a1261795ad63a25d96704ee9c1bc14412"
+      },
+      "ikea::tuplepack::native::read(ikea::tuplepack::detail::packet_read const&, unsigned int, unsigned char const*, unsigned long, unsigned long)": {
+        "instructions": 13139,
+        "bytes": 52556,
+        "machine_words_sha256": "644e6f5557ded796591d04c79b649039c32fe4ec8c24a6f6649000deb9f271e6"
+      },
+      "ikea::tuplepack::native::write(ikea::tuplepack::detail::packet_write const&, unsigned int, unsigned char*, unsigned long, ikea::tuplepack::native::native_packet, unsigned long)": {
+        "instructions": 25208,
+        "bytes": 100832,
+        "machine_words_sha256": "c41a63a371d5cb2e954c9f6ff998180494c3d6b0b43cde13825c810391f79499"
+      }
+    }
+  },
+  "build/workers/20260927T200008Z-95b9f4f8/results/v3-neon/stock/tuple-kernels.asm": {
+    "sha256": "43807f2a73bc7a7627ef3ca77d38e1840c1b8e4344a65b9156dc1cfd53d9537d",
+    "symbols": {
+      "ikea::tuplepack::native::read(ikea::tuplepack::detail::read64 const&, unsigned char const*)": {
+        "instructions": 369,
+        "bytes": 1476,
+        "machine_words_sha256": "255672fa0ce72c2bcaf1bec745121d03f873beeee053c44104eca92ee163b073"
+      },
+      "ikea::tuplepack::native::read(ikea::tuplepack::detail::packet_read const&, unsigned int, unsigned char const*, unsigned long, unsigned long)": {
+        "instructions": 13139,
+        "bytes": 52556,
+        "machine_words_sha256": "b0c6c09746fe14860ec6c9f505b93429bae0af15690076e4043b77a6508d7724"
+      },
+      "ikea::tuplepack::native::write(ikea::tuplepack::detail::packet_write const&, unsigned int, unsigned char*, unsigned long, ikea::tuplepack::native::native_packet, unsigned long)": {
+        "instructions": 25208,
+        "bytes": 100832,
+        "machine_words_sha256": "925a6892e5724eccf84f37c10b28691c041ad091ad8ef5aba59aa658331d7983"
+      }
+    }
+  },
+  "build/workers/20260927T200008Z-95b9f4f8/results/v3-neon/promoted/tuple-kernels.asm": {
+    "sha256": "531c310f067a6a246ce8ef6c9977594b48b6af830cdecd80e5c7547957aa0b96",
+    "symbols": {
+      "ikea::tuplepack::native::read(ikea::tuplepack::detail::read64 const&, unsigned char const*)": {
+        "instructions": 422,
+        "bytes": 1688,
+        "machine_words_sha256": "508fb8f4d1368aca36f2742a04a60b52eb63e26f65ae9f316e0c3d8e6ffa89f2"
+      },
+      "ikea::tuplepack::native::read(ikea::tuplepack::detail::packet_read const&, unsigned int, unsigned char const*, unsigned long, unsigned long)": {
+        "instructions": 13139,
+        "bytes": 52556,
+        "machine_words_sha256": "b0c6c09746fe14860ec6c9f505b93429bae0af15690076e4043b77a6508d7724"
+      },
+      "ikea::tuplepack::native::write(ikea::tuplepack::detail::packet_write const&, unsigned int, unsigned char*, unsigned long, ikea::tuplepack::native::native_packet, unsigned long)": {
+        "instructions": 25208,
+        "bytes": 100832,
+        "machine_words_sha256": "925a6892e5724eccf84f37c10b28691c041ad091ad8ef5aba59aa658331d7983"
+      }
+    }
+  }
+}

@@ -10,7 +10,7 @@ using block = bc::native::block;
 using pair = bc::native::pair;
 using consumer = std::uint64_t (*)(const bc::source&, const bc::source&, const bc::byte*, const bc::byte*);
 struct candidate { const char* name; consumer consume; bool sve; };
-extern const std::array<candidate, 7> candidates;
+extern const std::array<candidate, 8> candidates;
 std::uint64_t consume_sve(const bc::source&, const bc::source&, const bc::byte*, const bc::byte*);
 std::uint64_t consume_sve_interleaved(const bc::source&, const bc::source&, const bc::byte*, const bc::byte*);
 
@@ -95,14 +95,19 @@ template <unsigned Method>
     auto p8 = split<32>(t.body, p4, t.pos).val[0];
     return leaves<Method>(t, split<16>(t.body, p8, t.pos));
 }
+template <bool Constrain = false>
 [[gnu::always_inline]] inline pair interleaved(tree a, tree b) {
     using namespace bc::detail::neon;
     auto a4 = split<64>(a.body, a.root, a.pos).val[0];
     auto b4 = split<64>(b.body, b.root, b.pos).val[0];
+    if constexpr (Constrain) asm("" : "+w"(a4), "+w"(b4));
     auto a8 = split<32>(a.body, a4, a.pos).val[0];
     auto b8 = split<32>(b.body, b4, b.pos).val[0];
+    if constexpr (Constrain) asm("" : "+w"(a8), "+w"(b8));
     auto a16 = split<16>(a.body, a8, a.pos);
     auto b16 = split<16>(b.body, b8, b.pos);
+    if constexpr (Constrain)
+        asm("" : "+w"(a16.val[0]), "+w"(a16.val[1]), "+w"(b16.val[0]), "+w"(b16.val[1]));
     return bc::native::join(leaves<0>(a, a16), leaves<0>(b, b16));
 }
 } // namespace v3_spike

@@ -1,0 +1,18 @@
+{
+  "script": "workbench/spikes/ikea-neoverse-v3/tuple-x86-check.sh",
+  "config": {
+    "machine": "zen5",
+    "instance_type": "c8a.xlarge",
+    "capacity": "spot",
+    "fresh": true,
+    "deadline_seconds": 1200,
+    "idle_seconds": 0,
+    "disk_gb": 32,
+    "env": {
+      "SIXDB_BUILD_JOBS": "2"
+    }
+  },
+  "members": {
+    "x86": {}
+  }
+}

@@ -93,10 +93,10 @@ def explore(receipt, output):
                       'range', round(min(values), 3), round(max(values), 3))
 
 
-def paired(receipt, output, study, variants, pattern, prefix=''):
+def paired(receipt, output, study, variants, pattern, prefix='', trials=(1, 2)):
     rows = []
     for machine, directory in result_dirs(receipt).items():
-        for trial in (1, 2):
+        for trial in trials:
             a, b = (cases(directory / prefix / variant / pattern.format(trial=trial))
                     for variant in variants)
             if a.keys() != b.keys(): raise ValueError('case coverage differs')
@@ -112,7 +112,7 @@ def paired(receipt, output, study, variants, pattern, prefix=''):
     summary = {}
     for machine in ('c8g', 'c9g'):
         summary[machine] = {}
-        for trial in (1, 2):
+        for trial in trials:
             selected = [r['speedup'] for r in rows if r['machine'] == machine and r['trial'] == trial]
             summary[machine][trial] = {'cases': len(selected), 'median_case_speedup': statistics.median(selected),
                                        'geomean_case_speedup': math.exp(statistics.mean(map(math.log, selected))),
@@ -131,9 +131,38 @@ def followup(receipt, output):
     paired(receipt, output, 'series', ('stock', 'vector'), 'trial-{trial}.json', 'series')
 
 
+def broader(receipt, output):
+    for suite in ('seriespack', 'tuplepack', 'words', 'constrained'):
+        paired(receipt, output, 'broader-' + suite, ('neoverse-v2', 'neoverse-v3'),
+               suite + '-{trial}.json')
+
+
+def promotion(receipt, output):
+    for suite in ('maintained', 'shapes'):
+        paired(receipt, output, 'native-load-' + suite, ('control', 'sve'),
+               suite + '-{trial}.json', 'native-load')
+    for suite in ('tuple', 'words'):
+        paired(receipt, output, 'tuple-dispatch-' + suite, ('stock', 'dispatch'),
+               suite + '-{trial}.json', 'tuple-dispatch')
+
+
+def validate(receipt, output):
+    for profile in ('v2-neon', 'v3-neon'):
+        for suite in ('maintained', 'shapes', 'tuple', 'words'):
+            paired(receipt, output, 'final-' + profile + '-' + suite, ('stock', 'promoted'),
+                   suite + '-{trial}.json', profile, range(1, 5))
+
+
+def isolated(receipt, output):
+    for profile in ('v2-neon', 'v3-neon'):
+        for suite in ('tuple', 'words'):
+            paired(receipt, output, 'isolated-' + profile + '-' + suite, ('stock', 'promoted'),
+                   suite + '-{trial}.json', profile)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('mode', choices=['baseline', 'explore', 'tuple', 'followup'])
+    parser.add_argument('mode', choices=['baseline', 'explore', 'tuple', 'followup', 'broader', 'promotion', 'validate', 'isolated'])
     parser.add_argument('receipt', type=Path)
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()

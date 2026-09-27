@@ -1,0 +1,27 @@
+{
+  "description": "V3-policy preprocessed public-header translation unit is byte-identical before and after restricting the point-row dispatch to V3 tuning. V2 code generation is checked separately.",
+  "command": [
+    "clang++-21",
+    "-E",
+    "-P",
+    "-std=c++23",
+    "-march=armv8.2-a+simd",
+    "-mtune=neoverse-v3",
+    "-DSIXDB_TUNE_NEOVERSE_V3=1",
+    "-DSIXDB_TUNE_NEOVERSE_V2=0",
+    "-Iikea/include",
+    "-x",
+    "c++",
+    "-"
+  ],
+  "input": "#include <ikea/tuplepack/author/native.h>",
+  "before_header_sha256": "5dfebad0729706bd64a878519c59069b4a583da5a1247b7e9e11f5544da0f17c",
+  "after_header_sha256": "1411c0de82ebc87415e9677f44ee472cd904b368b34e1f91a29f4d30e9489839",
+  "preprocessed_sha256": "9551784f51ef677ea1a12f46fcc5c4fd86b3d5f516b73f19e108344e6de2c2e4",
+  "preprocessed_bytes": 1851609,
+  "v2_original_asm_sha256": "1b05c7d8bbd9d0741e489c2024eb5df1ff9c8ab12767ac937fd79da68a333da5",
+  "v2_policy_asm_sha256": "9aadf798d1eca58c55092328c944e0ae434443b32fe2f6948dca148047d8b157",
+  "v2_functions": 97,
+  "v2_machine_code_differences": [],
+  "captured_header_sha256": "5dfebad0729706bd64a878519c59069b4a583da5a1247b7e9e11f5544da0f17c"
+}

@@ -1,0 +1,8 @@
+{
+  "decision": "Promote TuplePack full point-row dispatch only under SIXDB_TUNE_NEOVERSE_V3, retaining original partial-packet dispatch. V2 candidate results remain evidence, not enabled production behavior.",
+  "production_commit": "686dbc7",
+  "bec256_production_commit": "f54724d",
+  "qualification": "C9g V3 profile: both full routine and word matrices; 2 alternating process trials with 5 repetitions; no case loses >3% in both trials. Prior 4-trial point-row gains recur. ARM V2/V3 and x86 AVX2/AVX512 behavior, independent headers and sanitizers pass.",
+  "limits": "Single instance per type in this campaign; process/function placement not randomized; some controls vary across processes. No whole-database or universal no-regression claim. C8g V3 and V2 candidate matrices retain unresolved regressions.",
+  "policy_proof": "V3 preprocessed public-header TU byte-identical to measured candidate; all 97 compiled TuplePack functions at V2 byte-identical to original."
+}
