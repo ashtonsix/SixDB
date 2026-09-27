@@ -70,6 +70,19 @@ numeric rules.
 The [Calico overview](calico.md) is a cross-cutting map of earlier work.
 Question-specific reading stays beside the question it informs.
 
+## Prefix names after local remapping
+
+The [prefix-addressing retrospective](prefix-addressing.md) separates derivable
+routing names, stable identity, location resolution and payload order. Calico's
+prefix shortcut remains useful in natural regions; below a remap boundary,
+physical prefixes need an explicit mapping domain. Ordered blocks can preserve
+logical clustering while flexible slots weaken the meaning of finer prefixes.
+The existing 16-bit local-position bound does not require Calico's byte-depth
+topology or rank-packed columns. The assessment keeps prefix lookup as a
+candidate without attributing payload-layout or hash-map implementation gains
+to it. Ashton's enclosing-box option uses natural prefix names to discover
+remapped segments, with exact fences distinguishing ownership from enclosure.
+
 ## Plans that keep improving
 
 Ashton's proposed Engine model retains query plans and equivalence graphs
