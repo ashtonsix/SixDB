@@ -7,10 +7,11 @@ indefinitely, inform several investigations, or acquire a link to a spike.
 
 ## Customer value and adoption
 
-The [commercial note](commercial.md) records the database-first intent and
-questions about a first buyer, adoption within a team, expansion, customer
-economics and distribution. These are hypotheses to investigate, with current
-implementation evidence kept distinct from the earlier hypothetical database.
+The [commercial note](commercial.md) asks how technical advantage becomes
+customer value and an enduring business: useful outcomes, workable adoption,
+reasons to stay and a sustainable paid offer. It connects performance and
+economics with the [sociological questions](sociology.md) about teams, discovery
+and shared authority. The current direction is database first.
 
 ## Orbital and distributed execution
 
