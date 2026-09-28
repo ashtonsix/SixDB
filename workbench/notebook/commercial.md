@@ -47,7 +47,7 @@ instead of maintaining a separate technical specification or task roster here.
 
 **An entry point can be narrow even when the engine is general.** Analytics and
 application teams may need distinct explanations, examples and adoption paths
-around one coherent product. The [Team Topologies interpretation](team-topologies.md)
+around one coherent product. The [sociological note](sociology.md#a-coherent-workload-within-one-teams-ownership)
 also suggests a team owning both needs within one business capability. Test
 which first workload it can adopt and operate with less cognitive load and
 waiting on other teams. Existing ownership matters; preserving technology
@@ -64,7 +64,9 @@ These are modeled or conceptual limits to investigate, not predictions of
 customer latency. A pipeline may also carry schema, freshness, access and
 ownership agreements that must survive removal of its copying machinery.
 Expansion should preserve the first team's useful service and ability to
-change its own systems.
+change its own systems. The [shared-authority discussion](sociology.md#shared-resources-and-decision-rights)
+adds a question about authority: what can each participant decide, which shared
+rules can it help change, and how are competing obligations resolved?
 
 **Faster work must turn into a benefit someone can capture.** Candidate benefits
 include fresher decisions, predictable application latency during analytics,
