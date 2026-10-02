@@ -55,9 +55,15 @@ class GroupContext:
 
     @classmethod
     def from_env(cls):
+        launch = 'launch with python3 workbench/tools/worker_group.py run GROUP_SPEC.json'
+        if not os.environ.get('SIXDB_RESULTS'):
+            raise ValueError(f'GroupContext requires a worker-group job (missing SIXDB_RESULTS); {launch}')
         results = Path(os.environ['SIXDB_RESULTS'])
         job = json.loads((results / 'job.json').read_text())
         config = job['config']
+        missing = [name for name in ('SIXDB_GROUP_URI', 'SIXDB_GROUP_MEMBER') if not config.get('env', {}).get(name)]
+        if missing:
+            raise ValueError(f'GroupContext requires a worker-group job (missing {", ".join(missing)} in job.json); {launch}')
         uri = config['env']['SIXDB_GROUP_URI']
         prefix = uri.removeprefix('s3://' + config['bucket'] + '/')
         aws = worker.Aws(config['region'])
