@@ -796,6 +796,7 @@ def main():
     for name, help_text in {
         'status': 'show job and instance state', 'wait': 'observe completion and collect results',
         'fetch': 'collect, repair or selectively recover results',
+        'evict': 'remove unchanged local results of a finished job after verifying recovery from S3',
         'cancel': 'terminate the worker if this job still owns it', 'logs': 'show uploaded script output',
     }.items():
         cmd = commands.add_parser(name, help=help_text)
@@ -888,6 +889,8 @@ def main():
         cancel(job, aws)
     elif args.command == 'wait':
         return wait(job, directory, aws)
+    elif args.command == 'evict':
+        worker_cache.evict(directory, status(job, aws))
     elif args.command == 'fetch':
         state = status(job, aws)
         if args.list_files:

@@ -101,7 +101,8 @@ byte-identical archived members can be removed this way. Derived files absent
 from the archive need their own recoverable export first. Coordinate any later
 history rewrite with branch users.
 
-[Local worker storage](storage.md) reclaims older verified compiler output.
+[Local worker storage](storage.md) reclaims older verified compiler output and
+supports explicit eviction/recovery of finished collections.
 Other build directories can contain unretained prototypes; inspect them before
 removing inactive copies.
 

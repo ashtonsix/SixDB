@@ -188,6 +188,69 @@ class StorageChecks(unittest.TestCase):
             cache.reclaim(self.job, reference)
         self.assertTrue((self.job / 'results/probe').exists())
 
+    def test_explicit_eviction_preserves_edits_and_supports_selective_then_normal_recovery(self):
+        (self.source / 'source.tar.gz').write_bytes(b'captured source fixture')
+        self.repack()
+        cache.collect(self.job, self.reference)
+        destination = self.job / 'results'
+        (destination / 'case-1.csv').write_text('value\nchanged\n')
+        (destination / 'notes.txt').write_text('unarchived analysis')
+        with self.stream():
+            removed = cache.evict(self.job, {'state': 'complete', 'artifact': self.reference})
+        self.assertEqual(removed, sum(p.stat().st_size for p in self.source.iterdir() if p.name != 'case-1.csv'))
+        self.assertFalse((destination / 'case-0.csv').exists())
+        self.assertFalse((destination / 'source.tar.gz').exists())
+        self.assertEqual((destination / 'case-1.csv').read_text(), 'value\nchanged\n')
+        self.assertEqual((destination / 'notes.txt').read_text(), 'unarchived analysis')
+        self.assertEqual(cache.read(self.job / 'artifact.json'), self.reference)
+        # Recovery preserves conflicting edits in the usual repair directory.
+        # Selected fetch leaves other evicted measurements remote; normal fetch
+        # then restores the measurement set.
+        cache.collect(self.job, self.reference, selected=['case-0.csv'])
+        self.assertEqual((destination / 'case-0.csv').read_text(), 'value\n0\n')
+        self.assertFalse((destination / 'source.tar.gz').exists())
+        cache.collect(self.job, self.reference)
+        self.assertTrue(cache.verified(self.job, self.reference, full=True))
+        preserved = next(self.job.glob('replaced-results-*'))
+        self.assertEqual((preserved / 'case-1.csv').read_text(), 'value\nchanged\n')
+        self.assertEqual((preserved / 'notes.txt').read_text(), 'unarchived analysis')
+
+    def test_explicit_eviction_refuses_unfinished_unarchived_and_pinned_jobs(self):
+        cache.collect(self.job, self.reference)
+        with patch.object(artifacts, 'remote_manifest') as remote:
+            for state in [None, {'state': 'running', 'artifact': self.reference}, {'state': 'complete'}]:
+                with self.assertRaisesRegex(ValueError, 'finished worker'):
+                    cache.evict(self.job, state)
+            (self.job / '.keep-local').touch()
+            with self.assertRaisesRegex(ValueError, 'pinned'):
+                cache.evict(self.job, {'state': 'complete', 'artifact': self.reference})
+        remote.assert_not_called()
+        self.assertTrue(cache.verified(self.job, self.reference, full=True))
+
+    def test_explicit_eviction_corrupt_archive_or_receipt_failure_keeps_results(self):
+        cache.collect(self.job, self.reference)
+        with self.stream(), self.assertRaisesRegex(ValueError, 'SHA-256'):
+            cache.evict(self.job, {'state': 'failed', 'artifact': self.reference | {'sha256': '0' * 64}})
+        self.assertTrue(cache.verified(self.job, self.reference, full=True))
+        original = storage.write_json
+        def fail_receipt(path, value):
+            if path.name == 'collection.json':
+                raise OSError(28, 'injected full disk')
+            original(path, value)
+        with self.stream(), patch.object(storage, 'write_json', side_effect=fail_receipt), self.assertRaises(OSError):
+            cache.evict(self.job, {'state': 'complete', 'artifact': self.reference})
+        self.assertTrue(cache.verified(self.job, self.reference, full=True))
+
+    def test_cli_eviction_works_without_free_space_preflight(self):
+        cache.collect(self.job, self.reference)
+        with self.stream(), patch.object(sys, 'argv', ['worker.py', 'evict', 'fixture']), \
+                patch.object(worker, 'locate', return_value=(self.job, {'config': {'region': 'fixture'}})), \
+                patch.object(worker, 'status', return_value={'state': 'complete', 'artifact': self.reference}), \
+                patch.object(cache, 'preflight', side_effect=AssertionError('eviction must work on a full volume')):
+            self.assertEqual(worker.main(), 0)
+        self.assertFalse((self.job / 'results/case-0.csv').exists())
+        self.assertTrue(cache.read(self.job / 'collection.json')['evicted'])
+
     def test_reclamation_receipt_failure_leaves_everything(self):
         (self.source / 'probe').write_bytes(b'\x7fELF' + b'a' * 2 ** 20)
         self.repack()

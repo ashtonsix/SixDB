@@ -1,4 +1,4 @@
-"""Verified local worker collection and reclamation of archived compiler output."""
+"""Verified local worker collection, recovery and cache reclamation."""
 from datetime import datetime, timezone
 import json
 import os
@@ -200,19 +200,23 @@ def inventory(root, older_hours=24):
     return sorted(entries, key=lambda entry: entry['accessed'])
 
 
-def reclaim(directory, reference, *, older_hours=0):
-    """Only remove unchanged large compiler output after a fresh full S3 read."""
+def reclaim(directory, reference, *, older_hours=0, include_results=False):
+    """Remove byte-identical archived files after a fresh full S3 read.
+
+    Automatic maintenance only removes compiler output. Explicit eviction can
+    include sources and measurements; fetch restores them from the same receipt.
+    """
     with storage.lock(directory / '.collection.lock'):
         if (directory / '.keep-local').exists() or (directory / 'results').is_symlink():
             return 0
         receipt = read(directory / 'collection.json')
         if time.time() - receipt.get('accessed_at', 0) < older_hours * 3600:
             return 0  # A fetch after inventory took priority while we waited for the lock.
-        print(f'Checking archived compiler output: {directory.name}', flush=True)
+        print(f'Checking archived {"results" if include_results else "compiler output"}: {directory.name}', flush=True)
         members = artifacts.remote_manifest(reference)
         destination = directory / 'results'
         candidates = {name: expected for name, expected in members.items()
-                      if expected['rebuildable'] and matches(destination, name, expected)}
+                      if (include_results or expected['rebuildable']) and matches(destination, name, expected)}
         if not candidates:
             return 0
         receipt = read(directory / 'collection.json')
@@ -232,8 +236,40 @@ def reclaim(directory, reference, *, older_hours=0):
                 path.unlink()
                 storage.sync_directory(path.parent)
                 removed += expected['bytes']
-        print(f'Reclaimed {removed / storage.GIB:.2f} GiB; measurements retained: {directory.name}', flush=True)
+        retained = 'recovery reference retained' if include_results else 'measurements retained'
+        print(f'Reclaimed {removed / storage.GIB:.2f} GiB; {retained}: {directory.name}', flush=True)
         return removed
+
+
+def evict(directory, state):
+    """Explicitly evict a finished collection; never infer completion from age."""
+    if not state or state.get('state') not in {'complete', 'failed', 'timeout', 'interrupted'} or not state.get('artifact'):
+        raise ValueError('eviction needs a finished worker with an archived result bundle')
+    if (directory / '.keep-local').exists():
+        raise ValueError('collection is pinned by .keep-local; remove the pin to allow eviction')
+    storage.write_json(directory / 'artifact.json', state['artifact'])
+    storage.write_json(directory / 'status.json', state)
+    removed = reclaim(directory, state['artifact'], include_results=True)
+    print(f'Recover: worker.py fetch {directory} --file PATH (or --full for everything)', flush=True)
+    return removed
+
+
+def show_build_usage(root):
+    """Show the wider build footprint without classifying it as disposable."""
+    build = root / 'build'
+    if not build.is_dir():
+        return
+    result = subprocess.run(['du', '-x', '-k', '-d', '1', str(build)], capture_output=True, text=True)
+    entries = []
+    for line in result.stdout.splitlines():
+        size, separator, name = line.partition('\t')
+        if separator and size.isdigit():
+            entries.append((int(size) * 1024, Path(name)))
+    print('Build usage (includes worker results; other directories need inspection):')
+    for size, path in sorted(entries, reverse=True)[:11]:
+        print(f'{size / storage.GIB:6.2f} GiB  {path}')
+    if result.returncode:
+        print('Build usage scan was incomplete; some paths could not be read.')
 
 
 def maintain(root, *, prune=True, older_hours=24, protect=None):
@@ -253,6 +289,9 @@ def maintain(root, *, prune=True, older_hours=24, protect=None):
         print(f'Worker results: {total / storage.GIB:.2f} GiB; soft budget {budget / storage.GIB:g} GiB')
         print(f'Largest {len(largest)} of {len(entries)} collections shown; '
               f"{sum(e['reclaimable'] for e in entries if e['eligible']) / storage.GIB:.2f} GiB old compiler output to verify")
+        print('Finished collections can be explicitly evicted after a fresh S3 check: worker.py evict JOB\n'
+              'This includes sources and measurements; local edits and .keep-local pins survive.')
+        show_build_usage(root)
         return
     # Reclaim substantial space with fewer S3 reads; age still protects live work.
     for entry in sorted(entries, key=lambda entry: -entry['reclaimable']):
