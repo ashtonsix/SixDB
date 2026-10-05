@@ -1,0 +1,342 @@
+{
+  "bounds": {
+    "claims_case": "two movers, two destination homes",
+    "exhaustive_move_cases": "one mover, one/two readers, two classes, two homes/class",
+    "exploration": "all interleavings of finite actions; invalid edges stop at first obligation failure",
+    "pressure_cases": "sixteen owners, sixteen homes/class, two populated classes"
+  },
+  "cases": [
+    {
+      "case": "short_latch_two_readers",
+      "completed_states": 4,
+      "invalid_transitions": 0,
+      "markers": {},
+      "max_depth": 16,
+      "state_limit": 100000,
+      "states": 312,
+      "states_without_completion_path": 0,
+      "transitions": 637,
+      "witnesses": {}
+    },
+    {
+      "case": "grid_domain_two_readers",
+      "completed_states": 4,
+      "invalid_transitions": 0,
+      "markers": {},
+      "max_depth": 16,
+      "state_limit": 100000,
+      "states": 355,
+      "states_without_completion_path": 0,
+      "transitions": 744,
+      "witnesses": {}
+    },
+    {
+      "case": "per_home_with_unrelated_reader",
+      "completed_states": 2,
+      "invalid_transitions": 0,
+      "markers": {},
+      "max_depth": 16,
+      "state_limit": 100000,
+      "states": 260,
+      "states_without_completion_path": 0,
+      "transitions": 556,
+      "witnesses": {}
+    },
+    {
+      "case": "grid_domain_with_unrelated_reader",
+      "completed_states": 2,
+      "invalid_transitions": 0,
+      "markers": {
+        "unrelated grid reader delays previous-home reclamation": [
+          "reader 1: enter grid protection",
+          "reader 1: resolve protected coordinate",
+          "writer: claim vacant destination home",
+          "writer: finish copying payload token 101",
+          "writer: publish initialized destination coordinate"
+        ]
+      },
+      "max_depth": 16,
+      "state_limit": 100000,
+      "states": 287,
+      "states_without_completion_path": 0,
+      "transitions": 637,
+      "witnesses": {}
+    },
+    {
+      "case": "bad_load_then_pin",
+      "completed_states": 2,
+      "invalid_transitions": 1,
+      "markers": {},
+      "max_depth": 9,
+      "state_limit": 100000,
+      "states": 37,
+      "states_without_completion_path": 1,
+      "transitions": 56,
+      "witnesses": {
+        "live raw grant lost its expected payload": [
+          "reader 0: load coordinate and expected token",
+          "writer: claim vacant destination home",
+          "writer: finish copying payload token 101",
+          "writer: publish initialized destination coordinate",
+          "writer: reclaim previous home",
+          "reader 0: retain home and return raw grant"
+        ]
+      }
+    },
+    {
+      "case": "cancel_is_not_completion",
+      "completed_states": 2,
+      "invalid_transitions": 0,
+      "markers": {},
+      "max_depth": 10,
+      "state_limit": 100000,
+      "states": 40,
+      "states_without_completion_path": 0,
+      "transitions": 58,
+      "witnesses": {}
+    },
+    {
+      "case": "bad_cancel_releases_raw_grant",
+      "completed_states": 2,
+      "invalid_transitions": 1,
+      "markers": {},
+      "max_depth": 10,
+      "state_limit": 100000,
+      "states": 40,
+      "states_without_completion_path": 0,
+      "transitions": 59,
+      "witnesses": {
+        "live raw grant lost its expected payload": [
+          "reader 0: take acquisition latch",
+          "reader 0: resolve protected coordinate",
+          "reader 0: retain home and return raw grant",
+          "reader 0: use raw reference",
+          "reader 0: request cancellation (raw grant remains)",
+          "writer: claim vacant destination home",
+          "writer: finish copying payload token 101",
+          "writer: publish initialized destination coordinate",
+          "writer: reclaim previous home"
+        ]
+      }
+    },
+    {
+      "case": "exclusive_gate_drains_grants",
+      "completed_states": 4,
+      "invalid_transitions": 0,
+      "markers": {},
+      "max_depth": 16,
+      "state_limit": 100000,
+      "states": 138,
+      "states_without_completion_path": 0,
+      "transitions": 223,
+      "witnesses": {}
+    },
+    {
+      "case": "bad_zero_grants_without_gate",
+      "completed_states": 2,
+      "invalid_transitions": 4,
+      "markers": {},
+      "max_depth": 8,
+      "state_limit": 100000,
+      "states": 23,
+      "states_without_completion_path": 1,
+      "transitions": 30,
+      "witnesses": {
+        "live raw grant lost its expected payload": [
+          "reader 0: take acquisition latch",
+          "reader 0: resolve protected coordinate",
+          "writer: observe zero grants without closing gate",
+          "reader 0: retain home and return raw grant",
+          "writer: mutate after stale zero-grant observation"
+        ]
+      }
+    },
+    {
+      "case": "bad_unique_head_implies_exclusive_payload",
+      "completed_states": 2,
+      "invalid_transitions": 4,
+      "markers": {},
+      "max_depth": 7,
+      "state_limit": 100000,
+      "states": 16,
+      "states_without_completion_path": 1,
+      "transitions": 20,
+      "witnesses": {
+        "live raw grant lost its expected payload": [
+          "reader 0: take acquisition latch",
+          "reader 0: resolve protected coordinate",
+          "reader 0: retain home and return raw grant",
+          "writer: mutate on sole-head knowledge alone"
+        ]
+      }
+    },
+    {
+      "case": "identity_reuse_after_head_retirement",
+      "completed_states": 1,
+      "invalid_transitions": 0,
+      "markers": {
+        "trampoline identity retired while old raw payload grant remains": [
+          "owner: retire allocation ownership",
+          "reader: bind old head expecting identity 1",
+          "reader: retire final usable head while retaining raw payload grant",
+          "allocator: reuse trampoline for identity 2 with another payload"
+        ]
+      },
+      "max_depth": 6,
+      "state_limit": 100000,
+      "states": 12,
+      "states_without_completion_path": 0,
+      "transitions": 16,
+      "witnesses": {}
+    },
+    {
+      "case": "bad_owner_retirement_is_identity_retirement",
+      "completed_states": 1,
+      "invalid_transitions": 1,
+      "markers": {
+        "trampoline identity retired while old raw payload grant remains": [
+          "owner: retire allocation ownership",
+          "reader: bind old head expecting identity 1",
+          "allocator: reuse trampoline for identity 2 with another payload",
+          "reader: retire final usable head while retaining raw payload grant"
+        ]
+      },
+      "max_depth": 6,
+      "state_limit": 100000,
+      "states": 14,
+      "states_without_completion_path": 1,
+      "transitions": 20,
+      "witnesses": {
+        "old usable head resolved a different allocation identity": [
+          "owner: retire allocation ownership",
+          "allocator: reuse trampoline for identity 2 with another payload",
+          "reader: bind old head expecting identity 1"
+        ]
+      }
+    },
+    {
+      "case": "version_specific_bindings",
+      "completed_states": 1,
+      "invalid_transitions": 0,
+      "markers": {},
+      "max_depth": 3,
+      "state_limit": 100000,
+      "states": 6,
+      "states_without_completion_path": 0,
+      "transitions": 7,
+      "witnesses": {}
+    },
+    {
+      "case": "bad_shared_binding_is_mvcc_selection",
+      "completed_states": 1,
+      "invalid_transitions": 2,
+      "markers": {},
+      "max_depth": 3,
+      "state_limit": 100000,
+      "states": 6,
+      "states_without_completion_path": 2,
+      "transitions": 7,
+      "witnesses": {
+        "one current trampoline cannot locate both selected logical versions": [
+          "writer: publish logical version 2, retaining version 1 bytes",
+          "reader: bind selected historical view 1"
+        ]
+      }
+    },
+    {
+      "case": "bad_coordinate_byte_is_version",
+      "completed_states": 5,
+      "invalid_transitions": 1,
+      "markers": {},
+      "max_depth": 6,
+      "state_limit": 100000,
+      "states": 30,
+      "states_without_completion_path": 1,
+      "transitions": 36,
+      "witnesses": {
+        "repeated coordinate falsely validates the selected logical version": [
+          "reader: save byte coordinate and payload token 101",
+          "writer: publish version 202 at another coordinate",
+          "writer: reclaim original home",
+          "writer: initialize version 303 at original coordinate",
+          "writer: publish original byte coordinate again",
+          "reader: byte comparison passes"
+        ]
+      }
+    },
+    {
+      "case": "serialized_destination_claim",
+      "completed_states": 2,
+      "invalid_transitions": 0,
+      "markers": {},
+      "max_depth": 2,
+      "state_limit": 100000,
+      "states": 7,
+      "states_without_completion_path": 0,
+      "transitions": 8,
+      "witnesses": {}
+    },
+    {
+      "case": "bad_split_scan_and_claim",
+      "completed_states": 2,
+      "invalid_transitions": 4,
+      "markers": {},
+      "max_depth": 4,
+      "state_limit": 100000,
+      "states": 23,
+      "states_without_completion_path": 6,
+      "transitions": 36,
+      "witnesses": {
+        "concurrent movers claimed the same destination home": [
+          "mover 0: observe vacant home 0",
+          "mover 1: observe vacant home 0",
+          "mover 0: claim earlier observed home 0",
+          "mover 1: claim earlier observed home 0"
+        ]
+      }
+    }
+  ],
+  "kind": "bounded interleaving model; no timing or probabilistic cost",
+  "limitations": [
+    "sequentially consistent abstract events; native ordering/atomicity must be validated separately",
+    "small finite histories, serialized claim/publication as explicitly stated; not an unbounded proof",
+    "tokens abstract complete bytes; no page faults, COW mappings, disk durability or recovery",
+    "latch/domain accounting is an experimental protocol, not a prescribed runtime or per-pointer reference count",
+    "same-version relocation is separated from MVCC view selection and in-place logical update",
+    "pressure handling reports would_block; it does not choose virtual/overflow placement or scheduling policy"
+  ],
+  "pressure": [
+    {
+      "case": "sixteen_current_payloads_same_class_replacement",
+      "current_payloads": 16,
+      "destination_class_free_homes": 0,
+      "result": "would_block; explicit promotion/overflow or exclusive in-place semantics required",
+      "retained_payloads": 0
+    },
+    {
+      "case": "sixteen_current_plus_sixteen_retained_payloads",
+      "class_one_free_homes": 0,
+      "class_zero_free_homes": 0,
+      "current_payloads": 16,
+      "occupied_homes": 32,
+      "result": "another replacement in either full class would_block",
+      "retained_payloads": 16
+    },
+    {
+      "cancel_releases_homes": 0,
+      "case": "completion_releases_one_home",
+      "one_completion_releases_homes": 1,
+      "replacement_coordinate": 0,
+      "result": "replacement resumes without overwriting another live payload"
+    }
+  ],
+  "properties": [
+    "published bindings name initialized payload",
+    "every live raw grant keeps its independently expected payload token until completion",
+    "identity reuse cannot make a usable old head name a different allocation",
+    "selected logical views locate their own expected version",
+    "simultaneous destination claims are distinct",
+    "every reachable safe state has a path to completion in its finite history"
+  ],
+  "source_sha256": "0aec111b4af3896cf3326c98a3b500d659aedaffed5dece6a91851a67d6cbad0"
+}

@@ -14,7 +14,7 @@ Successor to Calico's `loom` and parts of `arbor`; see the
 - Buffer-pool partitions, residency and byte-access leases, with admission and
   resource budgets for inputs, outputs and retained work.
 - Drivers for prefetching, suspension, resumption and cancellation, using
-  [Orbital](../orbital/README.md)'s version-bound views, transport and physical
+  [Orbital](../workbench/notebook/orbital/reference/README.md)'s version-bound views, transport and physical
   completion services.
 
 The working division gives [Engine](../engine/README.md) database meaning and

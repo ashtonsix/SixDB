@@ -1,5 +1,7 @@
 # Local message handoff measurements
 
+[Orbital research map: Worker](../../notebook/orbital/reference/README.md#worker)
+
 How much do colocated actors pay for payload transfer, queue pressure and their
 choice of waiting policy? This native fixture supplies measurement evidence to
 [Orbital's simulator](../../simulator/README.md); the [calibration challenge](calibration.md)

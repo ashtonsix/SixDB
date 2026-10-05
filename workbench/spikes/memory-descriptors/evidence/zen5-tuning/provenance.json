@@ -1,0 +1,46 @@
+{
+  "files_sha256": {
+    "baseline-source.json": "6f2ada2f010d6e4cf87abad30fa90315bb7ed705859f13fb716e5100a65754cb",
+    "compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "dependencies.json": "f28c730852d07c074f02f5b91396c4decad74b22726b70736c2bfbb176031f94",
+    "frozen-checks.txt": "57813150aa23b1cb7e7759182bfb51dadd1e5020ba98520936148c6866a2d94d",
+    "grouped-checks.txt": "0cc528364cd0a94d292eeb0a33916470fa42e009e7b13b68b92cd9f4f62a09f5",
+    "grouped-summary.csv": "1377de5f51bb0d6200eddf96ce4518da86db093bf46ab098e525bcae5c3e23fa",
+    "host.json": "3e8f2957fc4ccc2d5724c0ba1cc549171510db64a8bb387109031281645351fb",
+    "job.json": "128fec58477e56a7f4739a81e3bf335b3ea4f6ccdde245481cf08ac18038fc97",
+    "libc.txt": "0a361b537ea92ca84098127af4bbb1aa2144b39551239bdcd1bccb53ec4c5df0",
+    "lscpu.txt": "21df635e59aac020c32b261e5713b071c2f70e5d56a05225f0212fe792cdab3d",
+    "occupancy-checks.txt": "3a14630a0600769926fec65fe4bb2fa9954573f0b8d4f4da23b50880b9b31f80",
+    "occupancy-forward.csv": "c8e53d3026d9479ea66627694705be43a5039eaab6780ea1cdf10f0f7d946874",
+    "occupancy-reverse.csv": "a935c002ed87eda273de963230182ff03912ee354c50214eaebc8cec3cd76081",
+    "occupancy-summary.csv": "48e3929d995b499d663b566897f1cc6c9685f4e44700e0b1ec4e779ffbe36500",
+    "read-confirmation/grouped-frozen-forward.csv": "eb672a3d3e16da753d3dff4216e7d1fd9ac0a41e6bf0bc93c417c716ffa854c1",
+    "read-confirmation/grouped-frozen-reverse.csv": "91eb21978083f754c4d1e9529aa915a86cb8b8800daeef4defbc62d7764ac572",
+    "read-confirmation/grouped-tuned-forward.csv": "4fe690db727a2ff752bb5dfbb925da39761541bf07cf1fd7a609d033dd68e611",
+    "read-confirmation/grouped-tuned-reverse.csv": "55b8d022d1c0b7ac9a757d61127ec2289e81d19ad230c3ce79a7673f63ff2ead",
+    "source-manifest.json": "71ce28d1539c77a9a48c274802f64dfdb1fa66d68fb4c4a195389a7b277c1588",
+    "summary-checks.txt": "646e79fbb09bd9c1a6ec19163c8f8040633dfd17183dd8fb0958607bd48e76fe",
+    "tuning-checks.txt": "71742486816e0c68d8cd60afb1e1206bcbc6cb3aa85d9beddc871383968de96a",
+    "tuning-forward.csv": "5d59d72e1039850e8bf33ed9db641821ead8067d062ad8eb483e4a5e969ffd84",
+    "tuning-reverse.csv": "25ca7cac35a80274305d43197d95661159bd47aa35c4c2f366f2e336990d1496",
+    "tuning-summary.csv": "eea4efb2ea32c299adbc3cf9fed43197623801e85a1707edf2305628149a4713",
+    "worker-result.json": "69c5f30b50ed9484a604b547051b02dc63817b075dfd0338ae2317ef66723f53"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    [
+      "python3",
+      "workbench/spikes/memory-descriptors/tuning-summary.py",
+      "{evidence}"
+    ],
+    [
+      "python3",
+      "workbench/spikes/memory-descriptors/tuning-summary.py",
+      "{evidence}/read-confirmation",
+      "--read-confirmation"
+    ]
+  ],
+  "regenerate_from": "archive"
+}

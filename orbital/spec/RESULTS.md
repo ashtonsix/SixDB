@@ -30,7 +30,7 @@ narrower reset. Neither historical archive is rewritten by the current closure.
 
 The Tx and recovery dependency sets overlap in 55 baseline cases. The
 [retained design evidence](evidence/design-revision/README.md) records the invalidation;
-the [current architecture](../ARCHITECTURE.md) explains the design tradeoffs.
+the [earlier architecture proposal](../../workbench/notebook/orbital/reference/ARCHITECTURE.md) explains their design tradeoffs.
 Final dispositions come from parsed dependencies,
 exact captured inputs and raw outcomes. A stopped graph is sizing evidence only.
 
@@ -74,8 +74,8 @@ bytes. Their tables give the exact configurations. Authored service cuts remain
 restrictions on the explored joined histories, even where the component families
 explore wider local interleavings.
 
-The [architecture walkthrough](../ARCHITECTURE.md) carries the current design
-consequences and accepted tradeoffs into provisional implementation boundaries.
+The [earlier architecture walkthrough](../../workbench/notebook/orbital/reference/ARCHITECTURE.md) interprets these
+findings through exploratory implementation boundaries.
 The family reports above retain each finding and its model assumptions;
 [retired campaign accounts](../../workbench/notebook/retired-spikes.md#orbital-verification-campaign-accounts)
 preserve how the design arrived here. These checks do not silently amend BRIEF

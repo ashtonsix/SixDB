@@ -177,7 +177,7 @@ work, following the [collaboration guidance](../collaboration.md).
 Orbital supplies judgment about placement, recovery and execution dependencies;
 Engine, Loom and Shore work supplies semantics, scheduling and integration
 judgment as it develops. Scaffolding helps keep evidence discoverable. Details
-stay with their owners: [Orbital's brief](../../orbital/BRIEF.md) contains
+stay with their owners: [Orbital's brief](orbital/reference/BRIEF.md) contains
 targets, [CFT measurements](../spikes/cft-commit-latency/RESULTS.md) report
 component results, and the [simulator](../simulator/README.md) explores authored
 models. These are not interchangeable with production or customer evidence.

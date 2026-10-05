@@ -1,9 +1,9 @@
 # Orbital formal models
 
 These TLA+ models check how Orbital's contracts compose under concurrency,
-failure and resource pressure. For the system itself, start with the
-[architecture walkthrough](../ARCHITECTURE.md). Model conveniences and candidate
-mechanisms do not amend [BRIEF](../BRIEF.md) or [PHYSICAL](../PHYSICAL.md) implicitly.
+failure and resource pressure. The [Orbital navigation page](../../workbench/notebook/orbital/reference/README.md)
+connects them to the design workspace, briefs and experiments. Model conveniences
+and candidate mechanisms do not amend [BRIEF](../../workbench/notebook/orbital/reference/BRIEF.md) or [PHYSICAL](../../workbench/notebook/orbital/reference/PHYSICAL.md) implicitly.
 
 - [Results](RESULTS.md): current coverage, limitations and unfinished work.
 - [Verification obligations](PLAN.md): guarantees, assumptions and required compositions.

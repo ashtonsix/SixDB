@@ -1,0 +1,25 @@
+{
+  "files_sha256": {
+    "compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "composition-checks.jsonl": "273ff0ed06011a975796e214a9f98f144b2950eef1d6fa693343236753da9d06",
+    "composition-forward.csv": "606edaf04cdea1f5453113f314a0a3b7b1482b39d29a403bc4c3cdf1639fef2d",
+    "composition-reverse.csv": "5fccc1e7ff0efa4c7bc0efda0199f5fa7abd7853dd4201135b55a49a27fe9d82",
+    "composition-summary.csv": "5c4b931d63c440e20bc09e4cb793ee45e46c23920adea3354323165751128550",
+    "host.json": "0aaf6f0f89b3909a3978e796e179268a0b7b2f90eb9ce230c5b10c4caa574cde",
+    "job.json": "0ef1938d874f72c3eef8d7b18b6f677332032ab08ac70f1d257b722adf82e0a9",
+    "linux-capabilities.jsonl": "344f7294a234cab0122859ab2e8996562737b2931aed83e0e0cc3e54aa94a553",
+    "linux-views.jsonl": "6d94a27bc07898ca02be0d37474403d7824810f6a103c0b465f9407bd22ade97",
+    "lscpu.txt": "30fefad5c41d4f3a40116dd2c0b0a632b5422bde846934f058290a365278756c",
+    "source-manifest.json": "f49b0e0bf0953f37148d322786e39a834c5dd3f768af2e673ad978218b659563",
+    "summary-checks.json": "d81506ad83b1d417f475031dc6decb94f3ff8077005e021ca63aa68db7eea2b1",
+    "worker-result.json": "8712ea3732d095a984ac3762535de5cd91ba320d8a702bf27deadeb4707c549a"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/orbital-objects/composition-summary.py",
+    "{evidence}"
+  ]
+}

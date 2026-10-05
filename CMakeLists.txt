@@ -30,6 +30,6 @@ include(cmake/Targets.cmake)
 enable_testing()
 
 # Target dependencies are declared by their owners; order defines no edges.
-foreach(module ikea orbital loom engine shore workbench)
+foreach(module ikea loom engine shore workbench)
   add_subdirectory(${module})
 endforeach()

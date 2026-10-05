@@ -92,7 +92,7 @@ reproducible evaluation and publication of stable interfaces are candidate
 capabilities to test against customer needs. Access obligations constrain what
 may be made visible.
 
-[Orbital's extension and replay direction](../../orbital/BRIEF.md) is relevant
+[Orbital's extension and replay direction](orbital/reference/BRIEF.md) is relevant
 to execution evidence. Matching results or deterministic replay cannot
 establish that an input is true, a metric is useful or an inference is sound.
 Software can support scrutiny; domain judgment remains with people.

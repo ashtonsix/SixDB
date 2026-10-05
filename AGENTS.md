@@ -28,6 +28,9 @@ takes precedence over these defaults.
   keep detail with its owner, and leave entry documents thin and steerable.
   [Retired research](workbench/notebook/retired-spikes.md) shows how useful findings
   can survive without maintaining obsolete implementations or competing specs.
+- [Orbital's scratch workspace](workbench/notebook/orbital/ASHTON-SCRATCH.md) is Ashton's thinking space.
+  Keep its open sections open; add models, questions or answers only at his
+  explicit request. Organising existing material is not an invitation to design more.
 - Follow [BUILDING.md](BUILDING.md) and [code conventions](workbench/design/conventions.md).
   Use the pinned Linux toolchain; prefix Linux commands with `orb -m ubuntu`
   in this macOS/OrbStack workspace. Preserve incremental builds and build the

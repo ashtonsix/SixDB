@@ -1,9 +1,37 @@
-# Linux object mapping probes
+# Durable object views
 
-These small native probes test mechanisms behind Orbital's provisional
-[object/view design](../../../orbital/PHYSICAL.md). The broader design study and
-Python toys are [retired](../../notebook/retired-spikes.md); this directory keeps
-real Linux checks that the actor simulator cannot replace.
+[Orbital research map: Object](../../notebook/orbital/reference/README.md#object)
+
+The [embedded views spike](../orbital-views/README.md) follows Ashton's October 5
+notes and develops the current operation picture. This study retains the earlier
+composed caller and lifetime comparisons.
+
+How should an object operation obtain its state, expose ordinary memory and
+publish changes while preserving readers and outstanding I/O? The
+[composition brief](BRIEF.md) compares private images, shared backing with private
+changes, and exclusive reuse backed by reconstruction. It develops Orbital's
+provisional [object/view design](../../notebook/orbital/reference/PHYSICAL.md).
+
+The [composed caller](composition_fixture.h) filters selected record bodies and
+publishes an output and summary. [Findings](FINDINGS.md) explain the lifetime
+boundary and compare all three strategies, including held and late old readers.
+The experiment uses actual mappings, byte stores, file reads and socket sends,
+with supplied snapshot outcomes. It is not a durable commit implementation.
+
+## Prototype and checks
+
+- [composition.h](composition.h) and [composition.cpp](composition.cpp) implement
+  independently retained state, prepared views, physical uses and working changes.
+- [composition_probe.cpp](composition_probe.cpp) checks byte results, concurrent
+  publication, delayed borrowers, protection, stale acquisition and injected failures.
+- [composition_bench.cpp](composition_bench.cpp) compares prepared operation costs
+  with and without a bounded page cache. [compose.sh](compose.sh) runs the Zen5
+  comparison; [composition-summary.py](composition-summary.py) checks exact work
+  counters, independent checksums and coverage before summarising timings.
+
+The existing native probes below test individual Linux mechanisms. The earlier
+design study and Python toys are [retired](../../notebook/retired-spikes.md);
+these checks retain their narrow scope and evidence.
 
 - [capabilities.cpp](capabilities.cpp) verifies a read-only mapping traps on write,
   queries usermode UFFD features and registers a NOP-only restriction on a disabled
@@ -26,13 +54,12 @@ from the Mac):
 ```sh
 cmake -S . -B build/orbital-objects -G Ninja -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_CXX_COMPILER=clang++-21 -DSIXDB_SPIKES=orbital-objects
-cmake --build build/orbital-objects --target orbital_objects_capabilities orbital_objects_views
+cmake --build build/orbital-objects --target orbital_objects_composition_probe \
+  orbital_objects_composition_bench orbital_objects_capabilities orbital_objects_views
+ctest --test-dir build/orbital-objects -R orbital_objects_composition_probe --output-on-failure
 build/orbital-objects/workbench/spikes/orbital-objects/orbital_objects_capabilities
 build/orbital-objects/workbench/spikes/orbital-objects/orbital_objects_views
 ```
 
-A useful continuation would combine preparation/COW/reuse, a late old reader,
-partial overwrite, abort and delayed backend use under finite memory, comparing
-full preparation, bounded lookahead and demand faults at the same workload.
-Slow page sources and blocked workers matter. Extension protection transitions
-and allocator hints remain separate native questions; these probes settle neither.
+Select the architecture flags from [BUILDING.md](../../../BUILDING.md); the local
+AArch64 run uses `SIXDB_MARCH=armv8.2-a` and `SIXDB_TUNE=generic`.

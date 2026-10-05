@@ -15,8 +15,8 @@ the behavior of the first simulator.
 
 ## Current home
 
-[Orbital's architecture](../../orbital/ARCHITECTURE.md) now connects the intended
-system and provisional implementation boundaries. [Formal results](../../orbital/spec/RESULTS.md)
+[Orbital's earlier architecture proposal](orbital/reference/ARCHITECTURE.md) connects the
+studied mechanisms and possible implementation boundaries. [Formal results](../../orbital/spec/RESULTS.md)
 own verification status; [native model assumptions](../simulator/models/README.md)
 own simulator scope. This notebook preserves research motivations and unported
 questions, rather than another current design or sequence of required work.

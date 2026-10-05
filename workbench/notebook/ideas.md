@@ -17,7 +17,8 @@ and shared authority. The current direction is database first.
 
 The [Orbital research questions](orbital-ideas.md) curate object, execution,
 networking and recovery ideas from Calico and earlier SixDB work.
-[Orbital](../../orbital/README.md) owns the current design and entry points.
+[Ashton’s scratch notes](orbital/ASHTON-SCRATCH.md) remain his working outline;
+[historical reference material](orbital/reference/README.md) collects the earlier accounts and research links.
 
 The [consensus-networking note](consensus-networking.md) replaces the retired
 synthetic routing spike. Revisit routing, propagation/write overlap, scheduling
@@ -81,6 +82,14 @@ numeric rules.
 
 The [Calico overview](calico.md) is a cross-cutting map of earlier work.
 Question-specific reading stays beside the question it informs.
+
+## Buffers, allocation and object representations
+
+The [cross-module discussion](buffers-and-allocation.md) relates logical state,
+representations, physical parts and memory views. The
+[memory-descriptor brief](../spikes/memory-descriptors/BRIEF.md) starts a fresh
+investigation of arena-selected palettes, one-byte trampolines and arithmetic
+payload placement. The wider composition questions remain open.
 
 ## Prefix names after local remapping
 

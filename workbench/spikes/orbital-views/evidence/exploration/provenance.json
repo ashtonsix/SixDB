@@ -1,0 +1,42 @@
+{
+  "files_sha256": {
+    "control/affinity.json": "d4a028a74c63e130623a463157e6b88a852d85131e903b83f582adf9bc8b3f2d",
+    "control/comparisons.csv": "80e2a9c3020143683f34706faadf6c1afb1fc61d1842311553306c68fa53694b",
+    "control/probe.json": "4f91f791aa47201e9eb96153024d772cf2b3ab7bfc83290d8934b333c9ff76ea",
+    "control/summary.csv": "1db592849558d4db737f77b99706b14a460964313e2b8610510905c17b07ca08",
+    "job.json": "b301d1c4d71f7b8b189e89aa5a93e4530249ff50844e7a7ab4874fb758e4075e",
+    "publication/checks.txt": "424f6d0a03b0de4d70ee35e46e14bda698a302a38a98864ac365dc1bb3d0c0b0",
+    "publication/compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "publication/kernel.txt": "1a0a5e48c86282d553fa884b120165556e547afa23ff42227e901594ed42c1e0",
+    "publication/lscpu.txt": "9f050c8770bb56b5ee7094ddac4582f14e39a9178348358b28e2ffbcb8fb9065",
+    "publication/material-summary.csv": "2368114541c8c9cc6c28413f0e82a2e9717cae4749a7c1807691f3f5ab24f8c1",
+    "publication/pressure-summary.csv": "39f29fe0862f8e170276ae2e62654976d25893149cb2e34a428fb55459738da5",
+    "publication/recovery-summary.csv": "00e01443bbb8048b9b294ae3b176d67909346bca700b5dd1d85a76f2b6c93706",
+    "publication/summary-checks.json": "a9e0ac3c3120e7aa684342608b415bf2a71845d8f9b769e3949d7645ba98c63e",
+    "residency/comparisons.csv": "38f75008b946a53fb892cff18d69d7cc183e44e90d7d6259d9c2225508918ddc",
+    "residency/memory-comparisons.csv": "311df92f34c8bf79a80f3c46949bb8f900308f18de5bd9382247c3ed25732192",
+    "residency/summary-checks.json": "65aacdc7300afb0c25fcc94995f4f1ccb3e1dc354bed090635f2948c1578f7ae",
+    "worker-result.json": "679b7f4661359af6232363d1f0b0d7e6508c27b5ced199eaabd2504069ab07ed"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    [
+      "python3",
+      "workbench/spikes/orbital-views/control/summarize.py",
+      "{evidence}/control"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-views/residency/summarize.py",
+      "{evidence}/residency"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-views/publication/summarize.py",
+      "{evidence}/publication"
+    ]
+  ],
+  "regenerate_from": "archive"
+}

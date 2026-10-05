@@ -1,0 +1,37 @@
+{
+  "reference": {
+    "bucket": "calico-fleet-artifacts",
+    "bytes": 7783031,
+    "files": 26,
+    "format": 1,
+    "key": "sixdb/artifacts/sha256/20c3ada58c355ee5f9a54ae8df4f6372676a69c6910060e125746385d174d71c.tar.gz",
+    "kind": "files",
+    "region": "us-east-1",
+    "sha256": "20c3ada58c355ee5f9a54ae8df4f6372676a69c6910060e125746385d174d71c",
+    "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/20c3ada58c355ee5f9a54ae8df4f6372676a69c6910060e125746385d174d71c.tar.gz",
+    "subdirectory": ""
+  },
+  "source_tar_sha256": "3edbf9cdc7b44ca57b603698ba38b01e040510bfda407d74d2adca127fad5cca",
+  "files": {
+    "grouped.h": {
+      "original_sha256": "534e83df24e39e75043ec04e782ad20d772cdc578db06d9d14fcf0459f601be1",
+      "namespaced_sha256": "0dbd56bf0dafa876e91d50ef0cad4462b8682d1639b7c3573c96a7d647a26303"
+    },
+    "grouped.cpp": {
+      "original_sha256": "37768b6f2be9b5f28dd5e32ae6c6744d18c087aa323b45561b78cb16e378c557",
+      "namespaced_sha256": "483eff248bf52aae979d9ade88e1b9c32e3f4d994f52e2e05af29576f7e64546"
+    },
+    "grouped_probe.cpp": {
+      "original_sha256": "c4ebf97eccd841f7799173c470c4e2d8828e660fd8a9a319e19d9f55336d4ba3",
+      "namespaced_sha256": "ea554797248260b9ca621c6c5daad52c32331d569fceb382d833cb651fce744b"
+    },
+    "grouped_bench.cpp": {
+      "original_sha256": "f05d38bb93607559ac2b606645b39819ff667f00b5f610699cae8c600d6e342c",
+      "namespaced_sha256": "f9dc18ca0fccd74ddef4e8af0692927bcd70811585128da1b8a6f6f8ec2f671a"
+    }
+  },
+  "shared_sources": {
+    "arena.h": "d5af2ab7be0c4ddae13a2a72268c152d02e30cd728fd53f43facbd921024fd77",
+    "grouped_bench.cpp": "f05d38bb93607559ac2b606645b39819ff667f00b5f610699cae8c600d6e342c"
+  }
+}

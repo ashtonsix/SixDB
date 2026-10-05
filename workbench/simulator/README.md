@@ -8,7 +8,7 @@ what actually happened.
 The [Orbital model guide](models/README.md) states what the native models execute.
 Their prepared journal path and local coordinator records are narrower than the
 [formal models](../../orbital/spec/README.md). Retention fixtures are separate
-experiments. The [Orbital walkthrough](../../orbital/ARCHITECTURE.md) explains the
+experiments. The [Orbital walkthrough](../notebook/orbital/reference/ARCHITECTURE.md) explains the
 intended system; this laboratory is not its production implementation. Authored
 service costs do not predict production latency or throughput.
 

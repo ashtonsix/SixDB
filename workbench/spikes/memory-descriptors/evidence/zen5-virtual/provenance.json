@@ -1,0 +1,22 @@
+{
+  "files_sha256": {
+    "compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "host.json": "c6fc1b9606551b562c407073108ca1ba7c4c7362f53b327ff2da085bac3b3510",
+    "job.json": "9f7445eeb05d81df1ebd6ed758af2a5dbc3907259e525b529216267055ba3472",
+    "lscpu.txt": "30fefad5c41d4f3a40116dd2c0b0a632b5422bde846934f058290a365278756c",
+    "summary-checks.txt": "ee298a6c69fe1e6358cab0b51ce445a7c6487f63e641257ea9170a968eaaac8b",
+    "virtual-checks.txt": "072a2d88b34c81a02c8ca98f36a908ae15b97000f40affbb142b5cbdd26fc476",
+    "virtual-forward.csv": "7708d8c1c35cc062061b043ccbd9f28835b15493ed93c19640796cbe740d280b",
+    "virtual-reverse.csv": "c0d9b03fb3856e7c794a9120048aae94716d9f67da2433cc3c58ca368f32abd7",
+    "virtual-summary.csv": "aa680fea91439733c89d646e7720d19eea4eda700038416a6d624e0d57a24020",
+    "worker-result.json": "4ac7f937a84a7091fa2661d5b65d72f6878ec506a5eaa662760c2ce615ecaa12"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/memory-descriptors/virtual-summary.py",
+    "{evidence}"
+  ]
+}

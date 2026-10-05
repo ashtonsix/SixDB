@@ -16,7 +16,7 @@ with their current owners instead of preserving parallel implementations.
 | `orbital-scenarios/` | [Transaction workload repertoire](transactions/README.md), counterexamples and recovery questions in [Orbital research questions](orbital-ideas.md). Old arbitration/MVTO runtimes and browser are archived. |
 | `orbital-dataflow/` | [Distributed workload repertoire](dataflow-workloads.md), retained-state and progress questions in the mining guide. Four toy frameworks are archived; their unanswered questions are not declared solved. |
 | `orbital-dissemination/` | The full [223-entry source survey](dissemination/README.md) remains browsable in the notebook. Specialized routing, transport and resource comparisons remain recoverable from the checkpoint. |
-| `orbital-objects/{DESIGN,SCENARIOS,SOURCES}.md`, `probe.py`, `evidence/probe.json` | [Physical brief](../../orbital/PHYSICAL.md) owns provisional scope. The smaller [Linux mapping probe](../spikes/orbital-objects/README.md) retains real UFFD/COW evidence and executable sources. |
+| `orbital-objects/{DESIGN,SCENARIOS,SOURCES}.md`, `probe.py`, `evidence/probe.json` | [Physical brief](orbital/reference/PHYSICAL.md) records the earlier scope. The [object/view study](../spikes/orbital-objects/README.md) retains native mapping and composition evidence. |
 
 Completed does not imply superseded. Aggregate maintenance, trie remapping,
 regexp lowering and row-filter signatures still preserve distinct unanswered
@@ -29,8 +29,8 @@ cover. Their dated observations are research context, not current contracts.
 ## Earlier Orbital drafts
 
 The former `orbital/stale-drafts/` is archived at commit
-`1957910` rather than kept beside the live module. [BRIEF](../../orbital/BRIEF.md)
-and [PHYSICAL](../../orbital/PHYSICAL.md) own current direction;
+`1957910` rather than kept beside the live module. [BRIEF](orbital/reference/BRIEF.md)
+and [PHYSICAL](orbital/reference/PHYSICAL.md) retain subsequent research accounts;
 [research questions](orbital-ideas.md) and the [dissemination survey](dissemination/README.md)
 retain the useful questions, counterexamples and source references.
 
@@ -43,7 +43,7 @@ retain the useful questions, counterexamples and source references.
 
 The names are not a version sequence. In particular, “BRIEF2” in the historical
 contention comparison names a later compute/promote/renew candidate, not the
-`BRIEF2.md` above. Neither is the current fixed-position design. Old witness
+`BRIEF2.md` above. Both precede the studied fixed-position protocol. Old witness
 hierarchies, emergency quorum reductions, epoch-wide publication gates and
 expanding retry reservations are not inherited requirements.
 
@@ -55,8 +55,8 @@ source-map README retain their exact bytes; Git supplies shared recovery.
 
 The September 27 [architecture retrospective](https://github.com/ashtonsix/SixDB/blob/e40e87c/orbital/spec/ARCHITECTURE.md)
 and [design-change account](https://github.com/ashtonsix/SixDB/blob/e40e87c/orbital/spec/DESIGN-CHANGES.md)
-remain recoverable at `e40e87c`. Their current design substance is consolidated in
-[Orbital's architecture](../../orbital/ARCHITECTURE.md); the family reports retain
+remain recoverable at `e40e87c`. Their design findings are consolidated in
+[Orbital's earlier architecture proposal](orbital/reference/ARCHITECTURE.md); the family reports retain
 specific model findings. The dated [baseline](../../orbital/spec/evidence/baseline-before-design/README.md)
 and [design selection](../../orbital/spec/evidence/design-revision/README.md) preserve
 exact evidence. [RESULTS](../../orbital/spec/RESULTS.md) owns current coverage.

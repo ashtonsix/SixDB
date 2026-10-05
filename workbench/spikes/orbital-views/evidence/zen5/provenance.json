@@ -1,0 +1,24 @@
+{
+  "files_sha256": {
+    "checks.jsonl": "ef4d6d1d2c8715c3927c6f2ca97a07ad6d9b44f1c50175cbbb6d412ed948cc0b",
+    "comparisons.csv": "cfef960eed97e70017bd26339121595e2ddf4b212b9421ebcca629dd83e6fba4",
+    "compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "forward-1.csv": "61bd5a40ed53771a50cdfc9d5fe9742da6510e9c11e1a2c62ce8e87d26a791b2",
+    "forward-2.csv": "b765c5b0f9b2844e3e1f75d0d0ac45faec875899e810a2076f12a517aafd879d",
+    "forward-3.csv": "087d31a5d46756f92057715d6c687a6f516f83361c082f6a79d99b3c2c8527c6",
+    "host.json": "e3442e1ad3025f068a66a742801a61bac98a98afcdb7c320097cdb78df53ae1d",
+    "kernel.txt": "adfd4f6d772533be8f2b6bdfdcad4a80bcfd10958d747d154be97886e4ae8c7b",
+    "reverse-1.csv": "1f042b44e938c49bf6d625840d1ab846dab5ff902417c28bdeff20055feb4049",
+    "reverse-2.csv": "743e2a38bb5f41b99e9da1dd7f5b586a94681be1d602781fe38ca83397fbb574",
+    "reverse-3.csv": "7ca4c4fc1b54c35420b00dae3fdc36c255f41528397fd424fc7030b211b30b34",
+    "summary-checks.json": "ba68f8c34f7baaa2e0be3745604001f1fa683304894597d23fc8aef8a138bbfe"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/orbital-views/summarize.py",
+    "{evidence}"
+  ]
+}

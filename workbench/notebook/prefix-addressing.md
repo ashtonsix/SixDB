@@ -231,7 +231,7 @@ container placement there. Avoid making every physical-prefix lookup a global
 directory operation. Logical ownership, mapping edition, content version and
 the lifetime of resident addresses are distinct facts. This fits the provisional
 [Engine](../../engine/README.md), [Loom](../../loom/README.md) and
-[Orbital](../../orbital/README.md) division without selecting a wire format or
+[Orbital](orbital/reference/README.md) division without selecting a wire format or
 replication policy. Portable persistent names do not require identical local
 physical mappings on all replicas; the replication contract must decide that.
 

@@ -9,8 +9,9 @@ September 26, 2026, local AArch64 OrbStack, Clang 21.1.8, 4 KiB pages:
 
 The manifest also identifies the archived Python toy and its `probe.json` output;
 recover those from the [pre-curation checkpoint](../../../notebook/retired-spikes.md#recovery).
-They are not missing native-test dependencies. The two C++ sources and CMake file
-still match this receipt. Rebuild and run through the [probe guide](../README.md);
+They are not missing native-test dependencies. The two original C++ sources
+still match this receipt; CMake now also builds the composition experiment.
+Rebuild and run through the [probe guide](../README.md);
 results can legitimately differ on another kernel or architecture. Missing optional
 facilities must not silently become successful fault-path checks.
 

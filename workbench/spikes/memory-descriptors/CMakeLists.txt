@@ -1,0 +1,97 @@
+find_package(Threads REQUIRED)
+add_library(memory_descriptors_arena STATIC arena.cpp)
+sixdb_target(memory_descriptors_arena)
+target_link_libraries(memory_descriptors_arena PUBLIC Threads::Threads)
+
+add_executable(memory_descriptors_probe probe.cpp)
+sixdb_target(memory_descriptors_probe)
+target_link_libraries(memory_descriptors_probe PRIVATE memory_descriptors_arena)
+add_test(NAME memory_descriptors_native COMMAND memory_descriptors_probe)
+
+add_executable(memory_descriptors_bench bench.cpp)
+sixdb_target(memory_descriptors_bench)
+target_link_libraries(memory_descriptors_bench PRIVATE memory_descriptors_arena)
+add_test(NAME memory_descriptors_consumer COMMAND memory_descriptors_bench --quick)
+
+add_executable(memory_descriptors_allocation allocation_bench.cpp)
+sixdb_target(memory_descriptors_allocation)
+target_link_libraries(memory_descriptors_allocation PRIVATE Threads::Threads)
+add_test(NAME memory_descriptors_allocation COMMAND memory_descriptors_allocation --check)
+
+add_library(memory_descriptors_grouped STATIC grouped.cpp)
+sixdb_target(memory_descriptors_grouped)
+target_link_libraries(memory_descriptors_grouped PUBLIC memory_descriptors_arena)
+add_executable(memory_descriptors_grouped_probe grouped_probe.cpp)
+sixdb_target(memory_descriptors_grouped_probe)
+target_link_libraries(memory_descriptors_grouped_probe PRIVATE memory_descriptors_grouped)
+add_test(NAME memory_descriptors_grouped COMMAND memory_descriptors_grouped_probe)
+add_executable(memory_descriptors_grouped_bench grouped_bench.cpp)
+sixdb_target(memory_descriptors_grouped_bench)
+target_link_libraries(memory_descriptors_grouped_bench PRIVATE memory_descriptors_grouped)
+add_test(NAME memory_descriptors_grouped_consumer COMMAND memory_descriptors_grouped_bench --quick)
+
+add_library(memory_descriptors_occupancy STATIC occupancy.cpp)
+sixdb_target(memory_descriptors_occupancy)
+add_executable(memory_descriptors_occupancy_probe occupancy_probe.cpp)
+sixdb_target(memory_descriptors_occupancy_probe)
+target_link_libraries(memory_descriptors_occupancy_probe PRIVATE memory_descriptors_occupancy)
+add_test(NAME memory_descriptors_occupancy COMMAND memory_descriptors_occupancy_probe)
+add_executable(memory_descriptors_occupancy_bench occupancy_bench.cpp)
+sixdb_target(memory_descriptors_occupancy_bench)
+target_link_libraries(memory_descriptors_occupancy_bench PRIVATE memory_descriptors_occupancy)
+
+add_executable(memory_descriptors_virtual_growth virtual-growth.cpp)
+sixdb_target(memory_descriptors_virtual_growth)
+target_link_libraries(memory_descriptors_virtual_growth PRIVATE Threads::Threads)
+add_test(NAME memory_descriptors_virtual_growth COMMAND memory_descriptors_virtual_growth --check)
+
+# The matched baseline is recovered from its retained source archive, then put
+# in a separate namespace. It is never silently rebuilt from current source.
+set(SIXDB_DESCRIPTOR_BASELINE "" CACHE PATH "Recovered descriptor baseline directory")
+if(SIXDB_DESCRIPTOR_BASELINE)
+  add_library(memory_descriptors_frozen STATIC "${SIXDB_DESCRIPTOR_BASELINE}/frozen/grouped.cpp")
+  sixdb_target(memory_descriptors_frozen)
+  target_include_directories(memory_descriptors_frozen PUBLIC
+    "${CMAKE_CURRENT_SOURCE_DIR}" "${SIXDB_DESCRIPTOR_BASELINE}")
+  target_link_libraries(memory_descriptors_frozen PUBLIC memory_descriptors_arena)
+  add_executable(memory_descriptors_frozen_probe "${SIXDB_DESCRIPTOR_BASELINE}/frozen/grouped_probe.cpp")
+  sixdb_target(memory_descriptors_frozen_probe)
+  target_link_libraries(memory_descriptors_frozen_probe PRIVATE memory_descriptors_frozen)
+  add_test(NAME memory_descriptors_frozen COMMAND memory_descriptors_frozen_probe)
+  add_executable(memory_descriptors_frozen_bench "${SIXDB_DESCRIPTOR_BASELINE}/frozen/grouped_bench.cpp")
+  sixdb_target(memory_descriptors_frozen_bench)
+  target_link_libraries(memory_descriptors_frozen_bench PRIVATE memory_descriptors_frozen)
+  add_executable(memory_descriptors_tuning tuning_bench.cpp)
+  sixdb_target(memory_descriptors_tuning)
+  target_link_libraries(memory_descriptors_tuning PRIVATE memory_descriptors_grouped memory_descriptors_frozen)
+  add_test(NAME memory_descriptors_tuning COMMAND memory_descriptors_tuning --check)
+endif()
+
+# Libraries are explicit competitors, never overrides of process malloc.
+# extend.sh downloads hash-pinned source archives into ignored working space.
+set(SIXDB_DESCRIPTOR_ALLOCATOR_DEPS "" CACHE PATH "Optional pinned allocator source directory")
+if(SIXDB_DESCRIPTOR_ALLOCATOR_DEPS)
+  enable_language(C)
+  set(MI_OVERRIDE OFF CACHE BOOL "" FORCE)
+  set(MI_BUILD_SHARED OFF CACHE BOOL "" FORCE)
+  set(MI_BUILD_STATIC ON CACHE BOOL "" FORCE)
+  set(MI_BUILD_OBJECT OFF CACHE BOOL "" FORCE)
+  set(MI_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+  add_subdirectory("${SIXDB_DESCRIPTOR_ALLOCATOR_DEPS}/mimalloc-3.5.3"
+                   "${CMAKE_CURRENT_BINARY_DIR}/mimalloc" EXCLUDE_FROM_ALL)
+  add_library(memory_descriptors_allocator_libraries STATIC allocator_libraries.cpp)
+  sixdb_target(memory_descriptors_allocator_libraries)
+  target_link_libraries(memory_descriptors_allocator_libraries PRIVATE mimalloc-static)
+  target_include_directories(memory_descriptors_allocator_libraries SYSTEM PRIVATE
+    "${SIXDB_DESCRIPTOR_ALLOCATOR_DEPS}/snmalloc-0.7.5/src")
+  # Match vendor release semantics for header-compiled snmalloc. Benchmark
+  # correctness checks stay enabled in the separate first-party translation unit.
+  target_compile_definitions(memory_descriptors_allocator_libraries PRIVATE
+    NDEBUG=1 SNMALLOC_USE_WAIT_ON_ADDRESS=1)
+  target_compile_definitions(memory_descriptors_allocation PRIVATE DESCRIPTOR_ALLOCATOR_LIBRARIES)
+  target_link_libraries(memory_descriptors_allocation PRIVATE memory_descriptors_allocator_libraries)
+  if(TARGET memory_descriptors_tuning)
+    target_compile_definitions(memory_descriptors_tuning PRIVATE DESCRIPTOR_ALLOCATOR_LIBRARIES)
+    target_link_libraries(memory_descriptors_tuning PRIVATE memory_descriptors_allocator_libraries)
+  endif()
+endif()

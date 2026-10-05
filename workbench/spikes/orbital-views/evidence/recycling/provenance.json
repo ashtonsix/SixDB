@@ -1,0 +1,20 @@
+{
+  "files_sha256": {
+    "checks.jsonl": "3b9354e64b0ef14db6903c2bc768e392d0afafa1714ff3778363fe48496133a4",
+    "forward-1.csv": "236786ee2331623082995c060d09e1fbfbf01308291ff256ca87391177868ce9",
+    "forward-2.csv": "847287d4a4cfb3105ebea728d77a0c9f3cee436d1a416754d50fc487a43a34be",
+    "forward-3.csv": "f4f2034228b4649fb38f4bf0b84277f093909fb6635b7aa3846ceb09835103c7",
+    "host.json": "b357d356f42372d23c8052bc3a3eeb979f8811f84a6556728a181513ace562bb",
+    "reverse-1.csv": "883574590875317d51102a83a0bf596d4e13a98fcd2a2b146f07cb8faa063ad6",
+    "reverse-2.csv": "822d5ac958aef527506d8b88c128a0ccde33fe1090a60d72666bfcafd06aed79",
+    "reverse-3.csv": "31e65c612454d0c8be22ce36f21514c02cd205e19f865252e854901dc841c220"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/orbital-views/recycle-summary.py",
+    "{evidence}"
+  ]
+}

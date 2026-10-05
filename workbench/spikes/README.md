@@ -11,6 +11,9 @@ takes over, carry the surviving findings there and retire the redundant machiner
 the [September curation](../notebook/retired-spikes.md) is an example with recovery pointers.
 Loose thoughts can stay in the [notebook](../notebook/ideas.md) indefinitely.
 
+For Orbital, the [research map](../notebook/orbital/reference/README.md) groups briefs,
+experiments and checks under Object, Allocation, Journal, Port and Worker.
+
 - [Ikea composition](ikea-composition/README.md): reusable stages, ergonomics and interface seams.
 - [Layout analyser](layout-analyser/README.md): workload objectives, plane splitting, hardware fitting and reusable layout selection.
 - [Tuple layout](tuple-layout/README.md): physical layout, bound operations and native batching.
@@ -19,16 +22,21 @@ Loose thoughts can stay in the [notebook](../notebook/ideas.md) indefinitely.
 - [Ikea CPU comparison](ikea-cpu-comparison/README.md): October 2026 snapshot across six processors, matched case evidence and a frozen cloud-price model.
 - [Executable placement](executable-placement/README.md): distinguishing changed code from placement effects.
 - [Memory characterisation](memory-characterisation/README.md): automatic MLP, prefetch, cache sharing and host diagnostics.
+- [Memory descriptors](memory-descriptors/README.md): arena-selected palettes, one-byte trampolines, placement and retained native access.
 - [CFT commit latency](cft-commit-latency/README.md): directional network measurement and host/flow selection; durable quorum latency, storage throughput cliffs and live log preparation.
 - [Local message handoff](orbital-local-handoff/README.md): native Zen 5 measurements of batching, payload readiness, polling CPU, queue admission and instrumentation sensitivity.
-- [Orbital first formal investigation](orbital-formal-first-pass/README.md): superseded bounded checks, counterexamples and sizing evidence; incomplete design coverage.
 - [Orbital reservation policies](orbital-reservation-policy/README.md): broad-waiter progress, WAN convoys and deterministic bypass, with formal and native comparisons.
 - [Orbital prepared retention](orbital-root-fusion/README.md): deriving a prepared root from an existing same-owner record, with acquisition and recovery comparisons.
-- [Linux object mappings](orbital-objects/README.md): native protection, UFFD preparation, COW and late-reader probes.
+- [Orbital views](orbital-views/README.md): embedded object histories, versioned parts, sparse views, copying/taking, worker masks and allocation reuse.
+- [Durable object composition](orbital-objects/README.md): earlier composition of state, native views and physical lifetimes; Linux protection, UFFD and COW probes.
 - [Row filter signatures](row-filter-signatures/README.md): per-row Boolean evidence and progressive refinement.
 - [Aggregate maintenance](aggregate-maintenance/README.md): descendant summaries without excessive mutation cost.
 - [Trie remapping](trie-remapping/README.md): natural-key tries with difficult suffixes remapped to physical positions.
 - [Regexp lowering](regexp-lowering/README.md): exact LIKE rewrites and necessary-condition prefilters.
+
+## Earlier investigations
+
+- [Orbital first formal investigation](orbital-formal-first-pass/README.md): superseded bounded checks, counterexamples and sizing evidence; the maintained formal models are in [Orbital](../../orbital/spec/README.md).
 
 ## Building a study
 

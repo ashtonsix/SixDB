@@ -14,7 +14,7 @@ not a coverage checklist or another specification of the transaction protocol.
 
 The detailed documents are dated research records. Their model names and claims
 refer to the captured scenario implementations; current protocol direction belongs
-to [Orbital's brief](../../../orbital/BRIEF.md), and maintained experiments to the
+to [Orbital's brief](../orbital/reference/BRIEF.md), and maintained experiments to the
 [native simulator](../../simulator/README.md). Archived source links preserve the
 original context without keeping those old runtimes active.
 

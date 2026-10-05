@@ -1,8 +1,11 @@
 # Orbital research questions
 
+For the design workspace and research organised by area, start at
+[Orbital](orbital/reference/README.md).
+
 This is a consultable list of questions, useful examples and evidence from older
 drafts, SixDB studies and Calico. Inclusion does not select a mechanism or add a
-requirement to the [brief](../../orbital/BRIEF.md). The later
+requirement to the [brief](orbital/reference/BRIEF.md). The later
 [dissemination catalog](dissemination/README.md)
 preserves the systematic networking survey and records what was explored;
 this list remains a curated starting point. Engine owns application semantics;
@@ -17,11 +20,11 @@ alongside design prose: some attractive descriptions were never implemented.
 
 ## Durable objects, memory and local execution
 
-The [physical brief](../../orbital/PHYSICAL.md) owns provisional object/view boundaries.
-The focused [Linux mapping probes](../spikes/orbital-objects/README.md)
-retain real UFFD/COW checks. First-touch policy, late-reader reconstruction,
-delayed backend borrows, extension protection transitions and allocator hints
-still need composed native experiments; feature availability does not settle them.
+The [physical brief](orbital/reference/PHYSICAL.md) records earlier object/view proposals.
+The [object/view study](../spikes/orbital-objects/README.md) now includes a composed
+native caller alongside the UFFD/COW probes. Its [findings](../spikes/orbital-objects/FINDINGS.md)
+record the tested lifetime, reconstruction and capacity histories and the remaining
+limits. These older questions remain reference material, not a current task list.
 
 - **Make durable memory usable by ordinary programs.** The
   [early narrative](https://github.com/ashtonsix/SixDB/blob/1957910e21c266ea642ab505abe923217364948f/orbital/stale-drafts/BRIEF.md), in its memory and closing design-lessons

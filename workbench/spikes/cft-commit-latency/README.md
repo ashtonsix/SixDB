@@ -1,5 +1,7 @@
 # CFT commit latency
 
+[Orbital research map: Port](../../notebook/orbital/reference/README.md#port) · [Journal](../../notebook/orbital/reference/README.md#journal)
+
 How quickly can a crash-fault-tolerant (CFT) log make a record durable on a
 majority of replicas, and how much throughput can it preserve at that latency?
 This spike studies persistence, network selection and joint replication between

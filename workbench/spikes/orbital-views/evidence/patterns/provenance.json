@@ -1,0 +1,26 @@
+{
+  "files_sha256": {
+    "comparisons.csv": "08c42040efade0a92cda5bd8447685b15ef472f4851eda7320b3077649c3f1c9",
+    "forward-1.csv": "3777e9fefaf928e26147f0639c528b5389f90aedb8acff83b38f25fa65bb4658",
+    "forward-2.csv": "9477ff5043410d81ff2617c3af070bfd53551ca7083da4501b7a5c85f2acd148",
+    "forward-3.csv": "221aa9e04ac7ea54cf02bc611c27078e7a1857bc5ff7740862e0913f249a0293",
+    "host.json": "346c844df2bf8d7d935eb0955f1fcf3e523a935797a4f7991b156dbb434b9a80",
+    "orbital_views_acquisition_probe.jsonl": "434ab4ca64ee9877ea582e7af68a9bbe08bad95af9288dc78e20657c248fd1e5",
+    "orbital_views_embedded_probe.jsonl": "7a18f286e43c5e9dd79c0517aa29e9ce16fedbbfac64aea94923679aeda3a2d7",
+    "orbital_views_lifecycle_probe.jsonl": "4390e0c140f3661c7d7c40d9ba2b9737d81fa498bd908d543099418b7b592ae8",
+    "orbital_views_probe.jsonl": "ef4d6d1d2c8715c3927c6f2ca97a07ad6d9b44f1c50175cbbb6d412ed948cc0b",
+    "orbital_views_recycling_probe.jsonl": "3b9354e64b0ef14db6903c2bc768e392d0afafa1714ff3778363fe48496133a4",
+    "reverse-1.csv": "0225f172fd42227ba3495516095f272afffd57950e9275c808bb23bb0b2c77cb",
+    "reverse-2.csv": "ccbca173a51423fd827ed68fefc5d98e2a29d65d0fd0fea486b04b261115391a",
+    "reverse-3.csv": "b01aa1bf0ee7fa11826aa2823846f7c293a799d774ce5f4ffc4e79a073b2cc55",
+    "worker-result.json": "d627dc8a21135053c51de021ace01b6268aea86d9b6eda7e4a2b3d6a39bddcd0"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/orbital-views/pattern-summary.py",
+    "{evidence}"
+  ]
+}

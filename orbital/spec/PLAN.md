@@ -1,10 +1,10 @@
 # Orbital verification obligations
 
-This document maps the correctness-critical design in [BRIEF](../BRIEF.md) and
-[PHYSICAL](../PHYSICAL.md) to maintained model obligations and their assumptions.
+This document maps the correctness-critical design in [BRIEF](../../workbench/notebook/orbital/reference/BRIEF.md) and
+[PHYSICAL](../../workbench/notebook/orbital/reference/PHYSICAL.md) to maintained model obligations and their assumptions.
 [RESULTS](RESULTS.md) owns current evidence and open work; the family reports map
 the requirement IDs below to concrete models, configurations and properties.
-The implementation-facing [architecture](../ARCHITECTURE.md) explains how these
+The implementation-facing [architecture](../../workbench/notebook/orbital/reference/ARCHITECTURE.md) explains how these
 concepts fit together without treating formal modules as runtime components.
 
 ## Observable guarantees

@@ -1,8 +1,8 @@
 # Orbital experiment models
 
-The [Orbital walkthrough](../../../orbital/ARCHITECTURE.md) explains the intended
-system. This guide owns the narrower native models' assumptions and observation
-limits; [runtime services](../runtime.md) are shared machinery beneath them.
+The [Orbital navigation page](../../notebook/orbital/reference/README.md) connects the design
+workspace, briefs and experiments. This guide owns the native models' assumptions
+and observation limits; [runtime services](../runtime.md) are shared machinery beneath them.
 
 ## Transaction assembly
 
@@ -13,7 +13,7 @@ faults are assembled independently. Supplying an empty link vector creates no
 inter-host connectivity. Actors receive local options and authenticated message
 senders, never the case's future traffic, fault schedule, topology or observer.
 
-The [Orbital brief](../../../orbital/BRIEF.md) owns the intended contracts;
+The [earlier Orbital brief](../../notebook/orbital/reference/BRIEF.md) records the protocol studied here;
 the [formal models](../../../orbital/spec/README.md) examine broader authority
 and recovery bindings. This laboratory's prepared journal path and local
 coordinator records, described below, remain narrower. Formal results do not
@@ -29,7 +29,7 @@ a leader election or general consensus implementation. No harness supplies
 agreed epochs or durable outcomes.
 
 Two-shard transfers exercise the brief's
-[transaction sequence](../../../orbital/BRIEF.md#transactions-and-contention).
+[transaction sequence](../../notebook/orbital/reference/BRIEF.md#transactions-and-contention).
 A participant releases its reservation after its own durable position fix;
 execution waits for every fix. Client completion follows resolution of all
 declared outputs, including no-change/abort outcomes.

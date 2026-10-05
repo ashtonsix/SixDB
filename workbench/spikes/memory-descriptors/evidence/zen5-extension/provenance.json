@@ -1,0 +1,27 @@
+{
+  "files_sha256": {
+    "allocation-checks.txt": "4e7d10c912f16b09d7b2f3529470d331250a0472a3da9aeefd0b5da868e00d89",
+    "allocation-forward.csv": "456eb8c562554407242fa6b7f51ba4fae50f6105e7925748134a8064d3906e41",
+    "allocation-reverse.csv": "37a4f7a938b30d78298266e0cc16586dd9b3373a8c4342741b03ae75541826bc",
+    "allocation-summary.csv": "ac8ffed2a561f9881f17f39c9ecb9df86acaf9082d3123bd78e932a05a12785c",
+    "compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "dependencies.json": "f28c730852d07c074f02f5b91396c4decad74b22726b70736c2bfbb176031f94",
+    "grouped-checks.txt": "57813150aa23b1cb7e7759182bfb51dadd1e5020ba98520936148c6866a2d94d",
+    "grouped-forward.csv": "9f25628ad4fe1a257d5fdee54ee4314769a030c879c989872398e227d67e7be6",
+    "grouped-reverse.csv": "1c2eaf0cba826c9b831ac34da60cc90aad8bff3b0fadbf59c19c3990c5d547e6",
+    "grouped-summary.csv": "3492f7b269bb2623a4bf81546231742c9e9ad2a9fa00c5239d5c13657978c6cb",
+    "host.json": "e199a234199bc721f6d9e0c1affe5e0c6937ca00abca6978bb1182d1be0bced7",
+    "libc.txt": "0a361b537ea92ca84098127af4bbb1aa2144b39551239bdcd1bccb53ec4c5df0",
+    "lscpu.txt": "30fefad5c41d4f3a40116dd2c0b0a632b5422bde846934f058290a365278756c",
+    "summary-checks.txt": "9b205f004e253b8756b39646bd74788a963c078ad4f17bb8e967845ab9f16bf2",
+    "worker-result.json": "9bdf3c5701c156b7c7d9f4313d66f189b1e0b965b7a6bfdbb1c3527830c68529"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/memory-descriptors/extension-summary.py",
+    "{evidence}"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "files_sha256": {
+    "cut/affinity.json": "0a98b8593a2de3fd5f9a93521aca24f94c90daac81a0265087c7c18c0b77bb75",
+    "cut/cut-comparisons.csv": "799f0a13bd72306cc50cff5fc62a2ad36d56e6307f1f11f145ff538b3c3120ef",
+    "cut/cut-summary.csv": "1033c7d2c5408b7e980e8008254672ac8c9080b69461ba4e2862b0f6eaabd7e2",
+    "cut/probe.json": "40b02c58d796e720ecbe5d4b1dc4784046adb6e0873c554c122d0b21a20b2bae",
+    "job.json": "07994113ccc69ae20400df3d4451df4911cb111d4f1e679fdfb768bc291e10fd",
+    "systems/composition.txt": "b1ee122339d4200ae1194960db0d9344b081aa01c5468c7e32a2de2730c8d7fa",
+    "systems/filesystem.txt": "a213dc396433f3a89a0af3d89f688791dc4510582c5a184e6af44c32b4301929",
+    "systems/journal-summary.csv": "3cf6b4de82d106bd236710e203a9d429b63d4ab509fe04fcbb973ee57391d1d7",
+    "systems/limits.txt": "6ab5256ba3fc93d0322bf1e48ba97d1c25188c4f15500b50c4d8cf1c7ac85696",
+    "systems/resource-summary.csv": "6f2c6439e2a95ab961945f9bd7b3b70b16fd78a553ebd78561c473a5c8077d94",
+    "worker-result.json": "28012cec8ace6db9e23bd3456d42aaf4c00104411b56c5113ba42d1ea0a3d8ee"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    [
+      "python3",
+      "workbench/spikes/orbital-views/systems/summarize.py",
+      "{evidence}/systems"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-views/control/summarize-cut.py",
+      "{evidence}/cut"
+    ]
+  ],
+  "regenerate_from": "archive"
+}

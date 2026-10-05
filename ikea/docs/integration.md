@@ -14,8 +14,8 @@ in-place mutation with explicit retained state.
 | Orbital | Durable objects, transaction ordering, retained logical inputs and recovery; physical access and operation lifetimes |
 | Ikea | Admitted operations, composition, physical descriptions and issued-byte coverage |
 
-This working division follows Orbital's [logical](../../orbital/BRIEF.md) and
-[physical](../../orbital/PHYSICAL.md) briefs; it does not prescribe binding APIs.
+This working division follows Orbital's [logical](../../workbench/notebook/orbital/reference/BRIEF.md) and
+[physical](../../workbench/notebook/orbital/reference/PHYSICAL.md) briefs; it does not prescribe binding APIs.
 Engine declares a mutation's semantic effects and dependencies. Orbital establishes
 its position and retained logical inputs; Loom prepares the corresponding storage
 and completion resources. Ikea performs bounded local work. The enclosing owner

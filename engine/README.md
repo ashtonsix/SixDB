@@ -18,8 +18,9 @@ from `arbor`; see the [Calico reference map](../workbench/notebook/calico.md).
   semantics as other operations.
 
 Engine composes [Ikea](../ikea/README.md) parts and binds their work through
-[Loom](../loom/README.md). The current [Orbital design](../orbital/BRIEF.md) supplies
-shared transaction and recovery semantics; Engine defines their database meaning.
+[Loom](../loom/README.md). Orbital provides shared transaction and recovery
+semantics; Engine defines their database meaning. The [earlier Orbital brief](../workbench/notebook/orbital/reference/BRIEF.md)
+records the protocol investigated so far.
 [Shore](../shore/README.md) supplies external protocols and formats. Representation
 schemas and concrete integration interfaces remain open.
 

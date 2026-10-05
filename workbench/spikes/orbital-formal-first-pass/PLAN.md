@@ -1,7 +1,7 @@
 # Orbital's first formal models
 
 2026-09-27. Proposed model boundaries, reviewed before implementation. The
-[brief](../../../orbital/BRIEF.md) supplies the intended guarantees; the
+[brief](../../notebook/orbital/reference/BRIEF.md) supplies the intended guarantees; the
 [native simulator](../../simulator/README.md) supplies useful executions
 and known gaps. Neither is a proof. These models should expose mistakes in the
 design, not formalise only the simulator's successful paths.
