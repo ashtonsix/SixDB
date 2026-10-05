@@ -39,6 +39,9 @@ Git worktrees and `build/workspaces/*/build/workers`, deduplicating OrbStack ali
 `cache` also shows the checkout's largest build directories: these can dwarf
 worker collections and may contain unique prototypes or checkpoints. They remain
 deliberate cleanup decisions, not automatically disposable caches.
+For finished local studies with an existing artifact reference,
+[`artifacts.py evict`](artifacts.md#recover-or-reduce-retained-evidence) verifies
+and releases unchanged archived copies, including renamed selected logs.
 
 `SIXDB_WORKER_CACHE_GIB` adjusts the budget; `SIXDB_MIN_FREE_GIB` adjusts the
 5 GiB reserve checked before submission and transfers. OrbStack checks both

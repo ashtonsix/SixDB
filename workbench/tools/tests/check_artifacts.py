@@ -172,6 +172,195 @@ class ArtifactsCheck(unittest.TestCase):
     def snapshot(self, directory):
         return {str(p.relative_to(directory)): p.read_bytes() for p in artifacts.files(directory)}
 
+    def eviction_fixture(self):
+        subprocess.run(['git', 'init', '-q', str(self.root)], check=True)
+        (self.root / '.gitignore').write_text('/build/\n')
+        directory = self.root / 'build/output'
+        shutil.copytree(self.source, directory)
+        reference_path = self.root / 'artifact.json'
+        with patch.object(artifacts, 'aws', self.fake_aws), tempfile.TemporaryDirectory() as temp:
+            reference = artifacts.publish(self.source, Path(temp))
+        reference_path.write_text(json.dumps(reference))
+        return directory, reference_path, reference
+
+    def stream_object(self, reference):
+        bundle = self.root / 'stream.tar.gz'
+        bundle.write_bytes(self.objects[reference['key']])
+        original = subprocess.Popen
+        command = [sys.executable, '-c', 'import sys; sys.stdout.buffer.write(open(sys.argv[1], "rb").read())', str(bundle)]
+        return patch.object(artifacts.subprocess, 'Popen', side_effect=lambda argv, **kwargs:
+            original(command if argv[0] == 'aws' else argv, **kwargs))
+
+    def test_evict_preview_and_apply_preserve_edits_and_unarchived_files(self):
+        directory, reference_path, reference = self.eviction_fixture()
+        (directory / 'summary.md').write_text('a local correction')
+        (directory / 'notes.md').write_text('unarchived reasoning')
+        before = self.snapshot(directory)
+        with patch.object(artifacts, 'ROOT', self.root), self.stream_object(reference):
+            artifacts.evict(directory, reference_path, selected=['summary.csv', 'summary.md'])
+            self.assertEqual(self.snapshot(directory), before)
+            removed = artifacts.evict(directory, reference_path, selected=['summary.csv', 'summary.md'], apply=True)
+        self.assertEqual(removed, len(b'case,ns\ncase,12.125\n'))
+        self.assertFalse((directory / 'summary.csv').exists())
+        self.assertEqual((directory / 'summary.md').read_text(), 'a local correction')
+        self.assertEqual((directory / 'notes.md').read_text(), 'unarchived reasoning')
+        self.assertEqual((directory / 'accounting.csv').read_bytes(), before['accounting.csv'])
+
+    def test_evict_renamed_duplicate_has_recoverable_persistent_mapping(self):
+        directory, reference_path, reference = self.eviction_fixture()
+        original = b'case,ns\ncase,12.125\n'
+        renamed = directory / 'old-run/tlc.log'
+        renamed.parent.mkdir()
+        renamed.write_bytes(original)
+        (directory / 'summary.csv').unlink()
+        with patch.object(artifacts, 'ROOT', self.root), self.stream_object(reference):
+            self.assertEqual(artifacts.evict(directory, reference_path, selected=['old-run/tlc.log'],
+                minimum_bytes=21, match_content=True, apply=True), 0)
+            self.assertTrue(renamed.exists())
+            artifacts.evict(directory, reference_path, selected=['old-run/tlc.log'], match_content=True, apply=True)
+            artifacts.evict(directory, reference_path, selected=['old-run/tlc.log'], match_content=True, apply=True)
+        self.assertFalse(renamed.exists())
+        receipt = json.loads(next(directory.glob('.artifact-eviction-*.json')).read_text())
+        member = receipt['files']['old-run/tlc.log']['archive_member']
+        self.assertEqual(member, 'summary.csv')
+        with patch.object(artifacts, 'aws', self.fake_aws):
+            recovered = self.root / 'recovered'
+            artifacts.fetch(reference_path, recovered, selected=[member])
+        self.assertEqual((recovered / member).read_bytes(), original)
+
+    def test_evict_corrupt_archive_preserves_every_local_file(self):
+        directory, reference_path, reference = self.eviction_fixture()
+        before = self.snapshot(directory)
+        # A valid tar/gzip with different bytes must fail the full-object hash,
+        # even if a desired member still matches its local copy.
+        (self.source / 'unrelated.txt').write_text('new remote contents')
+        changed = self.root / 'changed.tar.gz'
+        artifacts.pack(self.source, changed)
+        self.objects[reference['key']] = changed.read_bytes()
+        with patch.object(artifacts, 'ROOT', self.root), self.stream_object(reference), \
+                self.assertRaisesRegex(ValueError, 'mismatch'):
+            artifacts.evict(directory, reference_path, selected=['summary.csv'], apply=True)
+        self.assertEqual(self.snapshot(directory), before)
+
+    def test_evict_recovery_receipt_write_failure_prevents_removal(self):
+        directory, reference_path, reference = self.eviction_fixture()
+        before = self.snapshot(directory)
+        with patch.object(artifacts, 'ROOT', self.root), self.stream_object(reference), \
+                patch.object(artifacts.storage, 'write_json', side_effect=OSError('disk full')), \
+                self.assertRaisesRegex(OSError, 'disk full'):
+            artifacts.evict(directory, reference_path, apply=True)
+        self.assertEqual(self.snapshot(directory), before)
+
+    def test_evict_partial_unlink_failure_flushes_and_preserves_recovery_for_retry(self):
+        directory, reference_path, reference = self.eviction_fixture()
+        selected = ['summary.csv', 'accounting.csv']
+        deleted = []
+        flushed_after_removal = []
+        unlink = Path.unlink
+        sync = artifacts.storage.sync_directory
+
+        def fail_second(path, *args, **kwargs):
+            if path.parent == directory and path.name in selected:
+                if deleted:
+                    raise OSError('interrupted unlink')
+                unlink(path, *args, **kwargs)
+                deleted.append(path.name)
+            else:
+                unlink(path, *args, **kwargs)
+
+        def record_sync(path):
+            if deleted:
+                flushed_after_removal.append(path)
+            sync(path)
+
+        with patch.object(artifacts, 'ROOT', self.root), self.stream_object(reference), \
+                patch.object(Path, 'unlink', fail_second), \
+                patch.object(artifacts.storage, 'sync_directory', record_sync), \
+                self.assertRaisesRegex(OSError, 'interrupted unlink'):
+            artifacts.evict(directory, reference_path, selected=selected, apply=True)
+        self.assertEqual(flushed_after_removal, [directory])
+        self.assertEqual(sum((directory / name).exists() for name in selected), 1)
+        receipt_path = next(directory.glob('.artifact-eviction-*.json'))
+        self.assertEqual(set(json.loads(receipt_path.read_text())['files']), set(selected))
+        with patch.object(artifacts, 'ROOT', self.root), self.stream_object(reference):
+            artifacts.evict(directory, reference_path, selected=selected, apply=True)
+        self.assertTrue(all(not (directory / name).exists() for name in selected))
+        self.assertEqual(set(json.loads(receipt_path.read_text())['files']), set(selected))
+
+    def test_evict_receipt_accepts_same_directory_alias_but_rejects_another_directory(self):
+        directory, reference_path, reference = self.eviction_fixture()
+        alias = self.root / 'output-alias'
+        alias.symlink_to(directory, target_is_directory=True)
+        with patch.object(artifacts, 'ROOT', self.root), self.stream_object(reference):
+            artifacts.evict(directory, reference_path, selected=['summary.csv'], apply=True)
+            receipt_path = next(directory.glob('.artifact-eviction-*.json'))
+            receipt = json.loads(receipt_path.read_text())
+            receipt['directory'] = str(alias)
+            receipt_path.write_text(json.dumps(receipt))
+            artifacts.evict(directory, reference_path, selected=['accounting.csv'], apply=True)
+            receipt = json.loads(receipt_path.read_text())
+            self.assertEqual(set(receipt['files']), {'summary.csv', 'accounting.csv'})
+            receipt['directory'] = str(self.source)
+            receipt_path.write_text(json.dumps(receipt))
+            with self.assertRaisesRegex(ValueError, 'does not match'):
+                artifacts.evict(directory, reference_path, selected=['summary.md'], apply=True)
+        self.assertTrue((directory / 'summary.md').exists())
+
+    def test_evict_pins_symlinks_and_force_tracked_outputs_stay(self):
+        directory, reference_path, reference = self.eviction_fixture()
+        pinned = directory / 'pinned'
+        pinned.mkdir()
+        (pinned / '.keep-local').touch()
+        (pinned / 'copy.csv').write_bytes((directory / 'summary.csv').read_bytes())
+        outside = self.root / 'outside.csv'
+        outside.write_bytes((directory / 'summary.csv').read_bytes())
+        (directory / 'linked.csv').symlink_to(outside)
+        (directory / 'linked-dir').symlink_to(self.source)
+        subprocess.run(['git', '-C', str(self.root), 'add', '-f', str(directory / 'summary.csv')], check=True)
+        with patch.object(artifacts, 'ROOT', self.root), self.stream_object(reference):
+            artifacts.evict(directory, reference_path, match_content=True, apply=True)
+        self.assertTrue((directory / 'summary.csv').is_file())
+        self.assertTrue((pinned / 'copy.csv').is_file())
+        self.assertTrue((directory / 'linked.csv').is_symlink())
+        self.assertTrue((directory / 'linked-dir').is_symlink())
+        self.assertEqual(outside.read_bytes(), b'case,ns\ncase,12.125\n')
+        self.assertTrue((self.source / 'summary.csv').exists())
+
+    def test_evict_uses_owning_checkout_and_preserves_nested_repositories(self):
+        directory, reference_path, reference = self.eviction_fixture()
+        subprocess.run(['git', '-C', str(self.root), 'add', '-f', str(directory / 'summary.csv')], check=True)
+        nested = directory / 'prototype'
+        subprocess.run(['git', 'init', '-q', str(nested)], check=True)
+        copy = nested / 'copy.csv'
+        copy.write_bytes((directory / 'accounting.csv').read_bytes())
+        subprocess.run(['git', '-C', str(nested), 'add', str(copy)], check=True)
+        # The tool lives in a different checkout from this archived output.
+        with self.stream_object(reference):
+            artifacts.evict(directory, reference_path, match_content=True, apply=True)
+        self.assertTrue((directory / 'summary.csv').exists())
+        self.assertTrue(copy.exists())
+        self.assertFalse((directory / 'accounting.csv').exists())
+
+    def test_evict_rejects_unignored_output_and_keeps_scoped_recovery_names(self):
+        directory, reference_path, reference = self.eviction_fixture()
+        with patch.object(artifacts, 'ROOT', self.root), patch.object(artifacts, 'remote_manifest') as remote:
+            with self.assertRaisesRegex(ValueError, 'ignored output'):
+                artifacts.evict(self.source, reference_path, apply=True)
+            remote.assert_not_called()
+        scoped_source = self.root / 'scoped-source'
+        shutil.copytree(self.source, scoped_source / 'study')
+        (scoped_source / 'outside.csv').write_text('different study')
+        with patch.object(artifacts, 'aws', self.fake_aws), tempfile.TemporaryDirectory() as temp:
+            reference = artifacts.publish(scoped_source, Path(temp), validate_run=False) | {'subdirectory': 'study'}
+        reference_path.write_text(json.dumps(reference))
+        with patch.object(artifacts, 'ROOT', self.root), self.stream_object(reference):
+            artifacts.evict(directory, reference_path, selected=['summary.csv'], apply=True)
+        receipt = json.loads(next(directory.glob('.artifact-eviction-*.json')).read_text())
+        self.assertEqual(receipt['files']['summary.csv']['archive_member'], 'summary.csv')
+        with patch.object(artifacts, 'aws', self.fake_aws):
+            artifacts.fetch(reference_path, self.root / 'scoped-recovery', selected=['summary.csv'])
+        self.assertEqual((self.root / 'scoped-recovery/summary.csv').read_bytes(), b'case,ns\ncase,12.125\n')
+
     def test_revise_previews_then_recovers_before_removing_only_selected_members(self):
         evidence = self.file_export()
         (evidence / 'notes.md').write_text('authored context stays')

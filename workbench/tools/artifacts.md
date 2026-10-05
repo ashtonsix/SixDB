@@ -106,6 +106,24 @@ supports explicit eviction/recovery of finished collections.
 Other build directories can contain unretained prototypes; inspect them before
 removing inactive copies.
 
+For a finished local bundle with an existing recovery reference, preview the
+byte-identical files that can leave ignored output, then apply:
+
+```sh
+python3 workbench/tools/artifacts.py evict build/STUDY path/to/evidence
+python3 workbench/tools/artifacts.py evict build/STUDY path/to/evidence --apply
+```
+
+Each invocation streams and verifies the full S3 bundle before comparing local
+files. Changed, unarchived, Git-tracked and `.keep-local`-pinned files stay.
+`--file EXACT/LOCAL/PATH` narrows the operation; `--min-bytes N` keeps smaller
+diagnostics locally. When a selected archive renamed the original run files,
+`--match-content` finds duplicates by size and SHA-256. A durable
+`.artifact-eviction-SHA256.json` receipt maps each local path to its archived
+member before removal, and repeated eviction preserves earlier mappings.
+Recover the recorded member with `fetch REFERENCE NEW_DIRECTORY --file MEMBER`.
+This is explicit curation, independent of worker cache budgets or age.
+
 Bundles are content-addressed under `s3://calico-fleet-artifacts/sixdb/artifacts/sha256/`
 in `us-east-1`, with conditional writes and a 5 GB single-PUT limit. No bucket
 expiry applied when checked on 2026-09-07; this is not Object Lock or a separate

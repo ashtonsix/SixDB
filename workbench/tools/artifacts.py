@@ -16,6 +16,7 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import time
 
 from evidence import compact_run, compact_files, copy_compact_files, git_root, verify_compact, verify_exports
 import storage
@@ -521,6 +522,116 @@ def fetch(reference_path, destination, *, selected=None):
         print('Whole-run validation and input dataset restoration were not requested.')
 
 
+def evict(directory, reference_path, *, selected=None, match_content=False, minimum_bytes=0, apply=False):
+    """Release unchanged archived output, recording renamed duplicates for recovery."""
+    if directory.is_symlink() or not directory.is_dir():
+        raise ValueError('eviction needs a regular output directory')
+    directory = directory.resolve()
+    if minimum_bytes < 0:
+        raise ValueError('minimum bytes must be nonnegative')
+    tracked = set()
+    checkout = git_root(directory)
+    if checkout is not None:
+        ignored = subprocess.run(['git', '-C', str(checkout), 'check-ignore', '-q', '--no-index', '--', str(directory)])
+        if ignored.returncode:
+            raise ValueError('evict only ignored output in the checkout; retained evidence stays in Git')
+        result = subprocess.run(['git', '-C', str(checkout), 'ls-files', '-z', '--', str(directory)],
+                                capture_output=True, text=True, check=True)
+        tracked = {checkout / name for name in result.stdout.split('\0') if name}
+    if any((parent / '.keep-local').exists() for parent in [directory, *directory.parents]):
+        raise ValueError('output is pinned by .keep-local')
+    if reference_path.is_dir():
+        reference_path = reference_path / 'artifact.json'
+    reference_path = reference_path.resolve()
+    reference = json.loads(reference_path.read_text())
+    selected = selection(selected)
+    prefix = reference.get('subdirectory', '').rstrip('/')
+    prefix = prefix + '/' if prefix else ''
+    members = {name.removeprefix(prefix): entry for name, entry in remote_manifest(reference).items()
+               if name.startswith(prefix)}
+    if not members:
+        raise ValueError('bundle subdirectory is empty or missing')
+    by_content = defaultdict(dict)
+    for name, entry in sorted(members.items()):
+        by_content[entry['bytes']].setdefault(entry['sha256'], name)
+    receipt_path = directory / f'.artifact-eviction-{reference["sha256"]}.json'
+    if receipt_path.is_symlink():
+        raise ValueError('eviction receipt was replaced by a symlink')
+    candidates = {}
+
+    def matches(name, entry):
+        path = directory / name
+        try:
+            return (not directory.is_symlink() and path.resolve() == directory / name and
+                not path.is_symlink() and path.is_file() and path.stat().st_size == entry['bytes'] and
+                not any((parent / '.keep-local').exists() for parent in path.parents) and sha256(path) == entry['sha256'])
+        except FileNotFoundError:
+            return False
+
+    # A selected archive may rename its original run files. Match only verified
+    # bytes when explicitly requested, and keep the original-to-archive mapping.
+    for base, directories, names in os.walk(directory, followlinks=False):
+        parent = Path(base)
+        directories[:] = [name for name in directories if not (parent / name).is_symlink()]
+        if (parent / '.keep-local').exists() or (parent / '.git').exists():
+            directories[:] = []
+            continue
+        for filename in names:
+            path = parent / filename
+            name = path.relative_to(directory).as_posix()
+            if (path in tracked | {reference_path, receipt_path} or filename.startswith('.artifact-eviction-') or
+                    (selected is not None and name not in selected) or path.is_symlink() or not path.is_file()):
+                continue
+            size = path.stat().st_size
+            if size < minimum_bytes:
+                continue
+            archived_name = name
+            if match_content:
+                if size not in by_content or path.resolve() != directory / name:
+                    continue
+                archived_name = by_content[size].get(sha256(path))
+            entry = members.get(archived_name)
+            if entry is not None and matches(name, entry):
+                candidates[name] = {'archive_member': archived_name, 'bytes': entry['bytes'], 'sha256': entry['sha256']}
+    size = sum(entry['bytes'] for entry in candidates.values())
+    print(f'{len(candidates):,} archived local files, {size:,} bytes can be released.', flush=True)
+    if not apply:
+        for name, entry in sorted(candidates.items(), key=lambda item: -item[1]['bytes'])[:5]:
+            print(f'  {entry["bytes"]:>12,}  {name} -> {entry["archive_member"]}', flush=True)
+        print('Repeat with --apply to release these verified copies.', flush=True)
+        return 0
+    receipt = json.loads(receipt_path.read_text()) if receipt_path.exists() else {}
+    if receipt:
+        try:
+            same_directory = Path(receipt['directory']).samefile(directory)
+        except (KeyError, OSError):
+            same_directory = False
+        if receipt.get('reference') != reference or not same_directory:
+            raise ValueError('eviction receipt does not match this directory/reference')
+    receipt.update(format=1, directory=str(directory), reference_path=str(reference_path), reference=reference,
+                   verified_at=time.time(), files=receipt.get('files', {}) | candidates)
+    # Persist recovery identity before unlinking; interrupted/repeated eviction
+    # keeps every mapping, including files already absent from the local tree.
+    storage.write_json(receipt_path, receipt)
+    removed = 0
+    changed_directories = set()
+    try:
+        for name, entry in candidates.items():
+            if matches(name, entry):
+                path = directory / name
+                path.unlink()
+                changed_directories.add(path.parent)
+                removed += entry['bytes']
+    finally:
+        # The recovery map is already durable. Flush each changed directory once,
+        # including a partial pass, rather than one journal commit per small file.
+        for parent in sorted(changed_directories):
+            storage.sync_directory(parent)
+    print(f'Released {removed:,} bytes; recovery map: {receipt_path}', flush=True)
+    print(f'Recover with artifacts.py fetch {reference_path} NEW_DIRECTORY --file ARCHIVE_MEMBER', flush=True)
+    return removed
+
+
 def report_commands(meta):
     commands = meta.get('regenerate', [])
     if not isinstance(commands, list):
@@ -709,6 +820,13 @@ def main():
                               help="new recovery directory, e.g. build/recovered/NAME or a path on another volume")
     fetch_parser.add_argument('--file', action='append', dest='selected',
                               help='Restore only this exact bundle file; repeat as needed (no input dataset restoration)')
+    evict_parser = commands.add_parser('evict', help='preview/release byte-identical archived local output')
+    evict_parser.add_argument('directory', type=Path)
+    evict_parser.add_argument('reference', type=Path)
+    evict_parser.add_argument('--file', action='append', dest='selected', help='Consider this exact local file; repeat as needed')
+    evict_parser.add_argument('--match-content', action='store_true', help='Match renamed archive members by size and SHA-256')
+    evict_parser.add_argument('--min-bytes', type=int, default=0, help='Consider only local files at least this large')
+    evict_parser.add_argument('--apply', action='store_true', help='release verified local copies and keep recovery mappings')
     args = parser.parse_args()
     if args.command in ('retain', 'preview'):
         action = retain if args.command == 'retain' else preview
@@ -722,6 +840,9 @@ def main():
         print(f'Verified {count} compact exports ({args.tree or "worktree"})')
     elif args.command == "fetch":
         fetch(args.reference, args.output, selected=args.selected)
+    elif args.command == 'evict':
+        evict(args.directory, args.reference, selected=args.selected, match_content=args.match_content,
+              minimum_bytes=args.min_bytes, apply=args.apply)
     else:
         if args.reference.resolve().is_relative_to(args.directory.resolve()):
             parser.error("keep the reference outside its input bundle")
