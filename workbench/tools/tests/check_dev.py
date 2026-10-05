@@ -37,6 +37,12 @@ def main():
         (root / "workbench/tools").mkdir(parents=True)
         (root / "workbench/spikes").mkdir()
         (root / "workbench/benchmarks").mkdir()
+        # Other Workbench modules are configured too; keep their bodies out of
+        # this editor fixture without duplicating the module inventory.
+        for module in sorted(p.parent.name for p in ROOT.glob('workbench/*/CMakeLists.txt')
+                             if p.parent.name not in {'spikes', 'benchmarks'}):
+            (root / "workbench" / module).mkdir()
+            (root / "workbench" / module / "CMakeLists.txt").write_text("# empty fixture module\n")
         for file in ["workbench/CMakeLists.txt", "workbench/spikes/CMakeLists.txt", "workbench/benchmarks/CMakeLists.txt", "workbench/tools/dev.py"]:
             shutil.copy2(ROOT / file, root / file)
         for kind, name in [("spikes", "first"), ("spikes", "second"), ("benchmarks", "recurring")]:
