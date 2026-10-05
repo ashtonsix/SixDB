@@ -10,6 +10,11 @@ takes precedence over these defaults.
   does not override user direction or a pause. Carry useful outcomes into their
   owning work; settled updates need no acknowledgment chain.
   [Collaboration](workbench/collaboration.md) gives examples.
+- Merge follow-up steers into the full active task; retain earlier requirements
+  unless Ashton explicitly cancels, replaces or narrows them. Carry remaining
+  scope and completion evidence through interruptions, compaction and handovers.
+  Answer an interim question, then resume. Before stopping, check the whole task;
+  completing its latest probe or steer does not close the parent work.
 - Follow the question and experimental signal. Do not invent roadmaps,
   mandatory templates, promotion stages, or approval gates. Distinguish
   constraints, proposals and observations; a spike does not establish a contract.
