@@ -1,0 +1,244 @@
+{
+  "processors": [
+    {
+      "id": "v2",
+      "name": "Neoverse V2",
+      "instance": "c8g.xlarge",
+      "core_index": 0.7937380612042515,
+      "core_p10": 0.7170942136847733,
+      "core_p90": 0.8532683381684699,
+      "dollar_index": 0.8651904092414446,
+      "usd_vcpu_hour": 0.03988,
+      "usd_core_hour": 0.03988,
+      "listed_vcpus": 4,
+      "allocated_cores": 4
+    },
+    {
+      "id": "v3",
+      "name": "Neoverse V3",
+      "instance": "c9g.xlarge",
+      "core_index": 1.0,
+      "core_p10": 1.0,
+      "core_p90": 1.0,
+      "dollar_index": 1.0,
+      "usd_vcpu_hour": 0.04347,
+      "usd_core_hour": 0.04347,
+      "listed_vcpus": 4,
+      "allocated_cores": 4
+    },
+    {
+      "id": "gnr",
+      "name": "Granite Rapids",
+      "instance": "c8i.xlarge",
+      "core_index": 1.4097760121637002,
+      "core_p10": 0.8074952901045743,
+      "core_p90": 2.5540190358556973,
+      "dollar_index": 0.6539639659455346,
+      "usd_vcpu_hour": 0.046855,
+      "usd_core_hour": 0.09371,
+      "listed_vcpus": 4,
+      "allocated_cores": 2
+    },
+    {
+      "id": "zen4",
+      "name": "Zen 4",
+      "instance": "c7a.xlarge",
+      "core_index": 1.3595544819265477,
+      "core_p10": 0.7336500298520914,
+      "core_p90": 2.2718541975122384,
+      "dollar_index": 1.1515945699405112,
+      "usd_vcpu_hour": 0.05132,
+      "usd_core_hour": 0.05132,
+      "listed_vcpus": 4,
+      "allocated_cores": 4
+    },
+    {
+      "id": "zen5",
+      "name": "Zen 5",
+      "instance": "c8a.xlarge",
+      "core_index": 2.0662579020577163,
+      "core_p10": 1.080144748957846,
+      "core_p90": 3.627034342826405,
+      "dollar_index": 1.6668874640892442,
+      "usd_vcpu_hour": 0.053885,
+      "usd_core_hour": 0.053885,
+      "listed_vcpus": 4,
+      "allocated_cores": 4
+    },
+    {
+      "id": "m1",
+      "name": "M1 Pro",
+      "instance": "mac2.metal",
+      "core_index": 1.0888810221352132,
+      "core_p10": 0.8517538358502733,
+      "core_p90": 1.374500224715871,
+      "dollar_index": 0.5825680988580642,
+      "usd_vcpu_hour": 0.08125,
+      "usd_core_hour": 0.08125,
+      "listed_vcpus": 8,
+      "allocated_cores": 8,
+      "dollar_index_4core_proxy": 0.2912840494290321
+    }
+  ],
+  "groups": [
+    {
+      "label": "A",
+      "cases": 150,
+      "core_indices": [
+        0.7716595752706219,
+        1.0,
+        1.494972156982758,
+        1.6213867589646083,
+        2.618332176444404,
+        1.0972846776622116
+      ],
+      "dollar_indices": [
+        0.8411244166753745,
+        1.0,
+        0.6934845765024062,
+        1.3733765084215028,
+        2.112255724413812,
+        0.5870641838520164
+      ]
+    },
+    {
+      "label": "B",
+      "cases": 61,
+      "core_indices": [
+        0.807420195162342,
+        1.0,
+        1.1862437633097151,
+        1.0946331359201196,
+        1.7020165373512497,
+        1.0200786059810993
+      ],
+      "dollar_indices": [
+        0.8801042097218408,
+        1.0,
+        0.5502722910156154,
+        0.9271960720663991,
+        1.3730473949829975,
+        0.5457577477169032
+      ]
+    },
+    {
+      "label": "C",
+      "cases": 40,
+      "core_indices": [
+        0.7966537432413318,
+        1.0,
+        0.9040636877472268,
+        0.7885466399922013,
+        1.2824734844349128,
+        0.9308448703678311
+      ],
+      "dollar_indices": [
+        0.8683685611509703,
+        1.0,
+        0.41937518414653663,
+        0.6679291200401596,
+        1.0345944579824748,
+        0.498016326337103
+      ]
+    },
+    {
+      "label": "D",
+      "cases": 78,
+      "core_indices": [
+        0.8253086321496652,
+        1.0,
+        1.8102095921911998,
+        1.5178573122455183,
+        1.9476166899356728,
+        1.2236375986281818
+      ],
+      "dollar_indices": [
+        0.8996029648832986,
+        1.0,
+        0.8397162626459446,
+        1.2856831130809174,
+        1.571177461473577,
+        0.6546649404599023
+      ]
+    }
+  ],
+  "cases": 329,
+  "core_wins": {
+    "clear": [
+      1,
+      9,
+      50,
+      0,
+      244,
+      9
+    ],
+    "no_clear": 16
+  },
+  "dollar_wins": {
+    "clear": [
+      2,
+      40,
+      0,
+      0,
+      277,
+      0
+    ],
+    "no_clear": 10
+  },
+  "variability": {
+    "gnr": {
+      "median_trial_change_pct": 0.009233890975779424,
+      "p90_abs_trial_change_pct": 1.7108771059144738,
+      "cases_above_5pct": 9
+    },
+    "zen4": {
+      "median_trial_change_pct": -0.019064706162852385,
+      "p90_abs_trial_change_pct": 2.031508768549468,
+      "cases_above_5pct": 15
+    },
+    "zen5": {
+      "median_trial_change_pct": 0.04980097409814643,
+      "p90_abs_trial_change_pct": 1.8604587469132736,
+      "cases_above_5pct": 12
+    },
+    "m1": {
+      "median_trial_change_pct": -0.5826371292246502,
+      "p90_abs_trial_change_pct": 2.5175998140095444,
+      "cases_above_5pct": 12
+    }
+  },
+  "excluded": {
+    "seriespack": {
+      "reference_only": [],
+      "x86_only": [
+        "pipeline-packet/n64/source0-map0-filter0-sink0/cps",
+        "pipeline-packet/n64/source0-map0-filter0-sink0/fused",
+        "pipeline-packet/n64/source0-map0-filter0-sink0/inline",
+        "pipeline-packet/n64/source0-map1-filter1-sink1/cps",
+        "pipeline-packet/n64/source0-map1-filter1-sink1/fused",
+        "pipeline-packet/n64/source0-map1-filter1-sink1/inline",
+        "pipeline-packet/n64/source1-map0-filter0-sink1-empty/cps",
+        "pipeline-packet/n64/source1-map0-filter0-sink1-empty/fused",
+        "pipeline-packet/n64/source1-map0-filter0-sink1-empty/inline",
+        "pipeline-packet/n64/source1-map0-filter0-sink1/cps",
+        "pipeline-packet/n64/source1-map0-filter0-sink1/fused",
+        "pipeline-packet/n64/source1-map0-filter0-sink1/inline",
+        "pipeline-packet/n64/source1-map2-filter2-sink0/cps",
+        "pipeline-packet/n64/source1-map2-filter2-sink0/fused",
+        "pipeline-packet/n64/source1-map2-filter2-sink0/inline"
+      ]
+    },
+    "tuplepack": {
+      "reference_only": [],
+      "x86_only": []
+    },
+    "words": {
+      "reference_only": [],
+      "x86_only": []
+    },
+    "bec256": {
+      "reference_only": [],
+      "x86_only": []
+    }
+  }
+}

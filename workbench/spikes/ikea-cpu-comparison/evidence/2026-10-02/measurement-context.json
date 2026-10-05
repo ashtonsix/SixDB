@@ -1,0 +1,3647 @@
+{
+  "receipts": {
+    "zen5": {
+      "status": "complete",
+      "started_utc": "2026-10-02T14:46:48.305540+00:00",
+      "historical_source_sha256": "1b32418a5ee879491f45ab93a0d7e5151c6098a6237f879ed22441f664f5e747",
+      "historical_manifest_sha256": "47bbdc9b8fffc10f9d32c348c3312934bcc408ae8cb74625799042ea4529838e",
+      "historical_files": 1126,
+      "march": "znver5",
+      "tune": "zen5",
+      "cpu": "0",
+      "min_time_seconds": 0.05,
+      "repetitions": 5,
+      "checks": [
+        {
+          "name": "ikea_bec256_check",
+          "status": "passed"
+        },
+        {
+          "name": "ikea_bec256_composition_check",
+          "status": "passed"
+        },
+        {
+          "name": "ikea_tuplepack_packets_check",
+          "status": "passed"
+        },
+        {
+          "name": "ikea_tuplepack_gpr_check",
+          "status": "passed"
+        }
+      ],
+      "trials": [
+        {
+          "name": "trial1-seriespack",
+          "suite": "seriespack",
+          "trial": 1,
+          "cases": 165,
+          "samples_sha256": "bcc689688feb26a0982f4752412864b8269292517ac144d7d9611f7fa8d2a07b"
+        },
+        {
+          "name": "trial1-tuplepack",
+          "suite": "tuplepack",
+          "trial": 1,
+          "cases": 61,
+          "samples_sha256": "c6138d72f8342c4acf8e20560bd526156237f27ab80c44454ce79480b61f313b"
+        },
+        {
+          "name": "trial1-words",
+          "suite": "words",
+          "trial": 1,
+          "cases": 40,
+          "samples_sha256": "33184185c8a2a69b328a3ed69b2d9e5eda397e892d0792c9dd850c1d29b56a38"
+        },
+        {
+          "name": "trial1-bec256",
+          "suite": "bec256",
+          "trial": 1,
+          "cases": 78,
+          "samples_sha256": "ed462ea68ff2b7283ce0e476a9dfa459f7db58102dc8fb83865a78b07930fbf4"
+        },
+        {
+          "name": "trial2-bec256",
+          "suite": "bec256",
+          "trial": 2,
+          "cases": 78,
+          "samples_sha256": "8be194fc881b2b3c6d298f2d1b5fc5f982604280262c60a9aa59e7b434311c91"
+        },
+        {
+          "name": "trial2-words",
+          "suite": "words",
+          "trial": 2,
+          "cases": 40,
+          "samples_sha256": "d6a868759f15e56e9a34883e70be6fce28c139b547b3955117a984870142efa0"
+        },
+        {
+          "name": "trial2-tuplepack",
+          "suite": "tuplepack",
+          "trial": 2,
+          "cases": 61,
+          "samples_sha256": "8a44e8cb474ce32c878739351c116c7332eb4527f528a179a5f88d4395bed20b"
+        },
+        {
+          "name": "trial2-seriespack",
+          "suite": "seriespack",
+          "trial": 2,
+          "cases": 165,
+          "samples_sha256": "af04406be5b09caaeca601368965ba47a89e2e498156a03ad254ea221a105d7d"
+        }
+      ],
+      "binary_sha256": {
+        "ikea_bec256_composition_check": "efd36a41d09527af682bcf1cca2586b88d003b262fc77155b2f4ca9127432de0",
+        "ikea_tuplepack_word_bench": "adc88187688f585ccd8f6274eeefc11886cc87f50734f2110cc34dfc11b727d2",
+        "ikea_bec256_check": "b71890a4109a9c852d95023a99b036eb2106e3edd2b1afc0829e89881d6758c3",
+        "ikea_tuplepack_bench": "00e58dd18a1c6aa6c24652f4c48a80e210cf167426880ff16bfaefdbdfa40fe7",
+        "ikea_seriespack_bench": "0b6393ab4951709986d00e7dc9350ab705426da2c6cbe36ccac3cc97f7fcb3f6",
+        "ikea_tuplepack_packets_check": "c08ccb835076020f2efe9194db3de6c3206245482c0a52e430eff204b1d5a136",
+        "ikea_tuplepack_gpr_check": "dcc719070488fc7447200f5ae1889f7d786459ea0dd6b7a5fe1aa4833b67d230",
+        "ikea_bec256_bench": "58febfda96bcf0d1e0f638021c44db216c2c7d37ccc5dff8499dcafd4504ecce"
+      },
+      "finished_utc": "2026-10-02T14:52:54.706546+00:00"
+    },
+    "gnr": {
+      "status": "complete",
+      "started_utc": "2026-10-02T14:46:33.783171+00:00",
+      "historical_source_sha256": "1b32418a5ee879491f45ab93a0d7e5151c6098a6237f879ed22441f664f5e747",
+      "historical_manifest_sha256": "47bbdc9b8fffc10f9d32c348c3312934bcc408ae8cb74625799042ea4529838e",
+      "historical_files": 1126,
+      "march": "graniterapids",
+      "tune": "granite-rapids",
+      "cpu": "0",
+      "min_time_seconds": 0.05,
+      "repetitions": 5,
+      "checks": [
+        {
+          "name": "ikea_bec256_check",
+          "status": "passed"
+        },
+        {
+          "name": "ikea_bec256_composition_check",
+          "status": "passed"
+        },
+        {
+          "name": "ikea_tuplepack_packets_check",
+          "status": "passed"
+        },
+        {
+          "name": "ikea_tuplepack_gpr_check",
+          "status": "passed"
+        }
+      ],
+      "trials": [
+        {
+          "name": "trial1-seriespack",
+          "suite": "seriespack",
+          "trial": 1,
+          "cases": 165,
+          "samples_sha256": "74c65a8a510aa928076cecf697ce11477053991203c02190775fdb13bc424624"
+        },
+        {
+          "name": "trial1-tuplepack",
+          "suite": "tuplepack",
+          "trial": 1,
+          "cases": 61,
+          "samples_sha256": "b4a5d24d7cc3bde41480a1006f7a83a009c4d565a210836f6ef4992058af6c6f"
+        },
+        {
+          "name": "trial1-words",
+          "suite": "words",
+          "trial": 1,
+          "cases": 40,
+          "samples_sha256": "aad86badeed85cc83fd8b55b2595ef1b0ddbf9b04a71427fbf84f6b9230b811a"
+        },
+        {
+          "name": "trial1-bec256",
+          "suite": "bec256",
+          "trial": 1,
+          "cases": 78,
+          "samples_sha256": "0f69f58f56e5fd4f7fa62f7ed06b1b5dd8334fd0d926c8fe8db3494d32eb7fcd"
+        },
+        {
+          "name": "trial2-bec256",
+          "suite": "bec256",
+          "trial": 2,
+          "cases": 78,
+          "samples_sha256": "080dfcc6a3b6aeb91108c0bb710254bb76687de4227a46775abf5679a8f03003"
+        },
+        {
+          "name": "trial2-words",
+          "suite": "words",
+          "trial": 2,
+          "cases": 40,
+          "samples_sha256": "38bb42300d67bf349ad71f03bd712bb2bab19e294dd4fef9a935cc33d670824d"
+        },
+        {
+          "name": "trial2-tuplepack",
+          "suite": "tuplepack",
+          "trial": 2,
+          "cases": 61,
+          "samples_sha256": "6f16ca3be2c0a76ed553643afae76a3d9937ee683de9f43986f7583500dcd0a5"
+        },
+        {
+          "name": "trial2-seriespack",
+          "suite": "seriespack",
+          "trial": 2,
+          "cases": 165,
+          "samples_sha256": "e0b1473b8328ddbae867f1ee8fb7a9d47dc636b13a1f4efb3518231918a93c92"
+        }
+      ],
+      "binary_sha256": {
+        "ikea_bec256_composition_check": "c393c93d8d98406d8bd206b3c0823f8fcc217360fe988147ed095435b5f7770e",
+        "ikea_tuplepack_word_bench": "28f4e52a5207c6754224fa0ec8ce512c45af2fbbb4dbe1ceabf718be52ac4c3f",
+        "ikea_bec256_check": "f043bf24b18a00fcbb5526b426c03c0143eb1a96f302b0c038ae6eb55b8dd264",
+        "ikea_tuplepack_bench": "541dc6d6bf6afd60ed9f46bed050a195275e285fa448bae5af9af99b3980ee03",
+        "ikea_seriespack_bench": "ef08dfd2f700d4acb87bde3281d6c2fdef5651670b2efae2da8b92555501ab7d",
+        "ikea_tuplepack_packets_check": "3041876ed8672adf3b0d9397e6704e6ee287c732d62827ceb18bca7a031c8fe3",
+        "ikea_tuplepack_gpr_check": "671aec6a0acd95c555a48dfca87bb11d87b936076648d698ee4c09b2bcd2267a",
+        "ikea_bec256_bench": "f2d5a00b4647b13eb2083b6a81ac68c10f78c6c22e30ead88b2e2988618d9f34"
+      },
+      "finished_utc": "2026-10-02T14:53:20.391565+00:00"
+    },
+    "m1": {
+      "started_utc": "2026-10-02T13:41:21.337454+00:00",
+      "status": "complete",
+      "host": {
+        "platform": "Linux-7.0.14-orbstack-00380-ga7e0a2dc9535-aarch64-with-glibc2.42",
+        "name": "ubuntu"
+      },
+      "cpu": 0,
+      "affinity": "Linux vCPU; physical host core placement is not established",
+      "compiler": "Clang 21.1.8",
+      "march": "armv8.2-a+simd",
+      "tune": "neoverse-v2",
+      "source_commit": "03f015217072aa6f31cfaf95f911adeb8a988848",
+      "source_sha256": "1b32418a5ee879491f45ab93a0d7e5151c6098a6237f879ed22441f664f5e747",
+      "c9g_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 41802378,
+        "files": 38,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/e18e8a8d2e9b399a5e095e973351d97d5a144839c3ffd9b070d2bc4c20a38268.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "e18e8a8d2e9b399a5e095e973351d97d5a144839c3ffd9b070d2bc4c20a38268",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/e18e8a8d2e9b399a5e095e973351d97d5a144839c3ffd9b070d2bc4c20a38268.tar.gz"
+      },
+      "binary_sha256": {
+        "ikea_bec256_check": "9c7a4fc583c9be6262f14af9776a89444c7bed75cc385cb904ee887268db2c70",
+        "compile_commands.json": "c43a1adbca3a826047ea4b59f05a18f53f0b7314942a6463ac608da9627dfd19",
+        "ikea_tuplepack_bench": "d799ff3048cfd22f594a442375dfdb4cb8eefd103b3066d7f6d8faaff571edf0",
+        "ikea_tuplepack_packets_check": "b8cf65649de923252c355355ce141b657d97c20db21a2a01b205216b6f4f7c36",
+        "ikea_bec256_composition_check": "7a2af0a0d3c50028b2513810f69f73b11c0c73ce3b48901f87ab45daae9f25cd",
+        "ikea_tuplepack_word_bench": "399bad029c4b5abea3fd2dcab998fc1f6cbf70c074cb391999d08865f6564c65",
+        "ikea_tuplepack_gpr_check": "a03f87866568f0812641ceb6cf7919ebf1a9cbdfa9a6019e7d7eebef7407d7cc",
+        "ikea_bec256_bench": "e00a8de9cb7cff4808e6520747c1aadfbad37ce8baa05df21c6e745dc03a8a53",
+        "ikea_seriespack_bench": "f3ed6fc4da1887af0fe4502df640c9516b5fcdf43cf32b4086ec857735c1993b"
+      },
+      "min_time_seconds": 0.05,
+      "repetitions": 5,
+      "trials": [
+        {
+          "name": "trial1-seriespack",
+          "suite": "seriespack",
+          "trial": 1,
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/recovered-c9g/baseline/ikea_seriespack_bench",
+            "--suite=all",
+            "--benchmark_min_time=0.05s",
+            "--benchmark_repetitions=5",
+            "--benchmark_enable_random_interleaving=false",
+            "--benchmark_out_format=json",
+            "--benchmark_out=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/m1-20261002/trial1-seriespack.json"
+          ],
+          "cases": 150,
+          "seconds": 55.81517318612896,
+          "samples_sha256": "779e0718ef93dd8b875cfe2119143158e9431d1dcacace253bda1ead5b3ed92e"
+        },
+        {
+          "name": "trial1-tuplepack",
+          "suite": "tuplepack",
+          "trial": 1,
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/recovered-c9g/baseline/ikea_tuplepack_bench",
+            "--benchmark_min_time=0.05s",
+            "--benchmark_repetitions=5",
+            "--benchmark_enable_random_interleaving=false",
+            "--benchmark_out_format=json",
+            "--benchmark_out=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/m1-20261002/trial1-tuplepack.json"
+          ],
+          "cases": 61,
+          "seconds": 22.77925112308003,
+          "samples_sha256": "62abd16177a8d17fef5eab7e129e48968f91b01e0b74b62b809598399e376d06"
+        },
+        {
+          "name": "trial1-words",
+          "suite": "words",
+          "trial": 1,
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/recovered-c9g/baseline/ikea_tuplepack_word_bench",
+            "--benchmark_min_time=0.05s",
+            "--benchmark_repetitions=5",
+            "--benchmark_enable_random_interleaving=false",
+            "--benchmark_out_format=json",
+            "--benchmark_out=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/m1-20261002/trial1-words.json"
+          ],
+          "cases": 40,
+          "seconds": 15.030835489975289,
+          "samples_sha256": "3022da8c172fe3eabbf16cb1270159b44fda8e1f2525f900f5d5032857cc661c"
+        },
+        {
+          "name": "trial1-bec256",
+          "suite": "bec256",
+          "trial": 1,
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/recovered-c9g/baseline/ikea_bec256_bench",
+            "--benchmark_min_time=0.05s",
+            "--benchmark_repetitions=5",
+            "--benchmark_enable_random_interleaving=false",
+            "--benchmark_out_format=json",
+            "--benchmark_out=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/m1-20261002/trial1-bec256.json"
+          ],
+          "cases": 78,
+          "seconds": 28.866440269863233,
+          "samples_sha256": "6317b19fb119c38810da9389ab7eebf6458c4b95b268f4c49cf5f2cf5dddd13c"
+        },
+        {
+          "name": "trial2-bec256",
+          "suite": "bec256",
+          "trial": 2,
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/recovered-c9g/baseline/ikea_bec256_bench",
+            "--benchmark_min_time=0.05s",
+            "--benchmark_repetitions=5",
+            "--benchmark_enable_random_interleaving=false",
+            "--benchmark_out_format=json",
+            "--benchmark_out=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/m1-20261002/trial2-bec256.json"
+          ],
+          "cases": 78,
+          "seconds": 28.824895084137097,
+          "samples_sha256": "64d1632873ff193be8c6779905d6ddf2591ea72bec235bdc0770077577f6bdf4"
+        },
+        {
+          "name": "trial2-words",
+          "suite": "words",
+          "trial": 2,
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/recovered-c9g/baseline/ikea_tuplepack_word_bench",
+            "--benchmark_min_time=0.05s",
+            "--benchmark_repetitions=5",
+            "--benchmark_enable_random_interleaving=false",
+            "--benchmark_out_format=json",
+            "--benchmark_out=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/m1-20261002/trial2-words.json"
+          ],
+          "cases": 40,
+          "seconds": 14.995626003947109,
+          "samples_sha256": "08796678ea32ea7cd287b81245c71508fdf70e95ddd8a55c17da7f0df38d73c2"
+        },
+        {
+          "name": "trial2-tuplepack",
+          "suite": "tuplepack",
+          "trial": 2,
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/recovered-c9g/baseline/ikea_tuplepack_bench",
+            "--benchmark_min_time=0.05s",
+            "--benchmark_repetitions=5",
+            "--benchmark_enable_random_interleaving=false",
+            "--benchmark_out_format=json",
+            "--benchmark_out=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/m1-20261002/trial2-tuplepack.json"
+          ],
+          "cases": 61,
+          "seconds": 22.7524005449377,
+          "samples_sha256": "6d020b9086923f7c8697a39d7f58092060a53ec2ad5ff7f6986ba9693e49c0d0"
+        },
+        {
+          "name": "trial2-seriespack",
+          "suite": "seriespack",
+          "trial": 2,
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/recovered-c9g/baseline/ikea_seriespack_bench",
+            "--suite=all",
+            "--benchmark_min_time=0.05s",
+            "--benchmark_repetitions=5",
+            "--benchmark_enable_random_interleaving=false",
+            "--benchmark_out_format=json",
+            "--benchmark_out=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/m1-20261002/trial2-seriespack.json"
+          ],
+          "cases": 150,
+          "seconds": 55.92005785298534,
+          "samples_sha256": "584613b67c4640cc6479d92d2c43e3f18f7da8a87ed5708c9140f9d21925aca2"
+        }
+      ],
+      "checks": [
+        {
+          "name": "ikea_bec256_check",
+          "status": "passed"
+        },
+        {
+          "name": "ikea_bec256_composition_check",
+          "status": "passed"
+        },
+        {
+          "name": "ikea_tuplepack_packets_check",
+          "status": "passed"
+        },
+        {
+          "name": "ikea_tuplepack_gpr_check",
+          "status": "passed"
+        }
+      ],
+      "selection": "All 329 cases in the identical-binary retained hardware comparison.",
+      "environment": {
+        "TUPLEPACK_WORD_BROAD": "0"
+      },
+      "unset_environment": [
+        "BEC_BROAD"
+      ],
+      "prior_attempt": {
+        "status": "failed",
+        "error": "Case/repetition mismatch: trial1-bec256"
+      },
+      "finished_utc": "2026-10-02T13:48:50.378974+00:00"
+    },
+    "zen4": {
+      "status": "complete",
+      "started_utc": "2026-10-02T15:13:15.256734+00:00",
+      "historical_source_sha256": "1b32418a5ee879491f45ab93a0d7e5151c6098a6237f879ed22441f664f5e747",
+      "historical_manifest_sha256": "47bbdc9b8fffc10f9d32c348c3312934bcc408ae8cb74625799042ea4529838e",
+      "historical_files": 1126,
+      "march": "znver4",
+      "tune": "zen4",
+      "cpu": "0",
+      "min_time_seconds": 0.05,
+      "repetitions": 5,
+      "checks": [
+        {
+          "name": "ikea_bec256_check",
+          "status": "passed"
+        },
+        {
+          "name": "ikea_bec256_composition_check",
+          "status": "passed"
+        },
+        {
+          "name": "ikea_tuplepack_packets_check",
+          "status": "passed"
+        },
+        {
+          "name": "ikea_tuplepack_gpr_check",
+          "status": "passed"
+        }
+      ],
+      "trials": [
+        {
+          "name": "trial1-seriespack",
+          "suite": "seriespack",
+          "trial": 1,
+          "cases": 165,
+          "samples_sha256": "4b20b511202480b596d647ac0cb8a4180927832853c92ed85f7f5dd4bc5e7b89"
+        },
+        {
+          "name": "trial1-tuplepack",
+          "suite": "tuplepack",
+          "trial": 1,
+          "cases": 61,
+          "samples_sha256": "562b31a51a0479e3a4c3fc2c22e3b1ff0c617bc81aaffcda3d04edb72dbbf97a"
+        },
+        {
+          "name": "trial1-words",
+          "suite": "words",
+          "trial": 1,
+          "cases": 40,
+          "samples_sha256": "b652b2944221b9ea1f24b570da85fe24d6dbae693bb3f4a3ada6d7a5b6f0b2cc"
+        },
+        {
+          "name": "trial1-bec256",
+          "suite": "bec256",
+          "trial": 1,
+          "cases": 78,
+          "samples_sha256": "b1da9571c16cb42558b0f848d2583cb0406c0b0c5b089274ee1e499b2e89be02"
+        },
+        {
+          "name": "trial2-bec256",
+          "suite": "bec256",
+          "trial": 2,
+          "cases": 78,
+          "samples_sha256": "381e54b4addfb7863980bda61a40279428ec27e7244d11285414300a1253e7c9"
+        },
+        {
+          "name": "trial2-words",
+          "suite": "words",
+          "trial": 2,
+          "cases": 40,
+          "samples_sha256": "bace9839695bfe5d943fcf6f7ed7c2adfe2c08d737b133e739cb3b910feb7b14"
+        },
+        {
+          "name": "trial2-tuplepack",
+          "suite": "tuplepack",
+          "trial": 2,
+          "cases": 61,
+          "samples_sha256": "5ba1cc84ec2e4975190f6fb2eeb149f898679e478e52cad0c9575169c41ca32a"
+        },
+        {
+          "name": "trial2-seriespack",
+          "suite": "seriespack",
+          "trial": 2,
+          "cases": 165,
+          "samples_sha256": "ce37db65614c9093333f053fb72db0ebdf3d17b1dfb918ede88635284d483918"
+        }
+      ],
+      "build_overlay": {
+        "path": "cmake/Tuning.cmake",
+        "original_sha256": "04f391dfe69c3779cf587f34d6e0f469f9d87679782f56577233ffed3ec39ec3",
+        "purpose": "Register -mtune=znver4; benchmark/library sources unchanged",
+        "applied_sha256": "b04f0636b699f00f116009bf6f02172128d87ba88bde8104c9f53e2dbf2be827"
+      },
+      "binary_sha256": {
+        "ikea_bec256_composition_check": "d5fbd93c97a4982fced645e0b79c1dcf04cdd83c0eeaddc05d5b5e128ed09209",
+        "ikea_tuplepack_word_bench": "66d75613c9dedae6f0469ede57899c56a825937e9199ebe2fabc68c5b4953aaa",
+        "ikea_bec256_check": "8446b3eabaa8c583cca129b5db27be01e1e20b35fc57703bf1b936b5ec646756",
+        "ikea_tuplepack_bench": "e77af49a50ac1ef0fa4ff5dec1d1d93300831342f908d3f90581aa7664e36268",
+        "ikea_seriespack_bench": "29d5c72e3462495186c851dbcdaec1992320a464c17737ac3630d0047a7cd7bd",
+        "ikea_tuplepack_packets_check": "adefa0ee7794c97e3bc9b3bbabfb9849362c6c67acee4b306c83597f99211ad5",
+        "ikea_tuplepack_gpr_check": "adeeb4d512b3ccf5cde540e11167463f8105fe5f9c1bb913676495497861e360",
+        "ikea_bec256_bench": "a5bb9ead67c73995484b1c32da24bd8eb664f4bbc3f9700f5a9232a8d49add23"
+      },
+      "finished_utc": "2026-10-02T15:20:12.097710+00:00"
+    }
+  },
+  "contexts": {
+    "zen5/trial1-seriespack": {
+      "date": "2026-10-02T14:48:37+00:00",
+      "host_name": "ip-172-31-41-232",
+      "executable": "/opt/sixdb/jobs/20261002T144455Z-5a1fcb41/results/binaries/ikea_seriespack_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 4506,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 49152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 1048576,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 16777216,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        1.61865,
+        0.694824,
+        0.265625
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "zen5/trial1-tuplepack": {
+      "date": "2026-10-02T14:49:38+00:00",
+      "host_name": "ip-172-31-41-232",
+      "executable": "/opt/sixdb/jobs/20261002T144455Z-5a1fcb41/results/binaries/ikea_tuplepack_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 4503,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 49152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 1048576,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 16777216,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        1.22559,
+        0.75293,
+        0.313477
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "zen5/trial1-words": {
+      "date": "2026-10-02T14:50:01+00:00",
+      "host_name": "ip-172-31-41-232",
+      "executable": "/opt/sixdb/jobs/20261002T144455Z-5a1fcb41/results/binaries/ikea_tuplepack_word_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 4509,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": false,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 49152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 1048576,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 16777216,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        1.14746,
+        0.773926,
+        0.333008
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "zen5/trial1-bec256": {
+      "date": "2026-10-02T14:50:17+00:00",
+      "host_name": "ip-172-31-41-232",
+      "executable": "/opt/sixdb/jobs/20261002T144455Z-5a1fcb41/results/binaries/ikea_bec256_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 4511,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 49152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 1048576,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 16777216,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        1.11377,
+        0.785645,
+        0.344727
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "zen5/trial2-bec256": {
+      "date": "2026-10-02T14:50:46+00:00",
+      "host_name": "ip-172-31-41-232",
+      "executable": "/opt/sixdb/jobs/20261002T144455Z-5a1fcb41/results/binaries/ikea_bec256_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 4509,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 49152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 1048576,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 16777216,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        1.06738,
+        0.807617,
+        0.367676
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "zen5/trial2-words": {
+      "date": "2026-10-02T14:51:15+00:00",
+      "host_name": "ip-172-31-41-232",
+      "executable": "/opt/sixdb/jobs/20261002T144455Z-5a1fcb41/results/binaries/ikea_tuplepack_word_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 4498,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": false,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 49152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 1048576,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 16777216,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        1.04297,
+        0.824707,
+        0.384766
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "zen5/trial2-tuplepack": {
+      "date": "2026-10-02T14:51:30+00:00",
+      "host_name": "ip-172-31-41-232",
+      "executable": "/opt/sixdb/jobs/20261002T144455Z-5a1fcb41/results/binaries/ikea_tuplepack_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 4508,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 49152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 1048576,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 16777216,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        1.03271,
+        0.833496,
+        0.39502
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "zen5/trial2-seriespack": {
+      "date": "2026-10-02T14:51:53+00:00",
+      "host_name": "ip-172-31-41-232",
+      "executable": "/opt/sixdb/jobs/20261002T144455Z-5a1fcb41/results/binaries/ikea_seriespack_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 4500,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 49152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 1048576,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 16777216,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        0.964844,
+        0.832031,
+        0.40625
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "gnr/trial1-seriespack": {
+      "date": "2026-10-02T14:49:01+00:00",
+      "host_name": "ip-172-31-16-235",
+      "executable": "/opt/sixdb/jobs/20261002T144501Z-b580732f/results/binaries/ikea_seriespack_bench",
+      "num_cpus": 2,
+      "mhz_per_cpu": 3899,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 49152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 2097152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 503316480,
+          "num_sharing": 2
+        }
+      ],
+      "load_avg": [
+        1.74902,
+        0.893555,
+        0.358887
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "gnr/trial1-tuplepack": {
+      "date": "2026-10-02T14:50:03+00:00",
+      "host_name": "ip-172-31-16-235",
+      "executable": "/opt/sixdb/jobs/20261002T144501Z-b580732f/results/binaries/ikea_tuplepack_bench",
+      "num_cpus": 2,
+      "mhz_per_cpu": 3898,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 49152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 2097152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 503316480,
+          "num_sharing": 2
+        }
+      ],
+      "load_avg": [
+        1.25195,
+        0.91748,
+        0.404297
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "gnr/trial1-words": {
+      "date": "2026-10-02T14:50:26+00:00",
+      "host_name": "ip-172-31-16-235",
+      "executable": "/opt/sixdb/jobs/20261002T144501Z-b580732f/results/binaries/ikea_tuplepack_word_bench",
+      "num_cpus": 2,
+      "mhz_per_cpu": 3899,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": false,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 49152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 2097152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 503316480,
+          "num_sharing": 2
+        }
+      ],
+      "load_avg": [
+        1.17969,
+        0.92334,
+        0.417969
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "gnr/trial1-bec256": {
+      "date": "2026-10-02T14:50:42+00:00",
+      "host_name": "ip-172-31-16-235",
+      "executable": "/opt/sixdb/jobs/20261002T144501Z-b580732f/results/binaries/ikea_bec256_bench",
+      "num_cpus": 2,
+      "mhz_per_cpu": 3899,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 49152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 2097152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 503316480,
+          "num_sharing": 2
+        }
+      ],
+      "load_avg": [
+        1.13916,
+        0.927734,
+        0.428223
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "gnr/trial2-bec256": {
+      "date": "2026-10-02T14:51:11+00:00",
+      "host_name": "ip-172-31-16-235",
+      "executable": "/opt/sixdb/jobs/20261002T144501Z-b580732f/results/binaries/ikea_bec256_bench",
+      "num_cpus": 2,
+      "mhz_per_cpu": 3882,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 49152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 2097152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 503316480,
+          "num_sharing": 2
+        }
+      ],
+      "load_avg": [
+        1.0835,
+        0.936523,
+        0.44873
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "gnr/trial2-words": {
+      "date": "2026-10-02T14:51:40+00:00",
+      "host_name": "ip-172-31-16-235",
+      "executable": "/opt/sixdb/jobs/20261002T144501Z-b580732f/results/binaries/ikea_tuplepack_word_bench",
+      "num_cpus": 2,
+      "mhz_per_cpu": 3900,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": false,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 49152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 2097152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 503316480,
+          "num_sharing": 2
+        }
+      ],
+      "load_avg": [
+        1.0498,
+        0.944336,
+        0.467285
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "gnr/trial2-tuplepack": {
+      "date": "2026-10-02T14:51:55+00:00",
+      "host_name": "ip-172-31-16-235",
+      "executable": "/opt/sixdb/jobs/20261002T144501Z-b580732f/results/binaries/ikea_tuplepack_bench",
+      "num_cpus": 2,
+      "mhz_per_cpu": 3883,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 49152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 2097152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 503316480,
+          "num_sharing": 2
+        }
+      ],
+      "load_avg": [
+        1.03809,
+        0.947266,
+        0.476074
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "gnr/trial2-seriespack": {
+      "date": "2026-10-02T14:52:18+00:00",
+      "host_name": "ip-172-31-16-235",
+      "executable": "/opt/sixdb/jobs/20261002T144501Z-b580732f/results/binaries/ikea_seriespack_bench",
+      "num_cpus": 2,
+      "mhz_per_cpu": 3899,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 49152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 2097152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 503316480,
+          "num_sharing": 2
+        }
+      ],
+      "load_avg": [
+        1.02393,
+        0.952148,
+        0.490723
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "m1/trial1-seriespack": {
+      "date": "2026-10-02T14:41:21+01:00",
+      "host_name": "ubuntu",
+      "executable": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/recovered-c9g/baseline/ikea_seriespack_bench",
+      "num_cpus": 10,
+      "mhz_per_cpu": 2000,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 131072,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 196608,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 12582912,
+          "num_sharing": 4
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 67108864,
+          "num_sharing": 10
+        }
+      ],
+      "load_avg": [
+        0.327637,
+        0.11377,
+        0.0712891
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "m1/trial1-tuplepack": {
+      "date": "2026-10-02T14:42:17+01:00",
+      "host_name": "ubuntu",
+      "executable": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/recovered-c9g/baseline/ikea_tuplepack_bench",
+      "num_cpus": 10,
+      "mhz_per_cpu": 2000,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 131072,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 196608,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 12582912,
+          "num_sharing": 4
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 67108864,
+          "num_sharing": 10
+        }
+      ],
+      "load_avg": [
+        0.77832,
+        0.280273,
+        0.132324
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "m1/trial1-words": {
+      "date": "2026-10-02T14:42:40+01:00",
+      "host_name": "ubuntu",
+      "executable": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/recovered-c9g/baseline/ikea_tuplepack_word_bench",
+      "num_cpus": 10,
+      "mhz_per_cpu": 2000,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": false,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 131072,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 196608,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 12582912,
+          "num_sharing": 4
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 67108864,
+          "num_sharing": 10
+        }
+      ],
+      "load_avg": [
+        0.842285,
+        0.328125,
+        0.151855
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "m1/trial1-bec256": {
+      "date": "2026-10-02T14:46:19+01:00",
+      "host_name": "ubuntu",
+      "executable": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/recovered-c9g/baseline/ikea_bec256_bench",
+      "num_cpus": 10,
+      "mhz_per_cpu": 2000,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 131072,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 196608,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 12582912,
+          "num_sharing": 4
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 67108864,
+          "num_sharing": 10
+        }
+      ],
+      "load_avg": [
+        0.660156,
+        0.603516,
+        0.311035
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "m1/trial2-bec256": {
+      "date": "2026-10-02T14:46:47+01:00",
+      "host_name": "ubuntu",
+      "executable": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/recovered-c9g/baseline/ikea_bec256_bench",
+      "num_cpus": 10,
+      "mhz_per_cpu": 2000,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 131072,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 196608,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 12582912,
+          "num_sharing": 4
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 67108864,
+          "num_sharing": 10
+        }
+      ],
+      "load_avg": [
+        0.852539,
+        0.658691,
+        0.339844
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "m1/trial2-words": {
+      "date": "2026-10-02T14:47:16+01:00",
+      "host_name": "ubuntu",
+      "executable": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/recovered-c9g/baseline/ikea_tuplepack_word_bench",
+      "num_cpus": 10,
+      "mhz_per_cpu": 2000,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": false,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 131072,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 196608,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 12582912,
+          "num_sharing": 4
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 67108864,
+          "num_sharing": 10
+        }
+      ],
+      "load_avg": [
+        0.992188,
+        0.709473,
+        0.368652
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "m1/trial2-tuplepack": {
+      "date": "2026-10-02T14:47:31+01:00",
+      "host_name": "ubuntu",
+      "executable": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/recovered-c9g/baseline/ikea_tuplepack_bench",
+      "num_cpus": 10,
+      "mhz_per_cpu": 2000,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 131072,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 196608,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 12582912,
+          "num_sharing": 4
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 67108864,
+          "num_sharing": 10
+        }
+      ],
+      "load_avg": [
+        0.994629,
+        0.724121,
+        0.378906
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "m1/trial2-seriespack": {
+      "date": "2026-10-02T14:47:54+01:00",
+      "host_name": "ubuntu",
+      "executable": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-m1-v3/recovered-c9g/baseline/ikea_seriespack_bench",
+      "num_cpus": 10,
+      "mhz_per_cpu": 2000,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 131072,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 196608,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 12582912,
+          "num_sharing": 4
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 67108864,
+          "num_sharing": 10
+        }
+      ],
+      "load_avg": [
+        0.996582,
+        0.743164,
+        0.392578
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "zen4/trial1-seriespack": {
+      "date": "2026-10-02T15:15:50+00:00",
+      "host_name": "ip-172-31-36-127",
+      "executable": "/opt/sixdb/jobs/20261002T151129Z-491eddc6/results/binaries/ikea_seriespack_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 3701,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 1048576,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 16777216,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        1.81836,
+        1.08984,
+        0.458984
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "zen4/trial1-tuplepack": {
+      "date": "2026-10-02T15:16:53+00:00",
+      "host_name": "ip-172-31-36-127",
+      "executable": "/opt/sixdb/jobs/20261002T151129Z-491eddc6/results/binaries/ikea_tuplepack_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 3699,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 1048576,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 16777216,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        1.27441,
+        1.07031,
+        0.49707
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "zen4/trial1-words": {
+      "date": "2026-10-02T15:17:16+00:00",
+      "host_name": "ip-172-31-36-127",
+      "executable": "/opt/sixdb/jobs/20261002T151129Z-491eddc6/results/binaries/ikea_tuplepack_word_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 3700,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": false,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 1048576,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 16777216,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        1.17969,
+        1.06299,
+        0.511719
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "zen4/trial1-bec256": {
+      "date": "2026-10-02T15:17:32+00:00",
+      "host_name": "ip-172-31-36-127",
+      "executable": "/opt/sixdb/jobs/20261002T151129Z-491eddc6/results/binaries/ikea_bec256_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 3700,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 1048576,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 16777216,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        1.13916,
+        1.05859,
+        0.520508
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "zen4/trial2-bec256": {
+      "date": "2026-10-02T15:18:01+00:00",
+      "host_name": "ip-172-31-36-127",
+      "executable": "/opt/sixdb/jobs/20261002T151129Z-491eddc6/results/binaries/ikea_bec256_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 3700,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 1048576,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 16777216,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        1.0835,
+        1.05273,
+        0.538086
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "zen4/trial2-words": {
+      "date": "2026-10-02T15:18:31+00:00",
+      "host_name": "ip-172-31-36-127",
+      "executable": "/opt/sixdb/jobs/20261002T151129Z-491eddc6/results/binaries/ikea_tuplepack_word_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 3701,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": false,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 1048576,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 16777216,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        1.0542,
+        1.04785,
+        0.551758
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "zen4/trial2-tuplepack": {
+      "date": "2026-10-02T15:18:46+00:00",
+      "host_name": "ip-172-31-36-127",
+      "executable": "/opt/sixdb/jobs/20261002T151129Z-491eddc6/results/binaries/ikea_tuplepack_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 3700,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 1048576,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 16777216,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        1.03809,
+        1.04395,
+        0.561523
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "zen4/trial2-seriespack": {
+      "date": "2026-10-02T15:19:10+00:00",
+      "host_name": "ip-172-31-36-127",
+      "executable": "/opt/sixdb/jobs/20261002T151129Z-491eddc6/results/binaries/ikea_seriespack_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 3700,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 32768,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 1048576,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 16777216,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        1.02637,
+        1.04004,
+        0.571289
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "v3/seriespack": {
+      "date": "2026-09-27T18:13:33+00:00",
+      "host_name": "ip-172-31-26-133",
+      "executable": "/opt/sixdb/jobs/20260927T180902Z-d0ff2b2d/results/baseline/ikea_seriespack_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 2000,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 2097152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 50331648,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        0.503906,
+        0.32373,
+        0.135254
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "v2/seriespack": {
+      "date": "2026-09-27T18:13:32+00:00",
+      "host_name": "ip-172-31-27-42",
+      "executable": "/opt/sixdb/jobs/20260927T180855Z-55dddb30/results/baseline/ikea_seriespack_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 2000,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 2097152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 37748736,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        1.69482,
+        0.918945,
+        0.374512
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "v3/tuplepack": {
+      "date": "2026-09-27T18:14:29+00:00",
+      "host_name": "ip-172-31-26-133",
+      "executable": "/opt/sixdb/jobs/20260927T180902Z-d0ff2b2d/results/baseline/ikea_tuplepack_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 2000,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 2097152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 50331648,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        0.804199,
+        0.439941,
+        0.188477
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "v2/tuplepack": {
+      "date": "2026-09-27T18:14:29+00:00",
+      "host_name": "ip-172-31-27-42",
+      "executable": "/opt/sixdb/jobs/20260927T180855Z-55dddb30/results/baseline/ikea_tuplepack_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 2000,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 2097152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 37748736,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        1.25342,
+        0.936523,
+        0.415527
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "v3/words": {
+      "date": "2026-09-27T18:14:52+00:00",
+      "host_name": "ip-172-31-26-133",
+      "executable": "/opt/sixdb/jobs/20260927T180902Z-d0ff2b2d/results/baseline/ikea_tuplepack_word_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 2000,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": false,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 2097152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 50331648,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        0.86084,
+        0.477539,
+        0.206055
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "v2/words": {
+      "date": "2026-09-27T18:14:52+00:00",
+      "host_name": "ip-172-31-27-42",
+      "executable": "/opt/sixdb/jobs/20260927T180855Z-55dddb30/results/baseline/ikea_tuplepack_word_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 2000,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": false,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 2097152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 37748736,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        1.18018,
+        0.942383,
+        0.429199
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "v3/bec256": {
+      "date": "2026-09-27T18:15:08+00:00",
+      "host_name": "ip-172-31-26-133",
+      "executable": "/opt/sixdb/jobs/20260927T180902Z-d0ff2b2d/results/baseline/ikea_bec256_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 2000,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 2097152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 50331648,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        0.89209,
+        0.503906,
+        0.219238
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    },
+    "v2/bec256": {
+      "date": "2026-09-27T18:15:07+00:00",
+      "host_name": "ip-172-31-27-42",
+      "executable": "/opt/sixdb/jobs/20260927T180855Z-55dddb30/results/baseline/ikea_bec256_bench",
+      "num_cpus": 4,
+      "mhz_per_cpu": 2000,
+      "cpu_scaling_enabled": false,
+      "aslr_enabled": true,
+      "caches": [
+        {
+          "type": "Data",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Instruction",
+          "level": 1,
+          "size": 65536,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 2,
+          "size": 2097152,
+          "num_sharing": 1
+        },
+        {
+          "type": "Unified",
+          "level": 3,
+          "size": 37748736,
+          "num_sharing": 4
+        }
+      ],
+      "load_avg": [
+        1.13965,
+        0.945312,
+        0.439453
+      ],
+      "library_version": "v1.9.4",
+      "library_build_type": "release",
+      "json_schema_version": 1
+    }
+  },
+  "input_sha256": {
+    "zen5/trial1-seriespack": "bcc689688feb26a0982f4752412864b8269292517ac144d7d9611f7fa8d2a07b",
+    "zen5/trial1-tuplepack": "c6138d72f8342c4acf8e20560bd526156237f27ab80c44454ce79480b61f313b",
+    "zen5/trial1-words": "33184185c8a2a69b328a3ed69b2d9e5eda397e892d0792c9dd850c1d29b56a38",
+    "zen5/trial1-bec256": "ed462ea68ff2b7283ce0e476a9dfa459f7db58102dc8fb83865a78b07930fbf4",
+    "zen5/trial2-bec256": "8be194fc881b2b3c6d298f2d1b5fc5f982604280262c60a9aa59e7b434311c91",
+    "zen5/trial2-words": "d6a868759f15e56e9a34883e70be6fce28c139b547b3955117a984870142efa0",
+    "zen5/trial2-tuplepack": "8a44e8cb474ce32c878739351c116c7332eb4527f528a179a5f88d4395bed20b",
+    "zen5/trial2-seriespack": "af04406be5b09caaeca601368965ba47a89e2e498156a03ad254ea221a105d7d",
+    "gnr/trial1-seriespack": "74c65a8a510aa928076cecf697ce11477053991203c02190775fdb13bc424624",
+    "gnr/trial1-tuplepack": "b4a5d24d7cc3bde41480a1006f7a83a009c4d565a210836f6ef4992058af6c6f",
+    "gnr/trial1-words": "aad86badeed85cc83fd8b55b2595ef1b0ddbf9b04a71427fbf84f6b9230b811a",
+    "gnr/trial1-bec256": "0f69f58f56e5fd4f7fa62f7ed06b1b5dd8334fd0d926c8fe8db3494d32eb7fcd",
+    "gnr/trial2-bec256": "080dfcc6a3b6aeb91108c0bb710254bb76687de4227a46775abf5679a8f03003",
+    "gnr/trial2-words": "38bb42300d67bf349ad71f03bd712bb2bab19e294dd4fef9a935cc33d670824d",
+    "gnr/trial2-tuplepack": "6f16ca3be2c0a76ed553643afae76a3d9937ee683de9f43986f7583500dcd0a5",
+    "gnr/trial2-seriespack": "e0b1473b8328ddbae867f1ee8fb7a9d47dc636b13a1f4efb3518231918a93c92",
+    "m1/trial1-seriespack": "779e0718ef93dd8b875cfe2119143158e9431d1dcacace253bda1ead5b3ed92e",
+    "m1/trial1-tuplepack": "62abd16177a8d17fef5eab7e129e48968f91b01e0b74b62b809598399e376d06",
+    "m1/trial1-words": "3022da8c172fe3eabbf16cb1270159b44fda8e1f2525f900f5d5032857cc661c",
+    "m1/trial1-bec256": "6317b19fb119c38810da9389ab7eebf6458c4b95b268f4c49cf5f2cf5dddd13c",
+    "m1/trial2-bec256": "64d1632873ff193be8c6779905d6ddf2591ea72bec235bdc0770077577f6bdf4",
+    "m1/trial2-words": "08796678ea32ea7cd287b81245c71508fdf70e95ddd8a55c17da7f0df38d73c2",
+    "m1/trial2-tuplepack": "6d020b9086923f7c8697a39d7f58092060a53ec2ad5ff7f6986ba9693e49c0d0",
+    "m1/trial2-seriespack": "584613b67c4640cc6479d92d2c43e3f18f7da8a87ed5708c9140f9d21925aca2",
+    "zen4/tuning-overlay.json": "317b95654324175e00694c33eaf14a0c06d11a18d8780b86a576459e8d28dab1",
+    "zen4/compile_commands.json": "2943428036c198dd433b3e617986763f6ad283ce29b219bebd3c17bf5a0f5bff",
+    "zen4/source-manifest.json": "e2a2b3976d1733d32cda7dbeed2f3ad5bdd06730ec053ad56381fb5bbda8844f",
+    "zen4/lscpu.json": "2b6bca034d4ed8ae3913163ba387710a0ebb6b5b36a58c3611920a46bbd1991b",
+    "zen4/compiler.txt": "5b17cd9bfa01ae4b276d020d757aeed82b232d4dacef417a833e5ba69a5307da",
+    "zen4/trial1-seriespack": "4b20b511202480b596d647ac0cb8a4180927832853c92ed85f7f5dd4bc5e7b89",
+    "zen4/trial1-tuplepack": "562b31a51a0479e3a4c3fc2c22e3b1ff0c617bc81aaffcda3d04edb72dbbf97a",
+    "zen4/trial1-words": "b652b2944221b9ea1f24b570da85fe24d6dbae693bb3f4a3ada6d7a5b6f0b2cc",
+    "zen4/trial1-bec256": "b1da9571c16cb42558b0f848d2583cb0406c0b0c5b089274ee1e499b2e89be02",
+    "zen4/trial2-bec256": "381e54b4addfb7863980bda61a40279428ec27e7244d11285414300a1253e7c9",
+    "zen4/trial2-words": "bace9839695bfe5d943fcf6f7ed7c2adfe2c08d737b133e739cb3b910feb7b14",
+    "zen4/trial2-tuplepack": "5ba1cc84ec2e4975190f6fb2eeb149f898679e478e52cad0c9575169c41ca32a",
+    "zen4/trial2-seriespack": "ce37db65614c9093333f053fb72db0ebdf3d17b1dfb918ede88635284d483918",
+    "v3/seriespack": "78e137dd9a86146c13d74ae6132cb65e71ea99401ec7f9a1a13f98a0a440612a",
+    "v2/seriespack": "2f4a18394f76a52be8d20015cc0d21ac6b3facca204310b6831eccfc3f2defb6",
+    "v3/tuplepack": "9902299512642f12dfb0ca288798d02846120b8800cef1aa34f8a3de3a33518c",
+    "v2/tuplepack": "9fc20a76801f9ee4a9249b6e4d310d2a52176b5dd46f1dedc721be67ace2f316",
+    "v3/words": "03824bcb61af0ccb41b8d5ea46abf77848df1020a7c7df239b7c1db3cbef7780",
+    "v2/words": "5b3e8e859db905fd01333e9bf3ecc1d9d9156375803e625de0ea1c682560873c",
+    "v3/bec256": "8891d691ce4e8dabd5fa1544bb9414073530e4cf3bebb380d911c7447ac28c30",
+    "v2/bec256": "06c0579194f34b0eacb32cda5b22e034c97b8003ffc36d6ec7f19eff0881e29f"
+  },
+  "retained_baseline_sha256": "a2989b54c2bf95fbcfcedf741675a5d166f864bd583cbe31b9eda0934b5a2db3",
+  "retained_baseline_references": {
+    "bucket": "calico-fleet-artifacts",
+    "format": 1,
+    "group": "20260927T180848Z-db63592a",
+    "members": {
+      "c8g": {
+        "artifact": {
+          "bucket": "calico-fleet-artifacts",
+          "bytes": 41802220,
+          "files": 40,
+          "format": 1,
+          "key": "sixdb/artifacts/sha256/b774f427ba7d55c9b75cc09b0aad4620b11c3a402d960447131c8cdd2ae28088.tar.gz",
+          "kind": "files",
+          "region": "us-east-1",
+          "sha256": "b774f427ba7d55c9b75cc09b0aad4620b11c3a402d960447131c8cdd2ae28088",
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/b774f427ba7d55c9b75cc09b0aad4620b11c3a402d960447131c8cdd2ae28088.tar.gz"
+        },
+        "collection": {
+          "exit_code": 0,
+          "utc": 1790533029.2312734
+        },
+        "error": null,
+        "instances": [
+          {
+            "id": "i-07f282894a6dc54d8",
+            "state": "running"
+          }
+        ],
+        "job": "20260927T180855Z-55dddb30",
+        "phase": "submitted",
+        "resource_observed_at": 1790533209.9172692,
+        "results": "/home/ashtonsix/sixdb-worktrees/ikea-neoverse-v3/build/workers/20260927T180855Z-55dddb30/results",
+        "session": {
+          "capacity": "spot",
+          "idle_until": 1790533851.8852124,
+          "instance_id": "i-07f282894a6dc54d8",
+          "job_id": "20260927T181717Z-adf152ec",
+          "job_sha256": "24079accb131f8a7fadd84563ef242ba043d7284e73b0c1a8c4be502b8d2e1f5",
+          "job_uri": "s3://calico-fleet-artifacts/sixdb/workers/20260927T181717Z-adf152ec",
+          "max_end": 1790543353.897976,
+          "profile": "840ef2f6d81e7596eea04e83a936cb6a65d521e2b16402780e810aeeab60d8b6",
+          "reuse_count": 1,
+          "revision": "ab9666190b7c47f985967324affb0238",
+          "state": "busy",
+          "subnet_id": "subnet-75288838",
+          "worker_id": "20260927T180855Z-55dddb30"
+        },
+        "source_commit": "03f015217072aa6f31cfaf95f911adeb8a988848",
+        "source_sha256": "1b32418a5ee879491f45ab93a0d7e5151c6098a6237f879ed22441f664f5e747",
+        "state": "complete",
+        "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260927T180855Z-55dddb30",
+        "worker": {
+          "id": "20260927T180855Z-55dddb30",
+          "instance_id": "i-07f282894a6dc54d8",
+          "max_end": 1790543353.897976,
+          "reuse_count": 0,
+          "reused": false
+        }
+      },
+      "c9g": {
+        "artifact": {
+          "bucket": "calico-fleet-artifacts",
+          "bytes": 41802378,
+          "files": 38,
+          "format": 1,
+          "key": "sixdb/artifacts/sha256/e18e8a8d2e9b399a5e095e973351d97d5a144839c3ffd9b070d2bc4c20a38268.tar.gz",
+          "kind": "files",
+          "region": "us-east-1",
+          "sha256": "e18e8a8d2e9b399a5e095e973351d97d5a144839c3ffd9b070d2bc4c20a38268",
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/e18e8a8d2e9b399a5e095e973351d97d5a144839c3ffd9b070d2bc4c20a38268.tar.gz"
+        },
+        "collection": {
+          "exit_code": 0,
+          "utc": 1790533026.297311
+        },
+        "error": null,
+        "instances": [
+          {
+            "id": "i-02cdf2117e22cffcd",
+            "state": "running"
+          }
+        ],
+        "job": "20260927T180902Z-d0ff2b2d",
+        "phase": "submitted",
+        "resource_observed_at": 1790533209.950349,
+        "results": "/home/ashtonsix/sixdb-worktrees/ikea-neoverse-v3/build/workers/20260927T180902Z-d0ff2b2d/results",
+        "session": {
+          "capacity": "spot",
+          "idle_until": 1790533848.8692954,
+          "instance_id": "i-02cdf2117e22cffcd",
+          "job_id": "20260927T181723Z-3a3f74b9",
+          "job_sha256": "128f61cf4a2a580d870c8299b102ea0afd6213139825e2a1e1fb07198a9ff53c",
+          "job_uri": "s3://calico-fleet-artifacts/sixdb/workers/20260927T181723Z-3a3f74b9",
+          "max_end": 1790543379.0045307,
+          "profile": "db5070b952bebc486914f01e6794f7764a64923340b72b5010fdb66468aba95e",
+          "reuse_count": 1,
+          "revision": "eb4f65fe79324d0584c379e8cfff983d",
+          "state": "busy",
+          "subnet_id": "subnet-75288838",
+          "worker_id": "20260927T180902Z-d0ff2b2d"
+        },
+        "source_commit": "03f015217072aa6f31cfaf95f911adeb8a988848",
+        "source_sha256": "1b32418a5ee879491f45ab93a0d7e5151c6098a6237f879ed22441f664f5e747",
+        "state": "complete",
+        "uri": "s3://calico-fleet-artifacts/sixdb/workers/20260927T180902Z-d0ff2b2d",
+        "worker": {
+          "id": "20260927T180902Z-d0ff2b2d",
+          "instance_id": "i-02cdf2117e22cffcd",
+          "max_end": 1790543379.0045307,
+          "reuse_count": 0,
+          "reused": false
+        }
+      }
+    },
+    "network": null,
+    "network_removed": false,
+    "region": "us-east-1",
+    "uri": "s3://calico-fleet-artifacts/sixdb/worker-groups/20260927T180848Z-db63592a"
+  },
+  "pricing": {
+    "v2": {
+      "product": {
+        "product": {
+          "productFamily": "Compute Instance",
+          "attributes": {
+            "enhancedNetworkingSupported": "Yes",
+            "intelTurboAvailable": "No",
+            "memory": "8 GiB",
+            "dedicatedEbsThroughput": "Up to 10 Gbps",
+            "vcpu": "4",
+            "classicnetworkingsupport": "false",
+            "capacitystatus": "Used",
+            "locationType": "AWS Region",
+            "storage": "EBS only",
+            "instanceFamily": "Compute optimized",
+            "operatingSystem": "Linux",
+            "intelAvx2Available": "No",
+            "instanceFamilyCategory": "Compute Optimized",
+            "regionCode": "us-east-1",
+            "physicalProcessor": "AWS Graviton4 Processor",
+            "clockSpeed": "2.7 GHz",
+            "ecu": "NA",
+            "networkPerformance": "Up to 12.5 Gigabit",
+            "servicename": "Amazon Elastic Compute Cloud",
+            "gpuMemory": "NA",
+            "dedicatedEbsThroughputDescription": "1250 Mbps",
+            "vpcnetworkingsupport": "true",
+            "instanceType": "c8g.xlarge",
+            "tenancy": "Shared",
+            "usagetype": "BoxUsage:c8g.xlarge",
+            "normalizationSizeFactor": "8",
+            "intelAvxAvailable": "No",
+            "servicecode": "AmazonEC2",
+            "licenseModel": "No License required",
+            "currentGeneration": "Yes",
+            "preInstalledSw": "NA",
+            "location": "US East (N. Virginia)",
+            "processorArchitecture": "64-bit",
+            "marketoption": "OnDemand",
+            "operation": "RunInstances",
+            "availabilityzone": "NA"
+          },
+          "sku": "G8YDHSYAVXZTFXQ7"
+        },
+        "serviceCode": "AmazonEC2",
+        "terms": {
+          "OnDemand": {
+            "G8YDHSYAVXZTFXQ7.JRTCKXETXF": {
+              "priceDimensions": {
+                "G8YDHSYAVXZTFXQ7.JRTCKXETXF.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "$0.15952 per On Demand Linux c8g.xlarge Instance Hour",
+                  "appliesTo": [],
+                  "rateCode": "G8YDHSYAVXZTFXQ7.JRTCKXETXF.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.1595200000"
+                  }
+                }
+              },
+              "sku": "G8YDHSYAVXZTFXQ7",
+              "effectiveDate": "2026-09-01T00:00:00Z",
+              "offerTermCode": "JRTCKXETXF",
+              "termAttributes": {}
+            }
+          },
+          "Reserved": {
+            "G8YDHSYAVXZTFXQ7.6QCMYABX3D": {
+              "priceDimensions": {
+                "G8YDHSYAVXZTFXQ7.6QCMYABX3D.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "USD 0.0 per Linux/UNIX (Amazon VPC), c8g.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "G8YDHSYAVXZTFXQ7.6QCMYABX3D.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.0000000000"
+                  }
+                },
+                "G8YDHSYAVXZTFXQ7.6QCMYABX3D.2TG2D8R56U": {
+                  "unit": "Quantity",
+                  "description": "Upfront Fee",
+                  "appliesTo": [],
+                  "rateCode": "G8YDHSYAVXZTFXQ7.6QCMYABX3D.2TG2D8R56U",
+                  "pricePerUnit": {
+                    "USD": "859"
+                  }
+                }
+              },
+              "sku": "G8YDHSYAVXZTFXQ7",
+              "effectiveDate": "2026-09-25T18:08:59Z",
+              "offerTermCode": "6QCMYABX3D",
+              "termAttributes": {
+                "LeaseContractLength": "1yr",
+                "OfferingClass": "standard",
+                "PurchaseOption": "All Upfront"
+              }
+            },
+            "G8YDHSYAVXZTFXQ7.HU7G6KETJZ": {
+              "priceDimensions": {
+                "G8YDHSYAVXZTFXQ7.HU7G6KETJZ.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "Linux/UNIX (Amazon VPC), c8g.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "G8YDHSYAVXZTFXQ7.HU7G6KETJZ.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.0500600000"
+                  }
+                },
+                "G8YDHSYAVXZTFXQ7.HU7G6KETJZ.2TG2D8R56U": {
+                  "unit": "Quantity",
+                  "description": "Upfront Fee",
+                  "appliesTo": [],
+                  "rateCode": "G8YDHSYAVXZTFXQ7.HU7G6KETJZ.2TG2D8R56U",
+                  "pricePerUnit": {
+                    "USD": "438"
+                  }
+                }
+              },
+              "sku": "G8YDHSYAVXZTFXQ7",
+              "effectiveDate": "2026-09-25T18:09:01Z",
+              "offerTermCode": "HU7G6KETJZ",
+              "termAttributes": {
+                "LeaseContractLength": "1yr",
+                "OfferingClass": "standard",
+                "PurchaseOption": "Partial Upfront"
+              }
+            },
+            "G8YDHSYAVXZTFXQ7.BPH4J8HBKS": {
+              "priceDimensions": {
+                "G8YDHSYAVXZTFXQ7.BPH4J8HBKS.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "Linux/UNIX (Amazon VPC), c8g.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "G8YDHSYAVXZTFXQ7.BPH4J8HBKS.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.0701000000"
+                  }
+                }
+              },
+              "sku": "G8YDHSYAVXZTFXQ7",
+              "effectiveDate": "2026-09-25T18:09:02Z",
+              "offerTermCode": "BPH4J8HBKS",
+              "termAttributes": {
+                "LeaseContractLength": "3yr",
+                "OfferingClass": "standard",
+                "PurchaseOption": "No Upfront"
+              }
+            },
+            "G8YDHSYAVXZTFXQ7.MZU6U2429S": {
+              "priceDimensions": {
+                "G8YDHSYAVXZTFXQ7.MZU6U2429S.2TG2D8R56U": {
+                  "unit": "Quantity",
+                  "description": "Upfront Fee",
+                  "appliesTo": [],
+                  "rateCode": "G8YDHSYAVXZTFXQ7.MZU6U2429S.2TG2D8R56U",
+                  "pricePerUnit": {
+                    "USD": "1842"
+                  }
+                },
+                "G8YDHSYAVXZTFXQ7.MZU6U2429S.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "USD 0.0 per Linux/UNIX (Amazon VPC), c8g.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "G8YDHSYAVXZTFXQ7.MZU6U2429S.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.0000000000"
+                  }
+                }
+              },
+              "sku": "G8YDHSYAVXZTFXQ7",
+              "effectiveDate": "2026-09-25T18:09:01Z",
+              "offerTermCode": "MZU6U2429S",
+              "termAttributes": {
+                "LeaseContractLength": "3yr",
+                "OfferingClass": "convertible",
+                "PurchaseOption": "All Upfront"
+              }
+            },
+            "G8YDHSYAVXZTFXQ7.VJWZNREJX2": {
+              "priceDimensions": {
+                "G8YDHSYAVXZTFXQ7.VJWZNREJX2.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "USD 0.0 per Linux/UNIX (Amazon VPC), c8g.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "G8YDHSYAVXZTFXQ7.VJWZNREJX2.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.0000000000"
+                  }
+                },
+                "G8YDHSYAVXZTFXQ7.VJWZNREJX2.2TG2D8R56U": {
+                  "unit": "Quantity",
+                  "description": "Upfront Fee",
+                  "appliesTo": [],
+                  "rateCode": "G8YDHSYAVXZTFXQ7.VJWZNREJX2.2TG2D8R56U",
+                  "pricePerUnit": {
+                    "USD": "935"
+                  }
+                }
+              },
+              "sku": "G8YDHSYAVXZTFXQ7",
+              "effectiveDate": "2026-09-25T18:08:54Z",
+              "offerTermCode": "VJWZNREJX2",
+              "termAttributes": {
+                "LeaseContractLength": "1yr",
+                "OfferingClass": "convertible",
+                "PurchaseOption": "All Upfront"
+              }
+            },
+            "G8YDHSYAVXZTFXQ7.4NA7Y494T4": {
+              "priceDimensions": {
+                "G8YDHSYAVXZTFXQ7.4NA7Y494T4.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "Linux/UNIX (Amazon VPC), c8g.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "G8YDHSYAVXZTFXQ7.4NA7Y494T4.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.1051200000"
+                  }
+                }
+              },
+              "sku": "G8YDHSYAVXZTFXQ7",
+              "effectiveDate": "2026-09-25T18:08:59Z",
+              "offerTermCode": "4NA7Y494T4",
+              "termAttributes": {
+                "LeaseContractLength": "1yr",
+                "OfferingClass": "standard",
+                "PurchaseOption": "No Upfront"
+              }
+            },
+            "G8YDHSYAVXZTFXQ7.CUZHX8X6JH": {
+              "priceDimensions": {
+                "G8YDHSYAVXZTFXQ7.CUZHX8X6JH.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "Linux/UNIX (Amazon VPC), c8g.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "G8YDHSYAVXZTFXQ7.CUZHX8X6JH.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.0544600000"
+                  }
+                },
+                "G8YDHSYAVXZTFXQ7.CUZHX8X6JH.2TG2D8R56U": {
+                  "unit": "Quantity",
+                  "description": "Upfront Fee",
+                  "appliesTo": [],
+                  "rateCode": "G8YDHSYAVXZTFXQ7.CUZHX8X6JH.2TG2D8R56U",
+                  "pricePerUnit": {
+                    "USD": "477"
+                  }
+                }
+              },
+              "sku": "G8YDHSYAVXZTFXQ7",
+              "effectiveDate": "2026-09-25T18:08:56Z",
+              "offerTermCode": "CUZHX8X6JH",
+              "termAttributes": {
+                "LeaseContractLength": "1yr",
+                "OfferingClass": "convertible",
+                "PurchaseOption": "Partial Upfront"
+              }
+            },
+            "G8YDHSYAVXZTFXQ7.7NE97W5U4E": {
+              "priceDimensions": {
+                "G8YDHSYAVXZTFXQ7.7NE97W5U4E.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "Linux/UNIX (Amazon VPC), c8g.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "G8YDHSYAVXZTFXQ7.7NE97W5U4E.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.1143600000"
+                  }
+                }
+              },
+              "sku": "G8YDHSYAVXZTFXQ7",
+              "effectiveDate": "2026-09-25T18:08:58Z",
+              "offerTermCode": "7NE97W5U4E",
+              "termAttributes": {
+                "LeaseContractLength": "1yr",
+                "OfferingClass": "convertible",
+                "PurchaseOption": "No Upfront"
+              }
+            },
+            "G8YDHSYAVXZTFXQ7.R5XV2EPZQZ": {
+              "priceDimensions": {
+                "G8YDHSYAVXZTFXQ7.R5XV2EPZQZ.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "Linux/UNIX (Amazon VPC), c8g.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "G8YDHSYAVXZTFXQ7.R5XV2EPZQZ.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.0357500000"
+                  }
+                },
+                "G8YDHSYAVXZTFXQ7.R5XV2EPZQZ.2TG2D8R56U": {
+                  "unit": "Quantity",
+                  "description": "Upfront Fee",
+                  "appliesTo": [],
+                  "rateCode": "G8YDHSYAVXZTFXQ7.R5XV2EPZQZ.2TG2D8R56U",
+                  "pricePerUnit": {
+                    "USD": "940"
+                  }
+                }
+              },
+              "sku": "G8YDHSYAVXZTFXQ7",
+              "effectiveDate": "2026-09-25T18:08:58Z",
+              "offerTermCode": "R5XV2EPZQZ",
+              "termAttributes": {
+                "LeaseContractLength": "3yr",
+                "OfferingClass": "convertible",
+                "PurchaseOption": "Partial Upfront"
+              }
+            },
+            "G8YDHSYAVXZTFXQ7.NQ3QZPMQV9": {
+              "priceDimensions": {
+                "G8YDHSYAVXZTFXQ7.NQ3QZPMQV9.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "USD 0.0 per Linux/UNIX (Amazon VPC), c8g.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "G8YDHSYAVXZTFXQ7.NQ3QZPMQV9.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.0000000000"
+                  }
+                },
+                "G8YDHSYAVXZTFXQ7.NQ3QZPMQV9.2TG2D8R56U": {
+                  "unit": "Quantity",
+                  "description": "Upfront Fee",
+                  "appliesTo": [],
+                  "rateCode": "G8YDHSYAVXZTFXQ7.NQ3QZPMQV9.2TG2D8R56U",
+                  "pricePerUnit": {
+                    "USD": "1603"
+                  }
+                }
+              },
+              "sku": "G8YDHSYAVXZTFXQ7",
+              "effectiveDate": "2026-09-25T18:09:01Z",
+              "offerTermCode": "NQ3QZPMQV9",
+              "termAttributes": {
+                "LeaseContractLength": "3yr",
+                "OfferingClass": "standard",
+                "PurchaseOption": "All Upfront"
+              }
+            },
+            "G8YDHSYAVXZTFXQ7.Z2E3P23VKM": {
+              "priceDimensions": {
+                "G8YDHSYAVXZTFXQ7.Z2E3P23VKM.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "Linux/UNIX (Amazon VPC), c8g.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "G8YDHSYAVXZTFXQ7.Z2E3P23VKM.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.0772300000"
+                  }
+                }
+              },
+              "sku": "G8YDHSYAVXZTFXQ7",
+              "effectiveDate": "2026-09-25T18:09:02Z",
+              "offerTermCode": "Z2E3P23VKM",
+              "termAttributes": {
+                "LeaseContractLength": "3yr",
+                "OfferingClass": "convertible",
+                "PurchaseOption": "No Upfront"
+              }
+            },
+            "G8YDHSYAVXZTFXQ7.38NPMPTW36": {
+              "priceDimensions": {
+                "G8YDHSYAVXZTFXQ7.38NPMPTW36.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "Linux/UNIX (Amazon VPC), c8g.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "G8YDHSYAVXZTFXQ7.38NPMPTW36.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.0324500000"
+                  }
+                },
+                "G8YDHSYAVXZTFXQ7.38NPMPTW36.2TG2D8R56U": {
+                  "unit": "Quantity",
+                  "description": "Upfront Fee",
+                  "appliesTo": [],
+                  "rateCode": "G8YDHSYAVXZTFXQ7.38NPMPTW36.2TG2D8R56U",
+                  "pricePerUnit": {
+                    "USD": "853"
+                  }
+                }
+              },
+              "sku": "G8YDHSYAVXZTFXQ7",
+              "effectiveDate": "2026-09-25T18:08:58Z",
+              "offerTermCode": "38NPMPTW36",
+              "termAttributes": {
+                "LeaseContractLength": "3yr",
+                "OfferingClass": "standard",
+                "PurchaseOption": "Partial Upfront"
+              }
+            }
+          }
+        },
+        "version": "20260925174521",
+        "publicationDate": "2026-09-25T17:45:21Z"
+      },
+      "effective_date": "2026-09-01T00:00:00Z",
+      "input_sha256": "8680fc968218b2de3226d0bac80c19e015df2c806616a22ec685b08f5e5dc4c2",
+      "hardware": {
+        "DefaultVCpus": 4,
+        "DefaultCores": 4,
+        "DefaultThreadsPerCore": 1,
+        "ValidCores": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "ValidThreadsPerCore": [
+          1
+        ]
+      }
+    },
+    "v3": {
+      "product": {
+        "product": {
+          "productFamily": "Compute Instance",
+          "attributes": {
+            "enhancedNetworkingSupported": "Yes",
+            "intelTurboAvailable": "No",
+            "memory": "8.0 GiB",
+            "dedicatedEbsThroughput": "Up to 12000 Mbps",
+            "vcpu": "4",
+            "classicnetworkingsupport": "false",
+            "capacitystatus": "Used",
+            "locationType": "AWS Region",
+            "storage": "EBS only",
+            "instanceFamily": "Compute optimized",
+            "operatingSystem": "Linux",
+            "intelAvx2Available": "No",
+            "instanceFamilyCategory": "Compute Optimized",
+            "regionCode": "us-east-1",
+            "physicalProcessor": "AWS Graviton5 Processor",
+            "clockSpeed": "3.3 GHz",
+            "ecu": "NA",
+            "networkPerformance": "Up to 15 Gigabit",
+            "servicename": "Amazon Elastic Compute Cloud",
+            "gpuMemory": "NA",
+            "dedicatedEbsThroughputDescription": "1500 Mbps",
+            "vpcnetworkingsupport": "true",
+            "instanceType": "c9g.xlarge",
+            "tenancy": "Shared",
+            "usagetype": "BoxUsage:c9g.xlarge",
+            "normalizationSizeFactor": "8",
+            "intelAvxAvailable": "No",
+            "servicecode": "AmazonEC2",
+            "licenseModel": "No License required",
+            "currentGeneration": "Yes",
+            "preInstalledSw": "NA",
+            "location": "US East (N. Virginia)",
+            "processorArchitecture": "64-bit",
+            "marketoption": "OnDemand",
+            "operation": "RunInstances",
+            "availabilityzone": "NA"
+          },
+          "sku": "VUSDKPZPHVR4FTX7"
+        },
+        "serviceCode": "AmazonEC2",
+        "terms": {
+          "OnDemand": {
+            "VUSDKPZPHVR4FTX7.JRTCKXETXF": {
+              "priceDimensions": {
+                "VUSDKPZPHVR4FTX7.JRTCKXETXF.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "$0.17388 per On Demand Linux c9g.xlarge Instance Hour",
+                  "appliesTo": [],
+                  "rateCode": "VUSDKPZPHVR4FTX7.JRTCKXETXF.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.1738800000"
+                  }
+                }
+              },
+              "sku": "VUSDKPZPHVR4FTX7",
+              "effectiveDate": "2026-09-01T00:00:00Z",
+              "offerTermCode": "JRTCKXETXF",
+              "termAttributes": {}
+            }
+          }
+        },
+        "version": "20260925174521",
+        "publicationDate": "2026-09-25T17:45:21Z"
+      },
+      "effective_date": "2026-09-01T00:00:00Z",
+      "input_sha256": "3f961c006d1f5827f40f18a0d54cd91c36943159ee0bc293386d41c75d853509",
+      "hardware": {
+        "DefaultVCpus": 4,
+        "DefaultCores": 4,
+        "DefaultThreadsPerCore": 1,
+        "ValidCores": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "ValidThreadsPerCore": [
+          1
+        ]
+      }
+    },
+    "gnr": {
+      "product": {
+        "product": {
+          "productFamily": "Compute Instance",
+          "attributes": {
+            "enhancedNetworkingSupported": "Yes",
+            "intelTurboAvailable": "Yes",
+            "memory": "8 GiB",
+            "dedicatedEbsThroughput": "Up to 10000 Mbps",
+            "vcpu": "4",
+            "classicnetworkingsupport": "false",
+            "capacitystatus": "Used",
+            "locationType": "AWS Region",
+            "storage": "EBS only",
+            "instanceFamily": "Compute optimized",
+            "operatingSystem": "Linux",
+            "intelAvx2Available": "Yes",
+            "instanceFamilyCategory": "Compute Optimized",
+            "regionCode": "us-east-1",
+            "physicalProcessor": "Intel Xeon Scalable (Granite Rapids)",
+            "clockSpeed": "3.9 GHz",
+            "ecu": "NA",
+            "networkPerformance": "Up to 12500 Megabit",
+            "servicename": "Amazon Elastic Compute Cloud",
+            "gpuMemory": "NA",
+            "dedicatedEbsThroughputDescription": "1250 Mbps",
+            "vpcnetworkingsupport": "true",
+            "instanceType": "c8i.xlarge",
+            "tenancy": "Shared",
+            "usagetype": "BoxUsage:c8i.xlarge",
+            "normalizationSizeFactor": "8",
+            "intelAvxAvailable": "Yes",
+            "processorFeatures": "Intel AVX; Intel AVX2; Intel AVX512; Intel Turbo; Intel AMX",
+            "servicecode": "AmazonEC2",
+            "licenseModel": "No License required",
+            "currentGeneration": "Yes",
+            "preInstalledSw": "NA",
+            "location": "US East (N. Virginia)",
+            "processorArchitecture": "64-bit",
+            "marketoption": "OnDemand",
+            "operation": "RunInstances",
+            "availabilityzone": "NA"
+          },
+          "sku": "YGRMMFCX2WRQB9A9"
+        },
+        "serviceCode": "AmazonEC2",
+        "terms": {
+          "OnDemand": {
+            "YGRMMFCX2WRQB9A9.JRTCKXETXF": {
+              "priceDimensions": {
+                "YGRMMFCX2WRQB9A9.JRTCKXETXF.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "$0.18742 per On Demand Linux c8i.xlarge Instance Hour",
+                  "appliesTo": [],
+                  "rateCode": "YGRMMFCX2WRQB9A9.JRTCKXETXF.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.1874200000"
+                  }
+                }
+              },
+              "sku": "YGRMMFCX2WRQB9A9",
+              "effectiveDate": "2026-09-01T00:00:00Z",
+              "offerTermCode": "JRTCKXETXF",
+              "termAttributes": {}
+            }
+          }
+        },
+        "version": "20260925174521",
+        "publicationDate": "2026-09-25T17:45:21Z"
+      },
+      "effective_date": "2026-09-01T00:00:00Z",
+      "input_sha256": "34a3627fb7ff4a6453e3af6ddde958b0eb3f3a323b730abeb132ebd12bae429c",
+      "hardware": {
+        "DefaultVCpus": 4,
+        "DefaultCores": 2,
+        "DefaultThreadsPerCore": 2,
+        "ValidCores": [
+          1,
+          2
+        ],
+        "ValidThreadsPerCore": [
+          1,
+          2
+        ]
+      }
+    },
+    "zen4": {
+      "product": {
+        "product": {
+          "productFamily": "Compute Instance",
+          "attributes": {
+            "enhancedNetworkingSupported": "Yes",
+            "intelTurboAvailable": "No",
+            "memory": "8 GiB",
+            "dedicatedEbsThroughput": "Up to 10000 Mbps",
+            "vcpu": "4",
+            "classicnetworkingsupport": "false",
+            "capacitystatus": "Used",
+            "locationType": "AWS Region",
+            "storage": "EBS only",
+            "instanceFamily": "Compute optimized",
+            "operatingSystem": "Linux",
+            "intelAvx2Available": "No",
+            "instanceFamilyCategory": "Compute Optimized",
+            "regionCode": "us-east-1",
+            "physicalProcessor": "AMD EPYC 9R14 Processor",
+            "clockSpeed": "Up to 3.7 GHz",
+            "ecu": "NA",
+            "networkPerformance": "Up to 12500 Megabit",
+            "servicename": "Amazon Elastic Compute Cloud",
+            "gpuMemory": "NA",
+            "dedicatedEbsThroughputDescription": "1250 Mbps",
+            "vpcnetworkingsupport": "true",
+            "instanceType": "c7a.xlarge",
+            "tenancy": "Shared",
+            "usagetype": "BoxUsage:c7a.xlarge",
+            "normalizationSizeFactor": "8",
+            "intelAvxAvailable": "No",
+            "processorFeatures": "AMD Turbo; AVX; AVX2; AVX512",
+            "servicecode": "AmazonEC2",
+            "licenseModel": "No License required",
+            "currentGeneration": "Yes",
+            "preInstalledSw": "NA",
+            "location": "US East (N. Virginia)",
+            "processorArchitecture": "64-bit",
+            "marketoption": "OnDemand",
+            "operation": "RunInstances",
+            "availabilityzone": "NA"
+          },
+          "sku": "5D34V874P5XR3YXR"
+        },
+        "serviceCode": "AmazonEC2",
+        "terms": {
+          "OnDemand": {
+            "5D34V874P5XR3YXR.JRTCKXETXF": {
+              "priceDimensions": {
+                "5D34V874P5XR3YXR.JRTCKXETXF.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "$0.20528 per On Demand Linux c7a.xlarge Instance Hour",
+                  "appliesTo": [],
+                  "rateCode": "5D34V874P5XR3YXR.JRTCKXETXF.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.2052800000"
+                  }
+                }
+              },
+              "sku": "5D34V874P5XR3YXR",
+              "effectiveDate": "2026-09-01T00:00:00Z",
+              "offerTermCode": "JRTCKXETXF",
+              "termAttributes": {}
+            }
+          },
+          "Reserved": {
+            "5D34V874P5XR3YXR.MZU6U2429S": {
+              "priceDimensions": {
+                "5D34V874P5XR3YXR.MZU6U2429S.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "USD 0.0 per Linux/UNIX (Amazon VPC), c7a.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "5D34V874P5XR3YXR.MZU6U2429S.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.0000000000"
+                  }
+                },
+                "5D34V874P5XR3YXR.MZU6U2429S.2TG2D8R56U": {
+                  "unit": "Quantity",
+                  "description": "Upfront Fee",
+                  "appliesTo": [],
+                  "rateCode": "5D34V874P5XR3YXR.MZU6U2429S.2TG2D8R56U",
+                  "pricePerUnit": {
+                    "USD": "2364"
+                  }
+                }
+              },
+              "sku": "5D34V874P5XR3YXR",
+              "effectiveDate": "2026-09-25T18:08:58Z",
+              "offerTermCode": "MZU6U2429S",
+              "termAttributes": {
+                "LeaseContractLength": "3yr",
+                "OfferingClass": "convertible",
+                "PurchaseOption": "All Upfront"
+              }
+            },
+            "5D34V874P5XR3YXR.NQ3QZPMQV9": {
+              "priceDimensions": {
+                "5D34V874P5XR3YXR.NQ3QZPMQV9.2TG2D8R56U": {
+                  "unit": "Quantity",
+                  "description": "Upfront Fee",
+                  "appliesTo": [],
+                  "rateCode": "5D34V874P5XR3YXR.NQ3QZPMQV9.2TG2D8R56U",
+                  "pricePerUnit": {
+                    "USD": "2067"
+                  }
+                },
+                "5D34V874P5XR3YXR.NQ3QZPMQV9.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "USD 0.0 per Linux/UNIX (Amazon VPC), c7a.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "5D34V874P5XR3YXR.NQ3QZPMQV9.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.0000000000"
+                  }
+                }
+              },
+              "sku": "5D34V874P5XR3YXR",
+              "effectiveDate": "2026-09-25T18:09:00Z",
+              "offerTermCode": "NQ3QZPMQV9",
+              "termAttributes": {
+                "LeaseContractLength": "3yr",
+                "OfferingClass": "standard",
+                "PurchaseOption": "All Upfront"
+              }
+            },
+            "5D34V874P5XR3YXR.BPH4J8HBKS": {
+              "priceDimensions": {
+                "5D34V874P5XR3YXR.BPH4J8HBKS.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "Linux/UNIX (Amazon VPC), c7a.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "5D34V874P5XR3YXR.BPH4J8HBKS.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.0903800000"
+                  }
+                }
+              },
+              "sku": "5D34V874P5XR3YXR",
+              "effectiveDate": "2026-09-25T18:09:02Z",
+              "offerTermCode": "BPH4J8HBKS",
+              "termAttributes": {
+                "LeaseContractLength": "3yr",
+                "OfferingClass": "standard",
+                "PurchaseOption": "No Upfront"
+              }
+            },
+            "5D34V874P5XR3YXR.Z2E3P23VKM": {
+              "priceDimensions": {
+                "5D34V874P5XR3YXR.Z2E3P23VKM.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "Linux/UNIX (Amazon VPC), c7a.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "5D34V874P5XR3YXR.Z2E3P23VKM.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.0991100000"
+                  }
+                }
+              },
+              "sku": "5D34V874P5XR3YXR",
+              "effectiveDate": "2026-09-25T18:09:02Z",
+              "offerTermCode": "Z2E3P23VKM",
+              "termAttributes": {
+                "LeaseContractLength": "3yr",
+                "OfferingClass": "convertible",
+                "PurchaseOption": "No Upfront"
+              }
+            },
+            "5D34V874P5XR3YXR.4NA7Y494T4": {
+              "priceDimensions": {
+                "5D34V874P5XR3YXR.4NA7Y494T4.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "Linux/UNIX (Amazon VPC), c7a.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "5D34V874P5XR3YXR.4NA7Y494T4.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.1357900000"
+                  }
+                }
+              },
+              "sku": "5D34V874P5XR3YXR",
+              "effectiveDate": "2026-09-25T18:08:58Z",
+              "offerTermCode": "4NA7Y494T4",
+              "termAttributes": {
+                "LeaseContractLength": "1yr",
+                "OfferingClass": "standard",
+                "PurchaseOption": "No Upfront"
+              }
+            },
+            "5D34V874P5XR3YXR.CUZHX8X6JH": {
+              "priceDimensions": {
+                "5D34V874P5XR3YXR.CUZHX8X6JH.2TG2D8R56U": {
+                  "unit": "Quantity",
+                  "description": "Upfront Fee",
+                  "appliesTo": [],
+                  "rateCode": "5D34V874P5XR3YXR.CUZHX8X6JH.2TG2D8R56U",
+                  "pricePerUnit": {
+                    "USD": "619"
+                  }
+                },
+                "5D34V874P5XR3YXR.CUZHX8X6JH.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "Linux/UNIX (Amazon VPC), c7a.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "5D34V874P5XR3YXR.CUZHX8X6JH.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.0706400000"
+                  }
+                }
+              },
+              "sku": "5D34V874P5XR3YXR",
+              "effectiveDate": "2026-09-25T18:09:01Z",
+              "offerTermCode": "CUZHX8X6JH",
+              "termAttributes": {
+                "LeaseContractLength": "1yr",
+                "OfferingClass": "convertible",
+                "PurchaseOption": "Partial Upfront"
+              }
+            },
+            "5D34V874P5XR3YXR.VJWZNREJX2": {
+              "priceDimensions": {
+                "5D34V874P5XR3YXR.VJWZNREJX2.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "USD 0.0 per Linux/UNIX (Amazon VPC), c7a.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "5D34V874P5XR3YXR.VJWZNREJX2.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.0000000000"
+                  }
+                },
+                "5D34V874P5XR3YXR.VJWZNREJX2.2TG2D8R56U": {
+                  "unit": "Quantity",
+                  "description": "Upfront Fee",
+                  "appliesTo": [],
+                  "rateCode": "5D34V874P5XR3YXR.VJWZNREJX2.2TG2D8R56U",
+                  "pricePerUnit": {
+                    "USD": "1213"
+                  }
+                }
+              },
+              "sku": "5D34V874P5XR3YXR",
+              "effectiveDate": "2026-09-25T18:08:57Z",
+              "offerTermCode": "VJWZNREJX2",
+              "termAttributes": {
+                "LeaseContractLength": "1yr",
+                "OfferingClass": "convertible",
+                "PurchaseOption": "All Upfront"
+              }
+            },
+            "5D34V874P5XR3YXR.HU7G6KETJZ": {
+              "priceDimensions": {
+                "5D34V874P5XR3YXR.HU7G6KETJZ.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "Linux/UNIX (Amazon VPC), c7a.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "5D34V874P5XR3YXR.HU7G6KETJZ.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.0646600000"
+                  }
+                },
+                "5D34V874P5XR3YXR.HU7G6KETJZ.2TG2D8R56U": {
+                  "unit": "Quantity",
+                  "description": "Upfront Fee",
+                  "appliesTo": [],
+                  "rateCode": "5D34V874P5XR3YXR.HU7G6KETJZ.2TG2D8R56U",
+                  "pricePerUnit": {
+                    "USD": "566"
+                  }
+                }
+              },
+              "sku": "5D34V874P5XR3YXR",
+              "effectiveDate": "2026-09-25T18:09:02Z",
+              "offerTermCode": "HU7G6KETJZ",
+              "termAttributes": {
+                "LeaseContractLength": "1yr",
+                "OfferingClass": "standard",
+                "PurchaseOption": "Partial Upfront"
+              }
+            },
+            "5D34V874P5XR3YXR.7NE97W5U4E": {
+              "priceDimensions": {
+                "5D34V874P5XR3YXR.7NE97W5U4E.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "Linux/UNIX (Amazon VPC), c7a.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "5D34V874P5XR3YXR.7NE97W5U4E.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.1483500000"
+                  }
+                }
+              },
+              "sku": "5D34V874P5XR3YXR",
+              "effectiveDate": "2026-09-25T18:08:57Z",
+              "offerTermCode": "7NE97W5U4E",
+              "termAttributes": {
+                "LeaseContractLength": "1yr",
+                "OfferingClass": "convertible",
+                "PurchaseOption": "No Upfront"
+              }
+            },
+            "5D34V874P5XR3YXR.6QCMYABX3D": {
+              "priceDimensions": {
+                "5D34V874P5XR3YXR.6QCMYABX3D.2TG2D8R56U": {
+                  "unit": "Quantity",
+                  "description": "Upfront Fee",
+                  "appliesTo": [],
+                  "rateCode": "5D34V874P5XR3YXR.6QCMYABX3D.2TG2D8R56U",
+                  "pricePerUnit": {
+                    "USD": "1110"
+                  }
+                },
+                "5D34V874P5XR3YXR.6QCMYABX3D.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "USD 0.0 per Linux/UNIX (Amazon VPC), c7a.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "5D34V874P5XR3YXR.6QCMYABX3D.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.0000000000"
+                  }
+                }
+              },
+              "sku": "5D34V874P5XR3YXR",
+              "effectiveDate": "2026-09-25T18:09:01Z",
+              "offerTermCode": "6QCMYABX3D",
+              "termAttributes": {
+                "LeaseContractLength": "1yr",
+                "OfferingClass": "standard",
+                "PurchaseOption": "All Upfront"
+              }
+            },
+            "5D34V874P5XR3YXR.R5XV2EPZQZ": {
+              "priceDimensions": {
+                "5D34V874P5XR3YXR.R5XV2EPZQZ.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "Linux/UNIX (Amazon VPC), c7a.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "5D34V874P5XR3YXR.R5XV2EPZQZ.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.0458900000"
+                  }
+                },
+                "5D34V874P5XR3YXR.R5XV2EPZQZ.2TG2D8R56U": {
+                  "unit": "Quantity",
+                  "description": "Upfront Fee",
+                  "appliesTo": [],
+                  "rateCode": "5D34V874P5XR3YXR.R5XV2EPZQZ.2TG2D8R56U",
+                  "pricePerUnit": {
+                    "USD": "1206"
+                  }
+                }
+              },
+              "sku": "5D34V874P5XR3YXR",
+              "effectiveDate": "2026-09-25T18:09:00Z",
+              "offerTermCode": "R5XV2EPZQZ",
+              "termAttributes": {
+                "LeaseContractLength": "3yr",
+                "OfferingClass": "convertible",
+                "PurchaseOption": "Partial Upfront"
+              }
+            },
+            "5D34V874P5XR3YXR.38NPMPTW36": {
+              "priceDimensions": {
+                "5D34V874P5XR3YXR.38NPMPTW36.2TG2D8R56U": {
+                  "unit": "Quantity",
+                  "description": "Upfront Fee",
+                  "appliesTo": [],
+                  "rateCode": "5D34V874P5XR3YXR.38NPMPTW36.2TG2D8R56U",
+                  "pricePerUnit": {
+                    "USD": "1100"
+                  }
+                },
+                "5D34V874P5XR3YXR.38NPMPTW36.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "Linux/UNIX (Amazon VPC), c7a.xlarge reserved instance applied",
+                  "appliesTo": [],
+                  "rateCode": "5D34V874P5XR3YXR.38NPMPTW36.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.0418400000"
+                  }
+                }
+              },
+              "sku": "5D34V874P5XR3YXR",
+              "effectiveDate": "2026-09-25T18:09:01Z",
+              "offerTermCode": "38NPMPTW36",
+              "termAttributes": {
+                "LeaseContractLength": "3yr",
+                "OfferingClass": "standard",
+                "PurchaseOption": "Partial Upfront"
+              }
+            }
+          }
+        },
+        "version": "20260925174521",
+        "publicationDate": "2026-09-25T17:45:21Z"
+      },
+      "effective_date": "2026-09-01T00:00:00Z",
+      "input_sha256": "00ae4abce937dc6ab0d842a5b17632ebb0ca6334e381d6166f13fd7a6f442366",
+      "hardware": {
+        "DefaultVCpus": 4,
+        "DefaultCores": 4,
+        "DefaultThreadsPerCore": 1,
+        "ValidCores": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "ValidThreadsPerCore": [
+          1
+        ]
+      }
+    },
+    "zen5": {
+      "product": {
+        "product": {
+          "productFamily": "Compute Instance",
+          "attributes": {
+            "enhancedNetworkingSupported": "Yes",
+            "intelTurboAvailable": "No",
+            "memory": "8 GiB",
+            "dedicatedEbsThroughput": "Up to 10000 Mbps",
+            "vcpu": "4",
+            "classicnetworkingsupport": "false",
+            "capacitystatus": "Used",
+            "locationType": "AWS Region",
+            "storage": "EBS only",
+            "instanceFamily": "Compute optimized",
+            "operatingSystem": "Linux",
+            "intelAvx2Available": "No",
+            "instanceFamilyCategory": "Compute Optimized",
+            "regionCode": "us-east-1",
+            "physicalProcessor": "AMD EPYC 9R45 Processor",
+            "clockSpeed": "Up to 4.5 GHz",
+            "ecu": "NA",
+            "networkPerformance": "Up to 15000 Megabit",
+            "servicename": "Amazon Elastic Compute Cloud",
+            "gpuMemory": "NA",
+            "dedicatedEbsThroughputDescription": "1250 Mbps",
+            "vpcnetworkingsupport": "true",
+            "instanceType": "c8a.xlarge",
+            "tenancy": "Shared",
+            "usagetype": "BoxUsage:c8a.xlarge",
+            "normalizationSizeFactor": "8",
+            "intelAvxAvailable": "No",
+            "processorFeatures": "AMD Turbo; AVX; AVX2; AVX512",
+            "servicecode": "AmazonEC2",
+            "licenseModel": "No License required",
+            "currentGeneration": "Yes",
+            "preInstalledSw": "NA",
+            "location": "US East (N. Virginia)",
+            "processorArchitecture": "64-bit",
+            "marketoption": "OnDemand",
+            "operation": "RunInstances",
+            "availabilityzone": "NA"
+          },
+          "sku": "5M6MVA6S2SPCEMUS"
+        },
+        "serviceCode": "AmazonEC2",
+        "terms": {
+          "OnDemand": {
+            "5M6MVA6S2SPCEMUS.JRTCKXETXF": {
+              "priceDimensions": {
+                "5M6MVA6S2SPCEMUS.JRTCKXETXF.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "$0.21554 per On Demand Linux c8a.xlarge Instance Hour",
+                  "appliesTo": [],
+                  "rateCode": "5M6MVA6S2SPCEMUS.JRTCKXETXF.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.2155400000"
+                  }
+                }
+              },
+              "sku": "5M6MVA6S2SPCEMUS",
+              "effectiveDate": "2026-09-01T00:00:00Z",
+              "offerTermCode": "JRTCKXETXF",
+              "termAttributes": {}
+            }
+          }
+        },
+        "version": "20260925174521",
+        "publicationDate": "2026-09-25T17:45:21Z"
+      },
+      "effective_date": "2026-09-01T00:00:00Z",
+      "input_sha256": "e0128263ca98a1255f7333baa0fe8c3b1f2c5496fca8f651703ca36a53652d66",
+      "hardware": {
+        "DefaultVCpus": 4,
+        "DefaultCores": 4,
+        "DefaultThreadsPerCore": 1,
+        "ValidCores": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "ValidThreadsPerCore": [
+          1
+        ]
+      }
+    },
+    "m1": {
+      "product": {
+        "product": {
+          "productFamily": "Dedicated Host",
+          "attributes": {
+            "enhancedNetworkingSupported": "Yes",
+            "intelTurboAvailable": "Yes",
+            "memory": "NA",
+            "vcpu": "8",
+            "classicnetworkingsupport": "false",
+            "capacitystatus": "AllocatedHost",
+            "locationType": "AWS Region",
+            "storage": "NA",
+            "instanceFamily": "General purpose",
+            "operatingSystem": "Linux",
+            "intelAvx2Available": "No",
+            "instanceFamilyCategory": "General Purpose",
+            "regionCode": "us-east-1",
+            "physicalProcessor": "Apple M1 chip with 8-core CPU, 8-core GPU, and 16-core Neural Engine",
+            "clockSpeed": "3.2 GHz",
+            "ecu": "NA",
+            "networkPerformance": "NA",
+            "instanceCapacity-Metal": "1",
+            "servicename": "Amazon Elastic Compute Cloud",
+            "gpuMemory": "NA",
+            "vpcnetworkingsupport": "true",
+            "instanceType": "mac2",
+            "tenancy": "Host",
+            "usagetype": "HostUsage:mac2",
+            "normalizationSizeFactor": "NA",
+            "intelAvxAvailable": "No",
+            "servicecode": "AmazonEC2",
+            "licenseModel": "No License required",
+            "currentGeneration": "Yes",
+            "preInstalledSw": "NA",
+            "location": "US East (N. Virginia)",
+            "processorArchitecture": "64-bit",
+            "physicalCores": "8",
+            "marketoption": "OnDemand",
+            "operation": "RunInstances",
+            "availabilityzone": "NA"
+          },
+          "sku": "V6UR2G74QTABQPH7"
+        },
+        "serviceCode": "AmazonEC2",
+        "terms": {
+          "OnDemand": {
+            "V6UR2G74QTABQPH7.JRTCKXETXF": {
+              "priceDimensions": {
+                "V6UR2G74QTABQPH7.JRTCKXETXF.6YS6EN2CT7": {
+                  "unit": "Hrs",
+                  "endRange": "Inf",
+                  "description": "$0.65 per On Demand MAC2 Dedicated Host Hour",
+                  "appliesTo": [],
+                  "rateCode": "V6UR2G74QTABQPH7.JRTCKXETXF.6YS6EN2CT7",
+                  "beginRange": "0",
+                  "pricePerUnit": {
+                    "USD": "0.6500000000"
+                  }
+                }
+              },
+              "sku": "V6UR2G74QTABQPH7",
+              "effectiveDate": "2026-09-01T00:00:00Z",
+              "offerTermCode": "JRTCKXETXF",
+              "termAttributes": {}
+            }
+          }
+        },
+        "version": "20260925174521",
+        "publicationDate": "2026-09-25T17:45:21Z"
+      },
+      "effective_date": "2026-09-01T00:00:00Z",
+      "input_sha256": "394b23ae6fe24fcd81f551ca8df1bef02d6609bbd408a2210b42ea7f5d32279a",
+      "hardware": {
+        "DefaultVCpus": 8,
+        "DefaultCores": 4,
+        "DefaultThreadsPerCore": 2
+      }
+    }
+  },
+  "pricing_retrieved_utc": "2026-10-02T15:30:34.122076+00:00",
+  "hardware_catalog_sha256": "f64d04c9b6aec735fc9c98420241aade43e4a4a670e88f0fcbe752c2b724096f",
+  "method": "Median of two trial medians (five repetitions each) for M1, Zen4 (when supplied), Zen5 and GNR; one historical trial of five repetitions for V2 and V3. Each case weighted equally in geometric means; all logical workload counters match. ARM identical binaries, x86 same historical C++ source with per-target tuning. Zen4 adds only its compiler tuning name to the historical CMake build configuration. Dollar indices divide the measured single-thread index by allocated core price, relative to V3. Intel uses two billed vCPUs per physical core. Mac primary model allocates cost over 8 cores; alternate allocation uses 4. Eight means listed cores (four P plus four E), four means P cores only with no E-core throughput credit. Both reuse M1 Pro timing for unmeasured base-M1 rental; neither measures host scaling."
+}

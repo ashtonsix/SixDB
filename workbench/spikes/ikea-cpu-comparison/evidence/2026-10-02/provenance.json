@@ -1,0 +1,26 @@
+{
+  "files_sha256": {
+    "c8g-artifact.json": "3d27a79632c6b28b416cf60a690d63c109a246512cc18ad0106703f826ee9205",
+    "c9g-artifact.json": "699de1cf6ec640949b287ca0ce0838c70e3105f670f272a6d064ae67a486446a",
+    "cases.csv": "08239275495faf590979ff29ce734d092f87353247e45a0d6aaaa7a08a6eba33",
+    "granite-rapids-artifact.json": "fcd110b6df5895ebebae17c49fc6964203b60e4dee2d5c77b48fd8fc40227b9e",
+    "iterations.csv": "8381188aa40d14595904ed60104d6281215fa3280c16b426295a7b7ace161ac0",
+    "measurement-context.json": "581fc123714766d76d8429a6f3bae6228cf43e49e34d7e8715fb3bc80e50f00d",
+    "measurement-summary.json": "d2e8624e3fae989b60d4670d07271c2aca2a85219af185f84f55a507946ba395",
+    "original-study-artifact.json": "27ac223b90a8aef3ee4f6c3925506aac23ba21e38e8c951101cb1b45a08cf69a",
+    "plot-data.json": "621a2ab3f21142f3b28a12a56ddc92657bde0c119586dc7619297517ac9754e0",
+    "zen4-artifact.json": "8b75d7e516297196f0290965387c491e1f7ab62a9474a8d4951bdb63cdeeb55b",
+    "zen5-artifact.json": "7362aebdf00ead4db2264446730b31c6927bd1405fcaf8e2aee5a76270651b42"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/ikea-cpu-comparison/report.py",
+    "{evidence}",
+    "--output",
+    "{evidence}/report",
+    "--plot"
+  ]
+}
