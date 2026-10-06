@@ -1,0 +1,13 @@
+[1/6] Building CXX object workbench/spikes/loom-execution/CMakeFiles/loom_abi_ordinary.dir/abi_bench.cpp.o
+[2/6] Building CXX object workbench/spikes/loom-execution/CMakeFiles/loom_abi_regcall.dir/abi_bench.cpp.o
+[3/6] Building CXX object workbench/spikes/loom-execution/CMakeFiles/loom_abi.dir/abi_bench.cpp.o
+FAILED: workbench/spikes/loom-execution/CMakeFiles/loom_abi.dir/abi_bench.cpp.o 
+/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=1  -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source/build/workspaces/loom-execution-run/source=. -ffunction-sections -fdata-sections -march=znver5 -mtune=znver5 -MD -MT workbench/spikes/loom-execution/CMakeFiles/loom_abi.dir/abi_bench.cpp.o -MF workbench/spikes/loom-execution/CMakeFiles/loom_abi.dir/abi_bench.cpp.o.d -o workbench/spikes/loom-execution/CMakeFiles/loom_abi.dir/abi_bench.cpp.o -c /opt/sixdb/source/build/workspaces/loom-execution-run/source/workbench/spikes/loom-execution/abi_bench.cpp
+error: ./workbench/spikes/loom-execution/abi_bench.cpp:243:32: ran out of registers during register allocation in function '_ZN12_GLOBAL__N_14RingISt16integer_sequenceImJEEE5yieldEPS3_PNS3_4SlotEmmmmmmmmmm'
+error: ./workbench/spikes/loom-execution/abi_bench.cpp:243:32: ran out of registers during register allocation in function '_ZN12_GLOBAL__N_14RingISt16integer_sequenceImJLm0ELm1EEEE5yieldEPS3_PNS3_4SlotEmmmmmmmmmmDv2_mS7_'
+error: ./workbench/spikes/loom-execution/abi_bench.cpp:243:32: ran out of registers during register allocation in function '_ZN12_GLOBAL__N_14RingISt16integer_sequenceImJLm0ELm1ELm2ELm3ELm4ELm5ELm6ELm7EEEE5yieldEPS3_PNS3_4SlotEmmmmmmmmmmDv2_mS7_S7_S7_S7_S7_S7_S7_'
+error: ./workbench/spikes/loom-execution/abi_bench.cpp:243:32: ran out of registers during register allocation in function '_ZN12_GLOBAL__N_14RingISt16integer_sequenceImJLm0ELm1ELm2ELm3ELm4ELm5ELm6ELm7ELm8ELm9ELm10ELm11EEEE5yieldEPS3_PNS3_4SlotEmmmmmmmmmmDv2_mS7_S7_S7_S7_S7_S7_S7_S7_S7_S7_S7_'
+4 errors generated.
+[4/6] Linking CXX executable workbench/spikes/loom-execution/loom_abi_regcall
+[5/6] Linking CXX executable workbench/spikes/loom-execution/loom_abi_ordinary
+ninja: build stopped: subcommand failed.

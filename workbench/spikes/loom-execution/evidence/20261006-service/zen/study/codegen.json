@@ -1,0 +1,304 @@
+[
+  {
+    "input": "assembly-loom_service.stdout",
+    "sha256": "1470d7b78a9bfd48bafafab14a65de7cde62b995cb23d417722e472239bb2d85",
+    "functions": {
+      "void (anonymous namespace)::hop<true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 17,
+        "prefetches": 1,
+        "conditional_branches": 1,
+        "calls": [],
+        "divides": []
+      },
+      "void (anonymous namespace)::hop<false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 15,
+        "prefetches": 0,
+        "conditional_branches": 1,
+        "calls": [],
+        "divides": []
+      },
+      "loom_spike::messaging::GroupChannels::receive(unsigned int, loom_spike::messaging::Packet&, loom_spike::messaging::Counters&)": {
+        "instructions": 202,
+        "prefetches": 0,
+        "conditional_branches": 13,
+        "calls": [],
+        "divides": []
+      },
+      "loom_spike::messaging::Channels::receive(unsigned int, loom_spike::messaging::Packet&, loom_spike::messaging::Counters&)": {
+        "instructions": 123,
+        "prefetches": 0,
+        "conditional_branches": 8,
+        "calls": [],
+        "divides": []
+      },
+      "loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::yield(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 54,
+        "prefetches": 0,
+        "conditional_branches": 9,
+        "calls": [],
+        "divides": []
+      },
+      "loom_hint_0": {
+        "instructions": 3,
+        "prefetches": 0,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "retq",
+          "nopw\t%cs:(%rax,%rax)",
+          "nopl\t(%rax,%rax)"
+        ]
+      },
+      "loom_hint_1": {
+        "instructions": 4,
+        "prefetches": 1,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prefetcht0\t(%rdi)",
+          "retq",
+          "nopw\t%cs:(%rax,%rax)",
+          "nop"
+        ]
+      },
+      "loom_hint_2": {
+        "instructions": 4,
+        "prefetches": 1,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prefetcht1\t(%rdi)",
+          "retq",
+          "nopw\t%cs:(%rax,%rax)",
+          "nop"
+        ]
+      },
+      "loom_hint_3": {
+        "instructions": 4,
+        "prefetches": 1,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prefetcht2\t(%rdi)",
+          "retq",
+          "nopw\t%cs:(%rax,%rax)",
+          "nop"
+        ]
+      },
+      "loom_hint_4": {
+        "instructions": 4,
+        "prefetches": 2,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prefetcht0\t(%rdi)",
+          "prefetcht0\t0x40(%rdi)",
+          "retq",
+          "nopl\t(%rax,%rax)"
+        ]
+      },
+      "loom_hint_5": {
+        "instructions": 4,
+        "prefetches": 2,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prefetcht1\t(%rdi)",
+          "prefetcht1\t0x40(%rdi)",
+          "retq",
+          "nopl\t(%rax,%rax)"
+        ]
+      },
+      "loom_hint_6": {
+        "instructions": 6,
+        "prefetches": 4,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prefetcht0\t(%rdi)",
+          "prefetcht0\t0x40(%rdi)",
+          "prefetcht0\t0x80(%rdi)",
+          "prefetcht0\t0xc0(%rdi)",
+          "retq",
+          "nopw\t%cs:(%rax,%rax)"
+        ]
+      },
+      "loom_hint_7": {
+        "instructions": 6,
+        "prefetches": 4,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prefetcht1\t(%rdi)",
+          "prefetcht1\t0x40(%rdi)",
+          "prefetcht1\t0x80(%rdi)",
+          "prefetcht1\t0xc0(%rdi)",
+          "retq",
+          "nopw\t%cs:(%rax,%rax)"
+        ]
+      },
+      "loom_hint_8": {
+        "instructions": 11,
+        "prefetches": 8,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prefetcht0\t(%rdi)",
+          "prefetcht0\t0x40(%rdi)",
+          "prefetcht0\t0x80(%rdi)",
+          "prefetcht0\t0xc0(%rdi)",
+          "prefetcht0\t0x100(%rdi)",
+          "prefetcht0\t0x140(%rdi)",
+          "prefetcht0\t0x180(%rdi)",
+          "prefetcht0\t0x1c0(%rdi)",
+          "retq",
+          "nopw\t%cs:(%rax,%rax)",
+          "nopl\t(%rax)"
+        ]
+      },
+      "loom_hint_9": {
+        "instructions": 11,
+        "prefetches": 8,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prefetcht1\t(%rdi)",
+          "prefetcht1\t0x40(%rdi)",
+          "prefetcht1\t0x80(%rdi)",
+          "prefetcht1\t0xc0(%rdi)",
+          "prefetcht1\t0x100(%rdi)",
+          "prefetcht1\t0x140(%rdi)",
+          "prefetcht1\t0x180(%rdi)",
+          "prefetcht1\t0x1c0(%rdi)",
+          "retq",
+          "nopw\t%cs:(%rax,%rax)",
+          "nopl\t(%rax)"
+        ]
+      },
+      "loom_hint_10": {
+        "instructions": 5,
+        "prefetches": 3,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prefetcht0\t(%rdi)",
+          "prefetcht1\t0x40(%rdi)",
+          "prefetcht1\t0x80(%rdi)",
+          "retq",
+          "nop"
+        ]
+      },
+      "loom_hint_11": {
+        "instructions": 7,
+        "prefetches": 5,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prefetcht0\t(%rdi)",
+          "prefetcht1\t0x40(%rdi)",
+          "prefetcht1\t0x80(%rdi)",
+          "prefetcht1\t0xc0(%rdi)",
+          "prefetcht1\t0x100(%rdi)",
+          "retq",
+          "nopl\t(%rax)"
+        ]
+      },
+      "loom_hint_12": {
+        "instructions": 5,
+        "prefetches": 3,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prefetcht0\t(%rdi)",
+          "prefetcht1\t(%rsi)",
+          "prefetcht1\t0x40(%rsi)",
+          "retq",
+          "nopl\t(%rax,%rax)"
+        ]
+      },
+      "loom_hint_13": {
+        "instructions": 8,
+        "prefetches": 5,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prefetcht0\t(%rdi)",
+          "prefetcht1\t(%rsi)",
+          "prefetcht1\t0x40(%rsi)",
+          "prefetcht1\t(%rsi,%rdx)",
+          "prefetcht1\t0x40(%rsi,%rdx)",
+          "retq",
+          "nopw\t%cs:(%rax,%rax)",
+          "nop"
+        ]
+      },
+      "loom_hint_14": {
+        "instructions": 12,
+        "prefetches": 9,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "leaq\t(%rdx,%rdx,2), %rax",
+          "prefetcht0\t(%rdi)",
+          "prefetcht1\t(%rsi)",
+          "prefetcht1\t0x40(%rsi)",
+          "prefetcht1\t(%rsi,%rdx)",
+          "prefetcht1\t0x40(%rsi,%rdx)",
+          "prefetcht1\t(%rsi,%rdx,2)",
+          "prefetcht1\t0x40(%rsi,%rdx,2)",
+          "prefetcht1\t(%rsi,%rax)",
+          "prefetcht1\t0x40(%rsi,%rax)",
+          "retq",
+          "nopw\t(%rax,%rax)"
+        ]
+      },
+      "loom_hint_15": {
+        "instructions": 23,
+        "prefetches": 17,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "leaq\t(%rdx,%rdx,2), %rax",
+          "leaq\t(%rdx,%rdx,4), %rcx",
+          "prefetcht0\t(%rdi)",
+          "prefetcht1\t(%rsi)",
+          "prefetcht1\t0x40(%rsi)",
+          "prefetcht1\t(%rsi,%rdx)",
+          "prefetcht1\t0x40(%rsi,%rdx)",
+          "prefetcht1\t(%rsi,%rdx,2)",
+          "prefetcht1\t0x40(%rsi,%rdx,2)",
+          "prefetcht1\t(%rsi,%rax)",
+          "prefetcht1\t0x40(%rsi,%rax)",
+          "prefetcht1\t(%rsi,%rdx,4)",
+          "prefetcht1\t0x40(%rsi,%rdx,4)",
+          "prefetcht1\t(%rsi,%rcx)",
+          "prefetcht1\t0x40(%rsi,%rcx)",
+          "leaq\t(%rsi,%rdx,8), %rcx",
+          "prefetcht1\t(%rsi,%rax,2)",
+          "prefetcht1\t0x40(%rsi,%rax,2)",
+          "subq\t%rdx, %rcx",
+          "prefetcht1\t(%rcx)",
+          "prefetcht1\t0x40(%rcx)",
+          "retq",
+          "nopw\t(%rax,%rax)"
+        ]
+      }
+    }
+  }
+]

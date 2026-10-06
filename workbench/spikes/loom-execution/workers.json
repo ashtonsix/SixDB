@@ -1,0 +1,25 @@
+{
+  "script": "workbench/spikes/loom-execution/cloud.sh",
+  "args": ["--families", "microtask,messaging,affinity,service"],
+  "config": {
+    "deadline_seconds": 7200,
+    "idle_seconds": 600,
+    "env": {"SIXDB_BUILD_JOBS": "4"}
+  },
+  "members": {
+    "zen": {
+      "config": {
+        "machine": "zen5",
+        "instance_type": "c8a.8xlarge",
+        "env": {"LOOM_SPIKE_MARCH": "znver5", "LOOM_SPIKE_TUNE": "zen5"}
+      }
+    },
+    "arm": {
+      "config": {
+        "machine": "neoverse-v2",
+        "instance_type": "c8g.4xlarge",
+        "env": {"LOOM_SPIKE_MARCH": "armv9-a+sve2+simd", "LOOM_SPIKE_TUNE": "neoverse-v2"}
+      }
+    }
+  }
+}

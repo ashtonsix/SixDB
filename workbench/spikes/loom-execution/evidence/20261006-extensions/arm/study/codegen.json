@@ -1,0 +1,3370 @@
+[
+  {
+    "input": "assembly-loom_inventory.stdout",
+    "sha256": "f040ff92091ba658d69858ffb82f66ea657ed9ae9a58f89132921cfba6837fe1",
+    "functions": {
+      "loom_spike::(anonymous namespace)::vector_step(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 32,
+        "prefetches": 0,
+        "conditional_branches": 1,
+        "calls": [],
+        "divides": []
+      },
+      "loom_spike::(anonymous namespace)::scalar_step(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 16,
+        "prefetches": 0,
+        "conditional_branches": 1,
+        "calls": [],
+        "divides": []
+      },
+      "loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::yield(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 48,
+        "prefetches": 0,
+        "conditional_branches": 9,
+        "calls": [],
+        "divides": []
+      },
+      "loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::yield(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 56,
+        "prefetches": 0,
+        "conditional_branches": 9,
+        "calls": [],
+        "divides": []
+      },
+      "loom_hint_0": {
+        "instructions": 4,
+        "prefetches": 0,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_1": {
+        "instructions": 4,
+        "prefetches": 1,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "ret",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_2": {
+        "instructions": 4,
+        "prefetches": 1,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl2keep, [x0]",
+          "ret",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_3": {
+        "instructions": 4,
+        "prefetches": 1,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl3keep, [x0]",
+          "ret",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_4": {
+        "instructions": 4,
+        "prefetches": 2,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl1keep, [x0, #0x40]",
+          "ret",
+          "nop"
+        ]
+      },
+      "loom_hint_5": {
+        "instructions": 4,
+        "prefetches": 2,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl2keep, [x0]",
+          "prfm\tpldl2keep, [x0, #0x40]",
+          "ret",
+          "nop"
+        ]
+      },
+      "loom_hint_6": {
+        "instructions": 8,
+        "prefetches": 4,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl1keep, [x0, #0x40]",
+          "prfm\tpldl1keep, [x0, #0x80]",
+          "prfm\tpldl1keep, [x0, #0xc0]",
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_7": {
+        "instructions": 8,
+        "prefetches": 4,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl2keep, [x0]",
+          "prfm\tpldl2keep, [x0, #0x40]",
+          "prfm\tpldl2keep, [x0, #0x80]",
+          "prfm\tpldl2keep, [x0, #0xc0]",
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_8": {
+        "instructions": 12,
+        "prefetches": 8,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl1keep, [x0, #0x40]",
+          "prfm\tpldl1keep, [x0, #0x80]",
+          "prfm\tpldl1keep, [x0, #0xc0]",
+          "prfm\tpldl1keep, [x0, #0x100]",
+          "prfm\tpldl1keep, [x0, #0x140]",
+          "prfm\tpldl1keep, [x0, #0x180]",
+          "prfm\tpldl1keep, [x0, #0x1c0]",
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_9": {
+        "instructions": 12,
+        "prefetches": 8,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl2keep, [x0]",
+          "prfm\tpldl2keep, [x0, #0x40]",
+          "prfm\tpldl2keep, [x0, #0x80]",
+          "prfm\tpldl2keep, [x0, #0xc0]",
+          "prfm\tpldl2keep, [x0, #0x100]",
+          "prfm\tpldl2keep, [x0, #0x140]",
+          "prfm\tpldl2keep, [x0, #0x180]",
+          "prfm\tpldl2keep, [x0, #0x1c0]",
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_10": {
+        "instructions": 4,
+        "prefetches": 3,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x0, #0x40]",
+          "prfm\tpldl2keep, [x0, #0x80]",
+          "ret"
+        ]
+      },
+      "loom_hint_11": {
+        "instructions": 8,
+        "prefetches": 5,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x0, #0x40]",
+          "prfm\tpldl2keep, [x0, #0x80]",
+          "prfm\tpldl2keep, [x0, #0xc0]",
+          "prfm\tpldl2keep, [x0, #0x100]",
+          "ret",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_12": {
+        "instructions": 4,
+        "prefetches": 3,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x1]",
+          "prfm\tpldl2keep, [x1, #0x40]",
+          "ret"
+        ]
+      },
+      "loom_hint_13": {
+        "instructions": 8,
+        "prefetches": 5,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "add\tx8, x1, x2",
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x1]",
+          "prfm\tpldl2keep, [x1, #0x40]",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "ret",
+          "nop"
+        ]
+      },
+      "loom_hint_14": {
+        "instructions": 16,
+        "prefetches": 9,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "add\tx8, x1, x2",
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x1]",
+          "prfm\tpldl2keep, [x1, #0x40]",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x1, x2, lsl #1",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x2, x2, lsl #1",
+          "add\tx8, x1, x8",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "ret",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_15": {
+        "instructions": 32,
+        "prefetches": 17,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "add\tx8, x1, x2",
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x1]",
+          "prfm\tpldl2keep, [x1, #0x40]",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x1, x2, lsl #1",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x2, x2, lsl #1",
+          "add\tx8, x1, x8",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x1, x2, lsl #2",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x2, x2, lsl #2",
+          "add\tx8, x1, x8",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "mov\tw8, #0x6                // =6",
+          "madd\tx8, x2, x8, x1",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "sub\tx8, x1, x2",
+          "add\tx8, x8, x2, lsl #3",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      }
+    }
+  },
+  {
+    "input": "assembly-loom_microtask.stdout",
+    "sha256": "d345679613b42beadff8701a6b867d13306367cff389fa3870f185d77bcbe48b",
+    "functions": {
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)0, (loom_spike::prefetch::Class)0, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 320,
+        "prefetches": 0,
+        "conditional_branches": 19,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "bl\t0x7e660 <loom_spike::microtask::issue_prefetch(loom_spike::microtask::Dependency, loom_spike::microtask::Prefetch, unsigned long, loom_spike::microtask::Counters&)>",
+          "bl\t0x7e660 <loom_spike::microtask::issue_prefetch(loom_spike::microtask::Dependency, loom_spike::microtask::Prefetch, unsigned long, loom_spike::microtask::Counters&)>",
+          "bl\t0x7e660 <loom_spike::microtask::issue_prefetch(loom_spike::microtask::Dependency, loom_spike::microtask::Prefetch, unsigned long, loom_spike::microtask::Counters&)>",
+          "bl\t0x7e660 <loom_spike::microtask::issue_prefetch(loom_spike::microtask::Dependency, loom_spike::microtask::Prefetch, unsigned long, loom_spike::microtask::Counters&)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx11, x9, x10",
+          "udiv\tx11, x22, x10",
+          "udiv\tx9, x22, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w21, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)0, (loom_spike::prefetch::Class)0, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 312,
+        "prefetches": 0,
+        "conditional_branches": 18,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "bl\t0x7e660 <loom_spike::microtask::issue_prefetch(loom_spike::microtask::Dependency, loom_spike::microtask::Prefetch, unsigned long, loom_spike::microtask::Counters&)>",
+          "bl\t0x7e660 <loom_spike::microtask::issue_prefetch(loom_spike::microtask::Dependency, loom_spike::microtask::Prefetch, unsigned long, loom_spike::microtask::Counters&)>",
+          "bl\t0x7e660 <loom_spike::microtask::issue_prefetch(loom_spike::microtask::Dependency, loom_spike::microtask::Prefetch, unsigned long, loom_spike::microtask::Counters&)>",
+          "bl\t0x7e660 <loom_spike::microtask::issue_prefetch(loom_spike::microtask::Dependency, loom_spike::microtask::Prefetch, unsigned long, loom_spike::microtask::Counters&)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx11, x9, x10",
+          "udiv\tx9, x22, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w21, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)0, (loom_spike::prefetch::Class)0, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 288,
+        "prefetches": 0,
+        "conditional_branches": 19,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "bl\t0x7e660 <loom_spike::microtask::issue_prefetch(loom_spike::microtask::Dependency, loom_spike::microtask::Prefetch, unsigned long, loom_spike::microtask::Counters&)>",
+          "bl\t0x7e660 <loom_spike::microtask::issue_prefetch(loom_spike::microtask::Dependency, loom_spike::microtask::Prefetch, unsigned long, loom_spike::microtask::Counters&)>",
+          "bl\t0x7e660 <loom_spike::microtask::issue_prefetch(loom_spike::microtask::Dependency, loom_spike::microtask::Prefetch, unsigned long, loom_spike::microtask::Counters&)>",
+          "bl\t0x7e660 <loom_spike::microtask::issue_prefetch(loom_spike::microtask::Dependency, loom_spike::microtask::Prefetch, unsigned long, loom_spike::microtask::Counters&)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx11, x9, x10",
+          "udiv\tx11, x22, x10",
+          "udiv\tx9, x22, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w21, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)0, (loom_spike::prefetch::Class)0, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 276,
+        "prefetches": 0,
+        "conditional_branches": 18,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "bl\t0x7e660 <loom_spike::microtask::issue_prefetch(loom_spike::microtask::Dependency, loom_spike::microtask::Prefetch, unsigned long, loom_spike::microtask::Counters&)>",
+          "bl\t0x7e660 <loom_spike::microtask::issue_prefetch(loom_spike::microtask::Dependency, loom_spike::microtask::Prefetch, unsigned long, loom_spike::microtask::Counters&)>",
+          "bl\t0x7e660 <loom_spike::microtask::issue_prefetch(loom_spike::microtask::Dependency, loom_spike::microtask::Prefetch, unsigned long, loom_spike::microtask::Counters&)>",
+          "bl\t0x7e660 <loom_spike::microtask::issue_prefetch(loom_spike::microtask::Dependency, loom_spike::microtask::Prefetch, unsigned long, loom_spike::microtask::Counters&)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w21, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)0, (loom_spike::prefetch::Class)0, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 36,
+        "prefetches": 0,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x7e660 <loom_spike::microtask::issue_prefetch(loom_spike::microtask::Dependency, loom_spike::microtask::Prefetch, unsigned long, loom_spike::microtask::Counters&)>",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)0, (loom_spike::prefetch::Class)0, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 40,
+        "prefetches": 0,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x7e660 <loom_spike::microtask::issue_prefetch(loom_spike::microtask::Dependency, loom_spike::microtask::Prefetch, unsigned long, loom_spike::microtask::Counters&)>",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)2, (loom_spike::prefetch::Class)0, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 36,
+        "prefetches": 0,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x805c0 <loom_spike::prefetch::issue_runtime(loom_spike::prefetch::Class, char const*, char const*, unsigned long)>",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)2, (loom_spike::prefetch::Class)0, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 40,
+        "prefetches": 0,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x805c0 <loom_spike::prefetch::issue_runtime(loom_spike::prefetch::Class, char const*, char const*, unsigned long)>",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)0, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 28,
+        "prefetches": 0,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)0, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 32,
+        "prefetches": 0,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)1, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 32,
+        "prefetches": 1,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)1, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 28,
+        "prefetches": 1,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)2, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 32,
+        "prefetches": 1,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)2, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 28,
+        "prefetches": 1,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)3, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 32,
+        "prefetches": 1,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)3, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 28,
+        "prefetches": 1,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)2, (loom_spike::prefetch::Class)0, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 296,
+        "prefetches": 0,
+        "conditional_branches": 19,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "bl\t0x805c0 <loom_spike::prefetch::issue_runtime(loom_spike::prefetch::Class, char const*, char const*, unsigned long)>",
+          "bl\t0x805c0 <loom_spike::prefetch::issue_runtime(loom_spike::prefetch::Class, char const*, char const*, unsigned long)>",
+          "bl\t0x805c0 <loom_spike::prefetch::issue_runtime(loom_spike::prefetch::Class, char const*, char const*, unsigned long)>",
+          "bl\t0x805c0 <loom_spike::prefetch::issue_runtime(loom_spike::prefetch::Class, char const*, char const*, unsigned long)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x8, x9",
+          "udiv\tx10, x22, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)2, (loom_spike::prefetch::Class)0, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 280,
+        "prefetches": 0,
+        "conditional_branches": 20,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "bl\t0x805c0 <loom_spike::prefetch::issue_runtime(loom_spike::prefetch::Class, char const*, char const*, unsigned long)>",
+          "bl\t0x805c0 <loom_spike::prefetch::issue_runtime(loom_spike::prefetch::Class, char const*, char const*, unsigned long)>",
+          "bl\t0x805c0 <loom_spike::prefetch::issue_runtime(loom_spike::prefetch::Class, char const*, char const*, unsigned long)>",
+          "bl\t0x805c0 <loom_spike::prefetch::issue_runtime(loom_spike::prefetch::Class, char const*, char const*, unsigned long)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)0, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 232,
+        "prefetches": 0,
+        "conditional_branches": 15,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w26, w8",
+          "udiv\tw9, w26, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)0, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 224,
+        "prefetches": 0,
+        "conditional_branches": 16,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w20, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)1, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 272,
+        "prefetches": 6,
+        "conditional_branches": 21,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x8, x9",
+          "udiv\tx11, x22, x10",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)1, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 264,
+        "prefetches": 6,
+        "conditional_branches": 22,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)2, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 272,
+        "prefetches": 6,
+        "conditional_branches": 21,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x8, x9",
+          "udiv\tx11, x22, x10",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)2, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 264,
+        "prefetches": 6,
+        "conditional_branches": 22,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)3, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 272,
+        "prefetches": 6,
+        "conditional_branches": 21,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x8, x9",
+          "udiv\tx11, x22, x10",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)3, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 264,
+        "prefetches": 6,
+        "conditional_branches": 22,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)4, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 280,
+        "prefetches": 12,
+        "conditional_branches": 21,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)4, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 272,
+        "prefetches": 12,
+        "conditional_branches": 22,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)5, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 280,
+        "prefetches": 12,
+        "conditional_branches": 21,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)5, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 272,
+        "prefetches": 12,
+        "conditional_branches": 22,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)6, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 288,
+        "prefetches": 16,
+        "conditional_branches": 19,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)6, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 272,
+        "prefetches": 16,
+        "conditional_branches": 20,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)7, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 288,
+        "prefetches": 16,
+        "conditional_branches": 19,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)7, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 272,
+        "prefetches": 16,
+        "conditional_branches": 20,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)8, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 304,
+        "prefetches": 32,
+        "conditional_branches": 19,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx10, x22, x9",
+          "udiv\tx11, x12, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)8, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 288,
+        "prefetches": 32,
+        "conditional_branches": 20,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx11, x12, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)9, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 304,
+        "prefetches": 32,
+        "conditional_branches": 19,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx10, x22, x9",
+          "udiv\tx11, x12, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)9, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 288,
+        "prefetches": 32,
+        "conditional_branches": 20,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx11, x12, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)10, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 288,
+        "prefetches": 18,
+        "conditional_branches": 21,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)10, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 280,
+        "prefetches": 18,
+        "conditional_branches": 22,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)11, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 288,
+        "prefetches": 20,
+        "conditional_branches": 19,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx10, x22, x9",
+          "udiv\tx11, x12, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)11, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 280,
+        "prefetches": 20,
+        "conditional_branches": 20,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx11, x12, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)12, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 288,
+        "prefetches": 12,
+        "conditional_branches": 19,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx12, x22, x11",
+          "udiv\tx14, x13, x11",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)12, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 280,
+        "prefetches": 12,
+        "conditional_branches": 20,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tx12, x22, x11",
+          "udiv\tx14, x13, x11",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)13, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 304,
+        "prefetches": 20,
+        "conditional_branches": 19,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx12, x22, x11",
+          "udiv\tx14, x13, x11",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)13, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 296,
+        "prefetches": 20,
+        "conditional_branches": 20,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tx12, x22, x11",
+          "udiv\tx14, x13, x11",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)14, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 328,
+        "prefetches": 36,
+        "conditional_branches": 19,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x8, x9",
+          "udiv\tx11, x22, x10",
+          "udiv\tx14, x22, x13",
+          "udiv\tx16, x15, x13",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)14, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 320,
+        "prefetches": 36,
+        "conditional_branches": 20,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x22, x13",
+          "udiv\tx16, x15, x13",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)15, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 384,
+        "prefetches": 68,
+        "conditional_branches": 19,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x8, x9",
+          "udiv\tx11, x22, x9",
+          "udiv\tx18, x22, x16",
+          "udiv\tx18, x19, x16",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::scalar_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)15, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 368,
+        "prefetches": 68,
+        "conditional_branches": 20,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tx18, x22, x16",
+          "udiv\tx18, x19, x16",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)0, (loom_spike::prefetch::Class)0, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 52,
+        "prefetches": 0,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x7e660 <loom_spike::microtask::issue_prefetch(loom_spike::microtask::Dependency, loom_spike::microtask::Prefetch, unsigned long, loom_spike::microtask::Counters&)>",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)0, (loom_spike::prefetch::Class)0, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 52,
+        "prefetches": 0,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x7e660 <loom_spike::microtask::issue_prefetch(loom_spike::microtask::Dependency, loom_spike::microtask::Prefetch, unsigned long, loom_spike::microtask::Counters&)>",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)2, (loom_spike::prefetch::Class)0, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 56,
+        "prefetches": 0,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x805c0 <loom_spike::prefetch::issue_runtime(loom_spike::prefetch::Class, char const*, char const*, unsigned long)>",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)2, (loom_spike::prefetch::Class)0, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 52,
+        "prefetches": 0,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x805c0 <loom_spike::prefetch::issue_runtime(loom_spike::prefetch::Class, char const*, char const*, unsigned long)>",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)0, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 40,
+        "prefetches": 0,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)0, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 40,
+        "prefetches": 0,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)1, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 44,
+        "prefetches": 1,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)1, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 40,
+        "prefetches": 1,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)2, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 44,
+        "prefetches": 1,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)2, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 40,
+        "prefetches": 1,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)3, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 44,
+        "prefetches": 1,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)3, true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 40,
+        "prefetches": 1,
+        "conditional_branches": 2,
+        "calls": [
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": []
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)2, (loom_spike::prefetch::Class)0, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 304,
+        "prefetches": 0,
+        "conditional_branches": 19,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "bl\t0x805c0 <loom_spike::prefetch::issue_runtime(loom_spike::prefetch::Class, char const*, char const*, unsigned long)>",
+          "bl\t0x805c0 <loom_spike::prefetch::issue_runtime(loom_spike::prefetch::Class, char const*, char const*, unsigned long)>",
+          "bl\t0x805c0 <loom_spike::prefetch::issue_runtime(loom_spike::prefetch::Class, char const*, char const*, unsigned long)>",
+          "bl\t0x805c0 <loom_spike::prefetch::issue_runtime(loom_spike::prefetch::Class, char const*, char const*, unsigned long)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x8, x9",
+          "udiv\tx10, x22, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)2, (loom_spike::prefetch::Class)0, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 296,
+        "prefetches": 0,
+        "conditional_branches": 18,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "bl\t0x805c0 <loom_spike::prefetch::issue_runtime(loom_spike::prefetch::Class, char const*, char const*, unsigned long)>",
+          "bl\t0x805c0 <loom_spike::prefetch::issue_runtime(loom_spike::prefetch::Class, char const*, char const*, unsigned long)>",
+          "bl\t0x805c0 <loom_spike::prefetch::issue_runtime(loom_spike::prefetch::Class, char const*, char const*, unsigned long)>",
+          "bl\t0x805c0 <loom_spike::prefetch::issue_runtime(loom_spike::prefetch::Class, char const*, char const*, unsigned long)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x8, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)0, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 248,
+        "prefetches": 0,
+        "conditional_branches": 15,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w26, w8",
+          "udiv\tw9, w26, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)0, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 232,
+        "prefetches": 0,
+        "conditional_branches": 14,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w20, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)1, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 288,
+        "prefetches": 6,
+        "conditional_branches": 21,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)1, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 280,
+        "prefetches": 6,
+        "conditional_branches": 20,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)2, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 288,
+        "prefetches": 6,
+        "conditional_branches": 21,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)2, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 280,
+        "prefetches": 6,
+        "conditional_branches": 20,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)3, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 288,
+        "prefetches": 6,
+        "conditional_branches": 21,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)3, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 280,
+        "prefetches": 6,
+        "conditional_branches": 20,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)4, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 296,
+        "prefetches": 12,
+        "conditional_branches": 21,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)4, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 288,
+        "prefetches": 12,
+        "conditional_branches": 20,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)5, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 296,
+        "prefetches": 12,
+        "conditional_branches": 21,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)5, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 288,
+        "prefetches": 12,
+        "conditional_branches": 20,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)6, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 296,
+        "prefetches": 16,
+        "conditional_branches": 19,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)6, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 288,
+        "prefetches": 16,
+        "conditional_branches": 18,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)7, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 296,
+        "prefetches": 16,
+        "conditional_branches": 19,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)7, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 288,
+        "prefetches": 16,
+        "conditional_branches": 18,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)8, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 312,
+        "prefetches": 32,
+        "conditional_branches": 19,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx10, x22, x9",
+          "udiv\tx11, x12, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)8, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 304,
+        "prefetches": 32,
+        "conditional_branches": 18,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx11, x12, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)9, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 312,
+        "prefetches": 32,
+        "conditional_branches": 19,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx10, x22, x9",
+          "udiv\tx11, x12, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)9, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 304,
+        "prefetches": 32,
+        "conditional_branches": 18,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx11, x12, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)10, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 312,
+        "prefetches": 18,
+        "conditional_branches": 21,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)10, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 296,
+        "prefetches": 18,
+        "conditional_branches": 20,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx12, x11, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)11, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 304,
+        "prefetches": 20,
+        "conditional_branches": 19,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx10, x22, x9",
+          "udiv\tx11, x12, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)11, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 288,
+        "prefetches": 20,
+        "conditional_branches": 18,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx10, x22, x9",
+          "udiv\tx11, x12, x9",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)12, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 304,
+        "prefetches": 12,
+        "conditional_branches": 19,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx12, x22, x11",
+          "udiv\tx14, x13, x11",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)12, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 296,
+        "prefetches": 12,
+        "conditional_branches": 18,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx12, x22, x11",
+          "udiv\tx14, x13, x11",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)13, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 320,
+        "prefetches": 20,
+        "conditional_branches": 19,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx12, x22, x11",
+          "udiv\tx14, x13, x11",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)13, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 304,
+        "prefetches": 20,
+        "conditional_branches": 18,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx12, x22, x11",
+          "udiv\tx14, x13, x11",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)14, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 344,
+        "prefetches": 36,
+        "conditional_branches": 19,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x9, x8",
+          "udiv\tx11, x22, x10",
+          "udiv\tx14, x22, x13",
+          "udiv\tx16, x15, x13",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)14, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 328,
+        "prefetches": 36,
+        "conditional_branches": 18,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x8, x9",
+          "udiv\tx14, x22, x13",
+          "udiv\tx16, x15, x13",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<true, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)15, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 400,
+        "prefetches": 68,
+        "conditional_branches": 19,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x8, x9",
+          "udiv\tx11, x22, x9",
+          "udiv\tx18, x22, x16",
+          "udiv\tx18, x19, x16",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "void loom_spike::(anonymous namespace)::vector_callback<false, (loom_spike::(anonymous namespace)::HintPath)1, (loom_spike::prefetch::Class)15, false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 380,
+        "prefetches": 68,
+        "conditional_branches": 18,
+        "calls": [
+          "bl\t0x86dc0 <bec_study::consume_pair(std::byte const*, unsigned int, std::byte const*, unsigned int, std::byte const*, std::byte const*)>",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "blr\tx8",
+          "bl\t0x1e90 <__assert_fail@plt>"
+        ],
+        "divides": [
+          "udiv\tx9, x22, x8",
+          "udiv\tx14, x13, x8",
+          "udiv\tx10, x8, x9",
+          "udiv\tx18, x22, x16",
+          "udiv\tx18, x19, x16",
+          "udiv\tx9, x22, x8",
+          "udiv\tw9, w12, w8",
+          "udiv\tw9, w12, w8",
+          "udiv\tx10, x8, x9",
+          "udiv\tw9, w20, w8",
+          "udiv\tw9, w10, w8"
+        ]
+      },
+      "loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::yield(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 48,
+        "prefetches": 0,
+        "conditional_branches": 9,
+        "calls": [],
+        "divides": []
+      },
+      "loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::yield(loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long, 0ul, 1ul>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long vector[2], unsigned long vector[2])": {
+        "instructions": 56,
+        "prefetches": 0,
+        "conditional_branches": 9,
+        "calls": [],
+        "divides": []
+      },
+      "loom_hint_0": {
+        "instructions": 4,
+        "prefetches": 0,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_1": {
+        "instructions": 4,
+        "prefetches": 1,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "ret",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_2": {
+        "instructions": 4,
+        "prefetches": 1,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl2keep, [x0]",
+          "ret",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_3": {
+        "instructions": 4,
+        "prefetches": 1,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl3keep, [x0]",
+          "ret",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_4": {
+        "instructions": 4,
+        "prefetches": 2,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl1keep, [x0, #0x40]",
+          "ret",
+          "nop"
+        ]
+      },
+      "loom_hint_5": {
+        "instructions": 4,
+        "prefetches": 2,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl2keep, [x0]",
+          "prfm\tpldl2keep, [x0, #0x40]",
+          "ret",
+          "nop"
+        ]
+      },
+      "loom_hint_6": {
+        "instructions": 8,
+        "prefetches": 4,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl1keep, [x0, #0x40]",
+          "prfm\tpldl1keep, [x0, #0x80]",
+          "prfm\tpldl1keep, [x0, #0xc0]",
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_7": {
+        "instructions": 8,
+        "prefetches": 4,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl2keep, [x0]",
+          "prfm\tpldl2keep, [x0, #0x40]",
+          "prfm\tpldl2keep, [x0, #0x80]",
+          "prfm\tpldl2keep, [x0, #0xc0]",
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_8": {
+        "instructions": 12,
+        "prefetches": 8,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl1keep, [x0, #0x40]",
+          "prfm\tpldl1keep, [x0, #0x80]",
+          "prfm\tpldl1keep, [x0, #0xc0]",
+          "prfm\tpldl1keep, [x0, #0x100]",
+          "prfm\tpldl1keep, [x0, #0x140]",
+          "prfm\tpldl1keep, [x0, #0x180]",
+          "prfm\tpldl1keep, [x0, #0x1c0]",
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_9": {
+        "instructions": 12,
+        "prefetches": 8,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl2keep, [x0]",
+          "prfm\tpldl2keep, [x0, #0x40]",
+          "prfm\tpldl2keep, [x0, #0x80]",
+          "prfm\tpldl2keep, [x0, #0xc0]",
+          "prfm\tpldl2keep, [x0, #0x100]",
+          "prfm\tpldl2keep, [x0, #0x140]",
+          "prfm\tpldl2keep, [x0, #0x180]",
+          "prfm\tpldl2keep, [x0, #0x1c0]",
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_10": {
+        "instructions": 4,
+        "prefetches": 3,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x0, #0x40]",
+          "prfm\tpldl2keep, [x0, #0x80]",
+          "ret"
+        ]
+      },
+      "loom_hint_11": {
+        "instructions": 8,
+        "prefetches": 5,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x0, #0x40]",
+          "prfm\tpldl2keep, [x0, #0x80]",
+          "prfm\tpldl2keep, [x0, #0xc0]",
+          "prfm\tpldl2keep, [x0, #0x100]",
+          "ret",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_12": {
+        "instructions": 4,
+        "prefetches": 3,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x1]",
+          "prfm\tpldl2keep, [x1, #0x40]",
+          "ret"
+        ]
+      },
+      "loom_hint_13": {
+        "instructions": 8,
+        "prefetches": 5,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "add\tx8, x1, x2",
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x1]",
+          "prfm\tpldl2keep, [x1, #0x40]",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "ret",
+          "nop"
+        ]
+      },
+      "loom_hint_14": {
+        "instructions": 16,
+        "prefetches": 9,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "add\tx8, x1, x2",
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x1]",
+          "prfm\tpldl2keep, [x1, #0x40]",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x1, x2, lsl #1",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x2, x2, lsl #1",
+          "add\tx8, x1, x8",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "ret",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_15": {
+        "instructions": 32,
+        "prefetches": 17,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "add\tx8, x1, x2",
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x1]",
+          "prfm\tpldl2keep, [x1, #0x40]",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x1, x2, lsl #1",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x2, x2, lsl #1",
+          "add\tx8, x1, x8",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x1, x2, lsl #2",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x2, x2, lsl #2",
+          "add\tx8, x1, x8",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "mov\tw8, #0x6                // =6",
+          "madd\tx8, x2, x8, x1",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "sub\tx8, x1, x2",
+          "add\tx8, x8, x2, lsl #3",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      }
+    }
+  },
+  {
+    "input": "assembly-loom_pressure.stdout",
+    "sha256": "1adae1537dbddab1a394918a81c7c1c559a131f07cd4c3f60ff11fb82c7f13d1",
+    "functions": {
+      "loom_spike::(anonymous namespace)::produce(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 112,
+        "prefetches": 0,
+        "conditional_branches": 16,
+        "calls": [],
+        "divides": []
+      },
+      "loom_spike::messaging::PairChannels::receive(unsigned int, loom_spike::messaging::Packet&, loom_spike::messaging::Counters&)": {
+        "instructions": 68,
+        "prefetches": 0,
+        "conditional_branches": 4,
+        "calls": [],
+        "divides": []
+      },
+      "loom_spike::messaging::InboxChannels::receive(unsigned int, loom_spike::messaging::Packet&, loom_spike::messaging::Counters&)": {
+        "instructions": 48,
+        "prefetches": 0,
+        "conditional_branches": 2,
+        "calls": [],
+        "divides": []
+      },
+      "loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::yield(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 48,
+        "prefetches": 0,
+        "conditional_branches": 9,
+        "calls": [],
+        "divides": []
+      },
+      "loom_hint_0": {
+        "instructions": 4,
+        "prefetches": 0,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_1": {
+        "instructions": 4,
+        "prefetches": 1,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "ret",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_2": {
+        "instructions": 4,
+        "prefetches": 1,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl2keep, [x0]",
+          "ret",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_3": {
+        "instructions": 4,
+        "prefetches": 1,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl3keep, [x0]",
+          "ret",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_4": {
+        "instructions": 4,
+        "prefetches": 2,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl1keep, [x0, #0x40]",
+          "ret",
+          "nop"
+        ]
+      },
+      "loom_hint_5": {
+        "instructions": 4,
+        "prefetches": 2,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl2keep, [x0]",
+          "prfm\tpldl2keep, [x0, #0x40]",
+          "ret",
+          "nop"
+        ]
+      },
+      "loom_hint_6": {
+        "instructions": 8,
+        "prefetches": 4,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl1keep, [x0, #0x40]",
+          "prfm\tpldl1keep, [x0, #0x80]",
+          "prfm\tpldl1keep, [x0, #0xc0]",
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_7": {
+        "instructions": 8,
+        "prefetches": 4,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl2keep, [x0]",
+          "prfm\tpldl2keep, [x0, #0x40]",
+          "prfm\tpldl2keep, [x0, #0x80]",
+          "prfm\tpldl2keep, [x0, #0xc0]",
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_8": {
+        "instructions": 12,
+        "prefetches": 8,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl1keep, [x0, #0x40]",
+          "prfm\tpldl1keep, [x0, #0x80]",
+          "prfm\tpldl1keep, [x0, #0xc0]",
+          "prfm\tpldl1keep, [x0, #0x100]",
+          "prfm\tpldl1keep, [x0, #0x140]",
+          "prfm\tpldl1keep, [x0, #0x180]",
+          "prfm\tpldl1keep, [x0, #0x1c0]",
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_9": {
+        "instructions": 12,
+        "prefetches": 8,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl2keep, [x0]",
+          "prfm\tpldl2keep, [x0, #0x40]",
+          "prfm\tpldl2keep, [x0, #0x80]",
+          "prfm\tpldl2keep, [x0, #0xc0]",
+          "prfm\tpldl2keep, [x0, #0x100]",
+          "prfm\tpldl2keep, [x0, #0x140]",
+          "prfm\tpldl2keep, [x0, #0x180]",
+          "prfm\tpldl2keep, [x0, #0x1c0]",
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_10": {
+        "instructions": 4,
+        "prefetches": 3,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x0, #0x40]",
+          "prfm\tpldl2keep, [x0, #0x80]",
+          "ret"
+        ]
+      },
+      "loom_hint_11": {
+        "instructions": 8,
+        "prefetches": 5,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x0, #0x40]",
+          "prfm\tpldl2keep, [x0, #0x80]",
+          "prfm\tpldl2keep, [x0, #0xc0]",
+          "prfm\tpldl2keep, [x0, #0x100]",
+          "ret",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_12": {
+        "instructions": 4,
+        "prefetches": 3,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x1]",
+          "prfm\tpldl2keep, [x1, #0x40]",
+          "ret"
+        ]
+      },
+      "loom_hint_13": {
+        "instructions": 8,
+        "prefetches": 5,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "add\tx8, x1, x2",
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x1]",
+          "prfm\tpldl2keep, [x1, #0x40]",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "ret",
+          "nop"
+        ]
+      },
+      "loom_hint_14": {
+        "instructions": 16,
+        "prefetches": 9,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "add\tx8, x1, x2",
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x1]",
+          "prfm\tpldl2keep, [x1, #0x40]",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x1, x2, lsl #1",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x2, x2, lsl #1",
+          "add\tx8, x1, x8",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "ret",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_15": {
+        "instructions": 32,
+        "prefetches": 17,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "add\tx8, x1, x2",
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x1]",
+          "prfm\tpldl2keep, [x1, #0x40]",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x1, x2, lsl #1",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x2, x2, lsl #1",
+          "add\tx8, x1, x8",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x1, x2, lsl #2",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x2, x2, lsl #2",
+          "add\tx8, x1, x8",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "mov\tw8, #0x6                // =6",
+          "madd\tx8, x2, x8, x1",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "sub\tx8, x1, x2",
+          "add\tx8, x8, x2, lsl #3",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      }
+    }
+  }
+]

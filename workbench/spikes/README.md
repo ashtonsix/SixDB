@@ -22,6 +22,7 @@ experiments and checks under Object, Allocation, Journal, Port and Worker.
 - [Ikea CPU comparison](ikea-cpu-comparison/README.md): October 2026 snapshot across six processors, matched case evidence and a frozen cloud-price model.
 - [Executable placement](executable-placement/README.md): distinguishing changed code from placement effects.
 - [Memory characterisation](memory-characterisation/README.md): automatic MLP, prefetch, cache sharing and host diagnostics.
+- [Loom execution](loom-execution/README.md): memory microtask rings, fixed hint classes, worker channels/groups, synchronization and affinity-crossing operations.
 - [Memory descriptors](memory-descriptors/README.md): arena-selected palettes, one-byte trampolines, placement and retained native access.
 - [CFT commit latency](cft-commit-latency/README.md): directional network measurement and host/flow selection; durable quorum latency, storage throughput cliffs and live log preparation.
 - [Local message handoff](orbital-local-handoff/README.md): native Zen 5 measurements of batching, payload readiness, polling CPU, queue admission and instrumentation sensitivity.

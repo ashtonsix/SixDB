@@ -1,0 +1,57 @@
+find_package(Threads REQUIRED)
+add_library(loom_spike_support STATIC support.cpp)
+sixdb_target(loom_spike_support)
+
+add_library(loom_spike_microtask STATIC microtask.cpp prefetch.cpp)
+sixdb_target(loom_spike_microtask)
+target_link_libraries(loom_spike_microtask PUBLIC loom_spike_support)
+
+add_library(loom_spike_bec STATIC ../bec256-composition/metadata.cpp ../bec256-composition/consumer.cpp)
+sixdb_target(loom_spike_bec)
+target_link_libraries(loom_spike_bec PUBLIC ikea::bec256 ikea::seriespack ikea::tuplepack)
+
+add_executable(loom_microtask microtask_bench.cpp)
+sixdb_target(loom_microtask)
+target_link_libraries(loom_microtask PRIVATE loom_spike_microtask loom_spike_bec)
+
+add_library(loom_spike_microtask_ordinary STATIC microtask.cpp prefetch.cpp)
+sixdb_target(loom_spike_microtask_ordinary)
+target_compile_definitions(loom_spike_microtask_ordinary PUBLIC LOOM_MICROTASK_ORDINARY_ABI=1)
+target_link_libraries(loom_spike_microtask_ordinary PUBLIC loom_spike_support)
+add_executable(loom_microtask_ordinary microtask_bench.cpp)
+sixdb_target(loom_microtask_ordinary)
+target_link_libraries(loom_microtask_ordinary PRIVATE loom_spike_microtask_ordinary loom_spike_bec)
+
+add_executable(loom_messaging messaging.cpp messaging_bench.cpp)
+sixdb_target(loom_messaging)
+target_link_libraries(loom_messaging PRIVATE loom_spike_support Threads::Threads)
+
+add_executable(loom_affinity affinity_bench.cpp messaging.cpp)
+sixdb_target(loom_affinity)
+target_link_libraries(loom_affinity PRIVATE loom_spike_support Threads::Threads)
+
+add_executable(loom_service service_bench.cpp messaging.cpp)
+sixdb_target(loom_service)
+target_link_libraries(loom_service PRIVATE loom_spike_microtask Threads::Threads)
+
+add_executable(loom_inventory inventory_bench.cpp)
+sixdb_target(loom_inventory)
+target_link_libraries(loom_inventory PRIVATE loom_spike_microtask)
+
+add_executable(loom_pressure pressure_bench.cpp messaging.cpp)
+sixdb_target(loom_pressure)
+target_link_libraries(loom_pressure PRIVATE loom_spike_microtask Threads::Threads)
+
+add_executable(loom_abi abi_bench.cpp)
+sixdb_target(loom_abi)
+target_link_libraries(loom_abi PRIVATE loom_spike_support)
+add_executable(loom_abi_ordinary abi_bench.cpp)
+sixdb_target(loom_abi_ordinary)
+target_compile_definitions(loom_abi_ordinary PRIVATE LOOM_ABI_ORDINARY=1)
+target_link_libraries(loom_abi_ordinary PRIVATE loom_spike_support)
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64)$")
+  add_executable(loom_abi_regcall abi_bench.cpp)
+  sixdb_target(loom_abi_regcall)
+  target_compile_definitions(loom_abi_regcall PRIVATE LOOM_ABI_REGCALL=1)
+  target_link_libraries(loom_abi_regcall PRIVATE loom_spike_support)
+endif()

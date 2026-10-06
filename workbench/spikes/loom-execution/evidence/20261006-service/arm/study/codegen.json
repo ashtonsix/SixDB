@@ -1,0 +1,323 @@
+[
+  {
+    "input": "assembly-loom_service.stdout",
+    "sha256": "04b71612716f3559ef06e6edda19688d23303ae5a154d55e83c1e1d46de0603f",
+    "functions": {
+      "void (anonymous namespace)::hop<true>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 16,
+        "prefetches": 1,
+        "conditional_branches": 1,
+        "calls": [],
+        "divides": []
+      },
+      "void (anonymous namespace)::hop<false>(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 16,
+        "prefetches": 0,
+        "conditional_branches": 1,
+        "calls": [],
+        "divides": []
+      },
+      "loom_spike::messaging::GroupChannels::receive(unsigned int, loom_spike::messaging::Packet&, loom_spike::messaging::Counters&)": {
+        "instructions": 224,
+        "prefetches": 0,
+        "conditional_branches": 16,
+        "calls": [],
+        "divides": []
+      },
+      "loom_spike::messaging::Channels::receive(unsigned int, loom_spike::messaging::Packet&, loom_spike::messaging::Counters&)": {
+        "instructions": 120,
+        "prefetches": 0,
+        "conditional_branches": 8,
+        "calls": [],
+        "divides": []
+      },
+      "loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::yield(loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>*, loom_spike::microtask::Ring<std::integer_sequence<unsigned long>>::Slot*, unsigned long, unsigned long, unsigned long, unsigned long)": {
+        "instructions": 48,
+        "prefetches": 0,
+        "conditional_branches": 9,
+        "calls": [],
+        "divides": []
+      },
+      "loom_hint_0": {
+        "instructions": 4,
+        "prefetches": 0,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_1": {
+        "instructions": 4,
+        "prefetches": 1,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "ret",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_2": {
+        "instructions": 4,
+        "prefetches": 1,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl2keep, [x0]",
+          "ret",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_3": {
+        "instructions": 4,
+        "prefetches": 1,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl3keep, [x0]",
+          "ret",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_4": {
+        "instructions": 4,
+        "prefetches": 2,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl1keep, [x0, #0x40]",
+          "ret",
+          "nop"
+        ]
+      },
+      "loom_hint_5": {
+        "instructions": 4,
+        "prefetches": 2,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl2keep, [x0]",
+          "prfm\tpldl2keep, [x0, #0x40]",
+          "ret",
+          "nop"
+        ]
+      },
+      "loom_hint_6": {
+        "instructions": 8,
+        "prefetches": 4,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl1keep, [x0, #0x40]",
+          "prfm\tpldl1keep, [x0, #0x80]",
+          "prfm\tpldl1keep, [x0, #0xc0]",
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_7": {
+        "instructions": 8,
+        "prefetches": 4,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl2keep, [x0]",
+          "prfm\tpldl2keep, [x0, #0x40]",
+          "prfm\tpldl2keep, [x0, #0x80]",
+          "prfm\tpldl2keep, [x0, #0xc0]",
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_8": {
+        "instructions": 12,
+        "prefetches": 8,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl1keep, [x0, #0x40]",
+          "prfm\tpldl1keep, [x0, #0x80]",
+          "prfm\tpldl1keep, [x0, #0xc0]",
+          "prfm\tpldl1keep, [x0, #0x100]",
+          "prfm\tpldl1keep, [x0, #0x140]",
+          "prfm\tpldl1keep, [x0, #0x180]",
+          "prfm\tpldl1keep, [x0, #0x1c0]",
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_9": {
+        "instructions": 12,
+        "prefetches": 8,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl2keep, [x0]",
+          "prfm\tpldl2keep, [x0, #0x40]",
+          "prfm\tpldl2keep, [x0, #0x80]",
+          "prfm\tpldl2keep, [x0, #0xc0]",
+          "prfm\tpldl2keep, [x0, #0x100]",
+          "prfm\tpldl2keep, [x0, #0x140]",
+          "prfm\tpldl2keep, [x0, #0x180]",
+          "prfm\tpldl2keep, [x0, #0x1c0]",
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_10": {
+        "instructions": 4,
+        "prefetches": 3,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x0, #0x40]",
+          "prfm\tpldl2keep, [x0, #0x80]",
+          "ret"
+        ]
+      },
+      "loom_hint_11": {
+        "instructions": 8,
+        "prefetches": 5,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x0, #0x40]",
+          "prfm\tpldl2keep, [x0, #0x80]",
+          "prfm\tpldl2keep, [x0, #0xc0]",
+          "prfm\tpldl2keep, [x0, #0x100]",
+          "ret",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_12": {
+        "instructions": 4,
+        "prefetches": 3,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x1]",
+          "prfm\tpldl2keep, [x1, #0x40]",
+          "ret"
+        ]
+      },
+      "loom_hint_13": {
+        "instructions": 8,
+        "prefetches": 5,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "add\tx8, x1, x2",
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x1]",
+          "prfm\tpldl2keep, [x1, #0x40]",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "ret",
+          "nop"
+        ]
+      },
+      "loom_hint_14": {
+        "instructions": 16,
+        "prefetches": 9,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "add\tx8, x1, x2",
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x1]",
+          "prfm\tpldl2keep, [x1, #0x40]",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x1, x2, lsl #1",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x2, x2, lsl #1",
+          "add\tx8, x1, x8",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "ret",
+          "nop",
+          "nop"
+        ]
+      },
+      "loom_hint_15": {
+        "instructions": 32,
+        "prefetches": 17,
+        "conditional_branches": 0,
+        "calls": [],
+        "divides": [],
+        "body": [
+          "add\tx8, x1, x2",
+          "prfm\tpldl1keep, [x0]",
+          "prfm\tpldl2keep, [x1]",
+          "prfm\tpldl2keep, [x1, #0x40]",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x1, x2, lsl #1",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x2, x2, lsl #1",
+          "add\tx8, x1, x8",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x1, x2, lsl #2",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "add\tx8, x2, x2, lsl #2",
+          "add\tx8, x1, x8",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "mov\tw8, #0x6                // =6",
+          "madd\tx8, x2, x8, x1",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "sub\tx8, x1, x2",
+          "add\tx8, x8, x2, lsl #3",
+          "prfm\tpldl2keep, [x8]",
+          "prfm\tpldl2keep, [x8, #0x40]",
+          "ret",
+          "nop",
+          "nop",
+          "nop"
+        ]
+      }
+    }
+  }
+]
