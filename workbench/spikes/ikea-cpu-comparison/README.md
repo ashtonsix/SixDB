@@ -74,8 +74,8 @@ attribute the difference to hardware alone or establish a remaining kernel defec
 - The two-trial median changes are +0.01% Intel, −0.02% Zen 4, +0.05% Zen 5
   and −0.58% M1. Their 90th-percentile absolute changes are 1.71%, 2.03%, 1.86%
   and 2.52%; 9, 15, 12 and 12 cases change more than 5%. This describes local
-  repeatability, not between-instance or between-day uncertainty. Figure
-  percentiles describe the spread across workloads, not confidence intervals.
+  repeatability, not between-instance or between-day uncertainty. Retained
+  per-case percentiles describe the spread across workloads, not confidence intervals.
 - Resident microbenchmarks omit database workload weighting, cold-memory
   behavior, host scaling and energy. Every case has equal aggregate weight,
   so SeriesPack contributes 150/329 cases. Runtime libraries/platforms and
