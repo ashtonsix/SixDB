@@ -73,6 +73,9 @@ def rebuild(directory):
     original = load('plot-data.json')
     context = load('measurement-context.json')
     selected = load('measurement-summary.json')
+    catalog_clocks = json.loads(Path(__file__).with_name('catalog-clocks.json').read_text())
+    same(catalog_clocks, {cpu: context['pricing'][cpu]['product']['product']['attributes']['clockSpeed']
+                          for cpu in CPUS}, 'Captured catalog clocks')
     require([p['id'] for p in original['processors']] == CPUS, 'Processor order changed')
     with (directory / 'cases.csv').open(newline='') as handle:
         cases = list(csv.DictReader(handle))
@@ -170,7 +173,7 @@ def rebuild(directory):
     return rebuilt, {'cases': len(cases), 'repetitions': count, 'historical_source_sha256': source,
                      'verified_files': manifest['files_sha256'], 'variability': variability,
                      'checks': ['retained hashes', 'matched medians and trial coverage', 'logical counters',
-                                'recorded source/check identities', 'captured hourly price allocation',
+                                'recorded source/check identities', 'captured hourly price allocation and catalog clocks',
                                 'all aggregate/group indices, distributions and strict 3% wins']}
 
 

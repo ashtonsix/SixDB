@@ -9,10 +9,11 @@ It is a historical comparison, not current production performance.
 
 ![Six-processor performance and allocated-price comparison](figures/comparison.png)
 
-The [SVG](figures/comparison.svg) and PNG are the single selected layout.
-The figure and its [anonymous numeric input](evidence/2026-10-02/plot-data.json)
-remain suitable for sharing. This account and the named evidence are private
-project material.
+The [SVG](figures/comparison.svg) and PNG are the single selected layout, with
+listed vCPU prices and catalog clocks beside the case wins. The figure, its
+[anonymous numeric input](evidence/2026-10-02/plot-data.json) and
+[catalog clock annotations](catalog-clocks.json) remain suitable for sharing.
+This account and the named evidence are private project material.
 
 ## Surviving findings
 
@@ -87,6 +88,11 @@ AWS Price List API captures for Linux/shared/on-demand US East (N. Virginia),
 October 2, 2026. Selected products and effective dates remain in
 [measurement context](evidence/2026-10-02/measurement-context.json).
 The following values are historical inputs, not a refreshed price quotation.
+The clock annotations copy this same capture's `clockSpeed` labels and are
+checked against it by the report. They preserve the AMD "up to" qualifiers;
+they are not measured operating frequencies or an IPC normalization. The
+figure marks the measured local M1 Pro clock as unverified: the catalog's
+3.2 GHz describes the unmeasured base-M1 rental instead.
 
 | Price product | USD/host-hour | Allocated cores | USD/allocated-core-hour |
 | --- | ---: | ---: | ---: |
@@ -100,9 +106,9 @@ The following values are historical inputs, not a refreshed price quotation.
 Intel has two billed SMT vCPUs per measured physical core; disabling SMT does
 not reduce the instance charge. The Mac rental is base M1 with four performance
 and four efficiency cores, while measurements are local M1 Pro. Applying those
-timings to that rental is an unmeasured proxy. The solid Mac figure allocates
-cost across eight listed cores; the dashed four-performance-core alternative
-gives index 0.291. Neither measures base-M1 performance or multicore scaling.
+timings to that rental is an unmeasured proxy. The Mac figure allocates cost
+across eight listed cores; the retained four-performance-core alternative gives
+index 0.291. Neither measures base-M1 performance or multicore scaling.
 The captured model assumes sustained allocations, notes the Mac 24-hour minimum,
 and excludes discounts, storage, network and tax.
 

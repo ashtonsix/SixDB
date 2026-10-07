@@ -2,7 +2,6 @@
 """Render the anonymous October 2026 CPU snapshot and workload distributions."""
 import argparse
 import json
-import math
 from pathlib import Path
 
 import matplotlib
@@ -33,10 +32,13 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     data = json.loads(args.data.read_text())
+    catalog_clocks = json.loads(Path(__file__).with_name('catalog-clocks.json').read_text())
     if set(data) != FIELDS:
         raise ValueError('Unexpected public fields')
     if [p['id'] for p in data['processors']] != ['v2', 'v3', 'gnr', 'zen4', 'zen5', 'm1']:
         raise ValueError('Unexpected processor order')
+    if set(catalog_clocks) != {p['id'] for p in data['processors']}:
+        raise ValueError('Incomplete catalog clocks')
     if [p['name'] for p in data['processors']] != ['Neoverse V2', 'Neoverse V3', 'Granite Rapids', 'Zen 4', 'Zen 5', 'M1 Pro']:
         raise ValueError('Unexpected public processor labels')
     if [p['instance'] for p in data['processors']] != ['c8g.xlarge', 'c9g.xlarge', 'c8i.xlarge', 'c7a.xlarge', 'c8a.xlarge', 'mac2.metal']:
@@ -67,7 +69,7 @@ def main():
     plt.rcParams.update({'font.family': 'DejaVu Sans', 'text.color': INK,
                          'axes.labelcolor': MUTED, 'xtick.color': MUTED,
                          'ytick.color': MUTED, 'svg.fonttype': 'none', 'font.size': 13})
-    width, height = 2400, 6400 / 3
+    width, height = 2400, 1960
     fig = plt.figure(figsize=(24, height / 100), facecolor=PAPER)
     canvas = fig.add_axes([0, 0, 1, 1])
     canvas.set_xlim(0, width); canvas.set_ylim(height, 0); canvas.axis('off')
@@ -133,32 +135,22 @@ def main():
     text(2124, 896, '100% of fastest', 19, MUTED)
     line(96, 950, 2304, 950)
 
-    text(96, 987, 'PER DOLLAR  /  The full distribution', 33, weight='bold')
-    text(96, 1042, 'Cases ranked independently for each CPU; further right means better value.', 22, MUTED)
-    # A cumulative percentile profile uses every observation and a log index scale.
-    dist = axes(230, 1120, 1150, 265)
-    p_only = dollar[:, 5] / 2
-    low = 2 ** math.floor(math.log2(min(float(dollar.min()), float(p_only.min()))))
-    high = 2 ** math.ceil(math.log2(float(dollar.max())))
-    dist.set_xscale('log', base=2); dist.set_xlim(low, high); dist.set_ylim(0, 100)
-    ticks = [2.0 ** k for k in range(int(math.log2(low)), int(math.log2(high)) + 1)]
-    dist.set_xticks(ticks, [f'{t:g}×' for t in ticks], fontsize=14)
-    dist.set_yticks([10, 50, 90], ['10th', '50th', '90th'], fontsize=14)
-    dist.tick_params(length=0, pad=10)
-    dist.grid(color=GRID, lw=1, zorder=0)
-    for spine in dist.spines.values(): spine.set_visible(False)
-    dist.axvline(1, color=MUTED, linestyle=(0, (3, 4)), lw=1.2, zorder=0)
-    percentiles = np.arange(1, data['cases'] + 1) / data['cases'] * 100
-    for i in range(6):
-        dist.step(np.sort(dollar[:, i]), percentiles, where='post', color=COLORS[i], lw=2.7, zorder=3)
-    dist.step(np.sort(p_only), percentiles, where='post', color=COLORS[5], lw=1.8,
-              linestyle=(0, (4, 3)), alpha=.75, zorder=2)
-    for i in range(6):
-        x = 230 + i * 190
-        line(x, 1093, x + 31, 1093, COLORS[i], 3)
-        text(x + 42, 1082, short[i], 21, COLORS[i], 'bold')
-    text(96, 1180, 'CASE\nPERCENTILE', 18, MUTED, 'bold')
-    text(230, 1426, 'Performance / $ index · V3 = 1.00× · M1 dashed: 4-performance-core price allocation', 21, MUTED)
+    text(96, 987, 'CLOUD PRICE & CLOCK', 33, weight='bold')
+    text(96, 1042, f"AWS on-demand · {data['region']} · USD · {data['pricing_date']}", 22, MUTED)
+    text(96, 1097, 'Processor', 23, MUTED, 'bold')
+    text(440, 1097, 'Price basis', 23, MUTED, 'bold')
+    text(1020, 1097, '$ / vCPU-hour', 23, MUTED, 'bold', ha='right')
+    text(1380, 1097, 'Catalog GHz', 23, MUTED, 'bold', ha='right')
+    for i, p in enumerate(data['processors']):
+        y = 1150 + i * 40
+        marker = '*' if p['id'] == 'gnr' else '†' if p['id'] == 'm1' else ''
+        text(96, y, p['name'] + marker, 26, COLORS[i], 'bold')
+        text(440, y, p['instance'] + ('†' if p['id'] == 'm1' else ''), 24, MUTED)
+        text(1020, y, f"${p['usd_vcpu_hour']:.6f}" + marker, 27, INK, 'bold', ha='right')
+        # The Mac catalog describes the rental proxy, not the measured local M1 Pro.
+        clock = 'Unverified†' if p['id'] == 'm1' else catalog_clocks[p['id']].removesuffix(' GHz').lower()
+        text(1380, y, clock, 27, INK, 'bold', ha='right')
+    text(96, 1400, 'Catalog clocks; operating frequencies during the runs were not measured.', 22, MUTED)
 
     text(1540, 987, 'CLEAR CASE WINS', 30, weight='bold')
     text(1540, 1042, '>3% faster than the runner-up among all six', 21, MUTED)
@@ -172,19 +164,26 @@ def main():
     text(1540, 1400, 'No clear winner', 22, MUTED)
     text(2155, 1400, str(data['core_wins']['no_clear']), 24, MUTED, 'bold', ha='right')
     text(2304, 1400, str(data['dollar_wins']['no_clear']), 24, MUTED, 'bold', ha='right')
-    line(96, 1482, 2304, 1482)
+    notes = [
+        '* Intel: 2 billed SMT vCPUs/core; SMT disabled. Per-dollar indices use $0.093710/core-hour; disabling SMT does not reduce the bill.',
+        '† M1 Pro tested locally; core placement unverified. Price proxy: base M1, $0.65/host-hour ÷ 8 cores (4P + 4E); 24h minimum.',
+        '27 Sep kernels · single-thread CPU time · ARM: identical V2-tuned binaries · x86: native tuning · 5 repeats, 1–2 trials · compute prices only',
+    ]
+    for y, note in zip([1458, 1496, 1534], notes):
+        text(96, y, note, 22, MUTED)
+    line(96, 1582, 2304, 1582)
 
-    text(96, 1514, 'HEAD TO HEAD  /  Cases won by >3%', 30, weight='bold')
-    text(2304, 1523, 'Read each row against the column · counts out of ' + str(data['cases']), 21, MUTED, ha='right')
+    text(96, 1614, 'HEAD TO HEAD  /  Cases won by >3%', 30, weight='bold')
+    text(2304, 1623, 'Read each row against the column · counts out of ' + str(data['cases']), 21, MUTED, ha='right')
     # The exact pairwise ledger preserves each neutral two-processor comparison.
     for x, kind, label in [(96, 'pairwise_core_wins', 'Per core'),
                            (1250, 'pairwise_dollar_wins', 'Per dollar')]:
         label_x, grid_x, cell_w, row_h = x, x + 300, 124, 33
-        text(label_x, 1573, label, 23, INK, 'bold')
+        text(label_x, 1673, label, 23, INK, 'bold')
         for j, name in enumerate(short):
-            text(grid_x + (j + .5) * cell_w, 1573, name, 22, COLORS[j], 'bold', ha='center')
+            text(grid_x + (j + .5) * cell_w, 1673, name, 22, COLORS[j], 'bold', ha='center')
         for i, name in enumerate(names):
-            y = 1613 + i * row_h
+            y = 1713 + i * row_h
             text(label_x, y + row_h / 2, name, 21, COLORS[i], 'bold', va='center')
             for j in range(6):
                 value = data[kind][i][j]
@@ -195,23 +194,6 @@ def main():
                      '—' if value is None else str(value), 21,
                      color=PAPER if value is not None and value / data['cases'] > .69 else INK,
                      weight='bold', va='center', ha='center')
-    line(96, 1843, 2304, 1843)
-
-    text(96, 1873, 'CLOUD PRICE BASIS', 21, MUTED, 'bold')
-    text(2304, 1873, f"AWS on-demand · {data['region']} · USD · {data['pricing_date']}", 21, MUTED, ha='right')
-    for i, p in enumerate(data['processors']):
-        x = 96 + i * column
-        text(x, 1917, p['instance'], 22, INK, 'bold')
-        text(x, 1952, f"vCPU-h  ${p['usd_vcpu_hour']:.6f}", 20, MUTED)
-        allocation_label = 'Alloc-h' if p['id'] == 'm1' else 'Core-h'
-        text(x, 1984, f"{allocation_label}  ${p['usd_core_hour']:.6f}", 20, MUTED)
-    notes = [
-        '27 Sep 2026 kernels. Single-thread CPU time. ARM: identical V2-tuned binaries; x86: native tuning. 5 repeats; 1 trial on V2/V3, 2 on other CPUs.',
-        'Intel SMT disabled; 2 billed vCPUs per physical core. Value model uses allocated core cost. M1 Pro in OrbStack; physical core placement unverified.',
-        'Mac price proxies unmeasured base M1: 4 P + 4 E cores. Solid M1 allocates cost over 8 listed cores; dashed over 4 P cores. Mac 24h minimum; other charges excluded.',
-    ]
-    for y, note in zip([2035, 2064, 2093], notes):
-        text(96, y, note, 17, MUTED)
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     fig.canvas.draw()
