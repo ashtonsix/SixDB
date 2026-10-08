@@ -43,7 +43,8 @@ entire envelope. View admission checks used planes' occupied spans, not gap data
 Checked get/read/set/replace/initialize report command errors before that call's
 reads/writes or output effects as specified at the declaration. A failed checked
 read leaves output unchanged. A failed checked mutation leaves data, summary and
-journal unchanged. Cold mutation binding may allocate temporary alias-analysis
+journal unchanged. Mutation binding reuses a whole admitted view's placement
+proof without allocation. Composed views may need temporary alias-analysis
 storage; allocation failure is a typed error. Kernel execution does not allocate.
 Diagnostic formatting and optional source identities stay outside hot bodies.
 

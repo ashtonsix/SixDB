@@ -8,7 +8,8 @@ namespace ikea::seriespack::composition {
 #if defined(__aarch64__) || defined(__AVX2__)
 /// Owns the admitted expression tree, borrowing its named leaf views and bytes.
 /// Moving this object invalidates erased operations made from its old address.
-/// Binding may allocate temporary alias-analysis storage; execution does not.
+/// A whole admitted view reuses its placement proof without allocation. Other
+/// expressions may allocate temporary alias-analysis storage; execution does not.
 template <class Expression> class prepared_mutation {
     Expression expression_;
     std::size_t count_;
@@ -52,6 +53,20 @@ template <class Expression> class prepared_mutation {
     /// disjoint stride gaps can still interleave. No 2^16 container-size limit.
     [[nodiscard]] static std::expected<prepared_mutation, error>
     bind(Expression expression, std::size_t count, mutation_diagnostic* diagnostic = nullptr) {
+        if constexpr (std::is_pointer_v<physical_type>) {
+            using Source = std::remove_cv_t<std::remove_pointer_t<physical_type>>;
+            if constexpr (std::is_same_v<Source, view<typename Source::format_type, std::uint8_t>>)
+                if (const auto* source = range_detail::physical_source(expression)) {
+                    // A whole admitted view already proves its fields disjoint.
+                    // Substituted views still need the cross-source walk below.
+                    if (diagnostic)
+                        *diagnostic = count > source->size() ? mutation_diagnostic{source}
+                                                           : mutation_diagnostic{};
+                    if (count > source->size())
+                        return std::unexpected(error::range);
+                    return prepared_mutation{std::move(expression), count};
+                }
+        }
         detail::write_admission admission{count};
         assign(admission, expression, 0, write_token{});
         if (diagnostic)

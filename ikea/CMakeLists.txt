@@ -85,6 +85,11 @@ add_executable(ikea_seriespack_ownership_check EXCLUDE_FROM_ALL
 sixdb_target(ikea_seriespack_ownership_check)
 target_link_libraries(ikea_seriespack_ownership_check PRIVATE ikea::seriespack)
 
+add_executable(ikea_seriespack_admission_check EXCLUDE_FROM_ALL
+  test/seriespack/mutation/admission.cpp test/seriespack/support.cpp)
+sixdb_target(ikea_seriespack_admission_check)
+target_link_libraries(ikea_seriespack_admission_check PRIVATE ikea::seriespack)
+
 foreach(example ordinary composition pipeline integration)
   add_executable(ikea_example_seriespack_${example} EXCLUDE_FROM_ALL examples/seriespack/${example}.cpp)
   sixdb_target(ikea_example_seriespack_${example})
@@ -104,6 +109,7 @@ set(ikea_example_targets
   ikea_example_bec256_ordinary ikea_example_bec256_native ikea_example_bec256_integration)
 set(ikea_check_targets
   ikea_seriespack_check ikea_seriespack_descriptor_check ikea_seriespack_ownership_check
+  ikea_seriespack_admission_check
   ikea_tuplepack_wire_check ikea_tuplepack_operations_check ikea_tuplepack_execution_check
   ikea_tuplepack_packets_check ikea_tuplepack_gpr_check ikea_tuplepack_ownership_check
   ikea_bec256_check ikea_bec256_composition_check)
