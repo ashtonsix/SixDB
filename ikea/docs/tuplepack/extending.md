@@ -76,6 +76,22 @@ native body. The [word example](../../examples/tuplepack/words.cpp) carries two
 four-byte rows in a `uint64_t`; the [packet example](../../examples/tuplepack/packets.cpp)
 keeps a larger projection in ISA vectors.
 
+The ordinary GPR reader selects its transfer or slot endpoint when the plan is
+prepared. The generic inline native body selects from those controls on each
+call, so inlining alone can add work and code size. Choose execution around a
+complete consumer and measure its plan loads, admission and result handling.
+
+When an authored consumer fixes a GPR transfer width, call
+`native_read.admit_transfer<Bytes>()` at its stable binding boundary. Success
+qualifies the prepared contiguous transfer shape for
+`get_transfer_unchecked<Bytes>(first, active)`; the original plan still owns
+its offset, shifts and masks. It does not admit the current row or keep backing
+alive. Retain the ordinary `admit`/owner proof for each original-row window,
+including fragmented physical slots. Unsupported shapes return `description`;
+keep the ordinary/native reader as a fallback when the consumer permits them.
+Inactive rows issue no payload access, including an entirely empty window.
+The same bounded transfer body implements both paths.
+
 Activity travels separately: `native::row_mask(plan, active)` expands original-row
 bits into a byte mask in the plan's packet order. A consumer's contract includes
 the map, groups, Rows and value interpretation; carrier types alone cannot prove

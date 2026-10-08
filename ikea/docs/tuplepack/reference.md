@@ -179,6 +179,17 @@ require matching carrier types and calling conventions. Controls are ISA-specifi
 An x86 build without AVX2 supports native GPR packets and buffered 64-byte packets;
 optimized native AVX-512 requires VBMI.
 
+For `native_reader<8, Byte, Rows>`, `admit_transfer<Bytes>()` accepts
+`1 <= Bytes <= 8 / Rows` at compile time and returns `description` unless the
+prepared projection has exactly that contiguous transfer width in one group.
+It changes neither the plan nor the binding. Offsets, equal shifts and masks
+remain those qualified by ordinary reader preparation; sparse/reordered or
+otherwise unsupported shapes keep the ordinary/native fallback.
+`get_transfer_unchecked<Bytes>(first, active)` requires that shape admission
+and a separately admitted current original-row window, stable named plan/view
+and readable backing. It invokes the same bounded transfer body. Inactive rows
+issue no access; an entirely empty mask returns zero without forming an address.
+
 Raw multi-row native bodies take an address callback, active mask and optional
 stride hint. They request only active addresses. A nonzero hint promises one
 allocation with that byte stride; omit it for arbitrary addresses. Ordinary

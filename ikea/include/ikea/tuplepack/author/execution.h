@@ -59,6 +59,31 @@ template <unsigned N, class Byte, unsigned Rows = 1> class native_reader {
             return std::unexpected(error::range);
         return {};
     }
+    /// Admits a fixed GPR transfer shape once around an authored consumer.
+    /// This proves the prepared projection uses Bytes consecutive, equally
+    /// shifted bytes in one group. The original named plan remains unchanged.
+    /// Row/window admission is separate and still required before payload access.
+    template <unsigned Bytes>
+    [[nodiscard]] std::expected<void, error> admit_transfer() const requires(N == 8) {
+        static_assert(Bytes > 0 && Bytes <= 8 / Rows);
+        if (plan_->controls().transfer.bytes != Bytes)
+            return std::unexpected(error::description);
+        return {};
+    }
+    /// Requires successful admit_transfer<Bytes>() and admission of the current
+    /// original-row window. Inactive rows issue no access. Uses the same bounded
+    /// transfer, shift and mask as the ordinary prepared endpoint.
+    template <unsigned Bytes>
+    [[gnu::always_inline]] std::uint64_t get_transfer_unchecked(
+        std::size_t first, std::uint64_t active = detail::all_rows<Rows>) const requires(N == 8) {
+        static_assert(Bytes > 0 && Bytes <= 8 / Rows);
+        if (!active)
+            return 0;
+        const auto base = source_->row_unchecked(first);
+        const auto stride = source_->stride();
+        return detail::read_gpr_transfer<Rows, Bytes>(plan_->controls(),
+            [&](unsigned r) { return base + r * stride; }, active, stride);
+    }
     [[gnu::always_inline]] native::packet_for<N>
     get_unchecked(std::size_t first, std::uint64_t active = detail::all_rows<Rows>) const {
         if (!active)
