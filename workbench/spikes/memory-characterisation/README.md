@@ -53,3 +53,25 @@ and [findings](FINDINGS.md) explain that experiment.
 [Retained evidence](evidence/README.md) owns offline regeneration and recovery.
 `check.py` checks inference refusal and lookup invalidation; every generated
 pointer cycle is validated by the measurement binary before timing.
+
+For a separate counter diagnostic, `run.py --profile screen --pmu basic
+--pmu-event l1d-load-misses:3:0x10000` runs the same isolated validated MLP
+footprint/chain controls and retains one `pmu-intervals/*.json` per timed chase
+sample. It bypasses lookup and does not run interference or system probes.
+[pmu.sh](pmu.sh) is the worker entry point. This checks whether available refill/
+miss signals respond to actual dependent memory accesses, beyond merely opening
+an event. Counters include the chase, sink aggregation and boundary clocks;
+allocation, chain construction/validation and calibration are outside the group.
+Actual page/NUMA receipts remain alongside the samples. Default measurements
+leave collection off. The curves and counters still require their CPU/kernel
+semantics; they do not assign a cache/DRAM tier automatically.
+
+The worker entry point also retains `memory-pmu-catalog.json` from the measured
+guest. `--env MEMORY_ARM_CACHE_EVENTS=1` adds ARM L1/L2/L3 refill diagnostics,
+using both `PERF_TYPE_RAW` and that guest's dynamic core-PMU type. The type is
+resolved locally; aliases advertised by sysfs are not evidence that the
+hypervisor permits the events. These are separate diagnostics, with unavailable
+events and group coverage retained. On the tested `c8g.medium`, generic L1 misses
+responded to the footprint sweep, while all six raw/device refill requests
+failed with `EINVAL`, including advertised L1/L2 events. That guest therefore
+does not establish whether composed reads were LLC- or DRAM-served.

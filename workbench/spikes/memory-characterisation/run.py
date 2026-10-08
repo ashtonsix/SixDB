@@ -32,16 +32,23 @@ def main():
     parser.add_argument('--system', action='store_true', help='Temporary-file I/O and bounded transport diagnostics')
     parser.add_argument('--mib', type=int, help='Override largest MLP footprint, 16..1024 MiB')
     parser.add_argument('--seed', type=int, default=357712151618, help='Recorded deterministic permutation seed')
+    parser.add_argument('--pmu', choices=['off', 'basic', 'stalls'], default='off',
+                        help='Separate isolated MLP counter diagnostic; bypasses the lookup')
+    parser.add_argument('--pmu-event', action='append', default=[], help='Qualified name:type:config')
     args = parser.parse_args()
     if args.mib is not None and not 16 <= args.mib <= 1024:
         parser.error('--mib must be between 16 and 1024')
+    if args.pmu != 'off' and (args.smt or args.system):
+        parser.error('PMU diagnostics use isolated MLP controls; omit --smt/--system')
+    if args.pmu == 'off' and args.pmu_event:
+        parser.error('--pmu-event requires --pmu basic or stalls')
     if not hasattr(os, 'sched_getaffinity'):
         parser.error('Run on Linux (orb -m ubuntu from macOS)')
     cpu = min(os.sched_getaffinity(0)) if args.cpu is None else args.cpu
     hardware = discover(cpu)
     output = (args.output or ROOT / 'build/experiments/memory-characterisation' /
               datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S.%fZ')).resolve()
-    if args.lookup and args.lookup.exists() and not args.force_probe and not args.smt:
+    if args.lookup and args.lookup.exists() and not args.force_probe and not args.smt and args.pmu == 'off':
         database = json.loads(args.lookup.read_text())
         entry = match(hardware, database)
         if entry:
@@ -75,8 +82,12 @@ def main():
                   '--ms', '5' if screen else '2', '--trials', '120' if screen else '40', '--seed', str(args.seed)]
         if not screen:
             common.append('--quick')
-        probes = [('isolated', [])]
-        if screen:
+        diagnostic = ['--suite', 'mlp', '--pmu', args.pmu,
+                      '--pmu-output', str(output / 'pmu-intervals')] if args.pmu != 'off' else []
+        for event in args.pmu_event:
+            diagnostic += ['--pmu-event', event]
+        probes = [('isolated', diagnostic)]
+        if screen and args.pmu == 'off':
             probes += [('thp', ['--suite', 'mlp', '--huge']), ('thp-tlb', ['--suite', 'tlb', '--huge'])]
         if args.smt:
             # One peer for each visible cache-sharing domain and SMT relation.
@@ -114,6 +125,10 @@ def main():
                 (output / 'instance-store').mkdir()
                 run.step('instance-store', [sys.executable, str(run.source_root / STUDY.relative_to(ROOT) / 'system_probe.py'),
                     str(output / 'instance-store'), os.environ['SIXDB_INSTANCE_STORE_DIR']])
+        if args.pmu != 'off':
+            run.step('pmu-sensitivity', [sys.executable,
+                str(run.source_root / STUDY.relative_to(ROOT) / 'pmu_sensitivity.py'),
+                str(output / 'pmu-intervals'), '--output', str(output / 'pmu-analysis.json')])
         with (output / 'samples.csv').open('w') as dest:
             writer = None
             for name, _ in probes:

@@ -1,3 +1,4 @@
+#include "pmu.h"
 #include <algorithm>
 #include <array>
 #include <atomic>
@@ -8,6 +9,7 @@
 #include <cstdint>
 #include <cstring>
 #include <fstream>
+#include <filesystem>
 #include <iostream>
 #include <numeric>
 #include <random>
@@ -35,6 +37,10 @@ U sink;
 double tick_ns = 1;
 int memory_node = -1;
 int first_touch_cpu = -1;
+namespace pmu = orbital_bench::pmu;
+pmu::Mode pmu_mode = pmu::Mode::off;
+std::vector<pmu::EventSpec> pmu_events;
+std::filesystem::path pmu_output;
 
 std::uint64_t now_ns() {
     timespec ts{};
@@ -213,9 +219,27 @@ template<std::size_t N> void measure_chains(const std::vector<U>& order,
     for (int rep = 0; rep < repetitions; ++rep) {
         std::vector<double> values;
         for (int sample = 0; sample < 3; ++sample) {
+            std::unique_ptr<pmu::Session> counters;
+            if (pmu_mode != pmu::Mode::off) counters = std::make_unique<pmu::Session>(pmu_mode, pmu_events);
+            if (counters) counters->start();
             start = now_ns();
             sink ^= chase(p, steps);
-            values.push_back(double(now_ns() - start) / (steps * N));
+            const auto elapsed_ns = now_ns() - start;
+            if (counters) counters->stop();
+            values.push_back(double(elapsed_ns) / (steps * N));
+            if (counters) {
+                const auto name = family + "-" + variant + "-bytes" + std::to_string(bytes) +
+                    "-k" + std::to_string(N) + "-rep" + std::to_string(rep) + "-sample" + std::to_string(sample) + ".json";
+                std::ofstream receipt(pmu_output / name);
+                receipt << "{\"schema\":1,\"scope\":\"dependent chase, sink aggregation and boundary clocks; setup/calibration excluded\","
+                    << "\"input_preparation\":\"full chain initialized and validated; 1024-step warmup and calibration; no flush or eviction\","
+                    << "\"family\":\"" << family << "\",\"variant\":\"" << variant << "\",\"bytes\":" << bytes
+                    << ",\"active_chains\":" << N << ",\"rep\":" << rep << ",\"sample\":" << sample
+                    << ",\"loads\":" << steps * N << ",\"elapsed_ns\":" << elapsed_ns
+                    << ",\"observed_load_service_tier\":null,\"measurement\":";
+                counters->write_json(receipt); receipt << "}\n";
+                if (!receipt) throw std::runtime_error("PMU diagnostic receipt write failed");
+            }
         }
         emit(family, variant, bytes, reported_k, 0, 0, 0, rep, values);
     }
@@ -472,6 +496,15 @@ int main(int argc, char** argv) try {
         else if (arg == "--peer") peer = std::stoi(next());
         else if (arg == "--interference") interference = next();
         else if (arg == "--suite") suite = next();
+        else if (arg == "--pmu") {
+            const auto mode = next();
+            if (mode == "off") pmu_mode = pmu::Mode::off;
+            else if (mode == "basic") pmu_mode = pmu::Mode::basic;
+            else if (mode == "stalls") pmu_mode = pmu::Mode::stalls;
+            else throw std::invalid_argument("PMU mode must be off, basic or stalls");
+        }
+        else if (arg == "--pmu-output") pmu_output = next();
+        else if (arg == "--pmu-event") pmu_events.push_back(pmu::parse_event_spec(next()));
         else if (arg == "--huge") huge = true;
         else if (arg == "--quick") quick = true;
         else throw std::runtime_error("unknown option: " + arg);
@@ -483,6 +516,14 @@ int main(int argc, char** argv) try {
         (interference != "compute" && interference != "stream") ||
         (suite != "all" && suite != "mlp" && suite != "tlb" && suite != "prefetch" && suite != "coherence" && suite != "streams"))
         throw std::runtime_error("invalid probe options");
+    if (pmu_mode != pmu::Mode::off) {
+        if (suite != "mlp" || pmu_output.empty() || peer >= 0)
+            throw std::invalid_argument("PMU diagnostics require isolated --suite mlp and --pmu-output");
+        if (std::filesystem::exists(pmu_output))
+            throw std::invalid_argument("PMU output directory must be new");
+        std::filesystem::create_directories(pmu_output);
+    } else if (!pmu_output.empty() || !pmu_events.empty())
+        throw std::invalid_argument("PMU output/events require basic or stalls mode");
     pin(cpu); calibrate();
     std::atomic<bool> ready = false, stop = false;
     // jthread ensures exceptions cannot leave an interference thread running.
