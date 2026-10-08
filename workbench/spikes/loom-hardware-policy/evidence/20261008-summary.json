@@ -1,0 +1,398 @@
+{
+  "input_sha256": "321a84fb3437669cda608e188c438b0bc219c5156c963b712a13351c76d5f38c",
+  "samples": 288,
+  "matched_semantic_groups": 72,
+  "units": "whole timed native batch ns per dispatched visit",
+  "limits": [
+    "local ARM Linux VM wall-clock samples; no V2 or Zen5 hardware timings",
+    "uniform demand code within each batch; mixed-code predictor behavior unmeasured",
+    "no DRAM service attribution or policy optimality claim",
+    "table preparation and independent oracles excluded; admission and drain included"
+  ],
+  "rows": [
+    {
+      "pattern": "irregular",
+      "training": 0,
+      "pressure": "low",
+      "path": "fixed-inline",
+      "trials": 9,
+      "median_ns_per_visit": 2.798537015914917,
+      "range_ns_per_visit": [
+        2.4444146156311035,
+        3.068934440612793
+      ]
+    },
+    {
+      "pattern": "irregular",
+      "training": 0,
+      "pressure": "low",
+      "path": "code-lut-switch",
+      "trials": 9,
+      "median_ns_per_visit": 3.171146869659424,
+      "range_ns_per_visit": [
+        3.1188533306121826,
+        4.110747575759888
+      ]
+    },
+    {
+      "pattern": "irregular",
+      "training": 0,
+      "pressure": "low",
+      "path": "procedure-lut",
+      "trials": 9,
+      "median_ns_per_visit": 3.2374274730682373,
+      "range_ns_per_visit": [
+        2.703904390335083,
+        3.7749440670013428
+      ]
+    },
+    {
+      "pattern": "irregular",
+      "training": 0,
+      "pressure": "low",
+      "path": "continuation-lut",
+      "trials": 9,
+      "median_ns_per_visit": 2.7698371410369873,
+      "range_ns_per_visit": [
+        2.3760180473327637,
+        3.474893093109131
+      ]
+    },
+    {
+      "pattern": "irregular",
+      "training": 0,
+      "pressure": "busy",
+      "path": "fixed-inline",
+      "trials": 9,
+      "median_ns_per_visit": 3.1101016998291016,
+      "range_ns_per_visit": [
+        2.754916191101074,
+        4.742638349533081
+      ]
+    },
+    {
+      "pattern": "irregular",
+      "training": 0,
+      "pressure": "busy",
+      "path": "code-lut-switch",
+      "trials": 9,
+      "median_ns_per_visit": 3.663095235824585,
+      "range_ns_per_visit": [
+        3.0230486392974854,
+        5.4559197425842285
+      ]
+    },
+    {
+      "pattern": "irregular",
+      "training": 0,
+      "pressure": "busy",
+      "path": "procedure-lut",
+      "trials": 9,
+      "median_ns_per_visit": 3.8668744564056396,
+      "range_ns_per_visit": [
+        3.1420395374298096,
+        4.52466344833374
+      ]
+    },
+    {
+      "pattern": "irregular",
+      "training": 0,
+      "pressure": "busy",
+      "path": "continuation-lut",
+      "trials": 9,
+      "median_ns_per_visit": 3.444633722305298,
+      "range_ns_per_visit": [
+        3.0167603492736816,
+        4.454300165176392
+      ]
+    },
+    {
+      "pattern": "irregular",
+      "training": 3,
+      "pressure": "low",
+      "path": "fixed-inline",
+      "trials": 9,
+      "median_ns_per_visit": 3.1287875175476074,
+      "range_ns_per_visit": [
+        2.634941577911377,
+        5.025354385375977
+      ]
+    },
+    {
+      "pattern": "irregular",
+      "training": 3,
+      "pressure": "low",
+      "path": "code-lut-switch",
+      "trials": 9,
+      "median_ns_per_visit": 3.2756240367889404,
+      "range_ns_per_visit": [
+        2.7774765491485596,
+        4.325752258300781
+      ]
+    },
+    {
+      "pattern": "irregular",
+      "training": 3,
+      "pressure": "low",
+      "path": "procedure-lut",
+      "trials": 9,
+      "median_ns_per_visit": 3.3484115600585938,
+      "range_ns_per_visit": [
+        2.84246563911438,
+        3.784818410873413
+      ]
+    },
+    {
+      "pattern": "irregular",
+      "training": 3,
+      "pressure": "low",
+      "path": "continuation-lut",
+      "trials": 9,
+      "median_ns_per_visit": 2.9827160835266113,
+      "range_ns_per_visit": [
+        2.5936355590820312,
+        4.454359531402588
+      ]
+    },
+    {
+      "pattern": "irregular",
+      "training": 3,
+      "pressure": "busy",
+      "path": "fixed-inline",
+      "trials": 9,
+      "median_ns_per_visit": 3.2715609073638916,
+      "range_ns_per_visit": [
+        2.5823302268981934,
+        4.073226451873779
+      ]
+    },
+    {
+      "pattern": "irregular",
+      "training": 3,
+      "pressure": "busy",
+      "path": "code-lut-switch",
+      "trials": 9,
+      "median_ns_per_visit": 3.5010993480682373,
+      "range_ns_per_visit": [
+        3.23042368888855,
+        4.534607648849487
+      ]
+    },
+    {
+      "pattern": "irregular",
+      "training": 3,
+      "pressure": "busy",
+      "path": "procedure-lut",
+      "trials": 9,
+      "median_ns_per_visit": 3.5953147411346436,
+      "range_ns_per_visit": [
+        3.2047739028930664,
+        4.266981840133667
+      ]
+    },
+    {
+      "pattern": "irregular",
+      "training": 3,
+      "pressure": "busy",
+      "path": "continuation-lut",
+      "trials": 9,
+      "median_ns_per_visit": 2.9915573596954346,
+      "range_ns_per_visit": [
+        2.792149305343628,
+        4.3039467334747314
+      ]
+    },
+    {
+      "pattern": "linear",
+      "training": 0,
+      "pressure": "low",
+      "path": "fixed-inline",
+      "trials": 9,
+      "median_ns_per_visit": 12.212705373764038,
+      "range_ns_per_visit": [
+        11.788030862808228,
+        12.984747171401978
+      ]
+    },
+    {
+      "pattern": "linear",
+      "training": 0,
+      "pressure": "low",
+      "path": "code-lut-switch",
+      "trials": 9,
+      "median_ns_per_visit": 12.726529121398926,
+      "range_ns_per_visit": [
+        11.989068031311035,
+        12.97243881225586
+      ]
+    },
+    {
+      "pattern": "linear",
+      "training": 0,
+      "pressure": "low",
+      "path": "procedure-lut",
+      "trials": 9,
+      "median_ns_per_visit": 12.62700891494751,
+      "range_ns_per_visit": [
+        12.177369832992554,
+        13.591991424560547
+      ]
+    },
+    {
+      "pattern": "linear",
+      "training": 0,
+      "pressure": "low",
+      "path": "continuation-lut",
+      "trials": 9,
+      "median_ns_per_visit": 12.18416452407837,
+      "range_ns_per_visit": [
+        11.976610660552979,
+        12.880935430526733
+      ]
+    },
+    {
+      "pattern": "linear",
+      "training": 0,
+      "pressure": "busy",
+      "path": "fixed-inline",
+      "trials": 9,
+      "median_ns_per_visit": 17.32542061805725,
+      "range_ns_per_visit": [
+        12.331368684768677,
+        109.59986424446106
+      ]
+    },
+    {
+      "pattern": "linear",
+      "training": 0,
+      "pressure": "busy",
+      "path": "code-lut-switch",
+      "trials": 9,
+      "median_ns_per_visit": 16.105627059936523,
+      "range_ns_per_visit": [
+        12.680295467376709,
+        58.22357487678528
+      ]
+    },
+    {
+      "pattern": "linear",
+      "training": 0,
+      "pressure": "busy",
+      "path": "procedure-lut",
+      "trials": 9,
+      "median_ns_per_visit": 24.646872758865356,
+      "range_ns_per_visit": [
+        12.966031312942505,
+        91.44059157371521
+      ]
+    },
+    {
+      "pattern": "linear",
+      "training": 0,
+      "pressure": "busy",
+      "path": "continuation-lut",
+      "trials": 9,
+      "median_ns_per_visit": 22.516257762908936,
+      "range_ns_per_visit": [
+        12.33231258392334,
+        179.41209173202515
+      ]
+    },
+    {
+      "pattern": "linear",
+      "training": 3,
+      "pressure": "low",
+      "path": "fixed-inline",
+      "trials": 9,
+      "median_ns_per_visit": 27.611518621444702,
+      "range_ns_per_visit": [
+        17.346580505371094,
+        43.907384634017944
+      ]
+    },
+    {
+      "pattern": "linear",
+      "training": 3,
+      "pressure": "low",
+      "path": "code-lut-switch",
+      "trials": 9,
+      "median_ns_per_visit": 23.70436120033264,
+      "range_ns_per_visit": [
+        16.933141231536865,
+        33.86086821556091
+      ]
+    },
+    {
+      "pattern": "linear",
+      "training": 3,
+      "pressure": "low",
+      "path": "procedure-lut",
+      "trials": 9,
+      "median_ns_per_visit": 25.508411169052124,
+      "range_ns_per_visit": [
+        17.579396724700928,
+        96.2425172328949
+      ]
+    },
+    {
+      "pattern": "linear",
+      "training": 3,
+      "pressure": "low",
+      "path": "continuation-lut",
+      "trials": 9,
+      "median_ns_per_visit": 25.368061780929565,
+      "range_ns_per_visit": [
+        19.797710418701172,
+        56.818519830703735
+      ]
+    },
+    {
+      "pattern": "linear",
+      "training": 3,
+      "pressure": "busy",
+      "path": "fixed-inline",
+      "trials": 9,
+      "median_ns_per_visit": 22.316531658172607,
+      "range_ns_per_visit": [
+        17.995527982711792,
+        62.1638925075531
+      ]
+    },
+    {
+      "pattern": "linear",
+      "training": 3,
+      "pressure": "busy",
+      "path": "code-lut-switch",
+      "trials": 9,
+      "median_ns_per_visit": 24.61442804336548,
+      "range_ns_per_visit": [
+        17.998021602630615,
+        35.94727635383606
+      ]
+    },
+    {
+      "pattern": "linear",
+      "training": 3,
+      "pressure": "busy",
+      "path": "procedure-lut",
+      "trials": 9,
+      "median_ns_per_visit": 22.674309968948364,
+      "range_ns_per_visit": [
+        17.828038454055786,
+        50.99628829956055
+      ]
+    },
+    {
+      "pattern": "linear",
+      "training": 3,
+      "pressure": "busy",
+      "path": "continuation-lut",
+      "trials": 9,
+      "median_ns_per_visit": 21.798436641693115,
+      "range_ns_per_visit": [
+        16.286200046539307,
+        42.336697578430176
+      ]
+    }
+  ]
+}

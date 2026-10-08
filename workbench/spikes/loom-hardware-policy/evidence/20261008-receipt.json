@@ -1,0 +1,61 @@
+{
+  "status": "complete",
+  "request": "Startup hardware lookup; defaults during bounded background calibration; coarse native policy adoption",
+  "capture": {
+    "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/loom-hardware-policy-20261008",
+    "source_digest": "88ac8e1cbbd619a5e65cf66aa8112738a1b772d03dca7cc8539716c7a8c791d1",
+    "measured_sources_match_live": [
+      "policy.h",
+      "policy.cpp",
+      "native.h",
+      "native.cpp",
+      "driver.cpp",
+      "check.cpp",
+      "startup.py",
+      "startup_check.py",
+      "check_driver.py",
+      "CMakeLists.txt"
+    ]
+  },
+  "qualification": {
+    "native_check": "passed",
+    "asan_ubsan_always_uar_check": "passed",
+    "tsan_check": "passed",
+    "actual_driver_cases_per_mode": 3,
+    "controlled_startup_checks": 18,
+    "runtime_options": {
+      "ASAN_OPTIONS": "detect_leaks=1:detect_stack_use_after_return=1:halt_on_error=1",
+      "UBSAN_OPTIONS": "halt_on_error=1:print_stacktrace=1",
+      "TSAN_OPTIONS": "halt_on_error=1"
+    }
+  },
+  "startup_outcome": {
+    "actual_miss": "foreground work progressed; two real seeds completed; width censored in one seed and training unresolved; defaults retained",
+    "actual_probe_failure": "defaults continued; service stopped and child reaped",
+    "actual_wall_budget_exhaustion": "defaults continued; probe terminated/reaped",
+    "controlled_hit_actual_native": "synthetic policy values only; lookup skipped calibration; revision1 acknowledged, width4/training3"
+  },
+  "timing": "Local VM cohort remains insufficient for a stable dispatch ranking; earlier exploratory cohorts not pooled",
+  "artifacts": {
+    "actual-miss.json": "3884c466739a6462ceaa676bb5e1a0158bf2059cf50e1f3620c6e940a308baa9",
+    "actual-failed-probe.json": "bd83b57591a56165a26b52cda2cbd0583da6006fd12d13dd951d22232cdd97e8",
+    "actual-budget-exhaustion.json": "3ca968a6c19d5964ec16f6fdd8db0f3e3ad342150b03e567101b4038704f9e1e",
+    "actual-native-controlled-hit.json": "aff3e9bc214126ff4c72caff4d495ecf761c0bb8405fcf5d74cf421fc684bc78",
+    "startup-checks.json": "95bdde3eecc8ec45798fa8e55c963049e8be0cc33e921b33a5ac5c97c8e35fb4",
+    "native-driver-check-final.json": "6dd7e00d12b97a6d4895d1a7f5d0e20852ff38c75dae3c9567106c600e987adc",
+    "asan-driver-check-final.json": "a8e4b03afa5d545172cb4b78c02a73416a54192ed24709e2c687409cf1abaf88",
+    "tsan-driver-check-final.json": "0509e76974239ea1bb4e56a6a62201e093ce678fe92fed6ca23a3b81da064d6a",
+    "selected-summary.json": "29ea6f79b944dc0c9f44326dd0f5f3c70ad908eed514c008f520a75ac7d7c3d0",
+    "bench-selected.jsonl": "321a84fb3437669cda608e188c438b0bc219c5156c963b712a13351c76d5f38c",
+    "codegen-final/receipt.json": "de778ea6c42971aefa910cfec428f397fbe52ea8bf6e1b1a4bfa306da9806614"
+  },
+  "driver_sha256": "c65edfd72ef0183396dbff2c3b220dc4bbe3169dc09abb4b948fd9bcfaf7fd7b",
+  "probe_sha256": "381d71d0a2f8f0a2d5f2606b567a7767b3e4b9189ea19002128361f6458d89be",
+  "remaining": [],
+  "limits": [
+    "Standalone spike; no runtime API changes",
+    "Background observations conditional/local, not automatically a global isolated hardware profile",
+    "No persistent learned-profile cache or host-wide calibration service",
+    "Primary V2/Zen5 timing and mixed-code predictor performance unmeasured"
+  ]
+}

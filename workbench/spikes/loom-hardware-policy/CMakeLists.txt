@@ -1,0 +1,13 @@
+find_package(Threads REQUIRED)
+add_library(loom_hardware_policy STATIC policy.cpp native.cpp)
+sixdb_target(loom_hardware_policy)
+target_link_libraries(loom_hardware_policy PUBLIC loom Threads::Threads)
+
+add_executable(loom_hardware_policy_driver driver.cpp)
+sixdb_target(loom_hardware_policy_driver)
+target_link_libraries(loom_hardware_policy_driver PRIVATE loom_hardware_policy)
+
+add_executable(loom_hardware_policy_check check.cpp)
+sixdb_target(loom_hardware_policy_check)
+target_link_libraries(loom_hardware_policy_check PRIVATE loom_hardware_policy)
+add_test(NAME loom_hardware_policy_check COMMAND loom_hardware_policy_check)
