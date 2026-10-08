@@ -19,7 +19,8 @@ and [Ikea integration](../ikea-composition/semantics-and-integration.md#loom-res
 already distinguish native work, short DRAM rotation and longer retained waits.
 The earlier [physical brief](../../notebook/orbital/reference/PHYSICAL.md#loom-bindings-and-allocation)
 keeps scheduling with Loom. The [current candidate](../../design/orbital/DESIGN.md)
-replaces historical Controller/architecture sketches; it is declaration-only.
+replaces historical Controller/architecture sketches and separates implemented
+allocation and execution interfaces from future object and recovery proposals.
 Calico's [AMAC findings](../../../../calico/loom/report/AMAC.md) are a comparison
 input, not a SixDB ABI, ring width or resource policy. The current consumer
 captures include October Ikea changes; September CPS timings do not describe
