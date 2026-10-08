@@ -1,0 +1,38 @@
+{
+  "command": [
+    "workbench/spikes/allocation-reuse-temperature/run.py",
+    "--output",
+    "/opt/sixdb/jobs/20261008T011249Z-047c638a/results/comparison",
+    "--cpu",
+    "0",
+    "--tune",
+    "zen5",
+    "--rounds",
+    "12",
+    "--operations",
+    "131072",
+    "--trials",
+    "4"
+  ],
+  "settings": {
+    "output": "/opt/sixdb/jobs/20261008T011249Z-047c638a/results/comparison",
+    "source": "/opt/sixdb/source",
+    "cpu": 0,
+    "policies": "baseline,segmented,cascade-mru,cascade-fifo",
+    "slots": 256,
+    "rounds": 12,
+    "operations": 131072,
+    "trials": 4,
+    "march": "native",
+    "tune": "zen5",
+    "hot_bytes": 262144,
+    "warm_bytes": 4194304
+  },
+  "scope": "Block mean allocation/touch/release cost; no individual-operation latency claim.",
+  "source_manifests": {
+    "baseline": "/opt/sixdb/jobs/20261008T011249Z-047c638a/results/comparison/source-baseline.capture.json",
+    "segmented": "/opt/sixdb/jobs/20261008T011249Z-047c638a/results/comparison/source-segmented.capture.json",
+    "cascade-mru": "/opt/sixdb/jobs/20261008T011249Z-047c638a/results/comparison/source-cascade-mru.capture.json",
+    "cascade-fifo": "/opt/sixdb/jobs/20261008T011249Z-047c638a/results/comparison/source-cascade-fifo.capture.json"
+  }
+}

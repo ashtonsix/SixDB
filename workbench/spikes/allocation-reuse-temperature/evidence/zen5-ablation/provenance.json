@@ -1,0 +1,21 @@
+{
+  "files_sha256": {
+    "comparison/comparisons.csv": "6b91e524b69e78ff9d8d9255425921d7f42604a553b158dee53d2342e5d18f96",
+    "comparison/context.json": "ce80dddb13948168352956a1759bbbd29a4567a09c42e0420b2dbec0987d754d",
+    "comparison/diagnostics-64/paths.json": "87ae9ebf08d66ba9f6d276ed92e513a17da101c118f12f0f8c40c0bdc4e8f272",
+    "comparison/samples.csv": "4396111ad98724c6c398cfe3379fbdb3c07353951c3614778b8732496fb1c531",
+    "host.json": "22d2f5cee07ab6b66b695424b71f022584108611a51e2c5e261c397e620ce72f",
+    "worker-result.json": "0dc6127549e95e6db94c19a86977c2d7bb7f2e6df7c35f58ecdeeac67b3f00de"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/allocation-reuse-temperature/summarize.py",
+    "--samples",
+    "{evidence}/comparison/samples.csv",
+    "--output",
+    "{evidence}/report"
+  ]
+}

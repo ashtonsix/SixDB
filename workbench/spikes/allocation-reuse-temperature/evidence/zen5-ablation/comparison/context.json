@@ -1,0 +1,1403 @@
+{
+  "command": [
+    "workbench/spikes/allocation-reuse-temperature/run.py",
+    "--output",
+    "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison",
+    "--cpu",
+    "0",
+    "--tune",
+    "zen5",
+    "--policies",
+    "baseline,window-first-ready,finite-two-pass,combined",
+    "--touch-bytes",
+    "64,full",
+    "--trials",
+    "8",
+    "--rounds",
+    "8",
+    "--operations",
+    "65536",
+    "--slots",
+    "256"
+  ],
+  "settings": {
+    "output": "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison",
+    "source": "/opt/sixdb/source",
+    "cpu": 0,
+    "policies": "baseline,window-first-ready,finite-two-pass,combined",
+    "workloads": "all",
+    "touch_bytes": "64,full",
+    "slots": 256,
+    "rounds": 8,
+    "operations": 65536,
+    "trials": 8,
+    "march": "native",
+    "tune": "zen5",
+    "hot_bytes": 262144,
+    "warm_bytes": 4194304
+  },
+  "scope": "Block mean allocation/touch/release cost; no individual-operation latency claim.",
+  "trial_orders": [
+    [
+      "baseline",
+      "window-first-ready",
+      "finite-two-pass",
+      "combined"
+    ],
+    [
+      "combined",
+      "finite-two-pass",
+      "window-first-ready",
+      "baseline"
+    ],
+    [
+      "window-first-ready",
+      "finite-two-pass",
+      "combined",
+      "baseline"
+    ],
+    [
+      "baseline",
+      "combined",
+      "finite-two-pass",
+      "window-first-ready"
+    ],
+    [
+      "finite-two-pass",
+      "combined",
+      "baseline",
+      "window-first-ready"
+    ],
+    [
+      "window-first-ready",
+      "baseline",
+      "combined",
+      "finite-two-pass"
+    ],
+    [
+      "combined",
+      "baseline",
+      "window-first-ready",
+      "finite-two-pass"
+    ],
+    [
+      "finite-two-pass",
+      "window-first-ready",
+      "baseline",
+      "combined"
+    ]
+  ],
+  "executions": [
+    {
+      "policy": "baseline",
+      "trial": 0,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-baseline/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "baseline-0-touch64.csv",
+      "binary_sha256": "478fcfb2910552f37008359763cb69806c3677e58418bb57702241c325f59efb"
+    },
+    {
+      "policy": "baseline",
+      "trial": 0,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-baseline/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "baseline-0-touchfull.csv",
+      "binary_sha256": "478fcfb2910552f37008359763cb69806c3677e58418bb57702241c325f59efb"
+    },
+    {
+      "policy": "window-first-ready",
+      "trial": 0,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-window-first-ready/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "window-first-ready-0-touch64.csv",
+      "binary_sha256": "634b8c342c7a273b83642ed3c9b7e744838ddeb6d637eb5cac27e5720c9fe4da"
+    },
+    {
+      "policy": "window-first-ready",
+      "trial": 0,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-window-first-ready/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "window-first-ready-0-touchfull.csv",
+      "binary_sha256": "634b8c342c7a273b83642ed3c9b7e744838ddeb6d637eb5cac27e5720c9fe4da"
+    },
+    {
+      "policy": "finite-two-pass",
+      "trial": 0,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-finite-two-pass/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "finite-two-pass-0-touch64.csv",
+      "binary_sha256": "a3add78499591c208806e6cd90f245f0a8ed27c06e91a708f4873dfbd74fb2a8"
+    },
+    {
+      "policy": "finite-two-pass",
+      "trial": 0,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-finite-two-pass/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "finite-two-pass-0-touchfull.csv",
+      "binary_sha256": "a3add78499591c208806e6cd90f245f0a8ed27c06e91a708f4873dfbd74fb2a8"
+    },
+    {
+      "policy": "combined",
+      "trial": 0,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-combined/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "combined-0-touch64.csv",
+      "binary_sha256": "ea7d917df8434433e0c941eb0a18586c060abe7126975f95aa93466bed169cc8"
+    },
+    {
+      "policy": "combined",
+      "trial": 0,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-combined/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "combined-0-touchfull.csv",
+      "binary_sha256": "ea7d917df8434433e0c941eb0a18586c060abe7126975f95aa93466bed169cc8"
+    },
+    {
+      "policy": "combined",
+      "trial": 1,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-combined/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "combined-1-touch64.csv",
+      "binary_sha256": "ea7d917df8434433e0c941eb0a18586c060abe7126975f95aa93466bed169cc8"
+    },
+    {
+      "policy": "combined",
+      "trial": 1,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-combined/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "combined-1-touchfull.csv",
+      "binary_sha256": "ea7d917df8434433e0c941eb0a18586c060abe7126975f95aa93466bed169cc8"
+    },
+    {
+      "policy": "finite-two-pass",
+      "trial": 1,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-finite-two-pass/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "finite-two-pass-1-touch64.csv",
+      "binary_sha256": "a3add78499591c208806e6cd90f245f0a8ed27c06e91a708f4873dfbd74fb2a8"
+    },
+    {
+      "policy": "finite-two-pass",
+      "trial": 1,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-finite-two-pass/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "finite-two-pass-1-touchfull.csv",
+      "binary_sha256": "a3add78499591c208806e6cd90f245f0a8ed27c06e91a708f4873dfbd74fb2a8"
+    },
+    {
+      "policy": "window-first-ready",
+      "trial": 1,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-window-first-ready/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "window-first-ready-1-touch64.csv",
+      "binary_sha256": "634b8c342c7a273b83642ed3c9b7e744838ddeb6d637eb5cac27e5720c9fe4da"
+    },
+    {
+      "policy": "window-first-ready",
+      "trial": 1,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-window-first-ready/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "window-first-ready-1-touchfull.csv",
+      "binary_sha256": "634b8c342c7a273b83642ed3c9b7e744838ddeb6d637eb5cac27e5720c9fe4da"
+    },
+    {
+      "policy": "baseline",
+      "trial": 1,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-baseline/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "baseline-1-touch64.csv",
+      "binary_sha256": "478fcfb2910552f37008359763cb69806c3677e58418bb57702241c325f59efb"
+    },
+    {
+      "policy": "baseline",
+      "trial": 1,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-baseline/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "baseline-1-touchfull.csv",
+      "binary_sha256": "478fcfb2910552f37008359763cb69806c3677e58418bb57702241c325f59efb"
+    },
+    {
+      "policy": "window-first-ready",
+      "trial": 2,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-window-first-ready/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "window-first-ready-2-touch64.csv",
+      "binary_sha256": "634b8c342c7a273b83642ed3c9b7e744838ddeb6d637eb5cac27e5720c9fe4da"
+    },
+    {
+      "policy": "window-first-ready",
+      "trial": 2,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-window-first-ready/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "window-first-ready-2-touchfull.csv",
+      "binary_sha256": "634b8c342c7a273b83642ed3c9b7e744838ddeb6d637eb5cac27e5720c9fe4da"
+    },
+    {
+      "policy": "finite-two-pass",
+      "trial": 2,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-finite-two-pass/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "finite-two-pass-2-touch64.csv",
+      "binary_sha256": "a3add78499591c208806e6cd90f245f0a8ed27c06e91a708f4873dfbd74fb2a8"
+    },
+    {
+      "policy": "finite-two-pass",
+      "trial": 2,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-finite-two-pass/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "finite-two-pass-2-touchfull.csv",
+      "binary_sha256": "a3add78499591c208806e6cd90f245f0a8ed27c06e91a708f4873dfbd74fb2a8"
+    },
+    {
+      "policy": "combined",
+      "trial": 2,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-combined/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "combined-2-touch64.csv",
+      "binary_sha256": "ea7d917df8434433e0c941eb0a18586c060abe7126975f95aa93466bed169cc8"
+    },
+    {
+      "policy": "combined",
+      "trial": 2,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-combined/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "combined-2-touchfull.csv",
+      "binary_sha256": "ea7d917df8434433e0c941eb0a18586c060abe7126975f95aa93466bed169cc8"
+    },
+    {
+      "policy": "baseline",
+      "trial": 2,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-baseline/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "baseline-2-touch64.csv",
+      "binary_sha256": "478fcfb2910552f37008359763cb69806c3677e58418bb57702241c325f59efb"
+    },
+    {
+      "policy": "baseline",
+      "trial": 2,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-baseline/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "baseline-2-touchfull.csv",
+      "binary_sha256": "478fcfb2910552f37008359763cb69806c3677e58418bb57702241c325f59efb"
+    },
+    {
+      "policy": "baseline",
+      "trial": 3,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-baseline/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "baseline-3-touch64.csv",
+      "binary_sha256": "478fcfb2910552f37008359763cb69806c3677e58418bb57702241c325f59efb"
+    },
+    {
+      "policy": "baseline",
+      "trial": 3,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-baseline/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "baseline-3-touchfull.csv",
+      "binary_sha256": "478fcfb2910552f37008359763cb69806c3677e58418bb57702241c325f59efb"
+    },
+    {
+      "policy": "combined",
+      "trial": 3,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-combined/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "combined-3-touch64.csv",
+      "binary_sha256": "ea7d917df8434433e0c941eb0a18586c060abe7126975f95aa93466bed169cc8"
+    },
+    {
+      "policy": "combined",
+      "trial": 3,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-combined/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "combined-3-touchfull.csv",
+      "binary_sha256": "ea7d917df8434433e0c941eb0a18586c060abe7126975f95aa93466bed169cc8"
+    },
+    {
+      "policy": "finite-two-pass",
+      "trial": 3,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-finite-two-pass/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "finite-two-pass-3-touch64.csv",
+      "binary_sha256": "a3add78499591c208806e6cd90f245f0a8ed27c06e91a708f4873dfbd74fb2a8"
+    },
+    {
+      "policy": "finite-two-pass",
+      "trial": 3,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-finite-two-pass/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "finite-two-pass-3-touchfull.csv",
+      "binary_sha256": "a3add78499591c208806e6cd90f245f0a8ed27c06e91a708f4873dfbd74fb2a8"
+    },
+    {
+      "policy": "window-first-ready",
+      "trial": 3,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-window-first-ready/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "window-first-ready-3-touch64.csv",
+      "binary_sha256": "634b8c342c7a273b83642ed3c9b7e744838ddeb6d637eb5cac27e5720c9fe4da"
+    },
+    {
+      "policy": "window-first-ready",
+      "trial": 3,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-window-first-ready/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "window-first-ready-3-touchfull.csv",
+      "binary_sha256": "634b8c342c7a273b83642ed3c9b7e744838ddeb6d637eb5cac27e5720c9fe4da"
+    },
+    {
+      "policy": "finite-two-pass",
+      "trial": 4,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-finite-two-pass/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "finite-two-pass-4-touch64.csv",
+      "binary_sha256": "a3add78499591c208806e6cd90f245f0a8ed27c06e91a708f4873dfbd74fb2a8"
+    },
+    {
+      "policy": "finite-two-pass",
+      "trial": 4,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-finite-two-pass/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "finite-two-pass-4-touchfull.csv",
+      "binary_sha256": "a3add78499591c208806e6cd90f245f0a8ed27c06e91a708f4873dfbd74fb2a8"
+    },
+    {
+      "policy": "combined",
+      "trial": 4,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-combined/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "combined-4-touch64.csv",
+      "binary_sha256": "ea7d917df8434433e0c941eb0a18586c060abe7126975f95aa93466bed169cc8"
+    },
+    {
+      "policy": "combined",
+      "trial": 4,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-combined/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "combined-4-touchfull.csv",
+      "binary_sha256": "ea7d917df8434433e0c941eb0a18586c060abe7126975f95aa93466bed169cc8"
+    },
+    {
+      "policy": "baseline",
+      "trial": 4,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-baseline/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "baseline-4-touch64.csv",
+      "binary_sha256": "478fcfb2910552f37008359763cb69806c3677e58418bb57702241c325f59efb"
+    },
+    {
+      "policy": "baseline",
+      "trial": 4,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-baseline/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "baseline-4-touchfull.csv",
+      "binary_sha256": "478fcfb2910552f37008359763cb69806c3677e58418bb57702241c325f59efb"
+    },
+    {
+      "policy": "window-first-ready",
+      "trial": 4,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-window-first-ready/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "window-first-ready-4-touch64.csv",
+      "binary_sha256": "634b8c342c7a273b83642ed3c9b7e744838ddeb6d637eb5cac27e5720c9fe4da"
+    },
+    {
+      "policy": "window-first-ready",
+      "trial": 4,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-window-first-ready/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "window-first-ready-4-touchfull.csv",
+      "binary_sha256": "634b8c342c7a273b83642ed3c9b7e744838ddeb6d637eb5cac27e5720c9fe4da"
+    },
+    {
+      "policy": "window-first-ready",
+      "trial": 5,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-window-first-ready/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "window-first-ready-5-touch64.csv",
+      "binary_sha256": "634b8c342c7a273b83642ed3c9b7e744838ddeb6d637eb5cac27e5720c9fe4da"
+    },
+    {
+      "policy": "window-first-ready",
+      "trial": 5,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-window-first-ready/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "window-first-ready-5-touchfull.csv",
+      "binary_sha256": "634b8c342c7a273b83642ed3c9b7e744838ddeb6d637eb5cac27e5720c9fe4da"
+    },
+    {
+      "policy": "baseline",
+      "trial": 5,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-baseline/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "baseline-5-touch64.csv",
+      "binary_sha256": "478fcfb2910552f37008359763cb69806c3677e58418bb57702241c325f59efb"
+    },
+    {
+      "policy": "baseline",
+      "trial": 5,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-baseline/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "baseline-5-touchfull.csv",
+      "binary_sha256": "478fcfb2910552f37008359763cb69806c3677e58418bb57702241c325f59efb"
+    },
+    {
+      "policy": "combined",
+      "trial": 5,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-combined/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "combined-5-touch64.csv",
+      "binary_sha256": "ea7d917df8434433e0c941eb0a18586c060abe7126975f95aa93466bed169cc8"
+    },
+    {
+      "policy": "combined",
+      "trial": 5,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-combined/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "combined-5-touchfull.csv",
+      "binary_sha256": "ea7d917df8434433e0c941eb0a18586c060abe7126975f95aa93466bed169cc8"
+    },
+    {
+      "policy": "finite-two-pass",
+      "trial": 5,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-finite-two-pass/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "finite-two-pass-5-touch64.csv",
+      "binary_sha256": "a3add78499591c208806e6cd90f245f0a8ed27c06e91a708f4873dfbd74fb2a8"
+    },
+    {
+      "policy": "finite-two-pass",
+      "trial": 5,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-finite-two-pass/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "finite-two-pass-5-touchfull.csv",
+      "binary_sha256": "a3add78499591c208806e6cd90f245f0a8ed27c06e91a708f4873dfbd74fb2a8"
+    },
+    {
+      "policy": "combined",
+      "trial": 6,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-combined/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "combined-6-touch64.csv",
+      "binary_sha256": "ea7d917df8434433e0c941eb0a18586c060abe7126975f95aa93466bed169cc8"
+    },
+    {
+      "policy": "combined",
+      "trial": 6,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-combined/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "combined-6-touchfull.csv",
+      "binary_sha256": "ea7d917df8434433e0c941eb0a18586c060abe7126975f95aa93466bed169cc8"
+    },
+    {
+      "policy": "baseline",
+      "trial": 6,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-baseline/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "baseline-6-touch64.csv",
+      "binary_sha256": "478fcfb2910552f37008359763cb69806c3677e58418bb57702241c325f59efb"
+    },
+    {
+      "policy": "baseline",
+      "trial": 6,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-baseline/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "baseline-6-touchfull.csv",
+      "binary_sha256": "478fcfb2910552f37008359763cb69806c3677e58418bb57702241c325f59efb"
+    },
+    {
+      "policy": "window-first-ready",
+      "trial": 6,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-window-first-ready/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "window-first-ready-6-touch64.csv",
+      "binary_sha256": "634b8c342c7a273b83642ed3c9b7e744838ddeb6d637eb5cac27e5720c9fe4da"
+    },
+    {
+      "policy": "window-first-ready",
+      "trial": 6,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-window-first-ready/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "window-first-ready-6-touchfull.csv",
+      "binary_sha256": "634b8c342c7a273b83642ed3c9b7e744838ddeb6d637eb5cac27e5720c9fe4da"
+    },
+    {
+      "policy": "finite-two-pass",
+      "trial": 6,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-finite-two-pass/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "finite-two-pass-6-touch64.csv",
+      "binary_sha256": "a3add78499591c208806e6cd90f245f0a8ed27c06e91a708f4873dfbd74fb2a8"
+    },
+    {
+      "policy": "finite-two-pass",
+      "trial": 6,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-finite-two-pass/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "finite-two-pass-6-touchfull.csv",
+      "binary_sha256": "a3add78499591c208806e6cd90f245f0a8ed27c06e91a708f4873dfbd74fb2a8"
+    },
+    {
+      "policy": "finite-two-pass",
+      "trial": 7,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-finite-two-pass/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "finite-two-pass-7-touch64.csv",
+      "binary_sha256": "a3add78499591c208806e6cd90f245f0a8ed27c06e91a708f4873dfbd74fb2a8"
+    },
+    {
+      "policy": "finite-two-pass",
+      "trial": 7,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-finite-two-pass/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "finite-two-pass-7-touchfull.csv",
+      "binary_sha256": "a3add78499591c208806e6cd90f245f0a8ed27c06e91a708f4873dfbd74fb2a8"
+    },
+    {
+      "policy": "window-first-ready",
+      "trial": 7,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-window-first-ready/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "window-first-ready-7-touch64.csv",
+      "binary_sha256": "634b8c342c7a273b83642ed3c9b7e744838ddeb6d637eb5cac27e5720c9fe4da"
+    },
+    {
+      "policy": "window-first-ready",
+      "trial": 7,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-window-first-ready/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "window-first-ready-7-touchfull.csv",
+      "binary_sha256": "634b8c342c7a273b83642ed3c9b7e744838ddeb6d637eb5cac27e5720c9fe4da"
+    },
+    {
+      "policy": "baseline",
+      "trial": 7,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-baseline/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "baseline-7-touch64.csv",
+      "binary_sha256": "478fcfb2910552f37008359763cb69806c3677e58418bb57702241c325f59efb"
+    },
+    {
+      "policy": "baseline",
+      "trial": 7,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-baseline/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "baseline-7-touchfull.csv",
+      "binary_sha256": "478fcfb2910552f37008359763cb69806c3677e58418bb57702241c325f59efb"
+    },
+    {
+      "policy": "combined",
+      "trial": 7,
+      "touch_bytes": "64",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-combined/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "64"
+      ],
+      "csv": "combined-7-touch64.csv",
+      "binary_sha256": "ea7d917df8434433e0c941eb0a18586c060abe7126975f95aa93466bed169cc8"
+    },
+    {
+      "policy": "combined",
+      "trial": 7,
+      "touch_bytes": "full",
+      "command": [
+        "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/build-combined/workbench/spikes/allocation-reuse-temperature/allocation_reuse_temperature_allocator",
+        "--cpu",
+        "0",
+        "--slots",
+        "256",
+        "--rounds",
+        "8",
+        "--operations",
+        "65536",
+        "--touch-bytes",
+        "full"
+      ],
+      "csv": "combined-7-touchfull.csv",
+      "binary_sha256": "ea7d917df8434433e0c941eb0a18586c060abe7126975f95aa93466bed169cc8"
+    }
+  ],
+  "policy_source_changes": {
+    "baseline": [],
+    "window-first-ready": [
+      "orbital/src/allocation/window.cpp"
+    ],
+    "finite-two-pass": [
+      "orbital/src/allocation/group.cpp"
+    ],
+    "combined": [
+      "orbital/src/allocation/group.cpp",
+      "orbital/src/allocation/window.cpp"
+    ]
+  },
+  "source_digests": {
+    "baseline": "bafb1d031c2c9f84938ddb3775b0e01502084f7a147030faabd42a25da78b2f2",
+    "window-first-ready": "b10816ca8342161233876f07021b503ec3cb732694f72cb9248295b46d0b74e1",
+    "finite-two-pass": "4b5408e2d907e001b909f76bbb017c69d13dc6df4a04a5dd7b587b94d0f4681c",
+    "combined": "dbed57fe4396bb05d82d66a52c55373f4f0c7b770a8514627c84834a8123e9b5"
+  },
+  "binary_sha256": {
+    "baseline": "478fcfb2910552f37008359763cb69806c3677e58418bb57702241c325f59efb",
+    "window-first-ready": "634b8c342c7a273b83642ed3c9b7e744838ddeb6d637eb5cac27e5720c9fe4da",
+    "finite-two-pass": "a3add78499591c208806e6cd90f245f0a8ed27c06e91a708f4873dfbd74fb2a8",
+    "combined": "ea7d917df8434433e0c941eb0a18586c060abe7126975f95aa93466bed169cc8"
+  },
+  "source_manifests": {
+    "baseline": "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/source-baseline.capture.json",
+    "window-first-ready": "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/source-window-first-ready.capture.json",
+    "finite-two-pass": "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/source-finite-two-pass.capture.json",
+    "combined": "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/source-combined.capture.json"
+  }
+}

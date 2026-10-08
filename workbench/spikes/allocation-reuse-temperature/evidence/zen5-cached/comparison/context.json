@@ -1,0 +1,38 @@
+{
+  "command": [
+    "workbench/spikes/allocation-reuse-temperature/run.py",
+    "--output",
+    "/opt/sixdb/jobs/20261008T012125Z-a150854c/results/comparison",
+    "--cpu",
+    "0",
+    "--tune",
+    "zen5",
+    "--policies",
+    "baseline,cached",
+    "--rounds",
+    "12",
+    "--operations",
+    "131072",
+    "--trials",
+    "4"
+  ],
+  "settings": {
+    "output": "/opt/sixdb/jobs/20261008T012125Z-a150854c/results/comparison",
+    "source": "/opt/sixdb/source",
+    "cpu": 0,
+    "policies": "baseline,cached",
+    "slots": 256,
+    "rounds": 12,
+    "operations": 131072,
+    "trials": 4,
+    "march": "native",
+    "tune": "zen5",
+    "hot_bytes": 262144,
+    "warm_bytes": 4194304
+  },
+  "scope": "Block mean allocation/touch/release cost; no individual-operation latency claim.",
+  "source_manifests": {
+    "baseline": "/opt/sixdb/jobs/20261008T012125Z-a150854c/results/comparison/source-baseline.capture.json",
+    "cached": "/opt/sixdb/jobs/20261008T012125Z-a150854c/results/comparison/source-cached.capture.json"
+  }
+}

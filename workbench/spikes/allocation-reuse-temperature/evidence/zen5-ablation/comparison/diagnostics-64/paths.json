@@ -1,0 +1,1031 @@
+{
+  "schema": 1,
+  "scope": "Untimed logical selection-path proof; no timing claim.",
+  "command": [
+    "workbench/spikes/allocation-reuse-temperature/diagnostics.py",
+    "--comparison",
+    "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison"
+  ],
+  "helper_sha256": "661d8fa0add75e6ea9b204cae3a6b4cc53d4f48475fd759de55503d9ec491198",
+  "options": {
+    "workloads": "all",
+    "touch_bytes": "64",
+    "operations": 65536,
+    "slots": 256,
+    "cpu": 0
+  },
+  "comparison_touch_bytes": "64,full",
+  "touch_selection": "derived; prefer 64 among comparison widths",
+  "warmup_blocks": 3,
+  "diagnostic_blocks_per_case": 1,
+  "policies": {
+    "baseline": {
+      "frozen": {
+        "receipt": "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/source-baseline.capture.json",
+        "receipt_sha256": "9fcd5359d25f25b9a615196f7302437c7936f0d9d9ce511ec44925350c3d0f35",
+        "source_digest": "bafb1d031c2c9f84938ddb3775b0e01502084f7a147030faabd42a25da78b2f2",
+        "binary_sha256": "478fcfb2910552f37008359763cb69806c3677e58418bb57702241c325f59efb"
+      },
+      "diagnostic_receipt": "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/diagnostics-64/source-baseline.capture.json",
+      "diagnostic_source_digest": "ec842a1754d8e4094c363111496d70d4bfcb951b028e02da178652e94c859823",
+      "diagnostic_binary_sha256": "4239a22f81c7dd81b0e058dfe245aa4ada75ca1dcaf4cc842bdef2139ca27d7f",
+      "finite_pass_order": [
+        "prepared matching hints",
+        "prepared other hints",
+        "unprepared matching hints",
+        "unprepared other hints"
+      ],
+      "cases": [
+        {
+          "schema": 1,
+          "workload": "hot-loop",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 65536,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 65536,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "warm-loop",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 65536,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 65536,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "batch-hot",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 65536,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 65536,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "cold-contamination",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 325280,
+          "window_extra_visits_after_first_ready": 259744,
+          "window_compatible_visits": 325280,
+          "window_compatible_extra_visits_after_first_ready": 259744,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "mixed-hints",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 171376,
+          "window_extra_visits_after_first_ready": 105840,
+          "window_compatible_visits": 171376,
+          "window_compatible_extra_visits_after_first_ready": 105840,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "mixed-sizes",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 184711,
+          "window_extra_visits_after_first_ready": 103448,
+          "window_compatible_visits": 157022,
+          "window_compatible_extra_visits_after_first_ready": 91501,
+          "allocations": 65536,
+          "reuses": 65521,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "finite-control",
+          "finite_cache_hits": 61440,
+          "finite_fallback_entries": 4096,
+          "finite_group_visits_per_pass": [
+            4096,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            4096,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 0,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 0,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "finite-fallback",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 65536,
+          "finite_group_visits_per_pass": [
+            94585,
+            14681,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            50855,
+            14681,
+            0,
+            0
+          ],
+          "window_candidate_visits": 0,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 0,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "window-locality",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 148093,
+          "window_extra_visits_after_first_ready": 81259,
+          "window_compatible_visits": 138428,
+          "window_compatible_extra_visits_after_first_ready": 72892,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        }
+      ]
+    },
+    "window-first-ready": {
+      "frozen": {
+        "receipt": "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/source-window-first-ready.capture.json",
+        "receipt_sha256": "0039b24d3b9d76890f4dc1d6e7db4f248f0c103400a5ae9eda41ecdbac35809b",
+        "source_digest": "b10816ca8342161233876f07021b503ec3cb732694f72cb9248295b46d0b74e1",
+        "binary_sha256": "634b8c342c7a273b83642ed3c9b7e744838ddeb6d637eb5cac27e5720c9fe4da"
+      },
+      "diagnostic_receipt": "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/diagnostics-64/source-window-first-ready.capture.json",
+      "diagnostic_source_digest": "d2d0dc1144552ec4c26d9d97ab76a51b0c65a1dbcf32dc3e98292c4f9ef0376d",
+      "diagnostic_binary_sha256": "ac8ad8908391394256c17129a2b375a40cd3bca9dc9c8704ecae7f9ea117e956",
+      "finite_pass_order": [
+        "prepared matching hints",
+        "prepared other hints",
+        "unprepared matching hints",
+        "unprepared other hints"
+      ],
+      "cases": [
+        {
+          "schema": 1,
+          "workload": "hot-loop",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 65536,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 65536,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "warm-loop",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 65536,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 65536,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "batch-hot",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 65536,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 65536,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "cold-contamination",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 65536,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 65536,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "mixed-hints",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 65536,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 65536,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "mixed-sizes",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 114580,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 65536,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "finite-control",
+          "finite_cache_hits": 61440,
+          "finite_fallback_entries": 4096,
+          "finite_group_visits_per_pass": [
+            4096,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            4096,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 0,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 0,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "finite-fallback",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 65536,
+          "finite_group_visits_per_pass": [
+            94585,
+            14681,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            50855,
+            14681,
+            0,
+            0
+          ],
+          "window_candidate_visits": 0,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 0,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "window-locality",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 65536,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 65536,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        }
+      ]
+    },
+    "finite-two-pass": {
+      "frozen": {
+        "receipt": "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/source-finite-two-pass.capture.json",
+        "receipt_sha256": "bd2914d4012f3568ed05dd4283ab6035fad0f14eae1acd1dd2d8432e917698ec",
+        "source_digest": "4b5408e2d907e001b909f76bbb017c69d13dc6df4a04a5dd7b587b94d0f4681c",
+        "binary_sha256": "a3add78499591c208806e6cd90f245f0a8ed27c06e91a708f4873dfbd74fb2a8"
+      },
+      "diagnostic_receipt": "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/diagnostics-64/source-finite-two-pass.capture.json",
+      "diagnostic_source_digest": "c7fa056e7d3176f6ac5313e18f0ae5e215156a7244e2367a014be0987be84c4f",
+      "diagnostic_binary_sha256": "0c4afda7f09c2809d45857ee32cabe52caa02393e432ab22572b2f10452bd35c",
+      "finite_pass_order": [
+        "prepared",
+        "unprepared"
+      ],
+      "cases": [
+        {
+          "schema": 1,
+          "workload": "hot-loop",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 65536,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 65536,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "warm-loop",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 65536,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 65536,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "batch-hot",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 65536,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 65536,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "cold-contamination",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 325280,
+          "window_extra_visits_after_first_ready": 259744,
+          "window_compatible_visits": 325280,
+          "window_compatible_extra_visits_after_first_ready": 259744,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "mixed-hints",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 171376,
+          "window_extra_visits_after_first_ready": 105840,
+          "window_compatible_visits": 171376,
+          "window_compatible_extra_visits_after_first_ready": 105840,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "mixed-sizes",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 184711,
+          "window_extra_visits_after_first_ready": 103448,
+          "window_compatible_visits": 157022,
+          "window_compatible_extra_visits_after_first_ready": 91501,
+          "allocations": 65536,
+          "reuses": 65521,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "finite-control",
+          "finite_cache_hits": 61440,
+          "finite_fallback_entries": 4096,
+          "finite_group_visits_per_pass": [
+            4096,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            4096,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 0,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 0,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "finite-fallback",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 65536,
+          "finite_group_visits_per_pass": [
+            65792,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            65536,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 0,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 0,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "window-locality",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 148093,
+          "window_extra_visits_after_first_ready": 81259,
+          "window_compatible_visits": 138428,
+          "window_compatible_extra_visits_after_first_ready": 72892,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        }
+      ]
+    },
+    "combined": {
+      "frozen": {
+        "receipt": "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/source-combined.capture.json",
+        "receipt_sha256": "14838dde1546e74c6d949c96e81055fadbfffe5e082388a22043380e4785f519",
+        "source_digest": "dbed57fe4396bb05d82d66a52c55373f4f0c7b770a8514627c84834a8123e9b5",
+        "binary_sha256": "ea7d917df8434433e0c941eb0a18586c060abe7126975f95aa93466bed169cc8"
+      },
+      "diagnostic_receipt": "/opt/sixdb/jobs/20261008T101428Z-6bf8d702/results/comparison/diagnostics-64/source-combined.capture.json",
+      "diagnostic_source_digest": "5119fb7de517e1eef207e40a4378ddebd28af835d4e4e997bfd6cafc4d8936f8",
+      "diagnostic_binary_sha256": "b0d9ec218cecdb6f45dfc0ee34768e54dbe3bf0acadb398d248d1441fddd758c",
+      "finite_pass_order": [
+        "prepared",
+        "unprepared"
+      ],
+      "cases": [
+        {
+          "schema": 1,
+          "workload": "hot-loop",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 65536,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 65536,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "warm-loop",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 65536,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 65536,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "batch-hot",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 65536,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 65536,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "cold-contamination",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 65536,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 65536,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "mixed-hints",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 65536,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 65536,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "mixed-sizes",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 114580,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 65536,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "finite-control",
+          "finite_cache_hits": 61440,
+          "finite_fallback_entries": 4096,
+          "finite_group_visits_per_pass": [
+            4096,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            4096,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 0,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 0,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "finite-fallback",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 65536,
+          "finite_group_visits_per_pass": [
+            65792,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            65536,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 0,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 0,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        },
+        {
+          "schema": 1,
+          "workload": "window-locality",
+          "finite_cache_hits": 0,
+          "finite_fallback_entries": 0,
+          "finite_group_visits_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "finite_selected_per_pass": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "window_candidate_visits": 65536,
+          "window_extra_visits_after_first_ready": 0,
+          "window_compatible_visits": 65536,
+          "window_compatible_extra_visits_after_first_ready": 0,
+          "allocations": 65536,
+          "reuses": 65536,
+          "correctness_verified": true,
+          "shutdown_charge": 0
+        }
+      ]
+    }
+  }
+}
