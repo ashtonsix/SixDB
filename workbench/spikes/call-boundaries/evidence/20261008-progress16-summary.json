@@ -1,0 +1,800 @@
+{
+  "date": "2026-10-08",
+  "scope": "Bounded explicit-union Progress16 ABI qualification and actual poll/park comparison; Architecture owns runtime integration and scheduler behavior tests.",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "historical_control": "Original32 is the frozen original runtime in the private comparison; maintained HistoricalProgress32 retains its field shape. Original matrix receipts are unchanged.",
+  "raw_receipts": {
+    "private_comparison": {
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/call-boundaries-20261008/source-union-progress/receipt.json",
+      "sha256": "71cf13cf52a16d5a3643f88319d280623a1d022438e25f007ff19946f68e7fa3"
+    },
+    "actual_poll": {
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/call-boundaries-20261008/source-union-progress/actual-poll/receipt.json",
+      "sha256": "6fec77a24f89667c53719a4c3f5cf5cf8d839fefa46de4b364a982b2eb4df1ef"
+    }
+  },
+  "sources": {
+    "before": {
+      "done.cpp": "7159d7b74a9056c9dffa4fdff74afa77e77ee79b7c7fb026dad390618f5ab841",
+      "loom/include/loom/detail/ring_storage.h": "38c90432aff8caa1f9de1a3b7d67e01e212da68881c378ed5e3429bf1eeeb17e",
+      "loom/include/loom/hardware.h": "8573dab86b1009e2aa7f257c2839b981977c0487df476914d49e7343e6f6cc0f",
+      "loom/include/loom/hints.h": "4348457787bed3b7ede31362f7794694df87af4bc1d479bc8b74ff4b13be0cbe",
+      "loom/include/loom/preparation.h": "1d1f11dd28511794885d1165eaa8cebd610433dca37de0839a236d6be6340fad",
+      "loom/include/loom/ring.h": "f96504ac78374d1eff9ea6cdcda647a28f4efea1a89c7ec5e2d47b8a0d6c659f",
+      "loom/include/loom/worker.h": "71fa0f00e55d87dcb4d600fce1782c7dd8289732c281308bad046c5da943ea7a",
+      "loom/src/worker.cpp": "1d0967df070cf0bb41a0ff643fa2c50d1ec00f03d732d4de1f93c8a7936d093b",
+      "orbital/include/orbital/allocation.h": "0203ecf2fd07b7bc88899c9ec50b39d5cfda235f0db9ffab17612034596574dd",
+      "orbital/include/orbital/preparation.h": "5a50bb22b0e719a6f98be8b97eb57196e2a703324ea9f383a222edfe12110e38",
+      "orbital/include/orbital/types.h": "a035b1fda28926cb1fe7db3cd09cfd88be91bae7bdc4484b7f326f64bac32792",
+      "orbital/include/orbital/worker.h": "5a57d7745ea210734241786178df710bec086d9e4193cb94815132ce668be09f"
+    },
+    "after": {
+      "done.cpp": "7159d7b74a9056c9dffa4fdff74afa77e77ee79b7c7fb026dad390618f5ab841",
+      "loom/include/loom/detail/ring_storage.h": "38c90432aff8caa1f9de1a3b7d67e01e212da68881c378ed5e3429bf1eeeb17e",
+      "loom/include/loom/hardware.h": "8573dab86b1009e2aa7f257c2839b981977c0487df476914d49e7343e6f6cc0f",
+      "loom/include/loom/hints.h": "4348457787bed3b7ede31362f7794694df87af4bc1d479bc8b74ff4b13be0cbe",
+      "loom/include/loom/preparation.h": "1d1f11dd28511794885d1165eaa8cebd610433dca37de0839a236d6be6340fad",
+      "loom/include/loom/ring.h": "f96504ac78374d1eff9ea6cdcda647a28f4efea1a89c7ec5e2d47b8a0d6c659f",
+      "loom/include/loom/worker.h": "71fa0f00e55d87dcb4d600fce1782c7dd8289732c281308bad046c5da943ea7a",
+      "loom/src/worker.cpp": "3402a80da871005591eb9a33b73a762afa38b00661c0a44e147d908c11a697f9",
+      "orbital/include/orbital/allocation.h": "0203ecf2fd07b7bc88899c9ec50b39d5cfda235f0db9ffab17612034596574dd",
+      "orbital/include/orbital/preparation.h": "5a50bb22b0e719a6f98be8b97eb57196e2a703324ea9f383a222edfe12110e38",
+      "orbital/include/orbital/types.h": "f16fa83013aadafe0cb539e06dc56834d894605e8419bebf32fa17b53abfe00b",
+      "orbital/include/orbital/worker.h": "5a57d7745ea210734241786178df710bec086d9e4193cb94815132ce668be09f"
+    }
+  },
+  "private_check": {
+    "binary_sha256": "1abd4626f7bfaa7a90bcf7aa554212ce5bbc36ce4ce8ec92bf8ffd0f066eb340",
+    "stdout": "PASS: 576 source-union factory/accessor cases; three signals, full-width generation boundaries and all current errors\n",
+    "status": 0
+  },
+  "private_consumer_bytes": {
+    "v2": {
+      "progress_probe::consume_original(unsigned int, unsigned long, orbital::Signal&, orbital::Error)": 100,
+      "progress_probe::consume_tagged(unsigned int, unsigned long, orbital::Signal&, orbital::Error)": 92,
+      "progress_probe::consume_union(unsigned int, unsigned long, orbital::Signal&, orbital::Error)": 84
+    },
+    "zen5-avx2": {
+      "progress_probe::consume_original(unsigned int, unsigned long, orbital::Signal&, orbital::Error)": 80,
+      "progress_probe::consume_tagged(unsigned int, unsigned long, orbital::Signal&, orbital::Error)": 84,
+      "progress_probe::consume_union(unsigned int, unsigned long, orbital::Signal&, orbital::Error)": 76
+    },
+    "zen5": {
+      "progress_probe::consume_original(unsigned int, unsigned long, orbital::Signal&, orbital::Error)": 80,
+      "progress_probe::consume_tagged(unsigned int, unsigned long, orbital::Signal&, orbital::Error)": 84,
+      "progress_probe::consume_union(unsigned int, unsigned long, orbital::Signal&, orbital::Error)": 76
+    }
+  },
+  "actual_functions": {
+    "v2": {
+      "before": [
+        {
+          "source": "loom/src/worker.cpp",
+          "object_sha256": "32f690edc29ad5f889a0b61775d36aa2683ecadba0a4a3d5ca35c415b4ac4513",
+          "ir_signatures": [],
+          "functions": [
+            {
+              "name": "loom::poll(loom::Worker&, loom::PollBudget)",
+              "bytes": 752,
+              "instructions": 188,
+              "calls": [
+                "bl 0xb5c <loom::poll(loom::Worker&, loom::PollBudget)+0x2c> [relocation: 0000000000000b5c:  R_AARCH64_CALL26\torbital::worker::on_lane(orbital::worker::Lane const&)]",
+                "bl 0xb80 <loom::poll(loom::Worker&, loom::PollBudget)+0x50> [relocation: 0000000000000b80:  R_AARCH64_CALL26\torbital::worker::pending(orbital::worker::Lane const&)]",
+                "bl 0xb90 <loom::poll(loom::Worker&, loom::PollBudget)+0x60> [relocation: 0000000000000b90:  R_AARCH64_CALL26\torbital::worker::poll(orbital::worker::Lane&, unsigned long)]",
+                "bl 0xbcc <loom::poll(loom::Worker&, loom::PollBudget)+0x9c> [relocation: 0000000000000bcc:  R_AARCH64_CALL26\torbital::worker::poll(orbital::worker::Lane&, unsigned long)]",
+                "blr x9",
+                "bl 0xcc8 <loom::poll(loom::Worker&, loom::PollBudget)+0x198> [relocation: 0000000000000cc8:  R_AARCH64_CALL26\torbital::pulse(orbital::Signal&)]",
+                "bl 0xcdc <loom::poll(loom::Worker&, loom::PollBudget)+0x1ac> [relocation: 0000000000000cdc:  R_AARCH64_CALL26\torbital::worker::pending(orbital::worker::Lane const&)]",
+                "bl 0xddc <loom::poll(loom::Worker&, loom::PollBudget)+0x2ac> [relocation: 0000000000000ddc:  R_AARCH64_CALL26\t__assert_fail]",
+                "bl 0xdfc <loom::poll(loom::Worker&, loom::PollBudget)+0x2cc> [relocation: 0000000000000dfc:  R_AARCH64_CALL26\t__assert_fail]",
+                "bl 0xe1c <loom::poll(loom::Worker&, loom::PollBudget)+0x2ec> [relocation: 0000000000000e1c:  R_AARCH64_CALL26\t__assert_fail]"
+              ],
+              "stack_instructions": [
+                "sub sp, sp, #0x80",
+                "stp x29, x30, [sp, #0x20]",
+                "stp x28, x27, [sp, #0x30]",
+                "stp x26, x25, [sp, #0x40]",
+                "stp x24, x23, [sp, #0x50]",
+                "stp x22, x21, [sp, #0x60]",
+                "stp x20, x19, [sp, #0x70]",
+                "add x29, sp, #0x20",
+                "mov x8, sp",
+                "ldr w8, [sp]",
+                "ldr x9, [sp, #0x8]",
+                "ldr w8, [sp, #0x10]",
+                "ldr x10, [sp, #0x18]",
+                "ldp x20, x19, [sp, #0x70]",
+                "ldp x22, x21, [sp, #0x60]",
+                "ldp x24, x23, [sp, #0x50]",
+                "ldp x26, x25, [sp, #0x40]",
+                "ldp x28, x27, [sp, #0x30]",
+                "ldp x29, x30, [sp, #0x20]",
+                "add sp, sp, #0x80"
+              ],
+              "first": [
+                "sub sp, sp, #0x80",
+                "stp x29, x30, [sp, #0x20]",
+                "stp x28, x27, [sp, #0x30]",
+                "stp x26, x25, [sp, #0x40]",
+                "stp x24, x23, [sp, #0x50]",
+                "stp x22, x21, [sp, #0x60]",
+                "stp x20, x19, [sp, #0x70]",
+                "add x29, sp, #0x20",
+                "mov x20, x2",
+                "mov x21, x1",
+                "mov x19, x0",
+                "bl 0xb5c <loom::poll(loom::Worker&, loom::PollBudget)+0x2c> [relocation: 0000000000000b5c:  R_AARCH64_CALL26\torbital::worker::on_lane(orbital::worker::Lane const&)]"
+              ],
+              "last": [
+                "mov w2, #0xe                // =14",
+                "bl 0xdfc <loom::poll(loom::Worker&, loom::PollBudget)+0x2cc> [relocation: 0000000000000dfc:  R_AARCH64_CALL26\t__assert_fail]",
+                "adrp x0, 0x0 <loom::Worker::~Worker()> [relocation: 0000000000000e00:  R_AARCH64_ADR_PREL_PG_HI21\t.rodata.str1.1+0x27c]",
+                "add x0, x0, #0x0 [relocation: 0000000000000e04:  R_AARCH64_ADD_ABS_LO12_NC\t.rodata.str1.1+0x27c]",
+                "adrp x1, 0x0 <loom::Worker::~Worker()> [relocation: 0000000000000e08:  R_AARCH64_ADR_PREL_PG_HI21\t.rodata.str1.1+0x42]",
+                "add x1, x1, #0x0 [relocation: 0000000000000e0c:  R_AARCH64_ADD_ABS_LO12_NC\t.rodata.str1.1+0x42]",
+                "adrp x3, 0x0 <loom::Worker::~Worker()> [relocation: 0000000000000e10:  R_AARCH64_ADR_PREL_PG_HI21\t.rodata.str1.1+0x2b5]",
+                "add x3, x3, #0x0 [relocation: 0000000000000e14:  R_AARCH64_ADD_ABS_LO12_NC\t.rodata.str1.1+0x2b5]",
+                "mov w2, #0xb2               // =178",
+                "bl 0xe1c <loom::poll(loom::Worker&, loom::PollBudget)+0x2ec> [relocation: 0000000000000e1c:  R_AARCH64_CALL26\t__assert_fail]"
+              ]
+            }
+          ]
+        },
+        {
+          "source": "done.cpp",
+          "object_sha256": "d3fa1f713d3cced267c4603bb00e7653cdec7d4038fde2a114ce5284ae53df28",
+          "ir_signatures": [
+            "define hidden void @_ZN2cb11actual_doneERN4loom4TaskE(ptr dead_on_unwind noalias writable writeonly sret(%\"struct.orbital::Progress\") align 8 captures(none) initializes((0, 4), (8, 20), (24, 32)) %0, ptr noundef nonnull readnone align 8 captures(none) dereferenceable(72) %1) local_unnamed_addr #0 {"
+          ],
+          "functions": [
+            {
+              "name": "cb::actual_done(loom::Task&)",
+              "bytes": 24,
+              "instructions": 6,
+              "calls": [],
+              "stack_instructions": [],
+              "first": [
+                "mov w9, #0x4                // =4",
+                "str wzr, [x8]",
+                "str xzr, [x8, #0x8]",
+                "str w9, [x8, #0x10]",
+                "str xzr, [x8, #0x18]",
+                "ret "
+              ],
+              "last": [
+                "mov w9, #0x4                // =4",
+                "str wzr, [x8]",
+                "str xzr, [x8, #0x8]",
+                "str w9, [x8, #0x10]",
+                "str xzr, [x8, #0x18]",
+                "ret "
+              ]
+            }
+          ]
+        }
+      ],
+      "after": [
+        {
+          "source": "loom/src/worker.cpp",
+          "object_sha256": "612846ad6041bb21da1c06b210c27c52610e98f7905f44ceb0a07b57089378b8",
+          "ir_signatures": [],
+          "functions": [
+            {
+              "name": "loom::poll(loom::Worker&, loom::PollBudget)",
+              "bytes": 732,
+              "instructions": 184,
+              "calls": [
+                "bl 0xab8 <loom::poll(loom::Worker&, loom::PollBudget)+0x28> [relocation: 0000000000000ab8:  R_AARCH64_CALL26\torbital::worker::on_lane(orbital::worker::Lane const&)]",
+                "bl 0xadc <loom::poll(loom::Worker&, loom::PollBudget)+0x4c> [relocation: 0000000000000adc:  R_AARCH64_CALL26\torbital::worker::pending(orbital::worker::Lane const&)]",
+                "bl 0xaec <loom::poll(loom::Worker&, loom::PollBudget)+0x5c> [relocation: 0000000000000aec:  R_AARCH64_CALL26\torbital::worker::poll(orbital::worker::Lane&, unsigned long)]",
+                "bl 0xb28 <loom::poll(loom::Worker&, loom::PollBudget)+0x98> [relocation: 0000000000000b28:  R_AARCH64_CALL26\torbital::worker::poll(orbital::worker::Lane&, unsigned long)]",
+                "blr x8",
+                "bl 0xc1c <loom::poll(loom::Worker&, loom::PollBudget)+0x18c> [relocation: 0000000000000c1c:  R_AARCH64_CALL26\torbital::pulse(orbital::Signal&)]",
+                "bl 0xc30 <loom::poll(loom::Worker&, loom::PollBudget)+0x1a0> [relocation: 0000000000000c30:  R_AARCH64_CALL26\torbital::worker::pending(orbital::worker::Lane const&)]",
+                "bl 0xd28 <loom::poll(loom::Worker&, loom::PollBudget)+0x298> [relocation: 0000000000000d28:  R_AARCH64_CALL26\t__assert_fail]",
+                "bl 0xd48 <loom::poll(loom::Worker&, loom::PollBudget)+0x2b8> [relocation: 0000000000000d48:  R_AARCH64_CALL26\t__assert_fail]",
+                "bl 0xd68 <loom::poll(loom::Worker&, loom::PollBudget)+0x2d8> [relocation: 0000000000000d68:  R_AARCH64_CALL26\t__assert_fail]"
+              ],
+              "stack_instructions": [
+                "stp x29, x30, [sp, #-0x60]!",
+                "stp x28, x27, [sp, #0x10]",
+                "stp x26, x25, [sp, #0x20]",
+                "stp x24, x23, [sp, #0x30]",
+                "stp x22, x21, [sp, #0x40]",
+                "stp x20, x19, [sp, #0x50]",
+                "mov x29, sp",
+                "ldp x20, x19, [sp, #0x50]",
+                "ldp x22, x21, [sp, #0x40]",
+                "ldp x24, x23, [sp, #0x30]",
+                "ldp x26, x25, [sp, #0x20]",
+                "ldp x28, x27, [sp, #0x10]",
+                "ldp x29, x30, [sp], #0x60"
+              ],
+              "first": [
+                "stp x29, x30, [sp, #-0x60]!",
+                "stp x28, x27, [sp, #0x10]",
+                "stp x26, x25, [sp, #0x20]",
+                "stp x24, x23, [sp, #0x30]",
+                "stp x22, x21, [sp, #0x40]",
+                "stp x20, x19, [sp, #0x50]",
+                "mov x29, sp",
+                "mov x20, x2",
+                "mov x21, x1",
+                "mov x19, x0",
+                "bl 0xab8 <loom::poll(loom::Worker&, loom::PollBudget)+0x28> [relocation: 0000000000000ab8:  R_AARCH64_CALL26\torbital::worker::on_lane(orbital::worker::Lane const&)]",
+                "tbz w0, #0x0, 0xd4c <loom::poll(loom::Worker&, loom::PollBudget)+0x2bc>"
+              ],
+              "last": [
+                "bl 0xd48 <loom::poll(loom::Worker&, loom::PollBudget)+0x2b8> [relocation: 0000000000000d48:  R_AARCH64_CALL26\t__assert_fail]",
+                "adrp x0, 0x0 <loom::Worker::~Worker()> [relocation: 0000000000000d4c:  R_AARCH64_ADR_PREL_PG_HI21\t.rodata.str1.1+0x27b]",
+                "add x0, x0, #0x0 [relocation: 0000000000000d50:  R_AARCH64_ADD_ABS_LO12_NC\t.rodata.str1.1+0x27b]",
+                "adrp x1, 0x0 <loom::Worker::~Worker()> [relocation: 0000000000000d54:  R_AARCH64_ADR_PREL_PG_HI21\t.rodata.str1.1+0x42]",
+                "add x1, x1, #0x0 [relocation: 0000000000000d58:  R_AARCH64_ADD_ABS_LO12_NC\t.rodata.str1.1+0x42]",
+                "adrp x3, 0x0 <loom::Worker::~Worker()> [relocation: 0000000000000d5c:  R_AARCH64_ADR_PREL_PG_HI21\t.rodata.str1.1+0x2b4]",
+                "add x3, x3, #0x0 [relocation: 0000000000000d60:  R_AARCH64_ADD_ABS_LO12_NC\t.rodata.str1.1+0x2b4]",
+                "mov w2, #0xb3               // =179",
+                "bl 0xd68 <loom::poll(loom::Worker&, loom::PollBudget)+0x2d8> [relocation: 0000000000000d68:  R_AARCH64_CALL26\t__assert_fail]",
+                "nop "
+              ]
+            }
+          ]
+        },
+        {
+          "source": "done.cpp",
+          "object_sha256": "67d8bbc7374f810ce78a9ea252a57f7c077c28392dc5766f383de0a8948baf64",
+          "ir_signatures": [
+            "define hidden [2 x i64] @_ZN2cb11actual_doneERN4loom4TaskE(ptr noundef nonnull readnone align 8 captures(none) dereferenceable(72) %0) local_unnamed_addr #0 {"
+          ],
+          "functions": [
+            {
+              "name": "cb::actual_done(loom::Task&)",
+              "bytes": 12,
+              "instructions": 3,
+              "calls": [],
+              "stack_instructions": [],
+              "first": [
+                "mov x1, #0x400000000        // =17179869184",
+                "mov x0, xzr",
+                "ret "
+              ],
+              "last": [
+                "mov x1, #0x400000000        // =17179869184",
+                "mov x0, xzr",
+                "ret "
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "zen5-avx2": {
+      "before": [
+        {
+          "source": "loom/src/worker.cpp",
+          "object_sha256": "3f2b06ba6b2649f04eec9c30cfdaa94169338c6560b8b2e98ccd5598c20f3c26",
+          "ir_signatures": [],
+          "functions": [
+            {
+              "name": "loom::poll(loom::Worker&, loom::PollBudget)",
+              "bytes": 803,
+              "instructions": 183,
+              "calls": [
+                "callq 0xbfc <loom::poll(loom::Worker&, loom::PollBudget)+0x1c> [relocation: 0000000000000bf8:  R_X86_64_PLT32\torbital::worker::on_lane(orbital::worker::Lane const&)-0x4]",
+                "callq 0xc25 <loom::poll(loom::Worker&, loom::PollBudget)+0x45> [relocation: 0000000000000c21:  R_X86_64_PLT32\torbital::worker::pending(orbital::worker::Lane const&)-0x4]",
+                "callq 0xc34 <loom::poll(loom::Worker&, loom::PollBudget)+0x54> [relocation: 0000000000000c30:  R_X86_64_PLT32\torbital::worker::poll(orbital::worker::Lane&, unsigned long)-0x4]",
+                "callq 0xc6b <loom::poll(loom::Worker&, loom::PollBudget)+0x8b> [relocation: 0000000000000c67:  R_X86_64_PLT32\torbital::worker::poll(orbital::worker::Lane&, unsigned long)-0x4]",
+                "callq *0x10(%rbp)",
+                "callq 0xdc8 <loom::poll(loom::Worker&, loom::PollBudget)+0x1e8> [relocation: 0000000000000dc4:  R_X86_64_PLT32\torbital::pulse(orbital::Signal&)-0x4]",
+                "callq 0xddf <loom::poll(loom::Worker&, loom::PollBudget)+0x1ff> [relocation: 0000000000000ddb:  R_X86_64_PLT32\torbital::worker::pending(orbital::worker::Lane const&)-0x4]",
+                "callq 0xec5 <loom::poll(loom::Worker&, loom::PollBudget)+0x2e5> [relocation: 0000000000000ec1:  R_X86_64_PLT32\t__assert_fail-0x4]",
+                "callq 0xee4 <loom::poll(loom::Worker&, loom::PollBudget)+0x304> [relocation: 0000000000000ee0:  R_X86_64_PLT32\t__assert_fail-0x4]",
+                "callq 0xf03 <loom::poll(loom::Worker&, loom::PollBudget)+0x323> [relocation: 0000000000000eff:  R_X86_64_PLT32\t__assert_fail-0x4]"
+              ],
+              "stack_instructions": [
+                "pushq %rbp",
+                "pushq %r15",
+                "pushq %r14",
+                "pushq %r13",
+                "pushq %r12",
+                "pushq %rbx",
+                "subq $0x28, %rsp",
+                "leaq 0x8(%rsp), %rdi",
+                "movl 0x8(%rsp), %eax",
+                "movl 0x18(%rsp), %eax",
+                "movq 0x10(%rsp), %rax",
+                "movq 0x20(%rsp), %rcx",
+                "addq $0x28, %rsp",
+                "popq %rbx",
+                "popq %r12",
+                "popq %r13",
+                "popq %r14",
+                "popq %r15",
+                "popq %rbp"
+              ],
+              "first": [
+                "pushq %rbp",
+                "pushq %r15",
+                "pushq %r14",
+                "pushq %r13",
+                "pushq %r12",
+                "pushq %rbx",
+                "subq $0x28, %rsp",
+                "movq %rdx, %r14",
+                "movq %rsi, %r15",
+                "movq %rdi, %rbx",
+                "callq 0xbfc <loom::poll(loom::Worker&, loom::PollBudget)+0x1c> [relocation: 0000000000000bf8:  R_X86_64_PLT32\torbital::worker::on_lane(orbital::worker::Lane const&)-0x4]",
+                "testb %al, %al"
+              ],
+              "last": [
+                "leaq (%rip), %rsi            # 0xed3 <loom::poll(loom::Worker&, loom::PollBudget)+0x2f3> [relocation: 0000000000000ecf:  R_X86_64_PC32\t.L.str.1-0x4]",
+                "leaq (%rip), %rcx            # 0xeda <loom::poll(loom::Worker&, loom::PollBudget)+0x2fa> [relocation: 0000000000000ed6:  R_X86_64_PC32\t.L__PRETTY_FUNCTION__._ZN4loom12_GLOBAL__N_15queueERNS_6WorkerERNS_4TaskE-0x4]",
+                "movl $0xe, %edx",
+                "callq 0xee4 <loom::poll(loom::Worker&, loom::PollBudget)+0x304> [relocation: 0000000000000ee0:  R_X86_64_PLT32\t__assert_fail-0x4]",
+                "leaq (%rip), %rdi            # 0xeeb <loom::poll(loom::Worker&, loom::PollBudget)+0x30b> [relocation: 0000000000000ee7:  R_X86_64_PC32\t.L.str.9-0x4]",
+                "leaq (%rip), %rsi            # 0xef2 <loom::poll(loom::Worker&, loom::PollBudget)+0x312> [relocation: 0000000000000eee:  R_X86_64_PC32\t.L.str.1-0x4]",
+                "leaq (%rip), %rcx            # 0xef9 <loom::poll(loom::Worker&, loom::PollBudget)+0x319> [relocation: 0000000000000ef5:  R_X86_64_PC32\t.L__PRETTY_FUNCTION__._ZN4loom4pollERNS_6WorkerENS_10PollBudgetE-0x4]",
+                "movl $0xb2, %edx",
+                "callq 0xf03 <loom::poll(loom::Worker&, loom::PollBudget)+0x323> [relocation: 0000000000000eff:  R_X86_64_PLT32\t__assert_fail-0x4]",
+                "nopw %cs:(%rax,%rax)"
+              ]
+            }
+          ]
+        },
+        {
+          "source": "done.cpp",
+          "object_sha256": "eb89c4272266f34411f5332e2c2d2ed779e06d1467d0c911c57c5195b12b7581",
+          "ir_signatures": [
+            "define hidden void @_ZN2cb11actual_doneERN4loom4TaskE(ptr dead_on_unwind noalias writable writeonly sret(%\"struct.orbital::Progress\") align 8 captures(none) initializes((0, 4), (8, 20), (24, 32)) %0, ptr noundef nonnull readnone align 8 captures(none) dereferenceable(72) %1) local_unnamed_addr #0 {"
+          ],
+          "functions": [
+            {
+              "name": "cb::actual_done(loom::Task&)",
+              "bytes": 33,
+              "instructions": 6,
+              "calls": [],
+              "stack_instructions": [],
+              "first": [
+                "movq %rdi, %rax",
+                "movl $0x0, (%rdi)",
+                "movq $0x0, 0x8(%rdi)",
+                "movl $0x4, 0x10(%rdi)",
+                "movq $0x0, 0x18(%rdi)",
+                "retq "
+              ],
+              "last": [
+                "movq %rdi, %rax",
+                "movl $0x0, (%rdi)",
+                "movq $0x0, 0x8(%rdi)",
+                "movl $0x4, 0x10(%rdi)",
+                "movq $0x0, 0x18(%rdi)",
+                "retq "
+              ]
+            }
+          ]
+        }
+      ],
+      "after": [
+        {
+          "source": "loom/src/worker.cpp",
+          "object_sha256": "ceff3e5e5556400abf58632f5fea066429b074f520a24019cc754be6d896754d",
+          "ir_signatures": [],
+          "functions": [
+            {
+              "name": "loom::poll(loom::Worker&, loom::PollBudget)",
+              "bytes": 796,
+              "instructions": 183,
+              "calls": [
+                "callq 0xb89 <loom::poll(loom::Worker&, loom::PollBudget)+0x19> [relocation: 0000000000000b85:  R_X86_64_PLT32\torbital::worker::on_lane(orbital::worker::Lane const&)-0x4]",
+                "callq 0xbb2 <loom::poll(loom::Worker&, loom::PollBudget)+0x42> [relocation: 0000000000000bae:  R_X86_64_PLT32\torbital::worker::pending(orbital::worker::Lane const&)-0x4]",
+                "callq 0xbc1 <loom::poll(loom::Worker&, loom::PollBudget)+0x51> [relocation: 0000000000000bbd:  R_X86_64_PLT32\torbital::worker::poll(orbital::worker::Lane&, unsigned long)-0x4]",
+                "callq 0xbfb <loom::poll(loom::Worker&, loom::PollBudget)+0x8b> [relocation: 0000000000000bf7:  R_X86_64_PLT32\torbital::worker::poll(orbital::worker::Lane&, unsigned long)-0x4]",
+                "callq *0x10(%rbp)",
+                "callq 0xd56 <loom::poll(loom::Worker&, loom::PollBudget)+0x1e6> [relocation: 0000000000000d52:  R_X86_64_PLT32\torbital::pulse(orbital::Signal&)-0x4]",
+                "callq 0xd6d <loom::poll(loom::Worker&, loom::PollBudget)+0x1fd> [relocation: 0000000000000d69:  R_X86_64_PLT32\torbital::worker::pending(orbital::worker::Lane const&)-0x4]",
+                "callq 0xe4e <loom::poll(loom::Worker&, loom::PollBudget)+0x2de> [relocation: 0000000000000e4a:  R_X86_64_PLT32\t__assert_fail-0x4]",
+                "callq 0xe6d <loom::poll(loom::Worker&, loom::PollBudget)+0x2fd> [relocation: 0000000000000e69:  R_X86_64_PLT32\t__assert_fail-0x4]",
+                "callq 0xe8c <loom::poll(loom::Worker&, loom::PollBudget)+0x31c> [relocation: 0000000000000e88:  R_X86_64_PLT32\t__assert_fail-0x4]"
+              ],
+              "stack_instructions": [
+                "pushq %rbp",
+                "pushq %r15",
+                "pushq %r14",
+                "pushq %r13",
+                "pushq %r12",
+                "pushq %rbx",
+                "pushq %rax",
+                "addq $0x8, %rsp",
+                "popq %rbx",
+                "popq %r12",
+                "popq %r13",
+                "popq %r14",
+                "popq %r15",
+                "popq %rbp"
+              ],
+              "first": [
+                "pushq %rbp",
+                "pushq %r15",
+                "pushq %r14",
+                "pushq %r13",
+                "pushq %r12",
+                "pushq %rbx",
+                "pushq %rax",
+                "movq %rdx, %r14",
+                "movq %rsi, %r15",
+                "movq %rdi, %rbx",
+                "callq 0xb89 <loom::poll(loom::Worker&, loom::PollBudget)+0x19> [relocation: 0000000000000b85:  R_X86_64_PLT32\torbital::worker::on_lane(orbital::worker::Lane const&)-0x4]",
+                "testb %al, %al"
+              ],
+              "last": [
+                "leaq (%rip), %rsi            # 0xe5c <loom::poll(loom::Worker&, loom::PollBudget)+0x2ec> [relocation: 0000000000000e58:  R_X86_64_PC32\t.L.str.1-0x4]",
+                "leaq (%rip), %rcx            # 0xe63 <loom::poll(loom::Worker&, loom::PollBudget)+0x2f3> [relocation: 0000000000000e5f:  R_X86_64_PC32\t.L__PRETTY_FUNCTION__._ZN4loom12_GLOBAL__N_15queueERNS_6WorkerERNS_4TaskE-0x4]",
+                "movl $0xe, %edx",
+                "callq 0xe6d <loom::poll(loom::Worker&, loom::PollBudget)+0x2fd> [relocation: 0000000000000e69:  R_X86_64_PLT32\t__assert_fail-0x4]",
+                "leaq (%rip), %rdi            # 0xe74 <loom::poll(loom::Worker&, loom::PollBudget)+0x304> [relocation: 0000000000000e70:  R_X86_64_PC32\t.L.str.9-0x4]",
+                "leaq (%rip), %rsi            # 0xe7b <loom::poll(loom::Worker&, loom::PollBudget)+0x30b> [relocation: 0000000000000e77:  R_X86_64_PC32\t.L.str.1-0x4]",
+                "leaq (%rip), %rcx            # 0xe82 <loom::poll(loom::Worker&, loom::PollBudget)+0x312> [relocation: 0000000000000e7e:  R_X86_64_PC32\t.L__PRETTY_FUNCTION__._ZN4loom4pollERNS_6WorkerENS_10PollBudgetE-0x4]",
+                "movl $0xb3, %edx",
+                "callq 0xe8c <loom::poll(loom::Worker&, loom::PollBudget)+0x31c> [relocation: 0000000000000e88:  R_X86_64_PLT32\t__assert_fail-0x4]",
+                "nopl (%rax)"
+              ]
+            }
+          ]
+        },
+        {
+          "source": "done.cpp",
+          "object_sha256": "9196c82c324ed18a47ad0ddcf2d7b49f53c49adbdf3efcaec07a3befffcd3ed8",
+          "ir_signatures": [
+            "define hidden { ptr, i64 } @_ZN2cb11actual_doneERN4loom4TaskE(ptr noundef nonnull readnone align 8 captures(none) dereferenceable(72) %0) local_unnamed_addr #0 {"
+          ],
+          "functions": [
+            {
+              "name": "cb::actual_done(loom::Task&)",
+              "bytes": 13,
+              "instructions": 3,
+              "calls": [],
+              "stack_instructions": [],
+              "first": [
+                "movabsq $0x400000000, %rdx      # imm = 0x400000000",
+                "xorl %eax, %eax",
+                "retq "
+              ],
+              "last": [
+                "movabsq $0x400000000, %rdx      # imm = 0x400000000",
+                "xorl %eax, %eax",
+                "retq "
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "zen5": {
+      "before": [
+        {
+          "source": "loom/src/worker.cpp",
+          "object_sha256": "2369b6740d9dea7ea390566bfca822677db446a350441894e41528e8230cf783",
+          "ir_signatures": [],
+          "functions": [
+            {
+              "name": "loom::poll(loom::Worker&, loom::PollBudget)",
+              "bytes": 803,
+              "instructions": 183,
+              "calls": [
+                "callq 0xc0c <loom::poll(loom::Worker&, loom::PollBudget)+0x1c> [relocation: 0000000000000c08:  R_X86_64_PLT32\torbital::worker::on_lane(orbital::worker::Lane const&)-0x4]",
+                "callq 0xc35 <loom::poll(loom::Worker&, loom::PollBudget)+0x45> [relocation: 0000000000000c31:  R_X86_64_PLT32\torbital::worker::pending(orbital::worker::Lane const&)-0x4]",
+                "callq 0xc44 <loom::poll(loom::Worker&, loom::PollBudget)+0x54> [relocation: 0000000000000c40:  R_X86_64_PLT32\torbital::worker::poll(orbital::worker::Lane&, unsigned long)-0x4]",
+                "callq 0xc7b <loom::poll(loom::Worker&, loom::PollBudget)+0x8b> [relocation: 0000000000000c77:  R_X86_64_PLT32\torbital::worker::poll(orbital::worker::Lane&, unsigned long)-0x4]",
+                "callq *0x10(%rbp)",
+                "callq 0xdd8 <loom::poll(loom::Worker&, loom::PollBudget)+0x1e8> [relocation: 0000000000000dd4:  R_X86_64_PLT32\torbital::pulse(orbital::Signal&)-0x4]",
+                "callq 0xdef <loom::poll(loom::Worker&, loom::PollBudget)+0x1ff> [relocation: 0000000000000deb:  R_X86_64_PLT32\torbital::worker::pending(orbital::worker::Lane const&)-0x4]",
+                "callq 0xed5 <loom::poll(loom::Worker&, loom::PollBudget)+0x2e5> [relocation: 0000000000000ed1:  R_X86_64_PLT32\t__assert_fail-0x4]",
+                "callq 0xef4 <loom::poll(loom::Worker&, loom::PollBudget)+0x304> [relocation: 0000000000000ef0:  R_X86_64_PLT32\t__assert_fail-0x4]",
+                "callq 0xf13 <loom::poll(loom::Worker&, loom::PollBudget)+0x323> [relocation: 0000000000000f0f:  R_X86_64_PLT32\t__assert_fail-0x4]"
+              ],
+              "stack_instructions": [
+                "pushq %rbp",
+                "pushq %r15",
+                "pushq %r14",
+                "pushq %r13",
+                "pushq %r12",
+                "pushq %rbx",
+                "subq $0x28, %rsp",
+                "leaq 0x8(%rsp), %rdi",
+                "movl 0x8(%rsp), %eax",
+                "movl 0x18(%rsp), %eax",
+                "movq 0x10(%rsp), %rax",
+                "movq 0x20(%rsp), %rcx",
+                "addq $0x28, %rsp",
+                "popq %rbx",
+                "popq %r12",
+                "popq %r13",
+                "popq %r14",
+                "popq %r15",
+                "popq %rbp"
+              ],
+              "first": [
+                "pushq %rbp",
+                "pushq %r15",
+                "pushq %r14",
+                "pushq %r13",
+                "pushq %r12",
+                "pushq %rbx",
+                "subq $0x28, %rsp",
+                "movq %rdx, %r14",
+                "movq %rsi, %r15",
+                "movq %rdi, %rbx",
+                "callq 0xc0c <loom::poll(loom::Worker&, loom::PollBudget)+0x1c> [relocation: 0000000000000c08:  R_X86_64_PLT32\torbital::worker::on_lane(orbital::worker::Lane const&)-0x4]",
+                "testb %al, %al"
+              ],
+              "last": [
+                "leaq (%rip), %rsi            # 0xee3 <loom::poll(loom::Worker&, loom::PollBudget)+0x2f3> [relocation: 0000000000000edf:  R_X86_64_PC32\t.L.str.1-0x4]",
+                "leaq (%rip), %rcx            # 0xeea <loom::poll(loom::Worker&, loom::PollBudget)+0x2fa> [relocation: 0000000000000ee6:  R_X86_64_PC32\t.L__PRETTY_FUNCTION__._ZN4loom12_GLOBAL__N_15queueERNS_6WorkerERNS_4TaskE-0x4]",
+                "movl $0xe, %edx",
+                "callq 0xef4 <loom::poll(loom::Worker&, loom::PollBudget)+0x304> [relocation: 0000000000000ef0:  R_X86_64_PLT32\t__assert_fail-0x4]",
+                "leaq (%rip), %rdi            # 0xefb <loom::poll(loom::Worker&, loom::PollBudget)+0x30b> [relocation: 0000000000000ef7:  R_X86_64_PC32\t.L.str.9-0x4]",
+                "leaq (%rip), %rsi            # 0xf02 <loom::poll(loom::Worker&, loom::PollBudget)+0x312> [relocation: 0000000000000efe:  R_X86_64_PC32\t.L.str.1-0x4]",
+                "leaq (%rip), %rcx            # 0xf09 <loom::poll(loom::Worker&, loom::PollBudget)+0x319> [relocation: 0000000000000f05:  R_X86_64_PC32\t.L__PRETTY_FUNCTION__._ZN4loom4pollERNS_6WorkerENS_10PollBudgetE-0x4]",
+                "movl $0xb2, %edx",
+                "callq 0xf13 <loom::poll(loom::Worker&, loom::PollBudget)+0x323> [relocation: 0000000000000f0f:  R_X86_64_PLT32\t__assert_fail-0x4]",
+                "nopw %cs:(%rax,%rax)"
+              ]
+            }
+          ]
+        },
+        {
+          "source": "done.cpp",
+          "object_sha256": "eb89c4272266f34411f5332e2c2d2ed779e06d1467d0c911c57c5195b12b7581",
+          "ir_signatures": [
+            "define hidden void @_ZN2cb11actual_doneERN4loom4TaskE(ptr dead_on_unwind noalias writable writeonly sret(%\"struct.orbital::Progress\") align 8 captures(none) initializes((0, 4), (8, 20), (24, 32)) %0, ptr noundef nonnull readnone align 8 captures(none) dereferenceable(72) %1) local_unnamed_addr #0 {"
+          ],
+          "functions": [
+            {
+              "name": "cb::actual_done(loom::Task&)",
+              "bytes": 33,
+              "instructions": 6,
+              "calls": [],
+              "stack_instructions": [],
+              "first": [
+                "movq %rdi, %rax",
+                "movl $0x0, (%rdi)",
+                "movq $0x0, 0x8(%rdi)",
+                "movl $0x4, 0x10(%rdi)",
+                "movq $0x0, 0x18(%rdi)",
+                "retq "
+              ],
+              "last": [
+                "movq %rdi, %rax",
+                "movl $0x0, (%rdi)",
+                "movq $0x0, 0x8(%rdi)",
+                "movl $0x4, 0x10(%rdi)",
+                "movq $0x0, 0x18(%rdi)",
+                "retq "
+              ]
+            }
+          ]
+        }
+      ],
+      "after": [
+        {
+          "source": "loom/src/worker.cpp",
+          "object_sha256": "5b3999ad7e120c4becdf40df064d76ee2ad58b9c68f0b2f3da62df09e28f64a3",
+          "ir_signatures": [],
+          "functions": [
+            {
+              "name": "loom::poll(loom::Worker&, loom::PollBudget)",
+              "bytes": 796,
+              "instructions": 183,
+              "calls": [
+                "callq 0xb99 <loom::poll(loom::Worker&, loom::PollBudget)+0x19> [relocation: 0000000000000b95:  R_X86_64_PLT32\torbital::worker::on_lane(orbital::worker::Lane const&)-0x4]",
+                "callq 0xbc2 <loom::poll(loom::Worker&, loom::PollBudget)+0x42> [relocation: 0000000000000bbe:  R_X86_64_PLT32\torbital::worker::pending(orbital::worker::Lane const&)-0x4]",
+                "callq 0xbd1 <loom::poll(loom::Worker&, loom::PollBudget)+0x51> [relocation: 0000000000000bcd:  R_X86_64_PLT32\torbital::worker::poll(orbital::worker::Lane&, unsigned long)-0x4]",
+                "callq 0xc0b <loom::poll(loom::Worker&, loom::PollBudget)+0x8b> [relocation: 0000000000000c07:  R_X86_64_PLT32\torbital::worker::poll(orbital::worker::Lane&, unsigned long)-0x4]",
+                "callq *0x10(%rbp)",
+                "callq 0xd66 <loom::poll(loom::Worker&, loom::PollBudget)+0x1e6> [relocation: 0000000000000d62:  R_X86_64_PLT32\torbital::pulse(orbital::Signal&)-0x4]",
+                "callq 0xd7d <loom::poll(loom::Worker&, loom::PollBudget)+0x1fd> [relocation: 0000000000000d79:  R_X86_64_PLT32\torbital::worker::pending(orbital::worker::Lane const&)-0x4]",
+                "callq 0xe5e <loom::poll(loom::Worker&, loom::PollBudget)+0x2de> [relocation: 0000000000000e5a:  R_X86_64_PLT32\t__assert_fail-0x4]",
+                "callq 0xe7d <loom::poll(loom::Worker&, loom::PollBudget)+0x2fd> [relocation: 0000000000000e79:  R_X86_64_PLT32\t__assert_fail-0x4]",
+                "callq 0xe9c <loom::poll(loom::Worker&, loom::PollBudget)+0x31c> [relocation: 0000000000000e98:  R_X86_64_PLT32\t__assert_fail-0x4]"
+              ],
+              "stack_instructions": [
+                "pushq %rbp",
+                "pushq %r15",
+                "pushq %r14",
+                "pushq %r13",
+                "pushq %r12",
+                "pushq %rbx",
+                "pushq %rax",
+                "addq $0x8, %rsp",
+                "popq %rbx",
+                "popq %r12",
+                "popq %r13",
+                "popq %r14",
+                "popq %r15",
+                "popq %rbp"
+              ],
+              "first": [
+                "pushq %rbp",
+                "pushq %r15",
+                "pushq %r14",
+                "pushq %r13",
+                "pushq %r12",
+                "pushq %rbx",
+                "pushq %rax",
+                "movq %rdx, %r14",
+                "movq %rsi, %r15",
+                "movq %rdi, %rbx",
+                "callq 0xb99 <loom::poll(loom::Worker&, loom::PollBudget)+0x19> [relocation: 0000000000000b95:  R_X86_64_PLT32\torbital::worker::on_lane(orbital::worker::Lane const&)-0x4]",
+                "testb %al, %al"
+              ],
+              "last": [
+                "leaq (%rip), %rsi            # 0xe6c <loom::poll(loom::Worker&, loom::PollBudget)+0x2ec> [relocation: 0000000000000e68:  R_X86_64_PC32\t.L.str.1-0x4]",
+                "leaq (%rip), %rcx            # 0xe73 <loom::poll(loom::Worker&, loom::PollBudget)+0x2f3> [relocation: 0000000000000e6f:  R_X86_64_PC32\t.L__PRETTY_FUNCTION__._ZN4loom12_GLOBAL__N_15queueERNS_6WorkerERNS_4TaskE-0x4]",
+                "movl $0xe, %edx",
+                "callq 0xe7d <loom::poll(loom::Worker&, loom::PollBudget)+0x2fd> [relocation: 0000000000000e79:  R_X86_64_PLT32\t__assert_fail-0x4]",
+                "leaq (%rip), %rdi            # 0xe84 <loom::poll(loom::Worker&, loom::PollBudget)+0x304> [relocation: 0000000000000e80:  R_X86_64_PC32\t.L.str.9-0x4]",
+                "leaq (%rip), %rsi            # 0xe8b <loom::poll(loom::Worker&, loom::PollBudget)+0x30b> [relocation: 0000000000000e87:  R_X86_64_PC32\t.L.str.1-0x4]",
+                "leaq (%rip), %rcx            # 0xe92 <loom::poll(loom::Worker&, loom::PollBudget)+0x312> [relocation: 0000000000000e8e:  R_X86_64_PC32\t.L__PRETTY_FUNCTION__._ZN4loom4pollERNS_6WorkerENS_10PollBudgetE-0x4]",
+                "movl $0xb3, %edx",
+                "callq 0xe9c <loom::poll(loom::Worker&, loom::PollBudget)+0x31c> [relocation: 0000000000000e98:  R_X86_64_PLT32\t__assert_fail-0x4]",
+                "nopl (%rax)"
+              ]
+            }
+          ]
+        },
+        {
+          "source": "done.cpp",
+          "object_sha256": "9196c82c324ed18a47ad0ddcf2d7b49f53c49adbdf3efcaec07a3befffcd3ed8",
+          "ir_signatures": [
+            "define hidden { ptr, i64 } @_ZN2cb11actual_doneERN4loom4TaskE(ptr noundef nonnull readnone align 8 captures(none) dereferenceable(72) %0) local_unnamed_addr #0 {"
+          ],
+          "functions": [
+            {
+              "name": "cb::actual_done(loom::Task&)",
+              "bytes": 13,
+              "instructions": 3,
+              "calls": [],
+              "stack_instructions": [],
+              "first": [
+                "movabsq $0x400000000, %rdx      # imm = 0x400000000",
+                "xorl %eax, %eax",
+                "retq "
+              ],
+              "last": [
+                "movabsq $0x400000000, %rdx      # imm = 0x400000000",
+                "xorl %eax, %eax",
+                "retq "
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "limits": [
+    "Static separate-TU codegen only; no scheduler speed or stall measurement.",
+    "Both arms use the same captured Worker/hint headers; only types.h and worker.cpp differ.",
+    "before worker.cpp is Architecture pre-Progress integration snapshot; full source diff retained.",
+    "No timings or PMU stall measurements; sizes are static observations.",
+    "Private factory/accessor boundary checks are not scheduler lifecycle qualification.",
+    "worker.cpp also differs in configure-time discovery; only poll, inlined park and done are compared."
+  ],
+  "stack_accounting": {
+    "v2": {
+      "before": 128,
+      "after": 96,
+      "includes": "all explicit frame storage"
+    },
+    "zen5-avx2/full": {
+      "before": 88,
+      "after": 56,
+      "includes": "six preserved-register pushes plus 40/8-byte reservation; excludes entry return address"
+    }
+  },
+  "compatibility_capture": {
+    "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008.capture.json",
+    "sha256": "a8fc1ac3ef0d4eefccb704cb616c4bca4c156d364ecab205aedbd7facf997f16",
+    "source_digest": "72103e45427215eea522137dc90d6d94bc98b58baf15b80bc35b0313765add86"
+  },
+  "compatibility_checks": {
+    "native": {
+      "binary": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/call-boundaries-20261008/progress16-native/workbench/spikes/call-boundaries/call_boundary_probe",
+      "binary_sha256": "b5cf4f7845e9b72f655f4b479c01931b49e00ea4caa8a0565f3cd4c7ce0a6545",
+      "stdout": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/call-boundaries-20261008/progress16-native-check.jsonl",
+      "stdout_sha256": "7f9a85c1939c3b475188b723b27e2091ce3301cf2bb68b21e89bf08fdc3f8159",
+      "checks": [
+        {
+          "checks": "returns-refusal-ownership",
+          "passed": true,
+          "inputs": 4096
+        },
+        {
+          "checks": "real-ikea-ring",
+          "passed": true,
+          "cases": 8
+        }
+      ],
+      "progress_layouts": {
+        "HistoricalProgress32": 32,
+        "Progress-current-runtime": 16,
+        "CompactProgress": 16
+      },
+      "compile_commands_sha256": "b50f657c53d61d4bcbfa9bdf886b4cfdaa027ac36706536fd1215565f9e6302e",
+      "probe_compile_commands": [
+        {
+          "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/call-boundaries-20261008/progress16-native",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/loom/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/orbital/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008=. -ffunction-sections -fdata-sections -mtune=generic -o workbench/spikes/call-boundaries/CMakeFiles/call_boundary_probe.dir/returns.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/workbench/spikes/call-boundaries/returns.cpp",
+          "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/workbench/spikes/call-boundaries/returns.cpp",
+          "output": "workbench/spikes/call-boundaries/CMakeFiles/call_boundary_probe.dir/returns.cpp.o"
+        },
+        {
+          "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/call-boundaries-20261008/progress16-native",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/loom/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/orbital/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008=. -ffunction-sections -fdata-sections -mtune=generic -o workbench/spikes/call-boundaries/CMakeFiles/call_boundary_probe.dir/callers.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/workbench/spikes/call-boundaries/callers.cpp",
+          "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/workbench/spikes/call-boundaries/callers.cpp",
+          "output": "workbench/spikes/call-boundaries/CMakeFiles/call_boundary_probe.dir/callers.cpp.o"
+        },
+        {
+          "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/call-boundaries-20261008/progress16-native",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/loom/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/orbital/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008=. -ffunction-sections -fdata-sections -mtune=generic -o workbench/spikes/call-boundaries/CMakeFiles/call_boundary_probe.dir/driver.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/workbench/spikes/call-boundaries/driver.cpp",
+          "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/workbench/spikes/call-boundaries/driver.cpp",
+          "output": "workbench/spikes/call-boundaries/CMakeFiles/call_boundary_probe.dir/driver.cpp.o"
+        },
+        {
+          "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/call-boundaries-20261008/progress16-native",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/loom/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/orbital/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008=. -ffunction-sections -fdata-sections -mtune=generic -o workbench/spikes/call-boundaries/CMakeFiles/call_boundary_probe.dir/ring.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/workbench/spikes/call-boundaries/ring.cpp",
+          "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/workbench/spikes/call-boundaries/ring.cpp",
+          "output": "workbench/spikes/call-boundaries/CMakeFiles/call_boundary_probe.dir/ring.cpp.o"
+        }
+      ]
+    },
+    "sanitize": {
+      "binary": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/call-boundaries-20261008/progress16-sanitize/workbench/spikes/call-boundaries/call_boundary_probe",
+      "binary_sha256": "7338b2465ca2b38e63011f9b8f87175c1ed5936ba8de2c2bfff2792549d48717",
+      "stdout": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/call-boundaries-20261008/progress16-sanitize-check.jsonl",
+      "stdout_sha256": "7f9a85c1939c3b475188b723b27e2091ce3301cf2bb68b21e89bf08fdc3f8159",
+      "checks": [
+        {
+          "checks": "returns-refusal-ownership",
+          "passed": true,
+          "inputs": 4096
+        },
+        {
+          "checks": "real-ikea-ring",
+          "passed": true,
+          "cases": 8
+        }
+      ],
+      "progress_layouts": {
+        "HistoricalProgress32": 32,
+        "Progress-current-runtime": 16,
+        "CompactProgress": 16
+      },
+      "compile_commands_sha256": "849f63a394f96901a014cc9c446cc058026f76566bb3aa7c7fd3d95637b0a11c",
+      "probe_compile_commands": [
+        {
+          "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/call-boundaries-20261008/progress16-sanitize",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/loom/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/orbital/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/ikea/include -O1 -fsanitize=address,undefined -fsanitize-address-use-after-return=always -fno-omit-frame-pointer -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008=. -ffunction-sections -fdata-sections -mtune=generic -o workbench/spikes/call-boundaries/CMakeFiles/call_boundary_probe.dir/returns.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/workbench/spikes/call-boundaries/returns.cpp",
+          "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/workbench/spikes/call-boundaries/returns.cpp",
+          "output": "workbench/spikes/call-boundaries/CMakeFiles/call_boundary_probe.dir/returns.cpp.o"
+        },
+        {
+          "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/call-boundaries-20261008/progress16-sanitize",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/loom/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/orbital/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/ikea/include -O1 -fsanitize=address,undefined -fsanitize-address-use-after-return=always -fno-omit-frame-pointer -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008=. -ffunction-sections -fdata-sections -mtune=generic -o workbench/spikes/call-boundaries/CMakeFiles/call_boundary_probe.dir/callers.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/workbench/spikes/call-boundaries/callers.cpp",
+          "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/workbench/spikes/call-boundaries/callers.cpp",
+          "output": "workbench/spikes/call-boundaries/CMakeFiles/call_boundary_probe.dir/callers.cpp.o"
+        },
+        {
+          "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/call-boundaries-20261008/progress16-sanitize",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/loom/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/orbital/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/ikea/include -O1 -fsanitize=address,undefined -fsanitize-address-use-after-return=always -fno-omit-frame-pointer -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008=. -ffunction-sections -fdata-sections -mtune=generic -o workbench/spikes/call-boundaries/CMakeFiles/call_boundary_probe.dir/driver.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/workbench/spikes/call-boundaries/driver.cpp",
+          "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/workbench/spikes/call-boundaries/driver.cpp",
+          "output": "workbench/spikes/call-boundaries/CMakeFiles/call_boundary_probe.dir/driver.cpp.o"
+        },
+        {
+          "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/call-boundaries-20261008/progress16-sanitize",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/loom/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/orbital/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/ikea/include -O1 -fsanitize=address,undefined -fsanitize-address-use-after-return=always -fno-omit-frame-pointer -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008=. -ffunction-sections -fdata-sections -mtune=generic -o workbench/spikes/call-boundaries/CMakeFiles/call_boundary_probe.dir/ring.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/workbench/spikes/call-boundaries/ring.cpp",
+          "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/call-boundaries-progress16-20261008/workbench/spikes/call-boundaries/ring.cpp",
+          "output": "workbench/spikes/call-boundaries/CMakeFiles/call_boundary_probe.dir/ring.cpp.o"
+        }
+      ]
+    }
+  }
+}

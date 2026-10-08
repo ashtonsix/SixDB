@@ -1,0 +1,1270 @@
+{
+  "source_captures": [
+    "build/captures/call-boundaries-20261008",
+    "build/captures/call-boundaries-20261008-v2"
+  ],
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "headers": {
+    "native": "libstdc++13.4.0-4ubuntu1 arm64",
+    "x86_cross": "libstdc++15.2.0-4ubuntu4cross1"
+  },
+  "qualification": "Static separate-TU V2/Zen5/Zen5-AVX2 code; native VM and sanitizer behavior checks; local boundary timing only.",
+  "targets": {
+    "v2": [
+      {
+        "function": "cb::finish",
+        "bytes": 20,
+        "stack_sites": 0,
+        "calls": []
+      },
+      {
+        "function": "cb::finish_native",
+        "bytes": 20,
+        "stack_sites": 0,
+        "calls": []
+      },
+      {
+        "function": "cb::use_expected",
+        "bytes": 76,
+        "stack_sites": 11,
+        "calls": [
+          "bl 0x50 <cb::use_expected(unsigned long)+0x10> [relocation: 0000000000000050:  R_AARCH64_CALL26\tcb::expected_triple(unsigned long)]"
+        ]
+      },
+      {
+        "function": "cb::use_output",
+        "bytes": 68,
+        "stack_sites": 10,
+        "calls": [
+          "bl 0xa0 <cb::use_output(unsigned long)+0x10> [relocation: 00000000000000a0:  R_AARCH64_CALL26\tcb::output(unsigned long, cb::Triple&)]"
+        ]
+      },
+      {
+        "function": "cb::use_callback",
+        "bytes": 16,
+        "stack_sites": 0,
+        "calls": []
+      },
+      {
+        "function": "cb::use_native_callback",
+        "bytes": 108,
+        "stack_sites": 21,
+        "calls": [
+          "bl 0x12c <cb::use_native_callback(unsigned long)+0x3c> [relocation: 000000000000012c:  R_AARCH64_CALL26\tcb::native_callback(unsigned long, void*, unsigned long (*)(void*, unsigned long, unsigned long, unsigned long, unsigned int))]"
+        ]
+      },
+      {
+        "function": "cb::use_reg_expected",
+        "bytes": 76,
+        "stack_sites": 11,
+        "calls": [
+          "bl 0x170 <cb::use_reg_expected(unsigned long)+0x10> [relocation: 0000000000000170:  R_AARCH64_CALL26\tcb::reg_expected(unsigned long)]"
+        ]
+      },
+      {
+        "function": "cb::use_inline",
+        "bytes": 44,
+        "stack_sites": 0,
+        "calls": []
+      },
+      {
+        "function": "cb::live_default",
+        "bytes": 84,
+        "stack_sites": 9,
+        "calls": [
+          "bl 0x208 <cb::live_default(unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x28> [relocation: 0000000000000208:  R_AARCH64_CALL26\tcb::leaf(unsigned long)]"
+        ]
+      },
+      {
+        "function": "cb::live_none",
+        "bytes": 148,
+        "stack_sites": 29,
+        "calls": [
+          "bl 0x280 <cb::live_none(unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x40> [relocation: 0000000000000280:  R_AARCH64_CALL26\tcb::leaf_none(unsigned long)]"
+        ]
+      },
+      {
+        "function": "cb::live_most",
+        "bytes": 60,
+        "stack_sites": 3,
+        "calls": [
+          "bl 0x2fc <cb::live_most(unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x1c> [relocation: 00000000000002fc:  R_AARCH64_CALL26\tcb::leaf_most(unsigned long)]"
+        ]
+      },
+      {
+        "function": "cb::allocation_forward",
+        "bytes": 136,
+        "stack_sites": 10,
+        "calls": [
+          "bl 0x33c <cb::allocation_forward(loom::Worker&, orbital::allocation::AllocationRequest const&)+0x1c> [relocation: 000000000000033c:  R_AARCH64_CALL26\torbital::worker::on_lane(orbital::worker::Lane const&)]",
+          "bl 0x3a4 <cb::allocation_forward(loom::Worker&, orbital::allocation::AllocationRequest const&)+0x84> [relocation: 00000000000003a4:  R_AARCH64_CALL26\t__assert_fail]"
+        ]
+      },
+      {
+        "function": "cb::hold_consumer",
+        "bytes": 100,
+        "stack_sites": 15,
+        "calls": [
+          "bl 0x3c4 <cb::hold_consumer(orbital::allocation::Allocation const&, orbital::ByteRange)+0x14> [relocation: 00000000000003c4:  R_AARCH64_CALL26\torbital::allocation::hold(orbital::allocation::Allocation const&, orbital::ByteRange)]",
+          "bl 0x3e4 <cb::hold_consumer(orbital::allocation::Allocation const&, orbital::ByteRange)+0x34> [relocation: 00000000000003e4:  R_AARCH64_CALL26\torbital::allocation::Hold::~Hold()]"
+        ]
+      },
+      {
+        "function": "cb::task_step",
+        "bytes": 24,
+        "stack_sites": 0,
+        "calls": []
+      },
+      {
+        "function": "cb::stats",
+        "bytes": 4,
+        "stack_sites": 0,
+        "calls": []
+      },
+      {
+        "function": "cb::task_service",
+        "bytes": 12,
+        "stack_sites": 0,
+        "calls": []
+      },
+      {
+        "function": "cb::use_progress_result",
+        "bytes": 96,
+        "stack_sites": 14,
+        "calls": [
+          "bl 0x470 <cb::use_progress_result(unsigned long, orbital::Signal&)+0x10> [relocation: 0000000000000470:  R_AARCH64_CALL26\tcb::progress_result(unsigned long, orbital::Signal&)]"
+        ]
+      },
+      {
+        "function": "cb::use_progress_output",
+        "bytes": 88,
+        "stack_sites": 12,
+        "calls": [
+          "bl 0x4d0 <cb::use_progress_output(unsigned long, orbital::Signal&)+0x10> [relocation: 00000000000004d0:  R_AARCH64_CALL26\tcb::progress_output(unsigned long, orbital::Signal&, cb::WaitDetail&)]"
+        ]
+      },
+      {
+        "function": "cb::use_progress_compact",
+        "bytes": 48,
+        "stack_sites": 3,
+        "calls": [
+          "bl 0x528 <cb::use_progress_compact(unsigned long, orbital::Signal&)+0x8> [relocation: 0000000000000528:  R_AARCH64_CALL26\tcb::progress_compact(unsigned long, orbital::Signal&)]"
+        ]
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 0
+        },
+        "role": "enqueue",
+        "bytes": 252,
+        "stack_sites": 0,
+        "calls": 0,
+        "first_stack": []
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 0
+        },
+        "role": "spin_live",
+        "bytes": 180,
+        "stack_sites": 5,
+        "calls": 3,
+        "first_stack": [
+          "stp x29, x30, [sp, #-0x20]!",
+          "str x19, [sp, #0x10]",
+          "mov x29, sp",
+          "ldr x19, [sp, #0x10]"
+        ]
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 0
+        },
+        "role": "callback",
+        "bytes": 1696,
+        "stack_sites": 0,
+        "calls": 0,
+        "first_stack": []
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 0
+        },
+        "role": "retire_yield",
+        "bytes": 360,
+        "stack_sites": 4,
+        "calls": 1,
+        "first_stack": [
+          "stp x29, x30, [sp, #-0x10]!",
+          "mov x29, sp",
+          "ldp x29, x30, [sp], #0x10",
+          "ldp x29, x30, [sp], #0x10"
+        ]
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 0
+        },
+        "role": "enter",
+        "bytes": 160,
+        "stack_sites": 21,
+        "calls": 2,
+        "first_stack": [
+          "stp d15, d14, [sp, #-0xa0]!",
+          "stp d13, d12, [sp, #0x10]",
+          "stp d11, d10, [sp, #0x20]",
+          "stp d9, d8, [sp, #0x30]"
+        ]
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 8
+        },
+        "role": "enqueue",
+        "bytes": 296,
+        "stack_sites": 0,
+        "calls": 0,
+        "first_stack": []
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 8
+        },
+        "role": "spin_live",
+        "bytes": 180,
+        "stack_sites": 5,
+        "calls": 3,
+        "first_stack": [
+          "stp x29, x30, [sp, #-0x20]!",
+          "str x19, [sp, #0x10]",
+          "mov x29, sp",
+          "ldr x19, [sp, #0x10]"
+        ]
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 8
+        },
+        "role": "callback",
+        "bytes": 1676,
+        "stack_sites": 0,
+        "calls": 0,
+        "first_stack": []
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 8
+        },
+        "role": "yield",
+        "bytes": 136,
+        "stack_sites": 0,
+        "calls": 0,
+        "first_stack": []
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 8
+        },
+        "role": "retire_yield",
+        "bytes": 376,
+        "stack_sites": 4,
+        "calls": 1,
+        "first_stack": [
+          "stp x29, x30, [sp, #-0x10]!",
+          "mov x29, sp",
+          "ldp x29, x30, [sp], #0x10",
+          "ldp x29, x30, [sp], #0x10"
+        ]
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 8
+        },
+        "role": "enter",
+        "bytes": 180,
+        "stack_sites": 21,
+        "calls": 2,
+        "first_stack": [
+          "stp d15, d14, [sp, #-0xa0]!",
+          "stp d13, d12, [sp, #0x10]",
+          "stp d11, d10, [sp, #0x20]",
+          "stp d9, d8, [sp, #0x30]"
+        ]
+      },
+      {
+        "family": {
+          "packets": 2,
+          "metadata": 0
+        },
+        "role": "enqueue",
+        "bytes": 260,
+        "stack_sites": 0,
+        "calls": 0,
+        "first_stack": []
+      },
+      {
+        "family": {
+          "packets": 2,
+          "metadata": 0
+        },
+        "role": "spin_live",
+        "bytes": 180,
+        "stack_sites": 5,
+        "calls": 3,
+        "first_stack": [
+          "stp x29, x30, [sp, #-0x20]!",
+          "str x19, [sp, #0x10]",
+          "mov x29, sp",
+          "ldr x19, [sp, #0x10]"
+        ]
+      },
+      {
+        "family": {
+          "packets": 2,
+          "metadata": 0
+        },
+        "role": "callback",
+        "bytes": 1752,
+        "stack_sites": 0,
+        "calls": 0,
+        "first_stack": []
+      },
+      {
+        "family": {
+          "packets": 2,
+          "metadata": 0
+        },
+        "role": "retire_yield",
+        "bytes": 368,
+        "stack_sites": 4,
+        "calls": 1,
+        "first_stack": [
+          "stp x29, x30, [sp, #-0x10]!",
+          "mov x29, sp",
+          "ldp x29, x30, [sp], #0x10",
+          "ldp x29, x30, [sp], #0x10"
+        ]
+      },
+      {
+        "family": {
+          "packets": 2,
+          "metadata": 0
+        },
+        "role": "enter",
+        "bytes": 168,
+        "stack_sites": 21,
+        "calls": 2,
+        "first_stack": [
+          "stp d15, d14, [sp, #-0xa0]!",
+          "stp d13, d12, [sp, #0x10]",
+          "stp d11, d10, [sp, #0x20]",
+          "stp d9, d8, [sp, #0x30]"
+        ]
+      },
+      {
+        "family": {
+          "packets": 3,
+          "metadata": 0
+        },
+        "role": "enqueue",
+        "bytes": 268,
+        "stack_sites": 0,
+        "calls": 0,
+        "first_stack": []
+      },
+      {
+        "family": {
+          "packets": 3,
+          "metadata": 0
+        },
+        "role": "spin_live",
+        "bytes": 180,
+        "stack_sites": 5,
+        "calls": 3,
+        "first_stack": [
+          "stp x29, x30, [sp, #-0x20]!",
+          "str x19, [sp, #0x10]",
+          "mov x29, sp",
+          "ldr x19, [sp, #0x10]"
+        ]
+      },
+      {
+        "family": {
+          "packets": 3,
+          "metadata": 0
+        },
+        "role": "callback",
+        "bytes": 2148,
+        "stack_sites": 48,
+        "calls": 0,
+        "first_stack": [
+          "sub sp, sp, #0xc0",
+          "str x30, [sp, #0xb0]",
+          "ldp q8, q9, [sp, #0xe0]",
+          "stp q8, q9, [sp, #0x20]"
+        ]
+      },
+      {
+        "family": {
+          "packets": 3,
+          "metadata": 0
+        },
+        "role": "retire_yield",
+        "bytes": 384,
+        "stack_sites": 6,
+        "calls": 1,
+        "first_stack": [
+          "stp x29, x30, [sp, #-0x10]!",
+          "mov x29, sp",
+          "ldp x29, x30, [sp], #0x10",
+          "stp q10, q11, [x29, #0x30]"
+        ]
+      },
+      {
+        "family": {
+          "packets": 3,
+          "metadata": 0
+        },
+        "role": "enter",
+        "bytes": 192,
+        "stack_sites": 25,
+        "calls": 2,
+        "first_stack": [
+          "sub sp, sp, #0xe0",
+          "stp d15, d14, [sp, #0x40]",
+          "stp d13, d12, [sp, #0x50]",
+          "stp d11, d10, [sp, #0x60]"
+        ]
+      }
+    ],
+    "zen5-avx2": [
+      {
+        "function": "cb::finish",
+        "bytes": 16,
+        "stack_sites": 0,
+        "calls": []
+      },
+      {
+        "function": "cb::finish_native",
+        "bytes": 17,
+        "stack_sites": 0,
+        "calls": []
+      },
+      {
+        "function": "cb::use_expected",
+        "bytes": 51,
+        "stack_sites": 8,
+        "calls": [
+          "callq 0x41 <cb::use_expected(unsigned long)+0x11> [relocation: 000000000000003d:  R_X86_64_PLT32\tcb::expected_triple(unsigned long)-0x4]"
+        ]
+      },
+      {
+        "function": "cb::use_output",
+        "bytes": 42,
+        "stack_sites": 7,
+        "calls": [
+          "callq 0x7c <cb::use_output(unsigned long)+0xc> [relocation: 0000000000000078:  R_X86_64_PLT32\tcb::output(unsigned long, cb::Triple&)-0x4]"
+        ]
+      },
+      {
+        "function": "cb::use_callback",
+        "bytes": 14,
+        "stack_sites": 0,
+        "calls": []
+      },
+      {
+        "function": "cb::use_native_callback",
+        "bytes": 37,
+        "stack_sites": 10,
+        "calls": [
+          "callq 0xcb <cb::use_native_callback(unsigned long)+0x1b> [relocation: 00000000000000c7:  R_X86_64_PLT32\tcb::native_callback(unsigned long, void*, unsigned long (*)(void*, unsigned long, unsigned long, unsigned long, unsigned int))-0x4]"
+        ]
+      },
+      {
+        "function": "cb::use_reg_expected",
+        "bytes": 52,
+        "stack_sites": 8,
+        "calls": [
+          "callq *(%rip)                 # 0xf2 <cb::use_reg_expected(unsigned long)+0x12> [relocation: 00000000000000ee:  R_X86_64_GOTPCRELX\tcb::__regcall3__reg_expected(unsigned long)-0x4]"
+        ]
+      },
+      {
+        "function": "cb::use_inline",
+        "bytes": 35,
+        "stack_sites": 0,
+        "calls": []
+      },
+      {
+        "function": "cb::live_default",
+        "bytes": 54,
+        "stack_sites": 10,
+        "calls": [
+          "callq 0x16d <cb::live_default(unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x1d> [relocation: 0000000000000169:  R_X86_64_PLT32\tcb::leaf(unsigned long)-0x4]"
+        ]
+      },
+      {
+        "function": "cb::live_none",
+        "bytes": 86,
+        "stack_sites": 22,
+        "calls": [
+          "callq 0x1bd <cb::live_none(unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x2d> [relocation: 00000000000001b9:  R_X86_64_PLT32\tcb::leaf_none(unsigned long)-0x4]"
+        ]
+      },
+      {
+        "function": "cb::live_most",
+        "bytes": 23,
+        "stack_sites": 2,
+        "calls": [
+          "callq 0x1f6 <cb::live_most(unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x6> [relocation: 00000000000001f2:  R_X86_64_PLT32\tcb::leaf_most(unsigned long)-0x4]"
+        ]
+      },
+      {
+        "function": "cb::allocation_forward",
+        "bytes": 109,
+        "stack_sites": 6,
+        "calls": [
+          "callq 0x226 <cb::allocation_forward(loom::Worker&, orbital::allocation::AllocationRequest const&)+0x16> [relocation: 0000000000000222:  R_X86_64_PLT32\torbital::worker::on_lane(orbital::worker::Lane const&)-0x4]",
+          "callq 0x249 <cb::allocation_forward(loom::Worker&, orbital::allocation::AllocationRequest const&)+0x39> [relocation: 0000000000000245:  R_X86_64_PLT32\torbital::allocation::allocate(orbital::allocation::Pool&, orbital::allocation::AllocationRequest const&, orbital::allocation::Temperature, int)-0x4]",
+          "callq 0x27d <cb::allocation_forward(loom::Worker&, orbital::allocation::AllocationRequest const&)+0x6d> [relocation: 0000000000000279:  R_X86_64_PLT32\t__assert_fail-0x4]"
+        ]
+      },
+      {
+        "function": "cb::hold_consumer",
+        "bytes": 71,
+        "stack_sites": 11,
+        "calls": [
+          "callq 0x298 <cb::hold_consumer(orbital::allocation::Allocation const&, orbital::ByteRange)+0x18> [relocation: 0000000000000294:  R_X86_64_PLT32\torbital::allocation::hold(orbital::allocation::Allocation const&, orbital::ByteRange)-0x4]",
+          "callq 0x2b3 <cb::hold_consumer(orbital::allocation::Allocation const&, orbital::ByteRange)+0x33> [relocation: 00000000000002af:  R_X86_64_PLT32\torbital::allocation::Hold::~Hold()-0x4]"
+        ]
+      },
+      {
+        "function": "cb::task_step",
+        "bytes": 33,
+        "stack_sites": 0,
+        "calls": []
+      },
+      {
+        "function": "cb::stats",
+        "bytes": 14,
+        "stack_sites": 2,
+        "calls": [
+          "callq 0x309 <cb::stats(orbital::allocation::Pool const&)+0x9> [relocation: 0000000000000305:  R_X86_64_PLT32\torbital::allocation::statistics(orbital::allocation::Pool const&)-0x4]"
+        ]
+      },
+      {
+        "function": "cb::task_service",
+        "bytes": 12,
+        "stack_sites": 0,
+        "calls": []
+      },
+      {
+        "function": "cb::use_progress_result",
+        "bytes": 61,
+        "stack_sites": 8,
+        "calls": [
+          "callq 0x334 <cb::use_progress_result(unsigned long, orbital::Signal&)+0x14> [relocation: 0000000000000330:  R_X86_64_PLT32\tcb::progress_result(unsigned long, orbital::Signal&)-0x4]"
+        ]
+      },
+      {
+        "function": "cb::use_progress_output",
+        "bytes": 53,
+        "stack_sites": 8,
+        "calls": [
+          "callq 0x36c <cb::use_progress_output(unsigned long, orbital::Signal&)+0xc> [relocation: 0000000000000368:  R_X86_64_PLT32\tcb::progress_output(unsigned long, orbital::Signal&, cb::WaitDetail&)-0x4]"
+        ]
+      },
+      {
+        "function": "cb::use_progress_compact",
+        "bytes": 45,
+        "stack_sites": 3,
+        "calls": [
+          "callq 0x3a6 <cb::use_progress_compact(unsigned long, orbital::Signal&)+0x6> [relocation: 00000000000003a2:  R_X86_64_PLT32\tcb::progress_compact(unsigned long, orbital::Signal&)-0x4]"
+        ]
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 0
+        },
+        "role": "enqueue",
+        "bytes": 306,
+        "stack_sites": 0,
+        "calls": 0,
+        "first_stack": []
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 0
+        },
+        "role": "spin_live",
+        "bytes": 271,
+        "stack_sites": 14,
+        "calls": 4,
+        "first_stack": [
+          "pushq %rbp",
+          "pushq %r15",
+          "pushq %r14",
+          "pushq %r13"
+        ]
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 0
+        },
+        "role": "callback",
+        "bytes": 1746,
+        "stack_sites": 5,
+        "calls": 0,
+        "first_stack": [
+          "pushq %rbp",
+          "popq %rbp",
+          "popq %rbp",
+          "popq %rbp"
+        ]
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 0
+        },
+        "role": "retire_yield",
+        "bytes": 451,
+        "stack_sites": 3,
+        "calls": 1,
+        "first_stack": [
+          "pushq %rax",
+          "popq %rax",
+          "popq %rcx"
+        ]
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 4
+        },
+        "role": "enqueue",
+        "bytes": 329,
+        "stack_sites": 0,
+        "calls": 0,
+        "first_stack": []
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 4
+        },
+        "role": "spin_live",
+        "bytes": 303,
+        "stack_sites": 14,
+        "calls": 4,
+        "first_stack": [
+          "pushq %rbp",
+          "pushq %r15",
+          "pushq %r14",
+          "pushq %r13"
+        ]
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 4
+        },
+        "role": "callback",
+        "bytes": 1916,
+        "stack_sites": 33,
+        "calls": 0,
+        "first_stack": [
+          "pushq %rbp",
+          "movq %rdi, -0x38(%rsp)",
+          "movq %rdx, -0x28(%rsp)",
+          "movq %rcx, -0x30(%rsp)"
+        ]
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 4
+        },
+        "role": "yield",
+        "bytes": 198,
+        "stack_sites": 0,
+        "calls": 0,
+        "first_stack": []
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 4
+        },
+        "role": "retire_yield",
+        "bytes": 483,
+        "stack_sites": 3,
+        "calls": 1,
+        "first_stack": [
+          "pushq %rax",
+          "popq %rax",
+          "popq %r11"
+        ]
+      },
+      {
+        "family": {
+          "packets": 2,
+          "metadata": 0
+        },
+        "role": "enqueue",
+        "bytes": 331,
+        "stack_sites": 0,
+        "calls": 0,
+        "first_stack": []
+      },
+      {
+        "family": {
+          "packets": 2,
+          "metadata": 0
+        },
+        "role": "spin_live",
+        "bytes": 302,
+        "stack_sites": 14,
+        "calls": 4,
+        "first_stack": [
+          "pushq %rbp",
+          "pushq %r15",
+          "pushq %r14",
+          "pushq %r13"
+        ]
+      },
+      {
+        "family": {
+          "packets": 2,
+          "metadata": 0
+        },
+        "role": "callback",
+        "bytes": 1858,
+        "stack_sites": 4,
+        "calls": 0,
+        "first_stack": [
+          "pushq %rbp",
+          "popq %rbp",
+          "popq %rbp",
+          "popq %rbp"
+        ]
+      },
+      {
+        "family": {
+          "packets": 2,
+          "metadata": 0
+        },
+        "role": "retire_yield",
+        "bytes": 481,
+        "stack_sites": 3,
+        "calls": 1,
+        "first_stack": [
+          "pushq %rax",
+          "popq %rax",
+          "popq %rcx"
+        ]
+      },
+      {
+        "family": {
+          "packets": 3,
+          "metadata": 0
+        },
+        "role": "enqueue",
+        "bytes": 355,
+        "stack_sites": 0,
+        "calls": 0,
+        "first_stack": []
+      },
+      {
+        "family": {
+          "packets": 3,
+          "metadata": 0
+        },
+        "role": "spin_live",
+        "bytes": 320,
+        "stack_sites": 14,
+        "calls": 4,
+        "first_stack": [
+          "pushq %rbp",
+          "pushq %r15",
+          "pushq %r14",
+          "pushq %r13"
+        ]
+      },
+      {
+        "family": {
+          "packets": 3,
+          "metadata": 0
+        },
+        "role": "callback",
+        "bytes": 1690,
+        "stack_sites": 2,
+        "calls": 0,
+        "first_stack": [
+          "pushq %rbp",
+          "popq %rbp"
+        ]
+      },
+      {
+        "family": {
+          "packets": 3,
+          "metadata": 0
+        },
+        "role": "yield",
+        "bytes": 232,
+        "stack_sites": 0,
+        "calls": 0,
+        "first_stack": []
+      },
+      {
+        "family": {
+          "packets": 3,
+          "metadata": 0
+        },
+        "role": "retire_yield",
+        "bytes": 499,
+        "stack_sites": 3,
+        "calls": 1,
+        "first_stack": [
+          "pushq %rax",
+          "popq %rax",
+          "popq %rcx"
+        ]
+      }
+    ],
+    "zen5": [
+      {
+        "function": "cb::finish",
+        "bytes": 16,
+        "stack_sites": 0,
+        "calls": []
+      },
+      {
+        "function": "cb::finish_native",
+        "bytes": 17,
+        "stack_sites": 0,
+        "calls": []
+      },
+      {
+        "function": "cb::use_expected",
+        "bytes": 51,
+        "stack_sites": 8,
+        "calls": [
+          "callq 0x41 <cb::use_expected(unsigned long)+0x11> [relocation: 000000000000003d:  R_X86_64_PLT32\tcb::expected_triple(unsigned long)-0x4]"
+        ]
+      },
+      {
+        "function": "cb::use_output",
+        "bytes": 42,
+        "stack_sites": 7,
+        "calls": [
+          "callq 0x7c <cb::use_output(unsigned long)+0xc> [relocation: 0000000000000078:  R_X86_64_PLT32\tcb::output(unsigned long, cb::Triple&)-0x4]"
+        ]
+      },
+      {
+        "function": "cb::use_callback",
+        "bytes": 14,
+        "stack_sites": 0,
+        "calls": []
+      },
+      {
+        "function": "cb::use_native_callback",
+        "bytes": 37,
+        "stack_sites": 10,
+        "calls": [
+          "callq 0xcb <cb::use_native_callback(unsigned long)+0x1b> [relocation: 00000000000000c7:  R_X86_64_PLT32\tcb::native_callback(unsigned long, void*, unsigned long (*)(void*, unsigned long, unsigned long, unsigned long, unsigned int))-0x4]"
+        ]
+      },
+      {
+        "function": "cb::use_reg_expected",
+        "bytes": 52,
+        "stack_sites": 8,
+        "calls": [
+          "callq *(%rip)                 # 0xf2 <cb::use_reg_expected(unsigned long)+0x12> [relocation: 00000000000000ee:  R_X86_64_GOTPCRELX\tcb::__regcall3__reg_expected(unsigned long)-0x4]"
+        ]
+      },
+      {
+        "function": "cb::use_inline",
+        "bytes": 35,
+        "stack_sites": 0,
+        "calls": []
+      },
+      {
+        "function": "cb::live_default",
+        "bytes": 54,
+        "stack_sites": 10,
+        "calls": [
+          "callq 0x16d <cb::live_default(unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x1d> [relocation: 0000000000000169:  R_X86_64_PLT32\tcb::leaf(unsigned long)-0x4]"
+        ]
+      },
+      {
+        "function": "cb::live_none",
+        "bytes": 86,
+        "stack_sites": 22,
+        "calls": [
+          "callq 0x1bd <cb::live_none(unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x2d> [relocation: 00000000000001b9:  R_X86_64_PLT32\tcb::leaf_none(unsigned long)-0x4]"
+        ]
+      },
+      {
+        "function": "cb::live_most",
+        "bytes": 23,
+        "stack_sites": 2,
+        "calls": [
+          "callq 0x1f6 <cb::live_most(unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)+0x6> [relocation: 00000000000001f2:  R_X86_64_PLT32\tcb::leaf_most(unsigned long)-0x4]"
+        ]
+      },
+      {
+        "function": "cb::allocation_forward",
+        "bytes": 109,
+        "stack_sites": 6,
+        "calls": [
+          "callq 0x226 <cb::allocation_forward(loom::Worker&, orbital::allocation::AllocationRequest const&)+0x16> [relocation: 0000000000000222:  R_X86_64_PLT32\torbital::worker::on_lane(orbital::worker::Lane const&)-0x4]",
+          "callq 0x249 <cb::allocation_forward(loom::Worker&, orbital::allocation::AllocationRequest const&)+0x39> [relocation: 0000000000000245:  R_X86_64_PLT32\torbital::allocation::allocate(orbital::allocation::Pool&, orbital::allocation::AllocationRequest const&, orbital::allocation::Temperature, int)-0x4]",
+          "callq 0x27d <cb::allocation_forward(loom::Worker&, orbital::allocation::AllocationRequest const&)+0x6d> [relocation: 0000000000000279:  R_X86_64_PLT32\t__assert_fail-0x4]"
+        ]
+      },
+      {
+        "function": "cb::hold_consumer",
+        "bytes": 71,
+        "stack_sites": 11,
+        "calls": [
+          "callq 0x298 <cb::hold_consumer(orbital::allocation::Allocation const&, orbital::ByteRange)+0x18> [relocation: 0000000000000294:  R_X86_64_PLT32\torbital::allocation::hold(orbital::allocation::Allocation const&, orbital::ByteRange)-0x4]",
+          "callq 0x2b3 <cb::hold_consumer(orbital::allocation::Allocation const&, orbital::ByteRange)+0x33> [relocation: 00000000000002af:  R_X86_64_PLT32\torbital::allocation::Hold::~Hold()-0x4]"
+        ]
+      },
+      {
+        "function": "cb::task_step",
+        "bytes": 33,
+        "stack_sites": 0,
+        "calls": []
+      },
+      {
+        "function": "cb::stats",
+        "bytes": 14,
+        "stack_sites": 2,
+        "calls": [
+          "callq 0x309 <cb::stats(orbital::allocation::Pool const&)+0x9> [relocation: 0000000000000305:  R_X86_64_PLT32\torbital::allocation::statistics(orbital::allocation::Pool const&)-0x4]"
+        ]
+      },
+      {
+        "function": "cb::task_service",
+        "bytes": 12,
+        "stack_sites": 0,
+        "calls": []
+      },
+      {
+        "function": "cb::use_progress_result",
+        "bytes": 61,
+        "stack_sites": 8,
+        "calls": [
+          "callq 0x334 <cb::use_progress_result(unsigned long, orbital::Signal&)+0x14> [relocation: 0000000000000330:  R_X86_64_PLT32\tcb::progress_result(unsigned long, orbital::Signal&)-0x4]"
+        ]
+      },
+      {
+        "function": "cb::use_progress_output",
+        "bytes": 53,
+        "stack_sites": 8,
+        "calls": [
+          "callq 0x36c <cb::use_progress_output(unsigned long, orbital::Signal&)+0xc> [relocation: 0000000000000368:  R_X86_64_PLT32\tcb::progress_output(unsigned long, orbital::Signal&, cb::WaitDetail&)-0x4]"
+        ]
+      },
+      {
+        "function": "cb::use_progress_compact",
+        "bytes": 45,
+        "stack_sites": 3,
+        "calls": [
+          "callq 0x3a6 <cb::use_progress_compact(unsigned long, orbital::Signal&)+0x6> [relocation: 00000000000003a2:  R_X86_64_PLT32\tcb::progress_compact(unsigned long, orbital::Signal&)-0x4]"
+        ]
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 0
+        },
+        "role": "enqueue",
+        "bytes": 308,
+        "stack_sites": 0,
+        "calls": 0,
+        "first_stack": []
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 0
+        },
+        "role": "spin_live",
+        "bytes": 282,
+        "stack_sites": 14,
+        "calls": 4,
+        "first_stack": [
+          "pushq %rbp",
+          "pushq %r15",
+          "pushq %r14",
+          "pushq %r13"
+        ]
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 0
+        },
+        "role": "callback",
+        "bytes": 1324,
+        "stack_sites": 5,
+        "calls": 0,
+        "first_stack": [
+          "pushq %rbp",
+          "popq %rbp",
+          "popq %rbp",
+          "popq %rbp"
+        ]
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 0
+        },
+        "role": "retire_yield",
+        "bytes": 458,
+        "stack_sites": 3,
+        "calls": 1,
+        "first_stack": [
+          "pushq %rax",
+          "popq %rax",
+          "popq %rcx"
+        ]
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 4
+        },
+        "role": "enqueue",
+        "bytes": 326,
+        "stack_sites": 0,
+        "calls": 0,
+        "first_stack": []
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 4
+        },
+        "role": "spin_live",
+        "bytes": 310,
+        "stack_sites": 14,
+        "calls": 4,
+        "first_stack": [
+          "pushq %rbp",
+          "pushq %r15",
+          "pushq %r14",
+          "pushq %r13"
+        ]
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 4
+        },
+        "role": "callback",
+        "bytes": 1588,
+        "stack_sites": 16,
+        "calls": 0,
+        "first_stack": [
+          "pushq %rbp",
+          "movq %rdx, -0x20(%rsp)",
+          "movq %rcx, -0x18(%rsp)",
+          "movq %r8, -0x10(%rsp)"
+        ]
+      },
+      {
+        "family": {
+          "packets": 1,
+          "metadata": 4
+        },
+        "role": "retire_yield",
+        "bytes": 490,
+        "stack_sites": 3,
+        "calls": 1,
+        "first_stack": [
+          "pushq %rax",
+          "popq %rax",
+          "popq %r11"
+        ]
+      },
+      {
+        "family": {
+          "packets": 2,
+          "metadata": 0
+        },
+        "role": "enqueue",
+        "bytes": 320,
+        "stack_sites": 0,
+        "calls": 0,
+        "first_stack": []
+      },
+      {
+        "family": {
+          "packets": 2,
+          "metadata": 0
+        },
+        "role": "spin_live",
+        "bytes": 289,
+        "stack_sites": 14,
+        "calls": 4,
+        "first_stack": [
+          "pushq %rbp",
+          "pushq %r15",
+          "pushq %r14",
+          "pushq %r13"
+        ]
+      },
+      {
+        "family": {
+          "packets": 2,
+          "metadata": 0
+        },
+        "role": "callback",
+        "bytes": 1357,
+        "stack_sites": 5,
+        "calls": 0,
+        "first_stack": [
+          "pushq %rbp",
+          "popq %rbp",
+          "popq %rbp",
+          "popq %rbp"
+        ]
+      },
+      {
+        "family": {
+          "packets": 2,
+          "metadata": 0
+        },
+        "role": "retire_yield",
+        "bytes": 468,
+        "stack_sites": 3,
+        "calls": 1,
+        "first_stack": [
+          "pushq %rax",
+          "popq %rax",
+          "popq %rcx"
+        ]
+      },
+      {
+        "family": {
+          "packets": 3,
+          "metadata": 0
+        },
+        "role": "enqueue",
+        "bytes": 328,
+        "stack_sites": 0,
+        "calls": 0,
+        "first_stack": []
+      },
+      {
+        "family": {
+          "packets": 3,
+          "metadata": 0
+        },
+        "role": "spin_live",
+        "bytes": 296,
+        "stack_sites": 14,
+        "calls": 4,
+        "first_stack": [
+          "pushq %rbp",
+          "pushq %r15",
+          "pushq %r14",
+          "pushq %r13"
+        ]
+      },
+      {
+        "family": {
+          "packets": 3,
+          "metadata": 0
+        },
+        "role": "callback",
+        "bytes": 1390,
+        "stack_sites": 5,
+        "calls": 0,
+        "first_stack": [
+          "pushq %rbp",
+          "popq %rbp",
+          "popq %rbp",
+          "popq %rbp"
+        ]
+      },
+      {
+        "family": {
+          "packets": 3,
+          "metadata": 0
+        },
+        "role": "retire_yield",
+        "bytes": 475,
+        "stack_sites": 3,
+        "calls": 1,
+        "first_stack": [
+          "pushq %rax",
+          "popq %rax",
+          "popq %rcx"
+        ]
+      }
+    ]
+  },
+  "negative_controls": [
+    {
+      "target": "zen5-avx2",
+      "returncode": 1,
+      "diagnostic": "error: <unknown>:0:0: ran out of registers during register allocation in function '_ZN4loom6detail10MemoryRingISt16integer_sequenceImJLm0ELm1ELm2ELm3ELm4ELm5ELm6ELm7ELm8ELm9ELm10ELm11ELm12ELm13EEEJPN2cb12_GLOBAL__N_16FamilyILj1ELj8ES2_ImJLm0ELm1ELm2ELm3ELm4ELm5ELm6ELm7EEES2_ImJLm0ELm1EEEE3JobEmmmmmmmmmmmDv4_xSC_EE5yieldEPSD_PNSD_4SlotESB_mmmmmmmmmmmSC_SC_'\nerror: <unknown>:0:0: ran out of registers during register allocation in function '_ZN4loom6detail10MemoryRingISt16integer_sequenceImJLm0ELm1ELm2ELm3ELm4ELm5ELm6ELm7ELm8ELm9ELm10ELm11ELm12ELm13EEEJPN2cb12_GLOBAL__N_16FamilyILj1ELj8ES2_ImJLm0ELm1ELm2ELm3ELm4ELm5ELm6ELm7EEES2_ImJLm0ELm1EEEE3JobEmmmmmmmmmmmDv4_xSC_EE12retire_yieldEPSD_PNSD_4SlotESB_mmmmmmmmmmmSC_SC_'\n2 errors generated.\n",
+      "retained_diagnostic": "build/call-boundaries-20261008/final-codegen/negative-controls/zen5-avx2-call-boundaries-ring-metadata8.log",
+      "sha256": "1aeeae20e6ea4173261f1f1cbf6eac0ffdf32874430e34ed0a02669cad15c38b"
+    },
+    {
+      "target": "zen5",
+      "returncode": 1,
+      "diagnostic": "error: <unknown>:0:0: ran out of registers during register allocation in function '_ZN4loom6detail10MemoryRingISt16integer_sequenceImJLm0ELm1ELm2ELm3ELm4ELm5ELm6ELm7ELm8ELm9ELm10ELm11ELm12EEEJPN2cb12_GLOBAL__N_16FamilyILj1ELj8ES2_ImJLm0ELm1ELm2ELm3ELm4ELm5ELm6ELm7EEES2_ImJLm0EEEE3JobEmmmmmmmmmmmDv8_xEE5yieldEPSD_PNSD_4SlotESB_mmmmmmmmmmmSC_'\nerror: <unknown>:0:0: ran out of registers during register allocation in function '_ZN4loom6detail10MemoryRingISt16integer_sequenceImJLm0ELm1ELm2ELm3ELm4ELm5ELm6ELm7ELm8ELm9ELm10ELm11ELm12EEEJPN2cb12_GLOBAL__N_16FamilyILj1ELj8ES2_ImJLm0ELm1ELm2ELm3ELm4ELm5ELm6ELm7EEES2_ImJLm0EEEE3JobEmmmmmmmmmmmDv8_xEE12retire_yieldEPSD_PNSD_4SlotESB_mmmmmmmmmmmSC_'\n2 errors generated.\n",
+      "retained_diagnostic": "build/call-boundaries-20261008/final-codegen/negative-controls/zen5-call-boundaries-ring-metadata8.log",
+      "sha256": "6da9541620c4e60a3f0b5be97b7996d8609ab3550b83c1868e0e006bd21f6651"
+    }
+  ],
+  "checks": [
+    {
+      "checks": "returns-refusal-ownership",
+      "passed": true,
+      "inputs": 4096
+    },
+    {
+      "checks": "real-ikea-ring",
+      "passed": true,
+      "cases": 8
+    }
+  ],
+  "sha256": {
+    "final-codegen/receipt.json": "70879951cc5cde7eb857f735d0c1eef6f795e54ee2f72f33dd4252f15fd6964c",
+    "codegen-v2/receipt.json": "4c6f14d9513dd17b074fe3a679edb920dc8b19e45723bc6295c1829de04326b6",
+    "local-paired-control.jsonl": "79bf6c02b24b096e07b5533e0fe7a41c913236c4e91ce532505dff6feca84d29",
+    "sanitize-check.jsonl": "d504c404882596dba630eaa062d60ef208be9163f3f2de61f8dbb19d6e5a7bbe",
+    "thin-lto-kept/receipt.json": "0b6fde8d95669dba0e3b0e80c096366e12abf0edbea40154b878f78c22e67045",
+    "thin-lto-kept/code.json": "1934fbbc705d86c45071347e82141b3c15fcd3f0644396327db6e8b1034042b5",
+    "ref-leaf-comparison.json": "d6ad06587bb6362933dae416f0f8cede4b2695b72180dc353dab76e197f5255d",
+    "stress-controls.json": "f2a131a7017f7e7260a07a2849b0add4bb185555113efc32e1d05d3fffcd91fe"
+  },
+  "coverage_limits": [
+    "Ring tests use Hint::none: active/overflow promotion and lifecycle are exercised, non-none admitted hints on promotion are not.",
+    "Compact Progress checks project active fields for one Signal, generations0..4095 and Error::capacity. Full64-bit preservation follows source/IR, not exhaustive protocol testing.",
+    "Callbacks compare synchronous trivial arithmetic/refusal; ownership checks separately qualify factories, not owning CPS or cancellation.",
+    "Historical stress artifact paths were overwritten by irrelevant loom/src/ring.cpp success; use uniquely retained failure diagnostics, not those objects."
+  ]
+}
