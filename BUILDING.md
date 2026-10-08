@@ -42,6 +42,11 @@ target. Build it with the release preset to produce a stripped executable in
 Packaging requires `llvm-objcopy-21` and `llvm-strip-21`. Project symbols are
 hidden by default; future shared-library APIs will need explicit exports.
 
+The first [Orbital runtime](orbital/README.md) implements allocation and worker
+support. `orbital_validate` and `loom_validate` build and run its ownership,
+reclamation and execution checks. Select `-DSIXDB_BENCHMARKS=orbital` for the
+[packed consumer and LMDB comparison](workbench/benchmarks/orbital/README.md).
+
 Build the `ikea_validate` target to build and run Ikea's behavior checks and
 examples. They are registered with CTest: `ctest --test-dir BUILD -N` lists them;
 after building, `ctest --test-dir BUILD -R NAME --output-on-failure` reruns a

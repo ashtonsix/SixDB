@@ -6,6 +6,9 @@ composition and caller costs. The [TuplePack suite](tuplepack/README.md) measure
 ordered code maps, mutation effects, native batching and pipeline boundaries.
 The [Bec256 suite](bec256/README.md) measures headless bitset reads, exact writes,
 analysis and native pair consumers.
+The [Orbital allocation consumer](orbital/README.md) replays ordered packed
+operations through Loom/Orbital against actual LMDB, with per-workload throughput
+and latency headroom.
 Individual candidate experiments and their findings
 stay with the [investigation](../spikes/README.md) that asks the question.
 
@@ -18,11 +21,15 @@ Select suites with `-DSIXDB_BENCHMARKS=seriespack` (semicolon-separated for seve
 or `python3 workbench/tools/dev.py --add-benchmark seriespack` for editor support.
 Only selected suites are configured; build the target needed for the comparison.
 
-Google Benchmark provides microbenchmark machinery. The usual convention
+Google Benchmark provides component microbenchmark machinery. Composed traces
+use a workload-owned driver when exact request/batch boundaries, independent
+state validation or allocation lifecycle matter; capture, affinity, recovery
+and evidence helpers remain shared. The usual convention
 is to pin CPUs and run cases/repetitions sequentially, without interleaving,
 so experiments can isolate performance across cache-residence and resident-set
 size tiers. The workload controls footprint and access pattern; those tiers
-need to be established on the measured machine.
+need to be established on the measured machine. [Residency tools](../tools/residency.md)
+cover setup controls, existing probes and observation limits.
 
 The [worker guide](../tools/workers.md) covers machine selection and background
 activity. [Source captures](../tools/README.md#captured-experiment-runs) let several
