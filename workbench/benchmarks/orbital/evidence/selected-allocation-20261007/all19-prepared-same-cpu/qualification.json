@@ -1,0 +1,35 @@
+{
+  "job": "20261007T220604Z-25aff588",
+  "panel": "paired",
+  "source_digest": "595e07faf800d3a749658934c6839ae513d019bb2141f6da7ff2cae552ab695e",
+  "original_run_sha256": "4a092a875741c5c46ec87fb4800d2b2f745137869b6a829fb14573b7394bdb3d",
+  "measured_binary_sha256": "dbf3785e2de171721b5595f4c834778de0e3e65a11d6cde985bdb794e67df3d3",
+  "validator_sha256": "82417c9ec1f26d6136ad76e52e7d09361dae8d3fd9a759a1508073d58b85b6e9",
+  "qualified_cases": 1710,
+  "owner_headroom_sha256": "036cc58585a67d79274281347d9ea4d5b1c271745e707ebd3713667b2aa3280e",
+  "analyzer_sha256": "1139422765ba44ff828496988e70ca8696de6fc3f40984224c6d731fb1f9066f",
+  "latency_units": [
+    "logical request"
+  ],
+  "selected_record_tiers": [
+    8192,
+    262144,
+    4194304
+  ],
+  "original_worker_state": "complete",
+  "scope": "complete measured panel",
+  "headroom": {
+    "lmdb": {
+      "cells": 57,
+      "throughput_at_least_reference": 57,
+      "p50_headroom_nonnegative": 56,
+      "p99_headroom_nonnegative": 53
+    },
+    "lmdb-read-batch64": {
+      "cells": 57,
+      "throughput_at_least_reference": 56,
+      "p50_headroom_nonnegative": 56,
+      "p99_headroom_nonnegative": 53
+    }
+  }
+}

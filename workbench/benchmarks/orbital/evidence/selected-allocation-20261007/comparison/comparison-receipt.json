@@ -1,0 +1,134 @@
+{
+  "source_digest": "595e07faf800d3a749658934c6839ae513d019bb2141f6da7ff2cae552ab695e",
+  "measured_binary_sha256": "dbf3785e2de171721b5595f4c834778de0e3e65a11d6cde985bdb794e67df3d3",
+  "validator_sha256": "82417c9ec1f26d6136ad76e52e7d09361dae8d3fd9a759a1508073d58b85b6e9",
+  "analyzer_sha256": "b7548f689ed2b0b0fca9259f3255b684a6dbee736dc9bb2be0cc8e0de0424d6b",
+  "instance": "i-09ad03d49ae94e37a",
+  "cpu": 0,
+  "producer_cpu": 0,
+  "adds_cpu_resource": false,
+  "qualified_cases_per_panel": 1710,
+  "matched_cells": 57,
+  "resources": 342,
+  "conditional_trials": 513,
+  "verified_lifecycle_trials": 18,
+  "panels": [
+    {
+      "name": "all19-synchronous",
+      "qualification": {
+        "job": "20261007T213247Z-9b3e59de",
+        "panel": "paired",
+        "source_digest": "595e07faf800d3a749658934c6839ae513d019bb2141f6da7ff2cae552ab695e",
+        "original_run_sha256": "e0f9075ce81485d535affb7c44f8501a8d2ebd4c35719f5363e3dc3dbc56ab67",
+        "measured_binary_sha256": "dbf3785e2de171721b5595f4c834778de0e3e65a11d6cde985bdb794e67df3d3",
+        "validator_sha256": "82417c9ec1f26d6136ad76e52e7d09361dae8d3fd9a759a1508073d58b85b6e9",
+        "qualified_cases": 1710,
+        "owner_headroom_sha256": "a368a7c483dc6278711a34f0f688c90290e5bbd8d9da5f7f50f3162029400650",
+        "analyzer_sha256": "1139422765ba44ff828496988e70ca8696de6fc3f40984224c6d731fb1f9066f",
+        "latency_units": [
+          "logical request"
+        ],
+        "selected_record_tiers": [
+          8192,
+          262144,
+          4194304
+        ],
+        "original_worker_state": "complete",
+        "scope": "complete measured panel",
+        "headroom": {
+          "lmdb": {
+            "cells": 57,
+            "throughput_at_least_reference": 56,
+            "p50_headroom_nonnegative": 56,
+            "p99_headroom_nonnegative": 53
+          },
+          "lmdb-read-batch64": {
+            "cells": 57,
+            "throughput_at_least_reference": 56,
+            "p50_headroom_nonnegative": 56,
+            "p99_headroom_nonnegative": 53
+          }
+        }
+      },
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 280620021,
+        "files": 4333,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/ac61a769e5e9a7e0c5da732340b0b12687bc7d78f083a82d6a2ae60a5254f8dd.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "ac61a769e5e9a7e0c5da732340b0b12687bc7d78f083a82d6a2ae60a5254f8dd",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/ac61a769e5e9a7e0c5da732340b0b12687bc7d78f083a82d6a2ae60a5254f8dd.tar.gz"
+      }
+    },
+    {
+      "name": "all19-prepared-same-cpu",
+      "qualification": {
+        "job": "20261007T220604Z-25aff588",
+        "panel": "paired",
+        "source_digest": "595e07faf800d3a749658934c6839ae513d019bb2141f6da7ff2cae552ab695e",
+        "original_run_sha256": "4a092a875741c5c46ec87fb4800d2b2f745137869b6a829fb14573b7394bdb3d",
+        "measured_binary_sha256": "dbf3785e2de171721b5595f4c834778de0e3e65a11d6cde985bdb794e67df3d3",
+        "validator_sha256": "82417c9ec1f26d6136ad76e52e7d09361dae8d3fd9a759a1508073d58b85b6e9",
+        "qualified_cases": 1710,
+        "owner_headroom_sha256": "036cc58585a67d79274281347d9ea4d5b1c271745e707ebd3713667b2aa3280e",
+        "analyzer_sha256": "1139422765ba44ff828496988e70ca8696de6fc3f40984224c6d731fb1f9066f",
+        "latency_units": [
+          "logical request"
+        ],
+        "selected_record_tiers": [
+          8192,
+          262144,
+          4194304
+        ],
+        "original_worker_state": "complete",
+        "scope": "complete measured panel",
+        "headroom": {
+          "lmdb": {
+            "cells": 57,
+            "throughput_at_least_reference": 57,
+            "p50_headroom_nonnegative": 56,
+            "p99_headroom_nonnegative": 53
+          },
+          "lmdb-read-batch64": {
+            "cells": 57,
+            "throughput_at_least_reference": 56,
+            "p50_headroom_nonnegative": 56,
+            "p99_headroom_nonnegative": 53
+          }
+        }
+      },
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 452713387,
+        "files": 5871,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/08e9485333915b2ce940f8b5716260fe1b0dd03936d8a12027a4a94fbc96af5a.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "08e9485333915b2ce940f8b5716260fe1b0dd03936d8a12027a4a94fbc96af5a",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/08e9485333915b2ce940f8b5716260fe1b0dd03936d8a12027a4a94fbc96af5a.tar.gz"
+      }
+    }
+  ],
+  "hashes": {
+    "cells.json": "fd2d1679a52a38a5590894fd1ad4152583c500888e74fcd4d3f2797116d9d118",
+    "cells.csv": "e3eeab15909f11f68ba13d0551806f4d0382f858c8ec6f5244648b78014f1813",
+    "resource-trials.json": "fcb08b16afc18905b6f7a097953a2d59e7960092b7620b114d4170ba2a4f8820",
+    "resource-trials.csv": "aad09d827d8a4f691db9328dd8f6ca2aa6b6773f20195cfb350900e043e741b2",
+    "conditioned-latency-trials.json": "7f796ab61d3f48992599b0369b0da5a2931c52619508666670d0306db3c904f8",
+    "conditioned-latency-trials.csv": "f7dbeb9bfc532392a3a5b0bd3467cd1638b761e7ebb99f1997a9a013a276b0b6",
+    "lifecycle-trials.json": "4671490b3ad4966152f5e83ed8b6f7c435af220b30cd7d23bae08ef12d0d0e96",
+    "lifecycle-trials.csv": "224b0200e4e50f2e6768344ceeaf11033f7113d0ae21bf903a45beac4c585a2f"
+  },
+  "limits": [
+    "Sequential three-trial medians on one guest and one fixed seed; no randomized cross-panel order or trace diversity.",
+    "Loaded fresh-store history; LLC/DRAM load service unobserved. No isolation, durability, versioning, Engine or Shore.",
+    "Conditional samples are actual flags joined to request latencies; they do not isolate a physical substep cause.",
+    "All-process CPU includes helper and measured drain; startup costs separate. Producer CPU includes wake/service.",
+    "Settled preparation inventory/backing zero; Arena charge includes ordinary live storage. Store teardown zero-charge has separate tests.",
+    "Canceled/unused successful construction counted; partial failed constructor writes unquantified.",
+    "Sample quantiles use floor((n-1)*percent/100); sample time sums include timer overhead and are not throughput time."
+  ]
+}

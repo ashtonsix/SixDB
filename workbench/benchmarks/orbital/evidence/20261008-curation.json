@@ -1,0 +1,167 @@
+{
+  "format": 1,
+  "purpose": "Keep source, findings, complete trial CSV comparisons, selected plots and context in Git; recover raw intervals, redundant JSON/plots and full manifests outside Git.",
+  "archive_reference": "20261008-before-curation-artifact.json",
+  "recovery_verified": true,
+  "archived_members": [
+    {
+      "path": "allocation-residency-20261007/common-scalar/selected.jsonl",
+      "bytes": 1990963,
+      "sha256": "e34acf2979db1becd8a597478b2b032d73cf56aa996181f62e2b364caac3fcdd",
+      "archive_member": "allocation-residency-20261007/common-scalar/selected.jsonl"
+    },
+    {
+      "path": "allocation-residency-20261007/frontier16/selected.jsonl",
+      "bytes": 543816,
+      "sha256": "2483e98f294c951cb1fee48fafefbe349622056f3c6682cc0a6f202806db598e",
+      "archive_member": "allocation-residency-20261007/frontier16/selected.jsonl"
+    },
+    {
+      "path": "allocation-residency-20261007/graviton-composed/selected.jsonl",
+      "bytes": 1003167,
+      "sha256": "ae5b27817533ed89712a599ee01196ab9699b8d7da7b27980ef21b5a3053a17a",
+      "archive_member": "allocation-residency-20261007/graviton-composed/selected.jsonl"
+    },
+    {
+      "path": "allocation-residency-20261007/graviton-events/selected.jsonl",
+      "bytes": 1366747,
+      "sha256": "96969d713bcacee316ac83dcc1b203c8820362fb695bcdee7c088fa2941eca9e",
+      "archive_member": "allocation-residency-20261007/graviton-events/selected.jsonl"
+    },
+    {
+      "path": "allocation-residency-20261007/historical-width/selected.jsonl",
+      "bytes": 2239547,
+      "sha256": "8d88c24a38a21bae66e494fa61563c94f6253c91a44bdd756bf8cc0887c85f6a",
+      "archive_member": "allocation-residency-20261007/historical-width/selected.jsonl"
+    },
+    {
+      "path": "allocation-residency-20261007/scalar-headroom.svg",
+      "bytes": 144039,
+      "sha256": "fa2e33f88d364af7e9256a5a451addb2c921a1bec7912a9b7ecae9fe0100796f",
+      "archive_member": "allocation-residency-20261007/scalar-headroom.svg"
+    },
+    {
+      "path": "allocation-residency-20261007/width-history.svg",
+      "bytes": 113244,
+      "sha256": "cffb729f707d2d8e40ce6f70f4398c07bb6b06bdec443ede132083af7b5011b9",
+      "archive_member": "allocation-residency-20261007/width-history.svg"
+    },
+    {
+      "path": "prefetch-control-20261007/comparison.svg",
+      "bytes": 76902,
+      "sha256": "39f30a05e542ea679538d9b5abe3cb597e35bd3a5b1f679c23bcf90f9f87bb6b",
+      "archive_member": "prefetch-control-20261007/comparison.svg"
+    },
+    {
+      "path": "prefetch-control-20261007/graviton-memory-reference/memory-pmu/intervals.jsonl",
+      "bytes": 526828,
+      "sha256": "792016d714dbfde76bb5be92f578fea2ca3929dbd56ff565b8331ee571f1a105",
+      "archive_member": "prefetch-control-20261007/graviton-memory-reference/memory-pmu/intervals.jsonl"
+    },
+    {
+      "path": "prefetch-control-20261007/graviton-memory-reference/memory-pmu/run.json",
+      "bytes": 350607,
+      "sha256": "d528409e67ba3955995133651272b3763ad8d042923e3a42680cb2bac3566a45",
+      "archive_member": "prefetch-control-20261007/graviton-memory-reference/memory-pmu/run.json"
+    },
+    {
+      "path": "prefetch-control-20261007/memory-reference/memory-pmu/intervals.jsonl",
+      "bytes": 525441,
+      "sha256": "9bd2ed5e923f97035d88224f35f33921162639e6b188d791aeed86db2aec7a86",
+      "archive_member": "prefetch-control-20261007/memory-reference/memory-pmu/intervals.jsonl"
+    },
+    {
+      "path": "prefetch-control-20261007/memory-reference/memory-pmu/run.json",
+      "bytes": 349634,
+      "sha256": "97af2bf47a36584394aa966c43253b69db5e32fd6d7ad90d01246730f2b221f8",
+      "archive_member": "prefetch-control-20261007/memory-reference/memory-pmu/run.json"
+    },
+    {
+      "path": "prefetch-control-20261007/recovered-native-manual/orbital-allocation/paired-manual/run.json",
+      "bytes": 137959,
+      "sha256": "0c1bf7f76cf1014f939673f7205186916bb650d33e4a340410ad8a4103697550",
+      "archive_member": "prefetch-control-20261007/recovered-native-manual/orbital-allocation/paired-manual/run.json"
+    },
+    {
+      "path": "prefetch-control-20261007/recovered-native-manual/orbital-allocation/paired-native/run.json",
+      "bytes": 137934,
+      "sha256": "428c1978e09942cd3ef045972e4158cefa0ccfc8a9e23245ff4d964e1e5d5533",
+      "archive_member": "prefetch-control-20261007/recovered-native-manual/orbital-allocation/paired-native/run.json"
+    },
+    {
+      "path": "prefetch-control-20261007/recovered-ring/orbital-allocation/paired-ring/run.json",
+      "bytes": 136990,
+      "sha256": "d084864d79a34c02c1105e667037defbfb743c91a157302ddcb371458963afa4",
+      "archive_member": "prefetch-control-20261007/recovered-ring/orbital-allocation/paired-ring/run.json"
+    },
+    {
+      "path": "selected-allocation-20261007/all19-prepared-same-cpu/comparison.json",
+      "bytes": 550398,
+      "sha256": "cc5bf3fd9c31480d29f4e60f571de429cb360ac6834243e484d11e8cfc1c67f1",
+      "archive_member": "selected-allocation-20261007/all19-prepared-same-cpu/comparison.json"
+    },
+    {
+      "path": "selected-allocation-20261007/all19-prepared-same-cpu/owner-headroom.json",
+      "bytes": 50502,
+      "sha256": "036cc58585a67d79274281347d9ea4d5b1c271745e707ebd3713667b2aa3280e",
+      "archive_member": "selected-allocation-20261007/all19-prepared-same-cpu/owner-headroom.json"
+    },
+    {
+      "path": "selected-allocation-20261007/all19-prepared-same-cpu/scalar-headroom.svg",
+      "bytes": 144227,
+      "sha256": "9e9d90c85b8be035876136fec5c7882317631fd21f29768e35ad8c1b8863db1c",
+      "archive_member": "selected-allocation-20261007/all19-prepared-same-cpu/scalar-headroom.svg"
+    },
+    {
+      "path": "selected-allocation-20261007/all19-synchronous/comparison.json",
+      "bytes": 552227,
+      "sha256": "6baf903e64d0429c84555e675ef4ff6dcdc699dbd2a830bfbfdf31b15726cdd5",
+      "archive_member": "selected-allocation-20261007/all19-synchronous/comparison.json"
+    },
+    {
+      "path": "selected-allocation-20261007/all19-synchronous/owner-headroom.json",
+      "bytes": 50857,
+      "sha256": "a368a7c483dc6278711a34f0f688c90290e5bbd8d9da5f7f50f3162029400650",
+      "archive_member": "selected-allocation-20261007/all19-synchronous/owner-headroom.json"
+    },
+    {
+      "path": "selected-allocation-20261007/all19-synchronous/scalar-headroom.svg",
+      "bytes": 142073,
+      "sha256": "60bb8260110a639771e6980a56cd2263b3015cf2119c1c25eab8b2dca2903639",
+      "archive_member": "selected-allocation-20261007/all19-synchronous/scalar-headroom.svg"
+    },
+    {
+      "path": "selected-allocation-20261007/capture.json",
+      "bytes": 448348,
+      "sha256": "fd3c612b067e7b5cf6fc0c2af99964fa94b6d9c1512579d2f0529c8b93c0153a",
+      "archive_member": "selected-allocation-20261007/capture.json"
+    },
+    {
+      "path": "selected-allocation-20261007/comparison/cells.json",
+      "bytes": 113254,
+      "sha256": "fd2d1679a52a38a5590894fd1ad4152583c500888e74fcd4d3f2797116d9d118",
+      "archive_member": "selected-allocation-20261007/comparison/cells.json"
+    },
+    {
+      "path": "selected-allocation-20261007/comparison/conditioned-latency-trials.json",
+      "bytes": 114292,
+      "sha256": "7f796ab61d3f48992599b0369b0da5a2931c52619508666670d0306db3c904f8",
+      "archive_member": "selected-allocation-20261007/comparison/conditioned-latency-trials.json"
+    },
+    {
+      "path": "selected-allocation-20261007/comparison/lifecycle-trials.json",
+      "bytes": 24640,
+      "sha256": "4671490b3ad4966152f5e83ed8b6f7c435af220b30cd7d23bae08ef12d0d0e96",
+      "archive_member": "selected-allocation-20261007/comparison/lifecycle-trials.json"
+    },
+    {
+      "path": "selected-allocation-20261007/comparison/resource-trials.json",
+      "bytes": 587810,
+      "sha256": "fcb08b16afc18905b6f7a097953a2d59e7960092b7620b114d4170ba2a4f8820",
+      "archive_member": "selected-allocation-20261007/comparison/resource-trials.json"
+    }
+  ],
+  "archive_only_bytes": 12422446,
+  "recovery_command": "orb -m ubuntu python3 workbench/tools/artifacts.py fetch workbench/benchmarks/orbital/evidence/20261008-before-curation-artifact.json build/recovered/orbital-evidence-20261008",
+  "runtime_limit": "These historical measured sources differ from current Stage 1 runtime; source and binary identities remain in the retained context and archives."
+}

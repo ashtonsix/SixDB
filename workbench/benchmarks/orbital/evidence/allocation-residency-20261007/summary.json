@@ -1,0 +1,552 @@
+{
+  "format": 1,
+  "status": "point-in-time comparison; headroom failed/pending",
+  "cohorts": {
+    "common-scalar": {
+      "job": "20261007T173659Z-8a9ac19c",
+      "source_digest": "c1dff856d689a0a4928e280f247bee57945c08f77b3988a4d5a129799e264aa9",
+      "guest": "i-02a0fe5cfeb7895ed",
+      "archive_sha256": "f2f3b986a5ed9586fe5e8eb1decd5792d637a5c1ad088bfa8cc618b8d5a21e2e"
+    },
+    "frontier16": {
+      "job": "20261007T174324Z-f38cbfc9",
+      "source_digest": "be92219c75af58aeca3cbaa11ff569c5e684995557d5e0c59817282b76496034",
+      "guest": "i-0ce0c9c8b7430153a",
+      "archive_sha256": "1ee42b78803472da4afbc93bd449fcefe7d4bd697986c129f8d8ad58edbc8b1e"
+    },
+    "historical-width": {
+      "job": "20261007T180854Z-b48f8d4a",
+      "source_digest": "a0e2b53b67bff1ff1fcfffca5ae9474d2067b3e18c5c0d8d85cdad69d310a3a0",
+      "guest": "i-0ce0c9c8b7430153a",
+      "archive_sha256": "47ccf62ae193df4a44b91e6be4cc3f7fa473aa1b0bc594f10bb2595fc2093b85"
+    },
+    "graviton-events": {
+      "job": "20261007T182355Z-f0aedaaf",
+      "source_digest": "df2f4debf2556ecf480ac8b5a2dda941b9b45257b4f560501e5163b98dcc09b0",
+      "guest": "i-0985146f23bb18f4c",
+      "archive_sha256": "c11d9f3909cc232709aa3e447dad00b8b400c8b6ea5554728c4815e5c6a0eedc"
+    },
+    "graviton-composed": {
+      "job": "20261007T174324Z-02064014",
+      "source_digest": "be92219c75af58aeca3cbaa11ff569c5e684995557d5e0c59817282b76496034",
+      "guest": "i-0cbd45e66c282e468",
+      "archive_sha256": "38f4230f69931e0c05b36f8552afc1fd87eeedd698b28927e4fc0978f457d53b"
+    }
+  },
+  "scalar": [
+    {
+      "workload": "point-hit",
+      "records": 8192,
+      "throughput_ratio": 1.5484832847296253,
+      "p50_headroom_ns": 50,
+      "p99_headroom_ns": 60
+    },
+    {
+      "workload": "point-hit",
+      "records": 262144,
+      "throughput_ratio": 1.6087948226765116,
+      "p50_headroom_ns": 70,
+      "p99_headroom_ns": 220
+    },
+    {
+      "workload": "point-hit",
+      "records": 4194304,
+      "throughput_ratio": 0.8871485045368592,
+      "p50_headroom_ns": -110,
+      "p99_headroom_ns": 310
+    },
+    {
+      "workload": "point-miss",
+      "records": 8192,
+      "throughput_ratio": 1.5318527165940508,
+      "p50_headroom_ns": 50,
+      "p99_headroom_ns": 60
+    },
+    {
+      "workload": "point-miss",
+      "records": 262144,
+      "throughput_ratio": 1.488611194093411,
+      "p50_headroom_ns": 80,
+      "p99_headroom_ns": 160
+    },
+    {
+      "workload": "point-miss",
+      "records": 4194304,
+      "throughput_ratio": 0.9171032032753933,
+      "p50_headroom_ns": -90,
+      "p99_headroom_ns": 320
+    },
+    {
+      "workload": "dependent-16",
+      "records": 8192,
+      "throughput_ratio": 1.6029639176234027,
+      "p50_headroom_ns": 790,
+      "p99_headroom_ns": 810
+    },
+    {
+      "workload": "dependent-16",
+      "records": 262144,
+      "throughput_ratio": 1.4318323487968072,
+      "p50_headroom_ns": 1090,
+      "p99_headroom_ns": 1530
+    },
+    {
+      "workload": "dependent-16",
+      "records": 4194304,
+      "throughput_ratio": 0.9375707559054176,
+      "p50_headroom_ns": -1210,
+      "p99_headroom_ns": -1190
+    },
+    {
+      "workload": "scan-16",
+      "records": 8192,
+      "throughput_ratio": 1.3483153951032072,
+      "p50_headroom_ns": 80,
+      "p99_headroom_ns": 80
+    },
+    {
+      "workload": "scan-16",
+      "records": 262144,
+      "throughput_ratio": 1.4256579944704868,
+      "p50_headroom_ns": 110,
+      "p99_headroom_ns": 260
+    },
+    {
+      "workload": "scan-16",
+      "records": 4194304,
+      "throughput_ratio": 0.9617506856849639,
+      "p50_headroom_ns": -40,
+      "p99_headroom_ns": 340
+    },
+    {
+      "workload": "stock-range",
+      "records": 8192,
+      "throughput_ratio": 1.2348088713869316,
+      "p50_headroom_ns": 100,
+      "p99_headroom_ns": 110
+    },
+    {
+      "workload": "stock-range",
+      "records": 262144,
+      "throughput_ratio": 1.2774065335981366,
+      "p50_headroom_ns": 130,
+      "p99_headroom_ns": 170
+    },
+    {
+      "workload": "stock-range",
+      "records": 4194304,
+      "throughput_ratio": 1.0215259870447304,
+      "p50_headroom_ns": -10,
+      "p99_headroom_ns": 360
+    },
+    {
+      "workload": "order-status",
+      "records": 8192,
+      "throughput_ratio": 1.3461869422434518,
+      "p50_headroom_ns": 90,
+      "p99_headroom_ns": 90
+    },
+    {
+      "workload": "order-status",
+      "records": 262144,
+      "throughput_ratio": 1.3650228834291174,
+      "p50_headroom_ns": 100,
+      "p99_headroom_ns": 260
+    },
+    {
+      "workload": "order-status",
+      "records": 4194304,
+      "throughput_ratio": 0.9789433767025961,
+      "p50_headroom_ns": -60,
+      "p99_headroom_ns": 280
+    },
+    {
+      "workload": "point-update",
+      "records": 8192,
+      "throughput_ratio": 8.41907355097144,
+      "p50_headroom_ns": 1330,
+      "p99_headroom_ns": 1420
+    },
+    {
+      "workload": "point-update",
+      "records": 262144,
+      "throughput_ratio": 8.000314721763415,
+      "p50_headroom_ns": 1830,
+      "p99_headroom_ns": 2270
+    },
+    {
+      "workload": "point-update",
+      "records": 4194304,
+      "throughput_ratio": 3.443661286459626,
+      "p50_headroom_ns": 2310,
+      "p99_headroom_ns": 5230
+    },
+    {
+      "workload": "point-rmw",
+      "records": 8192,
+      "throughput_ratio": 8.342414952281628,
+      "p50_headroom_ns": 1330,
+      "p99_headroom_ns": 1400
+    },
+    {
+      "workload": "point-rmw",
+      "records": 262144,
+      "throughput_ratio": 7.803511417722893,
+      "p50_headroom_ns": 1830,
+      "p99_headroom_ns": 2330
+    },
+    {
+      "workload": "point-rmw",
+      "records": 4194304,
+      "throughput_ratio": 3.497190150091813,
+      "p50_headroom_ns": 2290,
+      "p99_headroom_ns": 4920
+    },
+    {
+      "workload": "insert-random",
+      "records": 8192,
+      "throughput_ratio": 8.59138910891597,
+      "p50_headroom_ns": 1580,
+      "p99_headroom_ns": 3490
+    },
+    {
+      "workload": "insert-random",
+      "records": 262144,
+      "throughput_ratio": 6.284631778159424,
+      "p50_headroom_ns": 1820,
+      "p99_headroom_ns": -6911
+    },
+    {
+      "workload": "insert-random",
+      "records": 4194304,
+      "throughput_ratio": 1.1598866778683643,
+      "p50_headroom_ns": 2520,
+      "p99_headroom_ns": -13380
+    },
+    {
+      "workload": "delete",
+      "records": 8192,
+      "throughput_ratio": 14.78220504859735,
+      "p50_headroom_ns": 1370,
+      "p99_headroom_ns": 1990
+    },
+    {
+      "workload": "delete",
+      "records": 262144,
+      "throughput_ratio": 10.27863248932622,
+      "p50_headroom_ns": 1780,
+      "p99_headroom_ns": 2150
+    },
+    {
+      "workload": "delete",
+      "records": 4194304,
+      "throughput_ratio": 3.3052902242436666,
+      "p50_headroom_ns": 1990,
+      "p99_headroom_ns": 4340
+    },
+    {
+      "workload": "append",
+      "records": 8192,
+      "throughput_ratio": 21.999363726094025,
+      "p50_headroom_ns": 1440,
+      "p99_headroom_ns": 3340
+    },
+    {
+      "workload": "append",
+      "records": 262144,
+      "throughput_ratio": 22.705938568214986,
+      "p50_headroom_ns": 1510,
+      "p99_headroom_ns": 3460
+    },
+    {
+      "workload": "append",
+      "records": 4194304,
+      "throughput_ratio": 21.960119645808884,
+      "p50_headroom_ns": 1540,
+      "p99_headroom_ns": 3470
+    },
+    {
+      "workload": "insert-scan",
+      "records": 8192,
+      "throughput_ratio": 4.550808406490909,
+      "p50_headroom_ns": 1080,
+      "p99_headroom_ns": 1730
+    },
+    {
+      "workload": "insert-scan",
+      "records": 262144,
+      "throughput_ratio": 3.6372583844711923,
+      "p50_headroom_ns": 1480,
+      "p99_headroom_ns": -7070
+    },
+    {
+      "workload": "insert-scan",
+      "records": 4194304,
+      "throughput_ratio": 0.8221551987154588,
+      "p50_headroom_ns": 1680,
+      "p99_headroom_ns": -12990
+    },
+    {
+      "workload": "ycsb-a",
+      "records": 8192,
+      "throughput_ratio": 7.356791728917049,
+      "p50_headroom_ns": 170,
+      "p99_headroom_ns": 1420
+    },
+    {
+      "workload": "ycsb-a",
+      "records": 262144,
+      "throughput_ratio": 6.569040058942361,
+      "p50_headroom_ns": 620,
+      "p99_headroom_ns": 2200
+    },
+    {
+      "workload": "ycsb-a",
+      "records": 4194304,
+      "throughput_ratio": 3.929406551432828,
+      "p50_headroom_ns": 1850,
+      "p99_headroom_ns": 4720
+    },
+    {
+      "workload": "ycsb-b",
+      "records": 8192,
+      "throughput_ratio": 2.4254996031053744,
+      "p50_headroom_ns": 50,
+      "p99_headroom_ns": 1420
+    },
+    {
+      "workload": "ycsb-b",
+      "records": 262144,
+      "throughput_ratio": 2.4643722619309005,
+      "p50_headroom_ns": 80,
+      "p99_headroom_ns": 2150
+    },
+    {
+      "workload": "ycsb-b",
+      "records": 4194304,
+      "throughput_ratio": 1.490601269682279,
+      "p50_headroom_ns": 70,
+      "p99_headroom_ns": 3070
+    },
+    {
+      "workload": "ycsb-c",
+      "records": 8192,
+      "throughput_ratio": 1.5984082226002434,
+      "p50_headroom_ns": 50,
+      "p99_headroom_ns": 60
+    },
+    {
+      "workload": "ycsb-c",
+      "records": 262144,
+      "throughput_ratio": 1.6205106331214711,
+      "p50_headroom_ns": 70,
+      "p99_headroom_ns": 230
+    },
+    {
+      "workload": "ycsb-c",
+      "records": 4194304,
+      "throughput_ratio": 1.1313534968632104,
+      "p50_headroom_ns": 60,
+      "p99_headroom_ns": 490
+    },
+    {
+      "workload": "ycsb-d",
+      "records": 8192,
+      "throughput_ratio": 2.491135363456049,
+      "p50_headroom_ns": 50,
+      "p99_headroom_ns": 1190
+    },
+    {
+      "workload": "ycsb-d",
+      "records": 262144,
+      "throughput_ratio": 2.3467560993246224,
+      "p50_headroom_ns": 70,
+      "p99_headroom_ns": 1530
+    },
+    {
+      "workload": "ycsb-d",
+      "records": 4194304,
+      "throughput_ratio": 1.6327712795366602,
+      "p50_headroom_ns": 90,
+      "p99_headroom_ns": 810
+    },
+    {
+      "workload": "ycsb-e",
+      "records": 8192,
+      "throughput_ratio": 1.5859476488978956,
+      "p50_headroom_ns": 80,
+      "p99_headroom_ns": 920
+    },
+    {
+      "workload": "ycsb-e",
+      "records": 262144,
+      "throughput_ratio": 1.6557536518777134,
+      "p50_headroom_ns": 130,
+      "p99_headroom_ns": 1210
+    },
+    {
+      "workload": "ycsb-e",
+      "records": 4194304,
+      "throughput_ratio": 1.248079100098024,
+      "p50_headroom_ns": 170,
+      "p99_headroom_ns": 571
+    },
+    {
+      "workload": "ycsb-f",
+      "records": 8192,
+      "throughput_ratio": 7.241668512032428,
+      "p50_headroom_ns": 170,
+      "p99_headroom_ns": 1410
+    },
+    {
+      "workload": "ycsb-f",
+      "records": 262144,
+      "throughput_ratio": 6.382796238058305,
+      "p50_headroom_ns": 630,
+      "p99_headroom_ns": 2150
+    },
+    {
+      "workload": "ycsb-f",
+      "records": 4194304,
+      "throughput_ratio": 3.8568971598517763,
+      "p50_headroom_ns": 1840,
+      "p99_headroom_ns": 4520
+    },
+    {
+      "workload": "order-entry",
+      "records": 8192,
+      "throughput_ratio": 4.1759605744704125,
+      "p50_headroom_ns": 2830,
+      "p99_headroom_ns": 4030
+    },
+    {
+      "workload": "order-entry",
+      "records": 262144,
+      "throughput_ratio": 4.203132771622516,
+      "p50_headroom_ns": 3330,
+      "p99_headroom_ns": 4690
+    },
+    {
+      "workload": "order-entry",
+      "records": 4194304,
+      "throughput_ratio": 3.2350731821381333,
+      "p50_headroom_ns": 4020,
+      "p99_headroom_ns": 7560
+    }
+  ],
+  "large_ring": [
+    {
+      "setup": "loaded",
+      "workload": "point-hit",
+      "historical_ring_ns_per_request_by_active": {
+        "1": 1213.20783,
+        "16": 275.27621,
+        "32": 249.08187,
+        "64": 244.88876
+      },
+      "frontier_ring_active16_ns_per_request": 240.4638,
+      "frontier16_over_historical16_throughput": 1.1447719365659197
+    },
+    {
+      "setup": "loaded",
+      "workload": "point-miss",
+      "historical_ring_ns_per_request_by_active": {
+        "1": 1147.23316,
+        "16": 234.96748,
+        "32": 197.10217,
+        "64": 191.20263
+      },
+      "frontier_ring_active16_ns_per_request": 213.60844,
+      "frontier16_over_historical16_throughput": 1.0999915546408185
+    },
+    {
+      "setup": "loaded",
+      "workload": "dependent-16",
+      "historical_ring_ns_per_request_by_active": {
+        "1": 13793.23452,
+        "16": 3618.55783,
+        "32": 3107.93372,
+        "64": 3047.74086
+      },
+      "frontier_ring_active16_ns_per_request": 3506.741,
+      "frontier16_over_historical16_throughput": 1.0318862527914094
+    },
+    {
+      "setup": "warm-trace",
+      "workload": "point-hit",
+      "historical_ring_ns_per_request_by_active": {
+        "1": 875.13935,
+        "16": 242.83123,
+        "32": 204.79732,
+        "64": 207.23342
+      },
+      "frontier_ring_active16_ns_per_request": 222.83679,
+      "frontier16_over_historical16_throughput": 1.089726835501445
+    },
+    {
+      "setup": "warm-trace",
+      "workload": "point-miss",
+      "historical_ring_ns_per_request_by_active": {
+        "1": 829.88917,
+        "16": 210.49086,
+        "32": 171.60242,
+        "64": 165.85678
+      },
+      "frontier_ring_active16_ns_per_request": 203.01198,
+      "frontier16_over_historical16_throughput": 1.0368395993182276
+    },
+    {
+      "setup": "warm-trace",
+      "workload": "dependent-16",
+      "historical_ring_ns_per_request_by_active": {
+        "1": 13629.87237,
+        "16": 3549.54474,
+        "32": 3007.2461,
+        "64": 2929.37066
+      },
+      "frontier_ring_active16_ns_per_request": 3488.11294,
+      "frontier16_over_historical16_throughput": 1.0176117577202073
+    }
+  ],
+  "counter_qualification": {
+    "real_memory_intervals": 360,
+    "unavailable_errno22_by_event": {
+      "raw-l1d-refill": 360,
+      "raw-l2d-refill": 360,
+      "raw-l3d-refill": 360,
+      "armv8_pmuv3_0-l1d-refill": 360,
+      "armv8_pmuv3_0-l2d-refill": 360,
+      "armv8_pmuv3_0-l3d-refill": 360
+    },
+    "generic_l1_events_per_load_k1_by_bytes": {
+      "16384": 0.00020214030472930138,
+      "524288": 0.9548794690138527,
+      "8388608": 1.0013579883665664,
+      "268435456": 1.0013956557044255
+    },
+    "large_loaded_composed_point_hit": [
+      {
+        "execution": "manual",
+        "ns_per_request": 227.51787,
+        "instructions_per_request": 995.25174,
+        "generic_l1_events_per_request": 24.07932,
+        "ipc": 1.5823514848273863
+      },
+      {
+        "execution": "native",
+        "ns_per_request": 504.40361,
+        "instructions_per_request": 452.99848,
+        "generic_l1_events_per_request": 39.96833,
+        "ipc": 0.3235637698902745
+      },
+      {
+        "execution": "ring",
+        "ns_per_request": 238.16165,
+        "instructions_per_request": 1157.4487,
+        "generic_l1_events_per_request": 24.04637,
+        "ipc": 1.7480058786344164
+      }
+    ],
+    "limits": "L1 signal responsive; refill source unresolved. Single-trial composed PMU diagnostic; caller-only CPU/events."
+  }
+}

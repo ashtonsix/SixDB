@@ -1,0 +1,73 @@
+{
+  "format": 1,
+  "scope": "Completed allocation-stage qualification and selective recovery; no Stage 2 design draft or new hardware results.",
+  "current_runtime": {
+    "source_capture_digest": "d059bf8a18f43b045064c4a51ae7a397aa6a3c69d1b2b30309ecc71b6cf9e44a",
+    "qualification": {
+      "module_checks": {
+        "orbital": 11,
+        "loom": 12,
+        "failed": 0
+      },
+      "composed_checks": [
+        "packed-owner",
+        "packed-held",
+        "packed-retained",
+        "pack-growth",
+        "inventory"
+      ],
+      "trace_inventory_slots": [
+        17,
+        256
+      ],
+      "trace_widths": [
+        "64",
+        "full"
+      ],
+      "trace_operations": 513,
+      "trace_rounds": 2,
+      "trace_warmup": 1
+    },
+    "promoted_files_sha256": {
+      "loom/include/loom/ring.h": "d152716cc8ea0484c48218a3ebb9979a64a74dfd86bf42c06b8b9d35d5f35ef4",
+      "loom/include/loom/worker.h": "ecd115c4e06e6611f474b781f14a742edef1c9e26410c12a565c09dc7d03008a",
+      "orbital/include/orbital/allocation.h": "caeab1e7aaefb1b1fb398464cd1673e0ecb19dcede49b644048984a13507f2fe",
+      "orbital/src/allocation/allocation.cpp": "7ab583de69714c1e3314abf87b3910b97f81b560801a320d12f164b07b09461d",
+      "orbital/src/allocation/group.cpp": "af93934660c1df3a2d6ce521221e3f97dbbe306b57b57527ee18b833d0492354",
+      "orbital/src/allocation/internal.h": "d6fbc7f04fa3a297501c35a553af2d14655998d33d4c1c16f121c8c86799eae8",
+      "orbital/src/allocation/window.cpp": "798b60d079cb932bac7e632834bc7820e0b7c944f1b9a9763ff6fd3b21b70536",
+      "orbital/test/allocation.cpp": "012f86769e7a124f39bbf30d95f4a13b5644f804d2327f93cfdbfb921f264b29",
+      "orbital/test/reclamation.cpp": "8bfdc552d83ef61e50ae1257840128ecad84ad00322f64909632a75068ed89c1",
+      "orbital/test/window.cpp": "7838a836cbbc3110c3bd0a41cb7a3dfc5b57afebc135ff0feb407ead73736484",
+      "workbench/benchmarks/orbital/packed.cpp": "cb208a4eb7f7deb727072887b8ed148cb59c86a05031af38c9f09aa64a097bc3",
+      "workbench/spikes/allocation-reuse-temperature/allocator.cpp": "b642b2b76eaa6865ca90c8bf1ed1bc9c39530d9ac8a60fe50a32ad9b045ded50"
+    },
+    "fresh_native_module_checks": {
+      "passed": 23,
+      "failed": 0,
+      "archive_member": "build/reviews/orbital-20261008-reuse-ablation/cleanup-native/Testing/Temporary/LastTest.log"
+    }
+  },
+  "archive_reference": "20261008-local-qualification-artifact.json",
+  "selected_original_receipts": [
+    {
+      "archive_member": "build/reviews/orbital-20261008-reuse-ablation/qualification.json",
+      "sha256": "a433c7b93cebc9ae9a89ea3ce300b0136fe684a765b6bbccce13f9b07ada9219"
+    },
+    {
+      "archive_member": "build/ikea-orbital-stage1/commit-handoff-20261008.json",
+      "sha256": "abfd7825e7cb647e66c5a40fbbbb2241eb12441822035c32a235e628ee167e00"
+    },
+    {
+      "archive_member": "build/loom-hints-implementation-20261008/receipt.json",
+      "sha256": "971bf0bcb8f5912a4902c7a5c3e3d9665eac994d6bccceb244a47dec7d75e795"
+    },
+    {
+      "archive_member": "build/orbital-stage1/cohesion-next/closeout.json",
+      "sha256": "ad4d79690844c5687a3ea3cfbba8b8364647b6d2155bc9e31a102655a09a2651"
+    }
+  ],
+  "archive_selection": "selection.json contains per-file hashes and repository-relative recovery paths.",
+  "historical_limits": "Loom hint implementation ABI/TSan and the earlier cohesion closeout qualify their original recorded cuts. They precede later allocation, ring and worker header cleanup; they are not relabelled as exact-current results.",
+  "local_retention": "Incremental build trees remain ignored local caches. Selected original code and qualification records are archived; ordinary object files and duplicate build outputs need not enter Git. Stage 2 draft storage remains live and excluded."
+}

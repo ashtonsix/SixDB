@@ -1,0 +1,25 @@
+{
+  "format": 1,
+  "started_at": 1791412506.6528807,
+  "binary_sha256": "080e6ca7ee16aab47905e6b842d93701edb3d00bd9cdfe84af9ddd2bb0f47cb2",
+  "allowed_cpus": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "caller_cpu": 0,
+  "helper_cpu": 1,
+  "config": {
+    "binary": "build/benchmarks/orbital-tooling/workbench/benchmarks/orbital/orbital_lifecycle_bench",
+    "output": "/opt/sixdb/jobs/20261007T220604Z-25aff588/results/orbital-allocation/pressure",
+    "cpu": 0,
+    "helper_cpu": null,
+    "rounds": 64,
+    "slots": 16,
+    "arena_bytes": 8388608,
+    "repetitions": 3
+  },
+  "completed_at": 1791412506.7252874,
+  "verified": true
+}

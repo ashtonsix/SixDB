@@ -1,0 +1,3 @@
+# Preserve hashed collector bytes, including CSV CRLF and kernel diagnostic spaces.
+*.csv -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+*.stderr -text -whitespace

@@ -1,0 +1,342 @@
+{
+  "format": 1,
+  "host": "Same c8a.xlarge guest, EPYC 9R45, selected CPU 0, reported LLC 16 MiB",
+  "composed_source_sha256": "0279e3caa86632a6345c9b3aaf21abf94f5427ca90f6fa022a10cc3962247da1",
+  "composed_binary_sha256": "72cdcbc5386510f6c8d0c715835c63373d0785ec05128b35e521c0c53832582d",
+  "observed_load_service_tier": null,
+  "counter_qualification": {
+    "l1d-load-misses": "unqualified: full coverage but zero in all 360 memory intervals"
+  },
+  "memory": [
+    {
+      "bytes": 16384,
+      "active_chains": 1,
+      "samples": 9,
+      "median_ns_per_chase_load": 1.121344565900741
+    },
+    {
+      "bytes": 16384,
+      "active_chains": 2,
+      "samples": 9,
+      "median_ns_per_chase_load": 0.5614275189508025
+    },
+    {
+      "bytes": 16384,
+      "active_chains": 4,
+      "samples": 9,
+      "median_ns_per_chase_load": 0.2811868587639085
+    },
+    {
+      "bytes": 16384,
+      "active_chains": 8,
+      "samples": 9,
+      "median_ns_per_chase_load": 0.15369169581722403
+    },
+    {
+      "bytes": 16384,
+      "active_chains": 12,
+      "samples": 9,
+      "median_ns_per_chase_load": 0.14024973020748527
+    },
+    {
+      "bytes": 16384,
+      "active_chains": 16,
+      "samples": 9,
+      "median_ns_per_chase_load": 0.2098533782732065
+    },
+    {
+      "bytes": 16384,
+      "active_chains": 24,
+      "samples": 9,
+      "median_ns_per_chase_load": 0.20207390398667255
+    },
+    {
+      "bytes": 16384,
+      "active_chains": 32,
+      "samples": 9,
+      "median_ns_per_chase_load": 0.194838671875
+    },
+    {
+      "bytes": 16384,
+      "active_chains": 48,
+      "samples": 9,
+      "median_ns_per_chase_load": 0.2109966856060606
+    },
+    {
+      "bytes": 16384,
+      "active_chains": 64,
+      "samples": 9,
+      "median_ns_per_chase_load": 0.23084145845130238
+    },
+    {
+      "bytes": 524288,
+      "active_chains": 1,
+      "samples": 9,
+      "median_ns_per_chase_load": 3.8375894441713716
+    },
+    {
+      "bytes": 524288,
+      "active_chains": 2,
+      "samples": 9,
+      "median_ns_per_chase_load": 1.9198780818330907
+    },
+    {
+      "bytes": 524288,
+      "active_chains": 4,
+      "samples": 9,
+      "median_ns_per_chase_load": 0.9782280035660625
+    },
+    {
+      "bytes": 524288,
+      "active_chains": 8,
+      "samples": 9,
+      "median_ns_per_chase_load": 0.49401700306489105
+    },
+    {
+      "bytes": 524288,
+      "active_chains": 12,
+      "samples": 9,
+      "median_ns_per_chase_load": 0.3388433778034028
+    },
+    {
+      "bytes": 524288,
+      "active_chains": 16,
+      "samples": 9,
+      "median_ns_per_chase_load": 0.36710599679815514
+    },
+    {
+      "bytes": 524288,
+      "active_chains": 24,
+      "samples": 9,
+      "median_ns_per_chase_load": 0.30465041831753303
+    },
+    {
+      "bytes": 524288,
+      "active_chains": 32,
+      "samples": 9,
+      "median_ns_per_chase_load": 0.28650186133085154
+    },
+    {
+      "bytes": 524288,
+      "active_chains": 48,
+      "samples": 9,
+      "median_ns_per_chase_load": 0.29647305925417916
+    },
+    {
+      "bytes": 524288,
+      "active_chains": 64,
+      "samples": 9,
+      "median_ns_per_chase_load": 0.30910044695539296
+    },
+    {
+      "bytes": 8388608,
+      "active_chains": 1,
+      "samples": 9,
+      "median_ns_per_chase_load": 12.259766955186548
+    },
+    {
+      "bytes": 8388608,
+      "active_chains": 2,
+      "samples": 9,
+      "median_ns_per_chase_load": 6.116662810380311
+    },
+    {
+      "bytes": 8388608,
+      "active_chains": 4,
+      "samples": 9,
+      "median_ns_per_chase_load": 3.089222064404393
+    },
+    {
+      "bytes": 8388608,
+      "active_chains": 8,
+      "samples": 9,
+      "median_ns_per_chase_load": 1.5803386165264204
+    },
+    {
+      "bytes": 8388608,
+      "active_chains": 12,
+      "samples": 9,
+      "median_ns_per_chase_load": 1.0664207421011247
+    },
+    {
+      "bytes": 8388608,
+      "active_chains": 16,
+      "samples": 9,
+      "median_ns_per_chase_load": 0.9057575780643393
+    },
+    {
+      "bytes": 8388608,
+      "active_chains": 24,
+      "samples": 9,
+      "median_ns_per_chase_load": 0.6463627643735762
+    },
+    {
+      "bytes": 8388608,
+      "active_chains": 32,
+      "samples": 9,
+      "median_ns_per_chase_load": 0.5563691237251346
+    },
+    {
+      "bytes": 8388608,
+      "active_chains": 48,
+      "samples": 9,
+      "median_ns_per_chase_load": 0.5927646925615437
+    },
+    {
+      "bytes": 8388608,
+      "active_chains": 64,
+      "samples": 9,
+      "median_ns_per_chase_load": 0.6119876945328094
+    },
+    {
+      "bytes": 268435456,
+      "active_chains": 1,
+      "samples": 9,
+      "median_ns_per_chase_load": 146.04123801220575
+    },
+    {
+      "bytes": 268435456,
+      "active_chains": 2,
+      "samples": 9,
+      "median_ns_per_chase_load": 74.57735906862744
+    },
+    {
+      "bytes": 268435456,
+      "active_chains": 4,
+      "samples": 9,
+      "median_ns_per_chase_load": 36.61294325691062
+    },
+    {
+      "bytes": 268435456,
+      "active_chains": 8,
+      "samples": 9,
+      "median_ns_per_chase_load": 18.537337709914716
+    },
+    {
+      "bytes": 268435456,
+      "active_chains": 12,
+      "samples": 9,
+      "median_ns_per_chase_load": 12.519023114133624
+    },
+    {
+      "bytes": 268435456,
+      "active_chains": 16,
+      "samples": 9,
+      "median_ns_per_chase_load": 9.487668507206692
+    },
+    {
+      "bytes": 268435456,
+      "active_chains": 24,
+      "samples": 9,
+      "median_ns_per_chase_load": 6.402415071807925
+    },
+    {
+      "bytes": 268435456,
+      "active_chains": 32,
+      "samples": 9,
+      "median_ns_per_chase_load": 5.285896220081238
+    },
+    {
+      "bytes": 268435456,
+      "active_chains": 48,
+      "samples": 9,
+      "median_ns_per_chase_load": 5.292312830886026
+    },
+    {
+      "bytes": 268435456,
+      "active_chains": 64,
+      "samples": 9,
+      "median_ns_per_chase_load": 5.409033857966785
+    }
+  ],
+  "composed": [
+    {
+      "execution": "native",
+      "workload": "point-hit",
+      "records": 4194304,
+      "trials": 3,
+      "offered_batch": 64,
+      "active_width": 16,
+      "median_ns_per_logical_request": 580.45322
+    },
+    {
+      "execution": "native",
+      "workload": "point-miss",
+      "records": 4194304,
+      "trials": 3,
+      "offered_batch": 64,
+      "active_width": 16,
+      "median_ns_per_logical_request": 460.99814
+    },
+    {
+      "execution": "native",
+      "workload": "dependent-16",
+      "records": 4194304,
+      "trials": 3,
+      "offered_batch": 64,
+      "active_width": 16,
+      "median_ns_per_logical_request": 9425.0641
+    },
+    {
+      "execution": "manual",
+      "workload": "point-hit",
+      "records": 4194304,
+      "trials": 3,
+      "offered_batch": 64,
+      "active_width": 16,
+      "median_ns_per_logical_request": 290.64671
+    },
+    {
+      "execution": "manual",
+      "workload": "point-miss",
+      "records": 4194304,
+      "trials": 3,
+      "offered_batch": 64,
+      "active_width": 16,
+      "median_ns_per_logical_request": 250.80376
+    },
+    {
+      "execution": "manual",
+      "workload": "dependent-16",
+      "records": 4194304,
+      "trials": 3,
+      "offered_batch": 64,
+      "active_width": 16,
+      "median_ns_per_logical_request": 4149.05673
+    },
+    {
+      "execution": "ring",
+      "workload": "point-hit",
+      "records": 4194304,
+      "trials": 3,
+      "offered_batch": 64,
+      "active_width": 16,
+      "median_ns_per_logical_request": 290.681
+    },
+    {
+      "execution": "ring",
+      "workload": "point-miss",
+      "records": 4194304,
+      "trials": 3,
+      "offered_batch": 64,
+      "active_width": 16,
+      "median_ns_per_logical_request": 242.1462
+    },
+    {
+      "execution": "ring",
+      "workload": "dependent-16",
+      "records": 4194304,
+      "trials": 3,
+      "offered_batch": 64,
+      "active_width": 16,
+      "median_ns_per_logical_request": 3875.29232
+    }
+  ],
+  "limits": [
+    "Chase loads and logical requests are different units.",
+    "Composed arms ran sequentially on one guest; no cross-arm joint shuffle.",
+    "Batch completion quantiles are not scalar request p50/p99.",
+    "Initialised/validated data and calibration are access history; neither suite flushes data.",
+    "Footprint and timing alone do not attribute service to LLC or DRAM."
+  ]
+}

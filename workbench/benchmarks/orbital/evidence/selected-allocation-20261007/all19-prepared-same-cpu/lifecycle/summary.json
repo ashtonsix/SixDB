@@ -1,0 +1,47 @@
+[
+  {
+    "runtime": "finite",
+    "trials": 3,
+    "cycles_per_second": 10193.23019801783,
+    "cycle_p50_ns": 93180,
+    "cycle_p99_ns": 126081,
+    "drain_ns": 10460,
+    "observed_peak_charged_bytes": 95888,
+    "observed_peak_metadata_bytes": 38544,
+    "after_trim_charged_bytes": 0,
+    "minor_faults": 277,
+    "relocations": 2048,
+    "foreign_returns": 32,
+    "trim_pages": 224
+  },
+  {
+    "runtime": "window",
+    "trials": 3,
+    "cycles_per_second": 11229.384210397953,
+    "cycle_p50_ns": 45621,
+    "cycle_p99_ns": 168171,
+    "drain_ns": 10931,
+    "observed_peak_charged_bytes": 141824,
+    "observed_peak_metadata_bytes": 10752,
+    "after_trim_charged_bytes": 0,
+    "minor_faults": 526,
+    "relocations": 0,
+    "foreign_returns": 32,
+    "trim_pages": 512
+  },
+  {
+    "runtime": "mixed",
+    "trials": 3,
+    "cycles_per_second": 8537.230863797018,
+    "cycle_p50_ns": 95081,
+    "cycle_p99_ns": 169241,
+    "drain_ns": 10020,
+    "observed_peak_charged_bytes": 138128,
+    "observed_peak_metadata_bytes": 43920,
+    "after_trim_charged_bytes": 0,
+    "minor_faults": 424,
+    "relocations": 1024,
+    "foreign_returns": 32,
+    "trim_pages": 368
+  }
+]

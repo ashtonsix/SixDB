@@ -1,0 +1,36 @@
+{
+  "format": 1,
+  "status": "immutable point-in-time observations; current integration performance pending",
+  "cohorts": {
+    "common-scalar": {
+      "job": "20261007T173659Z-8a9ac19c",
+      "source_digest": "c1dff856d689a0a4928e280f247bee57945c08f77b3988a4d5a129799e264aa9",
+      "guest": "i-02a0fe5cfeb7895ed",
+      "archive_sha256": "f2f3b986a5ed9586fe5e8eb1decd5792d637a5c1ad088bfa8cc618b8d5a21e2e"
+    },
+    "frontier16": {
+      "job": "20261007T174324Z-f38cbfc9",
+      "source_digest": "be92219c75af58aeca3cbaa11ff569c5e684995557d5e0c59817282b76496034",
+      "guest": "i-0ce0c9c8b7430153a",
+      "archive_sha256": "1ee42b78803472da4afbc93bd449fcefe7d4bd697986c129f8d8ad58edbc8b1e"
+    },
+    "historical-width": {
+      "job": "20261007T180854Z-b48f8d4a",
+      "source_digest": "a0e2b53b67bff1ff1fcfffca5ae9474d2067b3e18c5c0d8d85cdad69d310a3a0",
+      "guest": "i-0ce0c9c8b7430153a",
+      "archive_sha256": "47ccf62ae193df4a44b91e6be4cc3f7fa473aa1b0bc594f10bb2595fc2093b85"
+    },
+    "graviton-events": {
+      "job": "20261007T182355Z-f0aedaaf",
+      "source_digest": "df2f4debf2556ecf480ac8b5a2dda941b9b45257b4f560501e5163b98dcc09b0",
+      "guest": "i-0985146f23bb18f4c",
+      "archive_sha256": "c11d9f3909cc232709aa3e447dad00b8b400c8b6ea5554728c4815e5c6a0eedc"
+    },
+    "graviton-composed": {
+      "job": "20261007T174324Z-02064014",
+      "source_digest": "be92219c75af58aeca3cbaa11ff569c5e684995557d5e0c59817282b76496034",
+      "guest": "i-0cbd45e66c282e468",
+      "archive_sha256": "38f4230f69931e0c05b36f8552afc1fd87eeedd698b28927e4fc0978f457d53b"
+    }
+  }
+}

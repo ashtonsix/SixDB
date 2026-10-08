@@ -152,6 +152,19 @@ bounded journals for split maintenance. Those are composition simplifications,
 not an Engine layout or a measured database performance claim. Old request
 samples and binary/source receipts remain immutable when code changes.
 
+The [closing qualification record](evidence/20261008-closeout.json) identifies
+the later `d059bf8a` runtime cut and distinguishes earlier implementation checks.
+Its [verified local-evidence archive](evidence/20261008-local-qualification-artifact.json)
+keeps selected captured code, original qualification/ABI receipts and diagnostics.
+Members retain their repository-relative `build/...` paths; `selection.json`
+records their hashes. Recover into ignored storage with:
+
+```sh
+orb -m ubuntu python3 workbench/tools/artifacts.py fetch \
+  workbench/benchmarks/orbital/evidence/20261008-local-qualification-artifact.json \
+  build/recovered/orbital-local-qualification-20261008
+```
+
 Throughput replays the deterministic trace without per-request clocks; latency
 replays it in a fresh store and times each whole request. Outcome checks, setup
 and loading are outside the interval; allocation, split, maintenance and final

@@ -1,0 +1,172 @@
+{
+  "status": "ready",
+  "dispatches": 0,
+  "checks": [
+    {
+      "recipe": "scalar",
+      "machine": "zen5",
+      "additional_events": [],
+      "actual_worker_parser": "accepted",
+      "actual_workload_preflight": "accepted before output creation"
+    },
+    {
+      "recipe": "prepared-same-cpu",
+      "machine": "zen5",
+      "additional_events": [],
+      "actual_worker_parser": "accepted",
+      "actual_workload_preflight": "accepted before output creation"
+    },
+    {
+      "recipe": "prepared-extra-cpu",
+      "machine": "zen5",
+      "additional_events": [],
+      "actual_worker_parser": "accepted",
+      "actual_workload_preflight": "accepted before output creation"
+    },
+    {
+      "recipe": "lookup-widths",
+      "machine": "zen5",
+      "additional_events": [],
+      "actual_worker_parser": "accepted",
+      "actual_workload_preflight": "accepted before output creation"
+    },
+    {
+      "recipe": "pmu-availability",
+      "machine": "zen5",
+      "additional_events": [],
+      "actual_worker_parser": "accepted",
+      "actual_workload_preflight": "existing adapter"
+    },
+    {
+      "recipe": "memory-sensitivity",
+      "machine": "zen5",
+      "additional_events": [],
+      "actual_worker_parser": "accepted",
+      "actual_workload_preflight": "existing adapter"
+    },
+    {
+      "recipe": "composed-counters",
+      "machine": "zen5",
+      "additional_events": [],
+      "actual_worker_parser": "accepted",
+      "actual_workload_preflight": "accepted before output creation"
+    },
+    {
+      "recipe": "lifecycle-1",
+      "machine": "zen5",
+      "additional_events": [],
+      "actual_worker_parser": "accepted",
+      "actual_workload_preflight": "existing adapter"
+    },
+    {
+      "recipe": "lifecycle-16",
+      "machine": "zen5",
+      "additional_events": [],
+      "actual_worker_parser": "accepted",
+      "actual_workload_preflight": "existing adapter"
+    },
+    {
+      "recipe": "lifecycle-64",
+      "machine": "zen5",
+      "additional_events": [],
+      "actual_worker_parser": "accepted",
+      "actual_workload_preflight": "existing adapter"
+    },
+    {
+      "recipe": "scalar",
+      "machine": "neoverse-v2",
+      "additional_events": [],
+      "actual_worker_parser": "accepted",
+      "actual_workload_preflight": "accepted before output creation"
+    },
+    {
+      "recipe": "prepared-same-cpu",
+      "machine": "neoverse-v2",
+      "additional_events": [],
+      "actual_worker_parser": "accepted",
+      "actual_workload_preflight": "accepted before output creation"
+    },
+    {
+      "recipe": "prepared-extra-cpu",
+      "machine": "neoverse-v2",
+      "additional_events": [],
+      "actual_worker_parser": "accepted",
+      "actual_workload_preflight": "accepted before output creation"
+    },
+    {
+      "recipe": "lookup-widths",
+      "machine": "neoverse-v2",
+      "additional_events": [],
+      "actual_worker_parser": "accepted",
+      "actual_workload_preflight": "accepted before output creation"
+    },
+    {
+      "recipe": "pmu-availability",
+      "machine": "neoverse-v2",
+      "additional_events": [],
+      "actual_worker_parser": "accepted",
+      "actual_workload_preflight": "existing adapter"
+    },
+    {
+      "recipe": "memory-sensitivity",
+      "machine": "neoverse-v2",
+      "additional_events": [],
+      "actual_worker_parser": "accepted",
+      "actual_workload_preflight": "existing adapter"
+    },
+    {
+      "recipe": "composed-counters",
+      "machine": "neoverse-v2",
+      "additional_events": [],
+      "actual_worker_parser": "accepted",
+      "actual_workload_preflight": "accepted before output creation"
+    },
+    {
+      "recipe": "lifecycle-1",
+      "machine": "neoverse-v2",
+      "additional_events": [],
+      "actual_worker_parser": "accepted",
+      "actual_workload_preflight": "existing adapter"
+    },
+    {
+      "recipe": "lifecycle-16",
+      "machine": "neoverse-v2",
+      "additional_events": [],
+      "actual_worker_parser": "accepted",
+      "actual_workload_preflight": "existing adapter"
+    },
+    {
+      "recipe": "lifecycle-64",
+      "machine": "neoverse-v2",
+      "additional_events": [],
+      "actual_worker_parser": "accepted",
+      "actual_workload_preflight": "existing adapter"
+    },
+    {
+      "recipe": "memory-sensitivity",
+      "machine": "neoverse-v2",
+      "additional_events": [
+        "l2d-refill:4:0x17"
+      ],
+      "actual_worker_parser": "accepted",
+      "actual_workload_preflight": "existing adapter"
+    },
+    {
+      "recipe": "composed-counters",
+      "machine": "neoverse-v2",
+      "additional_events": [
+        "l2d-refill:4:0x17"
+      ],
+      "actual_worker_parser": "accepted",
+      "actual_workload_preflight": "accepted before output creation"
+    }
+  ],
+  "helper_sha256": "1f67f1029f78b24923c38dee5ed3e6d4d2aa029701946108d11e0de287b26f52",
+  "negative_cli_checks": [
+    "negative idle interval refuses",
+    "missing source capture refuses",
+    "raw events on a non-counter recipe refuse before dispatch"
+  ],
+  "shell_adapters": "bash -n passed for run/pressure/pmu/memory-pmu",
+  "checked_at": 1791412925.267
+}
