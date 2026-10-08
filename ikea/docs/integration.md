@@ -14,18 +14,20 @@ in-place mutation with explicit retained state.
 | Orbital | Durable objects, transaction ordering, retained logical inputs and recovery; physical access and operation lifetimes |
 | Ikea | Admitted operations, composition, physical descriptions and issued-byte coverage |
 
-This working division follows Orbital's [logical](../../workbench/notebook/orbital/reference/BRIEF.md) and
-[physical](../../workbench/notebook/orbital/reference/PHYSICAL.md) briefs; it does not prescribe binding APIs.
+This working division follows the [candidate Orbital/Loom design](../../workbench/design/orbital/DESIGN.md).
+The current runtime implements allocation and worker support; object versions and
+publication remain design proposals.
 Engine declares a mutation's semantic effects and dependencies. Orbital establishes
 its position and retained logical inputs; Loom prepares the corresponding storage
 and completion resources. Ikea performs bounded local work. The enclosing owner
 then coordinates verification, installation and publication through Orbital.
 
-In-place and private-copy mutation are both valid. Page COW is one way to preserve
-older data; Orbital also considers no-COW reuse backed by retained reconstruction.
-A resident byte lease alone does not retain a logical cut: unresolved predecessors
-may require both an old fallback and future results. A newly discovered historical
-input can be unavailable. Maintenance may separately need old values for a delta.
+Owners can mutate exclusively owned storage or private drafts. If an older reader
+must still observe previous values, the enclosing object protocol preserves them.
+The candidate design separates published State, private Draft edits and cached
+Buffer generation. Keeping storage alive does not establish immutable contents,
+a selected logical version or permission to edit. Maintenance may separately need
+old values for a delta.
 
 ![The owner acquires and prepares work, invokes Ikea, then either retains a completed frontier across a wait or coordinates publication.](images/mutation-lifetime.svg)
 
@@ -45,6 +47,26 @@ valid. Before each invocation, supply stable input/selection, disjoint command
 metadata, enough effect capacity and any observation resources. Checked calls
 validate the command; trusted entries reuse established proofs. Neither acquires
 isolation. Kernels do not allocate, wait or call the scheduler.
+
+## Use the allocation runtime
+
+The [Loom allocation example](../../loom/examples/allocation.cpp) runs ready
+SeriesPack work over a live Allocation, then waits for a foreign reader before
+growing it. An uninterrupted owner call can borrow `bytes(allocation)` directly
+while its owner prevents release, growth or reentrant invalidation. Named views
+and prepared bindings still need stable addresses. A use that escapes this
+guarantee needs retained physical protection, such as a Hold covering its complete
+footprint. A Hold retains backing, not immutable contents.
+
+End borrowed access before relocation and bind again against the new storage.
+An old binding does not acquire a larger extent when allocation grows. For a
+fixed-capacity SeriesPack page, initialize the whole capacity once, keep a separate
+live count, and append into initialized spare rows with checked replacement.
+TuplePack construction can name an appended range. The
+[real growth checks](../../workbench/benchmarks/orbital/growth.cpp)
+exercise both packs, including old bounded access during disjoint in-place growth.
+The [packed consumer](../../workbench/benchmarks/orbital/README.md) adds ordered
+lookup, slot maintenance and complete-operation measurements.
 
 ## Retain live state across suspension
 

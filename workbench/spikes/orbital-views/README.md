@@ -2,7 +2,8 @@
 
 A spike covering Ashton's [October 5 design notes](../../notebook/orbital/ASHTON-SCRATCH.md),
 with views as the main uncertainty. The [findings](FINDINGS.md) own the alternatives
-and evidence.
+and evidence. The [Orbital and Loom candidate](../../design/orbital/DESIGN.md)
+consolidates this work with the other studies into types, TUs and caller examples.
 
 The embedded performance target permits retained in-memory producer inputs and
 epoch batches, with actual write maintenance included. The file provider tests

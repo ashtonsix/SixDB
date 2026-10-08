@@ -11,7 +11,8 @@ Ashton's embedded target is competitiveness with LMDB on all/most point
 operations, in both latency and throughput, including the maintenance those
 operations require. Its baseline can retain producer input in memory and admit
 events in epoch batches; file-durable admission is a stronger configuration.
-The isolated timings below do not establish LMDB competitiveness.
+The [consolidated design](../../design/orbital/DESIGN.md) owns the proposed operations and lifetimes. The isolated
+timings below do not establish LMDB competitiveness.
 
 ## Recommendations
 

@@ -1,11 +1,13 @@
 # Design development
 
-Cross-cutting conventions live here; module contracts belong with their module
-and candidate designs with their [investigation](../spikes/README.md).
+Cross-cutting conventions and current design recommendations live here. Module
+contracts belong with their module; experimental detail stays with its
+[investigation](../spikes/README.md).
 Most architectural bets and constraints have yet to be recorded.
 
 - [Build and code conventions](conventions.md): current settings and open choices.
 - [Tuning flags](tuning.md): microarchitecture policy independent of ISA availability.
+- [Orbital/Loom candidate](orbital/DESIGN.md): the full design; [allocation and worker support](../../orbital/README.md) is implemented.
 - [Project marks and visual direction](identity/README.md): intent, motion, assets and supporting material.
 
 [Project direction](../../README.md) owns the overall intent. Historical context

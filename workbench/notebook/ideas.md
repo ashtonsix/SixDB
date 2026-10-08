@@ -17,6 +17,8 @@ and shared authority. The current direction is database first.
 
 The [Orbital research questions](orbital-ideas.md) curate object, execution,
 networking and recovery ideas from Calico and earlier SixDB work.
+The [Orbital/Loom candidate](../design/orbital/DESIGN.md) keeps the full design in view;
+[allocation and worker support](../../orbital/README.md) is implemented.
 [Ashton’s scratch notes](orbital/ASHTON-SCRATCH.md) remain his working outline;
 [historical reference material](orbital/reference/README.md) collects the earlier accounts and research links.
 
@@ -87,9 +89,11 @@ Question-specific reading stays beside the question it informs.
 
 The [cross-module discussion](buffers-and-allocation.md) relates logical state,
 representations, physical parts and memory views. The
-[memory-descriptor brief](../spikes/memory-descriptors/BRIEF.md) starts a fresh
-investigation of arena-selected palettes, one-byte trampolines and arithmetic
-payload placement. The wider composition questions remain open.
+[memory-descriptor studies](../spikes/memory-descriptors/README.md) investigated
+palettes, one-byte trampolines and arithmetic placement. The
+[implemented allocator](../../orbital/README.md) now owns the physical contract;
+those studies explain choices rather than supplying a second runtime API.
+Logical representation and version ownership remain with the wider design.
 
 ## Prefix names after local remapping
 

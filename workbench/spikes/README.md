@@ -23,7 +23,10 @@ experiments and checks under Object, Allocation, Journal, Port and Worker.
 - [Executable placement](executable-placement/README.md): distinguishing changed code from placement effects.
 - [Memory characterisation](memory-characterisation/README.md): automatic MLP, prefetch, cache sharing and host diagnostics.
 - [Loom execution](loom-execution/README.md): memory microtask rings, fixed hint classes, worker channels/groups, synchronization and affinity-crossing operations.
+- [Loom hardware policy](loom-hardware-policy/README.md): startup lookup, background calibration and abstract demand codes mapped to inline native hints.
+- [Call boundaries](call-boundaries/README.md): Loom/Orbital caller and callee assembly, fat returns, native carrier limits and frequency-sensitive ABI alternatives.
 - [Memory descriptors](memory-descriptors/README.md): arena-selected palettes, one-byte trampolines, placement and retained native access.
+- [Allocation temperature reuse](allocation-reuse-temperature/README.md): bounded HOT/WARM queues, reuse ordering and actual allocator costs.
 - [CFT commit latency](cft-commit-latency/README.md): directional network measurement and host/flow selection; durable quorum latency, storage throughput cliffs and live log preparation.
 - [Local message handoff](orbital-local-handoff/README.md): native Zen 5 measurements of batching, payload readiness, polling CPU, queue admission and instrumentation sensitivity.
 - [Orbital reservation policies](orbital-reservation-policy/README.md): broad-waiter progress, WAN convoys and deterministic bypass, with formal and native comparisons.

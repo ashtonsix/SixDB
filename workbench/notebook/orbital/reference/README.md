@@ -5,19 +5,19 @@
 
 # Historical Orbital reference material
 
-Durable objects, deterministic execution and transactional recovery, backed by
-memory, transport and other OS-like services.
-
-Successor to Calico's `xmem` and `omachine`; see the
-[Calico reference map](../../calico.md).
+For implemented allocation and worker services, start with the
+[Orbital runtime](../../../../orbital/README.md). The
+[combined design](../../../design/orbital/DESIGN.md) keeps the wider candidate in view.
 
 **[Design workspace](../ASHTON-SCRATCH.md)** — Ashton's outline and open space for reasoning
 about the relationships. Agents contribute there only at his explicit request.
 
 This page organises earlier accounts and research under his five areas.
-The briefs mix user direction with researched proposals; the walkthrough's
-implementation divisions remain exploratory. Orbital has research models and
-native prototypes, but no production runtime.
+The briefs cover durable objects, deterministic execution and recovery. They mix
+user direction with proposals; the walkthrough's divisions remain exploratory.
+Prototype layouts, names and stronger lifetime/growth rules do not establish
+current runtime contracts. Formal models establish only their stated assumptions.
+[Calico's `xmem` and `omachine`](../../calico.md) are prior art, not inherited designs.
 
 ## Object
 
@@ -37,7 +37,10 @@ native prototypes, but no production runtime.
 - **Experiments:** [memory descriptors, arenas and groups](../../../spikes/memory-descriptors/README.md)
   — a guide to geometry, allocation choices, tuning and virtual growth;
   [memory characterisation](../../../spikes/memory-characterisation/README.md)
-  — measured hardware behaviour.
+  — measured hardware behaviour;
+  [reuse selection](../../../spikes/allocation-reuse-temperature/FINDINGS.md)
+  — selection now omits temperature/CPU ranking; temperature still guides cold-first
+  reclamation. Earlier cascades and candidate caches remain rejected.
 
 ## Journal
 
@@ -63,16 +66,22 @@ native prototypes, but no production runtime.
 
 - **Briefs:** [extensions and publication](BRIEF.md#extensions-and-publication),
   [protection and execution](PHYSICAL.md#protection-and-execution).
-- **Experiments:** [local thread handoff](../../../spikes/orbital-local-handoff/README.md).
+- **Experiments:** [local thread handoff](../../../spikes/orbital-local-handoff/README.md),
+  [call boundaries](../../../spikes/call-boundaries/README.md) and
+  [hardware hint policy](../../../spikes/loom-hardware-policy/README.md).
+  [Loom's guide](../../../../loom/README.md) owns the implemented Task and hint interfaces.
 - **Formal checks:** [execution and extensions](../../../../orbital/spec/EXECUTION.md).
   These are protocol models, not implemented WASM or Firecracker runtimes.
 
 ## Across the areas
 
-The [logical brief](BRIEF.md) and [physical brief](PHYSICAL.md) retain their full
-accounts. The [earlier architecture walkthrough](ARCHITECTURE.md) is a provisional
-cross-cutting proposal. The [buffers and allocation notebook](../../buffers-and-allocation.md)
-records the separate cross-module discussion.
+The [logical brief](BRIEF.md), [physical brief](PHYSICAL.md) and
+[earlier architecture walkthrough](ARCHITECTURE.md) retain their full accounts.
+Their useful distinctions carry into the current design: input storage,
+publication and physical completion are separate; native use needs both stable
+bytes and valid interpretation; physical retention supplies no immutability,
+version or access permission. The [buffers and allocation notebook](../../buffers-and-allocation.md)
+records the earlier cross-module discussion.
 
 Other module entry points: [Ikea](../../../../ikea/README.md), [Loom](../../../../loom/README.md),
 [Engine](../../../../engine/README.md), [Shore](../../../../shore/README.md).

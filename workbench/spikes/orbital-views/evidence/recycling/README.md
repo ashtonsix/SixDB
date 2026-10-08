@@ -1,8 +1,8 @@
 # Retaining released pages, October 5, 2026
 
 Job `20261005T104640Z-cce878b1`: fresh Spot c8a.large, AMD EPYC 9R45,
-Clang 21.1.8, 4 KiB pages, benchmark pinned to CPU 0. This tests
-[Ashton's release-hint follow-up](../../../../notebook/orbital/ASHTON-SCRATCH.md).
+Clang 21.1.8, 4 KiB pages, benchmark pinned to CPU 0. This isolates the
+[release-hint and deferred-reclamation approach](../../../../design/orbital/DESIGN.md#missing-bytes-memory-and-escape).
 
 The [pool](../../recycling.cpp) holds anonymous mapped pages with intrusive free
 lists. A lease can be copied for backend use. Only its final release makes a

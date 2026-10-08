@@ -2,3 +2,4 @@
 add_subdirectory(benchmarks)
 add_subdirectory(spikes)
 add_subdirectory(simulator EXCLUDE_FROM_ALL)
+add_subdirectory(design/orbital EXCLUDE_FROM_ALL)
