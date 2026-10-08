@@ -22,20 +22,27 @@ class constructor {
         return count_;
     }
     bool accepts(const construction_input& input) const noexcept {
-        std::array<byte, 64> lo, hi;
+        std::array<byte, 64> lo;
         std::memcpy(lo.data(), input.data(), 64);
+        if (!first_.accepts(lo))
+            return false;
+        if (count_ <= 64)
+            return true;
+        std::array<byte, 64> hi;
         std::memcpy(hi.data(), input.data() + 64, 64);
-        return first_.accepts(lo) && second_.accepts(hi);
+        return second_.accepts(hi);
     }
     /// Trusted complete initialization. Does not read old destination bytes;
     /// spare bits become zero, bytes outside the unit remain untouched.
     void initialize_unchecked(byte* destination, const construction_input& input) const {
         std::array<byte, 64> lo, hi;
         std::memcpy(lo.data(), input.data(), 64);
-        std::memcpy(hi.data(), input.data() + 64, 64);
+        if (count_ > 64)
+            std::memcpy(hi.data(), input.data() + 64, 64);
         std::memset(destination, 0, unit_bytes());
         first_.set_unchecked(destination, lo);
-        second_.set_unchecked(destination, hi);
+        if (count_ > 64)
+            second_.set_unchecked(destination, hi);
     }
 };
 class construction_operation {

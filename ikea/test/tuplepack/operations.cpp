@@ -1,7 +1,9 @@
 #include <ikea/tuplepack.h>
 #include <ikea/tuplepack/author/composition.h>
 #include <ikea/tuplepack/author/maintenance.h>
+#include <algorithm>
 #include <array>
+#include <vector>
 #include <cassert>
 #include <cstdio>
 
@@ -25,7 +27,77 @@ struct invalidate {
         rows |= 1ULL << row;
     }
 };
+namespace tp = ikea::tuplepack;
+using tp::byte;
+
+void check_construction_packets(unsigned count) {
+    const unsigned unit = (count + 1) / 2, stride = unit + 5;
+    constexpr unsigned rows = 3, offset = 3;
+    std::array<tp::code, 128> codes;
+    for (unsigned i = 0; i < count; ++i)
+        codes[i] = {byte(i / 2), byte(i % 2 * 4), 3};
+    auto layout = tp::layout::make(unit, std::span(codes).first(count));
+    assert(layout);
+    auto plan = tp::constructor::make(*layout);
+    assert(plan && plan->code_count() == count);
+    // End the allocation exactly at the last unit; gaps and prefix remain owned
+    // by somebody else. Poison ignored input slots, including the empty packet.
+    std::vector<byte> storage(offset + (rows - 1) * stride + unit, 0xa6);
+    auto view = tp::view::bind(*layout, storage, rows, stride, offset);
+    assert(view);
+    auto op = tp::bind_constructor(*plan, *view);
+    assert(op);
+    std::array<tp::construction_input, rows> values;
+    for (unsigned row = 0; row < rows; ++row) {
+        values[row].fill(255);
+        for (unsigned i = 0; i < count; ++i)
+            values[row][i] = (i * 5 + row * 3) % 8;
+        assert(plan->accepts(values[row]));
+    }
+    std::array<ikea::owner_write, rows> records;
+    ikea::source_write_journal effects{records};
+    const auto before = storage;
+    auto bad = values;
+    bad.back()[count - 1] = 8;
+    auto result = op->initialize(0, bad, effects);
+    assert(!result && result.error() == tp::error::value && !effects.used && storage == before);
+    ikea::source_write_journal short_effects{std::span(records).first(rows - 1)};
+    result = op->initialize(0, values, short_effects);
+    assert(!result && result.error() == tp::error::capacity && !short_effects.used && storage == before);
+    result = op->initialize(1, values, effects);
+    assert(!result && result.error() == tp::error::range && !effects.used && storage == before);
+    assert(op->initialize(0, values, effects));
+    auto expected = before;
+    for (unsigned row = 0; row < rows; ++row) {
+        const auto start = offset + row * stride;
+        std::fill_n(expected.begin() + start, unit, 0);
+        for (unsigned i = 0; i < count; ++i)
+            expected[start + i / 2] |= byte(((i * 5 + row * 3) % 8) << (i % 2 * 4));
+        const auto& effect = effects.storage[row];
+        assert(effect.source == &*view && effect.bytes.plane == 0 &&
+               effect.bytes.offset == start && effect.bytes.size == unit);
+    }
+    assert(storage == expected && effects.used == rows);
+    std::fill(storage.begin(), storage.end(), 0xa6);
+    struct Coverage {
+        const tp::view& destination;
+        std::span<const byte> bytes;
+        unsigned next = 0, stride, unit;
+        void before(const tp::view& source, ikea::byte_write write) {
+            assert(&source == &destination && write.offset == offset + next * stride &&
+                   write.plane == 0 && write.size == unit);
+            for (unsigned i = 0; i < unit; ++i)
+                assert(bytes[write.offset + i] == 0xa6);
+            ++next;
+        }
+    } coverage{*view, storage, 0, stride, unit};
+    op->initialize_unchecked(0, values, coverage);
+    assert(coverage.next == rows && storage == expected);
+}
+
 int main() {
+    for (auto count : {1u, 20u, 63u, 64u, 65u, 127u, 128u})
+        check_construction_packets(count);
     // Independent finite-interval reference for the shared cold overlap proof.
     for (unsigned sa = 1; sa < 12; ++sa)
         for (unsigned sb = 1; sb < 12; ++sb)
