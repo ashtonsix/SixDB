@@ -87,6 +87,46 @@ packet shape. This is a 128-byte rank-ordered input; only defined codes are
 consumed. Construction validates them all before writing, zeroes spare bits
 and preserves bytes outside each unit. It needs no prior initialized contents.
 
+## Complete-unit transfer
+
+`bind_transfer<Bytes>(source_layout, source_view, destination_layout, destination_view)`
+returns a borrowed `unit_transfer<Bytes, Byte>`. `Bytes` is 1–64; both descriptions
+must compare equal, including code rank order, offsets, shifts, widths and unit
+extent, and both view extents must match. Views do not retain layout identity:
+the caller supplies authoritative descriptions for the bytes. The operation
+retains the named views; it does not retain the supplied layout objects.
+
+`copy(first, source_rows, effects)` copies selected physical source rows into
+consecutive original destination rows. Source rows may repeat or be reordered.
+Every source unit must be initialized, including spare bits and entire spare
+bytes. Copy preserves those bytes exactly; destination contents need not be
+initialized. The owner must grant exclusive writes to whole destination units,
+including spares. Projection replacement remains the operation for preserving
+unselected destination fields. Copy performs no logical maintenance, format
+migration, ownership transfer or publication.
+
+Checked copy admits every source row, the full destination range, journal state
+and effect capacity before any effects or stores. Selected source units must be
+disjoint from the entire destination window, including its stride gaps. This
+conservative rule allows disjoint copies within one allocation but rejects
+self-copy, overlapping permutations and sources inside destination gaps.
+Rejection preserves destination bytes and the journal, including existing entries.
+Empty selection may start at the destination end and forms no payload address.
+
+`effect_capacity(count)` bounds additional journal records: zero for no rows,
+one for a tight destination, otherwise one per row. Tight output reports the
+complete contiguous span before any store; gapped output reports each exact unit
+before storing it. Effects name the destination view and storage-relative offsets;
+no prefix, stride gap or trailing padding is read or written.
+
+`admit(first, source_rows, remaining)` permits preflight with other children;
+`copy_unchecked` requires that exact command and proof to remain valid. Views,
+backing, source bytes and source row selection stay stable throughout. View/selection metadata
+is disjoint from issued writes. Journal storage is disjoint from both payloads
+and command metadata; coverage hooks cannot allocate, fail, suspend or modify source bytes,
+views or selection. A composed owner admits every child before beginning writes
+and separately accounts for summaries and visibility.
+
 ## Borrowing and admission
 
 | Resource | Required lifetime or proof |

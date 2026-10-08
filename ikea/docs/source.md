@@ -82,7 +82,7 @@ unless marked `src/`.
 | Responsibility | Owning files |
 | --- | --- |
 | Physical description and recovery | `description.h`; `src/tuplepack/description.cpp` |
-| Ordinary placement, plans and commands | `{view,plan,read,write,construction,selection}.h` |
+| Ordinary placement, plans and commands | `{view,plan,read,write,construction,transfer,selection}.h` |
 | Decoded packet grouping | `packet_layout.h`; `src/tuplepack/packet_layout.cpp` |
 | Code-map admission and ISA controls | `src/tuplepack/{prepare,packet_prepare}.cpp` |
 | Construction preparation | `src/tuplepack/construction.cpp` |

@@ -42,6 +42,10 @@ add_executable(ikea_tuplepack_wire_check EXCLUDE_FROM_ALL test/tuplepack/wire.cp
 sixdb_target(ikea_tuplepack_wire_check)
 target_link_libraries(ikea_tuplepack_wire_check PRIVATE ikea::tuplepack)
 
+add_executable(ikea_tuplepack_transfer_check EXCLUDE_FROM_ALL test/tuplepack/transfer.cpp)
+sixdb_target(ikea_tuplepack_transfer_check)
+target_link_libraries(ikea_tuplepack_transfer_check PRIVATE ikea::tuplepack)
+
 add_executable(ikea_tuplepack_operations_check EXCLUDE_FROM_ALL test/tuplepack/operations.cpp)
 sixdb_target(ikea_tuplepack_operations_check)
 target_link_libraries(ikea_tuplepack_operations_check PRIVATE ikea::tuplepack)
@@ -110,7 +114,8 @@ set(ikea_example_targets
 set(ikea_check_targets
   ikea_seriespack_check ikea_seriespack_descriptor_check ikea_seriespack_ownership_check
   ikea_seriespack_admission_check
-  ikea_tuplepack_wire_check ikea_tuplepack_operations_check ikea_tuplepack_execution_check
+  ikea_tuplepack_wire_check ikea_tuplepack_transfer_check
+  ikea_tuplepack_operations_check ikea_tuplepack_execution_check
   ikea_tuplepack_packets_check ikea_tuplepack_gpr_check ikea_tuplepack_ownership_check
   ikea_bec256_check ikea_bec256_composition_check)
 add_custom_target(ikea_examples DEPENDS ${ikea_example_targets})
