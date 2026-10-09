@@ -1,9 +1,19 @@
 # Metadata controls are independently runnable from the withdrawn baseline suite.
 add_subdirectory(orbital/descriptor)
+add_subdirectory(orbital/shape)
+
+add_library(orbital_mvcc_directory STATIC orbital/directory/object_directory.cpp)
+sixdb_target(orbital_mvcc_directory)
+target_link_libraries(orbital_mvcc_directory PUBLIC orbital::orbital)
+
+add_executable(orbital_mvcc_directory_check orbital/directory/check.cpp)
+sixdb_target(orbital_mvcc_directory_check)
+target_link_libraries(orbital_mvcc_directory_check PRIVATE orbital_mvcc_directory)
+add_test(NAME orbital_mvcc_directory_check COMMAND orbital_mvcc_directory_check)
 
 add_executable(orbital_mvcc_candidates_check orbital/candidates/check.cpp)
 sixdb_target(orbital_mvcc_candidates_check)
-target_link_libraries(orbital_mvcc_candidates_check PRIVATE orbital_mvcc_descriptor)
+target_link_libraries(orbital_mvcc_candidates_check PRIVATE orbital_mvcc_descriptor orbital_mvcc_directory)
 add_test(NAME orbital_mvcc_candidates_check COMMAND orbital_mvcc_candidates_check)
 
 add_executable(orbital_mvcc_retention_check orbital/retention/check.cpp)
@@ -15,7 +25,20 @@ sixdb_target(orbital_mvcc_retention_store_check)
 target_link_libraries(orbital_mvcc_retention_store_check PRIVATE orbital_mvcc_descriptor)
 add_test(NAME orbital_mvcc_retention_store_check COMMAND orbital_mvcc_retention_store_check)
 
-set(metadata_checks orbital_mvcc_candidates_check
+add_executable(orbital_mvcc_shape_store_check orbital/candidates/shape_store_check.cpp)
+sixdb_target(orbital_mvcc_shape_store_check)
+target_link_libraries(orbital_mvcc_shape_store_check
+  PRIVATE orbital_mvcc_shape orbital_mvcc_descriptor orbital_mvcc_directory)
+add_test(NAME orbital_mvcc_shape_store_check COMMAND orbital_mvcc_shape_store_check)
+
+# Accounting is separately runnable while its captured evidence is qualified.
+add_executable(orbital_mvcc_shape_backing orbital/shape_backing.cpp)
+sixdb_target(orbital_mvcc_shape_backing)
+target_link_libraries(orbital_mvcc_shape_backing
+  PRIVATE orbital_mvcc_shape orbital_mvcc_descriptor orbital_mvcc_directory)
+
+set(metadata_checks orbital_mvcc_candidates_check orbital_mvcc_directory_check
+  orbital_mvcc_shape_store_check
   orbital_mvcc_retention_check orbital_mvcc_retention_store_check)
 foreach(check IN ITEMS candidates_check compact_law_check descriptor_adapter_check
     compact_operations_check canonical_law_check compact_descriptor_check)
@@ -35,9 +58,11 @@ foreach(check IN LISTS metadata_checks)
   target_compile_options(${check} PRIVATE -UNDEBUG)
 endforeach()
 target_compile_options(orbital_mvcc_descriptor_check PRIVATE -UNDEBUG)
+target_compile_options(orbital_mvcc_shape_check PRIVATE -UNDEBUG)
 set_tests_properties(${metadata_checks} PROPERTIES LABELS orbital-mvcc-metadata TIMEOUT 60)
 add_custom_target(orbital_mvcc_metadata_validate
   COMMAND "${CMAKE_CTEST_COMMAND}" --test-dir "${PROJECT_BINARY_DIR}"
     --output-on-failure --no-tests=error -L "^orbital-mvcc-metadata$"
   DEPENDS ${metadata_checks} orbital_mvcc_descriptor_check orbital_mvcc_descriptor_abi
+    orbital_mvcc_shape_check orbital_mvcc_shape_abi
   USES_TERMINAL VERBATIM)

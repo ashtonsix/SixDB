@@ -10,6 +10,8 @@ struct DescriptorPhysical {
   using Selection = compact_descriptor::Selection;
   using Specification = compact_descriptor::RepresentationSpec;
   using PartSource = compact_descriptor::PartSource;
+  using Export = compact_descriptor::Export;
+  enum class ExportPolicy { selected };
   struct Binding {};
   static void retain(Value* v) noexcept { compact_descriptor::retain(v); }
   static void release(Value* v) noexcept { compact_descriptor::release(v); }
@@ -25,6 +27,9 @@ struct DescriptorPhysical {
   static Binding binding(orbital::ObjectId, std::uint64_t) noexcept { return {}; }
   static orbital::ObjectId bound_object(Value* source, Binding) noexcept { return compact_descriptor::object(source); }
   static std::uint64_t bound_cut(Value* source, Binding) noexcept { return compact_descriptor::version(source); }
+  static auto export_part(Selection selected, std::size_t index, Binding, ExportPolicy) noexcept {
+    return compact_descriptor::retain_part(selected, index);
+  }
 };
 
 template<class Physical> class PhysicalOwner {

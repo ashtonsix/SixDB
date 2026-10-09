@@ -88,7 +88,7 @@ template<class Store> void coherent_history() {
     {
       typename Store::Scope old(store);
       auto first = old.bind(A); check(first.part_count() == 2);
-      auto bound = store.bound(old, A); check(bound && bound->selection.descriptor == first.descriptor);
+      auto bound = store.bound(old, A); check(bound && bound->selection().descriptor == first.descriptor);
       check(word(*first.part(std::size_t{0})) == 10);
       auto export_result = cd::retain_part(first, 0); check(export_result); escaped = *export_result;
       std::array<Change, 2> next{{{A, encode(store, A, 2, 30, 40)}, {B, encode(store, B, 2, 300, 400)}}};
@@ -367,11 +367,61 @@ template<class Store> void abort_callback() {
   check(metadata.live == 0);
 }
 
+// Removing the first debt creates a hole. A later owner callback accepts private
+// work, which compacts the compact-directory debt vector without publication.
+// The interrupted sweep must replan instead of skipping the last live debt.
+template<class Store> void debt_compaction_callback() {
+  Memory metadata;
+  constexpr ObjectId X{1, 4};
+  {
+    Store store(metadata);
+    std::optional<typename Store::Prepared> accepted;
+    bool armed = false, called = false;
+    {
+      auto body = std::shared_ptr<const std::uint64_t>(new std::uint64_t(10), [&](const auto* word) {
+        delete word;
+        if (!armed) return;
+        called = true;
+        typename Store::Scope basis(store);
+        std::array<Change, 1> change{{{C, encode(store, C, 3, 30, 40)}}};
+        auto prepared = store.prepare(basis, change); check(prepared);
+        accepted.emplace(std::move(*prepared));
+      });
+      cd::RepresentationSpec spec{.object = A, .version = 1, .replica = {}, .format = {},
+          .logical_metadata = logical, .interpretation = {}, .dependencies = {}};
+      std::array<cd::PartSource, 1> source{{{.id = {0, 0}, .body = std::as_bytes(std::span(body.get(), 1)),
+          .interpretation = {}, .readable_padding = 0, .alignment = alignof(std::uint64_t), .backing = body}}};
+      auto physical = store.capture(spec, source); check(physical);
+      std::array<Change, 3> initial{{{X, encode(store, X, 1, 1, 2)},
+          {A, std::move(*physical)}, {B, encode(store, B, 1, 100, 200)}}};
+      publish(store, initial);
+    }
+    {
+      typename Store::Scope old(store);
+      std::array<Change, 3> changes{{{X, {}}, {A, encode(store, A, 2, 20, 30)},
+          {B, encode(store, B, 2, 110, 210)}}};
+      publish(store, changes);
+    }
+    armed = true;
+    while (store.drain()) {}
+    check(called && accepted);
+    check(store.statistics().versions == 2); // Both obsolete bodies were removed.
+    check(store.statistics().objects == 3); // Private C is still pinned.
+    accepted.reset();
+    check(store.statistics().objects == 2);
+    typename Store::Scope current(store);
+    check(!current.bind(X) && !current.bind(C));
+    pair(current.bind(A), 20, 30); pair(current.bind(B), 110, 210);
+  }
+  check(!metadata.live);
+}
+
 template<class Store> void run(const char* name) {
   coherent_history<Store>(); teardown_and_authority<Store>(); tombstones<Store>();
   refusal<Store>(); private_failure_and_empty<Store>(); private_reads<Store>(); callbacks<Store>();
   conversion_authority<Store>(); abort_callback<Store>();
-  std::cout << name << ": nine grouped histories passed\n";
+  debt_compaction_callback<Store>();
+  std::cout << name << ": ten grouped histories passed\n";
 }
 
 int main() {
@@ -379,4 +429,10 @@ int main() {
   run<Store<Slab<Version32>, compact_retention::DistinctRetention>>("v32-distinct");
   run<Store<Slab<Version16>, compact_retention::DistinctRetention>>("v16-distinct");
   run<Store<Chunks8, compact_retention::DistinctRetention>>("v8-distinct");
+  run<Store<Slab<Version32>, compact_retention::FloorRetention, DescriptorPhysical, CompactObjects>>("compact-v32-floor");
+  run<Store<Slab<Version16>, compact_retention::FloorRetention, DescriptorPhysical, CompactObjects>>("compact-v16-floor");
+  run<Store<Chunks8, compact_retention::FloorRetention, DescriptorPhysical, CompactObjects>>("compact-v8-floor");
+  run<Store<Slab<Version32>, compact_retention::DistinctRetention, DescriptorPhysical, CompactObjects>>("compact-v32-distinct");
+  run<Store<Slab<Version16>, compact_retention::DistinctRetention, DescriptorPhysical, CompactObjects>>("compact-v16-distinct");
+  run<Store<Chunks8, compact_retention::DistinctRetention, DescriptorPhysical, CompactObjects>>("compact-v8-distinct");
 }

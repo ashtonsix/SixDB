@@ -20,7 +20,8 @@ compact_history::Store16 store(metadata);
   compact_history::Store16::Scope read(store);
   auto selected = read.bind(object); // 8-byte borrowed physical descriptor
   auto part = selected.part(std::size_t{0});
-  auto export_owner = compact_descriptor::retain_part(selected, 0);
+  auto issued = store.bound(read, object);
+  auto export_owner = issued->export_part(0);
   // Release export_owner explicitly; its metadata resource must still be alive.
 }
 store.drain();
@@ -51,23 +52,35 @@ holes cannot be reused for a different cut. Both slab candidates retain their
 free pages for reuse. Slot generations are unnecessary here because no version
 slot escapes; cold capabilities retain real owners and re-find logical history.
 
-`Store<Nodes, Retention, Physical>` keeps the controls explicit. FloorRetention
+`Store<Nodes, Retention, Physical, Objects>` keeps the controls explicit. FloorRetention
 keeps all history down to the oldest reader; DistinctRetention keeps the selected
 predecessor for each distinct active cut using charged temporary scratch. The
 exact policy can remove an unpinned sole tombstone even with older absent readers.
 Replacement alternatives are captured only when discovered by a retained Scope.
-`shape_policy.h` is a separate physical-profile experiment with shared geometry;
-its logical binding lives in cold catalog-issued targets/exports, not the body.
+`shape_policy.h` shares proven Ikea geometry across physical realizations. Its
+logical binding lives in cold catalog-issued targets/exports, not the body.
+`bound(scope, object)` seals the selected physical value and exact Object/cut into
+one immutable borrowed pair. Its `export_part` creates an escaping owner; the
+issuing Scope must remain live until that call. A copied pair preserves its
+original association through later publication, deletion and recreation.
+
+`HashObjects` retains the original node-hash control. `CompactObjects` stores
+full-width Object IDs once in stable 24-byte paged entries, with 32-bit lookup
+buckets. A charged cold vector tracks reclamation debt; its index uses existing
+entry flags. Prepare reserves new debt slots before acceptance. Reentrant debt
+compaction stops/replans an active sweep even when no publication occurred.
 
 `Memory` reports requested PMR bytes, peak and allocation calls, not malloc
 overhead or resident pages. Add its 40-byte caller-resident resource once to a
 whole-state account. Statistics include Core/entry/node sizes, reserved history
-and descriptor-directory capacity, metadata copied during capture, requested
+and descriptor/Object-directory/debt capacity, metadata copied during capture, requested
 descriptor bytes and reclamation work. External encoded owners/control blocks
 and payload allocations are separate costs, not free memory. None of these
 figures establishes database performance; use the composed driver for that.
 
-`check.cpp` exercises nine grouped histories for all three node layouts and both
-retention policies, including coherent late lookup, absence/recreation, private
+`check.cpp` exercises ten grouped histories for all three node layouts, both
+retention policies and both directories, including coherent late lookup, absence/recreation, private
 reads, refusal sweeps, alternative replacement, narrow export, Store teardown,
-conversion authority and reentrant owner disposal. Its checks run under NDEBUG.
+conversion authority and reentrant owner disposal. `shape_store_check.cpp` adds
+real encoded rows/columns, repeated physical values at different logical cuts,
+sealed exports, foreign-resource rejection and delayed conversion. Checks run under NDEBUG.

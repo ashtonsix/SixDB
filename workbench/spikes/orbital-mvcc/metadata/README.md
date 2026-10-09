@@ -17,7 +17,7 @@ requested allocations, not RSS or hardware traffic.
 | Selection is 16 B, but its checked result is 24 B and returns indirectly | An 8 B descriptor borrow permits a 16 B checked result under ordinary ABI. Rich inspection need not travel with every selected access. |
 | RetainedView is 8 B but still returns indirectly | Nontrivial ownership matters independently of size. Keep stable owning state in frames and use trivial borrows across frequent calls; explicit escape remains an owning operation. |
 | The shared consumer Schema is 10,176 B on AArch64 and 15,296 B for the probed x86 configuration | Separate cold construction plans from hot controls where useful. Do not claim this storage disappeared when a cursor became 8 B. |
-| A 256-identity Allocation Group charges roughly 30–34 KiB metadata | The one-byte binding is not the allocation's total metadata. Amortization and sparse occupancy need their own accounting. |
+| A 256-identity Allocation Group charges roughly 30–34 KiB metadata | Revisit its trim inventory, control mappings and hint/ownership records. The one-byte binding is not the allocation's total metadata; charge full capacity and sparse occupancy. |
 
 The closure measurements use eight copied interpretation bytes per Part and
 eight bytes each of logical and parent interpretation. They exclude body bytes,
@@ -32,6 +32,13 @@ shared shape/law storage, directory and allocator capacity, caller records and
 external control blocks separately; moving costs outside its resource does not
 establish a reduction. Retained history and escaped access are additional
 workloads, not silently included in that initial-collection target.
+
+Allocation metadata is part of this same pass; the existing layer is a
+comparison point, not a frozen base. Show a new Arena/Pool's complete setup and
+retained capacity alongside the marginal cost in an existing Pool. A small
+Object-layer number cannot establish a small complete collection. Changes to
+either layer need composed read/write feedback and the physical lifetime,
+foreign-return, preparation and refusal checks appropriate to the change.
 
 ## Three different kinds of state
 
@@ -81,7 +88,8 @@ row-key LMDB control visible: matching encoded blobs isolates foundational
 overhead but cannot establish a general database performance win.
 
 Run the integrated metadata controls independently of the withdrawn baseline
-suite (descriptor, compact histories, retention and the six consumer checks):
+suite (descriptor, shared shape, Object directory, compact histories, retention
+and the six consumer checks):
 
 ```sh
 orb -m ubuntu cmake -S . -B build/orbital-mvcc/metadata-integration -G Ninja \
@@ -90,6 +98,7 @@ orb -m ubuntu cmake --build build/orbital-mvcc/metadata-integration \
   --target orbital_mvcc_metadata_validate -j2
 ```
 
-The target also compiles the descriptor ABI probe. Its ten tests use the separate
-`orbital-mvcc-metadata` CTest label and keep assertions enabled. This qualifies
-repository integration; the performance study owns measured comparisons.
+The target also compiles descriptor and shared-shape ABI probes. Its thirteen
+tests use the separate `orbital-mvcc-metadata` CTest label and keep assertions
+enabled. This qualifies repository integration; the performance study owns
+measured comparisons.

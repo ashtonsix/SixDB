@@ -146,15 +146,78 @@ sibling bodies but retains the whole candidate description directory: it is a
 loss for the 17-Part escape case. Weak owner witnesses check actual destruction,
 not merely a modeled charge.
 
+## Shared consumer proof and compact Object directory
+
+[Shared shape](shape/README.md) is a consumer-specific physical profile, not a
+general Orbital schema contract. It admits actual Tuple/SeriesPack descriptions
+once, shares invariant geometry and read controls, and keeps count, addresses
+and genuine ownership with each immutable realization. Orbital's catalog issues
+the exact Object/cut association. Its cold export cannot relabel an old borrow.
+
+`shape_backing.cpp` constructs actual encoded bodies, ends Schema/source Shape
+before resident observations, and checks old/current data through eight dense
+publications. Both writer-basis treatments pass: retained through install, or
+closed after accepted preparation and before install. They have identical
+resident costs in this separate-node control. This does not establish the same
+result for an inline-current alternative.
+
+Captured native `shape-accounting/20261009T211153393575Z` and fully instrumented
+ASan/UBSan/LSan `20261009T211446366566Z` pass the complete matrix, including
+independent/grouped shared owners and real Allocation owners. Probe source is
+`9018978654058821bf3e06d3595ad7c75b90bb069e47f8bf4e5ba96d3798a563`;
+source digests are `1144d20dc33f787c259261ee104507af43f3ace430cab9cfcb744b0491d08a1c`
+and `b114c0db6332d463c3e2bcea33494ea251a7bf779b1a59673e22523eabc03cbc`.
+The receipts, source archives and full JSONL remain ignored. No timings are
+claimed. All rows below use 64 Objects, three records each and compact directory
+with 16-byte separate history nodes:
+
+| Initial owner profile | Object/history/realization + shared proof | External shared control blocks | Charged Pool metadata | Logical body bytes |
+| --- | ---: | ---: | ---: | ---: |
+| One Tuple Part, shared | 7,395 | 3,584 | — | 4,416 |
+| Four independent Series Parts, shared | 11,960 | 14,336 | — | 11,520 |
+| Four grouped Series Parts, shared | 8,888 | 3,584 | — | 11,520 |
+| One Tuple Part, Allocation | 6,883 | — | 30,616 | 4,416 |
+| Four independent Series Parts, Allocation | 9,912 | — | 34,392 | 11,520 |
+| Four grouped Series Parts, Allocation | 8,376 | — | 34,392 | 11,520 |
+
+The first column includes 4,096 B catalog state: Core480, Object directory2,064,
+history capacity1,040 and primary-pointer registry512. The shared proof is227 B
+for Tuple or184 B for columns. These are actual requested allocations and
+reserved capacities, not a per-record sum that omits slack. Shared control-block
+sizes describe this fixture's PMR-backed deleters, not a universal `shared_ptr`
+cost. Memory40, Scope32, optional Scope storage40, transient input Change
+capacity, malloc overhead and observation records are separate caller costs.
+
+Pool counters omit fixed Arena/Pool heap and thread ownership. The separate
+[actual allocation census](allocation-profiles.md) measures752 B setup plus
+the retained Group pointer vector, Lane256 and OS stack/guard VA separately.
+New-Pool state and the marginal cost in an existing Pool are different questions;
+the setup and Group state do not disappear because they are outside the
+catalog's PMR resource. A fresh four-Part collection still misses the4–8 KiB
+target even before this external allocator state is added.
+
+An old cut preserves exactly old/current bodies. Eight dense publications of
+independent columns nevertheless grow the real Pool to three Groups:
+103,176 B charged metadata and196,608 B mapped payload remain after release,
+including idle inventory. Selected-copy escape then leaves168 B catalog/codec
+metadata and one actual Storage. Its held extent is20 B independently or224 B
+with grouping. Grouped ownership retains sibling bytes in the same allocation.
+Tuple escape is307 B metadata and69 B held body. The complete source checks
+escaped contents/binding after Store/proof teardown and then releases everything.
+The allocation census separately exercises idle trimming; high-water control
+state survives until Group retirement.
+
 ## What remains worth changing
 
-Shared immutable shapes may remove repeated interpretation, Part geometry and
-IDs rather than move identical state into another allocation. Separate stable
-Object identity, logical version state and physical realization; charge shared
-owners, exceptions and access dependencies. The Object index is provisional.
-Compact directory and inline-current alternatives are being prototyped against
-the 4–8 KiB initial-collection target; selection still needs the many-small-Object
-caller measurement and publication/retention evidence.
+The compact directory removes duplicate Object keys and hash-node overhead, but
+every current head still pays history and primary-registry capacity. Inline
+current binding is the next comparison. Independent four-Part ownership must
+remain a first-class case; grouping has different escape/retention behavior.
+Allocation metadata is also reopened: eager trim inventory, separately rounded
+control mappings and repeated hint padding are concrete opportunities. Their
+experimental changes must preserve physical pins, foreign returns, preparation
+and late completion. Whole-operation caller measurements decide which seams
+are useful; the census alone does not establish a performance win.
 
 Oldest-floor retention still keeps every intermediate version newer than the
 oldest reader, even when only two cuts are selectable. The separate embedded

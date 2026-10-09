@@ -2,6 +2,7 @@
 
 #include "versions.h"
 #include "physical.h"
+#include "object_policy.h"
 #include "../retention/retention.h"
 #include <expected>
 #include <unordered_map>
@@ -32,7 +33,7 @@ struct Hash {
 struct Empty {};
 
 template<class Nodes, class Retention = compact_retention::FloorRetention,
-    class Physical = DescriptorPhysical> class Store {
+    class Physical = DescriptorPhysical, class Objects = HashObjects> class Store {
   using Descriptor = typename Physical::Value;
   using Selection = typename Physical::Selection;
   using RepresentationSpec = typename Physical::Specification;
@@ -40,23 +41,29 @@ template<class Nodes, class Retention = compact_retention::FloorRetention,
 public:
   using Owner = PhysicalOwner<Physical>;
   using Change = ChangeOf<Owner>;
-  struct BoundSelection {
-    typename Physical::Selection selection;
-    [[no_unique_address]] typename Physical::Binding binding;
+  // A catalog-issued association. A live issuing Scope protects this borrow;
+  // export_part creates its separate escaping lifetime. Callers cannot relabel
+  // one selected physical realization with another version's identity.
+  class BoundSelection {
+    typename Physical::Selection selection_;
+    [[no_unique_address]] typename Physical::Binding binding_;
+    friend class Store;
+    BoundSelection(Selection selected, typename Physical::Binding binding) noexcept
+        : selection_(selected), binding_(binding) {}
+  public:
+    Selection selection() const noexcept { return selection_; }
+    typename Physical::Binding binding() const noexcept { return binding_; }
+    auto export_part(std::size_t index, typename Physical::ExportPolicy policy = {}) const noexcept {
+      return Physical::export_part(selection_, index, binding_, policy);
+    }
   };
 private:
   struct Core;
   Core* core_{};
   using Handle = typename Nodes::Handle;
-  struct Entry {
-    const ObjectId* identity{};
-    Handle head{};
-    std::uint32_t prepared{};
-    Entry* previous{};
-    Entry* next{};
-    bool debt{};
-  };
-  struct Pending { Entry* entry; Handle version; };
+  using Entry = typename Objects::Entry;
+  using ObjectHandle = typename Objects::Handle;
+  struct Pending { ObjectHandle entry; Handle version; };
 
 public:
   // Nonmovable, caller-resident enrollment. A stable address avoids repairing
@@ -158,6 +165,7 @@ public:
     std::size_t history_capacity_bytes{}, descriptor_directory_capacity_bytes{};
     std::size_t copied_metadata_bytes{}, captured_descriptor_bytes{}, reclamation_work{};
     std::size_t last_sweep_bytes{}, last_sweep_cuts{}, maintenance_refusals{};
+    std::size_t object_directory_capacity_bytes{}, debt_capacity_bytes{};
   };
 
 private:
@@ -167,13 +175,11 @@ private:
     std::size_t references{1};
     Nodes nodes;
     [[no_unique_address]] std::conditional_t<Nodes::indexed_rep, Registry, Empty> directory;
-    std::pmr::unordered_map<ObjectId, Entry, Hash> entries;
+    Objects entries;
     [[no_unique_address]] std::conditional_t<Nodes::inline_alternative, Empty, AlternativeMap> alternatives;
     std::pmr::unordered_map<const Scope*, std::pmr::vector<Descriptor*>> captures;
     Scope* first_scope{};
     Scope* last_scope{};
-    Entry* first_debt{};
-    Entry* last_debt{};
     std::uint64_t cut{}, occurrences{}, pending{};
     std::size_t versions{}, scopes{};
     std::size_t copied_metadata_bytes{}, captured_descriptor_bytes{}, reclamation_work{};
@@ -185,17 +191,16 @@ private:
           if constexpr (Nodes::indexed_rep) return Registry(resource);
           else return Empty{};
         }()),
-        entries(&resource), alternatives([&] {
+        entries(resource), alternatives([&] {
           if constexpr (Nodes::inline_alternative) return Empty{};
           else return AlternativeMap(&resource);
         }()), captures(&resource) {}
     ~Core() {
       assert(!first_scope && !pending);
-      for (auto& [id, entry] : entries) {
-        (void)id;
+      entries.for_each_live([&](ObjectHandle, Entry& entry) {
         auto h = entry.head;
         while (h) { auto older = nodes.get(h).older; drop(h); h = older; }
-      }
+      });
     }
     void release() noexcept { if (!--references) memory.destroy(this); }
     std::uint64_t floor() const noexcept { return first_scope ? first_scope->cut_ : cut; }
@@ -226,20 +231,11 @@ private:
       if (alternative) Physical::release(alternative);
       if (descriptor) Physical::release(descriptor);
     }
-    void add_debt(Entry& e) noexcept {
-      if (!e.debt) {
-        e.previous = last_debt; e.next = nullptr;
-        if (last_debt) last_debt->next = &e; else first_debt = &e;
-        last_debt = &e; e.debt = true;
-      }
+    void add_debt(ObjectHandle entry) noexcept {
+      entries.add_debt(entry);
       dirty = true; ++maintenance_changes;
     }
-    void remove_debt(Entry& e) noexcept {
-      if (!e.debt) return;
-      if (e.previous) e.previous->next = e.next; else first_debt = e.next;
-      if (e.next) e.next->previous = e.previous; else last_debt = e.previous;
-      e.previous = e.next = nullptr; e.debt = false;
-    }
+    void remove_debt(ObjectHandle entry) noexcept { entries.remove_debt(entry); }
     void close(Scope& scope) noexcept {
       const auto before = floor();
       const bool removed_distinct = Retention::uses_distinct_cuts && scope.cut_ < cut &&
@@ -257,14 +253,14 @@ private:
       }
       scope.core_ = nullptr; release();
     }
-    Handle locate(std::uint64_t selected_cut, ObjectId id) const noexcept {
+    Handle locate(std::uint64_t selected_cut, ObjectId id) noexcept {
       auto at = entries.find(id);
-      if (at == entries.end()) return {};
-      auto h = at->second.head;
+      if (!at) return {};
+      auto h = entries.get(at).head;
       while (h && nodes.cut(h) > selected_cut) h = nodes.get(h).older;
       return h;
     }
-    Selection resolve(std::uint64_t selected_cut, ObjectId id, bool alternative) const noexcept {
+    Selection resolve(std::uint64_t selected_cut, ObjectId id, bool alternative) noexcept {
       auto h = locate(selected_cut, id);
       if (!h || !primary(h)) return {};
       return Physical::selection(alternative ? alternate(h) : primary(h));
@@ -273,13 +269,13 @@ private:
       if (prepared.disposition_ != Disposition::accepted) return;
       assert(pending == prepared.occurrence_); pending = 0; prepared.disposition_ = Disposition::aborted;
       for (auto& change : prepared.changes_) {
-        auto* entry = std::exchange(change.entry, nullptr);
+        const auto handle = std::exchange(change.entry, ObjectHandle{});
+        auto& entry = entries.get(handle);
         const auto version = std::exchange(change.version, Handle{});
-        assert(entry->prepared); --entry->prepared;
-        if (!entry->head) {
-          const auto id = *entry->identity;
-          remove_debt(*entry); entries.erase(id);
-        } else if (!primary(entry->head)) add_debt(*entry);
+        assert(entries.pinned(handle)); entries.unpin(handle);
+        if (!entry.head) {
+          remove_debt(handle); const bool erased = entries.erase(handle); assert(erased); (void)erased;
+        } else if (!primary(entry.head)) add_debt(handle);
         drop(version); // No raw Entry/Version use remains after owner callbacks.
       }
     }
@@ -287,10 +283,8 @@ private:
       const auto started = maintenance_changes;
       std::size_t work = 0;
       const auto oldest = floor();
-      auto* entry = first_debt;
-      while (entry) {
-        auto* next = entry->next;
-        auto anchor = entry->head;
+      entries.for_each_debt([&](ObjectHandle handle, Entry& entry) {
+        auto anchor = entry.head;
         ++work;
         if (anchor) {
           auto cursor = plan.cursor(nodes.cut(anchor));
@@ -300,22 +294,22 @@ private:
             else {
               nodes.get(anchor).older = nodes.get(old).older;
               --versions; drop(old);
-              if (maintenance_changes != started) goto complete;
+              if (maintenance_changes != started) return false;
             }
           }
         }
-        auto head = entry->head;
+        auto head = entry.head;
         if (!head || !nodes.get(head).older) {
-          if (!head || primary(head)) remove_debt(*entry);
-          else if ((Retention::uses_distinct_cuts || nodes.cut(head) <= oldest) && !entry->prepared) {
-            const auto id = *entry->identity;
-            remove_debt(*entry); --versions; entries.erase(id); drop(head);
-            if (maintenance_changes != started) goto complete;
+          if (!head || primary(head)) remove_debt(handle);
+          else if ((Retention::uses_distinct_cuts || nodes.cut(head) <= oldest) && !entries.pinned(handle)) {
+            remove_debt(handle); --versions;
+            const bool erased = entries.erase(handle); assert(erased); (void)erased;
+            drop(head);
+            if (maintenance_changes != started) return false;
           }
         }
-        entry = next;
-      }
-    complete:
+        return true;
+      });
       dirty = maintenance_changes != started; draining = false; reclamation_work += work; return work;
     }
     std::size_t drain() noexcept {
@@ -363,24 +357,30 @@ public:
     if (c.pending || changes.empty()) return std::unexpected(Error::unavailable);
     if (c.cut == std::numeric_limits<std::uint64_t>::max() ||
         c.occurrences == std::numeric_limits<std::uint64_t>::max()) return std::unexpected(Error::capacity);
+    std::size_t new_debts = 0;
     for (std::size_t i = 0; i < changes.size(); ++i) {
       const auto& change = changes[i];
       auto* rep = change.representation.get();
       if (rep && !Physical::accepts(rep, change.object, c.cut + 1))
         return std::unexpected(Error::conflict);
+      if constexpr (requires { Physical::accepts_resource(rep, c.memory); }) {
+        if (rep && !Physical::accepts_resource(rep, c.memory)) return std::unexpected(Error::conflict);
+      }
       for (std::size_t j = 0; j < i; ++j) if (changes[j].object == change.object) return std::unexpected(Error::conflict);
+      const auto entry = c.entries.find(change.object);
+      if ((!entry || !c.entries.indebted(entry)) && ((entry && c.entries.get(entry).head) || !rep)) ++new_debts;
     }
     Prepared prepared(c.memory);
     std::pmr::vector<Handle> allocated(&c.memory);
     std::size_t initialized = 0;
     try {
       prepared.changes_.reserve(changes.size());
+      if (c.entries.reserve_debt(new_debts)) ++c.maintenance_changes;
       allocated = c.nodes.batch(changes.size(), c.cut + 1);
       for (std::size_t i = 0; i < changes.size(); ++i) {
         c.initialize(allocated[i], changes[i].representation.get()); ++initialized;
-        auto [where, inserted] = c.entries.try_emplace(changes[i].object);
-        if (inserted) where->second.identity = &where->first;
-        prepared.changes_.push_back({&where->second, allocated[i]});
+        auto [where, inserted] = c.entries.ensure(changes[i].object); (void)inserted;
+        prepared.changes_.push_back({where, allocated[i]});
       }
     } catch (const std::bad_alloc&) {
       for (std::size_t i = 0; i < allocated.size(); ++i) {
@@ -388,11 +388,15 @@ public:
       }
       for (const auto& change : changes) {
         auto at = c.entries.find(change.object);
-        if (at != c.entries.end() && !at->second.head && !at->second.prepared) c.entries.erase(at);
+        if (at && !c.entries.get(at).head && !c.entries.pinned(at)) {
+          const bool erased = c.entries.erase(at); assert(erased); (void)erased;
+        }
       }
       return std::unexpected(Error::capacity);
     }
-    for (auto& change : prepared.changes_) ++change.entry->prepared;
+    for (auto& change : prepared.changes_) {
+      const bool pinned = c.entries.pin(change.entry); assert(pinned); (void)pinned;
+    }
     ++c.references; prepared.core_ = &c; prepared.basis_ = c.cut;
     prepared.occurrence_ = ++c.occurrences; prepared.disposition_ = Disposition::accepted;
     c.pending = c.occurrences; return prepared;
@@ -403,10 +407,10 @@ public:
     if (prepared.disposition_ != Disposition::accepted || c.pending != prepared.occurrence_) return std::unexpected(Error::rejected);
     if (prepared.basis_ != c.cut) return std::unexpected(Error::stale);
     for (auto& change : prepared.changes_) {
-      auto& entry = *change.entry;
+      auto& entry = c.entries.get(change.entry);
       c.nodes.get(change.version).older = entry.head;
-      entry.head = change.version; --entry.prepared; ++c.versions;
-      if (c.nodes.get(change.version).older || !c.primary(change.version)) c.add_debt(entry);
+      entry.head = change.version; c.entries.unpin(change.entry); ++c.versions;
+      if (c.nodes.get(change.version).older || !c.primary(change.version)) c.add_debt(change.entry);
     }
     ++c.cut; c.pending = 0; prepared.disposition_ = Disposition::installed; return {};
   }
@@ -430,10 +434,13 @@ public:
     Pin pin(core_); auto& c = *pin.core;
     const auto id = Physical::bound_object(target.source_.get(), target.binding_);
     const auto cut = Physical::bound_cut(target.source_.get(), target.binding_);
-    auto at = c.entries.find(id); auto h = at == c.entries.end() ? Handle{} : at->second.head;
+    auto at = c.entries.find(id); auto h = at ? c.entries.get(at).head : Handle{};
     while (h && c.nodes.cut(h) > cut) h = c.nodes.get(h).older;
     if (!h || c.nodes.cut(h) != cut || !c.primary(h)) return std::unexpected(Error::absent);
     auto* next = replacement.get();
+    if constexpr (requires { Physical::accepts_resource(next, c.memory); }) {
+      if (!Physical::accepts_resource(next, c.memory)) return std::unexpected(Error::conflict);
+    }
     if (!Physical::equivalent(c.primary(h), next)) return std::unexpected(Error::conflict);
     if constexpr (Nodes::inline_alternative) {
       Physical::retain(next);
@@ -461,7 +468,8 @@ public:
         sizeof(Core), sizeof(Entry), sizeof(typename Nodes::Node), alternative_count, core_->memory.calls,
         core_->nodes.capacity_bytes(), directory_capacity_bytes, core_->copied_metadata_bytes,
         core_->captured_descriptor_bytes, core_->reclamation_work, core_->last_sweep_bytes,
-        core_->last_sweep_cuts, core_->maintenance_refusals};
+        core_->last_sweep_cuts, core_->maintenance_refusals,
+        core_->entries.capacity_bytes(), core_->entries.debt_capacity_bytes()};
   }
   static Selection select_private(const Scope& basis, std::span<const Change> changes, ObjectId id) noexcept {
     for (const auto& change : changes) if (change.object == id) return change.representation.selection();
