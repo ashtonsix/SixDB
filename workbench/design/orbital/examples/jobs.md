@@ -14,11 +14,10 @@ outlives the job. The frame cannot move while it is active.
 
 ```cpp
 #include <loom/worker.h>
-#include <orbital/journal.h>
+#include <orbital/candidate/journal.h>
 #include <utility>
 
-namespace candidate {
-using namespace orbital;
+namespace orbital::candidate::examples {
 
 struct ColdRead {
   ByteRange range{};
@@ -265,7 +264,7 @@ Progress install_frozen(journal::Consumer& consumer, const object::Draft& draft,
   return Progress::done();
 }
 
-} // namespace candidate
+} // namespace orbital::candidate::examples
 ```
 
 Releasing a lane does not transfer mutation authority. Cross-lane computation

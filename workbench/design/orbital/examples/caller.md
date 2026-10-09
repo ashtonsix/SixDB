@@ -9,13 +9,12 @@ like the state behind a database handle. The cache uses that Worker's Lane;
 Loom chooses policy and the Worker owns its allocation Pool. Reserve metadata once:
 
 ```cpp
-#include <orbital/journal.h>
+#include <orbital/candidate/journal.h>
 #include <loom/worker.h>
 #include <array>
 #include <utility>
 
-namespace candidate {
-using namespace orbital;
+namespace orbital::candidate::examples {
 
 Result<void> setup_caller(loom::Worker& worker, object::BufferCache& cache,
     journal::Consumer& consumer,
@@ -97,7 +96,7 @@ return, while its range array and selected state are still alive.
   return result;
 }
 
-} // namespace candidate
+} // namespace orbital::candidate::examples
 ```
 
 A query can keep one context and a larger view for many native lookups. Access

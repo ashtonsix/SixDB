@@ -1,14 +1,14 @@
 #pragma once
 
 // Provisional admission, retained history and State publication; declarations only.
-// See ../../DESIGN.md for the combined Orbital/Loom recommendation.
+// See ../../../DESIGN.md for the combined Orbital/Loom recommendation.
 
-#include <orbital/object.h>
+#include <orbital/candidate/object.h>
 #include <memory>
 #include <optional>
 #include <vector>
 
-namespace orbital::journal {
+namespace orbital::candidate::journal {
 struct Interpretation;
 struct Authority;
 struct Event;
@@ -486,4 +486,4 @@ struct EarlyGrant {
 // All spans/Scope bytes live in their owning retained storage, not task scratch.
 // Full epochs may carry logical continuations while independent work completes;
 // embedded whole-batch completion does not impose a shard-wide transaction fence.
-} // namespace orbital::journal
+} // namespace orbital::candidate::journal

@@ -1,4 +1,4 @@
-#include <orbital/journal.h>
+#include <orbital/candidate/journal.h>
 
 /* Candidate implementation boundaries, not runtime bodies.
 

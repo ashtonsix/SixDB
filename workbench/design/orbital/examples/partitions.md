@@ -13,12 +13,11 @@ Task's storage.
 
 ```cpp
 #include <loom/worker.h>
-#include <orbital/object.h>
+#include <orbital/candidate/object.h>
 #include <cstring>
 #include <utility>
 
-namespace candidate {
-using namespace orbital;
+namespace orbital::candidate::examples {
 namespace partition_route { struct Route; }
 
 struct PartitionWork {
@@ -137,7 +136,7 @@ void cancel_partition(PartitionWork& work) noexcept {
   if (work.done.state == Readiness::ready) acknowledge_partition(work);
 }
 
-} // namespace candidate
+} // namespace orbital::candidate::examples
 ```
 
 Take and cancellation run on the caller's assigned thread. Cancel before dropping caller interest;

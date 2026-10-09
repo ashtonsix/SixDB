@@ -1,7 +1,7 @@
-#include "orbital/port.h"
+#include "orbital/candidate/port.h"
 #include "orbital/worker.h"
 
-namespace orbital::port {
+namespace orbital::candidate::port {
 /* Endpoint creation / retain_memory
    Typed file/blob/network APIs retain their resources and qualify identity+extent.
    They return Source or Destination directly; a universal opaque locator format
@@ -71,4 +71,4 @@ namespace orbital::port {
    Partial writes can have effects; durability includes only the reported guarantee,
    not implicit root/namespace/checkpoint completion. Never publish an epoch here.
 */
-} // namespace orbital::port
+} // namespace orbital::candidate::port

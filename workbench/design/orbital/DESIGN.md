@@ -34,11 +34,11 @@ directly from their owning modules. There is no second scheduler or allocator he
 
 | Area | Responsibility |
 | --- | --- |
-| [Object](include/orbital/object.h) | Object → Representation → Part → View; private edits and cached bytes |
+| [Object](include/orbital/candidate/object.h) | Object → Representation → Part → View; private edits and cached bytes |
 | [Allocation](../../../orbital/include/orbital/allocation.h) | Implemented Arena budget, Pools, allocation, retention and reuse |
-| [Journal](include/orbital/journal.h) | Store input, admit batches, publish state, recover and coordinate transactions |
-| [Port](include/orbital/port.h) | Read and write memory, files, blobs and networks |
-| [Worker](../../../orbital/include/orbital/worker.h) | Implemented threads and message queues; future [isolated executors](include/orbital/executor.h) |
+| [Journal](include/orbital/candidate/journal.h) | Store input, admit batches, publish state, recover and coordinate transactions |
+| [Port](include/orbital/candidate/port.h) | Read and write memory, files, blobs and networks |
+| [Worker](../../../orbital/include/orbital/worker.h) | Implemented threads and message queues; future [isolated executors](include/orbital/candidate/executor.h) |
 | [Loom](../../../loom/include/loom/worker.h) | Implemented Tasks and [typed Rings](../../../loom/include/loom/ring.h); future placement and cache policy |
 
 Engine owns keys, schemas, indexes, query plans and legal partitions of work.

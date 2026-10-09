@@ -1,5 +1,5 @@
 #include <loom/worker.h>
-#include <orbital/object.h>
+#include <orbital/candidate/object.h>
 
 /* Future cache and placement policy; Worker/Task/Ring mechanics live in Loom.
 

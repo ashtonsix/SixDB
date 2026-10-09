@@ -1,15 +1,15 @@
 #pragma once
 
 // Provisional Object/Representation/Part/View interfaces; declarations only.
-// See ../../DESIGN.md for the combined Orbital/Loom recommendation.
+// See ../../../DESIGN.md for the combined Orbital/Loom recommendation.
 
 #include "port.h"
 #include <memory>
 #include <optional>
 #include <variant>
 
-namespace orbital::object { struct Draft; }
-namespace orbital::journal {
+namespace orbital::candidate::object { struct Draft; }
+namespace orbital::candidate::journal {
 struct State;
 struct ReadContext;
 struct Batch;
@@ -21,7 +21,7 @@ struct Consumer;
 struct AdmittedBatch;
 [[nodiscard]] Result<void> begin(Consumer&, const AdmittedBatch&, worker::Lane&, object::Draft&);
 }
-namespace orbital::object {
+namespace orbital::candidate::object {
 struct Object;
 struct Representation;
 struct Part;
@@ -308,4 +308,4 @@ void discard(Draft&) noexcept;
 // Lock.writer borrows only an open matching Draft generation. Close authority
 // and clear writer before destroying Draft; retained uses retain bytes/Lock,
 // never a stale Draft pointer. Finish native writes before closing.
-} // namespace orbital::object
+} // namespace orbital::candidate::object

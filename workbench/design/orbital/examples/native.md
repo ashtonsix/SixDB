@@ -13,12 +13,11 @@ Ring or per-value retain:
 
 ```cpp
 #include <loom/ring.h>
-#include <orbital/journal.h>
+#include <orbital/candidate/journal.h>
 #include <array>
 #include <optional>
 
-namespace candidate {
-using namespace orbital;
+namespace orbital::candidate::examples {
 
 std::uint64_t lookup_native(Bytes bytes, std::span<const std::size_t> offsets) noexcept {
   std::uint64_t sum = 0;
@@ -167,7 +166,7 @@ Result<std::optional<std::byte>> value_after_prefix(loom::Task& parent,
   return std::nullopt;
 }
 
-} // namespace candidate
+} // namespace orbital::candidate::examples
 ```
 
 A value completes this item directly. On `nullopt`, the parent returns Task

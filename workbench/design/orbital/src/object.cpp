@@ -1,6 +1,6 @@
-#include "orbital/object.h"
+#include "orbital/candidate/object.h"
 
-namespace orbital::object {
+namespace orbital::candidate::object {
 /* Selection / try_view
    Borrow Object/Representation/Part from the protected ReadContext, or select
    private candidates from Draft. Validate membership, cut/position and rights.
@@ -198,4 +198,4 @@ namespace orbital::object {
    reacquire a newer basis. Destroying
    Draft ends those references, not the caller's obligation to account for input.
 */
-} // namespace orbital::object
+} // namespace orbital::candidate::object

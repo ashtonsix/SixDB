@@ -12,39 +12,38 @@ an immutable captured source. Interpretation owns the runtime profile; executor
 choice does not change those semantics. Pool setup is outside this example.
 
 ```cpp
-#include <orbital/journal.h>
-#include <orbital/executor.h>
+#include <orbital/candidate/journal.h>
+#include <orbital/candidate/executor.h>
 #include <array>
 #include <utility>
 
-namespace candidate {
-using namespace orbital;
+namespace orbital::candidate::examples {
 
-Progress start_extension(Ref<worker::Execution> execution, worker::Executor& executor,
+Progress start_extension(Ref<execution::Execution> execution, execution::Executor& executor,
     worker::Lane& caller, Ref<journal::Interpretation> interpretation,
-    worker::ExecutionContext context, port::Source arguments,
+    execution::ExecutionContext context, port::Source arguments,
     const object::View& view, ByteRange coverage, bool writable,
-    object::RetainedView& retained_view, std::span<worker::Projection> descriptors) {
+    object::RetainedView& retained_view, std::span<execution::Projection> descriptors) {
   auto retained = object::retain_view(retained_view, view);
   if (!retained) return Progress::fail(retained.error());
 ```
 
-Describe the exact region and rights. `worker::prepare` copies this local projection
+Describe the exact region and rights. `execution::prepare` copies this local projection
 into supplied descriptors and rejects holes or escalated permissions. The RetainedView
 owns copied footprints and physical protection, so the local array and original
 view can end after preparation. The caller lane receives completion.
 
 ```cpp
-  const std::array projections{worker::Projection{std::move(*retained), coverage, writable}};
-  auto prepared = worker::prepare(*execution, executor, caller,
+  const std::array projections{execution::Projection{std::move(*retained), coverage, writable}};
+  auto prepared = execution::prepare(*execution, executor, caller,
       std::move(interpretation), context, std::move(arguments), projections, descriptors);
   if (!prepared) return Progress::fail(prepared.error());
-  return worker::start(std::move(execution));
+  return execution::start(std::move(execution));
 }
 ```
 
 Return control while execution proceeds. A capacity wait before acceptance
-leaves it idle; resume with `worker::start(execution)`, without repeating capture
+leaves it idle; resume with `execution::start(execution)`, without repeating capture
 and preparation. Pending work is observed without duplicate submission.
 Cancellation does not end physical use. Failed writable execution may already
 have changed private projected bytes; repair or discard those before retry.
@@ -61,29 +60,29 @@ Engine/Ikea supplies the ordinary import function. It revalidates original
 changes/authority/coverage and applies output with unit/index/summary maintenance.
 
 ```cpp
-Result<void> import_and_maintain(object::Draft&, const worker::Execution&) noexcept;
+Result<void> import_and_maintain(object::Draft&, const execution::Execution&) noexcept;
 
-Result<void> finish_extension(object::Draft& draft, Ref<worker::Execution> main,
-    std::span<const Ref<worker::Execution>> checkers, bool compare_exact_representation) {
+Result<void> finish_extension(object::Draft& draft, Ref<execution::Execution> main,
+    std::span<const Ref<execution::Execution>> checkers, bool compare_exact_representation) {
   auto& caller = *draft.lane;
   if (main->finished.lane != &caller)
     return std::unexpected(Error::invalid_argument);
   worker::poll(caller, 32);
-  auto progress = worker::start(main);
+  auto progress = execution::start(main);
   if (progress.kind() == Progress::Kind::failed)
     return std::unexpected(progress.failure());
-  auto report = worker::inspect(*main);
+  auto report = execution::inspect(*main);
   if (!report) return std::unexpected(report.error());
   for (const auto& checker : checkers) {
     if (checker->finished.lane != &caller)
       return std::unexpected(Error::invalid_argument);
-    auto progress = worker::start(checker);
+    auto progress = execution::start(checker);
     if (progress.kind() == Progress::Kind::failed)
       return std::unexpected(progress.failure());
-    auto checked = worker::inspect(*checker);
+    auto checked = execution::inspect(*checker);
     if (!checked) return std::unexpected(checked.error());
   }
-  auto verified = worker::verify(*main, checkers, compare_exact_representation);
+  auto verified = execution::verify(*main, checkers, compare_exact_representation);
   if (!verified) return verified;
   return import_and_maintain(draft, *main);
 }
@@ -149,7 +148,7 @@ Result<const port::Completion*> inspect_send(SinkTransfer& transfer, worker::Lan
   return completion;
 }
 
-} // namespace candidate
+} // namespace orbital::candidate::examples
 ```
 
 Inspect outcome and known transferred prefixes together. Partial/unknown

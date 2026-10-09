@@ -1,17 +1,17 @@
 #pragma once
 
 // Provisional isolated execution and verification; declarations only.
-// Native Lane/Thread services are implemented in Orbital; see ../../DESIGN.md.
+// Native Lane/Thread services are implemented in Orbital; see ../../../DESIGN.md.
 
 #include <orbital/worker.h>
-#include <orbital/object.h>
+#include <orbital/candidate/object.h>
 
-namespace orbital::journal {
+namespace orbital::candidate::journal {
 struct Interpretation;
 void retain_ref(Interpretation&) noexcept;
 void release_ref(Interpretation&) noexcept;
 }
-namespace orbital::worker {
+namespace orbital::candidate::execution {
 struct Executor;
 struct Execution;
 void retain_ref(Executor&) noexcept;
@@ -61,12 +61,12 @@ struct Execution {
   std::span<const Projection> projections;
   Report report;
   Signal finished;
-  Message completion;
+  worker::Message completion;
   void* backend_state{};
 };
 // Validate captured authority, initialized coverage and padding. Reuse owned
 // descriptors or copy into reserved storage; completion returns to caller Lane.
-[[nodiscard]] Result<void> prepare(Execution&, Executor&, Lane& completion_lane,
+[[nodiscard]] Result<void> prepare(Execution&, Executor&, worker::Lane& completion_lane,
     Ref<journal::Interpretation>, ExecutionContext,
     port::Source arguments, std::span<const Projection>,
     std::span<Projection> reserved_descriptors);
@@ -81,4 +81,4 @@ void finish(Ref<Execution>, Report, Result<void>) noexcept;
 [[nodiscard]] Result<void> verify(
     const Execution& main, std::span<const Ref<Execution>> checkers,
     bool compare_exact_representation);
-} // namespace orbital::worker
+} // namespace orbital::candidate::execution

@@ -1,6 +1,6 @@
 # Declaration-only design: compile the boundaries/callers without a fake runtime.
 add_library(orbital_design OBJECT EXCLUDE_FROM_ALL
-  src/object.cpp src/journal.cpp src/port.cpp src/worker.cpp)
+  src/object.cpp src/journal.cpp src/port.cpp src/executor.cpp)
 target_include_directories(orbital_design PUBLIC include)
 target_link_libraries(orbital_design PUBLIC orbital::orbital)
 sixdb_target(orbital_design)

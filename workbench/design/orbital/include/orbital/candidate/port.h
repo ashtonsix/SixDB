@@ -1,12 +1,12 @@
 #pragma once
 
 // Provisional retained endpoints and byte-transfer requests; declarations only.
-// See ../../DESIGN.md for the combined Orbital/Loom recommendation.
+// See ../../../DESIGN.md for the combined Orbital/Loom recommendation.
 
 #include <orbital/allocation.h>
 #include <variant>
 
-namespace orbital::port {
+namespace orbital::candidate::port {
 struct Backend;
 struct BackendOps;
 struct Resource;
@@ -117,4 +117,4 @@ void finish(Ref<Request>, Outcome, Persistence, Error) noexcept;
 // Request cannot be retargeted/reused before retirement; finish occurs once only
 // after actual physical use ends. Partial writes may have external effects.
 // Physical completion never publishes an epoch.
-} // namespace orbital::port
+} // namespace orbital::candidate::port
