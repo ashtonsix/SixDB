@@ -1,0 +1,247 @@
+# Authored point-write integration patch; no live source edits.
+# Base: current modified shape-write integration, captured per-file below.
+# Generic full-Update bodies/control and main are deliberately outside this patch.
+# Sizes/accounting use actual sizeof; slots remain included in enclosing records.
+# Clone-first absence can consume copy work; allocation refusal can precede absence.
+# Mapped readonly basis remains protected through write.publish().
+# Preimage-SHA256 7f3230e63d15769aa66bfc4057fa4c7a6f3b4da5b4f044c14a9f5dba539b88d6 workbench/spikes/orbital-mvcc/metadata/composed/material.h
+# Postimage-SHA256 385049ff8ea416876392227691675b0ec96c3c66cf9355012a06ad67fda526a4 workbench/spikes/orbital-mvcc/metadata/composed/material.h
+# Preimage-SHA256 7410238a580148a08da07d7e345b81bf0bbd5fcb9466c7b3f0b8667a232a6620 workbench/spikes/orbital-mvcc/metadata/composed/material.cpp
+# Postimage-SHA256 b3d907d7c016de1c98e6a51fc678552bae5b6f531fd906a5def071dc413c5b12 workbench/spikes/orbital-mvcc/metadata/composed/material.cpp
+# Preimage-SHA256 e9139736105fe394ecf53411e411da690a054d4984ce01a36cf7f002882757db workbench/spikes/orbital-mvcc/metadata/composed/backend.h
+# Postimage-SHA256 1537291a334547b7535222e7fd8e086797cec4b2caa6b9aa113ec959ba13f547 workbench/spikes/orbital-mvcc/metadata/composed/backend.h
+# Preimage-SHA256 af64765731f6f30d0f4e54adb8b3c2c0498a2adc41ba59995792e0c8febd0b62 workbench/spikes/orbital-mvcc/performance/composed_runtime.h
+# Postimage-SHA256 d323adc7c55bf13fb49e38365fc3558731666b1dc5968da0e44e561c96f0c2c2 workbench/spikes/orbital-mvcc/performance/composed_runtime.h
+# Preimage-SHA256 e1c7c317b5d8dcae29cc842117a6f342cbca292c05007fcd9c7796b99788634c workbench/spikes/orbital-mvcc/performance/composed_runtime.cpp
+# Postimage-SHA256 1f76a46b4df94258f0f7515fce4be834c20b93545656a0c1fa92b34fb050e285 workbench/spikes/orbital-mvcc/performance/composed_runtime.cpp
+
+diff --git a/workbench/spikes/orbital-mvcc/metadata/composed/material.h b/workbench/spikes/orbital-mvcc/metadata/composed/material.h
+--- a/workbench/spikes/orbital-mvcc/metadata/composed/material.h
++++ b/workbench/spikes/orbital-mvcc/metadata/composed/material.h
+@@ -4,6 +4,7 @@
+ #include "../consumer/shape_read.h"
+ #include "../consumer/write_batch.h"
+ #include "../consumer/shape_write.h"
++#include "../consumer/point_write.h"
+ #include "../orbital/candidates/shape_policy.h"
+ #include <optional>
+ 
+@@ -15,6 +16,7 @@
+ namespace sr = metadata_consumer::shape_read;
+ namespace wb = metadata_consumer::write_batch;
+ namespace sw = metadata_consumer::shape_write;
++namespace pw = metadata_consumer::point_write;
+ using orbital::Result;
+ using orbital::Error;
+ 
+@@ -50,7 +52,7 @@
+   struct ReleaseShape { void operator()(cs::Shape* value) const { cs::release(value); } };
+   std::unique_ptr<cs::Shape, ReleaseShape> tuple_, columns_proof_;
+   std::optional<sr::TupleProof> tuple_read_;
+-  std::optional<sw::TupleLaw> tuple_write_;
++  std::optional<pw::TupleLaw> tuple_write_;
+   std::optional<sw::SeriesProof> columns_write_;
+   Result<PrivateParts> allocate(const v::Shape&, v::Costs&);
+ public:
+@@ -67,8 +69,7 @@
+   Result<PrivateParts> convert(cs::Selection, v::Format, v::Costs&, v::ConstructionOptions = {});
+   Result<cs::Shape*> proof(const PrivateParts&);
+   v::ReadData generic(cs::Selection) const;
+-  Result<void> lookup(cs::Selection, orbital_bench::Key, std::size_t&, orbital_bench::Record&) const;
+-  Result<void> apply(cs::Selection basis, const PrivateParts&, std::span<const v::Update>,
++  Result<void> apply(cs::Selection basis, const PrivateParts&, std::span<const pw::Command>,
+       v::KernelCosts&, wb::ProbeCosts&) const;
+   orbital_bench::Outcome consume(cs::Selection, const orbital_bench::Operation&) const;
+   Accounting accounting() const;
+diff --git a/workbench/spikes/orbital-mvcc/metadata/composed/material.cpp b/workbench/spikes/orbital-mvcc/metadata/composed/material.cpp
+--- a/workbench/spikes/orbital-mvcc/metadata/composed/material.cpp
++++ b/workbench/spikes/orbital-mvcc/metadata/composed/material.cpp
+@@ -111,8 +111,8 @@
+       auto admitted = sr::admit_tuple_shape(owner.get(), v::data_program, parts.shape->parts[0].id);
+       if (!admitted) { owner.reset(); return std::unexpected(admitted.error()); }
+       tuple_read_ = *admitted;
+-      const auto write_admitted = sw::TupleLaw::prepare(tuple_write_, owner.get(),
+-          corpus_.schema.tuple, std::span(corpus_.schema.writers).subspan<1, 3>(),
++      const auto write_admitted = pw::TupleLaw::prepare(tuple_write_, owner.get(),
++          corpus_.schema.tuple, std::span(corpus_.schema.writers).subspan<2, 2>(),
+           v::data_program, parts.shape->parts[0].id);
+       if (!write_admitted) {
+         tuple_read_.reset(); tuple_write_.reset(); owner.reset();
+@@ -141,28 +141,19 @@
+   return p::need(v::ReadData::bind(corpus_.schema, physical.interpretation,
+       std::span(parts).first(physical.part_count)));
+ }
+-Result<void> Material::lookup(cs::Selection selected, orbital_bench::Key key,
+-    std::size_t& row, orbital_bench::Record& record) const {
+-  if (!selected) return std::unexpected(Error::absent);
+-  if (tuple_write_ && selected.shape() == tuple_write_->shape())
+-    return sw::lookup(tuple_write_->proof(), selected, key, row, record);
+-  if (columns_write_ && selected.shape() == columns_write_->shape())
+-    return sw::lookup(*columns_write_, selected, key, row, record);
+-  return std::unexpected(Error::invalid_argument);
+-}
+ Result<void> Material::apply(cs::Selection basis, const PrivateParts& target,
+-    std::span<const v::Update> input, v::KernelCosts& costs, wb::ProbeCosts& probes) const {
++    std::span<const pw::Command> input, v::KernelCosts& costs, wb::ProbeCosts& probes) const {
+   if (!basis) return std::unexpected(Error::absent);
+   if (!target.shape || target.shape->records != basis.records())
+     return std::unexpected(Error::invalid_argument);
+   // The private clone is constructed from this protected exact basis. Fresh
+-  // supplied IDs/extents/aliases and all keys are still admitted by sw::apply.
++  // supplied IDs/extents/aliases and all keys are still admitted by pw::apply.
+   if (tuple_write_ && basis.shape() == tuple_write_->shape() &&
+       target.shape == &shape(v::Format::rows))
+-    return sw::apply(tuple_write_->proof(), basis.records(), target.parts(), input, costs, probes);
++    return pw::apply(tuple_write_->proof(), basis.records(), target.parts(), input, costs, probes);
+   if (columns_write_ && basis.shape() == columns_write_->shape() &&
+       target.shape == &shape(v::Format::columns))
+-    return sw::apply(*columns_write_, basis.records(), target.parts(), input, costs, probes);
++    return pw::apply(*columns_write_, basis.records(), target.parts(), input, costs, probes);
+   return std::unexpected(Error::invalid_argument);
+ }
+ orbital_bench::Outcome Material::consume(cs::Selection selected,
+@@ -185,7 +176,7 @@
+   result.write_shape_heap_bytes = shape_heap(shape(v::Format::rows)) + shape_heap(columns_);
+   result.schema_bytes = sizeof(v::Schema);
+   result.borrowed_write_shape_record_bytes = sizeof(v::Shape);
+-  result.write_control_live_bytes = (tuple_write_ ? sizeof(sw::TupleLaw) : 0) +
++  result.write_control_live_bytes = (tuple_write_ ? sizeof(pw::TupleLaw) : 0) +
+       (columns_write_ ? sizeof(sw::SeriesProof) : 0);
+   result.write_control_slots_bytes = sizeof(tuple_write_) + sizeof(columns_write_);
+   result.pool_setup_and_inventory_bytes = sizeof(oa::Arena) + sizeof(oa::detail::ArenaState) +
+diff --git a/workbench/spikes/orbital-mvcc/metadata/composed/backend.h b/workbench/spikes/orbital-mvcc/metadata/composed/backend.h
+--- a/workbench/spikes/orbital-mvcc/metadata/composed/backend.h
++++ b/workbench/spikes/orbital-mvcc/metadata/composed/backend.h
+@@ -68,7 +68,8 @@
+   }
+ 
+   // Successful outcomes are emitted only after actual multi-Object install.
+-  // Cloning may have consumed work on refusal; the installed state is intact.
++  // Clone before key resolution: refusal may consume copies, and capacity can
++  // precede absence. The installed state and caller Outcomes remain intact.
+   Result<void> update(std::span<const orbital_bench::Operation> input,
+       std::span<orbital_bench::Outcome> output, std::span<const std::size_t> objects) {
+     using namespace orbital_bench;
+@@ -80,7 +81,7 @@
+     {
+       std::optional<Scope> basis(std::in_place, store_);
+       std::array<Change, 64> changes;
+-      std::array<v::Update, 64> updates;
++      std::array<pw::Command, 64> commands;
+       std::size_t changed{};
+       for (std::size_t offered = 0; offered < objects.size(); ++offered) {
+         const auto object = objects[offered];
+@@ -88,18 +89,12 @@
+         auto selected = select(*basis, object, true);
+         if (!selected) return std::unexpected(selected.error());
+         std::size_t used{};
+-        for (std::size_t i = 0; i < input.size(); ++i) if (objects[i] == object) {
+-          std::size_t position{};
+-          Record record;
+-          const auto found = material_.lookup(*selected, input[i].key, position, record);
+-          if (!found) return std::unexpected(found.error());
+-          record.value = input[i].record.value; record.tag = input[i].record.tag;
+-          updates[used++] = {input[i].key, record};
+-        }
++        for (std::size_t i = 0; i < input.size(); ++i) if (objects[i] == object)
++          commands[used++] = {input[i].key, input[i].record.value, input[i].record.tag};
+         auto parts = material_.clone(*selected, costs);
+         if (!parts) return std::unexpected(parts.error());
+         auto written = material_.apply(*selected, *parts,
+-            std::span(updates).first(used), costs.kernel, write_costs);
++            std::span(commands).first(used), costs.kernel, write_costs);
+         if (!written) return written;
+         auto owner = capture(*parts);
+         if (!owner) return std::unexpected(owner.error());
+@@ -158,7 +153,7 @@
+   template<std::size_t Capacity = 64> Bodies<Capacity> bodies(bool alternative = false) const {
+     return Bodies<Capacity>{*this, alternative};
+   }
+-  static constexpr std::size_t write_caller_arrays = sizeof(std::array<Change, 64>) + sizeof(std::array<v::Update, 64>);
++  static constexpr std::size_t write_caller_arrays = sizeof(std::array<Change, 64>) + sizeof(std::array<pw::Command, 64>);
+ };
+ using Inline = Backend<compact_history::InlineShapeStore16>;
+ using Directory = Backend<compact_history::CompactShapeStore16>;
+diff --git a/workbench/spikes/orbital-mvcc/performance/composed_runtime.h b/workbench/spikes/orbital-mvcc/performance/composed_runtime.h
+--- a/workbench/spikes/orbital-mvcc/performance/composed_runtime.h
++++ b/workbench/spikes/orbital-mvcc/performance/composed_runtime.h
+@@ -6,7 +6,7 @@
+ namespace composed = orbital_mvcc::composed;
+ namespace shape_read = orbital_mvcc::metadata_consumer::shape_read;
+ namespace write_batch = orbital_mvcc::metadata_consumer::write_batch;
+-namespace shape_write = orbital_mvcc::metadata_consumer::shape_write;
++namespace point_write = orbital_mvcc::metadata_consumer::point_write;
+ 
+ // One admitted immutable law, independent of any mapped-value transaction.
+ // The same native read bridge used by composed Orbital also receives LMDB's
+@@ -16,14 +16,14 @@
+   compact_history::Memory memory_;
+   compact_shape::Shape* shape_{};
+   std::optional<shape_read::TupleProof> proof_;
+-  std::optional<shape_write::TupleLaw> write_;
++  std::optional<point_write::TupleLaw> write_;
+ public:
+   explicit MappedShape(const Corpus& corpus);
+   ~MappedShape();
+   MappedShape(const MappedShape&) = delete;
+   auto proof() const { return *proof_; }
+   auto write_proof() const { return write_->proof(); }
+-  std::size_t write_control_live_bytes() const { return write_ ? sizeof(shape_write::TupleLaw) : 0; }
++  std::size_t write_control_live_bytes() const { return write_ ? sizeof(point_write::TupleLaw) : 0; }
+   std::size_t write_control_slots_bytes() const { return sizeof(write_); }
+   const Corpus& corpus() const { return corpus_; }
+   std::size_t metadata_bytes() const { return memory_.live; }
+diff --git a/workbench/spikes/orbital-mvcc/performance/composed_runtime.cpp b/workbench/spikes/orbital-mvcc/performance/composed_runtime.cpp
+--- a/workbench/spikes/orbital-mvcc/performance/composed_runtime.cpp
++++ b/workbench/spikes/orbital-mvcc/performance/composed_runtime.cpp
+@@ -12,8 +12,8 @@
+     compact_shape::release(shape_); shape_ = nullptr; need(admitted);
+   }
+   proof_ = *admitted;
+-  const auto write_admitted = shape_write::TupleLaw::prepare(write_, shape_, corpus.schema.tuple,
+-      std::span(corpus.schema.writers).subspan<1, 3>(), data::data_program, image.address.part);
++  const auto write_admitted = point_write::TupleLaw::prepare(write_, shape_, corpus.schema.tuple,
++      std::span(corpus.schema.writers).subspan<2, 2>(), data::data_program, image.address.part);
+   if (!write_admitted) {
+     proof_.reset(); write_.reset(); compact_shape::release(shape_); shape_ = nullptr;
+     need(write_admitted);
+@@ -92,31 +92,27 @@
+       throw std::invalid_argument("invalid composed LMDB fixed-row update");
+   std::optional<Lmdb::Read> basis(store.read());
+   auto write = store.edit();
+-  std::array<data::Update, 64> updates;
++  std::array<point_write::Command, 64> commands;
+   for (std::size_t offered = 0; offered < objects.size(); ++offered) {
+     const auto object = objects[offered];
+     if (std::find(objects.begin(), objects.begin() + offered, object) != objects.begin() + offered) continue;
+     const auto& image = corpus.images[object];
+     const auto bytes = basis->part(image.address);
+     if (!bytes) throw std::runtime_error("missing composed LMDB update basis");
++    // The lookup is gone; exact source mapping admission remains before copying.
++    need(point_write::admit_mapped(write_proof, image.shape.records, *bytes));
+     std::size_t used{};
+-    for (std::size_t i = 0; i < input.size(); ++i) if (objects[i] == object) {
+-      std::size_t position{};
+-      Record record;
+-      need(shape_write::lookup_mapped(write_proof, image.shape.records, *bytes,
+-          input[i].key, position, record));
+-      record.value = input[i].record.value; record.tag = input[i].record.tag;
+-      updates[used++] = {input[i].key, record};
+-    }
++    for (std::size_t i = 0; i < input.size(); ++i) if (objects[i] == object)
++      commands[used++] = {input[i].key, input[i].record.value, input[i].record.tag};
+     auto target = write.reserve_part(image.address, bytes->size());
+     std::memcpy(target.data(), bytes->data(), bytes->size());
+     costs.copied_bytes += bytes->size(); ++costs.copied_spans;
+     costs.requested_body_bytes += bytes->size(); ++costs.requested_parts;
+     const data::WritePart part{image.address.part, target};
+-    need(shape_write::apply(write_proof, image.shape.records, std::span{&part, 1},
+-        std::span(updates).first(used), costs.kernel, probe));
++    need(point_write::apply(write_proof, image.shape.records, std::span{&part, 1},
++        std::span(commands).first(used), costs.kernel, probe));
+   }
+-  basis.reset(); write.publish();
++  write.publish(); basis.reset();
+   for (auto& outcome : output) { outcome = {}; outcome.changes = 1; detail::mix(outcome.digest, 1); }
+ }
+ } // namespace orbital_versioned_performance
