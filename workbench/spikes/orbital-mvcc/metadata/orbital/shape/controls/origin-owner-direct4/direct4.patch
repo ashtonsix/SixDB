@@ -1,0 +1,138 @@
+--- a/workbench/spikes/orbital-mvcc/metadata/orbital/shape/shape.cpp
++++ b/workbench/spikes/orbital-mvcc/metadata/orbital/shape/shape.cpp
+@@ -97,15 +97,15 @@
+   use.storage = owner;
+   orbital::allocation::release(use);
+ }
+-orbital::allocation::Storage* pin(orbital::allocation::Storage* owner) {
+-  if (!owner) return nullptr;
+-  // Capture registered the actual full Allocation footprint. This local only
+-  // borrows its live physical token; retain never narrows Storage::held_extent.
++Result<orbital::allocation::Storage*> pin(orbital::allocation::Storage* owner) {
++  if (!owner) return static_cast<orbital::allocation::Storage*>(nullptr);
++  // This local borrows its live physical token; duplication can refuse at capacity.
+   orbital::allocation::Hold borrowed;
+   borrowed.storage = owner;
+   auto retained = orbital::allocation::retain(borrowed);
+   borrowed.storage = nullptr;
+-  return std::exchange(retained.storage, nullptr);
++  if (!retained) return std::unexpected(retained.error());
++  return std::exchange(retained->storage, nullptr);
+ }
+ 
+ bool within(const orbital::allocation::Allocation& allocation, Bytes body, std::uint32_t padding) {
+@@ -359,7 +359,15 @@
+     value->address = part_address(realization, index); value->binding = binding;
+     value->index = index; value->owners = realization->owners; value->interpretation = interpretation;
+     if (shared(value->owners)) std::construct_at(&value->owner.shared, shared_owner(realization, index));
+-    else value->owner.allocation = pin(allocation_owner(realization, index));
++    else {
++      auto held = pin(allocation_owner(realization, index));
++      if (!held) {
++        std::destroy_at(value);
++        memory->deallocate(value, size, alignof(Export));
++        return std::unexpected(held.error());
++      }
++      value->owner.allocation = *held;
++    }
+     if (interpretation == Interpretation::shared_shape) retain(source);
+     else {
+       auto* copy = std::construct_at(static_cast<Shape*>(static_cast<void*>(bytes(value) + sizeof(Export))),
+--- a/workbench/spikes/orbital-mvcc/metadata/orbital/shape/origin.cpp
++++ b/workbench/spikes/orbital-mvcc/metadata/orbital/shape/origin.cpp
+@@ -5,9 +5,11 @@
+ const std::byte* allocation_origin(const orbital::allocation::Storage* owner) noexcept {
+   if (!owner) return nullptr;
+   // Caller owns a live Hold. Its identity cannot rebind or retire during access.
+-  // This control uses the unchanged current Allocation layout, not route patches.
+-  const auto* domain = owner->domain;
++  // Reuse one packed-state snapshot for actual Direct4 routing and identity.
++  const auto state = owner->users.state.load(std::memory_order_relaxed);
++  const auto* domain = orbital::allocation::detail::route(
++      *const_cast<orbital::allocation::Storage*>(owner), state);
+   if (!domain->finite) return static_cast<const orbital::allocation::detail::Window*>(domain->context)->address;
+-  return static_cast<const orbital::allocation::detail::Group*>(domain->context)->geometry->resolve({owner->identity});
++  return static_cast<const orbital::allocation::detail::Group*>(domain->context)->geometry->resolve({static_cast<std::uint16_t>(state >> 24)});
+ }
+ } // namespace compact_shape::detail
+--- a/workbench/spikes/orbital-mvcc/metadata/orbital/shape/controls/origin-owner/check.cpp
++++ b/workbench/spikes/orbital-mvcc/metadata/orbital/shape/controls/origin-owner/check.cpp
+@@ -35,6 +35,30 @@
+   check(result); return *result;
+ }
+ 
++// The owner-only layout must retain the checked runtime's no-effect refusal.
++void export_refusal(cs::Selection selected, std::size_t index, oa::Storage* owner, Memory& memory) {
++  const auto users = owner->users.load();
++  const auto identity = owner->identity();
++  const auto before = memory.live;
++  const auto* address = take(selected.part(index)).address();
++  const auto byte = address[0];
++  owner->users.store(oa::detail::returning - 1);
++  for (auto policy : {cs::Interpretation::shared_shape, cs::Interpretation::selected_copy}) {
++    auto result = cs::detail::retain_part(selected, index, {{9,8},7}, policy);
++    check(!result && result.error() == orbital::Error::capacity);
++    check(memory.live == before && owner->users.load() == oa::detail::returning - 1);
++    check(owner->identity() == identity);
++    check(take(selected.part(index)).address() == address && address[0] == byte);
++  }
++  owner->users.store(users);
++  for (auto policy : {cs::Interpretation::shared_shape, cs::Interpretation::selected_copy}) {
++    auto* retried = take(cs::detail::retain_part(selected, index, {{9,8},7}, policy));
++    check(cs::view(retried).address() == address && cs::view(retried).address()[0] == byte);
++    cs::release(retried);
++  }
++  check(memory.live == before && owner->users.load() == users && owner->identity() == identity);
++}
++
+ void selected_origins(cs::probe::NativeFixture& fixture) {
+   Memory m;
+   auto wire = descriptor();
+@@ -51,7 +75,7 @@
+     sources[i] = {{1,i}, {allocations[i].address, 8}, interpretation, 0, 1, {}};
+     bodies[i] = {sources[i].id, sources[i].body, {}, &allocations[i]};
+   }
+-  check(identities.back()->identity == 255);
++  check(identities.back()->identity() == 255);
+   auto* shape = take(cs::prove_series(m, {3,4}, sources));
+   auto* value = take(cs::capture(m, {shape, 3, cs::Owners::independent_allocation}, bodies));
+   check(value->owners == cs::Owners::independent_origin);
+@@ -63,6 +87,7 @@
+     check(view && view.address() == expected[i] && view.address()[0] == std::byte(i));
+     check(cs::part_address(value, i) == expected[i]);
+   }
++  export_refusal({value}, 255, identities.back(), m);
+   std::array<cs::Export*, 2> escaped;
+   for (std::size_t i = 0; i < 2; ++i) escaped[i] = take(cs::detail::retain_part({value}, 255,
+       {{9,8}, 7}, i ? cs::Interpretation::selected_copy : cs::Interpretation::shared_shape));
+@@ -84,6 +109,7 @@
+   Memory m; auto wire = descriptor();
+   orbital::Bytes interpretation{reinterpret_cast<const std::byte*>(wire.data()), wire.size()};
+   auto allocation = take(oa::allocate(*fixture.pool, {.bytes = allocation_bytes, .alignment = 1}));
++  auto* owner = allocation.storage;
+   auto* expected = allocation.address + offset; expected[0] = std::byte{0x6b};
+   const cd::PartSource source{{1,2}, {expected,8}, interpretation,0,1,{}};
+   const cs::BodySource body{source.id,source.body,{},&allocation};
+@@ -99,6 +125,7 @@
+   check(cs::origin(value->owners) == compressed);
+   check(cs::footprint(value).requested_bytes == (compressed ? 32 : 40));
+   check(take(cs::Selection{value}.part(0)).address() == expected);
++  if (compressed) export_refusal({value}, 0, owner, m);
+   auto* exported = take(cs::detail::retain_part({value},0,{{9,8},2},cs::Interpretation::selected_copy));
+   cs::release(value);
+   check(cs::view(exported).address() == expected && expected[0] == std::byte{0x6b});
+@@ -137,6 +164,7 @@
+ }
+ 
+ int main() {
++  static_assert(sizeof(oa::Storage) == 4);
+   cs::probe::NativeFixture fixture; check(fixture.open());
+   selected_origins(fixture);
+   for (auto bytes : {64u,8192u}) for (auto offset : {0u,8u})
+@@ -144,5 +172,5 @@
+   placement_and_failure(fixture,64,8,cs::Owners::grouped_allocation);
+   growth(fixture,false); growth(fixture,true); empty_and_shared();
+   check(fixture.close());
+-  std::printf("{\"exact_origin_part_bytes\":8,\"explicit_part_bytes\":16,\"selection_bytes\":%zu,\"view_bytes\":%zu,\"result_view_bytes\":%zu,\"focused_histories\":true}\n",sizeof(cs::Selection),sizeof(cs::View),sizeof(orbital::Result<cs::View>));
++  std::printf("{\"exact_origin_part_bytes\":8,\"explicit_part_bytes\":16,\"selection_bytes\":%zu,\"view_bytes\":%zu,\"result_view_bytes\":%zu,\"focused_histories\":true,\"packed_storage_bytes\":4,\"saturated_export_refusal_retry\":true}\n",sizeof(cs::Selection),sizeof(cs::View),sizeof(orbital::Result<cs::View>));
+ }
