@@ -24,7 +24,7 @@ the Git bundle requires retained ancestor `8412e5c`. It need not be restored to
 | Baseline Objects | [Behavior](baseline/objects.md), [structure](baseline/structure.md), [header](baseline/include/orbital/object.h), [implementation](baseline/src/internal.h), [histories](baseline/test/object.cpp) |
 | Actual Loom composition | [Caller lifetimes](callers/README.md) and [executable histories](callers/loom.cpp) |
 | Disposable format consumer | [SeriesPack columns ↔ TuplePack rows](consumer/README.md), with four Parts ↔ one Part |
-| Complete-operation comparison | [LMDB controls and runner](performance/README.md), [retained baseline findings](performance/FINDINGS.md) |
+| Complete-operation comparison | [LMDB controls and runner](performance/README.md), [iteration feedback](performance/FEEDBACK.md), [retained baseline findings](performance/FINDINGS.md) |
 | Metadata alternatives | [Cross-module findings](metadata/README.md), packet census, ordinary ABI probes and candidates |
 
 ## Questions driving the next candidates

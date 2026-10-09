@@ -2,6 +2,10 @@
 
 The [2026-10-09 findings](FINDINGS.md) retain the qualified thin-cursor panel,
 including remaining deficits, old-reader capacity and exact native call frames.
+[Iteration feedback](FEEDBACK.md) records the subsequent matched Zen 5 native-call
+and catalog comparisons, including regressions, hardware counters and limits.
+Each comparison belongs to its captured sources; it does not qualify later
+directory, representation or Allocation changes.
 
 This is the rejected Stage 2 implementation retained as an experimental
 comparison baseline, alongside the fixed-record [consumer](../consumer/).

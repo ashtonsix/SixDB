@@ -1,0 +1,1321 @@
+{
+  "architecture": "x86_64",
+  "method": "exact measured executable, separate TUs, no LTO; structural only",
+  "limitation": "stack traffic is not evidence of forwarding stalls; no model cycles",
+  "functions": [
+    {
+      "symbol": "orbital_versioned_performance::Interval orbital_versioned_performance::opaque_read_trial<true, orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>, true>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&>(orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>, true>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+      "code_bytes": 3301,
+      "prologue": [
+        "14350:      \tpushq\t%rbp",
+        "14351:      \tpushq\t%r15",
+        "14353:      \tpushq\t%r14",
+        "14355:      \tpushq\t%r13",
+        "14357:      \tpushq\t%r12",
+        "14359:      \tpushq\t%rbx",
+        "1435a:      \tsubq\t$0x1f8, %rsp            # imm = 0x1F8",
+        "14361:      \tmovq\t0x240(%rsp), %rbp",
+        "14369:      \tmovq\t%r8, 0x90(%rsp)",
+        "14371:      \tmovq\t%rdx, 0x88(%rsp)",
+        "14379:      \tmovq\t%rsi, 0x70(%rsp)",
+        "1437e:      \tleaq\t-0x41(%rbp), %rax"
+      ],
+      "stack_adjustments": [
+        "1435a:      \tsubq\t$0x1f8, %rsp            # imm = 0x1F8"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZNSt6chrono3_V212steady_clock3nowEv@plt",
+        "_ZSt20__throw_length_errorPKc@plt",
+        "_ZdlPvm@plt",
+        "_Znwm@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "clock_gettime@plt",
+        "compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>::Core::close(compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>::Scope&)",
+        "memmove@plt",
+        "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_versioned_performance::FusedTuple16>(orbital_versioned_performance::FusedTuple16 const&, orbital_bench::Operation const&)",
+        "orbital_bench::pmu::Session::start()",
+        "orbital_bench::pmu::Session::stop()",
+        "orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>, true>::body(unsigned long)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::Interval orbital_versioned_performance::opaque_read_trial<false, orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>, true>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&>(orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>, true>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+      "code_bytes": 2654,
+      "prologue": [
+        "15040:      \tpushq\t%rbp",
+        "15041:      \tpushq\t%r15",
+        "15043:      \tpushq\t%r14",
+        "15045:      \tpushq\t%r13",
+        "15047:      \tpushq\t%r12",
+        "15049:      \tpushq\t%rbx",
+        "1504a:      \tsubq\t$0x1e8, %rsp            # imm = 0x1E8",
+        "15051:      \tmovq\t0x230(%rsp), %rbx",
+        "15059:      \tmovq\t%r8, 0x80(%rsp)",
+        "15061:      \tmovq\t%rdx, 0x78(%rsp)",
+        "15066:      \tmovq\t%rsi, 0x60(%rsp)",
+        "1506b:      \tmovq\t%rdi, (%rsp)"
+      ],
+      "stack_adjustments": [
+        "1504a:      \tsubq\t$0x1e8, %rsp            # imm = 0x1E8"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZNSt6chrono3_V212steady_clock3nowEv@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "clock_gettime@plt",
+        "compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>::Core::close(compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>::Scope&)",
+        "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_versioned_performance::FusedTuple16>(orbital_versioned_performance::FusedTuple16 const&, orbital_bench::Operation const&)",
+        "orbital_bench::pmu::Session::start()",
+        "orbital_bench::pmu::Session::stop()",
+        "orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>, true>::body(unsigned long)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>, true>::body(unsigned long)",
+      "code_bytes": 1001,
+      "prologue": [
+        "15aa0:      \tpushq\t%rbp",
+        "15aa1:      \tpushq\t%r15",
+        "15aa3:      \tpushq\t%r14",
+        "15aa5:      \tpushq\t%r13",
+        "15aa7:      \tpushq\t%r12",
+        "15aa9:      \tpushq\t%rbx",
+        "15aaa:      \tsubq\t$0x78, %rsp",
+        "15aae:      \tcmpq\t$0x8, %rdx",
+        "15ab2:      \tjae\t0x15dfb <orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>, true>::body(unsigned long)+0x35b>",
+        "15ab8:      \tleaq\t(%rdx,%rdx,2), %rbp",
+        "15abc:      \tmovq\t%rdx, %r15",
+        "15abf:      \tmovq\t%rsi, %r14"
+      ],
+      "stack_adjustments": [
+        "15aaa:      \tsubq\t$0x78, %rsp"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZSt24__throw_out_of_range_fmtPKcz@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "compact_descriptor::Selection::part(orbital::Id<orbital::PartTag>) const",
+        "compact_descriptor::Selection::part_count() const",
+        "compact_descriptor::View orbital_versioned_performance::need<compact_descriptor::View>(std::expected<compact_descriptor::View, orbital::Error>)",
+        "compact_descriptor::description(compact_descriptor::Selection)",
+        "compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>::Core::resolve(unsigned long, orbital::Id<orbital::ObjectTag>, bool) const",
+        "orbital_mvcc::metadata_consumer::ExplicitTuple16 orbital_versioned_performance::need<orbital_mvcc::metadata_consumer::ExplicitTuple16>(std::expected<orbital_mvcc::metadata_consumer::ExplicitTuple16, orbital::Error>)",
+        "orbital_mvcc::metadata_consumer::detail::admit_tuple_part(orbital_bench::versioned::TupleControl const&, std::span<std::byte const, 18446744073709551615ul>, std::span<std::byte const, 18446744073709551615ul>, unsigned char const*&)",
+        "orbital_mvcc::metadata_consumer::qualify_fixed_tuple_parent(unsigned long, std::span<std::byte const, 18446744073709551615ul>, orbital::Id<orbital::PartTag>, unsigned long)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::Interval orbital_versioned_performance::opaque_read_trial<true, orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>, false>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&>(orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>, false>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+      "code_bytes": 2570,
+      "prologue": [
+        "17120:      \tpushq\t%rbp",
+        "17121:      \tpushq\t%r15",
+        "17123:      \tpushq\t%r14",
+        "17125:      \tpushq\t%r13",
+        "17127:      \tpushq\t%r12",
+        "17129:      \tpushq\t%rbx",
+        "1712a:      \tsubq\t$0x178, %rsp            # imm = 0x178",
+        "17131:      \tmovq\t0x1c0(%rsp), %r12",
+        "17139:      \tmovq\t%r8, 0x78(%rsp)",
+        "1713e:      \tmovq\t%rsi, 0x68(%rsp)",
+        "17143:      \tleaq\t-0x41(%r12), %rax",
+        "17148:      \tcmpq\t$-0x40, %rax"
+      ],
+      "stack_adjustments": [
+        "1712a:      \tsubq\t$0x178, %rsp            # imm = 0x178"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZNSt6chrono3_V212steady_clock3nowEv@plt",
+        "_ZSt20__throw_length_errorPKc@plt",
+        "_ZdlPvm@plt",
+        "_Znwm@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "clock_gettime@plt",
+        "compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>::Core::close(compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>::Scope&)",
+        "memmove@plt",
+        "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_bench::versioned::TupleBody>(orbital_bench::versioned::TupleBody const&, orbital_bench::Operation const&)",
+        "orbital_bench::pmu::Session::start()",
+        "orbital_bench::pmu::Session::stop()",
+        "orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>, false>::body(unsigned long)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::Interval orbital_versioned_performance::opaque_read_trial<false, orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>, false>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&>(orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>, false>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+      "code_bytes": 1766,
+      "prologue": [
+        "17b30:      \tpushq\t%rbp",
+        "17b31:      \tpushq\t%r15",
+        "17b33:      \tpushq\t%r14",
+        "17b35:      \tpushq\t%r13",
+        "17b37:      \tpushq\t%r12",
+        "17b39:      \tpushq\t%rbx",
+        "17b3a:      \tsubq\t$0x158, %rsp            # imm = 0x158",
+        "17b41:      \tmovq\t0x1a0(%rsp), %r13",
+        "17b49:      \tmovq\t%r8, 0x58(%rsp)",
+        "17b4e:      \tmovq\t%rsi, 0x40(%rsp)",
+        "17b53:      \tleaq\t-0x41(%r13), %rax",
+        "17b57:      \tcmpq\t$-0x40, %rax"
+      ],
+      "stack_adjustments": [
+        "17b3a:      \tsubq\t$0x158, %rsp            # imm = 0x158"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZNSt6chrono3_V212steady_clock3nowEv@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "clock_gettime@plt",
+        "compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>::Core::close(compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>::Scope&)",
+        "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_bench::versioned::TupleBody>(orbital_bench::versioned::TupleBody const&, orbital_bench::Operation const&)",
+        "orbital_bench::pmu::Session::start()",
+        "orbital_bench::pmu::Session::stop()",
+        "orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>, false>::body(unsigned long)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_bench::versioned::TupleBody>(orbital_bench::versioned::TupleBody const&, orbital_bench::Operation const&)",
+      "code_bytes": 1357,
+      "prologue": [
+        "18220:      \tpushq\t%rbp",
+        "18221:      \tpushq\t%r15",
+        "18223:      \tpushq\t%r14",
+        "18225:      \tpushq\t%r13",
+        "18227:      \tpushq\t%r12",
+        "18229:      \tpushq\t%rbx",
+        "1822a:      \tsubq\t$0x1a8, %rsp            # imm = 0x1A8",
+        "18231:      \tvxorps\t%xmm0, %xmm0, %xmm0",
+        "18235:      \tvmovups\t%xmm0, (%rdi)",
+        "18239:      \tmovq\t$0x0, 0x10(%rdi)",
+        "18241:      \tmovq\t%rdi, %r14",
+        "18244:      \tmovl\t(%rdx), %eax"
+      ],
+      "stack_adjustments": [
+        "1822a:      \tsubq\t$0x1a8, %rsp            # imm = 0x1A8"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "orbital_bench::versioned::TupleBody::scan(unsigned long, std::span<orbital_bench::Row, 18446744073709551615ul>) const"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>, false>::body(unsigned long)",
+      "code_bytes": 911,
+      "prologue": [
+        "18770:      \tpushq\t%rbp",
+        "18771:      \tpushq\t%r15",
+        "18773:      \tpushq\t%r14",
+        "18775:      \tpushq\t%r13",
+        "18777:      \tpushq\t%r12",
+        "18779:      \tpushq\t%rbx",
+        "1877a:      \tsubq\t$0x58, %rsp",
+        "1877e:      \tcmpq\t$0x8, %rdx",
+        "18782:      \tjae\t0x18a82 <orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>, false>::body(unsigned long)+0x312>",
+        "18788:      \tmovq\t%rdx, %rax",
+        "1878b:      \tshlq\t$0x4, %rax",
+        "1878f:      \tmovq\t%rsi, %r15"
+      ],
+      "stack_adjustments": [
+        "1877a:      \tsubq\t$0x58, %rsp"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZSt24__throw_out_of_range_fmtPKcz@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "compact_descriptor::Selection::part(orbital::Id<orbital::PartTag>) const",
+        "compact_descriptor::Selection::part_count() const",
+        "compact_descriptor::View orbital_versioned_performance::need<compact_descriptor::View>(std::expected<compact_descriptor::View, orbital::Error>)",
+        "compact_descriptor::description(compact_descriptor::Selection)",
+        "compact_history::Store<compact_version_probe::Chunks8, compact_retention::FloorRetention>::Core::resolve(unsigned long, orbital::Id<orbital::ObjectTag>, bool) const",
+        "orbital_bench::versioned::TupleCursor orbital_versioned_performance::need<orbital_bench::versioned::TupleCursor>(std::expected<orbital_bench::versioned::TupleCursor, orbital::Error>)",
+        "orbital_bench::versioned::qualify_tuple(orbital_bench::versioned::TupleControl const&, std::span<std::byte const, 18446744073709551615ul>, std::span<orbital_bench::versioned::ReadPart const, 18446744073709551615ul>)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::Interval orbital_versioned_performance::opaque_read_trial<true, orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>, true>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&>(orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>, true>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+      "code_bytes": 3301,
+      "prologue": [
+        "1c670:      \tpushq\t%rbp",
+        "1c671:      \tpushq\t%r15",
+        "1c673:      \tpushq\t%r14",
+        "1c675:      \tpushq\t%r13",
+        "1c677:      \tpushq\t%r12",
+        "1c679:      \tpushq\t%rbx",
+        "1c67a:      \tsubq\t$0x1f8, %rsp            # imm = 0x1F8",
+        "1c681:      \tmovq\t0x240(%rsp), %rbp",
+        "1c689:      \tmovq\t%r8, 0x90(%rsp)",
+        "1c691:      \tmovq\t%rdx, 0x88(%rsp)",
+        "1c699:      \tmovq\t%rsi, 0x70(%rsp)",
+        "1c69e:      \tleaq\t-0x41(%rbp), %rax"
+      ],
+      "stack_adjustments": [
+        "1c67a:      \tsubq\t$0x1f8, %rsp            # imm = 0x1F8"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZNSt6chrono3_V212steady_clock3nowEv@plt",
+        "_ZSt20__throw_length_errorPKc@plt",
+        "_ZdlPvm@plt",
+        "_Znwm@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "clock_gettime@plt",
+        "compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>::Core::close(compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>::Scope&)",
+        "memmove@plt",
+        "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_versioned_performance::FusedTuple16>(orbital_versioned_performance::FusedTuple16 const&, orbital_bench::Operation const&)",
+        "orbital_bench::pmu::Session::start()",
+        "orbital_bench::pmu::Session::stop()",
+        "orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>, true>::body(unsigned long)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::Interval orbital_versioned_performance::opaque_read_trial<false, orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>, true>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&>(orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>, true>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+      "code_bytes": 2654,
+      "prologue": [
+        "1d360:      \tpushq\t%rbp",
+        "1d361:      \tpushq\t%r15",
+        "1d363:      \tpushq\t%r14",
+        "1d365:      \tpushq\t%r13",
+        "1d367:      \tpushq\t%r12",
+        "1d369:      \tpushq\t%rbx",
+        "1d36a:      \tsubq\t$0x1e8, %rsp            # imm = 0x1E8",
+        "1d371:      \tmovq\t0x230(%rsp), %rbx",
+        "1d379:      \tmovq\t%r8, 0x80(%rsp)",
+        "1d381:      \tmovq\t%rdx, 0x78(%rsp)",
+        "1d386:      \tmovq\t%rsi, 0x60(%rsp)",
+        "1d38b:      \tmovq\t%rdi, (%rsp)"
+      ],
+      "stack_adjustments": [
+        "1d36a:      \tsubq\t$0x1e8, %rsp            # imm = 0x1E8"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZNSt6chrono3_V212steady_clock3nowEv@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "clock_gettime@plt",
+        "compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>::Core::close(compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>::Scope&)",
+        "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_versioned_performance::FusedTuple16>(orbital_versioned_performance::FusedTuple16 const&, orbital_bench::Operation const&)",
+        "orbital_bench::pmu::Session::start()",
+        "orbital_bench::pmu::Session::stop()",
+        "orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>, true>::body(unsigned long)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>, true>::body(unsigned long)",
+      "code_bytes": 1001,
+      "prologue": [
+        "1ddc0:      \tpushq\t%rbp",
+        "1ddc1:      \tpushq\t%r15",
+        "1ddc3:      \tpushq\t%r14",
+        "1ddc5:      \tpushq\t%r13",
+        "1ddc7:      \tpushq\t%r12",
+        "1ddc9:      \tpushq\t%rbx",
+        "1ddca:      \tsubq\t$0x78, %rsp",
+        "1ddce:      \tcmpq\t$0x8, %rdx",
+        "1ddd2:      \tjae\t0x1e11b <orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>, true>::body(unsigned long)+0x35b>",
+        "1ddd8:      \tleaq\t(%rdx,%rdx,2), %rbp",
+        "1dddc:      \tmovq\t%rdx, %r15",
+        "1dddf:      \tmovq\t%rsi, %r14"
+      ],
+      "stack_adjustments": [
+        "1ddca:      \tsubq\t$0x78, %rsp"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZSt24__throw_out_of_range_fmtPKcz@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "compact_descriptor::Selection::part(orbital::Id<orbital::PartTag>) const",
+        "compact_descriptor::Selection::part_count() const",
+        "compact_descriptor::View orbital_versioned_performance::need<compact_descriptor::View>(std::expected<compact_descriptor::View, orbital::Error>)",
+        "compact_descriptor::description(compact_descriptor::Selection)",
+        "compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>::Core::resolve(unsigned long, orbital::Id<orbital::ObjectTag>, bool) const",
+        "orbital_mvcc::metadata_consumer::ExplicitTuple16 orbital_versioned_performance::need<orbital_mvcc::metadata_consumer::ExplicitTuple16>(std::expected<orbital_mvcc::metadata_consumer::ExplicitTuple16, orbital::Error>)",
+        "orbital_mvcc::metadata_consumer::detail::admit_tuple_part(orbital_bench::versioned::TupleControl const&, std::span<std::byte const, 18446744073709551615ul>, std::span<std::byte const, 18446744073709551615ul>, unsigned char const*&)",
+        "orbital_mvcc::metadata_consumer::qualify_fixed_tuple_parent(unsigned long, std::span<std::byte const, 18446744073709551615ul>, orbital::Id<orbital::PartTag>, unsigned long)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::Interval orbital_versioned_performance::opaque_read_trial<true, orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>, false>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&>(orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>, false>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+      "code_bytes": 2570,
+      "prologue": [
+        "1e390:      \tpushq\t%rbp",
+        "1e391:      \tpushq\t%r15",
+        "1e393:      \tpushq\t%r14",
+        "1e395:      \tpushq\t%r13",
+        "1e397:      \tpushq\t%r12",
+        "1e399:      \tpushq\t%rbx",
+        "1e39a:      \tsubq\t$0x178, %rsp            # imm = 0x178",
+        "1e3a1:      \tmovq\t0x1c0(%rsp), %r12",
+        "1e3a9:      \tmovq\t%r8, 0x78(%rsp)",
+        "1e3ae:      \tmovq\t%rsi, 0x68(%rsp)",
+        "1e3b3:      \tleaq\t-0x41(%r12), %rax",
+        "1e3b8:      \tcmpq\t$-0x40, %rax"
+      ],
+      "stack_adjustments": [
+        "1e39a:      \tsubq\t$0x178, %rsp            # imm = 0x178"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZNSt6chrono3_V212steady_clock3nowEv@plt",
+        "_ZSt20__throw_length_errorPKc@plt",
+        "_ZdlPvm@plt",
+        "_Znwm@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "clock_gettime@plt",
+        "compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>::Core::close(compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>::Scope&)",
+        "memmove@plt",
+        "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_bench::versioned::TupleBody>(orbital_bench::versioned::TupleBody const&, orbital_bench::Operation const&)",
+        "orbital_bench::pmu::Session::start()",
+        "orbital_bench::pmu::Session::stop()",
+        "orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>, false>::body(unsigned long)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::Interval orbital_versioned_performance::opaque_read_trial<false, orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>, false>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&>(orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>, false>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+      "code_bytes": 1766,
+      "prologue": [
+        "1eda0:      \tpushq\t%rbp",
+        "1eda1:      \tpushq\t%r15",
+        "1eda3:      \tpushq\t%r14",
+        "1eda5:      \tpushq\t%r13",
+        "1eda7:      \tpushq\t%r12",
+        "1eda9:      \tpushq\t%rbx",
+        "1edaa:      \tsubq\t$0x158, %rsp            # imm = 0x158",
+        "1edb1:      \tmovq\t0x1a0(%rsp), %r13",
+        "1edb9:      \tmovq\t%r8, 0x58(%rsp)",
+        "1edbe:      \tmovq\t%rsi, 0x40(%rsp)",
+        "1edc3:      \tleaq\t-0x41(%r13), %rax",
+        "1edc7:      \tcmpq\t$-0x40, %rax"
+      ],
+      "stack_adjustments": [
+        "1edaa:      \tsubq\t$0x158, %rsp            # imm = 0x158"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZNSt6chrono3_V212steady_clock3nowEv@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "clock_gettime@plt",
+        "compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>::Core::close(compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>::Scope&)",
+        "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_bench::versioned::TupleBody>(orbital_bench::versioned::TupleBody const&, orbital_bench::Operation const&)",
+        "orbital_bench::pmu::Session::start()",
+        "orbital_bench::pmu::Session::stop()",
+        "orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>, false>::body(unsigned long)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>, false>::body(unsigned long)",
+      "code_bytes": 911,
+      "prologue": [
+        "1f490:      \tpushq\t%rbp",
+        "1f491:      \tpushq\t%r15",
+        "1f493:      \tpushq\t%r14",
+        "1f495:      \tpushq\t%r13",
+        "1f497:      \tpushq\t%r12",
+        "1f499:      \tpushq\t%rbx",
+        "1f49a:      \tsubq\t$0x58, %rsp",
+        "1f49e:      \tcmpq\t$0x8, %rdx",
+        "1f4a2:      \tjae\t0x1f7a2 <orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>, false>::body(unsigned long)+0x312>",
+        "1f4a8:      \tmovq\t%rdx, %rax",
+        "1f4ab:      \tshlq\t$0x4, %rax",
+        "1f4af:      \tmovq\t%rsi, %r15"
+      ],
+      "stack_adjustments": [
+        "1f49a:      \tsubq\t$0x58, %rsp"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZSt24__throw_out_of_range_fmtPKcz@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "compact_descriptor::Selection::part(orbital::Id<orbital::PartTag>) const",
+        "compact_descriptor::Selection::part_count() const",
+        "compact_descriptor::View orbital_versioned_performance::need<compact_descriptor::View>(std::expected<compact_descriptor::View, orbital::Error>)",
+        "compact_descriptor::description(compact_descriptor::Selection)",
+        "compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version16>, compact_retention::FloorRetention>::Core::resolve(unsigned long, orbital::Id<orbital::ObjectTag>, bool) const",
+        "orbital_bench::versioned::TupleCursor orbital_versioned_performance::need<orbital_bench::versioned::TupleCursor>(std::expected<orbital_bench::versioned::TupleCursor, orbital::Error>)",
+        "orbital_bench::versioned::qualify_tuple(orbital_bench::versioned::TupleControl const&, std::span<std::byte const, 18446744073709551615ul>, std::span<orbital_bench::versioned::ReadPart const, 18446744073709551615ul>)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::Interval orbital_versioned_performance::opaque_read_trial<true, orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>, true>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&>(orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>, true>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+      "code_bytes": 3301,
+      "prologue": [
+        "22e00:      \tpushq\t%rbp",
+        "22e01:      \tpushq\t%r15",
+        "22e03:      \tpushq\t%r14",
+        "22e05:      \tpushq\t%r13",
+        "22e07:      \tpushq\t%r12",
+        "22e09:      \tpushq\t%rbx",
+        "22e0a:      \tsubq\t$0x1f8, %rsp            # imm = 0x1F8",
+        "22e11:      \tmovq\t0x240(%rsp), %rbp",
+        "22e19:      \tmovq\t%r8, 0x90(%rsp)",
+        "22e21:      \tmovq\t%rdx, 0x88(%rsp)",
+        "22e29:      \tmovq\t%rsi, 0x70(%rsp)",
+        "22e2e:      \tleaq\t-0x41(%rbp), %rax"
+      ],
+      "stack_adjustments": [
+        "22e0a:      \tsubq\t$0x1f8, %rsp            # imm = 0x1F8"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZNSt6chrono3_V212steady_clock3nowEv@plt",
+        "_ZSt20__throw_length_errorPKc@plt",
+        "_ZdlPvm@plt",
+        "_Znwm@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "clock_gettime@plt",
+        "compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>::Core::close(compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>::Scope&)",
+        "memmove@plt",
+        "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_versioned_performance::FusedTuple16>(orbital_versioned_performance::FusedTuple16 const&, orbital_bench::Operation const&)",
+        "orbital_bench::pmu::Session::start()",
+        "orbital_bench::pmu::Session::stop()",
+        "orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>, true>::body(unsigned long)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::Interval orbital_versioned_performance::opaque_read_trial<false, orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>, true>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&>(orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>, true>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+      "code_bytes": 2654,
+      "prologue": [
+        "23af0:      \tpushq\t%rbp",
+        "23af1:      \tpushq\t%r15",
+        "23af3:      \tpushq\t%r14",
+        "23af5:      \tpushq\t%r13",
+        "23af7:      \tpushq\t%r12",
+        "23af9:      \tpushq\t%rbx",
+        "23afa:      \tsubq\t$0x1e8, %rsp            # imm = 0x1E8",
+        "23b01:      \tmovq\t0x230(%rsp), %rbx",
+        "23b09:      \tmovq\t%r8, 0x80(%rsp)",
+        "23b11:      \tmovq\t%rdx, 0x78(%rsp)",
+        "23b16:      \tmovq\t%rsi, 0x60(%rsp)",
+        "23b1b:      \tmovq\t%rdi, (%rsp)"
+      ],
+      "stack_adjustments": [
+        "23afa:      \tsubq\t$0x1e8, %rsp            # imm = 0x1E8"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZNSt6chrono3_V212steady_clock3nowEv@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "clock_gettime@plt",
+        "compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>::Core::close(compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>::Scope&)",
+        "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_versioned_performance::FusedTuple16>(orbital_versioned_performance::FusedTuple16 const&, orbital_bench::Operation const&)",
+        "orbital_bench::pmu::Session::start()",
+        "orbital_bench::pmu::Session::stop()",
+        "orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>, true>::body(unsigned long)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>, true>::body(unsigned long)",
+      "code_bytes": 972,
+      "prologue": [
+        "24550:      \tpushq\t%rbp",
+        "24551:      \tpushq\t%r15",
+        "24553:      \tpushq\t%r14",
+        "24555:      \tpushq\t%r13",
+        "24557:      \tpushq\t%r12",
+        "24559:      \tpushq\t%rbx",
+        "2455a:      \tsubq\t$0x78, %rsp",
+        "2455e:      \tcmpq\t$0x8, %rdx",
+        "24562:      \tjae\t0x2488e <orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>, true>::body(unsigned long)+0x33e>",
+        "24568:      \tleaq\t(%rdx,%rdx,2), %rbp",
+        "2456c:      \tmovq\t%rdx, %r15",
+        "2456f:      \tmovq\t%rsi, %r14"
+      ],
+      "stack_adjustments": [
+        "2455a:      \tsubq\t$0x78, %rsp"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZSt24__throw_out_of_range_fmtPKcz@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "compact_descriptor::Selection::part(orbital::Id<orbital::PartTag>) const",
+        "compact_descriptor::Selection::part_count() const",
+        "compact_descriptor::View orbital_versioned_performance::need<compact_descriptor::View>(std::expected<compact_descriptor::View, orbital::Error>)",
+        "compact_descriptor::description(compact_descriptor::Selection)",
+        "compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>::Scope::bind(orbital::Id<orbital::ObjectTag>) const",
+        "orbital_mvcc::metadata_consumer::ExplicitTuple16 orbital_versioned_performance::need<orbital_mvcc::metadata_consumer::ExplicitTuple16>(std::expected<orbital_mvcc::metadata_consumer::ExplicitTuple16, orbital::Error>)",
+        "orbital_mvcc::metadata_consumer::detail::admit_tuple_part(orbital_bench::versioned::TupleControl const&, std::span<std::byte const, 18446744073709551615ul>, std::span<std::byte const, 18446744073709551615ul>, unsigned char const*&)",
+        "orbital_mvcc::metadata_consumer::qualify_fixed_tuple_parent(unsigned long, std::span<std::byte const, 18446744073709551615ul>, orbital::Id<orbital::PartTag>, unsigned long)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::Interval orbital_versioned_performance::opaque_read_trial<true, orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>, false>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&>(orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>, false>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+      "code_bytes": 2570,
+      "prologue": [
+        "24a40:      \tpushq\t%rbp",
+        "24a41:      \tpushq\t%r15",
+        "24a43:      \tpushq\t%r14",
+        "24a45:      \tpushq\t%r13",
+        "24a47:      \tpushq\t%r12",
+        "24a49:      \tpushq\t%rbx",
+        "24a4a:      \tsubq\t$0x178, %rsp            # imm = 0x178",
+        "24a51:      \tmovq\t0x1c0(%rsp), %r12",
+        "24a59:      \tmovq\t%r8, 0x78(%rsp)",
+        "24a5e:      \tmovq\t%rsi, 0x68(%rsp)",
+        "24a63:      \tleaq\t-0x41(%r12), %rax",
+        "24a68:      \tcmpq\t$-0x40, %rax"
+      ],
+      "stack_adjustments": [
+        "24a4a:      \tsubq\t$0x178, %rsp            # imm = 0x178"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZNSt6chrono3_V212steady_clock3nowEv@plt",
+        "_ZSt20__throw_length_errorPKc@plt",
+        "_ZdlPvm@plt",
+        "_Znwm@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "clock_gettime@plt",
+        "compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>::Core::close(compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>::Scope&)",
+        "memmove@plt",
+        "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_bench::versioned::TupleBody>(orbital_bench::versioned::TupleBody const&, orbital_bench::Operation const&)",
+        "orbital_bench::pmu::Session::start()",
+        "orbital_bench::pmu::Session::stop()",
+        "orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>, false>::body(unsigned long)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::Interval orbital_versioned_performance::opaque_read_trial<false, orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>, false>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&>(orbital_versioned_performance::Interval orbital_versioned_performance::candidate_reads<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>, false>(orbital_versioned_performance::Candidate<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>>&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)::'lambda'() const&, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+      "code_bytes": 1766,
+      "prologue": [
+        "25450:      \tpushq\t%rbp",
+        "25451:      \tpushq\t%r15",
+        "25453:      \tpushq\t%r14",
+        "25455:      \tpushq\t%r13",
+        "25457:      \tpushq\t%r12",
+        "25459:      \tpushq\t%rbx",
+        "2545a:      \tsubq\t$0x158, %rsp            # imm = 0x158",
+        "25461:      \tmovq\t0x1a0(%rsp), %r13",
+        "25469:      \tmovq\t%r8, 0x58(%rsp)",
+        "2546e:      \tmovq\t%rsi, 0x40(%rsp)",
+        "25473:      \tleaq\t-0x41(%r13), %rax",
+        "25477:      \tcmpq\t$-0x40, %rax"
+      ],
+      "stack_adjustments": [
+        "2545a:      \tsubq\t$0x158, %rsp            # imm = 0x158"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZNSt6chrono3_V212steady_clock3nowEv@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "clock_gettime@plt",
+        "compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>::Core::close(compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>::Scope&)",
+        "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_bench::versioned::TupleBody>(orbital_bench::versioned::TupleBody const&, orbital_bench::Operation const&)",
+        "orbital_bench::pmu::Session::start()",
+        "orbital_bench::pmu::Session::stop()",
+        "orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>, false>::body(unsigned long)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>, false>::body(unsigned long)",
+      "code_bytes": 897,
+      "prologue": [
+        "25b40:      \tpushq\t%rbp",
+        "25b41:      \tpushq\t%r15",
+        "25b43:      \tpushq\t%r14",
+        "25b45:      \tpushq\t%r13",
+        "25b47:      \tpushq\t%r12",
+        "25b49:      \tpushq\t%rbx",
+        "25b4a:      \tsubq\t$0x58, %rsp",
+        "25b4e:      \tcmpq\t$0x8, %rdx",
+        "25b52:      \tjae\t0x25e44 <orbital_versioned_performance::CandidateBodies<compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>, false>::body(unsigned long)+0x304>",
+        "25b58:      \tmovq\t%rdx, %rax",
+        "25b5b:      \tshlq\t$0x4, %rax",
+        "25b5f:      \tmovq\t%rsi, %r15"
+      ],
+      "stack_adjustments": [
+        "25b4a:      \tsubq\t$0x58, %rsp"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZSt24__throw_out_of_range_fmtPKcz@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "compact_descriptor::Selection::part(orbital::Id<orbital::PartTag>) const",
+        "compact_descriptor::Selection::part_count() const",
+        "compact_descriptor::View orbital_versioned_performance::need<compact_descriptor::View>(std::expected<compact_descriptor::View, orbital::Error>)",
+        "compact_descriptor::description(compact_descriptor::Selection)",
+        "compact_history::Store<compact_version_probe::Slab<compact_version_probe::Version32>, compact_retention::FloorRetention>::Scope::bind(orbital::Id<orbital::ObjectTag>) const",
+        "orbital_bench::versioned::TupleCursor orbital_versioned_performance::need<orbital_bench::versioned::TupleCursor>(std::expected<orbital_bench::versioned::TupleCursor, orbital::Error>)",
+        "orbital_bench::versioned::qualify_tuple(orbital_bench::versioned::TupleControl const&, std::span<std::byte const, 18446744073709551615ul>, std::span<orbital_bench::versioned::ReadPart const, 18446744073709551615ul>)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::Orbital::cursor(orbital::object::ReadContext const&, unsigned long) const",
+      "code_bytes": 265,
+      "prologue": [
+        "27bb0:      \tpushq\t%r15",
+        "27bb2:      \tpushq\t%r14",
+        "27bb4:      \tpushq\t%r13",
+        "27bb6:      \tpushq\t%r12",
+        "27bb8:      \tpushq\t%rbx",
+        "27bb9:      \tsubq\t$0x50, %rsp",
+        "27bbd:      \tmovq\t0x148(%rdi), %r15",
+        "27bc4:      \tmovq\t%rdx, %rbx",
+        "27bc7:      \tmovabsq\t$-0x5555555555555555, %r12 # imm = 0xAAAAAAAAAAAAAAAB",
+        "27bd1:      \tmovq\t0x3bc0(%r15), %r14",
+        "27bd8:      \tmovq\t0x3bc8(%r15), %rdx",
+        "27bdf:      \tsubq\t%r14, %rdx"
+      ],
+      "stack_adjustments": [
+        "27bb9:      \tsubq\t$0x50, %rsp"
+      ],
+      "call_targets": [
+        "_ZSt24__throw_out_of_range_fmtPKcz@plt",
+        "orbital::object::Selection orbital_versioned_performance::need<orbital::object::Selection>(std::expected<orbital::object::Selection, orbital::Error>)",
+        "orbital::object::Selection::part(orbital::Id<orbital::PartTag>) const",
+        "orbital::object::View orbital_versioned_performance::need<orbital::object::View>(std::expected<orbital::object::View, orbital::Error>)",
+        "orbital::object::select(orbital::object::ReadContext const&, orbital::Id<orbital::ObjectTag>, bool)",
+        "orbital_bench::versioned::TupleCursor orbital_versioned_performance::need<orbital_bench::versioned::TupleCursor>(std::expected<orbital_bench::versioned::TupleCursor, orbital::Error>)",
+        "orbital_bench::versioned::qualify_tuple(orbital_bench::versioned::TupleControl const&, orbital::object::View)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::Orbital::cursor(orbital::object::BorrowedContext const&, unsigned long) const",
+      "code_bytes": 265,
+      "prologue": [
+        "27cc0:      \tpushq\t%r15",
+        "27cc2:      \tpushq\t%r14",
+        "27cc4:      \tpushq\t%r13",
+        "27cc6:      \tpushq\t%r12",
+        "27cc8:      \tpushq\t%rbx",
+        "27cc9:      \tsubq\t$0x50, %rsp",
+        "27ccd:      \tmovq\t0x148(%rdi), %r15",
+        "27cd4:      \tmovq\t%rdx, %rbx",
+        "27cd7:      \tmovabsq\t$-0x5555555555555555, %r12 # imm = 0xAAAAAAAAAAAAAAAB",
+        "27ce1:      \tmovq\t0x3bc0(%r15), %r14",
+        "27ce8:      \tmovq\t0x3bc8(%r15), %rdx",
+        "27cef:      \tsubq\t%r14, %rdx"
+      ],
+      "stack_adjustments": [
+        "27cc9:      \tsubq\t$0x50, %rsp"
+      ],
+      "call_targets": [
+        "_ZSt24__throw_out_of_range_fmtPKcz@plt",
+        "orbital::object::Selection orbital_versioned_performance::need<orbital::object::Selection>(std::expected<orbital::object::Selection, orbital::Error>)",
+        "orbital::object::Selection::part(orbital::Id<orbital::PartTag>) const",
+        "orbital::object::View orbital_versioned_performance::need<orbital::object::View>(std::expected<orbital::object::View, orbital::Error>)",
+        "orbital::object::select(orbital::object::BorrowedContext const&, orbital::Id<orbital::ObjectTag>, bool)",
+        "orbital_bench::versioned::TupleCursor orbital_versioned_performance::need<orbital_bench::versioned::TupleCursor>(std::expected<orbital_bench::versioned::TupleCursor, orbital::Error>)",
+        "orbital_bench::versioned::qualify_tuple(orbital_bench::versioned::TupleControl const&, orbital::object::View)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::run_orbital_consume_reads(orbital_versioned_performance::Orbital&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+      "code_bytes": 9126,
+      "prologue": [
+        "290e0:      \tpushq\t%rbp",
+        "290e1:      \tpushq\t%r15",
+        "290e3:      \tpushq\t%r14",
+        "290e5:      \tpushq\t%r13",
+        "290e7:      \tpushq\t%r12",
+        "290e9:      \tpushq\t%rbx",
+        "290ea:      \tsubq\t$0x278, %rsp            # imm = 0x278",
+        "290f1:      \tmovq\t0x2b0(%rsp), %rax",
+        "290f9:      \tmovq\t%rdi, %r12",
+        "290fc:      \tmovq\t0x2b8(%rsp), %rdi",
+        "29104:      \tmovq\t%rcx, 0xe0(%rsp)",
+        "2910c:      \tleaq\t-0x1(%r9), %rcx"
+      ],
+      "stack_adjustments": [
+        "290ea:      \tsubq\t$0x278, %rsp            # imm = 0x278"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt13runtime_errorC1ERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZNSt6chrono3_V212steady_clock3nowEv@plt",
+        "_ZSt20__throw_length_errorPKc@plt",
+        "_ZSt24__throw_out_of_range_fmtPKcz@plt",
+        "_ZdlPvm@plt",
+        "_Znwm@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "bcmp@plt",
+        "clock_gettime@plt",
+        "ikea::tuplepack::layout::encode(std::span<unsigned char, 18446744073709551615ul>) const",
+        "memmove@plt",
+        "orbital::object::ReadContext orbital_versioned_performance::need<orbital::object::ReadContext>(std::expected<orbital::object::ReadContext, orbital::Error>)",
+        "orbital::object::Store::read() const",
+        "orbital::object::detail::release_ref(orbital::object::detail::Snapshot&)",
+        "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_versioned_performance::FusedTuple16>(orbital_versioned_performance::FusedTuple16 const&, orbital_bench::Operation const&)",
+        "orbital_bench::pmu::Session::start()",
+        "orbital_bench::pmu::Session::stop()",
+        "orbital_versioned_performance::Orbital::part(orbital::object::ReadContext const&, unsigned long) const",
+        "std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char>> std::operator+<char, std::char_traits<char>, std::allocator<char>>(char const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char>>&&)",
+        "std::__cxx11::to_string(unsigned int)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::run_lmdb_consume_reads(orbital_versioned_performance::Lmdb&, orbital_versioned_performance::Corpus const&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+      "code_bytes": 6099,
+      "prologue": [
+        "2b490:      \tpushq\t%rbp",
+        "2b491:      \tpushq\t%r15",
+        "2b493:      \tpushq\t%r14",
+        "2b495:      \tpushq\t%r13",
+        "2b497:      \tpushq\t%r12",
+        "2b499:      \tpushq\t%rbx",
+        "2b49a:      \tsubq\t$0x228, %rsp            # imm = 0x228",
+        "2b4a1:      \tmovq\t0x260(%rsp), %rax",
+        "2b4a9:      \tmovq\t0x280(%rsp), %rbp",
+        "2b4b1:      \tmovq\t%rdi, %r15",
+        "2b4b4:      \tmovq\t0x268(%rsp), %rdi",
+        "2b4bc:      \tmovq\t%rsi, 0xd8(%rsp)"
+      ],
+      "stack_adjustments": [
+        "2b49a:      \tsubq\t$0x228, %rsp            # imm = 0x228"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZNSt6chrono3_V212steady_clock3nowEv@plt",
+        "_ZSt20__throw_length_errorPKc@plt",
+        "_ZdlPvm@plt",
+        "_Znwm@plt",
+        "__clang_call_terminate",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "auto orbital_versioned_performance::lmdb_codec_bodies<true>(orbital_versioned_performance::Lmdb&, orbital_versioned_performance::Corpus const&)::'lambda'(orbital_versioned_performance::Lmdb::Read const&, unsigned long)::operator()(orbital_versioned_performance::Lmdb::Read const&, unsigned long) const",
+        "clock_gettime@plt",
+        "mdb_txn_abort@plt",
+        "memmove@plt",
+        "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_versioned_performance::FusedTuple16>(orbital_versioned_performance::FusedTuple16 const&, orbital_bench::Operation const&)",
+        "orbital_bench::pmu::Session::start()",
+        "orbital_bench::pmu::Session::stop()",
+        "orbital_versioned_performance::CodecBodies<orbital_versioned_performance::Lmdb::Read, auto orbital_versioned_performance::lmdb_codec_bodies<true>(orbital_versioned_performance::Lmdb&, orbital_versioned_performance::Corpus const&)::'lambda'(orbital_versioned_performance::Lmdb::Read const&, unsigned long), orbital_versioned_performance::ConsumedTuple16>::~CodecBodies()",
+        "orbital_versioned_performance::Lmdb::read() const"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::run_orbital_codec_reads(orbital_versioned_performance::Orbital&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+      "code_bytes": 7590,
+      "prologue": [
+        "2cc70:      \tpushq\t%rbp",
+        "2cc71:      \tpushq\t%r15",
+        "2cc73:      \tpushq\t%r14",
+        "2cc75:      \tpushq\t%r13",
+        "2cc77:      \tpushq\t%r12",
+        "2cc79:      \tpushq\t%rbx",
+        "2cc7a:      \tsubq\t$0x268, %rsp            # imm = 0x268",
+        "2cc81:      \tmovq\t0x2a0(%rsp), %rax",
+        "2cc89:      \tmovq\t%rdi, (%rsp)",
+        "2cc8d:      \tmovq\t0x2a8(%rsp), %rdi",
+        "2cc95:      \tmovq\t%rcx, 0x48(%rsp)",
+        "2cc9a:      \tleaq\t-0x1(%r9), %rcx"
+      ],
+      "stack_adjustments": [
+        "2cc7a:      \tsubq\t$0x268, %rsp            # imm = 0x268"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt13runtime_errorC1ERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZNSt6chrono3_V212steady_clock3nowEv@plt",
+        "_ZSt20__throw_length_errorPKc@plt",
+        "_ZSt24__throw_out_of_range_fmtPKcz@plt",
+        "_ZdlPvm@plt",
+        "_Znwm@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "bcmp@plt",
+        "clock_gettime@plt",
+        "ikea::tuplepack::layout::encode(std::span<unsigned char, 18446744073709551615ul>) const",
+        "memmove@plt",
+        "orbital::object::ReadContext orbital_versioned_performance::need<orbital::object::ReadContext>(std::expected<orbital::object::ReadContext, orbital::Error>)",
+        "orbital::object::Store::read() const",
+        "orbital::object::detail::release_ref(orbital::object::detail::Snapshot&)",
+        "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_versioned_performance::FusedTuple16>(orbital_versioned_performance::FusedTuple16 const&, orbital_bench::Operation const&)",
+        "orbital_bench::pmu::Session::start()",
+        "orbital_bench::pmu::Session::stop()",
+        "orbital_versioned_performance::Orbital::part(orbital::object::ReadContext const&, unsigned long) const",
+        "std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char>> std::operator+<char, std::char_traits<char>, std::allocator<char>>(char const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char>>&&)",
+        "std::__cxx11::to_string(unsigned int)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::run_lmdb_codec_reads(orbital_versioned_performance::Lmdb&, orbital_versioned_performance::Corpus const&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+      "code_bytes": 4650,
+      "prologue": [
+        "2ea20:      \tpushq\t%rbp",
+        "2ea21:      \tpushq\t%r15",
+        "2ea23:      \tpushq\t%r14",
+        "2ea25:      \tpushq\t%r13",
+        "2ea27:      \tpushq\t%r12",
+        "2ea29:      \tpushq\t%rbx",
+        "2ea2a:      \tsubq\t$0x1d8, %rsp            # imm = 0x1D8",
+        "2ea31:      \tmovq\t0x210(%rsp), %rax",
+        "2ea39:      \tmovq\t0x230(%rsp), %rbp",
+        "2ea41:      \tmovq\t%rdi, (%rsp)",
+        "2ea45:      \tmovq\t0x218(%rsp), %rdi",
+        "2ea4d:      \tmovq\t%rsi, 0x90(%rsp)"
+      ],
+      "stack_adjustments": [
+        "2ea2a:      \tsubq\t$0x1d8, %rsp            # imm = 0x1D8"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZNSt6chrono3_V212steady_clock3nowEv@plt",
+        "_ZSt20__throw_length_errorPKc@plt",
+        "_ZdlPvm@plt",
+        "_Znwm@plt",
+        "__clang_call_terminate",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "auto orbital_versioned_performance::lmdb_codec_bodies<false>(orbital_versioned_performance::Lmdb&, orbital_versioned_performance::Corpus const&)::'lambda'(orbital_versioned_performance::Lmdb::Read const&, unsigned long)::operator()(orbital_versioned_performance::Lmdb::Read const&, unsigned long) const",
+        "clock_gettime@plt",
+        "mdb_txn_abort@plt",
+        "memmove@plt",
+        "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_versioned_performance::FusedTuple16>(orbital_versioned_performance::FusedTuple16 const&, orbital_bench::Operation const&)",
+        "orbital_bench::pmu::Session::start()",
+        "orbital_bench::pmu::Session::stop()",
+        "orbital_versioned_performance::CodecBodies<orbital_versioned_performance::Lmdb::Read, auto orbital_versioned_performance::lmdb_codec_bodies<false>(orbital_versioned_performance::Lmdb&, orbital_versioned_performance::Corpus const&)::'lambda'(orbital_versioned_performance::Lmdb::Read const&, unsigned long), orbital_versioned_performance::FusedTuple16>::~CodecBodies()",
+        "orbital_versioned_performance::Lmdb::read() const"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::run_orbital_reads(orbital_versioned_performance::Orbital&, bool, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+      "code_bytes": 9310,
+      "prologue": [
+        "2fc50:      \tpushq\t%rbp",
+        "2fc51:      \tpushq\t%r15",
+        "2fc53:      \tpushq\t%r14",
+        "2fc55:      \tpushq\t%r13",
+        "2fc57:      \tpushq\t%r12",
+        "2fc59:      \tpushq\t%rbx",
+        "2fc5a:      \tsubq\t$0x1d8, %rsp            # imm = 0x1D8",
+        "2fc61:      \tmovq\t%r8, %r14",
+        "2fc64:      \tmovq\t0x210(%rsp), %r8",
+        "2fc6c:      \tmovq\t0x230(%rsp), %rax",
+        "2fc74:      \tmovq\t%rsi, 0x60(%rsp)",
+        "2fc79:      \tmovq\t%r9, %r15"
+      ],
+      "stack_adjustments": [
+        "2fc5a:      \tsubq\t$0x1d8, %rsp            # imm = 0x1D8"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZNSt6chrono3_V212steady_clock3nowEv@plt",
+        "_ZSt20__throw_length_errorPKc@plt",
+        "_ZSt24__throw_out_of_range_fmtPKcz@plt",
+        "_ZdlPvm@plt",
+        "_Znwm@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "clock_gettime@plt",
+        "memmove@plt",
+        "orbital::object::ReadContext orbital_versioned_performance::need<orbital::object::ReadContext>(std::expected<orbital::object::ReadContext, orbital::Error>)",
+        "orbital::object::Store::borrow() const &",
+        "orbital::object::Store::read() const",
+        "orbital::object::detail::release_ref(orbital::object::detail::Snapshot&)",
+        "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_bench::versioned::TupleBody>(orbital_bench::versioned::TupleBody const&, orbital_bench::Operation const&)",
+        "orbital_bench::pmu::Session::start()",
+        "orbital_bench::pmu::Session::stop()",
+        "orbital_versioned_performance::Orbital::cursor(orbital::object::BorrowedContext const&, unsigned long) const",
+        "orbital_versioned_performance::Orbital::cursor(orbital::object::ReadContext const&, unsigned long) const"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::run_lmdb_reads(orbital_versioned_performance::Lmdb&, orbital_versioned_performance::Corpus const&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+      "code_bytes": 6873,
+      "prologue": [
+        "320b0:      \tpushq\t%rbp",
+        "320b1:      \tpushq\t%r15",
+        "320b3:      \tpushq\t%r14",
+        "320b5:      \tpushq\t%r13",
+        "320b7:      \tpushq\t%r12",
+        "320b9:      \tpushq\t%rbx",
+        "320ba:      \tsubq\t$0x258, %rsp            # imm = 0x258",
+        "320c1:      \tmovq\t0x290(%rsp), %rax",
+        "320c9:      \tmovq\t0x2b0(%rsp), %r13",
+        "320d1:      \tmovq\t%rdi, %rbp",
+        "320d4:      \tmovq\t0x298(%rsp), %rdi",
+        "320dc:      \tmovq\t%rsi, 0x1d8(%rsp)"
+      ],
+      "stack_adjustments": [
+        "320ba:      \tsubq\t$0x258, %rsp            # imm = 0x258"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt13runtime_errorC1ERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZNSt6chrono3_V212steady_clock3nowEv@plt",
+        "_ZSt20__throw_length_errorPKc@plt",
+        "_ZSt24__throw_out_of_range_fmtPKcz@plt",
+        "_ZdlPvm@plt",
+        "_Znwm@plt",
+        "__clang_call_terminate",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "clock_gettime@plt",
+        "mdb_get@plt",
+        "mdb_strerror@plt",
+        "mdb_txn_abort@plt",
+        "memmove@plt",
+        "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_bench::versioned::TupleBody>(orbital_bench::versioned::TupleBody const&, orbital_bench::Operation const&)",
+        "orbital_bench::pmu::Session::start()",
+        "orbital_bench::pmu::Session::stop()",
+        "orbital_versioned_performance::Bodies<orbital_versioned_performance::Lmdb::Read, orbital_versioned_performance::lmdb_bodies(orbital_versioned_performance::Lmdb&, orbital_versioned_performance::Corpus const&)::'lambda'(orbital_versioned_performance::Lmdb::Read const&, unsigned long)>::~Bodies()",
+        "orbital_versioned_performance::Corpus::cursor(unsigned long, std::span<std::byte const, 18446744073709551615ul>, std::span<std::byte const, 18446744073709551615ul>) const",
+        "orbital_versioned_performance::Lmdb::read() const",
+        "std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char>> std::operator+<char, std::char_traits<char>, std::allocator<char>>(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char>>&&, char const*)",
+        "std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char>>::basic_string<std::allocator<char>>(char const*, std::allocator<char> const&)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_versioned_performance::run_direct_reads(orbital_versioned_performance::Corpus const&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long)",
+      "code_bytes": 4564,
+      "prologue": [
+        "33b90:      \tpushq\t%rbp",
+        "33b91:      \tpushq\t%r15",
+        "33b93:      \tpushq\t%r14",
+        "33b95:      \tpushq\t%r13",
+        "33b97:      \tpushq\t%r12",
+        "33b99:      \tpushq\t%rbx",
+        "33b9a:      \tsubq\t$0xf8, %rsp",
+        "33ba1:      \tmovq\t%rsi, %r15",
+        "33ba4:      \tmovq\t0x3bc0(%rsi), %rax",
+        "33bab:      \tmovq\t0x3bc8(%rsi), %rsi",
+        "33bb2:      \tmovq\t%rdi, 0x10(%rsp)",
+        "33bb7:      \tmovabsq\t$-0x5555555555555555, %rdi # imm = 0xAAAAAAAAAAAAAAAB"
+      ],
+      "stack_adjustments": [
+        "33b9a:      \tsubq\t$0xf8, %rsp"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "_ZNSt13runtime_errorC1EPKc@plt",
+        "_ZNSt16invalid_argumentC1EPKc@plt",
+        "_ZNSt6chrono3_V212steady_clock3nowEv@plt",
+        "_ZSt20__throw_length_errorPKc@plt",
+        "_ZSt24__throw_out_of_range_fmtPKcz@plt",
+        "_ZdlPvm@plt",
+        "_Znwm@plt",
+        "__cxa_allocate_exception@plt",
+        "__cxa_free_exception@plt",
+        "__cxa_throw@plt",
+        "clock_gettime@plt",
+        "memmove@plt",
+        "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_bench::versioned::TupleBody>(orbital_bench::versioned::TupleBody const&, orbital_bench::Operation const&)",
+        "orbital_bench::pmu::Session::start()",
+        "orbital_bench::pmu::Session::stop()",
+        "orbital_versioned_performance::Corpus::direct_cursor(unsigned long) const"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_bench::versioned::qualify_tuple(orbital_bench::versioned::TupleControl const&, orbital::object::View)",
+      "code_bytes": 75,
+      "prologue": [
+        "40580:      \tpushq\t%rbx",
+        "40581:      \tsubq\t$0x40, %rsp",
+        "40585:      \tmovq\t%rsi, %rdx",
+        "40588:      \tmovq\t(%rdi), %rsi",
+        "4058b:      \tmovq\t%rdi, %rbx",
+        "4058e:      \tmovq\t%rsp, %rdi",
+        "40591:      \tcallq\t0x403c0 <orbital_bench::versioned::bind(orbital_bench::versioned::Schema const&, orbital::object::View)>",
+        "40596:      \tcmpb\t$0x0, 0x38(%rsp)",
+        "4059b:      \tje\t0x405b6 <orbital_bench::versioned::qualify_tuple(orbital_bench::versioned::TupleControl const&, orbital::object::View)+0x36>",
+        "4059d:      \tmovq\t0x8(%rsp), %rax",
+        "405a2:      \tcmpq\t0x8(%rbx), %rax",
+        "405a6:      \tjne\t0x405c1 <orbital_bench::versioned::qualify_tuple(orbital_bench::versioned::TupleControl const&, orbital::object::View)+0x41>"
+      ],
+      "stack_adjustments": [
+        "40581:      \tsubq\t$0x40, %rsp"
+      ],
+      "call_targets": [
+        "orbital_bench::versioned::ReadData::tuple_cursor() const",
+        "orbital_bench::versioned::bind(orbital_bench::versioned::Schema const&, orbital::object::View)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_bench::versioned::qualify_tuple(orbital_bench::versioned::TupleControl const&, std::span<std::byte const, 18446744073709551615ul>, std::span<orbital_bench::versioned::ReadPart const, 18446744073709551615ul>)",
+      "code_bytes": 99,
+      "prologue": [
+        "44530:      \tpushq\t%rbx",
+        "44531:      \tsubq\t$0x40, %rsp",
+        "44535:      \tmovq\t%r8, %r9",
+        "44538:      \tmovq\t%rcx, %r8",
+        "4453b:      \tmovq\t%rdx, %rcx",
+        "4453e:      \tmovq\t%rsi, %rdx",
+        "44541:      \tmovq\t(%rdi), %rsi",
+        "44544:      \tmovq\t%rdi, %rbx",
+        "44547:      \tmovq\t%rsp, %rdi",
+        "4454a:      \tcallq\t0x43a00 <orbital_bench::versioned::ReadData::bind(orbital_bench::versioned::Schema const&, std::span<std::byte const, 18446744073709551615ul>, std::span<orbital_bench::versioned::ReadPart const, 18446744073709551615ul>)>",
+        "4454f:      \tcmpb\t$0x0, 0x38(%rsp)",
+        "44554:      \tje\t0x44576 <orbital_bench::versioned::qualify_tuple(orbital_bench::versioned::TupleControl const&, std::span<std::byte const, 18446744073709551615ul>, std::span<orbital_bench::versioned::ReadPart const, 18446744073709551615ul>)+0x46>"
+      ],
+      "stack_adjustments": [
+        "44531:      \tsubq\t$0x40, %rsp"
+      ],
+      "call_targets": [
+        "orbital_bench::versioned::ReadData::bind(orbital_bench::versioned::Schema const&, std::span<std::byte const, 18446744073709551615ul>, std::span<orbital_bench::versioned::ReadPart const, 18446744073709551615ul>)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital_bench::versioned::ReadData::get(unsigned long) const",
+      "code_bytes": 645,
+      "prologue": [
+        "462d0:      \tpushq\t%r15",
+        "462d2:      \tpushq\t%r14",
+        "462d4:      \tpushq\t%r12",
+        "462d6:      \tpushq\t%rbx",
+        "462d7:      \tpushq\t%rax",
+        "462d8:      \tmovzbl\t0x30(%rsi), %eax",
+        "462dc:      \tcmpl\t$0x1, %eax",
+        "462df:      \tje\t0x46376 <orbital_bench::versioned::ReadData::get(unsigned long) const+0xa6>",
+        "462e5:      \ttestl\t%eax, %eax",
+        "462e7:      \tjne\t0x46520 <orbital_bench::versioned::ReadData::get(unsigned long) const+0x250>",
+        "462ed:      \tmovq\t(%rsi), %rax",
+        "462f0:      \tmovq\t0x8(%rsi), %r8"
+      ],
+      "stack_adjustments": [],
+      "call_targets": [
+        "__cxa_allocate_exception@plt",
+        "__cxa_throw@plt"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital::object::Store::read() const",
+      "code_bytes": 273,
+      "prologue": [
+        "4f970:      \tpushq\t%r15",
+        "4f972:      \tpushq\t%r14",
+        "4f974:      \tpushq\t%r12",
+        "4f976:      \tpushq\t%rbx",
+        "4f977:      \tpushq\t%rax",
+        "4f978:      \tmovq\t(%rsi), %rax",
+        "4f97b:      \tmovq\t%rdi, %rbx",
+        "4f97e:      \ttestq\t%rax, %rax",
+        "4f981:      \tje\t0x4fa0e <orbital::object::Store::read() const+0x9e>",
+        "4f987:      \tmovq\t(%rax), %r15",
+        "4f98a:      \tmovq\t%rsi, %r12",
+        "4f98d:      \tmovq\t(%r15), %rax"
+      ],
+      "stack_adjustments": [],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "__cxa_begin_catch@plt",
+        "__cxa_end_catch@plt",
+        "orbital::object::detail::retain_base(orbital::object::detail::Base&)",
+        "orbital::object::detail::retain_domain(orbital::object::detail::Domain&)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital::object::Store::prepare(orbital::object::Draft&)",
+      "code_bytes": 878,
+      "prologue": [
+        "50300:      \tpushq\t%rbp",
+        "50301:      \tpushq\t%r15",
+        "50303:      \tpushq\t%r14",
+        "50305:      \tpushq\t%r13",
+        "50307:      \tpushq\t%r12",
+        "50309:      \tpushq\t%rbx",
+        "5030a:      \tsubq\t$0x38, %rsp",
+        "5030e:      \tmovq\t(%rsi), %rbx",
+        "50311:      \ttestq\t%rbx, %rbx",
+        "50314:      \tje\t0x50327 <orbital::object::Store::prepare(orbital::object::Draft&)+0x27>",
+        "50316:      \tmovq\t(%rdx), %rax",
+        "50319:      \tmovq\t%rdx, %r14"
+      ],
+      "stack_adjustments": [
+        "5030a:      \tsubq\t$0x38, %rsp"
+      ],
+      "call_targets": [
+        "_Unwind_Resume@plt",
+        "__assert_fail@plt",
+        "__cxa_begin_catch@plt",
+        "__cxa_end_catch@plt",
+        "orbital::Ref<orbital::object::detail::Acceptance> orbital::object::detail::make<orbital::object::detail::Acceptance, orbital::Ref<orbital::object::detail::Catalog>&>(orbital::object::detail::Domain&, orbital::Ref<orbital::object::detail::Catalog>&)",
+        "orbital::Ref<orbital::object::detail::Acceptance>::operator=(orbital::Ref<orbital::object::detail::Acceptance>&&)",
+        "orbital::Ref<orbital::object::detail::Edit>::reset()",
+        "orbital::object::Prepared::~Prepared()",
+        "orbital::object::detail::release_base(orbital::object::detail::Base&)",
+        "orbital::object::detail::release_ref(orbital::object::detail::Acceptance&)",
+        "orbital::object::detail::remove_empty(orbital::object::detail::Catalog&, orbital::object::detail::Entry&)",
+        "orbital::object::detail::retain_base(orbital::object::detail::Base&)",
+        "orbital::worker::on_lane(orbital::worker::Lane const&)",
+        "std::pair<std::__detail::_Node_iterator<std::pair<orbital::Id<orbital::ObjectTag> const, orbital::object::detail::Entry>, false, false>, bool> std::__detail::_Insert_base<orbital::Id<orbital::ObjectTag>, std::pair<orbital::Id<orbital::ObjectTag> const, orbital::object::detail::Entry>, std::pmr::polymorphic_allocator<std::pair<orbital::Id<orbital::ObjectTag> const, orbital::object::detail::Entry>>, std::__detail::_Select1st, std::equal_to<orbital::Id<orbital::ObjectTag>>, orbital::object::detail::Hash, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<false, false, true>>::try_emplace<orbital::Id<orbital::ObjectTag> const&>(std::__detail::_Node_const_iterator<std::pair<orbital::Id<orbital::ObjectTag> const, orbital::object::detail::Entry>, false, false>, orbital::Id<orbital::ObjectTag> const&)",
+        "std::vector<orbital::object::detail::Pending, std::pmr::polymorphic_allocator<orbital::object::detail::Pending>>::reserve(unsigned long)",
+        "void std::vector<orbital::object::detail::Pending, std::pmr::polymorphic_allocator<orbital::object::detail::Pending>>::_M_realloc_insert<orbital::object::detail::Pending>(__gnu_cxx::__normal_iterator<orbital::object::detail::Pending*, std::vector<orbital::object::detail::Pending, std::pmr::polymorphic_allocator<orbital::object::detail::Pending>>>, orbital::object::detail::Pending&&)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital::object::Store::install(orbital::object::Prepared&)",
+      "code_bytes": 473,
+      "prologue": [
+        "50a50:      \tpushq\t%rbp",
+        "50a51:      \tpushq\t%r15",
+        "50a53:      \tpushq\t%r14",
+        "50a55:      \tpushq\t%r13",
+        "50a57:      \tpushq\t%r12",
+        "50a59:      \tpushq\t%rbx",
+        "50a5a:      \tpushq\t%rax",
+        "50a5b:      \tmovq\t(%rdi), %r15",
+        "50a5e:      \txorl\t%eax, %eax",
+        "50a60:      \ttestq\t%r15, %r15",
+        "50a63:      \tje\t0x50bdc <orbital::object::Store::install(orbital::object::Prepared&)+0x18c>",
+        "50a69:      \tcmpq\t$0x0, (%rsi)"
+      ],
+      "stack_adjustments": [],
+      "call_targets": [
+        "__assert_fail@plt",
+        "orbital::object::detail::retain_base(orbital::object::detail::Base&)",
+        "orbital::worker::on_lane(orbital::worker::Lane const&)"
+      ],
+      "direct_memcpy_call": false
+    },
+    {
+      "symbol": "orbital::object::Store::drain(unsigned long)",
+      "code_bytes": 730,
+      "prologue": [
+        "51020:      \tpushq\t%rbp",
+        "51021:      \tpushq\t%r15",
+        "51023:      \tpushq\t%r14",
+        "51025:      \tpushq\t%r13",
+        "51027:      \tpushq\t%r12",
+        "51029:      \tpushq\t%rbx",
+        "5102a:      \tsubq\t$0x18, %rsp",
+        "5102e:      \tmovq\t(%rdi), %rbx",
+        "51031:      \ttestq\t%rbx, %rbx",
+        "51034:      \tje\t0x51292 <orbital::object::Store::drain(unsigned long)+0x272>",
+        "5103a:      \tmovq\t%rbx, %rdi",
+        "5103d:      \tmovq\t%rsi, %r14"
+      ],
+      "stack_adjustments": [
+        "5102a:      \tsubq\t$0x18, %rsp"
+      ],
+      "call_targets": [
+        "__assert_fail@plt",
+        "__clang_call_terminate",
+        "orbital::object::detail::drain_domain(orbital::object::detail::Domain&, unsigned long)",
+        "orbital::object::detail::release_base(orbital::object::detail::Base&)",
+        "orbital::object::detail::release_ref(orbital::object::detail::Catalog&)",
+        "orbital::object::detail::release_ref(orbital::object::detail::Rep&)",
+        "orbital::object::detail::retain_base(orbital::object::detail::Base&)",
+        "orbital::worker::on_lane(orbital::worker::Lane const&)",
+        "std::_Hashtable<orbital::Id<orbital::ObjectTag>, std::pair<orbital::Id<orbital::ObjectTag> const, orbital::object::detail::Entry>, std::pmr::polymorphic_allocator<std::pair<orbital::Id<orbital::ObjectTag> const, orbital::object::detail::Entry>>, std::__detail::_Select1st, std::equal_to<orbital::Id<orbital::ObjectTag>>, orbital::object::detail::Hash, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<false, false, true>>::_M_erase(std::integral_constant<bool, true>, orbital::Id<orbital::ObjectTag> const&)"
+      ],
+      "direct_memcpy_call": false
+    }
+  ]
+}

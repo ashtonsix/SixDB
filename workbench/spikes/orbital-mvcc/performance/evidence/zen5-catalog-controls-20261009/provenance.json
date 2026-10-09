@@ -1,0 +1,22 @@
+{
+  "files_sha256": {
+    "feedback/abi.json": "601386a982854bc298631e71ff275e7c0f44336ef589e02915be2f0fd94b4195",
+    "feedback/binary-identity.json": "72a4f32574aba166174e93b61a29dcfa9a151a823ac3fe979767301482c89410",
+    "feedback/measurements.csv": "364e356c479282615df97f95b82df359f491eb71c534eca5e638871c3321c0ec",
+    "feedback/parity.json": "632d45f18e5cd9d047357250bec2816904db7f70ab5d661887229a2d36e92736",
+    "feedback/qualification.json": "9f61d44851cf295a50da3ea3bcfe4936bf7a67b7a96d0bea06bb6af6672256cf",
+    "feedback/summary.csv": "c86b776ce4e1c14c25936468f45cbc8968dfd38cb50d7c2f83f5a249300d4268",
+    "host.json": "6393878bd4ff0ba79d9f7e4c48cf27b96895df13cee51a3b122239a70e39b7e2",
+    "worker-result.json": "7452e3c9e54dc7f25dc0ea38a001da458aa4bd17d506ce6cb6be64f3b4ac2bc0"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/orbital-mvcc/performance/run.py",
+    "--report",
+    "{evidence}/feedback"
+  ],
+  "regenerate_from": "archive"
+}
