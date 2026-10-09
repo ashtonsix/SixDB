@@ -78,6 +78,7 @@ are independent retention roots, not released by the absence of a local reader.
 - [Orbital records and closures](orbital/FINDINGS.md), [Allocation and Worker](orbital/allocation-worker.md), and [probe runner](orbital/run.py).
 - [Consumer and Ikea field/call census](consumer/ikea-census.md), [actual type probes](consumer/census.cpp), [probe runner](consumer/probe.py), and [qualification/native candidates](consumer/candidates.h).
 - [Admitted private write batches](consumer/write-batch.md) compare one batch admission with repeated field-writer binding, including actual effects, private backing and unchanged-error controls.
+- [Shared Shape writer laws](consumer/shape-write.md) remove repeated descriptor admission from the composed write path. The separate [value/tag command](consumer/point-write.md) also removes a source lookup and preserves untouched fields; its integration patch remains unapplied.
 - [Shared-Shape native reads](consumer/shape-read.md) compare public checked access with a composed private-layout path, using the same stored law and kernels for selected and mapped bodies.
 - [Composed Shape adapter](composed/README.md) joins shared Shapes, actual Allocation owners, retained histories, native reads/writes and one-Part/four-Part conversion. [Actual compact adapter checks](performance_adapter/README.md) independently exercise the descriptor-based performance controls.
 - [Loom findings and selected evidence](loom/README.md), [actual frame/type probes](loom/facts.cpp), [ordinary call producers](loom/boundaries.cpp), [consumers](loom/callers.cpp), and [code-generation runner](loom/codegen.py).
@@ -113,5 +114,5 @@ orb -m ubuntu ctest --test-dir build/orbital-mvcc/metadata-integration \
 ```
 
 The compiled `orbital_mvcc_composed` library reuses the performance runtime,
-write-batch and Shape-read libraries. These checks qualify repository integration;
+Shape-writer and Shape-read libraries. These checks qualify repository integration;
 the performance study owns measured comparisons.
