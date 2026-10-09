@@ -20,6 +20,14 @@ from experiment import Run
 
 
 def panel(profile="resident"):
+    if profile == 'fusion-quick':
+        for rows,objects in [(192,64),(32768,4)]:
+            for workload in ['point-hit','point-miss','dependent-16']:
+                for batch in [1,64]:
+                    yield dict(rows=rows,objects=objects,workload=workload,batch=batch,ops=32771,
+                               codec='shape',conditioning='warm-trace',**{'metadata-bytes':16*1024*1024},
+                               backends=['composed-inline','composed-directory','lmdb-composed'])
+        return
     if profile == 'composed-context':
         # Modest larger Object bodies and independent four-Part writes. The
         # columns arm is contextual: LMDB's mapped Tuple is not a Series control.
@@ -407,7 +415,7 @@ def main():
     parser.add_argument("--workspace", type=Path, default=ROOT/"build/workspaces/orbital-mvcc-performance")
     parser.add_argument("--cpu", type=int, default=2)
     parser.add_argument("--repetitions", type=int, default=5)
-    parser.add_argument("--profile", choices=["feedback","catalog","churn","groups","faults","quick","composed-quick","composed-context","resident"], default="feedback")
+    parser.add_argument("--profile", choices=["feedback","catalog","churn","groups","faults","quick","composed-quick","composed-context","fusion-quick","resident"], default="feedback")
     parser.add_argument("--march", default="")
     parser.add_argument("--tune", default="generic")
     parser.add_argument("--jobs", type=int, default=2)

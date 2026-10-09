@@ -1,0 +1,14 @@
+{
+  "point_source_job": "20261009T232342Z-c0b340ec",
+  "point_cut": "point-write",
+  "allocation": "Storage16/first-three/full growth",
+  "maintenance": "new-full",
+  "writer": "point in both arms",
+  "control": "bdb8efb read fusion, canonical mappedLMDB treatment included",
+  "author_patch_sha256": "bfecbfc7b2aee1c6f408ad482ab00a04f04a6710bb8e404e3fe32172022a1bca",
+  "captured_adapted_patch_sha256": "3df87821db551553286d35ae72661a96768035676812c8ab407c0e28530da549",
+  "adaptation": "Only additional <limits> include context from common publication helper; behavioral hunks unchanged. Published replay temporarily removes then restores that include.",
+  "profile": "fusion-quick, two repetitions,192rows64Objects and32768rows4Objects; hit/miss/dependent16 batch1/64",
+  "lifetime": "coherent Scope only; separate current-borrow entry not timed",
+  "native_smoke": "36 oracle CLI smokes plus focused fusion and mappedShape checks"
+}

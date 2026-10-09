@@ -505,6 +505,47 @@ counters are absent from the older table schema. Identical contextual ABI and
 binaries, full raw latency, source cuts and logs remain in the existing worker
 archive. The next read-fusion comparison fixes the point writer in both arms.
 
+## Coherent read fusion
+
+[Worker 20261009T233710Z-da0d7e25](evidence/zen5-read-fusion-screen-20261009/)
+passes 288 oracle trials, two repetitions in both clock modes, with the measured
+point writer fixed in both cuts. The [read-fusion control](../metadata/composed/controls/read-fusion/)
+combines actual opaque-ID Inline history selection and the canonical Ikea Tuple
+consumer in one ordinary TU. Mapped LMDB uses the same canonical consumer.
+All timed Orbital reads use coherent Scope; current-object borrow is excluded.
+
+| Warm read ns/request, baseline → fused | Tiny Inline scalar | Larger Inline scalar | Larger mapped scalar |
+| --- | ---: | ---: | ---: |
+| Point hit | 26.38 → 21.46 | 98.26 → 88.14 | 162.58 → 153.82 |
+| Point miss | 25.28 → 20.61 | 95.61 → 87.35 | 161.51 → 150.80 |
+| Dependent16 | 90.77 → 78.56 | 1262.74 → 1148.32 | 1305.22 → 1136.39 |
+
+Tiny is 192 rows / 64 Objects; larger is 32768 rows / four Objects. The larger
+dependent scalar still leaves mapped LMDB a small edge, 1148.32 versus 1136.39.
+Batch64 Inline is nearly unchanged/slightly worse in the tiny case: hit
+22.39 → 22.72 ns and dependent 88.01 → 88.56 ns; that path is not fused.
+Larger Inline dependent batch moves 1251.40 → 1216.76 ns, while unchanged
+Directory moves 1245.38 → 1222.11 ns; retain that drift for small margins.
+Mapped dependent batch improves 1221.39 → 1069.07 ns through the matching
+canonical specialization. Improving the comparator remains part of the result.
+
+Copies, capacities and all initial/held/released component accounting match.
+Exact measured scalar Inline throughput caller text grows 2537 → 2771 B;
+explicit stack reservation falls 312 → 296 B, excluding saved registers.
+The fused Scope entry is 922 B with 24 B reservation plus saved registers.
+Batch Inline and Directory caller code is unchanged. This measures structural
+ABI changes, not forwarding stalls. Thirty-six native CLI oracle checks plus
+focused fusion/mapped-Shape checks pass. The compact native receipt and source
+recipe identify this cut; native logs remain ignored. Full worker captures
+stay in the existing verified bundle, without another archive campaign.
+
+All six tables/parity files regenerate byte-identically. Both exact executable
+ABI summaries and all competitors/repetitions/modes remain selected. Cuts are
+blocked in time; batch64 has 513 samples, and margins remain directional.
+Architecture selected coherent scalar fusion. Larger/cold-start and retained
+reader breadth follows before more metadata controls; current-borrow and batch
+fusion remain separate.
+
 ## Clock-mode fault discriminator
 
 [Worker 20261009T213742Z-b9d498d3](evidence/zen5-fault-controls-20261009/feedback/measurements.csv)

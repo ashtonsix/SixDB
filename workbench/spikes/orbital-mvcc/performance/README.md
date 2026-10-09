@@ -184,6 +184,14 @@ keeps small scalar regressions, encoded-work counters and growing code text
 alongside batch/body improvements. Recover the actual source cuts to replay;
 the live selected writer is not the original screen baseline.
 
+`read_fusion_screen.sh` starts from the captured point-writer baseline and
+compares coherent scalar Inline fusion, with matching mapped LMDB specialization.
+`fusion-quick` covers hit/miss/dependent16 reads, tiny/larger bodies, batch1/64
+and both clock modes. Point behavior stays fixed; current-object borrow is
+excluded. The replay adapts only include context in its isolated source,
+restoring the common publication helper's `<limits>` afterward. The retained
+recipe identifies the mechanically adapted author patch.
+
 Composed reads use the protected native Tuple bridge. `--from columns` instead
 uses four real Series Parts and the generic consumer with its resident Schema;
 this is a contextual Orbital case, without a fictitious mapped-LMDB counterpart.

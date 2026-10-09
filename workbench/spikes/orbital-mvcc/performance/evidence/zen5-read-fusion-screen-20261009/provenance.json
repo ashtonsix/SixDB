@@ -1,0 +1,38 @@
+{
+  "files_sha256": {
+    "baseline/abi.json": "feb95d5acf4f16ca8c9d6b5432ca40b74fafe98c854e57a7387500c76128d91b",
+    "baseline/binary-identity.json": "6cfeb0686f155880166ccb6a629622e2c275a8697c7fe5f18da0337baad4dcc7",
+    "baseline/build-cost.json": "e1da5a9b761aad61e269f11b6b53fc1c2030c468e7d366ae566961da358178ec",
+    "baseline/measurements.csv": "757cc00e1e1c992a33503e42bb64d5d7416e60649356888759d20d4335d0fb67",
+    "baseline/parity.json": "c6e2456c9d2b3d4fbc1e202a52af958159f994db46646ba8b8664dbbda336aba",
+    "baseline/qualification.json": "caa851c8c39541755caa04647921c83f47410f52b056301c09c732dacfde7d28",
+    "baseline/summary.csv": "14a46e205fd9cfa0e4bc570d6710b5e89f6f7fe877847601852c888f4b3e6ebc",
+    "fused/abi.json": "f048eb0fbf4ea60c7528596760165dcaa162c3062df75f0552afdbedfa2367f7",
+    "fused/binary-identity.json": "7ce91ff0e95c119341cb017e9f72c1d1836795445d1cacc0726fd1a603f2bc64",
+    "fused/build-cost.json": "fd1843ca0eed454b54acb51bb54525253a65ec085a12710c96c5a14f9ecc8bd9",
+    "fused/measurements.csv": "fac9b2b129ff574f6fd0b5c55ac1c8b3d00fc9d39733cdda671fde714a20fe41",
+    "fused/parity.json": "c6e2456c9d2b3d4fbc1e202a52af958159f994db46646ba8b8664dbbda336aba",
+    "fused/qualification.json": "caa851c8c39541755caa04647921c83f47410f52b056301c09c732dacfde7d28",
+    "fused/summary.csv": "c1cc9d672b124d1410c4fee388441db6c4c545226ab06af96fbc534bffaa0705",
+    "host.json": "a1f90591c6b985b7bde2316514fbd5bdebeb469fc3aba8cd019cb145d9d0a921",
+    "worker-result.json": "036ba4ffdf24ab86779416134a02d46926089de43f29e6c2f4b553acf4ff86b9"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/baseline"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/fused"
+    ]
+  ],
+  "regenerate_from": "archive"
+}
