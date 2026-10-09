@@ -1,8 +1,11 @@
 # Orbital
 
-Orbital currently implements allocation, physical retention, background memory
-preparation and worker services. Objects, versioning, Journal and Port remain in
-the [combined Orbital/Loom design](../workbench/design/orbital/DESIGN.md).
+Orbital implements allocation, preparation and worker services. Versioned
+Objects, Representations and Views are experimental in the
+[MVCC study](../workbench/spikes/orbital-mvcc/README.md); the Stage 2 attempt was
+withdrawn so measured performance, metadata ownership and interfaces can develop
+together. Journal, Port and distributed execution remain in the
+[combined Orbital/Loom design](../workbench/design/orbital/DESIGN.md).
 
 Start with [Loom's caller path](../loom/README.md). A Loom Worker adopts an
 application thread, owns a local allocation Pool and handles completion Messages.
@@ -104,4 +107,5 @@ actual LMDB. It owns retained comparisons and the costs this allocation stage
 omits. Its mutable page layout is comparison machinery; it supplies no Object
 identity or versioning. [Prior research](../workbench/notebook/orbital/reference/README.md)
 explains the allocation, access and execution choices without establishing runtime
-contracts from prototype behavior.
+contracts from prototype behavior. The opt-in MVCC study retains Object and
+caller histories as checks for competing implementations.

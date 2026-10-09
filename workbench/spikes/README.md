@@ -32,7 +32,8 @@ experiments and checks under Object, Allocation, Journal, Port and Worker.
 - [Orbital reservation policies](orbital-reservation-policy/README.md): broad-waiter progress, WAN convoys and deterministic bypass, with formal and native comparisons.
 - [Orbital prepared retention](orbital-root-fusion/README.md): deriving a prepared root from an existing same-owner record, with acquisition and recovery comparisons.
 - [Orbital views](orbital-views/README.md): embedded object histories, versioned parts, sparse views, copying/taking, worker masks and allocation reuse.
-- [Orbital Stage 2 composition](orbital-stage2-composition/FINDINGS.md): executable selection/Representation/View seams, real SeriesPack–TuplePack conversion, and the supporting fusion/interleaving experiments; preparation for Objects/Views, with Engine and multi-block containers left open.
+- [Orbital MVCC](orbital-mvcc/README.md): withdrawn Stage 2 baseline, actual callers and LMDB controls; metadata, interfaces and complete-operation measurements must shape the next candidates together. Engine and multi-block containers remain open.
+- [Orbital Stage 2 composition](orbital-stage2-composition/FINDINGS.md): earlier selection/Representation/View seams, real SeriesPack–TuplePack conversion, and supporting fusion/interleaving experiments.
 - [Durable object composition](orbital-objects/README.md): earlier composition of state, native views and physical lifetimes; Linux protection, UFFD and COW probes.
 - [Row filter signatures](row-filter-signatures/README.md): per-row Boolean evidence and progressive refinement.
 - [Aggregate maintenance](aggregate-maintenance/README.md): descendant summaries without excessive mutation cost.

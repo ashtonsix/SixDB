@@ -3,8 +3,10 @@
 The maintained driver pushes an ordered packed container through Loom's actual
 Worker/Pool/Allocation/Hold path. It compares identical deterministic logical
 requests to actual LMDB, with an independent ordered-map oracle. This is the
-allocation implementation stage: Engine, Shore, versioning, concurrent isolation
-and durability are not implemented or priced by the candidate.
+allocation implementation stage: this mutable fixture does not implement or price
+Engine, Shore, versioning, concurrent isolation or durability. The withdrawn
+Stage 2 implementation and its row/column consumer are retained as a rejected
+experimental baseline in the [Orbital MVCC spike](../../spikes/orbital-mvcc/README.md).
 
 The [completed allocation comparison](evidence/selected-allocation-20261007/README.md)
 measures source `595e07fa` with synchronous and same-CPU preparation controls.
@@ -93,8 +95,8 @@ not a journal.
 `packed-owner` is the primary synchronous ready path. The real Allocation owns
 its bytes throughout the uninterrupted assigned-lane call, and checked stable
 Ikea bindings qualify the footprint. No pointer escapes and no poll, reentry,
-growth or release intervenes. Objects' future version/authority costs remain
-unimplemented. `packed` separately acquires a genuine Hold at each page access.
+growth or release intervenes. Object version selection and publication costs are
+absent from this path. `packed` separately acquires a genuine Hold at each page access.
 Stable named pack bindings remain admitted while placement is unchanged.
 `packed-retained` is a separate
 native-region control: each page's actual Hold remains live for the bounded

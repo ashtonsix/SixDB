@@ -1,10 +1,19 @@
 # Orbital Stage 2: structure exercised before implementation
 
-9 October 2026. These experiments prepare **Orbital Objects, Representations and
+9 October 2026. These experiments explored **Orbital Objects, Representations and
 Views for embedded versioned reads and writes**. Their types and algorithms are
 prototypes, not runtime contracts. The temporary consumer exercises real Ikea,
 Allocation and Loom components. Engine and Ikea's composition of many blocks
 remain open for Ashton to design. Stage 3's multiple workers are outside this pass.
+
+The subsequent implementation was withdrawn and is now a rejected experimental
+baseline in the [Orbital MVCC investigation](../orbital-mvcc/README.md).
+Its [Object behavior](../orbital-mvcc/baseline/objects.md),
+[consumer](../orbital-mvcc/consumer/README.md) and
+[comparison](../orbital-mvcc/performance/README.md) describe that candidate,
+not runtime contracts. Future promotion requires measurements to steer the
+architecture and implementation from the first candidate. The evidence and
+prototype limitations below retain their original experiment cutoff.
 
 ## The structure to carry forward
 
@@ -210,7 +219,7 @@ omitted per-point Hold/Buffer/Lock work. Native borrowing prevents new versionin
 overhead; it does not explain away those existing deficits. Matched snapshot
 scope and complete query work remain necessary in the eventual composed panel.
 
-## What remains open for implementation
+## Questions handed to the subsequent candidate
 
 - Choose compact frequent call shapes from the caller/ABI evidence, while
   retaining the distinct lifetime semantics above. A spike's `shared_ptr`,
@@ -243,5 +252,6 @@ qualification. Checks exposed real lifetime/ownership and harness errors before
 the results were retained. The selected-access source receipt and critical-path
 C++ codegen identities were checked against the final files; the interleaving
 native-source association has the narrower provenance stated above. Runtime
-modules are unchanged. Prototype signatures remain unsettled; the composed
-versioned comparison with LMDB remains ahead.
+modules were unchanged at this experiment's cutoff. These prototype signatures
+were not promoted to contracts; the later withdrawn baseline and comparison
+linked above retain the subsequent implementation outcomes.

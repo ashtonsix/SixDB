@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "processes": 101,
+  "source_sha256_digest": "c72a77518a93dda63524f25acfd97e2fe54b130d6e7fd95c85bd714bd9d96f94",
+  "same_compiled_source_as_native_capture": true,
+  "existing_db_unchanged": true,
+  "instrumentation": "ASan/UBSan; always-use-after-return; frame pointers; separate build",
+  "environment": {
+    "ASAN_OPTIONS": "detect_stack_use_after_return=1:detect_leaks=1:halt_on_error=1",
+    "UBSAN_OPTIONS": "halt_on_error=1"
+  },
+  "binary_sha256": {
+    "orbital_versioned_lmdb_check": "b3fd40f66cb2588d76734d90591ae2184675029621f41145f8f76552993a7030",
+    "orbital_versioned_body_check": "48dd3016d628c6ab342a200a93a4a1adc72c3ae083f3afbc03da653f247913e7",
+    "orbital_versioned_performance_check": "29f1818110d1841aec38f2f906d3106774cc7bc3e066efa339d3fa3c715d914e",
+    "orbital_versioned_performance_bench": "23b2feb76c29bd2ed23a1072ea3fb1003b35f00cd2d67bcc7907c54a135fb89e"
+  },
+  "full_receipt_in_archive": "sanitizers/qualification.json",
+  "scope": "8 Objects, native caller modes and tails, retained update/conversion, invalid options, reused DB refusal"
+}

@@ -1,7 +1,7 @@
 # Loom
 
-Loom connects database work to [Orbital](../orbital/README.md). The implemented
-allocation stage offers three paths: ordinary calls over ready bytes, typed
+Loom connects database work to [Orbital](../orbital/README.md). Its embedded
+runtime offers three paths: ordinary calls over ready bytes, typed
 Rings for independent memory lookups, and Tasks for work that suspends.
 Placement, the version-aware read cache and I/O orchestration remain in the
 [joint design](../workbench/design/orbital/DESIGN.md).
@@ -62,6 +62,15 @@ Stop external posting and keep independently retained backend records alive
 through final Message handling. A drained queue does not prove that all posting
 calls, including their wake callbacks, have returned.
 
+## Experimental Object callers
+
+The [MVCC study](../workbench/spikes/orbital-mvcc/README.md) owns the experimental
+versioned caller composition. Its [actual Loom callers](../workbench/spikes/orbital-mvcc/callers/loom.cpp)
+exercise coherent reads across suspension, exact resolved retention, native Rings,
+and delayed private fills with current, cancelled and stale completion. They use
+this module's existing mechanisms; the study revisits their Object-facing state
+and signatures together with complete-operation performance.
+
 ## Memory Rings
 
 [Typed Rings](include/loom/ring.h) hold independent memory continuations in
@@ -119,7 +128,8 @@ available for matched mechanism comparisons.
 ## Build and examples
 
 Build `loom_validate` using [Building](../BUILDING.md) to run the Worker, Ring and
-allocation caller checks. The compiled examples demonstrate complete lifetimes:
+allocation caller checks. The compiled examples demonstrate complete
+lifetimes:
 
 - [Allocation](examples/allocation.cpp): grow a SeriesPack after a foreign reader
   finishes, then resume its waiting Task.

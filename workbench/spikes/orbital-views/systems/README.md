@@ -7,7 +7,7 @@ pins one allowed CPU and alternates three forward/reverse trials. `SIXDB_RESULTS
 and the usual build/ISA/tuning settings select the destination and target.
 
 The embedded baseline can retain inputs in memory; file sync service below
-prices a stronger guarantee. [Consolidated design](../../../design/orbital/DESIGN.md#embedded-path) owns that distinction.
+prices a stronger guarantee. The [admitted-input design](../../../design/orbital/DESIGN.md#future-admitted-input-path) owns that distinction.
 The parent [check runner](../check.sh) exercises the four compositions below
 without running the performance matrices.
 

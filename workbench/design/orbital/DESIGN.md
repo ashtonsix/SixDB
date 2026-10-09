@@ -1,16 +1,51 @@
-# Orbital and Loom: candidate design
+# Orbital and Loom: runtime and protocol direction
 
-The [Orbital runtime](../../../orbital/README.md) implements allocation, physical
-retention, preparation and workers through [Loom](../../../loom/README.md)'s direct
-calls, Tasks and typed Rings. Module interfaces and compiled examples own current
-behavior. Objects, versions, Journal, Port and the read cache below are candidate
-designs. Their declarations compile; they have no runtime implementation.
+The [Orbital runtime](../../../orbital/README.md) owns supported allocation,
+preparation and worker interfaces. [Loom](../../../loom/README.md) supplies direct
+calls, Tasks and typed Rings. Journal, distributed authority/recovery, Port and
+the read cache remain future protocol work.
 
-The current [Stage 2 composition experiments](../../spikes/orbital-stage2-composition/FINDINGS.md)
-exercise selected versions, complete Representation ownership, native/retained
-Views and real SeriesPack–TuplePack conversion before implementing Objects/Views.
-They refine the seams below without promoting their fixture catalog or signatures
-to runtime contracts. Engine and Ikea multi-block container design remain open.
+**Orbital Stage 2 is experimental again.** Its first embedded Objects/Views
+implementation was withdrawn into the [MVCC study](../../spikes/orbital-mvcc/README.md).
+Performance was qualified too late to guide its architecture. That study now
+compares complete operations while changing version metadata, ownership, physical
+interpretation and call boundaries together. The target is lower latency than
+LMDB with versioning included. A correctness pass or a smaller `sizeof` alone
+does not establish the design.
+
+Engine and Ikea's composition of many blocks remain open for Ashton to design.
+The study's consumer is disposable scaffolding: it exercises real SeriesPack
+column Parts and TuplePack row Parts, including bidirectional 4-to-1 Part
+conversion, without defining Engine navigation, membership, indexes, summaries
+or container copy-on-write. Stage 3 adds multiple workers.
+
+## Embedded experiment
+
+Logical selection, complete physical interpretation and access to immutable
+backing remain the questions to compose. The study preserves the rejected
+[baseline](../../spikes/orbital-mvcc/baseline/objects.md), its actual lifetime and
+publication histories, and [matched LMDB evidence](../../spikes/orbital-mvcc/performance/README.md).
+Its source boundaries and layouts are candidates, not module contracts.
+The earlier [composition experiments](../../spikes/orbital-stage2-composition/FINDINGS.md)
+provide additional evidence and unresolved alternatives.
+
+Any embedded candidate must preserve the relevant correctness distinctions:
+coherent discovery versus resolved retention; logical publication versus physical
+conversion; private construction versus accepted finished work; caller cancellation
+versus actual physical completion. A version number alone supplies no authority.
+Representation interpretation and dependencies must survive with retained bytes,
+including when conversion changes the number of Parts. The wider consensus and
+recovery obligations below remain separate from the single-owner experiment.
+
+## Future protocol profile
+
+The declarations under `orbital/candidate/` use `orbital::candidate` and compile
+alongside runtime headers. They preserve the wider protocol questions below;
+they are not a second supported embedded API. Candidate examples begin with
+[a point read](examples/caller.md), [batch execution](examples/jobs.md),
+[memory lookups](examples/native.md), [partitioned work](examples/partitions.md)
+and [extensions and I/O](examples/extensions.md). Protocol calls have no runtime
+definitions. Actual Allocation, Worker/Task and Ring mechanics remain module-owned.
 
 In the candidate Object design, Objects belong to a shard. Representations belong
 to a replica. A Part describes its bytes and format. A View gives code access to
@@ -23,14 +58,7 @@ their metadata alive, so newer States can share them after an older State is gon
 One Draft keeps its admitted input, complete previous State and private edits
 through publication.
 
-The future-profile examples start with [a point read](examples/caller.md), then [batch execution](examples/jobs.md).
-[Memory lookups](examples/native.md), [partitioned work](examples/partitions.md)
-and [extensions and I/O](examples/extensions.md) show the other paths.
-Future protocol calls compile without definitions; these are not executable
-database examples. Allocation, native Worker/Task and typed Ring contracts come
-directly from their owning modules. There is no second scheduler or allocator here.
-
-## Where the parts meet
+### Protocol seams
 
 | Area | Responsibility |
 | --- | --- |
@@ -203,9 +231,9 @@ Evidence covers same-host LLC domains in single-NUMA guests. Cross-NUMA/host
 routing, observation cadence, search policy and concrete planning interfaces
 remain open, along with cache ranking, adaptive controls and stealing.
 
-## Embedded path
+## Future admitted-input path
 
-This Object/Journal path is proposed, beyond the implemented allocation stage.
+This Object/Journal path is proposed beyond the embedded finished-result profile.
 Input can be stored in memory and batches admitted locally. This protects it
 while the instance lives. Crash durability requires stronger storage.
 
@@ -356,9 +384,9 @@ pressure or timeout cannot choose another result.
 **Extensions and effects.** WASM is the preferred isolated-extension direction;
 Firecracker is another executor. Enforce exact ranges and rights, including
 partial pages. Recorded code/profile fixes runtime semantics. The owner chooses
-checking/audit policy; Worker compares the complete interaction and main result.
+checking/audit policy; the executor compares the complete interaction and main result.
 Fresh observations need agreed input before import. Engine/Ikea checks original
-authority and imports with all maintenance. Worker never publishes; a later
+authority and imports with all maintenance. The executor never publishes; a later
 audit incident cannot retrospectively abort an installed result.
 
 Published outbox intent supplies stable contribution IDs. Non-deduplicating
@@ -381,32 +409,33 @@ orb -m ubuntu cmake -S . -B build/design/orbital/clang -G Ninja
 orb -m ubuntu cmake --build build/design/orbital/clang --target orbital_design_check
 ```
 
-Ten candidate TUs compile independently, outside the default build, against the
+Eleven declaration/example TUs compile independently, outside the default build, against the
 actual Orbital/Loom libraries. Python extracts the
 pages' cpp blocks in reading order; diagnostics point back to Markdown.
 This skeleton checks future Object, Journal, Port and executor call shapes.
 Compilation proves neither correctness nor speed. Module headers own implemented
-allocation, reclamation and scheduling behavior; wire layouts remain open.
+allocation, reclamation and scheduling behavior. The MVCC study owns experimental
+Objects; wire layouts remain open.
 
-The next Object work has four unresolved seams:
-
-- Ready reads and updates through actual selected versions, including an old reader
-  surviving publication.
-- Immutable directory and private-edit organization that fits Engine membership,
-  with local navigation and update movement.
-- Exact Material, format and owner metadata retained through waits and retries;
-  logical reclamation eligibility distinct from physical Holds.
-- Completion capacity while predecessors, private edits, reconstruction and ready
-  inventory overlap.
+The embedded experiment leaves the wider seams open: stored input and
+replay authority, missing-byte reconstruction/Port, distributed cuts and recovery,
+and multiple-worker execution/reclamation. Engine owns its future navigation,
+membership and multi-block composition. The temporary consumer does not settle
+those choices.
 
 LMDB's page-local navigation, inline records, positioned scans and local split
 repair are leads for that composition. They do not justify a fixture-specific
 optimization layer. The [completed allocation comparison](../../benchmarks/orbital/evidence/selected-allocation-20261007/README.md)
 retains large point-read and insertion-tail gaps; same-CPU preparation did not
 repair the tails. It measures the earlier `595e07fa` cut, with snapshot/publication
-costs omitted. That headroom cannot price the Object path; real versioning needs matched reader,
-batching, maintenance and drain scope. Shared orchestration stays compiled once;
-native specialization remains local and evidence-led.
+costs omitted. That headroom cannot price the Object path. The
+[versioned comparison](../../spikes/orbital-mvcc/performance/README.md)
+retains the rejected baseline's selection and publication with matched reader groups,
+identical encoded Tuple payloads and the same legal Ikea native body. Its local
+ARM results retain small scalar-read deficits; the fixed updates include unequal
+adapter preparation and cannot isolate publication cost. It does not price
+insertion/split tails, durability or multiple workers. Shared orchestration stays
+compiled once; native specialization remains local and evidence-led.
 
 ## Evidence behind the recommendation
 

@@ -1,0 +1,1762 @@
+{
+  "commands": [
+    {
+      "name": "git-head",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "git-status",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "host",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "compiler",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "configure",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "linked-libraries",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "lmdb-version",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "performance_check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "lmdb_check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "body_check",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-0-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-0-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-0-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-0-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-0-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-0-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-0-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-0-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-1-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-1-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-1-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-1-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-1-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-1-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-1-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-1-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-2-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-2-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-2-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-2-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-2-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-2-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-2-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-00-2-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-0-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-0-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-0-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-0-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-0-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-0-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-0-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-0-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-1-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-1-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-1-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-1-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-1-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-1-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-1-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-1-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-2-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-2-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-2-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-2-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-2-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-2-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-2-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-01-2-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-0-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-0-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-0-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-0-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-0-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-0-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-0-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-0-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-1-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-1-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-1-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-1-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-1-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-1-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-1-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-1-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-2-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-2-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-2-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-2-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-2-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-2-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-2-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-02-2-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-0-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-0-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-0-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-0-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-0-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-0-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-0-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-0-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-1-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-1-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-1-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-1-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-1-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-1-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-1-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-1-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-2-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-2-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-2-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-2-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-2-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-2-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-2-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-03-2-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-0-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-0-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-0-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-0-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-0-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-0-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-0-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-0-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-1-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-1-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-1-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-1-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-1-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-1-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-1-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-1-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-2-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-2-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-2-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-2-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-2-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-2-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-2-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-04-2-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-0-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-0-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-0-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-0-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-0-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-0-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-0-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-0-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-1-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-1-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-1-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-1-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-1-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-1-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-1-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-1-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-2-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-2-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-2-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-2-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-2-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-2-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-2-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-05-2-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-0-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-0-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-0-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-0-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-0-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-0-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-0-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-0-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-1-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-1-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-1-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-1-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-1-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-1-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-1-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-1-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-2-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-2-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-2-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-2-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-2-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-2-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-2-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-06-2-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-0-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-0-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-0-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-0-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-0-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-0-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-0-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-0-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-1-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-1-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-1-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-1-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-1-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-1-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-1-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-1-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-2-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-2-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-2-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-2-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-2-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-2-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-2-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-07-2-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-0-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-0-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-0-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-0-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-0-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-0-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-0-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-0-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-1-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-1-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-1-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-1-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-1-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-1-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-1-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-1-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-2-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-2-throughput-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-2-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-2-throughput-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-2-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-2-latency-direct",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-2-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-08-2-latency-borrowed",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-09-0-throughput-row-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-09-0-latency-row-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-09-1-throughput-row-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-09-1-latency-row-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-09-2-throughput-row-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-09-2-latency-row-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-10-0-throughput-row-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-10-0-latency-row-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-10-1-throughput-row-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-10-1-latency-row-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-10-2-throughput-row-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-10-2-latency-row-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-11-0-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-11-0-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-11-0-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-11-0-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-11-1-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-11-1-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-11-1-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-11-1-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-11-2-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-11-2-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-11-2-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-11-2-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-12-0-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-12-0-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-12-0-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-12-0-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-12-1-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-12-1-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-12-1-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-12-1-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-12-2-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-12-2-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-12-2-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-12-2-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-13-0-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-13-0-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-13-0-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-13-0-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-13-1-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-13-1-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-13-1-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-13-1-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-13-2-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-13-2-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-13-2-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-13-2-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-14-0-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-14-0-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-14-0-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-14-0-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-14-1-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-14-1-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-14-1-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-14-1-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-14-2-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-14-2-throughput-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-14-2-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-14-2-latency-lmdb",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-15-0-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-15-0-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-15-1-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-15-1-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-15-2-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-15-2-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-16-0-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-16-0-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-16-1-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-16-1-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-16-2-throughput-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "trial-16-2-latency-orbital",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "symbols",
+      "required": true,
+      "returncode": 0
+    },
+    {
+      "name": "disassembly",
+      "required": true,
+      "returncode": 0
+    }
+  ],
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "config": {
+    "allowed_cpus": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "cpu": 2,
+    "panel": [
+      {
+        "backends": [
+          "orbital",
+          "borrowed",
+          "lmdb",
+          "direct"
+        ],
+        "batch": 1,
+        "objects": 1,
+        "ops": 32771,
+        "rows": 1024,
+        "workload": "point-hit"
+      },
+      {
+        "backends": [
+          "orbital",
+          "borrowed",
+          "lmdb",
+          "direct"
+        ],
+        "batch": 64,
+        "objects": 1,
+        "ops": 32771,
+        "rows": 1024,
+        "workload": "point-hit"
+      },
+      {
+        "backends": [
+          "orbital",
+          "borrowed",
+          "lmdb",
+          "direct"
+        ],
+        "batch": 1,
+        "objects": 1,
+        "ops": 32771,
+        "rows": 1024,
+        "workload": "point-miss"
+      },
+      {
+        "backends": [
+          "orbital",
+          "borrowed",
+          "lmdb",
+          "direct"
+        ],
+        "batch": 1,
+        "objects": 4,
+        "ops": 32771,
+        "rows": 32768,
+        "workload": "point-hit"
+      },
+      {
+        "backends": [
+          "orbital",
+          "borrowed",
+          "lmdb",
+          "direct"
+        ],
+        "batch": 64,
+        "objects": 4,
+        "ops": 32771,
+        "rows": 32768,
+        "workload": "point-hit"
+      },
+      {
+        "backends": [
+          "orbital",
+          "borrowed",
+          "lmdb",
+          "direct"
+        ],
+        "batch": 1,
+        "objects": 4,
+        "ops": 32771,
+        "rows": 32768,
+        "workload": "dependent-16"
+      },
+      {
+        "backends": [
+          "orbital",
+          "borrowed",
+          "lmdb",
+          "direct"
+        ],
+        "batch": 64,
+        "objects": 4,
+        "ops": 32771,
+        "rows": 32768,
+        "workload": "dependent-16"
+      },
+      {
+        "backends": [
+          "orbital",
+          "borrowed",
+          "lmdb",
+          "direct"
+        ],
+        "batch": 1,
+        "objects": 4,
+        "ops": 32771,
+        "rows": 32768,
+        "workload": "scan-16"
+      },
+      {
+        "backends": [
+          "orbital",
+          "borrowed",
+          "lmdb",
+          "direct"
+        ],
+        "batch": 64,
+        "objects": 4,
+        "ops": 32771,
+        "rows": 32768,
+        "workload": "scan-16"
+      },
+      {
+        "backends": [
+          "row-lmdb"
+        ],
+        "batch": 1,
+        "objects": 1,
+        "ops": 32771,
+        "rows": 1024,
+        "workload": "point-hit"
+      },
+      {
+        "backends": [
+          "row-lmdb"
+        ],
+        "batch": 64,
+        "objects": 1,
+        "ops": 32771,
+        "rows": 1024,
+        "workload": "point-hit"
+      },
+      {
+        "backends": [
+          "orbital",
+          "lmdb"
+        ],
+        "batch": 1,
+        "objects": 4,
+        "ops": 131,
+        "rows": 4096,
+        "workload": "point-update"
+      },
+      {
+        "backends": [
+          "orbital",
+          "lmdb"
+        ],
+        "batch": 64,
+        "objects": 4,
+        "ops": 131,
+        "rows": 4096,
+        "workload": "point-update"
+      },
+      {
+        "backends": [
+          "orbital",
+          "lmdb"
+        ],
+        "batch": 1,
+        "objects": 4,
+        "ops": 131,
+        "rows": 32768,
+        "workload": "point-update"
+      },
+      {
+        "backends": [
+          "orbital",
+          "lmdb"
+        ],
+        "batch": 64,
+        "objects": 4,
+        "ops": 131,
+        "rows": 32768,
+        "workload": "point-update"
+      },
+      {
+        "backends": [
+          "orbital"
+        ],
+        "batch": 1,
+        "from": "rows",
+        "objects": 4,
+        "ops": 16,
+        "rows": 4096,
+        "workload": "convert"
+      },
+      {
+        "backends": [
+          "orbital"
+        ],
+        "batch": 1,
+        "from": "columns",
+        "objects": 4,
+        "ops": 16,
+        "rows": 4096,
+        "workload": "convert"
+      }
+    ],
+    "repetitions": 3
+  },
+  "configure_flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DSIXDB_BENCHMARKS=orbital",
+    "-DSIXDB_MARCH=",
+    "-DSIXDB_TUNE=generic"
+  ],
+  "files_sha256": {
+    "abi.json": "aafbdf80467a83fc33a8d53342496ee91be4bd202617d59f6bb484c72446a16a",
+    "binary-identity.json": "2efb654c212850b0ab352e3f1fc84617ec45db7a48b5453d29d3903989c885a3",
+    "measurements.csv": "eb7c6ca0ae487e7e9a80fc0b8dd1dec3866bbcad08c4e2443588a4b47f6566fa",
+    "parity.json": "f7b516a2859656d0015aa5db3e5c6fe39a681c884dd267cc37828c5d656705d8",
+    "qualification.json": "7b7a306031a3f7e0d1a3b32f3b3cb6e3ea790455594bfca2c7ae6ae4490657da",
+    "sanitizer-summary.json": "6f4d8e478c5ee899017aca8eb6acb06ba3bfb578db6217848f6b4c037d8577cb",
+    "summary.csv": "d58dff0063b66b3b3fe59439d8a5a28f673350efbc67bf71275be494c2bc6730"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "git_head": "b2c205d090ff964d3368a58bcf8b40d783738bc0",
+  "inputs": {},
+  "platform": "Linux-7.0.14-orbstack-00380-ga7e0a2dc9535-aarch64-with-glibc2.42",
+  "regenerate": [
+    "python3",
+    "workbench/benchmarks/orbital/versioned-performance/run.py",
+    "--report",
+    "{evidence}"
+  ],
+  "regenerate_from": "archive",
+  "source_archive_sha256": "915ca4a1afc6543a5308b606b7109af5bf7b8a562bf51404e2b533ba13e7d5c0",
+  "source_digest": "0d447a62d901a99f28974f2dce8f41472db95ff85f6ad742ce155bdab4b09ed7",
+  "source_unchanged": true,
+  "started_utc": "2026-10-09T17:51:45.770459+00:00",
+  "status": "complete"
+}

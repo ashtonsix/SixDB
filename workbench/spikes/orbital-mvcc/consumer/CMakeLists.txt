@@ -1,0 +1,21 @@
+add_library(orbital_versioned_data STATIC data.cpp)
+sixdb_target(orbital_versioned_data)
+target_link_libraries(orbital_versioned_data PUBLIC orbital_mvcc_baseline ikea::seriespack ikea::tuplepack)
+target_include_directories(orbital_versioned_data PUBLIC .
+  "${PROJECT_SOURCE_DIR}/workbench/benchmarks/orbital")
+
+add_library(orbital_versioned_consumer STATIC consumer.cpp)
+sixdb_target(orbital_versioned_consumer)
+target_link_libraries(orbital_versioned_consumer PUBLIC orbital_versioned_data)
+
+add_executable(orbital_versioned_data_check check_data.cpp)
+sixdb_target(orbital_versioned_data_check)
+target_link_libraries(orbital_versioned_data_check PRIVATE orbital_versioned_data orbital_bench_workload)
+add_test(NAME orbital_versioned_data_check COMMAND orbital_versioned_data_check)
+set_tests_properties(orbital_versioned_data_check PROPERTIES TIMEOUT 60 LABELS orbital-mvcc)
+
+add_executable(orbital_versioned_check check.cpp)
+sixdb_target(orbital_versioned_check)
+target_link_libraries(orbital_versioned_check PRIVATE orbital_versioned_consumer)
+add_test(NAME orbital_versioned_check COMMAND orbital_versioned_check)
+set_tests_properties(orbital_versioned_check PROPERTIES TIMEOUT 60 LABELS orbital-mvcc)

@@ -1,9 +1,5 @@
-find_path(ORBITAL_BENCH_LMDB_INCLUDE lmdb.h REQUIRED)
-find_library(ORBITAL_BENCH_LMDB_LIBRARY lmdb REQUIRED)
-add_library(orbital_bench_workload STATIC workload.cpp reference.cpp lmdb.cpp)
-sixdb_target(orbital_bench_workload)
-target_include_directories(orbital_bench_workload PRIVATE "${ORBITAL_BENCH_LMDB_INCLUDE}")
-target_link_libraries(orbital_bench_workload PUBLIC "${ORBITAL_BENCH_LMDB_LIBRARY}")
+include(workload.cmake)
+
 add_executable(orbital_request_failure_check request_failure.cpp)
 sixdb_target(orbital_request_failure_check)
 target_include_directories(orbital_request_failure_check PRIVATE "${ORBITAL_BENCH_LMDB_INCLUDE}")

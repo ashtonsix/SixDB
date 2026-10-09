@@ -5,8 +5,11 @@ with the [SeriesPack/TuplePack fixture](../orbital-representation-conversion/).
 It tests whether logical selection, physical interpretation, and actual native
 bytes stay together across conversion, publication and waiting. It introduces
 no Engine navigation, multi-block container or production interface.
-The [cross-spike findings](FINDINGS.md) connect this caller to the proposed
-structure and the independent critical-path experiments.
+The [cross-spike findings](FINDINGS.md) connect this caller to the structure
+and the independent critical-path experiments. The subsequent Stage 2
+implementation was withdrawn; its rejected experimental baseline and consumer
+now live in the [Orbital MVCC investigation](../orbital-mvcc/README.md).
+This earlier caller supplies historical evidence, not a supported API.
 
 The fixture encodes eight columns as eight SeriesPack Parts, and the same
 records as one TuplePack Part. The adapter uses `selected::capture` to retain

@@ -1,7 +1,10 @@
 # Orbital research questions
 
-For the design workspace and research organised by area, start at
-[Orbital](orbital/reference/README.md).
+For implemented Stage 1 interfaces, start with the [Orbital runtime](../../orbital/README.md).
+The [cross-module design](../design/orbital/DESIGN.md) keeps future protocol direction
+separate from the withdrawn Stage 2 baseline in the
+[MVCC investigation](../spikes/orbital-mvcc/README.md). The
+[historical reference](orbital/reference/README.md) organizes earlier research.
 
 This is a consultable list of questions, useful examples and evidence from older
 drafts, SixDB studies and Calico. Inclusion does not select a mechanism or add a

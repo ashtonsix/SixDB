@@ -42,10 +42,18 @@ target. Build it with the release preset to produce a stripped executable in
 Packaging requires `llvm-objcopy-21` and `llvm-strip-21`. Project symbols are
 hidden by default; future shared-library APIs will need explicit exports.
 
-The first [Orbital runtime](orbital/README.md) implements allocation and worker
-support. `orbital_validate` and `loom_validate` build and run its ownership,
-reclamation and execution checks. Select `-DSIXDB_BENCHMARKS=orbital` for the
-[packed consumer and LMDB comparison](workbench/benchmarks/orbital/README.md).
+The [Orbital runtime](orbital/README.md) and [Loom](loom/README.md) implement
+Stage 1 allocation, preparation, worker and execution support.
+`orbital_validate` and `loom_validate` build and run their checks.
+Select `-DSIXDB_BENCHMARKS=orbital` for the
+[allocation comparison](workbench/benchmarks/orbital/README.md).
+
+The withdrawn Stage 2 Objects implementation is a rejected experimental baseline
+in the [Orbital MVCC spike](workbench/spikes/orbital-mvcc/README.md).
+Select `-DSIXDB_SPIKES=orbital-mvcc` independently of benchmark selection, then
+build `orbital_mvcc_validate` for its Object histories, actual Loom callers,
+consumer and LMDB checks. The earlier Object and consumer target names exist
+only inside that selected spike.
 
 Build the `ikea_validate` target to build and run Ikea's behavior checks and
 examples. They are registered with CTest: `ctest --test-dir BUILD -N` lists them;

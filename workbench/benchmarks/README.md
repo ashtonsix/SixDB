@@ -9,6 +9,9 @@ analysis and native pair consumers.
 The [Orbital allocation consumer](orbital/README.md) replays ordered packed
 operations through Loom/Orbital against actual LMDB, with per-workload throughput
 and latency headroom.
+The withdrawn Objects candidate, row/column consumer and LMDB controls now live
+in the opt-in [Orbital MVCC spike](../spikes/orbital-mvcc/README.md), where
+performance measurements must steer the design from the first candidate.
 Individual candidate experiments and their findings
 stay with the [investigation](../spikes/README.md) that asks the question.
 
