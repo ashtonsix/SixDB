@@ -36,9 +36,12 @@ struct EncodedBody {
 
 template<class Store> typename Store::Owner encode(Store& store, ch::Memory& memory,
     std::uint32_t value, bool columns = true,
-    std::array<std::weak_ptr<const void>, 4>* witnesses = nullptr) {
-  const std::array<orbital_bench::Row, 3> rows{{
+    std::array<std::weak_ptr<const void>, 4>* witnesses = nullptr,
+    orbital::ProgramId program = data_program, std::size_t count = 3) {
+  const std::array<orbital_bench::Row, 3> sample{{
       {1, {2, value, 4}}, {3, {4, value + 1, 6}}, {5, {6, value + 2, 8}}}};
+  check(count <= sample.size());
+  const auto rows = std::span(sample).first(count);
   v::Schema schema;
   auto physical = take(v::shape(schema, columns ? v::Format::columns : v::Format::rows, rows.size()));
   std::array<v::WritePart, 4> writable{};
@@ -54,7 +57,7 @@ template<class Store> typename Store::Owner encode(Store& store, ch::Memory& mem
   }
   v::KernelCosts costs;
   check(v::construct_into(schema, physical, {writable.data(), physical.part_count}, rows, costs));
-  auto* shape = take(cs::prove_fixture(memory, schema, data_program, physical.interpretation,
+  auto* shape = take(cs::prove_fixture(memory, schema, program, physical.interpretation,
       {sources.data(), physical.part_count}));
   auto captured = store.capture({shape, rows.size()}, {bodies.data(), physical.part_count});
   cs::release(shape);
@@ -204,6 +207,48 @@ template<class Store> void exact_store_authority() {
   check(!first_memory.live && !second_memory.live);
 }
 
+template<class Store> void conversion_compatibility_refusals() {
+  ch::Memory memory;
+  {
+    Store store(memory);
+    std::array<typename Store::Change, 1> initial{{{A, encode(store, memory, 71)}}};
+    publish(store, initial); initial = {};
+    typename Store::Scope basis(store);
+    const auto cut = basis.cut();
+    auto primary = basis.bind(A);
+    auto target = take(store.conversion(basis, A));
+    auto first_alternative = encode(store, memory, 71, false);
+    check(store.adopt(target, first_alternative)); first_alternative = {};
+    auto retained_alternative = take(basis.bind_alternative(A));
+
+    // Both replacements are valid, same-resource physical realizations. Only
+    // their semantic program or logical row count makes adoption incompatible.
+    std::array<typename Store::Owner, 2> incompatible{
+        encode(store, memory, 71, false, nullptr, {19, 4}),
+        encode(store, memory, 71, false, nullptr, data_program, 2)};
+    for (const auto& replacement : incompatible) {
+      auto refused = store.adopt(target, replacement);
+      check(!refused && refused.error() == orbital::Error::conflict);
+      check(store.borrow().cut == cut && basis.bind(A).realization == primary.realization);
+      typename Store::Scope current(store);
+      auto unchanged = take(store.bound(current, A));
+      check(unchanged.binding().object == A && unchanged.binding().version == cut);
+      check(unchanged.selection().realization == primary.realization && first_value(unchanged.selection()) == 71);
+      auto alternative = take(current.bind_alternative(A));
+      check(alternative.realization == retained_alternative.realization && first_value(alternative) == 71);
+    }
+
+    // Refusal must neither consume the target nor disturb an existing borrow.
+    auto replacement = encode(store, memory, 71, false);
+    check(store.adopt(target, replacement));
+    check(store.borrow().cut == cut && basis.bind(A).realization == primary.realization);
+    auto adopted = take(basis.bind_alternative(A));
+    check(adopted.realization == replacement.selection().realization && first_value(adopted) == 71);
+    check(first_value(primary) == 71 && first_value(retained_alternative) == 71);
+  }
+  check(!memory.live);
+}
+
 template<class Store> void accepted_private_and_alternatives() {
   ch::Memory memory;
   {
@@ -264,9 +309,10 @@ template<class Store> void run(const char* label) {
   repeated_physical_binding<Store>();
   overwrite_erase_recreate<Store>();
   exact_store_authority<Store>();
+  conversion_compatibility_refusals<Store>();
   accepted_private_and_alternatives<Store>();
   accepted_while_older_history_retires<Store>();
-  std::printf("%s: five actual encoded ownership/binding histories passed\n", label);
+  std::printf("%s: six actual encoded ownership/binding histories passed\n", label);
 }
 
 int main() {

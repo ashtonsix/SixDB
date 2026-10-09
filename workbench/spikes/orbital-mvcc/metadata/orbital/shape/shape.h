@@ -68,6 +68,9 @@ void retain(Realization*) noexcept;
 void release(Realization*) noexcept;
 std::uint64_t records(const Realization*) noexcept;
 std::pmr::memory_resource* resource(const Realization*) noexcept;
+// Conversion compatibility only: equal semantic ProgramId and record count.
+// The caller must establish equal logical content before catalog adoption;
+// this predicate neither compares bytes nor proves a lossless conversion.
 bool equivalent(const Realization*, const Realization*) noexcept;
 
 // Pointer-only native Part borrow. Count and proven geometry stay with its

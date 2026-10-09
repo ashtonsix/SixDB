@@ -79,6 +79,7 @@ are independent retention roots, not released by the absence of a local reader.
 - [Consumer and Ikea field/call census](consumer/ikea-census.md), [actual type probes](consumer/census.cpp), [probe runner](consumer/probe.py), and [qualification/native candidates](consumer/candidates.h).
 - [Admitted private write batches](consumer/write-batch.md) compare one batch admission with repeated field-writer binding, including actual effects, private backing and unchanged-error controls.
 - [Shared-Shape native reads](consumer/shape-read.md) compare public checked access with a composed private-layout path, using the same stored law and kernels for selected and mapped bodies.
+- [Composed Shape adapter](composed/README.md) joins shared Shapes, actual Allocation owners, retained histories, native reads/writes and one-Part/four-Part conversion. [Actual compact adapter checks](performance_adapter/README.md) independently exercise the descriptor-based performance controls.
 - [Loom findings and selected evidence](loom/README.md), [actual frame/type probes](loom/facts.cpp), [ordinary call producers](loom/boundaries.cpp), [consumers](loom/callers.cpp), and [code-generation runner](loom/codegen.py).
 
 The [performance study](../performance/README.md) owns the measured comparisons.
@@ -90,8 +91,8 @@ row-key LMDB control visible: matching encoded blobs isolates foundational
 overhead but cannot establish a general database performance win.
 
 Run the integrated metadata controls independently of the withdrawn baseline
-suite (descriptor, shared shape, Object directory, compact histories, retention
-and the seven consumer checks):
+suite (descriptor, shared shape, Object directory, compact histories, retention,
+native consumers and driver adapters):
 
 ```sh
 orb -m ubuntu cmake -S . -B build/orbital-mvcc/metadata-integration -G Ninja \
@@ -100,7 +101,17 @@ orb -m ubuntu cmake --build build/orbital-mvcc/metadata-integration \
   --target orbital_mvcc_metadata_validate -j2
 ```
 
-The target also compiles descriptor, shared-shape and inline-current ABI probes. Its fifteen
-tests use the separate `orbital-mvcc-metadata` CTest label and keep assertions
-enabled. This qualifies repository integration; the performance study owns
-measured comparisons.
+The target also compiles descriptor, shared-shape and inline-current ABI probes.
+Tests use the separate `orbital-mvcc-metadata` CTest label and keep assertions
+enabled. To build and run only the two adapter checks:
+
+```sh
+orb -m ubuntu cmake --build build/orbital-mvcc/metadata-integration \
+  --target orbital_mvcc_composed_check orbital_mvcc_actual_adapter_check -j2
+orb -m ubuntu ctest --test-dir build/orbital-mvcc/metadata-integration \
+  --output-on-failure -R '^orbital_mvcc_(composed|actual_adapter)_check$'
+```
+
+The compiled `orbital_mvcc_composed` library reuses the performance runtime,
+write-batch and Shape-read libraries. These checks qualify repository integration;
+the performance study owns measured comparisons.

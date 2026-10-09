@@ -81,6 +81,24 @@ target_link_libraries(orbital_mvcc_consumer_shape_read_check
 add_test(NAME orbital_mvcc_consumer_shape_read_check COMMAND orbital_mvcc_consumer_shape_read_check)
 list(APPEND metadata_checks orbital_mvcc_consumer_shape_read_check)
 
+add_library(orbital_mvcc_composed STATIC composed/material.cpp)
+sixdb_target(orbital_mvcc_composed)
+target_link_libraries(orbital_mvcc_composed PUBLIC
+  orbital_versioned_performance_runtime orbital_mvcc_write_batch
+  orbital_mvcc_shape_read orbital_mvcc_directory)
+
+add_executable(orbital_mvcc_composed_check composed/check.cpp)
+sixdb_target(orbital_mvcc_composed_check)
+target_link_libraries(orbital_mvcc_composed_check PRIVATE orbital_mvcc_composed)
+add_test(NAME orbital_mvcc_composed_check COMMAND orbital_mvcc_composed_check)
+list(APPEND metadata_checks orbital_mvcc_composed_check)
+
+add_executable(orbital_mvcc_actual_adapter_check performance_adapter/check.cpp)
+sixdb_target(orbital_mvcc_actual_adapter_check)
+target_link_libraries(orbital_mvcc_actual_adapter_check PRIVATE orbital_versioned_performance_runtime)
+add_test(NAME orbital_mvcc_actual_adapter_check COMMAND orbital_mvcc_actual_adapter_check)
+list(APPEND metadata_checks orbital_mvcc_actual_adapter_check)
+
 foreach(check IN LISTS metadata_checks)
   target_compile_options(${check} PRIVATE -UNDEBUG)
 endforeach()
