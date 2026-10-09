@@ -175,6 +175,15 @@ The screen retains requested metadata, actual copies/capacity/reclaim work,
 timings and all competitors; it does not measure foreign contention or heat
 benefits under pressure.
 
+`point_write_screen.sh` compares the measured new-full/Storage16 shared writer
+with the isolated narrow point command, including matched mapped LMDB and
+larger Tuple/Series4 writes. Its build patch adds an ordinary separate TU;
+source lookup and unchanged next stores disappear while clone-first admission
+changes failure precedence. The [retained pair](FEEDBACK.md#narrow-point-updates)
+keeps small scalar regressions, encoded-work counters and growing code text
+alongside batch/body improvements. Recover the actual source cuts to replay;
+the live selected writer is not the original screen baseline.
+
 Composed reads use the protected native Tuple bridge. `--from columns` instead
 uses four real Series Parts and the generic consumer with its resident Schema;
 this is a contextual Orbital case, without a fictitious mapped-LMDB counterpart.

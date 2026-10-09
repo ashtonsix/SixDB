@@ -458,6 +458,53 @@ experiment limit, without a portable-language or weak-memory claim.
 The narrow point-write comparison follows separately, with Storage16 and new
 full maintenance fixed rather than mixing these controls into its baseline.
 
+## Narrow point updates
+
+[Worker 20261009T232342Z-c0b340ec](evidence/zen5-point-write-screen-20261009/)
+passes 232 oracle trials with the measured new-full/Storage16 writer source
+fixed. The isolated [point command](../metadata/consumer/point-write.md)
+preserves clone key/next and writes only value/tag in an ordinary separate TU;
+the full writer remains the comparison control. Both cuts keep matched mapped
+LMDB specialization, rolling old readers and final settlement. Quick has two
+repetitions; the larger Tuple/Series4 context has one. Source cuts are blocked.
+
+| Update ns, full → point | Inline | Directory | Mapped LMDB |
+| --- | ---: | ---: | ---: |
+| 192 rows / 64 Objects, scalar | 562.00 → 618.82 | 576.17 → 507.98 | 1661.89 → 1751.73 |
+| 192 rows / 64 Objects, batch64 | 362.91 → 320.51 | 363.70 → 333.62 | 263.82 → 252.91 |
+| 4096 rows / four Objects, scalar | 761.46 → 731.52 | 771.61 → 682.91 | 2713.39 → 2545.99 |
+| 4096 rows / four Objects, batch64 | 188.59 → 126.83 | 180.40 → 120.38 | 263.32 → 215.62 |
+
+The small Inline and mapped scalar regressions remain evidence against a
+blanket speed claim; both Inline point repetitions are slower than both full
+repetitions. Larger Series4 batch Inline improves 198.97 → 147.20 ns and
+Directory 186.87 → 141.59 ns. These are useful directional batch/body signals.
+Architecture selected the narrow writer while keeping its failure tradeoff:
+clone-first admission may return capacity before absent and perform a wasted
+copy. Published logical state and refusal outcomes remain independently checked.
+
+Quick Tuple private copies remain 282831 B with 4099 admissions/updates.
+Actual encoded values/bindings fall 12297 → 8198; issued bytes 61485 → 28693
+(15 → 7 per command), while issued spans remain 4099. The command is 16 B
+rather than 24 B; scratch falls 128 → 64 B, Tuple law 1408 → 1072 B and
+stationary law slots 1432 → 1096 B. Backend is 2368 → 2048 B and explicit
+caller arrays 3072 → 2560 B. The original Schema stays 15296 B and PMR
+remains 6579 B. Source lookup is removed; clone writer key probes remain.
+
+Exact x86-64 code grows: composed update text 3044 → 3540 B and mapped
+1996 → 2235 B. Stack reservations fall 3528 → 3048 B and 1784 → 1240 B.
+Smaller caller storage is therefore not a universal code-size or scalar win.
+Twenty native CLI oracle cases pass, including old/final `next` preservation
+and complete settlement; the [native archive](evidence/zen5-point-write-screen-20261009/native-artifact.json)
+contains the already verified recipe/logs/ELFs. This adds no sanitizer claim.
+
+All twelve selected table/parity files regenerate byte-identically. Git keeps
+all competitors, repetitions and clock modes in the tables, two distinct ABI
+summaries, and 44 selected throughput JSON rows because their primitive effect
+counters are absent from the older table schema. Identical contextual ABI and
+binaries, full raw latency, source cuts and logs remain in the existing worker
+archive. The next read-fusion comparison fixes the point writer in both arms.
+
 ## Clock-mode fault discriminator
 
 [Worker 20261009T213742Z-b9d498d3](evidence/zen5-fault-controls-20261009/feedback/measurements.csv)
@@ -498,8 +545,9 @@ Actual publication/rolling retained readers, physical and metadata refusal,
 large-catalog correctness and finite-Group controls now exist. Full raw caller
 qualification is archived; its source and binary identity are explicit. The
 writer law has useful directional support with its inline storage charged.
-Next feedback holds it fixed while comparing original/full/bounded metadata
-maintenance, then Group advice and direct Storage routes. Cold
-conditioning and broader residency/catalog/retention generality remain open.
+Maintenance, Allocation-route and narrow-point pairs now retain their negative
+controls as well as useful reductions. Read fusion follows with the point writer
+fixed, then a modest larger/cold/retained read-write panel. Heap and trim controls
+remain separate; broader residency/catalog/retention generality remains open.
 The source-only baseline range diagnostic explicitly names uncovered allocator,
 map and new snapshot storage; it is not a cold measurement.

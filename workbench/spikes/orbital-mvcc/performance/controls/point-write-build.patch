@@ -1,0 +1,28 @@
+--- a/workbench/spikes/orbital-mvcc/metadata/CMakeLists.txt
++++ b/workbench/spikes/orbital-mvcc/metadata/CMakeLists.txt
+@@ -85,11 +85,15 @@
+ sixdb_target(orbital_mvcc_shape_write)
+ target_link_libraries(orbital_mvcc_shape_write PUBLIC orbital_mvcc_shape_read orbital_mvcc_write_batch)
+ 
++add_library(orbital_mvcc_point_write STATIC consumer/point_write.cpp)
++sixdb_target(orbital_mvcc_point_write)
++target_link_libraries(orbital_mvcc_point_write PUBLIC orbital_mvcc_shape_write)
++
+ add_library(orbital_mvcc_composed STATIC composed/material.cpp)
+ sixdb_target(orbital_mvcc_composed)
+ target_link_libraries(orbital_mvcc_composed PUBLIC
+   orbital_versioned_performance_runtime orbital_mvcc_write_batch
+-  orbital_mvcc_shape_read orbital_mvcc_shape_write orbital_mvcc_directory)
++  orbital_mvcc_shape_read orbital_mvcc_shape_write orbital_mvcc_point_write orbital_mvcc_directory)
+ 
+ add_executable(orbital_mvcc_composed_check composed/check.cpp)
+ sixdb_target(orbital_mvcc_composed_check)
+--- a/workbench/spikes/orbital-mvcc/performance/CMakeLists.txt
++++ b/workbench/spikes/orbital-mvcc/performance/CMakeLists.txt
+@@ -25,5 +25,5 @@
+ add_library(orbital_versioned_performance_composed STATIC composed_runtime.cpp)
+ sixdb_target(orbital_versioned_performance_composed)
+ target_link_libraries(orbital_versioned_performance_composed PUBLIC orbital_versioned_performance_runtime
+-  orbital_mvcc_composed orbital_mvcc_write_batch orbital_mvcc_shape_read orbital_mvcc_shape_write)
++  orbital_mvcc_composed orbital_mvcc_write_batch orbital_mvcc_shape_read orbital_mvcc_shape_write orbital_mvcc_point_write)
+ target_link_libraries(orbital_versioned_performance_bench PRIVATE orbital_versioned_performance_composed)
