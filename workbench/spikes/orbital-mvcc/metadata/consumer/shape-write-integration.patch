@@ -1,0 +1,314 @@
+--- a/workbench/spikes/orbital-mvcc/metadata/composed/material.h
++++ b/workbench/spikes/orbital-mvcc/metadata/composed/material.h
+@@ -3,6 +3,7 @@
+ #include "../../performance/read.h"
+ #include "../consumer/shape_read.h"
+ #include "../consumer/write_batch.h"
++#include "../consumer/shape_write.h"
+ #include "../orbital/candidates/shape_policy.h"
+ #include <optional>
+ 
+@@ -13,6 +14,7 @@
+ namespace oa = orbital::allocation;
+ namespace sr = metadata_consumer::shape_read;
+ namespace wb = metadata_consumer::write_batch;
++namespace sw = metadata_consumer::shape_write;
+ using orbital::Result;
+ using orbital::Error;
+ 
+@@ -29,6 +31,9 @@
+   std::size_t metadata_live{}, metadata_peak{}, metadata_calls{}, metadata_limit{};
+   std::size_t shared_shape_bytes{}, write_shape_heap_bytes{}, schema_bytes{};
+   std::size_t borrowed_write_shape_record_bytes{}, pool_setup_and_inventory_bytes{};
++  // Inline slots are included in sizeof(Backend), separate from PMR metadata.
++  // Live law bytes are a subset of these slots, not an additional allocation.
++  std::size_t write_control_live_bytes{}, write_control_slots_bytes{};
+   std::size_t active_allocations{}, live_capacity_bytes{};
+   // Some Allocation treatments do not track this diagnostic. Null is not zero.
+   std::optional<std::size_t> held_extent_bytes;
+@@ -45,6 +50,8 @@
+   struct ReleaseShape { void operator()(cs::Shape* value) const { cs::release(value); } };
+   std::unique_ptr<cs::Shape, ReleaseShape> tuple_, columns_proof_;
+   std::optional<sr::TupleProof> tuple_read_;
++  std::optional<sw::TupleLaw> tuple_write_;
++  std::optional<sw::SeriesProof> columns_write_;
+   Result<PrivateParts> allocate(const v::Shape&, v::Costs&);
+ public:
+   compact_history::Memory memory;
+@@ -60,6 +67,9 @@
+   Result<PrivateParts> convert(cs::Selection, v::Format, v::Costs&, v::ConstructionOptions = {});
+   Result<cs::Shape*> proof(const PrivateParts&);
+   v::ReadData generic(cs::Selection) const;
++  Result<void> lookup(cs::Selection, orbital_bench::Key, std::size_t&, orbital_bench::Record&) const;
++  Result<void> apply(cs::Selection basis, const PrivateParts&, std::span<const v::Update>,
++      v::KernelCosts&, wb::ProbeCosts&) const;
+   orbital_bench::Outcome consume(cs::Selection, const orbital_bench::Operation&) const;
+   Accounting accounting() const;
+ };
+--- a/workbench/spikes/orbital-mvcc/metadata/composed/material.cpp
++++ b/workbench/spikes/orbital-mvcc/metadata/composed/material.cpp
+@@ -32,6 +32,7 @@
+   memory.limit = partition(total, metadata_bytes);
+ }
+ Material::~Material() {
++  tuple_read_.reset(); tuple_write_.reset(); columns_write_.reset();
+   tuple_.reset(); columns_proof_.reset();
+   // The owning Backend destroys its catalog before this resource/runtime.
+   // Scopes and pending conversions may not outlive that enclosing Backend.
+@@ -110,6 +111,19 @@
+       auto admitted = sr::admit_tuple_shape(owner.get(), v::data_program, parts.shape->parts[0].id);
+       if (!admitted) { owner.reset(); return std::unexpected(admitted.error()); }
+       tuple_read_ = *admitted;
++      const auto write_admitted = sw::TupleLaw::prepare(tuple_write_, owner.get(),
++          corpus_.schema.tuple, std::span(corpus_.schema.writers).subspan<1, 3>(),
++          v::data_program, parts.shape->parts[0].id);
++      if (!write_admitted) {
++        tuple_read_.reset(); tuple_write_.reset(); owner.reset();
++        return std::unexpected(write_admitted.error());
++      }
++    } else {
++      std::array<orbital::PartId, 4> ids;
++      for (unsigned i = 0; i < ids.size(); ++i) ids[i] = parts.shape->parts[i].id;
++      const auto write_admitted = sw::admit_series_shape(owner.get(), v::data_program, ids);
++      if (!write_admitted) { owner.reset(); return std::unexpected(write_admitted.error()); }
++      columns_write_ = *write_admitted;
+     }
+   }
+   return owner.get();
+@@ -127,6 +141,30 @@
+   return p::need(v::ReadData::bind(corpus_.schema, physical.interpretation,
+       std::span(parts).first(physical.part_count)));
+ }
++Result<void> Material::lookup(cs::Selection selected, orbital_bench::Key key,
++    std::size_t& row, orbital_bench::Record& record) const {
++  if (!selected) return std::unexpected(Error::absent);
++  if (tuple_write_ && selected.shape() == tuple_write_->shape())
++    return sw::lookup(tuple_write_->proof(), selected, key, row, record);
++  if (columns_write_ && selected.shape() == columns_write_->shape())
++    return sw::lookup(*columns_write_, selected, key, row, record);
++  return std::unexpected(Error::invalid_argument);
++}
++Result<void> Material::apply(cs::Selection basis, const PrivateParts& target,
++    std::span<const v::Update> input, v::KernelCosts& costs, wb::ProbeCosts& probes) const {
++  if (!basis) return std::unexpected(Error::absent);
++  if (!target.shape || target.shape->records != basis.records())
++    return std::unexpected(Error::invalid_argument);
++  // The private clone is constructed from this protected exact basis. Fresh
++  // supplied IDs/extents/aliases and all keys are still admitted by sw::apply.
++  if (tuple_write_ && basis.shape() == tuple_write_->shape() &&
++      target.shape == &shape(v::Format::rows))
++    return sw::apply(tuple_write_->proof(), basis.records(), target.parts(), input, costs, probes);
++  if (columns_write_ && basis.shape() == columns_write_->shape() &&
++      target.shape == &shape(v::Format::columns))
++    return sw::apply(*columns_write_, basis.records(), target.parts(), input, costs, probes);
++  return std::unexpected(Error::invalid_argument);
++}
+ orbital_bench::Outcome Material::consume(cs::Selection selected,
+     const orbital_bench::Operation& op) const {
+   using orbital_bench::Kind;
+@@ -147,6 +185,9 @@
+   result.write_shape_heap_bytes = shape_heap(shape(v::Format::rows)) + shape_heap(columns_);
+   result.schema_bytes = sizeof(v::Schema);
+   result.borrowed_write_shape_record_bytes = sizeof(v::Shape);
++  result.write_control_live_bytes = (tuple_write_ ? sizeof(sw::TupleLaw) : 0) +
++      (columns_write_ ? sizeof(sw::SeriesProof) : 0);
++  result.write_control_slots_bytes = sizeof(tuple_write_) + sizeof(columns_write_);
+   result.pool_setup_and_inventory_bytes = sizeof(oa::Arena) + sizeof(oa::detail::ArenaState) +
+       sizeof(oa::Pool) + sizeof(oa::detail::PoolState) +
+       runtime.arena->state->pools.capacity() * sizeof(std::unique_ptr<oa::Pool>) +
+--- a/workbench/spikes/orbital-mvcc/metadata/composed/backend.h
++++ b/workbench/spikes/orbital-mvcc/metadata/composed/backend.h
+@@ -87,17 +87,18 @@
+         if (std::find(objects.begin(), objects.begin() + offered, object) != objects.begin() + offered) continue;
+         auto selected = select(*basis, object, true);
+         if (!selected) return std::unexpected(selected.error());
+-        const auto source = material_.generic(*selected);
+         std::size_t used{};
+         for (std::size_t i = 0; i < input.size(); ++i) if (objects[i] == object) {
+-          auto row = source.get(input[i].key);
+-          if (!row) return std::unexpected(Error::absent);
+-          row->value = input[i].record.value; row->tag = input[i].record.tag;
+-          updates[used++] = {input[i].key, *row};
++          std::size_t position{};
++          Record record;
++          const auto found = material_.lookup(*selected, input[i].key, position, record);
++          if (!found) return std::unexpected(found.error());
++          record.value = input[i].record.value; record.tag = input[i].record.tag;
++          updates[used++] = {input[i].key, record};
+         }
+         auto parts = material_.clone(*selected, costs);
+         if (!parts) return std::unexpected(parts.error());
+-        auto written = wb::apply(corpus().schema, *parts->shape, parts->parts(),
++        auto written = material_.apply(*selected, *parts,
+             std::span(updates).first(used), costs.kernel, write_costs);
+         if (!written) return written;
+         auto owner = capture(*parts);
+--- a/workbench/spikes/orbital-mvcc/performance/composed_runtime.h
++++ b/workbench/spikes/orbital-mvcc/performance/composed_runtime.h
+@@ -6,6 +6,7 @@
+ namespace composed = orbital_mvcc::composed;
+ namespace shape_read = orbital_mvcc::metadata_consumer::shape_read;
+ namespace write_batch = orbital_mvcc::metadata_consumer::write_batch;
++namespace shape_write = orbital_mvcc::metadata_consumer::shape_write;
+ 
+ // One admitted immutable law, independent of any mapped-value transaction.
+ // The same native read bridge used by composed Orbital also receives LMDB's
+@@ -15,11 +16,15 @@
+   compact_history::Memory memory_;
+   compact_shape::Shape* shape_{};
+   std::optional<shape_read::TupleProof> proof_;
++  std::optional<shape_write::TupleLaw> write_;
+ public:
+   explicit MappedShape(const Corpus& corpus);
+   ~MappedShape();
+   MappedShape(const MappedShape&) = delete;
+   auto proof() const { return *proof_; }
++  auto write_proof() const { return write_->proof(); }
++  std::size_t write_control_live_bytes() const { return write_ ? sizeof(shape_write::TupleLaw) : 0; }
++  std::size_t write_control_slots_bytes() const { return sizeof(write_); }
+   const Corpus& corpus() const { return corpus_; }
+   std::size_t metadata_bytes() const { return memory_.live; }
+ };
+@@ -27,7 +32,7 @@
+ Interval run_lmdb_shape_reads(Lmdb&, const Corpus&, const MappedShape&, bool latency,
+     std::span<const orbital_bench::Operation>, std::span<const std::size_t>,
+     std::span<orbital_bench::Outcome>, std::size_t batch, std::uint64_t& bindings);
+-void lmdb_composed_update(Lmdb&, const Corpus&, std::span<const orbital_bench::Operation>,
++void lmdb_composed_update(Lmdb&, const MappedShape&, std::span<const orbital_bench::Operation>,
+     std::span<const std::size_t>, std::span<orbital_bench::Outcome>, data::Costs&, write_batch::ProbeCosts&);
+ 
+ template<class Backend>
+--- a/workbench/spikes/orbital-mvcc/performance/composed_runtime.cpp
++++ b/workbench/spikes/orbital-mvcc/performance/composed_runtime.cpp
+@@ -12,8 +12,15 @@
+     compact_shape::release(shape_); shape_ = nullptr; need(admitted);
+   }
+   proof_ = *admitted;
++  const auto write_admitted = shape_write::TupleLaw::prepare(write_, shape_, corpus.schema.tuple,
++      std::span(corpus.schema.writers).subspan<1, 3>(), data::data_program, image.address.part);
++  if (!write_admitted) {
++    proof_.reset(); write_.reset(); compact_shape::release(shape_); shape_ = nullptr;
++    need(write_admitted);
++  }
+ }
+ MappedShape::~MappedShape() {
++  proof_.reset(); write_.reset();
+   if (shape_) compact_shape::release(shape_);
+   if (memory_.live) std::terminate();
+ }
+@@ -72,10 +79,12 @@
+   };
+   return batch == 1 ? run.template operator()<1>() : run.template operator()<64>();
+ }
+-void lmdb_composed_update(Lmdb& store, const Corpus& corpus, std::span<const orbital_bench::Operation> input,
++void lmdb_composed_update(Lmdb& store, const MappedShape& mapped_shape, std::span<const orbital_bench::Operation> input,
+     std::span<const std::size_t> objects, std::span<orbital_bench::Outcome> output,
+     data::Costs& costs, write_batch::ProbeCosts& probe) {
+   using namespace orbital_bench;
++  const auto& corpus = mapped_shape.corpus();
++  const auto write_proof = mapped_shape.write_proof();
+   if (input.empty() || input.size() > 64 || input.size() != objects.size() || input.size() != output.size())
+     throw std::invalid_argument("invalid composed LMDB publication batch");
+   for (std::size_t i = 0; i < input.size(); ++i)
+@@ -90,20 +99,21 @@
+     const auto& image = corpus.images[object];
+     const auto bytes = basis->part(image.address);
+     if (!bytes) throw std::runtime_error("missing composed LMDB update basis");
+-    const auto source = corpus.bind(object, *bytes, image.shape.parts[0].interpretation);
+     std::size_t used{};
+     for (std::size_t i = 0; i < input.size(); ++i) if (objects[i] == object) {
+-      auto row = source.get(input[i].key);
+-      if (!row) throw std::runtime_error("absent composed LMDB fixed-row update");
+-      row->value = input[i].record.value; row->tag = input[i].record.tag;
+-      updates[used++] = {input[i].key, *row};
++      std::size_t position{};
++      Record record;
++      need(shape_write::lookup_mapped(write_proof, image.shape.records, *bytes,
++          input[i].key, position, record));
++      record.value = input[i].record.value; record.tag = input[i].record.tag;
++      updates[used++] = {input[i].key, record};
+     }
+     auto target = write.reserve_part(image.address, bytes->size());
+     std::memcpy(target.data(), bytes->data(), bytes->size());
+     costs.copied_bytes += bytes->size(); ++costs.copied_spans;
+     costs.requested_body_bytes += bytes->size(); ++costs.requested_parts;
+     const data::WritePart part{image.address.part, target};
+-    need(write_batch::apply(corpus.schema, image.shape, std::span{&part, 1},
++    need(shape_write::apply(write_proof, image.shape.records, std::span{&part, 1},
+         std::span(updates).first(used), costs.kernel, probe));
+   }
+   basis.reset(); write.publish();
+--- a/workbench/spikes/orbital-mvcc/metadata/composed/check.cpp
++++ b/workbench/spikes/orbital-mvcc/metadata/composed/check.cpp
+@@ -174,7 +174,8 @@
+         "\"write_arrays\":%zu,\"private_parts\":%zu,\"pool_metadata\":%llu,"
+         "\"pool_mapped\":%llu,\"pool_reserved\":%llu,\"arena_charge\":%llu,"
+         "\"active_allocations\":%zu,\"live_capacity\":%zu,\"held_extent\":%s,"
+-        "\"borrowed_write_shape_record\":%zu,\"pool_setup_and_inventory\":%zu}\n",
++        "\"borrowed_write_shape_record\":%zu,\"pool_setup_and_inventory\":%zu,"
++        "\"write_control_live_bytes\":%zu,\"write_control_slots_bytes\":%zu}\n",
+         name, unsigned(initial), static_cast<unsigned long long>(comparisons), static_cast<unsigned long long>(refusals),
+         initial_account.metadata_live, initial_account.metadata_peak, static_cast<unsigned long long>(initial_account.pool.metadata_bytes),
+         final.metadata_live, final.metadata_peak, final.metadata_calls, final.shared_shape_bytes,
+@@ -183,7 +184,8 @@
+         sizeof(c::PrivateParts), static_cast<unsigned long long>(final.pool.metadata_bytes),
+         static_cast<unsigned long long>(final.pool.mapped_bytes), static_cast<unsigned long long>(final.pool.reserved_bytes),
+         static_cast<unsigned long long>(final.arena_charge), final.active_allocations, final.live_capacity_bytes, held_extent.c_str(),
+-        final.borrowed_write_shape_record_bytes, final.pool_setup_and_inventory_bytes);
++        final.borrowed_write_shape_record_bytes, final.pool_setup_and_inventory_bytes,
++        final.write_control_live_bytes, final.write_control_slots_bytes);
+   }
+   // Backend teardown checks zero PMR; actual Runtime shutdown checks zero Arena.
+ }
+--- a/workbench/spikes/orbital-mvcc/performance/main.cpp
++++ b/workbench/spikes/orbital-mvcc/performance/main.cpp
+@@ -235,6 +235,8 @@
+     std::cout<<",\"shared_shape_bytes\":"<<a.shared_shape_bytes
+         <<",\"write_shape_heap_bytes\":"<<a.write_shape_heap_bytes<<",\"schema_bytes\":"<<a.schema_bytes
+         <<",\"borrowed_write_shape_record_bytes\":"<<a.borrowed_write_shape_record_bytes
++        <<",\"write_control_live_bytes\":"<<a.write_control_live_bytes
++        <<",\"write_control_slots_bytes\":"<<a.write_control_slots_bytes
+         <<",\"pool_setup_and_inventory_bytes\":"<<a.pool_setup_and_inventory_bytes
+         <<",\"active_allocations\":"<<a.active_allocations<<",\"live_capacity_bytes\":"<<a.live_capacity_bytes
+         <<",\"backend_record_bytes\":"<<f.backend_record_bytes<<",\"write_caller_arrays_bytes\":"<<f.write_caller_arrays_bytes
+@@ -304,7 +306,7 @@
+   Interval interval,release,conditioning;
+   data::Costs costs;
+   write_batch::ProbeCosts write_probe;
+-  std::size_t mapped_shape_metadata{};
++  std::size_t mapped_shape_metadata{}, mapped_shape_record{}, mapped_write_control_live{}, mapped_write_control_slots{};
+   std::uint64_t bindings{},drain_steps{};
+   OrbitalFootprint orbital_initial,orbital_held,orbital_released;
+   Lmdb::Footprint lmdb_initial,lmdb_held,lmdb_released;
+@@ -383,11 +385,16 @@
+     else {auto write=store.edit();for (const auto& image:corpus.images) write.put_part(image.address,image.encoded);write.publish();}
+     lmdb_initial=store.footprint();
+     std::optional<MappedShape> mapped_shape;
+-    if (o.backend=="lmdb-composed") {mapped_shape.emplace(corpus);mapped_shape_metadata=mapped_shape->metadata_bytes();}
++    if (o.backend=="lmdb-composed") {
++      mapped_shape.emplace(corpus); mapped_shape_metadata=mapped_shape->metadata_bytes();
++      mapped_shape_record=sizeof(MappedShape);
++      mapped_write_control_live=mapped_shape->write_control_live_bytes();
++      mapped_write_control_slots=mapped_shape->write_control_slots_bytes();
++    }
+     if (updating) {
+       std::optional<Lmdb::Read> old(store.read());std::size_t first{},published{},witness{};
+       interval=writes(o,hardware,write_faults,[&](auto input,auto target) {
+-        if (o.backend=="lmdb-composed") lmdb_composed_update(store,corpus,input,std::span{objects}.subspan(first,input.size()),target,costs,write_probe);
++        if (o.backend=="lmdb-composed") lmdb_composed_update(store,*mapped_shape,input,std::span{objects}.subspan(first,input.size()),target,costs,write_probe);
+         else lmdb_update(store,corpus,input,std::span{objects}.subspan(first,input.size()),target,costs);
+         first+=input.size();
+         if (o.retention_age && ++published%o.retention_age==0) {
+@@ -579,7 +586,11 @@
+       <<",\"metadata_allocation_counts_available\":"<<(o.backend.starts_with("candidate") || o.backend.starts_with("composed-")?"true":"false");
+   std::cout<<",\"cost_counter_scope\":\"clone/update/conversion native kernels only; read decode counters unavailable\""
+       <<",\"maintenance_policy\":\""<<(o.backend.starts_with("candidate") || o.backend.starts_with("composed-")?"full catalog drain plus bounded physical poll":o.backend=="orbital"?"bounded drain plus bounded physical poll":"transaction release")<<"\"";
+-  std::cout<<",\"mapped_shape_metadata_bytes\":"<<mapped_shape_metadata<<",\"write_batch_probe\":{\"private_admissions\":"<<write_probe.private_admissions
++  std::cout<<",\"mapped_shape_metadata_bytes\":"<<mapped_shape_metadata
++      <<",\"mapped_shape_record_bytes\":"<<mapped_shape_record
++      <<",\"mapped_write_control_live_bytes\":"<<mapped_write_control_live
++      <<",\"mapped_write_control_slots_bytes\":"<<mapped_write_control_slots
++      <<",\"write_batch_probe\":{\"private_admissions\":"<<write_probe.private_admissions
+       <<",\"key_reads\":"<<write_probe.key_reads<<",\"full_rows_read\":"<<write_probe.full_rows_read<<",\"applied_updates\":"<<write_probe.applied_updates<<"}";
+   rusage usage{};
+   if (getrusage(RUSAGE_SELF,&usage)) throw std::runtime_error("process resource receipt failed");
