@@ -411,6 +411,53 @@ regenerate byte-identically. Git keeps the three distinct ABI summaries once,
 with identical contextual copies and raw sources/samples in the worker archive.
 Allocation advice/direct routes are next, with full maintenance held fixed.
 
+## Allocation advice and direct slots
+
+[Worker 20261009T231831Z-94780ebd](evidence/zen5-allocation-routes-screen-20261009/)
+passes 272 oracle trials on the same guest: one quick and one modest larger/
+Series4 repetition per cut. The shared writer and new full maintenance are
+fixed. Allocation varies from Storage16/full growth to Group advice, then
+Direct8 and Direct4 with the same checked Hold API and 8388607 use limit.
+Shape export propagates refusal; a common cold accounting adapter observes
+each actual slot layout. Source cuts are blocked and retain all competitors.
+
+| 64-Object result | Storage16 | Group advice | Direct8 | Direct4 |
+| --- | ---: | ---: | ---: | ---: |
+| Fresh/held/released Pool metadata B | 15032 | 10448 | 8400 | 7376 |
+| Inline scalar update ns | 547.44 | 603.82 | 548.78 | 543.22 |
+| Inline batch64 update ns | 343.91 | 350.42 | 344.79 | 345.04 |
+| Directory scalar update ns | 552.10 | 584.30 | 577.42 | 505.08 |
+| Directory batch64 update ns | 349.64 | 334.35 | 335.22 | 325.05 |
+
+Requested Pool metadata is roughly halved. PMR, copy/preparation/admission/update
+counters, live body capacity and reclamation match between cuts; Inline PMR
+remains 6579 B initially, 10323 B held and 10203 B released in batch64.
+Schema, law slots and setup still need their existing charges; the whole
+metadata target has not been achieved. Caller CPU follows update wall time.
+
+Group advice's scalar negative remains visible. Unchanged mapped LMDB batch64
+varies 263.53 / 269.38 / 247.87 / 260.31 ns, so this screen does not establish
+a small speed ranking. Direct4's Directory and larger-body signals are useful
+directional leads rather than a reason to discard Direct8. Ordinary owner-lane
+operation does not price foreign counter contention, saturation or advice
+quality under pressure; those belong to the separate qualified runtime controls.
+
+The larger Series4 Inline batch result is 200.90 / 211.11 / 195.29 / 189.56 ns.
+Its held/released Pool metadata is 27280 / 22696 / 20648 / 19624 B, with the
+same payload/copies and final zero debt/pending in all cuts. Larger Tuple uses
+Windows and keeps 3744 B held/released Pool metadata across all four cuts;
+the Group saving cannot be generalized to that allocation shape.
+
+All four cuts separately pass ten native CLI smokes, including real Series4,
+old readers and mapped LMDB; the [native archive](evidence/zen5-allocation-routes-screen-20261009/native-artifact.json)
+keeps commands/ELFs/recipes. All 24 table/parity files regenerate identically.
+Git omits the byte-identical Group-advice ABI and identical contextual copies
+after archive verification; three distinct exact-executable summaries remain.
+Direct routes retain the owner's explicit Clang/Linux enclosing-address
+experiment limit, without a portable-language or weak-memory claim.
+The narrow point-write comparison follows separately, with Storage16 and new
+full maintenance fixed rather than mixing these controls into its baseline.
+
 ## Clock-mode fault discriminator
 
 [Worker 20261009T213742Z-b9d498d3](evidence/zen5-fault-controls-20261009/feedback/measurements.csv)

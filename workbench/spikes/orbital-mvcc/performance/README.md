@@ -165,6 +165,16 @@ not cap allocator, OS or backing-destructor time. Old unavailable counters stay
 empty rather than becoming zero. The selected negative batch result in
 [feedback](FEEDBACK.md) keeps full drain as the current default.
 
+`allocation_routes_screen.sh` instead fixes that new full-drain writer cut and
+compares Storage16, Group advice and Direct8/Direct4. The latter two share the
+checked Hold API and count limit; Shape export refusal is carried through the
+owner patch. A common cold accounting adapter observes each actual layout.
+These remain pinned Clang/Linux address-routing controls with the owner's
+[documented reachability limit](../metadata/orbital/allocation/routes/direct-domain/README.md).
+The screen retains requested metadata, actual copies/capacity/reclaim work,
+timings and all competitors; it does not measure foreign contention or heat
+benefits under pressure.
+
 Composed reads use the protected native Tuple bridge. `--from columns` instead
 uses four real Series Parts and the generic consumer with its resident Schema;
 this is a contextual Orbital case, without a fictitious mapped-LMDB counterpart.
