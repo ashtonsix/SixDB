@@ -1,0 +1,14 @@
+add_library(orbital_mvcc_descriptor STATIC descriptor.cpp)
+sixdb_target(orbital_mvcc_descriptor)
+target_include_directories(orbital_mvcc_descriptor PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+target_link_libraries(orbital_mvcc_descriptor PUBLIC orbital::orbital)
+
+add_executable(orbital_mvcc_descriptor_check check.cpp)
+sixdb_target(orbital_mvcc_descriptor_check)
+target_link_libraries(orbital_mvcc_descriptor_check PRIVATE orbital_mvcc_descriptor)
+add_test(NAME orbital_mvcc_descriptor_check COMMAND orbital_mvcc_descriptor_check)
+set_tests_properties(orbital_mvcc_descriptor_check PROPERTIES LABELS orbital-mvcc TIMEOUT 30)
+
+add_library(orbital_mvcc_descriptor_abi OBJECT abi.cpp)
+sixdb_target(orbital_mvcc_descriptor_abi)
+target_link_libraries(orbital_mvcc_descriptor_abi PRIVATE orbital_mvcc_descriptor)

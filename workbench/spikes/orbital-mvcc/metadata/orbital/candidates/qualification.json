@@ -1,0 +1,47 @@
+{
+  "time_utc": "2026-10-09T20:43:17.833062+00:00",
+  "compiler": "Ubuntu Clang21.1.8",
+  "architecture": "aarch64-linux-gnu",
+  "source_sha256": {
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/common.h": "e6236f95831d98aada695e66bf51de88bb414cf189725b3435097a3bceaf2712",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/versions.h": "aa9275c72be7b4fa38c5dab3290e5ac48c95f29d2aa353a1532d9764dd9a0a40",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/physical.h": "a7e6724436295199677ad6fc2af0f5990ef7b8ac7a5e2d65d9117a0f6d12acdb",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/candidate_store.h": "4be14e87ff3dca9720d2165fb2142156e441334d5dd358de7964915657c94104",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/check.cpp": "000288fd4d4017282127756019373b6cdbd07573a9cf71312107f6f81e53cfab",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/descriptor/descriptor.h": "3081b7b444b4bbf71ab4ef336ee167438e7045e5c9b77719fcfbbccc89e15f30",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/descriptor/descriptor.cpp": "467ccd64d83776c58568598bbd56088c8da24ac9f106eabc90acc9dcf4663449",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/retention/retention.h": "3761716075745125e51ebfadc06ec3e9eee2adbe2327ddee63a5d0df494a85d7"
+  },
+  "qualification": {
+    "release": {
+      "flags": [
+        "-std=c++23",
+        "-O3",
+        "-DNDEBUG",
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic"
+      ],
+      "binary_sha256": "af9be225d61ed833cb6528f22e249b0185716e29afe5e0289d4a2b29a0b77066",
+      "log_sha256": "0abf6aaa94222fa5ddf0ea3cdb098415f54055b06522fefdf9bd6eeade6f63f2",
+      "output": "v32-floor: nine grouped histories passed\nv16-floor: nine grouped histories passed\nv8-floor: nine grouped histories passed\nv32-distinct: nine grouped histories passed\nv16-distinct: nine grouped histories passed\nv8-distinct: nine grouped histories passed\n"
+    },
+    "sanitizer": {
+      "flags": [
+        "-std=c++23",
+        "-O1",
+        "-g",
+        "-fno-omit-frame-pointer",
+        "-fsanitize=address,undefined"
+      ],
+      "environment": {
+        "ASAN_OPTIONS": "detect_leaks=1:halt_on_error=1",
+        "UBSAN_OPTIONS": "halt_on_error=1"
+      },
+      "binary_sha256": "5219a1c3b04dda24440fba5a875bbd73386cb382a6448f176227685404bcb409",
+      "log_sha256": "0abf6aaa94222fa5ddf0ea3cdb098415f54055b06522fefdf9bd6eeade6f63f2",
+      "output": "v32-floor: nine grouped histories passed\nv16-floor: nine grouped histories passed\nv8-floor: nine grouped histories passed\nv32-distinct: nine grouped histories passed\nv16-distinct: nine grouped histories passed\nv8-distinct: nine grouped histories passed\n"
+    }
+  }
+}
