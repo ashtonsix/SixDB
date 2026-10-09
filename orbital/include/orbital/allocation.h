@@ -34,6 +34,13 @@ struct AllocationRequest {
   Initialization initialization{Initialization::uninitialized};
 };
 
+/// Private span growth without content initialization. The caller authorizes
+/// and initializes newly exposed body/padding before a consumer reads them.
+struct GrowthRequest {
+  std::size_t bytes{}, reserved_bytes{};
+  std::size_t alignment{alignof(std::max_align_t)}, readable_padding{};
+};
+
 /// Shared byte budget and background reclamation for its Pools.
 struct Arena {
   std::atomic<std::uint32_t> references{};
@@ -111,13 +118,14 @@ struct Statistics {
 [[nodiscard]] Result<void> remove_pool(Pool&);
 /// Owner-lane operations. Padding is initialized; uninitialized body is not readable data.
 [[nodiscard]] Result<Allocation> allocate(Pool&, const AllocationRequest&);
+/// Preserves existing readable bytes; never initializes new body or padding.
 /// Failure preserves the original allocation. Relocation requires all Holds retired.
-[[nodiscard]] Result<void> grow(Allocation&, const AllocationRequest&);
+[[nodiscard]] Result<void> grow(Allocation&, const GrowthRequest&);
 /// Capture on the storage's owner Lane; include every byte a native kernel may read.
 /// Empty ranges and ranges beyond the Allocation plus readable padding fail.
 [[nodiscard]] Result<Hold> hold(const Allocation&, ByteRange footprint);
-/// Duplicate a live Hold on its storage's owner Lane.
-[[nodiscard]] Hold retain(const Hold&);
+/// Duplicate a live Hold on its owner Lane; saturation refuses without mutation.
+[[nodiscard]] Result<Hold> retain(const Hold&);
 /// Clear this use; final foreign returns are queued to the owning Lane.
 /// Temperature guides reclamation; timestamps reject stale advice.
 void release(Hold&, ReleaseHint = {}) noexcept;

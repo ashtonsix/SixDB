@@ -53,18 +53,18 @@ std::shared_ptr<const void> body(External& external, std::size_t bytes,
 constexpr std::size_t records = 3;
 orbital::ObjectId id(std::size_t object) { return {79, object + 1}; }
 
-struct PhysicalUses { std::size_t active{}, held_extent{}; };
+struct PhysicalUses { std::size_t active{}; };
 PhysicalUses uses(const oa::Pool* pool) {
   PhysicalUses result;
   if (!pool) return result;
   const auto observe = [&](const oa::Storage& storage) {
     if (storage.users.load(std::memory_order_relaxed)) {
-      ++result.active; result.held_extent += storage.held_extent;
+      ++result.active;
     }
   };
   for (const auto& group : pool->internal->groups)
-    for (const auto& storage : group->uses) observe(storage);
-  for (const auto& window : pool->internal->windows) observe(window->use);
+    for (const auto& storage : group->uses.slots) observe(storage);
+  for (const auto& window : pool->internal->windows) observe(window->uses[0]);
   return result;
 }
 
@@ -205,7 +205,7 @@ template<class Store> struct Fixture {
         "\"logical_body_bytes\":%zu,\"external_payload_requested\":%zu,\"external_bodies\":%zu,"
         "\"metadata_resource_record\":%zu,\"scope_record\":%zu,\"input_change_peak_capacity\":%zu,"
         "\"pool_metadata_charged\":%llu,\"pool_mapped_body\":%llu,\"pool_reserved_va\":%llu,"
-        "\"pool_idle_body\":%llu,\"active_storages\":%zu,\"held_extent\":%zu}\n",
+        "\"pool_idle_body\":%llu,\"active_storages\":%zu}\n",
         backend, phase, parts, objects, grouped ? "grouped" : "independent",
         pool ? "allocation" : "shared",
         writer_basis_held ? "through-install" : "closed-before-install",
@@ -219,7 +219,7 @@ template<class Store> struct Fixture {
         static_cast<unsigned long long>(physical.metadata_bytes),
         static_cast<unsigned long long>(physical.mapped_bytes),
         static_cast<unsigned long long>(physical.reserved_bytes),
-        static_cast<unsigned long long>(physical.idle_bytes), storage.active, storage.held_extent);
+        static_cast<unsigned long long>(physical.idle_bytes), storage.active);
   }
 };
 
@@ -279,7 +279,7 @@ template<class Store> void run(const char* backend, v::Format format,
       "\"external_owner_control_requested\":%zu,\"selected_logical_body_bytes\":%llu,"
       "\"external_payload_requested\":%zu,\"external_bodies\":%zu,\"pool_metadata_charged\":%llu,"
       "\"pool_mapped_body\":%llu,\"pool_reserved_va\":%llu,\"pool_idle_body\":%llu,"
-      "\"active_storages\":%zu,\"held_extent\":%zu}\n",
+      "\"active_storages\":%zu}\n",
       backend, fixture.parts, objects, grouped ? "grouped" : "independent",
       native ? "allocation" : "shared",
       writer_basis_held ? "through-install" : "closed-before-install",
@@ -288,7 +288,7 @@ template<class Store> void run(const char* backend, v::Format format,
       static_cast<unsigned long long>(physical.metadata_bytes),
       static_cast<unsigned long long>(physical.mapped_bytes),
       static_cast<unsigned long long>(physical.reserved_bytes),
-      static_cast<unsigned long long>(physical.idle_bytes), storage.active, storage.held_extent);
+      static_cast<unsigned long long>(physical.idle_bytes), storage.active);
   cs::release(escaped);
   check(!fixture.metadata.live && !fixture.external.owners.live && !fixture.external.payload.live);
   if (native) { check(uses(fixture.pool).active == 0); check(allocator->close()); }

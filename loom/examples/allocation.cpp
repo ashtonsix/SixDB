@@ -5,6 +5,7 @@
 #include <chrono>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <thread>
 
 namespace {
@@ -104,8 +105,12 @@ struct Growth {
     // Rebind against the new bytes and write only the new half, exactly once.
     auto grown = loom::grow(*growth.column,
         {.bytes = body_bytes(final_rows), .alignment = 64,
-         .readable_padding = padding, .initialization = alloc::Initialization::zero});
+         .readable_padding = padding});
     if (!grown) return orbital::Progress::fail(grown.error());
+    // This writer may initialize the new encoded rows and padding now that the
+    // overlapping physical reader has really finished. Grow preserves bytes.
+    std::memset(growth.column->address + body_bytes(first_rows), 0,
+        growth.column->size + padding - body_bytes(first_rows));
     write_half(*task.worker, *growth.column, first_rows);
     return orbital::Progress::done();
   }

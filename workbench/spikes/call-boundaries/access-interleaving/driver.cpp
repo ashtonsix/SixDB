@@ -263,7 +263,7 @@ void cancel_and_physical_drain(Fixture& fixture) {
         ring.counters().visits == 53 && ring.close(),
         "cancel retirement/close");
   // End all logical interest while one actual escaped physical Hold remains.
-  auto late = loom::retain(survivor->held);
+  auto late = require(loom::retain(survivor->held), "retain escaped physical Hold");
   work.clear(); survivor.reset();
   check(!fixture.worker.active_tasks &&
         loom::shutdown(fixture.worker).kind() == orbital::Progress::Kind::waiting,

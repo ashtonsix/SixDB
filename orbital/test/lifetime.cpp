@@ -4,6 +4,7 @@
 #include <chrono>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <source_location>
 #include <sys/mman.h>
 #include <thread>
@@ -75,11 +76,11 @@ void local_last_use(std::size_t body) {
   fill(value, 17);
   track(value.address);
   auto first = take(hold(value, {3, 35}));
-  auto copy = retain(first);
+  auto copy = take(retain(first));
   auto entire = take(hold(value, {0, body + 16}));
   release(value);
   external.reset();
-  auto late = retain(first);
+  auto late = take(retain(first));
   verify(first, body, 17); verify(copy, body, 17); verify(entire, body, 17);
   verify(late, body, 17);
   check(successful_unmaps.load() == 0, "dropping logical owners reclaimed captured storage");
@@ -109,7 +110,7 @@ void foreign_last_use(std::size_t body, bool reuse) {
   auto* original = value.address;
   track(original);
   auto first = take(hold(value, {0, body + 16}));
-  auto last = retain(first);
+  auto last = take(retain(first));
   release(value); release(first);
   external.reset();
   std::thread foreign([owned = std::move(last), body]() mutable {
@@ -149,6 +150,38 @@ void foreign_last_use(std::size_t body, bool reuse) {
   check(!worker::pending(lane), "closed Pool retained queue ownership");
   caller.reset();
   check(successful_unmaps.load() == 1, "captured backing was not retired exactly once");
+  tracked_address.store(0, std::memory_order_release);
+  worker::relinquish(lane);
+}
+
+void shared_finite_pin() {
+  auto external = take(open_arena(16 * 1024 * 1024));
+  worker::Lane lane;
+  check(bool(worker::adopt(lane)), "adopt shared finite pin Lane");
+  auto& pool = *take(add_pool(*external, lane));
+  auto first = take(allocate(pool, request(64)));
+  auto second = take(allocate(pool, request(64)));
+  fill(first, 13); fill(second, 29);
+  track(first.address);
+  auto returned = take(hold(first, {0, 80}));
+  auto survivor = take(hold(second, {0, 80}));
+  release(first); release(second); external.reset();
+  std::thread foreign([owned = std::move(returned)]() mutable { release(owned); });
+  foreign.join();
+  check(worker::poll(lane, 1) == 1, "shared finite return not delivered");
+  check(successful_unmaps.load() == 0, "one returned identity ended its neighbour's lifetime");
+  verify(survivor, 64, 29);
+  // Reuse another identity while the only surviving ownership is a neighbour's
+  // physical Hold. Ending that neighbour must not end the fresh allocation.
+  auto replacement = take(allocate(pool, request(64)));
+  fill(replacement, 47);
+  auto late = take(hold(replacement, {0, 80}));
+  release(replacement); release(survivor);
+  check(successful_unmaps.load() == 0, "neighbour release ended the replacement lifetime");
+  verify(late, 64, 47);
+  release(late);
+  check(successful_unmaps.load() == 1, "final shared finite pin did not retire exactly once");
+  check(!worker::pending(lane), "shared finite lifetime left queued ownership");
   tracked_address.store(0, std::memory_order_release);
   worker::relinquish(lane);
 }
@@ -236,6 +269,7 @@ void release_and_growth_overlap(std::size_t body) {
   worker::Lane lane;
   check(bool(worker::adopt(lane)), "adopt release/growth Lane");
   auto& pool = *take(add_pool(*arena, lane));
+  unsigned relocation_refusals = 0;
   for (unsigned round = 0; round < 48; ++round) {
     auto value = take(allocate(pool, request(body)));
     fill(value, round);
@@ -247,10 +281,17 @@ void release_and_growth_overlap(std::size_t body) {
       release(owned, {.temperature = Temperature::warm,
           .last_access = std::chrono::steady_clock::now()});
     });
-    const AllocationRequest larger{body * 5, body * 8, 64, 16, Initialization::zero};
-    auto denied = grow(value, larger);
-    check(!denied && denied.error() == Error::conflict,
-          "growth rewrote a genuinely held prefix/padding");
+    const GrowthRequest larger{body * 5, body * 8, 64, 16};
+    auto* original = value.address;
+    auto initial = grow(value, larger);
+    if (!initial) {
+      check(initial.error() == Error::conflict, "held growth failed for an unrelated reason");
+      ++relocation_refusals;
+    }
+    check(value.address == original, "growth relocated storage with a live physical reader");
+    for (std::size_t index = 0; index < body + 16; ++index)
+      check(value.address[index] == (index < body ? expected(index, round) : std::byte{0}),
+            "held growth changed previously readable bytes");
     begin.store(true, std::memory_order_release);
     const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(10);
     for (;;) {
@@ -260,31 +301,35 @@ void release_and_growth_overlap(std::size_t body) {
       check(std::chrono::steady_clock::now() < deadline, "growth did not observe final foreign release");
       std::this_thread::yield();
     }
-    // Growth can finish before the foreign thread returns from release. Its
-    // captured payload must already be dead; old Storage may be reusable now.
+    // The reader finished before releasing its Hold. Its final decrement can
+    // permit relocation before release returns; initialization is now ours.
+    std::memset(value.address + body + 16, 0, value.size - body);
     auto current = take(hold(value, {0, value.size + value.readable_padding}));
     verify(current, body, round);
     release(value);
-    auto copy_after_owner = retain(current);
+    auto copy_after_owner = take(retain(current));
     release(current);
     foreign.join();
     verify(copy_after_owner, body, round);
     release(copy_after_owner);
   }
-  // The high-water footprint remains conservative while a narrower Hold lives.
+  check(relocation_refusals != 0, "release/growth history never exercised relocation refusal");
+  // Holds pin the address; they do not restrict disjoint in-place growth.
   auto value = take(allocate(pool, request(body)));
   fill(value, 23);
+  value.address[body] = std::byte{0x7b};
   auto widest = take(hold(value, {0, body + 16}));
   auto narrower = take(hold(value, {0, 16}));
   std::thread foreign([owned = std::move(widest)]() mutable { release(owned); });
   foreign.join();
-  const AllocationRequest append{body + 8, body * 4, 64, 8, Initialization::zero};
-  auto denied = grow(value, append);
-  check(!denied && denied.error() == Error::conflict,
-        "ending widest Hold prematurely reset the high-water footprint");
+  const GrowthRequest append{body + 8, body * 4, 64, 8};
+  auto* original = value.address;
+  check(bool(grow(value, append)), "narrow reader blocked in-place physical growth");
+  check(value.address == original && value.address[body] == std::byte{0x7b},
+        "in-place growth changed existing readable padding");
   release(narrower);
   auto fresh = take(hold(value, {0, 16}));
-  check(bool(grow(value, append)), "fresh capture did not replace an ended footprint cohort");
+  check(bool(grow(value, append)), "repeat in-place growth failed with a fresh Hold");
   verify(fresh, body, 23);
   release(fresh); release(value);
   finish_close(pool, lane);
@@ -313,6 +358,7 @@ int main() {
     foreign_last_use(body, true);
     release_and_growth_overlap(body);
   }
+  shared_finite_pin();
   shared_pool_removal();
   std::puts("lifetime: sole pins, retained Holds, foreign returns, reuse, Pool removal and budget wakes pass");
 }

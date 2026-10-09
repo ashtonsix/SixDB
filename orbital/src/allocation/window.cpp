@@ -14,14 +14,14 @@ Window::~Window() { if (mapping) (void)::munmap(mapping, mapping_bytes); }
 void window_trim_run(Job& job) noexcept {
   auto& window = *static_cast<Window*>(job.context);
   window.discarded = ::munmap(window.mapping, window.mapping_bytes) == 0;
-  worker::post(*window.domain.pool->lane, window.trimmed);
+  worker::post(*window.uses.domain.pool->lane, window.trimmed);
 }
 
 void window_trim_handle(worker::Message& message, worker::Lane&) noexcept {
   auto& window = *static_cast<Window*>(message.context);
-  if (!window.discarded) { window.domain.pool->internal->trim_failed = true; return; }
-  refund(*window.domain.pool, window.charged);
-  window.domain.pool->internal->counts.trim_pages += window.charged / page_size();
+  if (!window.discarded) { window.uses.domain.pool->internal->trim_failed = true; return; }
+  refund(*window.uses.domain.pool, window.charged);
+  window.uses.domain.pool->internal->counts.trim_pages += window.charged / page_size();
   window.mapping = window.address = nullptr;
   window.mapping_bytes = window.prepared = window.reserved = window.charged = 0;
 }
@@ -30,7 +30,7 @@ void window_trim_release(worker::Message& message) noexcept {
   auto& window = *static_cast<Window*>(message.context);
   auto retained = std::move(window.trim_lifetime);
   if (window.discarded) {
-    auto& pool = *window.domain.pool;
+    auto& pool = *window.uses.domain.pool;
     const auto metadata = window.metadata_charge;
     auto& windows = pool.internal->windows;
     erase_owner(windows, window);
@@ -40,9 +40,9 @@ void window_trim_release(worker::Message& message) noexcept {
     return;
   }
   window.trim_pending = false;
-  window.use.users.store(0, std::memory_order_release);
+  window.uses[0].users.store(0, std::memory_order_release);
   add_idle(window);
-  pulse(window.domain.pool->capacity_changed);
+  pulse(window.uses.domain.pool->capacity_changed);
 }
 
 const worker::MessageOps window_trim_ops{no_retain, window_trim_handle, window_trim_release};
@@ -90,7 +90,7 @@ void window_prepare_handle(worker::Message&, worker::Lane&) noexcept {}
 
 void window_prepare_release(worker::Message& message) noexcept {
   auto& window = *static_cast<Window*>(message.context);
-  auto& pool = *window.domain.pool;
+  auto& pool = *window.uses.domain.pool;
   auto& preparation = *window.preparation;
   auto retained = std::move(window.trim_lifetime);
   const auto outcome = preparation.outcome;
@@ -106,9 +106,8 @@ void window_prepare_release(worker::Message& message) noexcept {
       pool.state == Pool::State::open && !pool.internal->close_requested;
   if (accepted) {
     auto& result = preparation.value;
-    window.use.lifetime = Ref<Arena>::retain(*pool.arena);
-    window.use.users.store(1, std::memory_order_relaxed);
-    result.storage = &window.use;
+    activate(window.uses[0]);
+    result.storage = &window.uses[0];
     result.address = window.address;
     result.size = preparation.request.bytes;
     result.readable_padding = preparation.request.readable_padding;
@@ -144,7 +143,7 @@ void window_prepare_lane_release(worker::Message& message) noexcept {
   // The preparer queue has unlinked its final use. This same stable Message
   // becomes the owner reply; worker::poll does not touch it after release.
   message.ops = &window_prepare_ops;
-  worker::post(*window.domain.pool->lane, message);
+  worker::post(*window.uses.domain.pool->lane, message);
 }
 
 const worker::MessageOps window_prepare_lane_ops{
@@ -219,8 +218,7 @@ Result<void> window_allocate(Pool& pool, const AllocationRequest& request, std::
     selected->reserved = reserved;
     selected->charged = prepared;
     selected->metadata_charge = metadata;
-    initialize(selected->domain, pool, selected, false);
-    selected->use.domain = &selected->domain;
+    initialize(selected->uses.domain, pool, selected, false);
     selected->job = {nullptr, selected, window_trim_run};
     selected->trimmed.context = selected;
     selected->trimmed.ops = &window_trim_ops;
@@ -235,14 +233,14 @@ Result<void> window_allocate(Pool& pool, const AllocationRequest& request, std::
     selected->prepared = prepared;
   }
   remove_idle(*selected);
-  result.storage = &selected->use;
+  result.storage = &selected->uses[0];
   result.address = selected->address; result.size = request.bytes;
   result.readable_padding = request.readable_padding;
   return {};
 }
 
 Result<void> extend_window(Window& window, std::size_t size) {
-  auto& pool = *window.domain.pool;
+  auto& pool = *window.uses.domain.pool;
   std::size_t prepared;
   if (!round_up(size, page_size(), prepared)) return std::unexpected(Error::invalid_argument);
   if (prepared > window.prepared) {
@@ -292,8 +290,7 @@ Result<void> prepare_window(Pool& pool, Preparation& preparation,
     selected->mapping_bytes = reserved + slack;
     selected->charged = prepared;
     selected->metadata_charge = sizeof(Window);
-    initialize(selected->domain, pool, selected, false);
-    selected->use.domain = &selected->domain;
+    initialize(selected->uses.domain, pool, selected, false);
   } else {
     const auto extra = prepared > selected->charged ? prepared - selected->charged : 0;
     if (extra && !claim(pool, extra)) return std::unexpected(Error::capacity);

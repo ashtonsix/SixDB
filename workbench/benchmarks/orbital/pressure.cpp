@@ -9,6 +9,7 @@
 #include <chrono>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <filesystem>
 #include <fstream>
 #include <sched.h>
@@ -309,26 +310,29 @@ int main(int argc, char** argv) {
            .initialization = alloc::Initialization::zero}), "allocate Tuple prefix");
       write(batch,schema,r,s,prefix_rows,0,effects);
       if (!s) {
-        // A real physical grant refuses relocation/overwrite without corrupting prefix.
+        // A physical grant refuses relocation while preserving its prefix.
         auto held = take(loom::hold(batch.tuples,{0,batch.tuples.size}), "growth conflict Hold");
         auto rejected = loom::grow(batch.tuples,
-            {.bytes = full_rows * stride, .reserved_bytes = reserve, .alignment = 64,
-             .initialization = alloc::Initialization::zero});
+            {.bytes = full_rows * stride, .reserved_bytes = reserve, .alignment = 64});
         if (!window) {
           require(!rejected && rejected.error() == orbital::Error::conflict, "finite growth must conflict with Hold");
           ++conflicts;
         } else {
-          // Window growth is disjoint from the held prefix, so it may succeed.
+          // In-place growth preserves bytes and leaves initialization to us.
           okay(std::move(rejected), "disjoint window growth");
         }
         require(read(alloc::bytes(batch.series),alloc::bytes(held),schema,prefix_rows) == expected(r,s,prefix_rows), "held prefix changed");
       }
       okay(loom::grow(batch.series,
-          {.bytes = full_rows * 20 / 8, .reserved_bytes = reserve, .alignment = 64,
-           .initialization = alloc::Initialization::zero}), "Series grow/rebind");
+          {.bytes = full_rows * 20 / 8, .reserved_bytes = reserve, .alignment = 64}), "Series grow/rebind");
+      // Keep caller initialization in the measured lifecycle. All old readers
+      // of these new rows have ended before the writer clears their bytes.
+      std::memset(batch.series.address + Format::tile_bytes, 0,
+          batch.series.size - Format::tile_bytes);
       okay(loom::grow(batch.tuples,
-          {.bytes = full_rows * stride, .reserved_bytes = reserve, .alignment = 64,
-           .initialization = alloc::Initialization::zero}), "Tuple grow/rebind");
+          {.bytes = full_rows * stride, .reserved_bytes = reserve, .alignment = 64}), "Tuple grow/rebind");
+      std::memset(batch.tuples.address + prefix_rows * stride, 0,
+          batch.tuples.size - prefix_rows * stride);
       write(batch,schema,r,s,full_rows,prefix_rows,effects);
       checksum = mix(checksum, read(alloc::bytes(batch.series),alloc::bytes(batch.tuples),schema,full_rows));
       rows += full_rows;

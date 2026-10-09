@@ -31,6 +31,13 @@ struct PageSpan {
   std::size_t first{}, count{};
 };
 
+// Cold trim inventory only. Geometry admits at most UINT16_MAX payload pages;
+// wider preparation and caller spans keep their original validation boundary.
+struct TrimSpan {
+  std::uint16_t first{}, count{};
+};
+static_assert(sizeof(TrimSpan) == 4);
+
 struct Home {
   std::uint16_t grid{};
   std::uint8_t cls{}, slot{};
@@ -117,6 +124,7 @@ public:
   [[nodiscard]] Result<void> mark_mapped(PageSpan) noexcept;
   [[nodiscard]] Result<void> begin_trim(PageSpan) noexcept;
   [[nodiscard]] Result<void> begin_trim(std::span<const PageSpan>) noexcept;
+  [[nodiscard]] Result<void> begin_trim(std::span<const TrimSpan>) noexcept;
   [[nodiscard]] Result<void> finish_trim(PageSpan, bool discarded) noexcept;
   [[nodiscard]] std::size_t live_words() const noexcept { return (payload_pages_ + 63) / 64; }
 
@@ -135,6 +143,8 @@ private:
   [[nodiscard]] bool occupied(const Home&) const noexcept;
   [[nodiscard]] bool bound(const Home&) const noexcept;
   [[nodiscard]] bool valid(PageSpan) const noexcept;
+  template<class Span>
+  [[nodiscard]] Result<void> begin_trim_spans(std::span<const Span>) noexcept;
   [[nodiscard]] Result<std::size_t> preparation_spans(
       const Home&, std::span<const PageSpan>) const noexcept;
   [[nodiscard]] Home home(std::size_t grid, unsigned cls, unsigned slot) const noexcept;

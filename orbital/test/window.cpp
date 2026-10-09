@@ -1,5 +1,5 @@
 #include <orbital/allocation.h>
-#include "../src/allocation/internal.h"
+#include "internal.h"
 #include <cerrno>
 #include <chrono>
 #include <cstdio>
@@ -126,18 +126,19 @@ void active_growth() {
   auto captured = take(hold(value, {0, 128}));
   auto* original = value.address;
   arm();
-  failed(grow(value, {page * 4, page * 8, 64, 0, Initialization::zero}));
+  failed(grow(value, {page * 4, page * 8, 64, 0}));
   check(value.address == original && value.size == page * 2 && capacity(value) == page * 2,
         "failed growth changed original allocation");
   for (const auto byte : bytes(captured)) check(byte == std::byte{0x5d}, "failed growth damaged retained bytes");
   const auto charged = fixture.arena->charged_bytes.load();
-  check(bool(grow(value, {page * 4, page * 8, 64, 0, Initialization::zero})), "growth retry failed");
+  check(bool(grow(value, {page * 4, page * 8, 64, 0})), "growth retry failed");
   check(value.address == original && fixture.arena->charged_bytes.load() == charged,
         "growth retry changed address or double charged");
   for (std::size_t byte = 0; byte < page * 2; ++byte)
     check(value.address[byte] == std::byte{0x5d}, "growth lost original data");
+  std::memset(value.address + page * 2, 0, value.size - page * 2);
   for (std::size_t byte = page * 2; byte < value.size; ++byte)
-    check(value.address[byte] == std::byte{0}, "growth did not initialize appended bytes");
+    check(value.address[byte] == std::byte{0}, "caller did not initialize appended bytes");
   release(captured); release(value);
   trim_all(fixture);
 }
@@ -222,7 +223,7 @@ void partial_hint(bool foreign) {
   auto alternative = take(allocate(*fixture.pool, {2 * page, 0, 64}));
   auto capture = take(hold(survivor, {0, 1}));
   auto& advice = static_cast<orbital::allocation::detail::Window*>(
-      survivor.storage->domain->context)->hint;
+      orbital::allocation::detail::route(*survivor.storage)->context)->hint;
   release(survivor);
   // A stale complete record cannot replace the newer per-field advice.
   release(capture, {.temperature = Temperature::cold, .last_access = access});

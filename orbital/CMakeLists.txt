@@ -24,6 +24,7 @@ target_link_options(orbital_reclamation_check PRIVATE
 add_test(NAME orbital_reclamation_check COMMAND orbital_reclamation_check)
 add_executable(orbital_window_check EXCLUDE_FROM_ALL test/window.cpp)
 sixdb_target(orbital_window_check)
+target_include_directories(orbital_window_check PRIVATE src/allocation)
 target_link_libraries(orbital_window_check PRIVATE orbital)
 target_link_options(orbital_window_check PRIVATE -Wl,--wrap=mprotect)
 add_test(NAME orbital_window_check COMMAND orbital_window_check)

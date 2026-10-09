@@ -24,9 +24,10 @@ Loom selects a Pool for new allocation. Growth and capture follow the storage's
 existing owner and run on its assigned thread. Release can run elsewhere: one
 reserved return Message per packing group or virtual window brings final returns
 back to the Lane. Actual users keep storage alive after Allocation release.
-Each live storage record keeps its Arena alive; additional Holds update that
-record's physical-use count. A Hold protects addresses and its captured footprint.
-It supplies no immutability, selected version or access permission.
+A Group keeps one active Arena pin while any identity is live or awaiting its
+owner return; each live Window keeps its own pin. Additional Holds update the
+identity's checked physical-use count and keep its address and captured footprint
+alive. A Hold supplies no immutability, selected version or access permission.
 
 Small allocations use finite Groups, each with a fixed palette of size classes.
 The one-byte binding selects a home whose address, capacity and page range derive
@@ -35,9 +36,11 @@ binding identity. Large allocations use reserved virtual windows. Both expose a
 resolved ordinary pointer; native access needs no repeated trampoline resolution or scheduler
 entry. Owner-local selection caches suggest candidates; geometry and actual page
 state authorize each claim. Owning records stay at stable addresses.
-Each Group embeds its fixed 256 identity records and release hints. Pool-owned
-Group and Window inventories grow with demand; their movable ownership handles
-preserve the records' addresses through queued work and physical retention.
+Each Group embeds 256 four-byte identity records and shares release advice.
+The owning Group or Window's Domain immediately precedes its identity records;
+the immutable slot identity recovers that return route. Pool-owned Group and
+Window inventories grow with demand; their movable ownership handles preserve
+the records' addresses through queued work and physical retention.
 
 The private allocation submodule keeps each backend's transactions together:
 
@@ -52,11 +55,11 @@ qualifies format, row extent and native transfer shape. Bind once around stable
 native work and rebuild address-qualified bindings after relocation or extent
 change. Raw zeroing does not establish initialized encoded values.
 
-Growth preserves the old prefix. It rejects relocation with live Holds and
-rejects zeroing protected padding.
-The current extent high-water mark lasts until all Holds end, so it can reject
-an append after the widest Hold ends while a narrower one remains. This is a
-conservative first implementation, not the stronger growth probe's contract.
+Growth preserves already readable body and padding; it never initializes bytes.
+`GrowthRequest` changes extent, reserve and alignment. Holds prevent relocation,
+but permit in-place growth. The writer initializes new body or padding after any
+overlapping reader finishes; a disjoint prefix reader can remain live. Physical
+retention grants no permission to change contents.
 
 ## Preparation, reuse and settlement
 

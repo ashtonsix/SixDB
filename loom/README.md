@@ -30,8 +30,11 @@ version or access permission; the operation must preserve those separately.
 `allocate(worker, request)` selects the Worker's Pool. `grow(allocation, request)`,
 `hold(allocation, footprint)` and `retain(hold)` use Orbital's actual operations
 on the captured storage's owner Lane; they take no separate Worker argument.
-The current allocation stage permits relocation only after all Holds retire;
-the caller releases native access before requesting such growth.
+Growth takes a `GrowthRequest`; capture and retain return checked `Result<Hold>`.
+Count saturation refuses a new Hold without changing the existing physical uses.
+Holds prevent relocation and permit in-place growth. Growth preserves readable
+bytes and does not initialize new bytes. The writer ends overlapping readers
+before initializing its new body or padding, then rebuilds its Ikea bindings.
 
 ## Tasks and completion
 

@@ -19,10 +19,24 @@ template<class Storage> std::optional<std::size_t> held_extent(const Storage& st
   if constexpr (tracks_extent<Storage>) return storage.held_extent;
   else return std::nullopt;
 }
+// Cold accounting observes the actual baseline or shared-route layout.
+// These adapters do not create owners or substitute a guessed metadata charge.
+template<class Group> const auto& storages(const Group& group) {
+  if constexpr (requires { group.uses.slots; }) return group.uses.slots;
+  else return group.uses;
+}
+template<class Storage> auto identity(const Storage& storage) {
+  if constexpr (requires { storage.identity(); }) return storage.identity();
+  else return storage.identity;
+}
+template<class Window> const auto& window_storage(const Window& window) {
+  if constexpr (requires { window.uses.slots; }) return window.uses.slots[0];
+  else return window.use;
+}
 template<class Window> std::optional<std::size_t> window_extent(const Window& window) {
   // Storage16 keeps a wide Window extent outside its finite Storage record.
   if constexpr (tracks_extent<Window>) return window.held_extent;
-  else return held_extent(window.use);
+  else return held_extent(window_storage(window));
 }
 }
 
@@ -198,10 +212,13 @@ Accounting Material::accounting() const {
     }
   };
   for (const auto& group : runtime.pool->internal->groups)
-    for (const auto& storage : group->uses)
-      observe(storage, group->geometry->bound_capacity({storage.identity}), held_extent(storage));
+    for (const auto& storage : storages(*group)) {
+      // An empty retiring Group can already have released its geometry.
+      if (!storage.users.load(std::memory_order_relaxed)) continue;
+      observe(storage, group->geometry->bound_capacity({identity(storage)}), held_extent(storage));
+    }
   for (const auto& window : runtime.pool->internal->windows)
-    observe(window->use, window->prepared, window_extent(*window));
+    observe(window_storage(*window), window->prepared, window_extent(*window));
   return result;
 }
 } // namespace orbital_mvcc::composed

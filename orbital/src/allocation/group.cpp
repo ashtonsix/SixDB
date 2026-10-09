@@ -14,7 +14,7 @@ void group_trim_run(Job& job) noexcept {
   if (group.retiring) {
     group.retired = group.geometry->retire().has_value();
     if (group.retired) group.geometry.reset();
-    worker::post(*group.domain.pool->lane, group.trimmed);
+    worker::post(*group.uses.domain.pool->lane, group.trimmed);
     return;
   }
   for (std::size_t i = 0; i < group.trimming.size(); ++i) {
@@ -26,12 +26,12 @@ void group_trim_run(Job& job) noexcept {
     group.discarded[i] = ::madvise(address, amount, MADV_DONTNEED) == 0 &&
         ::mprotect(address, amount, PROT_NONE) == 0;
   }
-  worker::post(*group.domain.pool->lane, group.trimmed);
+  worker::post(*group.uses.domain.pool->lane, group.trimmed);
 }
 
 void group_trim_handle(worker::Message& message, worker::Lane&) noexcept {
   auto& group = *static_cast<Group*>(message.context);
-  auto& pool = *group.domain.pool;
+  auto& pool = *group.uses.domain.pool;
   if (group.retiring) {
     if (group.retired) {
       pool.internal->counts.trim_pages += group.retire_mapped / page_size();
@@ -51,7 +51,7 @@ void group_trim_handle(worker::Message& message, worker::Lane&) noexcept {
       pool.internal->trim_failed = true;
       group.trimming[failed++] = span;
     } else {
-      verify(group.geometry->finish_trim(span, true));
+      verify(group.geometry->finish_trim({span.first, span.count}, true));
       amount += group.geometry->native_page() * span.count;
       pool.internal->counts.trim_pages += span.count;
     }
@@ -65,13 +65,13 @@ void group_trim_release(worker::Message& message) noexcept {
   auto& group = *static_cast<Group*>(message.context);
   auto retained = std::move(group.trim_lifetime);
   if (group.retiring && group.retired) {
-    auto& pool = *group.domain.pool;
+    auto& pool = *group.uses.domain.pool;
     erase_owner(pool.internal->groups, group);
     pulse(pool.capacity_changed);
     return;
   }
   group.trim_pending = false;
-  pulse(group.domain.pool->capacity_changed);
+  pulse(group.uses.domain.pool->capacity_changed);
 }
 
 const worker::MessageOps group_trim_ops{no_retain, group_trim_handle, group_trim_release};
@@ -94,16 +94,15 @@ Result<Group*> make_group(Pool& pool, Palette palette, bool deferred = false) {
     // Account concrete prepared bookkeeping, separately from sparse VA/RSS.
     group->metadata_charge = group->geometry->control_bytes() + sizeof(FiniteGroup) + sizeof(Group) +
         group->live.capacity() * sizeof(std::uint64_t) +
-        group->trimming.capacity() * sizeof(PageSpan) +
+        group->trimming.capacity() * sizeof(TrimSpan) +
         (group->discarded.capacity() + 7) / 8;
     if (!claim(pool, group->metadata_charge)) return std::unexpected(Error::capacity);
-    initialize(group->domain, pool, group.get(), true);
+    initialize(group->uses.domain, pool, group.get(), true);
     group->job = {nullptr, group.get(), group_trim_run};
     group->trimmed.context = group.get();
     group->trimmed.ops = &group_trim_ops;
     for (std::size_t i = 0; i < count; ++i) {
-      group->uses[i].domain = &group->domain;
-      group->uses[i].identity = static_cast<std::uint16_t>(i);
+      group->uses[i].initialize_identity(static_cast<std::uint8_t>(i));
     }
     auto* result = group.get();
     result->owner_index = pool.internal->groups.size();
@@ -413,8 +412,7 @@ void finite_prepare_reply_release(worker::Message& message) noexcept {
   verify(group.geometry->bind(record.identity, record.home));
   remember_ready_candidate(pool, group, record.home, request.request.alignment);
   auto& use = group.uses[record.identity.index];
-  use.lifetime = Ref<Arena>::retain(*pool.arena);
-  use.users.store(1, std::memory_order_relaxed);
+  activate(use);
   request.value.storage = &use; request.value.address = record.home.address;
   request.value.size = request.request.bytes; request.value.readable_padding = request.request.readable_padding;
   request.reused = record.reused;
@@ -499,7 +497,7 @@ Result<void> prepare_finite(Pool& pool, Preparation& request,
 }
 
 Result<void> map_home(Group& group, const Home& home) noexcept {
-  auto& pool = *group.domain.pool;
+  auto& pool = *group.uses.domain.pool;
   const auto page = group.geometry->native_page();
   std::size_t remaining = 0;
   for (std::size_t p = home.pages.first; p < home.pages.first + home.pages.count; ++p)
@@ -584,25 +582,22 @@ Result<void> finite_allocate(Pool& pool, const AllocationRequest& request, std::
   return {};
 }
 
-Result<bool> relocate_finite(Allocation& allocation, const AllocationRequest& request,
+Result<bool> relocate_finite(Allocation& allocation, const GrowthRequest& request,
     std::size_t needed) {
   auto& use = *allocation.storage;
-  auto& group = *static_cast<Group*>(use.domain->context);
-  auto& pool = *use.domain->pool;
-  const auto old = group.geometry->bound_home({use.identity});
+  auto& group = *static_cast<Group*>(route(use)->context);
+  auto& pool = *route(use)->pool;
+  const auto old = group.geometry->bound_home({use.identity()});
   assert(old);
-  auto destination = group.geometry->claim_home({use.identity}, needed, request.alignment);
+  auto destination = group.geometry->claim_home({use.identity()}, needed, request.alignment);
   if (!destination && destination.error() != Error::capacity)
     return std::unexpected(destination.error());
   if (destination) {
     const auto mapped = map_home(group, *destination);
     if (mapped) {
-      std::memcpy(destination->address, allocation.address, allocation.size);
-      if (request.initialization == Initialization::zero)
-        std::memset(destination->address + allocation.size, 0, request.bytes - allocation.size);
-      if (request.readable_padding)
-        std::memset(destination->address + request.bytes, 0, request.readable_padding);
-      verify(group.geometry->bind({use.identity}, *destination));
+      std::memcpy(destination->address, allocation.address,
+          allocation.size + allocation.readable_padding);
+      verify(group.geometry->bind({use.identity()}, *destination));
       verify(group.geometry->release_home(*old));
       allocation.address = destination->address;
       allocation.size = request.bytes; allocation.readable_padding = request.readable_padding;

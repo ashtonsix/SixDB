@@ -4,6 +4,7 @@
 #include <chrono>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <ikea/seriespack.h>
 #include <ikea/tuplepack.h>
 #include <loom/worker.h>
@@ -61,7 +62,7 @@ void series(loom::Worker& worker) {
               "initial Series effects");
     auto old_address = allocation.address;
     auto rejected = loom::grow(allocation,
-        {.bytes = next_bytes, .alignment = 64, .initialization = alloc::Initialization::zero});
+        {.bytes = next_bytes, .alignment = 64});
     require(!rejected && rejected.error() == orbital::Error::conflict,
             "Series growth must refuse live physical Hold");
     require(allocation.address == old_address && allocation.size == old_bytes,
@@ -71,8 +72,9 @@ void series(loom::Worker& worker) {
       require(reader.get(i) == first[i], "failed grow changed Series values");
   }
   okay(loom::grow(allocation,
-           {.bytes = next_bytes, .alignment = 64, .initialization = alloc::Initialization::zero}),
+           {.bytes = next_bytes, .alignment = 64}),
        "grow Series after retiring Hold");
+  std::memset(allocation.address + old_bytes, 0, next_bytes - old_bytes);
   {
     auto held = take(loom::hold(allocation, {0, next_bytes}), "grown Series Hold");
     auto bytes = loom::bytes(held);
@@ -151,7 +153,7 @@ void tuples(loom::Worker& worker) {
     ikea::source_write_journal effects{records};
     okay(construct.initialize(0, input, effects), "initial Tuple construction");
     auto rejected = loom::grow(allocation,
-        {.bytes = rows * stride, .alignment = 64, .initialization = alloc::Initialization::zero});
+        {.bytes = rows * stride, .alignment = 64});
     require(!rejected && rejected.error() == orbital::Error::conflict,
             "Tuple growth must refuse live physical Hold");
     auto read = take(tp::bind_reader(reader_plan, view), "initial Tuple read");
@@ -159,8 +161,9 @@ void tuples(loom::Worker& worker) {
   }
   okay(
       loom::grow(allocation,
-          {.bytes = rows * stride, .alignment = 64, .initialization = alloc::Initialization::zero}),
+          {.bytes = rows * stride, .alignment = 64}),
       "grow Tuple after retiring Hold");
+  std::memset(allocation.address + stride, 0, rows * stride - stride);
   {
     auto held = take(loom::hold(allocation, {0, rows * stride}), "grown Tuple Hold");
     auto bytes = loom::bytes(held);
@@ -203,9 +206,9 @@ void reserved_window(loom::Worker& worker) {
            "allocate reserved window");
   auto* address = allocation.address;
   {
-    // The owner deliberately retains a wider read grant, including padding.
-    // Tuple itself needs only the first four bytes. The grant still cannot
-    // be overwritten by growth while its physical reader remains live.
+    // A physical reader keeps the address stable, including readable padding.
+    // Grow can expose more bytes while preserving all bytes it already reads.
+    allocation.address[63] = std::byte{0x73};
     auto held = take(loom::hold(allocation, {0, 64}), "window padding Hold");
     const auto bytes = loom::bytes(held);
     auto view =
@@ -218,24 +221,17 @@ void reserved_window(loom::Worker& worker) {
     std::array<ikea::owner_write, 1> records;
     ikea::source_write_journal effects{records};
     okay(construct.initialize(0, input, effects), "window initial construction");
-    auto refused = loom::grow(allocation,
-                              {.bytes = 4096,
-                               .reserved_bytes = 16384,
-                               .alignment = 64,
-                               .initialization = alloc::Initialization::zero});
-    require(!refused && refused.error() == orbital::Error::conflict,
-            "in-place grow overwrites held padding");
-    require(allocation.address == address && allocation.size == stride,
-            "padding conflict changed allocation");
-    for (std::size_t i = stride; i < bytes.size(); ++i)
-      require(bytes[i] == std::byte{}, "padding conflict changed held bytes");
+    okay(loom::grow(allocation,
+                   {.bytes = 4096, .reserved_bytes = 16384, .alignment = 64}),
+         "in-place grow with live padding Hold");
+    require(allocation.address == address && allocation.size == 4096,
+            "in-place growth relocated storage");
+    for (std::size_t i = stride; i < 63; ++i)
+      require(bytes[i] == std::byte{}, "growth changed existing readable padding");
+    require(bytes[63] == std::byte{0x73}, "growth initialized held padding");
   }
-  okay(loom::grow(allocation,
-                  {.bytes = 4096,
-                   .reserved_bytes = 16384,
-                   .alignment = 64,
-                   .initialization = alloc::Initialization::zero}),
-       "grow reserved window after padding Hold retirement");
+  // The overlapping reader has retired. The writer now initializes new rows.
+  std::memset(allocation.address + stride, 0, allocation.size - stride);
   require(allocation.address == address, "reserved growth unexpectedly relocated");
   {
     auto held = take(loom::hold(allocation, {0, 4096}), "window body Hold");
@@ -250,9 +246,9 @@ void reserved_window(loom::Worker& worker) {
     okay(loom::grow(allocation,
                     {.bytes = 8192,
                      .reserved_bytes = 16384,
-                     .alignment = 64,
-                     .initialization = alloc::Initialization::zero}),
+                     .alignment = 64}),
          "disjoint in-place growth with live prefix Hold");
+    std::memset(allocation.address + 4096, 0, 4096);
     require(allocation.address == address && read.get(0) == 0x71,
             "in-place growth invalidated old binding");
     require(!read.get(1024), "old binding acquired the grown extent implicitly");

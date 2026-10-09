@@ -96,15 +96,15 @@ void drop(orbital::allocation::Storage* owner) {
   use.storage = owner;
   orbital::allocation::release(use);
 }
-orbital::allocation::Storage* pin(orbital::allocation::Storage* owner) {
-  if (!owner) return nullptr;
-  // Capture registered the actual full Allocation footprint. This local only
-  // borrows its live physical token; retain never narrows Storage::held_extent.
+Result<orbital::allocation::Storage*> pin(orbital::allocation::Storage* owner) {
+  if (!owner) return static_cast<orbital::allocation::Storage*>(nullptr);
+  // This local borrows its live physical token; duplication can refuse at capacity.
   orbital::allocation::Hold borrowed;
   borrowed.storage = owner;
   auto retained = orbital::allocation::retain(borrowed);
   borrowed.storage = nullptr;
-  return std::exchange(retained.storage, nullptr);
+  if (!retained) return std::unexpected(retained.error());
+  return std::exchange(retained->storage, nullptr);
 }
 
 bool within(const orbital::allocation::Allocation& allocation, Bytes body, std::uint32_t padding) {
@@ -349,7 +349,15 @@ Result<Export*> detail::retain_part(Selection selection, std::size_t index, Bind
     value->address = *address_slot(realization, index); value->binding = binding;
     value->index = index; value->owners = realization->owners; value->interpretation = interpretation;
     if (shared(value->owners)) std::construct_at(&value->owner.shared, shared_owner(realization, index));
-    else value->owner.allocation = pin(allocation_owner(realization, index));
+    else {
+      auto held = pin(allocation_owner(realization, index));
+      if (!held) {
+        std::destroy_at(value);
+        memory->deallocate(value, size, alignof(Export));
+        return std::unexpected(held.error());
+      }
+      value->owner.allocation = *held;
+    }
     if (interpretation == Interpretation::shared_shape) retain(source);
     else {
       auto* copy = std::construct_at(static_cast<Shape*>(static_cast<void*>(bytes(value) + sizeof(Export))),

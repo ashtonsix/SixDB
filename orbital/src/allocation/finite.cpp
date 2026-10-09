@@ -74,42 +74,46 @@ Result<std::unique_ptr<FiniteGroup>> FiniteGroup::create(FiniteConfig config) no
     offset += group->identities_ * group->capacities_[cls];
   }
   const auto payload_bytes = round_up(offset, group->native_page_);
-  const auto binding_bytes = round_up(group->identities_, group->native_page_);
   group->payload_pages_ = payload_bytes / group->native_page_;
-  group->reserved_bytes_ = binding_bytes + payload_bytes;
+  // The cold trim inventory uses bounded coordinates. Wide validation and
+  // preparation spans remain unchanged; unsupported geometry never truncates.
+  if (group->payload_pages_ > std::numeric_limits<std::uint16_t>::max())
+    return std::unexpected(Error::unavailable);
+  group->reserved_bytes_ = payload_bytes;
+  const auto grids_offset = round_up(group->identities_, alignof(Grid));
   const auto grids_bytes = group->grid_count_ * sizeof(Grid);
-  const auto scratch_offset = round_up(grids_bytes + group->payload_pages_ * sizeof(Page),
+  const auto scratch_offset = round_up(grids_offset + grids_bytes + group->payload_pages_ * sizeof(Page),
                                       alignof(std::uint64_t));
   group->metadata_bytes_ = round_up(scratch_offset + group->live_words() * sizeof(std::uint64_t),
                                    group->native_page_);
-  group->control_bytes_ = binding_bytes + group->metadata_bytes_;
+  group->control_bytes_ = group->metadata_bytes_;
   return group;
 }
 
 Result<void> FiniteGroup::prepare() noexcept {
   if (reservation_ || metadata_) return std::unexpected(Error::conflict);
-  const auto binding_bytes = round_up(identities_, native_page_);
+  const auto grids_offset = round_up(identities_, alignof(Grid));
   const auto grids_bytes = grid_count_ * sizeof(Grid);
-  const auto scratch_offset = round_up(grids_bytes + payload_pages_ * sizeof(Page),
+  const auto scratch_offset = round_up(grids_offset + grids_bytes + payload_pages_ * sizeof(Page),
                                       alignof(std::uint64_t));
   auto* reservation = ::mmap(nullptr, reserved_bytes_, PROT_NONE,
                               MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
   if (reservation == MAP_FAILED)
     return std::unexpected(Error::io);
   reservation_ = static_cast<std::byte*>(reservation);
-  payload_ = reservation_ + binding_bytes;
-  if (::mprotect(reservation, binding_bytes, PROT_READ | PROT_WRITE) != 0)
-    return std::unexpected(Error::io);
+  payload_ = reservation_;
+  // Bindings and owner control share one rounded mapping. Their accessors stay
+  // distinct; no binding address or payload offset is inferred from the other.
   auto* metadata = ::mmap(nullptr, metadata_bytes_, PROT_READ | PROT_WRITE,
                           MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   if (metadata == MAP_FAILED)
     return std::unexpected(Error::io);
   metadata_ = metadata;
-  bindings_ = ::new (reservation) std::uint8_t[binding_bytes];
-  std::memset(bindings_, unbound, binding_bytes);
   std::memset(metadata, 0, metadata_bytes_);
-  grids_ = ::new (metadata) Grid[grid_count_]{};
-  pages_ = ::new (static_cast<std::byte*>(metadata) + grids_bytes) Page[payload_pages_]{};
+  bindings_ = ::new (metadata) std::uint8_t[identities_];
+  std::memset(bindings_, unbound, identities_);
+  grids_ = ::new (static_cast<std::byte*>(metadata) + grids_offset) Grid[grid_count_]{};
+  pages_ = ::new (static_cast<std::byte*>(metadata) + grids_offset + grids_bytes) Page[payload_pages_]{};
   trim_scratch_ = ::new (static_cast<std::byte*>(metadata) + scratch_offset)
       std::uint64_t[live_words()]{};
   available_identity_grids_ = grid_count_ == 64
@@ -129,7 +133,6 @@ Result<void> FiniteGroup::retire() noexcept {
     } else {
       reservation_ = nullptr;
       payload_ = nullptr;
-      bindings_ = nullptr;
     }
   }
   if (metadata_) {
@@ -137,6 +140,7 @@ Result<void> FiniteGroup::retire() noexcept {
       failed = true;
     } else {
       metadata_ = nullptr;
+      bindings_ = nullptr;
       grids_ = nullptr;
       pages_ = nullptr;
       trim_scratch_ = nullptr;
@@ -456,11 +460,20 @@ Result<void> FiniteGroup::begin_trim(PageSpan span) noexcept {
 }
 
 Result<void> FiniteGroup::begin_trim(std::span<const PageSpan> spans) noexcept {
+  return begin_trim_spans(spans);
+}
+
+Result<void> FiniteGroup::begin_trim(std::span<const TrimSpan> spans) noexcept {
+  return begin_trim_spans(spans);
+}
+
+template<class Span>
+Result<void> FiniteGroup::begin_trim_spans(std::span<const Span> spans) noexcept {
   const auto live = std::span(trim_scratch_, live_words());
   const auto counted = live_pages(live);
   assert(counted);
   for (auto span : spans) {
-    if (!valid(span)) return std::unexpected(Error::invalid_argument);
+    if (!valid(PageSpan{span.first, span.count})) return std::unexpected(Error::invalid_argument);
     for (auto page = span.first; page < span.first + span.count; ++page)
       if (pages_[page] != Page::mapped || (live[page / 64] & (std::uint64_t{1} << (page % 64))))
         return std::unexpected(Error::conflict);

@@ -74,8 +74,8 @@ void geometry(Palette palette, std::uint16_t width) {
   check(group->native_page() == static_cast<std::size_t>(::sysconf(_SC_PAGESIZE)),
         "uses native page granule");
   check(group->control_bytes() % group->native_page() == 0, "control charge page rounded");
-  check(group->reserved_bytes() == group->native_page() + group->payload_pages() * group->native_page(),
-        "reservation has one dense control plane and payload aperture");
+  check(group->reserved_bytes() == group->payload_pages() * group->native_page(),
+        "payload reservation excludes separately charged control mapping");
   const auto& capacities = palette == Palette::a ? capacities_a : capacities_b;
   std::vector<Identity> identities;
   for (unsigned index = 0; index < width; ++index) {
@@ -351,6 +351,80 @@ void prepared_home_selection() {
   okay(group->release_home(selected), "release restored home");
   okay(group->release_identity(identity), "release selection identity");
 }
+
+void compact_trim_inventory() {
+  for (const auto palette : {Palette::a, Palette::b}) {
+    for (const auto width : {64, 256, 1024}) {
+      auto group = take(FiniteGroup::create({palette, static_cast<std::uint16_t>(width)}),
+                        "create compact trim geometry");
+      okay(group->prepare(), "prepare compact trim geometry");
+      check(group->payload_pages() <= std::numeric_limits<std::uint16_t>::max(),
+            "every supported geometry fits compact trim coordinates");
+      const auto page = group->native_page();
+      check(::mprotect(group->page_address(0), 3 * page, PROT_READ | PROT_WRITE) == 0,
+            "prepare three actual idle pages");
+      okay(group->mark_mapped({0, 3}), "publish compact trim pages");
+      group->page_address(0)[0] = std::byte{0x71};
+      group->page_address(2)[page - 1] = std::byte{0x93};
+      const auto unchanged = [&] {
+        check(group->mapped_pages() == 3, "rejected trim keeps all mapped charge");
+        for (std::size_t p = 0; p < 3; ++p)
+          check(group->mapped(p) && !group->trimming(p),
+                "invalid middle range partially quarantined the trim list");
+      };
+
+      const std::array<TrimSpan, 3> bad{{
+          {0, 1}, {static_cast<std::uint16_t>(group->payload_pages()), 1}, {2, 1}}};
+      check(!group->begin_trim(bad), "compact out-of-range middle span refuses");
+      unchanged();
+      const std::array<TrimSpan, 3> empty{{{0, 1}, {1, 0}, {2, 1}}};
+      check(!group->begin_trim(empty), "compact empty middle span refuses");
+      unchanged();
+      const std::array<TrimSpan, 3> compact_overflow{{
+          {0, 1}, {1, std::numeric_limits<std::uint16_t>::max()}, {2, 1}}};
+      check(!group->begin_trim(compact_overflow), "maximum compact count cannot overrun geometry");
+      unchanged();
+      const std::array<PageSpan, 3> overflow{{
+          {0, 1}, {1, std::numeric_limits<std::size_t>::max()}, {2, 1}}};
+      check(!group->begin_trim(overflow), "wide overflow count is not narrowed to a legal range");
+      unchanged();
+      const std::array<PageSpan, 3> wrapped_first{{{0, 1}, {65536, 1}, {2, 1}}};
+      check(!group->begin_trim(wrapped_first), "wide first page is not truncated to zero");
+      unchanged();
+
+      const std::array<TrimSpan, 3> valid{{{0, 1}, {1, 1}, {2, 1}}};
+      okay(group->begin_trim(valid), "reserve complete compact trim list");
+      for (std::size_t p = 0; p < 3; ++p)
+        check(group->trimming(p), "valid compact list quarantines every range");
+      okay(group->finish_trim({0, 1}, false), "failed first discard restores mapping");
+      check(::madvise(group->page_address(1), page, MADV_DONTNEED) == 0 &&
+          ::mprotect(group->page_address(1), page, PROT_NONE) == 0,
+          "discard actual middle page");
+      okay(group->finish_trim({1, 1}, true), "successful middle discard refunds only its range");
+      okay(group->finish_trim({2, 1}, false), "failed last discard restores mapping");
+      check(group->mapped_pages() == 2 && !group->mapped(1) &&
+          group->page_address(0)[0] == std::byte{0x71} &&
+          group->page_address(2)[page - 1] == std::byte{0x93},
+          "independent completions lost mapping charge or surviving bytes");
+
+      const auto last = group->payload_pages() - 1;
+      check(::mprotect(group->page_address(last), page, PROT_READ | PROT_WRITE) == 0,
+            "prepare last legal payload page");
+      okay(group->mark_mapped({last, 1}), "publish last legal payload page");
+      group->page_address(last)[page - 1] = std::byte{0xb5};
+      const std::array<TrimSpan, 1> beyond{{{static_cast<std::uint16_t>(last), 2}}};
+      check(!group->begin_trim(beyond) && !group->trimming(last),
+            "compact last-page range cannot cross payload boundary");
+      const std::array<TrimSpan, 1> endpoint{{{static_cast<std::uint16_t>(last), 1}}};
+      okay(group->begin_trim(endpoint), "compact last legal page is representable");
+      check(group->trimming(last), "compact endpoint is quarantined");
+      okay(group->finish_trim({last, 1}, false), "restore compact endpoint after discard refusal");
+      check(group->mapped_pages() == 3 && group->mapped(last) &&
+          group->page_address(last)[page - 1] == std::byte{0xb5},
+          "maximum geometry endpoint preserves bytes and charge");
+    }
+  }
+}
 } // namespace
 
 int main() {
@@ -362,5 +436,6 @@ int main() {
   grid_selection();
   alignment_and_validation();
   prepared_home_selection();
+  compact_trim_inventory();
   std::puts("finite: six native geometries, retained homes, binding, page unions and trim races passed");
 }

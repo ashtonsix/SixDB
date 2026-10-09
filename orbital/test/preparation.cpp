@@ -24,6 +24,7 @@ thread_local bool owner_thread{};
 std::atomic<bool> gate{}, inside{}, proceed{}, fail_map{}, fail_protect{}, fail_unmap{};
 std::atomic<unsigned> helper_maps{}, owner_maps{}, helper_protects{}, owner_protects{};
 std::atomic<unsigned> helper_constructions{}, cleanup_failures{}, cleanup_skip{};
+std::atomic<unsigned> fail_map_after{};
 
 void check(bool yes, const char* text, std::source_location loc = std::source_location::current()) {
   if (!yes) { std::fprintf(stderr,"%s:%u: %s\n",loc.file_name(),loc.line(),text); std::abort(); }
@@ -555,7 +556,9 @@ void finite_fresh_bounded_start_cancel_close(){
 void finite_control_vm_failures_own_partial_backing(){
   for(bool partial:{false,true}){
     Fixture f;alloc::Preparation failed;
-    if(partial)fail_protect=true;else fail_map=true;
+    // The second control-stage mmap fails after the payload reservation exists.
+    // Bindings share the owner-control mapping; no control mprotect is needed.
+    if(partial)fail_map_after=2;else fail_map=true;
     done(alloc::prepare(*f.pool,failed,small_request(),f.preparer.lane));f.settle(failed);
     const auto inventory=alloc::statistics(*f.pool);const auto charged=f.arena->charged_bytes.load();
     check(failed.state==alloc::Preparation::State::failed && failed.error==Error::io && !failed.backend &&
@@ -569,7 +572,7 @@ void finite_control_vm_failures_own_partial_backing(){
     const auto result=alloc::take(failed);check(!result && result.error()==Error::io,
           "terminal failed finite frame consulted replaced Pool");
   }
-  std::puts("{\"case\":\"finite-control-mmap-partial-protect-retire-failure-ownership\",\"passed\":true}");
+  std::puts("{\"case\":\"finite-control-second-map-retire-failure-ownership\",\"passed\":true}");
 }
 
 void finite_delivered_owner_operations(){
@@ -722,6 +725,12 @@ void* __wrap_mmap(void* a,std::size_t n,int p,int f,int fd,off_t o){
     while(!proceed.load(std::memory_order_acquire))std::this_thread::yield();
   }
   if(!owner_thread && fail_map.exchange(false)){errno=ENOMEM;return MAP_FAILED;}
+  if(!owner_thread){
+    auto remaining=fail_map_after.load(std::memory_order_relaxed);
+    while(remaining && !fail_map_after.compare_exchange_weak(remaining,remaining-1,
+        std::memory_order_relaxed)){}
+    if(remaining==1){errno=ENOMEM;return MAP_FAILED;}
+  }
   return __real_mmap(a,n,p,f,fd,o);
 }
 
