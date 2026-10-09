@@ -57,7 +57,7 @@ template<class Store> void publish(Store& store, std::uint64_t cut, bool columns
 }
 
 template<class Nodes, class Retention> void closing_cuts() {
-  using Store = compact_history::Store<Nodes, Retention>;
+  using Store = compact_history::Store<Nodes, Retention, DescriptorPhysical>;
   Memory metadata;
   std::array<Witnesses, 6> witnesses;
   {
@@ -96,7 +96,7 @@ template<class Nodes, class Retention> void closing_cuts() {
 }
 
 template<class Nodes> void absence_and_preparation() {
-  using Store = compact_history::Store<Nodes, DistinctRetention>;
+  using Store = compact_history::Store<Nodes, DistinctRetention, DescriptorPhysical>;
   Memory metadata;
   cd::Export* escaped = nullptr;
   {
@@ -146,7 +146,7 @@ template<class Nodes> void absence_and_preparation() {
 }
 
 template<class Nodes> void absence_only_churn() {
-  using Store = compact_history::Store<Nodes, DistinctRetention>;
+  using Store = compact_history::Store<Nodes, DistinctRetention, DescriptorPhysical>;
   Memory metadata;
   {
     Store store(metadata);
@@ -171,7 +171,7 @@ template<class Nodes> void absence_only_churn() {
 }
 
 template<class Nodes> void scratch_refusal() {
-  using Store = compact_history::Store<Nodes, DistinctRetention>;
+  using Store = compact_history::Store<Nodes, DistinctRetention, DescriptorPhysical>;
   Memory metadata;
   {
     Store store(metadata);

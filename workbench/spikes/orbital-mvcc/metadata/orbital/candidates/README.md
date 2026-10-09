@@ -3,8 +3,12 @@
 These are embedded, single-owner comparison backends over real immutable
 descriptors or shared Ikea shapes and externally owned encoded bytes. They do
 not implement Journal, IO, concurrent reclamation or an Engine index.
-`candidate_store.h` owns the common protocol; `history.h` and `inline_history.h`
-own the alternative storage layouts. No API here is promoted.
+`store.h` owns the common protocol; `history.h` and `inline_history.h` own the
+alternative storage layouts. It requires an explicit Physical policy and has no
+descriptor/Shape dependency. `physical.h` supplies generic ownership and changes;
+`descriptor_policy.h` supplies the byte-descriptor control and its aliases.
+`candidate_store.h` remains their thin entry header for existing driver callers.
+`shape_policy.h` includes the generic Store directly. No API here is promoted.
 
 ```cpp
 compact_history::Memory metadata; // final address; outlives every escaping owner
@@ -66,6 +70,12 @@ logical binding lives in cold catalog-issued targets/exports, not the body.
 one immutable borrowed pair. Its `export_part` creates an escaping owner; the
 issuing Scope must remain live until that call. A copied pair preserves its
 original association through later publication, deletion and recreation.
+The catalog owns that 24-byte Binding, independently of physical metadata.
+The Physical policy checks conversion compatibility; it does not establish
+equal logical content. The converter supplies that proof. Shape's ordinary
+Selection/View remain 8 bytes and its cold target/bound pair stay 40/32 bytes.
+The descriptor control now also stores the explicit cold binding: target/bound
+pair grow from 16/8 to 40/32 bytes. No per-version or per-Part bytes are added.
 
 `HashObjects` retains the original node-hash control. `CompactObjects` stores
 full-width Object IDs once in stable 24-byte paged entries, with 32-bit lookup

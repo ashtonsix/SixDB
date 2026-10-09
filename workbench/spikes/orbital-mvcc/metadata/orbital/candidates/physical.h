@@ -1,36 +1,9 @@
 #pragma once
 
-#include "../descriptor/descriptor.h"
+#include <orbital/types.h>
 #include <utility>
 
 namespace compact_history {
-
-struct DescriptorPhysical {
-  using Value = compact_descriptor::Descriptor;
-  using Selection = compact_descriptor::Selection;
-  using Specification = compact_descriptor::RepresentationSpec;
-  using PartSource = compact_descriptor::PartSource;
-  using Export = compact_descriptor::Export;
-  enum class ExportPolicy { selected };
-  struct Binding {};
-  static void retain(Value* v) noexcept { compact_descriptor::retain(v); }
-  static void release(Value* v) noexcept { compact_descriptor::release(v); }
-  static Value* get(Selection s) noexcept { return s.descriptor; }
-  static Selection selection(Value* v) noexcept { return {v}; }
-  static auto capture(std::pmr::memory_resource& memory, const Specification& spec,
-      std::span<const PartSource> parts) noexcept { return compact_descriptor::capture(memory, spec, parts); }
-  static bool accepts(Value* v, orbital::ObjectId object, std::uint64_t cut) noexcept {
-    return compact_descriptor::object(v) == object && compact_descriptor::version(v) == cut;
-  }
-  static bool equivalent(Value* a, Value* b) noexcept { return compact_descriptor::same_logical_state(a, b); }
-  static auto footprint(Value* v) noexcept { return compact_descriptor::footprint(v); }
-  static Binding binding(orbital::ObjectId, std::uint64_t) noexcept { return {}; }
-  static orbital::ObjectId bound_object(Value* source, Binding) noexcept { return compact_descriptor::object(source); }
-  static std::uint64_t bound_cut(Value* source, Binding) noexcept { return compact_descriptor::version(source); }
-  static auto export_part(Selection selected, std::size_t index, Binding, ExportPolicy) noexcept {
-    return compact_descriptor::retain_part(selected, index);
-  }
-};
 
 template<class Physical> class PhysicalOwner {
   using Value = typename Physical::Value;
@@ -48,8 +21,6 @@ public:
   explicit operator bool() const noexcept { return value_; }
 };
 
-using DescriptorOwner = PhysicalOwner<DescriptorPhysical>;
 template<class Owner> struct ChangeOf { orbital::ObjectId object; Owner representation; };
-using Change = ChangeOf<DescriptorOwner>;
 
 } // namespace compact_history

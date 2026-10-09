@@ -343,9 +343,9 @@ template<class Store> void run(const char* name) {
 
 int main() {
   run<Store32>("v32-floor"); run<Store16>("v16-floor"); run<Store8>("v8-floor");
-  run<Store<Slab<Version32>, compact_retention::DistinctRetention>>("v32-distinct");
-  run<Store<Slab<Version16>, compact_retention::DistinctRetention>>("v16-distinct");
-  run<Store<Chunks8, compact_retention::DistinctRetention>>("v8-distinct");
+  run<Store<Slab<Version32>, compact_retention::DistinctRetention, DescriptorPhysical>>("v32-distinct");
+  run<Store<Slab<Version16>, compact_retention::DistinctRetention, DescriptorPhysical>>("v16-distinct");
+  run<Store<Chunks8, compact_retention::DistinctRetention, DescriptorPhysical>>("v8-distinct");
   run<Store<Slab<Version32>, compact_retention::FloorRetention, DescriptorPhysical, CompactObjects>>("compact-v32-floor");
   run<Store<Slab<Version16>, compact_retention::FloorRetention, DescriptorPhysical, CompactObjects>>("compact-v16-floor");
   run<Store<Chunks8, compact_retention::FloorRetention, DescriptorPhysical, CompactObjects>>("compact-v8-floor");

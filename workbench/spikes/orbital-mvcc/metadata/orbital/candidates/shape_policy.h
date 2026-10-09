@@ -1,6 +1,6 @@
 #pragma once
 
-#include "candidate_store.h"
+#include "store.h"
 #include "../shape/shape.h"
 
 namespace compact_history {
@@ -10,7 +10,6 @@ struct ShapePhysical {
   using Selection = compact_shape::Selection;
   using Specification = compact_shape::Specification;
   using PartSource = compact_shape::BodySource;
-  using Binding = compact_shape::Binding;
   using Export = compact_shape::Export;
   using ExportPolicy = compact_shape::Interpretation;
   static void retain(Value* value) noexcept { compact_shape::retain(value); }
@@ -25,13 +24,11 @@ struct ShapePhysical {
   static bool accepts_resource(Value* value, std::pmr::memory_resource& memory) noexcept {
     return compact_shape::resource(value) == &memory;
   }
-  static bool equivalent(Value* a, Value* b) noexcept { return compact_shape::equivalent(a, b); }
+  // Program/count compatibility does not prove equal logical content.
+  static bool compatible(Value* a, Value* b) noexcept { return compact_shape::equivalent(a, b); }
   static auto footprint(Value* value) noexcept { return compact_shape::footprint(value); }
-  static Binding binding(ObjectId object, std::uint64_t cut) noexcept { return {object, cut}; }
-  static ObjectId bound_object(Value*, Binding binding) noexcept { return binding.object; }
-  static std::uint64_t bound_cut(Value*, Binding binding) noexcept { return binding.version; }
   static auto export_part(Selection selected, std::size_t index, Binding binding, ExportPolicy policy) noexcept {
-    return compact_shape::detail::retain_part(selected, index, binding, policy);
+    return compact_shape::detail::retain_part(selected, index, {binding.object, binding.version}, policy);
   }
 };
 

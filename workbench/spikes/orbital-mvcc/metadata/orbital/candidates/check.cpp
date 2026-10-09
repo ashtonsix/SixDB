@@ -89,8 +89,9 @@ template<class Store> void coherent_history() {
       typename Store::Scope old(store);
       auto first = old.bind(A); check(first.part_count() == 2);
       auto bound = store.bound(old, A); check(bound && bound->selection().descriptor == first.descriptor);
+      check(bound->binding().object == A && bound->binding().version == 1);
       check(word(*first.part(std::size_t{0})) == 10);
-      auto export_result = cd::retain_part(first, 0); check(export_result); escaped = *export_result;
+      auto export_result = bound->export_part(0); check(export_result); escaped = *export_result;
       std::array<Change, 2> next{{{A, encode(store, A, 2, 30, 40)}, {B, encode(store, B, 2, 300, 400)}}};
       auto prepared = store.prepare(old, next); check(prepared);
       auto conversion = store.conversion(old, A); check(conversion);
@@ -105,6 +106,8 @@ template<class Store> void coherent_history() {
       }
       store.drain(); pair(*alternative, 10, 20); pair(first, 10, 20);
       check(store.install(*prepared)); // Physical adoption did not stale logical basis.
+      check(bound->binding().object == A && bound->binding().version == 1);
+      check(cd::describe(cd::view(escaped)).version == 1);
       pair(old.bind(B), 100, 200); // B was not discovered before the publication.
       pair(old.bind(A), 10, 20); // Reopen after all earlier native Views ended.
       auto current = store.borrow(); pair(current.bind(A), 30, 40); pair(current.bind(B), 300, 400);
@@ -477,9 +480,9 @@ template<class Store> void run(const char* name) {
 
 int main() {
   run<Store32>("v32-floor"); run<Store16>("v16-floor"); run<Store8>("v8-floor");
-  run<Store<Slab<Version32>, compact_retention::DistinctRetention>>("v32-distinct");
-  run<Store<Slab<Version16>, compact_retention::DistinctRetention>>("v16-distinct");
-  run<Store<Chunks8, compact_retention::DistinctRetention>>("v8-distinct");
+  run<Store<Slab<Version32>, compact_retention::DistinctRetention, DescriptorPhysical>>("v32-distinct");
+  run<Store<Slab<Version16>, compact_retention::DistinctRetention, DescriptorPhysical>>("v16-distinct");
+  run<Store<Chunks8, compact_retention::DistinctRetention, DescriptorPhysical>>("v8-distinct");
   run<Store<Slab<Version32>, compact_retention::FloorRetention, DescriptorPhysical, CompactObjects>>("compact-v32-floor");
   run<Store<Slab<Version16>, compact_retention::FloorRetention, DescriptorPhysical, CompactObjects>>("compact-v16-floor");
   run<Store<Chunks8, compact_retention::FloorRetention, DescriptorPhysical, CompactObjects>>("compact-v8-floor");

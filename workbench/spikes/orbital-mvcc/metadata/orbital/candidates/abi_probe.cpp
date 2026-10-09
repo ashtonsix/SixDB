@@ -9,6 +9,8 @@ static_assert(sizeof(Store::Owner) == 8);
 static_assert(sizeof(Store::Change) == 24);
 static_assert(sizeof(Store::BoundSelection) == 32);
 static_assert(sizeof(Store::Prepared) == 64);
+static_assert(sizeof(compact_history::Binding) == 24);
+static_assert(sizeof(Store::ConversionTarget) == 40);
 
 Selection inline_bind(const Store::Scope& scope, orbital::ObjectId id) {
   return scope.bind(id);
