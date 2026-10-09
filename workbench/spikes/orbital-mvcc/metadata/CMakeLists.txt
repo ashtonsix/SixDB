@@ -54,6 +54,17 @@ endforeach()
 # Only this comparator retains the optional program-wide preparation Schema.
 target_sources(orbital_mvcc_consumer_candidates_check PRIVATE consumer/candidate_default_schema.cpp)
 
+add_library(orbital_mvcc_write_batch STATIC consumer/write_batch.cpp)
+sixdb_target(orbital_mvcc_write_batch)
+target_include_directories(orbital_mvcc_write_batch PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/..")
+target_link_libraries(orbital_mvcc_write_batch PUBLIC orbital_versioned_consumer)
+
+add_executable(orbital_mvcc_consumer_write_batch_check consumer/write_batch_check.cpp)
+sixdb_target(orbital_mvcc_consumer_write_batch_check)
+target_link_libraries(orbital_mvcc_consumer_write_batch_check PRIVATE orbital_mvcc_write_batch)
+add_test(NAME orbital_mvcc_consumer_write_batch_check COMMAND orbital_mvcc_consumer_write_batch_check)
+list(APPEND metadata_checks orbital_mvcc_consumer_write_batch_check)
+
 foreach(check IN LISTS metadata_checks)
   target_compile_options(${check} PRIVATE -UNDEBUG)
 endforeach()

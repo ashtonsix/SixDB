@@ -77,6 +77,7 @@ are independent retention roots, not released by the absence of a local reader.
 
 - [Orbital records and closures](orbital/FINDINGS.md), [Allocation and Worker](orbital/allocation-worker.md), and [probe runner](orbital/run.py).
 - [Consumer and Ikea field/call census](consumer/ikea-census.md), [actual type probes](consumer/census.cpp), [probe runner](consumer/probe.py), and [qualification/native candidates](consumer/candidates.h).
+- [Admitted private write batches](consumer/write-batch.md) compare one batch admission with repeated field-writer binding, including actual effects, private backing and unchanged-error controls.
 - [Loom findings and selected evidence](loom/README.md), [actual frame/type probes](loom/facts.cpp), [ordinary call producers](loom/boundaries.cpp), [consumers](loom/callers.cpp), and [code-generation runner](loom/codegen.py).
 
 The [performance study](../performance/README.md) owns the measured comparisons.
@@ -89,7 +90,7 @@ overhead but cannot establish a general database performance win.
 
 Run the integrated metadata controls independently of the withdrawn baseline
 suite (descriptor, shared shape, Object directory, compact histories, retention
-and the six consumer checks):
+and the seven consumer checks):
 
 ```sh
 orb -m ubuntu cmake -S . -B build/orbital-mvcc/metadata-integration -G Ninja \
@@ -98,7 +99,7 @@ orb -m ubuntu cmake --build build/orbital-mvcc/metadata-integration \
   --target orbital_mvcc_metadata_validate -j2
 ```
 
-The target also compiles descriptor and shared-shape ABI probes. Its thirteen
+The target also compiles descriptor and shared-shape ABI probes. Its fourteen
 tests use the separate `orbital-mvcc-metadata` CTest label and keep assertions
 enabled. This qualifies repository integration; the performance study owns
 measured comparisons.
