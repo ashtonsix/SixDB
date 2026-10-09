@@ -70,6 +70,17 @@ target_link_libraries(orbital_mvcc_consumer_write_batch_check PRIVATE orbital_mv
 add_test(NAME orbital_mvcc_consumer_write_batch_check COMMAND orbital_mvcc_consumer_write_batch_check)
 list(APPEND metadata_checks orbital_mvcc_consumer_write_batch_check)
 
+add_library(orbital_mvcc_shape_read STATIC consumer/shape_read.cpp consumer/shape_read_bridge.cpp)
+sixdb_target(orbital_mvcc_shape_read)
+target_link_libraries(orbital_mvcc_shape_read PUBLIC orbital_mvcc_shape)
+
+add_executable(orbital_mvcc_consumer_shape_read_check consumer/shape_read_check.cpp)
+sixdb_target(orbital_mvcc_consumer_shape_read_check)
+target_link_libraries(orbital_mvcc_consumer_shape_read_check
+  PRIVATE orbital_mvcc_shape_read orbital_mvcc_directory)
+add_test(NAME orbital_mvcc_consumer_shape_read_check COMMAND orbital_mvcc_consumer_shape_read_check)
+list(APPEND metadata_checks orbital_mvcc_consumer_shape_read_check)
+
 foreach(check IN LISTS metadata_checks)
   target_compile_options(${check} PRIVATE -UNDEBUG)
 endforeach()

@@ -78,6 +78,7 @@ are independent retention roots, not released by the absence of a local reader.
 - [Orbital records and closures](orbital/FINDINGS.md), [Allocation and Worker](orbital/allocation-worker.md), and [probe runner](orbital/run.py).
 - [Consumer and Ikea field/call census](consumer/ikea-census.md), [actual type probes](consumer/census.cpp), [probe runner](consumer/probe.py), and [qualification/native candidates](consumer/candidates.h).
 - [Admitted private write batches](consumer/write-batch.md) compare one batch admission with repeated field-writer binding, including actual effects, private backing and unchanged-error controls.
+- [Shared-Shape native reads](consumer/shape-read.md) compare public checked access with a composed private-layout path, using the same stored law and kernels for selected and mapped bodies.
 - [Loom findings and selected evidence](loom/README.md), [actual frame/type probes](loom/facts.cpp), [ordinary call producers](loom/boundaries.cpp), [consumers](loom/callers.cpp), and [code-generation runner](loom/codegen.py).
 
 The [performance study](../performance/README.md) owns the measured comparisons.
@@ -99,7 +100,7 @@ orb -m ubuntu cmake --build build/orbital-mvcc/metadata-integration \
   --target orbital_mvcc_metadata_validate -j2
 ```
 
-The target also compiles descriptor, shared-shape and inline-current ABI probes. Its fourteen
+The target also compiles descriptor, shared-shape and inline-current ABI probes. Its fifteen
 tests use the separate `orbital-mvcc-metadata` CTest label and keep assertions
 enabled. This qualifies repository integration; the performance study owns
 measured comparisons.

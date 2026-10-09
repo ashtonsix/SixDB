@@ -15,6 +15,8 @@
 #include <expected>
 #include <span>
 
+namespace orbital_mvcc::metadata_consumer::shape_read::detail { struct CursorAccess; }
+
 namespace orbital_mvcc::metadata_consumer::compact_law {
 namespace v = orbital_bench::versioned;
 namespace tp = ikea::tuplepack;
@@ -187,6 +189,7 @@ class Cursor {
   const tp::byte* data_;
   explicit Cursor(const tp::byte* data) : data_(data) {}
   friend orbital::Result<Cursor> qualify_cursor(const Control&, orbital::Bytes, orbital::Bytes);
+  friend struct orbital_mvcc::metadata_consumer::shape_read::detail::CursorAccess;
 public:
   Part with(const Control& control) const { return {data_, control.records}; }
 };
