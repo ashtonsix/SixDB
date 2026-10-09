@@ -89,5 +89,45 @@
     "Local AArch64 correctness and ordinary ABI qualification; no target-machine timing or whole-database performance conclusion.",
     "Frozen qualification covers32 named source files and exact linked library hashes. Recovery also holds supporting headers captured at closeout; those headers were not hashed by the original qualification receipt."
   ],
-  "recovery": "bounded-artifact.json"
+  "recovery": "bounded-artifact.json",
+  "independent_final_review": {
+    "result": "No consequential issue found in frozen source.",
+    "scope": "Partial cuts/refusal; sampled stable and inline history during same-object publication; drop callbacks, Store reset and accepted pins; debt queue slot reuse.",
+    "limits": "Read-only review supported by existing suites; no additional tests. Concurrent Store use and counter wraparound outside scope."
+  },
+  "mechanical_tidy": {
+    "base_commit": "813bad1",
+    "source_sha256": {
+      "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/candidate_store.h": "f641a993cd14effc234556d087ef1dfc2f163b4f30cedd058f551bacee765efd",
+      "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/debt_queue.h": "c1bf22886c30cd105b44b9db5d3b44978d29ec748e59210def36677d7c79848a",
+      "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/history.h": "fd3bde50cd2fb2695c105dd496b3aabeb04d5b4f769175c8934be057431ae303",
+      "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/inline_history.h": "bfb04efc5a695054b3b7f5eaa9935e7e82647583d6dd2c7df3b2e1bd9f7af381",
+      "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/inline_objects.h": "c86f206d564aa16af31e6de3ffa95afb592586696fda9ab5f272627fc73caaa6",
+      "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/object_policy.h": "2a7904a587950b51f6868a60345f70717bf9c8608e2074ffdf734738791058d3"
+    },
+    "changes": "Six headers; 17 insertions, 48 deletions. Void reservation chain, removed uncalled debt visitors, derived queue free count, merged identical cut-consumption states.",
+    "checks": "Eleven candidate histories and nine bounded histories each across14 layouts; both outputs identical to813bad1 qualified evidence.",
+    "profile": "Linux AArch64 -O3 -DNDEBUG",
+    "sizes": {
+      "before": {
+        "DebtQueue": 64,
+        "CompactObjects": 152,
+        "TipObjects": 152,
+        "HashObjects": 88,
+        "hash16-core": 648,
+        "compact16-core": 704,
+        "inline16-core": 712
+      },
+      "after": {
+        "DebtQueue": 56,
+        "CompactObjects": 144,
+        "TipObjects": 144,
+        "HashObjects": 88,
+        "hash16-core": 648,
+        "compact16-core": 696,
+        "inline16-core": 704
+      }
+    },
+    "limits": "Targeted native checks only; original full sanitizer qualification remains the earlier source cut."
+  }
 }

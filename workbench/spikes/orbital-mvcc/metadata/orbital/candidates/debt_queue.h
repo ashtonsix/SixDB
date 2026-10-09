@@ -10,13 +10,14 @@ class DebtQueue {
   struct Slot { std::uint32_t object{}, next{}; };
   static constexpr std::size_t maximum = UINT32_MAX >> 3;
   std::pmr::vector<Slot> slots_;
-  std::uint32_t first_{}, last_{}, free_{}, free_count_{}, live_{};
+  std::uint32_t first_{}, last_{}, free_{}, live_{};
   std::size_t reservation_work_{};
 public:
   explicit DebtQueue(compact_version_probe::Memory& memory) : slots_(&memory) {}
   void reserve(std::size_t additional) {
-    if (additional <= free_count_) return;
-    const auto added = additional - free_count_;
+    const auto free_count = slots_.size() - live_;
+    if (additional <= free_count) return;
+    const auto added = additional - free_count;
     if (added > maximum - slots_.size()) throw std::bad_alloc();
     const auto needed = slots_.size() + added;
     if (needed > slots_.capacity()) {
@@ -27,12 +28,12 @@ public:
     }
     while (slots_.size() < needed) {
       slots_.push_back({0, free_}); free_ = static_cast<std::uint32_t>(slots_.size());
-      ++free_count_; ++reservation_work_;
+      ++reservation_work_;
     }
   }
   std::uint32_t add(std::uint32_t object) noexcept {
     assert(free_ && object);
-    const auto slot = free_; free_ = slots_[slot - 1].next; --free_count_;
+    const auto slot = free_; free_ = slots_[slot - 1].next;
     slots_[slot - 1] = {object, 0};
     if (last_) slots_[last_ - 1].next = slot; else first_ = slot;
     last_ = slot; ++live_; return slot - 1;
@@ -43,20 +44,12 @@ public:
     // placeholders have not been enrolled; accepted existing tips keep debt.
     assert(first_ == index + 1);
     first_ = slots_[index].next; if (!first_) last_ = 0;
-    slots_[index] = {0, free_}; free_ = index + 1; ++free_count_; --live_;
+    slots_[index] = {0, free_}; free_ = index + 1; --live_;
   }
   void rotate() noexcept {
     if (!first_ || first_ == last_) return;
     const auto old = first_; first_ = slots_[old - 1].next;
     slots_[last_ - 1].next = old; slots_[old - 1].next = 0; last_ = old;
-  }
-  template<class Visitor> void for_each(Visitor&& visitor) {
-    auto slot = first_;
-    while (slot) {
-      const auto next = slots_[slot - 1].next;
-      if (!visitor(slots_[slot - 1].object)) break;
-      slot = next;
-    }
   }
   std::size_t size() const noexcept { return live_; }
   std::size_t capacity_bytes() const noexcept { return slots_.capacity() * sizeof(Slot); }

@@ -82,13 +82,13 @@ template<class Nodes, class Physical, class Objects> struct InlineHistory {
     if (!version || !primary(version)) return {};
     return Physical::selection(alternative ? alternate(version) : primary(version));
   }
-  bool reserve(std::span<const Change> changes) {
+  void reserve(std::span<const Change> changes) {
     std::size_t new_debts = 0;
     for (const auto& change : changes) {
       const auto entry = entries.find(change.object);
       if ((!entry || !entries.indebted(entry)) && ((entry && head(entry)) || !change.representation)) ++new_debts;
     }
-    return entries.reserve_debt(new_debts);
+    entries.reserve_debt(new_debts);
   }
   void erase_borrowed(Node node) noexcept {
     if (nodes.get(node).primary) directory.erase(nodes.get(node).primary);

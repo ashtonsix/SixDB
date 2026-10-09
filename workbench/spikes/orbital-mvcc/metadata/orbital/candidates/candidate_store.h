@@ -210,7 +210,7 @@ private:
     std::size_t remaining_entries{}, remaining_cuts{};
     std::size_t entry_visits{}, version_visits{}, cut_visits{}, debt_visits{}, plan_work{}, maintenance_restarts{};
     std::size_t reclaimed_versions{}, completed_sweeps{}, head_refreshes{};
-    enum class Step { idle, cuts, entry, covered, older, consume, finish, seek };
+    enum class Step { idle, cuts, entry, older, consume, finish, seek };
     Step step{Step::idle};
     Step resume_step{Step::idle};
     bool crossed_floor{};
@@ -338,13 +338,7 @@ private:
           anchor_cut = anchor ? version_cut(anchor) : 0;
           crossed_floor = !anchor || version_cut(anchor) <= planned_floor;
           remaining_cuts = reader_cuts.size();
-          step = !anchor ? Step::finish : Retention::uses_distinct_cuts ? Step::covered : Step::older;
-          break;
-        case Step::covered:
-          if (!remaining_cuts) { step = Step::older; break; }
-          ++work; ++cut_visits;
-          if (reader_cuts[remaining_cuts - 1] >= version_cut(anchor)) --remaining_cuts;
-          else step = Step::older;
+          step = !anchor ? Step::finish : Retention::uses_distinct_cuts ? Step::consume : Step::older;
           break;
         case Step::older: {
           ++work; ++version_visits;
@@ -449,7 +443,7 @@ public:
     }
     Prepared prepared(c.memory);
     try {
-      if (c.reserve(changes)) ++c.maintenance_changes;
+      c.reserve(changes);
       c.Layout::prepare(changes, c.cut + 1, prepared.changes_);
     } catch (const std::bad_alloc&) { return std::unexpected(Error::capacity); }
     ++c.references; prepared.core_ = &c; prepared.basis_ = c.cut;

@@ -56,7 +56,7 @@ public:
     if (pinned(entry) || entry->debt) return false;
     return entries_.erase(*entry->identity) != 0;
   }
-  bool reserve_debt(std::size_t) { return false; }
+  void reserve_debt(std::size_t) {}
   void add_debt(Handle entry) noexcept {
     if (entry->debt) return;
     entry->previous = last_debt_; entry->next = nullptr;
@@ -77,14 +77,6 @@ public:
   }
   std::size_t debt_count() const noexcept { return debt_count_; }
   std::size_t debt_reservation_work() const noexcept { return 0; }
-  template<class Visitor> void for_each_debt(Visitor&& visit) {
-    auto* entry = first_debt_;
-    while (entry) {
-      auto* next = entry->next;
-      if (!visit(entry, *entry)) break;
-      entry = next;
-    }
-  }
   template<class Visitor> void for_each_live(Visitor&& visit) {
     for (auto& [id, entry] : entries_) { (void)id; visit(&entry, entry); }
   }
@@ -122,9 +114,7 @@ public:
   void unpin(Handle entry) noexcept { entries_.unpin(entry); }
   bool erase(Handle entry) noexcept { return entries_.erase(entry); }
 
-  bool reserve_debt(std::size_t additional) {
-    debts_.reserve(additional); return false;
-  }
+  void reserve_debt(std::size_t additional) { debts_.reserve(additional); }
   void add_debt(Handle entry) noexcept {
     if (entries_.indebted(entry)) return;
     encode_index(entry, debts_.add(entry)); entries_.set_indebted(entry, true);
@@ -139,9 +129,6 @@ public:
   void rotate_debt() noexcept { debts_.rotate(); }
   std::size_t debt_count() const noexcept { return debts_.size(); }
   std::size_t debt_reservation_work() const noexcept { return debts_.reservation_work(); }
-  template<class Visitor> void for_each_debt(Visitor&& visit) {
-    debts_.for_each([&](Handle entry) { return visit(entry, entries_.get(entry)); });
-  }
   template<class Visitor> void for_each_live(Visitor&& visit) { entries_.for_each_live(visit); }
   std::size_t size() const noexcept { return entries_.size(); }
   std::size_t capacity_bytes() const noexcept { return entries_.capacity_bytes(); }
