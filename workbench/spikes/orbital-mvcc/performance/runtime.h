@@ -3,6 +3,7 @@
 #include "../consumer/consumer.h"
 
 namespace orbital_versioned_performance {
+struct RangeManifest;
 namespace obj = orbital::object;
 class Runtime {
 public:
@@ -14,12 +15,13 @@ public:
   Runtime(const Runtime&)=delete;
 };
 class Orbital {
+  friend RangeManifest diagnostic_ranges(const Orbital&);
   Runtime runtime_;
   obj::Store store_;
   const Corpus& corpus_;
 public:
   data::Costs costs;
-  Orbital(const Corpus&,std::size_t byte_limit,data::Format initial=data::Format::rows);
+  Orbital(const Corpus&,std::size_t byte_limit,data::Format initial=data::Format::rows,std::size_t metadata_bytes=0);
   ~Orbital();
   obj::ReadContext read() const { return need(store_.read()); }
   obj::BorrowedContext borrow() const { return store_.borrow(); }
@@ -34,6 +36,7 @@ public:
   void convert(std::size_t object,data::Format);
   obj::Statistics statistics() const { return store_.statistics(); }
   std::uint64_t charged_bytes() const { return runtime_.arena->charged_bytes.load(); }
+  orbital::allocation::Statistics pool_statistics() const { return orbital::allocation::statistics(*runtime_.pool); }
   std::size_t drain(std::size_t budget) { return store_.drain(budget); }
   void poll(std::size_t budget) { (void)orbital::worker::poll(runtime_.lane,budget); }
 };

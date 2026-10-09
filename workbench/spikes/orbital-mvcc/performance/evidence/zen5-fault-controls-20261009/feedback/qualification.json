@@ -1,0 +1,33 @@
+{
+  "performance_check": {
+    "passed": true,
+    "comparisons": 20286,
+    "read_data_bytes": 56,
+    "read_data_result_bytes": 64,
+    "tuple_cursor_bytes": 8,
+    "tuple_cursor_result_bytes": 16,
+    "tuple_control_bytes": 16,
+    "tuple_body_bytes": 24,
+    "actual_orbital": true,
+    "common_tuple_payload": true,
+    "complete_callers_batch1_batch64_tail": true,
+    "old_future_discovery": true,
+    "private_failure": true,
+    "bidirectional_conversion": true,
+    "shutdown_charge_zero": true
+  },
+  "lmdb_check": {
+    "passed": true,
+    "comparisons": 532,
+    "old_new_snapshot": true,
+    "private_abort": true
+  },
+  "body_check": {
+    "passed": true,
+    "mapped_tuple_compares": 2096,
+    "objects": 4,
+    "parts_per_object": 1,
+    "mapped_body_copy": false,
+    "old_new_snapshot": true
+  }
+}

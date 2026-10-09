@@ -1,0 +1,24 @@
+{
+  "files_sha256": {
+    "feedback/abi.json": "b7b77018ea9733f0d88446126dedce6e85e50bd37513e62b408698a9e2a3c707",
+    "feedback/binary-identity.json": "d70354b1ecb6be29e3bbcd0f8c27439a1d19064a0ac740eb05ab481632d61b4a",
+    "feedback/build-cost.json": "c1f79378c15c2da27c98569ac6931626e244c080af8378fc220ef1f5b2f110b4",
+    "feedback/hardware-counters.csv": "0b12cd960f905b1aaac9aeac269e2490cd1851a61fb08cda75c84fbbcb3db952",
+    "feedback/measurements.csv": "a6b9467b3d9a063548add6de5623c754c92264e41ac25c211b21e4941e60e2b8",
+    "feedback/parity.json": "7e2cddd34373754b05ec785bcb922af05c6e53d509d7a99d415cb0d256a2834d",
+    "feedback/qualification.json": "3c6ab546d5eb5e1649dbf73bb46be6c6846c62ee99b4dbcebdcb7eb875ff3ed1",
+    "feedback/summary.csv": "b7e6031876669601082de92313e801066ffc7e4b0de3a8720ce91e6df376df48",
+    "host.json": "a3e7393eb56bb6a7413c8d51d283568c450d87843605f8a786b79970adff7b49",
+    "worker-result.json": "23c59b6bdc3161299086db9e6f291a03643f71dad04c7b21b692978bf38757a7"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/orbital-mvcc/performance/run.py",
+    "--report",
+    "{evidence}/feedback"
+  ],
+  "regenerate_from": "archive"
+}

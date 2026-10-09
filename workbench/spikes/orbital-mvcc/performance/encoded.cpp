@@ -2,8 +2,8 @@
 
 namespace orbital_versioned_performance {
 Corpus::Corpus(std::size_t total_rows,std::size_t objects,std::uint64_t seed) {
-  if (!objects || objects>8 || total_rows<objects || total_rows%objects)
-    throw std::invalid_argument("fixture requires 1..8 Objects and divisible nonempty total row count");
+  if (!objects || objects>4096 || total_rows<objects || total_rows%objects)
+    throw std::invalid_argument("fixture requires 1..4096 Objects and divisible nonempty total row count");
   images.reserve(objects);
   for (std::size_t i=0;i<objects;++i) {
     auto shape=need(data::shape(schema,data::Format::rows,total_rows/objects));

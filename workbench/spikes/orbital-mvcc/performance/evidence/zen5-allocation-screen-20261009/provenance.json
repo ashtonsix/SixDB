@@ -1,0 +1,61 @@
+{
+  "files_sha256": {
+    "compact/binary-identity.json": "640197087e047b339cca66ea2e50d61399f64ad5ac34d55722d316c16a04ace3",
+    "compact/build-cost.json": "044ab31ca8aa878aa1dc0a2e59839eac3a8f6e698377f6690bde0b6c8054bafc",
+    "compact/measurements.csv": "652056681c043ef6d300cef0a6a2c6f089ea9dd84e41c418dd999d506fe7da04",
+    "compact/parity.json": "0848135c8688bf64b794505ba56917e289488b9b00cc596753e912fec7b22c8b",
+    "compact/qualification.json": "caa851c8c39541755caa04647921c83f47410f52b056301c09c732dacfde7d28",
+    "compact/summary.csv": "3d52d25ce155bff8cbb6efb568bc7d1f0c321153586aa9f442f020372b8aceaa",
+    "current/abi.json": "a56203acadf8dca619a7b43a33c841db045e6e3a3d68c7623b6e5e515e75a95e",
+    "current/binary-identity.json": "37f8500d6ae1bed9674d622f2adfa67384859243d9ec63b5803c0e0e5237ded7",
+    "current/build-cost.json": "2ffd9c4fdd3ab56bd1ca1913ae1d9afb362542c4a0c0e0236fbc9b6737f9ca4c",
+    "current/measurements.csv": "8a9e3b9f8d086c836e3e0a04a934cc0e9142085898d63469540f10b02f00bf6c",
+    "current/parity.json": "0848135c8688bf64b794505ba56917e289488b9b00cc596753e912fec7b22c8b",
+    "current/qualification.json": "caa851c8c39541755caa04647921c83f47410f52b056301c09c732dacfde7d28",
+    "current/summary.csv": "e3310407e28c3f03f085049b1750f232800d020101b78f62c0adab85a99a415e",
+    "growth/binary-identity.json": "1d9835a53279a0fbf3499456e7d48830af90727bb16bd026739d960fd10e42e7",
+    "growth/build-cost.json": "3305bbe4047647909130247969c78b04ac08d0259579443663ab712afb05e683",
+    "growth/measurements.csv": "b2aea1a729287a2c51a6f7706ab1cb67b86298c896e093196a0678b7136009e2",
+    "growth/parity.json": "0848135c8688bf64b794505ba56917e289488b9b00cc596753e912fec7b22c8b",
+    "growth/qualification.json": "caa851c8c39541755caa04647921c83f47410f52b056301c09c732dacfde7d28",
+    "growth/summary.csv": "48b6aafab3bdecfd40c6d1f64ffa9a170cdee85c7cde9a5b86aeb760719a083a",
+    "host.json": "18e566c77dcb4b42b295fd88b10a5dfc7c5dee902ed995c53818c6432897e6d4",
+    "storage16/binary-identity.json": "8c56731fdaab073bd527893e0701dc97c73741c1dc19b843bd4ae6fe9313702f",
+    "storage16/build-cost.json": "910f71311aa38b006e8fe32d22b9c159ee2ce9e620d2b34333cee35a89b8355b",
+    "storage16/measurements.csv": "4a2eeb0b8d2aac34ad5361a60611a29676666f5f085be79038be690c5f2218fd",
+    "storage16/parity.json": "0848135c8688bf64b794505ba56917e289488b9b00cc596753e912fec7b22c8b",
+    "storage16/qualification.json": "caa851c8c39541755caa04647921c83f47410f52b056301c09c732dacfde7d28",
+    "storage16/summary.csv": "668762c71ee5af01b526ac1561129de7f0c9464d1659a545d999df58666af750",
+    "worker-result.json": "e6e7d6e783caabc0141aa5610108d7db7f43a2656e8a5b0a22a5e1ddb6b07a02"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/current"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/compact"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/storage16"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/growth"
+    ]
+  ],
+  "regenerate_from": "archive"
+}

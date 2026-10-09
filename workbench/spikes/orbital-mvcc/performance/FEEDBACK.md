@@ -2,8 +2,8 @@
 
 These are paired iteration results, not qualification of the current design.
 Each worker capture preserves its exact sources, compiler flags and executable;
-later edits do not change an earlier measurement's meaning. All runs here use
-one core of the same Spot c8a.large Zen 5 EPYC guest, Clang 21.1.8,
+later edits do not change an earlier measurement's meaning. Runs use
+one core of a Spot c8a.large Zen 5 EPYC guest, Clang 21.1.8,
 `x86-64-v3` ISA and `zen5` tune. Bodies, opaque identifiers, offered requests,
 snapshots and independent expected outcomes are matched against mapped LMDB.
 The 256 MiB total limit is the same; the initial fixture assigns 1 MiB to
@@ -119,6 +119,124 @@ and 64 for batch callers; collisions rebind actual opaque IDs. Later directory,
 shape and physical-owner candidates also differ. The archived executable and
 source map determine the measured code; these numbers do not qualify those edits.
 
+## Publication and retained-reader controls
+
+[Worker 20261009T211827Z-20df97c1](evidence/zen5-publication-controls-20261009/feedback/measurements.csv)
+passed 200 primary trials and 20 separate hardware replays. Each case has five
+rotated repetitions. It performs real full-Part clones, native fixed-key updates,
+actual multi-Object publication and periodic old-reader first discovery/release.
+The final tail has three requests. Median throughput is ns per logical update:
+
+| Rows / Objects / batch / rotation age | Baseline | Mapped LMDB | Store8 | Store16 | Store32 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 4096 / 1 / 1 / 8 | 2117.60 | 4353.09 | 1508.86 | 1473.71 | 1490.52 |
+| 4096 / 4 / 64 / 8 | 294.12 | 284.17 | 242.65 | 243.65 | 241.26 |
+| 32768 / 4 / 1 / 64 | 4244.27 | 9200.19 | 3574.77 | 3535.21 | 3506.98 |
+| 32768 / 4 / 64 / 64 | 648.10 | 1964.61 | 579.09 | 584.88 | 584.35 |
+
+The large LMDB batch result has the mode discrepancy investigated below;
+**do not use its throughput/latency ratio as an architectural gain claim**.
+The candidate/baseline comparisons also include unequal generic writer
+preparation and maintenance policy: candidate fixed Shape and full drain versus
+baseline dynamic Shape and bounded drain. No isolated publication ratio follows.
+
+Large batch median p99 is 61940 ns baseline versus 81521 / 95281 / 87581 ns
+for Store8 / 16 / 32: their throughput improvement is not a tail improvement.
+Before final release, baseline retains 213 versions / 165047 metadata bytes,
+versus seven versions / 8557–13581 bytes in candidates. After full release all
+have four versions; candidate reusable capacities remain visible. Final release
+median is 88731 ns baseline versus roughly 1 microsecond candidates, with more
+baseline maintenance left at this boundary. The Arena still holds 49071360 B
+of idle/reusable backing after release in all three candidate arms and baseline.
+
+Configured age is the **periodic rotation interval**, not final held age:
+32771 scalar groups leave age three; 8193 batch groups leave age one. The age-N
+releases are inside publication samples. The separately timed final release
+follows complete old/current validation and is warm. The original witness trace
+selects Object0 in the four-Object panels, so it is not diverse old discovery.
+This capture also holds the candidate writer basis through its drain; an external
+old reader masks that effect. Later code closes basis before install/drain and
+independently checks reclamation with no external reader.
+
+## Finite Groups and the 64-Object budget
+
+[Worker 20261009T212633Z-b34c4d41](evidence/zen5-group-controls-20261009/feedback/measurements.csv)
+reused that host and passed 200 trials plus 20 hardware replays. Its 192 rows
+in 64 Objects have three Tuple rows per Object. Legacy and consume16 are paired,
+with the common one/64-slot cache rather than a catalog-sized prepared array.
+The source combines committed `83face4` metadata with the owned current caller.
+
+For consume16, scalar medians are 94.35 ns baseline, 156.94 ns mapped LMDB,
+and 66.63 / 67.05 / 65.60 ns Store8 / 16 / 32. Batch64 medians are 68.09,
+116.81, and 62.06 / 62.69 / 60.69 ns respectively. Scalar clock replay includes
+clock overhead; its p99 is not a higher-resolution throughput measurement.
+
+The actual fresh Pool has 30608 metadata bytes and 8192 mapped bytes, charged
+38800 B to the Arena. Candidate PMR is 29840 / 30336 / 30744 B versus baseline
+Domain 55784 B. **Named catalog plus Pool metadata is about 60 KiB for the
+candidates**, before allocator/worker/fixture controls, and far from the 4–8 KiB
+total target. This is a useful Allocation control, not a compact-layout success.
+The combined incremental build took 9.67 s wall, 9.45 s user CPU, 0.19 s system
+CPU, and 391656 KiB largest compiler-process peak, with one job. That is not
+simultaneous build memory or a per-backend compilation comparison.
+
+## Short Allocation source-treatment screen
+
+[All four cuts](evidence/zen5-allocation-screen-20261009/) from worker
+`20261009T215905Z-f3bfeb71` retain 192 trials: two repetitions per arm, with
+192 rows / 64 Objects, batch1/64 reads, real writes and age-eight old readers.
+The cumulative treatments are current, first-three compact controls, Storage16,
+and removal of growth tracking. Each executable captures its actual patched
+sources. Backend order rotates within each cut; the source cuts themselves are
+blocked in that order. This is directional feedback, not timing qualification.
+
+| Treatment | Fresh Pool metadata B | Batch64 held/released candidate Pool metadata B | Candidate16 scalar update ns | Candidate16 batch64 update ns |
+| --- | ---: | ---: | ---: | ---: |
+| Current | 30608 | 91824 | 616.39 | 573.27 |
+| First three | 19112 | 57336 | 623.87 | 574.26 |
+| Storage16 | 15032 | 45096 | 611.68 | 565.29 |
+| Growth removal | 15032 | 45096 | 625.62 | 573.22 |
+
+Actual fresh Allocation metadata is roughly halved. There is no large write
+regression signal in this small panel; the narrow timing differences need more
+feedback. Growth removal changes Hold bookkeeping without further Group-byte savings
+here. Recorded growths are zero: this does not measure grow-operation speed,
+and Storage remains 16 B. Candidate PMR remains 30336 B initially; batch64
+has 47481 B while held and 46392 B after release. Scalar has 32977 / 31888 B
+while held / released and one Group with 30608 → 15032 Pool metadata bytes. Allocation counts, mapped/idle bytes, copied metadata
+and catalog state agree across all four cuts. Neither this catalog nor the
+baseline reaches the total metadata target.
+
+All competitors and both clock modes remain in the selection. The four ABI
+summaries were byte-identical; Git keeps `current/abi.json` once and the existing
+worker archive recovers the other copies. Full raw samples, sources and binaries
+remain in that archive. This screen uses the old generic writer/catalog controls;
+the next small screen composes the shared Shape, inline catalog and native bridge.
+
+## Clock-mode fault discriminator
+
+[Worker 20261009T213742Z-b9d498d3](evidence/zen5-fault-controls-20261009/feedback/measurements.csv)
+passed 100 trials comparing original mode-specific latency-buffer reservation
+and equal preallocation/page touching before both modes. It uses another Zen 5
+Spot guest; both preparations and all backends rotate within this source cut.
+Every timed operation still passes the independent oracle. Write-wrapper fault
+deltas exclude fixture preparation and validation, but include sample preparation.
+
+| LMDB preparation | Throughput ns/update | Latency replay ns/update | Throughput wrapper minor faults | Latency wrapper minor faults |
+| --- | ---: | ---: | ---: | ---: |
+| Original mode-specific | 1972.66 | 1119.77 | 508325 | 626 |
+| Equal buffer setup | 1988.57 | 1122.16 | 508341 | 626 |
+
+**Equal buffer preparation does not resolve the discrepancy.** It lies inside
+the write wrapper, and is not a quantile aggregation artifact. The primary
+latency runner also passes a long CSV filename, unlike the local no-export probe;
+CLI/allocator-history sensitivity remains a possible discriminator, not a finding.
+LMDB's overflow buffers use malloc/free while singleton pages are reused in its
+[0.9.31 implementation](https://github.com/LMDB/lmdb/blob/LMDB_0.9.31/libraries/liblmdb/mdb.c).
+Local ARM allocator environment probes changed fault counts but did not reproduce
+the default mode split; they are diagnostics, not performance evidence.
+Keep this limitation on large LMDB writes while comparing Orbital treatments.
+
 ## Retention and next discriminators
 
 Git keeps the authored experiment, all selected competitors/repetitions,
@@ -131,9 +249,11 @@ a compact counter table with every requested event, error and coverage. Future
 captures select that table directly. No duplicate bundle upload
 is needed. Disposable validated databases are regenerated and removed.
 
-Next feedback exercises actual publication, old-reader first discovery,
-bounded retained windows and release/maintenance CPU using these real catalogs.
-The 192-row/64-Object profile exposes finite Groups and their fresh Pool cost. Cold ranges, retained-cut discovery, bounded churn/release, larger
-Object/independent-Part fixtures and capacity remain owed. The source-only
-baseline diagnostic explicitly reports uncovered allocator/map headers and new
-snapshot storage; it cannot claim every metadata byte was conditioned.
+Actual publication/rolling retained readers, physical and metadata refusal,
+large-catalog correctness and finite-Group controls now exist. Full raw caller
+qualification is archived; its source and binary identity are explicit. Next
+feedback prioritizes quick paired Allocation source treatments and the composed
+shared-Shape/inline/native bridge, including Tuple1/Series4 operations. Cold
+conditioning and broader residency/catalog/retention generality remain open.
+The source-only baseline range diagnostic explicitly names uncovered allocator,
+map and new snapshot storage; it is not a cold measurement.

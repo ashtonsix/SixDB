@@ -1,0 +1,23 @@
+{
+  "files_sha256": {
+    "feedback/abi.json": "c377eddd7d16566330644ab220f96c19c93aa2a09126a92a48066bfc16097732",
+    "feedback/binary-identity.json": "ae64c8d6f37e1d57264886a67ac71829f0fbfcdace269309889df91224fb9801",
+    "feedback/hardware-counters.csv": "67404c767ceb4c1971934e7e7431e431b4cb6768049e7c9700c377ddfef44354",
+    "feedback/measurements.csv": "5602fa21d09588174df4a82561925099270d8fbd5d84f49427beea8dccee3bd7",
+    "feedback/parity.json": "0dc358dd122cf0c20e2bf63ef6f70875b6ff677ed5371d471921f6d9b279c92c",
+    "feedback/qualification.json": "f7a823e5c257d379da2a9dff3ff81abe17929f43dabfcaebf4ab021b2bf3e9ab",
+    "feedback/summary.csv": "e6a2b69b3cd89f6d2b001eb7e2378548a304f8a7d6fb78871b2446683417f41d",
+    "host.json": "9c77b05ea18972ed34af9462eb64b6c0744d81af4c8e47b47eabbfd666ffa542",
+    "worker-result.json": "a4cb1901697e4a5cbecca8c71eca16ca142bcb999f32c625c9aa687abd804d75"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/orbital-mvcc/performance/run.py",
+    "--report",
+    "{evidence}/feedback"
+  ],
+  "regenerate_from": "archive"
+}

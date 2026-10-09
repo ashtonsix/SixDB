@@ -1,9 +1,8 @@
 # Versioned consumer performance and ABI
 
-The [2026-10-09 findings](FINDINGS.md) retain the qualified thin-cursor panel,
-including remaining deficits, old-reader capacity and exact native call frames.
-[Iteration feedback](FEEDBACK.md) records the subsequent matched Zen 5 native-call
-and catalog comparisons, including regressions, hardware counters and limits.
+[Iteration feedback](FEEDBACK.md) retains paired read and publication results,
+including negative tail/counter findings and source limits. The earlier
+[thin-cursor findings](FINDINGS.md) remain a historical baseline comparison.
 Each comparison belongs to its captured sources; it does not qualify later
 directory, representation or Allocation changes.
 
@@ -22,13 +21,13 @@ is the unaligned, non-overreading 23-byte Tuple representation. Series columns
 need stronger alignment and are excluded from this common-payload arm; their
 actual Orbital conversion remains a separate case.
 
-The primary read binding caches an 8-byte qualified Tuple cursor per resolved
-Object. Its Schema and row count belong to the enclosing fixture/control, and
-its actual snapshot protects the bytes. Both adapters open the same ephemeral
-24-byte inline native Tuple body; no endpoint points into a former cursor or
-wrapper. Qualification proves the actual description/count matches that control.
-Generic 56-byte row/column bindings remain for updates and conversion; a small
-cursor alone provides no ownership or publication authority.
+The legacy read binding stores an 8-byte qualified Tuple cursor; direct16 and
+scratch-free consume16 are separate whole-body treatments applied to both owned
+Orbital and mapped LMDB. The common direct-mapped request cache has one slot for
+scalar calls and 64 for batch calls, regardless of catalog size. It performs one
+probe, rebinds collisions using actual opaque IDs, and initializes only used
+slots. Its Schema/count remain fixture/control state. Generic row/column bindings
+remain for updates and conversion; cursor size alone is not ownership cost.
 
 The primary fixture's external prepared Schema, parent interpretation and Part
 layout are fixed for all logical publications. Orbital still selects real
@@ -72,10 +71,19 @@ Updates are **adapter-inclusive**. Orbital's wrapper qualifies its source to
 preserve `next`, then the actual consumer qualifies it again and constructs a
 dynamic Shape; mapped LMDB binds once and reuses the fixture's prepared Shape.
 The output reports those logical preparation counts. Do not interpret a write
-ratio as isolated publication overhead. Both clone the same complete Tuple
-Parts and apply the same actual native field writer. Each publication includes
-bounded Orbital drain/poll work; old-reader release plus subsequent catalog drain
-and physical polling have a separate clock and footprint. Remaining Arena charge
+ratio as isolated publication overhead. Store8/16/32 use the real candidate catalogs with the same Allocation/Pool and
+charged body-owner records; their generic write control binds once and reuses
+the fixed Shape. All clone identical complete Tuple Parts and apply the actual
+native writer. The writer basis ends before install/drain; Prepared pins its
+exact catalog. Baseline publication uses bounded drain, candidates full drain,
+and physical polling is bounded. This policy difference remains in the output.
+
+`--retention-age N` rotates a real old reader after every N publications and
+first discovers an old Object immediately before that rotation, inside the
+publication envelope. Zero holds the original reader throughout. Final retained
+age is the remainder after periodic rotation, reported separately from N. Old
+reader release, catalog drain and physical poll have a separate clock/footprint
+after full old/current validation; that release is warm from validation. Remaining Arena charge
 can be idle Pool backing; successful shutdown independently requires zero charge.
 LMDB file-used bytes are a high-water footprint, not a live-payload refund.
 
@@ -97,8 +105,9 @@ and `-DCMAKE_EXE_LINKER_FLAGS='-fsanitize=address,undefined'`, then run the same
 checks with `ASAN_OPTIONS=detect_stack_use_after_return=1:detect_leaks=1:halt_on_error=1`
 and `UBSAN_OPTIONS=halt_on_error=1`. Sanitized clocks are not performance evidence.
 
-The bounded serial runner captures sources, builds incrementally in its own
-workspace, records host/compiler/affinity, rotates competitor order and uses
+The serial runner captures sources, builds incrementally in its own
+workspace, records host/compiler/affinity and combined build wall/CPU/largest
+process memory, rotates codec and competitor order together, and uses
 fresh processes/stores for throughput and latency. It checks matched outcomes,
 logical requests, group counts and clock modes before summarizing. Its selected
 measurements keep all repetitions, copy/preparation counters and initial,
@@ -106,8 +115,40 @@ old-reader-held and released footprints:
 
 ```sh
 orb -m ubuntu python3 workbench/spikes/orbital-mvcc/performance/run.py \
-  --output build/experiments/orbital-versioned/NEW-run --cpu 2 --repetitions 3
+  --output build/experiments/orbital-versioned/NEW-run --cpu 2 --repetitions 5 --profile churn
 ```
+
+Profiles are bounded discriminators: `feedback` varies body admission/consumption;
+`catalog` compares real Store8/16/32; `churn` measures actual writes with rolling
+old readers; `groups` uses 192 rows in 64 Objects to exercise finite Allocations;
+`resident` replays the earlier context/conversion controls. `quick` is a small
+64-Object read/write feedback screen with two repetitions; tails are directional.
+`faults` compares original versus equal sample-buffer preparation in both clock
+modes; the long LMDB write-mode discrepancy remains unresolved. Corpus supports
+1–4096 Objects; `--metadata-bytes` explicitly divides the fixed total limit.
+All currently have one independent Tuple Part per Object. Full construction
+Schema remains resident in Corpus: Pool/PMR totals exclude it while process
+memory includes it. Compact/canonical law and multi-Part
+fixtures are still separate work.
+
+Correctness qualification uses captured sources and meaningful lifetime/failure
+cases, including sparse 64-Object writes with repeated keys, a failure after
+earlier private clones, unchanged published bytes, successful retry, late old
+discovery, no old reader accidentally held by the writer, and actual physical-capacity
+refusal after an earlier clone followed by successful retry:
+
+```sh
+orb -m ubuntu python3 workbench/spikes/orbital-mvcc/performance/qualify.py \
+  --sanitize --output build/orbital-mvcc/qualification/NEW-cut
+```
+
+ASan/UBSan/always-use-after-return/leak checks cover 120 CLI cases through
+4096 Objects and four explicit 1 MiB metadata-capacity refusals. Clocks in
+qualification are not performance evidence. `--sanitizer-qualification DIR` in
+the performance runner validates actual compiled-input hashes and binary hashes
+before attaching that receipt; another source cut is refused. New summaries
+leave unavailable counters blank, and own-process VmHWM/VmRSS is separate from
+possibly inherited rusage high-water.
 
 Authored harness code and selected comparisons belong in Git. Full source
 snapshots, binaries, disassembly, routine logs and per-process JSON belong in

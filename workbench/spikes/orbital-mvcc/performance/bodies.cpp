@@ -16,8 +16,9 @@ void lmdb_update(Lmdb& store,const Corpus& corpus,std::span<const orbital_bench:
   auto basis=store.read();auto write=store.edit();
   std::array<std::size_t,64> positions;
   std::array<Record,64> changed;
-  for (std::size_t object=0;object<corpus.images.size();++object) {
-    if (std::find(objects.begin(),objects.end(),object)==objects.end())continue;
+  for (std::size_t offered=0;offered<objects.size();++offered) {
+    const auto object=objects[offered];
+    if (std::find(objects.begin(),objects.begin()+offered,object)!=objects.begin()+offered)continue;
     const auto& image=corpus.images[object];auto bytes=basis.part(image.address);
     if (!bytes) throw std::runtime_error("missing LMDB update basis");
     auto source=corpus.bind(object,*bytes,image.shape.parts[0].interpretation);

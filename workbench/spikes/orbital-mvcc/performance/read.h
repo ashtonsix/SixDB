@@ -8,6 +8,7 @@ namespace orbital_versioned_performance {
 // batch. This function never refreshes selection during a dependent chain.
 template<class Read>
 orbital_bench::Outcome read_operation(const Read& read, const orbital_bench::Operation& op) {
+  if constexpr (requires { read.consume(op); }) return read.consume(op);
   using namespace orbital_bench;
   Outcome result{};
   if (op.kind==Kind::scan) {
@@ -16,6 +17,19 @@ orbital_bench::Outcome read_operation(const Read& read, const orbital_bench::Ope
     const auto count=read.scan(op.key,std::span(rows).first(op.count));
     for (std::size_t i=0;i<count;++i) consume_row(result,rows[i].key,rows[i].record);
   } else if (op.kind==Kind::read || op.kind==Kind::chain) {
+    if constexpr (requires(std::span<Record> target) { read.chain(op.key,target); }) {
+      if (op.kind==Kind::chain) {
+        if (op.count>16) throw std::invalid_argument("this fixture's chain scratch bound is 16");
+        std::array<Record,16> records;
+        const auto chain=read.chain(op.key,std::span(records).first(op.count));
+        auto key=op.key;
+        for (std::size_t i=0;i<chain.completed;++i) {
+          consume_row(result,key,records[i]);key=records[i].next;
+        }
+        if (chain.completed<op.count) consume_absent(result,chain.next);
+        return result;
+      }
+    }
     auto key=op.key;
     for (auto left=op.kind==Kind::chain?op.count:1u;left;--left) {
       const auto record=read.get(key);

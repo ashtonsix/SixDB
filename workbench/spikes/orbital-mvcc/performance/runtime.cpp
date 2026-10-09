@@ -4,9 +4,10 @@
 
 namespace orbital_versioned_performance {
 namespace {
-std::size_t metadata_limit(std::size_t total) {
+std::size_t metadata_limit(std::size_t total,std::size_t offered=0) {
   if (total<1024*1024) throw std::invalid_argument("common byte limit must be at least 1 MiB");
-  return std::min<std::size_t>(total/4,1024*1024);
+  if (offered && offered>=total) throw std::invalid_argument("metadata partition must leave body budget");
+  return offered?offered:std::min<std::size_t>(total/4,1024*1024);
 }
 template<class Context>
 data::ReadData bind(const Corpus& corpus,const Context& context,std::size_t object,bool alternative) {
@@ -43,8 +44,8 @@ Runtime::~Runtime() {
   }
   arena={};orbital::worker::relinquish(lane);
 }
-Orbital::Orbital(const Corpus& corpus,std::size_t limit,data::Format format)
-    :runtime_(limit-metadata_limit(limit)),store_(need(obj::Store::open(runtime_.lane,metadata_limit(limit)))),corpus_(corpus) {
+Orbital::Orbital(const Corpus& corpus,std::size_t limit,data::Format format,std::size_t metadata_bytes)
+    :runtime_(limit-metadata_limit(limit,metadata_bytes)),store_(need(obj::Store::open(runtime_.lane,metadata_limit(limit,metadata_bytes)))),corpus_(corpus) {
   auto draft=need(store_.edit());
   for (const auto& image:corpus.images) {
     auto representation=need(data::construct(corpus.schema,store_,*runtime_.pool,image.address.object,
@@ -84,8 +85,9 @@ void Orbital::update(std::span<const orbital_bench::Operation> input,std::span<o
     output[i]={};output[i].changes=1;detail::mix(output[i].digest,1);
   }
   std::array<data::Update,64> updates;
-  for (std::size_t object=0;object<corpus_.images.size();++object) {
-    if (std::find(objects.begin(),objects.end(),object)==objects.end()) continue;
+  for (std::size_t offered=0;offered<objects.size();++offered) {
+    const auto object=objects[offered];
+    if (std::find(objects.begin(),objects.begin()+offered,object)!=objects.begin()+offered) continue;
     auto selected=need(draft.select(corpus_.images[object].address.object));
     const auto source=need(data::bind(corpus_.schema,selected));
     std::size_t used{};

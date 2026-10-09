@@ -11,9 +11,12 @@ target_link_libraries(orbital_versioned_performance_fixture PUBLIC orbital_versi
 add_executable(orbital_versioned_body_check body_check.cpp)
 sixdb_target(orbital_versioned_body_check)
 target_link_libraries(orbital_versioned_body_check PRIVATE orbital_versioned_performance_fixture)
-add_library(orbital_versioned_performance_runtime STATIC runtime.cpp bodies.cpp run.cpp)
+add_library(orbital_versioned_performance_runtime STATIC runtime.cpp bodies.cpp run.cpp ranges.cpp
+  "${CMAKE_CURRENT_SOURCE_DIR}/../metadata/orbital/descriptor/descriptor.cpp"
+  "${CMAKE_CURRENT_SOURCE_DIR}/../../../benchmarks/orbital/pmu.cpp")
 sixdb_target(orbital_versioned_performance_runtime)
 target_link_libraries(orbital_versioned_performance_runtime PUBLIC orbital_versioned_performance_fixture orbital_versioned_consumer)
+target_include_directories(orbital_versioned_performance_runtime PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/..")
 add_executable(orbital_versioned_performance_check check.cpp)
 sixdb_target(orbital_versioned_performance_check)
 target_link_libraries(orbital_versioned_performance_check PRIVATE orbital_versioned_performance_runtime)
