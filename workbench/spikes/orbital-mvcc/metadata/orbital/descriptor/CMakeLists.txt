@@ -7,7 +7,7 @@ add_executable(orbital_mvcc_descriptor_check check.cpp)
 sixdb_target(orbital_mvcc_descriptor_check)
 target_link_libraries(orbital_mvcc_descriptor_check PRIVATE orbital_mvcc_descriptor)
 add_test(NAME orbital_mvcc_descriptor_check COMMAND orbital_mvcc_descriptor_check)
-set_tests_properties(orbital_mvcc_descriptor_check PROPERTIES LABELS orbital-mvcc TIMEOUT 30)
+set_tests_properties(orbital_mvcc_descriptor_check PROPERTIES LABELS orbital-mvcc-metadata TIMEOUT 30)
 
 add_library(orbital_mvcc_descriptor_abi OBJECT abi.cpp)
 sixdb_target(orbital_mvcc_descriptor_abi)

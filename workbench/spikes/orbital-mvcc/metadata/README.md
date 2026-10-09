@@ -1,0 +1,95 @@
+# Metadata and call boundaries
+
+The question is how much state each operation actually needs, where that state
+lives, and what crosses its calls. Smaller handles alone do not answer it.
+The baseline is the withdrawn Stage 2 cut `7f73c81`; probes retain their compiler,
+target, input hashes and generated code. Sizes below are observed records or
+requested allocations, not RSS or hardware traffic.
+
+## Findings that change the design
+
+| Baseline observation | Consequence for the next comparison |
+| --- | --- |
+| Version is 88 B; its repeated ownership header is 32 B | Catalog-owned history can avoid independent reference-counted allocation for every version. Compare 8/16/32 B nodes with their actual directories, chunk slack and retirement. |
+| Info and Part are 200 B each; Representation is 160 B before arrays | Removing one field from Version cannot address the closure. Consolidate ownership and directories; test shared interpretation instead of copying the same law into every realization. |
+| A one-Part captured closure adds 600 B requested metadata; four Parts add 1,272 B | These are rejected baseline costs. Charge the entire replacement, including exports and shared records. A reduced but still bulky closure is a control, not a satisfactory endpoint. |
+| A coherent context is an 8 B owner backed by a 96 B heap enrollment | Compare final-place caller registration with allocation and lifetime work inside the read interval. Keep future discovery and alternative capture correct. |
+| Selection is 16 B, but its checked result is 24 B and returns indirectly | An 8 B descriptor borrow permits a 16 B checked result under ordinary ABI. Rich inspection need not travel with every selected access. |
+| RetainedView is 8 B but still returns indirectly | Nontrivial ownership matters independently of size. Keep stable owning state in frames and use trivial borrows across frequent calls; explicit escape remains an owning operation. |
+| The shared consumer Schema is 10,176 B on AArch64 and 15,296 B for the probed x86 configuration | Separate cold construction plans from hot controls where useful. Do not claim this storage disappeared when a cursor became 8 B. |
+| A 256-identity Allocation Group charges roughly 30–34 KiB metadata | The one-byte binding is not the allocation's total metadata. Amortization and sparse occupancy need their own accounting. |
+
+The closure measurements use eight copied interpretation bytes per Part and
+eight bytes each of logical and parent interpretation. They exclude body bytes,
+external owners/control blocks and malloc overhead. The baseline's real codec
+descriptions have their own costs. Compare like fixtures when quoting reductions.
+
+Ashton's working target is **4–8 KiB total requested metadata for 64 Objects**
+with one or four Parts each: roughly 64–128 bytes per Object after amortizing
+collection state. The first compact controls still charge about 36–37 KiB for
+the four-Part case, so they are far from that target. A candidate must report
+shared shape/law storage, directory and allocator capacity, caller records and
+external control blocks separately; moving costs outside its resource does not
+establish a reduction. Retained history and escaped access are additional
+workloads, not silently included in that initial-collection target.
+
+## Three different kinds of state
+
+**Ownership and authority** stay with the catalog, reader registration, private
+operation and any escaped access. Their stable residence matters more than a
+small return value. Catalog history must preserve absence and later discovery;
+an independently replaced physical alternative needs its own protection.
+
+**Immutable interpretation** connects a physical representation to its Parts,
+geometry and native decoder. Test what can be shared between realizations and
+what belongs to an Object or logical version. A shared record must remove
+duplication, not hide an unchanged per-version allocation. Independent Part
+retention must keep its interpretation without retaining unrelated bodies.
+
+**Call packets** carry the qualified access needed now. Prefer ordinary 8/16 B
+value returns where the meaning fits; inspect error wrappers and the enclosing
+caller. Cold construction records passed by reference and resident SIMD plans
+are different from frequent returned packets. A 32 B history record can be a
+useful resident layout while being unsuitable as a by-value return.
+
+These are candidate placements, not a frozen architecture. In particular, the
+first consolidated descriptor still has a substantial header and Part records.
+It must compete with shared-shape/interpretation alternatives under total memory
+cost and complete-operation measurements.
+
+History retention is another ownership cost, independent of node width. The
+compact Store currently admits new scopes at its current cut. Comparing an
+oldest-reader floor with the exact live cuts can reveal how much intermediate
+history is retained unnecessarily under that admission policy. Later discovery,
+prepared changes, conversion targets, selected alternatives and escaped Parts
+still need their actual owners. This is an embedded retention experiment;
+[Journal/recovery and audit obligations](../../../../orbital/spec/EXECUTION.md)
+are independent retention roots, not released by the absence of a local reader.
+
+## Evidence and executable probes
+
+- [Orbital records and closures](orbital/FINDINGS.md), [Allocation and Worker](orbital/allocation-worker.md), and [probe runner](orbital/run.py).
+- [Consumer and Ikea field/call census](consumer/ikea-census.md), [actual type probes](consumer/census.cpp), [probe runner](consumer/probe.py), and [qualification/native candidates](consumer/candidates.h).
+- [Loom findings and selected evidence](loom/README.md), [actual frame/type probes](loom/facts.cpp), [ordinary call producers](loom/boundaries.cpp), [consumers](loom/callers.cpp), and [code-generation runner](loom/codegen.py).
+
+The [performance study](../performance/README.md) owns the measured comparisons.
+Apply shared codec improvements to the mapped-LMDB arm too. Compare the old
+catalog with the new native call path before attributing a gain to new metadata.
+Include sparse and dense publication, retained-cut first discovery, alternative
+replacement, escaped Parts, release/drain and many small Objects. Keep the native
+row-key LMDB control visible: matching encoded blobs isolates foundational
+overhead but cannot establish a general database performance win.
+
+Run the integrated metadata controls independently of the withdrawn baseline
+suite (descriptor, compact histories, retention and the six consumer checks):
+
+```sh
+orb -m ubuntu cmake -S . -B build/orbital-mvcc/metadata-integration -G Ninja \
+  -DCMAKE_BUILD_TYPE=Release -DSIXDB_SPIKES=orbital-mvcc
+orb -m ubuntu cmake --build build/orbital-mvcc/metadata-integration \
+  --target orbital_mvcc_metadata_validate -j2
+```
+
+The target also compiles the descriptor ABI probe. Its ten tests use the separate
+`orbital-mvcc-metadata` CTest label and keep assertions enabled. This qualifies
+repository integration; the performance study owns measured comparisons.

@@ -25,6 +25,7 @@ target_link_libraries(orbital_mvcc_interfaces PRIVATE orbital_mvcc_baseline)
 include("${PROJECT_SOURCE_DIR}/workbench/benchmarks/orbital/workload.cmake")
 add_subdirectory(consumer)
 add_subdirectory(performance)
+add_subdirectory(metadata)
 
 foreach(check IN ITEMS orbital_versioned_lmdb_check orbital_versioned_body_check
     orbital_versioned_performance_check)

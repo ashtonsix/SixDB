@@ -12,6 +12,12 @@ deficits, so it is a **rejected experimental baseline**, not an architecture to
 finish optimizing. Its source is retained here to expose those choices to
 comparison. The original cut is `7f73c818548c9c52b53818f2eb5af3c1d2451124`;
 the older measured cut and exact source digest remain with each captured run.
+The implementation commits were soft-reset at Ashton's request: the work first
+appears on `main` as a spike in `ffe2231`. A verified
+[history bundle reference](baseline/history-artifact.json) preserves the discarded
+local history for provenance. Recover it with `workbench/tools/artifacts.py fetch`;
+the Git bundle requires retained ancestor `8412e5c`. It need not be restored to
+`main` to inspect the original sources.
 
 | Area | Current material |
 | --- | --- |
@@ -19,7 +25,7 @@ the older measured cut and exact source digest remain with each captured run.
 | Actual Loom composition | [Caller lifetimes](callers/README.md) and [executable histories](callers/loom.cpp) |
 | Disposable format consumer | [SeriesPack columns ↔ TuplePack rows](consumer/README.md), with four Parts ↔ one Part |
 | Complete-operation comparison | [LMDB controls and runner](performance/README.md), [retained baseline findings](performance/FINDINGS.md) |
-| Metadata alternatives | `metadata/orbital/`, `metadata/consumer/`, `metadata/loom/`: packet census, ordinary ABI probes and candidates in progress |
+| Metadata alternatives | [Cross-module findings](metadata/README.md), packet census, ordinary ABI probes and candidates |
 
 ## Questions driving the next candidates
 
@@ -41,8 +47,12 @@ Each candidate needs complete-operation feedback early enough to change its
 seams: the same encoded data, legal native body, read cut, lifetime, work and
 budget under Orbital and LMDB. Pair a small discriminating loop with broader
 checks across object/part counts, retained history, churn and cache footprints.
-Record throughput and adequately sampled latency separately; keep platform and
-unequal adapter costs explicit. The [baseline findings](performance/FINDINGS.md)
+Measure throughput, caller and process CPU, allocation/copy work, total and
+retained memory, reclamation work, and generated code/stack costs alongside
+adequately sampled latency. Use actual hardware counters for IPC/cache/TLB where
+available; label missing counters and keep static models separate. Include
+sustained bounded churn and release costs. Keep platform and unequal adapter
+costs explicit. The [baseline findings](performance/FINDINGS.md)
 identify cases to challenge, not performance conclusions for new candidates.
 
 The tests remain falsifiers: coherent later discovery, absence, exact retained
