@@ -1,0 +1,284 @@
+--- a/workbench/spikes/orbital-mvcc/metadata/composed/backend.h
++++ b/workbench/spikes/orbital-mvcc/metadata/composed/backend.h
+@@ -33,7 +33,8 @@
+       std::pmr::vector<Change> changes(&material_.memory);
+       changes.reserve(corpus.images.size());
+       for (const auto& image : corpus.images) {
+-        auto parts = p::need(material_.construct(image.rows, initial, costs));
++        PrivateParts parts;
++        p::need(material_.construct(parts, image.rows, initial, costs));
+         changes.push_back({image.address.object, p::need(capture(parts))});
+       }
+       auto accepted = p::need(store_.prepare(*basis, changes));
+@@ -67,20 +68,22 @@
+     return {&material_, p::need(select(scope, object, alternative))};
+   }
+ 
++private:
+   // Successful outcomes are emitted only after actual multi-Object install.
+   // Cloning may have consumed work on refusal; the installed state is intact.
+-  Result<void> update(std::span<const orbital_bench::Operation> input,
++  template<std::size_t Capacity>
++  Result<void> update_parts(std::span<const orbital_bench::Operation> input,
+       std::span<orbital_bench::Outcome> output, std::span<const std::size_t> objects) {
+     using namespace orbital_bench;
+-    if (input.empty() || input.size() > 64 || output.size() != input.size() || objects.size() != input.size())
++    if (input.empty() || input.size() > Capacity || output.size() != input.size() || objects.size() != input.size())
+       return std::unexpected(Error::invalid_argument);
+     for (std::size_t i = 0; i < input.size(); ++i)
+       if (objects[i] >= corpus().images.size() || input[i].kind != Kind::update || input[i].record.value > value_mask)
+         return std::unexpected(Error::invalid_argument);
+     {
+       std::optional<Scope> basis(std::in_place, store_);
+-      std::array<Change, 64> changes;
+-      std::array<v::Update, 64> updates;
++      std::array<Change, Capacity> changes;
++      std::array<v::Update, Capacity> updates;
+       std::size_t changed{};
+       for (std::size_t offered = 0; offered < objects.size(); ++offered) {
+         const auto object = objects[offered];
+@@ -95,12 +98,13 @@
+           row->value = input[i].record.value; row->tag = input[i].record.tag;
+           updates[used++] = {input[i].key, *row};
+         }
+-        auto parts = material_.clone(*selected, costs);
+-        if (!parts) return std::unexpected(parts.error());
+-        auto written = wb::apply(corpus().schema, *parts->shape, parts->parts(),
++        PrivateParts parts;
++        const auto cloned = material_.clone(parts, *selected, costs);
++        if (!cloned) return cloned;
++        auto written = wb::apply(corpus().schema, *parts.shape, parts.parts(),
+             std::span(updates).first(used), costs.kernel, write_costs);
+         if (!written) return written;
+-        auto owner = capture(*parts);
++        auto owner = capture(parts);
+         if (!owner) return std::unexpected(owner.error());
+         changes[changed++] = {corpus().images[object].address.object, std::move(*owner)};
+       }
+@@ -114,15 +118,22 @@
+     for (auto& outcome : output) { outcome = {}; outcome.changes = 1; detail::mix(outcome.digest, 1); }
+     return {};
+   }
++public:
++  Result<void> update(std::span<const orbital_bench::Operation> input,
++      std::span<orbital_bench::Outcome> output, std::span<const std::size_t> objects) {
++    if (input.size() == 1) return update_parts<1>(input, output, objects);
++    return update_parts<64>(input, output, objects);
++  }
+   Result<Conversion> prepare_conversion(const Scope& scope, std::size_t object,
+       v::Format format, v::ConstructionOptions options = {}) {
+     auto selected = select(scope, object, true);
+     if (!selected) return std::unexpected(selected.error());
+     auto target = store_.conversion(scope, corpus().images[object].address.object);
+     if (!target) return std::unexpected(target.error());
+-    auto parts = material_.convert(*selected, format, costs, options);
+-    if (!parts) return std::unexpected(parts.error());
+-    auto owner = capture(*parts);
++    PrivateParts parts;
++    const auto converted = material_.convert(parts, *selected, format, costs, options);
++    if (!converted) return std::unexpected(converted.error());
++    auto owner = capture(parts);
+     if (!owner) return std::unexpected(owner.error());
+     return Conversion{std::move(*target), std::move(*owner)};
+   }
+@@ -157,6 +168,8 @@
+   template<std::size_t Capacity = 64> Bodies<Capacity> bodies(bool alternative = false) const {
+     return Bodies<Capacity>{*this, alternative};
+   }
++  static constexpr std::size_t scalar_write_caller_arrays = sizeof(std::array<Change, 1>) + sizeof(std::array<v::Update, 1>);
++  // Batch maximum; not the scalar caller reservation.
+   static constexpr std::size_t write_caller_arrays = sizeof(std::array<Change, 64>) + sizeof(std::array<v::Update, 64>);
+ };
+ using Inline = Backend<compact_history::InlineShapeStore16>;
+--- a/workbench/spikes/orbital-mvcc/metadata/composed/material.h
++++ b/workbench/spikes/orbital-mvcc/metadata/composed/material.h
+@@ -17,8 +17,13 @@
+ using orbital::Error;
+ 
+ // Private, initialized Parts only cross capture after the last native writer.
+-// No address points into this movable record; Allocation owns the actual bytes.
++// Final caller-owned state; failure may leave RAII-owned partial allocations.
+ struct PrivateParts {
++  PrivateParts() = default;
++  PrivateParts(const PrivateParts&) = delete;
++  PrivateParts& operator=(const PrivateParts&) = delete;
++  PrivateParts(PrivateParts&&) = delete;
++  PrivateParts& operator=(PrivateParts&&) = delete;
+   const v::Shape* shape{};
+   std::array<oa::Allocation, 4> allocations;
+   std::array<v::WritePart, 4> writable;
+@@ -45,7 +50,7 @@
+   struct ReleaseShape { void operator()(cs::Shape* value) const { cs::release(value); } };
+   std::unique_ptr<cs::Shape, ReleaseShape> tuple_, columns_proof_;
+   std::optional<sr::TupleProof> tuple_read_;
+-  Result<PrivateParts> allocate(const v::Shape&, v::Costs&);
++  Result<void> allocate(PrivateParts&, const v::Shape&, v::Costs&);
+ public:
+   compact_history::Memory memory;
+   p::Runtime runtime;
+@@ -55,9 +60,10 @@
+   const p::Corpus& corpus() const { return corpus_; }
+   const v::Shape& shape(v::Format format) const;
+   const v::Shape& shape(cs::Selection) const;
+-  Result<PrivateParts> construct(std::span<const orbital_bench::Row>, v::Format, v::Costs&);
+-  Result<PrivateParts> clone(cs::Selection, v::Costs&);
+-  Result<PrivateParts> convert(cs::Selection, v::Format, v::Costs&, v::ConstructionOptions = {});
++  // Each destination must be fresh; discard it on failure before reuse.
++  Result<void> construct(PrivateParts&, std::span<const orbital_bench::Row>, v::Format, v::Costs&);
++  Result<void> clone(PrivateParts&, cs::Selection, v::Costs&);
++  Result<void> convert(PrivateParts&, cs::Selection, v::Format, v::Costs&, v::ConstructionOptions = {});
+   Result<cs::Shape*> proof(const PrivateParts&);
+   v::ReadData generic(cs::Selection) const;
+   orbital_bench::Outcome consume(cs::Selection, const orbital_bench::Operation&) const;
+--- a/workbench/spikes/orbital-mvcc/metadata/composed/material.cpp
++++ b/workbench/spikes/orbital-mvcc/metadata/composed/material.cpp
+@@ -1,6 +1,7 @@
+ #include "material.h"
+ #include "../../../../../orbital/src/allocation/internal.h"
+ #include <cstring>
++#include <cassert>
+ 
+ namespace orbital_mvcc::composed {
+ namespace {
+@@ -49,8 +50,9 @@
+   if (columns_proof_ && selected.shape() == columns_proof_.get()) return columns_;
+   throw std::invalid_argument("composed Shape is not this fixture's proven law");
+ }
+-Result<PrivateParts> Material::allocate(const v::Shape& shape, v::Costs& costs) {
+-  PrivateParts result; result.shape = &shape;
++Result<void> Material::allocate(PrivateParts& result, const v::Shape& shape, v::Costs& costs) {
++  assert(!result.shape);
++  result.shape = &shape;
+   for (unsigned i = 0; i < shape.part_count; ++i) {
+     const auto& part = shape.parts[i];
+     auto allocation = oa::allocate(*runtime.pool, {.bytes = part.body_bytes,
+@@ -61,37 +63,37 @@
+     result.writable[i] = {part.id, oa::bytes(result.allocations[i])};
+     costs.requested_body_bytes += part.body_bytes; ++costs.requested_parts;
+   }
+-  return result;
++  return {};
+ }
+-Result<PrivateParts> Material::construct(std::span<const orbital_bench::Row> rows,
++Result<void> Material::construct(PrivateParts& result, std::span<const orbital_bench::Row> rows,
+     v::Format format, v::Costs& costs) {
+-  auto result = allocate(shape(format), costs);
+-  if (!result) return std::unexpected(result.error());
+-  const auto built = v::construct_into(corpus_.schema, *result->shape, result->parts(), rows, costs.kernel);
++  const auto allocated = allocate(result, shape(format), costs);
++  if (!allocated) return allocated;
++  const auto built = v::construct_into(corpus_.schema, *result.shape, result.parts(), rows, costs.kernel);
+   if (!built) return std::unexpected(built.error());
+-  return result;
++  return {};
+ }
+-Result<PrivateParts> Material::clone(cs::Selection selected, v::Costs& costs) {
+-  auto result = allocate(shape(selected), costs);
+-  if (!result) return std::unexpected(result.error());
+-  for (unsigned i = 0; i < result->shape->part_count; ++i) {
+-    auto source = selected.part(result->shape->parts[i].id);
++Result<void> Material::clone(PrivateParts& result, cs::Selection selected, v::Costs& costs) {
++  const auto allocated = allocate(result, shape(selected), costs);
++  if (!allocated) return allocated;
++  for (unsigned i = 0; i < result.shape->part_count; ++i) {
++    auto source = selected.part(result.shape->parts[i].id);
+     if (!source) return std::unexpected(source.error());
+-    auto destination = result->writable[i].bytes;
++    auto destination = result.writable[i].bytes;
+     std::memcpy(destination.data(), source->address(), destination.size());
+     costs.copied_bytes += destination.size(); ++costs.copied_spans;
+   }
+-  return result;
++  return {};
+ }
+-Result<PrivateParts> Material::convert(cs::Selection selected, v::Format format,
++Result<void> Material::convert(PrivateParts& result, cs::Selection selected, v::Format format,
+     v::Costs& costs, v::ConstructionOptions options) {
+   const auto source = generic(selected);
+-  auto result = allocate(shape(format), costs);
+-  if (!result) return std::unexpected(result.error());
+-  const auto converted = v::convert_into(corpus_.schema, source, *result->shape,
+-      result->parts(), costs.kernel, options);
++  const auto allocated = allocate(result, shape(format), costs);
++  if (!allocated) return allocated;
++  const auto converted = v::convert_into(corpus_.schema, source, *result.shape,
++      result.parts(), costs.kernel, options);
+   if (!converted) return std::unexpected(converted.error());
+-  return result;
++  return {};
+ }
+ Result<cs::Shape*> Material::proof(const PrivateParts& parts) {
+   auto& owner = parts.shape->format == v::Format::rows ? tuple_ : columns_proof_;
+--- a/workbench/spikes/orbital-mvcc/metadata/composed/check.cpp
++++ b/workbench/spikes/orbital-mvcc/metadata/composed/check.cpp
+@@ -100,6 +100,22 @@
+     check(!capacity && capacity.error() == orbital::Error::capacity && unchanged == sentinels && owner.cut() == cut);
+     owner.metadata_limit(before_failure.metadata_limit);
+     check(owner.accounting().active_allocations == before_failure.active_allocations); ++refusals;
++    // Scalar dispatch must keep the same early refusal/output contract.
++    const std::array<std::size_t, 1> scalar_object{1};
++    std::array<Operation, 1> scalar_input{failed[0]};
++    std::array<Outcome, 1> scalar_output{{{.digest = 817}}};
++    const auto scalar_sentinel = scalar_output;
++    scalar_input[0].key = 2;
++    auto scalar_missing = owner.update(scalar_input, scalar_output, scalar_object);
++    check(!scalar_missing && scalar_missing.error() == orbital::Error::absent &&
++        scalar_output == scalar_sentinel && owner.cut() == cut); ++refusals;
++    scalar_input[0] = failed[0];
++    owner.metadata_limit(before_failure.metadata_live);
++    auto scalar_capacity = owner.update(scalar_input, scalar_output, scalar_object);
++    owner.metadata_limit(before_failure.metadata_limit);
++    check(!scalar_capacity && scalar_capacity.error() == orbital::Error::capacity &&
++        scalar_output == scalar_sentinel && owner.cut() == cut); ++refusals;
++    check(owner.accounting().active_allocations == before_failure.active_allocations);
+     auto partial = owner.convert(1, opposite, {.fail_after_rows = 1});
+     check(!partial && owner.cut() == cut);
+     check(owner.accounting().active_allocations == before_failure.active_allocations); ++refusals;
+@@ -171,7 +187,7 @@
+         "\"pmr_live\":%zu,\"pmr_peak\":%zu,\"pmr_calls\":%zu,\"shared_shapes\":%zu,"
+         "\"write_shape_heap\":%zu,\"shared_schema\":%zu,\"backend_record\":%zu,"
+         "\"scope\":%zu,\"body\":%zu,\"bodies1\":%zu,\"bodies64\":%zu,"
+-        "\"write_arrays\":%zu,\"private_parts\":%zu,\"pool_metadata\":%llu,"
++        "\"write_arrays\":%zu,\"scalar_write_arrays\":%zu,\"private_parts\":%zu,\"pool_metadata\":%llu,"
+         "\"pool_mapped\":%llu,\"pool_reserved\":%llu,\"arena_charge\":%llu,"
+         "\"active_allocations\":%zu,\"live_capacity\":%zu,\"held_extent\":%s,"
+         "\"borrowed_write_shape_record\":%zu,\"pool_setup_and_inventory\":%zu}\n",
+@@ -179,7 +195,7 @@
+         initial_account.metadata_live, initial_account.metadata_peak, static_cast<unsigned long long>(initial_account.pool.metadata_bytes),
+         final.metadata_live, final.metadata_peak, final.metadata_calls, final.shared_shape_bytes,
+         final.write_shape_heap_bytes, final.schema_bytes, sizeof(Backend), sizeof(typename Backend::Scope), sizeof(c::Body),
+-        sizeof(typename Backend::template Bodies<1>), sizeof(typename Backend::template Bodies<64>), Backend::write_caller_arrays,
++        sizeof(typename Backend::template Bodies<1>), sizeof(typename Backend::template Bodies<64>), Backend::write_caller_arrays, Backend::scalar_write_caller_arrays,
+         sizeof(c::PrivateParts), static_cast<unsigned long long>(final.pool.metadata_bytes),
+         static_cast<unsigned long long>(final.pool.mapped_bytes), static_cast<unsigned long long>(final.pool.reserved_bytes),
+         static_cast<unsigned long long>(final.arena_charge), final.active_allocations, final.live_capacity_bytes, held_extent.c_str(),
+@@ -199,6 +215,22 @@
+   std::printf("{\"backend\":\"%s\",\"wide_window\":true,\"held_extent\":%s,\"encoded_bytes\":%zu}\n",
+       name, extent.c_str(), corpus.images[0].encoded.size());
+ }
++void check_partial_parts() {
++  static_assert(!std::is_move_constructible_v<c::PrivateParts>);
++  p::Corpus corpus(60000, 1, 419);
++  c::Material material(corpus, 1024 * 1024, 256 * 1024);
++  v::Costs costs;
++  {
++    c::PrivateParts parts;
++    auto refused = material.construct(parts, corpus.images[0].rows, v::Format::columns, costs);
++    check(!refused && refused.error() == orbital::Error::capacity);
++    // One real Window fits; the next cannot fit the remaining Arena budget.
++    check(costs.requested_parts == 1 && material.accounting().active_allocations == 1);
++  }
++  orbital::worker::poll(material.runtime.lane, 65536);
++  check(material.accounting().active_allocations == 0);
++  std::puts("{\"partial_private_parts_cleanup\":true}");
++}
+ int main() {
+   for (auto format : {v::Format::rows, v::Format::columns}) {
+     run<c::Inline>("inline16", format);
+@@ -206,5 +238,6 @@
+   }
+   check_window_extent<c::Inline>("inline16");
+   check_window_extent<c::Directory>("directory16");
++  check_partial_parts();
+   std::puts("{\"passed\":true,\"teardown_checked\":true,\"timings\":false}");
+ }
