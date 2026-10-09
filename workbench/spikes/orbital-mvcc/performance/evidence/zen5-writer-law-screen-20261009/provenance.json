@@ -1,0 +1,55 @@
+{
+  "files_sha256": {
+    "baseline-context/measurements.csv": "54ccc0a9dc99e12b4e177545daf85ceb695cd257f0b4e7e66e9a07ce9287a83f",
+    "baseline-context/parity.json": "2d368f0f4866debcf40c901bd2b7d39bc319e3991bd38145539eadbbce06a581",
+    "baseline-context/summary.csv": "7f337da092c376ea579e876384c4a1678153e1c27836566bda99f85645930f7c",
+    "baseline/abi.json": "ce22b16e77927f9f907f5bd43ee00b09993005fd3fe0cd27e2c59d54df97bbde",
+    "baseline/binary-identity.json": "d1b0000d77e29864f204121d40a931aaad8715aedc1eb19b17d3b94bae8bf0ae",
+    "baseline/build-cost.json": "893a55d38f61924fe4f8825ffa57df8c0cc642279f35b7ce4b8ebff36858db01",
+    "baseline/measurements.csv": "b9ff362d20e653359912485191f43589d6cde24081f4baca9cfd88ea52fb7109",
+    "baseline/parity.json": "aeb47069848b1d6fee18009eaa568cb3eeef2c6fefa594153e0c9e68cbeaf9d0",
+    "baseline/qualification.json": "caa851c8c39541755caa04647921c83f47410f52b056301c09c732dacfde7d28",
+    "baseline/summary.csv": "c046086fe16169e596119206f1e2737ec8e59fd2aa16f7f591faf81698c40a9e",
+    "host.json": "c6c03d42e1e9fc32cc7c23d2421ac38e88772fb95842a67596a6d8919ecc025a",
+    "worker-result.json": "e86df605dc12f60842af6d6390a2cb196235347f7f33c78fb09fe332a7fd0097",
+    "writer-law-context/measurements.csv": "0fe043e0b600f39f037ecad514ad65c3967425c933b2c4b95efed2134527eb66",
+    "writer-law-context/parity.json": "2d368f0f4866debcf40c901bd2b7d39bc319e3991bd38145539eadbbce06a581",
+    "writer-law-context/summary.csv": "96c72f8c3efbb314dc4969831be762165fbd8e8dcbb09644be509403c04d541f",
+    "writer-law/abi.json": "b14c9bfedbc222fa8267f871f658fcd125b280f0b09cf99eb0c4a6d58e7d3d26",
+    "writer-law/binary-identity.json": "bc86d674725d0d2f8e716d19fc01971b4bfa24044cb574b13bbe0827273403b8",
+    "writer-law/build-cost.json": "2169abcfd03eac9fc0337ca91d86dd09936d35d962507cf50822f0baefebf3e3",
+    "writer-law/measurements.csv": "70c33a7c7fd0434fe7b2a12d7527325944b6d454afb3f8d429dd603faf2ee29a",
+    "writer-law/parity.json": "aeb47069848b1d6fee18009eaa568cb3eeef2c6fefa594153e0c9e68cbeaf9d0",
+    "writer-law/qualification.json": "caa851c8c39541755caa04647921c83f47410f52b056301c09c732dacfde7d28",
+    "writer-law/summary.csv": "82e15eefb669cfa1196065c9612e09b5887f1263781eb0db9bb512d8cb383560"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/baseline"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/writer-law"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/baseline-context"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/writer-law-context"
+    ]
+  ]
+}

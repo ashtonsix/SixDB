@@ -290,6 +290,67 @@ records smaller AArch64 scalar frames, removed Allocation moves and larger
 emitted update text; this capture retains the actual x86-64 executable's
 structural summaries. Neither establishes store-to-load forwarding stalls.
 
+## Shared writer-law screen
+
+[Worker 20261009T225603Z-d1b40bd6](evidence/zen5-writer-law-screen-20261009/)
+passes 232 oracle trials: 96 per quick cut and 20 per larger/contextual cut.
+The baseline is `d000430`; the treatment is Ikea's released writer-law cut1
+(`a8c185…` source map). First-three Allocation controls, Storage16 and the
+**full growth API** are fixed in both arms. Default caller state remains;
+private-state and later bounded maintenance are excluded. A fresh c8a.large
+Zen5 Spot guest runs cuts in baseline-then-treatment order, with two rotated
+quick repetitions and one contextual repetition. Complete update medians are:
+
+| 192 rows / 64 Objects, ns/update | Baseline scalar | Writer scalar | Baseline batch64 | Writer batch64 |
+| --- | ---: | ---: | ---: | ---: |
+| Inline | 881.54 | 567.48 | 630.10 | 348.35 |
+| Directory | 850.15 | 553.64 | 570.49 | 379.94 |
+| Matched native LMDB | 2017.58 | 1590.85 | 506.10 | 252.48 |
+
+Writes improve for both systems. Inline caller CPU per batch64 request falls
+630.89 → 348.91 ns; process CPU agrees. Older candidate16 batch64 is
+616.84 → 612.82 ns and generic LMDB 503.97 → 496.33 ns. Read controls remain
+in the evidence, including Inline scalar 26.30 → 28.18 ns and Directory
+batch64 26.80 → 27.84 ns: this is a write-control result, without a read win.
+
+The modest 4096-row / four-Object sample includes actual independent Series4:
+
+| ns/update, baseline → writer | Scalar | Batch64 |
+| --- | ---: | ---: |
+| Tuple Inline | 1128.25 → 766.64 | 213.53 → 180.63 |
+| Tuple Directory | 1138.29 → 787.51 | 215.69 → 187.77 |
+| Tuple mapped LMDB | 3127.49 → 2605.38 | 309.58 → 250.71 |
+| Series4 Inline | 1572.45 → 1138.52 | 241.51 → 190.78 |
+| Series4 Directory | 1688.13 → 1111.48 | 244.91 → 193.67 |
+
+Preparation/admission, copies, capacity, PMR/Pool and reclamation counters match
+between source cuts. The quick writes copy 282831 B, admit 4099 private targets,
+apply 4099 updates and perform 12297 measured writer key reads. Larger batch64
+has 259 private admissions and 45092 writer key reads; Tuple copies 6099968 B
+and Series 5967360 B. Source lookup is outside these writer probes, and the
+source/clone searches still both exist. This control changes law admission and
+native source access, rather than publication or clone volume.
+
+Initial PMR remains 6355 B Inline / 6883 B Directory, Pool metadata 15032 B,
+and resident Schema **15296 B**. The Tuple law adds 1408 live bytes in 1432
+inline slots; the containing Backend grows 896 → 2368 B including placement
+and alignment. Series engages an 8 B proof but reserves the same slots,
+including the empty Tuple optional. MappedShape reports 1488 B containing
+record, 1416 B slots and 1408 B live law. These views overlap; the original
+Schema has not been removed. Quick process peaks are roughly 5.3–5.5 MiB,
+without a useful RSS reduction signal. Larger Series held/released Pool
+metadata stays 27280 B in both cuts, with reusable backing after reader release.
+
+Both native arms separately pass 17968 composed comparisons, 16 refusals and
+ten CLI write smokes each; the [native archive](evidence/zen5-writer-law-screen-20261009/native-artifact.json)
+identifies source recipe, logs and binaries. This screen adds no sanitizer claim.
+Measured x86-64 composed update stack reservation falls only 3576 → 3544 B;
+mapped update stays 1784 B. Large caller state remains a separate discriminator.
+Batch64 has 65 samples, so p99 is the maximum; blocked source cuts and few
+repetitions keep all margins directional. All twelve table/parity files
+regenerate byte-identically. Git keeps the two distinct ABI summaries once;
+identical contextual copies and all raw captures remain in the worker archive.
+
 ## Clock-mode fault discriminator
 
 [Worker 20261009T213742Z-b9d498d3](evidence/zen5-fault-controls-20261009/feedback/measurements.csv)
@@ -328,9 +389,10 @@ is needed. Disposable validated databases are regenerated and removed.
 
 Actual publication/rolling retained readers, physical and metadata refusal,
 large-catalog correctness and finite-Group controls now exist. Full raw caller
-qualification is archived; its source and binary identity are explicit. Next
-feedback prioritizes quick paired Allocation source treatments and the composed
-shared-Shape/inline/native bridge, including Tuple1/Series4 operations. Cold
+qualification is archived; its source and binary identity are explicit. The
+writer law has useful directional support with its inline storage charged.
+Next feedback holds it fixed while comparing original/full/bounded metadata
+maintenance, then Group advice and direct Storage routes. Cold
 conditioning and broader residency/catalog/retention generality remain open.
 The source-only baseline range diagnostic explicitly names uncovered allocator,
 map and new snapshot storage; it is not a cold measurement.

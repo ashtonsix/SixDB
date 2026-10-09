@@ -20,6 +20,18 @@ from experiment import Run
 
 
 def panel(profile="resident"):
+    if profile == 'composed-context':
+        # Modest larger Object bodies and independent four-Part writes. The
+        # columns arm is contextual: LMDB's mapped Tuple is not a Series control.
+        for batch in [1,64]:
+            for initial,backends in [
+                ('rows',['composed-inline','composed-directory','lmdb-composed']),
+                ('columns',['composed-inline','composed-directory']),
+            ]:
+                yield dict(rows=4096,objects=4,workload='point-update',batch=batch,ops=4099,
+                           **{'from':initial,'retention-age':8,'metadata-bytes':16*1024*1024},
+                           backends=backends)
+        return
     if profile == 'composed-quick':
         for batch in [1,64]:
             yield dict(rows=192,objects=64,workload='point-hit',batch=batch,ops=4099,
@@ -230,6 +242,16 @@ def summarize(output):
                     base[f"{label}_{name}"]=f.get(name)
         if result.get('report_schema',1)>=3:
             base['mapped_shape_metadata_bytes']=result['mapped_shape_metadata_bytes']
+            # Add fields only for captures which report them, keeping historical
+            # report regeneration stable. These inline views overlap records.
+            if 'mapped_shape_record_bytes' in result:
+                for name in ['mapped_shape_record_bytes','mapped_write_control_live_bytes',
+                             'mapped_write_control_slots_bytes']:
+                    base[name]=result[name]
+                for label,field in [('initial','footprint_initial'),('held','footprint_after_interval'),('released','footprint_after_reader_release')]:
+                    f=result.get(field,{})
+                    for name in ['write_control_live_bytes','write_control_slots_bytes']:
+                        base[f'{label}_{name}']=f.get(name)
             for name in ['private_admissions','key_reads','full_rows_read','applied_updates']:
                 base[f'write_batch_{name}']=result['write_batch_probe'][name]
             for label,field in [('initial','footprint_initial'),('held','footprint_after_interval'),('released','footprint_after_reader_release')]:
@@ -378,7 +400,7 @@ def main():
     parser.add_argument("--workspace", type=Path, default=ROOT/"build/workspaces/orbital-mvcc-performance")
     parser.add_argument("--cpu", type=int, default=2)
     parser.add_argument("--repetitions", type=int, default=5)
-    parser.add_argument("--profile", choices=["feedback","catalog","churn","groups","faults","quick","composed-quick","resident"], default="feedback")
+    parser.add_argument("--profile", choices=["feedback","catalog","churn","groups","faults","quick","composed-quick","composed-context","resident"], default="feedback")
     parser.add_argument("--march", default="")
     parser.add_argument("--tune", default="generic")
     parser.add_argument("--jobs", type=int, default=2)

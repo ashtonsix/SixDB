@@ -139,6 +139,22 @@ The retained first composed screen pairs current Allocation against the
 cumulative compact, Storage16 and growth-core source treatment. Two repetitions give quick feedback;
 their tails do not qualify a design.
 
+`composed-context` adds 4096 rows in four Objects, batch1/64 updates and rolling
+old readers. Tuple includes matched native LMDB; four independent Series Parts
+are a contextual composed case. One repetition gives a modest directional
+sample, with preparation, CPU, copies, capacity and reclamation recorded.
+
+The separate `writer_law_screen.sh` requires an isolated source cut containing
+the released [writer-law control](../metadata/consumer/shape-write.md) and its
+integration patch. It fixes the first-three Allocation controls, Storage16 and
+the full growth API in both cuts, then runs default composed before writer-law.
+Caller-owned private state and later maintenance controls remain separate.
+The shared writer law owns prepared controls in stationary inline slots; their
+live-byte and slot views overlap the containing Backend/MappedShape records.
+The fixture's original Schema remains resident and charged. Recover the exact
+captured cuts and run each profile directly to repeat a retained comparison;
+the screen script applies source treatments to the original isolated baseline.
+
 Composed reads use the protected native Tuple bridge. `--from columns` instead
 uses four real Series Parts and the generic consumer with its resident Schema;
 this is a contextual Orbital case, without a fictitious mapped-LMDB counterpart.
