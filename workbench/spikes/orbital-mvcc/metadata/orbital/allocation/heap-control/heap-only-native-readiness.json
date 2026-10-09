@@ -1,0 +1,144 @@
+{
+  "date": "2026-10-10",
+  "status": "native-smoke-and-census-passed",
+  "base": "../routes/direct-domain/direct-domain4-cut.json",
+  "cut": "heap-only-cut.json",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)",
+  "flags": "-O3 -g; assertions enabled; no SIXDB_TRIM_COMPARE",
+  "native_page": 4096,
+  "runtime_patch_sha256": "6e75cf6f0e35a40b089172c3aa762bc9ab9eb78f12b0286dbfe8e85a1c2e2ff1",
+  "base_runtime_hashes_verified": true,
+  "runtime_hashes_match_cut": true,
+  "patch_replay_identical": true,
+  "native_smoke_runs": 1,
+  "native_census_runs": 1,
+  "native_smoke": [
+    {
+      "palette": "A",
+      "native_page": 4096,
+      "Group": 1448,
+      "FiniteGroup": 448,
+      "control_heap_requested": 1968,
+      "metadata_charge": 5256,
+      "public_metadata": 5256,
+      "payload_reserved": 2605056
+    },
+    {
+      "palette": "B",
+      "native_page": 4096,
+      "Group": 1448,
+      "FiniteGroup": 448,
+      "control_heap_requested": 2488,
+      "metadata_charge": 6792,
+      "public_metadata": 6792,
+      "payload_reserved": 4489216
+    }
+  ],
+  "requested_census": [
+    {
+      "storage": 4,
+      "palette": "A",
+      "Group": 1448,
+      "FiniteGroup": 448,
+      "control_heap_requested": 1968,
+      "live_capacity": 80,
+      "trim_capacity": 1272,
+      "discard_capacity": 40,
+      "group_metadata_charge": 5256,
+      "empty_pool": 0,
+      "populated_pool": 5256,
+      "group_vector_capacity_bytes_excluded_from_public_pool": 8,
+      "native_page_bytes": 4096,
+      "payload_reserved": 2605056
+    },
+    {
+      "storage": 4,
+      "palette": "B",
+      "Group": 1448,
+      "FiniteGroup": 448,
+      "control_heap_requested": 2488,
+      "live_capacity": 144,
+      "trim_capacity": 2192,
+      "discard_capacity": 72,
+      "group_metadata_charge": 6792,
+      "empty_pool": 0,
+      "populated_pool": 6792,
+      "group_vector_capacity_bytes_excluded_from_public_pool": 8,
+      "native_page_bytes": 4096,
+      "payload_reserved": 4489216
+    }
+  ],
+  "build_inputs": [
+    {
+      "path": "CMakeLists.txt",
+      "sha256": "d6adfff37e73681da99d623c313352fe259454de4c5dc8f6dfe80e0d447d25fd"
+    },
+    {
+      "path": "probes/native_fixture.h",
+      "sha256": "9e9c507da474295814438e717659bc369efdb77e31bb66f07355d6b2db16edf3"
+    },
+    {
+      "path": "probes/smoke.cpp",
+      "sha256": "bdf5753334b4b97b12715d5f5486be4b5072daef1e690b26656ba0960bbc8db5"
+    },
+    {
+      "path": "probes/census.cpp",
+      "sha256": "c062740c42e3f7df1c015b6aeb5d9467431f39027f8f61261f285699bb4a9638"
+    }
+  ],
+  "binaries": [
+    {
+      "path": "native/liborbital.a",
+      "sha256": "c227fc0156ad8243466f9e2e2a29a565bc90a7a4e3b62325ff8d8df1862de2c0"
+    },
+    {
+      "path": "native/heap_only_smoke",
+      "sha256": "1f77a4abd2d38610fb667b753c0b3b0a78edc2b74e5a5274c3ff3ac45be2b43f"
+    },
+    {
+      "path": "native/heap_only_census",
+      "sha256": "058503243600cbb7ee2e2765ee8117c4b7ee421483919328ea953ca87ce8f28a"
+    }
+  ],
+  "logs": [
+    {
+      "path": "heap_only_smoke.log",
+      "sha256": "4606a7c9a83d3e8e1a13f3046c4bc2b78a986d897de698f13de17177d47fb436",
+      "exit_code": 0
+    },
+    {
+      "path": "heap_only_census.log",
+      "sha256": "08b92a9f6a8661b09eb8f52b951210ade92bdd073c6c85ee2ea6e0579dc39acf",
+      "exit_code": 0
+    }
+  ],
+  "independent_review": "Only existing four heap patch files changed; original Direct4 hashes intact; replay byte-identical; internal.h and full 318/548 span reserves unchanged; payload geometry and VM unchanged.",
+  "setup_correction": "An initial git apply inside the ignored repository subtree silently skipped paths. Unpatched smoke reported original 7384/8400 costs; independent census aborted. Explicit patch -p1 -d applied the same patch, expected changed hashes were checked, and the two corrected binaries were rebuilt before the one successful smoke/census run recorded here.",
+  "limits": [
+    "Ordinary native allocation/hold/release/close smoke and actual requested census only; failure-history matrix was not rerun for heap-only.",
+    "The qualified bounded16-plus-heap cut and its six-check receipt remain separate and unchanged.",
+    "Requested extent is logical accounting, not allocator usable extent, RSS or arena retention.",
+    "Native 4 KiB only; 16 KiB geometry and allocator footprint remain modeled, not natively qualified.",
+    "No timing, sanitizer, archive or production/main/index/Tooling changes."
+  ],
+  "root_review": {
+    "runtime_build_binary_log_hashes_verified": 23,
+    "changed_files": "Exactly the existing four heap-patch files; original full-reserve internal.h unchanged."
+  },
+  "retained_recipe_reproduction": {
+    "status": "Both smoke and census passed after rebuilding with retained CMake/probes; no matrix rerun.",
+    "CMakeLists_sha256": "6e1bb8e12cca5a0638bf1b1843472beb0ae51c41e598bc69ac70f26e030d415b",
+    "smoke_sha256": "bdf5753334b4b97b12715d5f5486be4b5072daef1e690b26656ba0960bbc8db5",
+    "census_sha256": "c062740c42e3f7df1c015b6aeb5d9467431f39027f8f61261f285699bb4a9638",
+    "fixture": "../../shape/native_fixture.h",
+    "fixture_sha256": "9e9c507da474295814438e717659bc369efdb77e31bb66f07355d6b2db16edf3",
+    "binaries": {
+      "smoke": "fd386e2ab709f9bbe8158fd204a0544b3e92d3972202eb0850d6f1a96abf4cc7",
+      "census": "63a67e0f577c0d9df1d7417c62208c46b537e76d61e1661a256ca1c25b673ecc"
+    },
+    "logs": {
+      "smoke": "4606a7c9a83d3e8e1a13f3046c4bc2b78a986d897de698f13de17177d47fb436",
+      "census": "08b92a9f6a8661b09eb8f52b951210ade92bdd073c6c85ee2ea6e0579dc39acf"
+    }
+  }
+}

@@ -57,8 +57,9 @@ here. Fetch either with `workbench/tools/artifacts.py fetch` into ignored output
 
 ## Further treatments
 
-Apply these after the three-control patch, in order. Each treatment keeps its
-own source cut; production Allocation is unchanged.
+These compose after the three-control patch through their identified source
+cuts. Each treatment keeps its own inputs; later placement/batching controls
+are alternatives rather than a required sequence. Production Allocation is unchanged.
 
 | Treatment | Populated A Pool metadata | What changes |
 | --- | ---: | --- |
@@ -66,6 +67,9 @@ own source cut; production Allocation is unchanged.
 | [Pure growth](growth.patch), [qualification](growth-qualification.json) | 15,040 B | Deletes protected-footprint tracking and implicit growth writes. Storage remains 16 B after alignment. |
 | [Group advice](../heat/README.md) | 10,456 B | Advisory heat follows the Group, matching current reclamation granularity. |
 | [Shared route controls](routes/) | 8,416 / 7,392 B | Storage8 / Storage4 recover a shared route; checked8 and packed4 compare the same fallible retention API. |
+| [Direct-Domain controls](routes/direct-domain/README.md) | 8,408 / 7,384 B | Remove the shared header-pointer load with the same checked retention policy. |
+| [Bounded16 trim](trim-batch16/README.md) | 6,144 B | Smaller reserve, but fragmented drains require more jobs and repeated scans. |
+| [Exact metadata heap](heap-control/README.md) | 5,256 B full inventory / 4,016 B with batch16 | Same placement patch on either cut; payload VM and replies retain their owners. |
 
 Numbers are observed requested Pool metadata on the 4 KiB AArch64 guest, before
 Arena/Pool setup, caller state and Object/Representation metadata. Even the

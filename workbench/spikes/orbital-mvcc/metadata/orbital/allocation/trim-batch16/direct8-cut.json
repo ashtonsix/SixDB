@@ -1,0 +1,110 @@
+{
+  "date": "2026-10-10",
+  "base": "../routes/direct-domain/direct-domain8-cut.json",
+  "source": "/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/trim-batch16/direct8",
+  "scope": "Separate bounded16 trim inventory and conservative current-cold warm-pass deferral; no persistent Group state, public API or main runtime/index changes",
+  "patches_in_order": [
+    {
+      "path": "direct8-batch16.patch",
+      "sha256": "14141ae18b96653e4654b9b3d77ad7b419f5162ab6dd5c84f94c797b25c7c446"
+    },
+    {
+      "path": "comparison-counters.patch",
+      "sha256": "c6c0766b863271cbe1034199c168f1448c90e91696450028b4f534244873a801"
+    }
+  ],
+  "runtime_inputs": [
+    {
+      "path": "orbital/include/orbital/allocation.h",
+      "base_sha256": "f8d070ca801238c8581761fcc6cf48d297d7ef5c1bd723139ec25089516ea317",
+      "sha256": "f8d070ca801238c8581761fcc6cf48d297d7ef5c1bd723139ec25089516ea317",
+      "changed": false
+    },
+    {
+      "path": "orbital/include/orbital/preparation.h",
+      "base_sha256": "5a50bb22b0e719a6f98be8b97eb57196e2a703324ea9f383a222edfe12110e38",
+      "sha256": "5a50bb22b0e719a6f98be8b97eb57196e2a703324ea9f383a222edfe12110e38",
+      "changed": false
+    },
+    {
+      "path": "orbital/include/orbital/types.h",
+      "base_sha256": "f16fa83013aadafe0cb539e06dc56834d894605e8419bebf32fa17b53abfe00b",
+      "sha256": "f16fa83013aadafe0cb539e06dc56834d894605e8419bebf32fa17b53abfe00b",
+      "changed": false
+    },
+    {
+      "path": "orbital/include/orbital/worker.h",
+      "base_sha256": "5a57d7745ea210734241786178df710bec086d9e4193cb94815132ce668be09f",
+      "sha256": "5a57d7745ea210734241786178df710bec086d9e4193cb94815132ce668be09f",
+      "changed": false
+    },
+    {
+      "path": "orbital/src/allocation/allocation.cpp",
+      "base_sha256": "3b503b9af3f2dc1df92979ab9a2a5f6b28d52aab86547eef7e285847e7c546c2",
+      "sha256": "d829b3b28dccf5909ed03522be8e99a48480c0dda5191dad2e48b74bcde69e00",
+      "changed": true
+    },
+    {
+      "path": "orbital/src/allocation/arena.cpp",
+      "base_sha256": "5c884a6b17e2d272c4790ac2db729e054c3c086cec4197104bfad00798ca5fb2",
+      "sha256": "5c884a6b17e2d272c4790ac2db729e054c3c086cec4197104bfad00798ca5fb2",
+      "changed": false
+    },
+    {
+      "path": "orbital/src/allocation/finite.cpp",
+      "base_sha256": "2c1c8f88e4733213926f81ab2b580c61892c80105a0a5464505421b3e046c432",
+      "sha256": "2c1c8f88e4733213926f81ab2b580c61892c80105a0a5464505421b3e046c432",
+      "changed": false
+    },
+    {
+      "path": "orbital/src/allocation/finite.h",
+      "base_sha256": "fc479f5419b2f74f84ecd492fb0ceb9fc05cc9ee638dd2eaa0d44bdbb7ed03bb",
+      "sha256": "fc479f5419b2f74f84ecd492fb0ceb9fc05cc9ee638dd2eaa0d44bdbb7ed03bb",
+      "changed": false
+    },
+    {
+      "path": "orbital/src/allocation/group.cpp",
+      "base_sha256": "fc9a8630a2ef255a711d98f4afbc9c3385f8b818ffc2a40d9593f9b0113d8798",
+      "sha256": "c4ef98f41f5f1b7c795c2960f5093ec1d09eb3cad74686e554b3180ddba42761",
+      "changed": true
+    },
+    {
+      "path": "orbital/src/allocation/internal.h",
+      "base_sha256": "a46c8a5b40bb6586b022fc904db7b996c9457e4ad79db505131138222a10b5bb",
+      "sha256": "55a3ce9a9e7442a8e790fcbed934f67d67139e43d0578f76095b334f5c9d7721",
+      "changed": true
+    },
+    {
+      "path": "orbital/src/allocation/window.cpp",
+      "base_sha256": "f527db3f07c0cdeb23fc3d22b9cfc9829cc4a93bf4ba3e71281f3b0608ea02ce",
+      "sha256": "f527db3f07c0cdeb23fc3d22b9cfc9829cc4a93bf4ba3e71281f3b0608ea02ce",
+      "changed": false
+    },
+    {
+      "path": "orbital/src/types.cpp",
+      "base_sha256": "8fb36e1d5f33cf0cef19243ab72f9907e527d068efec53a3fab22f89d19a962f",
+      "sha256": "8fb36e1d5f33cf0cef19243ab72f9907e527d068efec53a3fab22f89d19a962f",
+      "changed": false
+    },
+    {
+      "path": "orbital/src/worker.cpp",
+      "base_sha256": "8d4593f17951bb40433635de30470ffffa19d8dcbaf026009c2645894df503dd",
+      "sha256": "8d4593f17951bb40433635de30470ffffa19d8dcbaf026009c2645894df503dd",
+      "changed": false
+    }
+  ],
+  "build": {
+    "compiler": "Clang 21.1.8",
+    "standard": "C++23",
+    "flags": "-O3 -g -fno-fast-math -ffp-contract=off -Wall -Wextra -Wpedantic",
+    "assertions": true,
+    "plain_compare_macro": 0
+  },
+  "native_readiness": "native-readiness.json",
+  "replay": "Copy frozen base orbital directory, then git apply the two patches in order; recipe replay matched every runtime byte",
+  "limits": [
+    "SIXDB_TRIM_COMPARE=1 grows private PoolState and performs logical counting; omit in census/timing builds",
+    "Warm pass waits for current-cold pending/retained spans even when cold enrollment completed",
+    "Span count bounded; owner census/live coverage, pages per span, total Pool jobs and fairness under mutations remain unbounded"
+  ]
+}

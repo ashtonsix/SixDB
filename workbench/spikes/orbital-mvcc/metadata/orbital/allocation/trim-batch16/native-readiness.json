@@ -1,0 +1,79 @@
+{
+  "date": "2026-10-10",
+  "scope": "Separate bounded16 control over frozen Direct4 with Direct8 compatibility; initial focused native correctness only",
+  "flags": "-std=c++23 -O3 -g -fno-fast-math -ffp-contract=off -Wall -Wextra -Wpedantic; assertions enabled; SIXDB_TRIM_COMPARE absent",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "machine": "aarch64",
+  "native_page_bytes": 4096,
+  "results": [
+    {
+      "profile": "direct4",
+      "test": "reclamation",
+      "status": 0,
+      "seconds": 0.023210172992548905,
+      "output": "reclamation failures, asynchronous progress, capacity wakes and foreign close pass",
+      "binary_sha256": "47fee53940a34b5e50cea68072855d89f843bb62184f366f66be8af381a757f2"
+    },
+    {
+      "profile": "direct4",
+      "test": "finite",
+      "status": 0,
+      "seconds": 0.017225129005964845,
+      "output": "finite: six native geometries, retained homes, binding, page unions and trim races passed",
+      "binary_sha256": "363ba121b8b7bf33dc172292e04afb027edff2cefa73b142458b06ea32e282c3"
+    },
+    {
+      "profile": "direct4",
+      "test": "lifetime",
+      "status": 0,
+      "seconds": 0.0323983840062283,
+      "output": "lifetime: sole pins, retained Holds, foreign returns, reuse, Pool removal and budget wakes pass",
+      "binary_sha256": "7bdba98c4724a0433412a92ff2ab0789a565dbe0b56ca0b4905bf70138340b8b"
+    },
+    {
+      "profile": "direct8",
+      "test": "reclamation",
+      "status": 0,
+      "seconds": 0.015071878995513543,
+      "output": "reclamation failures, asynchronous progress, capacity wakes and foreign close pass",
+      "binary_sha256": "fb6603d3bf242561895959d3cd46721458d9d782e6d0c32d174f00320e21a14e"
+    },
+    {
+      "profile": "direct8",
+      "test": "finite",
+      "status": 0,
+      "seconds": 0.011963836994254962,
+      "output": "finite: six native geometries, retained homes, binding, page unions and trim races passed",
+      "binary_sha256": "0a02cacd8f7e32d93c08396c2eb743c56c1561039b61ffc3939269ccccd281f8"
+    },
+    {
+      "profile": "direct8",
+      "test": "lifetime",
+      "status": 0,
+      "seconds": 0.01492471300298348,
+      "output": "lifetime: sole pins, retained Holds, foreign returns, reuse, Pool removal and budget wakes pass",
+      "binary_sha256": "b00d62bd1b8736f02298295921497c235f830a26c74e5d8abe38afea456ecc47"
+    }
+  ],
+  "frozen_tests": {
+    "reclamation": "8bfdc552d83ef61e50ae1257840128ecad84ad00322f64909632a75068ed89c1",
+    "finite": "79c35aaeda988e8547cb8b50b19bceeef439af287c9fb34e4112fc8d3b8194c7",
+    "lifetime": "8a5273717d4d47b4e62bd127ab3f7df0db1273a7752585503a09370e3444487a"
+  },
+  "limits": [
+    "No broad sanitizer matrix or campaign archive",
+    "Existing tests do not establish overflow boundary or sustained trim-heavy performance; consequence driver owned by root",
+    "No owner scan bound or fairness claim under continuing remapping"
+  ],
+  "full_receipt": "build/orbital-mvcc-metadata/trim-batch16/native-readiness.json",
+  "full_receipt_sha256": "f4be5ca5d674ecb03d9ae967c3261a9d866e2e8558f67f4fd1d79e58000ebc10",
+  "comparison_counter_smoke": {
+    "profile": "direct4",
+    "test": "reclamation",
+    "status": 0,
+    "comparison_macro": 1,
+    "seconds": 0.018925488999229856,
+    "output": "reclamation failures, asynchronous progress, capacity wakes and foreign close pass",
+    "binary_sha256": "5820a4a04ca950c1068fa0095a4b356562bfbffe73793abdb789309fddec3843"
+  }
+}

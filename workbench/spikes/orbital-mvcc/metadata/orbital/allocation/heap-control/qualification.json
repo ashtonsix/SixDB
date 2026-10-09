@@ -1,0 +1,200 @@
+{
+  "date": "2026-10-10",
+  "status": "native-qualified",
+  "base": "../trim-batch16/native-readiness.json",
+  "compiler": "Clang 21.1.8",
+  "flags": "-O3 -g; assertions enabled",
+  "native_page": 4096,
+  "runtime_patch_sha256": "6e75cf6f0e35a40b089172c3aa762bc9ab9eb78f12b0286dbfe8e85a1c2e2ff1",
+  "native_smoke": [
+    {
+      "palette": "A",
+      "control_heap_requested": 1968,
+      "metadata_charge": 4016,
+      "payload_reserved": 2605056
+    },
+    {
+      "palette": "B",
+      "control_heap_requested": 2488,
+      "metadata_charge": 4600,
+      "payload_reserved": 4489216
+    }
+  ],
+  "limits": [
+    "Requested heap charge excludes allocator chunk/arena overhead and process RSS.",
+    "Observed usable bytes are an alternative footprint observation, not additional charge.",
+    "16 KiB geometry remains modeled; usable samples use those sizes on the 4 KiB guest.",
+    "Native behavior qualification only; no timing, sanitizer or weak-memory claim."
+  ],
+  "runtime_hashes_match_native_quick_cut": true,
+  "base_runtime_hashes_match_frozen_bounded16_cut": true,
+  "native_tests_passed": 6,
+  "native_tests_failed": 0,
+  "tests": [
+    {
+      "target": "heap_allocation",
+      "source_sha256": "e99d0efcfce8242c48f7122e0ed9ebb9dd6d0b7888e2588a25a2bf2e14d38fcc",
+      "binary_sha256": "4bf0599f74dca29faff06290d46e0aba7558599ccbccdb3a85e7dbfc6cba85c9"
+    },
+    {
+      "target": "heap_lifetime",
+      "source_sha256": "8a5273717d4d47b4e62bd127ab3f7df0db1273a7752585503a09370e3444487a",
+      "binary_sha256": "8ceb4c9afbea52b561ce82edc3539227d012e61c9ef29869b391c25596cd87d8"
+    },
+    {
+      "target": "heap_preparation",
+      "source_sha256": "372ee4ffcca481f0cd48ecf3577cf23eb0cbdd5207b450dba3bf007e9bca563c",
+      "binary_sha256": "c45320e9fc4591e7f5eadc5d6fd956d81da80c2a858b5a5fcafc591346bb8e51"
+    },
+    {
+      "target": "heap_reclamation",
+      "source_sha256": "1ce34f00b283ff1e8b5de6a0945f4a706f553d8cf0ffe0cb351217daabe013e7",
+      "binary_sha256": "f9bcd12882a41c1de7cf43047ee1c1f6d6c5368ccfabd9e4c57b43531bab1627"
+    },
+    {
+      "target": "heap_budget",
+      "source_sha256": "3d0fd333dc20cd8831a0251f4c45c11aff4dc60d1ca83347d4dd51e66c656a4b",
+      "binary_sha256": "69a9f6adae9653005769d3dc289d551d522faf9d060553529052d16a86877622"
+    },
+    {
+      "target": "heap_finite",
+      "source_sha256": "4bc5b5dd08452de59aa4fc68d1403fad4b5421ae623243a111d2eb672ce14cf6",
+      "binary_sha256": "2d7b0d5b7419ecca53541d44b8fe6a8c9079aa4f872ffe1151358e09b74fe1c4"
+    }
+  ],
+  "test_adaptation_patch_sha256": "130249585e38f60bc6509561b4a75b513de0f73d4a8da16e1400fec47f6dae57",
+  "test_inputs": [
+    {
+      "path": "tests/allocation.cpp",
+      "base_sha256": "e99d0efcfce8242c48f7122e0ed9ebb9dd6d0b7888e2588a25a2bf2e14d38fcc",
+      "sha256": "e99d0efcfce8242c48f7122e0ed9ebb9dd6d0b7888e2588a25a2bf2e14d38fcc",
+      "changed": false
+    },
+    {
+      "path": "tests/lifetime.cpp",
+      "base_sha256": "8a5273717d4d47b4e62bd127ab3f7df0db1273a7752585503a09370e3444487a",
+      "sha256": "8a5273717d4d47b4e62bd127ab3f7df0db1273a7752585503a09370e3444487a",
+      "changed": false
+    },
+    {
+      "path": "tests/window.cpp",
+      "base_sha256": "5992f0c755bf0de89510490ca0f11686f3b4278aa6423d77b263e8ce813d4b2b",
+      "sha256": "5992f0c755bf0de89510490ca0f11686f3b4278aa6423d77b263e8ce813d4b2b",
+      "changed": false
+    },
+    {
+      "path": "tests/preparation.cpp",
+      "base_sha256": "1a6653bd63240e14036e71504660cf8d7e883b1c4dd5aa18129d97e4337ea89f",
+      "sha256": "372ee4ffcca481f0cd48ecf3577cf23eb0cbdd5207b450dba3bf007e9bca563c",
+      "changed": true
+    },
+    {
+      "path": "tests/returns.cpp",
+      "base_sha256": "d070335a4e195b7a339329f8aeed7bf69a9e2fb50e4f76b41c292b6033e637c6",
+      "sha256": "d070335a4e195b7a339329f8aeed7bf69a9e2fb50e4f76b41c292b6033e637c6",
+      "changed": false
+    },
+    {
+      "path": "tests/reclamation.cpp",
+      "base_sha256": "8bfdc552d83ef61e50ae1257840128ecad84ad00322f64909632a75068ed89c1",
+      "sha256": "1ce34f00b283ff1e8b5de6a0945f4a706f553d8cf0ffe0cb351217daabe013e7",
+      "changed": true
+    },
+    {
+      "path": "tests/budget.cpp",
+      "base_sha256": "3d0fd333dc20cd8831a0251f4c45c11aff4dc60d1ca83347d4dd51e66c656a4b",
+      "sha256": "3d0fd333dc20cd8831a0251f4c45c11aff4dc60d1ca83347d4dd51e66c656a4b",
+      "changed": false
+    },
+    {
+      "path": "tests/finite.cpp",
+      "base_sha256": "79c35aaeda988e8547cb8b50b19bceeef439af287c9fb34e4112fc8d3b8194c7",
+      "sha256": "4bc5b5dd08452de59aa4fc68d1403fad4b5421ae623243a111d2eb672ce14cf6",
+      "changed": true
+    }
+  ],
+  "build_recipe": {
+    "path": "build/orbital-mvcc-metadata/heap-control/CMakeLists.txt",
+    "sha256": "3e13e7c0f7966f42d7ae17f2bc7123ea72987c408e81a4a812087e3b212020de"
+  },
+  "smoke": {
+    "path": "probes/smoke.cpp",
+    "sha256": "bdf5753334b4b97b12715d5f5486be4b5072daef1e690b26656ba0960bbc8db5",
+    "binary_sha256": "8fa35505e8087eab2ca305f7c15a78c7eb10da2df7755c24b85fc4e2a8102041"
+  },
+  "consequential_histories": [
+    "Exact-sized metadata ENOMEM after real payload reservation in A and B, synchronous and deferred.",
+    "Metadata ENOMEM reports capacity; failed payload mmap reports io.",
+    "No value exposure or active/preparation pin after heap failure.",
+    "Partial reservation and logical charge remain owned through payload munmap failure and successful retry.",
+    "Prepared cancellation, shared live neighbor and uncertain-page cleanup.",
+    "Paused retirement; final owner callback settles refunds.",
+    "Budget refusal before explicit VM and exact-budget prepared reuse."
+  ],
+  "review": "Read-only final review found no consequential defect in the runtime cut.",
+  "observed_usable_samples": {
+    "environment": "glibc2.42 on4KiB AArch64guest; allocator usable extents only",
+    "bounded16": {
+      "A": 4064,
+      "B": 4640
+    },
+    "metadata": {
+      "A": 1976,
+      "B": 2488
+    },
+    "16KiB_geometry_sizes_allocated_on4KiB_guest": {
+      "metadata_A": 1432,
+      "metadata_B": 1576,
+      "bounded16_A": 3456,
+      "bounded16_B": 3616
+    }
+  },
+  "link_dependencies": [
+    {
+      "path": "build/orbital-mvcc/native/ikea/libikea_seriespack.a",
+      "sha256": "3163e1c35a5d086c625af3657df0f2079f34f52caafbb45263b317df30885d40"
+    },
+    {
+      "path": "build/orbital-mvcc/native/ikea/libikea_tuplepack.a",
+      "sha256": "1d1f9f1a57cadd5e15879e8480b730dbd3832e1c506f918ef559fde3947c8370"
+    },
+    {
+      "path": "build/orbital-mvcc/native/ikea/libikea_core.a",
+      "sha256": "d83a85cfa413df81400d2970dc80e1622a30b876d08b2b2b22e3f87795205ad8"
+    }
+  ],
+  "patch_replay_identical": true,
+  "independent_review": {
+    "result": "No consequential runtime defect;41 input/binary/recipe hashes and both patch replays verified.",
+    "evidence_repair": "Independent review could recover preparation and reclamation outputs only; root reran the other four existing native binaries and retained their outputs. All four passed.",
+    "confirmation": "build/orbital-mvcc-metadata/heap-control/root-confirmation/qualification.json",
+    "confirmation_sha256": "93631c3e8a32329bd8c1f79a64fabf83e377e7f48a4909d749ff34fd4e648360",
+    "comparison": "../trim-batch16/comparison-qualification.json",
+    "results": [
+      {
+        "target": "allocation",
+        "exit_code": 0,
+        "binary_sha256": "4bf0599f74dca29faff06290d46e0aba7558599ccbccdb3a85e7dbfc6cba85c9",
+        "log_sha256": "d7f2a12abca39a39211ad11d6366635a54719e38694b9ae70636ff7ea99086bb"
+      },
+      {
+        "target": "lifetime",
+        "exit_code": 0,
+        "binary_sha256": "8ceb4c9afbea52b561ce82edc3539227d012e61c9ef29869b391c25596cd87d8",
+        "log_sha256": "2f3f6ab580d1f4542409ff417f429c880f75b919f3839c9e7e9a1429d0745fe6"
+      },
+      {
+        "target": "budget",
+        "exit_code": 0,
+        "binary_sha256": "69a9f6adae9653005769d3dc289d551d522faf9d060553529052d16a86877622",
+        "log_sha256": "06dcadeceef066b78b77fb652687dc975cc7f4c467d89aae7550a1e8758040ec"
+      },
+      {
+        "target": "finite",
+        "exit_code": 0,
+        "binary_sha256": "2d7b0d5b7419ecca53541d44b8fe6a8c9079aa4f872ffe1151358e09b74fe1c4",
+        "log_sha256": "35f6b862afb7cf91cfb61020467c6711fb49d5b22d2d5de9061f8ed61612b546"
+      }
+    ]
+  }
+}

@@ -1,0 +1,68 @@
+diff --git a/orbital/src/allocation/internal.h b/orbital/src/allocation/internal.h
+--- a/orbital/src/allocation/internal.h
++++ b/orbital/src/allocation/internal.h
+@@ -27,6 +27,7 @@
+ namespace detail {
+ constexpr std::uint32_t returning = std::uint32_t{1} << 23;
+ constexpr std::uint16_t group_identities = 256;
++constexpr std::size_t trim_batch_spans = 16;
+ 
+ 
+ struct Job {
+diff --git a/orbital/src/allocation/allocation.cpp b/orbital/src/allocation/allocation.cpp
+--- a/orbital/src/allocation/allocation.cpp
++++ b/orbital/src/allocation/allocation.cpp
+@@ -466,6 +466,20 @@
+   // One Pool-wide floor, shared by finite pages and virtual windows. Prefer
+   // cold groups, then permit warmer inventory when the requested trim needs it.
+   for (unsigned pass = 0; pass < 2; ++pass) {
++    // A bounded cold batch can leave idle pages for the next owner retry.
++    // Conservatively wait for its reply before selecting warmer inventory;
++    // existing pending/failed records also cover repeated calls while it runs.
++    if (pass && std::any_of(pool.internal->groups.begin(), pool.internal->groups.end(),
++        [](const auto& group) {
++          return group->last_use.temperature.value_or(Temperature::cold) == Temperature::cold &&
++              (group->trim_pending || !group->trimming.empty());
++        })) {
++#if SIXDB_TRIM_COMPARE
++      ++pool.internal->trim_comparison.warm_pass_deferrals;
++      pool.internal->trim_comparison.last_call_deferred_warm = true;
++#endif
++      break;
++    }
+     for (auto& group : pool.internal->groups) {
+       if (group->trim_pending || group->control_preparing) continue;
+       if (group->retiring) {
+@@ -499,6 +513,15 @@
+         if (!group->trimming.empty() && group->trimming.back().first + group->trimming.back().count == p)
+           ++group->trimming.back().count;
+         else {
++          // A full batch can still extend its last contiguous run. Leave the
++          // next separated run mapped and charged for a later owner retry.
++          if (group->trimming.size() == trim_batch_spans) {
++#if SIXDB_TRIM_COMPARE
++            ++pool.internal->trim_comparison.batch_overflows;
++            pool.internal->trim_comparison.last_call_truncated = true;
++#endif
++            break;
++          }
+           group->trimming.push_back({static_cast<std::uint16_t>(p), 1});
+           group->discarded.push_back(false);
+         }
+diff --git a/orbital/src/allocation/group.cpp b/orbital/src/allocation/group.cpp
+--- a/orbital/src/allocation/group.cpp
++++ b/orbital/src/allocation/group.cpp
+@@ -86,10 +86,9 @@
+     const auto count = group->geometry->identity_count();
+     assert(count == group->uses.size());
+     group->live.resize(group->geometry->live_words());
+-    // N pages contain at most ceil(N/2) separated runs, attained by alternating pages.
+-    const auto runs = (group->geometry->payload_pages() + 1) / 2;
+-    group->trimming.reserve(runs);
+-    group->discarded.reserve(runs);
++    // Enrollment enforces this bound before appending a new separated run.
++    group->trimming.reserve(trim_batch_spans);
++    group->discarded.reserve(trim_batch_spans);
+     // sizeof(Group) includes its fixed identity records and hints.
+     // Account concrete prepared bookkeeping, separately from sparse VA/RSS.
+     group->metadata_charge = group->geometry->control_bytes() + sizeof(FiniteGroup) + sizeof(Group) +

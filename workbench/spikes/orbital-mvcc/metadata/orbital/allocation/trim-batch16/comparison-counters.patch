@@ -1,0 +1,141 @@
+diff --git a/orbital/src/allocation/internal.h b/orbital/src/allocation/internal.h
+--- a/orbital/src/allocation/internal.h
++++ b/orbital/src/allocation/internal.h
+@@ -137,6 +137,21 @@
+   std::uint8_t grid{};
+ };
+ 
++#ifndef SIXDB_TRIM_COMPARE
++#define SIXDB_TRIM_COMPARE 0
++#endif
++#if SIXDB_TRIM_COMPARE
++// Owner-only logical work counters. Plain control builds omit this record.
++struct TrimComparison {
++  std::uint64_t calls{}, census_pages{}, enrollment_pages{};
++  std::uint64_t census_live_builds{}, validation_live_builds{};
++  std::uint64_t jobs{}, retry_jobs{}, retire_jobs{}, ranges{}, pages{};
++  std::uint64_t new_ranges{}, new_pages{}, retire_pages{}, max_ranges{};
++  std::uint64_t batch_overflows{}, warm_pass_deferrals{};
++  bool last_call_truncated{}, last_call_deferred_warm{};
++};
++#endif
++
+ struct PoolState {
+   std::array<ReadyCandidate, 4> ready_candidates;
+   std::uint8_t next_candidate{};
+@@ -152,6 +167,9 @@
+   Job broadcast_job; // Reuses the notice pin through cold registry work and its reply.
+   bool broadcast_requested{}, close_requested{}; // Assigned Pool lane only.
+   Statistics counts;
++#if SIXDB_TRIM_COMPARE
++  TrimComparison trim_comparison;
++#endif
+   bool trim_failed{};
+   std::uint64_t preparations{}, preparation_debt{}, preparation_metadata{}, preparation_uncertain{};
+ };
+diff --git a/orbital/src/allocation/allocation.cpp b/orbital/src/allocation/allocation.cpp
+--- a/orbital/src/allocation/allocation.cpp
++++ b/orbital/src/allocation/allocation.cpp
+@@ -441,8 +441,39 @@
+ 
+ Hold::~Hold() { release(*this); }
+ 
++#if SIXDB_TRIM_COMPARE
++namespace {
++void compare_trim_job(Pool& pool, const Group& group, bool retry = false) noexcept {
++  auto& work = pool.internal->trim_comparison;
++  ++work.jobs;
++  if (group.retiring) {
++    ++work.retire_jobs;
++    const auto pages = group.retire_mapped / group.geometry->native_page();
++    work.pages += pages;
++    work.retire_pages += pages;
++    return;
++  }
++  work.retry_jobs += retry;
++  work.ranges += group.trimming.size();
++  work.max_ranges = std::max(work.max_ranges, std::uint64_t(group.trimming.size()));
++  std::uint64_t pages = 0;
++  for (auto span : group.trimming) pages += span.count;
++  work.pages += pages;
++  if (!retry) {
++    work.new_ranges += group.trimming.size();
++    work.new_pages += pages;
++  }
++}
++}
++#endif
++
+ Progress trim_cold(Pool& pool, std::uint64_t keep_bytes) {
+   if (!pool.lane || !worker::on_lane(*pool.lane)) return Progress::fail(Error::conflict);
++#if SIXDB_TRIM_COMPARE
++  ++pool.internal->trim_comparison.calls;
++  pool.internal->trim_comparison.last_call_truncated = false;
++  pool.internal->trim_comparison.last_call_deferred_warm = false;
++#endif
+   if (std::exchange(pool.internal->trim_failed, false)) return Progress::fail(Error::io);
+   const auto observed = pool.capacity_changed.generation;
+   bool pending = false;
+@@ -452,10 +483,17 @@
+     if (!group->trimming.empty()) {
+       group->trim_pending = true;
+       group->trim_lifetime = Ref<Arena>::retain(*pool.arena);
++#if SIXDB_TRIM_COMPARE
++      compare_trim_job(pool, *group, true);
++#endif
+       schedule(*pool.arena, group->job); pending = true;
+       continue;
+     }
+     if (group->retiring) continue;
++#if SIXDB_TRIM_COMPARE
++    ++pool.internal->trim_comparison.census_live_builds;
++    pool.internal->trim_comparison.census_pages += group->geometry->payload_pages();
++#endif
+     verify(group->geometry->live_pages(group->live));
+     for (std::size_t p = 0; p < group->geometry->payload_pages(); ++p)
+       if (group->geometry->mapped(p) && !(group->live[p / 64] & (std::uint64_t{1} << (p % 64))))
+@@ -475,6 +513,9 @@
+         if (pass) continue;
+         group->trim_pending = true;
+         group->trim_lifetime = Ref<Arena>::retain(*pool.arena);
++#if SIXDB_TRIM_COMPARE
++        compare_trim_job(pool, *group);
++#endif
+         schedule(*pool.arena, group->job); pending = true;
+         continue;
+       }
+@@ -491,12 +532,18 @@
+         group->retire_reserved = group->geometry->reserved_bytes();
+         group->retiring = group->trim_pending = true;
+         group->trim_lifetime = Ref<Arena>::retain(*pool.arena);
++#if SIXDB_TRIM_COMPARE
++        compare_trim_job(pool, *group);
++#endif
+         schedule(*pool.arena, group->job); idle -= mapped; pending = true;
+         continue;
+       }
+       const auto page = group->geometry->native_page();
+       assert(group->geometry->payload_pages() <= UINT16_MAX);
+       for (std::size_t p = 0; p < group->geometry->payload_pages() && idle > keep_bytes; ++p) {
++#if SIXDB_TRIM_COMPARE
++        ++pool.internal->trim_comparison.enrollment_pages;
++#endif
+         if (!group->geometry->mapped(p) || (group->live[p / 64] & (std::uint64_t{1} << (p % 64)))) continue;
+         if (idle - page < keep_bytes) break;
+         if (!group->trimming.empty() && group->trimming.back().first + group->trimming.back().count == p)
+@@ -508,9 +555,15 @@
+         idle -= page;
+       }
+       if (!group->trimming.empty()) {
++#if SIXDB_TRIM_COMPARE
++        ++pool.internal->trim_comparison.validation_live_builds;
++#endif
+         verify(group->geometry->begin_trim(group->trimming));
+         group->trim_pending = true;
+         group->trim_lifetime = Ref<Arena>::retain(*pool.arena);
++#if SIXDB_TRIM_COMPARE
++        compare_trim_job(pool, *group);
++#endif
+         schedule(*pool.arena, group->job); pending = true;
+       }
+     }

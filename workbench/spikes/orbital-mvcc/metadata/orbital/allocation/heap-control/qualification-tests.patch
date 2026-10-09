@@ -1,0 +1,248 @@
+diff --git a/tests/preparation.cpp b/tests/preparation.cpp
+--- a/tests/preparation.cpp
++++ b/tests/preparation.cpp
+@@ -1,4 +1,5 @@
+ #include <orbital/preparation.h>
++#include "finite.h"
+ #include <ikea/seriespack.h>
+ #include <ikea/tuplepack.h>
+ #include <array>
+@@ -24,7 +25,8 @@
+ std::atomic<bool> gate{}, inside{}, proceed{}, fail_map{}, fail_protect{}, fail_unmap{};
+ std::atomic<unsigned> helper_maps{}, owner_maps{}, helper_protects{}, owner_protects{};
+ std::atomic<unsigned> helper_constructions{}, cleanup_failures{}, cleanup_skip{};
+-std::atomic<unsigned> fail_map_after{};
++std::atomic<bool> fail_metadata{}, metadata_reservation_seen{};
++std::atomic<std::size_t> metadata_size{};
+ 
+ void check(bool yes, const char* text, std::source_location loc = std::source_location::current()) {
+   if (!yes) { std::fprintf(stderr,"%s:%u: %s\n",loc.file_name(),loc.line(),text); std::abort(); }
+@@ -554,25 +556,33 @@
+ }
+ 
+ void finite_control_vm_failures_own_partial_backing(){
++  for(std::size_t alignment:{16,64}){
+   for(bool partial:{false,true}){
+     Fixture f;alloc::Preparation failed;
+-    // The second control-stage mmap fails after the payload reservation exists.
+-    // Bindings share the owner-control mapping; no control mprotect is needed.
+-    if(partial)fail_map_after=2;else fail_map=true;
+-    done(alloc::prepare(*f.pool,failed,small_request(),f.preparer.lane));f.settle(failed);
++    const auto references=f.arena->references.load();
++    const auto expected=partial?Error::capacity:Error::io;
++    // Metadata heap ENOMEM happens after the real sparse payload reservation.
++    auto planned=take(alloc::detail::FiniteGroup::create({alignment>=64?alloc::detail::Palette::b:alloc::detail::Palette::a,256}));
++    metadata_size=planned->control_bytes();metadata_reservation_seen=false;
++    if(partial)fail_metadata=true;else fail_map=true;
++    done(alloc::prepare(*f.pool,failed,small_request(64,alignment),f.preparer.lane));f.settle(failed);
+     const auto inventory=alloc::statistics(*f.pool);const auto charged=f.arena->charged_bytes.load();
+-    check(failed.state==alloc::Preparation::State::failed && failed.error==Error::io && !failed.backend &&
++    check(failed.state==alloc::Preparation::State::failed && failed.error==expected && !failed.backend &&
+           !failed.owner && inventory.mapped_bytes==0 && inventory.preparing_bytes==0 &&
++          inventory.uncertain_bytes==0 && inventory.allocations==0 && !failed.value &&
+           inventory.metadata_bytes==charged && charged>0,
+           "failed finite control lost terminal status or partial mapping custody");
+     check((inventory.reserved_bytes>0)==partial,"failed finite control reported nonexistent/lost sparse mapping");
+-    auto healthy=take(alloc::allocate(*f.pool,small_request()));alloc::release(healthy);
++    check(!fail_metadata && (metadata_reservation_seen.load()==partial),"heap failure did not follow real payload reservation");
++    check(f.arena->references.load()==references,"failed helper retained its preparation pin");
++    auto healthy=take(alloc::allocate(*f.pool,small_request(64,alignment)));alloc::release(healthy);
+     if(partial){fail_unmap=true;f.close_all(true);}else f.close_all();
+     f.pool=take(alloc::add_pool(*f.arena,f.lane));alloc::cancel(failed);
+-    const auto result=alloc::take(failed);check(!result && result.error()==Error::io,
++    const auto result=alloc::take(failed);check(!result && result.error()==expected,
+           "terminal failed finite frame consulted replaced Pool");
+   }
+-  std::puts("{\"case\":\"finite-control-second-map-retire-failure-ownership\",\"passed\":true}");
++  }
++  std::puts("{\"case\":\"finite-control-heap-ENOMEM-payload-unmap-retry\",\"passed\":true}");
+ }
+ 
+ void finite_delivered_owner_operations(){
+@@ -725,13 +735,18 @@
+     while(!proceed.load(std::memory_order_acquire))std::this_thread::yield();
+   }
+   if(!owner_thread && fail_map.exchange(false)){errno=ENOMEM;return MAP_FAILED;}
+-  if(!owner_thread){
+-    auto remaining=fail_map_after.load(std::memory_order_relaxed);
+-    while(remaining && !fail_map_after.compare_exchange_weak(remaining,remaining-1,
+-        std::memory_order_relaxed)){}
+-    if(remaining==1){errno=ENOMEM;return MAP_FAILED;}
+-  }
+-  return __real_mmap(a,n,p,f,fd,o);
++  auto* result=__real_mmap(a,n,p,f,fd,o);
++  if(!owner_thread && fail_metadata && p==PROT_NONE && result!=MAP_FAILED)metadata_reservation_seen=true;
++  return result;
++}
++
++void* __real__ZnwmRKSt9nothrow_t(std::size_t,const std::nothrow_t&) noexcept;
++void* __wrap__ZnwmRKSt9nothrow_t(std::size_t bytes,const std::nothrow_t& tag) noexcept{
++  if(!owner_thread && bytes==metadata_size && fail_metadata.exchange(false)){
++    check(metadata_reservation_seen,"heap metadata allocation preceded real payload reservation");
++    return nullptr;
++  }
++  return __real__ZnwmRKSt9nothrow_t(bytes,tag);
+ }
+ 
+ int __wrap_mprotect(void* a,std::size_t n,int p){
+diff --git a/tests/reclamation.cpp b/tests/reclamation.cpp
+--- a/tests/reclamation.cpp
++++ b/tests/reclamation.cpp
+@@ -1,4 +1,5 @@
+ #include <orbital/allocation.h>
++#include "finite.h"
+ #include <algorithm>
+ #include <array>
+ #include <cerrno>
+@@ -44,12 +45,14 @@
+ 
+ enum class Call { discard, protect, unmap };
+ 
+-enum class Action { fail, pause, fail_preparation };
+-
+-enum class Decision { normal, fail, paused, partial_preparation };
++enum class Action { fail, pause };
++
++enum class Decision { normal, fail, paused };
+ 
+ thread_local bool observe_vm{};
+ thread_local unsigned observed_vm_calls{};
++thread_local bool fail_metadata{}, metadata_reservation_seen{};
++thread_local std::size_t metadata_size{};
+ 
+ void note_vm() noexcept { if (observe_vm) ++observed_vm_calls; }
+ 
+@@ -71,17 +74,14 @@
+   hook.armed = true; hook.entered = hook.resume = hook.finished = false;
+ }
+ 
+-Decision before(Call call, void* address, bool reclamation = true, bool preparation = false) {
++Decision before(Call call, void* address, bool reclamation = true) {
+   std::unique_lock lock(hook.mutex);
+-  const bool partial = hook.action == Action::fail_preparation;
+   const bool caller = hook.owner == std::this_thread::get_id();
+-  if (!hook.armed || hook.call != call || !(partial ? preparation : reclamation) ||
+-      caller != partial ||
++  if (!hook.armed || hook.call != call || !reclamation || caller ||
+       (hook.address && hook.address != address)) return Decision::normal;
+   hook.armed = false;
+   hook.entered = true;
+   hook.changed.notify_all();
+-  if (partial) return Decision::partial_preparation;
+   if (hook.action == Action::fail) {
+     hook.finished = true;
+     errno = EIO;
+@@ -93,7 +93,7 @@
+ }
+ 
+ void after(Decision decision) {
+-  if (decision != Decision::paused && decision != Decision::partial_preparation) return;
++  if (decision != Decision::paused) return;
+   std::lock_guard lock(hook.mutex);
+   hook.finished = true;
+   hook.changed.notify_all();
+@@ -171,28 +171,35 @@
+   check(after.trim_pages == before.trim_pages, "unsettled reclamation counted trimmed pages");
+ }
+ 
+-void finite_preparation_and_cleanup_failure() {
+-  Fixture fixture;
+-  arm(Call::protect, Action::fail_preparation);
+-  auto refused = allocate(*fixture.pool, {64, 0, 16, 0, Initialization::zero});
+-  check(!refused && refused.error() == Error::io, "partial control preparation did not fail");
+-  wait_finished();
++void finite_heap_preparation_and_cleanup_failure(std::size_t alignment) {
++  Fixture fixture;
++  const auto references = fixture.arena->references.load();
++  auto planned = take(detail::FiniteGroup::create({alignment >= 64 ? detail::Palette::b : detail::Palette::a, 256}));
++  metadata_size = planned->control_bytes();
++  metadata_reservation_seen = false; fail_metadata = true;
++  auto refused = allocate(*fixture.pool, {64, 0, alignment, 0, Initialization::zero});
++  check(!refused && refused.error() == Error::capacity && !fail_metadata && metadata_reservation_seen,
++        "metadata ENOMEM after payload reservation was lost");
+   const auto before = statistics(*fixture.pool);
+   const auto charged = fixture.arena->charged_bytes.load();
+-  check(before.allocations == 0 && before.mapped_bytes == 0 && before.reserved_bytes > 0 &&
++  check(before.allocations == 0 && before.mapped_bytes == 0 && before.preparing_bytes == 0 &&
++      before.uncertain_bytes == 0 && before.reserved_bytes > 0 &&
+       before.metadata_bytes > 0 && charged == before.metadata_bytes,
+       "failed preparation lost ownership or exposed payload inventory");
++  check(fixture.arena->references.load() == references, "heap failure exposed an active allocation pin");
+   arm(Call::unmap, Action::fail);
+   expect_io(finish(fixture.lane, [&] { return trim_cold(*fixture.pool, 0); }));
+   check(fixture.pool->state == Pool::State::open && fixture.pool->lane == &fixture.lane,
+       "failed preparation cleanup lost its owner route");
+   check(fixture.arena->charged_bytes.load() == charged, "failed cleanup refunded partial control mappings");
+   unchanged_inventory(before, statistics(*fixture.pool));
++  check(fixture.arena->references.load() == references, "failed cleanup retained a transient trim pin");
+   trim(fixture);
+   const auto after = statistics(*fixture.pool);
+   check(after.mapped_bytes == 0 && after.reserved_bytes == 0 && after.metadata_bytes == 0 &&
+       fixture.arena->charged_bytes.load() == 0, "cleanup retry stranded control mappings or metadata");
+   check(after.trim_pages == before.trim_pages, "control cleanup was counted as trimmed payload");
++  check(fixture.arena->references.load() == references, "successful retry retained a transient pin");
+   auto value = take(allocate(*fixture.pool, {64, 0, 16, 0, Initialization::zero}));
+   for (auto byte : bytes(value)) check(byte == std::byte{0}, "new finite allocation exposed failed preparation data");
+   release(value); close_fixture(fixture);
+@@ -478,7 +485,19 @@
+ extern "C" void* __wrap_mmap(void* address, std::size_t size, int rights, int flags,
+     int descriptor, off_t offset) noexcept {
+   note_vm();
+-  return __real_mmap(address, size, rights, flags, descriptor, offset);
++  auto* result = __real_mmap(address, size, rights, flags, descriptor, offset);
++  if (fail_metadata && rights == PROT_NONE && result != MAP_FAILED) metadata_reservation_seen = true;
++  return result;
++}
++
++extern "C" void* __real__ZnwmRKSt9nothrow_t(std::size_t, const std::nothrow_t&) noexcept;
++extern "C" void* __wrap__ZnwmRKSt9nothrow_t(std::size_t bytes, const std::nothrow_t& tag) noexcept {
++  if (fail_metadata && bytes == metadata_size) {
++    check(metadata_reservation_seen, "metadata allocation preceded actual payload reservation");
++    fail_metadata = false;
++    return nullptr;
++  }
++  return __real__ZnwmRKSt9nothrow_t(bytes, tag);
+ }
+ 
+ extern "C" int __wrap_madvise(void* address, std::size_t size, int advice) noexcept {
+@@ -492,16 +511,8 @@
+ 
+ extern "C" int __wrap_mprotect(void* address, std::size_t size, int rights) noexcept {
+   note_vm();
+-  auto decision = before(Call::protect, address, rights == PROT_NONE, rights == (PROT_READ | PROT_WRITE));
++  auto decision = before(Call::protect, address, rights == PROT_NONE);
+   if (decision == Decision::fail) return -1;
+-  if (decision == Decision::partial_preparation) {
+-    const auto page = static_cast<std::size_t>(::sysconf(_SC_PAGESIZE));
+-    check(size >= page && __real_mprotect(address, page, rights) == 0,
+-        "could not make a real partial control preparation");
+-    after(decision);
+-    errno = EIO;
+-    return -1;
+-  }
+   const auto result = __real_mprotect(address, size, rights);
+   after(decision);
+   return result;
+@@ -518,7 +529,8 @@
+ 
+ int main() {
+   budget_refusal_before_vm();
+-  finite_preparation_and_cleanup_failure();
++  finite_heap_preparation_and_cleanup_failure(16);
++  finite_heap_preparation_and_cleanup_failure(64);
+   finite_discard_failure(Call::discard);
+   finite_discard_failure(Call::protect);
+   pool_wide_retention_floor();
+diff --git a/tests/finite.cpp b/tests/finite.cpp
+--- a/tests/finite.cpp
++++ b/tests/finite.cpp
+@@ -73,7 +73,8 @@
+   check(bool(group->prepare()), "prepare geometry");
+   check(group->native_page() == static_cast<std::size_t>(::sysconf(_SC_PAGESIZE)),
+         "uses native page granule");
+-  check(group->control_bytes() % group->native_page() == 0, "control charge page rounded");
++  check(group->control_bytes() >= width && group->control_bytes() % alignof(std::uint64_t) == 0,
++        "heap control extent includes bindings and complete aligned scratch");
+   check(group->reserved_bytes() == group->payload_pages() * group->native_page(),
+         "payload reservation excludes separately charged control mapping");
+   const auto& capacities = palette == Palette::a ? capacities_a : capacities_b;

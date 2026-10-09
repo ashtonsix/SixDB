@@ -1,0 +1,118 @@
+{
+  "date": "2026-10-10",
+  "status": "native comparison complete; controls remain separate",
+  "cuts": {
+    "baseline": "../routes/direct-domain/direct-domain4-cut.json",
+    "batch16": "direct4-cut.json",
+    "heap16": "../heap-control/heap-control-cut.json"
+  },
+  "source_cuts_verified_before_and_after": true,
+  "driver_sha256": "98d509524970fcbe7ad38eddd41698d46843783cc08c222b8dc8d7164913c092",
+  "recipe_sha256": "c7c3c051844918e886869a27d9db7260f315b90395a09da4e866c2fe61794bbe",
+  "counter_patch_sha256": "c6c0766b863271cbe1034199c168f1448c90e91696450028b4f534244873a801",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)",
+  "machine": "aarch64",
+  "owner_cpu": 2,
+  "helper_cpu": 3,
+  "plain_flags": "-O3 -g -DNDEBUG -fno-fast-math -ffp-contract=off; no counters or fault wrappers",
+  "census": {
+    "baseline": [
+      {
+        "palette": "A",
+        "requested_group_metadata": 7384,
+        "control_bytes": 4096,
+        "native_page_bytes": 4096,
+        "excluded_owner_vector_capacity": 8
+      },
+      {
+        "palette": "B",
+        "requested_group_metadata": 8400,
+        "control_bytes": 4096,
+        "native_page_bytes": 4096,
+        "excluded_owner_vector_capacity": 8
+      }
+    ],
+    "batch16": [
+      {
+        "palette": "A",
+        "requested_group_metadata": 6144,
+        "control_bytes": 4096,
+        "native_page_bytes": 4096,
+        "excluded_owner_vector_capacity": 8
+      },
+      {
+        "palette": "B",
+        "requested_group_metadata": 6208,
+        "control_bytes": 4096,
+        "native_page_bytes": 4096,
+        "excluded_owner_vector_capacity": 8
+      }
+    ],
+    "heap16": [
+      {
+        "palette": "A",
+        "requested_group_metadata": 4016,
+        "control_bytes": 1968,
+        "native_page_bytes": 4096,
+        "excluded_owner_vector_capacity": 8
+      },
+      {
+        "palette": "B",
+        "requested_group_metadata": 4600,
+        "control_bytes": 2488,
+        "native_page_bytes": 4096,
+        "excluded_owner_vector_capacity": 8
+      }
+    ]
+  },
+  "consequence_histories": 30,
+  "passed": 30,
+  "failed": 0,
+  "checks": [
+    "16-run overflow guard and final-span coalescing",
+    "independent initial idle page/run inventory versus selected work",
+    "failed discard retains the excluded page and logical charge; retry settles successful refund",
+    "Pool floor with123-byte offset",
+    "repeated pending calls defer warm Group; no unresolved cold spans when warm work starts",
+    "live bytes unchanged; empty Group retires through one job"
+  ],
+  "logical_work": "logical-work.csv",
+  "fault_results": {
+    "baseline": {
+      "histories": 3,
+      "retry_jobs_each": 1,
+      "all_retained_page_charge_checks_passed": true
+    },
+    "batch16": {
+      "histories": 3,
+      "retry_jobs_each": 1,
+      "all_retained_page_charge_checks_passed": true
+    },
+    "heap16": {
+      "histories": 3,
+      "retry_jobs_each": 1,
+      "all_retained_page_charge_checks_passed": true
+    }
+  },
+  "plain_comparison": "comparison.csv",
+  "plain_comparison_sha256": "9bf297db4c6e0395dad477a3d7985ce781b4285a1bf0c47acf1fdda692845f75",
+  "plain_samples_per_case": 12,
+  "raw_outputs": {
+    "directory": "build/orbital-mvcc-metadata/trim-batch16/root-comparison",
+    "consequences_sha256": "9bb3c0e38a8f7481905ab0dac28661ffe317d03951214023f705ea465612ed69",
+    "timings_sha256": "7627b3271e6136404eb41d4403edef3b5cb2010537192e9fdcf7198274a948ba",
+    "summary_sha256": "c03dae0e05da988a0a963de3ed1345680f7db3461004321ef710d4c27ef8af39"
+  },
+  "limits": [
+    "AArch64 OrbStack 4KiB native pages; guest scheduling affects times.",
+    "Synthetic mapped inventory, not database traffic or point-operation latency.",
+    "Setup and final fixture close excluded; measured trim includes waits and owner replies.",
+    "Group metadata excludes Arena/thread/libc setup, Pool vector capacity and Object state.",
+    "Instrumented counters are finite Group submissions, not successful physical work.",
+    "Bounded spans do not bound census, span pages, Pool jobs or fairness under mutations.",
+    "Repeated pending recheck and inventory assertions run only in instrumented histories; plain timings omit them.",
+    "No warm Window or ongoing-mutator fairness scenario.",
+    "Heap source safety independently reviewed; its six native suites remain separately documented."
+  ],
+  "logical_work_sha256": "d72a8d7e4563578dcecfbac4edb0c105b3cf522e2a9c5af2863e80afd51a89bd"
+}

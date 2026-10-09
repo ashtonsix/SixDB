@@ -1,0 +1,100 @@
+diff --git a/orbital/src/allocation/allocation.cpp b/orbital/src/allocation/allocation.cpp
+--- a/orbital/src/allocation/allocation.cpp
++++ b/orbital/src/allocation/allocation.cpp
+@@ -663,7 +663,7 @@
+     if (group->control_preparing) {
+       result.metadata_bytes += group->metadata_charge;
+       result.preparing_reserved_bytes += group->geometry->native_page() *
+-          (1 + group->geometry->payload_pages());
++          group->geometry->payload_pages();
+       continue;
+     }
+     if (group->retiring) {
+diff --git a/orbital/src/allocation/finite.cpp b/orbital/src/allocation/finite.cpp
+--- a/orbital/src/allocation/finite.cpp
++++ b/orbital/src/allocation/finite.cpp
+@@ -84,8 +84,7 @@
+   const auto grids_bytes = group->grid_count_ * sizeof(Grid);
+   const auto scratch_offset = round_up(grids_offset + grids_bytes + group->payload_pages_ * sizeof(Page),
+                                       alignof(std::uint64_t));
+-  group->metadata_bytes_ = round_up(scratch_offset + group->live_words() * sizeof(std::uint64_t),
+-                                   group->native_page_);
++  group->metadata_bytes_ = scratch_offset + group->live_words() * sizeof(std::uint64_t);
+   group->control_bytes_ = group->metadata_bytes_;
+   return group;
+ }
+@@ -102,12 +101,12 @@
+     return std::unexpected(Error::io);
+   reservation_ = static_cast<std::byte*>(reservation);
+   payload_ = reservation_;
+-  // Bindings and owner control share one rounded mapping. Their accessors stay
++  // Bindings and owner control share one stable heap block. Their accessors stay
+   // distinct; no binding address or payload offset is inferred from the other.
+-  auto* metadata = ::mmap(nullptr, metadata_bytes_, PROT_READ | PROT_WRITE,
+-                          MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+-  if (metadata == MAP_FAILED)
+-    return std::unexpected(Error::io);
++  // Ordinary new covers the maximum required alignment: the uint64_t scratch.
++  auto* metadata = ::operator new(metadata_bytes_, std::nothrow);
++  if (!metadata)
++    return std::unexpected(Error::capacity);
+   metadata_ = metadata;
+   std::memset(metadata, 0, metadata_bytes_);
+   bindings_ = ::new (metadata) std::uint8_t[identities_];
+@@ -136,15 +135,12 @@
+     }
+   }
+   if (metadata_) {
+-    if (::munmap(metadata_, metadata_bytes_) != 0) {
+-      failed = true;
+-    } else {
+-      metadata_ = nullptr;
+-      bindings_ = nullptr;
+-      grids_ = nullptr;
+-      pages_ = nullptr;
+-      trim_scratch_ = nullptr;
+-    }
++    ::operator delete(metadata_);
++    metadata_ = nullptr;
++    bindings_ = nullptr;
++    grids_ = nullptr;
++    pages_ = nullptr;
++    trim_scratch_ = nullptr;
+   }
+   if (failed)
+     return std::unexpected(Error::io);
+diff --git a/orbital/src/allocation/finite.h b/orbital/src/allocation/finite.h
+--- a/orbital/src/allocation/finite.h
++++ b/orbital/src/allocation/finite.h
+@@ -92,7 +92,7 @@
+ 
+   [[nodiscard]] std::size_t reserved_bytes() const noexcept { return reservation_ ? reserved_bytes_ : 0; }
+ 
+-  // Prepared writable control page(s) + page-rounded owner metadata mapping.
++  // Exact requested bytes of the stable writable owner metadata heap block.
+   // The separately allocated sizeof(FiniteGroup) is not included.
+   [[nodiscard]] std::size_t control_bytes() const noexcept { return control_bytes_; }
+ 
+diff --git a/orbital/src/allocation/group.cpp b/orbital/src/allocation/group.cpp
+--- a/orbital/src/allocation/group.cpp
++++ b/orbital/src/allocation/group.cpp
+@@ -264,7 +264,9 @@
+   auto& record = *static_cast<FinitePreparation*>(message.context);
+   auto& geometry = *record.group->geometry;
+   if (record.phase == FinitePreparation::Phase::control) {
+-    record.control_ok = geometry.prepare().has_value();
++    const auto prepared = geometry.prepare();
++    record.control_ok = prepared.has_value();
++    if (!prepared) record.error = prepared.error();
+     return;
+   }
+   const auto page = geometry.native_page();
+@@ -345,7 +347,7 @@
+       group.retiring = true;
+       group.retire_charge = group.metadata_charge;
+       group.retire_reserved = group.geometry->reserved_bytes();
+-      finite_prepare_finish(record, std::unexpected(record.control_ok ? Error::rejected : Error::io));
++      finite_prepare_finish(record, std::unexpected(record.control_ok ? Error::rejected : record.error));
+       return;
+     }
+     add_available(group);

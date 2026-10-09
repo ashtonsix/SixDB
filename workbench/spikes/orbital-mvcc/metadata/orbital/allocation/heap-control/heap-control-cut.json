@@ -1,0 +1,82 @@
+{
+  "base": "../trim-batch16/direct4-cut.json",
+  "source": "/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/heap-control",
+  "patch_sha256": "6e75cf6f0e35a40b089172c3aa762bc9ab9eb78f12b0286dbfe8e85a1c2e2ff1",
+  "files": [
+    {
+      "path": "orbital/src/allocation/allocation.cpp",
+      "base_sha256": "1d4556421e4556b12a2a596885e6330eb1413893c9e3809f2a05dec4f3c9e558",
+      "sha256": "8730a677e46029e3673047a1d2b35f07c1ec4a266462d95497234dbfda1e32de"
+    },
+    {
+      "path": "orbital/src/allocation/finite.cpp",
+      "base_sha256": "2c1c8f88e4733213926f81ab2b580c61892c80105a0a5464505421b3e046c432",
+      "sha256": "ffc721108e848f5fcf4d51f5cf775b0caa454cfbf9df992bce6d37a2d98a752d"
+    },
+    {
+      "path": "orbital/src/allocation/finite.h",
+      "base_sha256": "fc479f5419b2f74f84ecd492fb0ceb9fc05cc9ee638dd2eaa0d44bdbb7ed03bb",
+      "sha256": "c5f79ffcd02bf199ac8eb3cb4484ab290706879550fffe267e71bce94d79ae97"
+    },
+    {
+      "path": "orbital/src/allocation/group.cpp",
+      "base_sha256": "1c08cd9af31dbf6cf3c9cdcf6ec921deaa4972be22d94b509b50fe1fef65c2ae",
+      "sha256": "bcd5432614725d59d72a996ffed62a9c564a20d2705ab775d77bf8d29f17c51d"
+    }
+  ],
+  "runtime_inputs": [
+    {
+      "path": "orbital/include/orbital/allocation.h",
+      "sha256": "f8d070ca801238c8581761fcc6cf48d297d7ef5c1bd723139ec25089516ea317"
+    },
+    {
+      "path": "orbital/include/orbital/preparation.h",
+      "sha256": "5a50bb22b0e719a6f98be8b97eb57196e2a703324ea9f383a222edfe12110e38"
+    },
+    {
+      "path": "orbital/include/orbital/types.h",
+      "sha256": "f16fa83013aadafe0cb539e06dc56834d894605e8419bebf32fa17b53abfe00b"
+    },
+    {
+      "path": "orbital/include/orbital/worker.h",
+      "sha256": "5a57d7745ea210734241786178df710bec086d9e4193cb94815132ce668be09f"
+    },
+    {
+      "path": "orbital/src/allocation/allocation.cpp",
+      "sha256": "8730a677e46029e3673047a1d2b35f07c1ec4a266462d95497234dbfda1e32de"
+    },
+    {
+      "path": "orbital/src/allocation/arena.cpp",
+      "sha256": "5c884a6b17e2d272c4790ac2db729e054c3c086cec4197104bfad00798ca5fb2"
+    },
+    {
+      "path": "orbital/src/allocation/finite.cpp",
+      "sha256": "ffc721108e848f5fcf4d51f5cf775b0caa454cfbf9df992bce6d37a2d98a752d"
+    },
+    {
+      "path": "orbital/src/allocation/finite.h",
+      "sha256": "c5f79ffcd02bf199ac8eb3cb4484ab290706879550fffe267e71bce94d79ae97"
+    },
+    {
+      "path": "orbital/src/allocation/group.cpp",
+      "sha256": "bcd5432614725d59d72a996ffed62a9c564a20d2705ab775d77bf8d29f17c51d"
+    },
+    {
+      "path": "orbital/src/allocation/internal.h",
+      "sha256": "3d6d8bea6b619721e92f79c246dab78b5cca5a98ca9c1626af83dff961cd1cb3"
+    },
+    {
+      "path": "orbital/src/allocation/window.cpp",
+      "sha256": "f527db3f07c0cdeb23fc3d22b9cfc9829cc4a93bf4ba3e71281f3b0608ea02ce"
+    },
+    {
+      "path": "orbital/src/types.cpp",
+      "sha256": "8fb36e1d5f33cf0cef19243ab72f9907e527d068efec53a3fab22f89d19a962f"
+    },
+    {
+      "path": "orbital/src/worker.cpp",
+      "sha256": "8d4593f17951bb40433635de30470ffffa19d8dcbaf026009c2645894df503dd"
+    }
+  ],
+  "scope": "Exact requested stable metadata heap after bounded16 Direct4; payload VM, routing, Group and reply owners unchanged."
+}
