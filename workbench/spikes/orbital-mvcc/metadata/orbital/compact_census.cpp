@@ -25,7 +25,7 @@ int main() {
   record<h::Store16::ConversionTarget>("ConversionTarget");
   record<orbital::Result<h::Store16::ConversionTarget>>("Result<ConversionTarget>");
   record<h::Store16::Prepared>("Prepared");
-  record<orbital::Result<h::Store16::Prepared>>("Result<Prepared>");
+  record<orbital::Result<void>>("prepare status");
   record<h::Store16::Statistics>("Statistics");
   record<d::Selection>("Selection");
   record<orbital::Result<d::Selection>>("Result<Selection>");

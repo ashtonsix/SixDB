@@ -18,8 +18,9 @@ compact_history::Store16 store(metadata);
   spec.version = basis.cut() + 1;
   auto rep = store.capture(spec, parts);
   compact_history::Change changes[] = {{spec.object, std::move(*rep)}};
-  auto prepared = store.prepare(basis, changes);
-  store.install(*prepared);
+  compact_history::Store16::Prepared prepared(store); // 48 bytes, caller-owned
+  store.prepare(basis, changes, prepared); // small Result<void> status
+  store.install(prepared);
 }
 {
   compact_history::Store16::Scope read(store);
@@ -38,10 +39,22 @@ keeps future discovery coherent and survives Store move/reset. It is nonmovable
 because the Core links its caller-owned address. A Borrowed scope ends before
 publication, suspension or final Store reset. Native Views own nothing.
 
-`prepare` accepts an immutable result against this Core's exact predecessor and
-issues one private, single-use occurrence. Refusal leaves logical state unchanged.
-Installed work cannot be installed twice; abort/destruction of accepted work is a
-terminal no-effect result. Abort keeps the single-writer exclusion until every
+`Prepared(store)` is a noncopyable, nonmovable caller-owned packet with one Core
+pin and mutation vector. `prepare(scope, changes, packet)` returns a small status
+and accepts only an empty packet belonging to the same Core. Refusal leaves
+logical state unchanged and clears rolled-back mutation records so that exact
+packet can retry. Accepted packets are permanently single-use; preparation never
+implicitly aborts or replaces one. Installed work cannot be installed twice;
+abort/destruction of accepted work is a terminal no-effect result.
+
+Only one packet can be accepted per Core, and only its installation advances the
+logical cut. Saved predecessor and occurrence numbers are therefore redundant:
+Core identity, terminal disposition and pending exclusion establish authority.
+The logical-cut overflow refusal remains; the former artificial limit on the
+number of accepted-and-aborted attempts is removed. Packet storage falls from
+64 to 48 bytes and the 72-byte returned `Result<Prepared>` disappears; mutation
+capacity remains charged. This is a type-layout change, not a stack or latency
+claim. Abort keeps the single-writer exclusion until every
 change has released its entry pin and private owner, including through reentrant
 destructor callbacks. Install neither allocates nor destroys user owners.
 
@@ -117,10 +130,10 @@ External encoded owners/control blocks
 and payload allocations are separate costs, not free memory. None of these
 figures establishes database performance; use the composed driver for that.
 
-`check.cpp` exercises eleven grouped histories for all three node layouts, both
+`check.cpp` exercises twelve grouped histories for all three node layouts, both
 retention policies and both directories plus inline16, including coherent late lookup, absence/recreation, private
 reads, refusal sweeps, alternative replacement, narrow export, Store teardown,
-conversion authority and reentrant owner disposal. `shape_store_check.cpp` adds
+conversion authority, same-packet refusal retry, output/Core authority and reentrant owner disposal. `shape_store_check.cpp` adds
 real encoded rows/columns, repeated physical values at different logical cuts,
 sealed exports, foreign-resource rejection, delayed conversion and accepted work
 crossing old-history reclamation. Checks run under NDEBUG. `abi_probe.cpp` checks
@@ -132,3 +145,11 @@ The [bounded qualification](bounded-qualification.json) identifies the held cut
 and eight native/sanitizer runs. Its [verified archive](bounded-artifact.json)
 holds sources, recipes, logs, exact linked libraries and the rejected starvation
 control. Composed target-machine timings remain a separate comparison.
+
+The stationary `Prepared` change has [local complete-update feedback](prepared-feedback.json):
+64 longer paired oracle trials preserve outcomes, copies, admissions and reclaim
+work, and reduce each composed catalog by 16 requested bytes. Tiny Tuple writes
+regress in that screen; larger Tuple batches are near-flat or slightly better.
+Unchanged LMDB timings also vary substantially on the local VM. This selects a
+simpler ownership/ordinary-ABI seam, not a demonstrated speedup; the negative
+signal remains for the next matched target-machine comparison.

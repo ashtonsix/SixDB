@@ -163,8 +163,9 @@ template<class Store> struct Fixture {
     for (std::size_t object = 0; object < objects; ++object)
       changes.push_back({id(object), encode(schema, physical, object, cut + 1)});
     input_capacity = changes.capacity() * sizeof(typename Store::Change);
-    auto prepared = take(store.prepare(*basis, changes));
-    // Prepared has its own exact occurrence/Core pin. Source reads have ended;
+    typename Store::Prepared prepared(store);
+    check(store.prepare(*basis, changes, prepared));
+    // Prepared has its own exact Core pin. Source reads have ended;
     // this arm does not keep an otherwise unnecessary writer cut discoverable.
     if (!writer_basis_held) basis.reset();
     check(store.install(prepared));

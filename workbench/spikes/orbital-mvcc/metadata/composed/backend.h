@@ -29,15 +29,18 @@ public:
   Backend(const p::Corpus& corpus, std::size_t bytes, v::Format initial = v::Format::rows,
       std::size_t metadata_bytes = 0) : material_(corpus, bytes, metadata_bytes), store_(material_.memory) {
     {
-      std::optional<Scope> basis(std::in_place, store_);
-      std::pmr::vector<Change> changes(&material_.memory);
-      changes.reserve(corpus.images.size());
-      for (const auto& image : corpus.images) {
-        auto parts = p::need(material_.construct(image.rows, initial, costs));
-        changes.push_back({image.address.object, p::need(capture(parts))});
+      typename Store::Prepared accepted(store_);
+      {
+        Scope basis(store_);
+        std::pmr::vector<Change> changes(&material_.memory);
+        changes.reserve(corpus.images.size());
+        for (const auto& image : corpus.images) {
+          auto parts = p::need(material_.construct(image.rows, initial, costs));
+          changes.push_back({image.address.object, p::need(capture(parts))});
+        }
+        p::need(store_.prepare(basis, changes, accepted));
       }
-      auto accepted = p::need(store_.prepare(*basis, changes));
-      basis.reset(); p::need(store_.install(accepted));
+      p::need(store_.install(accepted));
     }
     store_.drain(); costs = {}; write_costs = {};
   }
@@ -79,31 +82,33 @@ public:
       if (objects[i] >= corpus().images.size() || input[i].kind != Kind::update || input[i].record.value > value_mask)
         return std::unexpected(Error::invalid_argument);
     {
-      std::optional<Scope> basis(std::in_place, store_);
-      std::array<Change, 64> changes;
-      std::array<pw::Command, 64> commands;
-      std::size_t changed{};
-      for (std::size_t offered = 0; offered < objects.size(); ++offered) {
-        const auto object = objects[offered];
-        if (std::find(objects.begin(), objects.begin() + offered, object) != objects.begin() + offered) continue;
-        auto selected = select(*basis, object, true);
-        if (!selected) return std::unexpected(selected.error());
-        std::size_t used{};
-        for (std::size_t i = 0; i < input.size(); ++i) if (objects[i] == object)
-          commands[used++] = {input[i].key, input[i].record.value, input[i].record.tag};
-        auto parts = material_.clone(*selected, costs);
-        if (!parts) return std::unexpected(parts.error());
-        auto written = material_.apply(*selected, *parts,
-            std::span(commands).first(used), costs.kernel, write_costs);
-        if (!written) return written;
-        auto owner = capture(*parts);
-        if (!owner) return std::unexpected(owner.error());
-        changes[changed++] = {corpus().images[object].address.object, std::move(*owner)};
+      typename Store::Prepared accepted(store_);
+      {
+        Scope basis(store_);
+        std::array<Change, 64> changes;
+        std::array<pw::Command, 64> commands;
+        std::size_t changed{};
+        for (std::size_t offered = 0; offered < objects.size(); ++offered) {
+          const auto object = objects[offered];
+          if (std::find(objects.begin(), objects.begin() + offered, object) != objects.begin() + offered) continue;
+          auto selected = select(basis, object, true);
+          if (!selected) return std::unexpected(selected.error());
+          std::size_t used{};
+          for (std::size_t i = 0; i < input.size(); ++i) if (objects[i] == object)
+            commands[used++] = {input[i].key, input[i].record.value, input[i].record.tag};
+          auto parts = material_.clone(*selected, costs);
+          if (!parts) return std::unexpected(parts.error());
+          auto written = material_.apply(*selected, *parts,
+              std::span(commands).first(used), costs.kernel, write_costs);
+          if (!written) return written;
+          auto owner = capture(*parts);
+          if (!owner) return std::unexpected(owner.error());
+          changes[changed++] = {corpus().images[object].address.object, std::move(*owner)};
+        }
+        auto status = store_.prepare(basis, std::span(changes).first(changed), accepted);
+        if (!status) return status;
       }
-      auto accepted = store_.prepare(*basis, std::span(changes).first(changed));
-      if (!accepted) return std::unexpected(accepted.error());
-      basis.reset();
-      auto installed = store_.install(*accepted);
+      auto installed = store_.install(accepted);
       if (!installed) return installed;
     }
     store_.drain(); poll(128);

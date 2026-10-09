@@ -1,6 +1,6 @@
 // Complete requested-state accounting; decoded fixture words are not timings.
 #include <orbital/object.h>
-#include "orbital/src/object/internal.h"
+#include "../../baseline/src/internal.h"
 #include "candidates/candidate_store.h"
 #include <array>
 #include <cstdio>
@@ -123,7 +123,8 @@ template<class StoreType> struct Compact {
           {{0, object + 1}, cut + 1, {}, {}, description, description, {}}, parts_source));
       changes.push_back({{0, object + 1}, std::move(representation)});
     }
-    auto prepared = need(store.prepare(basis, changes));
+    typename StoreType::Prepared prepared(store);
+    need(store.prepare(basis, changes, prepared));
     need(store.install(prepared));
     ++cut;
     copied_bytes += width * (16 + parts * 8);
@@ -215,7 +216,7 @@ int main() {
           matrix<Compact<candidate::Store16>>(lane, "indexed16", parts, objects, dense, publications);
           matrix<Compact<candidate::Store8>>(lane, "chunked8", parts, objects, dense, publications);
           using Exact16 = candidate::Store<candidate::Slab<candidate::Version16>,
-              compact_retention::DistinctRetention>;
+              compact_retention::DistinctRetention, candidate::DescriptorPhysical>;
           matrix<Compact<Exact16>>(lane, "indexed16-live-cuts", parts, objects, dense, publications);
         }
       }

@@ -38,14 +38,13 @@ std::uint64_t word(cd::Selection selected) {
 
 // An epoch no caller observed should not force a reader-cut plan rebuild.
 template<class Store> void publish(Store& store, std::span<const Change> changes) {
-  std::optional<typename Store::Prepared> accepted;
+  typename Store::Prepared accepted(store);
   {
     typename Store::Scope basis(store);
-    auto prepared = store.prepare(basis, changes); check(prepared);
-    accepted.emplace(std::move(*prepared));
+    check(store.prepare(basis, changes, accepted));
   }
   const auto allocations = store.statistics().allocation_calls;
-  check(store.install(*accepted)); check(store.statistics().allocation_calls == allocations);
+  check(store.install(accepted)); check(store.statistics().allocation_calls == allocations);
 }
 
 template<class Store> void update(Store& store, ObjectId id, std::uint64_t value) {
@@ -168,11 +167,11 @@ template<class Store> void accepted_and_recycled() {
     std::array<Change, 1> erased{{{A, {}}}}; publish(store, erased);
     typename Store::Scope basis(store);
     std::array<Change, 2> changes{{{A, encode(store, A, 3, 30)}, {B, encode(store, B, 3, 300)}}};
-    auto prepared = store.prepare(basis, changes); check(prepared);
+    typename Store::Prepared prepared(store); check(store.prepare(basis, changes, prepared));
     finish(store); // Pin and debt enrollment must survive history reclamation.
     check(store.statistics().objects == 2 && !basis.bind(A) && !zero.bind(B));
     const auto allocations = store.statistics().allocation_calls;
-    check(store.install(*prepared)); check(store.statistics().allocation_calls == allocations);
+    check(store.install(prepared)); check(store.statistics().allocation_calls == allocations);
     check(word(store.borrow().bind(A)) == 30 && word(store.borrow().bind(B)) == 300);
     check(!zero.bind(A) && !zero.bind(B)); finish(store);
   }
@@ -295,15 +294,14 @@ template<class Store> void interleaved_readers() {
         const auto value = action ? n + 1 : 0;
         std::array<Change, 1> change{{{ids[index], value ? encode(store, ids[index], store.borrow().cut + 1, value) : DescriptorOwner{}}}};
         if (action == 2) {
-          std::optional<typename Store::Prepared> prepared;
+          typename Store::Prepared prepared(store);
           {
             typename Store::Scope basis(store);
-            auto accepted = store.prepare(basis, change); check(accepted);
-            prepared.emplace(std::move(*accepted));
+            check(store.prepare(basis, change, prepared));
           }
           check(store.drain(1) <= 1); // Accepted entry pins span a partial sweep.
           const auto allocations = store.statistics().allocation_calls;
-          check(store.install(*prepared)); check(store.statistics().allocation_calls == allocations);
+          check(store.install(prepared)); check(store.statistics().allocation_calls == allocations);
         } else publish(store, change);
         current[index] = value;
       } else if (action == 3 && readers.size() < 32)

@@ -42,7 +42,8 @@ public:
             image.shape.parts[0].interpretation,0,1,backing};
         changes.push_back({image.address.object,need(store_.capture(spec,std::span<const compact_descriptor::PartSource>{&part,1}))});
       }
-      auto accepted=need(store_.prepare(basis,changes));need(store_.install(accepted));
+      typename Store::Prepared accepted(store_);
+      need(store_.prepare(basis,changes,accepted));need(store_.install(accepted));
     }
     store_.drain();costs={};
   }
@@ -68,48 +69,51 @@ public:
       throw std::invalid_argument("invalid candidate publication batch");
     // Prepared pins its exact Core; the writer read Scope ends before install
     // and drain, so it cannot artificially retain the previous version.
-    auto accepted=[&] {
-      Scope basis(store_);
-      std::pmr::vector<compact_history::Change> changes(&memory_);
-      std::array<std::size_t,64> positions;
-      std::array<Record,64> changed;
-      for (std::size_t i=0;i<input.size();++i) {
-        if (objects[i]>=corpus_.images.size() || input[i].kind!=Kind::update || input[i].record.value>value_mask)
-          throw std::invalid_argument("invalid candidate fixed-row update");
-        output[i]={};output[i].changes=1;detail::mix(output[i].digest,1);
-      }
-      for (std::size_t offered=0;offered<objects.size();++offered) {
-        const auto object=objects[offered];
-        if (std::find(objects.begin(),objects.begin()+offered,object)!=objects.begin()+offered) continue;
-        const auto& image=corpus_.images[object];
-        const auto selected=basis.bind(image.address.object);
-        const auto source=body(basis,object);
-        const auto original=need(selected.part(image.address.part));
-        std::size_t used{};
-        for (std::size_t i=0;i<input.size();++i) if (objects[i]==object) {
-          auto record=source.get(input[i].key);
-          if (!record) throw std::runtime_error("absent candidate fixed-row update");
-          record->value=input[i].record.value;record->tag=input[i].record.tag;
-          positions[used]=source.lower_bound(input[i].key);changed[used++]=*record;
+    {
+      typename Store::Prepared accepted(store_);
+      {
+        Scope basis(store_);
+        std::pmr::vector<compact_history::Change> changes(&memory_);
+        std::array<std::size_t,64> positions;
+        std::array<Record,64> changed;
+        for (std::size_t i=0;i<input.size();++i) {
+          if (objects[i]>=corpus_.images.size() || input[i].kind!=Kind::update || input[i].record.value>value_mask)
+            throw std::invalid_argument("invalid candidate fixed-row update");
+          output[i]={};output[i].changes=1;detail::mix(output[i].digest,1);
         }
-        auto backing=std::allocate_shared<Backing>(std::pmr::polymorphic_allocator<Backing>{&memory_});
-        backing->allocation=need(orbital::allocation::allocate(*runtime_.pool,
-            {.bytes=original.body().size(),.alignment=1,.initialization=orbital::allocation::Initialization::uninitialized}));
-        auto bytes=orbital::allocation::bytes(backing->allocation);
-        std::memcpy(bytes.data(),original.body().data(),bytes.size());costs.copied_bytes+=bytes.size();++costs.copied_spans;
-        costs.requested_body_bytes+=bytes.size();++costs.requested_parts;
-        const data::WritePart output_part{image.address.part,bytes};
-        for (std::size_t i=0;i<used;++i)
-          need(data::update_into(corpus_.schema,image.shape,std::span<const data::WritePart>{&output_part,1},positions[i],changed[i],costs.kernel));
-        const auto logical=codec::detail::count_bytes(image.shape.records);
-        const compact_descriptor::RepresentationSpec spec{image.address.object,basis.cut()+1,{},data::data_program,
-            logical,image.shape.interpretation,{}};
-        const compact_descriptor::PartSource part{image.address.part,bytes,image.shape.parts[0].interpretation,0,1,backing};
-        changes.push_back({image.address.object,need(store_.capture(spec,std::span<const compact_descriptor::PartSource>{&part,1}))});
+        for (std::size_t offered=0;offered<objects.size();++offered) {
+          const auto object=objects[offered];
+          if (std::find(objects.begin(),objects.begin()+offered,object)!=objects.begin()+offered) continue;
+          const auto& image=corpus_.images[object];
+          const auto selected=basis.bind(image.address.object);
+          const auto source=body(basis,object);
+          const auto original=need(selected.part(image.address.part));
+          std::size_t used{};
+          for (std::size_t i=0;i<input.size();++i) if (objects[i]==object) {
+            auto record=source.get(input[i].key);
+            if (!record) throw std::runtime_error("absent candidate fixed-row update");
+            record->value=input[i].record.value;record->tag=input[i].record.tag;
+            positions[used]=source.lower_bound(input[i].key);changed[used++]=*record;
+          }
+          auto backing=std::allocate_shared<Backing>(std::pmr::polymorphic_allocator<Backing>{&memory_});
+          backing->allocation=need(orbital::allocation::allocate(*runtime_.pool,
+              {.bytes=original.body().size(),.alignment=1,.initialization=orbital::allocation::Initialization::uninitialized}));
+          auto bytes=orbital::allocation::bytes(backing->allocation);
+          std::memcpy(bytes.data(),original.body().data(),bytes.size());costs.copied_bytes+=bytes.size();++costs.copied_spans;
+          costs.requested_body_bytes+=bytes.size();++costs.requested_parts;
+          const data::WritePart output_part{image.address.part,bytes};
+          for (std::size_t i=0;i<used;++i)
+            need(data::update_into(corpus_.schema,image.shape,std::span<const data::WritePart>{&output_part,1},positions[i],changed[i],costs.kernel));
+          const auto logical=codec::detail::count_bytes(image.shape.records);
+          const compact_descriptor::RepresentationSpec spec{image.address.object,basis.cut()+1,{},data::data_program,
+              logical,image.shape.interpretation,{}};
+          const compact_descriptor::PartSource part{image.address.part,bytes,image.shape.parts[0].interpretation,0,1,backing};
+          changes.push_back({image.address.object,need(store_.capture(spec,std::span<const compact_descriptor::PartSource>{&part,1}))});
+        }
+        need(store_.prepare(basis,changes,accepted));
       }
-      return need(store_.prepare(basis,changes));
-    }();
-    need(store_.install(accepted));
+      need(store_.install(accepted));
+    }
     store_.drain();orbital::worker::poll(runtime_.lane,128);
   }
   std::size_t drain(std::size_t) {return store_.drain();}

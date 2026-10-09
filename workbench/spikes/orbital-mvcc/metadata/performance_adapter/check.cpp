@@ -39,7 +39,8 @@ void replace(perf::Candidate<Store>& candidate, std::size_t object,
       image.shape.parts[0].interpretation, 0, 1, backing};
   const compact_history::Change change{image.address.object,
       perf::need(store.capture(spec, {&part, 1}))};
-  auto prepared = perf::need(store.prepare(basis, {&change, 1}));
+  typename Store::Prepared prepared(store);
+  perf::need(store.prepare(basis, {&change, 1}, prepared));
   perf::need(store.install(prepared));
 }
 

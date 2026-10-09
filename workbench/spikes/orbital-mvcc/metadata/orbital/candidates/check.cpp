@@ -66,12 +66,12 @@ void pair(cd::Selection selected, std::uint64_t a, std::uint64_t b) {
 
 template<class Store> void publish(Store& store, std::span<const Change> changes) {
   typename Store::Scope basis(store);
-  auto prepared = store.prepare(basis, changes); check(prepared);
+  typename Store::Prepared prepared(store); check(store.prepare(basis, changes, prepared));
   const auto calls = store.statistics().allocation_calls;
-  check(store.install(*prepared));
+  check(store.install(prepared));
   check(store.statistics().allocation_calls == calls);
-  check(prepared->disposition() == Disposition::installed);
-  check(!store.install(*prepared));
+  check(prepared.disposition() == Disposition::installed);
+  check(!store.install(prepared));
 }
 
 template<class Store> void coherent_history() {
@@ -93,7 +93,7 @@ template<class Store> void coherent_history() {
       check(word(*first.part(std::size_t{0})) == 10);
       auto export_result = bound->export_part(0); check(export_result); escaped = *export_result;
       std::array<Change, 2> next{{{A, encode(store, A, 2, 30, 40)}, {B, encode(store, B, 2, 300, 400)}}};
-      auto prepared = store.prepare(old, next); check(prepared);
+      typename Store::Prepared prepared(store); check(store.prepare(old, next, prepared));
       auto conversion = store.conversion(old, A); check(conversion);
       {
         auto row = encode(store, A, 1, 10, 20, false);
@@ -105,7 +105,7 @@ template<class Store> void coherent_history() {
         check(store.adopt(*conversion, second_row));
       }
       store.drain(); pair(*alternative, 10, 20); pair(first, 10, 20);
-      check(store.install(*prepared)); // Physical adoption did not stale logical basis.
+      check(store.install(prepared)); // Physical adoption did not stale logical basis.
       check(bound->binding().object == A && bound->binding().version == 1);
       check(cd::describe(cd::view(escaped)).version == 1);
       pair(old.bind(B), 100, 200); // B was not discovered before the publication.
@@ -136,12 +136,13 @@ template<class Store> void teardown_and_authority() {
     typename Store::Scope old(source);
     typename Store::Scope basis(source);
     std::array<Change, 1> next{{{A, encode(source, A, 2, 30, 40)}}};
-    auto accepted = source.prepare(basis, next); check(accepted); next = {};
+    typename Store::Prepared accepted(source); check(source.prepare(basis, next, accepted)); next = {};
     Store foreign(metadata);
-    check(!foreign.install(*accepted));
+    check(!foreign.install(accepted));
     Store moved(std::move(source));
-    check(moved.install(*accepted));
-    check(!moved.prepare(old, std::span<const Change>{}));
+    check(moved.install(accepted));
+    typename Store::Prepared stale(moved);
+    check(!moved.prepare(old, std::span<const Change>{}, stale));
     pair(old.bind(B), 100, 200);
     moved = {};
     pair(old.bind(A), 10, 20); pair(old.bind(B), 100, 200); check(!old.bind(C));
@@ -151,9 +152,9 @@ template<class Store> void teardown_and_authority() {
     Store store(metadata);
     typename Store::Scope basis(store);
     std::array<Change, 1> private_result{{{A, encode(store, A, 1, 10, 20)}}};
-    auto accepted = store.prepare(basis, private_result); check(accepted);
-    accepted->abort(); check(accepted->disposition() == Disposition::aborted);
-    check(!store.install(*accepted)); check(!basis.bind(A));
+    typename Store::Prepared accepted(store); check(store.prepare(basis, private_result, accepted));
+    accepted.abort(); check(accepted.disposition() == Disposition::aborted);
+    check(!store.install(accepted)); check(!basis.bind(A));
     store = {}; // Prepared and Scope pins keep disposal's real Core alive.
   }
   check(metadata.live == 0);
@@ -176,8 +177,8 @@ template<class Store> void tombstones() {
     {
       typename Store::Scope basis(store);
       std::array<Change, 1> recreated{{{A, encode(store, A, 4, 30, 40)}}};
-      auto prepared = store.prepare(basis, recreated); check(prepared);
-      store.drain(); check(store.install(*prepared)); pair(store.borrow().bind(A), 30, 40);
+      typename Store::Prepared prepared(store); check(store.prepare(basis, recreated, prepared));
+      store.drain(); check(store.install(prepared)); pair(store.borrow().bind(A), 30, 40);
     }
     store.drain();
     check(store.statistics().objects == 1 && store.statistics().versions == 1);
@@ -186,7 +187,7 @@ template<class Store> void tombstones() {
       check(store.statistics().objects == 0 && store.statistics().versions == 0);
       typename Store::Scope basis(store);
       std::array<Change, 1> recreated{{{A, encode(store, A, basis.cut() + 1, i, i + 1)}}};
-      auto prepared = store.prepare(basis, recreated); check(prepared); check(store.install(*prepared));
+      typename Store::Prepared prepared(store); check(store.prepare(basis, recreated, prepared)); check(store.install(prepared));
     }
   }
   check(metadata.live == 0);
@@ -205,13 +206,23 @@ template<class Store> void refusal() {
       std::array<Change, 3> update{{{A, encode(store, A, 2, 30, 40)}, {B, encode(store, B, 2, 300, 400)},
           {C, encode(store, C, 2, 7, 8)}}};
       metadata.limit = metadata.live + allowance;
-      auto prepared = store.prepare(basis, update);
+      typename Store::Prepared prepared(store);
+      auto status = store.prepare(basis, update, prepared);
       metadata.limit = std::numeric_limits<std::size_t>::max();
-      if (prepared) { prepared->abort(); check(prepared->disposition() == Disposition::aborted); }
-      else check(prepared.error() == Error::capacity);
+      if (status) { prepared.abort(); check(prepared.disposition() == Disposition::aborted); }
+      else {
+        check(status.error() == Error::capacity && prepared.disposition() == Disposition::empty);
+        // Reuse this exact packet after partial rollback, not a fresh output.
+        check(store.prepare(basis, update, prepared));
+        check(store.install(prepared));
+        pair(store.borrow().bind(A), 30, 40); pair(store.borrow().bind(B), 300, 400);
+        pair(store.borrow().bind(C), 7, 8);
+      }
       pair(basis.bind(A), 10, 20); pair(basis.bind(B), 100, 200); check(!basis.bind(C));
-      pair(store.borrow().bind(A), 10, 20); pair(store.borrow().bind(B), 100, 200);
-      check(!store.borrow().bind(C));
+      if (status) {
+        pair(store.borrow().bind(A), 10, 20); pair(store.borrow().bind(B), 100, 200);
+        check(!store.borrow().bind(C));
+      }
     }
     check(metadata.live == 0);
   }
@@ -236,7 +247,7 @@ template<class Store> void private_failure_and_empty() {
     pair(basis.bind(A), 10, 20); pair(basis.bind(B), 100, 200);
     auto zero = store.capture(second, empty); check(zero);
     std::array<Change, 1> updated{{{B, std::move(*zero)}}};
-    auto accepted = store.prepare(basis, updated); check(accepted); check(store.install(*accepted));
+    typename Store::Prepared accepted(store); check(store.prepare(basis, updated, accepted)); check(store.install(accepted));
     auto selected = store.borrow().bind(B); check(selected.part_count() == 2);
     check(selected.part(std::size_t{0})->body().empty() && selected.part(std::size_t{1})->body().empty());
   }
@@ -257,7 +268,7 @@ template<class Store> void private_reads() {
     auto b = Store::select_private(basis, std::span(changes).first(1), B);
     const auto sum = word(*a.part(std::size_t{0})) + word(*a.part(std::size_t{1}));
     changes[1].representation = encode(store, B, 2, sum, word(*b.part(std::size_t{1})));
-    auto prepared = store.prepare(basis, changes); check(prepared); check(store.install(*prepared));
+    typename Store::Prepared prepared(store); check(store.prepare(basis, changes, prepared)); check(store.install(prepared));
     pair(store.borrow().bind(B), 70, 200); pair(basis.bind(B), 100, 200);
   }
   check(metadata.live == 0);
@@ -350,7 +361,7 @@ template<class Store> void abort_callback() {
     }
     std::array<Change, 1> erased{{{A, {}}}}; publish(store, erased);
     typename Store::Scope basis(store);
-    std::optional<typename Store::Prepared> accepted;
+    typename Store::Prepared accepted(store);
     bool called = false;
     {
       auto backing = std::shared_ptr<const std::uint64_t>(new std::uint64_t(30), [&](const std::uint64_t* word) {
@@ -362,10 +373,10 @@ template<class Store> void abort_callback() {
           .interpretation = {}, .readable_padding = 0, .alignment = alignof(std::uint64_t), .backing = backing}}};
       auto descriptor = store.capture(spec, part); check(descriptor);
       std::array<Change, 1> changes{{{A, std::move(*descriptor)}}};
-      auto prepared = store.prepare(basis, changes); check(prepared); accepted.emplace(std::move(*prepared));
+      check(store.prepare(basis, changes, accepted));
     }
-    accepted->abort(); check(called && accepted->disposition() == Disposition::aborted);
-    check(!basis.bind(A)); accepted.reset();
+    accepted.abort(); check(called && accepted.disposition() == Disposition::aborted);
+    check(!basis.bind(A));
   }
   check(metadata.live == 0);
 }
@@ -383,7 +394,8 @@ template<class Store> void two_change_abort_callback() {
       }
       std::array<Change, 1> deleted{{{B, {}}}}; publish(store, deleted);
       typename Store::Scope basis(store);
-      std::optional<typename Store::Prepared> accepted, nested;
+      std::optional<typename Store::Prepared> accepted(std::in_place, store);
+      typename Store::Prepared nested(store);
       std::size_t called = 0;
       {
         auto backing = std::shared_ptr<const std::uint64_t>(new std::uint64_t(30), [&](const auto* word) {
@@ -391,9 +403,8 @@ template<class Store> void two_change_abort_callback() {
           check(store.drain() > 0); // B stays pinned while obsolete B's body can go.
           check(store.statistics().objects == 1 && store.statistics().versions == 1);
           std::array<Change, 1> change{{{B, encode(store, B, 3, 300, 400)}}};
-          auto prepared = store.prepare(basis, change);
-          if (prepared) nested.emplace(std::move(*prepared));
-          check(!prepared && prepared.error() == Error::unavailable);
+          const auto refused = store.prepare(basis, change, nested);
+          check(!refused && refused.error() == Error::unavailable);
           if (explicit_abort) accepted->abort(); // Terminal before owner callbacks.
         });
         cd::RepresentationSpec spec{.object = A, .version = 3, .replica = {}, .format = {},
@@ -402,8 +413,7 @@ template<class Store> void two_change_abort_callback() {
             .interpretation = {}, .readable_padding = 0, .alignment = alignof(std::uint64_t), .backing = backing}}};
         auto descriptor = store.capture(spec, part); check(descriptor);
         std::array<Change, 2> changes{{{A, std::move(*descriptor)}, {B, encode(store, B, 3, 300, 400)}}};
-        auto prepared = store.prepare(basis, changes); check(prepared);
-        accepted.emplace(std::move(*prepared));
+        check(store.prepare(basis, changes, *accepted));
       }
       if (explicit_abort) {
         accepted->abort(); check(accepted->disposition() == Disposition::aborted);
@@ -411,11 +421,11 @@ template<class Store> void two_change_abort_callback() {
         auto installed = store.install(*accepted);
         check(!installed && installed.error() == Error::rejected);
       } else accepted.reset();
-      check(called == 1 && !nested && !basis.bind(A) && !basis.bind(B));
+      check(called == 1 && nested.disposition() == Disposition::empty && !basis.bind(A) && !basis.bind(B));
       // Disposal finishes the exclusion. A later batch can reuse B normally.
       std::array<Change, 1> change{{{B, encode(store, B, 3, 300, 400)}}};
-      auto retry = store.prepare(basis, change); check(retry);
-      check(store.install(*retry)); pair(store.borrow().bind(B), 300, 400);
+      typename Store::Prepared retry(store); check(store.prepare(basis, change, retry));
+      check(store.install(retry)); pair(store.borrow().bind(B), 300, 400);
       check(!basis.bind(B));
     }
     check(metadata.live == 0);
@@ -429,7 +439,7 @@ template<class Store> void private_prepare_callback() {
   constexpr ObjectId X{1, 4};
   {
     Store store(metadata);
-    std::optional<typename Store::Prepared> accepted;
+    typename Store::Prepared accepted(store);
     bool armed = false, called = false;
     {
       auto body = std::shared_ptr<const std::uint64_t>(new std::uint64_t(10), [&](const auto* word) {
@@ -438,8 +448,7 @@ template<class Store> void private_prepare_callback() {
         called = true;
         typename Store::Scope basis(store);
         std::array<Change, 1> change{{{C, encode(store, C, 3, 30, 40)}}};
-        auto prepared = store.prepare(basis, change); check(prepared);
-        accepted.emplace(std::move(*prepared));
+        check(store.prepare(basis, change, accepted));
       });
       cd::RepresentationSpec spec{.object = A, .version = 1, .replica = {}, .format = {},
           .logical_metadata = logical, .interpretation = {}, .dependencies = {}};
@@ -458,10 +467,10 @@ template<class Store> void private_prepare_callback() {
     }
     armed = true;
     while (store.drain()) {}
-    check(called && accepted);
+    check(called && accepted.disposition() == Disposition::accepted);
     check(store.statistics().versions == 2); // Both obsolete bodies were removed.
     check(store.statistics().objects == 3); // Private C is still pinned.
-    accepted.reset();
+    accepted.abort();
     check(store.statistics().objects == 2);
     typename Store::Scope current(store);
     check(!current.bind(X) && !current.bind(C));
@@ -470,12 +479,73 @@ template<class Store> void private_prepare_callback() {
   check(!metadata.live);
 }
 
+// Output identity and terminal state cannot be confused with another accepted
+// publication, including after the public Store handle changes incarnation.
+template<class Store> void prepared_output() {
+  Memory metadata;
+  {
+    Store store(metadata), foreign(metadata), empty;
+    typename Store::Scope basis(store), empty_basis(empty);
+    typename Store::Prepared first(store), foreign_output(foreign), empty_output(empty);
+    std::array<Change, 1> change{{{A, encode(store, A, 1, 10, 20)}}};
+    auto refused = empty.prepare(empty_basis, change, empty_output);
+    check(!refused && refused.error() == Error::conflict);
+    check(empty_output.disposition() == Disposition::empty && !empty.install(empty_output));
+    refused = store.prepare(basis, change, foreign_output);
+    check(!refused && refused.error() == Error::conflict);
+    check(foreign_output.disposition() == Disposition::empty);
+    check(store.prepare(basis, change, first));
+    refused = store.prepare(basis, change, first);
+    check(!refused && refused.error() == Error::unavailable);
+    first.abort();
+    refused = store.prepare(basis, change, first);
+    check(!refused && refused.error() == Error::unavailable);
+    typename Store::Prepared second(store), contender(store);
+    check(store.prepare(basis, change, second));
+    first.abort(); // An old aborted packet cannot clear the new exclusion.
+    refused = store.install(first);
+    check(!refused && refused.error() == Error::rejected);
+    refused = store.prepare(basis, change, first);
+    check(!refused && refused.error() == Error::unavailable);
+    refused = store.prepare(basis, change, contender);
+    check(!refused && refused.error() == Error::unavailable);
+    check(store.install(second));
+    refused = store.install(second);
+    check(!refused && refused.error() == Error::rejected);
+    typename Store::Scope current(store);
+    change = {{{A, encode(store, A, 2, 30, 40)}}};
+    refused = store.prepare(current, change, second);
+    check(!refused && refused.error() == Error::unavailable);
+    check(store.prepare(current, change, contender));
+    second.abort(); // An old installed packet likewise has no current authority.
+    refused = store.install(second);
+    check(!refused && refused.error() == Error::rejected);
+    refused = store.prepare(current, change, second);
+    check(!refused && refused.error() == Error::unavailable);
+    check(store.install(contender));
+    pair(store.borrow().bind(A), 30, 40); pair(current.bind(A), 10, 20);
+    check(!basis.bind(A));
+    typename Store::Prepared previous_incarnation(store);
+    store = Store(metadata);
+    typename Store::Scope replacement_basis(store);
+    change = {{{A, encode(store, A, 1, 50, 60)}}};
+    refused = store.prepare(replacement_basis, change, previous_incarnation);
+    check(!refused && refused.error() == Error::conflict);
+    typename Store::Prepared replacement(store);
+    check(store.prepare(replacement_basis, change, replacement));
+    Store moved(std::move(store));
+    check(moved.install(replacement)); pair(moved.borrow().bind(A), 50, 60);
+    pair(current.bind(A), 10, 20);
+  }
+  check(!metadata.live);
+}
+
 template<class Store> void run(const char* name) {
   coherent_history<Store>(); teardown_and_authority<Store>(); tombstones<Store>();
   refusal<Store>(); private_failure_and_empty<Store>(); private_reads<Store>(); callbacks<Store>();
   conversion_authority<Store>(); abort_callback<Store>();
-  two_change_abort_callback<Store>(); private_prepare_callback<Store>();
-  std::cout << name << ": eleven grouped histories passed\n";
+  two_change_abort_callback<Store>(); private_prepare_callback<Store>(); prepared_output<Store>();
+  std::cout << name << ": twelve grouped histories passed\n";
 }
 
 int main() {

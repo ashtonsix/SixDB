@@ -191,7 +191,8 @@ Store::Owner encode(Store& store, ch::Memory& memory, std::span<const Row> rows,
 void publish(Store& store, orbital::ObjectId object, const Store::Owner& owner) {
   Store::Scope basis(store);
   const std::array<Store::Change, 1> changes{{{object, owner}}};
-  auto prepared = take(store.prepare(basis, changes), "actual history prepare");
+  Store::Prepared prepared(store);
+  check(store.prepare(basis, changes, prepared).has_value(), "actual history prepare");
   const auto calls = store.statistics().allocation_calls;
   check(store.install(prepared).has_value(), "actual history install");
   check(store.statistics().allocation_calls == calls, "history install allocated");

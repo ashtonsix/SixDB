@@ -1,0 +1,928 @@
+{
+  "question": "Does stationary caller-owned Prepared simplify the ordinary ABI without increasing complete-operation work?",
+  "source": {
+    "before": {
+      "tree": "f6b3bc1e7ecc0099c6bdb7c34f3bbefb41509767",
+      "head": "9ea696a",
+      "binary_sha256": "d8967de15d108f235d65b3e251ec86084140e9acaeab958d64d3435af6ee7470",
+      "source": "build/reviews/orbital-stage2-reattempt/projected-metadata-source",
+      "scope": "Selected point writer, generic Store seam, production Allocation baseline; no readfusion or compact Allocation applied"
+    },
+    "after": {
+      "tree": "8592b5758e0637eb250e7c40c7e209b809f32759",
+      "head": "83642e63a925c8484577b921f6f9876283876542",
+      "binary_sha256": "caa4209253ebf54c1790606d43e0d6a1a16b0d8572ce57e48ad931adacc011d1",
+      "scope": "Prepared only over selected point writer and generic Store, unchanged production Allocation; no read fusion",
+      "source_receipt": "build/orbital-mvcc/metadata-projected-integration/prepared-live-receipt.json"
+    },
+    "prepared_store_sha256": "420c55e98c7890affbb495f0e1e2fcd324506d1bdc701befbb4c69764abc1835"
+  },
+  "native_qualification": "Eight registered checks, candidate ABI, benchmark, Shape accounting and three standalone probes pass; no new sanitizer claim.",
+  "layout": {
+    "Prepared_bytes": [
+      64,
+      48
+    ],
+    "prepare_return_bytes": [
+      72,
+      8
+    ],
+    "Core_bytes": [
+      704,
+      688
+    ],
+    "backend_bytes": [
+      2048,
+      2048
+    ],
+    "writer_arrays_bytes": [
+      2560,
+      2560
+    ]
+  },
+  "first_screen": "64 oracle trials, 4099 operations each, two blocked repetitions per cut; unstable timings including unchanged LMDB. No speed claim retained.",
+  "followup": {
+    "oracle_trials": 64,
+    "ops": 65537,
+    "cpu": 2,
+    "repetitions": 2,
+    "order": "per-case before-after then after-before",
+    "limits": "Local AArch64 OrbStack throughput signal only; no Zen5, tail, PMU, cold claim; public Allocation baseline and no read fusion",
+    "binary_sha256": {
+      "before": "d8967de15d108f235d65b3e251ec86084140e9acaeab958d64d3435af6ee7470",
+      "after": "caa4209253ebf54c1790606d43e0d6a1a16b0d8572ce57e48ad931adacc011d1"
+    },
+    "summary": [
+      {
+        "case": {
+          "rows": 192,
+          "objects": 64,
+          "format": "rows",
+          "batch": 1,
+          "age": 8,
+          "backend": "composed-inline"
+        },
+        "before": {
+          "wall_ns": 630.8710423119765,
+          "caller_cpu_ns": 631.0210949539955,
+          "process_cpu_ns": 631.0608282344324
+        },
+        "after": {
+          "wall_ns": 688.5082396203671,
+          "caller_cpu_ns": 677.4140866991165,
+          "process_cpu_ns": 677.4579550482933
+        },
+        "footprint_differences": {
+          "footprint_initial": {
+            "metadata_bytes": [
+              6579,
+              6563
+            ],
+            "metadata_peak": [
+              9395,
+              9379
+            ],
+            "catalog_core_bytes": [
+              704,
+              688
+            ]
+          },
+          "footprint_after_interval": {
+            "metadata_bytes": [
+              7795,
+              7779
+            ],
+            "metadata_peak": [
+              9395,
+              9379
+            ],
+            "catalog_core_bytes": [
+              704,
+              688
+            ]
+          },
+          "footprint_after_reader_release": {
+            "metadata_bytes": [
+              7755,
+              7739
+            ],
+            "metadata_peak": [
+              9395,
+              9379
+            ],
+            "catalog_core_bytes": [
+              704,
+              688
+            ]
+          }
+        }
+      },
+      {
+        "case": {
+          "rows": 192,
+          "objects": 64,
+          "format": "rows",
+          "batch": 1,
+          "age": 8,
+          "backend": "composed-directory"
+        },
+        "before": {
+          "wall_ns": 720.9203579657293,
+          "caller_cpu_ns": 721.0475227733951,
+          "process_cpu_ns": 721.0872636831102
+        },
+        "after": {
+          "wall_ns": 781.9354105314555,
+          "caller_cpu_ns": 781.9259883729801,
+          "process_cpu_ns": 782.0747516669973
+        },
+        "footprint_differences": {
+          "footprint_initial": {
+            "metadata_bytes": [
+              7099,
+              7083
+            ],
+            "metadata_peak": [
+              9659,
+              9643
+            ],
+            "catalog_core_bytes": [
+              696,
+              680
+            ]
+          },
+          "footprint_after_interval": {
+            "metadata_bytes": [
+              8763,
+              8747
+            ],
+            "metadata_peak": [
+              9659,
+              9643
+            ],
+            "catalog_core_bytes": [
+              696,
+              680
+            ]
+          },
+          "footprint_after_reader_release": {
+            "metadata_bytes": [
+              8723,
+              8707
+            ],
+            "metadata_peak": [
+              9659,
+              9643
+            ],
+            "catalog_core_bytes": [
+              696,
+              680
+            ]
+          }
+        }
+      },
+      {
+        "case": {
+          "rows": 192,
+          "objects": 64,
+          "format": "rows",
+          "batch": 1,
+          "age": 8,
+          "backend": "lmdb-composed"
+        },
+        "before": {
+          "wall_ns": 4952.004188473687,
+          "caller_cpu_ns": 4929.450775897584,
+          "process_cpu_ns": 4929.479698490929
+        },
+        "after": {
+          "wall_ns": 3867.7048461174604,
+          "caller_cpu_ns": 3863.220379327708,
+          "process_cpu_ns": 3863.260738208951
+        },
+        "footprint_differences": {
+          "footprint_initial": {},
+          "footprint_after_interval": {},
+          "footprint_after_reader_release": {}
+        }
+      },
+      {
+        "case": {
+          "rows": 192,
+          "objects": 64,
+          "format": "rows",
+          "batch": 64,
+          "age": 8,
+          "backend": "composed-inline"
+        },
+        "before": {
+          "wall_ns": 520.1411187573432,
+          "caller_cpu_ns": 520.0405267253612,
+          "process_cpu_ns": 520.0700901780673
+        },
+        "after": {
+          "wall_ns": 541.803347727238,
+          "caller_cpu_ns": 542.1142560690907,
+          "process_cpu_ns": 542.1555762393763
+        },
+        "footprint_differences": {
+          "footprint_initial": {
+            "metadata_bytes": [
+              6579,
+              6563
+            ],
+            "metadata_peak": [
+              9395,
+              9379
+            ],
+            "catalog_core_bytes": [
+              704,
+              688
+            ]
+          },
+          "footprint_after_interval": {
+            "metadata_bytes": [
+              10243,
+              10227
+            ],
+            "metadata_peak": [
+              17115,
+              17099
+            ],
+            "catalog_core_bytes": [
+              704,
+              688
+            ]
+          },
+          "footprint_after_reader_release": {
+            "metadata_bytes": [
+              10203,
+              10187
+            ],
+            "metadata_peak": [
+              17115,
+              17099
+            ],
+            "catalog_core_bytes": [
+              704,
+              688
+            ]
+          }
+        }
+      },
+      {
+        "case": {
+          "rows": 192,
+          "objects": 64,
+          "format": "rows",
+          "batch": 64,
+          "age": 8,
+          "backend": "composed-directory"
+        },
+        "before": {
+          "wall_ns": 384.1915177685887,
+          "caller_cpu_ns": 384.2832369501198,
+          "process_cpu_ns": 384.31184674306115
+        },
+        "after": {
+          "wall_ns": 408.8491768008911,
+          "caller_cpu_ns": 408.9254924699025,
+          "process_cpu_ns": 408.94901353433943
+        },
+        "footprint_differences": {
+          "footprint_initial": {
+            "metadata_bytes": [
+              7099,
+              7083
+            ],
+            "metadata_peak": [
+              9659,
+              9643
+            ],
+            "catalog_core_bytes": [
+              696,
+              680
+            ]
+          },
+          "footprint_after_interval": {
+            "metadata_bytes": [
+              11283,
+              11267
+            ],
+            "metadata_peak": [
+              18155,
+              18139
+            ],
+            "catalog_core_bytes": [
+              696,
+              680
+            ]
+          },
+          "footprint_after_reader_release": {
+            "metadata_bytes": [
+              11243,
+              11227
+            ],
+            "metadata_peak": [
+              18155,
+              18139
+            ],
+            "catalog_core_bytes": [
+              696,
+              680
+            ]
+          }
+        }
+      },
+      {
+        "case": {
+          "rows": 192,
+          "objects": 64,
+          "format": "rows",
+          "batch": 64,
+          "age": 8,
+          "backend": "lmdb-composed"
+        },
+        "before": {
+          "wall_ns": 358.20383905274883,
+          "caller_cpu_ns": 358.2845720737904,
+          "process_cpu_ns": 358.3096800280757
+        },
+        "after": {
+          "wall_ns": 345.25927338755207,
+          "caller_cpu_ns": 345.3370462486839,
+          "process_cpu_ns": 345.35770633382674
+        },
+        "footprint_differences": {
+          "footprint_initial": {},
+          "footprint_after_interval": {},
+          "footprint_after_reader_release": {}
+        }
+      },
+      {
+        "case": {
+          "rows": 192,
+          "objects": 64,
+          "format": "columns",
+          "batch": 1,
+          "age": 8,
+          "backend": "composed-inline"
+        },
+        "before": {
+          "wall_ns": 903.904130491173,
+          "caller_cpu_ns": 903.8564780200497,
+          "process_cpu_ns": 903.8869951325205
+        },
+        "after": {
+          "wall_ns": 860.6413400064087,
+          "caller_cpu_ns": 860.7459602972367,
+          "process_cpu_ns": 860.7761646093047
+        },
+        "footprint_differences": {
+          "footprint_initial": {
+            "metadata_bytes": [
+              9608,
+              9592
+            ],
+            "metadata_peak": [
+              12424,
+              12408
+            ],
+            "catalog_core_bytes": [
+              704,
+              688
+            ]
+          },
+          "footprint_after_interval": {
+            "metadata_bytes": [
+              10872,
+              10856
+            ],
+            "metadata_peak": [
+              12424,
+              12408
+            ],
+            "catalog_core_bytes": [
+              704,
+              688
+            ]
+          },
+          "footprint_after_reader_release": {
+            "metadata_bytes": [
+              10784,
+              10768
+            ],
+            "metadata_peak": [
+              12424,
+              12408
+            ],
+            "catalog_core_bytes": [
+              704,
+              688
+            ]
+          }
+        }
+      },
+      {
+        "case": {
+          "rows": 192,
+          "objects": 64,
+          "format": "columns",
+          "batch": 1,
+          "age": 8,
+          "backend": "composed-directory"
+        },
+        "before": {
+          "wall_ns": 861.9831316660818,
+          "caller_cpu_ns": 862.0864854967423,
+          "process_cpu_ns": 862.1189175580207
+        },
+        "after": {
+          "wall_ns": 900.1600851427438,
+          "caller_cpu_ns": 900.2570380090635,
+          "process_cpu_ns": 900.2866090910478
+        },
+        "footprint_differences": {
+          "footprint_initial": {
+            "metadata_bytes": [
+              10128,
+              10112
+            ],
+            "metadata_peak": [
+              12688,
+              12672
+            ],
+            "catalog_core_bytes": [
+              696,
+              680
+            ]
+          },
+          "footprint_after_interval": {
+            "metadata_bytes": [
+              11840,
+              11824
+            ],
+            "metadata_peak": [
+              12688,
+              12672
+            ],
+            "catalog_core_bytes": [
+              696,
+              680
+            ]
+          },
+          "footprint_after_reader_release": {
+            "metadata_bytes": [
+              11752,
+              11736
+            ],
+            "metadata_peak": [
+              12688,
+              12672
+            ],
+            "catalog_core_bytes": [
+              696,
+              680
+            ]
+          }
+        }
+      },
+      {
+        "case": {
+          "rows": 192,
+          "objects": 64,
+          "format": "columns",
+          "batch": 64,
+          "age": 8,
+          "backend": "composed-inline"
+        },
+        "before": {
+          "wall_ns": 696.9096083128613,
+          "caller_cpu_ns": 696.8979889222882,
+          "process_cpu_ns": 696.9323206738179
+        },
+        "after": {
+          "wall_ns": 690.2505683812199,
+          "caller_cpu_ns": 690.3784579703068,
+          "process_cpu_ns": 690.4124692921555
+        },
+        "footprint_differences": {
+          "footprint_initial": {
+            "metadata_bytes": [
+              9608,
+              9592
+            ],
+            "metadata_peak": [
+              12424,
+              12408
+            ],
+            "catalog_core_bytes": [
+              704,
+              688
+            ]
+          },
+          "footprint_after_interval": {
+            "metadata_bytes": [
+              13320,
+              13304
+            ],
+            "metadata_peak": [
+              26288,
+              26272
+            ],
+            "catalog_core_bytes": [
+              704,
+              688
+            ]
+          },
+          "footprint_after_reader_release": {
+            "metadata_bytes": [
+              13232,
+              13216
+            ],
+            "metadata_peak": [
+              26288,
+              26272
+            ],
+            "catalog_core_bytes": [
+              704,
+              688
+            ]
+          }
+        }
+      },
+      {
+        "case": {
+          "rows": 192,
+          "objects": 64,
+          "format": "columns",
+          "batch": 64,
+          "age": 8,
+          "backend": "composed-directory"
+        },
+        "before": {
+          "wall_ns": 744.9947052809863,
+          "caller_cpu_ns": 745.0721195660467,
+          "process_cpu_ns": 745.0981888093748
+        },
+        "after": {
+          "wall_ns": 694.472382013214,
+          "caller_cpu_ns": 694.5904603506416,
+          "process_cpu_ns": 694.6200161740696
+        },
+        "footprint_differences": {
+          "footprint_initial": {
+            "metadata_bytes": [
+              10128,
+              10112
+            ],
+            "metadata_peak": [
+              12688,
+              12672
+            ],
+            "catalog_core_bytes": [
+              696,
+              680
+            ]
+          },
+          "footprint_after_interval": {
+            "metadata_bytes": [
+              14360,
+              14344
+            ],
+            "metadata_peak": [
+              27328,
+              27312
+            ],
+            "catalog_core_bytes": [
+              696,
+              680
+            ]
+          },
+          "footprint_after_reader_release": {
+            "metadata_bytes": [
+              14272,
+              14256
+            ],
+            "metadata_peak": [
+              27328,
+              27312
+            ],
+            "catalog_core_bytes": [
+              696,
+              680
+            ]
+          }
+        }
+      },
+      {
+        "case": {
+          "rows": 4096,
+          "objects": 4,
+          "format": "rows",
+          "batch": 64,
+          "age": 8,
+          "backend": "composed-inline"
+        },
+        "before": {
+          "wall_ns": 133.31720249629979,
+          "caller_cpu_ns": 133.40205532752492,
+          "process_cpu_ns": 133.42272304194577
+        },
+        "after": {
+          "wall_ns": 130.41142408105344,
+          "caller_cpu_ns": 130.49403390451195,
+          "process_cpu_ns": 130.53344675526802
+        },
+        "footprint_differences": {
+          "footprint_initial": {
+            "metadata_bytes": [
+              2443,
+              2427
+            ],
+            "metadata_peak": [
+              2603,
+              2587
+            ],
+            "catalog_core_bytes": [
+              704,
+              688
+            ]
+          },
+          "footprint_after_interval": {
+            "metadata_bytes": [
+              3627,
+              3611
+            ],
+            "metadata_peak": [
+              4019,
+              4003
+            ],
+            "catalog_core_bytes": [
+              704,
+              688
+            ]
+          },
+          "footprint_after_reader_release": {
+            "metadata_bytes": [
+              3587,
+              3571
+            ],
+            "metadata_peak": [
+              4019,
+              4003
+            ],
+            "catalog_core_bytes": [
+              704,
+              688
+            ]
+          }
+        }
+      },
+      {
+        "case": {
+          "rows": 4096,
+          "objects": 4,
+          "format": "rows",
+          "batch": 64,
+          "age": 8,
+          "backend": "composed-directory"
+        },
+        "before": {
+          "wall_ns": 133.3273723240307,
+          "caller_cpu_ns": 133.42526359155897,
+          "process_cpu_ns": 133.45451424386223
+        },
+        "after": {
+          "wall_ns": 130.0636434380579,
+          "caller_cpu_ns": 130.18440728138305,
+          "process_cpu_ns": 130.2184262325099
+        },
+        "footprint_differences": {
+          "footprint_initial": {
+            "metadata_bytes": [
+              2995,
+              2979
+            ],
+            "metadata_peak": [
+              3155,
+              3139
+            ],
+            "catalog_core_bytes": [
+              696,
+              680
+            ]
+          },
+          "footprint_after_interval": {
+            "metadata_bytes": [
+              3171,
+              3155
+            ],
+            "metadata_peak": [
+              3563,
+              3547
+            ],
+            "catalog_core_bytes": [
+              696,
+              680
+            ]
+          },
+          "footprint_after_reader_release": {
+            "metadata_bytes": [
+              3131,
+              3115
+            ],
+            "metadata_peak": [
+              3563,
+              3547
+            ],
+            "catalog_core_bytes": [
+              696,
+              680
+            ]
+          }
+        }
+      },
+      {
+        "case": {
+          "rows": 4096,
+          "objects": 4,
+          "format": "rows",
+          "batch": 64,
+          "age": 8,
+          "backend": "lmdb-composed"
+        },
+        "before": {
+          "wall_ns": 420.90715931458567,
+          "caller_cpu_ns": 420.9698948685475,
+          "process_cpu_ns": 421.00327296031253
+        },
+        "after": {
+          "wall_ns": 475.8868578055144,
+          "caller_cpu_ns": 475.98683949524695,
+          "process_cpu_ns": 476.01609014755024
+        },
+        "footprint_differences": {
+          "footprint_initial": {},
+          "footprint_after_interval": {},
+          "footprint_after_reader_release": {}
+        }
+      },
+      {
+        "case": {
+          "rows": 4096,
+          "objects": 4,
+          "format": "rows",
+          "batch": 64,
+          "age": 0,
+          "backend": "composed-inline"
+        },
+        "before": {
+          "wall_ns": 127.41185894990616,
+          "caller_cpu_ns": 127.51766177884248,
+          "process_cpu_ns": 127.55676182919572
+        },
+        "after": {
+          "wall_ns": 123.49044051451853,
+          "caller_cpu_ns": 123.54725574866106,
+          "process_cpu_ns": 123.5796801806613
+        },
+        "footprint_differences": {
+          "footprint_initial": {
+            "metadata_bytes": [
+              2443,
+              2427
+            ],
+            "metadata_peak": [
+              2603,
+              2587
+            ],
+            "catalog_core_bytes": [
+              704,
+              688
+            ]
+          },
+          "footprint_after_interval": {
+            "metadata_bytes": [
+              3747,
+              3731
+            ],
+            "metadata_peak": [
+              4019,
+              4003
+            ],
+            "catalog_core_bytes": [
+              704,
+              688
+            ]
+          },
+          "footprint_after_reader_release": {
+            "metadata_bytes": [
+              3587,
+              3571
+            ],
+            "metadata_peak": [
+              4019,
+              4003
+            ],
+            "catalog_core_bytes": [
+              704,
+              688
+            ]
+          }
+        }
+      },
+      {
+        "case": {
+          "rows": 4096,
+          "objects": 4,
+          "format": "rows",
+          "batch": 64,
+          "age": 0,
+          "backend": "composed-directory"
+        },
+        "before": {
+          "wall_ns": 124.7759586187955,
+          "caller_cpu_ns": 124.83342234157804,
+          "process_cpu_ns": 124.85886598410059
+        },
+        "after": {
+          "wall_ns": 125.97821078169584,
+          "caller_cpu_ns": 126.03407998535178,
+          "process_cpu_ns": 126.05093306071379
+        },
+        "footprint_differences": {
+          "footprint_initial": {
+            "metadata_bytes": [
+              2995,
+              2979
+            ],
+            "metadata_peak": [
+              3155,
+              3139
+            ],
+            "catalog_core_bytes": [
+              696,
+              680
+            ]
+          },
+          "footprint_after_interval": {
+            "metadata_bytes": [
+              3291,
+              3275
+            ],
+            "metadata_peak": [
+              3563,
+              3547
+            ],
+            "catalog_core_bytes": [
+              696,
+              680
+            ]
+          },
+          "footprint_after_reader_release": {
+            "metadata_bytes": [
+              3131,
+              3115
+            ],
+            "metadata_peak": [
+              3563,
+              3547
+            ],
+            "catalog_core_bytes": [
+              696,
+              680
+            ]
+          }
+        }
+      },
+      {
+        "case": {
+          "rows": 4096,
+          "objects": 4,
+          "format": "rows",
+          "batch": 64,
+          "age": 0,
+          "backend": "lmdb-composed"
+        },
+        "before": {
+          "wall_ns": 1408.4390268092834,
+          "caller_cpu_ns": 1408.5850283046218,
+          "process_cpu_ns": 1408.6200009155134
+        },
+        "after": {
+          "wall_ns": 1144.9291240062867,
+          "caller_cpu_ns": 1144.768405633459,
+          "process_cpu_ns": 1144.7995636052915
+        },
+        "footprint_differences": {
+          "footprint_initial": {},
+          "footprint_after_interval": {},
+          "footprint_after_reader_release": {}
+        }
+      }
+    ]
+  },
+  "interpretation": "The longer, sequentially alternating pair still gives mixed timings: tiny Tuple scalar and batch regress, larger Tuple batch is near-flat or slightly better. Unchanged LMDB varies materially, so this local VM does not establish causality or target-machine ranking. Keep the negative signal for the next matched target-machine run. Logical outcomes, clone/copy counts, admissions, reclamation and capacities agree; each composed catalog saves exactly 16 requested bytes. Select the simpler publication seam for its ordinary ABI and ownership behavior, not a measured speedup.",
+  "recovery": "Local raw trials and frozen binaries: build/reviews/orbital-stage2-reattempt/prepared-feedback; source trees/binary hashes above identify the paired inputs."
+}

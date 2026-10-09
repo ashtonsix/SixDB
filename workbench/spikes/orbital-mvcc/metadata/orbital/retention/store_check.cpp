@@ -52,8 +52,9 @@ template<class Store> void publish(Store& store, std::uint64_t cut, bool columns
     Witnesses* witnesses = nullptr, bool erased = false, ObjectId key = object) {
   typename Store::Scope basis(store);
   std::array<Change, 1> change{{{key, erased ? DescriptorOwner{} : representation(store, cut, columns, witnesses, key)}}};
-  auto accepted = store.prepare(basis, change);
-  CHECK(accepted && store.install(*accepted));
+  typename Store::Prepared accepted(store);
+  auto status = store.prepare(basis, change, accepted);
+  CHECK(status && store.install(accepted));
 }
 
 template<class Nodes, class Retention> void closing_cuts() {
@@ -124,13 +125,14 @@ template<class Nodes> void absence_and_preparation() {
     {
       typename Store::Scope basis(store);
       std::array<Change, 1> change{{{object, representation(store, 6, false)}}};
-      auto accepted = store.prepare(basis, change);
-      CHECK(accepted);
+      typename Store::Prepared accepted(store);
+      auto status = store.prepare(basis, change, accepted);
+      CHECK(status);
       two.reset(); store.drain(); // The only old selected tombstone becomes unnecessary.
       CHECK(store.statistics().versions == 1 && store.statistics().objects == 1);
       zero.reset(); store.drain(); // The accepted Entry must survive tombstone eligibility.
       CHECK(store.statistics().objects == 1);
-      CHECK(store.install(*accepted) && word(store.borrow().bind(object)) == 63);
+      CHECK(store.install(accepted) && word(store.borrow().bind(object)) == 63);
       CHECK(!basis.bind(object));
     }
     store.drain();

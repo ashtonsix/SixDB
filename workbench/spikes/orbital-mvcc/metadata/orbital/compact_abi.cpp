@@ -23,10 +23,10 @@ extern "C" orbital::Result<void> compact_install(
   return store.install(prepared);
 }
 
-extern "C" orbital::Result<history::Store16::Prepared> compact_prepare(
+extern "C" orbital::Result<void> compact_prepare(
     history::Store16& store, const history::Store16::Scope& scope,
-    std::span<const history::Change> changes) {
-  return store.prepare(scope, changes);
+    std::span<const history::Change> changes, history::Store16::Prepared& prepared) {
+  return store.prepare(scope, changes, prepared);
 }
 
 extern "C" void compact_enroll(history::Store16::Scope* final_place,

@@ -135,18 +135,19 @@ public:
     Selection source() const noexcept { return source_.selection(); }
   };
 
+  // Caller-owned, single-use publication storage. An empty packet can retry
+  // refusal; acceptance ends that eligibility even when subsequently aborted.
   class Prepared {
     Core* core_{};
-    std::uint64_t basis_{}, occurrence_{};
     Disposition disposition_{Disposition::empty};
     std::pmr::vector<Pending> changes_;
     friend class Store;
     friend struct Core;
-    explicit Prepared(Memory& memory) : changes_(&memory) {}
   public:
-    Prepared(Prepared&& other) noexcept : core_(std::exchange(other.core_, nullptr)),
-        basis_(other.basis_), occurrence_(other.occurrence_), disposition_(other.disposition_),
-        changes_(std::move(other.changes_)) {}
+    explicit Prepared(const Store& store) noexcept : core_(store.core_),
+        changes_(core_ ? &core_->memory : std::pmr::get_default_resource()) {
+      if (core_) ++core_->references;
+    }
     Prepared(const Prepared&) = delete;
     Prepared& operator=(const Prepared&) = delete;
     ~Prepared() {
@@ -190,7 +191,7 @@ private:
     std::pmr::unordered_map<const Scope*, std::pmr::vector<Value*>> captures;
     Scope* first_scope{};
     Scope* last_scope{};
-    std::uint64_t cut{}, occurrences{}, pending{};
+    std::uint64_t cut{};
     std::size_t scopes{};
     std::size_t copied_metadata_bytes{}, captured_descriptor_bytes{}, reclamation_work{};
     std::size_t last_sweep_bytes{}, last_sweep_cuts{}, maintenance_refusals{};
@@ -213,7 +214,7 @@ private:
     Step resume_step{Step::idle};
     bool crossed_floor{};
     bool callback_restart{};
-    bool dirty{}, draining{};
+    bool dirty{}, draining{}, pending{};
 
     explicit Core(Memory& resource) : Layout(resource), captures(&resource), reader_cuts(&resource) {}
     ~Core() { assert(!first_scope && !pending); this->dispose(); }
@@ -248,7 +249,7 @@ private:
     }
     void abort(Prepared& prepared) noexcept {
       if (prepared.disposition_ != Disposition::accepted) return;
-      assert(pending == prepared.occurrence_); prepared.disposition_ = Disposition::aborted;
+      assert(pending); prepared.disposition_ = Disposition::aborted;
       for (auto& change : prepared.changes_) {
         const auto current = head(change.entry);
         if (current && (entries.indebted(change.entry) || !primary(current))) add_debt(change.entry);
@@ -256,7 +257,7 @@ private:
       }
       // Owner callbacks can drain or close the Store. They cannot prepare while
       // later mutations in this batch still own entry pins.
-      pending = 0;
+      pending = false;
     }
     void begin_entries() noexcept {
       remaining_entries = entries.debt_count();
@@ -422,13 +423,13 @@ public:
     pin.core->captured_descriptor_bytes += footprint.requested_bytes;
     return Owner::take(*captured);
   }
-  Result<Prepared> prepare(const Scope& basis, std::span<const Change> changes) {
-    if (!core_ || basis.core_ != core_) return std::unexpected(Error::conflict);
-    Pin pin(core_); auto& c = *pin.core;
+  Result<void> prepare(const Scope& basis, std::span<const Change> changes, Prepared& prepared) {
+    if (!core_ || basis.core_ != core_ || prepared.core_ != core_) return std::unexpected(Error::conflict);
+    auto& c = *prepared.core_; // The caller-owned packet already pins this Core.
     if (basis.cut_ != c.cut) return std::unexpected(Error::stale);
-    if (c.pending || changes.empty()) return std::unexpected(Error::unavailable);
-    if (c.cut == std::numeric_limits<std::uint64_t>::max() ||
-        c.occurrences == std::numeric_limits<std::uint64_t>::max()) return std::unexpected(Error::capacity);
+    if (c.pending || changes.empty() || prepared.disposition_ != Disposition::empty)
+      return std::unexpected(Error::unavailable);
+    if (c.cut == std::numeric_limits<std::uint64_t>::max()) return std::unexpected(Error::capacity);
     for (std::size_t i = 0; i < changes.size(); ++i) {
       const auto& change = changes[i];
       auto* rep = change.representation.get();
@@ -439,25 +440,29 @@ public:
       }
       for (std::size_t j = 0; j < i; ++j) if (changes[j].object == change.object) return std::unexpected(Error::conflict);
     }
-    Prepared prepared(c.memory);
+    assert(prepared.changes_.empty());
     try {
       c.reserve(changes);
       c.Layout::prepare(changes, c.cut + 1, prepared.changes_);
-    } catch (const std::bad_alloc&) { return std::unexpected(Error::capacity); }
-    ++c.references; prepared.core_ = &c; prepared.basis_ = c.cut;
-    prepared.occurrence_ = ++c.occurrences; prepared.disposition_ = Disposition::accepted;
-    c.pending = c.occurrences; return prepared;
+    } catch (const std::bad_alloc&) {
+      prepared.changes_.clear(); // Layout rolled back owners/slots; retry must not revisit them.
+      return std::unexpected(Error::capacity);
+    } catch (...) {
+      prepared.changes_.clear(); throw;
+    }
+    prepared.disposition_ = Disposition::accepted; c.pending = true; return {};
   }
   Result<void> install(Prepared& prepared) noexcept {
     if (!core_ || prepared.core_ != core_) return std::unexpected(Error::conflict);
     auto& c = *core_;
-    if (prepared.disposition_ != Disposition::accepted || c.pending != prepared.occurrence_) return std::unexpected(Error::rejected);
-    if (prepared.basis_ != c.cut) return std::unexpected(Error::stale);
+    if (prepared.disposition_ != Disposition::accepted || !c.pending) return std::unexpected(Error::rejected);
+    // One accepted packet excludes every other publication. Its predecessor
+    // therefore cannot change before install or completion of abort cleanup.
     for (auto& change : prepared.changes_)
       if (c.Layout::install(change, c.cut + 1)) c.add_debt(change.entry);
     if constexpr (Retention::uses_distinct_cuts)
       if (c.last_scope && c.last_scope->cut_ == c.cut) ++c.reader_changes;
-    ++c.cut; c.pending = 0; prepared.disposition_ = Disposition::installed; return {};
+    ++c.cut; prepared.disposition_ = Disposition::installed; c.pending = false; return {};
   }
   Result<ConversionTarget> conversion(const Scope& basis, ObjectId id) const noexcept {
     if (!core_ || basis.core_ != core_) return std::unexpected(Error::conflict);

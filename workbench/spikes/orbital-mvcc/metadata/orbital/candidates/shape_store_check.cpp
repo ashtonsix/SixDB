@@ -89,7 +89,7 @@ std::uint64_t exported_value(cs::Export* exported, bool columns) {
 
 template<class Store> void publish(Store& store, std::span<const typename Store::Change> changes) {
   typename Store::Scope basis(store);
-  auto prepared = take(store.prepare(basis, changes));
+  typename Store::Prepared prepared(store); check(store.prepare(basis, changes, prepared));
   const auto before = store.statistics().allocation_calls;
   check(store.install(prepared));
   check(store.statistics().allocation_calls == before);
@@ -196,7 +196,8 @@ template<class Store> void exact_store_authority() {
     auto foreign_budget = second.adopt(correct_second_target, foreign_replacement);
     check(!foreign_budget && foreign_budget.error() == orbital::Error::conflict);
     std::array<typename Store::Change, 1> foreign_changes{{{A, foreign_replacement}}};
-    auto foreign_prepare = second.prepare(second_scope, foreign_changes);
+    typename Store::Prepared prepared(second);
+    auto foreign_prepare = second.prepare(second_scope, foreign_changes, prepared);
     check(!foreign_prepare && foreign_prepare.error() == orbital::Error::conflict);
     // Closing the public Store handle does not reinterpret the target as the
     // other Store incarnation, even when Object ID and cut are equal.
@@ -262,7 +263,7 @@ template<class Store> void accepted_private_and_alternatives() {
     auto captured_alternative = take(basis.bind_alternative(A));
     std::array<typename Store::Change, 2> changes{{
         {A, encode(store, memory, 91)}, {B, encode(store, memory, 191, false)}}};
-    auto prepared = take(store.prepare(basis, changes));
+    typename Store::Prepared prepared(store); check(store.prepare(basis, changes, prepared));
     auto second_alternative = encode(store, memory, 81, false);
     check(store.adopt(target, second_alternative)); second_alternative = {};
     store.drain();
@@ -289,7 +290,7 @@ template<class Store> void accepted_while_older_history_retires() {
     publish(store, changes); changes = {};
     typename Store::Scope basis(store);
     changes = {{{A, encode(store, memory, 203)}}};
-    auto prepared = take(store.prepare(basis, changes)); changes = {};
+    typename Store::Prepared prepared(store); check(store.prepare(basis, changes, prepared)); changes = {};
     auto target = take(store.conversion(basis, A));
     auto alternative = encode(store, memory, 202, false);
     check(store.adopt(target, alternative)); alternative = {};
