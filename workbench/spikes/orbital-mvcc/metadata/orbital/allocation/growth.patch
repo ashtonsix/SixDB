@@ -1,0 +1,982 @@
+--- a/orbital/include/orbital/allocation.h
++++ b/orbital/include/orbital/allocation.h
+@@ -32,6 +32,13 @@
+   std::size_t bytes{}, reserved_bytes{};
+   std::size_t alignment{alignof(std::max_align_t)}, readable_padding{};
+   Initialization initialization{Initialization::uninitialized};
++};
++
++/// Private span growth without content initialization. The caller authorizes
++/// and initializes newly exposed body/padding before a consumer reads them.
++struct GrowthRequest {
++  std::size_t bytes{}, reserved_bytes{};
++  std::size_t alignment{alignof(std::max_align_t)}, readable_padding{};
+ };
+ 
+ /// Shared byte budget and background reclamation for its Pools.
+@@ -111,8 +118,9 @@
+ [[nodiscard]] Result<void> remove_pool(Pool&);
+ /// Owner-lane operations. Padding is initialized; uninitialized body is not readable data.
+ [[nodiscard]] Result<Allocation> allocate(Pool&, const AllocationRequest&);
++/// Preserves existing readable bytes; never initializes new body or padding.
+ /// Failure preserves the original allocation. Relocation requires all Holds retired.
+-[[nodiscard]] Result<void> grow(Allocation&, const AllocationRequest&);
++[[nodiscard]] Result<void> grow(Allocation&, const GrowthRequest&);
+ /// Capture on the storage's owner Lane; include every byte a native kernel may read.
+ /// Empty ranges and ranges beyond the Allocation plus readable padding fail.
+ [[nodiscard]] Result<Hold> hold(const Allocation&, ByteRange footprint);
+--- a/orbital/src/allocation/internal.h
++++ b/orbital/src/allocation/internal.h
+@@ -20,7 +20,6 @@
+ struct Storage {
+   detail::Domain* domain{};
+   std::atomic<std::uint32_t> users{};
+-  std::uint16_t held_extent{}; // Finite Home extent; Windows keep their wide extent.
+   std::uint8_t identity{};
+   std::atomic<bool> foreign_hint_pending{};
+ };
+@@ -107,7 +106,6 @@
+   std::size_t owner_index{}; // Pool owning-vector position, not an allocation identity.
+   Storage use;
+   Ref<Arena> active_lifetime;
+-  std::size_t held_extent{};
+   Window* next_idle{};
+   Window** previous_idle{};
+   std::byte* mapping{};
+@@ -182,8 +180,6 @@
+ 
+ // Establish the active backend pin before exposing the first physical user.
+ void activate(Storage&) noexcept;
+-std::size_t held_extent(const Storage&) noexcept;
+-void held_extent(Storage&, std::size_t) noexcept;
+ 
+ // Fill a fresh output only on success; common allocation code establishes
+ // its physical use before exposing the handle to callers.
+@@ -192,7 +188,7 @@
+ Result<void> window_allocate(Pool&, const AllocationRequest&, std::size_t,
+     Allocation&);
+ // False means local capacity was unavailable; common growth may try elsewhere.
+-Result<bool> relocate_finite(Allocation&, const AllocationRequest&, std::size_t);
++Result<bool> relocate_finite(Allocation&, const GrowthRequest&, std::size_t);
+ Result<void> extend_window(Window&, std::size_t);
+ Result<void> prepare_finite(Pool&, Preparation&, const AllocationRequest&, worker::Lane&);
+ Result<void> prepare_window(Pool&, Preparation&, const AllocationRequest&, worker::Lane&);
+@@ -212,7 +208,8 @@
+   return true;
+ }
+ 
+-inline Result<std::size_t> extent(const AllocationRequest& request) noexcept {
++template<class Request>
++inline Result<std::size_t> extent(const Request& request) noexcept {
+   if (!request.bytes || !std::has_single_bit(request.alignment) ||
+       request.bytes > maximum - request.readable_padding)
+     return std::unexpected(Error::invalid_argument);
+--- a/orbital/src/allocation/allocation.cpp
++++ b/orbital/src/allocation/allocation.cpp
+@@ -59,18 +59,6 @@
+     window.active_lifetime = Ref<Arena>::retain(*domain.pool->arena);
+   }
+   use.users.store(1, std::memory_order_relaxed);
+-}
+-
+-std::size_t held_extent(const Storage& use) noexcept {
+-  if (use.domain->finite) return use.held_extent;
+-  return static_cast<const Window*>(use.domain->context)->held_extent;
+-}
+-
+-void held_extent(Storage& use, std::size_t extent) noexcept {
+-  if (use.domain->finite) {
+-    assert(extent <= 3072);
+-    use.held_extent = static_cast<std::uint16_t>(extent);
+-  } else static_cast<Window*>(use.domain->context)->held_extent = extent;
+ }
+ 
+ void recycle(Storage& use, bool notify = true) noexcept {
+@@ -95,7 +83,6 @@
+     retained = std::move(window.active_lifetime);
+     add_idle(window);
+   }
+-  held_extent(use, 0);
+   if (notify) pulse(pool.capacity_changed);
+ }
+ 
+@@ -313,7 +300,7 @@
+   return static_cast<Window*>(domain.context)->reserved;
+ }
+ 
+-Result<void> grow(Allocation& allocation, const AllocationRequest& request) {
++Result<void> grow(Allocation& allocation, const GrowthRequest& request) {
+   if (!allocation) return std::unexpected(Error::invalid_argument);
+   auto& use = *allocation.storage;
+   auto& pool = *use.domain->pool;
+@@ -325,12 +312,9 @@
+   // While the move-only Allocation is live, it owns exactly one user. Every
+   // additional user is a Hold; foreign release publishes completion here.
+   const bool held = use.users.load(std::memory_order_acquire) > 1;
+-  const auto protected_extent = held_extent(use);
+-  const bool changes_protected = held && protected_extent > allocation.size &&
+-      (request.initialization == Initialization::zero || request.bytes < protected_extent);
+   const bool aligned = reinterpret_cast<std::uintptr_t>(allocation.address) % request.alignment == 0;
+-  if (changes_protected) return std::unexpected(Error::conflict);
+-  const auto needed = std::max(*size, request.reserved_bytes);
++  const auto previous_extent = allocation.size + allocation.readable_padding;
++  const auto needed = std::max({*size, request.reserved_bytes, previous_extent});
+   if (!aligned || needed > reserved_bytes(allocation)) {
+     if (held) return std::unexpected(Error::conflict);
+     if (use.domain->finite && needed <= 3072 && request.alignment <= 3072) {
+@@ -340,9 +324,14 @@
+       // Private identity is not a public address promise. With no live Holds,
+       // class pressure or local page cost can use ready backing elsewhere.
+     }
+-    auto replacement = allocate(pool, request);
++    // Allocate uninitialized replacement bytes. Fresh-allocation padding policy
++    // does not apply to growth; interpretation and initialization belong to its writer.
++    auto replacement = allocate(pool, {.bytes = std::max(*size, previous_extent),
++        .reserved_bytes = needed, .alignment = request.alignment});
+     if (!replacement) return std::unexpected(replacement.error());
+-    std::memcpy(replacement->address, allocation.address, allocation.size);
++    std::memcpy(replacement->address, allocation.address, previous_extent);
++    replacement->size = request.bytes;
++    replacement->readable_padding = request.readable_padding;
+     allocation = std::move(*replacement);
+     ++pool.internal->counts.relocations;
+   } else {
+@@ -353,10 +342,6 @@
+         if (!extended) return std::unexpected(extended.error());
+       }
+     }
+-    if (request.initialization == Initialization::zero)
+-      std::memset(allocation.address + allocation.size, 0, request.bytes - allocation.size);
+-    if (request.readable_padding)
+-      std::memset(allocation.address + request.bytes, 0, request.readable_padding);
+     allocation.size = request.bytes;
+     allocation.readable_padding = request.readable_padding;
+   }
+@@ -373,8 +358,6 @@
+   auto& use = *allocation.storage;
+   const auto users = use.users.fetch_add(1, std::memory_order_relaxed);
+   assert(users && users < returning - 1);
+-  if (users == 1) held_extent(use, 0);
+-  held_extent(use, std::max(held_extent(use), static_cast<std::size_t>(footprint.offset + footprint.size)));
+   Hold result;
+   result.storage = &use;
+   result.address = allocation.address + footprint.offset;
+--- a/orbital/src/allocation/group.cpp
++++ b/orbital/src/allocation/group.cpp
+@@ -583,7 +583,7 @@
+   return {};
+ }
+ 
+-Result<bool> relocate_finite(Allocation& allocation, const AllocationRequest& request,
++Result<bool> relocate_finite(Allocation& allocation, const GrowthRequest& request,
+     std::size_t needed) {
+   auto& use = *allocation.storage;
+   auto& group = *static_cast<Group*>(use.domain->context);
+@@ -596,11 +596,8 @@
+   if (destination) {
+     const auto mapped = map_home(group, *destination);
+     if (mapped) {
+-      std::memcpy(destination->address, allocation.address, allocation.size);
+-      if (request.initialization == Initialization::zero)
+-        std::memset(destination->address + allocation.size, 0, request.bytes - allocation.size);
+-      if (request.readable_padding)
+-        std::memset(destination->address + request.bytes, 0, request.readable_padding);
++      std::memcpy(destination->address, allocation.address,
++          allocation.size + allocation.readable_padding);
+       verify(group.geometry->bind({use.identity}, *destination));
+       verify(group.geometry->release_home(*old));
+       allocation.address = destination->address;
+--- a/orbital/test/allocation.cpp
++++ b/orbital/test/allocation.cpp
+@@ -1,6 +1,7 @@
+ #include <orbital/allocation.h>
+ #include <array>
+-#include <cassert>
++#include <cstdio>
++#include <cstdlib>
+ #include <chrono>
+ #include <cstring>
+ #include <iostream>
+@@ -11,10 +12,11 @@
+ using namespace orbital;
+ using namespace orbital::allocation;
+ namespace {
++#define CHECK(x) do { if (!(x)) { std::fprintf(stderr, "allocation check failed: %s:%d: %s\n", __FILE__, __LINE__, #x); std::abort(); } } while (false)
+ void drain(Pool& pool) {
+   const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(5);
+   while (close(pool).kind() != Progress::Kind::done) {
+-    assert(std::chrono::steady_clock::now() < deadline);
++    CHECK(std::chrono::steady_clock::now() < deadline);
+     worker::poll(*pool.lane, 1024);
+     std::this_thread::yield();
+   }
+@@ -23,83 +25,89 @@
+ void trim(Pool& pool) {
+   const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(5);
+   while (trim_cold(pool, 0).kind() != Progress::Kind::done) {
+-    assert(std::chrono::steady_clock::now() < deadline);
++    CHECK(std::chrono::steady_clock::now() < deadline);
+     worker::poll(*pool.lane, 1024);
+     std::this_thread::yield();
+   }
+ }
+ 
+ void exercise(std::size_t amount, std::size_t alignment) {
+-  auto arena = open_arena(128 * 1024 * 1024); assert(arena);
+-  worker::Lane lane; assert(worker::adopt(lane));
+-  auto pool = add_pool(**arena, lane); assert(pool);
++  auto arena = open_arena(128 * 1024 * 1024); CHECK(arena);
++  worker::Lane lane; CHECK(worker::adopt(lane));
++  auto pool = add_pool(**arena, lane); CHECK(pool);
+   auto allocation = allocate(**pool, {amount, amount * 4, alignment, 32, Initialization::zero});
+   // Reserve includes padding; exact tiny bodies use a compatible finite class.
+   if (!allocation && amount * 4 < amount + 32) {
+     allocation = allocate(**pool, {amount, amount + 32, alignment, 32, Initialization::zero});
+   }
+-  assert(allocation);
+-  assert(reinterpret_cast<std::uintptr_t>(allocation->address) % alignment == 0);
+-  for (auto value : bytes(*allocation)) assert(value == std::byte{0});
++  CHECK(allocation);
++  CHECK(reinterpret_cast<std::uintptr_t>(allocation->address) % alignment == 0);
++  for (auto value : bytes(*allocation)) CHECK(value == std::byte{0});
+   std::memset(allocation->address, 0x5a, amount);
+-  auto captured = hold(*allocation, {0, amount}); assert(captured);
++  auto captured = hold(*allocation, {0, amount}); CHECK(captured);
+   const auto* original = captured->address;
+-  assert(grow(*allocation, {amount + 1, 0, alignment, 0, Initialization::zero}));
+-  assert(allocation->address == original);
+-  assert(allocation->address[amount] == std::byte{0});
+-  assert(original[0] == std::byte{0x5a});
++  CHECK(grow(*allocation, {amount + 1, 0, alignment, 0}));
++  CHECK(allocation->address == original);
++  CHECK(allocation->address[amount] == std::byte{0});
++  CHECK(original[0] == std::byte{0x5a});
+   release(*allocation, {Temperature::hot});
+   auto future = allocate(**pool, {amount, amount * 4, alignment, 32});
+-  assert(future && future->address != original);
++  CHECK(future && future->address != original);
+   std::thread foreign([owned = std::move(*captured), original]() mutable {
+-    assert(owned.address == original && owned.address[0] == std::byte{0x5a});
++    CHECK(owned.address == original && owned.address[0] == std::byte{0x5a});
+     release(owned);
+   }); foreign.join();
+-  assert(worker::pending(lane));
++  CHECK(worker::pending(lane));
+   worker::poll(lane, 1024);
+   release(*future);
+   trim(**pool);
+   drain(**pool);
+-  assert((*arena)->charged_bytes.load() == 0);
++  CHECK((*arena)->charged_bytes.load() == 0);
+   worker::relinquish(lane);
+ }
+ 
+ void padding_and_rollback() {
+-  auto arena = open_arena(16 * 1024 * 1024); assert(arena);
+-  worker::Lane lane; assert(worker::adopt(lane));
+-  auto pool = add_pool(**arena, lane); assert(pool);
+-  auto value = allocate(**pool, {63, 256, 64, 1, Initialization::zero}); assert(value);
++  auto arena = open_arena(16 * 1024 * 1024); CHECK(arena);
++  worker::Lane lane; CHECK(worker::adopt(lane));
++  auto pool = add_pool(**arena, lane); CHECK(pool);
++  auto value = allocate(**pool, {63, 256, 64, 1, Initialization::zero}); CHECK(value);
+   value->address[63] = std::byte{0x73};
+-  auto wide = hold(*value, {0, 64}); assert(wide);
+-  auto denied = grow(*value, {64, 256, 64, 0, Initialization::zero});
+-  assert(!denied && denied.error() == Error::conflict);
+-  assert(value->size == 63 && wide->address[63] == std::byte{0x73});
++  auto wide = hold(*value, {0, 64}); CHECK(wide);
++  auto* original = value->address;
++  // A live physical reader still owns byte 63 after the public padding drops.
++  CHECK(grow(*value, {63, 256, 64, 0}));
++  CHECK(value->size == 63 && value->readable_padding == 0 && value->address == original);
++  CHECK(wide->address[63] == std::byte{0x73});
++  CHECK(grow(*value, {64, 256, 64, 0}));
++  CHECK(value->address == original && value->size == 64 && wide->address[63] == std::byte{0x73});
++  for (unsigned byte = 0; byte < 63; ++byte) CHECK(wide->address[byte] == std::byte{0});
+   release(*wide);
+-  assert(grow(*value, {64, 256, 64, 0, Initialization::zero}));
+-  assert(value->address[63] == std::byte{0});
+-  const auto* address = value->address;
++  // Initialization is a writer decision after its overlapping reader retires.
++  value->address[63] = std::byte{0};
+   const auto charged = (*arena)->charged_bytes.load();
+-  assert(!grow(*value, {32 * 1024 * 1024, 0, 64}));
+-  assert(value->address == address && value->size == 64);
+-  // Failed cold allocation may keep reusable metadata/VA, never charge phantom body.
+-  assert((*arena)->charged_bytes.load() == charged);
+-  assert(!allocate(**pool, {std::numeric_limits<std::size_t>::max(), 0, 8, 1}));
+-  assert(!allocate(**pool, {16, 0, 3}));
+-  assert(!hold(*value, {64, 1}));
+-  release(*value); drain(**pool); worker::relinquish(lane);
++  CHECK(!grow(*value, {32 * 1024 * 1024, 0, 64}));
++  CHECK(value->address == original && value->size == 64 && value->address[63] == std::byte{0});
++  // Failed cold allocation may keep reusable metadata/VA, never phantom body.
++  CHECK((*arena)->charged_bytes.load() == charged);
++  CHECK(!allocate(**pool, {std::numeric_limits<std::size_t>::max(), 0, 8, 1}));
++  CHECK(!allocate(**pool, {16, 0, 3}));
++  CHECK(!hold(*value, {64, 1}));
++  release(*value); drain(**pool);
++  CHECK((*arena)->charged_bytes.load() == 0);
++  CHECK(remove_pool(**pool)); worker::relinquish(lane);
+ }
+ 
+ void concurrent_returns() {
+-  auto arena = open_arena(32 * 1024 * 1024); assert(arena);
+-  worker::Lane lane; assert(worker::adopt(lane));
+-  auto pool = add_pool(**arena, lane); assert(pool);
++  auto arena = open_arena(32 * 1024 * 1024); CHECK(arena);
++  worker::Lane lane; CHECK(worker::adopt(lane));
++  auto pool = add_pool(**arena, lane); CHECK(pool);
+   for (unsigned iteration = 0; iteration < 50; ++iteration) {
+     std::vector<Allocation> values;
+     std::array<std::vector<Hold>, 4> uses;
+     for (unsigned i = 0; i < 64; ++i) {
+-      auto value = allocate(**pool, {64, 0, 16, 0, Initialization::zero}); assert(value);
++      auto value = allocate(**pool, {64, 0, 16, 0, Initialization::zero}); CHECK(value);
+       value->address[0] = std::byte(i);
+-      auto held = hold(*value, {0, 64}); assert(held);
++      auto held = hold(*value, {0, 64}); CHECK(held);
+       uses[i % 4].push_back(std::move(*held)); values.push_back(std::move(*value));
+     }
+     values.clear();
+@@ -110,16 +118,16 @@
+     for (auto& thread : threads) thread.join();
+     while (worker::pending(lane)) worker::poll(lane, 1);
+   }
+-  drain(**pool); assert((*arena)->charged_bytes.load() == 0); worker::relinquish(lane);
++  drain(**pool); CHECK((*arena)->charged_bytes.load() == 0); worker::relinquish(lane);
+ }
+ 
+ void finite_inventory() {
+-  auto arena = open_arena(32 * 1024 * 1024); assert(arena);
+-  worker::Lane lane; assert(worker::adopt(lane));
+-  auto pool = add_pool(**arena, lane); assert(pool);
++  auto arena = open_arena(32 * 1024 * 1024); CHECK(arena);
++  worker::Lane lane; CHECK(worker::adopt(lane));
++  auto pool = add_pool(**arena, lane); CHECK(pool);
+   std::vector<Allocation> values;
+   for (unsigned index = 0; index < 8 * 256; ++index) {
+-    auto value = allocate(**pool, {64, 0, 16}); assert(value);
++    auto value = allocate(**pool, {64, 0, 16}); CHECK(value);
+     value->address[0] = std::byte(index % 251);
+     values.push_back(std::move(*value));
+   }
+@@ -128,104 +136,108 @@
+   auto* released = values[123].address;
+   const auto retained = statistics(**pool);
+   release(values[123]);
+-  auto replacement = allocate(**pool, {64, 0, 16}); assert(replacement);
+-  assert(replacement->address == released);
+-  assert(statistics(**pool).reserved_bytes == retained.reserved_bytes);
+-  assert(statistics(**pool).metadata_bytes == retained.metadata_bytes);
++  auto replacement = allocate(**pool, {64, 0, 16}); CHECK(replacement);
++  CHECK(replacement->address == released);
++  CHECK(statistics(**pool).reserved_bytes == retained.reserved_bytes);
++  CHECK(statistics(**pool).metadata_bytes == retained.metadata_bytes);
+   for (unsigned index = 0; index < values.size(); ++index)
+-    if (index != 123) assert(values[index].address[0] == std::byte(index % 251));
++    if (index != 123) CHECK(values[index].address[0] == std::byte(index % 251));
+   release(*replacement); values.clear();
+   drain(**pool); worker::relinquish(lane);
+ }
+ 
+ void finite_alignment_growth() {
+-  auto arena = open_arena(16 * 1024 * 1024); assert(arena);
+-  worker::Lane lane; assert(worker::adopt(lane));
+-  auto pool = add_pool(**arena, lane); assert(pool);
++  auto arena = open_arena(16 * 1024 * 1024); CHECK(arena);
++  worker::Lane lane; CHECK(worker::adopt(lane));
++  auto pool = add_pool(**arena, lane); CHECK(pool);
+   std::vector<Allocation> values;
+   for (unsigned index = 0; index < 16; ++index) {
+-    auto value = allocate(**pool, {300, 320, 64, 16, Initialization::zero}); assert(value);
++    auto value = allocate(**pool, {300, 320, 64, 16, Initialization::zero}); CHECK(value);
+     std::memset(value->address, 0x57 + index, value->size);
+     values.push_back(std::move(*value));
+   }
+   auto& source = values[1];
+   auto* original = source.address;
+-  assert(reinterpret_cast<std::uintptr_t>(original) % 128 == 64);
+-  auto held = hold(source, {0, 316}); assert(held);
+-  const AllocationRequest target{305, 320, 128, 15, Initialization::zero};
++  CHECK(reinterpret_cast<std::uintptr_t>(original) % 128 == 64);
++  auto held = hold(source, {0, 316}); CHECK(held);
++  const GrowthRequest target{305, 320, 128, 15};
+   const auto charged = (*arena)->charged_bytes.load();
+   const auto refused = grow(source, target);
+-  assert(!refused && refused.error() == Error::conflict);
+-  assert(source.address == original && source.size == 300 && (*arena)->charged_bytes.load() == charged);
++  CHECK(!refused && refused.error() == Error::conflict);
++  CHECK(source.address == original && source.size == 300 && (*arena)->charged_bytes.load() == charged);
+   release(*held);
+-  assert(grow(source, target));
+-  assert(source.address != original && reinterpret_cast<std::uintptr_t>(source.address) % 128 == 0);
+-  for (unsigned byte = 0; byte < 300; ++byte) assert(source.address[byte] == std::byte{0x58});
+-  for (unsigned byte = 300; byte < 320; ++byte) assert(source.address[byte] == std::byte{0});
+-  auto reused = allocate(**pool, {300, 320, 64, 16}); assert(reused);
+-  assert(reused->address == original);
++  CHECK(grow(source, target));
++  CHECK(source.address != original && reinterpret_cast<std::uintptr_t>(source.address) % 128 == 0);
++  for (unsigned byte = 0; byte < 300; ++byte) CHECK(source.address[byte] == std::byte{0x58});
++  for (unsigned byte = 300; byte < 316; ++byte) CHECK(source.address[byte] == std::byte{0});
++  // The caller has retired old readers and may now initialize new body/padding.
++  std::memset(source.address + 300, 0, 20);
++  for (unsigned byte = 300; byte < 320; ++byte) CHECK(source.address[byte] == std::byte{0});
++  auto reused = allocate(**pool, {300, 320, 64, 16}); CHECK(reused);
++  CHECK(reused->address == original);
+   release(*reused); values.clear();
+-  drain(**pool); worker::relinquish(lane);
++  drain(**pool); CHECK((*arena)->charged_bytes.load() == 0);
++  CHECK(remove_pool(**pool)); worker::relinquish(lane);
+ }
+ 
+ void finite_metadata_budget() {
+   const auto page = static_cast<std::uint64_t>(::sysconf(_SC_PAGESIZE));
+   // A small aligned allocation should not require a 60 KiB controller. This
+   // public cap leaves room for three native page floors without pricing private fields.
+-  auto arena = open_arena(32 * 1024 + 3 * page); assert(arena);
+-  worker::Lane lane; assert(worker::adopt(lane));
+-  auto pool = add_pool(**arena, lane); assert(pool);
++  auto arena = open_arena(32 * 1024 + 3 * page); CHECK(arena);
++  worker::Lane lane; CHECK(worker::adopt(lane));
++  auto pool = add_pool(**arena, lane); CHECK(pool);
+   for (unsigned round = 0; round < 4; ++round) {
+-    auto value = allocate(**pool, {64, 0, 64, 16, Initialization::zero}); assert(value);
++    auto value = allocate(**pool, {64, 0, 64, 16, Initialization::zero}); CHECK(value);
+     std::memset(value->address, 0x61 + round, value->size);
+-    auto captured = hold(*value, {0, 80}); assert(captured);
++    auto captured = hold(*value, {0, 80}); CHECK(captured);
+     const auto charged = (*arena)->charged_bytes.load();
+-    assert(charged <= 32 * 1024 + 3 * page);
++    CHECK(charged <= 32 * 1024 + 3 * page);
+     release(*value);
+     const auto progress = trim_cold(**pool, 0);
+-    assert(progress.kind() == Progress::Kind::done && (*arena)->charged_bytes.load() == charged);
++    CHECK(progress.kind() == Progress::Kind::done && (*arena)->charged_bytes.load() == charged);
+     std::thread foreign([held = std::move(*captured), round]() mutable {
+       for (unsigned byte = 0; byte < 64; ++byte)
+-        assert(held.address[byte] == std::byte(0x61 + round));
+-      for (unsigned byte = 64; byte < 80; ++byte) assert(held.address[byte] == std::byte{0});
++        CHECK(held.address[byte] == std::byte(0x61 + round));
++      for (unsigned byte = 64; byte < 80; ++byte) CHECK(held.address[byte] == std::byte{0});
+       release(held);
+     });
+     foreign.join();
+     while (worker::pending(lane)) worker::poll(lane, 16);
+     trim(**pool);
+-    assert((*arena)->charged_bytes.load() == 0 && statistics(**pool).metadata_bytes == 0);
++    CHECK((*arena)->charged_bytes.load() == 0 && statistics(**pool).metadata_bytes == 0);
+   }
+   drain(**pool); worker::relinquish(lane);
+ }
+ 
+ void finite_prepared_before_hint() {
+   auto history = [](std::uint64_t limit, bool check_reuse) {
+-    auto arena = open_arena(limit); assert(arena);
+-    worker::Lane lane; assert(worker::adopt(lane));
+-    auto pool = add_pool(**arena, lane); assert(pool);
++    auto arena = open_arena(limit); CHECK(arena);
++    worker::Lane lane; CHECK(worker::adopt(lane));
++    auto pool = add_pool(**arena, lane); CHECK(pool);
+     std::vector<Allocation> live;
+     for (unsigned index = 0; index < 256; ++index) {
+-      auto value = allocate(**pool, {64, 256, 64, 16, Initialization::zero}); assert(value);
++      auto value = allocate(**pool, {64, 256, 64, 16, Initialization::zero}); CHECK(value);
+       value->address[0] = std::byte(index % 251);
+       live.push_back(std::move(*value));
+     }
+     const AllocationRequest request{1000, 1024, 64, 24, Initialization::zero};
+-    auto cold = allocate(**pool, request); assert(cold);
++    auto cold = allocate(**pool, request); CHECK(cold);
+     auto* prepared = cold->address;
+     release(live[0], {Temperature::warm});
+     release(*cold, {Temperature::cold});
+     const auto charged = (*arena)->charged_bytes.load();
+     if (check_reuse) {
+-      assert(charged == limit);
+-      auto reused = allocate(**pool, request); assert(reused);
+-      assert(reused->address == prepared && (*arena)->charged_bytes.load() == charged);
+-      for (unsigned byte = 0; byte < 1024; ++byte) assert(reused->address[byte] == std::byte{0});
++      CHECK(charged == limit);
++      auto reused = allocate(**pool, request); CHECK(reused);
++      CHECK(reused->address == prepared && (*arena)->charged_bytes.load() == charged);
++      for (unsigned byte = 0; byte < 1024; ++byte) CHECK(reused->address[byte] == std::byte{0});
+       for (unsigned index = 1; index < live.size(); ++index)
+-        assert(live[index].address[0] == std::byte(index % 251));
++        CHECK(live[index].address[0] == std::byte(index % 251));
+       release(*reused);
+     }
+     live.clear(); drain(**pool);
+-    assert((*arena)->charged_bytes.load() == 0);
++    CHECK((*arena)->charged_bytes.load() == 0);
+     worker::relinquish(lane);
+     return charged;
+   };
+@@ -236,49 +248,54 @@
+ 
+ void finite_growth_prepared_fallback() {
+   auto history = [](std::uint64_t limit, bool grow_at_limit) {
+-    auto arena = open_arena(limit); assert(arena);
+-    worker::Lane lane; assert(worker::adopt(lane));
+-    auto pool = add_pool(**arena, lane); assert(pool);
++    auto arena = open_arena(limit); CHECK(arena);
++    worker::Lane lane; CHECK(worker::adopt(lane));
++    auto pool = add_pool(**arena, lane); CHECK(pool);
+     std::array<Allocation, 256> live;
+     for (unsigned index = 0; index < live.size(); ++index) {
+-      auto value = allocate(**pool, {64, 256, 64, 16, Initialization::zero}); assert(value);
++      auto value = allocate(**pool, {64, 256, 64, 16, Initialization::zero}); CHECK(value);
+       std::memset(value->address, 0x40 + index % 32, value->size);
+       live[index] = std::move(*value);
+     }
+-    const AllocationRequest target{1000, 1024, 64, 24, Initialization::zero};
+-    auto spare = allocate(**pool, target); assert(spare);
++    const AllocationRequest destination{1000, 1024, 64, 24, Initialization::zero};
++    const GrowthRequest target{1000, 1024, 64, 24};
++    auto spare = allocate(**pool, destination); CHECK(spare);
+     auto* prepared = spare->address;
+     release(live[0], {Temperature::warm});
+     release(*spare, {Temperature::cold});
+     const auto charged = (*arena)->charged_bytes.load();
+     if (grow_at_limit) {
+-      assert(charged == limit);
++      CHECK(charged == limit);
+       // Establish that the same public request has a zero-charge destination.
+-      auto ordinary = allocate(**pool, target); assert(ordinary);
+-      assert(ordinary->address == prepared && (*arena)->charged_bytes.load() == charged);
++      auto ordinary = allocate(**pool, destination); CHECK(ordinary);
++      CHECK(ordinary->address == prepared && (*arena)->charged_bytes.load() == charged);
+       std::memset(ordinary->address, 0xdd, 1024);
+       release(*ordinary, {Temperature::cold});
+       auto& source = live[1];
+       auto* original = source.address;
+-      auto retained = hold(source, {0, 64}); assert(retained);
++      auto retained = hold(source, {0, 64}); CHECK(retained);
+       auto refused = grow(source, target);
+-      assert(!refused && refused.error() == Error::conflict);
+-      assert(source.address == original && source.size == 64 &&
++      CHECK(!refused && refused.error() == Error::conflict);
++      CHECK(source.address == original && source.size == 64 &&
+           (*arena)->charged_bytes.load() == charged);
+       release(*retained);
+-      assert(grow(source, target));
+-      assert(source.address == prepared && source.size == target.bytes &&
++      CHECK(grow(source, target));
++      CHECK(source.address == prepared && source.size == target.bytes &&
+           source.readable_padding == target.readable_padding &&
+           (*arena)->charged_bytes.load() == charged);
+-      for (unsigned byte = 0; byte < 64; ++byte) assert(source.address[byte] == std::byte{0x41});
+-      for (unsigned byte = 64; byte < 1024; ++byte) assert(source.address[byte] == std::byte{0});
++      for (unsigned byte = 0; byte < 64; ++byte) CHECK(source.address[byte] == std::byte{0x41});
++      for (unsigned byte = 64; byte < 80; ++byte) CHECK(source.address[byte] == std::byte{0});
++      for (unsigned byte = 80; byte < 1024; ++byte) CHECK(source.address[byte] == std::byte{0xdd});
++      // The ready destination was poisoned; grow must not initialize any new byte.
++      std::memset(source.address + 64, 0, 960);
++      for (unsigned byte = 64; byte < 1024; ++byte) CHECK(source.address[byte] == std::byte{0});
+       for (unsigned index = 2; index < live.size(); ++index)
+-        for (const auto byte : bytes(live[index])) assert(byte == std::byte(0x40 + index % 32));
++        for (const auto byte : bytes(live[index])) CHECK(byte == std::byte(0x40 + index % 32));
+     }
+     for (auto& value : live) release(value);
+     drain(**pool);
+-    assert((*arena)->charged_bytes.load() == 0);
+-    assert(remove_pool(**pool));
++    CHECK((*arena)->charged_bytes.load() == 0);
++    CHECK(remove_pool(**pool));
+     worker::relinquish(lane);
+     return charged;
+   };
+--- a/orbital/test/lifetime.cpp
++++ b/orbital/test/lifetime.cpp
+@@ -4,6 +4,7 @@
+ #include <chrono>
+ #include <cstdio>
+ #include <cstdlib>
++#include <cstring>
+ #include <source_location>
+ #include <sys/mman.h>
+ #include <thread>
+@@ -268,6 +269,7 @@
+   worker::Lane lane;
+   check(bool(worker::adopt(lane)), "adopt release/growth Lane");
+   auto& pool = *take(add_pool(*arena, lane));
++  unsigned relocation_refusals = 0;
+   for (unsigned round = 0; round < 48; ++round) {
+     auto value = take(allocate(pool, request(body)));
+     fill(value, round);
+@@ -279,10 +281,17 @@
+       release(owned, {.temperature = Temperature::warm,
+           .last_access = std::chrono::steady_clock::now()});
+     });
+-    const AllocationRequest larger{body * 5, body * 8, 64, 16, Initialization::zero};
+-    auto denied = grow(value, larger);
+-    check(!denied && denied.error() == Error::conflict,
+-          "growth rewrote a genuinely held prefix/padding");
++    const GrowthRequest larger{body * 5, body * 8, 64, 16};
++    auto* original = value.address;
++    auto initial = grow(value, larger);
++    if (!initial) {
++      check(initial.error() == Error::conflict, "held growth failed for an unrelated reason");
++      ++relocation_refusals;
++    }
++    check(value.address == original, "growth relocated storage with a live physical reader");
++    for (std::size_t index = 0; index < body + 16; ++index)
++      check(value.address[index] == (index < body ? expected(index, round) : std::byte{0}),
++            "held growth changed previously readable bytes");
+     begin.store(true, std::memory_order_release);
+     const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(10);
+     for (;;) {
+@@ -292,8 +301,9 @@
+       check(std::chrono::steady_clock::now() < deadline, "growth did not observe final foreign release");
+       std::this_thread::yield();
+     }
+-    // Growth can finish before the foreign thread returns from release. Its
+-    // captured payload must already be dead; old Storage may be reusable now.
++    // The reader finished before releasing its Hold. Its final decrement can
++    // permit relocation before release returns; initialization is now ours.
++    std::memset(value.address + body + 16, 0, value.size - body);
+     auto current = take(hold(value, {0, value.size + value.readable_padding}));
+     verify(current, body, round);
+     release(value);
+@@ -303,20 +313,23 @@
+     verify(copy_after_owner, body, round);
+     release(copy_after_owner);
+   }
+-  // The high-water footprint remains conservative while a narrower Hold lives.
++  check(relocation_refusals != 0, "release/growth history never exercised relocation refusal");
++  // Holds pin the address; they do not restrict disjoint in-place growth.
+   auto value = take(allocate(pool, request(body)));
+   fill(value, 23);
++  value.address[body] = std::byte{0x7b};
+   auto widest = take(hold(value, {0, body + 16}));
+   auto narrower = take(hold(value, {0, 16}));
+   std::thread foreign([owned = std::move(widest)]() mutable { release(owned); });
+   foreign.join();
+-  const AllocationRequest append{body + 8, body * 4, 64, 8, Initialization::zero};
+-  auto denied = grow(value, append);
+-  check(!denied && denied.error() == Error::conflict,
+-        "ending widest Hold prematurely reset the high-water footprint");
++  const GrowthRequest append{body + 8, body * 4, 64, 8};
++  auto* original = value.address;
++  check(bool(grow(value, append)), "narrow reader blocked in-place physical growth");
++  check(value.address == original && value.address[body] == std::byte{0x7b},
++        "in-place growth changed existing readable padding");
+   release(narrower);
+   auto fresh = take(hold(value, {0, 16}));
+-  check(bool(grow(value, append)), "fresh capture did not replace an ended footprint cohort");
++  check(bool(grow(value, append)), "repeat in-place growth failed with a fresh Hold");
+   verify(fresh, body, 23);
+   release(fresh); release(value);
+   finish_close(pool, lane);
+--- a/orbital/test/window.cpp
++++ b/orbital/test/window.cpp
+@@ -126,18 +126,19 @@
+   auto captured = take(hold(value, {0, 128}));
+   auto* original = value.address;
+   arm();
+-  failed(grow(value, {page * 4, page * 8, 64, 0, Initialization::zero}));
++  failed(grow(value, {page * 4, page * 8, 64, 0}));
+   check(value.address == original && value.size == page * 2 && capacity(value) == page * 2,
+         "failed growth changed original allocation");
+   for (const auto byte : bytes(captured)) check(byte == std::byte{0x5d}, "failed growth damaged retained bytes");
+   const auto charged = fixture.arena->charged_bytes.load();
+-  check(bool(grow(value, {page * 4, page * 8, 64, 0, Initialization::zero})), "growth retry failed");
++  check(bool(grow(value, {page * 4, page * 8, 64, 0})), "growth retry failed");
+   check(value.address == original && fixture.arena->charged_bytes.load() == charged,
+         "growth retry changed address or double charged");
+   for (std::size_t byte = 0; byte < page * 2; ++byte)
+     check(value.address[byte] == std::byte{0x5d}, "growth lost original data");
++  std::memset(value.address + page * 2, 0, value.size - page * 2);
+   for (std::size_t byte = page * 2; byte < value.size; ++byte)
+-    check(value.address[byte] == std::byte{0}, "growth did not initialize appended bytes");
++    check(value.address[byte] == std::byte{0}, "caller did not initialize appended bytes");
+   release(captured); release(value);
+   trim_all(fixture);
+ }
+--- a/loom/examples/allocation.cpp
++++ b/loom/examples/allocation.cpp
+@@ -5,6 +5,7 @@
+ #include <chrono>
+ #include <cstdio>
+ #include <cstdlib>
++#include <cstring>
+ #include <thread>
+ 
+ namespace {
+@@ -104,8 +105,12 @@
+     // Rebind against the new bytes and write only the new half, exactly once.
+     auto grown = loom::grow(*growth.column,
+         {.bytes = body_bytes(final_rows), .alignment = 64,
+-         .readable_padding = padding, .initialization = alloc::Initialization::zero});
++         .readable_padding = padding});
+     if (!grown) return orbital::Progress::fail(grown.error());
++    // This writer may initialize the new encoded rows and padding now that the
++    // overlapping physical reader has really finished. Grow preserves bytes.
++    std::memset(growth.column->address + body_bytes(first_rows), 0,
++        growth.column->size + padding - body_bytes(first_rows));
+     write_half(*task.worker, *growth.column, first_rows);
+     return orbital::Progress::done();
+   }
+--- a/workbench/benchmarks/orbital/growth.cpp
++++ b/workbench/benchmarks/orbital/growth.cpp
+@@ -4,6 +4,7 @@
+ #include <chrono>
+ #include <cstdio>
+ #include <cstdlib>
++#include <cstring>
+ #include <ikea/seriespack.h>
+ #include <ikea/tuplepack.h>
+ #include <loom/worker.h>
+@@ -61,7 +62,7 @@
+               "initial Series effects");
+     auto old_address = allocation.address;
+     auto rejected = loom::grow(allocation,
+-        {.bytes = next_bytes, .alignment = 64, .initialization = alloc::Initialization::zero});
++        {.bytes = next_bytes, .alignment = 64});
+     require(!rejected && rejected.error() == orbital::Error::conflict,
+             "Series growth must refuse live physical Hold");
+     require(allocation.address == old_address && allocation.size == old_bytes,
+@@ -71,8 +72,9 @@
+       require(reader.get(i) == first[i], "failed grow changed Series values");
+   }
+   okay(loom::grow(allocation,
+-           {.bytes = next_bytes, .alignment = 64, .initialization = alloc::Initialization::zero}),
++           {.bytes = next_bytes, .alignment = 64}),
+        "grow Series after retiring Hold");
++  std::memset(allocation.address + old_bytes, 0, next_bytes - old_bytes);
+   {
+     auto held = take(loom::hold(allocation, {0, next_bytes}), "grown Series Hold");
+     auto bytes = loom::bytes(held);
+@@ -151,7 +153,7 @@
+     ikea::source_write_journal effects{records};
+     okay(construct.initialize(0, input, effects), "initial Tuple construction");
+     auto rejected = loom::grow(allocation,
+-        {.bytes = rows * stride, .alignment = 64, .initialization = alloc::Initialization::zero});
++        {.bytes = rows * stride, .alignment = 64});
+     require(!rejected && rejected.error() == orbital::Error::conflict,
+             "Tuple growth must refuse live physical Hold");
+     auto read = take(tp::bind_reader(reader_plan, view), "initial Tuple read");
+@@ -159,8 +161,9 @@
+   }
+   okay(
+       loom::grow(allocation,
+-          {.bytes = rows * stride, .alignment = 64, .initialization = alloc::Initialization::zero}),
++          {.bytes = rows * stride, .alignment = 64}),
+       "grow Tuple after retiring Hold");
++  std::memset(allocation.address + stride, 0, rows * stride - stride);
+   {
+     auto held = take(loom::hold(allocation, {0, rows * stride}), "grown Tuple Hold");
+     auto bytes = loom::bytes(held);
+@@ -203,9 +206,9 @@
+            "allocate reserved window");
+   auto* address = allocation.address;
+   {
+-    // The owner deliberately retains a wider read grant, including padding.
+-    // Tuple itself needs only the first four bytes. The grant still cannot
+-    // be overwritten by growth while its physical reader remains live.
++    // A physical reader keeps the address stable, including readable padding.
++    // Grow can expose more bytes while preserving all bytes it already reads.
++    allocation.address[63] = std::byte{0x73};
+     auto held = take(loom::hold(allocation, {0, 64}), "window padding Hold");
+     const auto bytes = loom::bytes(held);
+     auto view =
+@@ -218,24 +221,17 @@
+     std::array<ikea::owner_write, 1> records;
+     ikea::source_write_journal effects{records};
+     okay(construct.initialize(0, input, effects), "window initial construction");
+-    auto refused = loom::grow(allocation,
+-                              {.bytes = 4096,
+-                               .reserved_bytes = 16384,
+-                               .alignment = 64,
+-                               .initialization = alloc::Initialization::zero});
+-    require(!refused && refused.error() == orbital::Error::conflict,
+-            "in-place grow overwrites held padding");
+-    require(allocation.address == address && allocation.size == stride,
+-            "padding conflict changed allocation");
+-    for (std::size_t i = stride; i < bytes.size(); ++i)
+-      require(bytes[i] == std::byte{}, "padding conflict changed held bytes");
+-  }
+-  okay(loom::grow(allocation,
+-                  {.bytes = 4096,
+-                   .reserved_bytes = 16384,
+-                   .alignment = 64,
+-                   .initialization = alloc::Initialization::zero}),
+-       "grow reserved window after padding Hold retirement");
++    okay(loom::grow(allocation,
++                   {.bytes = 4096, .reserved_bytes = 16384, .alignment = 64}),
++         "in-place grow with live padding Hold");
++    require(allocation.address == address && allocation.size == 4096,
++            "in-place growth relocated storage");
++    for (std::size_t i = stride; i < 63; ++i)
++      require(bytes[i] == std::byte{}, "growth changed existing readable padding");
++    require(bytes[63] == std::byte{0x73}, "growth initialized held padding");
++  }
++  // The overlapping reader has retired. The writer now initializes new rows.
++  std::memset(allocation.address + stride, 0, allocation.size - stride);
+   require(allocation.address == address, "reserved growth unexpectedly relocated");
+   {
+     auto held = take(loom::hold(allocation, {0, 4096}), "window body Hold");
+@@ -250,9 +246,9 @@
+     okay(loom::grow(allocation,
+                     {.bytes = 8192,
+                      .reserved_bytes = 16384,
+-                     .alignment = 64,
+-                     .initialization = alloc::Initialization::zero}),
++                     .alignment = 64}),
+          "disjoint in-place growth with live prefix Hold");
++    std::memset(allocation.address + 4096, 0, 4096);
+     require(allocation.address == address && read.get(0) == 0x71,
+             "in-place growth invalidated old binding");
+     require(!read.get(1024), "old binding acquired the grown extent implicitly");
+--- a/workbench/benchmarks/orbital/pressure.cpp
++++ b/workbench/benchmarks/orbital/pressure.cpp
+@@ -9,6 +9,7 @@
+ #include <chrono>
+ #include <cstdio>
+ #include <cstdlib>
++#include <cstring>
+ #include <filesystem>
+ #include <fstream>
+ #include <sched.h>
+@@ -309,26 +310,29 @@
+            .initialization = alloc::Initialization::zero}), "allocate Tuple prefix");
+       write(batch,schema,r,s,prefix_rows,0,effects);
+       if (!s) {
+-        // A real physical grant refuses relocation/overwrite without corrupting prefix.
++        // A physical grant refuses relocation while preserving its prefix.
+         auto held = take(loom::hold(batch.tuples,{0,batch.tuples.size}), "growth conflict Hold");
+         auto rejected = loom::grow(batch.tuples,
+-            {.bytes = full_rows * stride, .reserved_bytes = reserve, .alignment = 64,
+-             .initialization = alloc::Initialization::zero});
++            {.bytes = full_rows * stride, .reserved_bytes = reserve, .alignment = 64});
+         if (!window) {
+           require(!rejected && rejected.error() == orbital::Error::conflict, "finite growth must conflict with Hold");
+           ++conflicts;
+         } else {
+-          // Window growth is disjoint from the held prefix, so it may succeed.
++          // In-place growth preserves bytes and leaves initialization to us.
+           okay(std::move(rejected), "disjoint window growth");
+         }
+         require(read(alloc::bytes(batch.series),alloc::bytes(held),schema,prefix_rows) == expected(r,s,prefix_rows), "held prefix changed");
+       }
+       okay(loom::grow(batch.series,
+-          {.bytes = full_rows * 20 / 8, .reserved_bytes = reserve, .alignment = 64,
+-           .initialization = alloc::Initialization::zero}), "Series grow/rebind");
++          {.bytes = full_rows * 20 / 8, .reserved_bytes = reserve, .alignment = 64}), "Series grow/rebind");
++      // Keep caller initialization in the measured lifecycle. All old readers
++      // of these new rows have ended before the writer clears their bytes.
++      std::memset(batch.series.address + Format::tile_bytes, 0,
++          batch.series.size - Format::tile_bytes);
+       okay(loom::grow(batch.tuples,
+-          {.bytes = full_rows * stride, .reserved_bytes = reserve, .alignment = 64,
+-           .initialization = alloc::Initialization::zero}), "Tuple grow/rebind");
++          {.bytes = full_rows * stride, .reserved_bytes = reserve, .alignment = 64}), "Tuple grow/rebind");
++      std::memset(batch.tuples.address + prefix_rows * stride, 0,
++          batch.tuples.size - prefix_rows * stride);
+       write(batch,schema,r,s,full_rows,prefix_rows,effects);
+       checksum = mix(checksum, read(alloc::bytes(batch.series),alloc::bytes(batch.tuples),schema,full_rows));
+       rows += full_rows;
+--- a/orbital/README.md
++++ b/orbital/README.md
+@@ -52,11 +52,11 @@
+ native work and rebuild address-qualified bindings after relocation or extent
+ change. Raw zeroing does not establish initialized encoded values.
+ 
+-Growth preserves the old prefix. It rejects relocation with live Holds and
+-rejects zeroing protected padding.
+-The current extent high-water mark lasts until all Holds end, so it can reject
+-an append after the widest Hold ends while a narrower one remains. This is a
+-conservative first implementation, not the stronger growth probe's contract.
++Growth preserves already readable body and padding; it never initializes bytes.
++`GrowthRequest` changes extent, reserve and alignment. Holds prevent relocation,
++but permit in-place growth. The writer initializes new body or padding after any
++overlapping reader finishes; a disjoint prefix reader can remain live. Physical
++retention grants no permission to change contents.
+ 
+ ## Preparation, reuse and settlement
+ 
+--- a/loom/README.md
++++ b/loom/README.md
+@@ -30,8 +30,9 @@
+ `allocate(worker, request)` selects the Worker's Pool. `grow(allocation, request)`,
+ `hold(allocation, footprint)` and `retain(hold)` use Orbital's actual operations
+ on the captured storage's owner Lane; they take no separate Worker argument.
+-The current allocation stage permits relocation only after all Holds retire;
+-the caller releases native access before requesting such growth.
++Holds prevent relocation and permit in-place growth. Growth preserves readable
++bytes and does not initialize new bytes. The writer ends overlapping readers
++before initializing its new body or padding, then rebuilds its Ikea bindings.
+ 
+ ## Tasks and completion
+ 
+--- a/workbench/design/orbital/DESIGN.md
++++ b/workbench/design/orbital/DESIGN.md
+@@ -248,9 +248,10 @@
+ registration keeps backing stable without another capture per call. Footprints,
+ authority and decoding metadata must remain valid through use. An open View stays
+ at its address and closes on its assigned thread. The registration mechanism and
+-its cost remain unimplemented. Growth must respect the actual allocator's Hold
+-high-water protection; the views probe's stronger disjoint-append behavior is not
+-the current runtime contract.
++its cost remain unimplemented. The allocator preserves readable bytes during
++growth. Holds prevent relocation and permit in-place growth; they grant no right
++to overwrite contents. The Object owner must authorize initialization of new
++body or padding after overlapping readers finish.
+ 
+ **Write.** Store input → admit batch → edit Draft → publish State:
+ 
+--- a/workbench/spikes/orbital-mvcc/metadata/orbital/shape_backing.cpp
++++ b/workbench/spikes/orbital-mvcc/metadata/orbital/shape_backing.cpp
+@@ -53,13 +53,13 @@
+ constexpr std::size_t records = 3;
+ orbital::ObjectId id(std::size_t object) { return {79, object + 1}; }
+ 
+-struct PhysicalUses { std::size_t active{}, held_extent{}; };
++struct PhysicalUses { std::size_t active{}; };
+ PhysicalUses uses(const oa::Pool* pool) {
+   PhysicalUses result;
+   if (!pool) return result;
+   const auto observe = [&](const oa::Storage& storage) {
+     if (storage.users.load(std::memory_order_relaxed)) {
+-      ++result.active; result.held_extent += oa::detail::held_extent(storage);
++      ++result.active;
+     }
+   };
+   for (const auto& group : pool->internal->groups)
+@@ -204,7 +204,7 @@
+         "\"logical_body_bytes\":%zu,\"external_payload_requested\":%zu,\"external_bodies\":%zu,"
+         "\"metadata_resource_record\":%zu,\"scope_record\":%zu,\"input_change_peak_capacity\":%zu,"
+         "\"pool_metadata_charged\":%llu,\"pool_mapped_body\":%llu,\"pool_reserved_va\":%llu,"
+-        "\"pool_idle_body\":%llu,\"active_storages\":%zu,\"held_extent\":%zu}\n",
++        "\"pool_idle_body\":%llu,\"active_storages\":%zu}\n",
+         backend, phase, parts, objects, grouped ? "grouped" : "independent",
+         pool ? "allocation" : "shared",
+         writer_basis_held ? "through-install" : "closed-before-install",
+@@ -218,7 +218,7 @@
+         static_cast<unsigned long long>(physical.metadata_bytes),
+         static_cast<unsigned long long>(physical.mapped_bytes),
+         static_cast<unsigned long long>(physical.reserved_bytes),
+-        static_cast<unsigned long long>(physical.idle_bytes), storage.active, storage.held_extent);
++        static_cast<unsigned long long>(physical.idle_bytes), storage.active);
+   }
+ };
+ 
+@@ -278,7 +278,7 @@
+       "\"external_owner_control_requested\":%zu,\"selected_logical_body_bytes\":%llu,"
+       "\"external_payload_requested\":%zu,\"external_bodies\":%zu,\"pool_metadata_charged\":%llu,"
+       "\"pool_mapped_body\":%llu,\"pool_reserved_va\":%llu,\"pool_idle_body\":%llu,"
+-      "\"active_storages\":%zu,\"held_extent\":%zu}\n",
++      "\"active_storages\":%zu}\n",
+       backend, fixture.parts, objects, grouped ? "grouped" : "independent",
+       native ? "allocation" : "shared",
+       writer_basis_held ? "through-install" : "closed-before-install",
+@@ -287,7 +287,7 @@
+       static_cast<unsigned long long>(physical.metadata_bytes),
+       static_cast<unsigned long long>(physical.mapped_bytes),
+       static_cast<unsigned long long>(physical.reserved_bytes),
+-      static_cast<unsigned long long>(physical.idle_bytes), storage.active, storage.held_extent);
++      static_cast<unsigned long long>(physical.idle_bytes), storage.active);
+   cs::release(escaped);
+   check(!fixture.metadata.live && !fixture.external.owners.live && !fixture.external.payload.live);
+   if (native) { check(uses(fixture.pool).active == 0); check(allocator->close()); }

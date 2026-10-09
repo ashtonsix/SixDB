@@ -1,0 +1,169 @@
+--- a/orbital/src/allocation/internal.h
++++ b/orbital/src/allocation/internal.h
+@@ -30,34 +30,6 @@
+ constexpr std::uint32_t returning = std::uint32_t{1} << 31;
+ constexpr std::uint16_t group_identities = 256;
+ 
+-// Separate owner/foreign planes retain full timestamps without the padding in
+-// an array of optional<Temperature>. Zero temperature means no advice.
+-struct HintPlane {
+-  std::array<std::chrono::steady_clock::time_point, group_identities> last_access{};
+-  std::array<std::uint8_t, group_identities> temperatures{};
+-
+-  ReleaseHint load(std::uint16_t identity) const noexcept {
+-    ReleaseHint result;
+-    result.last_access = last_access[identity];
+-    if (temperatures[identity]) result.temperature = static_cast<Temperature>(temperatures[identity] - 1);
+-    return result;
+-  }
+-
+-  void merge(std::uint16_t identity, const ReleaseHint& incoming) noexcept {
+-    if (incoming.last_access != std::chrono::steady_clock::time_point{} &&
+-        incoming.last_access < last_access[identity]) return;
+-    if (incoming.temperature) temperatures[identity] = static_cast<std::uint8_t>(*incoming.temperature) + 1;
+-    if (incoming.last_access != std::chrono::steady_clock::time_point{}) last_access[identity] = incoming.last_access;
+-  }
+-
+-  void clear(std::uint16_t identity) noexcept {
+-    last_access[identity] = {};
+-    temperatures[identity] = 0;
+-  }
+-};
+-
+-static_assert(sizeof(std::chrono::steady_clock::time_point) == 8);
+-static_assert(sizeof(HintPlane) == 9 * group_identities);
+ 
+ struct Job {
+   Job* next{};
+@@ -84,7 +56,8 @@
+   Ref<Arena> active_lifetime; // Owner-managed pin while any finite identity is live/returning.
+   std::uint16_t active_identities{};
+   std::array<Storage, group_identities> uses{};
+-  HintPlane hints, foreign_hints;
++  ReleaseHint foreign_use;
++  bool advice_pending{};
+   std::vector<std::uint64_t> live;
+   std::array<std::uint64_t, (group_identities + 63) / 64> returned{};
+   std::vector<TrimSpan> trimming;
+--- a/orbital/src/allocation/allocation.cpp
++++ b/orbital/src/allocation/allocation.cpp
+@@ -8,12 +8,12 @@
+ namespace orbital::allocation::detail {
+ 
+ ReleaseHint hint(Storage& use) noexcept {
+-  if (use.domain->finite) return static_cast<Group*>(use.domain->context)->hints.load(use.identity);
++  if (use.domain->finite) return static_cast<Group*>(use.domain->context)->last_use;
+   return static_cast<Window*>(use.domain->context)->hint;
+ }
+ 
+ ReleaseHint foreign_hint(Storage& use) noexcept {
+-  if (use.domain->finite) return static_cast<Group*>(use.domain->context)->foreign_hints.load(use.identity);
++  if (use.domain->finite) return static_cast<Group*>(use.domain->context)->foreign_use;
+   return static_cast<Window*>(use.domain->context)->foreign_hint;
+ }
+ 
+@@ -34,7 +34,7 @@
+ void merge_hint(Storage& use, const ReleaseHint& incoming, bool foreign = false) noexcept {
+   if (use.domain->finite) {
+     auto& group = *static_cast<Group*>(use.domain->context);
+-    (foreign ? group.foreign_hints : group.hints).merge(use.identity, incoming);
++    merge_hint(foreign ? group.foreign_use : group.last_use, incoming);
+   } else {
+     auto& window = *static_cast<Window*>(use.domain->context);
+     merge_hint(foreign ? window.foreign_hint : window.hint, incoming);
+@@ -42,7 +42,7 @@
+ }
+ 
+ void clear_foreign_hint(Storage& use) noexcept {
+-  if (use.domain->finite) static_cast<Group*>(use.domain->context)->foreign_hints.clear(use.identity);
++  if (use.domain->finite) static_cast<Group*>(use.domain->context)->foreign_use = {};
+   else static_cast<Window*>(use.domain->context)->foreign_hint = {};
+ }
+ 
+@@ -72,7 +72,6 @@
+     auto& group = *static_cast<Group*>(domain.context);
+     assert(group.active_identities);
+     if (!--group.active_identities) retained = std::move(group.active_lifetime);
+-    merge_hint(group.last_use, group.hints.load(use.identity));
+     const auto home = group.geometry->bound_home({use.identity});
+     assert(home);
+     verify(group.geometry->release_identity({use.identity}));
+@@ -89,14 +88,16 @@
+ bool returned(Domain& domain) noexcept {
+   if (!domain.finite) return static_cast<Window*>(domain.context)->use.users.load(std::memory_order_acquire) == returning;
+   auto& group = *static_cast<Group*>(domain.context);
+-  return std::any_of(group.returned.begin(), group.returned.end(), [](auto word) { return word != 0; });
++  return group.advice_pending || std::any_of(group.returned.begin(), group.returned.end(), [](auto word) { return word != 0; });
+ }
+ 
+ void apply_return(Storage& use) noexcept {
+   if (use.users.load(std::memory_order_acquire) != returning) return;
+-  merge_hint(use, foreign_hint(use));
+-  clear_foreign_hint(use);
+-  use.foreign_hint_pending.store(false, std::memory_order_relaxed);
++  if (!use.domain->finite) {
++    merge_hint(use, foreign_hint(use));
++    clear_foreign_hint(use);
++    use.foreign_hint_pending.store(false, std::memory_order_relaxed);
++  }
+   use.users.store(0, std::memory_order_release);
+   recycle(use, false);
+   ++use.domain->pool->internal->counts.foreign_returns;
+@@ -109,6 +110,8 @@
+     if (!lock) return;
+     if (domain.finite) {
+       auto& group = *static_cast<Group*>(domain.context);
++      merge_hint(group.last_use, group.foreign_use);
++      group.foreign_use = {}; group.advice_pending = false;
+       for (std::size_t i = 0; i < group.returned.size(); ++i) {
+         auto word = std::exchange(group.returned[i], 0);
+         while (word) {
+@@ -153,6 +156,14 @@
+   domain.returns.ops = &return_ops;
+ }
+ 
++// Caller holds Domain::mutex. Advice and final returns share one route/lifetime.
++void post_returns(Domain& domain) noexcept {
++  if (domain.queued.load(std::memory_order_relaxed)) return;
++  domain.queued.store(true, std::memory_order_release);
++  domain.lifetime = Ref<Arena>::retain(*domain.pool->arena);
++  worker::post(*domain.pool->lane, domain.returns);
++}
++
+ void drop(Storage& use, ReleaseHint value) noexcept {
+   auto& domain = *use.domain;
+   const bool local = worker::on_lane(*domain.pool->lane);
+@@ -161,7 +172,10 @@
+     else {
+       std::lock_guard lock(domain.mutex);
+       merge_hint(use, value, true);
+-      use.foreign_hint_pending.store(true, std::memory_order_release);
++      if (domain.finite) {
++        static_cast<Group*>(domain.context)->advice_pending = true;
++        post_returns(domain);
++      } else use.foreign_hint_pending.store(true, std::memory_order_release);
+     }
+   }
+   auto users = use.users.load(std::memory_order_relaxed);
+@@ -179,11 +193,7 @@
+         auto& group = *static_cast<Group*>(domain.context);
+         group.returned[use.identity / 64] |= std::uint64_t{1} << (use.identity % 64);
+       }
+-      if (!domain.queued.load(std::memory_order_relaxed)) {
+-        domain.queued.store(true, std::memory_order_release);
+-        domain.lifetime = Ref<Arena>::retain(*domain.pool->arena);
+-        worker::post(*domain.pool->lane, domain.returns);
+-      }
++      post_returns(domain);
+       return;
+     }
+     const auto next = users == 1 ? (local ? 0 : returning) : users - 1;
+@@ -193,7 +203,7 @@
+   if (users != 1) return;
+   if (local) {
+     // Foreign releases with explicit hints can precede this local final release.
+-    if (use.foreign_hint_pending.exchange(false, std::memory_order_acq_rel)) {
++    if (!domain.finite && use.foreign_hint_pending.exchange(false, std::memory_order_acq_rel)) {
+       // Final user retirement observes every preceding foreign hint write.
+       // Other identities may publish concurrently, but cannot touch this hint.
+       merge_hint(use, foreign_hint(use)); clear_foreign_hint(use);

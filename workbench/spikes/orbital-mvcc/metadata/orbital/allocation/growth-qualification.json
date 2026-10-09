@@ -1,0 +1,67 @@
+{
+  "status": "qualified isolated pure-growth control, not promoted",
+  "base": "storage16.patch after compact-controls.patch",
+  "patch_sha256": "2d4f78e34b9486247564f9e665c4dc48aa5b11d630a557416dd44efd23590125",
+  "source_files_sha256": {
+    "orbital/include/orbital/allocation.h": "cf81956a9c432f1f74fb53fff018adfb0661486228d364b41cbac3d590802689",
+    "orbital/src/allocation/internal.h": "4e109a51f04b4207d0fa8928cff4d7ed4367cf580f28761539cea1faa5f18117",
+    "orbital/src/allocation/allocation.cpp": "3b87338d6b79bc67c32059e08c0554eeb1724f5ea1c29d74150d6479200267a7",
+    "orbital/src/allocation/group.cpp": "c161c1e1e52698b8ea30d44e2647ae6770af3102ff38de75361dc008698611fc",
+    "orbital/test/allocation.cpp": "e99d0efcfce8242c48f7122e0ed9ebb9dd6d0b7888e2588a25a2bf2e14d38fcc",
+    "orbital/test/lifetime.cpp": "153af41a39f91e9b4fb5b344071bdc5d6751775690e739301e2467c3361f7e93",
+    "orbital/test/window.cpp": "181699f15e05300b891f0e6b20306b36b89d70d08e02d0b0320fa0f9485e5887",
+    "loom/examples/allocation.cpp": "0ba0e40aa3e102bd7c44cc94b9590119fd2545016b6827c57ad56f05d0f8babf",
+    "workbench/benchmarks/orbital/growth.cpp": "195f0e1fde38f3ffbc76b58b5fc352e0c1321683f003e333c748b4e79e357d93",
+    "workbench/benchmarks/orbital/pressure.cpp": "c0799636732faf63d896b86e69efe56975383e4129782d7ca23697c688caa041",
+    "orbital/README.md": "d3d3a3f70d32c74d498ecb2a1ee35701815eef7636fe1847b6559cec0d9295e9",
+    "loom/README.md": "981c3ec82186b7cf7aac34ee7a774ac6355dc904533c6c979efd04ac20dd7abc",
+    "workbench/design/orbital/DESIGN.md": "cc39aea571f8b103a6c74da7fef04951ebcdd0a2e7c3bc675c8b942eadbc3465",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/shape_backing.cpp": "b20a0d266319ed68839b434dca114048deb971a923e65c5bd2105f2ef39d6b6f"
+  },
+  "runs": [
+    {
+      "profile": "native",
+      "original_run": "/Users/ashtonsix/.codex/worktrees/allocation-storage/sixdb/build/orbital-mvcc-metadata/shape-accounting/20261009T220741739442Z",
+      "source_digest": "5fb35e88bd32a9008f58b8afb4a69c73788c2d17678b51e48cbd12d8acd608d3",
+      "all_required_steps_pass": true,
+      "matrix_rows": 384,
+      "backing_sha256": "8807812cc87efd6578fcd230531c07fbc1ef329bdbd85161cffb213bb8db979f",
+      "runtime_validation_sha256": "78bdf60f39b41d0aba19b8094020b670afc4579101f0225a20af234a1219bf49"
+    },
+    {
+      "profile": "sanitize",
+      "original_run": "/Users/ashtonsix/.codex/worktrees/allocation-storage/sixdb/build/orbital-mvcc-metadata/shape-accounting/20261009T220741739441Z",
+      "source_digest": "5fb35e88bd32a9008f58b8afb4a69c73788c2d17678b51e48cbd12d8acd608d3",
+      "all_required_steps_pass": true,
+      "matrix_rows": 384,
+      "backing_sha256": "8807812cc87efd6578fcd230531c07fbc1ef329bdbd85161cffb213bb8db979f",
+      "runtime_validation_sha256": "2cf7d7b7dd3b692086b61728899a56579d54bb0f727cbc6a50534fcf79ff62a8"
+    }
+  ],
+  "runtime_checks": {
+    "orbital": 11,
+    "loom": 12,
+    "caller_NDEBUG_runs": 16,
+    "caller_qualification_sha256": "cb73bab0cbea1a4581dc4002af276e44648d926501a6384e60deb1ab37ffe0b1"
+  },
+  "semantics": [
+    "GrowthRequest has no initialization policy; growth preserves old readable body and padding, including temporarily undeclared padding.",
+    "Holds retain physical storage and refuse relocation; content access and writer initialization remain with the data unit.",
+    "New body and padding are not initialized by growth. No per-Storage or per-Window protected-footprint bookkeeping.",
+    "Relocation/failure cleanup and foreign return preserve existing ownership."
+  ],
+  "falsifiers": [
+    "Held poisoned padding survives in-place growth and a declaration gap without implicit writes.",
+    "Relocation into reused poisoned backing preserves the old readable extent and leaves new bytes untouched.",
+    "Actual relocation is refused while held; already-large reused Windows still allow in-place growth.",
+    "Explicit caller initialization is included in growth and pressure work, after overlapping readers finish."
+  ],
+  "limits": [
+    "AArch64 OrbStack, 4 KiB native pages, Clang21.1.8; correctness/accounting, not Zen5 timing.",
+    "Storage remains16 B because of alignment; removing its field alone saves no record bytes. Window loses its wide held-extent field.",
+    "384 rows qualify the captured pre-inline Shape adapters and actual Allocation lifetime/collections, not newer Stage2 protocols.",
+    "Runtime CTest targets force assertions on; separate migrated caller checks execute with NDEBUG.",
+    "Complete Collection metadata target is not met by this change."
+  ],
+  "recovery": "growth-artifact.json"
+}

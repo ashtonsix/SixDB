@@ -1,0 +1,56 @@
+{
+  "status": "qualified structural control, not promoted",
+  "base": "compact-controls.patch qualified source",
+  "patch_sha256": "c85db5aac534219e40ba3bbc7db0c5266b0d38ec5336cca4c63355d5d56be423",
+  "source_files_sha256": {
+    "orbital/src/allocation/internal.h": "8faa5e5b7cbd5bc2621f30efda81a3c8691817ea4ff76b318e72b72ad1fab20d",
+    "orbital/src/allocation/allocation.cpp": "e271d735129b49f8ce3da75e76944e9977fc895d8ed5fdfc82cdc72768e0691c",
+    "orbital/src/allocation/group.cpp": "f7325283ac40b4c99999585c83f2d52c29201b1008e14f81ec6bd6cd20a7b007",
+    "orbital/src/allocation/window.cpp": "3b9a3ee5688a5bccdb11295d9436fe674b29628d9b020371be00068e25dc3791",
+    "orbital/test/lifetime.cpp": "4c8367ee62436bf7c21f17cdfda024313fee80997e6ae5f33330e7f65c2034ad"
+  },
+  "runs": [
+    {
+      "profile": "native",
+      "run": "build/orbital-mvcc-metadata/shape-accounting/20261009T214449462589Z",
+      "source_digest": "41ac4068410f3f897547818ac721c523da91a056ee040ad89d0442495f0a80f1",
+      "all_required_steps_pass": true,
+      "backing_sha256": "fc1610d73c4b1b3ddef9041787836a744c258421a4d8767eca1df32e1776e2d1",
+      "runtime_validation_sha256": "2186b37329b25612cb440754f3d2c7237948678ac9b02e8f4c337c07b3f6627d"
+    },
+    {
+      "profile": "sanitize",
+      "run": "build/orbital-mvcc-metadata/shape-accounting/20261009T214523007278Z",
+      "source_digest": "41ac4068410f3f897547818ac721c523da91a056ee040ad89d0442495f0a80f1",
+      "all_required_steps_pass": true,
+      "backing_sha256": "fc1610d73c4b1b3ddef9041787836a744c258421a4d8767eca1df32e1776e2d1",
+      "runtime_validation_sha256": "ff8969426674a892e290742c53627689ad79425e4ad0db9059d14d77f907a7c3"
+    }
+  ],
+  "runtime_checks": {
+    "orbital": 11,
+    "loom": 12,
+    "new_falsifier": "Two finite identities outlive the last caller Arena reference; foreign return of one, owner reuse, release of its neighbour, final local release; exact once physical unmap."
+  },
+  "pool_metadata_bytes": {
+    "palette_A": {
+      "first_three": 19120,
+      "storage16": 15040
+    },
+    "palette_B": {
+      "first_three": 20136,
+      "storage16": 16056
+    }
+  },
+  "mechanism": {
+    "Storage": "Domain pointer8, atomic users4, finite extent2, identity1, atomic advice flag1",
+    "Group": "One owner-managed active Arena pin and 16-bit active identity count, plus unchanged queued/preparation/trim pins.",
+    "Window": "Full size_t held extent and active Arena pin move into Window; no narrowed Window range."
+  },
+  "limits": [
+    "Finite extent bound 3072 is the current palette/finite-admission limit, independent of native page size.",
+    "Users remains32 bits with existing returning marker; no claim of a proven tiny live-use bound.",
+    "Heat planes remain full timestamp controls.",
+    "Public Allocation/Hold packets and policy are unchanged."
+  ]
+}

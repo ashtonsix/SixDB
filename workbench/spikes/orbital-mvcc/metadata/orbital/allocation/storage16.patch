@@ -1,0 +1,240 @@
+--- a/orbital/src/allocation/internal.h
++++ b/orbital/src/allocation/internal.h
+@@ -19,12 +19,13 @@
+ // Physical retention is independent of the dense one-byte binding plane.
+ struct Storage {
+   detail::Domain* domain{};
+-  Ref<Arena> lifetime; // One pin per live reservation, shared by its physical uses.
+-  std::size_t held_extent{};
+   std::atomic<std::uint32_t> users{};
+-  std::uint16_t identity{};
++  std::uint16_t held_extent{}; // Finite Home extent; Windows keep their wide extent.
++  std::uint8_t identity{};
+   std::atomic<bool> foreign_hint_pending{};
+ };
++
++static_assert(sizeof(Storage) == 16);
+ 
+ namespace detail {
+ constexpr std::uint32_t returning = std::uint32_t{1} << 31;
+@@ -81,6 +82,8 @@
+   Group* next_available{};
+   Group** previous_available{};
+   std::unique_ptr<FiniteGroup> geometry;
++  Ref<Arena> active_lifetime; // Owner-managed pin while any finite identity is live/returning.
++  std::uint16_t active_identities{};
+   std::array<Storage, group_identities> uses{};
+   HintPlane hints, foreign_hints;
+   std::vector<std::uint64_t> live;
+@@ -103,6 +106,8 @@
+   Domain domain;
+   std::size_t owner_index{}; // Pool owning-vector position, not an allocation identity.
+   Storage use;
++  Ref<Arena> active_lifetime;
++  std::size_t held_extent{};
+   Window* next_idle{};
+   Window** previous_idle{};
+   std::byte* mapping{};
+@@ -175,6 +180,11 @@
+ void schedule(Arena&, Job&) noexcept;
+ void initialize(Domain&, Pool&, void*, bool) noexcept;
+ 
++// Establish the active backend pin before exposing the first physical user.
++void activate(Storage&) noexcept;
++std::size_t held_extent(const Storage&) noexcept;
++void held_extent(Storage&, std::size_t) noexcept;
++
+ // Fill a fresh output only on success; common allocation code establishes
+ // its physical use before exposing the handle to callers.
+ Result<void> finite_allocate(Pool&, const AllocationRequest&, std::size_t,
+--- a/orbital/src/allocation/allocation.cpp
++++ b/orbital/src/allocation/allocation.cpp
+@@ -46,23 +46,56 @@
+   else static_cast<Window*>(use.domain->context)->foreign_hint = {};
+ }
+ 
++void activate(Storage& use) noexcept {
++  auto& domain = *use.domain;
++  assert(worker::on_lane(*domain.pool->lane) && !use.users.load(std::memory_order_relaxed));
++  if (domain.finite) {
++    auto& group = *static_cast<Group*>(domain.context);
++    assert(group.active_identities < group_identities);
++    if (!group.active_identities++)
++      group.active_lifetime = Ref<Arena>::retain(*domain.pool->arena);
++  } else {
++    auto& window = *static_cast<Window*>(domain.context);
++    window.active_lifetime = Ref<Arena>::retain(*domain.pool->arena);
++  }
++  use.users.store(1, std::memory_order_relaxed);
++}
++
++std::size_t held_extent(const Storage& use) noexcept {
++  if (use.domain->finite) return use.held_extent;
++  return static_cast<const Window*>(use.domain->context)->held_extent;
++}
++
++void held_extent(Storage& use, std::size_t extent) noexcept {
++  if (use.domain->finite) {
++    assert(extent <= 3072);
++    use.held_extent = static_cast<std::uint16_t>(extent);
++  } else static_cast<Window*>(use.domain->context)->held_extent = extent;
++}
++
+ void recycle(Storage& use, bool notify = true) noexcept {
+   auto& domain = *use.domain;
+   auto& pool = *domain.pool;
+   assert(worker::on_lane(*pool.lane) && !use.users.load(std::memory_order_relaxed));
+   // Detach before identity reuse or notification can grant the same record.
+   // The old pin outlives every touch here, including a final local Hold release.
+-  auto retained = std::move(use.lifetime);
++  Ref<Arena> retained;
+   if (domain.finite) {
+     auto& group = *static_cast<Group*>(domain.context);
++    assert(group.active_identities);
++    if (!--group.active_identities) retained = std::move(group.active_lifetime);
+     merge_hint(group.last_use, group.hints.load(use.identity));
+     const auto home = group.geometry->bound_home({use.identity});
+     assert(home);
+     verify(group.geometry->release_identity({use.identity}));
+     verify(group.geometry->release_home(*home));
+     add_available(group);
+-  } else add_idle(*static_cast<Window*>(domain.context));
+-  use.held_extent = 0;
++  } else {
++    auto& window = *static_cast<Window*>(domain.context);
++    retained = std::move(window.active_lifetime);
++    add_idle(window);
++  }
++  held_extent(use, 0);
+   if (notify) pulse(pool.capacity_changed);
+ }
+ 
+@@ -211,11 +244,7 @@
+     return result;
+   }
+   auto& use = *value.storage;
+-  {
+-    auto lifetime = Ref<Arena>::retain(*pool.arena);
+-    use.lifetime.swap(lifetime);
+-  }
+-  use.users.store(1, std::memory_order_relaxed);
++  activate(use);
+   if (request.initialization == Initialization::zero) std::memset(value.address, 0, *size);
+   else if (request.readable_padding) std::memset(value.address + request.bytes, 0, request.readable_padding);
+   ++pool.internal->counts.allocations;
+@@ -296,8 +325,9 @@
+   // While the move-only Allocation is live, it owns exactly one user. Every
+   // additional user is a Hold; foreign release publishes completion here.
+   const bool held = use.users.load(std::memory_order_acquire) > 1;
+-  const bool changes_protected = held && use.held_extent > allocation.size &&
+-      (request.initialization == Initialization::zero || request.bytes < use.held_extent);
++  const auto protected_extent = held_extent(use);
++  const bool changes_protected = held && protected_extent > allocation.size &&
++      (request.initialization == Initialization::zero || request.bytes < protected_extent);
+   const bool aligned = reinterpret_cast<std::uintptr_t>(allocation.address) % request.alignment == 0;
+   if (changes_protected) return std::unexpected(Error::conflict);
+   const auto needed = std::max(*size, request.reserved_bytes);
+@@ -343,8 +373,8 @@
+   auto& use = *allocation.storage;
+   const auto users = use.users.fetch_add(1, std::memory_order_relaxed);
+   assert(users && users < returning - 1);
+-  if (users == 1) use.held_extent = 0;
+-  use.held_extent = std::max(use.held_extent, static_cast<std::size_t>(footprint.offset + footprint.size));
++  if (users == 1) held_extent(use, 0);
++  held_extent(use, std::max(held_extent(use), static_cast<std::size_t>(footprint.offset + footprint.size)));
+   Hold result;
+   result.storage = &use;
+   result.address = allocation.address + footprint.offset;
+--- a/orbital/src/allocation/group.cpp
++++ b/orbital/src/allocation/group.cpp
+@@ -103,7 +103,7 @@
+     group->trimmed.ops = &group_trim_ops;
+     for (std::size_t i = 0; i < count; ++i) {
+       group->uses[i].domain = &group->domain;
+-      group->uses[i].identity = static_cast<std::uint16_t>(i);
++      group->uses[i].identity = static_cast<std::uint8_t>(i);
+     }
+     auto* result = group.get();
+     result->owner_index = pool.internal->groups.size();
+@@ -413,8 +413,7 @@
+   verify(group.geometry->bind(record.identity, record.home));
+   remember_ready_candidate(pool, group, record.home, request.request.alignment);
+   auto& use = group.uses[record.identity.index];
+-  use.lifetime = Ref<Arena>::retain(*pool.arena);
+-  use.users.store(1, std::memory_order_relaxed);
++  activate(use);
+   request.value.storage = &use; request.value.address = record.home.address;
+   request.value.size = request.request.bytes; request.value.readable_padding = request.request.readable_padding;
+   request.reused = record.reused;
+--- a/orbital/src/allocation/window.cpp
++++ b/orbital/src/allocation/window.cpp
+@@ -106,8 +106,7 @@
+       pool.state == Pool::State::open && !pool.internal->close_requested;
+   if (accepted) {
+     auto& result = preparation.value;
+-    window.use.lifetime = Ref<Arena>::retain(*pool.arena);
+-    window.use.users.store(1, std::memory_order_relaxed);
++    activate(window.use);
+     result.storage = &window.use;
+     result.address = window.address;
+     result.size = preparation.request.bytes;
+--- a/orbital/test/lifetime.cpp
++++ b/orbital/test/lifetime.cpp
+@@ -153,6 +153,38 @@
+   worker::relinquish(lane);
+ }
+ 
++void shared_finite_pin() {
++  auto external = take(open_arena(16 * 1024 * 1024));
++  worker::Lane lane;
++  check(bool(worker::adopt(lane)), "adopt shared finite pin Lane");
++  auto& pool = *take(add_pool(*external, lane));
++  auto first = take(allocate(pool, request(64)));
++  auto second = take(allocate(pool, request(64)));
++  fill(first, 13); fill(second, 29);
++  track(first.address);
++  auto returned = take(hold(first, {0, 80}));
++  auto survivor = take(hold(second, {0, 80}));
++  release(first); release(second); external.reset();
++  std::thread foreign([owned = std::move(returned)]() mutable { release(owned); });
++  foreign.join();
++  check(worker::poll(lane, 1) == 1, "shared finite return not delivered");
++  check(successful_unmaps.load() == 0, "one returned identity ended its neighbour's lifetime");
++  verify(survivor, 64, 29);
++  // Reuse another identity while the only surviving ownership is a neighbour's
++  // physical Hold. Ending that neighbour must not end the fresh allocation.
++  auto replacement = take(allocate(pool, request(64)));
++  fill(replacement, 47);
++  auto late = take(hold(replacement, {0, 80}));
++  release(replacement); release(survivor);
++  check(successful_unmaps.load() == 0, "neighbour release ended the replacement lifetime");
++  verify(late, 64, 47);
++  release(late);
++  check(successful_unmaps.load() == 1, "final shared finite pin did not retire exactly once");
++  check(!worker::pending(lane), "shared finite lifetime left queued ownership");
++  tracked_address.store(0, std::memory_order_release);
++  worker::relinquish(lane);
++}
++
+ void shared_pool_removal() {
+   const auto page = static_cast<std::size_t>(::sysconf(_SC_PAGESIZE));
+   const auto small = 2 * page;
+@@ -313,6 +345,7 @@
+     foreign_last_use(body, true);
+     release_and_growth_overlap(body);
+   }
++  shared_finite_pin();
+   shared_pool_removal();
+   std::puts("lifetime: sole pins, retained Holds, foreign returns, reuse, Pool removal and budget wakes pass");
+ }
+--- a/workbench/spikes/orbital-mvcc/metadata/orbital/shape_backing.cpp
++++ b/workbench/spikes/orbital-mvcc/metadata/orbital/shape_backing.cpp
+@@ -59,7 +59,7 @@
+   if (!pool) return result;
+   const auto observe = [&](const oa::Storage& storage) {
+     if (storage.users.load(std::memory_order_relaxed)) {
+-      ++result.active; result.held_extent += storage.held_extent;
++      ++result.active; result.held_extent += oa::detail::held_extent(storage);
+     }
+   };
+   for (const auto& group : pool->internal->groups)

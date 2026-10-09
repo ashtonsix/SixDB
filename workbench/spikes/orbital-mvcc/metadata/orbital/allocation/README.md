@@ -1,6 +1,9 @@
 # Allocation metadata controls
 
-These are isolated comparison controls, not a promoted allocator design.
+These are isolated comparison controls, not a promoted allocator design. The
+performance study measures complete operations while these treatments reduce
+the backing layer's costs; neither a smaller record nor a passing history alone
+settles the choice.
 [The frozen census](../allocation-worker.md) counts a 256-identity Group at
 30,616 / 34,392 requested metadata bytes for palettes A / B. The
 [prototype patch](compact-controls.patch) changes three independent costs:
@@ -52,8 +55,29 @@ sanitizer settings. Sources, full JSONL and logs are recoverable from the verifi
 [sanitizer bundle](sanitizer-artifact.json); the patch and compact receipt belong
 here. Fetch either with `workbench/tools/artifacts.py fetch` into ignored output.
 
-The next question is whether trim needs identity-level heat at all. Group advice
-is the first comparison; spatial rolling epochs are a fallback for selective
-reclamation. Heat is advisory and cannot replace physical lifetime authority.
-Storage packing/shared routing is a separate structural comparison, with actual
-range limits and overflow behavior, rather than assumed tiny counters.
+## Further treatments
+
+Apply these after the three-control patch, in order. Each treatment keeps its
+own source cut; production Allocation is unchanged.
+
+| Treatment | Populated A Pool metadata | What changes |
+| --- | ---: | --- |
+| [Storage16](storage16.patch), [qualification](storage16-qualification.json) | 15,040 B | One active Arena pin per Group; wide Window state stays with Window. |
+| [Pure growth](growth.patch), [qualification](growth-qualification.json) | 15,040 B | Deletes protected-footprint tracking and implicit growth writes. Storage remains 16 B after alignment. |
+| [Group advice](../heat/README.md) | 10,456 B | Advisory heat follows the Group, matching current reclamation granularity. |
+
+Numbers are observed requested Pool metadata on the 4 KiB AArch64 guest, before
+Arena/Pool setup, caller state and Object/Representation metadata. Even the
+smallest Pool does not establish the complete 64-Object 4–8 KiB target.
+Target-machine timing and complete collection costs remain separate evidence.
+
+Growth retains physical bytes; it does not decide whether a reader or writer
+may access their contents. The caller initializes new body/padding after
+overlapping readers finish. The qualified native and sanitizer cuts pass all
+23 runtime checks, 384 encoded collection rows and 16 migrated caller checks.
+Their sources and logs are in the [growth archive](growth-artifact.json).
+
+Group advice removes 4,584 B per Group without a demonstrated local point-operation
+penalty. Spatial epochs add cold-page discrimination but have not earned adoption.
+Neither policy can replace physical lifetime authority. Shared routing and
+smaller physical-use records remain separate active comparisons.

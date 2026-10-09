@@ -1,0 +1,75 @@
+{
+  "status": "qualified isolated Group-advice control; spatial prototype remains unpromoted",
+  "base": {
+    "source": "allocation-storage captured 2026-10-09; GrowthRequest + Storage16",
+    "files": {
+      "orbital/include/orbital/allocation.h": "cf81956a9c432f1f74fb53fff018adfb0661486228d364b41cbac3d590802689",
+      "orbital/include/orbital/preparation.h": "5a50bb22b0e719a6f98be8b97eb57196e2a703324ea9f383a222edfe12110e38",
+      "orbital/include/orbital/types.h": "f16fa83013aadafe0cb539e06dc56834d894605e8419bebf32fa17b53abfe00b",
+      "orbital/include/orbital/worker.h": "5a57d7745ea210734241786178df710bec086d9e4193cb94815132ce668be09f",
+      "orbital/src/allocation/allocation.cpp": "3b87338d6b79bc67c32059e08c0554eeb1724f5ea1c29d74150d6479200267a7",
+      "orbital/src/allocation/arena.cpp": "5c884a6b17e2d272c4790ac2db729e054c3c086cec4197104bfad00798ca5fb2",
+      "orbital/src/allocation/finite.cpp": "2c1c8f88e4733213926f81ab2b580c61892c80105a0a5464505421b3e046c432",
+      "orbital/src/allocation/finite.h": "fc479f5419b2f74f84ecd492fb0ceb9fc05cc9ee638dd2eaa0d44bdbb7ed03bb",
+      "orbital/src/allocation/group.cpp": "c161c1e1e52698b8ea30d44e2647ae6770af3102ff38de75361dc008698611fc",
+      "orbital/src/allocation/internal.h": "4e109a51f04b4207d0fa8928cff4d7ed4367cf580f28761539cea1faa5f18117",
+      "orbital/src/allocation/window.cpp": "3b9a3ee5688a5bccdb11295d9436fe674b29628d9b020371be00068e25dc3791",
+      "orbital/src/types.cpp": "8fb36e1d5f33cf0cef19243ab72f9907e527d068efec53a3fab22f89d19a962f",
+      "orbital/src/worker.cpp": "8d4593f17951bb40433635de30470ffffa19d8dcbaf026009c2645894df503dd"
+    }
+  },
+  "candidate_sha256": {
+    "orbital/include/orbital/allocation.h": "cf81956a9c432f1f74fb53fff018adfb0661486228d364b41cbac3d590802689",
+    "orbital/include/orbital/preparation.h": "5a50bb22b0e719a6f98be8b97eb57196e2a703324ea9f383a222edfe12110e38",
+    "orbital/include/orbital/types.h": "f16fa83013aadafe0cb539e06dc56834d894605e8419bebf32fa17b53abfe00b",
+    "orbital/include/orbital/worker.h": "5a57d7745ea210734241786178df710bec086d9e4193cb94815132ce668be09f",
+    "orbital/src/allocation/allocation.cpp": "f184367c312c5c5a1b9ed6781fe1a4098d16714caa039d5075078cc1b28e0b99",
+    "orbital/src/allocation/arena.cpp": "5c884a6b17e2d272c4790ac2db729e054c3c086cec4197104bfad00798ca5fb2",
+    "orbital/src/allocation/finite.cpp": "2c1c8f88e4733213926f81ab2b580c61892c80105a0a5464505421b3e046c432",
+    "orbital/src/allocation/finite.h": "fc479f5419b2f74f84ecd492fb0ceb9fc05cc9ee638dd2eaa0d44bdbb7ed03bb",
+    "orbital/src/allocation/group.cpp": "c161c1e1e52698b8ea30d44e2647ae6770af3102ff38de75361dc008698611fc",
+    "orbital/src/allocation/internal.h": "fadcb142cc51b369a4b5358e6d5c4f74b71aed7354148c4c37ea4a49d7421c62",
+    "orbital/src/allocation/window.cpp": "3b9a3ee5688a5bccdb11295d9436fe674b29628d9b020371be00068e25dc3791",
+    "orbital/src/types.cpp": "8fb36e1d5f33cf0cef19243ab72f9907e527d068efec53a3fab22f89d19a962f",
+    "orbital/src/worker.cpp": "8d4593f17951bb40433635de30470ffffa19d8dcbaf026009c2645894df503dd"
+  },
+  "authored_sha256": {
+    "README.md": "5170001372f1104acee321fd9e1bd0d07d55b6586c6e4324da7ebaec95041d65",
+    "base.json": "514e8dc5dcab1d29a42bf4a413ff9a23c5f6dbcea1962f9b35d03af2018bc236",
+    "group-advice.patch": "5e4756d9062bb76bf53a04c0076a503cd87c5fb928e49b809d1f77b3aefda9ab",
+    "heat.cpp": "4befdea1c12027d5031b7837f87d7f20a39e41c59a353b2c021a5038cf088da4",
+    "heat.h": "5ef0dad950b961b36e85a903cc07b3da6d67ea6a6610e81afdcc66f6e34952ee",
+    "runtime.cpp": "cb2f60c2a0fe8daa4f695d5485fc7e5e381388dffb5c242683f9350840145c68",
+    "timing.cpp": "714cec486973c200b50ba89850487d07281ba87b9a070e6db19089b1d288c2e8",
+    "trace.cpp": "8217c179834ad5c686d28b6d52a7d83a1e202f03651c2d45153d398e387b0012"
+  },
+  "qualification": {
+    "compiler": "Clang21.1.8; C++23",
+    "runtime": {
+      "native": "-O3 -DNDEBUG",
+      "sanitizers": "-O1 -DNDEBUG -fsanitize=address,undefined; detect_leaks=1",
+      "actual_histories_passed": true,
+      "group_bytes": 4520,
+      "pool_A_metadata_bytes": 10456,
+      "observed_release_cpp_allocations": 0
+    },
+    "spatial": {
+      "native_output": "trace-final.jsonl",
+      "sanitizer_output": "trace-sanitize-final.jsonl",
+      "histories_passed": true
+    },
+    "timings": [
+      "timing-base-2.jsonl",
+      "timing-group-2.jsonl",
+      "timing-final.jsonl"
+    ],
+    "scope": "Private captured GrowthRequest+Storage16 +Group advice. No production edits or promotions."
+  },
+  "recovery": "artifact.json",
+  "limits": [
+    "Local AArch64 correctness and directional timing only; complete target operation latency remains unmeasured for this treatment.",
+    "The child receipt records passed histories and output identities; it is not a captured command-by-command experiment receipt. README describes reproduction.",
+    "Group-wide advice deliberately changes per-identity timestamp ordering; physical lifetime authority is unchanged.",
+    "Spatial banks are separately allocated prototype state; in-map placement is arithmetic, not an implemented saving."
+  ]
+}
