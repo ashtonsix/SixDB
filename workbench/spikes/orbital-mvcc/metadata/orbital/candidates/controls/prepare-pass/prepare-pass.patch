@@ -1,0 +1,61 @@
+--- a/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/history.h
++++ b/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/history.h
+@@ -75,15 +75,13 @@
+     if (!version || !primary(version)) return {};
+     return Physical::selection(alternative ? alternate(version) : primary(version));
+   }
+-  void reserve(std::span<const Change> changes) {
++  void prepare(std::span<const Change> changes, std::uint64_t cut, std::pmr::vector<Mutation>& output) {
+     std::size_t new_debts = 0;
+     for (const auto& change : changes) {
+       const auto entry = entries.find(change.object);
+       if ((!entry || !entries.indebted(entry)) && ((entry && head(entry)) || !change.representation)) ++new_debts;
+     }
+     entries.reserve_debt(new_debts);
+-  }
+-  void prepare(std::span<const Change> changes, std::uint64_t cut, std::pmr::vector<Mutation>& output) {
+     std::pmr::vector<Ref> allocated(&memory);
+     std::size_t initialized = 0;
+     try {
+--- a/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/inline_history.h
++++ b/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/inline_history.h
+@@ -82,23 +82,19 @@
+     if (!version || !primary(version)) return {};
+     return Physical::selection(alternative ? alternate(version) : primary(version));
+   }
+-  void reserve(std::span<const Change> changes) {
+-    std::size_t new_debts = 0;
+-    for (const auto& change : changes) {
+-      const auto entry = entries.find(change.object);
+-      if ((!entry || !entries.indebted(entry)) && ((entry && head(entry)) || !change.representation)) ++new_debts;
+-    }
+-    entries.reserve_debt(new_debts);
+-  }
+   void erase_borrowed(Node node) noexcept {
+     if (nodes.get(node).primary) directory.erase(nodes.get(node).primary);
+     nodes.erase(node);
+   }
+   void prepare(std::span<const Change> changes, std::uint64_t, std::pmr::vector<Mutation>& output) {
+-    std::size_t count = 0;
++    std::size_t count = 0, new_debts = 0;
+     for (const auto& change : changes) {
+-      const auto entry = entries.find(change.object); count += entry && head(entry);
++      const auto entry = entries.find(change.object);
++      const bool has_tip = entry && head(entry);
++      count += has_tip;
++      if ((!entry || !entries.indebted(entry)) && (has_tip || !change.representation)) ++new_debts;
+     }
++    entries.reserve_debt(new_debts);
+     std::pmr::vector<Node> allocated(&memory);
+     std::size_t initialized = 0;
+     try {
+--- a/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/candidate_store.h
++++ b/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/candidate_store.h
+@@ -443,7 +443,6 @@
+     }
+     Prepared prepared(c.memory);
+     try {
+-      c.reserve(changes);
+       c.Layout::prepare(changes, c.cut + 1, prepared.changes_);
+     } catch (const std::bad_alloc&) { return std::unexpected(Error::capacity); }
+     ++c.references; prepared.core_ = &c; prepared.basis_ = c.cut;
