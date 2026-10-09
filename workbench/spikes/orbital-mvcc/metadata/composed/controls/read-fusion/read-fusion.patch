@@ -1,0 +1,421 @@
+diff --git a/workbench/spikes/orbital-mvcc/metadata/CMakeLists.txt b/workbench/spikes/orbital-mvcc/metadata/CMakeLists.txt
+--- a/workbench/spikes/orbital-mvcc/metadata/CMakeLists.txt
++++ b/workbench/spikes/orbital-mvcc/metadata/CMakeLists.txt
+@@ -99,3 +99,8 @@
+-add_library(orbital_mvcc_composed STATIC composed/material.cpp)
++add_library(orbital_mvcc_composed STATIC composed/material.cpp composed/read_fusion.cpp)
++add_executable(orbital_mvcc_composed_read_fusion_check composed/read_fusion_check.cpp)
++sixdb_target(orbital_mvcc_composed_read_fusion_check)
++target_link_libraries(orbital_mvcc_composed_read_fusion_check PRIVATE orbital_mvcc_composed)
++add_test(NAME orbital_mvcc_composed_read_fusion_check COMMAND orbital_mvcc_composed_read_fusion_check)
++list(APPEND metadata_checks orbital_mvcc_composed_read_fusion_check)
+ sixdb_target(orbital_mvcc_composed)
+ target_link_libraries(orbital_mvcc_composed PUBLIC
+diff --git a/workbench/spikes/orbital-mvcc/metadata/composed/backend.h b/workbench/spikes/orbital-mvcc/metadata/composed/backend.h
+--- a/workbench/spikes/orbital-mvcc/metadata/composed/backend.h
++++ b/workbench/spikes/orbital-mvcc/metadata/composed/backend.h
+@@ -1,10 +1,11 @@
+ #pragma once
+-#include "material.h"
++#include "read_fusion.h"
+ #include "../../performance/request_cache.h"
+ #include <algorithm>
+ 
+ namespace orbital_mvcc::composed {
+ template<class Store> class Backend {
++  friend struct InlineReadFusion;
+   Material material_;
+   Store store_;
+   using Owner = typename Store::Owner;
+@@ -149,6 +150,19 @@
+     std::uint64_t bindings{};
+     explicit Bodies(const Backend& owner, bool alternative = false)
+         : owner_(owner), scope_(owner.catalog()), alternative_(alternative) {}
++    // One-shot scalar trial seam. Existing body() still binds immediately and
++    // keeps its original escaping-selection/alternative-capture semantics.
++    [[gnu::always_inline]] void consume_into(std::size_t object, const orbital_bench::Operation& op,
++        orbital_bench::Outcome& output)
++        requires(Capacity == 1 && std::is_same_v<Store, compact_history::InlineShapeStore16>) {
++      if (alternative_) { output = body(object).consume(op); return; }
++      if (object >= owner_.corpus().images.size())
++        p::need(Result<void>{std::unexpected(Error::invalid_argument)});
++      const auto status = InlineReadFusion::consume(owner_, scope_,
++          owner_.corpus().images[object].address.object, op, output);
++      if (!status) p::need(status);
++      ++bindings;
++    }
+     Body body(std::size_t object) {
+       auto selected = cache_.get(object, [&] { return p::need(owner_.select(scope_, object, alternative_)); }, bindings);
+       return {&owner_.material_, selected};
+diff --git a/workbench/spikes/orbital-mvcc/metadata/composed/material.h b/workbench/spikes/orbital-mvcc/metadata/composed/material.h
+--- a/workbench/spikes/orbital-mvcc/metadata/composed/material.h
++++ b/workbench/spikes/orbital-mvcc/metadata/composed/material.h
+@@ -40,6 +40,7 @@
+ // Tuple Shape are also explicit borrowed write controls, counted separately.
+ // Actual captured Shapes own their read law. No per-body shared_ptr is used.
+ class Material {
++  friend struct InlineReadFusion;
+   const p::Corpus& corpus_;
+   v::Shape columns_;
+   struct ReleaseShape { void operator()(cs::Shape* value) const { cs::release(value); } };
+diff --git a/workbench/spikes/orbital-mvcc/metadata/composed/read_fusion.cpp b/workbench/spikes/orbital-mvcc/metadata/composed/read_fusion.cpp
+new file mode 100644
+--- /dev/null
++++ b/workbench/spikes/orbital-mvcc/metadata/composed/read_fusion.cpp
+@@ -0,0 +1,79 @@
++#include "backend.h"
++#include "../orbital/shape/shape_private.h"
++#include "../consumer/shape_read_private.h"
++
++namespace orbital_mvcc::composed {
++[[gnu::always_inline]] inline Result<void> InlineReadFusion::consume_at(const Owner& owner, Core* core,
++    std::uint64_t cut, orbital::ObjectId object, const orbital_bench::Operation& op,
++    orbital_bench::Outcome& output) {
++
++  // A lookup-only walk over the actual directory. Keep the found cell address
++  // through version selection; find()->handle->get() needlessly reopens it.
++  // Full opaque identity, tombstones and bounded probing remain mandatory.
++  const auto& directory = core->entries.entries_;
++  using Directory = compact_history::inline_detail::TipDirectory;
++  const auto capacity = directory.buckets_.size();
++  if (!capacity) return std::unexpected(Error::absent);
++  auto index = static_cast<std::size_t>(Directory::hash(object)) & (capacity - 1);
++  const compact_history::inline_detail::Entry* found{};
++  for (std::size_t probes = 0; probes < capacity; ++probes) {
++    const auto handle = directory.buckets_[index];
++    if (handle == Directory::empty) break;
++    if (handle != Directory::deleted) {
++      const auto& entry = directory.cell(handle);
++      if (entry.object == object) { found = &entry; break; }
++    }
++    index = (index + 1) & (capacity - 1);
++  }
++  if (!found) return std::unexpected(Error::absent);
++
++  // The enrolled cut, not current catalog time, governs first discovery.
++  // Primary-only selection matches body(..., alternative=false). Retained
++  // ancestors and tombstones follow the same actual nodes/registry as resolve.
++  cs::Realization* value{};
++  if (found->cut && found->cut <= cut)
++    value = static_cast<cs::Realization*>(found->primary);
++  else {
++    auto node = found->older;
++    while (node && core->nodes.cut(node) > cut) node = core->nodes.get(node).older;
++    if (node) value = static_cast<cs::Realization*>(core->directory.get(core->nodes.get(node).primary));
++  }
++  if (!value) return std::unexpected(Error::absent);
++
++  const auto& material = owner.material_;
++  using orbital_bench::Kind;
++  if (material.tuple_read_ && value->shape == material.tuple_read_->shape() &&
++      (op.kind == Kind::read || op.kind == Kind::chain)) {
++    if (op.kind == Kind::chain && op.count > 16)
++      throw std::invalid_argument("composed chain exceeds fixture bound");
++    // TupleProof cold admission proves every transfer equals canonical().
++    // Specialize the same Ikea transfer body; stored Shape/ReadLaw still exist
++    // and remain charged. Capture established actual count/placement; Scope
++    // or uninterrupted current borrow protects backing. No runtime Shape
++    // count/transfer reload is needed.
++    constexpr auto law = metadata_consumer::compact_law::ReadLaw::canonical();
++    const metadata_consumer::compact_law::Control control{law, static_cast<std::size_t>(value->count)};
++    const auto cursor = sr::detail::CursorAccess::admitted(*cs::address_slot(value, 0));
++    [[clang::always_inline]] metadata_consumer::compact_law::read_chain_into(law, cursor.with(control),
++        op.key, op.kind == Kind::chain ? op.count : 1, output);
++    return {};
++  }
++  // Real converted Series primary or scan: preserve the established behavior.
++  // This slow path publishes output only after its complete operation succeeds.
++  output = material.consume({value}, op);
++  return {};
++}
++Result<void> InlineReadFusion::consume(const Owner& owner, const Scope& scope,
++    orbital::ObjectId object, const orbital_bench::Operation& op, orbital_bench::Outcome& output) {
++  auto* core = scope.core_;
++  if (!core || core != owner.store_.core_) return std::unexpected(Error::invalid_argument);
++  return consume_at(owner, core, scope.cut_, object, op, output);
++}
++Result<void> InlineReadFusion::consume_current(const Owner& owner, orbital::ObjectId object,
++    const orbital_bench::Operation& op, orbital_bench::Outcome& output) {
++  const auto borrowed = owner.store_.borrow();
++  if (!borrowed.core || borrowed.cut != borrowed.core->cut)
++    return std::unexpected(Error::invalid_argument);
++  return consume_at(owner, borrowed.core, borrowed.cut, object, op, output);
++}
++} // namespace orbital_mvcc::composed
+diff --git a/workbench/spikes/orbital-mvcc/metadata/composed/read_fusion.h b/workbench/spikes/orbital-mvcc/metadata/composed/read_fusion.h
+new file mode 100644
+--- /dev/null
++++ b/workbench/spikes/orbital-mvcc/metadata/composed/read_fusion.h
+@@ -0,0 +1,26 @@
++#pragma once
++#include "material.h"
++
++namespace orbital_mvcc::composed {
++template<class Store> class Backend;
++// Disposable friend-style full-operation seam. Uses actual owner, enrolled
++// Scope and opaque ObjectId. No deferred Body, per-Object cache or new lifetime.
++struct InlineReadFusion {
++  using Owner = Backend<compact_history::InlineShapeStore16>;
++  using Scope = compact_history::InlineShapeStore16::Scope;
++private:
++  using Core = compact_history::InlineShapeStore16::Core;
++  static inline Result<void> consume_at(const Owner&, Core*, std::uint64_t, orbital::ObjectId,
++      const orbital_bench::Operation&, orbital_bench::Outcome&);
++public:
++  // Scope belongs to owner; missing Object/cross-owner refusal preserves output.
++  // Existing invalid-operation exceptions and non-Tuple fallback are retained.
++  static Result<void> consume(const Owner&, const Scope&, orbital::ObjectId,
++      const orbital_bench::Operation&, orbital_bench::Outcome&);
++  // Explicit current-Object entry: obtain existing Borrowed inside this call.
++  // Fixed native reads cannot yield/reenter/publish; nothing borrowed escapes.
++  // The Scope-based trial does not silently select this weaker lifetime mode.
++  static Result<void> consume_current(const Owner&, orbital::ObjectId,
++      const orbital_bench::Operation&, orbital_bench::Outcome&);
++};
++} // namespace orbital_mvcc::composed
+diff --git a/workbench/spikes/orbital-mvcc/metadata/composed/read_fusion_check.cpp b/workbench/spikes/orbital-mvcc/metadata/composed/read_fusion_check.cpp
+new file mode 100644
+--- /dev/null
++++ b/workbench/spikes/orbital-mvcc/metadata/composed/read_fusion_check.cpp
+@@ -0,0 +1,148 @@
++#include "backend.h"
++#include "../../performance/oracle.h"
++#include <cstdio>
++#include <cstdlib>
++#include <source_location>
++
++namespace c = orbital_mvcc::composed;
++namespace p = orbital_versioned_performance;
++namespace v = orbital_bench::versioned;
++using namespace orbital_bench;
++using HistoryStore = compact_history::InlineShapeStore16;
++
++template<class T> void check(const T& test, std::source_location at = std::source_location::current()) {
++  if (static_cast<bool>(test)) return;
++  std::fprintf(stderr, "check failed: %s:%u\n", at.file_name(), at.line()); std::abort();
++}
++std::uint64_t comparisons{}, refusals{};
++void exercise(const c::Inline& owner, const c::Inline::Scope& scope, std::size_t object,
++    const p::Golden& expected) {
++  const auto id = owner.corpus().images[object].address.object;
++  const auto run = [&](Operation op) {
++    Outcome output{41, 43, 47};
++    check(c::InlineReadFusion::consume(owner, scope, id, op, output));
++    check(output == p::oracle(expected, op));
++    ++comparisons;
++  };
++  for (const auto& [key, record] : expected) { (void)record; run({.kind=Kind::read, .key=key, .record={}}); }
++  check(!expected.contains(2));
++  run({.kind=Kind::read, .key=2, .record={}});
++  for (unsigned count : {0, 1, 16}) run({.kind=Kind::chain, .key=expected.begin()->first, .record={}, .count=count});
++  run({.kind=Kind::scan, .key=expected.begin()->first, .record={}, .count=16});
++}
++void run(v::Format initial) {
++  p::Corpus corpus(512, 8, 8143);
++  constexpr std::uint64_t factor = UINT64_C(0x9e3779b97f4a7c15), hash = 39;
++  // Distinct full opaque identities deliberately collide. No ordinal lookup is
++  // sufficient; a deleted bucket must not hide later entries in the chain.
++  for (std::size_t i=0; i<corpus.images.size(); ++i)
++    corpus.images[i].address.object = {hash ^ ((i+1)*factor), i+1};
++  const orbital::ObjectId missing{hash ^ (999*factor), 999};
++  std::array<p::Golden, 8> original;
++  for (std::size_t i=0; i<original.size(); ++i)
++    for (const auto& row : corpus.images[i].rows) original[i].emplace(row.key, row.record);
++  auto expected=original;
++  c::Inline owner(corpus, 64*1024*1024, initial);
++  std::optional<c::Inline::Scope> unseen(std::in_place, owner.catalog());
++  const auto old_cut=unseen->cut();
++  const auto opposite=initial==v::Format::rows ? v::Format::columns : v::Format::rows;
++  {
++    auto escaped_scope=owner.read();
++    check(owner.convert(7, opposite));
++    const auto escaped=owner.body(escaped_scope, 7, true);
++    auto* const realization=escaped.selected.realization;
++    check(owner.convert(7, initial));
++    check(escaped.selected.realization==realization && escaped.format()==opposite);
++    check(p::read_operation(escaped, {.kind=Kind::read, .key=original[7].begin()->first, .record={}}) ==
++        p::oracle(original[7], {.kind=Kind::read, .key=original[7].begin()->first, .record={}}));
++    ++comparisons;
++  }
++  check(owner.convert(7, opposite));
++  std::array<std::size_t, 3> destinations{5, 6, 7};
++  for (unsigned round=0; round<3; ++round) {
++    std::array<Operation, 3> edits;
++    std::array<Outcome, 3> results;
++    for (std::size_t i=0; i<edits.size(); ++i) {
++      const auto object=destinations[i], key=corpus.images[object].rows[round].key;
++      edits[i]={.kind=Kind::update, .key=key, .record={UINT64_MAX, unsigned(700+10*round+i), unsigned(900+10*round+i)}};
++      expected[object][key].value=edits[i].record.value;
++      expected[object][key].tag=edits[i].record.tag;
++    }
++    check(owner.update(edits, results, destinations));
++  }
++  check(owner.cut()==old_cut+3);
++  const auto allocation_calls=owner.statistics().allocation_calls;
++  {
++    auto current=owner.read();
++    check(owner.body(current, 7).format()==opposite); // actual converted primary fallback
++    for (std::size_t i=0; i<original.size(); ++i) {
++      // First lookup in this old Scope, after three publications and conversion.
++      exercise(owner, *unseen, i, original[i]);
++      exercise(owner, current, i, expected[i]);
++      const auto scopes_before=owner.statistics().scopes;
++      Outcome current_output;
++      const Operation current_op{.kind=Kind::chain,.key=expected[i].begin()->first, .record={},.count=16};
++      check(c::InlineReadFusion::consume_current(owner,corpus.images[i].address.object,current_op,current_output));
++      check(current_output==p::oracle(expected[i],current_op) && owner.statistics().scopes==scopes_before);
++      ++comparisons;
++      auto scalar=owner.bodies<1>();
++      Outcome actual;
++      Operation op{.kind=Kind::read, .key=expected[i].begin()->first, .record={}};
++      scalar.consume_into(i, op, actual);
++      check(actual==p::oracle(expected[i], op) && scalar.bindings==1); ++comparisons;
++    }
++    const Outcome sentinel{17, 19, 23}; Outcome output=sentinel;
++    const Operation op{.kind=Kind::read, .key=1, .record={}};
++    auto absent=c::InlineReadFusion::consume(owner, current, missing, op, output);
++    check(!absent && absent.error()==orbital::Error::absent && output==sentinel); ++refusals;
++    auto current_absent=c::InlineReadFusion::consume_current(owner,missing,op,output);
++    check(!current_absent && current_absent.error()==orbital::Error::absent && output==sentinel); ++refusals;
++    bool invalid=false;
++    try { (void)c::InlineReadFusion::consume(owner, current, corpus.images[initial==v::Format::rows ? 0 : 7].address.object,
++        {.kind=Kind::chain, .key=1, .record={}, .count=17}, output); }
++    catch(const std::invalid_argument&) { invalid=true; }
++    check(invalid && output==sentinel); ++refusals;
++    c::Inline other(corpus, 64*1024*1024, initial); auto foreign=other.read();
++    auto wrong=c::InlineReadFusion::consume(owner, foreign, corpus.images[0].address.object, op, output);
++    check(!wrong && wrong.error()==orbital::Error::invalid_argument && output==sentinel); ++refusals;
++  }
++  check(owner.statistics().allocation_calls==allocation_calls);
++  {
++    // Actual tombstone publication, followed by old discovery and eventual
++    // entry erasure. This modifies the real catalog only in the falsifier.
++    auto& store=const_cast<HistoryStore&>(owner.catalog());
++    std::optional<HistoryStore::Scope> basis(std::in_place, store);
++    auto retained=HistoryStore::Owner::retain(basis->bind(corpus.images[0].address.object).realization);
++    const std::array<HistoryStore::Change,2> changes{{
++        {corpus.images[1].address.object,{}}, {missing,retained}}};
++    auto accepted=p::need(store.prepare(*basis, changes)); basis.reset(); check(store.install(accepted));
++    auto current=owner.read();
++    const Outcome sentinel{29, 31, 37}; Outcome output=sentinel;
++    auto absent=c::InlineReadFusion::consume(owner,current,corpus.images[1].address.object,
++        {.kind=Kind::read,.key=1, .record={}},output);
++    check(!absent && absent.error()==orbital::Error::absent && output==sentinel); ++refusals;
++    exercise(owner,*unseen,1,original[1]);
++    const Operation born_op{.kind=Kind::read,.key=expected[0].begin()->first,.record={}};
++    auto not_yet=c::InlineReadFusion::consume(owner,*unseen,missing,born_op,output);
++    check(!not_yet && not_yet.error()==orbital::Error::absent && output==sentinel); ++refusals;
++    check(c::InlineReadFusion::consume(owner,current,missing,born_op,output));
++    check(output==p::oracle(expected[0],born_op)); ++comparisons;
++    // This real Object has no Corpus ordinal at all.
++    check(c::InlineReadFusion::consume_current(owner,missing,born_op,output));
++    check(output==p::oracle(expected[0],born_op)); ++comparisons;
++  }
++  unseen.reset(); owner.drain(); owner.poll(65536);
++  check(owner.statistics().scopes==0 && owner.statistics().objects==8);
++  {
++    auto current=owner.read();
++    exercise(owner,current,7,expected[7]); // probe through erased collision bucket
++  }
++  // Backend/Runtime destruction retain their actual zero-PMR/Arena assertions.
++}
++int main() {
++  static_assert(!std::is_move_constructible_v<c::Inline::Scope>);
++  static_assert(!std::is_move_constructible_v<c::Inline::Bodies<1>>);
++  run(v::Format::rows); run(v::Format::columns);
++  std::printf("{\"passed\":true,\"comparisons\":%llu,\"refusals\":%llu,\"timing\":false}\n",
++      static_cast<unsigned long long>(comparisons),static_cast<unsigned long long>(refusals));
++}
+diff --git a/workbench/spikes/orbital-mvcc/metadata/consumer/shape_read_bridge.cpp b/workbench/spikes/orbital-mvcc/metadata/consumer/shape_read_bridge.cpp
+--- a/workbench/spikes/orbital-mvcc/metadata/consumer/shape_read_bridge.cpp
++++ b/workbench/spikes/orbital-mvcc/metadata/consumer/shape_read_bridge.cpp
+@@ -20,8 +20,15 @@
+     orbital::Bytes body, Key key, unsigned steps, Outcome& output) noexcept {
+   // Mapping has no capture placement proof: keep its actual range admission.
+   if (!detail::mapped_extent(count, body)) return std::unexpected(orbital::Error::invalid_argument);
+-  detail::consume(*cs::law(const_cast<cs::Shape*>(proof.shape())), body.data(),
+-                  count, key, steps, output);
++  // The same exact TupleProof used by the fused catalog caller admits every
++  // canonical transfer. Retain fresh mapped range admission above and the
++  // caller's protecting transaction; specialize the identical Ikea body.
++  (void)proof;
++  constexpr auto law = compact_law::ReadLaw::canonical();
++  const compact_law::Control control{law, static_cast<std::size_t>(count)};
++  const auto cursor = detail::CursorAccess::admitted(body.data());
++  [[clang::always_inline]] compact_law::read_chain_into(law, cursor.with(control),
++      key, steps, output);
+   return {};
+ }
+ } // namespace orbital_mvcc::metadata_consumer::shape_read
+diff --git a/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/candidate_store.h b/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/candidate_store.h
+--- a/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/candidate_store.h
++++ b/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/candidate_store.h
+@@ -9,6 +9,8 @@
+ // Experimental catalog adapter for real immutable encoded owners. This surface
+ // is a comparison fixture, not a promoted Orbital API. The supplied Memory
+ // resource must outlive the Store, scopes, descriptor owners and Part exports.
++namespace orbital_mvcc::composed { struct InlineReadFusion; }
++
+ namespace compact_history {
+ 
+ using compact_version_probe::Memory;
+@@ -29,6 +31,7 @@
+ 
+ template<class Nodes, class Retention = compact_retention::FloorRetention,
+     class Physical = DescriptorPhysical, class Objects = HashObjects> class Store {
++  friend struct orbital_mvcc::composed::InlineReadFusion;
+   using Descriptor = typename Physical::Value;
+   using Selection = typename Physical::Selection;
+   using RepresentationSpec = typename Physical::Specification;
+@@ -71,6 +74,7 @@
+   // Nonmovable, caller-resident enrollment. A stable address avoids repairing
+   // links on moves. One Core pin preserves later discovery after Store reset.
+   class Scope {
++    friend struct orbital_mvcc::composed::InlineReadFusion;
+     Core* core_{};
+     std::uint64_t cut_{};
+     Scope* previous_{};
+diff --git a/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/inline_objects.h b/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/inline_objects.h
+--- a/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/inline_objects.h
++++ b/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/inline_objects.h
+@@ -15,6 +15,8 @@
+ // current cut/physical pointer; only older versions need separate history slots. IDs remain full-width; stable
+ // entry handles are internal locations, not identities or exported lifetimes.
+ // The resource outlives TipDirectory. Its caller owns physical lifetimes and every old-history slot.
++namespace orbital_mvcc::composed { struct InlineReadFusion; }
++
+ namespace compact_history::inline_detail {
+ 
+ using Handle = std::uint32_t;
+@@ -33,6 +35,7 @@
+ static_assert(sizeof(Entry) == 40);
+ 
+ class TipDirectory {
++  friend struct orbital_mvcc::composed::InlineReadFusion;
+   static constexpr Handle empty = 0, deleted = UINT32_MAX;
+   static constexpr std::uint32_t live = 1, pinned_bit = 2, debt_bit = 4;
+   static constexpr std::uint32_t page_entries = 32;
+@@ -212,6 +215,7 @@
+ namespace compact_history {
+ 
+ class TipObjects {
++  friend struct orbital_mvcc::composed::InlineReadFusion;
+ public:
+   static constexpr bool inline_current = true;
+   using Entry = inline_detail::Entry;
+diff --git a/workbench/spikes/orbital-mvcc/performance/bodies.h b/workbench/spikes/orbital-mvcc/performance/bodies.h
+--- a/workbench/spikes/orbital-mvcc/performance/bodies.h
++++ b/workbench/spikes/orbital-mvcc/performance/bodies.h
+@@ -56,7 +56,11 @@
+     if constexpr (Latency) batch_start=clock_ns();
+     {
+       auto selected=acquire();
+-      for (std::size_t i=first;i<first+count;++i) output[i]=read_operation(selected.body(objects[i]),input[i]);
++      for (std::size_t i=first;i<first+count;++i) {
++        if constexpr (requires { selected.consume_into(objects[i],input[i],output[i]); })
++          selected.consume_into(objects[i],input[i],output[i]);
++        else output[i]=read_operation(selected.body(objects[i]),input[i]);
++      }
+       bindings+=selected.bindings;
+     }
+     if constexpr (Latency) interval.batch_ns.push_back(clock_ns()-batch_start);
