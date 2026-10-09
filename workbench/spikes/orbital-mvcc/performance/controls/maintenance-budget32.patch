@@ -1,0 +1,11 @@
+--- a/workbench/spikes/orbital-mvcc/metadata/composed/backend.h
++++ b/workbench/spikes/orbital-mvcc/metadata/composed/backend.h
+@@ -51,7 +51,7 @@
+   Accounting accounting() const { return material_.accounting(); }
+   void metadata_limit(std::size_t bytes) { material_.memory.limit = bytes; }
+   std::size_t drain() { return store_.drain(); }
+-  static constexpr std::size_t publication_work_limit = std::numeric_limits<std::size_t>::max();
++  static constexpr std::size_t publication_work_limit = 32;
+   std::size_t publication_drain() {
+     if constexpr (publication_work_limit == std::numeric_limits<std::size_t>::max()) return store_.drain();
+     else return store_.drain(publication_work_limit);

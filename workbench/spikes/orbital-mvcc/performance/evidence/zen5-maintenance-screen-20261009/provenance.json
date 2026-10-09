@@ -1,0 +1,77 @@
+{
+  "files_sha256": {
+    "host.json": "6d3094cba39241ecbce86ea05a4df2eee41b97f9fd37b4152fde5538da6c12da",
+    "new-bounded32-context/measurements.csv": "d9861eaa043ef7ff61688a7446492157f1a9cc1e581e52fb6ce2705ebb53fb4a",
+    "new-bounded32-context/parity.json": "2d368f0f4866debcf40c901bd2b7d39bc319e3991bd38145539eadbbce06a581",
+    "new-bounded32-context/summary.csv": "e14f88ace0690b7f655a762e8d189b419aca4dd979cbd6a039fbf2ec83f1e49a",
+    "new-bounded32/abi.json": "424f8b90f5a427693b1fe2efe646c60ad3511aff97f41db423f7d39c35bbc48e",
+    "new-bounded32/binary-identity.json": "48fb19fa0e3c53bb320818cb051d012e7ec684bcf5ce0697e7f31b5ccd58f671",
+    "new-bounded32/build-cost.json": "7d269bbe4b4f9f37aff9a9ae9b09a60c4835984c7f839b6c664c46f6bca3fe99",
+    "new-bounded32/measurements.csv": "a99fa682b6b4b48b0a2a22fb9746929013c2c404c51402064ac1ca9984edeba2",
+    "new-bounded32/parity.json": "0848135c8688bf64b794505ba56917e289488b9b00cc596753e912fec7b22c8b",
+    "new-bounded32/qualification.json": "caa851c8c39541755caa04647921c83f47410f52b056301c09c732dacfde7d28",
+    "new-bounded32/summary.csv": "c79eb0af9bfffec1156b0674686addaeddfd53bd59ff64fa9995875a7a6aea52",
+    "new-full-context/measurements.csv": "89a90d8ada8d022e009c5e136bfe9c975800541e92e306f60b810d5bb08bce4f",
+    "new-full-context/parity.json": "2d368f0f4866debcf40c901bd2b7d39bc319e3991bd38145539eadbbce06a581",
+    "new-full-context/summary.csv": "ff8a34fb29037c5f0aecac1bd81228f43c832c68a40ed062ffd5c08ef6c69324",
+    "new-full/abi.json": "887ff4b136c1a1884b4b8f30ce046d1d9d61667b7869f988481edeec22fecb3d",
+    "new-full/binary-identity.json": "efef594908a8dd669c840c5488a884ac2ced6055a490dbb49005d5afcfda10db",
+    "new-full/build-cost.json": "5fa81a680512d328e6031e327acace07fc4fa7f3d1b5a11d5e1272b32c619691",
+    "new-full/measurements.csv": "e320c346b443577f7c754df427922fc5d3fbeb3d11d39c2d2222976dff3ca323",
+    "new-full/parity.json": "0848135c8688bf64b794505ba56917e289488b9b00cc596753e912fec7b22c8b",
+    "new-full/qualification.json": "caa851c8c39541755caa04647921c83f47410f52b056301c09c732dacfde7d28",
+    "new-full/summary.csv": "742e41e68599c9aae2e9bd074ed9f8f0ac728edb5a4e9e9cbc3ecb1d45842ff6",
+    "original-context/measurements.csv": "1681ce14016b50a21b31f23cd6d8869d60d87b5d046917e7ee13872c8372cde2",
+    "original-context/parity.json": "2d368f0f4866debcf40c901bd2b7d39bc319e3991bd38145539eadbbce06a581",
+    "original-context/summary.csv": "6f1b2e0b5356927f5e7e3cf43ae0c870f09781d141dcccd8fc2e5440f8461f93",
+    "original/abi.json": "b037617b01534e6b768e9080f31c613746beed4152d1cc764abf3dca91daf06d",
+    "original/binary-identity.json": "d1393c1389f893e9431e1a43fd9b133128aebb8249a60e25965d9caf0f3f5fad",
+    "original/build-cost.json": "0c7e5b6da46a9da83a52d133a4cceda574071a725791f314296413ec19941e13",
+    "original/measurements.csv": "064959e98d4b96f7a7f95924396447fc2852d53d19050078347655c3b167c6ba",
+    "original/parity.json": "0848135c8688bf64b794505ba56917e289488b9b00cc596753e912fec7b22c8b",
+    "original/qualification.json": "caa851c8c39541755caa04647921c83f47410f52b056301c09c732dacfde7d28",
+    "original/summary.csv": "8e2c76a756acbb794b9a1375cd7f30de80e3b9f49d30fce55ceb18d3ac3e6e58",
+    "worker-result.json": "c2625ffdeb7e547105842715e84fac964f0b2c0e6ec398194bd6328e85aa835b"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/original"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/new-full"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/new-bounded32"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/original-context"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/new-full-context"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/new-bounded32-context"
+    ]
+  ]
+}

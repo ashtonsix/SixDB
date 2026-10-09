@@ -351,6 +351,66 @@ repetitions keep all margins directional. All twelve table/parity files
 regenerate byte-identically. Git keeps the two distinct ABI summaries once;
 identical contextual copies and all raw captures remain in the worker archive.
 
+## Full and bounded maintenance
+
+[Worker 20261009T231018Z-f0210c01](evidence/zen5-maintenance-screen-20261009/)
+reuses the writer-law guest and passes 204 oracle trials. Writer law, default
+caller state, first-three Allocation controls, Storage16 and full growth stay
+fixed. Original `d000430` candidate metadata is compared with the `0acd622`
+header-only maintenance delta, then that same implementation with 32 metadata
+steps per publication/reader-rotation maintenance invocation. Constructor and
+final settlement remain full drain; the final physical poll is 65536 in all
+cuts. One rotated quick repetition and one contextual repetition per cut keep
+timings directional. Counters distinguish new visits/backlog from original
+unavailable diagnostics.
+
+| 64-Object writes, ns/update | Original full | New full | Bounded32 | Bounded32 with final settlement |
+| --- | ---: | ---: | ---: | ---: |
+| Inline scalar | 564.76 | 576.40 | 557.23 | 557.37 |
+| Directory scalar | 577.26 | 583.15 | 557.80 | 557.94 |
+| Inline batch64 | 379.19 | 382.07 | 435.64 | 501.65 |
+| Directory batch64 | 383.70 | 368.04 | 407.20 | 470.65 |
+
+The full-drain tiny panel shows no large new regression. Bounded32 batch64
+is slower even before settlement and retains **4163 versions / 64 debt Objects**
+instead of 67 versions / three debts. Inline held PMR is 304699 B with 337527 B
+peak, versus new-full 10323 / 17115 B. Pool metadata rises 15032 → 255544 B.
+One conservative sweep starts, no sweep completes, zero versions are reclaimed,
+and no restart churn occurs. Held counters record 59 entry visits, 1109 version
+and cut visits and one head refresh. Source/counter analysis identifies two
+causes. The 2336 available steps cannot cover even one step per 4096 required
+retirements. Separately, the first sweep keeps its cut-2 publication boundary
+and cut-1 reader snapshot until all Objects finish; it therefore preserves
+newer versions even after that reader closes. Traversal advances through 58
+completed entries, with six still pending, but its retention plan is stale.
+Refreshing that plan at completed Object boundaries is a separate proposed
+control; it cannot remove the independent service deficit.
+
+Final settlement takes 270553 ns Inline / 260082 ns Directory and clears debt
+and pending work, reaching 64 current versions. Reusable PMR remains 140739 B,
+Pool metadata 255544 B and idle mapped backing 393216 B. The new full arm
+instead settles in about 0.5 microseconds, with 10203 / 11243 B released PMR
+and unchanged 15032 B Pool metadata. Neither zero backlog nor low publication
+time means the retained capacity disappeared. Settlement follows independent
+old/current validation and is warm; the combined figure adds that clock to
+publication and excludes validation/fixture work.
+The 130536 B released PMR excess is exactly 66024 B extra history capacity plus
+64512 B extra descriptor-directory capacity, rather than still-live versions.
+
+The four-Object larger panel has useful negative context: Series4 Inline batch64
+is 200.92 ns original → 229.47 ns new-full → 208.55 ns bounded; Tuple is
+187.29 → 187.12 → 189.93 ns. These small cuts have three old versions at the
+boundary and do not recreate the 64-Object backlog. The scalar bounded signal
+is also a different service/load balance. Keep full drain as default; this
+bounded budget has not earned selection.
+
+All three cuts separately pass ten native CLI oracles; new cuts settle to zero
+debt/pending and one current version per Object. The [native archive](evidence/zen5-maintenance-screen-20261009/native-artifact.json)
+keeps their ELF identities, commands and recipes. All 18 table/parity files
+regenerate byte-identically. Git keeps the three distinct ABI summaries once,
+with identical contextual copies and raw sources/samples in the worker archive.
+Allocation advice/direct routes are next, with full maintenance held fixed.
+
 ## Clock-mode fault discriminator
 
 [Worker 20261009T213742Z-b9d498d3](evidence/zen5-fault-controls-20261009/feedback/measurements.csv)

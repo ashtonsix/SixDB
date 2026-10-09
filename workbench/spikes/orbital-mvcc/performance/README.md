@@ -155,6 +155,16 @@ The fixture's original Schema remains resident and charged. Recover the exact
 captured cuts and run each profile directly to repeat a retained comparison;
 the screen script applies source treatments to the original isolated baseline.
 
+`maintenance_screen.sh` starts from that measured writer-law cut with Allocation
+already fixed. An unapplied caller/reporting patch adds a default full-drain
+helper, detailed maintenance counters and publication-plus-final-settlement
+cost. Candidate-header deltas compare original and new full drain; the separate
+32-step control bounds each publication and reader-rotation maintenance call.
+Final release still uses full drain and the same physical poll. Work steps do
+not cap allocator, OS or backing-destructor time. Old unavailable counters stay
+empty rather than becoming zero. The selected negative batch result in
+[feedback](FEEDBACK.md) keeps full drain as the current default.
+
 Composed reads use the protected native Tuple bridge. `--from columns` instead
 uses four real Series Parts and the generic consumer with its resident Schema;
 this is a contextual Orbital case, without a fictitious mapped-LMDB counterpart.

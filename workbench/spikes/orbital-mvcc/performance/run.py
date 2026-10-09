@@ -240,6 +240,13 @@ def summarize(output):
                              "copied_metadata_bytes","captured_descriptor_bytes","reclamation_work","last_sweep_bytes",
                              "last_sweep_cuts","maintenance_refusals","catalog_core_bytes","catalog_entry_bytes","version_node_bytes"]:
                     base[f"{label}_{name}"]=f.get(name)
+        if 'metadata_maintenance_work_limit' in result:
+            base['metadata_maintenance_work_limit']=result['metadata_maintenance_work_limit']
+            base['publication_plus_final_settlement_ns_per_request']=(interval['wall_ns']+result['release_and_drain']['wall_ns'])/result['operations']
+            for label,field in [('initial','footprint_initial'),('held','footprint_after_interval'),('released','footprint_after_reader_release')]:
+                f=result.get(field,{})
+                for name in ['cut_capacity_bytes', 'debt_objects', 'maintenance_remaining_entries', 'entry_visits', 'version_visits', 'cut_visits', 'debt_visits', 'plan_work', 'maintenance_restarts', 'debt_reservation_work', 'reclaimed_versions', 'completed_sweeps', 'head_refreshes', 'maintenance_pending', 'maintenance_counters_available']:
+                    base[f'{label}_{name}']=f.get(name)
         if result.get('report_schema',1)>=3:
             base['mapped_shape_metadata_bytes']=result['mapped_shape_metadata_bytes']
             # Add fields only for captures which report them, keeping historical
