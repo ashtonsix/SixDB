@@ -1,4 +1,4 @@
-#include "shape.h"
+#include "shape_private.h"
 
 #include <algorithm>
 #include <bit>
@@ -9,12 +9,6 @@
 
 namespace compact_shape {
 namespace {
-enum class Kind : std::uint32_t { tuple, series };
-bool shared(Owners owners) { return owners == Owners::independent_shared || owners == Owners::grouped_shared; }
-bool grouped(Owners owners) { return owners == Owners::grouped_shared || owners == Owners::grouped_allocation; }
-std::byte* bytes(void* p) { return static_cast<std::byte*>(p); }
-const std::byte* bytes(const void* p) { return static_cast<const std::byte*>(p); }
-
 bool valid(Bytes input, std::size_t padding = 0) {
   if (padding > SIZE_MAX - input.size()) return false;
   const auto extent = input.size() + padding;
@@ -42,33 +36,7 @@ bool unique(std::pmr::memory_resource& memory, std::span<const compact_descripto
 }
 } // namespace
 
-struct Shape {
-  std::pmr::memory_resource* resource;
-  std::uint32_t references{1}, allocated_bytes;
-  ProgramId program;
-  std::shared_ptr<const void> dependencies;
-  std::uint32_t parts;
-  Kind kind;
-};
-
-struct Realization {
-  Shape* shape;
-  std::uint64_t count;
-  std::uint32_t references{1};
-  Owners owners;
-};
-
 namespace {
-struct SharedBody { const std::byte* address; std::shared_ptr<const void> owner; };
-struct AllocatedBody { const std::byte* address; orbital::allocation::Storage* owner; };
-
-Geometry* geometries(Shape* shape) {
-  return static_cast<Geometry*>(static_cast<void*>(bytes(shape) + sizeof(Shape)));
-}
-const Geometry* geometries(const Shape* shape) { return geometries(const_cast<Shape*>(shape)); }
-ReadLaw* law(Shape* shape) {
-  return static_cast<ReadLaw*>(static_cast<void*>(bytes(shape) + sizeof(Shape) + shape->parts * sizeof(Geometry)));
-}
 Bytes wire(const Shape* shape) {
   if (shape->kind != Kind::tuple) return {};
   return {bytes(shape) + sizeof(Shape) + shape->parts * sizeof(Geometry) + sizeof(ReadLaw), 75};
@@ -117,17 +85,6 @@ std::size_t realization_bytes(const Shape& shape, Owners owners) {
       (shape.parts ? (shared(owners) ? sizeof(std::shared_ptr<const void>) : sizeof(void*)) : 0);
   return sizeof(Realization) + shape.parts * (shared(owners) ? sizeof(SharedBody) : sizeof(AllocatedBody));
 }
-const std::byte** addresses(Realization* value) {
-  return static_cast<const std::byte**>(static_cast<void*>(bytes(value) + sizeof(Realization)));
-}
-SharedBody* shared_bodies(Realization* value) {
-  return static_cast<SharedBody*>(static_cast<void*>(bytes(value) + sizeof(Realization)));
-}
-AllocatedBody* allocated_bodies(Realization* value) {
-  return static_cast<AllocatedBody*>(static_cast<void*>(bytes(value) + sizeof(Realization)));
-}
-void* group_owner(Realization* value) { return bytes(value) + sizeof(Realization) + value->shape->parts * sizeof(const std::byte*); }
-
 Result<orbital::allocation::Storage*> hold_source(orbital::allocation::Allocation* allocation) {
   if (!allocation || !*allocation) return static_cast<orbital::allocation::Storage*>(nullptr);
   auto retained = orbital::allocation::hold(*allocation, {0, allocation->size + allocation->readable_padding});
@@ -173,11 +130,6 @@ bool unique_allocations(std::pmr::memory_resource& memory, std::span<const BodyS
   return std::adjacent_find(owners.begin(), owners.end()) == owners.end();
 }
 
-const std::byte* const* address_slot(Realization* realization, std::size_t index) {
-  if (grouped(realization->owners)) return addresses(realization) + index;
-  if (shared(realization->owners)) return &shared_bodies(realization)[index].address;
-  return &allocated_bodies(realization)[index].address;
-}
 std::shared_ptr<const void>& shared_owner(Realization* value, std::size_t index) {
   if (grouped(value->owners)) return *static_cast<std::shared_ptr<const void>*>(group_owner(value));
   return shared_bodies(value)[index].owner;
@@ -187,9 +139,6 @@ orbital::allocation::Storage* allocation_owner(Realization* value, std::size_t i
   return allocated_bodies(value)[index].owner;
 }
 } // namespace
-
-static_assert(sizeof(Shape) == 56 && sizeof(Realization) == 24);
-static_assert(sizeof(SharedBody) == 24 && sizeof(AllocatedBody) == 16);
 
 Result<std::uint64_t> Geometry::extent(std::uint64_t count) const noexcept {
   if (!tile_rows || !tile_bytes) return std::unexpected(Error::invalid_argument);

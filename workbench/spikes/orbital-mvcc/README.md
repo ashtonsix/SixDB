@@ -1,7 +1,7 @@
 # Orbital MVCC
 
 How can coherent versioned access, representation changes and short native calls
-fit together below LMDB's latency? Performance, metadata ownership and interfaces
+fit together while broadly outperforming LMDB? Performance, metadata ownership and interfaces
 must be measured and changed together, while preserving the actual lifetime and
 publication behavior. Engine and Ikea's future multi-block containers remain
 outside this investigation.

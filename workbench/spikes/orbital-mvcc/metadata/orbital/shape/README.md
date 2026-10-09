@@ -24,6 +24,12 @@ original description, including count. Native Selection and View are trivial
 is 16 bytes. LLVM IR on local AArch64 returns both pairs in ordinary registers.
 Their validity comes from the protected catalog scope, not from per-read pins.
 
+`shape_private.h` owns the actual Shape/Realization layout and inline addressing
+helpers. A composed native consumer may deliberately depend on this private
+header to fuse access with its kernels in an ordinary, independently compiled
+TU. This exposes a maintenance dependency without copying layouts, expanding
+the public API or textually including one implementation file in another.
+
 Measured request sizes on 64-bit builds include complete headers and arrays:
 
 | Record | One Part | Four Parts |
