@@ -1,0 +1,288 @@
+--- a/workbench/spikes/orbital-mvcc/metadata/CMakeLists.txt
++++ b/workbench/spikes/orbital-mvcc/metadata/CMakeLists.txt
+@@ -1,6 +1,7 @@
+ # Metadata controls are independently runnable from the withdrawn baseline suite.
+ add_subdirectory(orbital/descriptor)
+ add_subdirectory(orbital/shape)
++add_test(NAME orbital_mvcc_shape_origin_owner_check COMMAND orbital_mvcc_shape_origin_owner_check)
+ 
+ add_library(orbital_mvcc_directory STATIC orbital/directory/object_directory.cpp)
+ sixdb_target(orbital_mvcc_directory)
+@@ -47,7 +48,8 @@
+ target_link_libraries(orbital_mvcc_shape_backing
+   PRIVATE orbital_mvcc_shape orbital_mvcc_descriptor orbital_mvcc_directory)
+ 
+-set(metadata_checks orbital_mvcc_candidates_check orbital_mvcc_directory_check
++set(metadata_checks orbital_mvcc_shape_origin_owner_check
++  orbital_mvcc_candidates_check orbital_mvcc_directory_check
+   orbital_mvcc_shape_store_check orbital_mvcc_bounded_check
+   orbital_mvcc_retention_check orbital_mvcc_retention_store_check)
+ foreach(check IN ITEMS candidates_check compact_law_check descriptor_adapter_check
+--- a/workbench/spikes/orbital-mvcc/metadata/orbital/shape/shape.h
++++ b/workbench/spikes/orbital-mvcc/metadata/orbital/shape/shape.h
+@@ -50,7 +50,10 @@
+ const ReadLaw& tuple_law(const Shape*) noexcept;
+ Bytes tuple_interpretation(const Shape*) noexcept;
+ 
+-enum class Owners { independent_shared, grouped_shared, independent_allocation, grouped_allocation };
++enum class Owners {
++  independent_shared, grouped_shared, independent_allocation, grouped_allocation,
++  independent_origin // Capture result only; exact-origin compression is automatic.
++};
+ struct Specification { Shape* shape{}; std::uint64_t records{}; Owners owners = Owners::independent_shared; };
+ struct BodySource {
+   PartId id{};
+@@ -73,12 +76,23 @@
+ // this predicate neither compares bytes nor proves a lossless conversion.
+ bool equivalent(const Realization*, const Realization*) noexcept;
+ 
+-// Pointer-only native Part borrow. Count and proven geometry stay with its
+-// Selection/control; an empty Part still has a valid address slot.
++// Pointer-sized native borrow. An origin-only Allocation uses a tagged pointer
++// to its aligned owner slot; explicit address slots preserve slices and null Parts.
++namespace detail { const std::byte* allocation_origin(const orbital::allocation::Storage*) noexcept; }
+ struct View {
+-  const std::byte* const* slot{};
++  std::uintptr_t slot{};
++  View() = default;
++  explicit View(const std::byte* const* address) noexcept
++      : slot(reinterpret_cast<std::uintptr_t>(address)) {}
++  static View origin(orbital::allocation::Storage* const* owner) noexcept {
++    View result; result.slot = reinterpret_cast<std::uintptr_t>(owner) | 1; return result;
++  }
+   explicit operator bool() const noexcept { return slot; }
+-  const std::byte* address() const noexcept { return *slot; }
++  const std::byte* address() const noexcept {
++    if (slot & 1) return detail::allocation_origin(
++        *reinterpret_cast<orbital::allocation::Storage* const*>(slot & ~std::uintptr_t{1}));
++    return *reinterpret_cast<const std::byte* const*>(slot);
++  }
+ };
+ struct Control { const Shape* shape; std::uint64_t records; };
+ struct Selection {
+--- a/workbench/spikes/orbital-mvcc/metadata/orbital/shape/shape_private.h
++++ b/workbench/spikes/orbital-mvcc/metadata/orbital/shape/shape_private.h
+@@ -28,6 +28,9 @@
+ struct SharedBody { const std::byte* address; std::shared_ptr<const void> owner; };
+ struct AllocatedBody { const std::byte* address; orbital::allocation::Storage* owner; };
+ 
++static_assert(alignof(const std::byte*) >= 2 && alignof(orbital::allocation::Storage*) >= 2);
++inline bool origin(Owners owners) { return owners == Owners::independent_origin; }
++
+ inline bool shared(Owners owners) {
+   return owners == Owners::independent_shared || owners == Owners::grouped_shared;
+ }
+@@ -53,6 +56,9 @@
+ inline AllocatedBody* allocated_bodies(Realization* value) {
+   return static_cast<AllocatedBody*>(static_cast<void*>(bytes(value) + sizeof(Realization)));
+ }
++inline orbital::allocation::Storage** origin_owners(Realization* value) {
++  return static_cast<orbital::allocation::Storage**>(static_cast<void*>(bytes(value) + sizeof(Realization)));
++}
+ inline void* group_owner(Realization* value) {
+   return bytes(value) + sizeof(Realization) + value->shape->parts * sizeof(const std::byte*);
+ }
+@@ -62,6 +68,15 @@
+   return &allocated_bodies(value)[index].address;
+ }
+ 
++inline const std::byte* part_address(Realization* value, std::size_t index) {
++  if (origin(value->owners)) return detail::allocation_origin(origin_owners(value)[index]);
++  return *address_slot(value, index);
++}
++inline View part_view(Realization* value, std::size_t index) {
++  if (origin(value->owners)) return View::origin(origin_owners(value) + index);
++  return View{address_slot(value, index)};
++}
++
+ static_assert(sizeof(Shape) == 56 && sizeof(Realization) == 24);
+ static_assert(sizeof(SharedBody) == 24 && sizeof(AllocatedBody) == 16);
+ 
+--- a/workbench/spikes/orbital-mvcc/metadata/orbital/shape/shape.cpp
++++ b/workbench/spikes/orbital-mvcc/metadata/orbital/shape/shape.cpp
+@@ -81,6 +81,7 @@
+ }
+ 
+ std::size_t realization_bytes(const Shape& shape, Owners owners) {
++  if (origin(owners)) return sizeof(Realization) + shape.parts * sizeof(orbital::allocation::Storage*);
+   if (grouped(owners)) return sizeof(Realization) + shape.parts * sizeof(const std::byte*) +
+       (shape.parts ? (shared(owners) ? sizeof(std::shared_ptr<const void>) : sizeof(void*)) : 0);
+   return sizeof(Realization) + shape.parts * (shared(owners) ? sizeof(SharedBody) : sizeof(AllocatedBody));
+@@ -135,6 +136,7 @@
+   return shared_bodies(value)[index].owner;
+ }
+ orbital::allocation::Storage* allocation_owner(Realization* value, std::size_t index) {
++  if (origin(value->owners)) return origin_owners(value)[index];
+   if (grouped(value->owners)) return *static_cast<orbital::allocation::Storage**>(group_owner(value));
+   return allocated_bodies(value)[index].owner;
+ }
+@@ -230,12 +232,18 @@
+       if (grouped(spec.owners) && i && body.allocation != bodies[0].allocation) return std::unexpected(Error::invalid_argument);
+     }
+   }
+-  const auto size = realization_bytes(*shape, spec.owners);
++  // Only exact origins can omit addresses. Mixed or sliced inputs keep the
++  // existing explicit-address layout, including empty non-null ranges.
++  auto owners = spec.owners;
++  if (owners == Owners::independent_allocation && std::ranges::all_of(bodies, [](const BodySource& body) {
++        return body.allocation && *body.allocation ? body.body.data() == body.allocation->address : !body.body.data();
++      })) owners = Owners::independent_origin;
++  const auto size = realization_bytes(*shape, owners);
+   try {
+     if (!shared(spec.owners) && !grouped(spec.owners) && !unique_allocations(memory, bodies))
+       return std::unexpected(Error::invalid_argument);
+     auto* value = std::construct_at(static_cast<Realization*>(memory.allocate(size, alignof(Realization))),
+-        Realization{shape, spec.records, 1, spec.owners});
++        Realization{shape, spec.records, 1, owners});
+     retain(shape);
+     if (grouped(spec.owners)) {
+       for (std::size_t i = 0; i < bodies.size(); ++i) std::construct_at(addresses(value) + i, bodies[i].body.data());
+@@ -252,13 +260,15 @@
+     } else {
+       for (std::size_t i = 0; i < bodies.size(); ++i) {
+         if (shared(spec.owners)) std::construct_at(shared_bodies(value) + i, SharedBody{bodies[i].body.data(), bodies[i].backing});
++        else if (origin(owners)) std::construct_at(origin_owners(value) + i, nullptr);
+         else std::construct_at(allocated_bodies(value) + i, AllocatedBody{bodies[i].body.data(), nullptr});
+       }
+       if (!shared(spec.owners)) {
+         for (std::size_t i = 0; i < bodies.size(); ++i) {
+           auto held = hold_source(bodies[i].allocation);
+           if (!held) { release(value); return std::unexpected(held.error()); }
+-          allocated_bodies(value)[i].owner = *held;
++          if (origin(owners)) origin_owners(value)[i] = *held;
++          else allocated_bodies(value)[i].owner = *held;
+         }
+       }
+     }
+@@ -284,7 +294,7 @@
+   } else {
+     for (std::size_t i = 0; i < shape->parts; ++i) {
+       if (shared(value->owners)) std::destroy_at(shared_bodies(value) + i);
+-      else drop(allocated_bodies(value)[i].owner);
++      else drop(allocation_owner(value, i));
+     }
+   }
+   std::destroy_at(value);
+@@ -302,12 +312,12 @@
+ std::size_t Selection::part_count() const noexcept { return realization ? realization->shape->parts : 0; }
+ Result<View> Selection::part(std::size_t index) const noexcept {
+   if (!realization || index >= realization->shape->parts) return std::unexpected(Error::absent);
+-  return View{address_slot(realization, index)};
++  return part_view(realization, index);
+ }
+ Result<View> Selection::part(PartId id) const noexcept {
+   if (!realization) return std::unexpected(Error::absent);
+   for (std::size_t i = 0; i < realization->shape->parts; ++i)
+-    if (geometries(realization->shape)[i].id == id) return View{address_slot(realization, i)};
++    if (geometries(realization->shape)[i].id == id) return part_view(realization, i);
+   return std::unexpected(Error::absent);
+ }
+ 
+@@ -346,7 +356,7 @@
+     value = static_cast<Export*>(memory->allocate(size, alignof(Export)));
+     std::construct_at(value);
+     value->shape = source; value->count = realization->count;
+-    value->address = *address_slot(realization, index); value->binding = binding;
++    value->address = part_address(realization, index); value->binding = binding;
+     value->index = index; value->owners = realization->owners; value->interpretation = interpretation;
+     if (shared(value->owners)) std::construct_at(&value->owner.shared, shared_owner(realization, index));
+     else value->owner.allocation = pin(allocation_owner(realization, index));
+@@ -381,7 +391,7 @@
+   memory->deallocate(value, size, alignof(Export));
+   if (!copied) release(shape);
+ }
+-View view(const Export* value) noexcept { return {&value->address}; }
++View view(const Export* value) noexcept { return View{&value->address}; }
+ Binding binding(const Export* value) noexcept { return value->binding; }
+ std::uint64_t records(const Export* value) noexcept { return value->count; }
+ const Geometry& geometry(const Export* value) noexcept { return geometries(value->shape)[value->index]; }
+--- /dev/null
++++ b/workbench/spikes/orbital-mvcc/metadata/orbital/shape/origin.cpp
+@@ -0,0 +1,13 @@
++#include "shape_private.h"
++#include "internal.h"
++
++namespace compact_shape::detail {
++const std::byte* allocation_origin(const orbital::allocation::Storage* owner) noexcept {
++  if (!owner) return nullptr;
++  // Caller owns a live Hold. Its identity cannot rebind or retire during access.
++  // This control uses the unchanged current Allocation layout, not route patches.
++  const auto* domain = owner->domain;
++  if (!domain->finite) return static_cast<const orbital::allocation::detail::Window*>(domain->context)->address;
++  return static_cast<const orbital::allocation::detail::Group*>(domain->context)->geometry->resolve({owner->identity});
++}
++} // namespace compact_shape::detail
+--- a/workbench/spikes/orbital-mvcc/metadata/orbital/shape/check.cpp
++++ b/workbench/spikes/orbital-mvcc/metadata/orbital/shape/check.cpp
+@@ -248,7 +248,7 @@
+   auto* value = take(cs::capture(metadata, {shape, 3,
+       grouped ? cs::Owners::grouped_allocation : cs::Owners::independent_allocation}, bodies));
+   for (const auto& allocation : allocations) check(!allocation);
+-  check(cs::footprint(value).requested_bytes == 24 + parts * (grouped ? 8 : 16) + (grouped ? 8 : 0));
++  check(cs::footprint(value).requested_bytes == 24 + parts * 8 + (grouped ? 8 : 0));
+   cs::release(shape);
+   auto* escaped = take(cs::detail::retain_part({value}, parts - 1, {{1, 7}, 1}, cs::Interpretation::selected_copy));
+   cs::release(value);
+--- a/workbench/spikes/orbital-mvcc/metadata/orbital/shape/CMakeLists.txt
++++ b/workbench/spikes/orbital-mvcc/metadata/orbital/shape/CMakeLists.txt
+@@ -1,8 +1,9 @@
+-add_library(orbital_mvcc_shape STATIC shape.cpp)
++add_library(orbital_mvcc_shape STATIC shape.cpp origin.cpp)
+ sixdb_target(orbital_mvcc_shape)
+ target_include_directories(orbital_mvcc_shape PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}"
+   "${PROJECT_SOURCE_DIR}/workbench/spikes/orbital-mvcc")
+ target_link_libraries(orbital_mvcc_shape PUBLIC orbital_versioned_data orbital::orbital)
++target_include_directories(orbital_mvcc_shape PRIVATE "${PROJECT_SOURCE_DIR}/orbital/src/allocation")
+ 
+ add_executable(orbital_mvcc_shape_check check.cpp)
+ sixdb_target(orbital_mvcc_shape_check)
+@@ -13,3 +14,9 @@
+ add_library(orbital_mvcc_shape_abi OBJECT abi.cpp)
+ sixdb_target(orbital_mvcc_shape_abi)
+ target_link_libraries(orbital_mvcc_shape_abi PRIVATE orbital_mvcc_shape)
++
++add_executable(orbital_mvcc_shape_origin_owner_check controls/origin-owner/check.cpp)
++sixdb_target(orbital_mvcc_shape_origin_owner_check)
++target_link_libraries(orbital_mvcc_shape_origin_owner_check PRIVATE orbital_mvcc_shape)
++target_include_directories(orbital_mvcc_shape_origin_owner_check PRIVATE
++  "${PROJECT_SOURCE_DIR}/orbital/src/allocation")
+--- a/workbench/spikes/orbital-mvcc/metadata/consumer/shape_read_bridge.cpp
++++ b/workbench/spikes/orbital-mvcc/metadata/consumer/shape_read_bridge.cpp
+@@ -11,7 +11,7 @@
+   if (value->shape != proof.shape()) return std::unexpected(orbital::Error::invalid_argument);
+   // Factory admitted this immutable one-Part Tuple Shape; capture admitted
+   // count/placement. The enclosing owner protects both for this entire call.
+-  detail::consume(*cs::law(value->shape), *cs::address_slot(value, 0),
++  detail::consume(*cs::law(value->shape), cs::part_address(value, 0),
+                   value->count, key, steps, output);
+   return {};
+ }
+--- a/workbench/spikes/orbital-mvcc/metadata/consumer/shape_write.cpp
++++ b/workbench/spikes/orbital-mvcc/metadata/consumer/shape_write.cpp
+@@ -241,7 +241,7 @@
+   if (!selected) return std::unexpected(orbital::Error::absent);
+   auto* value = selected.realization;
+   if (value->shape != proof.law().shape()) return std::unexpected(orbital::Error::invalid_argument);
+-  return tuple_lookup(*cs::law(value->shape), *cs::address_slot(value, 0), value->count, key, row, output);
++  return tuple_lookup(*cs::law(value->shape), cs::part_address(value, 0), value->count, key, row, output);
+ }
+ orbital::Result<void> lookup(SeriesProof proof, cs::Selection selected,
+     Key key, std::size_t& row, Record& output) noexcept {
+@@ -249,13 +249,13 @@
+   auto* value = selected.realization;
+   if (value->shape != proof.shape()) return std::unexpected(orbital::Error::invalid_argument);
+   const auto count = static_cast<std::size_t>(value->count);
+-  const auto keys = decoder<64>(*cs::address_slot(value, 0), count);
++  const auto keys = decoder<64>(cs::part_address(value, 0), count);
+   return lookup_row(count, key, row, output,
+       [&](std::size_t i) { return keys.get_unchecked(i); },
+       [&](std::size_t i) { return Record{
+-          decoder<64>(*cs::address_slot(value, 1), count).get_unchecked(i),
+-          std::uint32_t(decoder<20>(*cs::address_slot(value, 2), count).get_unchecked(i)),
+-          std::uint32_t(decoder<32>(*cs::address_slot(value, 3), count).get_unchecked(i))}; });
++          decoder<64>(cs::part_address(value, 1), count).get_unchecked(i),
++          std::uint32_t(decoder<20>(cs::part_address(value, 2), count).get_unchecked(i)),
++          std::uint32_t(decoder<32>(cs::part_address(value, 3), count).get_unchecked(i))}; });
+ }
+ orbital::Result<void> lookup_mapped(TupleProof proof, std::uint64_t count,
+     orbital::Bytes body, Key key, std::size_t& row, Record& output) noexcept {
