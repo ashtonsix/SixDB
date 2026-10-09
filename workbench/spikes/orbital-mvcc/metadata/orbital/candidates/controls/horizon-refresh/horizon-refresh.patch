@@ -1,0 +1,158 @@
+--- a/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/candidate_store.h
++++ b/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/candidate_store.h
+@@ -199,8 +199,9 @@
+     std::uint64_t maintenance_changes{};
+     // A cut snapshot is conservative through scope release. New scopes start
+     // at the current cut, so the unsampled suffix is protected through the
+-    // plan's boundary until the next sweep. Closing a builder's exact Scope
+-    // repairs its pointer before unlinking; unrelated writes cannot restart it.
++    // plan's boundary until the next Object. A completed Object can refresh
++    // that plan without resetting debt traversal. Closing a builder's exact
++    // Scope repairs its pointer before unlinking; writes cannot restart it.
+     std::uint64_t reader_changes{}, plan_generation = UINT64_MAX;
+     std::uint64_t pass_generation{}, planned_floor{}, building_cut{}, anchor_cut{};
+     std::pmr::vector<std::uint64_t> reader_cuts;
+@@ -210,7 +211,7 @@
+     std::size_t remaining_entries{}, remaining_cuts{};
+     std::size_t entry_visits{}, version_visits{}, cut_visits{}, debt_visits{}, plan_work{}, maintenance_restarts{};
+     std::size_t reclaimed_versions{}, completed_sweeps{}, head_refreshes{};
+-    enum class Step { idle, cuts, entry, older, consume, finish, seek };
++    enum class Step { idle, plan, cuts, entry, older, consume, finish, seek };
+     Step step{Step::idle};
+     Step resume_step{Step::idle};
+     bool crossed_floor{};
+@@ -260,9 +261,9 @@
+       // later mutations in this batch still own entry pins.
+       pending = 0;
+     }
+-    void begin_entries() noexcept {
+-      remaining_entries = entries.debt_count();
+-      step = Step::entry;
++    void finish_plan() noexcept {
++      last_sweep_bytes = reader_cuts.capacity() * sizeof(std::uint64_t);
++      last_sweep_cuts = reader_cuts.size(); step = Step::entry;
+     }
+     void restart() noexcept {
+       // A callback may keep changing the front object. Rotation preserves the
+@@ -289,8 +290,11 @@
+           }
+         }
+         switch (step) {
+-        case Step::idle: {
+-          ++work; ++plan_work; building_cut = cut; pass_generation = maintenance_changes;
++        case Step::idle:
++          remaining_entries = entries.debt_count(); pass_generation = maintenance_changes;
++          [[fallthrough]];
++        case Step::plan: {
++          ++work; ++plan_work; building_cut = cut;
+           planned_floor = Retention::uses_distinct_cuts ? cut : floor();
+           if constexpr (Retention::uses_distinct_cuts) {
+             if (plan_generation != reader_changes) {
+@@ -308,13 +312,11 @@
+               if (next_cut) break;
+             }
+           }
+-          last_sweep_bytes = reader_cuts.capacity() * sizeof(std::uint64_t);
+-          last_sweep_cuts = reader_cuts.size(); begin_entries(); break;
++          finish_plan(); break;
+         }
+         case Step::cuts: {
+           if (!next_cut) {
+-            last_sweep_bytes = reader_cuts.capacity() * sizeof(std::uint64_t);
+-            last_sweep_cuts = reader_cuts.size(); begin_entries(); break;
++            finish_plan(); break;
+           }
+           ++work; ++cut_visits;
+           assert(next_cut->cut_ < building_cut);
+@@ -322,10 +324,7 @@
+           if (reader_cuts.empty() || reader_cuts.back() != value) reader_cuts.push_back(value);
+           auto* next = next_cut->next_;
+           next_cut = next && next->cut_ < building_cut ? next : nullptr;
+-          if (!next_cut) {
+-            last_sweep_bytes = reader_cuts.capacity() * sizeof(std::uint64_t);
+-            last_sweep_cuts = reader_cuts.size(); begin_entries();
+-          }
++          if (!next_cut) finish_plan();
+           break;
+         }
+         case Step::entry:
+@@ -382,6 +381,14 @@
+               remove_debt(entry); ++reclaimed_versions; erase_head(entry);
+             } else entries.rotate_debt();
+           } else entries.rotate_debt();
++          // Refresh only after completing an Object. A partially sampled plan
++          // still gets to process one Object if readers change while it builds.
++          // Keep the sweep count and debt position; new reader cuts must be
++          // sampled before advancing the protected suffix boundary.
++          const bool refresh = Retention::uses_distinct_cuts
++              ? building_cut != cut || plan_generation != reader_changes
++              : planned_floor != floor();
++          if (remaining_entries && refresh) step = Step::plan;
+           break;
+         }
+         case Step::seek:
+--- a/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/bounded_check.cpp
++++ b/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/bounded_check.cpp
+@@ -334,6 +334,54 @@
+   check(!memory.live);
+ }
+ 
++// A first-sweep snapshot must not preserve every newer publication across
++// many reader rotations. Values recorded at enrollment are an independent
++// coherent-read oracle; all Objects are first discovered after later writes.
++template<class Store> void rotating_batch_horizon() {
++  Memory memory;
++  {
++    Store store(memory);
++    constexpr std::size_t count = 64;
++    std::array<std::uint64_t, count> current{}, saved{};
++    const auto id = [](std::size_t i) { return ObjectId{57, i + 1}; };
++    const auto batch = [&](std::size_t changed, std::uint64_t value) {
++      const auto cut = store.borrow().cut + 1;
++      std::array<Change, count> changes;
++      for (std::size_t i = 0; i < changed; ++i) {
++        current[i] = value + i;
++        changes[i] = {id(i), encode(store, id(i), cut, current[i])};
++      }
++      publish(store, std::span(changes).first(changed));
++    };
++    batch(count, 1000); store.drain(); saved = current;
++    std::optional<typename Store::Scope> reader(std::in_place, store);
++    const auto verify = [&] {
++      for (std::size_t i = 0; i < count; ++i) {
++        check(word(reader->bind(id(i))) == saved[i]);
++        check(word(store.borrow().bind(id(i))) == current[i]);
++      }
++    };
++    for (std::uint64_t n = 1; n <= 65; ++n) {
++      batch(n == 65 ? 3 : count, (n + 1) * 1000);
++      check(store.drain(32) <= 32); verify();
++      if (n % 8 == 0) {
++        reader.reset(); reader.emplace(store); saved = current;
++        check(store.drain(32) <= 32);
++      }
++    }
++    const auto held = store.statistics();
++    std::fprintf(stderr, "rotating batch horizon: work=%zu versions=%zu reclaimed=%zu entries=%zu remaining=%zu plans=%zu sweeps=%zu restarts=%zu\n",
++        held.reclamation_work, held.versions, held.reclaimed_versions, held.entry_visits,
++        held.maintenance_remaining_entries, held.plan_work, held.completed_sweeps, held.maintenance_restarts);
++    check(held.reclamation_work <= (65 + 8) * 32);
++    check(held.reclaimed_versions > 0); // Fails with the original whole-sweep horizon.
++    reader.reset(); finish(store, 17);
++    check(store.statistics().versions == count);
++    for (std::size_t i = 0; i < count; ++i) check(word(store.borrow().bind(id(i))) == current[i]);
++  }
++  check(!memory.live);
++}
++
+ template<class Store> void run(const char* name) {
+   limits_and_cuts<Store>(); sparse_predecessors<Store>(); interrupted_plan<Store>();
+   refusal_and_reuse<Store>(); accepted_and_recycled<Store>(); callbacks_and_fairness<Store>(); long_chain<Store>();
+@@ -342,6 +390,7 @@
+ }
+ 
+ int main() {
++  rotating_batch_horizon<Store<Slab<Version16>, compact_retention::DistinctRetention, DescriptorPhysical, TipObjects>>();
+   run<Store32>("v32-floor"); run<Store16>("v16-floor"); run<Store8>("v8-floor");
+   run<Store<Slab<Version32>, compact_retention::DistinctRetention>>("v32-distinct");
+   run<Store<Slab<Version16>, compact_retention::DistinctRetention>>("v16-distinct");
