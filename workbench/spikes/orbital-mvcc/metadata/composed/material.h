@@ -4,6 +4,7 @@
 #include "../consumer/shape_read.h"
 #include "../consumer/write_batch.h"
 #include "../consumer/shape_write.h"
+#include "../consumer/point_write.h"
 #include "../orbital/candidates/shape_policy.h"
 #include <optional>
 
@@ -15,6 +16,7 @@ namespace oa = orbital::allocation;
 namespace sr = metadata_consumer::shape_read;
 namespace wb = metadata_consumer::write_batch;
 namespace sw = metadata_consumer::shape_write;
+namespace pw = metadata_consumer::point_write;
 using orbital::Result;
 using orbital::Error;
 
@@ -50,7 +52,7 @@ class Material {
   struct ReleaseShape { void operator()(cs::Shape* value) const { cs::release(value); } };
   std::unique_ptr<cs::Shape, ReleaseShape> tuple_, columns_proof_;
   std::optional<sr::TupleProof> tuple_read_;
-  std::optional<sw::TupleLaw> tuple_write_;
+  std::optional<pw::TupleLaw> tuple_write_;
   std::optional<sw::SeriesProof> columns_write_;
   Result<PrivateParts> allocate(const v::Shape&, v::Costs&);
 public:
@@ -67,8 +69,7 @@ public:
   Result<PrivateParts> convert(cs::Selection, v::Format, v::Costs&, v::ConstructionOptions = {});
   Result<cs::Shape*> proof(const PrivateParts&);
   v::ReadData generic(cs::Selection) const;
-  Result<void> lookup(cs::Selection, orbital_bench::Key, std::size_t&, orbital_bench::Record&) const;
-  Result<void> apply(cs::Selection basis, const PrivateParts&, std::span<const v::Update>,
+  Result<void> apply(cs::Selection basis, const PrivateParts&, std::span<const pw::Command>,
       v::KernelCosts&, wb::ProbeCosts&) const;
   orbital_bench::Outcome consume(cs::Selection, const orbital_bench::Operation&) const;
   Accounting accounting() const;

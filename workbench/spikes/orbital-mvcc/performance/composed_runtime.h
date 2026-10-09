@@ -6,7 +6,7 @@ namespace orbital_versioned_performance {
 namespace composed = orbital_mvcc::composed;
 namespace shape_read = orbital_mvcc::metadata_consumer::shape_read;
 namespace write_batch = orbital_mvcc::metadata_consumer::write_batch;
-namespace shape_write = orbital_mvcc::metadata_consumer::shape_write;
+namespace point_write = orbital_mvcc::metadata_consumer::point_write;
 
 // One admitted immutable law, independent of any mapped-value transaction.
 // The same native read bridge used by composed Orbital also receives LMDB's
@@ -16,14 +16,14 @@ class MappedShape {
   compact_history::Memory memory_;
   compact_shape::Shape* shape_{};
   std::optional<shape_read::TupleProof> proof_;
-  std::optional<shape_write::TupleLaw> write_;
+  std::optional<point_write::TupleLaw> write_;
 public:
   explicit MappedShape(const Corpus& corpus);
   ~MappedShape();
   MappedShape(const MappedShape&) = delete;
   auto proof() const { return *proof_; }
   auto write_proof() const { return write_->proof(); }
-  std::size_t write_control_live_bytes() const { return write_ ? sizeof(shape_write::TupleLaw) : 0; }
+  std::size_t write_control_live_bytes() const { return write_ ? sizeof(point_write::TupleLaw) : 0; }
   std::size_t write_control_slots_bytes() const { return sizeof(write_); }
   const Corpus& corpus() const { return corpus_; }
   std::size_t metadata_bytes() const { return memory_.live; }

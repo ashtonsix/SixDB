@@ -12,8 +12,8 @@ MappedShape::MappedShape(const Corpus& corpus) : corpus_(corpus) {
     compact_shape::release(shape_); shape_ = nullptr; need(admitted);
   }
   proof_ = *admitted;
-  const auto write_admitted = shape_write::TupleLaw::prepare(write_, shape_, corpus.schema.tuple,
-      std::span(corpus.schema.writers).subspan<1, 3>(), data::data_program, image.address.part);
+  const auto write_admitted = point_write::TupleLaw::prepare(write_, shape_, corpus.schema.tuple,
+      std::span(corpus.schema.writers).subspan<2, 2>(), data::data_program, image.address.part);
   if (!write_admitted) {
     proof_.reset(); write_.reset(); compact_shape::release(shape_); shape_ = nullptr;
     need(write_admitted);
@@ -92,31 +92,27 @@ void lmdb_composed_update(Lmdb& store, const MappedShape& mapped_shape, std::spa
       throw std::invalid_argument("invalid composed LMDB fixed-row update");
   std::optional<Lmdb::Read> basis(store.read());
   auto write = store.edit();
-  std::array<data::Update, 64> updates;
+  std::array<point_write::Command, 64> commands;
   for (std::size_t offered = 0; offered < objects.size(); ++offered) {
     const auto object = objects[offered];
     if (std::find(objects.begin(), objects.begin() + offered, object) != objects.begin() + offered) continue;
     const auto& image = corpus.images[object];
     const auto bytes = basis->part(image.address);
     if (!bytes) throw std::runtime_error("missing composed LMDB update basis");
+    // The lookup is gone; exact source mapping admission remains before copying.
+    need(point_write::admit_mapped(write_proof, image.shape.records, *bytes));
     std::size_t used{};
-    for (std::size_t i = 0; i < input.size(); ++i) if (objects[i] == object) {
-      std::size_t position{};
-      Record record;
-      need(shape_write::lookup_mapped(write_proof, image.shape.records, *bytes,
-          input[i].key, position, record));
-      record.value = input[i].record.value; record.tag = input[i].record.tag;
-      updates[used++] = {input[i].key, record};
-    }
+    for (std::size_t i = 0; i < input.size(); ++i) if (objects[i] == object)
+      commands[used++] = {input[i].key, input[i].record.value, input[i].record.tag};
     auto target = write.reserve_part(image.address, bytes->size());
     std::memcpy(target.data(), bytes->data(), bytes->size());
     costs.copied_bytes += bytes->size(); ++costs.copied_spans;
     costs.requested_body_bytes += bytes->size(); ++costs.requested_parts;
     const data::WritePart part{image.address.part, target};
-    need(shape_write::apply(write_proof, image.shape.records, std::span{&part, 1},
-        std::span(updates).first(used), costs.kernel, probe));
+    need(point_write::apply(write_proof, image.shape.records, std::span{&part, 1},
+        std::span(commands).first(used), costs.kernel, probe));
   }
-  basis.reset(); write.publish();
+  write.publish(); basis.reset();
   for (auto& outcome : output) { outcome = {}; outcome.changes = 1; detail::mix(outcome.digest, 1); }
 }
 } // namespace orbital_versioned_performance

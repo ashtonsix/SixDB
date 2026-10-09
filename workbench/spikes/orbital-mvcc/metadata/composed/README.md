@@ -11,11 +11,13 @@ private clones, conversion and the explicit native-read seam. Immutable proven
 Shapes are shared across Objects. Tuple point/dependent reads call Ikea's
 qualified `shape_read::read_proven` bridge using the authoritative private Shape
 layout. Column reads and scans use existing generic consumer binding.
-Writes use the shared [Shape writer law](../consumer/shape-write.md) for native
-source lookup and fresh private-clone admission. The law owns its writer plans;
-the write path no longer consults Schema or re-admits immutable descriptors.
-It still checks every new placement and preflights all updates before stores.
-Source and clone key searches remain separate. Conversion calls `convert_into`,
+Writes use the shared [value/tag point law](../consumer/point-write.md). It owns
+its writer plans, admits every fresh private clone and resolves keys once in
+that clone. Key/next bytes remain as cloned; only value/tag are written. All
+commands are checked before stores. Cloning before key resolution permits
+capacity failure to precede absence and can consume copy work on refusal;
+neither installed state nor caller Outcomes change. The generic full-record
+writer remains a separate control. Conversion calls `convert_into`,
 changing one Tuple Part to four
 SeriesPack Parts or back, then adopts at the catalog-issued exact version.
 
@@ -30,7 +32,7 @@ representation-choice policy is inferred from this test convention.
 
 Link the compiled `orbital_mvcc_composed` CMake target and include
 `metadata/composed/backend.h`. It compiles `material.cpp` once and reuses
-`orbital_versioned_performance_runtime`, `orbital_mvcc_shape_write`,
+`orbital_versioned_performance_runtime`, `orbital_mvcc_point_write`,
 `orbital_mvcc_shape_read` and `orbital_mvcc_directory`. Each source remains an
 ordinary independent translation unit.
 

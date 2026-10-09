@@ -1,7 +1,7 @@
 # Value/tag point command
 
 [point_write.h](point_write.h) / [point_write.cpp](point_write.cpp) is a separate
-spike control for this fixed-row driver's update semantics: change value/tag,
+writer used by the composed spike for this fixed-row driver's update semantics: change value/tag,
 preserve key/next already present in the initialized exact-basis clone. The
 generic full-record `Update`, per-row mutation and [Shape write control](shape-write.md)
 retain their full next/value/tag behavior. The two existing Ikea point mutation
@@ -38,7 +38,7 @@ order and same-value commands still issue stores. Refusal preserves every clone
 byte and both primitive counters. No unchecked-position interface is exposed.
 Effects resolve against named stationary value/tag views before they close.
 
-The authored [integration patch](point-write-integration.patch) removes the
+The retained [integration patch](point-write-integration.patch) records the now-selected change removing the
 source-record lookup from native and mapped LMDB treatments. Global object/kind/
 value validation remains before selection or cloning, and object groups retain
 their existing order. Clone-first key admission intentionally accepts capacity
@@ -50,7 +50,7 @@ Mapped source admission checks exact count × 23 extent, null storage and addres
 overflow before reservation/memcpy. The transaction supplies encoding association
 and protects the readonly basis through publication. Destination write admission
 does not establish source bounds. This changes no Engine/container/shared-Part
-policy. Architecture owns integration and Tooling owns matched timing.
+policy. The composed driver and its matched LMDB treatment both use this path.
 
 ## Qualification
 
@@ -121,8 +121,11 @@ deduplication are excluded. The full-write comparator contains additional lookup
 factory endpoints, so object totals have different surfaces.
 
 These checks qualify actual capture/Allocation-backed clones and in-memory
-mapped spans. Store/Scope publication, real LMDB transaction behavior and
-matched whole-owner performance remain integration obligations. Only sizeof
-runs under x86 qemu; no x86 mutation or timed gain is claimed here. Resident
+mapped spans. The separate [composed checks](../composed/README.md#qualification)
+exercise Store/Scope publication, and the complete-operation performance screen
+also checks real LMDB updates against independent results. Its 232 oracle trials
+show better batched writes but mixed scalar results; this isolated qualification
+does not establish a general speedup. Only sizeof runs under x86 qemu in the
+isolated codegen probe. Resident
 fixture Schema is still 10176 B ARM /15296 B x86, separately charged for generic
 construction, conversion and reads. This control removes no clone Parts.

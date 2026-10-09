@@ -68,7 +68,8 @@ public:
   }
 
   // Successful outcomes are emitted only after actual multi-Object install.
-  // Cloning may have consumed work on refusal; the installed state is intact.
+  // Clone before key resolution: refusal may consume copies, and capacity can
+  // precede absence. The installed state and caller Outcomes remain intact.
   Result<void> update(std::span<const orbital_bench::Operation> input,
       std::span<orbital_bench::Outcome> output, std::span<const std::size_t> objects) {
     using namespace orbital_bench;
@@ -80,7 +81,7 @@ public:
     {
       std::optional<Scope> basis(std::in_place, store_);
       std::array<Change, 64> changes;
-      std::array<v::Update, 64> updates;
+      std::array<pw::Command, 64> commands;
       std::size_t changed{};
       for (std::size_t offered = 0; offered < objects.size(); ++offered) {
         const auto object = objects[offered];
@@ -88,18 +89,12 @@ public:
         auto selected = select(*basis, object, true);
         if (!selected) return std::unexpected(selected.error());
         std::size_t used{};
-        for (std::size_t i = 0; i < input.size(); ++i) if (objects[i] == object) {
-          std::size_t position{};
-          Record record;
-          const auto found = material_.lookup(*selected, input[i].key, position, record);
-          if (!found) return std::unexpected(found.error());
-          record.value = input[i].record.value; record.tag = input[i].record.tag;
-          updates[used++] = {input[i].key, record};
-        }
+        for (std::size_t i = 0; i < input.size(); ++i) if (objects[i] == object)
+          commands[used++] = {input[i].key, input[i].record.value, input[i].record.tag};
         auto parts = material_.clone(*selected, costs);
         if (!parts) return std::unexpected(parts.error());
         auto written = material_.apply(*selected, *parts,
-            std::span(updates).first(used), costs.kernel, write_costs);
+            std::span(commands).first(used), costs.kernel, write_costs);
         if (!written) return written;
         auto owner = capture(*parts);
         if (!owner) return std::unexpected(owner.error());
@@ -158,7 +153,7 @@ public:
   template<std::size_t Capacity = 64> Bodies<Capacity> bodies(bool alternative = false) const {
     return Bodies<Capacity>{*this, alternative};
   }
-  static constexpr std::size_t write_caller_arrays = sizeof(std::array<Change, 64>) + sizeof(std::array<v::Update, 64>);
+  static constexpr std::size_t write_caller_arrays = sizeof(std::array<Change, 64>) + sizeof(std::array<pw::Command, 64>);
 };
 using Inline = Backend<compact_history::InlineShapeStore16>;
 using Directory = Backend<compact_history::CompactShapeStore16>;
