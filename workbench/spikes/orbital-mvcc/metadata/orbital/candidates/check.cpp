@@ -419,10 +419,9 @@ template<class Store> void two_change_abort_callback() {
   }
 }
 
-// Removing the first debt creates a hole. A later owner callback accepts private
-// work, which compacts the compact-directory debt vector without publication.
-// The interrupted sweep must replan instead of skipping the last live debt.
-template<class Store> void debt_compaction_callback() {
+// A later owner callback accepts private work after the first debt retires.
+// That enrollment must neither skip B's remaining debt nor lose C's private pin.
+template<class Store> void private_prepare_callback() {
   Memory metadata;
   constexpr ObjectId X{1, 4};
   {
@@ -472,7 +471,7 @@ template<class Store> void run(const char* name) {
   coherent_history<Store>(); teardown_and_authority<Store>(); tombstones<Store>();
   refusal<Store>(); private_failure_and_empty<Store>(); private_reads<Store>(); callbacks<Store>();
   conversion_authority<Store>(); abort_callback<Store>();
-  two_change_abort_callback<Store>(); debt_compaction_callback<Store>();
+  two_change_abort_callback<Store>(); private_prepare_callback<Store>();
   std::cout << name << ": eleven grouped histories passed\n";
 }
 

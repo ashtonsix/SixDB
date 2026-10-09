@@ -1,0 +1,93 @@
+{
+  "format": 1,
+  "compiler": "Linux Clang21.1.8 AArch64",
+  "source_digest": "474f165b5baeeefaf8eaa3f453368f9dcdeb8134e79a9cf06114448774b64a3f",
+  "qualified_source_sha256": {
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/bounded_check.cpp": "826fa6a9a3edc5948c6c2d634a91cdc2c4768e114646b1e677522c6bc18f8790",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/candidate_store.h": "4e4ac5e7becc39227513984367e6938a1793d1d348032e70f87065bb6f6f3427",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/check.cpp": "cb65529acd7f7c743dbc15253f14a80a1041022467f26f6daa6033745259b247",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/debt_queue.h": "7b3e5cf9ec99d1847c292ea193494f5f8bc21e5b01547d60c25d6c7050f0063c",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/inline_objects.h": "7689c93eb1728f7c490f7afdad9adbee7fd7294069cdc396c85ddc53cb9c0696",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/object_policy.h": "bfa1c6a6dbe568e01c99053dcdd5e167d23b57396fa703d616027cad0a1bb478",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/descriptor/check.cpp": "7f15ad6956a2ce594b3b57203f1b9f8c2658f87b05b6a08736ee356dd93be025",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/directory/check.cpp": "5e48667e4889ef57aec42110642af34e26c09644e311b84f8138c19b82754538",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/retention/check.cpp": "14f2ff8a8f9e26c95cf8ba9e5c381682a33ae27ff31d38f05f46967f8e093444",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/shape/check.cpp": "ad6a5f42131b473531906d30ad164f410d77445a6e197e100c45bf7526dd29b8"
+  },
+  "runs": {
+    "bounded-release": {
+      "exit_code": 0,
+      "binary_sha256": "849679f035be382cb98b75e9305790da08d048fc59af40f6ae34e9480ac4bfa9",
+      "log_sha256": "f0848aa46517d6abdf19502b1401f39cec9cf6b317f42391e99dcfe323e42e7e"
+    },
+    "bounded-retention-release": {
+      "exit_code": 0,
+      "binary_sha256": "8003528b8da2ef0eef12ea0b4fee4af8e1781841ef068f9747086dc41cc9c988",
+      "log_sha256": "d433b7557d6acbb62bb538ca1b34239315b05c3e8c6b0984dd31136230247b22"
+    },
+    "bounded-check-release": {
+      "exit_code": 0,
+      "binary_sha256": "5ab6a2a75648bbbe242336b58efd32cd1f34fa7906538286b180365db651caf7",
+      "log_sha256": "ef1672eb35b0b66b25d4cd7483d672de07b1318856f060ad247c7956e154abbd"
+    },
+    "bounded-check-sanitize": {
+      "exit_code": 0,
+      "binary_sha256": "238714d640af246bc19f4c50c9dc69a4bebbc1d343330e80447c3364f2dbd108",
+      "log_sha256": "ef1672eb35b0b66b25d4cd7483d672de07b1318856f060ad247c7956e154abbd"
+    },
+    "bounded-sanitize": {
+      "exit_code": 0,
+      "binary_sha256": "299d1efbc2dfa8d711ed3b2c73b61e62826ee054458cd0a9f1fc0039408d1af3",
+      "log_sha256": "f0848aa46517d6abdf19502b1401f39cec9cf6b317f42391e99dcfe323e42e7e"
+    },
+    "bounded-shape-release": {
+      "exit_code": 0,
+      "binary_sha256": "25300b0140b5785d3d5548aa940fb480cab1df44c999d33b33b754a207d1d82c",
+      "log_sha256": "0d4efaa2d01cc9033f979f72a0fe4a5f48b4568b6574904d6f28607646ac9175"
+    },
+    "bounded-shape-sanitize": {
+      "exit_code": 0,
+      "binary_sha256": "4eea7b4ba842f2aadf7d36cecaae0d0289af73a75978c5e782288ec13950c59c",
+      "log_sha256": "0d4efaa2d01cc9033f979f72a0fe4a5f48b4568b6574904d6f28607646ac9175"
+    },
+    "bounded-retention-sanitize": {
+      "exit_code": 0,
+      "binary_sha256": "34671ef016be6d3393e000f260f1fe8c952e3a114fb024d509d26d3e584b2148",
+      "log_sha256": "d433b7557d6acbb62bb538ca1b34239315b05c3e8c6b0984dd31136230247b22"
+    }
+  },
+  "coverage": {
+    "publication_ownership": "11 histories across14 layouts per profile",
+    "bounded_progress": "9 histories across14 layouts per profile, including1200 interleaved model steps per layout",
+    "actual_encoded": "6 histories across7 layouts per profile",
+    "retained_cut_oracle": "3 layouts per profile"
+  },
+  "profiles": {
+    "release": "-std=c++23 -O3 -DNDEBUG -g -Wall -Wextra -Wpedantic",
+    "sanitize": "-std=c++23 -O1 -DNDEBUG -g -fno-omit-frame-pointer -fsanitize=address,undefined -Wall -Wextra -Wpedantic"
+  },
+  "sanitizer_environment": {
+    "ASAN_OPTIONS": "detect_leaks=1:halt_on_error=1",
+    "UBSAN_OPTIONS": "halt_on_error=1"
+  },
+  "abi": {
+    "source": "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/abi_probe.cpp",
+    "llvm_sha256": "d59f86758836c1c22740dabc85046b8bc1322842d012cce8714d85e6cd52d088",
+    "outputs": "bind=i64; Borrowed/Result<View>/Control=[2 x i64]; Scope32, Owner8, Change24, Bound32, Prepared64"
+  },
+  "independent_progress": {
+    "path": "build/orbital-mvcc-metadata/candidates/bounded-progress",
+    "source_digest": "641d18f26d9d31c61786c3ffb09c4f1724afa51f63f35fd1b90a2db06765fdb3",
+    "independent_root_observation": "400 B writes with drain(1): old_A_still_alive=false, versions63, version_visits366, restarts0. Final settlement remains separately charged."
+  },
+  "rejected_early": {
+    "path": "build/orbital-mvcc-metadata/candidates/bounded-early",
+    "reason": "Global maintenance-generation invalidation starved A under400 B updates with drain(1); zero older-node visits and133 restarts."
+  },
+  "limits": [
+    "Metadata-step budget includes setup/restarts, entry/head, older-node/edge, cut and queue visits. It does not cap malloc or arbitrary owner destructors or guarantee bounded backlog under excess arrival rate. Queue growth copies/initializes slots only when capacity is needed, charged outside drain as debt_reservation_work.",
+    "Local AArch64 correctness and ordinary ABI qualification; no target-machine timing or whole-database performance conclusion.",
+    "Frozen qualification covers32 named source files and exact linked library hashes. Recovery also holds supporting headers captured at closeout; those headers were not hashed by the original qualification receipt."
+  ],
+  "recovery": "bounded-artifact.json"
+}

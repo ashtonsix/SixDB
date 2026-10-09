@@ -25,7 +25,7 @@ compact_history::Store16 store(metadata);
   auto export_owner = issued->export_part(0);
   // Release export_owner explicitly; its metadata resource must still be alive.
 }
-store.drain();
+store.drain(128); // bounded maintenance; drain() is the full-sweep convenience
 ```
 
 The example elides error checks; `check.cpp` shows fallible calls. Ordinary
@@ -40,8 +40,6 @@ Installed work cannot be installed twice; abort/destruction of accepted work is 
 terminal no-effect result. Abort keeps the single-writer exclusion until every
 change has released its entry pin and private owner, including through reentrant
 destructor callbacks. Install neither allocates nor destroys user owners.
-Abort remains exclusive until every accepted entry and private owner is released;
-disposal callbacks can drain, but cannot prepare another batch mid-abort.
 
 Conversion uses `conversion(scope, object)` to issue a cold capability, followed
 by `adopt(target, replacement)`. It pins the exact Core incarnation and physical
@@ -59,7 +57,7 @@ slot escapes; cold capabilities retain real owners and re-find logical history.
 
 `Store<Nodes, Retention, Physical, Objects>` keeps the controls explicit. FloorRetention
 keeps all history down to the oldest reader; DistinctRetention keeps the selected
-predecessor for each distinct active cut using charged temporary scratch. The
+predecessor for each distinct active cut using charged, reusable cut scratch. The
 exact policy can remove an unpinned sole tombstone even with older absent readers.
 Replacement alternatives are captured only when discovered by a retained Scope.
 `shape_policy.h` shares proven Ikea geometry across physical realizations. Its
@@ -71,9 +69,26 @@ original association through later publication, deletion and recreation.
 
 `HashObjects` retains the original node-hash control. `CompactObjects` stores
 full-width Object IDs once in stable 24-byte paged entries, with 32-bit lookup
-buckets. A charged cold vector tracks reclamation debt; its index uses existing
-entry flags. Prepare reserves new debt slots before acceptance. Reentrant debt
-compaction stops/replans an active sweep even when no publication occurred.
+buckets. A charged cold queue uses 8-byte handle/link slots and existing entry
+flags. Retired slots are reused. Prepare reserves new enrollments without
+scanning historical holes; occasional geometric growth records copied and
+initialized slot work separately. Install never grows this queue.
+
+`drain(limit)` resumes cut construction, chain traversal and queue retirement.
+Units count plan/restart attempts, entry/head inspections, older-node/edge visits,
+cut visits and queue completion. The returned work never exceeds the limit;
+allocation and arbitrary owner disposal are not elapsed-time guarantees.
+Scope close repairs the builder's saved pointer. An active chain keeps its
+sampled head through publication; inline tips use a bounded prefix walk when
+that head moves into history. New read scopes are protected conservatively
+through the plan boundary, then reconciled on the next sweep. Unrelated writes
+do not reset progress; callbacks that add work rotate the interrupted object.
+`drain()` stops on scratch refusal; its bounded overload charges the attempt and
+leaves debt pending for retry.
+The limit bounds work per call, not retained history under an arbitrary arrival
+rate. `debt_objects` also includes history still needed by readers;
+`maintenance_pending` identifies an unfinished sweep. Compare backlog and final
+settlement alongside latency.
 
 `InlineShapeStore16` puts the current cut/physical pointer directly in a 40-byte
 Object entry. Only replaced tips require old16 history and descriptor slots.
@@ -87,7 +102,8 @@ pins also preserve debt slots until completion, keeping install allocation-free.
 overhead or resident pages. Add its 40-byte caller-resident resource once to a
 whole-state account. Statistics include Core/entry/node sizes, reserved history
 and descriptor/Object-directory/debt capacity, metadata copied during capture, requested
-descriptor bytes and reclamation work. External encoded owners/control blocks
+descriptor bytes, cut/queue capacity, visit/restart counts and pending debt.
+External encoded owners/control blocks
 and payload allocations are separate costs, not free memory. None of these
 figures establishes database performance; use the composed driver for that.
 
@@ -99,3 +115,10 @@ real encoded rows/columns, repeated physical values at different logical cuts,
 sealed exports, foreign-resource rejection, delayed conversion and accepted work
 crossing old-history reclamation. Checks run under NDEBUG. `abi_probe.cpp` checks
 ordinary caller packets; it does not replace end-to-end measurements.
+`bounded_check.cpp` adds refusal/retry, partial cut construction, continuous
+same/unrelated-object writes, late readers, callbacks, recycled entries and long
+chains, checking one-unit progress while preserving exact old values.
+The [bounded qualification](bounded-qualification.json) identifies the held cut
+and eight native/sanitizer runs. Its [verified archive](bounded-artifact.json)
+holds sources, recipes, logs, exact linked libraries and the rejected starvation
+control. Composed target-machine timings remain a separate comparison.

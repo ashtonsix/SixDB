@@ -2,6 +2,7 @@
 
 #include "common.h"
 #include "physical.h"
+#include "debt_queue.h"
 #include "../directory/object_directory.h"
 #include <unordered_map>
 
@@ -29,6 +30,7 @@ private:
   std::pmr::unordered_map<orbital::ObjectId, Entry, ObjectHash> entries_;
   Entry* first_debt_{};
   Entry* last_debt_{};
+  std::size_t debt_count_{};
 public:
   explicit HashObjects(compact_version_probe::Memory& memory) : entries_(&memory) {}
   Handle find(orbital::ObjectId id) noexcept {
@@ -59,14 +61,22 @@ public:
     if (entry->debt) return;
     entry->previous = last_debt_; entry->next = nullptr;
     if (last_debt_) last_debt_->next = entry; else first_debt_ = entry;
-    last_debt_ = entry; entry->debt = true;
+    last_debt_ = entry; entry->debt = true; ++debt_count_;
   }
   void remove_debt(Handle entry) noexcept {
     if (!entry->debt) return;
     if (entry->previous) entry->previous->next = entry->next; else first_debt_ = entry->next;
     if (entry->next) entry->next->previous = entry->previous; else last_debt_ = entry->previous;
-    entry->previous = entry->next = nullptr; entry->debt = false;
+    entry->previous = entry->next = nullptr; entry->debt = false; --debt_count_;
   }
+  Handle front_debt() const noexcept { return first_debt_; }
+  void rotate_debt() noexcept {
+    if (!first_debt_ || first_debt_ == last_debt_) return;
+    auto* entry = first_debt_; first_debt_ = entry->next; first_debt_->previous = nullptr;
+    entry->next = nullptr; entry->previous = last_debt_; last_debt_->next = entry; last_debt_ = entry;
+  }
+  std::size_t debt_count() const noexcept { return debt_count_; }
+  std::size_t debt_reservation_work() const noexcept { return 0; }
   template<class Visitor> void for_each_debt(Visitor&& visit) {
     auto* entry = first_debt_;
     while (entry) {
@@ -93,14 +103,14 @@ private:
   static constexpr std::uint32_t flag_mask = 7;
   static constexpr std::size_t max_debts = (UINT32_MAX >> 3);
   compact_directory::Directory entries_;
-  std::pmr::vector<Handle> debts_;
+  detail::DebtQueue debts_;
   void encode_index(Handle entry, std::size_t index) noexcept {
     assert(index < max_debts);
     auto& flags = entries_.get(entry).flags;
     flags = (flags & flag_mask) | static_cast<std::uint32_t>((index + 1) << 3);
   }
 public:
-  explicit CompactObjects(compact_version_probe::Memory& memory) : entries_(memory), debts_(&memory) {}
+  explicit CompactObjects(compact_version_probe::Memory& memory) : entries_(memory), debts_(memory) {}
   Handle find(orbital::ObjectId id) const noexcept { return entries_.find(id); }
   std::pair<Handle, bool> ensure(orbital::ObjectId id) { return entries_.ensure(id); }
   Entry& get(Handle entry) noexcept { return entries_.get(entry); }
@@ -112,45 +122,30 @@ public:
   void unpin(Handle entry) noexcept { entries_.unpin(entry); }
   bool erase(Handle entry) noexcept { return entries_.erase(entry); }
 
-  // Cold prepare compacts cleared debt slots and reserves every possible new
-  // enrollment before acceptance. Install never grows a container.
   bool reserve_debt(std::size_t additional) {
-    const auto before = debts_.size();
-    const auto remaining = static_cast<std::size_t>(std::count_if(debts_.begin(), debts_.end(),
-        [](Handle entry) { return entry != 0; }));
-    if (additional > max_debts - remaining) throw std::bad_alloc();
-    debts_.reserve(remaining + additional); // Refusal precedes any index changes.
-    std::size_t out = 0;
-    for (auto entry : debts_) {
-      if (!entry) continue;
-      debts_[out] = entry; encode_index(entry, out); ++out;
-    }
-    debts_.resize(out);
-    return out != before;
+    debts_.reserve(additional); return false;
   }
   void add_debt(Handle entry) noexcept {
     if (entries_.indebted(entry)) return;
-    assert(debts_.size() < debts_.capacity());
-    encode_index(entry, debts_.size());
-    debts_.push_back(entry); entries_.set_indebted(entry, true);
+    encode_index(entry, debts_.add(entry)); entries_.set_indebted(entry, true);
   }
   void remove_debt(Handle entry) noexcept {
     if (!entries_.indebted(entry)) return;
     auto& flags = entries_.get(entry).flags;
     const auto index = (flags >> 3) - 1;
-    assert(index < debts_.size() && debts_[index] == entry);
-    debts_[index] = 0; flags &= flag_mask; entries_.set_indebted(entry, false);
+    debts_.remove(index); flags &= flag_mask; entries_.set_indebted(entry, false);
   }
+  Handle front_debt() const noexcept { return debts_.front(); }
+  void rotate_debt() noexcept { debts_.rotate(); }
+  std::size_t debt_count() const noexcept { return debts_.size(); }
+  std::size_t debt_reservation_work() const noexcept { return debts_.reservation_work(); }
   template<class Visitor> void for_each_debt(Visitor&& visit) {
-    for (std::size_t index = 0; index < debts_.size(); ++index) {
-      const auto entry = debts_[index];
-      if (entry && !visit(entry, entries_.get(entry))) break;
-    }
+    debts_.for_each([&](Handle entry) { return visit(entry, entries_.get(entry)); });
   }
   template<class Visitor> void for_each_live(Visitor&& visit) { entries_.for_each_live(visit); }
   std::size_t size() const noexcept { return entries_.size(); }
   std::size_t capacity_bytes() const noexcept { return entries_.capacity_bytes(); }
-  std::size_t debt_capacity_bytes() const noexcept { return debts_.capacity() * sizeof(Handle); }
+  std::size_t debt_capacity_bytes() const noexcept { return debts_.capacity_bytes(); }
 };
 
 static_assert(sizeof(HashObjects::Entry) == 40);

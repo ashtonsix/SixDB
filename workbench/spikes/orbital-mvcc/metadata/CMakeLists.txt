@@ -16,6 +16,11 @@ sixdb_target(orbital_mvcc_candidates_check)
 target_link_libraries(orbital_mvcc_candidates_check PRIVATE orbital_mvcc_descriptor orbital_mvcc_directory)
 add_test(NAME orbital_mvcc_candidates_check COMMAND orbital_mvcc_candidates_check)
 
+add_executable(orbital_mvcc_bounded_check orbital/candidates/bounded_check.cpp)
+sixdb_target(orbital_mvcc_bounded_check)
+target_link_libraries(orbital_mvcc_bounded_check PRIVATE orbital_mvcc_descriptor orbital_mvcc_directory)
+add_test(NAME orbital_mvcc_bounded_check COMMAND orbital_mvcc_bounded_check)
+
 add_executable(orbital_mvcc_retention_check orbital/retention/check.cpp)
 sixdb_target(orbital_mvcc_retention_check)
 add_test(NAME orbital_mvcc_retention_check COMMAND orbital_mvcc_retention_check)
@@ -43,7 +48,7 @@ target_link_libraries(orbital_mvcc_shape_backing
   PRIVATE orbital_mvcc_shape orbital_mvcc_descriptor orbital_mvcc_directory)
 
 set(metadata_checks orbital_mvcc_candidates_check orbital_mvcc_directory_check
-  orbital_mvcc_shape_store_check
+  orbital_mvcc_shape_store_check orbital_mvcc_bounded_check
   orbital_mvcc_retention_check orbital_mvcc_retention_store_check)
 foreach(check IN ITEMS candidates_check compact_law_check descriptor_adapter_check
     compact_operations_check canonical_law_check compact_descriptor_check)

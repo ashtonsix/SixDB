@@ -34,6 +34,7 @@ template<class Nodes, class Retention = compact_retention::FloorRetention,
   using RepresentationSpec = typename Physical::Specification;
   using PartSource = typename Physical::PartSource;
 public:
+  static constexpr bool exact_retention = Retention::uses_distinct_cuts;
   using Owner = PhysicalOwner<Physical>;
   using Change = ChangeOf<Owner>;
   // A catalog-issued association. A live issuing Scope protects this borrow;
@@ -167,6 +168,10 @@ public:
     std::size_t copied_metadata_bytes{}, captured_descriptor_bytes{}, reclamation_work{};
     std::size_t last_sweep_bytes{}, last_sweep_cuts{}, maintenance_refusals{};
     std::size_t object_directory_capacity_bytes{}, debt_capacity_bytes{};
+    std::size_t cut_capacity_bytes{}, debt_objects{}, maintenance_remaining_entries{};
+    std::size_t entry_visits{}, version_visits{}, cut_visits{}, debt_visits{}, plan_work{}, maintenance_restarts{};
+    std::size_t debt_reservation_work{}, reclaimed_versions{}, completed_sweeps{}, head_refreshes{};
+    bool maintenance_pending{};
   };
 
 private:
@@ -192,9 +197,27 @@ private:
     std::size_t copied_metadata_bytes{}, captured_descriptor_bytes{}, reclamation_work{};
     std::size_t last_sweep_bytes{}, last_sweep_cuts{}, maintenance_refusals{};
     std::uint64_t maintenance_changes{};
+    // A cut snapshot is conservative through scope release. New scopes start
+    // at the current cut, so the unsampled suffix is protected through the
+    // plan's boundary until the next sweep. Closing a builder's exact Scope
+    // repairs its pointer before unlinking; unrelated writes cannot restart it.
+    std::uint64_t reader_changes{}, plan_generation = UINT64_MAX;
+    std::uint64_t pass_generation{}, planned_floor{}, building_cut{}, anchor_cut{};
+    std::pmr::vector<std::uint64_t> reader_cuts;
+    Scope* next_cut{};
+    ObjectHandle debt_entry{};
+    Handle anchor{};
+    std::size_t remaining_entries{}, remaining_cuts{};
+    std::size_t entry_visits{}, version_visits{}, cut_visits{}, debt_visits{}, plan_work{}, maintenance_restarts{};
+    std::size_t reclaimed_versions{}, completed_sweeps{}, head_refreshes{};
+    enum class Step { idle, cuts, entry, covered, older, consume, finish, seek };
+    Step step{Step::idle};
+    Step resume_step{Step::idle};
+    bool crossed_floor{};
+    bool callback_restart{};
     bool dirty{}, draining{};
 
-    explicit Core(Memory& resource) : Layout(resource), captures(&resource) {}
+    explicit Core(Memory& resource) : Layout(resource), captures(&resource), reader_cuts(&resource) {}
     ~Core() { assert(!first_scope && !pending); this->dispose(); }
     void release() noexcept { if (!--references) memory.destroy(this); }
     std::uint64_t floor() const noexcept { return first_scope ? first_scope->cut_ : cut; }
@@ -208,6 +231,11 @@ private:
       const bool removed_distinct = Retention::uses_distinct_cuts && scope.cut_ < cut &&
           (!scope.previous_ || scope.previous_->cut_ != scope.cut_) &&
           (!scope.next_ || scope.next_->cut_ != scope.cut_);
+      if (removed_distinct) ++reader_changes;
+      if (step == Step::cuts && next_cut == &scope) {
+        auto* next = scope.next_;
+        next_cut = next && next->cut_ < building_cut ? next : nullptr;
+      }
       if (scope.previous_) scope.previous_->next_ = scope.next_; else first_scope = scope.next_;
       if (scope.next_) scope.next_->previous_ = scope.previous_; else last_scope = scope.previous_;
       --scopes; if (floor() != before || removed_distinct) { dirty = true; ++maintenance_changes; }
@@ -232,50 +260,149 @@ private:
       // later mutations in this batch still own entry pins.
       pending = 0;
     }
-    template<class Plan> std::size_t drain_plan(const Plan& plan) noexcept {
-      const auto started = maintenance_changes;
+    void begin_entries() noexcept {
+      remaining_entries = entries.debt_count();
+      step = Step::entry;
+    }
+    void restart() noexcept {
+      // A callback may keep changing the front object. Rotation preserves the
+      // progress of other objects even when this particular chain must restart.
+      if (debt_entry) { assert(entries.front_debt() == debt_entry); entries.rotate_debt(); }
+      if (step == Step::cuts) plan_generation = UINT64_MAX;
+      debt_entry = {}; anchor = {}; next_cut = nullptr; step = Step::idle;
+      callback_restart = false; dirty = true; ++maintenance_restarts;
+    }
+    std::size_t drain(std::size_t limit) noexcept {
+      if (!limit || !dirty || draining) return 0;
+      draining = true;
       std::size_t work = 0;
-      const auto oldest = floor();
-      entries.for_each_debt([&](ObjectHandle handle, Entry&) {
-        auto anchor = head(handle);
-        ++work;
-        if (anchor) {
-          auto cursor = plan.cursor(version_cut(anchor));
-          while (older(anchor)) {
-            auto old = older(anchor); ++work;
-            if (cursor.keep(version_cut(old))) anchor = old;
-            else {
-              link_older(anchor, older(old));
-              --versions; drop(old);
-              if (maintenance_changes != started) return false;
+      while (work < limit && dirty) {
+        if (callback_restart) {
+          ++work; restart(); continue;
+        }
+        if (!work && debt_entry && step != Step::finish) {
+          const auto current = head(debt_entry);
+          if (anchor && step != Step::seek && version_cut(anchor) != anchor_cut) {
+            // An inline current tip moved into history. Find that sampled tip
+            // through a bounded prefix walk; future publications only prepend.
+            resume_step = step; anchor = older(current); step = Step::seek; ++head_refreshes;
+          }
+        }
+        switch (step) {
+        case Step::idle: {
+          ++work; ++plan_work; building_cut = cut; pass_generation = maintenance_changes;
+          planned_floor = Retention::uses_distinct_cuts ? cut : floor();
+          if constexpr (Retention::uses_distinct_cuts) {
+            if (plan_generation != reader_changes) {
+              reader_cuts.clear(); next_cut = nullptr;
+              if (first_scope && first_scope->cut_ < cut) {
+                try {
+                  if (scopes > reader_cuts.max_size()) throw std::bad_alloc();
+                  reader_cuts.reserve(scopes);
+                }
+                catch (const std::bad_alloc&) { ++maintenance_refusals; goto finished; }
+                next_cut = first_scope;
+              }
+              plan_generation = reader_changes;
+              step = Step::cuts;
+              if (next_cut) break;
             }
           }
+          last_sweep_bytes = reader_cuts.capacity() * sizeof(std::uint64_t);
+          last_sweep_cuts = reader_cuts.size(); begin_entries(); break;
         }
-        const auto current = head(handle);
-        if (!current || !older(current)) {
-          // Accepted work can replace this tip after the sweep. Keep its debt
-          // slot pinned too, so install need not allocate a fresh enrollment.
-          if (!current || primary(current)) { if (!entries.pinned(handle)) remove_debt(handle); }
-          else if ((Retention::uses_distinct_cuts || version_cut(current) <= oldest) && !entries.pinned(handle)) {
-            remove_debt(handle); erase_head(handle);
-            if (maintenance_changes != started) return false;
+        case Step::cuts: {
+          if (!next_cut) {
+            last_sweep_bytes = reader_cuts.capacity() * sizeof(std::uint64_t);
+            last_sweep_cuts = reader_cuts.size(); begin_entries(); break;
           }
+          ++work; ++cut_visits;
+          assert(next_cut->cut_ < building_cut);
+          const auto value = next_cut->cut_;
+          if (reader_cuts.empty() || reader_cuts.back() != value) reader_cuts.push_back(value);
+          auto* next = next_cut->next_;
+          next_cut = next && next->cut_ < building_cut ? next : nullptr;
+          if (!next_cut) {
+            last_sweep_bytes = reader_cuts.capacity() * sizeof(std::uint64_t);
+            last_sweep_cuts = reader_cuts.size(); begin_entries();
+          }
+          break;
         }
-        return true;
-      });
-      dirty = maintenance_changes != started; draining = false; reclamation_work += work; return work;
-    }
-    std::size_t drain() noexcept {
-      if (!dirty || draining) return 0;
-      try {
-        typename Retention::Plan plan(memory, scopes, floor(), [&](auto visit) {
-          for (auto* scope = first_scope; scope; scope = scope->next_) visit(scope->cut_);
-        });
-        last_sweep_bytes = plan.requested_bytes(); last_sweep_cuts = plan.cut_count();
-        draining = true; return drain_plan(plan);
-      } catch (const std::bad_alloc&) {
-        ++maintenance_refusals; dirty = true; return 0;
+        case Step::entry:
+          if (!remaining_entries || !entries.front_debt()) {
+            ++completed_sweeps; step = Step::idle;
+            dirty = maintenance_changes != pass_generation; break;
+          }
+          ++work; ++entry_visits;
+          debt_entry = entries.front_debt(); anchor = head(debt_entry);
+          anchor_cut = anchor ? version_cut(anchor) : 0;
+          crossed_floor = !anchor || version_cut(anchor) <= planned_floor;
+          remaining_cuts = reader_cuts.size();
+          step = !anchor ? Step::finish : Retention::uses_distinct_cuts ? Step::covered : Step::older;
+          break;
+        case Step::covered:
+          if (!remaining_cuts) { step = Step::older; break; }
+          ++work; ++cut_visits;
+          if (reader_cuts[remaining_cuts - 1] >= version_cut(anchor)) --remaining_cuts;
+          else step = Step::older;
+          break;
+        case Step::older: {
+          ++work; ++version_visits;
+          const auto old = older(anchor);
+          if (!old) { step = Step::finish; break; }
+          const auto old_cut = version_cut(old);
+          bool keep;
+          if constexpr (Retention::uses_distinct_cuts) {
+            // Scopes added after this plan can select the suffix above its
+            // boundary or its first predecessor. Keep that range this sweep.
+            const bool newer = !crossed_floor;
+            if (newer) crossed_floor = old_cut <= planned_floor;
+            keep = newer || (remaining_cuts && reader_cuts[remaining_cuts - 1] >= old_cut);
+          }
+          else { keep = !crossed_floor; if (keep) crossed_floor = old_cut <= planned_floor; }
+          if (keep) { anchor = old; anchor_cut = old_cut; if constexpr (Retention::uses_distinct_cuts) step = Step::consume; }
+          else {
+            link_older(anchor, older(old)); --versions; ++reclaimed_versions;
+            const auto before_callback = maintenance_changes;
+            drop(old); // No directory/node mutation follows the owner callback.
+            callback_restart = maintenance_changes != before_callback;
+          }
+          break;
+        }
+        case Step::consume:
+          if (!remaining_cuts) { step = Step::older; break; }
+          ++work; ++cut_visits;
+          if (reader_cuts[remaining_cuts - 1] >= version_cut(anchor)) --remaining_cuts;
+          else step = Step::older;
+          break;
+        case Step::finish: {
+          ++work; ++debt_visits;
+          const auto entry = std::exchange(debt_entry, ObjectHandle{});
+          anchor = {}; --remaining_entries; step = Step::entry;
+          const auto current = head(entry);
+          // Pins preserve the reserved debt slot across accepted work. Install
+          // transfers the tip without allocating or disposing any user owner.
+          if ((!current || !older(current)) && !entries.pinned(entry)) {
+            if (!current || primary(current)) remove_debt(entry);
+            else if (Retention::uses_distinct_cuts || version_cut(current) <= planned_floor) {
+              remove_debt(entry); ++reclaimed_versions; erase_head(entry);
+            } else entries.rotate_debt();
+          } else entries.rotate_debt();
+          break;
+        }
+        case Step::seek:
+          ++work; ++version_visits;
+          assert(anchor);
+          if (version_cut(anchor) == anchor_cut) step = resume_step;
+          else { assert(version_cut(anchor) > anchor_cut); anchor = older(anchor); }
+          break;
+        }
       }
+    finished:
+      if (step == Step::entry && !remaining_entries && maintenance_changes == pass_generation) {
+        ++completed_sweeps; step = Step::idle; dirty = false;
+      }
+      draining = false; reclamation_work += work; return work;
     }
   };
   struct Pin {
@@ -336,6 +463,8 @@ public:
     if (prepared.basis_ != c.cut) return std::unexpected(Error::stale);
     for (auto& change : prepared.changes_)
       if (c.Layout::install(change, c.cut + 1)) c.add_debt(change.entry);
+    if constexpr (Retention::uses_distinct_cuts)
+      if (c.last_scope && c.last_scope->cut_ == c.cut) ++c.reader_changes;
     ++c.cut; c.pending = 0; prepared.disposition_ = Disposition::installed; return {};
   }
   Result<ConversionTarget> conversion(const Scope& basis, ObjectId id) const noexcept {
@@ -370,7 +499,18 @@ public:
 
   std::size_t drain() noexcept {
     if (!core_) return 0;
-    Pin pin(core_); return pin.core->drain();
+    Pin pin(core_);
+    const auto before = pin.core->maintenance_refusals;
+    const auto work = pin.core->drain(std::numeric_limits<std::size_t>::max());
+    // Preserve the old convenience loop's stop-on-refusal behavior. The
+    // bounded overload and counters still account for the refused plan attempt.
+    return pin.core->maintenance_refusals == before ? work : 0;
+  }
+  // A work limit caps metadata steps, including planning and restart attempts.
+  // It cannot cap malloc, OS calls or arbitrary backing-owner destructor time.
+  std::size_t drain(std::size_t work_limit) noexcept {
+    if (!core_) return 0;
+    Pin pin(core_); return pin.core->drain(work_limit);
   }
   Statistics statistics() const noexcept {
     if (!core_) return {};
@@ -381,7 +521,11 @@ public:
         core_->history_capacity_bytes(), directory_capacity_bytes, core_->copied_metadata_bytes,
         core_->captured_descriptor_bytes, core_->reclamation_work, core_->last_sweep_bytes,
         core_->last_sweep_cuts, core_->maintenance_refusals,
-        core_->entries.capacity_bytes(), core_->entries.debt_capacity_bytes()};
+        core_->entries.capacity_bytes(), core_->entries.debt_capacity_bytes(),
+        core_->reader_cuts.capacity() * sizeof(std::uint64_t), core_->entries.debt_count(), core_->remaining_entries,
+        core_->entry_visits, core_->version_visits, core_->cut_visits, core_->debt_visits, core_->plan_work,
+        core_->maintenance_restarts, core_->entries.debt_reservation_work(), core_->reclaimed_versions,
+        core_->completed_sweeps, core_->head_refreshes, core_->dirty};
   }
   static Selection select_private(const Scope& basis, std::span<const Change> changes, ObjectId id) noexcept {
     for (const auto& change : changes) if (change.object == id) return change.representation.selection();
