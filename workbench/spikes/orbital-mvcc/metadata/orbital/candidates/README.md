@@ -1,9 +1,10 @@
 # Compact history candidates
 
-These are embedded, single-owner comparison backends. They use the real
-[descriptor candidate](../descriptor/descriptor.h) and externally owned encoded
-bytes; they do not implement Journal, IO, concurrent reclamation or an Engine
-index. `candidate_store.h` is the usable adapter. No API here is promoted.
+These are embedded, single-owner comparison backends over real immutable
+descriptors or shared Ikea shapes and externally owned encoded bytes. They do
+not implement Journal, IO, concurrent reclamation or an Engine index.
+`candidate_store.h` owns the common protocol; `history.h` and `inline_history.h`
+own the alternative storage layouts. No API here is promoted.
 
 ```cpp
 compact_history::Memory metadata; // final address; outlives every escaping owner
@@ -36,7 +37,11 @@ publication, suspension or final Store reset. Native Views own nothing.
 `prepare` accepts an immutable result against this Core's exact predecessor and
 issues one private, single-use occurrence. Refusal leaves logical state unchanged.
 Installed work cannot be installed twice; abort/destruction of accepted work is a
-terminal no-effect result. Install neither allocates nor destroys user owners.
+terminal no-effect result. Abort keeps the single-writer exclusion until every
+change has released its entry pin and private owner, including through reentrant
+destructor callbacks. Install neither allocates nor destroys user owners.
+Abort remains exclusive until every accepted entry and private owner is released;
+disposal callbacks can drain, but cannot prepare another batch mid-abort.
 
 Conversion uses `conversion(scope, object)` to issue a cold capability, followed
 by `adopt(target, replacement)`. It pins the exact Core incarnation and physical
@@ -70,6 +75,14 @@ buckets. A charged cold vector tracks reclamation debt; its index uses existing
 entry flags. Prepare reserves new debt slots before acceptance. Reentrant debt
 compaction stops/replans an active sweep even when no publication occurred.
 
+`InlineShapeStore16` puts the current cut/physical pointer directly in a 40-byte
+Object entry. Only replaced tips require old16 history and descriptor slots.
+Prepare borrows the pinned current owner; install transfers it into history and
+the accepted replacement into the tip. The old link is read again at install
+because a drain may have shortened history. Alternatives use exact entry/cut
+keys, so adoption between prepare/install requires no install migration. Entry
+pins also preserve debt slots until completion, keeping install allocation-free.
+
 `Memory` reports requested PMR bytes, peak and allocation calls, not malloc
 overhead or resident pages. Add its 40-byte caller-resident resource once to a
 whole-state account. Statistics include Core/entry/node sizes, reserved history
@@ -78,9 +91,11 @@ descriptor bytes and reclamation work. External encoded owners/control blocks
 and payload allocations are separate costs, not free memory. None of these
 figures establishes database performance; use the composed driver for that.
 
-`check.cpp` exercises ten grouped histories for all three node layouts, both
-retention policies and both directories, including coherent late lookup, absence/recreation, private
+`check.cpp` exercises eleven grouped histories for all three node layouts, both
+retention policies and both directories plus inline16, including coherent late lookup, absence/recreation, private
 reads, refusal sweeps, alternative replacement, narrow export, Store teardown,
 conversion authority and reentrant owner disposal. `shape_store_check.cpp` adds
 real encoded rows/columns, repeated physical values at different logical cuts,
-sealed exports, foreign-resource rejection and delayed conversion. Checks run under NDEBUG.
+sealed exports, foreign-resource rejection, delayed conversion and accepted work
+crossing old-history reclamation. Checks run under NDEBUG. `abi_probe.cpp` checks
+ordinary caller packets; it does not replace end-to-end measurements.

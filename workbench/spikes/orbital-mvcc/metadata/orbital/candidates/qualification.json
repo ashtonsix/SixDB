@@ -1,47 +1,113 @@
 {
-  "time_utc": "2026-10-09T20:43:17.833062+00:00",
-  "compiler": "Ubuntu Clang21.1.8",
-  "architecture": "aarch64-linux-gnu",
-  "source_sha256": {
-    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/common.h": "e6236f95831d98aada695e66bf51de88bb414cf189725b3435097a3bceaf2712",
-    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/versions.h": "aa9275c72be7b4fa38c5dab3290e5ac48c95f29d2aa353a1532d9764dd9a0a40",
-    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/physical.h": "a7e6724436295199677ad6fc2af0f5990ef7b8ac7a5e2d65d9117a0f6d12acdb",
-    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/candidate_store.h": "4be14e87ff3dca9720d2165fb2142156e441334d5dd358de7964915657c94104",
-    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/check.cpp": "000288fd4d4017282127756019373b6cdbd07573a9cf71312107f6f81e53cfab",
-    "workbench/spikes/orbital-mvcc/metadata/orbital/descriptor/descriptor.h": "3081b7b444b4bbf71ab4ef336ee167438e7045e5c9b77719fcfbbccc89e15f30",
-    "workbench/spikes/orbital-mvcc/metadata/orbital/descriptor/descriptor.cpp": "467ccd64d83776c58568598bbd56088c8da24ac9f106eabc90acc9dcf4663449",
-    "workbench/spikes/orbital-mvcc/metadata/orbital/retention/retention.h": "3761716075745125e51ebfadc06ec3e9eee2adbe2327ddee63a5d0df494a85d7"
+  "compiler": "Linux Clang21.1.8 AArch64",
+  "profiles": {
+    "release": "-std=c++23 -O3 -DNDEBUG -g -Wall -Wextra -Wpedantic",
+    "sanitize": "-std=c++23 -O1 -DNDEBUG -g -fno-omit-frame-pointer -fsanitize=address,undefined -Wall -Wextra -Wpedantic"
   },
-  "qualification": {
-    "release": {
-      "flags": [
-        "-std=c++23",
-        "-O3",
-        "-DNDEBUG",
-        "-g",
-        "-Wall",
-        "-Wextra",
-        "-Wpedantic"
-      ],
-      "binary_sha256": "af9be225d61ed833cb6528f22e249b0185716e29afe5e0289d4a2b29a0b77066",
-      "log_sha256": "0abf6aaa94222fa5ddf0ea3cdb098415f54055b06522fefdf9bd6eeade6f63f2",
-      "output": "v32-floor: nine grouped histories passed\nv16-floor: nine grouped histories passed\nv8-floor: nine grouped histories passed\nv32-distinct: nine grouped histories passed\nv16-distinct: nine grouped histories passed\nv8-distinct: nine grouped histories passed\n"
+  "sanitizer_environment": {
+    "ASAN_OPTIONS": "detect_leaks=1:halt_on_error=1",
+    "UBSAN_OPTIONS": "halt_on_error=1"
+  },
+  "linked_libraries": {
+    "build/orbital-mvcc/native/workbench/spikes/orbital-mvcc/consumer/liborbital_versioned_data.a": "69acd97d0489383ddeff0c44d3899ec4848a6d8015a0f1ad48d3886f19ea42b8",
+    "build/orbital-mvcc/native/ikea/libikea_tuplepack.a": "1d1f9f1a57cadd5e15879e8480b730dbd3832e1c506f918ef559fde3947c8370",
+    "build/orbital-mvcc/native/ikea/libikea_seriespack.a": "3163e1c35a5d086c625af3657df0f2079f34f52caafbb45263b317df30885d40",
+    "build/orbital-mvcc/native/ikea/libikea_core.a": "d83a85cfa413df81400d2970dc80e1622a30b876d08b2b2b22e3f87795205ad8",
+    "build/orbital-mvcc/native/orbital/liborbital.a": "8b85253b32a1cdc97559e2b6647c1a702f9ce07832cde16a0f2f1985bca14f43",
+    "build/orbital-mvcc/metadata-adapter/sanitize/build/workbench/spikes/orbital-mvcc/consumer/liborbital_versioned_data.a": "208489d013d4821b26b02f29808379a90184c13879072744a2399347e1ca581c",
+    "build/orbital-mvcc/metadata-adapter/sanitize/build/ikea/libikea_tuplepack.a": "11b47ee505e2a10a89540a5f5002a906af1fa343f9db2ca6ea3a94612ce20b99",
+    "build/orbital-mvcc/metadata-adapter/sanitize/build/ikea/libikea_seriespack.a": "a166a260254bee4b412bab055bf149e9b1ffff124f1b3b93e46fef3ff1874634",
+    "build/orbital-mvcc/metadata-adapter/sanitize/build/ikea/libikea_core.a": "38a3994fd39e9a74b072aef8fa0ffd90f8d2d51c4ab6c24db498b1780f542b70",
+    "build/orbital-mvcc/metadata-adapter/sanitize/build/orbital/liborbital.a": "3d5f460d93b846fe060ed4683108b5cbb05a0b0207e5b35da007ee3ff7769019"
+  },
+  "abi": {
+    "source": "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/abi_probe.cpp",
+    "llvm_sha256": "c1af1ca5606baa6fc56492c234d63435d7d974b9c9e5e4ab819f523ff32beaff",
+    "outputs": "bind=i64; Borrowed/Result<View>/Control=[2 x i64]; Scope32, Owner8, Change24, Bound32, Prepared64",
+    "qualification": "Structural layouts unchanged from inline receipt; ordinary ABI checks were not repeated for the abort-only repair."
+  },
+  "utc": "2026-10-09T21:51:24.076546+00:00",
+  "commands": [
+    [
+      "abort-release",
+      "clang++-21 -std=c++23 -O3 -DNDEBUG -g -Wall -Wextra -Wpedantic -Iorbital/include workbench/spikes/orbital-mvcc/metadata/orbital/candidates/check.cpp workbench/spikes/orbital-mvcc/metadata/orbital/descriptor/descriptor.cpp workbench/spikes/orbital-mvcc/metadata/orbital/directory/object_directory.cpp -o build/orbital-mvcc-metadata/candidates/abort-release && build/orbital-mvcc-metadata/candidates/abort-release > build/orbital-mvcc-metadata/candidates/abort-release.log 2>&1"
+    ],
+    [
+      "abort-sanitize",
+      "clang++-21 -std=c++23 -O1 -DNDEBUG -g -fno-omit-frame-pointer -fsanitize=address,undefined -Wall -Wextra -Wpedantic -Iorbital/include workbench/spikes/orbital-mvcc/metadata/orbital/candidates/check.cpp workbench/spikes/orbital-mvcc/metadata/orbital/descriptor/descriptor.cpp workbench/spikes/orbital-mvcc/metadata/orbital/directory/object_directory.cpp -o build/orbital-mvcc-metadata/candidates/abort-sanitize && ASAN_OPTIONS=detect_leaks=1:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 build/orbital-mvcc-metadata/candidates/abort-sanitize > build/orbital-mvcc-metadata/candidates/abort-sanitize.log 2>&1"
+    ],
+    [
+      "abort-shape-release",
+      "clang++-21 -std=c++23 -O3 -DNDEBUG -g -Wall -Wextra -Wpedantic -Iorbital/include -Iikea/include -Iworkbench/spikes/orbital-mvcc -Iworkbench/benchmarks/orbital workbench/spikes/orbital-mvcc/metadata/orbital/candidates/shape_store_check.cpp workbench/spikes/orbital-mvcc/metadata/orbital/shape/shape.cpp workbench/spikes/orbital-mvcc/metadata/orbital/directory/object_directory.cpp build/orbital-mvcc/native/workbench/spikes/orbital-mvcc/consumer/liborbital_versioned_data.a build/orbital-mvcc/native/ikea/libikea_tuplepack.a build/orbital-mvcc/native/ikea/libikea_seriespack.a build/orbital-mvcc/native/ikea/libikea_core.a build/orbital-mvcc/native/orbital/liborbital.a -pthread -o build/orbital-mvcc-metadata/candidates/abort-shape-release && build/orbital-mvcc-metadata/candidates/abort-shape-release > build/orbital-mvcc-metadata/candidates/abort-shape-release.log 2>&1"
+    ],
+    [
+      "abort-shape-sanitize",
+      "clang++-21 -std=c++23 -O1 -DNDEBUG -g -fno-omit-frame-pointer -fsanitize=address,undefined -Wall -Wextra -Wpedantic -Iorbital/include -Iikea/include -Iworkbench/spikes/orbital-mvcc -Iworkbench/benchmarks/orbital workbench/spikes/orbital-mvcc/metadata/orbital/candidates/shape_store_check.cpp workbench/spikes/orbital-mvcc/metadata/orbital/shape/shape.cpp workbench/spikes/orbital-mvcc/metadata/orbital/directory/object_directory.cpp build/orbital-mvcc/metadata-adapter/sanitize/build/workbench/spikes/orbital-mvcc/consumer/liborbital_versioned_data.a build/orbital-mvcc/metadata-adapter/sanitize/build/ikea/libikea_tuplepack.a build/orbital-mvcc/metadata-adapter/sanitize/build/ikea/libikea_seriespack.a build/orbital-mvcc/metadata-adapter/sanitize/build/ikea/libikea_core.a build/orbital-mvcc/metadata-adapter/sanitize/build/orbital/liborbital.a -pthread -o build/orbital-mvcc-metadata/candidates/abort-shape-sanitize && ASAN_OPTIONS=detect_leaks=1:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 build/orbital-mvcc-metadata/candidates/abort-shape-sanitize > build/orbital-mvcc-metadata/candidates/abort-shape-sanitize.log 2>&1"
+    ]
+  ],
+  "sources": {
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/abi_probe.cpp": "274f72c3dfded7a5342aed1b271b4999b946b443eb61452dee6b573219700dc7",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/candidate_store.h": "6a2d5f261dbbbb92c0263a31882707993139c88cabdf5f34aff855cb13e1058d",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/check.cpp": "1f9fdb2571cb9c8aa6d0fc5cf1d179333086fc82bcca826ad0d457c6daafba7c",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/common.h": "e6236f95831d98aada695e66bf51de88bb414cf189725b3435097a3bceaf2712",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/history.h": "4ffe70090153e7a05f5884b3e2ebde0f6347ba1194fbb479253bf479dd39aadb",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/inline_history.h": "0a3f4965e8a20a8a018b019f15d573c4f68ed0e877e34135fbdb3f9c4b0a1162",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/inline_objects.h": "16b3b60f8d353e3301a19260558465e599e8d12318e72369d1a502bd026fecaa",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/object_policy.h": "723edd3e341b70a03350a647f4f0c5c2fb24223f144ccef5c576ce7e873ed816",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/physical.h": "db9a1db0f6c940e069747a83c9c19c3888d3b7d8c3ada300f7ff572f6bdc375f",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/shape_policy.h": "aae140db9259e0f601cd94d9431316ea304c10d477694c69d2ae249733cbefb5",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/shape_store_check.cpp": "b3a6591756bbe6a1748cf87c3307d8a3abc14c6650cdf64c1ff415ad435323e8",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/versions.h": "aa9275c72be7b4fa38c5dab3290e5ac48c95f29d2aa353a1532d9764dd9a0a40",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/descriptor/abi.cpp": "2201e0bf667aacddbf0e11d88c0470cc15e84ff6eb5742891375c1ece4f24793",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/descriptor/check.cpp": "7f15ad6956a2ce594b3b57203f1b9f8c2658f87b05b6a08736ee356dd93be025",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/descriptor/descriptor.cpp": "467ccd64d83776c58568598bbd56088c8da24ac9f106eabc90acc9dcf4663449",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/descriptor/descriptor.h": "3081b7b444b4bbf71ab4ef336ee167438e7045e5c9b77719fcfbbccc89e15f30",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/directory/check.cpp": "5e48667e4889ef57aec42110642af34e26c09644e311b84f8138c19b82754538",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/directory/object_directory.cpp": "3e91c0b0172445604292b8b048c8a9d480747aa1a2c32509c9b4021f44f96ac3",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/directory/object_directory.h": "6a928bf3757a73da5d978656e46dc8ba80351e431a6a64c29fdc68d4e0f1cd65",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/retention/check.cpp": "14f2ff8a8f9e26c95cf8ba9e5c381682a33ae27ff31d38f05f46967f8e093444",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/retention/checks.h": "7df006fc01c05d9cd83aaad75761d244176b5126cbb8e5627b5dff6a27664d0d",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/retention/retention.h": "3761716075745125e51ebfadc06ec3e9eee2adbe2327ddee63a5d0df494a85d7",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/retention/store_check.cpp": "ffb776c883d8d01f0a4c25cc4f0cf2b1a345f190662cec812959fa59f7c8dfad",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/shape/abi.cpp": "6e66e8bcefe61df7ab1b1c8bb2ba36cb9510124c681d83e7acf79dfd15079df0",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/shape/check.cpp": "ad6a5f42131b473531906d30ad164f410d77445a6e197e100c45bf7526dd29b8",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/shape/native_fixture.h": "9e9c507da474295814438e717659bc369efdb77e31bb66f07355d6b2db16edf3",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/shape/shape.cpp": "ed1e170dca250bf8aed5df3614309e3d5b10b2304940b6a3d99559108b1760a3",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/shape/shape.h": "60134697f5052cd158628bc8067664a7a1f74e5ae811e43fd44d7517b5576c90",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/shape/shape_private.h": "2e5fefd92a1648243a04ed0b037b2203517a2417d6c1c8b5637d0d142f5b3978"
+  },
+  "runs": {
+    "abort-release": {
+      "exit_code": 0,
+      "binary_sha256": "51e90f00dae02a1e94e9f4d36288fa74449c07ea43d26f39150c497c1c2b8f88",
+      "log_sha256": "f0848aa46517d6abdf19502b1401f39cec9cf6b317f42391e99dcfe323e42e7e",
+      "output": "v32-floor: eleven grouped histories passed\nv16-floor: eleven grouped histories passed\nv8-floor: eleven grouped histories passed\nv32-distinct: eleven grouped histories passed\nv16-distinct: eleven grouped histories passed\nv8-distinct: eleven grouped histories passed\ncompact-v32-floor: eleven grouped histories passed\ncompact-v16-floor: eleven grouped histories passed\ncompact-v8-floor: eleven grouped histories passed\ncompact-v32-distinct: eleven grouped histories passed\ncompact-v16-distinct: eleven grouped histories passed\ncompact-v8-distinct: eleven grouped histories passed\ninline-v16-floor: eleven grouped histories passed\ninline-v16-distinct: eleven grouped histories passed\n"
     },
-    "sanitizer": {
-      "flags": [
-        "-std=c++23",
-        "-O1",
-        "-g",
-        "-fno-omit-frame-pointer",
-        "-fsanitize=address,undefined"
-      ],
-      "environment": {
-        "ASAN_OPTIONS": "detect_leaks=1:halt_on_error=1",
-        "UBSAN_OPTIONS": "halt_on_error=1"
-      },
-      "binary_sha256": "5219a1c3b04dda24440fba5a875bbd73386cb382a6448f176227685404bcb409",
-      "log_sha256": "0abf6aaa94222fa5ddf0ea3cdb098415f54055b06522fefdf9bd6eeade6f63f2",
-      "output": "v32-floor: nine grouped histories passed\nv16-floor: nine grouped histories passed\nv8-floor: nine grouped histories passed\nv32-distinct: nine grouped histories passed\nv16-distinct: nine grouped histories passed\nv8-distinct: nine grouped histories passed\n"
+    "abort-sanitize": {
+      "exit_code": 0,
+      "binary_sha256": "47a91455c5646a032b70add16bed7ad74c0c838289fb94ebcb98df4bc63d650a",
+      "log_sha256": "f0848aa46517d6abdf19502b1401f39cec9cf6b317f42391e99dcfe323e42e7e",
+      "output": "v32-floor: eleven grouped histories passed\nv16-floor: eleven grouped histories passed\nv8-floor: eleven grouped histories passed\nv32-distinct: eleven grouped histories passed\nv16-distinct: eleven grouped histories passed\nv8-distinct: eleven grouped histories passed\ncompact-v32-floor: eleven grouped histories passed\ncompact-v16-floor: eleven grouped histories passed\ncompact-v8-floor: eleven grouped histories passed\ncompact-v32-distinct: eleven grouped histories passed\ncompact-v16-distinct: eleven grouped histories passed\ncompact-v8-distinct: eleven grouped histories passed\ninline-v16-floor: eleven grouped histories passed\ninline-v16-distinct: eleven grouped histories passed\n"
+    },
+    "abort-shape-release": {
+      "exit_code": 0,
+      "binary_sha256": "c4d7605399e11fe6f0cf462973216e33b9a32e7055d436ce1a3285b219031cf4",
+      "log_sha256": "7216cdf697d82062c5cc41ac6d03ebc81684ce437c3e34ac949f542dc8675237",
+      "output": "shape32-distinct: five actual encoded ownership/binding histories passed\nshape16-distinct: five actual encoded ownership/binding histories passed\nshape8-distinct: five actual encoded ownership/binding histories passed\ncompact-shape32-distinct: five actual encoded ownership/binding histories passed\ncompact-shape16-distinct: five actual encoded ownership/binding histories passed\ncompact-shape8-distinct: five actual encoded ownership/binding histories passed\ninline-shape16-distinct: five actual encoded ownership/binding histories passed\n"
+    },
+    "abort-shape-sanitize": {
+      "exit_code": 0,
+      "binary_sha256": "58a662403a12feb2e11dba7320eb58093522e433287dbe0c570a8c0d32226bc8",
+      "log_sha256": "7216cdf697d82062c5cc41ac6d03ebc81684ce437c3e34ac949f542dc8675237",
+      "output": "shape32-distinct: five actual encoded ownership/binding histories passed\nshape16-distinct: five actual encoded ownership/binding histories passed\nshape8-distinct: five actual encoded ownership/binding histories passed\ncompact-shape32-distinct: five actual encoded ownership/binding histories passed\ncompact-shape16-distinct: five actual encoded ownership/binding histories passed\ncompact-shape8-distinct: five actual encoded ownership/binding histories passed\ninline-shape16-distinct: five actual encoded ownership/binding histories passed\n"
     }
-  }
+  },
+  "falsifier": {
+    "unfixed_exit_code": 134,
+    "unfixed_log_sha256": "61ccbac7c6921a30070c452b13804a50d01fd12560aa211fba651e08b9249b0c",
+    "unfixed_output": "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/check.cpp:393: check failed\n",
+    "unfixed_candidate_store_sha256": "25fbbce59c85160eb049944b26009f83ad87c69fb32a9296a3bc51e9b7bcf3d7",
+    "check_sha256": "1f9fdb2571cb9c8aa6d0fc5cf1d179333086fc82bcca826ad0d457c6daafba7c"
+  },
+  "scope_note": "Corrected shared protocol and inline-current control. Accounting of the earlier inline cut is separately source-qualified under ../evidence/inline-current-20261009; it predates the added two-change abort falsifier. No performance claim."
 }

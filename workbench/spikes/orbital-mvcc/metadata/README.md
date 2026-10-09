@@ -99,7 +99,7 @@ orb -m ubuntu cmake --build build/orbital-mvcc/metadata-integration \
   --target orbital_mvcc_metadata_validate -j2
 ```
 
-The target also compiles descriptor and shared-shape ABI probes. Its fourteen
+The target also compiles descriptor, shared-shape and inline-current ABI probes. Its fourteen
 tests use the separate `orbital-mvcc-metadata` CTest label and keep assertions
 enabled. This qualifies repository integration; the performance study owns
 measured comparisons.

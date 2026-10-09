@@ -1,0 +1,73 @@
+{
+  "native": {
+    "run": "build/orbital-mvcc-metadata/shape-accounting/20261009T213546205101Z",
+    "source_digest": "8531682b5ae885d2f5bcb190a2c6c4cb67976ae8b410c2401334e209a3ceddb2"
+  },
+  "sanitized": {
+    "run": "build/orbital-mvcc-metadata/shape-accounting/20261009T213558440168Z",
+    "source_digest": "9c1aaa178f77404ffd1d54622b8349caed8f919ee733dc391ca3196a6b72df06"
+  },
+  "component_source_sha256": {
+    "workbench/spikes/orbital-mvcc/metadata/orbital/FINDINGS.md": "8088ad23bf275ff08f414b6b88cd57eb5f9917c2da31c781ae7bbe79a1c64048",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/abi.cpp": "422dd4888a923be7169c19e0a0ec4ef9799a32a026c6aef1150c9cce31a9eb25",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/allocation-profiles.md": "ad21cd19a2418dd431768f1fa902280484c38327388f386e113d74fe4235d5c7",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/allocation-worker.md": "a25a20ca05ff00722a06dd021a6472bc7cd0ac735546f44f75d9bb078f8daa47",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/allocation/compact-controls.patch": "81159aae77a65a3289bb50fbd52d76e8aa15ebf4d5997c5d2352623da8925087",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/allocation_profiles.cpp": "08e9876cd1ddf234ec816af11524b42e7322ebc7a0484dceb9695b2874de84a0",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/allocation_worker.cpp": "d5f1e03535d16450a1aa31e084a2bd72d29cfd156b1293972c855a8028bc9569",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/backing.cpp": "28f89b69a6fe565f577c1553ff97f07a6292c5cf1a308bc32879e73ba4af474e",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/README.md": "6940e61a8a456c40aec3fc65b713a3ec5d03349624b3b7b2f83f4b73b42aa21f",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/abi_probe.cpp": "274f72c3dfded7a5342aed1b271b4999b946b443eb61452dee6b573219700dc7",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/candidate_store.h": "25fbbce59c85160eb049944b26009f83ad87c69fb32a9296a3bc51e9b7bcf3d7",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/check.cpp": "73fb442a20419b78c94dee3027ead213b167ebd36f3622b6ba46ca79c614f837",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/common.h": "e6236f95831d98aada695e66bf51de88bb414cf189725b3435097a3bceaf2712",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/history.h": "4ffe70090153e7a05f5884b3e2ebde0f6347ba1194fbb479253bf479dd39aadb",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/inline_history.h": "0a3f4965e8a20a8a018b019f15d573c4f68ed0e877e34135fbdb3f9c4b0a1162",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/inline_objects.h": "16b3b60f8d353e3301a19260558465e599e8d12318e72369d1a502bd026fecaa",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/object_policy.h": "723edd3e341b70a03350a647f4f0c5c2fb24223f144ccef5c576ce7e873ed816",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/physical.h": "db9a1db0f6c940e069747a83c9c19c3888d3b7d8c3ada300f7ff572f6bdc375f",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/qualification.json": "18feacb7549a74a2022f27d6364fdf92dda5f219be6a55b91b1b6b8474862fd5",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/shape_policy.h": "aae140db9259e0f601cd94d9431316ea304c10d477694c69d2ae249733cbefb5",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/shape_store_check.cpp": "b3a6591756bbe6a1748cf87c3307d8a3abc14c6650cdf64c1ff415ad435323e8",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/versions.h": "aa9275c72be7b4fa38c5dab3290e5ac48c95f29d2aa353a1532d9764dd9a0a40",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/census.cpp": "1374f443a6c9bf14c1b54a6ff04de50a9f362ce23c5e5d152e0ff32d9873d1eb",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/compact_abi.cpp": "4d7ee80bbd704c933a7f2cc3fa1efff75493ffcc54d272aabfcd959922387f52",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/compact_backing.cpp": "5caffde5e73830a7e60679bc8128a808983fe54e1e198e568135fb719199bb6c",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/compact_census.cpp": "11ec95d9df4f95922b3e134a876e251303a3019b392aa423d9ccbb7087c9334e",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/descriptor/CMakeLists.txt": "07895e20dd2c0eb2d9f9e87f7d331de38fc33002fc0e448e6801234d8df0cb7f",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/descriptor/README.md": "ff4472c898427cbfa1c30684ae8e6979dd59d61cc231eb0e643c2d1873bf9178",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/descriptor/abi.cpp": "2201e0bf667aacddbf0e11d88c0470cc15e84ff6eb5742891375c1ece4f24793",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/descriptor/check.cpp": "7f15ad6956a2ce594b3b57203f1b9f8c2658f87b05b6a08736ee356dd93be025",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/descriptor/descriptor.cpp": "467ccd64d83776c58568598bbd56088c8da24ac9f106eabc90acc9dcf4663449",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/descriptor/descriptor.h": "3081b7b444b4bbf71ab4ef336ee167438e7045e5c9b77719fcfbbccc89e15f30",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/directory/check.cpp": "5e48667e4889ef57aec42110642af34e26c09644e311b84f8138c19b82754538",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/directory/object_directory.cpp": "3e91c0b0172445604292b8b048c8a9d480747aa1a2c32509c9b4021f44f96ac3",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/directory/object_directory.h": "6a928bf3757a73da5d978656e46dc8ba80351e431a6a64c29fdc68d4e0f1cd65",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/escape_backing.cpp": "4d5acf7b409fd3192287966afaf94793e783ce12957bf10de551af033444ad1d",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/packet_candidates.cpp": "f2682c86fbd67d00bffbd5e7bc608b8d633bad4c79e53061e53898840afb03ac",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/retention/check.cpp": "14f2ff8a8f9e26c95cf8ba9e5c381682a33ae27ff31d38f05f46967f8e093444",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/retention/checks.h": "7df006fc01c05d9cd83aaad75761d244176b5126cbb8e5627b5dff6a27664d0d",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/retention/retention.h": "3761716075745125e51ebfadc06ec3e9eee2adbe2327ddee63a5d0df494a85d7",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/retention/store_check.cpp": "ffb776c883d8d01f0a4c25cc4f0cf2b1a345f190662cec812959fa59f7c8dfad",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/run.py": "7ea20345f60ac180032f18f8094214b8d02be0943ca713f307ec84477f935b0d",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/shape/CMakeLists.txt": "a6613078ba431365b20b7b59601078a1646b5a937642f4c585cbfde6866ffa1e",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/shape/README.md": "9c3bc7442763b3d3bf53176568756c5d8f0bd458000b97f46d33eb9d7f9f9fb7",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/shape/abi.cpp": "6e66e8bcefe61df7ab1b1c8bb2ba36cb9510124c681d83e7acf79dfd15079df0",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/shape/check.cpp": "ad6a5f42131b473531906d30ad164f410d77445a6e197e100c45bf7526dd29b8",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/shape/native_fixture.h": "9e9c507da474295814438e717659bc369efdb77e31bb66f07355d6b2db16edf3",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/shape/shape.cpp": "513eb7a5b0b9958649d7d8dec6867028ba8ba28b91aeed53bfafdd6b54f1c681",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/shape/shape.h": "60134697f5052cd158628bc8067664a7a1f74e5ae811e43fd44d7517b5576c90",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/shape_backing.cpp": "de1a7a88e1b44951660a04ddec398439169a8fa15f78b7e20e72c0c3aaf53f7a"
+  },
+  "source_changes_between_captures": [
+    "workbench/spikes/orbital-mvcc/performance/run.py",
+    "workbench/spikes/orbital-mvcc/performance/main.cpp",
+    "workbench/spikes/orbital-mvcc/performance/trial.h"
+  ],
+  "outcomes": {
+    "all_512_matrix_rows_passed": true,
+    "all_rows_identical_between_native_and_sanitized": true
+  },
+  "selection": "All native Allocation owner rows for separate-node compact directory versus inline-current, including singleton/64, Tuple1/Series4, independent/grouped, both writer Scope lifetimes, all four phases. Other node controls and shared-owner controls are recoverable in the archive.",
+  "not_a_timing_claim": true
+}

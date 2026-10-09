@@ -157,32 +157,37 @@ the exact Object/cut association. Its cold export cannot relabel an old borrow.
 `shape_backing.cpp` constructs actual encoded bodies, ends Schema/source Shape
 before resident observations, and checks old/current data through eight dense
 publications. Both writer-basis treatments pass: retained through install, or
-closed after accepted preparation and before install. They have identical
-resident costs in this separate-node control. This does not establish the same
-result for an inline-current alternative.
+closed after accepted preparation and before install. Both pass for separate
+history and inline-current layouts. The inline layout pays for old history only
+when replacing an existing tip; install transfers its old physical owner into
+prepared history without allocation.
 
-Captured native `shape-accounting/20261009T211153393575Z` and fully instrumented
-ASan/UBSan/LSan `20261009T211446366566Z` pass the complete matrix, including
-independent/grouped shared owners and real Allocation owners. Probe source is
-`9018978654058821bf3e06d3595ad7c75b90bb069e47f8bf4e5ba96d3798a563`;
-source digests are `1144d20dc33f787c259261ee104507af43f3ace430cab9cfcb744b0491d08a1c`
-and `b114c0db6332d463c3e2bcea33494ea251a7bf779b1a59673e22523eabc03cbc`.
-The receipts, source archives and full JSONL remain ignored. No timings are
-claimed. All rows below use 64 Objects, three records each and compact directory
-with 16-byte separate history nodes:
+The [selected inline comparison](evidence/inline-current-20261009/native-controls.csv)
+retains singleton/64, Tuple1/Series4, independent/grouped Allocation owners, both
+writer Scope lifetimes and every accounting phase. Native
+`shape-accounting/20261009T213546205101Z` and fully instrumented ASan/UBSan/LSan
+`20261009T213558440168Z` pass all 512 matrix rows with identical output. Their
+[qualification](evidence/inline-current-20261009/qualification.json) identifies
+component hashes and the three unrelated performance files that changed between
+source captures. Full sources/logs are in the
+[native archive](evidence/inline-current-20261009/artifact.json) and
+[sanitizer archive](evidence/inline-current-20261009-sanitizer.json).
+No timings are claimed. Initial rows below use 64 Objects, three records each:
 
-| Initial owner profile | Object/history/realization + shared proof | External shared control blocks | Charged Pool metadata | Logical body bytes |
-| --- | ---: | ---: | ---: | ---: |
-| One Tuple Part, shared | 7,395 | 3,584 | — | 4,416 |
-| Four independent Series Parts, shared | 11,960 | 14,336 | — | 11,520 |
-| Four grouped Series Parts, shared | 8,888 | 3,584 | — | 11,520 |
-| One Tuple Part, Allocation | 6,883 | — | 30,616 | 4,416 |
-| Four independent Series Parts, Allocation | 9,912 | — | 34,392 | 11,520 |
-| Four grouped Series Parts, Allocation | 8,376 | — | 34,392 | 11,520 |
+| Owner profile | Separate16 closure | Inline-current closure | External shared controls | Charged Pool metadata | Logical body bytes |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| One Tuple Part, shared | 7,395 | 6,867 | 3,584 | — | 4,416 |
+| Four independent Series Parts, shared | 11,960 | 11,432 | 14,336 | — | 11,520 |
+| Four grouped Series Parts, shared | 8,888 | 8,360 | 3,584 | — | 11,520 |
+| One Tuple Part, Allocation | 6,883 | 6,355 | — | 30,616 | 4,416 |
+| Four independent Series Parts, Allocation | 9,912 | 9,384 | — | 34,392 | 11,520 |
+| Four grouped Series Parts, Allocation | 8,376 | 7,848 | — | 34,392 | 11,520 |
 
 The first column includes 4,096 B catalog state: Core480, Object directory2,064,
 history capacity1,040 and primary-pointer registry512. The shared proof is227 B
-for Tuple or184 B for columns. These are actual requested allocations and
+for Tuple or184 B for columns. Inline current has3,568 B catalog state, including
+40-byte stable entries and no initial history/primary slots. Both columns include
+the shared proof. These are actual requested allocations and
 reserved capacities, not a per-record sum that omits slack. Shared control-block
 sizes describe this fixture's PMR-backed deleters, not a universal `shared_ptr`
 cost. Memory40, Scope32, optional Scope storage40, transient input Change
@@ -205,19 +210,25 @@ with grouping. Grouped ownership retains sibling bytes in the same allocation.
 Tuple escape is307 B metadata and69 B held body. The complete source checks
 escaped contents/binding after Store/proof teardown and then releases everything.
 The allocation census separately exercises idle trimming; high-water control
-state survives until Group retirement.
+state survives until Group retirement. After old-reader release the inline
+catalog retains6,928 B capacity, versus7,976 B for separate16; neither refunds
+its history high-water merely because only current versions remain.
+
+The isolated [Allocation controls](allocation/README.md) reduce each Group to
+19,120 /20,136 B through a shared control mapping, compact trim spans and split
+hint planes. Real bodies, physical retention and whole collection checks pass.
+Those measured savings are separate from the inline comparison above and do not
+remove Storage or full timestamp capacity.
 
 ## What remains worth changing
 
-The compact directory removes duplicate Object keys and hash-node overhead, but
-every current head still pays history and primary-registry capacity. Inline
-current binding is the next comparison. Independent four-Part ownership must
-remain a first-class case; grouping has different escape/retention behavior.
-Allocation metadata is also reopened: eager trim inventory, separately rounded
-control mappings and repeated hint padding are concrete opportunities. Their
-experimental changes must preserve physical pins, foreign returns, preparation
-and late completion. Whole-operation caller measurements decide which seams
-are useful; the census alone does not establish a performance win.
+Inline current removes initial history/primary-registry capacity; independent
+four-Part ownership remains a first-class case because grouping changes escape
+and retention. Remaining Allocation ownership and heat capacity deserve
+structural comparisons with honest counter/range limits, physical pins, foreign
+returns, preparation and late completion. Whole-operation callers decide which
+seams are useful. Cleanup needs matched bounded-work comparisons: a full drain
+against an amortized baseline confounds both p99 and retained history with layout.
 
 Oldest-floor retention still keeps every intermediate version newer than the
 oldest reader, even when only two cuts are selectable. The separate embedded

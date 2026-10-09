@@ -1,8 +1,7 @@
 #pragma once
 
-#include "versions.h"
-#include "physical.h"
-#include "object_policy.h"
+#include "history.h"
+#include "inline_history.h"
 #include "../retention/retention.h"
 #include <expected>
 #include <unordered_map>
@@ -27,10 +26,6 @@ using orbital::Error;
 using orbital::Result;
 
 enum class Disposition { empty, accepted, installed, aborted };
-struct Hash {
-  std::size_t operator()(ObjectId id) const noexcept { return id.high ^ (id.low * 0x9e3779b97f4a7c15ULL); }
-};
-struct Empty {};
 
 template<class Nodes, class Retention = compact_retention::FloorRetention,
     class Physical = DescriptorPhysical, class Objects = HashObjects> class Store {
@@ -60,10 +55,16 @@ public:
 private:
   struct Core;
   Core* core_{};
-  using Handle = typename Nodes::Handle;
-  using Entry = typename Objects::Entry;
-  using ObjectHandle = typename Objects::Handle;
-  struct Pending { ObjectHandle entry; Handle version; };
+  static constexpr bool inline_tip = [] {
+    if constexpr (requires { Objects::inline_current; }) return Objects::inline_current;
+    else return false;
+  }();
+  using Layout = std::conditional_t<inline_tip, InlineHistory<Nodes, Physical, Objects>,
+      NodeHistory<Nodes, Physical, Objects>>;
+  using Entry = typename Layout::Entry;
+  using ObjectHandle = typename Layout::ObjectHandle;
+  using Handle = typename Layout::Ref;
+  using Pending = typename Layout::Mutation;
 
 public:
   // Nonmovable, caller-resident enrollment. A stable address avoids repairing
@@ -169,68 +170,34 @@ public:
   };
 
 private:
-  using AlternativeMap = std::pmr::unordered_map<Handle, Descriptor*>;
-  struct Core {
-    Memory& memory;
+  struct Core : Layout {
+    using Layout::memory;
+    using Layout::entries;
+    using Layout::versions;
+    using Layout::primary;
+    using Layout::locate;
+    using Layout::resolve;
+    using Layout::head;
+    using Layout::older;
+    using Layout::link_older;
+    using Layout::version_cut;
+    using Layout::drop;
+    using Layout::erase_head;
     std::size_t references{1};
-    Nodes nodes;
-    [[no_unique_address]] std::conditional_t<Nodes::indexed_rep, Registry, Empty> directory;
-    Objects entries;
-    [[no_unique_address]] std::conditional_t<Nodes::inline_alternative, Empty, AlternativeMap> alternatives;
     std::pmr::unordered_map<const Scope*, std::pmr::vector<Descriptor*>> captures;
     Scope* first_scope{};
     Scope* last_scope{};
     std::uint64_t cut{}, occurrences{}, pending{};
-    std::size_t versions{}, scopes{};
+    std::size_t scopes{};
     std::size_t copied_metadata_bytes{}, captured_descriptor_bytes{}, reclamation_work{};
     std::size_t last_sweep_bytes{}, last_sweep_cuts{}, maintenance_refusals{};
     std::uint64_t maintenance_changes{};
     bool dirty{}, draining{};
 
-    explicit Core(Memory& resource) : memory(resource), nodes(resource), directory([&] {
-          if constexpr (Nodes::indexed_rep) return Registry(resource);
-          else return Empty{};
-        }()),
-        entries(resource), alternatives([&] {
-          if constexpr (Nodes::inline_alternative) return Empty{};
-          else return AlternativeMap(&resource);
-        }()), captures(&resource) {}
-    ~Core() {
-      assert(!first_scope && !pending);
-      entries.for_each_live([&](ObjectHandle, Entry& entry) {
-        auto h = entry.head;
-        while (h) { auto older = nodes.get(h).older; drop(h); h = older; }
-      });
-    }
+    explicit Core(Memory& resource) : Layout(resource), captures(&resource) {}
+    ~Core() { assert(!first_scope && !pending); this->dispose(); }
     void release() noexcept { if (!--references) memory.destroy(this); }
     std::uint64_t floor() const noexcept { return first_scope ? first_scope->cut_ : cut; }
-    Descriptor* primary(Handle h) const noexcept {
-      if constexpr (Nodes::indexed_rep) return static_cast<Descriptor*>(directory.get(nodes.get(h).primary));
-      else return static_cast<Descriptor*>(nodes.get(h).primary);
-    }
-    Descriptor* alternate(Handle h) const noexcept {
-      if constexpr (Nodes::inline_alternative) return static_cast<Descriptor*>(nodes.get(h).alternative);
-      else { auto at = alternatives.find(h); return at == alternatives.end() ? nullptr : at->second; }
-    }
-    void initialize(Handle h, Descriptor* rep) {
-      if constexpr (Nodes::indexed_rep) nodes.get(h).primary = rep ? directory.add(rep) : 0;
-      else nodes.get(h).primary = rep;
-      if (rep) Physical::retain(rep);
-    }
-    void drop(Handle h) noexcept {
-      auto* descriptor = primary(h);
-      Descriptor* alternative{};
-      if constexpr (Nodes::indexed_rep) { if (nodes.get(h).primary) directory.erase(nodes.get(h).primary); }
-      if constexpr (Nodes::inline_alternative) {
-        alternative = static_cast<Descriptor*>(nodes.get(h).alternative);
-      } else {
-        auto at = alternatives.find(h);
-        if (at != alternatives.end()) { alternative = at->second; alternatives.erase(at); }
-      }
-      nodes.erase(h);
-      if (alternative) Physical::release(alternative);
-      if (descriptor) Physical::release(descriptor);
-    }
     void add_debt(ObjectHandle entry) noexcept {
       entries.add_debt(entry);
       dirty = true; ++maintenance_changes;
@@ -253,58 +220,44 @@ private:
       }
       scope.core_ = nullptr; release();
     }
-    Handle locate(std::uint64_t selected_cut, ObjectId id) noexcept {
-      auto at = entries.find(id);
-      if (!at) return {};
-      auto h = entries.get(at).head;
-      while (h && nodes.cut(h) > selected_cut) h = nodes.get(h).older;
-      return h;
-    }
-    Selection resolve(std::uint64_t selected_cut, ObjectId id, bool alternative) noexcept {
-      auto h = locate(selected_cut, id);
-      if (!h || !primary(h)) return {};
-      return Physical::selection(alternative ? alternate(h) : primary(h));
-    }
     void abort(Prepared& prepared) noexcept {
       if (prepared.disposition_ != Disposition::accepted) return;
-      assert(pending == prepared.occurrence_); pending = 0; prepared.disposition_ = Disposition::aborted;
+      assert(pending == prepared.occurrence_); prepared.disposition_ = Disposition::aborted;
       for (auto& change : prepared.changes_) {
-        const auto handle = std::exchange(change.entry, ObjectHandle{});
-        auto& entry = entries.get(handle);
-        const auto version = std::exchange(change.version, Handle{});
-        assert(entries.pinned(handle)); entries.unpin(handle);
-        if (!entry.head) {
-          remove_debt(handle); const bool erased = entries.erase(handle); assert(erased); (void)erased;
-        } else if (!primary(entry.head)) add_debt(handle);
-        drop(version); // No raw Entry/Version use remains after owner callbacks.
+        const auto current = head(change.entry);
+        if (current && (entries.indebted(change.entry) || !primary(current))) add_debt(change.entry);
+        Layout::abort(change); // Bookkeeping precedes reentrant owner disposal.
       }
+      // Owner callbacks can drain or close the Store. They cannot prepare while
+      // later mutations in this batch still own entry pins.
+      pending = 0;
     }
     template<class Plan> std::size_t drain_plan(const Plan& plan) noexcept {
       const auto started = maintenance_changes;
       std::size_t work = 0;
       const auto oldest = floor();
-      entries.for_each_debt([&](ObjectHandle handle, Entry& entry) {
-        auto anchor = entry.head;
+      entries.for_each_debt([&](ObjectHandle handle, Entry&) {
+        auto anchor = head(handle);
         ++work;
         if (anchor) {
-          auto cursor = plan.cursor(nodes.cut(anchor));
-          while (nodes.get(anchor).older) {
-            auto old = nodes.get(anchor).older; ++work;
-            if (cursor.keep(nodes.cut(old))) anchor = old;
+          auto cursor = plan.cursor(version_cut(anchor));
+          while (older(anchor)) {
+            auto old = older(anchor); ++work;
+            if (cursor.keep(version_cut(old))) anchor = old;
             else {
-              nodes.get(anchor).older = nodes.get(old).older;
+              link_older(anchor, older(old));
               --versions; drop(old);
               if (maintenance_changes != started) return false;
             }
           }
         }
-        auto head = entry.head;
-        if (!head || !nodes.get(head).older) {
-          if (!head || primary(head)) remove_debt(handle);
-          else if ((Retention::uses_distinct_cuts || nodes.cut(head) <= oldest) && !entries.pinned(handle)) {
-            remove_debt(handle); --versions;
-            const bool erased = entries.erase(handle); assert(erased); (void)erased;
-            drop(head);
+        const auto current = head(handle);
+        if (!current || !older(current)) {
+          // Accepted work can replace this tip after the sweep. Keep its debt
+          // slot pinned too, so install need not allocate a fresh enrollment.
+          if (!current || primary(current)) { if (!entries.pinned(handle)) remove_debt(handle); }
+          else if ((Retention::uses_distinct_cuts || version_cut(current) <= oldest) && !entries.pinned(handle)) {
+            remove_debt(handle); erase_head(handle);
             if (maintenance_changes != started) return false;
           }
         }
@@ -357,7 +310,6 @@ public:
     if (c.pending || changes.empty()) return std::unexpected(Error::unavailable);
     if (c.cut == std::numeric_limits<std::uint64_t>::max() ||
         c.occurrences == std::numeric_limits<std::uint64_t>::max()) return std::unexpected(Error::capacity);
-    std::size_t new_debts = 0;
     for (std::size_t i = 0; i < changes.size(); ++i) {
       const auto& change = changes[i];
       auto* rep = change.representation.get();
@@ -367,36 +319,12 @@ public:
         if (rep && !Physical::accepts_resource(rep, c.memory)) return std::unexpected(Error::conflict);
       }
       for (std::size_t j = 0; j < i; ++j) if (changes[j].object == change.object) return std::unexpected(Error::conflict);
-      const auto entry = c.entries.find(change.object);
-      if ((!entry || !c.entries.indebted(entry)) && ((entry && c.entries.get(entry).head) || !rep)) ++new_debts;
     }
     Prepared prepared(c.memory);
-    std::pmr::vector<Handle> allocated(&c.memory);
-    std::size_t initialized = 0;
     try {
-      prepared.changes_.reserve(changes.size());
-      if (c.entries.reserve_debt(new_debts)) ++c.maintenance_changes;
-      allocated = c.nodes.batch(changes.size(), c.cut + 1);
-      for (std::size_t i = 0; i < changes.size(); ++i) {
-        c.initialize(allocated[i], changes[i].representation.get()); ++initialized;
-        auto [where, inserted] = c.entries.ensure(changes[i].object); (void)inserted;
-        prepared.changes_.push_back({where, allocated[i]});
-      }
-    } catch (const std::bad_alloc&) {
-      for (std::size_t i = 0; i < allocated.size(); ++i) {
-        if (i < initialized) c.drop(allocated[i]); else c.nodes.erase(allocated[i]);
-      }
-      for (const auto& change : changes) {
-        auto at = c.entries.find(change.object);
-        if (at && !c.entries.get(at).head && !c.entries.pinned(at)) {
-          const bool erased = c.entries.erase(at); assert(erased); (void)erased;
-        }
-      }
-      return std::unexpected(Error::capacity);
-    }
-    for (auto& change : prepared.changes_) {
-      const bool pinned = c.entries.pin(change.entry); assert(pinned); (void)pinned;
-    }
+      if (c.reserve(changes)) ++c.maintenance_changes;
+      c.Layout::prepare(changes, c.cut + 1, prepared.changes_);
+    } catch (const std::bad_alloc&) { return std::unexpected(Error::capacity); }
     ++c.references; prepared.core_ = &c; prepared.basis_ = c.cut;
     prepared.occurrence_ = ++c.occurrences; prepared.disposition_ = Disposition::accepted;
     c.pending = c.occurrences; return prepared;
@@ -406,25 +334,21 @@ public:
     auto& c = *core_;
     if (prepared.disposition_ != Disposition::accepted || c.pending != prepared.occurrence_) return std::unexpected(Error::rejected);
     if (prepared.basis_ != c.cut) return std::unexpected(Error::stale);
-    for (auto& change : prepared.changes_) {
-      auto& entry = c.entries.get(change.entry);
-      c.nodes.get(change.version).older = entry.head;
-      entry.head = change.version; c.entries.unpin(change.entry); ++c.versions;
-      if (c.nodes.get(change.version).older || !c.primary(change.version)) c.add_debt(change.entry);
-    }
+    for (auto& change : prepared.changes_)
+      if (c.Layout::install(change, c.cut + 1)) c.add_debt(change.entry);
     ++c.cut; c.pending = 0; prepared.disposition_ = Disposition::installed; return {};
   }
   Result<ConversionTarget> conversion(const Scope& basis, ObjectId id) const noexcept {
     if (!core_ || basis.core_ != core_) return std::unexpected(Error::conflict);
     auto h = core_->locate(basis.cut_, id);
     if (!h || !core_->primary(h)) return std::unexpected(Error::absent);
-    return ConversionTarget(*core_, core_->primary(h), id, core_->nodes.cut(h));
+    return ConversionTarget(*core_, core_->primary(h), id, core_->version_cut(h));
   }
   Result<BoundSelection> bound(const Scope& basis, ObjectId id) const noexcept {
     if (!core_ || basis.core_ != core_) return std::unexpected(Error::conflict);
     auto h = core_->locate(basis.cut_, id);
     if (!h || !core_->primary(h)) return std::unexpected(Error::absent);
-    return BoundSelection{Physical::selection(core_->primary(h)), Physical::binding(id, core_->nodes.cut(h))};
+    return BoundSelection{Physical::selection(core_->primary(h)), Physical::binding(id, core_->version_cut(h))};
   }
   // The cold capability pins this exact Store incarnation and immutable source.
   // It does not keep obsolete history alive or authorize logical publication.
@@ -434,39 +358,27 @@ public:
     Pin pin(core_); auto& c = *pin.core;
     const auto id = Physical::bound_object(target.source_.get(), target.binding_);
     const auto cut = Physical::bound_cut(target.source_.get(), target.binding_);
-    auto at = c.entries.find(id); auto h = at ? c.entries.get(at).head : Handle{};
-    while (h && c.nodes.cut(h) > cut) h = c.nodes.get(h).older;
-    if (!h || c.nodes.cut(h) != cut || !c.primary(h)) return std::unexpected(Error::absent);
+    const auto h = c.locate(cut, id);
+    if (!h || c.version_cut(h) != cut || !c.primary(h)) return std::unexpected(Error::absent);
     auto* next = replacement.get();
     if constexpr (requires { Physical::accepts_resource(next, c.memory); }) {
       if (!Physical::accepts_resource(next, c.memory)) return std::unexpected(Error::conflict);
     }
     if (!Physical::equivalent(c.primary(h), next)) return std::unexpected(Error::conflict);
-    if constexpr (Nodes::inline_alternative) {
-      Physical::retain(next);
-      auto* old = static_cast<Descriptor*>(c.nodes.get(h).alternative); c.nodes.get(h).alternative = next;
-      if (old) Physical::release(old);
-    } else {
-      try {
-        auto [where, inserted] = c.alternatives.try_emplace(h, next); Physical::retain(next);
-        if (!inserted) { auto* old = where->second; where->second = next; Physical::release(old); }
-      } catch (const std::bad_alloc&) { return std::unexpected(Error::capacity); }
-    }
-    return {};
+    return c.Layout::adopt(h, next);
   }
+
   std::size_t drain() noexcept {
     if (!core_) return 0;
     Pin pin(core_); return pin.core->drain();
   }
   Statistics statistics() const noexcept {
     if (!core_) return {};
-    std::size_t alternative_count = 0;
-    std::size_t directory_capacity_bytes = 0;
-    if constexpr (!Nodes::inline_alternative) alternative_count = core_->alternatives.size();
-    if constexpr (Nodes::indexed_rep) directory_capacity_bytes = core_->directory.capacity_bytes();
+    const auto alternative_count = core_->alternative_count();
+    const auto directory_capacity_bytes = core_->descriptor_capacity_bytes();
     return {core_->memory.live, core_->memory.peak, core_->entries.size(), core_->versions, core_->scopes,
-        sizeof(Core), sizeof(Entry), sizeof(typename Nodes::Node), alternative_count, core_->memory.calls,
-        core_->nodes.capacity_bytes(), directory_capacity_bytes, core_->copied_metadata_bytes,
+        sizeof(Core), sizeof(Entry), Layout::node_bytes, alternative_count, core_->memory.calls,
+        core_->history_capacity_bytes(), directory_capacity_bytes, core_->copied_metadata_bytes,
         core_->captured_descriptor_bytes, core_->reclamation_work, core_->last_sweep_bytes,
         core_->last_sweep_cuts, core_->maintenance_refusals,
         core_->entries.capacity_bytes(), core_->entries.debt_capacity_bytes()};

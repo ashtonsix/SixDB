@@ -1,0 +1,514 @@
+diff --git a/loom/CMakeLists.txt b/loom/CMakeLists.txt
+index 5f57aaa..6afa86b 100644
+--- a/loom/CMakeLists.txt
++++ b/loom/CMakeLists.txt
+@@ -80,8 +80,14 @@ set_tests_properties(
+   loom_example_preparation_finite loom_budget_check
+   PROPERTIES LABELS loom-runtime)
+ 
++set(loom_checks loom_worker_check loom_capacity_check loom_ring_check loom_hint_check
++  loom_hardware_check loom_example_hints loom_example_allocation loom_example_capacity
++  loom_example_partition loom_example_preparation loom_budget_check)
++foreach(check IN LISTS loom_checks)
++  target_compile_options(${check} PRIVATE -UNDEBUG)
++endforeach()
+ add_custom_target(loom_validate
+   COMMAND "${CMAKE_CTEST_COMMAND}" --test-dir "${PROJECT_BINARY_DIR}"
+     --output-on-failure --no-tests=error -L "^loom-runtime$"
+-  DEPENDS loom_worker_check loom_capacity_check loom_ring_check loom_hint_check loom_hardware_check loom_example_hints loom_example_allocation loom_example_capacity loom_example_partition loom_example_preparation loom_budget_check
++  DEPENDS ${loom_checks}
+   USES_TERMINAL VERBATIM)
+diff --git a/orbital/CMakeLists.txt b/orbital/CMakeLists.txt
+index 4faba31..0c2e997 100644
+--- a/orbital/CMakeLists.txt
++++ b/orbital/CMakeLists.txt
+@@ -63,16 +63,19 @@ target_link_options(orbital_budget_check PRIVATE "LINKER:--wrap=pthread_mutex_tr
+ add_test(NAME orbital_budget_check COMMAND orbital_budget_check)
+ set_tests_properties(orbital_budget_check PROPERTIES TIMEOUT 60)
+ 
+-set_tests_properties(orbital_allocation_check orbital_finite_check
++set(orbital_checks orbital_allocation_check orbital_finite_check
+   orbital_reclamation_check orbital_window_check orbital_return_check
+   orbital_worker_check orbital_lifetime_check orbital_thread_check
+-  orbital_preparation_check orbital_notification_check orbital_budget_check
+-  PROPERTIES LABELS "orbital-runtime")
++  orbital_preparation_check orbital_notification_check orbital_budget_check)
++# Existing checks use assert for actions as well as expectations. Optimized
++# library experiments may use NDEBUG; the checks must still execute their work.
++foreach(check IN LISTS orbital_checks)
++  target_compile_options(${check} PRIVATE -UNDEBUG)
++endforeach()
++set_tests_properties(${orbital_checks} PROPERTIES LABELS "orbital-runtime")
+ 
+ add_custom_target(orbital_validate
+   COMMAND "${CMAKE_CTEST_COMMAND}" --test-dir "${PROJECT_BINARY_DIR}"
+     --output-on-failure --no-tests=error -L "^orbital-runtime$"
+-  DEPENDS orbital_allocation_check orbital_finite_check orbital_reclamation_check
+-    orbital_window_check orbital_return_check orbital_worker_check
+-    orbital_lifetime_check orbital_thread_check orbital_preparation_check orbital_notification_check orbital_budget_check
++  DEPENDS ${orbital_checks}
+   USES_TERMINAL VERBATIM)
+diff --git a/orbital/src/allocation/allocation.cpp b/orbital/src/allocation/allocation.cpp
+index 3546e32..db6a04c 100644
+--- a/orbital/src/allocation/allocation.cpp
++++ b/orbital/src/allocation/allocation.cpp
+@@ -7,13 +7,13 @@
+ 
+ namespace orbital::allocation::detail {
+ 
+-ReleaseHint& hint(Storage& use) noexcept {
+-  if (use.domain->finite) return static_cast<Group*>(use.domain->context)->hints[use.identity];
++ReleaseHint hint(Storage& use) noexcept {
++  if (use.domain->finite) return static_cast<Group*>(use.domain->context)->hints.load(use.identity);
+   return static_cast<Window*>(use.domain->context)->hint;
+ }
+ 
+-ReleaseHint& foreign_hint(Storage& use) noexcept {
+-  if (use.domain->finite) return static_cast<Group*>(use.domain->context)->foreign_hints[use.identity];
++ReleaseHint foreign_hint(Storage& use) noexcept {
++  if (use.domain->finite) return static_cast<Group*>(use.domain->context)->foreign_hints.load(use.identity);
+   return static_cast<Window*>(use.domain->context)->foreign_hint;
+ }
+ 
+@@ -31,6 +31,21 @@ void merge_hint(ReleaseHint& target, const ReleaseHint& incoming) noexcept {
+     target.last_access = incoming.last_access;
+ }
+ 
++void merge_hint(Storage& use, const ReleaseHint& incoming, bool foreign = false) noexcept {
++  if (use.domain->finite) {
++    auto& group = *static_cast<Group*>(use.domain->context);
++    (foreign ? group.foreign_hints : group.hints).merge(use.identity, incoming);
++  } else {
++    auto& window = *static_cast<Window*>(use.domain->context);
++    merge_hint(foreign ? window.foreign_hint : window.hint, incoming);
++  }
++}
++
++void clear_foreign_hint(Storage& use) noexcept {
++  if (use.domain->finite) static_cast<Group*>(use.domain->context)->foreign_hints.clear(use.identity);
++  else static_cast<Window*>(use.domain->context)->foreign_hint = {};
++}
++
+ void recycle(Storage& use, bool notify = true) noexcept {
+   auto& domain = *use.domain;
+   auto& pool = *domain.pool;
+@@ -40,7 +55,7 @@ void recycle(Storage& use, bool notify = true) noexcept {
+   auto retained = std::move(use.lifetime);
+   if (domain.finite) {
+     auto& group = *static_cast<Group*>(domain.context);
+-    merge_hint(group.last_use, group.hints[use.identity]);
++    merge_hint(group.last_use, group.hints.load(use.identity));
+     const auto home = group.geometry->bound_home({use.identity});
+     assert(home);
+     verify(group.geometry->release_identity({use.identity}));
+@@ -59,8 +74,8 @@ bool returned(Domain& domain) noexcept {
+ 
+ void apply_return(Storage& use) noexcept {
+   if (use.users.load(std::memory_order_acquire) != returning) return;
+-  merge_hint(hint(use), foreign_hint(use));
+-  foreign_hint(use) = {};
++  merge_hint(use, foreign_hint(use));
++  clear_foreign_hint(use);
+   use.foreign_hint_pending.store(false, std::memory_order_relaxed);
+   use.users.store(0, std::memory_order_release);
+   recycle(use, false);
+@@ -122,10 +137,10 @@ void drop(Storage& use, ReleaseHint value) noexcept {
+   auto& domain = *use.domain;
+   const bool local = worker::on_lane(*domain.pool->lane);
+   if (supplied(value)) {
+-    if (local) merge_hint(hint(use), value);
++    if (local) merge_hint(use, value);
+     else {
+       std::lock_guard lock(domain.mutex);
+-      merge_hint(foreign_hint(use), value);
++      merge_hint(use, value, true);
+       use.foreign_hint_pending.store(true, std::memory_order_release);
+     }
+   }
+@@ -161,7 +176,7 @@ void drop(Storage& use, ReleaseHint value) noexcept {
+     if (use.foreign_hint_pending.exchange(false, std::memory_order_acq_rel)) {
+       // Final user retirement observes every preceding foreign hint write.
+       // Other identities may publish concurrently, but cannot touch this hint.
+-      merge_hint(hint(use), foreign_hint(use)); foreign_hint(use) = {};
++      merge_hint(use, foreign_hint(use)); clear_foreign_hint(use);
+     }
+     recycle(use);
+   }
+@@ -442,12 +457,16 @@ Progress trim_cold(Pool& pool, std::uint64_t keep_bytes) {
+         continue;
+       }
+       const auto page = group->geometry->native_page();
++      assert(group->geometry->payload_pages() <= UINT16_MAX);
+       for (std::size_t p = 0; p < group->geometry->payload_pages() && idle > keep_bytes; ++p) {
+         if (!group->geometry->mapped(p) || (group->live[p / 64] & (std::uint64_t{1} << (p % 64)))) continue;
+         if (idle - page < keep_bytes) break;
+         if (!group->trimming.empty() && group->trimming.back().first + group->trimming.back().count == p)
+           ++group->trimming.back().count;
+-        else { group->trimming.push_back({p, 1}); group->discarded.push_back(false); }
++        else {
++          group->trimming.push_back({static_cast<std::uint16_t>(p), 1});
++          group->discarded.push_back(false);
++        }
+         idle -= page;
+       }
+       if (!group->trimming.empty()) {
+diff --git a/orbital/src/allocation/finite.cpp b/orbital/src/allocation/finite.cpp
+index 6e8380b..0f9315a 100644
+--- a/orbital/src/allocation/finite.cpp
++++ b/orbital/src/allocation/finite.cpp
+@@ -74,42 +74,46 @@ Result<std::unique_ptr<FiniteGroup>> FiniteGroup::create(FiniteConfig config) no
+     offset += group->identities_ * group->capacities_[cls];
+   }
+   const auto payload_bytes = round_up(offset, group->native_page_);
+-  const auto binding_bytes = round_up(group->identities_, group->native_page_);
+   group->payload_pages_ = payload_bytes / group->native_page_;
+-  group->reserved_bytes_ = binding_bytes + payload_bytes;
++  // The cold trim inventory uses bounded coordinates. Wide validation and
++  // preparation spans remain unchanged; unsupported geometry never truncates.
++  if (group->payload_pages_ > std::numeric_limits<std::uint16_t>::max())
++    return std::unexpected(Error::unavailable);
++  group->reserved_bytes_ = payload_bytes;
++  const auto grids_offset = round_up(group->identities_, alignof(Grid));
+   const auto grids_bytes = group->grid_count_ * sizeof(Grid);
+-  const auto scratch_offset = round_up(grids_bytes + group->payload_pages_ * sizeof(Page),
++  const auto scratch_offset = round_up(grids_offset + grids_bytes + group->payload_pages_ * sizeof(Page),
+                                       alignof(std::uint64_t));
+   group->metadata_bytes_ = round_up(scratch_offset + group->live_words() * sizeof(std::uint64_t),
+                                    group->native_page_);
+-  group->control_bytes_ = binding_bytes + group->metadata_bytes_;
++  group->control_bytes_ = group->metadata_bytes_;
+   return group;
+ }
+ 
+ Result<void> FiniteGroup::prepare() noexcept {
+   if (reservation_ || metadata_) return std::unexpected(Error::conflict);
+-  const auto binding_bytes = round_up(identities_, native_page_);
++  const auto grids_offset = round_up(identities_, alignof(Grid));
+   const auto grids_bytes = grid_count_ * sizeof(Grid);
+-  const auto scratch_offset = round_up(grids_bytes + payload_pages_ * sizeof(Page),
++  const auto scratch_offset = round_up(grids_offset + grids_bytes + payload_pages_ * sizeof(Page),
+                                       alignof(std::uint64_t));
+   auto* reservation = ::mmap(nullptr, reserved_bytes_, PROT_NONE,
+                               MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
+   if (reservation == MAP_FAILED)
+     return std::unexpected(Error::io);
+   reservation_ = static_cast<std::byte*>(reservation);
+-  payload_ = reservation_ + binding_bytes;
+-  if (::mprotect(reservation, binding_bytes, PROT_READ | PROT_WRITE) != 0)
+-    return std::unexpected(Error::io);
++  payload_ = reservation_;
++  // Bindings and owner control share one rounded mapping. Their accessors stay
++  // distinct; no binding address or payload offset is inferred from the other.
+   auto* metadata = ::mmap(nullptr, metadata_bytes_, PROT_READ | PROT_WRITE,
+                           MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+   if (metadata == MAP_FAILED)
+     return std::unexpected(Error::io);
+   metadata_ = metadata;
+-  bindings_ = ::new (reservation) std::uint8_t[binding_bytes];
+-  std::memset(bindings_, unbound, binding_bytes);
+   std::memset(metadata, 0, metadata_bytes_);
+-  grids_ = ::new (metadata) Grid[grid_count_]{};
+-  pages_ = ::new (static_cast<std::byte*>(metadata) + grids_bytes) Page[payload_pages_]{};
++  bindings_ = ::new (metadata) std::uint8_t[identities_];
++  std::memset(bindings_, unbound, identities_);
++  grids_ = ::new (static_cast<std::byte*>(metadata) + grids_offset) Grid[grid_count_]{};
++  pages_ = ::new (static_cast<std::byte*>(metadata) + grids_offset + grids_bytes) Page[payload_pages_]{};
+   trim_scratch_ = ::new (static_cast<std::byte*>(metadata) + scratch_offset)
+       std::uint64_t[live_words()]{};
+   available_identity_grids_ = grid_count_ == 64
+@@ -129,7 +133,6 @@ Result<void> FiniteGroup::retire() noexcept {
+     } else {
+       reservation_ = nullptr;
+       payload_ = nullptr;
+-      bindings_ = nullptr;
+     }
+   }
+   if (metadata_) {
+@@ -137,6 +140,7 @@ Result<void> FiniteGroup::retire() noexcept {
+       failed = true;
+     } else {
+       metadata_ = nullptr;
++      bindings_ = nullptr;
+       grids_ = nullptr;
+       pages_ = nullptr;
+       trim_scratch_ = nullptr;
+@@ -456,11 +460,20 @@ Result<void> FiniteGroup::begin_trim(PageSpan span) noexcept {
+ }
+ 
+ Result<void> FiniteGroup::begin_trim(std::span<const PageSpan> spans) noexcept {
++  return begin_trim_spans(spans);
++}
++
++Result<void> FiniteGroup::begin_trim(std::span<const TrimSpan> spans) noexcept {
++  return begin_trim_spans(spans);
++}
++
++template<class Span>
++Result<void> FiniteGroup::begin_trim_spans(std::span<const Span> spans) noexcept {
+   const auto live = std::span(trim_scratch_, live_words());
+   const auto counted = live_pages(live);
+   assert(counted);
+   for (auto span : spans) {
+-    if (!valid(span)) return std::unexpected(Error::invalid_argument);
++    if (!valid(PageSpan{span.first, span.count})) return std::unexpected(Error::invalid_argument);
+     for (auto page = span.first; page < span.first + span.count; ++page)
+       if (pages_[page] != Page::mapped || (live[page / 64] & (std::uint64_t{1} << (page % 64))))
+         return std::unexpected(Error::conflict);
+diff --git a/orbital/src/allocation/finite.h b/orbital/src/allocation/finite.h
+index 5e3fbf8..d3514ce 100644
+--- a/orbital/src/allocation/finite.h
++++ b/orbital/src/allocation/finite.h
+@@ -31,6 +31,13 @@ struct PageSpan {
+   std::size_t first{}, count{};
+ };
+ 
++// Cold trim inventory only. Geometry admits at most UINT16_MAX payload pages;
++// wider preparation and caller spans keep their original validation boundary.
++struct TrimSpan {
++  std::uint16_t first{}, count{};
++};
++static_assert(sizeof(TrimSpan) == 4);
++
+ struct Home {
+   std::uint16_t grid{};
+   std::uint8_t cls{}, slot{};
+@@ -117,6 +124,7 @@ public:
+   [[nodiscard]] Result<void> mark_mapped(PageSpan) noexcept;
+   [[nodiscard]] Result<void> begin_trim(PageSpan) noexcept;
+   [[nodiscard]] Result<void> begin_trim(std::span<const PageSpan>) noexcept;
++  [[nodiscard]] Result<void> begin_trim(std::span<const TrimSpan>) noexcept;
+   [[nodiscard]] Result<void> finish_trim(PageSpan, bool discarded) noexcept;
+   [[nodiscard]] std::size_t live_words() const noexcept { return (payload_pages_ + 63) / 64; }
+ 
+@@ -135,6 +143,8 @@ private:
+   [[nodiscard]] bool occupied(const Home&) const noexcept;
+   [[nodiscard]] bool bound(const Home&) const noexcept;
+   [[nodiscard]] bool valid(PageSpan) const noexcept;
++  template<class Span>
++  [[nodiscard]] Result<void> begin_trim_spans(std::span<const Span>) noexcept;
+   [[nodiscard]] Result<std::size_t> preparation_spans(
+       const Home&, std::span<const PageSpan>) const noexcept;
+   [[nodiscard]] Home home(std::size_t grid, unsigned cls, unsigned slot) const noexcept;
+diff --git a/orbital/src/allocation/group.cpp b/orbital/src/allocation/group.cpp
+index 6a1633e..b3072a0 100644
+--- a/orbital/src/allocation/group.cpp
++++ b/orbital/src/allocation/group.cpp
+@@ -51,7 +51,7 @@ void group_trim_handle(worker::Message& message, worker::Lane&) noexcept {
+       pool.internal->trim_failed = true;
+       group.trimming[failed++] = span;
+     } else {
+-      verify(group.geometry->finish_trim(span, true));
++      verify(group.geometry->finish_trim({span.first, span.count}, true));
+       amount += group.geometry->native_page() * span.count;
+       pool.internal->counts.trim_pages += span.count;
+     }
+@@ -94,7 +94,7 @@ Result<Group*> make_group(Pool& pool, Palette palette, bool deferred = false) {
+     // Account concrete prepared bookkeeping, separately from sparse VA/RSS.
+     group->metadata_charge = group->geometry->control_bytes() + sizeof(FiniteGroup) + sizeof(Group) +
+         group->live.capacity() * sizeof(std::uint64_t) +
+-        group->trimming.capacity() * sizeof(PageSpan) +
++        group->trimming.capacity() * sizeof(TrimSpan) +
+         (group->discarded.capacity() + 7) / 8;
+     if (!claim(pool, group->metadata_charge)) return std::unexpected(Error::capacity);
+     initialize(group->domain, pool, group.get(), true);
+diff --git a/orbital/src/allocation/internal.h b/orbital/src/allocation/internal.h
+index 09bab3d..9ffbd98 100644
+--- a/orbital/src/allocation/internal.h
++++ b/orbital/src/allocation/internal.h
+@@ -30,6 +30,35 @@ namespace detail {
+ constexpr std::uint32_t returning = std::uint32_t{1} << 31;
+ constexpr std::uint16_t group_identities = 256;
+ 
++// Separate owner/foreign planes retain full timestamps without the padding in
++// an array of optional<Temperature>. Zero temperature means no advice.
++struct HintPlane {
++  std::array<std::chrono::steady_clock::time_point, group_identities> last_access{};
++  std::array<std::uint8_t, group_identities> temperatures{};
++
++  ReleaseHint load(std::uint16_t identity) const noexcept {
++    ReleaseHint result;
++    result.last_access = last_access[identity];
++    if (temperatures[identity]) result.temperature = static_cast<Temperature>(temperatures[identity] - 1);
++    return result;
++  }
++
++  void merge(std::uint16_t identity, const ReleaseHint& incoming) noexcept {
++    if (incoming.last_access != std::chrono::steady_clock::time_point{} &&
++        incoming.last_access < last_access[identity]) return;
++    if (incoming.temperature) temperatures[identity] = static_cast<std::uint8_t>(*incoming.temperature) + 1;
++    if (incoming.last_access != std::chrono::steady_clock::time_point{}) last_access[identity] = incoming.last_access;
++  }
++
++  void clear(std::uint16_t identity) noexcept {
++    last_access[identity] = {};
++    temperatures[identity] = 0;
++  }
++};
++
++static_assert(sizeof(std::chrono::steady_clock::time_point) == 8);
++static_assert(sizeof(HintPlane) == 9 * group_identities);
++
+ struct Job {
+   Job* next{};
+   void* context{};
+@@ -53,10 +82,10 @@ struct Group {
+   Group** previous_available{};
+   std::unique_ptr<FiniteGroup> geometry;
+   std::array<Storage, group_identities> uses{};
+-  std::array<ReleaseHint, group_identities> hints{}, foreign_hints{};
++  HintPlane hints, foreign_hints;
+   std::vector<std::uint64_t> live;
+   std::array<std::uint64_t, (group_identities + 63) / 64> returned{};
+-  std::vector<PageSpan> trimming;
++  std::vector<TrimSpan> trimming;
+   std::vector<bool> discarded;
+   std::uint64_t metadata_charge{};
+   Job job;
+diff --git a/orbital/test/finite.cpp b/orbital/test/finite.cpp
+index e9c2ce7..d7e171e 100644
+--- a/orbital/test/finite.cpp
++++ b/orbital/test/finite.cpp
+@@ -74,8 +74,8 @@ void geometry(Palette palette, std::uint16_t width) {
+   check(group->native_page() == static_cast<std::size_t>(::sysconf(_SC_PAGESIZE)),
+         "uses native page granule");
+   check(group->control_bytes() % group->native_page() == 0, "control charge page rounded");
+-  check(group->reserved_bytes() == group->native_page() + group->payload_pages() * group->native_page(),
+-        "reservation has one dense control plane and payload aperture");
++  check(group->reserved_bytes() == group->payload_pages() * group->native_page(),
++        "payload reservation excludes separately charged control mapping");
+   const auto& capacities = palette == Palette::a ? capacities_a : capacities_b;
+   std::vector<Identity> identities;
+   for (unsigned index = 0; index < width; ++index) {
+@@ -351,6 +351,80 @@ void prepared_home_selection() {
+   okay(group->release_home(selected), "release restored home");
+   okay(group->release_identity(identity), "release selection identity");
+ }
++
++void compact_trim_inventory() {
++  for (const auto palette : {Palette::a, Palette::b}) {
++    for (const auto width : {64, 256, 1024}) {
++      auto group = take(FiniteGroup::create({palette, static_cast<std::uint16_t>(width)}),
++                        "create compact trim geometry");
++      okay(group->prepare(), "prepare compact trim geometry");
++      check(group->payload_pages() <= std::numeric_limits<std::uint16_t>::max(),
++            "every supported geometry fits compact trim coordinates");
++      const auto page = group->native_page();
++      check(::mprotect(group->page_address(0), 3 * page, PROT_READ | PROT_WRITE) == 0,
++            "prepare three actual idle pages");
++      okay(group->mark_mapped({0, 3}), "publish compact trim pages");
++      group->page_address(0)[0] = std::byte{0x71};
++      group->page_address(2)[page - 1] = std::byte{0x93};
++      const auto unchanged = [&] {
++        check(group->mapped_pages() == 3, "rejected trim keeps all mapped charge");
++        for (std::size_t p = 0; p < 3; ++p)
++          check(group->mapped(p) && !group->trimming(p),
++                "invalid middle range partially quarantined the trim list");
++      };
++
++      const std::array<TrimSpan, 3> bad{{
++          {0, 1}, {static_cast<std::uint16_t>(group->payload_pages()), 1}, {2, 1}}};
++      check(!group->begin_trim(bad), "compact out-of-range middle span refuses");
++      unchanged();
++      const std::array<TrimSpan, 3> empty{{{0, 1}, {1, 0}, {2, 1}}};
++      check(!group->begin_trim(empty), "compact empty middle span refuses");
++      unchanged();
++      const std::array<TrimSpan, 3> compact_overflow{{
++          {0, 1}, {1, std::numeric_limits<std::uint16_t>::max()}, {2, 1}}};
++      check(!group->begin_trim(compact_overflow), "maximum compact count cannot overrun geometry");
++      unchanged();
++      const std::array<PageSpan, 3> overflow{{
++          {0, 1}, {1, std::numeric_limits<std::size_t>::max()}, {2, 1}}};
++      check(!group->begin_trim(overflow), "wide overflow count is not narrowed to a legal range");
++      unchanged();
++      const std::array<PageSpan, 3> wrapped_first{{{0, 1}, {65536, 1}, {2, 1}}};
++      check(!group->begin_trim(wrapped_first), "wide first page is not truncated to zero");
++      unchanged();
++
++      const std::array<TrimSpan, 3> valid{{{0, 1}, {1, 1}, {2, 1}}};
++      okay(group->begin_trim(valid), "reserve complete compact trim list");
++      for (std::size_t p = 0; p < 3; ++p)
++        check(group->trimming(p), "valid compact list quarantines every range");
++      okay(group->finish_trim({0, 1}, false), "failed first discard restores mapping");
++      check(::madvise(group->page_address(1), page, MADV_DONTNEED) == 0 &&
++          ::mprotect(group->page_address(1), page, PROT_NONE) == 0,
++          "discard actual middle page");
++      okay(group->finish_trim({1, 1}, true), "successful middle discard refunds only its range");
++      okay(group->finish_trim({2, 1}, false), "failed last discard restores mapping");
++      check(group->mapped_pages() == 2 && !group->mapped(1) &&
++          group->page_address(0)[0] == std::byte{0x71} &&
++          group->page_address(2)[page - 1] == std::byte{0x93},
++          "independent completions lost mapping charge or surviving bytes");
++
++      const auto last = group->payload_pages() - 1;
++      check(::mprotect(group->page_address(last), page, PROT_READ | PROT_WRITE) == 0,
++            "prepare last legal payload page");
++      okay(group->mark_mapped({last, 1}), "publish last legal payload page");
++      group->page_address(last)[page - 1] = std::byte{0xb5};
++      const std::array<TrimSpan, 1> beyond{{{static_cast<std::uint16_t>(last), 2}}};
++      check(!group->begin_trim(beyond) && !group->trimming(last),
++            "compact last-page range cannot cross payload boundary");
++      const std::array<TrimSpan, 1> endpoint{{{static_cast<std::uint16_t>(last), 1}}};
++      okay(group->begin_trim(endpoint), "compact last legal page is representable");
++      check(group->trimming(last), "compact endpoint is quarantined");
++      okay(group->finish_trim({last, 1}, false), "restore compact endpoint after discard refusal");
++      check(group->mapped_pages() == 3 && group->mapped(last) &&
++          group->page_address(last)[page - 1] == std::byte{0xb5},
++          "maximum geometry endpoint preserves bytes and charge");
++    }
++  }
++}
+ } // namespace
+ 
+ int main() {
+@@ -362,5 +436,6 @@ int main() {
+   grid_selection();
+   alignment_and_validation();
+   prepared_home_selection();
++  compact_trim_inventory();
+   std::puts("finite: six native geometries, retained homes, binding, page unions and trim races passed");
+ }
+diff --git a/orbital/test/preparation.cpp b/orbital/test/preparation.cpp
+index b4c08c0..e650992 100644
+--- a/orbital/test/preparation.cpp
++++ b/orbital/test/preparation.cpp
+@@ -24,6 +24,7 @@ thread_local bool owner_thread{};
+ std::atomic<bool> gate{}, inside{}, proceed{}, fail_map{}, fail_protect{}, fail_unmap{};
+ std::atomic<unsigned> helper_maps{}, owner_maps{}, helper_protects{}, owner_protects{};
+ std::atomic<unsigned> helper_constructions{}, cleanup_failures{}, cleanup_skip{};
++std::atomic<unsigned> fail_map_after{};
+ 
+ void check(bool yes, const char* text, std::source_location loc = std::source_location::current()) {
+   if (!yes) { std::fprintf(stderr,"%s:%u: %s\n",loc.file_name(),loc.line(),text); std::abort(); }
+@@ -555,7 +556,9 @@ void finite_fresh_bounded_start_cancel_close(){
+ void finite_control_vm_failures_own_partial_backing(){
+   for(bool partial:{false,true}){
+     Fixture f;alloc::Preparation failed;
+-    if(partial)fail_protect=true;else fail_map=true;
++    // The second control-stage mmap fails after the payload reservation exists.
++    // Bindings share the owner-control mapping; no control mprotect is needed.
++    if(partial)fail_map_after=2;else fail_map=true;
+     done(alloc::prepare(*f.pool,failed,small_request(),f.preparer.lane));f.settle(failed);
+     const auto inventory=alloc::statistics(*f.pool);const auto charged=f.arena->charged_bytes.load();
+     check(failed.state==alloc::Preparation::State::failed && failed.error==Error::io && !failed.backend &&
+@@ -569,7 +572,7 @@ void finite_control_vm_failures_own_partial_backing(){
+     const auto result=alloc::take(failed);check(!result && result.error()==Error::io,
+           "terminal failed finite frame consulted replaced Pool");
+   }
+-  std::puts("{\"case\":\"finite-control-mmap-partial-protect-retire-failure-ownership\",\"passed\":true}");
++  std::puts("{\"case\":\"finite-control-second-map-retire-failure-ownership\",\"passed\":true}");
+ }
+ 
+ void finite_delivered_owner_operations(){
+@@ -722,6 +725,12 @@ void* __wrap_mmap(void* a,std::size_t n,int p,int f,int fd,off_t o){
+     while(!proceed.load(std::memory_order_acquire))std::this_thread::yield();
+   }
+   if(!owner_thread && fail_map.exchange(false)){errno=ENOMEM;return MAP_FAILED;}
++  if(!owner_thread){
++    auto remaining=fail_map_after.load(std::memory_order_relaxed);
++    while(remaining && !fail_map_after.compare_exchange_weak(remaining,remaining-1,
++        std::memory_order_relaxed)){}
++    if(remaining==1){errno=ENOMEM;return MAP_FAILED;}
++  }
+   return __real_mmap(a,n,p,f,fd,o);
+ }
+ 

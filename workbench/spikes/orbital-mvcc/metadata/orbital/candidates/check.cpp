@@ -367,6 +367,58 @@ template<class Store> void abort_callback() {
   check(metadata.live == 0);
 }
 
+// A's private backing is disposed before the outer batch unpins B. Its
+// callback must not accept another batch that mistakes B's pin for its own.
+template<class Store> void two_change_abort_callback() {
+  for (bool explicit_abort : {false, true}) {
+    Memory metadata;
+    {
+      Store store(metadata);
+      {
+        std::array<Change, 1> initial{{{B, encode(store, B, 1, 100, 200)}}};
+        publish(store, initial);
+      }
+      std::array<Change, 1> deleted{{{B, {}}}}; publish(store, deleted);
+      typename Store::Scope basis(store);
+      std::optional<typename Store::Prepared> accepted, nested;
+      std::size_t called = 0;
+      {
+        auto backing = std::shared_ptr<const std::uint64_t>(new std::uint64_t(30), [&](const auto* word) {
+          delete word; ++called;
+          check(store.drain() > 0); // B stays pinned while obsolete B's body can go.
+          check(store.statistics().objects == 1 && store.statistics().versions == 1);
+          std::array<Change, 1> change{{{B, encode(store, B, 3, 300, 400)}}};
+          auto prepared = store.prepare(basis, change);
+          if (prepared) nested.emplace(std::move(*prepared));
+          check(!prepared && prepared.error() == Error::unavailable);
+          if (explicit_abort) accepted->abort(); // Terminal before owner callbacks.
+        });
+        cd::RepresentationSpec spec{.object = A, .version = 3, .replica = {}, .format = {},
+            .logical_metadata = logical, .interpretation = {}, .dependencies = {}};
+        std::array<cd::PartSource, 1> part{{{.id = {0, 0}, .body = std::as_bytes(std::span(backing.get(), 1)),
+            .interpretation = {}, .readable_padding = 0, .alignment = alignof(std::uint64_t), .backing = backing}}};
+        auto descriptor = store.capture(spec, part); check(descriptor);
+        std::array<Change, 2> changes{{{A, std::move(*descriptor)}, {B, encode(store, B, 3, 300, 400)}}};
+        auto prepared = store.prepare(basis, changes); check(prepared);
+        accepted.emplace(std::move(*prepared));
+      }
+      if (explicit_abort) {
+        accepted->abort(); check(accepted->disposition() == Disposition::aborted);
+        accepted->abort();
+        auto installed = store.install(*accepted);
+        check(!installed && installed.error() == Error::rejected);
+      } else accepted.reset();
+      check(called == 1 && !nested && !basis.bind(A) && !basis.bind(B));
+      // Disposal finishes the exclusion. A later batch can reuse B normally.
+      std::array<Change, 1> change{{{B, encode(store, B, 3, 300, 400)}}};
+      auto retry = store.prepare(basis, change); check(retry);
+      check(store.install(*retry)); pair(store.borrow().bind(B), 300, 400);
+      check(!basis.bind(B));
+    }
+    check(metadata.live == 0);
+  }
+}
+
 // Removing the first debt creates a hole. A later owner callback accepts private
 // work, which compacts the compact-directory debt vector without publication.
 // The interrupted sweep must replan instead of skipping the last live debt.
@@ -420,8 +472,8 @@ template<class Store> void run(const char* name) {
   coherent_history<Store>(); teardown_and_authority<Store>(); tombstones<Store>();
   refusal<Store>(); private_failure_and_empty<Store>(); private_reads<Store>(); callbacks<Store>();
   conversion_authority<Store>(); abort_callback<Store>();
-  debt_compaction_callback<Store>();
-  std::cout << name << ": ten grouped histories passed\n";
+  two_change_abort_callback<Store>(); debt_compaction_callback<Store>();
+  std::cout << name << ": eleven grouped histories passed\n";
 }
 
 int main() {
@@ -435,4 +487,6 @@ int main() {
   run<Store<Slab<Version32>, compact_retention::DistinctRetention, DescriptorPhysical, CompactObjects>>("compact-v32-distinct");
   run<Store<Slab<Version16>, compact_retention::DistinctRetention, DescriptorPhysical, CompactObjects>>("compact-v16-distinct");
   run<Store<Chunks8, compact_retention::DistinctRetention, DescriptorPhysical, CompactObjects>>("compact-v8-distinct");
+  run<Store<Slab<Version16>, compact_retention::FloorRetention, DescriptorPhysical, TipObjects>>("inline-v16-floor");
+  run<Store<Slab<Version16>, compact_retention::DistinctRetention, DescriptorPhysical, TipObjects>>("inline-v16-distinct");
 }

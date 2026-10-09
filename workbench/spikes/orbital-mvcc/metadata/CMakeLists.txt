@@ -31,6 +31,11 @@ target_link_libraries(orbital_mvcc_shape_store_check
   PRIVATE orbital_mvcc_shape orbital_mvcc_descriptor orbital_mvcc_directory)
 add_test(NAME orbital_mvcc_shape_store_check COMMAND orbital_mvcc_shape_store_check)
 
+add_library(orbital_mvcc_candidates_abi OBJECT orbital/candidates/abi_probe.cpp)
+sixdb_target(orbital_mvcc_candidates_abi)
+target_link_libraries(orbital_mvcc_candidates_abi
+  PRIVATE orbital_mvcc_shape orbital_mvcc_descriptor orbital_mvcc_directory)
+
 # Accounting is separately runnable while its captured evidence is qualified.
 add_executable(orbital_mvcc_shape_backing orbital/shape_backing.cpp)
 sixdb_target(orbital_mvcc_shape_backing)
@@ -75,5 +80,5 @@ add_custom_target(orbital_mvcc_metadata_validate
   COMMAND "${CMAKE_CTEST_COMMAND}" --test-dir "${PROJECT_BINARY_DIR}"
     --output-on-failure --no-tests=error -L "^orbital-mvcc-metadata$"
   DEPENDS ${metadata_checks} orbital_mvcc_descriptor_check orbital_mvcc_descriptor_abi
-    orbital_mvcc_shape_check orbital_mvcc_shape_abi
+    orbital_mvcc_shape_check orbital_mvcc_shape_abi orbital_mvcc_candidates_abi
   USES_TERMINAL VERBATIM)

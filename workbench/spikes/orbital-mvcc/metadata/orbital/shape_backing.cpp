@@ -302,6 +302,7 @@ int main() {
             run<ch::ShapeStore32>("shape32-hash", format, grouped, objects, basis_held, native);
             run<ch::ShapeStore16>("shape16-hash", format, grouped, objects, basis_held, native);
             run<ch::CompactShapeStore16>("shape16-directory", format, grouped, objects, basis_held, native);
+            run<ch::InlineShapeStore16>("shape16-inline", format, grouped, objects, basis_held, native);
           }
       }
 }

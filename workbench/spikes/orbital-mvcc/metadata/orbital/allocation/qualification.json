@@ -1,0 +1,63 @@
+{
+  "status": "qualified control, not promoted",
+  "base_commit": "9f9e1c09ddf28dc7b54967ccfba2c01cb0b6bc6d",
+  "patch_sha256": "81159aae77a65a3289bb50fbd52d76e8aa15ebf4d5997c5d2352623da8925087",
+  "source_files_sha256": {
+    "loom/CMakeLists.txt": "6e14ca0d94fc4c31965d4e5acf22f1fd2d5c226e7293c141979b3889c538752a",
+    "orbital/CMakeLists.txt": "70b9a0d3c0b763acdacd9c1275c136462cd865d0c26563d7c0e93e83fa5269f4",
+    "orbital/src/allocation/allocation.cpp": "1b824d76bae9ad8dd4599c1cf30b050fed32853ce6c61627c05b444b82b5aab5",
+    "orbital/src/allocation/finite.cpp": "2c1c8f88e4733213926f81ab2b580c61892c80105a0a5464505421b3e046c432",
+    "orbital/src/allocation/finite.h": "fc479f5419b2f74f84ecd492fb0ceb9fc05cc9ee638dd2eaa0d44bdbb7ed03bb",
+    "orbital/src/allocation/group.cpp": "6cac5194f3215f4c01dfcf2ed4172f5be3b1301660bb43cd4f6298a9b6888cfa",
+    "orbital/src/allocation/internal.h": "a406cb1574122b34e3872f0b3d2d0731c903d18cee6daf426fbef573bd025ab8",
+    "orbital/test/finite.cpp": "79c35aaeda988e8547cb8b50b19bceeef439af287c9fb34e4112fc8d3b8194c7",
+    "orbital/test/preparation.cpp": "1a6653bd63240e14036e71504660cf8d7e883b1c4dd5aa18129d97e4337ea89f"
+  },
+  "platform": "Linux AArch64 / OrbStack; Clang 21.1.8 C++23; native page 4096 B",
+  "qualification": {
+    "checks": {
+      "orbital": 11,
+      "loom": 12
+    },
+    "encoded_collection": "1/64 Objects; Tuple1/Series4; independent/grouped shared/native owners; two writer Scope lifetimes; eight publications; retained late discovery and narrow export"
+  },
+  "runs": [
+    {
+      "profile": "native",
+      "run": "build/orbital-mvcc-metadata/shape-accounting/20261009T212443581205Z",
+      "source_digest": "350805c9b0e1a18edcec1970f10cae5cc215487a491710fd0c5ad86316321804",
+      "outputs": {
+        "backing.jsonl": "e37167064bcde0b97b5af4cb66d5dacb6dba3f9975f79362451013b77fd0dea7",
+        "runtime-validation.stdout": "82d12f5f2e53530b8293660d6a1ce04ed088d7ab5f1139fc0548b88689118b45",
+        "runner.py": "5677fecaa85e6ebc2773e4126695b9f893baebc4bc8a49120d072394d44b9af4"
+      },
+      "all_required_steps_pass": true
+    },
+    {
+      "profile": "asan-ubsan-lsan",
+      "run": "build/orbital-mvcc-metadata/shape-accounting/20261009T212539902843Z",
+      "source_digest": "350805c9b0e1a18edcec1970f10cae5cc215487a491710fd0c5ad86316321804",
+      "outputs": {
+        "backing.jsonl": "e37167064bcde0b97b5af4cb66d5dacb6dba3f9975f79362451013b77fd0dea7",
+        "runtime-validation.stdout": "a025a356731173d55737dce3412c95f1c24f4890e0cd27150ea9d2c30b90063d",
+        "runner.py": "5677fecaa85e6ebc2773e4126695b9f893baebc4bc8a49120d072394d44b9af4"
+      },
+      "all_required_steps_pass": true
+    }
+  ],
+  "group_requested_metadata_bytes": {
+    "palette_A": {
+      "baseline": 30616,
+      "candidate": 19120
+    },
+    "palette_B": {
+      "baseline": 34392,
+      "candidate": 20136
+    }
+  },
+  "limits": [
+    "Requested control capacity, not RSS or timing.",
+    "Arena/Pool setup, caller Lane and OS thread memory are additional.",
+    "SoA timestamps preserve prior semantics; newer heat-policy question remains open."
+  ]
+}

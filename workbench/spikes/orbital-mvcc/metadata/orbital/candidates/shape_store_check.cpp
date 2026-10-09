@@ -232,12 +232,41 @@ template<class Store> void accepted_private_and_alternatives() {
   check(!memory.live);
 }
 
+template<class Store> void accepted_while_older_history_retires() {
+  ch::Memory memory;
+  {
+    Store store(memory);
+    std::array<typename Store::Change, 1> changes{{{A, encode(store, memory, 201)}}};
+    publish(store, changes); changes = {};
+    std::optional<typename Store::Scope> first;
+    first.emplace(store);
+    changes = {{{A, encode(store, memory, 202)}}};
+    publish(store, changes); changes = {};
+    typename Store::Scope basis(store);
+    changes = {{{A, encode(store, memory, 203)}}};
+    auto prepared = take(store.prepare(basis, changes)); changes = {};
+    auto target = take(store.conversion(basis, A));
+    auto alternative = encode(store, memory, 202, false);
+    check(store.adopt(target, alternative)); alternative = {};
+    first.reset(); store.drain(); // The prepared old-tip link must not retain a stale slot.
+    check(store.statistics().versions == 1);
+    const auto calls = memory.calls;
+    check(store.install(prepared)); check(memory.calls == calls);
+    store.drain();
+    check(first_value(basis.bind(A)) == 202 && first_value(take(basis.bind_alternative(A))) == 202);
+    typename Store::Scope current(store);
+    check(first_value(current.bind(A)) == 203 && store.statistics().versions == 2);
+  }
+  check(!memory.live);
+}
+
 template<class Store> void run(const char* label) {
   repeated_physical_binding<Store>();
   overwrite_erase_recreate<Store>();
   exact_store_authority<Store>();
   accepted_private_and_alternatives<Store>();
-  std::printf("%s: four actual encoded ownership/binding histories passed\n", label);
+  accepted_while_older_history_retires<Store>();
+  std::printf("%s: five actual encoded ownership/binding histories passed\n", label);
 }
 
 int main() {
@@ -249,4 +278,5 @@ int main() {
   run<ch::CompactShapeStore32>("compact-shape32-distinct");
   run<ch::CompactShapeStore16>("compact-shape16-distinct");
   run<ch::CompactShapeStore8>("compact-shape8-distinct");
+  run<ch::InlineShapeStore16>("inline-shape16-distinct");
 }
