@@ -1,0 +1,476 @@
+{
+  "scope": "Whole dependent-chain composition; static diagnosis, no new execution or timing",
+  "first_measured_run": "20261009T201008Z-9400a6b9",
+  "first_selection": "workbench/spikes/orbital-mvcc/performance/evidence/zen5-direct-qualification-20261009",
+  "exact_disassembly": "build/orbital-mvcc-metadata/loom/chain-codegen/recovered-direct16/feedback/disassembly.txt",
+  "exact_disassembly_sha256": "32be28cd81d509748603a98e36334d6c0bdfaa03665349adcfc05dbc240b2cde",
+  "measured_binary_identity": {
+    "orbital_versioned_performance_bench": "a041b5e79e89160e44584abcc1dce3611c3deb3b2f41dc4d2a0d9654862705ba",
+    "orbital_versioned_performance_check": "7b121737c2fe6a7d3096efe33f98766ab434f8ab2d8e697cf707ad38e5bba724",
+    "orbital_versioned_lmdb_check": "4ff6df438f6e56a17207683b2e67670831b42338cb8bb1e346cf32fd0a5ee6d8",
+    "orbital_versioned_body_check": "b0055c475328bd66e63fc479b39ae5b0e4f0d0e5b6bc25fd34ac748c2612d518"
+  },
+  "timing_source": "workbench/spikes/orbital-mvcc/performance/evidence/zen5-direct-qualification-20261009/feedback/summary.csv",
+  "timing_source_sha256": "5651876a18da47adcd82b1c59cb3e676ad5619e6eaf8cbc9b5568bbe343844c8",
+  "measured_batch64_dependent16": {
+    "lmdb": {
+      "legacy_ns_per_request": 1134.403092938845,
+      "direct16_ns_per_request": 1213.7565073594626,
+      "relative_increase_percent": 6.995169081833197
+    },
+    "orbital": {
+      "legacy_ns_per_request": 1150.7180077476057,
+      "direct16_ns_per_request": 1230.4493630445688,
+      "relative_increase_percent": 6.928835280246259
+    }
+  },
+  "explicit_scratch_access_bytes": "256 + 32*N for N completed rows, not hardware/cache/DRAM traffic",
+  "exact_sites": {
+    "zero_256_bytes": [
+      "190f0",
+      "190f9",
+      "19102",
+      "1910b",
+      "19114",
+      "1911a",
+      "19120",
+      "19126"
+    ],
+    "ordinary_chain_call": "19148",
+    "decoder_record_stores": [
+      "19b94",
+      "19b98"
+    ],
+    "decoder_code_bytes": 375,
+    "direct_operation_code_bytes": 1895,
+    "baseline_operation_code_bytes": 1357,
+    "direct_operation_local_reserve_bytes": 392,
+    "baseline_operation_local_reserve_bytes": 424
+  },
+  "replica_receipt": "build/orbital-mvcc-metadata/loom/chain-codegen/replica-03/receipt.json",
+  "replica_receipt_sha256": "b1e093c9c9d66886f929b8352343ce4bb547bc178c36527b688fcb1c7d6e07c2",
+  "replica_recipe_sha256": "f6e71faba388372f4a2e5183199139f0520568db15de99c216aa2e6d9d8bf162",
+  "variants": {
+    "direct16": {
+      "job": "20261009T201008Z-9400a6b9",
+      "source_archive_sha256": "5ffe7650edba350c945cd72ab80fe7def5a2bdf60db4760d750602af2b930960",
+      "object_sha256": "d3d16efbad59577081f86485a204182fd2885975d33fff4645f7f8cb14b4e301",
+      "ir_sha256": "5a303d7ab393333fe6cc121a6a7fd5b3c887b87d4293b46e3f85cc5113d311a9",
+      "dependency_files": 532,
+      "selected_functions": [
+        {
+          "function": "orbital_versioned_performance::run_orbital_codec_reads(orbital_versioned_performance::Orbital&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+          "bytes": 6275,
+          "static_instruction_sites": 1281,
+          "static_call_sites": 94,
+          "static_stack_memory_sites": 287,
+          "local_reserve_instructions": [
+            {
+              "offset": "a",
+              "op": "subq",
+              "args": "$0x228, %rsp            # imm = 0x228",
+              "relocations": []
+            }
+          ]
+        },
+        {
+          "function": "orbital_versioned_performance::run_lmdb_codec_reads(orbital_versioned_performance::Lmdb&, orbital_versioned_performance::Corpus const&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+          "bytes": 4521,
+          "static_instruction_sites": 926,
+          "static_call_sites": 76,
+          "static_stack_memory_sites": 218,
+          "local_reserve_instructions": [
+            {
+              "offset": "a",
+              "op": "subq",
+              "args": "$0x1d8, %rsp            # imm = 0x1D8",
+              "relocations": []
+            }
+          ]
+        },
+        {
+          "function": "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_versioned_performance::FusedTuple16>(orbital_versioned_performance::FusedTuple16 const&, orbital_bench::Operation const&)",
+          "bytes": 1895,
+          "static_instruction_sites": 483,
+          "static_call_sites": 11,
+          "static_stack_memory_sites": 35,
+          "local_reserve_instructions": [
+            {
+              "offset": "7",
+              "op": "subq",
+              "args": "$0x188, %rsp            # imm = 0x188",
+              "relocations": []
+            }
+          ]
+        },
+        {
+          "function": "orbital_versioned_performance::FusedTuple16::chain(unsigned long, std::span<orbital_bench::Record, 18446744073709551615ul>) const",
+          "bytes": 375,
+          "static_instruction_sites": 92,
+          "static_call_sites": 0,
+          "static_stack_memory_sites": 12,
+          "local_reserve_instructions": []
+        },
+        {
+          "function": "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_bench::versioned::TupleBody>(orbital_bench::versioned::TupleBody const&, orbital_bench::Operation const&)",
+          "bytes": 1357,
+          "static_instruction_sites": 342,
+          "static_call_sites": 8,
+          "static_stack_memory_sites": 36,
+          "local_reserve_instructions": [
+            {
+              "offset": "a",
+              "op": "subq",
+              "args": "$0x1a8, %rsp            # imm = 0x1A8",
+              "relocations": []
+            }
+          ]
+        }
+      ],
+      "private_placement_control": null
+    },
+    "consume": {
+      "job": "20261009T201950Z-eaae80c6",
+      "source_archive_sha256": "a9c90bb0f885e0c704da9c7de76e0b4aaeefd6ecaac8199c26468dc720b5b0e8",
+      "object_sha256": "10776e24c19fd3eaf9026d1dff76338d4c595fddee9ea60d549e3326a5e03917",
+      "ir_sha256": "3c3a3165e8f1f0f2d7948ae3b0a8b232691cc6315bb0c7f547d407b9898809a0",
+      "dependency_files": 533,
+      "selected_functions": [
+        {
+          "function": "orbital_versioned_performance::run_orbital_consume_reads(orbital_versioned_performance::Orbital&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+          "bytes": 7720,
+          "static_instruction_sites": 1576,
+          "static_call_sites": 99,
+          "static_stack_memory_sites": 329,
+          "local_reserve_instructions": [
+            {
+              "offset": "a",
+              "op": "subq",
+              "args": "$0x268, %rsp            # imm = 0x268",
+              "relocations": []
+            }
+          ]
+        },
+        {
+          "function": "orbital_versioned_performance::run_lmdb_consume_reads(orbital_versioned_performance::Lmdb&, orbital_versioned_performance::Corpus const&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+          "bytes": 5955,
+          "static_instruction_sites": 1230,
+          "static_call_sites": 80,
+          "static_stack_memory_sites": 257,
+          "local_reserve_instructions": [
+            {
+              "offset": "a",
+              "op": "subq",
+              "args": "$0x228, %rsp            # imm = 0x228",
+              "relocations": []
+            }
+          ]
+        },
+        {
+          "function": "orbital_versioned_performance::run_orbital_codec_reads(orbital_versioned_performance::Orbital&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+          "bytes": 6275,
+          "static_instruction_sites": 1281,
+          "static_call_sites": 94,
+          "static_stack_memory_sites": 287,
+          "local_reserve_instructions": [
+            {
+              "offset": "a",
+              "op": "subq",
+              "args": "$0x228, %rsp            # imm = 0x228",
+              "relocations": []
+            }
+          ]
+        },
+        {
+          "function": "orbital_versioned_performance::run_lmdb_codec_reads(orbital_versioned_performance::Lmdb&, orbital_versioned_performance::Corpus const&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+          "bytes": 4521,
+          "static_instruction_sites": 926,
+          "static_call_sites": 76,
+          "static_stack_memory_sites": 218,
+          "local_reserve_instructions": [
+            {
+              "offset": "a",
+              "op": "subq",
+              "args": "$0x1d8, %rsp            # imm = 0x1D8",
+              "relocations": []
+            }
+          ]
+        },
+        {
+          "function": "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_versioned_performance::FusedTuple16>(orbital_versioned_performance::FusedTuple16 const&, orbital_bench::Operation const&)",
+          "bytes": 1895,
+          "static_instruction_sites": 483,
+          "static_call_sites": 11,
+          "static_stack_memory_sites": 35,
+          "local_reserve_instructions": [
+            {
+              "offset": "7",
+              "op": "subq",
+              "args": "$0x188, %rsp            # imm = 0x188",
+              "relocations": []
+            }
+          ]
+        },
+        {
+          "function": "orbital_versioned_performance::FusedTuple16::chain(unsigned long, std::span<orbital_bench::Record, 18446744073709551615ul>) const",
+          "bytes": 375,
+          "static_instruction_sites": 92,
+          "static_call_sites": 0,
+          "static_stack_memory_sites": 12,
+          "local_reserve_instructions": []
+        },
+        {
+          "function": "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_bench::versioned::TupleBody>(orbital_bench::versioned::TupleBody const&, orbital_bench::Operation const&)",
+          "bytes": 1357,
+          "static_instruction_sites": 342,
+          "static_call_sites": 8,
+          "static_stack_memory_sites": 36,
+          "local_reserve_instructions": [
+            {
+              "offset": "a",
+              "op": "subq",
+              "args": "$0x1a8, %rsp            # imm = 0x1A8",
+              "relocations": []
+            }
+          ]
+        }
+      ],
+      "private_placement_control": null
+    },
+    "local-output": {
+      "job": "20261009T201950Z-eaae80c6",
+      "source_archive_sha256": "a9c90bb0f885e0c704da9c7de76e0b4aaeefd6ecaac8199c26468dc720b5b0e8",
+      "object_sha256": "10ff3d72c586303b5026efd14e2ab67b6f1043b4e9facc7d1eadaac587b8332e",
+      "ir_sha256": "73110bef8db0700324f23320da8e2726530aa21bc1bb137fd25ea7a92be23aeb",
+      "dependency_files": 533,
+      "selected_functions": [
+        {
+          "function": "orbital_versioned_performance::run_orbital_consume_reads(orbital_versioned_performance::Orbital&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+          "bytes": 7848,
+          "static_instruction_sites": 1593,
+          "static_call_sites": 99,
+          "static_stack_memory_sites": 340,
+          "local_reserve_instructions": [
+            {
+              "offset": "a",
+              "op": "subq",
+              "args": "$0x278, %rsp            # imm = 0x278",
+              "relocations": []
+            }
+          ]
+        },
+        {
+          "function": "orbital_versioned_performance::run_lmdb_consume_reads(orbital_versioned_performance::Lmdb&, orbital_versioned_performance::Corpus const&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+          "bytes": 6129,
+          "static_instruction_sites": 1255,
+          "static_call_sites": 80,
+          "static_stack_memory_sites": 268,
+          "local_reserve_instructions": [
+            {
+              "offset": "a",
+              "op": "subq",
+              "args": "$0x238, %rsp            # imm = 0x238",
+              "relocations": []
+            }
+          ]
+        },
+        {
+          "function": "orbital_versioned_performance::run_orbital_codec_reads(orbital_versioned_performance::Orbital&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+          "bytes": 6275,
+          "static_instruction_sites": 1281,
+          "static_call_sites": 94,
+          "static_stack_memory_sites": 287,
+          "local_reserve_instructions": [
+            {
+              "offset": "a",
+              "op": "subq",
+              "args": "$0x228, %rsp            # imm = 0x228",
+              "relocations": []
+            }
+          ]
+        },
+        {
+          "function": "orbital_versioned_performance::run_lmdb_codec_reads(orbital_versioned_performance::Lmdb&, orbital_versioned_performance::Corpus const&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+          "bytes": 4521,
+          "static_instruction_sites": 926,
+          "static_call_sites": 76,
+          "static_stack_memory_sites": 218,
+          "local_reserve_instructions": [
+            {
+              "offset": "a",
+              "op": "subq",
+              "args": "$0x1d8, %rsp            # imm = 0x1D8",
+              "relocations": []
+            }
+          ]
+        },
+        {
+          "function": "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_versioned_performance::FusedTuple16>(orbital_versioned_performance::FusedTuple16 const&, orbital_bench::Operation const&)",
+          "bytes": 1895,
+          "static_instruction_sites": 483,
+          "static_call_sites": 11,
+          "static_stack_memory_sites": 35,
+          "local_reserve_instructions": [
+            {
+              "offset": "7",
+              "op": "subq",
+              "args": "$0x188, %rsp            # imm = 0x188",
+              "relocations": []
+            }
+          ]
+        },
+        {
+          "function": "orbital_versioned_performance::FusedTuple16::chain(unsigned long, std::span<orbital_bench::Record, 18446744073709551615ul>) const",
+          "bytes": 375,
+          "static_instruction_sites": 92,
+          "static_call_sites": 0,
+          "static_stack_memory_sites": 12,
+          "local_reserve_instructions": []
+        },
+        {
+          "function": "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_bench::versioned::TupleBody>(orbital_bench::versioned::TupleBody const&, orbital_bench::Operation const&)",
+          "bytes": 1357,
+          "static_instruction_sites": 342,
+          "static_call_sites": 8,
+          "static_stack_memory_sites": 36,
+          "local_reserve_instructions": [
+            {
+              "offset": "a",
+              "op": "subq",
+              "args": "$0x1a8, %rsp            # imm = 0x1A8",
+              "relocations": []
+            }
+          ]
+        }
+      ],
+      "private_placement_control": {
+        "changed_header": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/chain-codegen/replica-03/local-output-source/workbench/spikes/orbital-mvcc/metadata/consumer/operations.h",
+        "before_sha256": "0b0a500aa217ba9094a6938f5c0125fca2ead1205d10f0b3494a0d59369f8e16",
+        "after_sha256": "5a62ba2e7d4cb03d91431cab0ce88ba6a4b65e1929b838bbebe22a41c5179d67",
+        "change": "Accumulate an unescaped local Outcome and assign output once; search/decode/digest algorithm unchanged."
+      }
+    }
+  },
+  "exact_operation_replica_check": [
+    {
+      "function": "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_versioned_performance::FusedTuple16>(orbital_versioned_performance::FusedTuple16 const&, orbital_bench::Operation const&)",
+      "bytes": 1895,
+      "actual_sites": 483,
+      "replica_sites": 483,
+      "same_instruction_offsets_and_mnemonics": true,
+      "same_non_control_operands": false
+    },
+    {
+      "function": "orbital_versioned_performance::FusedTuple16::chain(unsigned long, std::span<orbital_bench::Record, 18446744073709551615ul>) const",
+      "bytes": 375,
+      "actual_sites": 92,
+      "replica_sites": 92,
+      "same_instruction_offsets_and_mnemonics": true,
+      "same_non_control_operands": true
+    },
+    {
+      "function": "orbital_bench::Outcome orbital_versioned_performance::read_operation<orbital_bench::versioned::TupleBody>(orbital_bench::versioned::TupleBody const&, orbital_bench::Operation const&)",
+      "bytes": 1357,
+      "actual_sites": 342,
+      "replica_sites": 342,
+      "same_instruction_offsets_and_mnemonics": true,
+      "same_non_control_operands": false
+    }
+  ],
+  "limits": [
+    "Stack-related sites include frame setup. Stack-memory sites exclude address-only LEA/NOP and include explicit push/pop, but not implicit call/return stack effects. They include spills, ABI save/restore and outgoing arguments; inspect the retained disassembly for meaning.",
+    "Actual captured run.cpp, not a reduced wrapper. Independent TUs; no LTO.",
+    "Local cross-header compiler replica, distinct from the exact measured executable.",
+    "No execution, PMU counters, instruction costs, latency or throughput measured.",
+    "Exact first and second measured executables were inspected; private local-Outcome control is compiler-only.",
+    "Replica outer code differs from exact executables; paired control uses matching cross headers and flags.",
+    "Private source changes only output placement and has no runtime/performance qualification.",
+    "Static opcode/operand order and access counts are not executed IPC, stalls or instruction cycles."
+  ],
+  "exact_scratch_free": {
+    "run": "20261009T201950Z-eaae80c6",
+    "disassembly": "build/orbital-mvcc-metadata/loom/chain-codegen/recovered-consume/feedback/disassembly.txt",
+    "disassembly_sha256": "66fc25ea3c1cfd339bcf0cb3d75f37ba6f2f782e4facda95ef5c1360a638e9d1",
+    "binary_identity": {
+      "orbital_versioned_performance_bench": "705be4eabb772907d3a1fbeeeb7cbbc5c41e380951d22c4aea020d12d301675e",
+      "orbital_versioned_performance_check": "ab93b97733046c0f6ef19e41ec5d43232c0ea924de2951bcd4106fe041e41cc7",
+      "orbital_versioned_lmdb_check": "0691c9a605181906049ce36b063c2c635f20052ba65d46ba6ebc531fb4f57254",
+      "orbital_versioned_body_check": "b6d3154d0c2f4eab7138c47dcba03245008045149cfe192bb003d0ea0bcb76fd"
+    },
+    "whole_callers": [
+      {
+        "function": "orbital_versioned_performance::run_orbital_consume_reads(orbital_versioned_performance::Orbital&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+        "bytes": 8998,
+        "local_reserve_instructions": [
+          "10ffa:      \tsubq\t$0x278, %rsp            # imm = 0x278"
+        ]
+      },
+      {
+        "function": "orbital_versioned_performance::run_lmdb_consume_reads(orbital_versioned_performance::Lmdb&, orbital_versioned_performance::Corpus const&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+        "bytes": 5971,
+        "local_reserve_instructions": [
+          "1332a:      \tsubq\t$0x228, %rsp            # imm = 0x228"
+        ]
+      },
+      {
+        "function": "orbital_versioned_performance::run_orbital_codec_reads(orbital_versioned_performance::Orbital&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+        "bytes": 7461,
+        "local_reserve_instructions": [
+          "14a8a:      \tsubq\t$0x268, %rsp            # imm = 0x268"
+        ]
+      },
+      {
+        "function": "orbital_versioned_performance::run_lmdb_codec_reads(orbital_versioned_performance::Lmdb&, orbital_versioned_performance::Corpus const&, bool, std::span<orbital_bench::Operation const, 18446744073709551615ul>, std::span<unsigned long const, 18446744073709551615ul>, std::span<orbital_bench::Outcome, 18446744073709551615ul>, unsigned long, unsigned long&)",
+        "bytes": 4553,
+        "local_reserve_instructions": [
+          "167ba:      \tsubq\t$0x1d8, %rsp            # imm = 0x1D8"
+        ]
+      }
+    ],
+    "lmdb_function_start": "13320",
+    "lmdb_relative_sites": {
+      "hoisted_control_stores_range": [
+        "433",
+        "488"
+      ],
+      "source_pointer_and_seven_control_loads_range": [
+        "4fc",
+        "5d4"
+      ],
+      "per_hop_digest_count_stores": [
+        "60b",
+        "610"
+      ],
+      "dependent_key_search_range": [
+        "4b8",
+        "4db"
+      ],
+      "final_key_reload_range": [
+        "514",
+        "524"
+      ],
+      "next_decode": "54a",
+      "loop_backedge": "618"
+    }
+  },
+  "private_local_output": {
+    "diff": "build/orbital-mvcc-metadata/loom/chain-codegen/replica-03/local-output.patch",
+    "diff_sha256": "172fda24e0e096087b851828243391887715fbc517eacefe933a25623fd22a33",
+    "change": "Accumulate an unescaped local Outcome and assign output once; search/decode/digest algorithm unchanged.",
+    "verified_whole_capture_files_except_operations": true,
+    "lmdb_first_loop_relative_range": [
+      "4e0",
+      "652"
+    ],
+    "per_hop_outcome_stores": 0,
+    "schema_mask_loads_in_hop_loop": 0,
+    "key_mask_register": true,
+    "next_value_tag_masks_in_stack_slots": true,
+    "lmdb_whole_local_reserve_change_bytes": 16,
+    "orbital_whole_local_reserve_change_bytes": 16,
+    "runtime_qualification": false,
+    "timing": false,
+    "lmdb_offset_shift_stack_slots_remain": 7,
+    "orbital_offset_shift_stack_slots_remain": 6
+  }
+}
