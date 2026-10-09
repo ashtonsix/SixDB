@@ -12,8 +12,15 @@ MappedShape::MappedShape(const Corpus& corpus) : corpus_(corpus) {
     compact_shape::release(shape_); shape_ = nullptr; need(admitted);
   }
   proof_ = *admitted;
+  const auto write_admitted = shape_write::TupleLaw::prepare(write_, shape_, corpus.schema.tuple,
+      std::span(corpus.schema.writers).subspan<1, 3>(), data::data_program, image.address.part);
+  if (!write_admitted) {
+    proof_.reset(); write_.reset(); compact_shape::release(shape_); shape_ = nullptr;
+    need(write_admitted);
+  }
 }
 MappedShape::~MappedShape() {
+  proof_.reset(); write_.reset();
   if (shape_) compact_shape::release(shape_);
   if (memory_.live) std::terminate();
 }
@@ -72,10 +79,12 @@ Interval run_lmdb_shape_reads(Lmdb& store, const Corpus& corpus, const MappedSha
   };
   return batch == 1 ? run.template operator()<1>() : run.template operator()<64>();
 }
-void lmdb_composed_update(Lmdb& store, const Corpus& corpus, std::span<const orbital_bench::Operation> input,
+void lmdb_composed_update(Lmdb& store, const MappedShape& mapped_shape, std::span<const orbital_bench::Operation> input,
     std::span<const std::size_t> objects, std::span<orbital_bench::Outcome> output,
     data::Costs& costs, write_batch::ProbeCosts& probe) {
   using namespace orbital_bench;
+  const auto& corpus = mapped_shape.corpus();
+  const auto write_proof = mapped_shape.write_proof();
   if (input.empty() || input.size() > 64 || input.size() != objects.size() || input.size() != output.size())
     throw std::invalid_argument("invalid composed LMDB publication batch");
   for (std::size_t i = 0; i < input.size(); ++i)
@@ -90,20 +99,21 @@ void lmdb_composed_update(Lmdb& store, const Corpus& corpus, std::span<const orb
     const auto& image = corpus.images[object];
     const auto bytes = basis->part(image.address);
     if (!bytes) throw std::runtime_error("missing composed LMDB update basis");
-    const auto source = corpus.bind(object, *bytes, image.shape.parts[0].interpretation);
     std::size_t used{};
     for (std::size_t i = 0; i < input.size(); ++i) if (objects[i] == object) {
-      auto row = source.get(input[i].key);
-      if (!row) throw std::runtime_error("absent composed LMDB fixed-row update");
-      row->value = input[i].record.value; row->tag = input[i].record.tag;
-      updates[used++] = {input[i].key, *row};
+      std::size_t position{};
+      Record record;
+      need(shape_write::lookup_mapped(write_proof, image.shape.records, *bytes,
+          input[i].key, position, record));
+      record.value = input[i].record.value; record.tag = input[i].record.tag;
+      updates[used++] = {input[i].key, record};
     }
     auto target = write.reserve_part(image.address, bytes->size());
     std::memcpy(target.data(), bytes->data(), bytes->size());
     costs.copied_bytes += bytes->size(); ++costs.copied_spans;
     costs.requested_body_bytes += bytes->size(); ++costs.requested_parts;
     const data::WritePart part{image.address.part, target};
-    need(write_batch::apply(corpus.schema, image.shape, std::span{&part, 1},
+    need(shape_write::apply(write_proof, image.shape.records, std::span{&part, 1},
         std::span(updates).first(used), costs.kernel, probe));
   }
   basis.reset(); write.publish();

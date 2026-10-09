@@ -99,7 +99,7 @@ list(APPEND metadata_checks orbital_mvcc_consumer_shape_write_check)
 add_library(orbital_mvcc_composed STATIC composed/material.cpp)
 sixdb_target(orbital_mvcc_composed)
 target_link_libraries(orbital_mvcc_composed PUBLIC
-  orbital_versioned_performance_runtime orbital_mvcc_write_batch
+  orbital_versioned_performance_runtime orbital_mvcc_shape_write
   orbital_mvcc_shape_read orbital_mvcc_directory)
 
 add_executable(orbital_mvcc_composed_check composed/check.cpp)

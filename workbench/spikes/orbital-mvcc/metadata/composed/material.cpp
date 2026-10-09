@@ -32,6 +32,7 @@ Material::Material(const p::Corpus& corpus, std::size_t total, std::size_t metad
   memory.limit = partition(total, metadata_bytes);
 }
 Material::~Material() {
+  tuple_read_.reset(); tuple_write_.reset(); columns_write_.reset();
   tuple_.reset(); columns_proof_.reset();
   // The owning Backend destroys its catalog before this resource/runtime.
   // Scopes and pending conversions may not outlive that enclosing Backend.
@@ -110,6 +111,19 @@ Result<cs::Shape*> Material::proof(const PrivateParts& parts) {
       auto admitted = sr::admit_tuple_shape(owner.get(), v::data_program, parts.shape->parts[0].id);
       if (!admitted) { owner.reset(); return std::unexpected(admitted.error()); }
       tuple_read_ = *admitted;
+      const auto write_admitted = sw::TupleLaw::prepare(tuple_write_, owner.get(),
+          corpus_.schema.tuple, std::span(corpus_.schema.writers).subspan<1, 3>(),
+          v::data_program, parts.shape->parts[0].id);
+      if (!write_admitted) {
+        tuple_read_.reset(); tuple_write_.reset(); owner.reset();
+        return std::unexpected(write_admitted.error());
+      }
+    } else {
+      std::array<orbital::PartId, 4> ids;
+      for (unsigned i = 0; i < ids.size(); ++i) ids[i] = parts.shape->parts[i].id;
+      const auto write_admitted = sw::admit_series_shape(owner.get(), v::data_program, ids);
+      if (!write_admitted) { owner.reset(); return std::unexpected(write_admitted.error()); }
+      columns_write_ = *write_admitted;
     }
   }
   return owner.get();
@@ -126,6 +140,30 @@ v::ReadData Material::generic(cs::Selection selected) const {
   }
   return p::need(v::ReadData::bind(corpus_.schema, physical.interpretation,
       std::span(parts).first(physical.part_count)));
+}
+Result<void> Material::lookup(cs::Selection selected, orbital_bench::Key key,
+    std::size_t& row, orbital_bench::Record& record) const {
+  if (!selected) return std::unexpected(Error::absent);
+  if (tuple_write_ && selected.shape() == tuple_write_->shape())
+    return sw::lookup(tuple_write_->proof(), selected, key, row, record);
+  if (columns_write_ && selected.shape() == columns_write_->shape())
+    return sw::lookup(*columns_write_, selected, key, row, record);
+  return std::unexpected(Error::invalid_argument);
+}
+Result<void> Material::apply(cs::Selection basis, const PrivateParts& target,
+    std::span<const v::Update> input, v::KernelCosts& costs, wb::ProbeCosts& probes) const {
+  if (!basis) return std::unexpected(Error::absent);
+  if (!target.shape || target.shape->records != basis.records())
+    return std::unexpected(Error::invalid_argument);
+  // The private clone is constructed from this protected exact basis. Fresh
+  // supplied IDs/extents/aliases and all keys are still admitted by sw::apply.
+  if (tuple_write_ && basis.shape() == tuple_write_->shape() &&
+      target.shape == &shape(v::Format::rows))
+    return sw::apply(tuple_write_->proof(), basis.records(), target.parts(), input, costs, probes);
+  if (columns_write_ && basis.shape() == columns_write_->shape() &&
+      target.shape == &shape(v::Format::columns))
+    return sw::apply(*columns_write_, basis.records(), target.parts(), input, costs, probes);
+  return std::unexpected(Error::invalid_argument);
 }
 orbital_bench::Outcome Material::consume(cs::Selection selected,
     const orbital_bench::Operation& op) const {
@@ -147,6 +185,9 @@ Accounting Material::accounting() const {
   result.write_shape_heap_bytes = shape_heap(shape(v::Format::rows)) + shape_heap(columns_);
   result.schema_bytes = sizeof(v::Schema);
   result.borrowed_write_shape_record_bytes = sizeof(v::Shape);
+  result.write_control_live_bytes = (tuple_write_ ? sizeof(sw::TupleLaw) : 0) +
+      (columns_write_ ? sizeof(sw::SeriesProof) : 0);
+  result.write_control_slots_bytes = sizeof(tuple_write_) + sizeof(columns_write_);
   result.pool_setup_and_inventory_bytes = sizeof(oa::Arena) + sizeof(oa::detail::ArenaState) +
       sizeof(oa::Pool) + sizeof(oa::detail::PoolState) +
       runtime.arena->state->pools.capacity() * sizeof(std::unique_ptr<oa::Pool>) +

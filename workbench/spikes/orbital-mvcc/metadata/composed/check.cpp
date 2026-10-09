@@ -174,7 +174,8 @@ template<class Backend> void run(const char* name, v::Format initial) {
         "\"write_arrays\":%zu,\"private_parts\":%zu,\"pool_metadata\":%llu,"
         "\"pool_mapped\":%llu,\"pool_reserved\":%llu,\"arena_charge\":%llu,"
         "\"active_allocations\":%zu,\"live_capacity\":%zu,\"held_extent\":%s,"
-        "\"borrowed_write_shape_record\":%zu,\"pool_setup_and_inventory\":%zu}\n",
+        "\"borrowed_write_shape_record\":%zu,\"pool_setup_and_inventory\":%zu,"
+        "\"write_control_live_bytes\":%zu,\"write_control_slots_bytes\":%zu}\n",
         name, unsigned(initial), static_cast<unsigned long long>(comparisons), static_cast<unsigned long long>(refusals),
         initial_account.metadata_live, initial_account.metadata_peak, static_cast<unsigned long long>(initial_account.pool.metadata_bytes),
         final.metadata_live, final.metadata_peak, final.metadata_calls, final.shared_shape_bytes,
@@ -183,7 +184,8 @@ template<class Backend> void run(const char* name, v::Format initial) {
         sizeof(c::PrivateParts), static_cast<unsigned long long>(final.pool.metadata_bytes),
         static_cast<unsigned long long>(final.pool.mapped_bytes), static_cast<unsigned long long>(final.pool.reserved_bytes),
         static_cast<unsigned long long>(final.arena_charge), final.active_allocations, final.live_capacity_bytes, held_extent.c_str(),
-        final.borrowed_write_shape_record_bytes, final.pool_setup_and_inventory_bytes);
+        final.borrowed_write_shape_record_bytes, final.pool_setup_and_inventory_bytes,
+        final.write_control_live_bytes, final.write_control_slots_bytes);
   }
   // Backend teardown checks zero PMR; actual Runtime shutdown checks zero Arena.
 }

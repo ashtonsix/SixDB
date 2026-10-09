@@ -87,17 +87,18 @@ public:
         if (std::find(objects.begin(), objects.begin() + offered, object) != objects.begin() + offered) continue;
         auto selected = select(*basis, object, true);
         if (!selected) return std::unexpected(selected.error());
-        const auto source = material_.generic(*selected);
         std::size_t used{};
         for (std::size_t i = 0; i < input.size(); ++i) if (objects[i] == object) {
-          auto row = source.get(input[i].key);
-          if (!row) return std::unexpected(Error::absent);
-          row->value = input[i].record.value; row->tag = input[i].record.tag;
-          updates[used++] = {input[i].key, *row};
+          std::size_t position{};
+          Record record;
+          const auto found = material_.lookup(*selected, input[i].key, position, record);
+          if (!found) return std::unexpected(found.error());
+          record.value = input[i].record.value; record.tag = input[i].record.tag;
+          updates[used++] = {input[i].key, record};
         }
         auto parts = material_.clone(*selected, costs);
         if (!parts) return std::unexpected(parts.error());
-        auto written = wb::apply(corpus().schema, *parts->shape, parts->parts(),
+        auto written = material_.apply(*selected, *parts,
             std::span(updates).first(used), costs.kernel, write_costs);
         if (!written) return written;
         auto owner = capture(*parts);

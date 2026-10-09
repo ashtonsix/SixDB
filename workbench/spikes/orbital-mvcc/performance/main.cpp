@@ -235,6 +235,8 @@ void print_footprint(const OrbitalFootprint& f) {
     std::cout<<",\"shared_shape_bytes\":"<<a.shared_shape_bytes
         <<",\"write_shape_heap_bytes\":"<<a.write_shape_heap_bytes<<",\"schema_bytes\":"<<a.schema_bytes
         <<",\"borrowed_write_shape_record_bytes\":"<<a.borrowed_write_shape_record_bytes
+        <<",\"write_control_live_bytes\":"<<a.write_control_live_bytes
+        <<",\"write_control_slots_bytes\":"<<a.write_control_slots_bytes
         <<",\"pool_setup_and_inventory_bytes\":"<<a.pool_setup_and_inventory_bytes
         <<",\"active_allocations\":"<<a.active_allocations<<",\"live_capacity_bytes\":"<<a.live_capacity_bytes
         <<",\"backend_record_bytes\":"<<f.backend_record_bytes<<",\"write_caller_arrays_bytes\":"<<f.write_caller_arrays_bytes
@@ -304,7 +306,7 @@ int main(int argc,char** argv) try {
   Interval interval,release,conditioning;
   data::Costs costs;
   write_batch::ProbeCosts write_probe;
-  std::size_t mapped_shape_metadata{};
+  std::size_t mapped_shape_metadata{}, mapped_shape_record{}, mapped_write_control_live{}, mapped_write_control_slots{};
   std::uint64_t bindings{},drain_steps{};
   OrbitalFootprint orbital_initial,orbital_held,orbital_released;
   Lmdb::Footprint lmdb_initial,lmdb_held,lmdb_released;
@@ -383,11 +385,16 @@ int main(int argc,char** argv) try {
     else {auto write=store.edit();for (const auto& image:corpus.images) write.put_part(image.address,image.encoded);write.publish();}
     lmdb_initial=store.footprint();
     std::optional<MappedShape> mapped_shape;
-    if (o.backend=="lmdb-composed") {mapped_shape.emplace(corpus);mapped_shape_metadata=mapped_shape->metadata_bytes();}
+    if (o.backend=="lmdb-composed") {
+      mapped_shape.emplace(corpus); mapped_shape_metadata=mapped_shape->metadata_bytes();
+      mapped_shape_record=sizeof(MappedShape);
+      mapped_write_control_live=mapped_shape->write_control_live_bytes();
+      mapped_write_control_slots=mapped_shape->write_control_slots_bytes();
+    }
     if (updating) {
       std::optional<Lmdb::Read> old(store.read());std::size_t first{},published{},witness{};
       interval=writes(o,hardware,write_faults,[&](auto input,auto target) {
-        if (o.backend=="lmdb-composed") lmdb_composed_update(store,corpus,input,std::span{objects}.subspan(first,input.size()),target,costs,write_probe);
+        if (o.backend=="lmdb-composed") lmdb_composed_update(store,*mapped_shape,input,std::span{objects}.subspan(first,input.size()),target,costs,write_probe);
         else lmdb_update(store,corpus,input,std::span{objects}.subspan(first,input.size()),target,costs);
         first+=input.size();
         if (o.retention_age && ++published%o.retention_age==0) {
@@ -579,7 +586,11 @@ int main(int argc,char** argv) try {
       <<",\"metadata_allocation_counts_available\":"<<(o.backend.starts_with("candidate") || o.backend.starts_with("composed-")?"true":"false");
   std::cout<<",\"cost_counter_scope\":\"clone/update/conversion native kernels only; read decode counters unavailable\""
       <<",\"maintenance_policy\":\""<<(o.backend.starts_with("candidate") || o.backend.starts_with("composed-")?"full catalog drain plus bounded physical poll":o.backend=="orbital"?"bounded drain plus bounded physical poll":"transaction release")<<"\"";
-  std::cout<<",\"mapped_shape_metadata_bytes\":"<<mapped_shape_metadata<<",\"write_batch_probe\":{\"private_admissions\":"<<write_probe.private_admissions
+  std::cout<<",\"mapped_shape_metadata_bytes\":"<<mapped_shape_metadata
+      <<",\"mapped_shape_record_bytes\":"<<mapped_shape_record
+      <<",\"mapped_write_control_live_bytes\":"<<mapped_write_control_live
+      <<",\"mapped_write_control_slots_bytes\":"<<mapped_write_control_slots
+      <<",\"write_batch_probe\":{\"private_admissions\":"<<write_probe.private_admissions
       <<",\"key_reads\":"<<write_probe.key_reads<<",\"full_rows_read\":"<<write_probe.full_rows_read<<",\"applied_updates\":"<<write_probe.applied_updates<<"}";
   rusage usage{};
   if (getrusage(RUSAGE_SELF,&usage)) throw std::runtime_error("process resource receipt failed");

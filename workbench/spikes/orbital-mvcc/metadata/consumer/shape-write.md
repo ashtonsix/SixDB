@@ -58,11 +58,12 @@ offered order; same-record commands still issue preserving stores. Named views
 and endpoints stay stationary until journal sources are resolved.
 
 [shape-write-integration.patch](shape-write-integration.patch) is an authored
-Material/backend/mapped-LMDB adaptation for the owning Architecture task. It
+Material/backend/mapped-LMDB adaptation, now applied to the composed spike. It
 accounts for live law, optional slots and containing records separately; these
 are overlapping accounting views, not additive allocations. Existing fixture
 Schema, write Shapes, construction/conversion and generic read paths remain
-charged. Integration and matched whole-owner timing belong to their owners.
+charged. The first paired target-worker screen supports selecting this path;
+its comparison and limits belong in the [performance findings](../../performance/FEEDBACK.md).
 
 ## Qualification
 

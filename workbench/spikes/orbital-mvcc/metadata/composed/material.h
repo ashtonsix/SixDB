@@ -3,6 +3,7 @@
 #include "../../performance/read.h"
 #include "../consumer/shape_read.h"
 #include "../consumer/write_batch.h"
+#include "../consumer/shape_write.h"
 #include "../orbital/candidates/shape_policy.h"
 #include <optional>
 
@@ -13,6 +14,7 @@ namespace cs = compact_shape;
 namespace oa = orbital::allocation;
 namespace sr = metadata_consumer::shape_read;
 namespace wb = metadata_consumer::write_batch;
+namespace sw = metadata_consumer::shape_write;
 using orbital::Result;
 using orbital::Error;
 
@@ -29,6 +31,9 @@ struct Accounting {
   std::size_t metadata_live{}, metadata_peak{}, metadata_calls{}, metadata_limit{};
   std::size_t shared_shape_bytes{}, write_shape_heap_bytes{}, schema_bytes{};
   std::size_t borrowed_write_shape_record_bytes{}, pool_setup_and_inventory_bytes{};
+  // Inline slots are included in sizeof(Backend), separate from PMR metadata.
+  // Live law bytes are a subset of these slots, not an additional allocation.
+  std::size_t write_control_live_bytes{}, write_control_slots_bytes{};
   std::size_t active_allocations{}, live_capacity_bytes{};
   // Some Allocation treatments do not track this diagnostic. Null is not zero.
   std::optional<std::size_t> held_extent_bytes;
@@ -45,6 +50,8 @@ class Material {
   struct ReleaseShape { void operator()(cs::Shape* value) const { cs::release(value); } };
   std::unique_ptr<cs::Shape, ReleaseShape> tuple_, columns_proof_;
   std::optional<sr::TupleProof> tuple_read_;
+  std::optional<sw::TupleLaw> tuple_write_;
+  std::optional<sw::SeriesProof> columns_write_;
   Result<PrivateParts> allocate(const v::Shape&, v::Costs&);
 public:
   compact_history::Memory memory;
@@ -60,6 +67,9 @@ public:
   Result<PrivateParts> convert(cs::Selection, v::Format, v::Costs&, v::ConstructionOptions = {});
   Result<cs::Shape*> proof(const PrivateParts&);
   v::ReadData generic(cs::Selection) const;
+  Result<void> lookup(cs::Selection, orbital_bench::Key, std::size_t&, orbital_bench::Record&) const;
+  Result<void> apply(cs::Selection basis, const PrivateParts&, std::span<const v::Update>,
+      v::KernelCosts&, wb::ProbeCosts&) const;
   orbital_bench::Outcome consume(cs::Selection, const orbital_bench::Operation&) const;
   Accounting accounting() const;
 };
