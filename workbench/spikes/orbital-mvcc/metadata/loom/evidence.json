@@ -1,0 +1,2261 @@
+{
+  "baseline": "7f73c81",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "receipt": "build/orbital-mvcc-metadata/loom/codegen-02/receipt.json",
+  "receipt_sha256": "f869433415adcb0ce95591c123bc600542cb7767ce4d1b26523fd3ed86fd8719",
+  "probe_sha256": {
+    "probe.h": "45017742a9fea13d83164c6b06dced0912412f418374d926385268a6d526b64e",
+    "boundaries.cpp": "711d91abe3a9ceea58001faff0b37c5240f0bab5ca1a55fdadb05a6f40a14d9e",
+    "callers.cpp": "8715c331bb10e8438a3cd133303614089faaf9f1c3efa6ba94425fc27875c615",
+    "facts.cpp": "b2b7b3bd0ffd0ead2bae6a5d1dbba90d07fb5f4b7b45803fbe54550c0e828965",
+    "check.cpp": "3298dddba7c831195b73165a51847efa413778988a1034b5d895012c56e535fd",
+    "codegen.py": "a64e4bfc128fdceb7811716215612a8665a167bdf2b0632e1ccb175eff0eb5d9"
+  },
+  "helper_sha256": "baf66e334592b9adc6977c7ad6a80c8dff70d77e6aa27034d6348a2dab6160cf",
+  "facts_columns": [
+    "bytes",
+    "alignment",
+    "trivially_copyable",
+    "trivially_destructible",
+    "copy_constructible",
+    "move_constructible"
+  ],
+  "targets": {
+    "v2": {
+      "facts": {
+        "Progress": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "ResultVoid": [
+          8,
+          4,
+          0,
+          1,
+          1,
+          1
+        ],
+        "ObjectId": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "PartId": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Epoch": [
+          8,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "BufferGeneration": [
+          8,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "ByteRange": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Bytes": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "MutableBytes": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "WaitLink": [
+          32,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Signal": [
+          32,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Message": [
+          24,
+          8,
+          1,
+          1,
+          0,
+          0
+        ],
+        "MessageOps": [
+          24,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Lane": [
+          256,
+          64,
+          0,
+          0,
+          0,
+          0
+        ],
+        "Thread": [
+          8,
+          8,
+          0,
+          0,
+          0,
+          0
+        ],
+        "Worker": [
+          448,
+          64,
+          0,
+          0,
+          0,
+          0
+        ],
+        "Task": [
+          72,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "PollBudget": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "AllocationRequest": [
+          40,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Allocation": [
+          32,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "Hold": [
+          32,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "ResultAllocation": [
+          40,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "ResultHold": [
+          40,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "ReleaseHint": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Arena": [
+          32,
+          8,
+          0,
+          0,
+          0,
+          0
+        ],
+        "Pool": [
+          64,
+          8,
+          0,
+          0,
+          0,
+          0
+        ],
+        "PreparedBytes": [
+          24,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Preparation": [
+          192,
+          8,
+          0,
+          0,
+          0,
+          0
+        ],
+        "PreparationOutcome": [
+          32,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "AllocationStatistics": [
+          104,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "RingCapacity": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "SpinBudget": [
+          8,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "RingLayout": [
+          24,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "RingStorage": [
+          56,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "ResultRingStorage": [
+          64,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "MemoryDemand": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "MemoryDependency": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "DemandClass": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "HintProfile": [
+          32,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "HintPolicy": [
+          56,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Description": [
+          88,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "RepresentationSpec": [
+          104,
+          8,
+          0,
+          0,
+          1,
+          1
+        ],
+        "PartSource": [
+          80,
+          8,
+          0,
+          0,
+          1,
+          1
+        ],
+        "PartPlan": [
+          72,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "View": [
+          8,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Selection": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "ResultView": [
+          16,
+          8,
+          0,
+          1,
+          1,
+          1
+        ],
+        "ResultSelection": [
+          24,
+          8,
+          0,
+          1,
+          1,
+          1
+        ],
+        "BorrowedContext": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "ReadContext": [
+          8,
+          8,
+          0,
+          0,
+          1,
+          1
+        ],
+        "Representation": [
+          8,
+          8,
+          0,
+          0,
+          1,
+          1
+        ],
+        "RetainedView": [
+          8,
+          8,
+          0,
+          0,
+          1,
+          1
+        ],
+        "RetainedSelection": [
+          16,
+          8,
+          0,
+          0,
+          1,
+          1
+        ],
+        "ResultRetainedView": [
+          16,
+          8,
+          0,
+          0,
+          1,
+          1
+        ],
+        "ResultReadContext": [
+          16,
+          8,
+          0,
+          0,
+          1,
+          1
+        ],
+        "ResultRetainedSelection": [
+          24,
+          8,
+          0,
+          0,
+          1,
+          1
+        ],
+        "Builder": [
+          8,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "WriteView": [
+          16,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "ResultWriteView": [
+          24,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "ResultMutableBytes": [
+          24,
+          8,
+          0,
+          1,
+          1,
+          1
+        ],
+        "Draft": [
+          8,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "Prepared": [
+          8,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "Store": [
+          8,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "ObjectStatistics": [
+          96,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Compound": [
+          696,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "PhysicalUse": [
+          96,
+          8,
+          0,
+          0,
+          0,
+          0
+        ],
+        "DelayedFill": [
+          128,
+          8,
+          0,
+          0,
+          0,
+          0
+        ],
+        "RingFrame": [
+          56,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "NativeBody": [
+          592,
+          8,
+          1,
+          1,
+          0,
+          0
+        ],
+        "Stage2Ring": [
+          320,
+          64,
+          0,
+          0,
+          0,
+          0
+        ],
+        "Stage2Slot": [
+          88,
+          8,
+          0,
+          1,
+          1,
+          1
+        ],
+        "Stage2Arguments": [
+          32,
+          8,
+          0,
+          1,
+          1,
+          1
+        ],
+        "TupleLayout": [
+          392,
+          4,
+          1,
+          1,
+          1,
+          1
+        ],
+        "TupleReader8": [
+          96,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "TupleView": [
+          48,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "TupleReadOperation": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "TupleNativeReader": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Packet8": [
+          8,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Packet16": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Packet32": [
+          32,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "ResultPacket8": [
+          16,
+          8,
+          0,
+          1,
+          1,
+          1
+        ],
+        "ResultPacket16": [
+          24,
+          8,
+          0,
+          1,
+          1,
+          1
+        ],
+        "ResultPacket32": [
+          40,
+          8,
+          0,
+          1,
+          1,
+          1
+        ],
+        "CompactResult16": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "signatures": [
+        "define hidden i64 @_ZN13loom_metadata5pass8ENS_7Packet8E(ptr %0) local_unnamed_addr #0 {",
+        "define hidden [2 x i64] @_ZN13loom_metadata6pass16ENS_8Packet16E([2 x i64] %0) local_unnamed_addr #0 {",
+        "define hidden void @_ZN13loom_metadata6pass32ENS_8Packet32E(ptr dead_on_unwind noalias writable writeonly sret(%\"struct.loom_metadata::Packet32\") align 8 captures(none) initializes((0, 32)) %0, ptr noundef captures(none) %1) local_unnamed_addr #2 {",
+        "define hidden [2 x i64] @_ZN13loom_metadata8checked8ENS_7Packet8E(ptr %0) local_unnamed_addr #0 {",
+        "define hidden void @_ZN13loom_metadata9checked16ENS_8Packet16E(ptr dead_on_unwind noalias writable writeonly sret(%\"class.std::expected.0\") align 8 captures(none) initializes((0, 17)) %0, [2 x i64] %1) local_unnamed_addr #3 {",
+        "define hidden void @_ZN13loom_metadata9checked32ENS_8Packet32E(ptr dead_on_unwind noalias writable writeonly sret(%\"class.std::expected.3\") align 8 captures(none) initializes((0, 33)) %0, ptr noundef readonly captures(none) %1) local_unnamed_addr #2 {",
+        "define hidden [2 x i64] @_ZN13loom_metadata13pass_result16ENS_8Result16E([2 x i64] returned %0) local_unnamed_addr #0 {",
+        "define hidden [2 x i64] @_ZN13loom_metadata13pass_progressEN7orbital8ProgressE([2 x i64] returned %0) local_unnamed_addr #0 {",
+        "define hidden i64 @_ZN13loom_metadata9pass_viewEN7orbital6object4ViewE(ptr %0) local_unnamed_addr #0 {",
+        "define hidden [2 x i64] @_ZN13loom_metadata14pass_selectionEN7orbital6object9SelectionE([2 x ptr] %0) local_unnamed_addr #0 {",
+        "define hidden [2 x i64] @_ZN13loom_metadata12checked_viewEN7orbital6object4ViewE(ptr %0) local_unnamed_addr #0 {",
+        "define hidden void @_ZN13loom_metadata17checked_selectionEN7orbital6object9SelectionE(ptr dead_on_unwind noalias writable writeonly sret(%\"class.std::expected.9\") align 8 captures(none) initializes((0, 17)) %0, [2 x ptr] %1) local_unnamed_addr #3 {",
+        "define hidden void @_ZN13loom_metadata13checked_bytesESt4spanIKSt4byteLm18446744073709551615EE(ptr dead_on_unwind noalias writable writeonly sret(%\"class.std::expected.12\") align 8 captures(none) initializes((0, 17)) %0, [2 x i64] %1) local_unnamed_addr #3 {",
+        "define hidden void @_ZN13loom_metadata9move_viewEN7orbital6object12RetainedViewE(ptr dead_on_unwind noalias writable writeonly sret(%\"class.orbital::object::RetainedView\") align 8 captures(none) initializes((0, 8)) %0, ptr noundef captures(none) %1) local_unnamed_addr #2 personality ptr @__gxx_personality_v0 {",
+        "define hidden void @_ZN13loom_metadata13checked_ownerEN7orbital6object12RetainedViewE(ptr dead_on_unwind noalias writable writeonly sret(%\"class.std::expected.15\") align 8 captures(none) initializes((0, 9)) %0, ptr noundef captures(none) %1) local_unnamed_addr #2 personality ptr @__gxx_personality_v0 {",
+        "define hidden void @_ZN13loom_metadata15move_allocationEN7orbital10allocation10AllocationE(ptr dead_on_unwind noalias nonnull writable sret(%\"class.std::expected.18\") align 8 %0, ptr noundef nonnull %1) local_unnamed_addr #4 {",
+        "define hidden void @_ZN13loom_metadata9move_holdEN7orbital10allocation4HoldE(ptr dead_on_unwind noalias nonnull writable sret(%\"class.std::expected.21\") align 8 %0, ptr noundef nonnull %1) local_unnamed_addr #4 {",
+        "define hidden void @_ZN13loom_metadata9move_bankEN4loom6detail11RingStorageE(ptr dead_on_unwind noalias nonnull writable sret(%\"class.std::expected.24\") align 8 %0, ptr noundef nonnull %1) local_unnamed_addr #4 {",
+        "define hidden noundef i64 @_ZN13loom_metadata7caller8ENS_7Packet8E(ptr %0) local_unnamed_addr #0 {",
+        "declare i64 @_ZN13loom_metadata5pass8ENS_7Packet8E(ptr) local_unnamed_addr #2",
+        "define hidden noundef i64 @_ZN13loom_metadata8caller16ENS_8Packet16E([2 x i64] %0) local_unnamed_addr #0 {",
+        "declare [2 x i64] @_ZN13loom_metadata6pass16ENS_8Packet16E([2 x i64]) local_unnamed_addr #2",
+        "define hidden noundef i64 @_ZN13loom_metadata8caller32ENS_8Packet32E(ptr noundef readonly captures(none) %0) local_unnamed_addr #0 {",
+        "declare void @_ZN13loom_metadata6pass32ENS_8Packet32E(ptr dead_on_unwind writable sret(%\"struct.loom_metadata::Packet32\") align 8, ptr noundef) local_unnamed_addr #2",
+        "define hidden noundef i64 @_ZN13loom_metadata16caller_checked16ENS_8Packet16E([2 x i64] %0) local_unnamed_addr #0 {",
+        "declare void @_ZN13loom_metadata9checked16ENS_8Packet16E(ptr dead_on_unwind writable sret(%\"class.std::expected\") align 8, [2 x i64]) local_unnamed_addr #2",
+        "define hidden noundef i64 @_ZN13loom_metadata15caller_result16ENS_8Result16E([2 x i64] %0) local_unnamed_addr #0 {",
+        "declare [2 x i64] @_ZN13loom_metadata13pass_result16ENS_8Result16E([2 x i64]) local_unnamed_addr #2",
+        "define hidden noundef i64 @_ZN13loom_metadata15caller_progressEN7orbital8ProgressE([2 x i64] %0) local_unnamed_addr #0 {",
+        "declare [2 x i64] @_ZN13loom_metadata13pass_progressEN7orbital8ProgressE([2 x i64]) local_unnamed_addr #2",
+        "define hidden noundef i64 @_ZN13loom_metadata16caller_selectionEN7orbital6object9SelectionE([2 x ptr] %0) local_unnamed_addr #0 {",
+        "declare [2 x i64] @_ZN13loom_metadata14pass_selectionEN7orbital6object9SelectionE([2 x ptr]) local_unnamed_addr #2",
+        "define hidden noundef i64 @_ZN13loom_metadata24caller_checked_selectionEN7orbital6object9SelectionE([2 x ptr] %0) local_unnamed_addr #0 {",
+        "declare void @_ZN13loom_metadata17checked_selectionEN7orbital6object9SelectionE(ptr dead_on_unwind writable sret(%\"class.std::expected.0\") align 8, [2 x ptr]) local_unnamed_addr #2",
+        "define hidden [2 x i64] @_ZN13loom_metadata19caller_checked_viewEN7orbital6object4ViewE(ptr %0) local_unnamed_addr #0 {",
+        "declare [2 x i64] @_ZN13loom_metadata12checked_viewEN7orbital6object4ViewE(ptr) local_unnamed_addr #2",
+        "define hidden void @_ZN13loom_metadata8discoverERKN7orbital6object11ReadContextENS0_2IdINS0_9ObjectTagEEE(ptr dead_on_unwind noalias writable sret(%\"class.std::expected.0\") align 8 %0, ptr noundef nonnull align 8 dereferenceable(8) %1, [2 x i64] %2) local_unnamed_addr #0 {",
+        "declare void @_ZN7orbital6object6selectERKNS0_11ReadContextENS_2IdINS_9ObjectTagEEEb(ptr dead_on_unwind writable sret(%\"class.std::expected.0\") align 8, ptr noundef nonnull align 8 dereferenceable(8), [2 x i64], i1 noundef) local_unnamed_addr #2",
+        "define hidden [2 x i64] @_ZN13loom_metadata7resolveEN7orbital6object9SelectionEm([2 x ptr] %0, i64 noundef %1) local_unnamed_addr #4 personality ptr @__gxx_personality_v0 {",
+        "define hidden void @_ZN13loom_metadata11retain_onceEN7orbital6object4ViewE(ptr dead_on_unwind noalias writable sret(%\"class.orbital::object::RetainedView\") align 8 %0, ptr %1) local_unnamed_addr #0 {",
+        "declare void @_ZN7orbital6object6retainENS0_4ViewE(ptr dead_on_unwind writable sret(%\"class.orbital::object::RetainedView\") align 8, ptr) local_unnamed_addr #2",
+        "define hidden noundef i64 @_ZN13loom_metadata15prepared_callerERKN19object_access_check10NativeBodyEm(ptr noundef nonnull align 1 %0, i64 noundef %1) local_unnamed_addr #5 {",
+        "declare noundef i64 @_ZN13loom_metadata11native_wordERKN19object_access_check10NativeBodyEm(ptr noundef nonnull align 1, i64 noundef) local_unnamed_addr #6",
+        "declare void @_ZN7orbital6object6selectERKNS0_15BorrowedContextENS_2IdINS_9ObjectTagEEEb(ptr dead_on_unwind writable sret(%\"class.std::expected.53\") align 8, ptr noundef nonnull align 8 dereferenceable(16), [2 x i64], i1 noundef) local_unnamed_addr #11",
+        "declare void @_ZN7orbital6object6selectERKNS0_11ReadContextENS_2IdINS_9ObjectTagEEEb(ptr dead_on_unwind writable sret(%\"class.std::expected.53\") align 8, ptr noundef nonnull align 8 dereferenceable(8), [2 x i64], i1 noundef) local_unnamed_addr #11",
+        "declare void @_ZN7orbital6object6retainENS0_9SelectionE(ptr dead_on_unwind writable sret(%\"class.orbital::object::RetainedSelection\") align 8, [2 x ptr]) local_unnamed_addr #11",
+        "declare void @_ZN7orbital6object6retainENS0_4ViewE(ptr dead_on_unwind writable sret(%\"class.orbital::object::RetainedView\") align 8, ptr) local_unnamed_addr #11",
+        "define hidden noundef i64 @_ZN13loom_metadata11native_wordERKN19object_access_check10NativeBodyEm(ptr noundef nonnull readonly align 8 captures(none) dereferenceable(592) %0, i64 noundef %1) local_unnamed_addr #14 {",
+        "define hidden noundef i64 @_ZN13loom_metadata15prepared_inlineERKN19object_access_check10NativeBodyEm(ptr noundef nonnull readonly align 8 captures(none) dereferenceable(592) %0, i64 noundef %1) local_unnamed_addr #15 {"
+      ],
+      "functions": [
+        {
+          "name": "loom_metadata::pass8(loom_metadata::Packet8)",
+          "role": "ordinary_packet_probe",
+          "bytes": 4,
+          "static_instruction_sites": 1,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::pass16(loom_metadata::Packet16)",
+          "role": "ordinary_packet_probe",
+          "bytes": 8,
+          "static_instruction_sites": 2,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::pass32(loom_metadata::Packet32)",
+          "role": "ordinary_packet_probe",
+          "bytes": 32,
+          "static_instruction_sites": 8,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::checked8(loom_metadata::Packet8)",
+          "role": "ordinary_packet_probe",
+          "bytes": 8,
+          "static_instruction_sites": 2,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::checked16(loom_metadata::Packet16)",
+          "role": "ordinary_packet_probe",
+          "bytes": 16,
+          "static_instruction_sites": 4,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::checked32(loom_metadata::Packet32)",
+          "role": "ordinary_packet_probe",
+          "bytes": 20,
+          "static_instruction_sites": 5,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::pass_result16(loom_metadata::Result16)",
+          "role": "ordinary_packet_probe",
+          "bytes": 4,
+          "static_instruction_sites": 1,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::pass_progress(orbital::Progress)",
+          "role": "ordinary_packet_probe",
+          "bytes": 4,
+          "static_instruction_sites": 1,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::pass_view(orbital::object::View)",
+          "role": "ordinary_packet_probe",
+          "bytes": 4,
+          "static_instruction_sites": 1,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::pass_selection(orbital::object::Selection)",
+          "role": "ordinary_packet_probe",
+          "bytes": 4,
+          "static_instruction_sites": 1,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::checked_view(orbital::object::View)",
+          "role": "ordinary_packet_probe",
+          "bytes": 8,
+          "static_instruction_sites": 2,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::checked_selection(orbital::object::Selection)",
+          "role": "ordinary_packet_probe",
+          "bytes": 16,
+          "static_instruction_sites": 4,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::checked_bytes(std::span<std::byte const, 18446744073709551615ul>)",
+          "role": "ordinary_packet_probe",
+          "bytes": 16,
+          "static_instruction_sites": 4,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::move_view(orbital::object::RetainedView)",
+          "role": "ordinary_packet_probe",
+          "bytes": 16,
+          "static_instruction_sites": 4,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::checked_owner(orbital::object::RetainedView)",
+          "role": "ordinary_packet_probe",
+          "bytes": 24,
+          "static_instruction_sites": 6,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::move_allocation(orbital::allocation::Allocation)",
+          "role": "ordinary_packet_probe",
+          "bytes": 48,
+          "static_instruction_sites": 12,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 4,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::move_hold(orbital::allocation::Hold)",
+          "role": "ordinary_packet_probe",
+          "bytes": 48,
+          "static_instruction_sites": 12,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 4,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::move_bank(loom::detail::RingStorage)",
+          "role": "ordinary_packet_probe",
+          "bytes": 68,
+          "static_instruction_sites": 17,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 4,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::caller8(loom_metadata::Packet8)",
+          "role": "ordinary_packet_probe",
+          "bytes": 4,
+          "static_instruction_sites": 1,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 1
+        },
+        {
+          "name": "loom_metadata::caller16(loom_metadata::Packet16)",
+          "role": "ordinary_packet_probe",
+          "bytes": 24,
+          "static_instruction_sites": 6,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 2,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::caller32(loom_metadata::Packet32)",
+          "role": "ordinary_packet_probe",
+          "bytes": 64,
+          "static_instruction_sites": 16,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 5,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::caller_checked16(loom_metadata::Packet16)",
+          "role": "ordinary_packet_probe",
+          "bytes": 56,
+          "static_instruction_sites": 14,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 4,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::caller_result16(loom_metadata::Result16)",
+          "role": "ordinary_packet_probe",
+          "bytes": 36,
+          "static_instruction_sites": 9,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 2,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::caller_progress(orbital::Progress)",
+          "role": "ordinary_packet_probe",
+          "bytes": 44,
+          "static_instruction_sites": 11,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 2,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::caller_selection(orbital::object::Selection)",
+          "role": "ordinary_packet_probe",
+          "bytes": 24,
+          "static_instruction_sites": 6,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 2,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::caller_checked_selection(orbital::object::Selection)",
+          "role": "ordinary_packet_probe",
+          "bytes": 68,
+          "static_instruction_sites": 17,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 6,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::caller_checked_view(orbital::object::View)",
+          "role": "ordinary_packet_probe",
+          "bytes": 52,
+          "static_instruction_sites": 13,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 3,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::discover(orbital::object::ReadContext const&, orbital::Id<orbital::ObjectTag>)",
+          "role": "ordinary_packet_probe",
+          "bytes": 8,
+          "static_instruction_sites": 2,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 1
+        },
+        {
+          "name": "loom_metadata::resolve(orbital::object::Selection, unsigned long)",
+          "role": "ordinary_packet_probe",
+          "bytes": 72,
+          "static_instruction_sites": 18,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::retain_once(orbital::object::View)",
+          "role": "ordinary_packet_probe",
+          "bytes": 4,
+          "static_instruction_sites": 1,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 1
+        },
+        {
+          "name": "loom_metadata::prepared_caller(object_access_check::NativeBody const&, unsigned long)",
+          "role": "ordinary_packet_probe",
+          "bytes": 108,
+          "static_instruction_sites": 27,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 9,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "object_access_check::native(loom::detail::MemoryRing<std::integer_sequence<unsigned long, 0ul, 1ul, 2ul, 3ul>, object_access_check::RingFrame*, unsigned long, unsigned long, unsigned long>*, loom::detail::MemoryRing<std::integer_sequence<unsigned long, 0ul, 1ul, 2ul, 3ul>, object_access_check::RingFrame*, unsigned long, unsigned long, unsigned long>::Slot*, object_access_check::RingFrame*, unsigned long, unsigned long, unsigned long)",
+          "role": "native_callback",
+          "bytes": 1604,
+          "static_instruction_sites": 401,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 32
+        },
+        {
+          "name": "loom::detail::MemoryRing<std::integer_sequence<unsigned long, 0ul, 1ul, 2ul, 3ul>, object_access_check::RingFrame*, unsigned long, unsigned long, unsigned long>::yield(loom::detail::MemoryRing<std::integer_sequence<unsigned long, 0ul, 1ul, 2ul, 3ul>, object_access_check::RingFrame*, unsigned long, unsigned long, unsigned long>*, loom::detail::MemoryRing<std::integer_sequence<unsigned long, 0ul, 1ul, 2ul, 3ul>, object_access_check::RingFrame*, unsigned long, unsigned long, unsigned long>::Slot*, object_access_check::RingFrame*, unsigned long, unsigned long, unsigned long)",
+          "role": "recurrent_yield",
+          "bytes": 88,
+          "static_instruction_sites": 22,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 2
+        },
+        {
+          "name": "loom_metadata::native_word(object_access_check::NativeBody const&, unsigned long)",
+          "role": "ordinary_packet_probe",
+          "bytes": 1024,
+          "static_instruction_sites": 256,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 2
+        },
+        {
+          "name": "loom_metadata::prepared_inline(object_access_check::NativeBody const&, unsigned long)",
+          "role": "ordinary_packet_probe",
+          "bytes": 1716,
+          "static_instruction_sites": 429,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 9,
+          "tail_or_jump_sites": 14
+        },
+        {
+          "name": "loom::detail::MemoryRing<std::integer_sequence<unsigned long, 0ul, 1ul, 2ul, 3ul>, object_access_check::RingFrame*, unsigned long, unsigned long, unsigned long>::enter(void (*)(loom::detail::MemoryRing<std::integer_sequence<unsigned long, 0ul, 1ul, 2ul, 3ul>, object_access_check::RingFrame*, unsigned long, unsigned long, unsigned long>*, loom::detail::MemoryRing<std::integer_sequence<unsigned long, 0ul, 1ul, 2ul, 3ul>, object_access_check::RingFrame*, unsigned long, unsigned long, unsigned long>::Slot*, object_access_check::RingFrame*, unsigned long, unsigned long, unsigned long), loom::detail::MemoryRing<std::integer_sequence<unsigned long, 0ul, 1ul, 2ul, 3ul>, object_access_check::RingFrame*, unsigned long, unsigned long, unsigned long>*, loom::detail::MemoryRing<std::integer_sequence<unsigned long, 0ul, 1ul, 2ul, 3ul>, object_access_check::RingFrame*, unsigned long, unsigned long, unsigned long>::Slot*, object_access_check::RingFrame*, unsigned long, unsigned long, unsigned long)",
+          "role": "ordinary_entry_bridge",
+          "bytes": 120,
+          "static_instruction_sites": 30,
+          "ordinary_call_sites": 2,
+          "stack_memory_sites": 20,
+          "tail_or_jump_sites": 0
+        }
+      ],
+      "objects": [
+        {
+          "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/codegen-02/v2/boundaries.o",
+          "sha256": "232fd87765747322597e53313399559434762c8a4ff8e3f414df127aa6424fb9",
+          "ir_sha256": "bc9c3dcc0f43d2e7203a131351dbfb88e232c38d9abd2f8721a6210d1b54db11"
+        },
+        {
+          "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/codegen-02/v2/callers.o",
+          "sha256": "bc27748721e76111967ea0c2c37cc8f3aeb98b36cb673a5c0b881c777e9f15fb",
+          "ir_sha256": "6e408e0dee424450c439862b131a28f5e23b96a3a5cf78dc6e822b13ff70a28b"
+        },
+        {
+          "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/codegen-02/v2/facts.o",
+          "sha256": "5526d9323838eae32784359ec37e3b8b37345f0482e10ba3dd0bcde06bf5d9cb",
+          "ir_sha256": "9a21986a15159263c09fff74e07b0fa8d9cec202de2362135c8889afc7f78113"
+        }
+      ],
+      "dependency_manifest_sha256": "ebc60ee5747ea8979891e3c5f0ccefdfe4aa3007ba394e5bea7ca87bfb561400",
+      "dependency_files": 371,
+      "caller_record_layouts": [
+        "0 | struct object_access_check::Metadata\n         0 |   Word first\n         8 |   Word rows\n        16 |   Word shift\n           | [sizeof=24, dsize=24, align=8,\n           |  nvsize=24, nvalign=8]",
+        "0 | struct object_access_check::Fixture\n         0 |   class orbital::Ref<struct orbital::allocation::Arena> arena\n         0 |     struct orbital::allocation::Arena * pointer_\n        64 |   struct loom::Worker worker\n        64 |     struct orbital::worker::Lane lane\n        64 |       int cpu\n        72 |       void (*)(void *) noexcept notify_posted\n        80 |       void * notify_context\n       128 |       struct orbital::worker::Message sentinel\n       128 |         struct std::atomic<struct orbital::worker::Message *> next\n       128 |           struct std::__atomic_base<struct orbital::worker::Message *> _M_b\n       128 |             __pointer_type _M_p\n       136 |         void * context\n       144 |         const MessageOps * ops\n       192 |       struct std::atomic<struct orbital::worker::Message *> producer\n       192 |         struct std::__atomic_base<struct orbital::worker::Message *> _M_b\n       192 |           __pointer_type _M_p\n       256 |       Message * consumer\n       264 |       struct std::atomic<void *> owner\n       264 |         struct std::__atomic_base<void *> _M_b\n       264 |           __pointer_type _M_p\n       272 |       Lane * owner_next\n       320 |     class orbital::Ref<struct orbital::allocation::Arena> arena\n       320 |       struct orbital::allocation::Arena * pointer_\n       328 |     orbital::allocation::Pool * memory\n       336 |     Task * first\n       344 |     Task * last\n       352 |     std::uint64_t task_limit\n       360 |     std::uint64_t active_tasks\n       368 |     struct orbital::Signal capacity_changed\n       368 |       worker::Lane * lane\n       376 |       Readiness state\n       380 |       Error failure\n       384 |       std::uint64_t generation\n       392 |       WaitLink * waiters\n       400 |     struct loom::HintPolicy hints\n       400 |       struct loom::HintProfile profile\n       400 |         std::uint64_t revision\n       408 |         struct loom::HintGeometry geometry\n       408 |           std::size_t line_bytes\n       416 |           std::size_t page_bytes\n       424 |         unsigned int preferred_width\n       428 |         unsigned int training_accesses\n       432 |       HintPressure pressure\n       436 |       struct std::array<enum loom::Hint, 17> codes\n       436 |         typename __array_traits<loom::Hint, 17UL>::_Type _M_elems\n       456 |     class std::shared_ptr<class loom::HardwareProfile> hardware\n       456 |       class std::__shared_ptr<class loom::HardwareProfile> (base)\n       456 |         class std::__shared_ptr_access<class loom::HardwareProfile, __gnu_cxx::_S_atomic> (base) (empty)\n       456 |         element_type * _M_ptr\n       464 |         class std::__shared_count<> _M_refcount\n       464 |           _Sp_counted_base<(__gnu_cxx::_Lock_policy)2U> * _M_pi\n       472 |     _Bool stopping\n       473 |     _Bool polling\n           | [sizeof=512, dsize=512, align=64,\n           |  nvsize=512, nvalign=64]",
+        "0 | struct object_access_check::Payload\n         0 |   class std::vector<class std::shared_ptr<const struct object_access_check::OwnedPart> > parts\n         0 |     struct std::_Vector_base<class std::shared_ptr<const struct object_access_check::OwnedPart>, class std::allocator<class std::shared_ptr<const struct object_access_check::OwnedPart> > > (base)\n         0 |       struct std::_Vector_base<class std::shared_ptr<const struct object_access_check::OwnedPart>, class std::allocator<class std::shared_ptr<const struct object_access_check::OwnedPart> > >::_Vector_impl _M_impl\n         0 |         class std::allocator<class std::shared_ptr<const struct object_access_check::OwnedPart> > (base) (empty)\n         0 |           class std::__new_allocator<class std::shared_ptr<const struct object_access_check::OwnedPart> > (base) (empty)\n         0 |         struct std::_Vector_base<class std::shared_ptr<const struct object_access_check::OwnedPart>, class std::allocator<class std::shared_ptr<const struct object_access_check::OwnedPart> > >::_Vector_impl_data (base)\n         0 |           pointer _M_start\n         8 |           pointer _M_finish\n        16 |           pointer _M_end_of_storage\n           | [sizeof=24, dsize=24, align=8,\n           |  nvsize=24, nvalign=8]",
+        "0 | struct object_access_check::OwnedPart\n         0 |   struct orbital::allocation::Allocation storage\n         0 |     Storage * storage\n         8 |     std::byte * address\n        16 |     std::size_t size\n        24 |     std::size_t readable_padding\n        32 |   struct object_access_check::Metadata metadata\n        32 |     Word first\n        40 |     Word rows\n        48 |     Word shift\n           | [sizeof=56, dsize=56, align=8,\n           |  nvsize=56, nvalign=8]",
+        "0 | struct object_access_check::NativeBody\n         0 |   struct object_access_check::Metadata shape\n         0 |     Word first\n         8 |     Word rows\n        16 |     Word shift\n        24 |   class ikea::tuplepack::layout layout\n        24 |     struct std::array<struct ikea::tuplepack::code, 128> codes_\n        24 |       typename __array_traits<ikea::tuplepack::code, 128UL>::_Type _M_elems\n       408 |     unsigned int bytes_\n       412 |     unsigned int count_\n       416 |   class ikea::tuplepack::reader<8> prepared\n       416 |     struct ikea::tuplepack::detail::gpr_read controls_\n       416 |       struct ikea::tuplepack::detail::scalar_read<8> (base)\n       416 |         struct std::array<struct ikea::tuplepack::code, 8> codes\n       416 |           typename __array_traits<ikea::tuplepack::code, 8UL>::_Type _M_elems\n       440 |         class ikea::tuplepack::packet_layout<8> ordering\n       440 |           struct std::array<unsigned char, 8> offsets_\n       440 |             typename __array_traits<unsigned char, 8UL>::_Type _M_elems\n       448 |           struct std::array<unsigned char, 8> owners_\n       448 |             typename __array_traits<unsigned char, 8UL>::_Type _M_elems\n       456 |           unsigned int rows_\n       460 |           unsigned int slots_\n       464 |           _Bool row_major_\n       465 |           _Bool single_group_\n       468 |         unsigned int slots\n       472 |         unsigned int bytes\n       480 |         std::uint64_t reads\n       488 |       struct ikea::tuplepack::detail::word_transfer transfer\n       488 |         std::uint64_t mask\n       496 |         byte offset\n       497 |         byte shift\n       498 |         byte bytes\n       504 |     std::conditional_t<8U == 8, detail::gpr_reader<1U>, detail::no_kernel_entry> entry_\n       512 |   class ikea::tuplepack::basic_view<const unsigned char> source\n       512 |     class std::span<const unsigned char> storage_\n       512 |       pointer _M_ptr\n       520 |       class std::__detail::__extent_storage<dynamic_extent> _M_extent\n       520 |         size_t _M_extent_value\n       528 |     std::size_t count_\n       536 |     std::size_t stride_\n       544 |     std::size_t offset_\n       552 |     unsigned int bytes_\n       560 |   class ikea::tuplepack::read_operation<8, const unsigned char> operation\n       560 |     const reader<8U, 1U> * plan_\n       568 |     const basic_view<const unsigned char> * source_\n       576 |   class ikea::tuplepack::native_reader<8, const unsigned char> reader\n       576 |     const reader<8U, 1U> * plan_\n       584 |     const basic_view<const unsigned char> * source_\n           | [sizeof=592, dsize=592, align=8,\n           |  nvsize=592, nvalign=8]",
+        "0 | struct object_access_check::Published\n         0 |   Word version\n         8 |   struct std::array<class std::weak_ptr<const struct object_access_check::OwnedPart>, 3> first\n         8 |     typename __array_traits<std::weak_ptr<const object_access_check::OwnedPart>, 3UL>::_Type _M_elems\n        56 |   struct std::array<class std::weak_ptr<const struct object_access_check::OwnedPart>, 3> second\n        56 |     typename __array_traits<std::weak_ptr<const object_access_check::OwnedPart>, 3UL>::_Type _M_elems\n           | [sizeof=104, dsize=104, align=8,\n           |  nvsize=104, nvalign=8]",
+        "0 | struct object_access_check::Compound\n         0 |   class orbital::object::ReadContext context\n         0 |     class orbital::Ref<struct orbital::object::detail::Snapshot> snapshot_\n         0 |       struct orbital::object::detail::Snapshot * pointer_\n         8 |   class orbital::object::Selection selected\n         8 |     detail::Version * version_\n        16 |     const detail::Access * access_\n        24 |   class orbital::object::View early\n        24 |     const detail::Leaf * leaf_\n        32 |   class std::unique_ptr<struct object_access_check::NativeBody> early_body\n        32 |     struct std::__uniq_ptr_data<struct object_access_check::NativeBody, struct std::default_delete<struct object_access_check::NativeBody> > _M_t\n        32 |       class std::__uniq_ptr_impl<struct object_access_check::NativeBody, struct std::default_delete<struct object_access_check::NativeBody> > (base)\n        32 |         class std::tuple<struct object_access_check::NativeBody *, struct std::default_delete<struct object_access_check::NativeBody> > _M_t\n        32 |           struct std::_Tuple_impl<0, struct object_access_check::NativeBody *, struct std::default_delete<struct object_access_check::NativeBody> > (base)\n        32 |             struct std::_Tuple_impl<1, struct std::default_delete<struct object_access_check::NativeBody> > (base) (empty)\n        32 |               struct std::_Head_base<1, struct std::default_delete<struct object_access_check::NativeBody> > (base) (empty)\n        32 |                 struct std::default_delete<struct object_access_check::NativeBody> _M_head_impl (empty)\n        32 |             struct std::_Head_base<0, struct object_access_check::NativeBody *> (base)\n        32 |               struct object_access_check::NativeBody * _M_head_impl\n        40 |   struct loom::Task task\n        40 |     Worker * worker\n        48 |     void * context\n        56 |     Progress (*)(Task &) noexcept step\n        64 |     Task * next\n        72 |     struct orbital::WaitLink wait\n        72 |       Signal * source\n        80 |       WaitLink * next\n        88 |       void * waiter\n        96 |       void (*)(void *) noexcept notify\n       104 |     TaskState state\n       108 |     orbital::Error failure\n       112 |   struct orbital::Signal gate\n       112 |     worker::Lane * lane\n       120 |     Readiness state\n       124 |     Error failure\n       128 |     std::uint64_t generation\n       136 |     WaitLink * waiters\n       144 |   struct std::array<unsigned long, 67> result\n       144 |     typename __array_traits<unsigned long, 67UL>::_Type _M_elems\n       680 |   Word version\n       688 |   unsigned int calls\n       692 |   _Bool opened\n       693 |   _Bool ready\n       694 |   _Bool completed\n           | [sizeof=696, dsize=695, align=8,\n           |  nvsize=695, nvalign=8]",
+        "0 | class (lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:257:17) (empty)\n           | [sizeof=1, dsize=0, align=1,\n           |  nvsize=0, nvalign=1]",
+        "0 | struct object_access_check::PhysicalUse\n         0 |   class orbital::object::RetainedView access\n         0 |     class orbital::Ref<struct orbital::object::detail::Part> part_\n         0 |       struct orbital::object::detail::Part * pointer_\n         8 |   class std::unique_ptr<struct object_access_check::NativeBody> body\n         8 |     struct std::__uniq_ptr_data<struct object_access_check::NativeBody, struct std::default_delete<struct object_access_check::NativeBody> > _M_t\n         8 |       class std::__uniq_ptr_impl<struct object_access_check::NativeBody, struct std::default_delete<struct object_access_check::NativeBody> > (base)\n         8 |         class std::tuple<struct object_access_check::NativeBody *, struct std::default_delete<struct object_access_check::NativeBody> > _M_t\n         8 |           struct std::_Tuple_impl<0, struct object_access_check::NativeBody *, struct std::default_delete<struct object_access_check::NativeBody> > (base)\n         8 |             struct std::_Tuple_impl<1, struct std::default_delete<struct object_access_check::NativeBody> > (base) (empty)\n         8 |               struct std::_Head_base<1, struct std::default_delete<struct object_access_check::NativeBody> > (base) (empty)\n         8 |                 struct std::default_delete<struct object_access_check::NativeBody> _M_head_impl (empty)\n         8 |             struct std::_Head_base<0, struct object_access_check::NativeBody *> (base)\n         8 |               struct object_access_check::NativeBody * _M_head_impl\n        16 |   struct orbital::Signal done\n        16 |     worker::Lane * lane\n        24 |     Readiness state\n        28 |     Error failure\n        32 |     std::uint64_t generation\n        40 |     WaitLink * waiters\n        48 |   struct orbital::worker::Message completion\n        48 |     struct std::atomic<struct orbital::worker::Message *> next\n        48 |       struct std::__atomic_base<struct orbital::worker::Message *> _M_b\n        48 |         __pointer_type _M_p\n        56 |     void * context\n        64 |     const MessageOps * ops\n        72 |   struct std::atomic<unsigned int> references\n        72 |     struct std::__atomic_base<unsigned int> (base)\n        72 |       __int_type _M_i\n        80 |   Word result\n        88 |   unsigned int handled\n           | [sizeof=96, dsize=92, align=8,\n           |  nvsize=92, nvalign=8]",
+        "0 | class object_access_check::PhysicalUse::(lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:398:5) (empty)\n           | [sizeof=1, dsize=0, align=1,\n           |  nvsize=0, nvalign=1]",
+        "0 | class object_access_check::PhysicalUse::(lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:402:5) (empty)\n           | [sizeof=1, dsize=0, align=1,\n           |  nvsize=0, nvalign=1]",
+        "0 | class object_access_check::PhysicalUse::(lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:410:5) (empty)\n           | [sizeof=1, dsize=0, align=1,\n           |  nvsize=0, nvalign=1]",
+        "0 | class (lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:430:19) (empty)\n           | [sizeof=1, dsize=0, align=1,\n           |  nvsize=0, nvalign=1]",
+        "0 | struct Caller\n         0 |   struct loom::Task task\n         0 |     Worker * worker\n         8 |     void * context\n        16 |     Progress (*)(Task &) noexcept step\n        24 |     Task * next\n        32 |     struct orbital::WaitLink wait\n        32 |       Signal * source\n        40 |       WaitLink * next\n        48 |       void * waiter\n        56 |       void (*)(void *) noexcept notify\n        64 |     TaskState state\n        68 |     orbital::Error failure\n        72 |   PhysicalUse * physical\n           | [sizeof=80, dsize=80, align=8,\n           |  nvsize=80, nvalign=8]",
+        "0 | class (lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:446:23)\n         0 |   std::unique_ptr<PhysicalUse> & \n         8 |   Fixture & \n           | [sizeof=16, dsize=16, align=8,\n           |  nvsize=16, nvalign=8]",
+        "0 | struct object_access_check::DelayedFill\n         0 |   obj::Store * store\n         8 |   class orbital::object::Draft draft\n         8 |     class orbital::Ref<struct orbital::object::detail::Edit> edit_\n         8 |       struct orbital::object::detail::Edit * pointer_\n        16 |   class orbital::object::Builder builder\n        16 |     class orbital::Ref<struct orbital::object::detail::Build> build_\n        16 |       struct orbital::object::detail::Build * pointer_\n        24 |   class orbital::object::WriteView writer\n        24 |     class orbital::Ref<struct orbital::object::detail::Build> build_\n        24 |       struct orbital::object::detail::Build * pointer_\n        32 |     std::size_t index_\n        40 |   class std::span<enum std::byte> target\n        40 |     pointer _M_ptr\n        48 |     class std::__detail::__extent_storage<dynamic_extent> _M_extent\n        48 |       size_t _M_extent_value\n        56 |   struct orbital::Signal done\n        56 |     worker::Lane * lane\n        64 |     Readiness state\n        68 |     Error failure\n        72 |     std::uint64_t generation\n        80 |     WaitLink * waiters\n        88 |   struct orbital::worker::Message completion\n        88 |     struct std::atomic<struct orbital::worker::Message *> next\n        88 |       struct std::__atomic_base<struct orbital::worker::Message *> _M_b\n        88 |         __pointer_type _M_p\n        96 |     void * context\n       104 |     const MessageOps * ops\n       112 |   struct std::atomic<unsigned int> references\n       112 |     struct std::__atomic_base<unsigned int> (base)\n       112 |       __int_type _M_i\n       116 |   _Bool interested\n       120 |   unsigned int handled\n       124 |   FillResult result\n           | [sizeof=128, dsize=128, align=8,\n           |  nvsize=128, nvalign=8]",
+        "0 | class object_access_check::DelayedFill::(lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:521:5) (empty)\n           | [sizeof=1, dsize=0, align=1,\n           |  nvsize=0, nvalign=1]",
+        "0 | class object_access_check::DelayedFill::(lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:525:5) (empty)\n           | [sizeof=1, dsize=0, align=1,\n           |  nvsize=0, nvalign=1]",
+        "0 | class object_access_check::DelayedFill::(lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:551:5) (empty)\n           | [sizeof=1, dsize=0, align=1,\n           |  nvsize=0, nvalign=1]",
+        "0 | struct Caller\n         0 |   struct loom::Task task\n         0 |     Worker * worker\n         8 |     void * context\n        16 |     Progress (*)(Task &) noexcept step\n        24 |     Task * next\n        32 |     struct orbital::WaitLink wait\n        32 |       Signal * source\n        40 |       WaitLink * next\n        48 |       void * waiter\n        56 |       void (*)(void *) noexcept notify\n        64 |     TaskState state\n        68 |     orbital::Error failure\n        72 |   DelayedFill * physical\n        80 |   unsigned int calls\n        84 |   FillResult observed\n           | [sizeof=88, dsize=88, align=8,\n           |  nvsize=88, nvalign=8]",
+        "0 | class (lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:578:21) (empty)\n           | [sizeof=1, dsize=0, align=1,\n           |  nvsize=0, nvalign=1]",
+        "0 | class (lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:590:25)\n         0 |   class std::span<enum std::byte> \n         0 |     pointer _M_ptr\n         8 |     class std::__detail::__extent_storage<dynamic_extent> _M_extent\n         8 |       size_t _M_extent_value\n        16 |   orbital::worker::Message * \n        24 |   orbital::worker::Lane * \n        32 |   std::atomic<_Bool> & \n        40 |   std::atomic<_Bool> & \n           | [sizeof=48, dsize=48, align=8,\n           |  nvsize=48, nvalign=8]",
+        "0 | struct object_access_check::RingFrame\n         0 |   class orbital::object::RetainedView access\n         0 |     class orbital::Ref<struct orbital::object::detail::Part> part_\n         0 |       struct orbital::object::detail::Part * pointer_\n         8 |   class std::unique_ptr<struct object_access_check::NativeBody> body\n         8 |     struct std::__uniq_ptr_data<struct object_access_check::NativeBody, struct std::default_delete<struct object_access_check::NativeBody> > _M_t\n         8 |       class std::__uniq_ptr_impl<struct object_access_check::NativeBody, struct std::default_delete<struct object_access_check::NativeBody> > (base)\n         8 |         class std::tuple<struct object_access_check::NativeBody *, struct std::default_delete<struct object_access_check::NativeBody> > _M_t\n         8 |           struct std::_Tuple_impl<0, struct object_access_check::NativeBody *, struct std::default_delete<struct object_access_check::NativeBody> > (base)\n         8 |             struct std::_Tuple_impl<1, struct std::default_delete<struct object_access_check::NativeBody> > (base) (empty)\n         8 |               struct std::_Head_base<1, struct std::default_delete<struct object_access_check::NativeBody> > (base) (empty)\n         8 |                 struct std::default_delete<struct object_access_check::NativeBody> _M_head_impl (empty)\n         8 |             struct std::_Head_base<0, struct object_access_check::NativeBody *> (base)\n         8 |               struct object_access_check::NativeBody * _M_head_impl\n        16 |   class loom::DemandClass demand\n        16 |     std::uint8_t code_\n        24 |   Word owner\n        32 |   Word steps\n        40 |   Word sum\n        48 |   _Bool completed\n           | [sizeof=56, dsize=49, align=8,\n           |  nvsize=49, nvalign=8]",
+        "0 | class (lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:685:3) (empty)\n           | [sizeof=1, dsize=0, align=1,\n           |  nvsize=0, nvalign=1]",
+        "0 | struct object_access_check::DecoderOwner\n         0 |   struct std::array<enum std::byte, 1> fields\n         0 |     typename __array_traits<std::byte, 1UL>::_Type _M_elems\n           | [sizeof=1, dsize=1, align=1,\n           |  nvsize=1, nvalign=1]"
+      ],
+      "additional_actual_declarations": [
+        "declare void @_ZNK7orbital6object5Store10statisticsEv(ptr dead_on_unwind writable sret(%\"struct.orbital::object::Statistics\") align 8, ptr noundef nonnull align 8 dereferenceable(8)) local_unnamed_addr #11",
+        "declare [2 x i64] @_ZNKR7orbital6object5Store6borrowEv(ptr noundef nonnull align 8 dereferenceable(8)) local_unnamed_addr #11",
+        "declare void @_ZNKR7orbital6object9WriteView5bytesEv(ptr dead_on_unwind writable sret(%\"class.std::expected.107\") align 8, ptr noundef nonnull align 8 dereferenceable(16)) local_unnamed_addr #11",
+        "declare void @_ZN7orbital10allocation10statisticsERKNS0_4PoolE(ptr dead_on_unwind writable sret(%\"struct.orbital::allocation::Statistics\") align 8, ptr noundef nonnull align 8 dereferenceable(64)) local_unnamed_addr #11"
+      ]
+    },
+    "zen5": {
+      "facts": {
+        "Progress": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "ResultVoid": [
+          8,
+          4,
+          0,
+          1,
+          1,
+          1
+        ],
+        "ObjectId": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "PartId": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Epoch": [
+          8,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "BufferGeneration": [
+          8,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "ByteRange": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Bytes": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "MutableBytes": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "WaitLink": [
+          32,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Signal": [
+          32,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Message": [
+          24,
+          8,
+          1,
+          1,
+          0,
+          0
+        ],
+        "MessageOps": [
+          24,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Lane": [
+          256,
+          64,
+          0,
+          0,
+          0,
+          0
+        ],
+        "Thread": [
+          8,
+          8,
+          0,
+          0,
+          0,
+          0
+        ],
+        "Worker": [
+          448,
+          64,
+          0,
+          0,
+          0,
+          0
+        ],
+        "Task": [
+          72,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "PollBudget": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "AllocationRequest": [
+          40,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Allocation": [
+          32,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "Hold": [
+          32,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "ResultAllocation": [
+          40,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "ResultHold": [
+          40,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "ReleaseHint": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Arena": [
+          32,
+          8,
+          0,
+          0,
+          0,
+          0
+        ],
+        "Pool": [
+          64,
+          8,
+          0,
+          0,
+          0,
+          0
+        ],
+        "PreparedBytes": [
+          24,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Preparation": [
+          192,
+          8,
+          0,
+          0,
+          0,
+          0
+        ],
+        "PreparationOutcome": [
+          32,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "AllocationStatistics": [
+          104,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "RingCapacity": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "SpinBudget": [
+          8,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "RingLayout": [
+          24,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "RingStorage": [
+          56,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "ResultRingStorage": [
+          64,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "MemoryDemand": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "MemoryDependency": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "DemandClass": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "HintProfile": [
+          32,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "HintPolicy": [
+          56,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Description": [
+          88,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "RepresentationSpec": [
+          104,
+          8,
+          0,
+          0,
+          1,
+          1
+        ],
+        "PartSource": [
+          80,
+          8,
+          0,
+          0,
+          1,
+          1
+        ],
+        "PartPlan": [
+          72,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "View": [
+          8,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Selection": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "ResultView": [
+          16,
+          8,
+          0,
+          1,
+          1,
+          1
+        ],
+        "ResultSelection": [
+          24,
+          8,
+          0,
+          1,
+          1,
+          1
+        ],
+        "BorrowedContext": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "ReadContext": [
+          8,
+          8,
+          0,
+          0,
+          1,
+          1
+        ],
+        "Representation": [
+          8,
+          8,
+          0,
+          0,
+          1,
+          1
+        ],
+        "RetainedView": [
+          8,
+          8,
+          0,
+          0,
+          1,
+          1
+        ],
+        "RetainedSelection": [
+          16,
+          8,
+          0,
+          0,
+          1,
+          1
+        ],
+        "ResultRetainedView": [
+          16,
+          8,
+          0,
+          0,
+          1,
+          1
+        ],
+        "ResultReadContext": [
+          16,
+          8,
+          0,
+          0,
+          1,
+          1
+        ],
+        "ResultRetainedSelection": [
+          24,
+          8,
+          0,
+          0,
+          1,
+          1
+        ],
+        "Builder": [
+          8,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "WriteView": [
+          16,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "ResultWriteView": [
+          24,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "ResultMutableBytes": [
+          24,
+          8,
+          0,
+          1,
+          1,
+          1
+        ],
+        "Draft": [
+          8,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "Prepared": [
+          8,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "Store": [
+          8,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "ObjectStatistics": [
+          96,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Compound": [
+          696,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "PhysicalUse": [
+          96,
+          8,
+          0,
+          0,
+          0,
+          0
+        ],
+        "DelayedFill": [
+          128,
+          8,
+          0,
+          0,
+          0,
+          0
+        ],
+        "RingFrame": [
+          56,
+          8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "NativeBody": [
+          592,
+          8,
+          1,
+          1,
+          0,
+          0
+        ],
+        "Stage2Ring": [
+          320,
+          64,
+          0,
+          0,
+          0,
+          0
+        ],
+        "Stage2Slot": [
+          88,
+          8,
+          0,
+          1,
+          1,
+          1
+        ],
+        "Stage2Arguments": [
+          32,
+          8,
+          0,
+          1,
+          1,
+          1
+        ],
+        "TupleLayout": [
+          392,
+          4,
+          1,
+          1,
+          1,
+          1
+        ],
+        "TupleReader8": [
+          96,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "TupleView": [
+          48,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "TupleReadOperation": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "TupleNativeReader": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Packet8": [
+          8,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Packet16": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Packet32": [
+          32,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "ResultPacket8": [
+          16,
+          8,
+          0,
+          1,
+          1,
+          1
+        ],
+        "ResultPacket16": [
+          24,
+          8,
+          0,
+          1,
+          1,
+          1
+        ],
+        "ResultPacket32": [
+          40,
+          8,
+          0,
+          1,
+          1,
+          1
+        ],
+        "CompactResult16": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "signatures": [
+        "define hidden ptr @_ZN13loom_metadata5pass8ENS_7Packet8E(ptr readnone returned captures(ret: address, provenance) %0) local_unnamed_addr #0 {",
+        "define hidden { ptr, i64 } @_ZN13loom_metadata6pass16ENS_8Packet16E(ptr %0, i64 %1) local_unnamed_addr #0 {",
+        "define hidden void @_ZN13loom_metadata6pass32ENS_8Packet32E(ptr dead_on_unwind noalias writable writeonly sret(%\"struct.loom_metadata::Packet32\") align 8 captures(none) initializes((0, 32)) %0, ptr noundef byval(%\"struct.loom_metadata::Packet32\") align 8 captures(none) %1) local_unnamed_addr #2 {",
+        "define hidden { ptr, i8 } @_ZN13loom_metadata8checked8ENS_7Packet8E(ptr %0) local_unnamed_addr #0 {",
+        "define hidden void @_ZN13loom_metadata9checked16ENS_8Packet16E(ptr dead_on_unwind noalias writable writeonly sret(%\"class.std::expected.0\") align 8 captures(none) initializes((0, 17)) %0, ptr %1, i64 %2) local_unnamed_addr #3 {",
+        "define hidden void @_ZN13loom_metadata9checked32ENS_8Packet32E(ptr dead_on_unwind noalias writable writeonly sret(%\"class.std::expected.3\") align 8 captures(none) initializes((0, 33)) %0, ptr noundef readonly byval(%\"struct.loom_metadata::Packet32\") align 8 captures(none) %1) local_unnamed_addr #2 {",
+        "define hidden { ptr, ptr } @_ZN13loom_metadata13pass_result16ENS_8Result16E(ptr %0, ptr %1) local_unnamed_addr #0 {",
+        "define hidden { ptr, i64 } @_ZN13loom_metadata13pass_progressEN7orbital8ProgressE(ptr %0, i64 %1) local_unnamed_addr #0 {",
+        "define hidden ptr @_ZN13loom_metadata9pass_viewEN7orbital6object4ViewE(ptr readnone returned captures(ret: address, provenance) %0) local_unnamed_addr #0 {",
+        "define hidden { ptr, ptr } @_ZN13loom_metadata14pass_selectionEN7orbital6object9SelectionE(ptr %0, ptr %1) local_unnamed_addr #0 {",
+        "define hidden { ptr, i8 } @_ZN13loom_metadata12checked_viewEN7orbital6object4ViewE(ptr %0) local_unnamed_addr #0 {",
+        "define hidden void @_ZN13loom_metadata17checked_selectionEN7orbital6object9SelectionE(ptr dead_on_unwind noalias writable writeonly sret(%\"class.std::expected.9\") align 8 captures(none) initializes((0, 17)) %0, ptr %1, ptr %2) local_unnamed_addr #3 {",
+        "define hidden void @_ZN13loom_metadata13checked_bytesESt4spanIKSt4byteLm18446744073709551615EE(ptr dead_on_unwind noalias writable writeonly sret(%\"class.std::expected.12\") align 8 captures(none) initializes((0, 17)) %0, ptr %1, i64 %2) local_unnamed_addr #3 {",
+        "define hidden void @_ZN13loom_metadata9move_viewEN7orbital6object12RetainedViewE(ptr dead_on_unwind noalias writable writeonly sret(%\"class.orbital::object::RetainedView\") align 8 captures(none) initializes((0, 8)) %0, ptr noundef captures(none) %1) local_unnamed_addr #2 personality ptr @__gxx_personality_v0 {",
+        "define hidden void @_ZN13loom_metadata13checked_ownerEN7orbital6object12RetainedViewE(ptr dead_on_unwind noalias writable writeonly sret(%\"class.std::expected.15\") align 8 captures(none) initializes((0, 9)) %0, ptr noundef captures(none) %1) local_unnamed_addr #2 personality ptr @__gxx_personality_v0 {",
+        "define hidden void @_ZN13loom_metadata15move_allocationEN7orbital10allocation10AllocationE(ptr dead_on_unwind noalias nonnull writable sret(%\"class.std::expected.18\") align 8 %0, ptr noundef nonnull %1) local_unnamed_addr #4 {",
+        "define hidden void @_ZN13loom_metadata9move_holdEN7orbital10allocation4HoldE(ptr dead_on_unwind noalias nonnull writable sret(%\"class.std::expected.21\") align 8 %0, ptr noundef nonnull %1) local_unnamed_addr #4 {",
+        "define hidden void @_ZN13loom_metadata9move_bankEN4loom6detail11RingStorageE(ptr dead_on_unwind noalias nonnull writable sret(%\"class.std::expected.24\") align 8 %0, ptr noundef nonnull %1) local_unnamed_addr #4 {",
+        "define hidden noundef i64 @_ZN13loom_metadata7caller8ENS_7Packet8E(ptr %0) local_unnamed_addr #0 {",
+        "declare ptr @_ZN13loom_metadata5pass8ENS_7Packet8E(ptr) local_unnamed_addr #2",
+        "define hidden noundef i64 @_ZN13loom_metadata8caller16ENS_8Packet16E(ptr %0, i64 %1) local_unnamed_addr #0 {",
+        "declare { ptr, i64 } @_ZN13loom_metadata6pass16ENS_8Packet16E(ptr, i64) local_unnamed_addr #2",
+        "define hidden noundef i64 @_ZN13loom_metadata8caller32ENS_8Packet32E(ptr noundef readonly byval(%\"struct.loom_metadata::Packet32\") align 8 captures(none) %0) local_unnamed_addr #0 {",
+        "declare void @_ZN13loom_metadata6pass32ENS_8Packet32E(ptr dead_on_unwind writable sret(%\"struct.loom_metadata::Packet32\") align 8, ptr noundef byval(%\"struct.loom_metadata::Packet32\") align 8) local_unnamed_addr #2",
+        "define hidden noundef i64 @_ZN13loom_metadata16caller_checked16ENS_8Packet16E(ptr %0, i64 %1) local_unnamed_addr #0 {",
+        "declare void @_ZN13loom_metadata9checked16ENS_8Packet16E(ptr dead_on_unwind writable sret(%\"class.std::expected\") align 8, ptr, i64) local_unnamed_addr #2",
+        "define hidden noundef i64 @_ZN13loom_metadata15caller_result16ENS_8Result16E(ptr %0, ptr %1) local_unnamed_addr #0 {",
+        "declare { ptr, ptr } @_ZN13loom_metadata13pass_result16ENS_8Result16E(ptr, ptr) local_unnamed_addr #2",
+        "define hidden noundef i64 @_ZN13loom_metadata15caller_progressEN7orbital8ProgressE(ptr %0, i64 %1) local_unnamed_addr #0 {",
+        "declare { ptr, i64 } @_ZN13loom_metadata13pass_progressEN7orbital8ProgressE(ptr, i64) local_unnamed_addr #2",
+        "define hidden noundef i64 @_ZN13loom_metadata16caller_selectionEN7orbital6object9SelectionE(ptr %0, ptr %1) local_unnamed_addr #0 {",
+        "declare { ptr, ptr } @_ZN13loom_metadata14pass_selectionEN7orbital6object9SelectionE(ptr, ptr) local_unnamed_addr #2",
+        "define hidden noundef i64 @_ZN13loom_metadata24caller_checked_selectionEN7orbital6object9SelectionE(ptr %0, ptr %1) local_unnamed_addr #0 {",
+        "declare void @_ZN13loom_metadata17checked_selectionEN7orbital6object9SelectionE(ptr dead_on_unwind writable sret(%\"class.std::expected.0\") align 8, ptr, ptr) local_unnamed_addr #2",
+        "define hidden { ptr, i64 } @_ZN13loom_metadata19caller_checked_viewEN7orbital6object4ViewE(ptr %0) local_unnamed_addr #0 {",
+        "declare { ptr, i8 } @_ZN13loom_metadata12checked_viewEN7orbital6object4ViewE(ptr) local_unnamed_addr #2",
+        "define hidden void @_ZN13loom_metadata8discoverERKN7orbital6object11ReadContextENS0_2IdINS0_9ObjectTagEEE(ptr dead_on_unwind noalias writable sret(%\"class.std::expected.0\") align 8 %0, ptr noundef nonnull align 8 dereferenceable(8) %1, i64 %2, i64 %3) local_unnamed_addr #0 {",
+        "declare void @_ZN7orbital6object6selectERKNS0_11ReadContextENS_2IdINS_9ObjectTagEEEb(ptr dead_on_unwind writable sret(%\"class.std::expected.0\") align 8, ptr noundef nonnull align 8 dereferenceable(8), i64, i64, i1 noundef zeroext) local_unnamed_addr #2",
+        "define hidden { ptr, i8 } @_ZN13loom_metadata7resolveEN7orbital6object9SelectionEm(ptr readnone captures(none) %0, ptr readonly captures(address_is_null) %1, i64 noundef %2) local_unnamed_addr #3 personality ptr @__gxx_personality_v0 {",
+        "define hidden void @_ZN13loom_metadata11retain_onceEN7orbital6object4ViewE(ptr dead_on_unwind noalias writable sret(%\"class.orbital::object::RetainedView\") align 8 %0, ptr %1) local_unnamed_addr #0 {",
+        "declare void @_ZN7orbital6object6retainENS0_4ViewE(ptr dead_on_unwind writable sret(%\"class.orbital::object::RetainedView\") align 8, ptr) local_unnamed_addr #2",
+        "define hidden noundef i64 @_ZN13loom_metadata15prepared_callerERKN19object_access_check10NativeBodyEm(ptr noundef nonnull align 1 %0, i64 noundef %1) local_unnamed_addr #4 {",
+        "declare noundef i64 @_ZN13loom_metadata11native_wordERKN19object_access_check10NativeBodyEm(ptr noundef nonnull align 1, i64 noundef) local_unnamed_addr #5",
+        "declare void @_ZN7orbital6object6selectERKNS0_15BorrowedContextENS_2IdINS_9ObjectTagEEEb(ptr dead_on_unwind writable sret(%\"class.std::expected.53\") align 8, ptr noundef nonnull align 8 dereferenceable(16), i64, i64, i1 noundef zeroext) local_unnamed_addr #11",
+        "declare void @_ZN7orbital6object6selectERKNS0_11ReadContextENS_2IdINS_9ObjectTagEEEb(ptr dead_on_unwind writable sret(%\"class.std::expected.53\") align 8, ptr noundef nonnull align 8 dereferenceable(8), i64, i64, i1 noundef zeroext) local_unnamed_addr #11",
+        "declare void @_ZN7orbital6object6retainENS0_9SelectionE(ptr dead_on_unwind writable sret(%\"class.orbital::object::RetainedSelection\") align 8, ptr, ptr) local_unnamed_addr #11",
+        "declare void @_ZN7orbital6object6retainENS0_4ViewE(ptr dead_on_unwind writable sret(%\"class.orbital::object::RetainedView\") align 8, ptr) local_unnamed_addr #11",
+        "define hidden noundef i64 @_ZN13loom_metadata11native_wordERKN19object_access_check10NativeBodyEm(ptr noundef nonnull readonly align 8 captures(none) dereferenceable(592) %0, i64 noundef %1) local_unnamed_addr #14 {",
+        "define hidden noundef i64 @_ZN13loom_metadata15prepared_inlineERKN19object_access_check10NativeBodyEm(ptr noundef nonnull readonly align 8 captures(none) dereferenceable(592) %0, i64 noundef %1) local_unnamed_addr #15 {"
+      ],
+      "functions": [
+        {
+          "name": "loom_metadata::pass8(loom_metadata::Packet8)",
+          "role": "ordinary_packet_probe",
+          "bytes": 4,
+          "static_instruction_sites": 2,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::pass16(loom_metadata::Packet16)",
+          "role": "ordinary_packet_probe",
+          "bytes": 8,
+          "static_instruction_sites": 3,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::pass32(loom_metadata::Packet32)",
+          "role": "ordinary_packet_probe",
+          "bytes": 45,
+          "static_instruction_sites": 10,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 4,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::checked8(loom_metadata::Packet8)",
+          "role": "ordinary_packet_probe",
+          "bytes": 6,
+          "static_instruction_sites": 3,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::checked16(loom_metadata::Packet16)",
+          "role": "ordinary_packet_probe",
+          "bytes": 15,
+          "static_instruction_sites": 5,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::checked32(loom_metadata::Packet32)",
+          "role": "ordinary_packet_probe",
+          "bytes": 21,
+          "static_instruction_sites": 6,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 1,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::pass_result16(loom_metadata::Result16)",
+          "role": "ordinary_packet_probe",
+          "bytes": 7,
+          "static_instruction_sites": 3,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::pass_progress(orbital::Progress)",
+          "role": "ordinary_packet_probe",
+          "bytes": 7,
+          "static_instruction_sites": 3,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::pass_view(orbital::object::View)",
+          "role": "ordinary_packet_probe",
+          "bytes": 4,
+          "static_instruction_sites": 2,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::pass_selection(orbital::object::Selection)",
+          "role": "ordinary_packet_probe",
+          "bytes": 7,
+          "static_instruction_sites": 3,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::checked_view(orbital::object::View)",
+          "role": "ordinary_packet_probe",
+          "bytes": 6,
+          "static_instruction_sites": 3,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::checked_selection(orbital::object::Selection)",
+          "role": "ordinary_packet_probe",
+          "bytes": 15,
+          "static_instruction_sites": 5,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::checked_bytes(std::span<std::byte const, 18446744073709551615ul>)",
+          "role": "ordinary_packet_probe",
+          "bytes": 15,
+          "static_instruction_sites": 5,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::move_view(orbital::object::RetainedView)",
+          "role": "ordinary_packet_probe",
+          "bytes": 17,
+          "static_instruction_sites": 5,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::checked_owner(orbital::object::RetainedView)",
+          "role": "ordinary_packet_probe",
+          "bytes": 21,
+          "static_instruction_sites": 6,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::move_allocation(orbital::allocation::Allocation)",
+          "role": "ordinary_packet_probe",
+          "bytes": 18,
+          "static_instruction_sites": 7,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 2,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::move_hold(orbital::allocation::Hold)",
+          "role": "ordinary_packet_probe",
+          "bytes": 18,
+          "static_instruction_sites": 7,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 2,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::move_bank(loom::detail::RingStorage)",
+          "role": "ordinary_packet_probe",
+          "bytes": 50,
+          "static_instruction_sites": 16,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 5,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::caller8(loom_metadata::Packet8)",
+          "role": "ordinary_packet_probe",
+          "bytes": 5,
+          "static_instruction_sites": 1,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 1
+        },
+        {
+          "name": "loom_metadata::caller16(loom_metadata::Packet16)",
+          "role": "ordinary_packet_probe",
+          "bytes": 11,
+          "static_instruction_sites": 5,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 2,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::caller32(loom_metadata::Packet32)",
+          "role": "ordinary_packet_probe",
+          "bytes": 53,
+          "static_instruction_sites": 12,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 6,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::caller_checked16(loom_metadata::Packet16)",
+          "role": "ordinary_packet_probe",
+          "bytes": 46,
+          "static_instruction_sites": 13,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 3,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::caller_result16(loom_metadata::Result16)",
+          "role": "ordinary_packet_probe",
+          "bytes": 24,
+          "static_instruction_sites": 9,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 2,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::caller_progress(orbital::Progress)",
+          "role": "ordinary_packet_probe",
+          "bytes": 41,
+          "static_instruction_sites": 14,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 2,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::caller_selection(orbital::object::Selection)",
+          "role": "ordinary_packet_probe",
+          "bytes": 12,
+          "static_instruction_sites": 5,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 2,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::caller_checked_selection(orbital::object::Selection)",
+          "role": "ordinary_packet_probe",
+          "bytes": 48,
+          "static_instruction_sites": 14,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 3,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::caller_checked_view(orbital::object::View)",
+          "role": "ordinary_packet_probe",
+          "bytes": 34,
+          "static_instruction_sites": 12,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 2,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::discover(orbital::object::ReadContext const&, orbital::Id<orbital::ObjectTag>)",
+          "role": "ordinary_packet_probe",
+          "bytes": 17,
+          "static_instruction_sites": 7,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 2,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::resolve(orbital::object::Selection, unsigned long)",
+          "role": "ordinary_packet_probe",
+          "bytes": 29,
+          "static_instruction_sites": 11,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::retain_once(orbital::object::View)",
+          "role": "ordinary_packet_probe",
+          "bytes": 14,
+          "static_instruction_sites": 6,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 2,
+          "tail_or_jump_sites": 0
+        },
+        {
+          "name": "loom_metadata::prepared_caller(object_access_check::NativeBody const&, unsigned long)",
+          "role": "ordinary_packet_probe",
+          "bytes": 74,
+          "static_instruction_sites": 28,
+          "ordinary_call_sites": 1,
+          "stack_memory_sites": 9,
+          "tail_or_jump_sites": 1
+        },
+        {
+          "name": "object_access_check::native(loom::detail::MemoryRing<std::integer_sequence<unsigned long, 0ul, 1ul, 2ul, 3ul>, object_access_check::RingFrame*, unsigned long, unsigned long, unsigned long>*, loom::detail::MemoryRing<std::integer_sequence<unsigned long, 0ul, 1ul, 2ul, 3ul>, object_access_check::RingFrame*, unsigned long, unsigned long, unsigned long>::Slot*, object_access_check::RingFrame*, unsigned long, unsigned long, unsigned long)",
+          "role": "native_callback",
+          "bytes": 1685,
+          "static_instruction_sites": 420,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 33
+        },
+        {
+          "name": "loom_metadata::native_word(object_access_check::NativeBody const&, unsigned long)",
+          "role": "ordinary_packet_probe",
+          "bytes": 885,
+          "static_instruction_sites": 242,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 0,
+          "tail_or_jump_sites": 5
+        },
+        {
+          "name": "loom_metadata::prepared_inline(object_access_check::NativeBody const&, unsigned long)",
+          "role": "ordinary_packet_probe",
+          "bytes": 4146,
+          "static_instruction_sites": 993,
+          "ordinary_call_sites": 0,
+          "stack_memory_sites": 86,
+          "tail_or_jump_sites": 35
+        }
+      ],
+      "objects": [
+        {
+          "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/codegen-02/zen5/boundaries.o",
+          "sha256": "01b7bd0d7d442d36062e9a0dca6370b7c841d5554b8ca083ba302f1f041fc87c",
+          "ir_sha256": "3b08d654323a866f9528d759d053e6a12a0dc2e1658a383d3c2bc22d051084aa"
+        },
+        {
+          "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/codegen-02/zen5/callers.o",
+          "sha256": "99cd76a586dffe8fa97c2c02152cbe18317b650d2c7e4e0f5e2ce132691226f0",
+          "ir_sha256": "e6e94b4b7678ae742ff84654e33f074f803a187e14eb8ffa2888117f4deba050"
+        },
+        {
+          "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/codegen-02/zen5/facts.o",
+          "sha256": "51b59dba84ca6cbd6308a576479ef2b898260485434d1f25db8dfcdc06ba8dc5",
+          "ir_sha256": "75425db8d88bea4f183c9a4ac001f55f9a6e99d58f66f6abc23b1c323e732949"
+        }
+      ],
+      "dependency_manifest_sha256": "17ca8018ae5e00e4a2c57e59965289ed3224d6aae149c51772484c8fafd40dcd",
+      "dependency_files": 491,
+      "caller_record_layouts": [
+        "0 | struct object_access_check::Metadata\n         0 |   Word first\n         8 |   Word rows\n        16 |   Word shift\n           | [sizeof=24, dsize=24, align=8,\n           |  nvsize=24, nvalign=8]",
+        "0 | struct object_access_check::Fixture\n         0 |   class orbital::Ref<struct orbital::allocation::Arena> arena\n         0 |     struct orbital::allocation::Arena * pointer_\n        64 |   struct loom::Worker worker\n        64 |     struct orbital::worker::Lane lane\n        64 |       int cpu\n        72 |       void (*)(void *) noexcept notify_posted\n        80 |       void * notify_context\n       128 |       struct orbital::worker::Message sentinel\n       128 |         struct std::atomic<struct orbital::worker::Message *> next\n       128 |           struct std::__atomic_base<struct orbital::worker::Message *> _M_b\n       128 |             __pointer_type _M_p\n       136 |         void * context\n       144 |         const MessageOps * ops\n       192 |       struct std::atomic<struct orbital::worker::Message *> producer\n       192 |         struct std::__atomic_base<struct orbital::worker::Message *> _M_b\n       192 |           __pointer_type _M_p\n       256 |       Message * consumer\n       264 |       struct std::atomic<void *> owner\n       264 |         struct std::__atomic_base<void *> _M_b\n       264 |           __pointer_type _M_p\n       272 |       Lane * owner_next\n       320 |     class orbital::Ref<struct orbital::allocation::Arena> arena\n       320 |       struct orbital::allocation::Arena * pointer_\n       328 |     orbital::allocation::Pool * memory\n       336 |     Task * first\n       344 |     Task * last\n       352 |     std::uint64_t task_limit\n       360 |     std::uint64_t active_tasks\n       368 |     struct orbital::Signal capacity_changed\n       368 |       worker::Lane * lane\n       376 |       Readiness state\n       380 |       Error failure\n       384 |       std::uint64_t generation\n       392 |       WaitLink * waiters\n       400 |     struct loom::HintPolicy hints\n       400 |       struct loom::HintProfile profile\n       400 |         std::uint64_t revision\n       408 |         struct loom::HintGeometry geometry\n       408 |           std::size_t line_bytes\n       416 |           std::size_t page_bytes\n       424 |         unsigned int preferred_width\n       428 |         unsigned int training_accesses\n       432 |       HintPressure pressure\n       436 |       struct std::array<enum loom::Hint, 17> codes\n       436 |         typename __array_traits<loom::Hint, 17UL>::_Type _M_elems\n       456 |     class std::shared_ptr<class loom::HardwareProfile> hardware\n       456 |       class std::__shared_ptr<class loom::HardwareProfile> (base)\n       456 |         class std::__shared_ptr_access<class loom::HardwareProfile, __gnu_cxx::_S_atomic> (base) (empty)\n       456 |         element_type * _M_ptr\n       464 |         class std::__shared_count<> _M_refcount\n       464 |           _Sp_counted_base<(__gnu_cxx::_Lock_policy)2U> * _M_pi\n       472 |     _Bool stopping\n       473 |     _Bool polling\n           | [sizeof=512, dsize=512, align=64,\n           |  nvsize=512, nvalign=64]",
+        "0 | struct object_access_check::Payload\n         0 |   class std::vector<class std::shared_ptr<const struct object_access_check::OwnedPart> > parts\n         0 |     struct std::_Vector_base<class std::shared_ptr<const struct object_access_check::OwnedPart>, class std::allocator<class std::shared_ptr<const struct object_access_check::OwnedPart> > > (base)\n         0 |       struct std::_Vector_base<class std::shared_ptr<const struct object_access_check::OwnedPart>, class std::allocator<class std::shared_ptr<const struct object_access_check::OwnedPart> > >::_Vector_impl _M_impl\n         0 |         class std::allocator<class std::shared_ptr<const struct object_access_check::OwnedPart> > (base) (empty)\n         0 |           class std::__new_allocator<class std::shared_ptr<const struct object_access_check::OwnedPart> > (base) (empty)\n         0 |         struct std::_Vector_base<class std::shared_ptr<const struct object_access_check::OwnedPart>, class std::allocator<class std::shared_ptr<const struct object_access_check::OwnedPart> > >::_Vector_impl_data (base)\n         0 |           pointer _M_start\n         8 |           pointer _M_finish\n        16 |           pointer _M_end_of_storage\n           | [sizeof=24, dsize=24, align=8,\n           |  nvsize=24, nvalign=8]",
+        "0 | struct object_access_check::OwnedPart\n         0 |   struct orbital::allocation::Allocation storage\n         0 |     Storage * storage\n         8 |     std::byte * address\n        16 |     std::size_t size\n        24 |     std::size_t readable_padding\n        32 |   struct object_access_check::Metadata metadata\n        32 |     Word first\n        40 |     Word rows\n        48 |     Word shift\n           | [sizeof=56, dsize=56, align=8,\n           |  nvsize=56, nvalign=8]",
+        "0 | struct object_access_check::NativeBody\n         0 |   struct object_access_check::Metadata shape\n         0 |     Word first\n         8 |     Word rows\n        16 |     Word shift\n        24 |   class ikea::tuplepack::layout layout\n        24 |     struct std::array<struct ikea::tuplepack::code, 128> codes_\n        24 |       typename __array_traits<ikea::tuplepack::code, 128UL>::_Type _M_elems\n       408 |     unsigned int bytes_\n       412 |     unsigned int count_\n       416 |   class ikea::tuplepack::reader<8> prepared\n       416 |     struct ikea::tuplepack::detail::gpr_read controls_\n       416 |       struct ikea::tuplepack::detail::scalar_read<8> (base)\n       416 |         struct std::array<struct ikea::tuplepack::code, 8> codes\n       416 |           typename __array_traits<ikea::tuplepack::code, 8UL>::_Type _M_elems\n       440 |         class ikea::tuplepack::packet_layout<8> ordering\n       440 |           struct std::array<unsigned char, 8> offsets_\n       440 |             typename __array_traits<unsigned char, 8UL>::_Type _M_elems\n       448 |           struct std::array<unsigned char, 8> owners_\n       448 |             typename __array_traits<unsigned char, 8UL>::_Type _M_elems\n       456 |           unsigned int rows_\n       460 |           unsigned int slots_\n       464 |           _Bool row_major_\n       465 |           _Bool single_group_\n       468 |         unsigned int slots\n       472 |         unsigned int bytes\n       480 |         std::uint64_t reads\n       488 |       struct ikea::tuplepack::detail::word_transfer transfer\n       488 |         std::uint64_t mask\n       496 |         byte offset\n       497 |         byte shift\n       498 |         byte bytes\n       504 |     std::conditional_t<8U == 8, detail::gpr_reader<1U>, detail::no_kernel_entry> entry_\n       512 |   class ikea::tuplepack::basic_view<const unsigned char> source\n       512 |     class std::span<const unsigned char> storage_\n       512 |       pointer _M_ptr\n       520 |       class std::__detail::__extent_storage<dynamic_extent> _M_extent\n       520 |         size_t _M_extent_value\n       528 |     std::size_t count_\n       536 |     std::size_t stride_\n       544 |     std::size_t offset_\n       552 |     unsigned int bytes_\n       560 |   class ikea::tuplepack::read_operation<8, const unsigned char> operation\n       560 |     const reader<8U, 1U> * plan_\n       568 |     const basic_view<const unsigned char> * source_\n       576 |   class ikea::tuplepack::native_reader<8, const unsigned char> reader\n       576 |     const reader<8U, 1U> * plan_\n       584 |     const basic_view<const unsigned char> * source_\n           | [sizeof=592, dsize=592, align=8,\n           |  nvsize=592, nvalign=8]",
+        "0 | struct object_access_check::Published\n         0 |   Word version\n         8 |   struct std::array<class std::weak_ptr<const struct object_access_check::OwnedPart>, 3> first\n         8 |     typename __array_traits<std::weak_ptr<const object_access_check::OwnedPart>, 3UL>::_Type _M_elems\n        56 |   struct std::array<class std::weak_ptr<const struct object_access_check::OwnedPart>, 3> second\n        56 |     typename __array_traits<std::weak_ptr<const object_access_check::OwnedPart>, 3UL>::_Type _M_elems\n           | [sizeof=104, dsize=104, align=8,\n           |  nvsize=104, nvalign=8]",
+        "0 | struct object_access_check::Compound\n         0 |   class orbital::object::ReadContext context\n         0 |     class orbital::Ref<struct orbital::object::detail::Snapshot> snapshot_\n         0 |       struct orbital::object::detail::Snapshot * pointer_\n         8 |   class orbital::object::Selection selected\n         8 |     detail::Version * version_\n        16 |     const detail::Access * access_\n        24 |   class orbital::object::View early\n        24 |     const detail::Leaf * leaf_\n        32 |   class std::unique_ptr<struct object_access_check::NativeBody> early_body\n        32 |     struct std::__uniq_ptr_data<struct object_access_check::NativeBody, struct std::default_delete<struct object_access_check::NativeBody> > _M_t\n        32 |       class std::__uniq_ptr_impl<struct object_access_check::NativeBody, struct std::default_delete<struct object_access_check::NativeBody> > (base)\n        32 |         class std::tuple<struct object_access_check::NativeBody *, struct std::default_delete<struct object_access_check::NativeBody> > _M_t\n        32 |           struct std::_Tuple_impl<0, struct object_access_check::NativeBody *, struct std::default_delete<struct object_access_check::NativeBody> > (base)\n        32 |             struct std::_Tuple_impl<1, struct std::default_delete<struct object_access_check::NativeBody> > (base) (empty)\n        32 |               struct std::_Head_base<1, struct std::default_delete<struct object_access_check::NativeBody> > (base) (empty)\n        32 |                 struct std::default_delete<struct object_access_check::NativeBody> _M_head_impl (empty)\n        32 |             struct std::_Head_base<0, struct object_access_check::NativeBody *> (base)\n        32 |               struct object_access_check::NativeBody * _M_head_impl\n        40 |   struct loom::Task task\n        40 |     Worker * worker\n        48 |     void * context\n        56 |     Progress (*)(Task &) noexcept step\n        64 |     Task * next\n        72 |     struct orbital::WaitLink wait\n        72 |       Signal * source\n        80 |       WaitLink * next\n        88 |       void * waiter\n        96 |       void (*)(void *) noexcept notify\n       104 |     TaskState state\n       108 |     orbital::Error failure\n       112 |   struct orbital::Signal gate\n       112 |     worker::Lane * lane\n       120 |     Readiness state\n       124 |     Error failure\n       128 |     std::uint64_t generation\n       136 |     WaitLink * waiters\n       144 |   struct std::array<unsigned long, 67> result\n       144 |     typename __array_traits<unsigned long, 67UL>::_Type _M_elems\n       680 |   Word version\n       688 |   unsigned int calls\n       692 |   _Bool opened\n       693 |   _Bool ready\n       694 |   _Bool completed\n           | [sizeof=696, dsize=695, align=8,\n           |  nvsize=695, nvalign=8]",
+        "0 | class (lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:257:17) (empty)\n           | [sizeof=1, dsize=0, align=1,\n           |  nvsize=0, nvalign=1]",
+        "0 | struct object_access_check::PhysicalUse\n         0 |   class orbital::object::RetainedView access\n         0 |     class orbital::Ref<struct orbital::object::detail::Part> part_\n         0 |       struct orbital::object::detail::Part * pointer_\n         8 |   class std::unique_ptr<struct object_access_check::NativeBody> body\n         8 |     struct std::__uniq_ptr_data<struct object_access_check::NativeBody, struct std::default_delete<struct object_access_check::NativeBody> > _M_t\n         8 |       class std::__uniq_ptr_impl<struct object_access_check::NativeBody, struct std::default_delete<struct object_access_check::NativeBody> > (base)\n         8 |         class std::tuple<struct object_access_check::NativeBody *, struct std::default_delete<struct object_access_check::NativeBody> > _M_t\n         8 |           struct std::_Tuple_impl<0, struct object_access_check::NativeBody *, struct std::default_delete<struct object_access_check::NativeBody> > (base)\n         8 |             struct std::_Tuple_impl<1, struct std::default_delete<struct object_access_check::NativeBody> > (base) (empty)\n         8 |               struct std::_Head_base<1, struct std::default_delete<struct object_access_check::NativeBody> > (base) (empty)\n         8 |                 struct std::default_delete<struct object_access_check::NativeBody> _M_head_impl (empty)\n         8 |             struct std::_Head_base<0, struct object_access_check::NativeBody *> (base)\n         8 |               struct object_access_check::NativeBody * _M_head_impl\n        16 |   struct orbital::Signal done\n        16 |     worker::Lane * lane\n        24 |     Readiness state\n        28 |     Error failure\n        32 |     std::uint64_t generation\n        40 |     WaitLink * waiters\n        48 |   struct orbital::worker::Message completion\n        48 |     struct std::atomic<struct orbital::worker::Message *> next\n        48 |       struct std::__atomic_base<struct orbital::worker::Message *> _M_b\n        48 |         __pointer_type _M_p\n        56 |     void * context\n        64 |     const MessageOps * ops\n        72 |   struct std::atomic<unsigned int> references\n        72 |     struct std::__atomic_base<unsigned int> (base)\n        72 |       __int_type _M_i\n        80 |   Word result\n        88 |   unsigned int handled\n           | [sizeof=96, dsize=92, align=8,\n           |  nvsize=92, nvalign=8]",
+        "0 | class object_access_check::PhysicalUse::(lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:398:5) (empty)\n           | [sizeof=1, dsize=0, align=1,\n           |  nvsize=0, nvalign=1]",
+        "0 | class object_access_check::PhysicalUse::(lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:402:5) (empty)\n           | [sizeof=1, dsize=0, align=1,\n           |  nvsize=0, nvalign=1]",
+        "0 | class object_access_check::PhysicalUse::(lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:410:5) (empty)\n           | [sizeof=1, dsize=0, align=1,\n           |  nvsize=0, nvalign=1]",
+        "0 | class (lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:430:19) (empty)\n           | [sizeof=1, dsize=0, align=1,\n           |  nvsize=0, nvalign=1]",
+        "0 | struct Caller\n         0 |   struct loom::Task task\n         0 |     Worker * worker\n         8 |     void * context\n        16 |     Progress (*)(Task &) noexcept step\n        24 |     Task * next\n        32 |     struct orbital::WaitLink wait\n        32 |       Signal * source\n        40 |       WaitLink * next\n        48 |       void * waiter\n        56 |       void (*)(void *) noexcept notify\n        64 |     TaskState state\n        68 |     orbital::Error failure\n        72 |   PhysicalUse * physical\n           | [sizeof=80, dsize=80, align=8,\n           |  nvsize=80, nvalign=8]",
+        "0 | class (lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:446:23)\n         0 |   std::unique_ptr<PhysicalUse> & \n         8 |   Fixture & \n           | [sizeof=16, dsize=16, align=8,\n           |  nvsize=16, nvalign=8]",
+        "0 | struct object_access_check::DelayedFill\n         0 |   obj::Store * store\n         8 |   class orbital::object::Draft draft\n         8 |     class orbital::Ref<struct orbital::object::detail::Edit> edit_\n         8 |       struct orbital::object::detail::Edit * pointer_\n        16 |   class orbital::object::Builder builder\n        16 |     class orbital::Ref<struct orbital::object::detail::Build> build_\n        16 |       struct orbital::object::detail::Build * pointer_\n        24 |   class orbital::object::WriteView writer\n        24 |     class orbital::Ref<struct orbital::object::detail::Build> build_\n        24 |       struct orbital::object::detail::Build * pointer_\n        32 |     std::size_t index_\n        40 |   class std::span<enum std::byte> target\n        40 |     pointer _M_ptr\n        48 |     class std::__detail::__extent_storage<dynamic_extent> _M_extent\n        48 |       size_t _M_extent_value\n        56 |   struct orbital::Signal done\n        56 |     worker::Lane * lane\n        64 |     Readiness state\n        68 |     Error failure\n        72 |     std::uint64_t generation\n        80 |     WaitLink * waiters\n        88 |   struct orbital::worker::Message completion\n        88 |     struct std::atomic<struct orbital::worker::Message *> next\n        88 |       struct std::__atomic_base<struct orbital::worker::Message *> _M_b\n        88 |         __pointer_type _M_p\n        96 |     void * context\n       104 |     const MessageOps * ops\n       112 |   struct std::atomic<unsigned int> references\n       112 |     struct std::__atomic_base<unsigned int> (base)\n       112 |       __int_type _M_i\n       116 |   _Bool interested\n       120 |   unsigned int handled\n       124 |   FillResult result\n           | [sizeof=128, dsize=128, align=8,\n           |  nvsize=128, nvalign=8]",
+        "0 | class object_access_check::DelayedFill::(lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:521:5) (empty)\n           | [sizeof=1, dsize=0, align=1,\n           |  nvsize=0, nvalign=1]",
+        "0 | class object_access_check::DelayedFill::(lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:525:5) (empty)\n           | [sizeof=1, dsize=0, align=1,\n           |  nvsize=0, nvalign=1]",
+        "0 | class object_access_check::DelayedFill::(lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:551:5) (empty)\n           | [sizeof=1, dsize=0, align=1,\n           |  nvsize=0, nvalign=1]",
+        "0 | struct Caller\n         0 |   struct loom::Task task\n         0 |     Worker * worker\n         8 |     void * context\n        16 |     Progress (*)(Task &) noexcept step\n        24 |     Task * next\n        32 |     struct orbital::WaitLink wait\n        32 |       Signal * source\n        40 |       WaitLink * next\n        48 |       void * waiter\n        56 |       void (*)(void *) noexcept notify\n        64 |     TaskState state\n        68 |     orbital::Error failure\n        72 |   DelayedFill * physical\n        80 |   unsigned int calls\n        84 |   FillResult observed\n           | [sizeof=88, dsize=88, align=8,\n           |  nvsize=88, nvalign=8]",
+        "0 | class (lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:578:21) (empty)\n           | [sizeof=1, dsize=0, align=1,\n           |  nvsize=0, nvalign=1]",
+        "0 | class (lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:590:25)\n         0 |   class std::span<enum std::byte> \n         0 |     pointer _M_ptr\n         8 |     class std::__detail::__extent_storage<dynamic_extent> _M_extent\n         8 |       size_t _M_extent_value\n        16 |   orbital::worker::Message * \n        24 |   orbital::worker::Lane * \n        32 |   std::atomic<_Bool> & \n        40 |   std::atomic<_Bool> & \n           | [sizeof=48, dsize=48, align=8,\n           |  nvsize=48, nvalign=8]",
+        "0 | struct object_access_check::RingFrame\n         0 |   class orbital::object::RetainedView access\n         0 |     class orbital::Ref<struct orbital::object::detail::Part> part_\n         0 |       struct orbital::object::detail::Part * pointer_\n         8 |   class std::unique_ptr<struct object_access_check::NativeBody> body\n         8 |     struct std::__uniq_ptr_data<struct object_access_check::NativeBody, struct std::default_delete<struct object_access_check::NativeBody> > _M_t\n         8 |       class std::__uniq_ptr_impl<struct object_access_check::NativeBody, struct std::default_delete<struct object_access_check::NativeBody> > (base)\n         8 |         class std::tuple<struct object_access_check::NativeBody *, struct std::default_delete<struct object_access_check::NativeBody> > _M_t\n         8 |           struct std::_Tuple_impl<0, struct object_access_check::NativeBody *, struct std::default_delete<struct object_access_check::NativeBody> > (base)\n         8 |             struct std::_Tuple_impl<1, struct std::default_delete<struct object_access_check::NativeBody> > (base) (empty)\n         8 |               struct std::_Head_base<1, struct std::default_delete<struct object_access_check::NativeBody> > (base) (empty)\n         8 |                 struct std::default_delete<struct object_access_check::NativeBody> _M_head_impl (empty)\n         8 |             struct std::_Head_base<0, struct object_access_check::NativeBody *> (base)\n         8 |               struct object_access_check::NativeBody * _M_head_impl\n        16 |   class loom::DemandClass demand\n        16 |     std::uint8_t code_\n        24 |   Word owner\n        32 |   Word steps\n        40 |   Word sum\n        48 |   _Bool completed\n           | [sizeof=56, dsize=49, align=8,\n           |  nvsize=49, nvalign=8]",
+        "0 | class (lambda at /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp:685:3) (empty)\n           | [sizeof=1, dsize=0, align=1,\n           |  nvsize=0, nvalign=1]",
+        "0 | struct object_access_check::DecoderOwner\n         0 |   struct std::array<enum std::byte, 1> fields\n         0 |     typename __array_traits<std::byte, 1UL>::_Type _M_elems\n           | [sizeof=1, dsize=1, align=1,\n           |  nvsize=1, nvalign=1]"
+      ],
+      "additional_actual_declarations": [
+        "declare void @_ZNK7orbital6object5Store10statisticsEv(ptr dead_on_unwind writable sret(%\"struct.orbital::object::Statistics\") align 8, ptr noundef nonnull align 8 dereferenceable(8)) local_unnamed_addr #11",
+        "declare { ptr, i64 } @_ZNKR7orbital6object5Store6borrowEv(ptr noundef nonnull align 8 dereferenceable(8)) local_unnamed_addr #11",
+        "declare void @_ZNKR7orbital6object9WriteView5bytesEv(ptr dead_on_unwind writable sret(%\"class.std::expected.107\") align 8, ptr noundef nonnull align 8 dereferenceable(16)) local_unnamed_addr #11",
+        "declare void @_ZN7orbital10allocation10statisticsERKNS0_4PoolE(ptr dead_on_unwind writable sret(%\"struct.orbital::allocation::Statistics\") align 8, ptr noundef nonnull align 8 dereferenceable(64)) local_unnamed_addr #11"
+      ]
+    }
+  },
+  "native_controls": [
+    {
+      "argv": [
+        "clang++-21",
+        "-std=c++23",
+        "-O3",
+        "-g0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/orbital-mvcc/metadata/loom",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/workbench/spikes/orbital-mvcc/baseline/include",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/include",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/orbital/include",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/ikea/include",
+        "-DLM_CALLER_SOURCE=\"/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/source/loom/test/object_access.cpp\"",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/orbital-mvcc/metadata/loom/check.cpp",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/codegen-02/v2/boundaries.o",
+        "-Wl,--gc-sections",
+        "-o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/codegen-02/packet-check"
+      ],
+      "binary_sha256": "a6f940b289205a5f7a90f050884273e5a2e0173517b4cc01479416279e22bbfb",
+      "run_argv": [
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/loom/codegen-02/packet-check"
+      ],
+      "output": "loom metadata packet controls: passed\n"
+    }
+  ],
+  "limits": [
+    "Static sites and ABI lowering, not executed instructions, latency or throughput.",
+    "Stack-related sites include frame setup. Stack-memory sites exclude address-only LEA/NOP and include explicit push/pop, but not implicit call/return stack effects. They include spills, ABI save/restore and outgoing arguments; inspect the retained disassembly for meaning.",
+    "Independent packet producer and consumer TUs; no LTO.",
+    "The facts TU includes the real frozen caller to inspect its types and emitted bodies.",
+    "8/16/32-byte packets and Result16 are mechanical controls, not MVCC contracts.",
+    "Cross target is compile-only; installed native/cross headers are independently hashed."
+  ]
+}

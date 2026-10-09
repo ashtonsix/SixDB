@@ -11,6 +11,7 @@
 #include <memory>
 #include <source_location>
 #include <thread>
+#include <type_traits>
 #include <vector>
 
 namespace object_access_check {
@@ -30,6 +31,9 @@ void check(bool valid, const char* expression,
 template<class T, class E> T required(std::expected<T, E> result) {
   CHECK(result); return std::move(*result);
 }
+template<class T> constexpr bool fixed_record =
+    !std::is_copy_constructible_v<T> && !std::is_copy_assignable_v<T> &&
+    !std::is_move_constructible_v<T> && !std::is_move_assignable_v<T>;
 
 struct Fixture {
   orbital::Ref<orbital::allocation::Arena> arena;
@@ -131,7 +135,10 @@ struct NativeBody {
   }
   NativeBody(const NativeBody&) = delete;
   NativeBody(NativeBody&&) = delete;
+  NativeBody& operator=(const NativeBody&) = delete;
+  NativeBody& operator=(NativeBody&&) = delete;
 };
+static_assert(fixed_record<NativeBody>);
 
 Word expected(unsigned seed, Word row) {
   Word result = 0;
@@ -278,7 +285,13 @@ struct Compound {
       return orbital::Progress::done();
     };
   }
+  // The Task callback is bound to this frame from construction onward.
+  Compound(const Compound&) = delete;
+  Compound(Compound&&) = delete;
+  Compound& operator=(const Compound&) = delete;
+  Compound& operator=(Compound&&) = delete;
 };
+static_assert(fixed_record<Compound>);
 
 void coherent_wait() {
   Fixture fixture;
@@ -393,7 +406,12 @@ struct PhysicalUse {
     done.lane = &worker.lane; done.state = orbital::Readiness::pending;
     completion.context = this; completion.ops = &ops;
   }
+  PhysicalUse(const PhysicalUse&) = delete;
+  PhysicalUse(PhysicalUse&&) = delete;
+  PhysicalUse& operator=(const PhysicalUse&) = delete;
+  PhysicalUse& operator=(PhysicalUse&&) = delete;
 };
+static_assert(fixed_record<PhysicalUse>);
 const orbital::worker::MessageOps PhysicalUse::ops{
     [](orbital::worker::Message& message) noexcept {
       auto& use = *static_cast<PhysicalUse*>(message.context);
@@ -431,7 +449,12 @@ void detach_and_physical_owner() {
         return orbital::Progress::wait(static_cast<Caller*>(task.context)->physical->done);
       };
     }
+    Caller(const Caller&) = delete;
+    Caller(Caller&&) = delete;
+    Caller& operator=(const Caller&) = delete;
+    Caller& operator=(Caller&&) = delete;
   };
+  static_assert(fixed_record<Caller>);
   auto caller = std::make_unique<Caller>(*physical);
   CHECK(loom::start(fixture.worker, caller->task));
   CHECK(loom::poll(fixture.worker, {0, 1}) == 1 && caller->task.state == loom::TaskState::waiting);
@@ -516,7 +539,12 @@ struct DelayedFill {
     done.lane = &worker.lane; done.state = orbital::Readiness::pending;
     completion.context = this; completion.ops = &ops;
   }
+  DelayedFill(const DelayedFill&) = delete;
+  DelayedFill(DelayedFill&&) = delete;
+  DelayedFill& operator=(const DelayedFill&) = delete;
+  DelayedFill& operator=(DelayedFill&&) = delete;
 };
+static_assert(fixed_record<DelayedFill>);
 const orbital::worker::MessageOps DelayedFill::ops{
     [](orbital::worker::Message& message) noexcept {
       auto& use = *static_cast<DelayedFill*>(message.context);
@@ -582,7 +610,12 @@ void delayed_fill_completion() {
           return orbital::Progress::done();
         };
       }
+      Caller(const Caller&) = delete;
+      Caller(Caller&&) = delete;
+      Caller& operator=(const Caller&) = delete;
+      Caller& operator=(Caller&&) = delete;
     };
+    static_assert(fixed_record<Caller>);
     auto caller = std::make_unique<Caller>(*physical);
     CHECK(loom::start(fixture.worker, caller->task));
     CHECK(loom::poll(fixture.worker, {0, 1}) == 1 && caller->task.state == loom::TaskState::waiting);
