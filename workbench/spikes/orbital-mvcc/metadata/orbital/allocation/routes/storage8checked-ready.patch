@@ -1,0 +1,420 @@
+--- a/orbital/include/orbital/allocation.h
++++ b/orbital/include/orbital/allocation.h
+@@ -124,8 +124,8 @@
+ /// Capture on the storage's owner Lane; include every byte a native kernel may read.
+ /// Empty ranges and ranges beyond the Allocation plus readable padding fail.
+ [[nodiscard]] Result<Hold> hold(const Allocation&, ByteRange footprint);
+-/// Duplicate a live Hold on its storage's owner Lane.
+-[[nodiscard]] Hold retain(const Hold&);
++/// Duplicate a live Hold on its owner Lane; saturation refuses without mutation.
++[[nodiscard]] Result<Hold> retain(const Hold&);
+ /// Clear this use; final foreign returns are queued to the owning Lane.
+ /// Temperature guides reclamation; timestamps reject stale advice.
+ void release(Hold&, ReleaseHint = {}) noexcept;
+--- a/orbital/src/allocation/allocation.cpp
++++ b/orbital/src/allocation/allocation.cpp
+@@ -8,13 +8,13 @@
+ namespace orbital::allocation::detail {
+ 
+ ReleaseHint hint(Storage& use) noexcept {
+-  if (use.domain->finite) return static_cast<Group*>(use.domain->context)->last_use;
+-  return static_cast<Window*>(use.domain->context)->hint;
++  if (route(use)->finite) return static_cast<Group*>(route(use)->context)->last_use;
++  return static_cast<Window*>(route(use)->context)->hint;
+ }
+ 
+ ReleaseHint foreign_hint(Storage& use) noexcept {
+-  if (use.domain->finite) return static_cast<Group*>(use.domain->context)->foreign_use;
+-  return static_cast<Window*>(use.domain->context)->foreign_hint;
++  if (route(use)->finite) return static_cast<Group*>(route(use)->context)->foreign_use;
++  return static_cast<Window*>(route(use)->context)->foreign_hint;
+ }
+ 
+ bool supplied(const ReleaseHint& value) noexcept {
+@@ -32,22 +32,22 @@
+ }
+ 
+ void merge_hint(Storage& use, const ReleaseHint& incoming, bool foreign = false) noexcept {
+-  if (use.domain->finite) {
+-    auto& group = *static_cast<Group*>(use.domain->context);
++  if (route(use)->finite) {
++    auto& group = *static_cast<Group*>(route(use)->context);
+     merge_hint(foreign ? group.foreign_use : group.last_use, incoming);
+   } else {
+-    auto& window = *static_cast<Window*>(use.domain->context);
++    auto& window = *static_cast<Window*>(route(use)->context);
+     merge_hint(foreign ? window.foreign_hint : window.hint, incoming);
+   }
+ }
+ 
+ void clear_foreign_hint(Storage& use) noexcept {
+-  if (use.domain->finite) static_cast<Group*>(use.domain->context)->foreign_use = {};
+-  else static_cast<Window*>(use.domain->context)->foreign_hint = {};
++  if (route(use)->finite) static_cast<Group*>(route(use)->context)->foreign_use = {};
++  else static_cast<Window*>(route(use)->context)->foreign_hint = {};
+ }
+ 
+ void activate(Storage& use) noexcept {
+-  auto& domain = *use.domain;
++  auto& domain = *route(use);
+   assert(worker::on_lane(*domain.pool->lane) && !use.users.load(std::memory_order_relaxed));
+   if (domain.finite) {
+     auto& group = *static_cast<Group*>(domain.context);
+@@ -62,7 +62,7 @@
+ }
+ 
+ void recycle(Storage& use, bool notify = true) noexcept {
+-  auto& domain = *use.domain;
++  auto& domain = *route(use);
+   auto& pool = *domain.pool;
+   assert(worker::on_lane(*pool.lane) && !use.users.load(std::memory_order_relaxed));
+   // Detach before identity reuse or notification can grant the same record.
+@@ -86,21 +86,21 @@
+ }
+ 
+ bool returned(Domain& domain) noexcept {
+-  if (!domain.finite) return static_cast<Window*>(domain.context)->use.users.load(std::memory_order_acquire) == returning;
++  if (!domain.finite) return static_cast<Window*>(domain.context)->uses[0].users.load(std::memory_order_acquire) == returning;
+   auto& group = *static_cast<Group*>(domain.context);
+   return group.advice_pending || std::any_of(group.returned.begin(), group.returned.end(), [](auto word) { return word != 0; });
+ }
+ 
+ void apply_return(Storage& use) noexcept {
+   if (use.users.load(std::memory_order_acquire) != returning) return;
+-  if (!use.domain->finite) {
++  if (!route(use)->finite) {
+     merge_hint(use, foreign_hint(use));
+     clear_foreign_hint(use);
+-    use.foreign_hint_pending.store(false, std::memory_order_relaxed);
++    static_cast<Window*>(route(use)->context)->foreign_hint_pending.store(false, std::memory_order_relaxed);
+   }
+   use.users.store(0, std::memory_order_release);
+   recycle(use, false);
+-  ++use.domain->pool->internal->counts.foreign_returns;
++  ++route(use)->pool->internal->counts.foreign_returns;
+ }
+ 
+ void returns_handle(worker::Message& message, worker::Lane&) noexcept {
+@@ -120,7 +120,7 @@
+           word &= word - 1;
+         }
+       }
+-    } else apply_return(static_cast<Window*>(domain.context)->use);
++    } else apply_return(static_cast<Window*>(domain.context)->uses[0]);
+   }
+   pulse(domain.pool->capacity_changed);
+ }
+@@ -165,7 +165,7 @@
+ }
+ 
+ void drop(Storage& use, ReleaseHint value) noexcept {
+-  auto& domain = *use.domain;
++  auto& domain = *route(use);
+   const bool local = worker::on_lane(*domain.pool->lane);
+   if (supplied(value)) {
+     if (local) merge_hint(use, value);
+@@ -175,7 +175,7 @@
+       if (domain.finite) {
+         static_cast<Group*>(domain.context)->advice_pending = true;
+         post_returns(domain);
+-      } else use.foreign_hint_pending.store(true, std::memory_order_release);
++      } else static_cast<Window*>(route(use)->context)->foreign_hint_pending.store(true, std::memory_order_release);
+     }
+   }
+   auto users = use.users.load(std::memory_order_relaxed);
+@@ -203,7 +203,7 @@
+   if (users != 1) return;
+   if (local) {
+     // Foreign releases with explicit hints can precede this local final release.
+-    if (!domain.finite && use.foreign_hint_pending.exchange(false, std::memory_order_acq_rel)) {
++    if (!domain.finite && static_cast<Window*>(route(use)->context)->foreign_hint_pending.exchange(false, std::memory_order_acq_rel)) {
+       // Final user retirement observes every preceding foreign hint write.
+       // Other identities may publish concurrently, but cannot touch this hint.
+       merge_hint(use, foreign_hint(use)); clear_foreign_hint(use);
+@@ -297,7 +297,7 @@
+ 
+ std::size_t capacity(const Allocation& allocation) noexcept {
+   if (!allocation) return 0;
+-  const auto& domain = *allocation.storage->domain;
++  const auto& domain = *route(*allocation.storage);
+   if (domain.finite)
+     return static_cast<Group*>(domain.context)->geometry->bound_capacity({allocation.storage->identity});
+   return static_cast<Window*>(domain.context)->prepared;
+@@ -305,7 +305,7 @@
+ 
+ std::size_t reserved_bytes(const Allocation& allocation) noexcept {
+   if (!allocation) return 0;
+-  const auto& domain = *allocation.storage->domain;
++  const auto& domain = *route(*allocation.storage);
+   if (domain.finite) return capacity(allocation);
+   return static_cast<Window*>(domain.context)->reserved;
+ }
+@@ -313,7 +313,7 @@
+ Result<void> grow(Allocation& allocation, const GrowthRequest& request) {
+   if (!allocation) return std::unexpected(Error::invalid_argument);
+   auto& use = *allocation.storage;
+-  auto& pool = *use.domain->pool;
++  auto& pool = *route(use)->pool;
+   if (!pool.lane || !worker::on_lane(*pool.lane)) return std::unexpected(Error::conflict);
+   if (pool.state != Pool::State::open || pool.internal->close_requested)
+     return std::unexpected(Error::unavailable);
+@@ -327,7 +327,7 @@
+   const auto needed = std::max({*size, request.reserved_bytes, previous_extent});
+   if (!aligned || needed > reserved_bytes(allocation)) {
+     if (held) return std::unexpected(Error::conflict);
+-    if (use.domain->finite && needed <= 3072 && request.alignment <= 3072) {
++    if (route(use)->finite && needed <= 3072 && request.alignment <= 3072) {
+       auto relocated = relocate_finite(allocation, request, needed);
+       if (!relocated) return std::unexpected(relocated.error());
+       if (*relocated) return {};
+@@ -345,8 +345,8 @@
+     allocation = std::move(*replacement);
+     ++pool.internal->counts.relocations;
+   } else {
+-    if (!use.domain->finite) {
+-      auto& window = *static_cast<Window*>(use.domain->context);
++    if (!route(use)->finite) {
++      auto& window = *static_cast<Window*>(route(use)->context);
+       if (*size > window.prepared) {
+         auto extended = extend_window(window, *size);
+         if (!extended) return std::unexpected(extended.error());
+@@ -359,15 +359,26 @@
+   return {};
+ }
+ 
++namespace {
++bool add_user(Storage& use) noexcept {
++  auto users = use.users.load(std::memory_order_relaxed);
++  for (;;) {
++    // Reserve the return marker; do not increment then assert after overflow.
++    if (!users || users >= returning - 1) return false;
++    if (use.users.compare_exchange_weak(users, users + 1,
++        std::memory_order_relaxed, std::memory_order_relaxed)) return true;
++  }
++}
++}
++
+ Result<Hold> hold(const Allocation& allocation, ByteRange footprint) {
+-  if (!allocation || !worker::on_lane(*allocation.storage->domain->pool->lane))
++  if (!allocation || !worker::on_lane(*route(*allocation.storage)->pool->lane))
+     return std::unexpected(Error::conflict);
+   if (!footprint.size || footprint.offset > allocation.size + allocation.readable_padding ||
+       footprint.size > allocation.size + allocation.readable_padding - footprint.offset)
+     return std::unexpected(Error::invalid_argument);
+   auto& use = *allocation.storage;
+-  const auto users = use.users.fetch_add(1, std::memory_order_relaxed);
+-  assert(users && users < returning - 1);
++  if (!add_user(use)) return std::unexpected(Error::capacity);
+   Hold result;
+   result.storage = &use;
+   result.address = allocation.address + footprint.offset;
+@@ -375,11 +386,12 @@
+   return result;
+ }
+ 
+-Hold retain(const Hold& original) {
+-  assert(original && worker::on_lane(*original.storage->domain->pool->lane));
++Result<Hold> retain(const Hold& original) {
++  if (!original) return std::unexpected(Error::invalid_argument);
++  if (!worker::on_lane(*route(*original.storage)->pool->lane))
++    return std::unexpected(Error::conflict);
+   auto& use = *original.storage;
+-  const auto users = use.users.fetch_add(1, std::memory_order_relaxed);
+-  assert(users && users < returning - 1);
++  if (!add_user(use)) return std::unexpected(Error::capacity);
+   Hold result;
+   result.storage = original.storage;
+   result.address = original.address;
+@@ -448,7 +460,7 @@
+   }
+   for (auto& window : pool.internal->windows) {
+     if (window->trim_pending || window->preparation) { pending = true; continue; }
+-    if (window->address && !window->use.users.load(std::memory_order_acquire) &&
++    if (window->address && !window->uses[0].users.load(std::memory_order_acquire) &&
+         !window->domain.queued.load(std::memory_order_acquire)) idle += window->charged;
+   }
+   // One Pool-wide floor, shared by finite pages and virtual windows. Prefer
+@@ -500,13 +512,13 @@
+       }
+     }
+     for (auto& window : pool.internal->windows) {
+-      if (window->trim_pending || window->preparation || !window->address || window->use.users.load(std::memory_order_acquire) ||
++      if (window->trim_pending || window->preparation || !window->address || window->uses[0].users.load(std::memory_order_acquire) ||
+           window->domain.queued.load(std::memory_order_acquire)) continue;
+       const bool cold = window->hint.temperature.value_or(Temperature::cold) == Temperature::cold;
+       if ((pass == 0) != cold || idle < window->charged || idle - window->charged < keep_bytes) continue;
+       idle -= window->charged;
+       remove_idle(*window);
+-      window->use.users.store(returning, std::memory_order_release);
++      window->uses[0].users.store(returning, std::memory_order_release);
+       window->trim_pending = true;
+       window->trim_lifetime = Ref<Arena>::retain(*pool.arena);
+       schedule(*pool.arena, window->job); pending = true;
+@@ -542,7 +554,7 @@
+       if (group->uses[i].users.load(std::memory_order_acquire)) return Progress::wait(pool.capacity_changed, observed);
+   }
+   for (auto& window : pool.internal->windows)
+-    if (window->preparation || (!window->trim_pending && (window->use.users.load(std::memory_order_acquire) ||
++    if (window->preparation || (!window->trim_pending && (window->uses[0].users.load(std::memory_order_acquire) ||
+         window->domain.queued.load(std::memory_order_acquire)))) return Progress::wait(pool.capacity_changed, observed);
+   auto trimming = trim_cold(pool, 0);
+   if (trimming.kind() != Progress::Kind::done) return trimming;
+@@ -606,7 +618,7 @@
+       if (window->mapping) result.reserved_bytes += window->mapping_bytes;
+     }
+     result.metadata_bytes += window->metadata_charge;
+-    if (!window->preparation && !window->use.users.load(std::memory_order_acquire)) result.idle_bytes += window->charged;
++    if (!window->preparation && !window->uses[0].users.load(std::memory_order_acquire)) result.idle_bytes += window->charged;
+   }
+   return result;
+ }
+--- a/orbital/src/allocation/group.cpp
++++ b/orbital/src/allocation/group.cpp
+@@ -102,7 +102,7 @@
+     group->trimmed.context = group.get();
+     group->trimmed.ops = &group_trim_ops;
+     for (std::size_t i = 0; i < count; ++i) {
+-      group->uses[i].domain = &group->domain;
++      group->uses.domain = &group->domain;
+       group->uses[i].identity = static_cast<std::uint8_t>(i);
+     }
+     auto* result = group.get();
+@@ -586,8 +586,8 @@
+ Result<bool> relocate_finite(Allocation& allocation, const GrowthRequest& request,
+     std::size_t needed) {
+   auto& use = *allocation.storage;
+-  auto& group = *static_cast<Group*>(use.domain->context);
+-  auto& pool = *use.domain->pool;
++  auto& group = *static_cast<Group*>(route(use)->context);
++  auto& pool = *route(use)->pool;
+   const auto old = group.geometry->bound_home({use.identity});
+   assert(old);
+   auto destination = group.geometry->claim_home({use.identity}, needed, request.alignment);
+--- a/orbital/src/allocation/internal.h
++++ b/orbital/src/allocation/internal.h
+@@ -18,18 +18,36 @@
+ namespace detail { struct Domain; struct Group; struct Window; }
+ // Physical retention is independent of the dense one-byte binding plane.
+ struct Storage {
+-  detail::Domain* domain{};
+   std::atomic<std::uint32_t> users{};
+   std::uint8_t identity{};
+-  std::atomic<bool> foreign_hint_pending{};
+-};
+-
+-static_assert(sizeof(Storage) == 16);
++};
++
++static_assert(sizeof(Storage) == 8);
+ 
+ namespace detail {
+ constexpr std::uint32_t returning = std::uint32_t{1} << 31;
+ constexpr std::uint16_t group_identities = 256;
+ 
++
++// Stable shared route. This candidate isolates the Clang container-of idiom;
++// it is not claimed to be portable ISO C++23 (see routes/README.md).
++template<std::size_t Count>
++struct StorageBlock {
++  Domain* domain{};
++  std::array<Storage, Count> slots{};
++  Storage& operator[](std::size_t index) noexcept { return slots[index]; }
++  constexpr std::size_t size() const noexcept { return Count; }
++};
++static_assert(std::is_standard_layout_v<StorageBlock<256>>);
++static_assert(std::is_standard_layout_v<StorageBlock<1>>);
++static_assert(offsetof(StorageBlock<256>, slots) == offsetof(StorageBlock<1>, slots));
++
++inline Domain* route(Storage& use) noexcept {
++  auto* first = &use - use.identity; // Within the actual array of Storage objects.
++  auto* header = reinterpret_cast<std::byte*>(first) - offsetof(StorageBlock<1>, slots);
++  return *reinterpret_cast<Domain**>(header);
++}
++inline const Domain* route(const Storage& use) noexcept { return route(const_cast<Storage&>(use)); }
+ 
+ struct Job {
+   Job* next{};
+@@ -55,7 +73,7 @@
+   std::unique_ptr<FiniteGroup> geometry;
+   Ref<Arena> active_lifetime; // Owner-managed pin while any finite identity is live/returning.
+   std::uint16_t active_identities{};
+-  std::array<Storage, group_identities> uses{};
++  StorageBlock<group_identities> uses{};
+   ReleaseHint foreign_use;
+   bool advice_pending{};
+   std::vector<std::uint64_t> live;
+@@ -77,7 +95,7 @@
+ struct Window {
+   Domain domain;
+   std::size_t owner_index{}; // Pool owning-vector position, not an allocation identity.
+-  Storage use;
++  StorageBlock<1> uses;
+   Ref<Arena> active_lifetime;
+   Window* next_idle{};
+   Window** previous_idle{};
+@@ -88,6 +106,7 @@
+   // after a failed preparation, until retry or actual unmapping.
+   std::size_t reserved{}, prepared{}, charged{};
+   ReleaseHint hint, foreign_hint;
++  std::atomic<bool> foreign_hint_pending{};
+   Job job;
+   worker::Message trimmed;
+   Ref<Arena> trim_lifetime;
+@@ -211,7 +230,7 @@
+ }
+ 
+ inline void add_idle(Window& window) noexcept {
+-  if (window.previous_idle || window.trim_pending || window.use.users.load(std::memory_order_acquire) ||
++  if (window.previous_idle || window.trim_pending || window.uses[0].users.load(std::memory_order_acquire) ||
+       window.domain.queued.load(std::memory_order_acquire)) return;
+   auto& head = window.domain.pool->internal->idle_windows;
+   window.next_idle = head;
+--- a/orbital/src/allocation/window.cpp
++++ b/orbital/src/allocation/window.cpp
+@@ -40,7 +40,7 @@
+     return;
+   }
+   window.trim_pending = false;
+-  window.use.users.store(0, std::memory_order_release);
++  window.uses[0].users.store(0, std::memory_order_release);
+   add_idle(window);
+   pulse(window.domain.pool->capacity_changed);
+ }
+@@ -106,8 +106,8 @@
+       pool.state == Pool::State::open && !pool.internal->close_requested;
+   if (accepted) {
+     auto& result = preparation.value;
+-    activate(window.use);
+-    result.storage = &window.use;
++    activate(window.uses[0]);
++    result.storage = &window.uses[0];
+     result.address = window.address;
+     result.size = preparation.request.bytes;
+     result.readable_padding = preparation.request.readable_padding;
+@@ -219,7 +219,7 @@
+     selected->charged = prepared;
+     selected->metadata_charge = metadata;
+     initialize(selected->domain, pool, selected, false);
+-    selected->use.domain = &selected->domain;
++    selected->uses.domain = &selected->domain;
+     selected->job = {nullptr, selected, window_trim_run};
+     selected->trimmed.context = selected;
+     selected->trimmed.ops = &window_trim_ops;
+@@ -234,7 +234,7 @@
+     selected->prepared = prepared;
+   }
+   remove_idle(*selected);
+-  result.storage = &selected->use;
++  result.storage = &selected->uses[0];
+   result.address = selected->address; result.size = request.bytes;
+   result.readable_padding = request.readable_padding;
+   return {};
+@@ -292,7 +292,7 @@
+     selected->charged = prepared;
+     selected->metadata_charge = sizeof(Window);
+     initialize(selected->domain, pool, selected, false);
+-    selected->use.domain = &selected->domain;
++    selected->uses.domain = &selected->domain;
+   } else {
+     const auto extra = prepared > selected->charged ? prepared - selected->charged : 0;
+     if (extra && !claim(pool, extra)) return std::unexpected(Error::capacity);

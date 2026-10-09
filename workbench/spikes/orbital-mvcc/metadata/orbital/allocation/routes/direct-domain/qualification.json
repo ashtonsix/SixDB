@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-09",
+  "scope": "Separate direct-Domain prefix controls; main runtime/index and all earlier cuts untouched",
+  "bases": {
+    "direct-domain8": "../storage8checked-ready-cut.json",
+    "direct-domain4": "../storage4-word-loop-ready-cut.json"
+  },
+  "qualified_runs": {
+    "existing_release_and_sanitized_regressions": 32,
+    "focused_native": 6,
+    "focused_debug": 6,
+    "focused_fully_instrumented_NDEBUG_sanitized": 8,
+    "root_frozen_diagnostic_TU_compiles": 2
+  },
+  "matched_max_live_uses": 8388607,
+  "layout": {
+    "Domain": 112,
+    "slots_offset_N1_N256": 112,
+    "StorageOwner_standard_layout": true,
+    "enclosing_Group_standard_layout": false,
+    "Window": 320,
+    "direct-domain8": {
+      "Storage": 8,
+      "Group": 2472,
+      "A": 8408,
+      "B": 9424
+    },
+    "direct-domain4": {
+      "Storage": 4,
+      "Group": 1448,
+      "A": 7384,
+      "B": 8400
+    }
+  },
+  "receipts": {
+    "regression-tests/qualification-direct-domain8-direct-domain4.json": "c5572519b2dda20cb6c74dab53c03b57c6dd63ebb0a736f2591b1e61130f836c",
+    "direct-domain-native-qualification.json": "ecaf7d0c54bffd0013687ca287736a11be537a665ad8fe73db397486959054dc",
+    "direct-domain-focused-qualification.json": "945e9b5ba7f4984a56ce6324a49910fe3e22c6f1cdef426adc6138757bd99ef6",
+    "direct-domain-matched-timing.json": "585da1c27f729b90134514de068f76524fec44c0ce86f96c4737907f3f8a0510",
+    "direct-domain-timing.json": "59a8ac7a62d43a042a1e1427859c8aff0d8be3c99a7b3df2d43b3637d4caa479",
+    "accounting-direct-validation/qualification.json": "54721ee1ae2c148824a23801d86ac741d46e3094c7acf92f8b79313f8eba1616"
+  },
+  "owner_cycle_ns": {
+    "direct-domain8": [
+      22.2,
+      22.511
+    ],
+    "direct-domain4": [
+      23.043,
+      23.321
+    ]
+  },
+  "diagnostic": {
+    "dependency_commit": "e9926e1",
+    "Material_sha256": "d7c2912164750646f29e983642729479d00d5cbffa4a4fb1550f7ce3d76c6ce6",
+    "source_reference": "../artifact.json",
+    "scope": "Frozen Material diagnostic TU compile only, no whole driver/runtime claim"
+  },
+  "limits": [
+    "Pinned Clang21/Linux container-of control; C++23 reachability is not portable",
+    "Synthetic count-boundary injection, not millions of real Holds",
+    "Foreign local guest timings noisy; no performance winner or end-to-end claim",
+    "No weak-memory proof or complete Object+setup metadata budget claim"
+  ]
+}

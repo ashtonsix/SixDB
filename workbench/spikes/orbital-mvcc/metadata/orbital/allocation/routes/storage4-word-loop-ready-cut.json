@@ -1,0 +1,33 @@
+{
+  "base": "heat/base.json then heat/group-advice.patch",
+  "source": "/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/routes/storage4-word-loop-ready",
+  "patch_sha256": "07e16bb89a1125684029fc98c3ed04d5813b63dcd7bd110c365931cc2c816108",
+  "files": [
+    {
+      "path": "orbital/include/orbital/allocation.h",
+      "base_sha256": "cf81956a9c432f1f74fb53fff018adfb0661486228d364b41cbac3d590802689",
+      "sha256": "f8d070ca801238c8581761fcc6cf48d297d7ef5c1bd723139ec25089516ea317"
+    },
+    {
+      "path": "orbital/src/allocation/allocation.cpp",
+      "base_sha256": "f184367c312c5c5a1b9ed6781fe1a4098d16714caa039d5075078cc1b28e0b99",
+      "sha256": "e6560f1142cb5cb1e3ece18bb8e5b9965b3bcac4d9dd5771f102494df595936e"
+    },
+    {
+      "path": "orbital/src/allocation/group.cpp",
+      "base_sha256": "c161c1e1e52698b8ea30d44e2647ae6770af3102ff38de75361dc008698611fc",
+      "sha256": "f2bc8c8984d1caefe19d362fed5e781401e37805ee2f3ac10c7654931c6246c0"
+    },
+    {
+      "path": "orbital/src/allocation/internal.h",
+      "base_sha256": "fadcb142cc51b369a4b5358e6d5c4f74b71aed7354148c4c37ea4a49d7421c62",
+      "sha256": "e44da0568120f1f19d69c1dbca70d03301f9eb9039b1015e173800c4ad0364d4"
+    },
+    {
+      "path": "orbital/src/allocation/window.cpp",
+      "base_sha256": "3b9a3ee5688a5bccdb11295d9436fe674b29628d9b020371be00068e25dc3791",
+      "sha256": "f49de0e2f5c23c5994c2bb403fad84b0838b06b03f1548e9c71c3024fb186a81"
+    }
+  ],
+  "qualification": "Ready copies only add constexpr size() for the existing Debug assert; algorithm qualification in routes/regression-tests/qualification*.json; actual Ready native/debug focused runs routes/ready-focused-qualification.json"
+}

@@ -1,0 +1,28 @@
+--- a/workbench/spikes/orbital-mvcc/metadata/orbital/shape_backing.cpp
++++ b/workbench/spikes/orbital-mvcc/metadata/orbital/shape_backing.cpp
+@@ -53,6 +53,14 @@
+ constexpr std::size_t records = 3;
+ orbital::ObjectId id(std::size_t object) { return {79, object + 1}; }
+ 
++template<class Group> const auto& storages(const Group& group) {
++  if constexpr (requires { group.uses.slots; }) return group.uses.slots;
++  else return group.uses;
++}
++template<class Window> const auto& window_storage(const Window& window) {
++  if constexpr (requires { window.uses.slots; }) return window.uses.slots[0];
++  else return window.use;
++}
+ struct PhysicalUses { std::size_t active{}; };
+ PhysicalUses uses(const oa::Pool* pool) {
+   PhysicalUses result;
+@@ -63,8 +71,8 @@
+     }
+   };
+   for (const auto& group : pool->internal->groups)
+-    for (const auto& storage : group->uses) observe(storage);
+-  for (const auto& window : pool->internal->windows) observe(window->use);
++    for (const auto& storage : storages(*group)) observe(storage);
++  for (const auto& window : pool->internal->windows) observe(window_storage(*window));
+   return result;
+ }
+ 

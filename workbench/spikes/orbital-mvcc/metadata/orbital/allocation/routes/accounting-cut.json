@@ -1,0 +1,32 @@
+{
+  "source_base": "e9926e1 Material; qualified pure-growth shape_backing.cpp (pre-inline accounting adapters)",
+  "files": {
+    "workbench/spikes/orbital-mvcc/metadata/composed/material.cpp": {
+      "base_sha256": "6a1d5ea0db8bdc7229a67a4f843377061ac288b7b96fc5c1f5ac8b12fab49ea4",
+      "candidate_sha256": "d7c2912164750646f29e983642729479d00d5cbffa4a4fb1550f7ce3d76c6ce6"
+    },
+    "workbench/spikes/orbital-mvcc/metadata/orbital/shape_backing.cpp": {
+      "base_sha256": "b20a0d266319ed68839b434dca114048deb971a923e65c5bd2105f2ef39d6b6f",
+      "candidate_sha256": "93626030f3e6117db5872957f62856e2d5def1c174837b88d514f9e27bfcb0a4"
+    }
+  },
+  "patch_sha256": {
+    "accounting.patch": "513783d0043c29c36aa9094b71df73662da3329d23859b46b3eef2f6182924fc",
+    "backing-accounting.patch": "33e43e2e9769125251d4f0a0b9dd6f9ca99c3bcb39d313990da359b8ce4abffd"
+  },
+  "semantics": "Diagnostic compatibility only: active user count is logical, capacity comes from actual geometry, Pool statistics and setup remain authoritative, absent held-extent stays null rather than zero. No changed read/write/ownership behavior.",
+  "diagnostic_repair": "Read the actual const Window array slot directly; StorageBlock early controls expose only a mutable operator[].",
+  "qualification": {
+    "profiles_compiled": [
+      "baseline",
+      "storage16",
+      "group-advice",
+      "storage8checked",
+      "storage4-word-loop"
+    ],
+    "flags": "Clang21.1.8 C++23 -O3 -DNDEBUG",
+    "receipt": "build/orbital-mvcc-metadata/routes/accounting-validation/qualification.json",
+    "receipt_sha256": "c87967da76e36458011806a2ccf173fd02bb99ce02c296268d9bcfec54a7ccdf",
+    "limits": "Independent Material TU compiles against five matched runtime/header cuts. Companion backing diagnostic patch is authored but not executed; no runtime/timing proof inferred."
+  }
+}

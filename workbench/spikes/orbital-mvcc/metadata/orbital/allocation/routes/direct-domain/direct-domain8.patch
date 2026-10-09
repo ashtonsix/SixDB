@@ -1,0 +1,308 @@
+--- a/orbital/src/allocation/allocation.cpp
++++ b/orbital/src/allocation/allocation.cpp
+@@ -461,7 +461,7 @@
+   for (auto& window : pool.internal->windows) {
+     if (window->trim_pending || window->preparation) { pending = true; continue; }
+     if (window->address && !window->uses[0].users.load(std::memory_order_acquire) &&
+-        !window->domain.queued.load(std::memory_order_acquire)) idle += window->charged;
++        !window->uses.domain.queued.load(std::memory_order_acquire)) idle += window->charged;
+   }
+   // One Pool-wide floor, shared by finite pages and virtual windows. Prefer
+   // cold groups, then permit warmer inventory when the requested trim needs it.
+@@ -477,7 +477,7 @@
+       }
+       const bool cold = group->last_use.temperature.value_or(Temperature::cold) == Temperature::cold;
+       if ((pass == 0) != cold) continue;
+-      bool empty = !group->domain.queued.load(std::memory_order_acquire);
++      bool empty = !group->uses.domain.queued.load(std::memory_order_acquire);
+       for (std::size_t i = 0; empty && i < group->geometry->identity_count(); ++i)
+         empty = group->uses[i].users.load(std::memory_order_acquire) == 0;
+       const auto mapped = group->geometry->mapped_pages() * group->geometry->native_page();
+@@ -513,7 +513,7 @@
+     }
+     for (auto& window : pool.internal->windows) {
+       if (window->trim_pending || window->preparation || !window->address || window->uses[0].users.load(std::memory_order_acquire) ||
+-          window->domain.queued.load(std::memory_order_acquire)) continue;
++          window->uses.domain.queued.load(std::memory_order_acquire)) continue;
+       const bool cold = window->hint.temperature.value_or(Temperature::cold) == Temperature::cold;
+       if ((pass == 0) != cold || idle < window->charged || idle - window->charged < keep_bytes) continue;
+       idle -= window->charged;
+@@ -548,14 +548,14 @@
+   if (pool.internal->preparation_debt) return Progress::fail(Error::io);
+   if (pool.internal->preparations) return Progress::wait(pool.capacity_changed, observed);
+   for (auto& group : pool.internal->groups) {
+-    if (group->trim_pending || group->domain.queued.load(std::memory_order_acquire)) return Progress::wait(pool.capacity_changed, observed);
++    if (group->trim_pending || group->uses.domain.queued.load(std::memory_order_acquire)) return Progress::wait(pool.capacity_changed, observed);
+     if (group->retiring) continue;
+     for (std::size_t i = 0; i < group->geometry->identity_count(); ++i)
+       if (group->uses[i].users.load(std::memory_order_acquire)) return Progress::wait(pool.capacity_changed, observed);
+   }
+   for (auto& window : pool.internal->windows)
+     if (window->preparation || (!window->trim_pending && (window->uses[0].users.load(std::memory_order_acquire) ||
+-        window->domain.queued.load(std::memory_order_acquire)))) return Progress::wait(pool.capacity_changed, observed);
++        window->uses.domain.queued.load(std::memory_order_acquire)))) return Progress::wait(pool.capacity_changed, observed);
+   auto trimming = trim_cold(pool, 0);
+   if (trimming.kind() != Progress::Kind::done) return trimming;
+   std::uint64_t metadata = 0;
+--- a/orbital/src/allocation/group.cpp
++++ b/orbital/src/allocation/group.cpp
+@@ -14,7 +14,7 @@
+   if (group.retiring) {
+     group.retired = group.geometry->retire().has_value();
+     if (group.retired) group.geometry.reset();
+-    worker::post(*group.domain.pool->lane, group.trimmed);
++    worker::post(*group.uses.domain.pool->lane, group.trimmed);
+     return;
+   }
+   for (std::size_t i = 0; i < group.trimming.size(); ++i) {
+@@ -26,12 +26,12 @@
+     group.discarded[i] = ::madvise(address, amount, MADV_DONTNEED) == 0 &&
+         ::mprotect(address, amount, PROT_NONE) == 0;
+   }
+-  worker::post(*group.domain.pool->lane, group.trimmed);
++  worker::post(*group.uses.domain.pool->lane, group.trimmed);
+ }
+ 
+ void group_trim_handle(worker::Message& message, worker::Lane&) noexcept {
+   auto& group = *static_cast<Group*>(message.context);
+-  auto& pool = *group.domain.pool;
++  auto& pool = *group.uses.domain.pool;
+   if (group.retiring) {
+     if (group.retired) {
+       pool.internal->counts.trim_pages += group.retire_mapped / page_size();
+@@ -65,13 +65,13 @@
+   auto& group = *static_cast<Group*>(message.context);
+   auto retained = std::move(group.trim_lifetime);
+   if (group.retiring && group.retired) {
+-    auto& pool = *group.domain.pool;
++    auto& pool = *group.uses.domain.pool;
+     erase_owner(pool.internal->groups, group);
+     pulse(pool.capacity_changed);
+     return;
+   }
+   group.trim_pending = false;
+-  pulse(group.domain.pool->capacity_changed);
++  pulse(group.uses.domain.pool->capacity_changed);
+ }
+ 
+ const worker::MessageOps group_trim_ops{no_retain, group_trim_handle, group_trim_release};
+@@ -97,12 +97,11 @@
+         group->trimming.capacity() * sizeof(TrimSpan) +
+         (group->discarded.capacity() + 7) / 8;
+     if (!claim(pool, group->metadata_charge)) return std::unexpected(Error::capacity);
+-    initialize(group->domain, pool, group.get(), true);
++    initialize(group->uses.domain, pool, group.get(), true);
+     group->job = {nullptr, group.get(), group_trim_run};
+     group->trimmed.context = group.get();
+     group->trimmed.ops = &group_trim_ops;
+     for (std::size_t i = 0; i < count; ++i) {
+-      group->uses.domain = &group->domain;
+       group->uses[i].identity = static_cast<std::uint8_t>(i);
+     }
+     auto* result = group.get();
+@@ -498,7 +497,7 @@
+ }
+ 
+ Result<void> map_home(Group& group, const Home& home) noexcept {
+-  auto& pool = *group.domain.pool;
++  auto& pool = *group.uses.domain.pool;
+   const auto page = group.geometry->native_page();
+   std::size_t remaining = 0;
+   for (std::size_t p = home.pages.first; p < home.pages.first + home.pages.count; ++p)
+--- a/orbital/src/allocation/internal.h
++++ b/orbital/src/allocation/internal.h
+@@ -25,29 +25,9 @@
+ static_assert(sizeof(Storage) == 8);
+ 
+ namespace detail {
+-constexpr std::uint32_t returning = std::uint32_t{1} << 31;
++constexpr std::uint32_t returning = std::uint32_t{1} << 23;
+ constexpr std::uint16_t group_identities = 256;
+ 
+-
+-// Stable shared route. This candidate isolates the Clang container-of idiom;
+-// it is not claimed to be portable ISO C++23 (see routes/README.md).
+-template<std::size_t Count>
+-struct StorageBlock {
+-  Domain* domain{};
+-  std::array<Storage, Count> slots{};
+-  Storage& operator[](std::size_t index) noexcept { return slots[index]; }
+-  constexpr std::size_t size() const noexcept { return Count; }
+-};
+-static_assert(std::is_standard_layout_v<StorageBlock<256>>);
+-static_assert(std::is_standard_layout_v<StorageBlock<1>>);
+-static_assert(offsetof(StorageBlock<256>, slots) == offsetof(StorageBlock<1>, slots));
+-
+-inline Domain* route(Storage& use) noexcept {
+-  auto* first = &use - use.identity; // Within the actual array of Storage objects.
+-  auto* header = reinterpret_cast<std::byte*>(first) - offsetof(StorageBlock<1>, slots);
+-  return *reinterpret_cast<Domain**>(header);
+-}
+-inline const Domain* route(const Storage& use) noexcept { return route(const_cast<Storage&>(use)); }
+ 
+ struct Job {
+   Job* next{};
+@@ -65,15 +45,35 @@
+   Ref<Arena> lifetime;
+ };
+ 
++// Actual routing state precedes the slots; there is no loaded header pointer.
++// Recovery remains the pinned Clang/Linux container-of experiment.
++template<std::size_t Count>
++struct StorageOwner {
++  Domain domain;
++  std::array<Storage, Count> slots{};
++  Storage& operator[](std::size_t index) noexcept { return slots[index]; }
++  constexpr std::size_t size() const noexcept { return Count; }
++};
++static_assert(std::is_standard_layout_v<Domain>);
++static_assert(std::is_standard_layout_v<StorageOwner<256>>);
++static_assert(std::is_standard_layout_v<StorageOwner<1>>);
++static_assert(offsetof(StorageOwner<256>, slots) == offsetof(StorageOwner<1>, slots));
++static_assert(offsetof(StorageOwner<1>, slots) == sizeof(Domain));
++
++inline Domain* route(Storage& use) noexcept {
++  auto* first = &use - use.identity;
++  return reinterpret_cast<Domain*>(reinterpret_cast<std::byte*>(first) - offsetof(StorageOwner<1>, slots));
++}
++inline const Domain* route(const Storage& use) noexcept { return route(const_cast<Storage&>(use)); }
++
+ struct Group {
+-  Domain domain;
++  StorageOwner<group_identities> uses;
+   std::size_t owner_index{}; // Pool owning-vector position, not an allocation identity.
+   Group* next_available{};
+   Group** previous_available{};
+   std::unique_ptr<FiniteGroup> geometry;
+   Ref<Arena> active_lifetime; // Owner-managed pin while any finite identity is live/returning.
+   std::uint16_t active_identities{};
+-  StorageBlock<group_identities> uses{};
+   ReleaseHint foreign_use;
+   bool advice_pending{};
+   std::vector<std::uint64_t> live;
+@@ -93,9 +93,8 @@
+ };
+ 
+ struct Window {
+-  Domain domain;
++  StorageOwner<1> uses;
+   std::size_t owner_index{}; // Pool owning-vector position, not an allocation identity.
+-  StorageBlock<1> uses;
+   Ref<Arena> active_lifetime;
+   Window* next_idle{};
+   Window** previous_idle{};
+@@ -231,8 +230,8 @@
+ 
+ inline void add_idle(Window& window) noexcept {
+   if (window.previous_idle || window.trim_pending || window.uses[0].users.load(std::memory_order_acquire) ||
+-      window.domain.queued.load(std::memory_order_acquire)) return;
+-  auto& head = window.domain.pool->internal->idle_windows;
++      window.uses.domain.queued.load(std::memory_order_acquire)) return;
++  auto& head = window.uses.domain.pool->internal->idle_windows;
+   window.next_idle = head;
+   window.previous_idle = &head;
+   if (head) head->previous_idle = &window.next_idle;
+@@ -249,7 +248,7 @@
+ 
+ inline void add_available(Group& group) noexcept {
+   if (group.previous_available || group.retiring || group.control_preparing || !group.geometry->has_identity()) return;
+-  auto& head = group.domain.pool->internal->available_groups;
++  auto& head = group.uses.domain.pool->internal->available_groups;
+   group.next_available = head;
+   group.previous_available = &head;
+   if (head) head->previous_available = &group.next_available;
+@@ -257,7 +256,7 @@
+ }
+ 
+ inline void remove_available(Group& group) noexcept {
+-  for (auto& candidate : group.domain.pool->internal->ready_candidates)
++  for (auto& candidate : group.uses.domain.pool->internal->ready_candidates)
+     if (candidate.group == &group) candidate.group = nullptr;
+   if (!group.previous_available) return;
+   *group.previous_available = group.next_available;
+--- a/orbital/src/allocation/window.cpp
++++ b/orbital/src/allocation/window.cpp
+@@ -14,14 +14,14 @@
+ void window_trim_run(Job& job) noexcept {
+   auto& window = *static_cast<Window*>(job.context);
+   window.discarded = ::munmap(window.mapping, window.mapping_bytes) == 0;
+-  worker::post(*window.domain.pool->lane, window.trimmed);
++  worker::post(*window.uses.domain.pool->lane, window.trimmed);
+ }
+ 
+ void window_trim_handle(worker::Message& message, worker::Lane&) noexcept {
+   auto& window = *static_cast<Window*>(message.context);
+-  if (!window.discarded) { window.domain.pool->internal->trim_failed = true; return; }
+-  refund(*window.domain.pool, window.charged);
+-  window.domain.pool->internal->counts.trim_pages += window.charged / page_size();
++  if (!window.discarded) { window.uses.domain.pool->internal->trim_failed = true; return; }
++  refund(*window.uses.domain.pool, window.charged);
++  window.uses.domain.pool->internal->counts.trim_pages += window.charged / page_size();
+   window.mapping = window.address = nullptr;
+   window.mapping_bytes = window.prepared = window.reserved = window.charged = 0;
+ }
+@@ -30,7 +30,7 @@
+   auto& window = *static_cast<Window*>(message.context);
+   auto retained = std::move(window.trim_lifetime);
+   if (window.discarded) {
+-    auto& pool = *window.domain.pool;
++    auto& pool = *window.uses.domain.pool;
+     const auto metadata = window.metadata_charge;
+     auto& windows = pool.internal->windows;
+     erase_owner(windows, window);
+@@ -42,7 +42,7 @@
+   window.trim_pending = false;
+   window.uses[0].users.store(0, std::memory_order_release);
+   add_idle(window);
+-  pulse(window.domain.pool->capacity_changed);
++  pulse(window.uses.domain.pool->capacity_changed);
+ }
+ 
+ const worker::MessageOps window_trim_ops{no_retain, window_trim_handle, window_trim_release};
+@@ -90,7 +90,7 @@
+ 
+ void window_prepare_release(worker::Message& message) noexcept {
+   auto& window = *static_cast<Window*>(message.context);
+-  auto& pool = *window.domain.pool;
++  auto& pool = *window.uses.domain.pool;
+   auto& preparation = *window.preparation;
+   auto retained = std::move(window.trim_lifetime);
+   const auto outcome = preparation.outcome;
+@@ -143,7 +143,7 @@
+   // The preparer queue has unlinked its final use. This same stable Message
+   // becomes the owner reply; worker::poll does not touch it after release.
+   message.ops = &window_prepare_ops;
+-  worker::post(*window.domain.pool->lane, message);
++  worker::post(*window.uses.domain.pool->lane, message);
+ }
+ 
+ const worker::MessageOps window_prepare_lane_ops{
+@@ -218,8 +218,7 @@
+     selected->reserved = reserved;
+     selected->charged = prepared;
+     selected->metadata_charge = metadata;
+-    initialize(selected->domain, pool, selected, false);
+-    selected->uses.domain = &selected->domain;
++    initialize(selected->uses.domain, pool, selected, false);
+     selected->job = {nullptr, selected, window_trim_run};
+     selected->trimmed.context = selected;
+     selected->trimmed.ops = &window_trim_ops;
+@@ -241,7 +240,7 @@
+ }
+ 
+ Result<void> extend_window(Window& window, std::size_t size) {
+-  auto& pool = *window.domain.pool;
++  auto& pool = *window.uses.domain.pool;
+   std::size_t prepared;
+   if (!round_up(size, page_size(), prepared)) return std::unexpected(Error::invalid_argument);
+   if (prepared > window.prepared) {
+@@ -291,8 +290,7 @@
+     selected->mapping_bytes = reserved + slack;
+     selected->charged = prepared;
+     selected->metadata_charge = sizeof(Window);
+-    initialize(selected->domain, pool, selected, false);
+-    selected->uses.domain = &selected->domain;
++    initialize(selected->uses.domain, pool, selected, false);
+   } else {
+     const auto extra = prepared > selected->charged ? prepared - selected->charged : 0;
+     if (extra && !claim(pool, extra)) return std::unexpected(Error::capacity);

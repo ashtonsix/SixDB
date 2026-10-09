@@ -1,0 +1,82 @@
+{
+  "base": "storage8checked-ready",
+  "source": "/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/routes/direct-domain8",
+  "patch_sha256": "2b0af128254622a19394090c77be80242f6e0e2d1e7816872b00fa87cfac1018",
+  "files": [
+    {
+      "path": "orbital/src/allocation/allocation.cpp",
+      "base_sha256": "c4779583fedf1158746bce8aff68367d0dc9a2c8d6d98d8f772906e198db464a",
+      "sha256": "3b503b9af3f2dc1df92979ab9a2a5f6b28d52aab86547eef7e285847e7c546c2"
+    },
+    {
+      "path": "orbital/src/allocation/group.cpp",
+      "base_sha256": "3d903b7d19bca49d98ffc843da7d5abc104134cbfbf813dfc94078e35a090e83",
+      "sha256": "fc9a8630a2ef255a711d98f4afbc9c3385f8b818ffc2a40d9593f9b0113d8798"
+    },
+    {
+      "path": "orbital/src/allocation/internal.h",
+      "base_sha256": "e1382ef9585144c7eb231382f10b7abc92047263bc87dc729ff79396960c4795",
+      "sha256": "a46c8a5b40bb6586b022fc904db7b996c9457e4ad79db505131138222a10b5bb"
+    },
+    {
+      "path": "orbital/src/allocation/window.cpp",
+      "base_sha256": "f49de0e2f5c23c5994c2bb403fad84b0838b06b03f1548e9c71c3024fb186a81",
+      "sha256": "f527db3f07c0cdeb23fc3d22b9cfc9829cc4a93bf4ba3e71281f3b0608ea02ce"
+    }
+  ],
+  "runtime_inputs": [
+    {
+      "path": "orbital/include/orbital/allocation.h",
+      "sha256": "f8d070ca801238c8581761fcc6cf48d297d7ef5c1bd723139ec25089516ea317"
+    },
+    {
+      "path": "orbital/include/orbital/preparation.h",
+      "sha256": "5a50bb22b0e719a6f98be8b97eb57196e2a703324ea9f383a222edfe12110e38"
+    },
+    {
+      "path": "orbital/include/orbital/types.h",
+      "sha256": "f16fa83013aadafe0cb539e06dc56834d894605e8419bebf32fa17b53abfe00b"
+    },
+    {
+      "path": "orbital/include/orbital/worker.h",
+      "sha256": "5a57d7745ea210734241786178df710bec086d9e4193cb94815132ce668be09f"
+    },
+    {
+      "path": "orbital/src/allocation/allocation.cpp",
+      "sha256": "3b503b9af3f2dc1df92979ab9a2a5f6b28d52aab86547eef7e285847e7c546c2"
+    },
+    {
+      "path": "orbital/src/allocation/arena.cpp",
+      "sha256": "5c884a6b17e2d272c4790ac2db729e054c3c086cec4197104bfad00798ca5fb2"
+    },
+    {
+      "path": "orbital/src/allocation/finite.cpp",
+      "sha256": "2c1c8f88e4733213926f81ab2b580c61892c80105a0a5464505421b3e046c432"
+    },
+    {
+      "path": "orbital/src/allocation/finite.h",
+      "sha256": "fc479f5419b2f74f84ecd492fb0ceb9fc05cc9ee638dd2eaa0d44bdbb7ed03bb"
+    },
+    {
+      "path": "orbital/src/allocation/group.cpp",
+      "sha256": "fc9a8630a2ef255a711d98f4afbc9c3385f8b818ffc2a40d9593f9b0113d8798"
+    },
+    {
+      "path": "orbital/src/allocation/internal.h",
+      "sha256": "a46c8a5b40bb6586b022fc904db7b996c9457e4ad79db505131138222a10b5bb"
+    },
+    {
+      "path": "orbital/src/allocation/window.cpp",
+      "sha256": "f527db3f07c0cdeb23fc3d22b9cfc9829cc4a93bf4ba3e71281f3b0608ea02ce"
+    },
+    {
+      "path": "orbital/src/types.cpp",
+      "sha256": "8fb36e1d5f33cf0cef19243ab72f9907e527d068efec53a3fab22f89d19a962f"
+    },
+    {
+      "path": "orbital/src/worker.cpp",
+      "sha256": "8d4593f17951bb40433635de30470ffffa19d8dcbaf026009c2645894df503dd"
+    }
+  ],
+  "scope": "Separate actual-Domain prefix prototype; matched 8388607 live-use limit; public checked retain API unchanged. Pinned Clang/Linux container-of experiment."
+}

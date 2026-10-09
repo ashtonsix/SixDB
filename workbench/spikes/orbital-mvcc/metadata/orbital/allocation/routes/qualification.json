@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-09",
+  "mode": "Experimental source treatments; main runtime untouched",
+  "selected_patches": {
+    "storage8checked-ready.patch": "2ad96cd7dab1f58037da207229654f77cc9d77ac46316c7f755758fd1f091eed",
+    "storage4-word-loop-ready.patch": "07e16bb89a1125684029fc98c3ed04d5813b63dcd7bd110c365931cc2c816108",
+    "checked-owner.patch": "2aef4e3595004e991f447a768eb4c9f4f357d265a2ffbbfd8552e8715c8b36aa"
+  },
+  "ignored_capture": {
+    "path": "/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/routes/final-source.tar.gz",
+    "bytes": 445182,
+    "sha256": "21567394105380a12c28271450cc27a814c52b6e2dd14cd477a6ed1e27c7994f"
+  },
+  "receipts": {
+    "regression-tests/qualification.json": "0449774bdd2bb10d9a92d110e0213fd0c32f4932a8a386f94616aaf2d6864087",
+    "regression-tests/qualification-storage4-word-loop.json": "aada6ea5ce9e7c96b5dc9ca0047358b87d0ec538107d3db1b7bd162f6bb1904f",
+    "focused-qualification.json": "fefebe50b6e4f205a885ad46689c33741800632bf52f34314f7639af29292e7e",
+    "export-and-refinement-qualification.json": "8bec198d248bd26c9eb8feb4090c2c8e04d6787ead483fbfde33de0ae8482bea",
+    "ready-focused-qualification.json": "e12a34e5a2c7da6f2bd6d418effcb1f4da7eee2e8993adb7ecfddcef3dad07c6",
+    "ready-sanitizer-qualification.json": "f4c1da0233a1f3d48715b91503d6cbcb55aa6c7463b42760f836411fc5f1718f",
+    "uses-timing-corrected.json": "c61969e7d235886c71c9df0bed8bee1cc165cadc533e6ccc364c93bb5719adac"
+  },
+  "qualifications": {
+    "two_original_checked_layouts_existing_regression_runs": 32,
+    "packed_word_loop_regression_runs": 16,
+    "final_ready_native_debug_focused_runs": 12,
+    "final_ready_sanitized_focused_runs": 8,
+    "additional_actual_shape_ownership_runs": "private full Shape checks native both + fully-instrumented packed4; saturated standalone Export passed both final ready runtimes"
+  },
+  "component_bytes": {
+    "Storage8": {
+      "Group": 2480,
+      "A": 8416,
+      "B": 9432
+    },
+    "Storage4": {
+      "Group": 1456,
+      "A": 7392,
+      "B": 8408
+    },
+    "common": {
+      "FiniteGroup": 448,
+      "control_mapping": 4096,
+      "live_capacity": [
+        80,
+        144
+      ],
+      "trim_capacity": [
+        1272,
+        2192
+      ],
+      "discard_capacity": [
+        40,
+        72
+      ],
+      "excluded_first_Group_pointer_capacity": 8
+    }
+  },
+  "limits": [
+    "C++23 enclosing-header reachability is not portable; compiler-specific control",
+    "Count boundaries injected synthetically, not millions of real Holds",
+    "No weak-memory proof, target-machine performance claim, or complete metadata-budget claim",
+    "Setup/Object metadata and glibc usable bytes are separate from public Pool charges"
+  ],
+  "corrected_timing": "uses-timing.json had unverified shared-line pair choice and a stale refinement binary; use uses-timing-corrected.json"
+}

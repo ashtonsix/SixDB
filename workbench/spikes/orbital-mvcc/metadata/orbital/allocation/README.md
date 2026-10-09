@@ -65,6 +65,7 @@ own source cut; production Allocation is unchanged.
 | [Storage16](storage16.patch), [qualification](storage16-qualification.json) | 15,040 B | One active Arena pin per Group; wide Window state stays with Window. |
 | [Pure growth](growth.patch), [qualification](growth-qualification.json) | 15,040 B | Deletes protected-footprint tracking and implicit growth writes. Storage remains 16 B after alignment. |
 | [Group advice](../heat/README.md) | 10,456 B | Advisory heat follows the Group, matching current reclamation granularity. |
+| [Shared route controls](routes/) | 8,416 / 7,392 B | Storage8 / Storage4 recover a shared route; checked8 and packed4 compare the same fallible retention API. |
 
 Numbers are observed requested Pool metadata on the 4 KiB AArch64 guest, before
 Arena/Pool setup, caller state and Object/Representation metadata. Even the
@@ -79,5 +80,7 @@ Their sources and logs are in the [growth archive](growth-artifact.json).
 
 Group advice removes 4,584 B per Group without a demonstrated local point-operation
 penalty. Spatial epochs add cold-page discrimination but have not earned adoption.
-Neither policy can replace physical lifetime authority. Shared routing and
-smaller physical-use records remain separate active comparisons.
+Neither policy can replace physical lifetime authority. Shared routing has an
+explicit C++23 reachability caveat: its pinned Clang/Linux address arithmetic is
+an implementation-specific treatment, not a portable-language proof. Overflow,
+foreign return, preparation and last-pin behavior belong in its qualification.
