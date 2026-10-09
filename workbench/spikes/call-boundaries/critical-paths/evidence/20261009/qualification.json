@@ -1,0 +1,256 @@
+{
+  "checks": {
+    "native_point": {
+      "receipt_sha256": "b634005e3d7f983518ee58a6d0ec3b43787cb85f75e2dbb4b42e653034b2fbb6",
+      "source_union": "Unchanged v3 libraries plus corrected final/check.cpp; all other captured source bytes identical, except analysis-only codegen.py.",
+      "changed_captured_paths": [
+        "workbench/spikes/call-boundaries/critical-paths/codegen.py",
+        "workbench/spikes/call-boundaries/critical-paths/check.cpp"
+      ],
+      "check_source_sha256": "4414c98f43ed088c011d1b804399200ca90f5d561f0c23e5ac4887ff41d92297",
+      "compiler_argv": [
+        "/usr/bin/clang++-21",
+        "-DSIXDB_TUNE_GENERIC=1",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_NEOVERSE_V2=0",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-DSIXDB_TUNE_ZEN5=0",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/loom/include",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/orbital/include",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/ikea/include",
+        "-O3",
+        "-g",
+        "-std=c++23",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3=.",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-mtune=generic",
+        "-o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/critical-paths-20261009/checks-final/native/check.o",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-final/workbench/spikes/call-boundaries/critical-paths/check.cpp"
+      ],
+      "linker_argv": [
+        "/usr/bin/clang++-21",
+        "-O3",
+        "-g",
+        "-fno-fast-math",
+        "-Wl,--gc-sections",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/critical-paths-20261009/checks-final/native/check.o",
+        "-o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/critical-paths-20261009/checks-final/native/check",
+        "workbench/spikes/call-boundaries/critical-paths/libcritical_paths.a",
+        "loom/libloom.a",
+        "orbital/liborbital.a",
+        "ikea/libikea_seriespack.a",
+        "ikea/libikea_tuplepack.a",
+        "ikea/libikea_core.a"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/critical-paths-20261009/native-v3",
+      "libraries_sha256": {
+        "workbench/spikes/call-boundaries/critical-paths/libcritical_paths.a": "c779b73fe3c41789c3762c973d2800f9cb2aa8d0bcbfaff855acf80256bbd396",
+        "loom/libloom.a": "d8748893bf6cf8c4a7747f5f3448164f59468c84e759a5c3d5b6a02987871a5d",
+        "orbital/liborbital.a": "b0663b2e265039df99cd2c2f163ae605fe05c65c615038a9f4e2866d4d94a9d7",
+        "ikea/libikea_seriespack.a": "4d10154ba9487f0c240255a27294038a85879cdc1c0881812893e55d1fc5adff",
+        "ikea/libikea_tuplepack.a": "56f77bc816432f8b1da9386548835e6bf9b2f7f212370f83e5f803fc9c826078",
+        "ikea/libikea_core.a": "113411bc305df483d3609659f0320a0d2deab104e99ca073236208460ee48f2e"
+      },
+      "mode": "native",
+      "compile_status": 0,
+      "link_status": 0,
+      "binary_sha256": "588e5ed16cd9333201be34a096c09ec8ecdd9824a1a6326ddfd7578d07d99f87",
+      "run_status": 0,
+      "elapsed_seconds": 0.012527366998256184,
+      "stdout_sha256": "084e868046ef0ace15d92a8723a1aa5d1ccb63fceebe14b4f88ecba09f279f52",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": {
+        "check": "complete-packed-point-read",
+        "passed": true,
+        "histories": 63500,
+        "query_arms": 6,
+        "native_caller_control": true,
+        "retained_release": true,
+        "final_charge_zero": true
+      }
+    },
+    "asan_ubsan_point": {
+      "receipt_sha256": "156ca7baba38f43844aa1f421baa2c02e1330487ffadae3f0d9e173b174601e4",
+      "source_union": "Unchanged v3 libraries plus corrected final/check.cpp; all other captured source bytes identical, except analysis-only codegen.py.",
+      "changed_captured_paths": [
+        "workbench/spikes/call-boundaries/critical-paths/codegen.py",
+        "workbench/spikes/call-boundaries/critical-paths/check.cpp"
+      ],
+      "check_source_sha256": "4414c98f43ed088c011d1b804399200ca90f5d561f0c23e5ac4887ff41d92297",
+      "compiler_argv": [
+        "/usr/bin/clang++-21",
+        "-DSIXDB_TUNE_GENERIC=1",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_NEOVERSE_V2=0",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-DSIXDB_TUNE_ZEN5=0",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/loom/include",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/orbital/include",
+        "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/ikea/include",
+        "-fsanitize=address,undefined",
+        "-fsanitize-address-use-after-return=always",
+        "-fno-omit-frame-pointer",
+        "-O3",
+        "-g",
+        "-std=c++23",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3=.",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-mtune=generic",
+        "-o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/critical-paths-20261009/checks-final/asan/check.o",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-final/workbench/spikes/call-boundaries/critical-paths/check.cpp"
+      ],
+      "linker_argv": [
+        "/usr/bin/clang++-21",
+        "-fsanitize=address,undefined",
+        "-fsanitize-address-use-after-return=always",
+        "-fno-omit-frame-pointer",
+        "-O3",
+        "-g",
+        "-fno-fast-math",
+        "-Wl,--gc-sections",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/critical-paths-20261009/checks-final/asan/check.o",
+        "-o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/critical-paths-20261009/checks-final/asan/check",
+        "workbench/spikes/call-boundaries/critical-paths/libcritical_paths.a",
+        "loom/libloom.a",
+        "orbital/liborbital.a",
+        "ikea/libikea_seriespack.a",
+        "ikea/libikea_tuplepack.a",
+        "ikea/libikea_core.a"
+      ],
+      "cwd": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/critical-paths-20261009/asan-v3",
+      "libraries_sha256": {
+        "workbench/spikes/call-boundaries/critical-paths/libcritical_paths.a": "4d0068de12566e1f4dbd7668c4eca70c028d88eecf87737713f315a8e7cb77ff",
+        "loom/libloom.a": "31082852de080d162b46c8d51b513cd9d3df975bb76f6bec13fc1e80d1e115a5",
+        "orbital/liborbital.a": "8173f13b7172f2e343f6970dd1091bef2f768686420c6cf9e74fc0aad29e249d",
+        "ikea/libikea_seriespack.a": "4e874a4b6d74f09a99649a57cb399bce5b6823ec1323260506afe2d8a9758a36",
+        "ikea/libikea_tuplepack.a": "85444a6089247ffc7a59efa1a4131c9ca7e18a518d656d6158a0bc1e257e35c2",
+        "ikea/libikea_core.a": "6a851aaaafd9f1df8511d04d1ee08ac3cdd545674ab1a19ed2503d07165a430d"
+      },
+      "mode": "asan",
+      "compile_status": 0,
+      "link_status": 0,
+      "binary_sha256": "662c0d9895c727386dad5b143c58b9f8bf1e74a8ae0025095bd015ff4447bffa",
+      "run_status": 0,
+      "elapsed_seconds": 0.02660669100441737,
+      "stdout_sha256": "084e868046ef0ace15d92a8723a1aa5d1ccb63fceebe14b4f88ecba09f279f52",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": {
+        "check": "complete-packed-point-read",
+        "passed": true,
+        "histories": 63500,
+        "query_arms": 6,
+        "native_caller_control": true,
+        "retained_release": true,
+        "final_charge_zero": true
+      }
+    },
+    "native_wire": {
+      "receipt_sha256": "89c4dc8293085f7d68187254d45d3c1440abaa1f8ec8a4aeb38d3f577e4fd83c",
+      "binary": "build/critical-paths-20261009/native-v3/workbench/spikes/call-boundaries/critical-paths/critical_paths_wire_check",
+      "binary_sha256": "5747c6aed5a9ae6c45b0e74d124eaa865356be592913768f8836736e56937d06",
+      "status": 0,
+      "checks": {
+        "check": "independent-wire-law",
+        "passed": true,
+        "cases": 8388608,
+        "decode_arms": 4,
+        "rounding_modes": 4
+      },
+      "result": {
+        "check": "independent-wire-law",
+        "passed": true,
+        "cases": 8388608,
+        "decode_arms": 4,
+        "rounding_modes": 4
+      }
+    },
+    "asan_ubsan_wire": {
+      "receipt_sha256": "5a058580c6eae14efd428fa1fbb552d4eb7be9234d6cd5f99b05fe76d455878c",
+      "argv": [
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/critical-paths-20261009/asan-v3/workbench/spikes/call-boundaries/critical-paths/critical_paths_wire_check"
+      ],
+      "status": 0,
+      "binary_sha256": "c23727dea173365274c1a633dd1e54c6ed49fc430dddfd1211a1e7bd38a830a5",
+      "result": {
+        "check": "independent-wire-law",
+        "passed": true,
+        "cases": 8388608,
+        "decode_arms": 4,
+        "rounding_modes": 4
+      }
+    },
+    "qemu_x86_wire": {
+      "receipt_sha256": "ff0281dfbefca5c9a04a0d1bd9a3d839cbaebd6be33cd6782e37203e67adceed",
+      "compile_argv": [
+        "clang++-21",
+        "--target=x86_64-linux-gnu",
+        "--gcc-install-dir=/usr/lib/gcc-cross/x86_64-linux-gnu/15",
+        "--sysroot=/",
+        "-isystem",
+        "/usr/x86_64-linux-gnu/include/c++/15",
+        "-isystem",
+        "/usr/x86_64-linux-gnu/include/c++/15/x86_64-linux-gnu",
+        "-isystem",
+        "/usr/x86_64-linux-gnu/include",
+        "-L/usr/x86_64-linux-gnu/lib",
+        "-std=c++23",
+        "-O3",
+        "-g0",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-march=x86-64-v3",
+        "-static",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-final/workbench/spikes/call-boundaries/critical-paths/wire_check.cpp",
+        "-o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/critical-paths-20261009/checks-final/x86-wire/wire_check"
+      ],
+      "compile_status": 0,
+      "source_sha256": "a306f5e877f3a169147ec2afe587064463ce8b0417e18e2ca2ab95ffe0009ad4",
+      "run_argv": [
+        "qemu-x86_64",
+        "-cpu",
+        "max",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/critical-paths-20261009/checks-final/x86-wire/wire_check"
+      ],
+      "run_status": 0,
+      "binary_sha256": "f5cfc2fcabc5545cc6fb10f7b65d608bd5aa12c1c7525c520c5ed21d39e1b61c",
+      "result": {
+        "check": "independent-wire-law",
+        "passed": true,
+        "cases": 8388608,
+        "decode_arms": 4,
+        "rounding_modes": 4
+      }
+    }
+  },
+  "limits": [
+    "Native runs are local AArch64; V2 objects are target models, not a V2 hardware run.",
+    "The x86 wire law uses Clang21 x86-64-v3 and QEMU max for functional coverage of BMI2/SIMD arms, not Zen5 execution or timing.",
+    "Point-query libraries are frozen v3 bytes; corrected final/check.cpp adds owner-message polling during teardown. No query/library byte changed.",
+    "The retained Scope keeps physical backing. Immutable Page/Schema/Bindings/directory metadata is fixture-owned and outlives the Scope; this does not qualify MVCC snapshots."
+  ]
+}

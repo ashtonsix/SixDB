@@ -1,0 +1,3 @@
+add_executable(call_boundary_access_interleaving EXCLUDE_FROM_ALL driver.cpp kernels.cpp)
+sixdb_target(call_boundary_access_interleaving)
+target_link_libraries(call_boundary_access_interleaving PRIVATE loom ikea::tuplepack)

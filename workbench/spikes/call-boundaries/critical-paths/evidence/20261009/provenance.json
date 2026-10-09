@@ -1,0 +1,15 @@
+{
+  "files_sha256": {
+    "qualification.json": "32d50352644be43f2c4e2b94f8daf5eaff2f471d7dbd1920c501a2e9b83c26d8",
+    "static-summary.json": "a8789ab7ea168312ccbfc87c10f0ae406cf4c7614f04bc33e4e380d814c163b0"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/call-boundaries/critical-paths/summarize.py",
+    "{evidence}"
+  ],
+  "regenerate_from": "archive"
+}

@@ -1,0 +1,1023 @@
+{
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "mca": "Ubuntu LLVM version 21.1.8",
+  "source_digest": "0a4ddfafd7aac956a48361931e56f6ff2be29f55c267446650dffe0263dff5bd",
+  "raw_receipt_sha256": "4ca3bc216c0eb37f6e8106a4f4558bd781ed00ea796893cd5c922c2e84e1721d",
+  "analysis_recipe_sha256": "cbe4a21f321db24bacd4faf766fb30212809b02b8cfa71236c07d7151e3c868e",
+  "parser_controls": {
+    "passed": true,
+    "arm_immediate_preserved": true,
+    "final_retq_accepted": true,
+    "branch_call_refusals": 11,
+    "multiple_return_refused": true
+  },
+  "units": {
+    "bytes": "Object symbol size; alignment padding is excluded.",
+    "instruction_sites": "Disassembler sites; may include boundary padding.",
+    "load_sites_lexical": "Conservative lexical load count; excludes some memory-source ALU instructions. Not physical loads.",
+    "stack_sites": "Explicit stack-address sites and register push/pop; not a spill count.",
+    "cacheline64_span": "Minimum/maximum alignment bound for code, not cache misses.",
+    "mca": "LLVM21 CPU-model resource/latency assumptions, exact successful found-row tail including its saves/restores but excluding return. Not whole-query cycles or hardware timing."
+  },
+  "limits": [
+    "Static sites and compiler CPU model, not dynamic stalls or hardware throughput.",
+    "MCA covers exactly the successful found-row tail; excludes directory/slot search, admission, ownership setup and branch behavior.",
+    "MCA load latencies and alias/resource assumptions are its pinned CPU model; no physical-address/cache simulation.",
+    "No ordinary call is modeled as a cheap inlined callee. Complete functions and relocation-resolved calls remain separately inspected.",
+    "64-byte code spans are min/max alignment bounds, not observed I-cache misses.",
+    "Zen5 compile-only; different native and cross standard-library header versions remain recorded in arguments.",
+    "Repeated MCA regions reuse argument/clobbered registers; Total Cycles is not independent-call latency.",
+    "The actual native Driver already sees inline bodies. The deliberately outlined ordinary fixture is a hypothetical new seam, not the current baseline.",
+    "The current Driver contains native/direct/manual routes and setup; its whole-symbol size is not comparable to one fixture query."
+  ],
+  "targets": {
+    "zen5": {
+      "objects": [
+        {
+          "source": "workbench/spikes/call-boundaries/critical-paths/seams.cpp",
+          "source_sha256": "17e92acd1921ede6669c8b0a2731cf4f0976ddb26f8a2051b53b8fdea83585ea",
+          "object_sha256": "0a16b2a98ef63c1b614646f6c330dcb67b3c5349c2a48a8d869a788a4e0585bc",
+          "compiler_assembly_sha256": "c1401dd02b48a64391aecdce68c15d8ecc77ace8364588ca41f9aa4a6955c8ab",
+          "argv": [
+            "clang++-21",
+            "-std=c++23",
+            "-O3",
+            "-g0",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+            "-ffp-contract=off",
+            "-fno-fast-math",
+            "-fvisibility=hidden",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/loom/include",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/orbital/include",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/ikea/include",
+            "--target=x86_64-linux-gnu",
+            "--sysroot=/usr/x86_64-linux-gnu",
+            "-isystem",
+            "/usr/x86_64-linux-gnu/include/c++/15",
+            "-isystem",
+            "/usr/x86_64-linux-gnu/include/c++/15/x86_64-linux-gnu",
+            "-march=znver5",
+            "-c",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/workbench/spikes/call-boundaries/critical-paths/seams.cpp",
+            "-o",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/critical-paths-20261009/codegen-qualified/zen5/seams.o"
+          ]
+        },
+        {
+          "source": "workbench/spikes/call-boundaries/critical-paths/ordinary.cpp",
+          "source_sha256": "5c4ee236808bb267d55cb721d29045008aa785481131452af6a584a44948e7ac",
+          "object_sha256": "1f5e9c7ce3ddf48c50ca3b3686b135534d4ba3af12f78c45f740002b155462e2",
+          "compiler_assembly_sha256": "340e4694c719e1ab1a2d524bad71a9841f71ec6ece7e1130bbe8c3fc36d874ee",
+          "argv": [
+            "clang++-21",
+            "-std=c++23",
+            "-O3",
+            "-g0",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+            "-ffp-contract=off",
+            "-fno-fast-math",
+            "-fvisibility=hidden",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/loom/include",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/orbital/include",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/ikea/include",
+            "--target=x86_64-linux-gnu",
+            "--sysroot=/usr/x86_64-linux-gnu",
+            "-isystem",
+            "/usr/x86_64-linux-gnu/include/c++/15",
+            "-isystem",
+            "/usr/x86_64-linux-gnu/include/c++/15/x86_64-linux-gnu",
+            "-march=znver5",
+            "-c",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/workbench/spikes/call-boundaries/critical-paths/ordinary.cpp",
+            "-o",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/critical-paths-20261009/codegen-qualified/zen5/ordinary.o"
+          ]
+        },
+        {
+          "source": "workbench/spikes/call-boundaries/critical-paths/visible.cpp",
+          "source_sha256": "d230c254b9b285e3e9bf3219132b38c2d9098a41aa1e7d1ad44eae0a4b018889",
+          "object_sha256": "18899a5b2eb175e09d2e38fbfb38282a0b3fc816e228dff22bcd1c9f55c9acbf",
+          "compiler_assembly_sha256": "ed18ccb557f3906bc6936ad113033856e5b9d7a6d154fdfda868ad4ab0f06e6c",
+          "argv": [
+            "clang++-21",
+            "-std=c++23",
+            "-O3",
+            "-g0",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+            "-ffp-contract=off",
+            "-fno-fast-math",
+            "-fvisibility=hidden",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/loom/include",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/orbital/include",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/ikea/include",
+            "--target=x86_64-linux-gnu",
+            "--sysroot=/usr/x86_64-linux-gnu",
+            "-isystem",
+            "/usr/x86_64-linux-gnu/include/c++/15",
+            "-isystem",
+            "/usr/x86_64-linux-gnu/include/c++/15/x86_64-linux-gnu",
+            "-march=znver5",
+            "-c",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/workbench/spikes/call-boundaries/critical-paths/visible.cpp",
+            "-o",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/critical-paths-20261009/codegen-qualified/zen5/visible.o"
+          ]
+        },
+        {
+          "source": "workbench/spikes/call-boundaries/critical-paths/fused.cpp",
+          "source_sha256": "a5259751d1f6e60917b75921ed8751d57bcae9302a49cdad46a6123d6c222c06",
+          "object_sha256": "579225b3a288a93d9b5105104ff1f1a60d68031d0f385ec2daa9c7875a7e15d1",
+          "compiler_assembly_sha256": "81c8e62e4c6fe44e129a0b05cd4890da2d518fc247c42664f7c037b7b2a179e2",
+          "argv": [
+            "clang++-21",
+            "-std=c++23",
+            "-O3",
+            "-g0",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+            "-ffp-contract=off",
+            "-fno-fast-math",
+            "-fvisibility=hidden",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/loom/include",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/orbital/include",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/ikea/include",
+            "--target=x86_64-linux-gnu",
+            "--sysroot=/usr/x86_64-linux-gnu",
+            "-isystem",
+            "/usr/x86_64-linux-gnu/include/c++/15",
+            "-isystem",
+            "/usr/x86_64-linux-gnu/include/c++/15/x86_64-linux-gnu",
+            "-march=znver5",
+            "-c",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/workbench/spikes/call-boundaries/critical-paths/fused.cpp",
+            "-o",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/critical-paths-20261009/codegen-qualified/zen5/fused.o"
+          ]
+        },
+        {
+          "source": "workbench/benchmarks/orbital/lookup.cpp",
+          "source_sha256": "767ed421b19ca548a48cb86595b1a44a4937bd70c3af696592b4ba9a0ca7e56d",
+          "object_sha256": "3e45204e40bde19726d0de6fe7a001e9590fdca1b1c0c5c88b9a45082dd6f381",
+          "compiler_assembly_sha256": "36e0b43c74fd693c0ef372918825774eabf9d59fec2810ab18d985433cc8b155",
+          "argv": [
+            "clang++-21",
+            "-std=c++23",
+            "-O3",
+            "-g0",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+            "-ffp-contract=off",
+            "-fno-fast-math",
+            "-fvisibility=hidden",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/loom/include",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/orbital/include",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/ikea/include",
+            "--target=x86_64-linux-gnu",
+            "--sysroot=/usr/x86_64-linux-gnu",
+            "-isystem",
+            "/usr/x86_64-linux-gnu/include/c++/15",
+            "-isystem",
+            "/usr/x86_64-linux-gnu/include/c++/15/x86_64-linux-gnu",
+            "-march=znver5",
+            "-c",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/workbench/benchmarks/orbital/lookup.cpp",
+            "-o",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/critical-paths-20261009/codegen-qualified/zen5/lookup.o"
+          ]
+        }
+      ],
+      "bodies": [
+        {
+          "name": "critical_paths::Directory::locate(unsigned long) const",
+          "bytes": 82,
+          "instruction_sites": 29,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 2,
+          "cacheline64_span_max": 3,
+          "load_sites_lexical": 3
+        },
+        {
+          "name": "critical_paths::View::size() const",
+          "bytes": 8,
+          "instruction_sites": 4,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 1,
+          "cacheline64_span_max": 2,
+          "load_sites_lexical": 2
+        },
+        {
+          "name": "critical_paths::View::physical(unsigned long) const",
+          "bytes": 12,
+          "instruction_sites": 5,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 1,
+          "cacheline64_span_max": 2,
+          "load_sites_lexical": 3
+        },
+        {
+          "name": "critical_paths::View::key(unsigned long) const",
+          "bytes": 51,
+          "instruction_sites": 13,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 1,
+          "cacheline64_span_max": 2,
+          "load_sites_lexical": 6
+        },
+        {
+          "name": "critical_paths::View::payload(unsigned long) const",
+          "bytes": 181,
+          "instruction_sites": 46,
+          "calls": [],
+          "stack_sites": [
+            "pushq %r14",
+            "pushq %rbx",
+            "popq %rbx",
+            "popq %r14"
+          ],
+          "cacheline64_span_min": 3,
+          "cacheline64_span_max": 4,
+          "load_sites_lexical": 16
+        },
+        {
+          "name": "critical_paths::Scope::open() const",
+          "bytes": 5,
+          "instruction_sites": 3,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 1,
+          "cacheline64_span_max": 2,
+          "load_sites_lexical": 1
+        },
+        {
+          "name": "critical_paths::Scope::directory() const",
+          "bytes": 4,
+          "instruction_sites": 3,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 1,
+          "cacheline64_span_max": 2,
+          "load_sites_lexical": 0
+        },
+        {
+          "name": "critical_paths::ordinary(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 443,
+          "instruction_sites": 127,
+          "calls": [
+            "callq 0x1c <critical_paths::ordinary(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)+0x1c> [relocation: 0000000000000018:  R_X86_64_PLT32\tcritical_paths::Scope::open() const-0x4]",
+            "callq 0x33 <critical_paths::ordinary(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)+0x33> [relocation: 000000000000002f:  R_X86_64_PLT32\tcritical_paths::Scope::directory() const-0x4]",
+            "callq 0x3e <critical_paths::ordinary(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)+0x3e> [relocation: 000000000000003a:  R_X86_64_PLT32\tcritical_paths::Directory::locate(unsigned long) const-0x4]",
+            "callq 0x5b <critical_paths::ordinary(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)+0x5b> [relocation: 0000000000000057:  R_X86_64_PLT32\tcritical_paths::View::size() const-0x4]",
+            "callq 0x8f <critical_paths::ordinary(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)+0x8f> [relocation: 000000000000008b:  R_X86_64_PLT32\tcritical_paths::View::physical(unsigned long) const-0x4]",
+            "callq 0x9d <critical_paths::ordinary(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)+0x9d> [relocation: 0000000000000099:  R_X86_64_PLT32\tcritical_paths::View::key(unsigned long) const-0x4]",
+            "callq 0x13b <critical_paths::ordinary(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)+0x13b> [relocation: 0000000000000137:  R_X86_64_PLT32\tcritical_paths::View::payload(unsigned long) const-0x4]"
+          ],
+          "stack_sites": [
+            "pushq %rbp",
+            "pushq %r15",
+            "pushq %r14",
+            "pushq %r13",
+            "pushq %r12",
+            "pushq %rbx",
+            "subq $0x18, %rsp",
+            "leaq 0x8(%rsp), %rdi",
+            "movq %rbx, 0x10(%rsp)",
+            "movq %rax, 0x8(%rsp)",
+            "leaq 0x8(%rsp), %r12",
+            "movq 0x10(%rsp), %rdx",
+            "addq $0x18, %rsp",
+            "popq %rbx",
+            "popq %r12",
+            "popq %r13",
+            "popq %r14",
+            "popq %r15",
+            "popq %rbp",
+            "leaq 0x8(%rsp), %rdi",
+            "movq 0x10(%rsp), %rax"
+          ],
+          "cacheline64_span_min": 7,
+          "cacheline64_span_max": 8,
+          "load_sites_lexical": 2
+        },
+        {
+          "name": "critical_paths::payload_ordinary(critical_paths::View const&, unsigned long, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 139,
+          "instruction_sites": 41,
+          "calls": [
+            "callq 0x1cf <critical_paths::payload_ordinary(critical_paths::View const&, unsigned long, unsigned long, orbital_bench::Outcome&)+0xf> [relocation: 00000000000001cb:  R_X86_64_PLT32\tcritical_paths::View::payload(unsigned long) const-0x4]"
+          ],
+          "stack_sites": [
+            "pushq %r14",
+            "pushq %rbx",
+            "pushq %rax",
+            "addq $0x8, %rsp",
+            "popq %rbx",
+            "popq %r14"
+          ],
+          "cacheline64_span_min": 3,
+          "cacheline64_span_max": 4,
+          "load_sites_lexical": 0
+        },
+        {
+          "name": "critical_paths::visible(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 623,
+          "instruction_sites": 170,
+          "calls": [],
+          "stack_sites": [
+            "pushq %rbp",
+            "pushq %r15",
+            "pushq %r14",
+            "pushq %r13",
+            "pushq %r12",
+            "pushq %rbx",
+            "popq %rbx",
+            "popq %r12",
+            "popq %r13",
+            "popq %r14",
+            "popq %r15",
+            "popq %rbp"
+          ],
+          "cacheline64_span_min": 10,
+          "cacheline64_span_max": 11,
+          "load_sites_lexical": 28
+        },
+        {
+          "name": "critical_paths::payload_visible(orbital_bench::packed::Page const&, unsigned long, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 288,
+          "instruction_sites": 75,
+          "calls": [],
+          "stack_sites": [
+            "pushq %r15",
+            "pushq %r14",
+            "pushq %r12",
+            "pushq %rbx",
+            "popq %rbx",
+            "popq %r12",
+            "popq %r14",
+            "popq %r15"
+          ],
+          "cacheline64_span_min": 5,
+          "cacheline64_span_max": 6,
+          "load_sites_lexical": 15
+        },
+        {
+          "name": "critical_paths::fused(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 420,
+          "instruction_sites": 118,
+          "calls": [],
+          "stack_sites": [
+            "pushq %r14",
+            "pushq %rbx",
+            "popq %rbx",
+            "popq %r14"
+          ],
+          "cacheline64_span_min": 7,
+          "cacheline64_span_max": 8,
+          "load_sites_lexical": 10
+        },
+        {
+          "name": "critical_paths::fused_multiply(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 426,
+          "instruction_sites": 119,
+          "calls": [],
+          "stack_sites": [
+            "pushq %r14",
+            "pushq %rbx",
+            "popq %rbx",
+            "popq %r14"
+          ],
+          "cacheline64_span_min": 7,
+          "cacheline64_span_max": 8,
+          "load_sites_lexical": 10
+        },
+        {
+          "name": "critical_paths::fused_simd(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 416,
+          "instruction_sites": 117,
+          "calls": [],
+          "stack_sites": [
+            "pushq %r14",
+            "pushq %rbx",
+            "popq %rbx",
+            "popq %r14"
+          ],
+          "cacheline64_span_min": 7,
+          "cacheline64_span_max": 8,
+          "load_sites_lexical": 10
+        },
+        {
+          "name": "critical_paths::fused_fp(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 439,
+          "instruction_sites": 121,
+          "calls": [],
+          "stack_sites": [
+            "pushq %r14",
+            "pushq %rbx",
+            "popq %rbx",
+            "popq %r14"
+          ],
+          "cacheline64_span_min": 7,
+          "cacheline64_span_max": 8,
+          "load_sites_lexical": 10
+        },
+        {
+          "name": "critical_paths::payload_fused(orbital_bench::packed::Page const&, unsigned long, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 184,
+          "instruction_sites": 46,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 3,
+          "cacheline64_span_max": 4,
+          "load_sites_lexical": 3
+        },
+        {
+          "name": "critical_paths::payload_multiply(orbital_bench::packed::Page const&, unsigned long, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 193,
+          "instruction_sites": 47,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 4,
+          "cacheline64_span_max": 4,
+          "load_sites_lexical": 3
+        },
+        {
+          "name": "critical_paths::payload_simd(orbital_bench::packed::Page const&, unsigned long, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 190,
+          "instruction_sites": 50,
+          "calls": [],
+          "stack_sites": [
+            "pushq %rbx",
+            "popq %rbx"
+          ],
+          "cacheline64_span_min": 3,
+          "cacheline64_span_max": 4,
+          "load_sites_lexical": 3
+        },
+        {
+          "name": "critical_paths::payload_fp(orbital_bench::packed::Page const&, unsigned long, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 207,
+          "instruction_sites": 48,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 4,
+          "cacheline64_span_max": 5,
+          "load_sites_lexical": 3
+        }
+      ],
+      "found_row_tail_models": [
+        {
+          "symbol": "_ZN14critical_paths15payload_visibleERKN13orbital_bench6packed4PageEmmRNS0_7OutcomeE",
+          "status": 0,
+          "region_sha256": "4e16de8760be37e1d814aff2492bc5075c2f7c1ccb42eac4e9a709ad21277752",
+          "assembled_region_sha256": "4f3afe7833158d742e26826ba5dd518f391cc1038a5a858a55697db3b5627169",
+          "summary": {
+            "Iterations": 100.0,
+            "Instructions": 7400.0,
+            "Total Cycles": 2415.0,
+            "Total uOps": 7500.0,
+            "Dispatch Width": 6.0,
+            "uOps Per Cycle": 3.11,
+            "IPC": 3.06,
+            "Block RThroughput": 13.3
+          }
+        },
+        {
+          "symbol": "_ZN14critical_paths13payload_fusedERKN13orbital_bench6packed4PageEmmRNS0_7OutcomeE",
+          "status": 0,
+          "region_sha256": "423fe25bf1d1ff2cd93c9ee1783369b4c606162e28ef0fe09bd9e6faa2e35245",
+          "assembled_region_sha256": "02031992752e38830b35fb3bf46516f252a795a8aafeacc9a4261c363cc7f364",
+          "summary": {
+            "Iterations": 100.0,
+            "Instructions": 4400.0,
+            "Total Cycles": 2210.0,
+            "Total uOps": 4800.0,
+            "Dispatch Width": 6.0,
+            "uOps Per Cycle": 2.17,
+            "IPC": 1.99,
+            "Block RThroughput": 8.0
+          }
+        },
+        {
+          "symbol": "_ZN14critical_paths16payload_multiplyERKN13orbital_bench6packed4PageEmmRNS0_7OutcomeE",
+          "status": 0,
+          "region_sha256": "720774d52faedabb06749dd4908449bf2cbe4bc42f30dcce0bd380d91f737074",
+          "assembled_region_sha256": "a7e7546ec8b718a034e9cebfe112673e6ce7ff8407d5a57ca66f4bf967c888d2",
+          "summary": {
+            "Iterations": 100.0,
+            "Instructions": 4500.0,
+            "Total Cycles": 2111.0,
+            "Total uOps": 4900.0,
+            "Dispatch Width": 6.0,
+            "uOps Per Cycle": 2.32,
+            "IPC": 2.13,
+            "Block RThroughput": 8.2
+          }
+        },
+        {
+          "symbol": "_ZN14critical_paths12payload_simdERKN13orbital_bench6packed4PageEmmRNS0_7OutcomeE",
+          "status": 0,
+          "region_sha256": "1b941bd58cfb29ce7481d862c0c39b2918bbad843e972f92db3b64aad7d344a3",
+          "assembled_region_sha256": "262e4081153365300dfe82dbfc2be293858e2a7cad795de92f1a56d138e41036",
+          "summary": {
+            "Iterations": 100.0,
+            "Instructions": 4800.0,
+            "Total Cycles": 2108.0,
+            "Total uOps": 5100.0,
+            "Dispatch Width": 6.0,
+            "uOps Per Cycle": 2.42,
+            "IPC": 2.28,
+            "Block RThroughput": 8.5
+          }
+        },
+        {
+          "symbol": "_ZN14critical_paths10payload_fpERKN13orbital_bench6packed4PageEmmRNS0_7OutcomeE",
+          "status": 0,
+          "region_sha256": "8fdc9b723da2391839fcadd2ead66d6725e172007fcb0c2f8f8a6be287ebf57e",
+          "assembled_region_sha256": "198e58afa9bd1c0f748017140505e2dce7c50fae278e22a82a7e63afa6f7bf2e",
+          "summary": {
+            "Iterations": 100.0,
+            "Instructions": 4700.0,
+            "Total Cycles": 3707.0,
+            "Total uOps": 5400.0,
+            "Dispatch Width": 6.0,
+            "uOps Per Cycle": 1.46,
+            "IPC": 1.27,
+            "Block RThroughput": 9.0
+          }
+        }
+      ]
+    },
+    "v2": {
+      "objects": [
+        {
+          "source": "workbench/spikes/call-boundaries/critical-paths/seams.cpp",
+          "source_sha256": "17e92acd1921ede6669c8b0a2731cf4f0976ddb26f8a2051b53b8fdea83585ea",
+          "object_sha256": "510c8ff441bc9829316863aa5d4ea2ca2bc78db340f3789182b21dbcc8b2ba3e",
+          "compiler_assembly_sha256": "ea28fc5c2da7d9709f6a0f3a6aafd44d4d151fcdb645c7af7302b84fde286bca",
+          "argv": [
+            "clang++-21",
+            "-std=c++23",
+            "-O3",
+            "-g0",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+            "-ffp-contract=off",
+            "-fno-fast-math",
+            "-fvisibility=hidden",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/loom/include",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/orbital/include",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/ikea/include",
+            "-mcpu=neoverse-v2",
+            "-c",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/workbench/spikes/call-boundaries/critical-paths/seams.cpp",
+            "-o",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/critical-paths-20261009/codegen-qualified/v2/seams.o"
+          ]
+        },
+        {
+          "source": "workbench/spikes/call-boundaries/critical-paths/ordinary.cpp",
+          "source_sha256": "5c4ee236808bb267d55cb721d29045008aa785481131452af6a584a44948e7ac",
+          "object_sha256": "1350c8427ad5559fbac2be64fe1d6426bf3688b3a82a60d00f6e918a7efc7ffc",
+          "compiler_assembly_sha256": "7a43f28ad0c92a5a2d862900ffc2f3858e4cfc5354409189b0c956b2261a604a",
+          "argv": [
+            "clang++-21",
+            "-std=c++23",
+            "-O3",
+            "-g0",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+            "-ffp-contract=off",
+            "-fno-fast-math",
+            "-fvisibility=hidden",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/loom/include",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/orbital/include",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/ikea/include",
+            "-mcpu=neoverse-v2",
+            "-c",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/workbench/spikes/call-boundaries/critical-paths/ordinary.cpp",
+            "-o",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/critical-paths-20261009/codegen-qualified/v2/ordinary.o"
+          ]
+        },
+        {
+          "source": "workbench/spikes/call-boundaries/critical-paths/visible.cpp",
+          "source_sha256": "d230c254b9b285e3e9bf3219132b38c2d9098a41aa1e7d1ad44eae0a4b018889",
+          "object_sha256": "d4875e9d752e0894cbaf56b332ce5a49184e9626ae0d721eddb7c3cb20822617",
+          "compiler_assembly_sha256": "fc6205450944bb156077bace44e84ffe19e2f7219ec1872eca5d640d4e6eb3c1",
+          "argv": [
+            "clang++-21",
+            "-std=c++23",
+            "-O3",
+            "-g0",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+            "-ffp-contract=off",
+            "-fno-fast-math",
+            "-fvisibility=hidden",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/loom/include",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/orbital/include",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/ikea/include",
+            "-mcpu=neoverse-v2",
+            "-c",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/workbench/spikes/call-boundaries/critical-paths/visible.cpp",
+            "-o",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/critical-paths-20261009/codegen-qualified/v2/visible.o"
+          ]
+        },
+        {
+          "source": "workbench/spikes/call-boundaries/critical-paths/fused.cpp",
+          "source_sha256": "a5259751d1f6e60917b75921ed8751d57bcae9302a49cdad46a6123d6c222c06",
+          "object_sha256": "42db3ad8869fa75d1bb26bc8270757ed482756d652cb370d488a39f5700009f1",
+          "compiler_assembly_sha256": "4563899a2d8ea267d5b38f9164456428e4bc383d39c930e594e57528800398d9",
+          "argv": [
+            "clang++-21",
+            "-std=c++23",
+            "-O3",
+            "-g0",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+            "-ffp-contract=off",
+            "-fno-fast-math",
+            "-fvisibility=hidden",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/loom/include",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/orbital/include",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/ikea/include",
+            "-mcpu=neoverse-v2",
+            "-c",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/workbench/spikes/call-boundaries/critical-paths/fused.cpp",
+            "-o",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/critical-paths-20261009/codegen-qualified/v2/fused.o"
+          ]
+        },
+        {
+          "source": "workbench/benchmarks/orbital/lookup.cpp",
+          "source_sha256": "767ed421b19ca548a48cb86595b1a44a4937bd70c3af696592b4ba9a0ca7e56d",
+          "object_sha256": "472992a3c29394b6f862f59cc15514333932d89f878870ec860d28eb6b5b8ae3",
+          "compiler_assembly_sha256": "6527adc8f6b74596b73bab659b12c7fcf90859f37830d72b7610cd850c8bc0e2",
+          "argv": [
+            "clang++-21",
+            "-std=c++23",
+            "-O3",
+            "-g0",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+            "-ffp-contract=off",
+            "-fno-fast-math",
+            "-fvisibility=hidden",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/loom/include",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/orbital/include",
+            "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/ikea/include",
+            "-mcpu=neoverse-v2",
+            "-c",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/critical-paths-20261009-v3/workbench/benchmarks/orbital/lookup.cpp",
+            "-o",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/critical-paths-20261009/codegen-qualified/v2/lookup.o"
+          ]
+        }
+      ],
+      "bodies": [
+        {
+          "name": "critical_paths::Directory::locate(unsigned long) const",
+          "bytes": 96,
+          "instruction_sites": 24,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 2,
+          "cacheline64_span_max": 3,
+          "load_sites_lexical": 3
+        },
+        {
+          "name": "critical_paths::View::size() const",
+          "bytes": 12,
+          "instruction_sites": 4,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 1,
+          "cacheline64_span_max": 2,
+          "load_sites_lexical": 2
+        },
+        {
+          "name": "critical_paths::View::physical(unsigned long) const",
+          "bytes": 16,
+          "instruction_sites": 4,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 1,
+          "cacheline64_span_max": 2,
+          "load_sites_lexical": 3
+        },
+        {
+          "name": "critical_paths::View::key(unsigned long) const",
+          "bytes": 52,
+          "instruction_sites": 16,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 1,
+          "cacheline64_span_max": 2,
+          "load_sites_lexical": 8
+        },
+        {
+          "name": "critical_paths::View::payload(unsigned long) const",
+          "bytes": 164,
+          "instruction_sites": 44,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 3,
+          "cacheline64_span_max": 4,
+          "load_sites_lexical": 19
+        },
+        {
+          "name": "critical_paths::Scope::open() const",
+          "bytes": 8,
+          "instruction_sites": 4,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 1,
+          "cacheline64_span_max": 2,
+          "load_sites_lexical": 1
+        },
+        {
+          "name": "critical_paths::Scope::directory() const",
+          "bytes": 4,
+          "instruction_sites": 4,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 1,
+          "cacheline64_span_max": 2,
+          "load_sites_lexical": 0
+        },
+        {
+          "name": "critical_paths::ordinary(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 396,
+          "instruction_sites": 100,
+          "calls": [
+            "bl 0x24 <critical_paths::ordinary(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)+0x24> [relocation: 0000000000000024:  R_AARCH64_CALL26\tcritical_paths::Scope::open() const]",
+            "bl 0x30 <critical_paths::ordinary(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)+0x30> [relocation: 0000000000000030:  R_AARCH64_CALL26\tcritical_paths::Scope::directory() const]",
+            "bl 0x38 <critical_paths::ordinary(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)+0x38> [relocation: 0000000000000038:  R_AARCH64_CALL26\tcritical_paths::Directory::locate(unsigned long) const]",
+            "bl 0x58 <critical_paths::ordinary(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)+0x58> [relocation: 0000000000000058:  R_AARCH64_CALL26\tcritical_paths::View::size() const]",
+            "bl 0x78 <critical_paths::ordinary(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)+0x78> [relocation: 0000000000000078:  R_AARCH64_CALL26\tcritical_paths::View::physical(unsigned long) const]",
+            "bl 0x88 <critical_paths::ordinary(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)+0x88> [relocation: 0000000000000088:  R_AARCH64_CALL26\tcritical_paths::View::key(unsigned long) const]",
+            "bl 0x128 <critical_paths::ordinary(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)+0x128> [relocation: 0000000000000128:  R_AARCH64_CALL26\tcritical_paths::View::payload(unsigned long) const]"
+          ],
+          "stack_sites": [
+            "stp x29, x30, [sp, #-0x50]!",
+            "str x25, [sp, #0x10]",
+            "stp x24, x23, [sp, #0x20]",
+            "stp x22, x21, [sp, #0x30]",
+            "stp x20, x19, [sp, #0x40]",
+            "mov x29, sp",
+            "str x0, [x29, #0x18]",
+            "add x0, x29, #0x18",
+            "add x0, x29, #0x18",
+            "add x0, x29, #0x18",
+            "ldp x20, x19, [sp, #0x40]",
+            "ldp x22, x21, [sp, #0x30]",
+            "ldp x24, x23, [sp, #0x20]",
+            "ldr x25, [sp, #0x10]",
+            "ldp x29, x30, [sp], #0x50",
+            "ldp x20, x19, [sp, #0x40]",
+            "ldp x22, x21, [sp, #0x30]",
+            "ldp x24, x23, [sp, #0x20]",
+            "ldr x25, [sp, #0x10]",
+            "ldp x29, x30, [sp], #0x50",
+            "add x0, x29, #0x18",
+            "ldp x20, x19, [sp, #0x40]",
+            "ldp x22, x21, [sp, #0x30]",
+            "ldp x24, x23, [sp, #0x20]",
+            "ldr x25, [sp, #0x10]",
+            "ldp x29, x30, [sp], #0x50"
+          ],
+          "cacheline64_span_min": 7,
+          "cacheline64_span_max": 8,
+          "load_sites_lexical": 15
+        },
+        {
+          "name": "critical_paths::payload_ordinary(critical_paths::View const&, unsigned long, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 128,
+          "instruction_sites": 32,
+          "calls": [
+            "bl 0x1a4 <critical_paths::payload_ordinary(critical_paths::View const&, unsigned long, unsigned long, orbital_bench::Outcome&)+0x14> [relocation: 00000000000001a4:  R_AARCH64_CALL26\tcritical_paths::View::payload(unsigned long) const]"
+          ],
+          "stack_sites": [
+            "stp x29, x30, [sp, #-0x20]!",
+            "stp x20, x19, [sp, #0x10]",
+            "mov x29, sp",
+            "ldp x20, x19, [sp, #0x10]",
+            "ldp x29, x30, [sp], #0x20"
+          ],
+          "cacheline64_span_min": 2,
+          "cacheline64_span_max": 3,
+          "load_sites_lexical": 2
+        },
+        {
+          "name": "critical_paths::visible(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 512,
+          "instruction_sites": 128,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 8,
+          "cacheline64_span_max": 9,
+          "load_sites_lexical": 32
+        },
+        {
+          "name": "critical_paths::payload_visible(orbital_bench::packed::Page const&, unsigned long, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 248,
+          "instruction_sites": 62,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 4,
+          "cacheline64_span_max": 5,
+          "load_sites_lexical": 18
+        },
+        {
+          "name": "critical_paths::fused(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 372,
+          "instruction_sites": 96,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 6,
+          "cacheline64_span_max": 7,
+          "load_sites_lexical": 13
+        },
+        {
+          "name": "critical_paths::fused_multiply(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 372,
+          "instruction_sites": 96,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 6,
+          "cacheline64_span_max": 7,
+          "load_sites_lexical": 13
+        },
+        {
+          "name": "critical_paths::fused_simd(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 380,
+          "instruction_sites": 96,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 6,
+          "cacheline64_span_max": 7,
+          "load_sites_lexical": 14
+        },
+        {
+          "name": "critical_paths::fused_fp(critical_paths::Scope const&, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 392,
+          "instruction_sites": 100,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 7,
+          "cacheline64_span_max": 8,
+          "load_sites_lexical": 13
+        },
+        {
+          "name": "critical_paths::payload_fused(orbital_bench::packed::Page const&, unsigned long, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 168,
+          "instruction_sites": 44,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 3,
+          "cacheline64_span_max": 4,
+          "load_sites_lexical": 5
+        },
+        {
+          "name": "critical_paths::payload_multiply(orbital_bench::packed::Page const&, unsigned long, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 168,
+          "instruction_sites": 44,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 3,
+          "cacheline64_span_max": 4,
+          "load_sites_lexical": 5
+        },
+        {
+          "name": "critical_paths::payload_simd(orbital_bench::packed::Page const&, unsigned long, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 172,
+          "instruction_sites": 44,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 3,
+          "cacheline64_span_max": 4,
+          "load_sites_lexical": 6
+        },
+        {
+          "name": "critical_paths::payload_fp(orbital_bench::packed::Page const&, unsigned long, unsigned long, orbital_bench::Outcome&)",
+          "bytes": 188,
+          "instruction_sites": 47,
+          "calls": [],
+          "stack_sites": [],
+          "cacheline64_span_min": 3,
+          "cacheline64_span_max": 4,
+          "load_sites_lexical": 5
+        }
+      ],
+      "found_row_tail_models": [
+        {
+          "symbol": "_ZN14critical_paths15payload_visibleERKN13orbital_bench6packed4PageEmmRNS0_7OutcomeE",
+          "status": 0,
+          "region_sha256": "ce3481fe4bbd23e7c29211e38a7fe83922f1eecdfccabc52863323750e3ca045",
+          "assembled_region_sha256": "a1d06d015f917fc2fc76a2d5d3c7bfb6ff278b5a5d4871a056fa84faa9eb450c",
+          "summary": {
+            "Iterations": 100.0,
+            "Instructions": 6100.0,
+            "Total Cycles": 1172.0,
+            "Total uOps": 6800.0,
+            "Dispatch Width": 6.0,
+            "uOps Per Cycle": 5.8,
+            "IPC": 5.2,
+            "Block RThroughput": 11.3
+          }
+        },
+        {
+          "symbol": "_ZN14critical_paths13payload_fusedERKN13orbital_bench6packed4PageEmmRNS0_7OutcomeE",
+          "status": 0,
+          "region_sha256": "1c6eebf1897fccf92cc9777660f8b563bce67439bc25ff396e05fe1309559912",
+          "assembled_region_sha256": "25f7bd776393efcd7adf0fd06e56e59e6065c0a7605d4dfb4fdb10cca307f75a",
+          "summary": {
+            "Iterations": 100.0,
+            "Instructions": 4100.0,
+            "Total Cycles": 773.0,
+            "Total uOps": 4400.0,
+            "Dispatch Width": 6.0,
+            "uOps Per Cycle": 5.69,
+            "IPC": 5.3,
+            "Block RThroughput": 7.3
+          }
+        },
+        {
+          "symbol": "_ZN14critical_paths16payload_multiplyERKN13orbital_bench6packed4PageEmmRNS0_7OutcomeE",
+          "status": 0,
+          "region_sha256": "1c6eebf1897fccf92cc9777660f8b563bce67439bc25ff396e05fe1309559912",
+          "assembled_region_sha256": "25f7bd776393efcd7adf0fd06e56e59e6065c0a7605d4dfb4fdb10cca307f75a",
+          "summary": {
+            "Iterations": 100.0,
+            "Instructions": 4100.0,
+            "Total Cycles": 773.0,
+            "Total uOps": 4400.0,
+            "Dispatch Width": 6.0,
+            "uOps Per Cycle": 5.69,
+            "IPC": 5.3,
+            "Block RThroughput": 7.3
+          }
+        },
+        {
+          "symbol": "_ZN14critical_paths12payload_simdERKN13orbital_bench6packed4PageEmmRNS0_7OutcomeE",
+          "status": 0,
+          "region_sha256": "f62e6b58369b471ebc5ef5064604c286b798a3346d797a69012180544323f46a",
+          "assembled_region_sha256": "d3cbb153ba3c91b3765813b0e2526820cb9fa6bc77a5c45c33cba2ec56294c92",
+          "summary": {
+            "Iterations": 100.0,
+            "Instructions": 4200.0,
+            "Total Cycles": 831.0,
+            "Total uOps": 4700.0,
+            "Dispatch Width": 6.0,
+            "uOps Per Cycle": 5.66,
+            "IPC": 5.05,
+            "Block RThroughput": 7.8
+          }
+        },
+        {
+          "symbol": "_ZN14critical_paths10payload_fpERKN13orbital_bench6packed4PageEmmRNS0_7OutcomeE",
+          "status": 0,
+          "region_sha256": "d5f5848bda93b26fdabb98c6ec8e0e4248874d5d63f93f14eaa964b67f940242",
+          "assembled_region_sha256": "72311ec8e03cceb244ad580b727d508e0e8cabc8d98a2e5af5c469b506cce7c7",
+          "summary": {
+            "Iterations": 100.0,
+            "Instructions": 4600.0,
+            "Total Cycles": 879.0,
+            "Total uOps": 5100.0,
+            "Dispatch Width": 6.0,
+            "uOps Per Cycle": 5.8,
+            "IPC": 5.23,
+            "Block RThroughput": 8.5
+          }
+        }
+      ]
+    }
+  }
+}

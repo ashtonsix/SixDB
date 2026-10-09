@@ -6,6 +6,12 @@ calls, Tasks and typed Rings. Module interfaces and compiled examples own curren
 behavior. Objects, versions, Journal, Port and the read cache below are candidate
 designs. Their declarations compile; they have no runtime implementation.
 
+The current [Stage 2 composition experiments](../../spikes/orbital-stage2-composition/FINDINGS.md)
+exercise selected versions, complete Representation ownership, native/retained
+Views and real SeriesPack–TuplePack conversion before implementing Objects/Views.
+They refine the seams below without promoting their fixture catalog or signatures
+to runtime contracts. Engine and Ikea multi-block container design remain open.
+
 In the candidate Object design, Objects belong to a shard. Representations belong
 to a replica. A Part describes its bytes and format. A View gives code access to
 those bytes. A **Draft** holds private edits; a published **State** makes a

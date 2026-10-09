@@ -1,0 +1,10 @@
+set(packed_sources "${PROJECT_SOURCE_DIR}/workbench/benchmarks/orbital")
+add_library(critical_paths STATIC seams.cpp ordinary.cpp visible.cpp fused.cpp
+  "${packed_sources}/packed-page.cpp" "${packed_sources}/packed-construction.cpp" "${packed_sources}/lookup.cpp")
+sixdb_target(critical_paths)
+target_link_libraries(critical_paths PUBLIC loom ikea::seriespack ikea::tuplepack)
+add_executable(critical_paths_check check.cpp)
+sixdb_target(critical_paths_check)
+target_link_libraries(critical_paths_check PRIVATE critical_paths)
+add_executable(critical_paths_wire_check wire_check.cpp)
+sixdb_target(critical_paths_wire_check)
