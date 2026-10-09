@@ -6,6 +6,14 @@ The catalog owns Object identity and logical cuts. A realization owns its record
 count, body addresses and actual body ownership. There are no per-realization
 Object labels, portable descriptions, decoded Schema objects or per-Part boxes.
 
+This Shape and [`ShapePhysical`](../candidates/shape_policy.h) form the concrete
+TuplePack/SeriesPack consumer adapter at `Store`'s existing `Physical` seam.
+Record counts, tile geometry, decoding laws and Program/count compatibility
+belong to that adapter. Generic Orbital owns Object/cut association, coherent
+Scopes, publication, conversion authority and physical lifetime; its
+Representations need not contain rows or this fixture's data program. Keeping
+that boundary requires no additional dispatch, indirection or metadata.
+
 `prove_fixture` admits the actual parent and every supplied Part through the
 existing Ikea consumer. Tuple preparation then extracts four read controls from
 the actual Schema and retains its exact 75-byte portable description. Columns
