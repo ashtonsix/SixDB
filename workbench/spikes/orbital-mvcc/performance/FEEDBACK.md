@@ -213,6 +213,83 @@ worker archive recovers the other copies. Full raw samples, sources and binaries
 remain in that archive. This screen uses the old generic writer/catalog controls;
 the next small screen composes the shared Shape, inline catalog and native bridge.
 
+## First composed native-call screen
+
+[Worker 20261009T221823Z-38f26e9d](evidence/zen5-composed-screen-20261009/)
+keeps 192 trials: 96 for current Allocation and 96 for cumulative compact,
+Storage16 and growth-core. It uses the same 192-row / 64-Object discriminator,
+two repetitions, both clock modes and all older controls. Metadata is released
+root tree `b3338ed4` with the separately captured driver overlay; live subsequent
+maintenance edits are excluded. Cuts are temporally blocked, so small margins
+remain directional. The following medians are ns per complete request:
+
+| Current → Storage16 + growth-core | Scalar hit | Batch64 hit | Scalar update | Batch64 update |
+| --- | ---: | ---: | ---: | ---: |
+| Composed Inline | 25.31 → 27.26 | 24.15 → 21.78 | 829.32 → 828.39 | 590.26 → 573.42 |
+| Composed Directory | 30.67 → 31.06 | 26.11 → 26.41 | 789.95 → 814.59 | 570.05 → 563.05 |
+| Matched native LMDB | 132.88 → 132.26 | 58.95 → 62.01 | 1893.20 → 1866.15 | 487.46 → 511.54 |
+
+The shared Shape/native bridge improves the read signal for both systems.
+Scalar composed writes are slower than the old Store16 control
+(645.17 → 618.21 ns); this is useful negative feedback. The matched LMDB write
+body is also slower than its generic control in this panel. The new body
+qualifies a private batch once and retains duplicate order; these complete-call
+numbers do not isolate the writer kernel, capture or publication.
+
+Initial PMR is 6355 B Inline / 6883 B Directory, including a 227 B shared
+Shape. Pool metadata is 30608 → 15032 B. The actual resident shared Schema
+is **15296 B**, with 283 B writer-shape heap, 304 B borrowed writer-shape record,
+672 B Pool setup/inventory and 896 B Backend record reported separately.
+These records have different inclusion scopes and must not be added blindly;
+the shared Shape is already in PMR. The total metadata target is not achieved.
+Mapped LMDB's same 227 B proof is separate from its map/file footprint.
+
+Batch64 held/released PMR is 9835 / 9715 B Inline and 10883 / 10763 B Directory.
+The writes perform 4099 private admissions and updates, 12297 key reads and no
+full-row materialization inside the qualified writer. The preserving source
+reads still occur outside that writer body. Retained age is again one after
+the final batch tail; final release follows validation and is warm.
+Held requested extent is absent under growth-core and remains `null`, not zero.
+
+The enclosing driver separately passed 42 targeted native oracle cases,
+including both real conversion directions, old selected bodies and four-Series-
+Part writes. That is wiring coverage, not a new sanitizer qualification or a
+multi-Part performance panel. The prior SAN receipt remains its own source cut.
+The two captured ABI summaries were byte-identical: retain one and recover the
+other from the same verified archive. Next attribution is caller-owned private
+state with scalar-sized scratch, separate from Allocation heat and maintenance.
+
+## Caller-owned private state
+
+[Worker 20261009T222617Z-06d79f04](evidence/zen5-private-state-screen-20261009/)
+reuses the preceding guest for another 192 trials. Storage16 plus growth-core
+is fixed. The only native source treatment is the released caller-owned private
+state patch: fresh stationary Parts, `Result<void>` instead of a large owned
+return, and one-entry scratch for scalar updates. Heat and later catalog
+maintenance are excluded. All competitors and both clock modes remain selected.
+Two source cuts are blocked, with two rotated repetitions each.
+
+| Composed writes, ns per update | Baseline scalar | Private scalar | Baseline batch64 | Private batch64 |
+| --- | ---: | ---: | ---: | ---: |
+| Inline | 824.01 | 789.12 | 577.87 | 559.23 |
+| Directory | 825.78 | 744.34 | 572.91 | 600.73 |
+
+Scalar feedback improves, but Directory batch64 regresses. Native mapped LMDB
+batch64 is 505.75 → 503.45 ns; the older mapped control is 486.17 → 473.83 ns.
+Copy requests, Pool allocation/reuse counts, live metadata and qualified writer
+counters are identical between cuts. This changes call placement and temporary
+storage, rather than the retained representation's footprint.
+
+Scalar sampled p99 falls 1350 → 1270 ns Inline and 1260 → 1170 ns Directory.
+Batch64 goes 49535.5 → 54500 ns Inline and 54121 → 53036 ns Directory.
+There are only 65 group samples per batch64 replay, so nearest-rank p99 is the
+maximum; these are obvious-tail feedback signals, not qualified distributions.
+The retained negative cells rule out a blanket ABI or throughput win.
+The owner's [separate codegen control](../metadata/composed/controls/private-state/README.md)
+records smaller AArch64 scalar frames, removed Allocation moves and larger
+emitted update text; this capture retains the actual x86-64 executable's
+structural summaries. Neither establishes store-to-load forwarding stalls.
+
 ## Clock-mode fault discriminator
 
 [Worker 20261009T213742Z-b9d498d3](evidence/zen5-fault-controls-20261009/feedback/measurements.csv)

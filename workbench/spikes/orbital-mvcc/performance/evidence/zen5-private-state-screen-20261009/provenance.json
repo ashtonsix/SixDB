@@ -1,0 +1,38 @@
+{
+  "files_sha256": {
+    "composed/abi.json": "ce22b16e77927f9f907f5bd43ee00b09993005fd3fe0cd27e2c59d54df97bbde",
+    "composed/binary-identity.json": "d1b0000d77e29864f204121d40a931aaad8715aedc1eb19b17d3b94bae8bf0ae",
+    "composed/build-cost.json": "c24ad6fe25339dda8a62edc85989664a573fc2097582ca551b0ff39a5cb85cc8",
+    "composed/measurements.csv": "7e3a159ff9ddbd27b60ef5905dd50bbc4ed9416ce3139809dc5266399c304aa7",
+    "composed/parity.json": "aeb47069848b1d6fee18009eaa568cb3eeef2c6fefa594153e0c9e68cbeaf9d0",
+    "composed/qualification.json": "caa851c8c39541755caa04647921c83f47410f52b056301c09c732dacfde7d28",
+    "composed/summary.csv": "852b6fb8e95d7acec7c3203ad03f192e48b142e3bee6812ad0f25ea2ab773938",
+    "host.json": "ec099018cf16b840a782fd0ad278942a0af41ba046d2ec4f17bada3968ef3e1e",
+    "private-state/abi.json": "fcb150917023a5d1f26081313de68ad074a4e3a2810e28880232f931c6cf47e4",
+    "private-state/binary-identity.json": "681b80d57e56bca16a55c1116c2871729fbfe0280121b1890095fe4e4deb4934",
+    "private-state/build-cost.json": "35757441cf138ecd3af93341666b6480fb95bf6cd03c0d42268420882e21c370",
+    "private-state/measurements.csv": "1337ee64d25fe43a0cee0ecf51632f2169d9bc5d1119f67f1ca40ddcd39aaab7",
+    "private-state/parity.json": "aeb47069848b1d6fee18009eaa568cb3eeef2c6fefa594153e0c9e68cbeaf9d0",
+    "private-state/qualification.json": "caa851c8c39541755caa04647921c83f47410f52b056301c09c732dacfde7d28",
+    "private-state/summary.csv": "c14bfb091a2bcb3b089547c6b82d911c70e2b3b0ebe386db6f679e4a53c6fd39",
+    "worker-result.json": "f0a604feabcea6daae32ccfc5986cb6feefa4b4b82764cdb754994f520d06a85"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/composed"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/private-state"
+    ]
+  ],
+  "regenerate_from": "archive"
+}

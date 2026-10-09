@@ -20,6 +20,18 @@ from experiment import Run
 
 
 def panel(profile="resident"):
+    if profile == 'composed-quick':
+        for batch in [1,64]:
+            yield dict(rows=192,objects=64,workload='point-hit',batch=batch,ops=4099,
+                       codec='consume16',conditioning='warm-trace',**{'metadata-bytes':16*1024*1024},
+                       backends=['orbital','candidate16','lmdb'])
+            yield dict(rows=192,objects=64,workload='point-hit',batch=batch,ops=4099,
+                       codec='shape',conditioning='warm-trace',**{'metadata-bytes':16*1024*1024},
+                       backends=['composed-inline','composed-directory','lmdb-composed'])
+            yield dict(rows=192,objects=64,workload='point-update',batch=batch,ops=4099,
+                       **{'retention-age':8,'metadata-bytes':16*1024*1024},
+                       backends=['orbital','candidate16','lmdb','composed-inline','composed-directory','lmdb-composed'])
+        return
     if profile == 'quick':
         for batch in [1,64]:
             yield dict(rows=192,objects=64,workload='point-hit',batch=batch,ops=4099,
@@ -155,6 +167,7 @@ def summarize(output):
         base = dict(workload=key[0], rows=key[1], objects=key[2], batch=key[3], source_format=key[4],
                     backend=result["backend"], mode=result["mode"], repeat=repeat,
                     comparison="conversion" if key[0] == "convert" else
+                    "contextual-series" if key[4] == "columns" else
                     "contextual-row-key" if result["backend"] == "row-lmdb" else
                     "prequalified-native" if result["backend"] == "direct" else "common-tuple",
                     wall_ns=interval["wall_ns"], caller_cpu_ns=interval["caller_cpu_ns"],
@@ -215,6 +228,16 @@ def summarize(output):
                              "copied_metadata_bytes","captured_descriptor_bytes","reclamation_work","last_sweep_bytes",
                              "last_sweep_cuts","maintenance_refusals","catalog_core_bytes","catalog_entry_bytes","version_node_bytes"]:
                     base[f"{label}_{name}"]=f.get(name)
+        if result.get('report_schema',1)>=3:
+            base['mapped_shape_metadata_bytes']=result['mapped_shape_metadata_bytes']
+            for name in ['private_admissions','key_reads','full_rows_read','applied_updates']:
+                base[f'write_batch_{name}']=result['write_batch_probe'][name]
+            for label,field in [('initial','footprint_initial'),('held','footprint_after_interval'),('released','footprint_after_reader_release')]:
+                f=result.get(field,{})
+                for name in ['shared_shape_bytes','write_shape_heap_bytes','schema_bytes','borrowed_write_shape_record_bytes',
+                             'pool_setup_and_inventory_bytes','active_allocations','live_capacity_bytes','held_extent_bytes',
+                             'backend_record_bytes','write_caller_arrays_bytes']:
+                    base[f'{label}_{name}']=f.get(name)
         rows.append(base)
         group_key = key + (result["backend"], result["mode"])
         if "codec" in result:
@@ -251,6 +274,9 @@ def abi(output):
     wanted = ("::run_orbital_reads(", "::run_lmdb_reads(", "::run_direct_reads(",
               "::run_orbital_codec_reads(", "::run_lmdb_codec_reads(",
               "::run_orbital_consume_reads(", "::run_lmdb_consume_reads(",
+              "::run_lmdb_shape_reads(", "::composed_reads<", "::read_proven(",
+              "::read_mapped_proven(", "::lmdb_composed_update(",
+              "orbital_mvcc::composed::Backend<",
               "::candidate_reads<", "::CandidateBodies<", "::sized_reads<",
               "::Orbital::cursor(", "::qualify_tuple(", "::ReadData::get(",
               "::read_operation<orbital_bench::versioned::TupleBody>",
@@ -352,7 +378,7 @@ def main():
     parser.add_argument("--workspace", type=Path, default=ROOT/"build/workspaces/orbital-mvcc-performance")
     parser.add_argument("--cpu", type=int, default=2)
     parser.add_argument("--repetitions", type=int, default=5)
-    parser.add_argument("--profile", choices=["feedback","catalog","churn","groups","faults","quick","resident"], default="feedback")
+    parser.add_argument("--profile", choices=["feedback","catalog","churn","groups","faults","quick","composed-quick","resident"], default="feedback")
     parser.add_argument("--march", default="")
     parser.add_argument("--tune", default="generic")
     parser.add_argument("--jobs", type=int, default=2)

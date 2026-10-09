@@ -2,6 +2,7 @@
 #include "oracle.h"
 #include "pmu.h"
 #include "candidate_runtime.h"
+#include "composed_runtime.h"
 #include <algorithm>
 #include <charconv>
 #include <cstdlib>
@@ -36,9 +37,9 @@ Options options(int argc,char** argv) {
   for (int i=1;i<argc;++i) {
     const std::string_view key=argv[i];
     if (key=="--help") {
-      std::cout<<"--backend orbital|borrowed|lmdb|direct|row-lmdb|candidate8|candidate16|candidate32 --workload point-hit|point-miss|dependent-16|scan-16|point-update|convert\n"
+      std::cout<<"--backend orbital|borrowed|lmdb|lmdb-composed|direct|row-lmdb|candidate8|candidate16|candidate32|composed-inline|composed-directory --workload point-hit|point-miss|dependent-16|scan-16|point-update|convert\n"
           "--mode throughput|latency --rows N --objects 1..4096 --batch 1|64 --ops N --seed N --bytes N --metadata-bytes N --db NEW_DIRECTORY --from rows|columns\n";
-      std::cout<<"--codec legacy|direct16|consume16 --conditioning none|warm-trace --latency-samples NEW_FILE --retention-age N_PUBLICATIONS (0 holds old reader)\n";
+      std::cout<<"--codec legacy|direct16|consume16|shape --conditioning none|warm-trace --latency-samples NEW_FILE --sample-storage equal|mode --retention-age N_PUBLICATIONS (0 holds old reader)\n";
       std::exit(0);
     }
     if (++i==argc) throw std::invalid_argument("missing option value");
@@ -73,11 +74,14 @@ Options options(int argc,char** argv) {
     else throw std::invalid_argument("unknown option");
   }
   const bool candidate=result.backend=="candidate8" || result.backend=="candidate16" || result.backend=="candidate32";
-  if (result.backend!="orbital" && result.backend!="borrowed" && result.backend!="lmdb" && result.backend!="direct" && result.backend!="row-lmdb" && !candidate)
+  const bool composed=result.backend=="composed-inline" || result.backend=="composed-directory";
+  const bool mapped_composed=result.backend=="lmdb-composed";
+  if (result.backend!="orbital" && result.backend!="borrowed" && result.backend!="lmdb" && !mapped_composed && result.backend!="direct" && result.backend!="row-lmdb" && !candidate && !composed)
     throw std::invalid_argument("unknown backend");
   if (result.mode!="throughput" && result.mode!="latency") throw std::invalid_argument("unknown mode");
   if (result.sample_storage!="equal" && result.sample_storage!="mode") throw std::invalid_argument("sample storage must be equal or mode");
-  if (result.codec!="legacy" && result.codec!="direct16" && result.codec!="consume16") throw std::invalid_argument("unknown codec treatment");
+  if (result.codec!="legacy" && result.codec!="direct16" && result.codec!="consume16" && result.codec!="shape") throw std::invalid_argument("unknown codec treatment");
+  if (result.codec=="shape" && !composed && !mapped_composed) throw std::invalid_argument("Shape codec requires a composed backend");
   if (result.conditioning!="none" && result.conditioning!="warm-trace") throw std::invalid_argument("unknown conditioning");
   if (result.pmu!=orbital_bench::pmu::Mode::off && result.mode!="throughput")
     throw std::invalid_argument("PMU requires a separate throughput replay");
@@ -89,19 +93,23 @@ Options options(int argc,char** argv) {
   if (result.batch!=1 && result.batch!=64) throw std::invalid_argument("batch must be 1 or 64");
   if (result.workload!="point-hit" && result.workload!="point-miss" && result.workload!="dependent-16" && result.workload!="scan-16" && result.workload!="point-update" && result.workload!="convert")
     throw std::invalid_argument("unsupported workload");
-  if (result.workload=="point-update" && result.backend!="orbital" && result.backend!="lmdb" && !candidate)
+  if (result.workload=="point-update" && result.backend!="orbital" && result.backend!="lmdb" && !mapped_composed && !candidate && !composed)
     throw std::invalid_argument("updates require orbital or mapped lmdb");
-  if (result.workload=="convert" && (result.backend!="orbital" || result.batch!=1))
+  if (result.workload=="convert" && ((result.backend!="orbital" && !composed) || result.batch!=1))
     throw std::invalid_argument("conversion requires orbital and batch 1");
-  if (result.workload!="convert" && result.from!="rows") throw std::invalid_argument("common read/write comparison uses Tuple rows");
+  if (result.workload!="convert" && result.from!="rows" && !composed) throw std::invalid_argument("common read/write comparison uses Tuple rows");
   if (candidate && (result.workload=="convert" || result.codec=="direct16"))
     throw std::invalid_argument("candidate adapter supports generic updates and legacy/consume16 reads");
   if (result.retention_age && result.workload!="point-update") throw std::invalid_argument("retention-age requires point-update");
   if ((result.codec!="legacy" || result.conditioning!="none") &&
-      ((result.backend!="orbital" && result.backend!="lmdb" && !candidate) || result.workload=="point-update" || result.workload=="convert"))
+      ((result.backend!="orbital" && result.backend!="lmdb" && !mapped_composed && !candidate && !composed) || result.workload=="point-update" || result.workload=="convert"))
     throw std::invalid_argument("codec/conditioning treatment requires an owned common-Tuple read");
   if (result.backend=="row-lmdb" && result.objects!=1) throw std::invalid_argument("row-key LMDB control requires one Object");
-  if ((result.backend=="lmdb" || result.backend=="row-lmdb") && result.db.empty()) throw std::invalid_argument("LMDB requires --db NEW_DIRECTORY");
+  if ((result.backend=="lmdb" || result.backend=="row-lmdb" || mapped_composed) && result.db.empty()) throw std::invalid_argument("LMDB requires --db NEW_DIRECTORY");
+  if ((composed || mapped_composed) && result.workload!="point-update" && result.workload!="convert") {
+    if (result.codec!="legacy" && result.codec!="shape") throw std::invalid_argument("composed reads use the shared Shape bridge");
+    result.codec="shape";
+  }
   if (!result.ops) result.ops=result.workload=="convert"?2*result.objects:result.workload=="point-update"?64:10000;
   if (result.retention_age>std::numeric_limits<std::size_t>::max()/result.batch)
     throw std::invalid_argument("retention window extent overflows");
@@ -123,7 +131,7 @@ ProcessMemory process_memory() {
   }
   return memory;
 }
-void verify(const data::ReadData& body,const Golden& expected) {
+template<class Body> void verify(const Body& body,const Golden& expected) {
   require(body.size()==expected.size(),"final row count differs");
   std::size_t index{};
   for (const auto& [key,record]:expected) require(body.row_unchecked(index++)==Row{key,record},"final row differs from independent map");
@@ -158,6 +166,8 @@ struct OrbitalFootprint {
   orbital::allocation::Statistics pool;
   std::size_t core_bytes{},entry_bytes{},node_bytes{},metadata_allocation_calls{};
   std::optional<compact_history::Store32::Statistics> candidate;
+  std::optional<composed::Accounting> composed_accounting;
+  std::size_t backend_record_bytes{},write_caller_arrays_bytes{};
 };
 OrbitalFootprint footprint(const Orbital& store) {
   OrbitalFootprint result;result.metadata=store.statistics();result.arena_charge=store.charged_bytes();
@@ -176,6 +186,24 @@ template<class Store> OrbitalFootprint footprint(const Candidate<Store>& store) 
       s.history_capacity_bytes,s.descriptor_directory_capacity_bytes,s.copied_metadata_bytes,s.captured_descriptor_bytes,
       s.reclamation_work,s.last_sweep_bytes,s.last_sweep_cuts,s.maintenance_refusals,
       s.object_directory_capacity_bytes,s.debt_capacity_bytes};
+  return result;
+}
+template<class Store> OrbitalFootprint footprint(const composed::Backend<Store>& store) {
+  const auto s=store.statistics();const auto a=store.accounting();
+  OrbitalFootprint result;
+  result.metadata.metadata_bytes=a.metadata_live;result.metadata.metadata_peak=a.metadata_peak;
+  result.metadata.metadata_limit=a.metadata_limit;result.metadata.objects=s.objects;
+  result.metadata.versions=s.versions;result.metadata.contexts=s.scopes;result.metadata.completed_cut=store.cut();
+  result.arena_charge=a.arena_charge;result.pool=a.pool;
+  result.core_bytes=s.core_bytes;result.entry_bytes=s.entry_bytes;result.node_bytes=s.node_bytes;
+  result.metadata_allocation_calls=a.metadata_calls;
+  result.candidate=compact_history::Store32::Statistics{s.requested_bytes,s.peak_bytes,s.objects,s.versions,s.scopes,
+      s.core_bytes,s.entry_bytes,s.node_bytes,s.alternative_count,s.allocation_calls,
+      s.history_capacity_bytes,s.descriptor_directory_capacity_bytes,s.copied_metadata_bytes,s.captured_descriptor_bytes,
+      s.reclamation_work,s.last_sweep_bytes,s.last_sweep_cuts,s.maintenance_refusals,
+      s.object_directory_capacity_bytes,s.debt_capacity_bytes};
+  result.composed_accounting=a;result.backend_record_bytes=sizeof(store);
+  result.write_caller_arrays_bytes=composed::Backend<Store>::write_caller_arrays;
   return result;
 }
 void print_footprint(const OrbitalFootprint& f) {
@@ -201,6 +229,17 @@ void print_footprint(const OrbitalFootprint& f) {
         <<",\"reclamation_work\":"<<c.reclamation_work
         <<",\"last_sweep_bytes\":"<<c.last_sweep_bytes<<",\"last_sweep_cuts\":"<<c.last_sweep_cuts
         <<",\"maintenance_refusals\":"<<c.maintenance_refusals;
+  }
+  if (f.composed_accounting) {
+    const auto& a=*f.composed_accounting;
+    std::cout<<",\"shared_shape_bytes\":"<<a.shared_shape_bytes
+        <<",\"write_shape_heap_bytes\":"<<a.write_shape_heap_bytes<<",\"schema_bytes\":"<<a.schema_bytes
+        <<",\"borrowed_write_shape_record_bytes\":"<<a.borrowed_write_shape_record_bytes
+        <<",\"pool_setup_and_inventory_bytes\":"<<a.pool_setup_and_inventory_bytes
+        <<",\"active_allocations\":"<<a.active_allocations<<",\"live_capacity_bytes\":"<<a.live_capacity_bytes
+        <<",\"backend_record_bytes\":"<<f.backend_record_bytes<<",\"write_caller_arrays_bytes\":"<<f.write_caller_arrays_bytes
+        <<",\"held_extent_bytes\":";
+    if (a.held_extent_bytes) std::cout<<*a.held_extent_bytes;else std::cout<<"null";
   }
   std::cout<<"}";
 }
@@ -264,6 +303,8 @@ int main(int argc,char** argv) try {
   }
   Interval interval,release,conditioning;
   data::Costs costs;
+  write_batch::ProbeCosts write_probe;
+  std::size_t mapped_shape_metadata{};
   std::uint64_t bindings{},drain_steps{};
   OrbitalFootprint orbital_initial,orbital_held,orbital_released;
   Lmdb::Footprint lmdb_initial,lmdb_held,lmdb_released;
@@ -336,15 +377,19 @@ int main(int argc,char** argv) try {
       orbital_held=orbital_released=footprint(store);
     }
     costs=store.costs;
-  } else if (o.backend=="lmdb" || o.backend=="row-lmdb") {
+  } else if (o.backend=="lmdb" || o.backend=="row-lmdb" || o.backend=="lmdb-composed") {
     Lmdb store(o.db,o.bytes);
     if (o.backend=="row-lmdb") store.load(corpus.images[0].rows);
     else {auto write=store.edit();for (const auto& image:corpus.images) write.put_part(image.address,image.encoded);write.publish();}
     lmdb_initial=store.footprint();
+    std::optional<MappedShape> mapped_shape;
+    if (o.backend=="lmdb-composed") {mapped_shape.emplace(corpus);mapped_shape_metadata=mapped_shape->metadata_bytes();}
     if (updating) {
       std::optional<Lmdb::Read> old(store.read());std::size_t first{},published{},witness{};
       interval=writes(o,hardware,write_faults,[&](auto input,auto target) {
-        lmdb_update(store,corpus,input,std::span{objects}.subspan(first,input.size()),target,costs);first+=input.size();
+        if (o.backend=="lmdb-composed") lmdb_composed_update(store,corpus,input,std::span{objects}.subspan(first,input.size()),target,costs,write_probe);
+        else lmdb_update(store,corpus,input,std::span{objects}.subspan(first,input.size()),target,costs);
+        first+=input.size();
         if (o.retention_age && ++published%o.retention_age==0) {
           const auto object=witness_objects[witness];const auto& image=corpus.images[object];
           witnesses[witness]=read_operation(corpus.bind(object,*old->part(image.address),image.shape.parts[0].interpretation),witness_operations[witness]);++witness;
@@ -368,6 +413,7 @@ int main(int argc,char** argv) try {
     } else {
       const auto read=[&](bool timed_latency,std::uint64_t& count) {
         if (o.backend=="row-lmdb") return run_row_lmdb_reads(store,timed_latency,trace.operations,output,o.batch);
+        if (mapped_shape) return run_lmdb_shape_reads(store,corpus,*mapped_shape,timed_latency,trace.operations,objects,output,o.batch,count);
         if (o.codec=="consume16") return run_lmdb_consume_reads(store,corpus,timed_latency,trace.operations,objects,output,o.batch,count);
         return o.codec=="direct16"?
             run_lmdb_codec_reads(store,corpus,timed_latency,trace.operations,objects,output,o.batch,count):
@@ -381,6 +427,73 @@ int main(int argc,char** argv) try {
       interval=read(latency,bindings);active_hardware=nullptr;
       lmdb_held=lmdb_released=store.footprint();
     }
+  } else if (o.backend.starts_with("composed-")) {
+    const auto run=[&]<class Backend>() {
+      const auto initial=o.from=="rows"?data::Format::rows:data::Format::columns;
+      Backend store(corpus,o.bytes,initial,o.metadata_bytes);orbital_initial=footprint(store);
+      if (updating || conversion) {
+        std::optional<typename Backend::Scope> old(std::in_place,store.catalog());
+        std::vector<composed::Body> old_bodies;
+        if (conversion) for (std::size_t object=0;object<o.objects;++object) old_bodies.push_back(store.body(*old,object));
+        if (updating) {
+          std::size_t first{},published{},witness{};
+          interval=writes(o,hardware,write_faults,[&](auto input,auto target) {
+            need(store.update(input,target,std::span{objects}.subspan(first,input.size())));first+=input.size();
+            if (o.retention_age && ++published%o.retention_age==0) {
+              witnesses[witness]=read_operation(store.body(*old,witness_objects[witness]),witness_operations[witness]);++witness;
+              old.reset();old.emplace(store.catalog());store.drain();store.poll(128);
+            }
+          },trace.operations,output);
+        } else {
+          std::vector<data::Format> formats(o.objects,initial);
+          if (latency) interval.batch_ns.reserve(o.ops);
+          hardware.start();
+          const auto process_cpu=process_cpu_ns(),cpu=caller_cpu_ns(),start=clock_ns();
+          for (std::size_t i=0;i<o.ops;++i) {
+            const auto object=i%o.objects;
+            const auto target=formats[object]==data::Format::rows?data::Format::columns:data::Format::rows;
+            const auto batch_start=latency?clock_ns():0;
+            need(store.convert(object,target));
+            if (latency) interval.batch_ns.push_back(clock_ns()-batch_start);
+            formats[object]=target;
+          }
+          interval.wall_ns=clock_ns()-start;interval.caller_cpu_ns=caller_cpu_ns()-cpu;
+          interval.process_cpu_ns=process_cpu_ns()-process_cpu;hardware.stop();
+          interval.snapshot_scopes=o.ops;interval.logical_requests=o.ops;interval.logical_rows=o.ops*(o.rows/o.objects);
+          auto current=store.read();
+          for (std::size_t object=0;object<o.objects;++object) {
+            const auto body=store.body(current,object,true);
+            require(body.format()==formats[object],"composed conversion selected wrong format");verify(body,expected[object]);
+          }
+        }
+        orbital_held=footprint(store);
+        {
+          auto current=store.read();
+          for (std::size_t object=0;object<o.objects;++object) {
+            if (conversion) verify(old_bodies[object],original[object]);
+            else {verify(store.body(*old,object),o.retention_age?last_old_expected[object]:original[object]);verify(store.body(current,object),expected[object]);}
+          }
+        }
+        old_bodies.clear();release_hardware.start();
+        const auto process_cpu=process_cpu_ns(),cpu=caller_cpu_ns(),start=clock_ns();
+        old.reset();drain_steps=store.drain();store.poll(65536);
+        release.wall_ns=clock_ns()-start;release.caller_cpu_ns=caller_cpu_ns()-cpu;
+        release.process_cpu_ns=process_cpu_ns()-process_cpu;release_hardware.stop();
+        orbital_released=footprint(store);costs=store.costs;write_probe=store.write_costs;return;
+      }
+      const auto read=[&](bool timed_latency,std::uint64_t& count) {
+        return composed_reads(store,timed_latency,trace.operations,objects,output,o.batch,count);
+      };
+      if (o.conditioning=="warm-trace") {
+        std::uint64_t ignored{};conditioning=read(false,ignored);
+        require(output==expected_output,"composed warm trace differs from independent oracle");
+      }
+      active_hardware=o.pmu==orbital_bench::pmu::Mode::off?nullptr:&hardware;
+      interval=read(latency,bindings);active_hardware=nullptr;
+      orbital_held=orbital_released=footprint(store);costs=store.costs;
+    };
+    if (o.backend=="composed-inline") run.template operator()<composed::Inline>();
+    else run.template operator()<composed::Directory>();
   } else if (o.backend.starts_with("candidate")) {
     const auto run=[&]<class Store>() {
       Candidate<Store> store(corpus,o.bytes,o.metadata_bytes);orbital_initial=footprint(store);
@@ -442,12 +555,13 @@ int main(int argc,char** argv) try {
     if (!samples) throw std::runtime_error("cannot finish latency sample output");
   }
   std::uint64_t digest{};for (const auto& outcome:output) {detail::mix(digest,outcome.digest);detail::mix(digest,outcome.changes);}
-  std::cout<<"{\"passed\":true,\"report_schema\":2,\"backend\":\""<<o.backend<<"\",\"workload\":\""<<o.workload
+  std::cout<<"{\"passed\":true,\"report_schema\":3,\"backend\":\""<<o.backend<<"\",\"workload\":\""<<o.workload
       <<"\",\"mode\":\""<<o.mode<<"\",\"rows\":"<<o.rows<<",\"objects\":"<<o.objects
       <<",\"codec\":\""<<o.codec<<"\",\"conditioning\":\""<<o.conditioning<<"\""
       <<",\"sample_storage\":\""<<o.sample_storage<<"\",\"reserved_sample_bytes\":"<<interval.batch_ns.capacity()*sizeof(std::uint64_t)
       <<",\"batch\":"<<o.batch<<",\"operations\":"<<o.ops<<",\"seed\":"<<o.seed<<",\"byte_limit\":"<<o.bytes
       <<",\"offered_metadata_partition\":"<<o.metadata_bytes<<",\"retention_age_publications\":"<<o.retention_age
+      <<",\"parts_per_object\":"<<(o.from=="columns"?4:1)
       <<",\"publication_groups\":"<<(updating?groups:0)
       <<",\"retained_reader_rotations\":"<<(updating?rotations:0)
       <<",\"final_retained_age_publications\":"<<(updating?(o.retention_age?groups%o.retention_age:groups):0)
@@ -462,9 +576,11 @@ int main(int argc,char** argv) try {
   std::cout<<",\"hardware\":";hardware.write_json(std::cout);
   std::cout<<",\"release_hardware\":";release_hardware.write_json(std::cout);
   std::cout<<",\"hardware_scope\":\"complete trial loop and boundary clock reads; setup, qualification before direct control, conditioning and post-clock logical accounting excluded\""
-      <<",\"metadata_allocation_counts_available\":"<<(o.backend.starts_with("candidate")?"true":"false");
+      <<",\"metadata_allocation_counts_available\":"<<(o.backend.starts_with("candidate") || o.backend.starts_with("composed-")?"true":"false");
   std::cout<<",\"cost_counter_scope\":\"clone/update/conversion native kernels only; read decode counters unavailable\""
-      <<",\"maintenance_policy\":\""<<(o.backend.starts_with("candidate")?"full catalog drain plus bounded physical poll":o.backend=="orbital"?"bounded drain plus bounded physical poll":"transaction release")<<"\"";
+      <<",\"maintenance_policy\":\""<<(o.backend.starts_with("candidate") || o.backend.starts_with("composed-")?"full catalog drain plus bounded physical poll":o.backend=="orbital"?"bounded drain plus bounded physical poll":"transaction release")<<"\"";
+  std::cout<<",\"mapped_shape_metadata_bytes\":"<<mapped_shape_metadata<<",\"write_batch_probe\":{\"private_admissions\":"<<write_probe.private_admissions
+      <<",\"key_reads\":"<<write_probe.key_reads<<",\"full_rows_read\":"<<write_probe.full_rows_read<<",\"applied_updates\":"<<write_probe.applied_updates<<"}";
   rusage usage{};
   if (getrusage(RUSAGE_SELF,&usage)) throw std::runtime_error("process resource receipt failed");
   const auto memory=process_memory();
@@ -477,19 +593,19 @@ int main(int argc,char** argv) try {
   std::cout<<",\"conditioning_interval\":";print_interval(conditioning);
   std::cout<<",\"old_reader_held\":"<<(updating || conversion?"true":"false")<<",\"release_and_drain\":";
   print_interval(release);std::cout<<",\"drain_steps\":"<<drain_steps<<",\"physical_poll_budget\":"
-      <<((updating || conversion) && (o.backend=="orbital" || o.backend.starts_with("candidate"))?65536:0);
-  if (o.backend=="orbital" || o.backend=="borrowed" || o.backend.starts_with("candidate")) {
+      <<((updating || conversion) && (o.backend=="orbital" || o.backend.starts_with("candidate") || o.backend.starts_with("composed-"))?65536:0);
+  if (o.backend=="orbital" || o.backend=="borrowed" || o.backend.starts_with("candidate") || o.backend.starts_with("composed-")) {
     std::cout<<",\"footprint_initial\":";print_footprint(orbital_initial);
     std::cout<<",\"footprint_after_interval\":";print_footprint(orbital_held);
     std::cout<<",\"footprint_after_reader_release\":";print_footprint(orbital_released);
-  } else if (o.backend=="lmdb" || o.backend=="row-lmdb") {
+  } else if (o.backend=="lmdb" || o.backend=="row-lmdb" || o.backend=="lmdb-composed") {
     std::cout<<",\"footprint_initial\":";print_footprint(lmdb_initial);
     std::cout<<",\"footprint_after_interval\":";print_footprint(lmdb_held);
     std::cout<<",\"footprint_after_reader_release\":";print_footprint(lmdb_released);
   }
-  std::cout<<",\"comparison\":\""<<(conversion?"actual-conversion":o.backend=="row-lmdb"?"contextual-row-key":o.backend=="direct"?"prequalified-native":"common-tuple")
+  std::cout<<",\"comparison\":\""<<(conversion?"actual-conversion":o.from=="columns"?"contextual-series":o.backend=="row-lmdb"?"contextual-row-key":o.backend=="direct"?"prequalified-native":"common-tuple")
       <<"\",\"update_preparation\":{\"source_bindings\":"
-      <<(updating?costs.copied_spans*(o.backend=="orbital"?2:1):0)
+      <<(updating?(o.backend.starts_with("composed-")?write_probe.private_admissions:costs.copied_spans*(o.backend=="orbital"?2:1)):0)
       <<",\"dynamic_shape_preparations\":"<<(updating && o.backend=="orbital"?costs.copied_spans:0)
       <<",\"accounting\":\"logical counts of current adapters; no isolated publication ratio\"}"
       <<",\"scope\":\"single-caller resident fixed-membership; adapter-inclusive; durability flushes disabled\"}\n";

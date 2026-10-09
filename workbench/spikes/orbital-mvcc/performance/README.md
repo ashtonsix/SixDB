@@ -126,10 +126,33 @@ old readers; `groups` uses 192 rows in 64 Objects to exercise finite Allocations
 `faults` compares original versus equal sample-buffer preparation in both clock
 modes; the long LMDB write-mode discrepancy remains unresolved. Corpus supports
 1–4096 Objects; `--metadata-bytes` explicitly divides the fixed total limit.
-All currently have one independent Tuple Part per Object. Full construction
+The common comparison has one independent Tuple Part per Object. Full construction
 Schema remains resident in Corpus: Pool/PMR totals exclude it while process
-memory includes it. Compact/canonical law and multi-Part
-fixtures are still separate work.
+memory includes it.
+
+`composed-inline` and `composed-directory` use the actual composed catalog,
+shared Shape and native consumer. `lmdb-composed` receives the same Shape read
+bridge over protected mapped values, plus the same private `write_batch` body.
+The older `lmdb` and catalog arms remain comparison controls. `composed-quick`
+keeps the 192-row / 64-Object read/write discriminator with both clock modes;
+The retained first composed screen pairs current Allocation against the
+cumulative compact, Storage16 and growth-core source treatment. Two repetitions give quick feedback;
+their tails do not qualify a design.
+
+Composed reads use the protected native Tuple bridge. `--from columns` instead
+uses four real Series Parts and the generic consumer with its resident Schema;
+this is a contextual Orbital case, without a fictitious mapped-LMDB counterpart.
+Both directions of actual conversion, alternative adoption and old selected
+bodies run through the enclosing driver. These paths have targeted oracle checks;
+the prior caller sanitizer receipt does not qualify this new source cut.
+
+Composed output separates PMR live/peak/calls, shared proof (already included in
+PMR), borrowed Schema/writer controls, Pool setup/inventory, actual live Allocation
+capacity and Arena charge. Optional held extent is `null` when a treatment removes
+the diagnostic. Backend and caller-array record sizes are explicit; they do not
+measure compiled frames. Mapped Shape proof bytes are reported separately from
+LMDB's map/file footprint. No total-metadata target is established by these
+component inventories.
 
 Correctness qualification uses captured sources and meaningful lifetime/failure
 cases, including sparse 64-Object writes with repeated keys, a failure after

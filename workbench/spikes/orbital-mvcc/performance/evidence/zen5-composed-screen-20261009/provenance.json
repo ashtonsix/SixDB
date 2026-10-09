@@ -1,0 +1,37 @@
+{
+  "files_sha256": {
+    "current/abi.json": "174cf6e981b34b0bb4a2190c5f392132242093d97c0804781f5c1e2a59733df0",
+    "current/binary-identity.json": "fb15978e1b7d75a68a0364bd1dadc780af3050942f39f9abeebc7b9761921640",
+    "current/build-cost.json": "0308923e57512edf57e6e4b0a86f9a9d1c66f6bc93407c5ea34a30e163b336e3",
+    "current/measurements.csv": "ac9a166bec21e7decb029081cca46f6e548d7c6c532367bfda64780d8fe86ad5",
+    "current/parity.json": "aeb47069848b1d6fee18009eaa568cb3eeef2c6fefa594153e0c9e68cbeaf9d0",
+    "current/qualification.json": "caa851c8c39541755caa04647921c83f47410f52b056301c09c732dacfde7d28",
+    "current/summary.csv": "46ceadd371bd008cf6c9239fa21222635a917b0fd070a7a2eff7209903afc145",
+    "host.json": "0050d6850d9c889acc9c2c295f5fa56f90094901810a1a8c21d32c8ad2fda082",
+    "storage16-growth/binary-identity.json": "17bc318f74e947f3198d26176c68b42a5ed2519a0362fde10adac9bc4a05bdf3",
+    "storage16-growth/build-cost.json": "3cc1b460a1ffa53b3c2a861135a6262fc55ae1beb07fc3016e3b1cb5f0eda6c2",
+    "storage16-growth/measurements.csv": "026aa5863fe7ac77e7a2e0de39f0f48da87112042a8cdf531da56bc0660cbff4",
+    "storage16-growth/parity.json": "aeb47069848b1d6fee18009eaa568cb3eeef2c6fefa594153e0c9e68cbeaf9d0",
+    "storage16-growth/qualification.json": "caa851c8c39541755caa04647921c83f47410f52b056301c09c732dacfde7d28",
+    "storage16-growth/summary.csv": "c11a380387b064af75e938d69d4cd68db723f2446265c11978bbd3c551fa4f93",
+    "worker-result.json": "986f71b32f812e9800281285a635b8cc76cf94fcc487d8d505098d93b07f9bfb"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/current"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/storage16-growth"
+    ]
+  ],
+  "regenerate_from": "archive"
+}
