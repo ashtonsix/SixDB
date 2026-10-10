@@ -75,6 +75,24 @@ are independent retention roots, not released by the absence of a local reader.
 
 ## Evidence and executable probes
 
+The selected composed path now uses an inline current version, 16-byte older
+nodes, coherent caller-resident Scopes and a stationary 48-byte `Prepared`.
+Preparation returns an 8-byte status. The catalog selects and retains physical
+representations without depending on their codec or Shape; full maintenance
+remains the default after bounded maintenance increased retained memory and
+total work. Scalar coherent reads use the measured friend fusion, and point
+writes use the narrow value/tag law. Other layouts remain comparison controls.
+The [publication feedback](orbital/candidates/prepared-feedback.json) retains
+the negative tiny-write signal as well as the smaller ABI.
+
+Production Allocation now uses 4-byte finite ownership records, a shared
+active-Group lifetime and Group-level advice. Growth preserves readable bytes;
+the caller owns initialization and content permissions. These changes remove
+the former Hold high-water state. They do not establish the whole-collection
+budget: cold allocator capacity, initial catalog/physical records and resident
+consumer construction plans still matter. The measured cuts and their limits
+remain with the [complete-operation feedback](../performance/FEEDBACK.md).
+
 - [Orbital records and closures](orbital/FINDINGS.md), [Allocation and Worker](orbital/allocation-worker.md), and [probe runner](orbital/run.py).
 - [Consumer and Ikea field/call census](consumer/ikea-census.md), [actual type probes](consumer/census.cpp), [probe runner](consumer/probe.py), and [qualification/native candidates](consumer/candidates.h).
 - [Admitted private write batches](consumer/write-batch.md) compare one batch admission with repeated field-writer binding, including actual effects, private backing and unchanged-error controls.

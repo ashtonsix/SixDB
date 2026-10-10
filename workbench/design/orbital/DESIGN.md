@@ -248,9 +248,11 @@ View. Buffer owns the Allocation or protected immutable Source; proposed View
 registration keeps backing stable without another capture per call. Footprints,
 authority and decoding metadata must remain valid through use. An open View stays
 at its address and closes on its assigned thread. The registration mechanism and
-its cost remain unimplemented. Growth must respect the actual allocator's Hold
-high-water protection; the views probe's stronger disjoint-append behavior is not
-the current runtime contract.
+its cost remain unimplemented. The allocator's Hold protects physical lifetime
+and prevents relocation; it does not track a content-lock high-water mark.
+Growth preserves existing readable bytes and leaves new body/padding
+initialization to the writer. Ikea and the caller must authorize writes against
+actual overlapping physical footprints, including padding and preserving stores.
 
 **Write.** Store input → admit batch → edit Draft → publish State:
 

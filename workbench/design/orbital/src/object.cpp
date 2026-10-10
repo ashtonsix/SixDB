@@ -163,12 +163,14 @@ namespace orbital::candidate::object {
    paths; copy changed records/paths using reserved storage. Directory geometry
    remains private and compiled once. state copies borrowed logical/physical
    metadata into owned nodes before its source expires. Before rare backing growth,
-   derive the maximum registered physical extent from actual read/write footprints,
-   including their promised readable padding. Capture that extent with one temporary
-   allocation Hold, call existing grow, then release the Hold. This forbids relocation
-   or clobbering protected padding while allowing disjoint in-place append. With no
-   registered users, grow needs no extra Hold. Source-backed immutable aliases cannot
-   grow or acquire write permission. Establish logical initialization with the owner.
+   preserve a physical Hold for registered users that do not already retain one.
+   It prevents relocation; the allocator does not derive content permissions from
+   a maximum protected extent. Growth preserves existing readable bytes and leaves
+   new body/padding uninitialized. The writer must separately authorize every
+   initialization against actual read/write footprints, including padding and
+   preserving stores. With no registered users, grow needs no extra Hold.
+   Source-backed immutable aliases cannot grow or acquire write permission.
+   Establish logical initialization with the owner.
    Resource failure preserves the admitted obligation. Later batch events see
    earlier private work. Partial stores/imports need owner repair or discard,
    never blind replay from a later cursor.
