@@ -1,0 +1,1775 @@
+{
+  "recipe": {
+    "base_commit": "d9fff3eaf54aed5202b642cb6069b4bfb9e373ac",
+    "common_loom_patch_sha256": "864dedffd2351ca516b24c04aeddea79c2c336d116bd15fef545a21049683394",
+    "common_reader_patch_original_sha256": "449829ed13143e780ea25dd7eb8f3f7b73cdb135fb6b2382a20d15674cd7179d",
+    "common_reader_current_context_sha256": "8ff4a4528e41b03f53b4b2c2b85d4e7879f5c8b729673a1a61ee29cea082023f",
+    "common_reader_policy": "renew",
+    "candidate_patch_sha256": "9ec3a039c4e4a11cd2d6360a7397f907f895d6b397b8ced577940bd9c1f204a5",
+    "source_arm_order": [
+      "baseline-0",
+      "candidate-0",
+      "candidate-1",
+      "baseline-1"
+    ],
+    "runtime_postimages_per_arm": 887,
+    "candidate_only_changes": [
+      "workbench/spikes/orbital-mvcc/metadata/consumer/shape_read.h",
+      "workbench/spikes/orbital-mvcc/metadata/consumer/shape_read_bridge.cpp",
+      "workbench/spikes/orbital-mvcc/metadata/consumer/shape_read_private.h"
+    ],
+    "cases": 8,
+    "trials_per_arm": 96,
+    "total_trials": 192,
+    "limits": "Warm trace, complete point/dependent read requests. No PMU sweep; no production candidate composition with diagnostics or maintenance. Same Loom caller and reset/renew LMDB both arms; batch1 control; two observations per case/mode/backend.",
+    "root_native_receipt": "build/orbital-mvcc/metadata-projected-integration/canonical-selected-read-index-integration-receipt.json",
+    "root_native_receipt_sha256": "b3473d068e5f4aa04f96a861179829b830d1bbbae9bf18124bbeadc051c772f6",
+    "root_loom_caller_commit": "7f01270",
+    "prepared_source_commit": "c619a69fccf59c500f45f0d24da75b9fc254f337"
+  },
+  "audit": {
+    "passed": true,
+    "total_trials": 192,
+    "matched_case_mode_backend_groups": 48,
+    "source_arm_order": [
+      "baseline-0",
+      "candidate-0",
+      "candidate-1",
+      "baseline-1"
+    ],
+    "actual_sources": [
+      {
+        "cut": "baseline-0",
+        "source_sha256": "1aba44a3733161cbdd3b39098156b1a699667a17d6eebb37b4c5893b786e4f2c",
+        "verified_postimages": 887
+      },
+      {
+        "cut": "candidate-0",
+        "source_sha256": "00a22d3fa7c8a3219409db48893ebd1e44692d698e9382e87f62e5888cdb07f5",
+        "verified_postimages": 887
+      },
+      {
+        "cut": "candidate-1",
+        "source_sha256": "e34fcde8bdc9e10bbcd1f11f9734153f90273a3b711853f08f95d2665fff122b",
+        "verified_postimages": 887
+      },
+      {
+        "cut": "baseline-1",
+        "source_sha256": "d1adb2cc533584f36a8f348266aa93e2258f5e0be9481c49776fe4fc9b57ddda",
+        "verified_postimages": 887
+      }
+    ],
+    "logical_and_available_component_parity": true,
+    "exact_renew_lifecycle_trials": 64,
+    "comparisons": [
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "dependent-16",
+        "batch": 1,
+        "mode": "latency",
+        "backend": "composed-directory",
+        "baseline_wall_ns_per_request": [
+          132.83973635226266,
+          133.24585761801592
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          132.8479753440542,
+          133.2553782307528
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          132.86048640566355,
+          133.26666870098563
+        ],
+        "candidate_wall_ns_per_request": [
+          124.63363949833695,
+          124.31170852277928
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          124.63980348478837,
+          124.3206188398279
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          124.64926306795643,
+          124.33190931006072
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "dependent-16",
+        "batch": 1,
+        "mode": "latency",
+        "backend": "composed-inline",
+        "baseline_wall_ns_per_request": [
+          117.26703487839859,
+          118.5556742241616
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          117.27322937963443,
+          118.56373012724666
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          117.28268896280248,
+          118.57532574532361
+        ],
+        "candidate_wall_ns_per_request": [
+          117.36684873821366,
+          116.82518080009764
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          117.37362302035336,
+          116.83381648408654
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          117.38430319489792,
+          116.8454121021635
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "dependent-16",
+        "batch": 1,
+        "mode": "latency",
+        "backend": "lmdb-composed",
+        "baseline_wall_ns_per_request": [
+          193.94986420920935,
+          193.05697110249915
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          193.9572182722529,
+          193.06530163864392
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          193.96881389032987,
+          193.0759818131885
+        ],
+        "candidate_wall_ns_per_request": [
+          194.04598578011047,
+          192.84153672454303
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          194.05150895608924,
+          192.85075218943578
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          194.0612736871014,
+          192.86234780751275
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "dependent-16",
+        "batch": 1,
+        "mode": "throughput",
+        "backend": "composed-directory",
+        "baseline_wall_ns_per_request": [
+          95.71190992035642,
+          95.6276891153764
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          95.71972170516615,
+          95.6361111958744
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          95.73101217539899,
+          95.6470965182631
+        ],
+        "candidate_wall_ns_per_request": [
+          83.34240639589882,
+          84.69265509139179
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          83.3505538433371,
+          84.7011382014586
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          83.36031857434928,
+          84.71151322815905
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "dependent-16",
+        "batch": 1,
+        "mode": "throughput",
+        "backend": "composed-inline",
+        "baseline_wall_ns_per_request": [
+          78.45997986024229,
+          79.50788807177078
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          78.4681883372494,
+          79.51576088614934
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          78.48039425101462,
+          79.52857709560281
+        ],
+        "candidate_wall_ns_per_request": [
+          78.21464099356137,
+          77.98089774495743
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          78.22223917488023,
+          77.98819077843216
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          78.23536053217784,
+          78.00039669219737
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "dependent-16",
+        "batch": 1,
+        "mode": "throughput",
+        "backend": "lmdb-composed",
+        "baseline_wall_ns_per_request": [
+          152.22129321656342,
+          156.18607915535077
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          152.22764029172134,
+          156.19273137835282
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          152.23832046626592,
+          156.2037167007415
+        ],
+        "candidate_wall_ns_per_request": [
+          151.82734734979098,
+          153.44280003661774
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          151.83308412926064,
+          153.44884196393153
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          151.84254371242866,
+          153.4604375820085
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "dependent-16",
+        "batch": 64,
+        "mode": "latency",
+        "backend": "composed-directory",
+        "baseline_wall_ns_per_request": [
+          93.21882151902597,
+          93.86359891367367
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          93.2254432272436,
+          93.87266180464435
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          93.25382197674773,
+          93.88364712703304
+        ],
+        "candidate_wall_ns_per_request": [
+          81.76750785755699,
+          81.85020292331635
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          81.7738549327149,
+          81.85960147691557
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          81.7848402551036,
+          81.87150224283666
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "dependent-16",
+        "batch": 64,
+        "mode": "latency",
+        "backend": "composed-inline",
+        "baseline_wall_ns_per_request": [
+          89.4200360074456,
+          89.08650941381099
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          89.42604741997498,
+          89.09526715693754
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          89.43703274236367,
+          89.10686277501449
+        ],
+        "candidate_wall_ns_per_request": [
+          77.44566842635257,
+          77.05721522077447
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          77.45143572060664,
+          77.06664428915809
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          77.46089530377468,
+          77.07915535076745
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "dependent-16",
+        "batch": 64,
+        "mode": "latency",
+        "backend": "lmdb-composed",
+        "baseline_wall_ns_per_request": [
+          138.3171706691892,
+          138.30157761435416
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          138.32327362607182,
+          138.31015226877423
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          138.333038357084,
+          138.3211375911629
+        ],
+        "candidate_wall_ns_per_request": [
+          141.25757529523054,
+          138.6091971560221
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          141.26303744164048,
+          138.167037929877
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          141.27280217265266,
+          138.18015928717463
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "dependent-16",
+        "batch": 64,
+        "mode": "throughput",
+        "backend": "composed-directory",
+        "baseline_wall_ns_per_request": [
+          92.75347105672698,
+          93.13093893991639
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          92.75917732141222,
+          93.13969668304293
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          92.76833175673615,
+          93.1503768575875
+        ],
+        "candidate_wall_ns_per_request": [
+          81.06505752036861,
+          81.15931768942052
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          81.07079429983827,
+          81.16755668121205
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          81.08055903085045,
+          81.17945744713313
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "dependent-16",
+        "batch": 64,
+        "mode": "throughput",
+        "backend": "composed-inline",
+        "baseline_wall_ns_per_request": [
+          88.53327637240243,
+          88.88416587836807
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          88.53837234139941,
+          88.89295413627903
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          88.54752677672332,
+          88.90454975435598
+        ],
+        "candidate_wall_ns_per_request": [
+          76.3157059595374,
+          76.64435018766592
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          76.32055781025907,
+          76.65194836898478
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          76.33154313264777,
+          76.66476457843825
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "dependent-16",
+        "batch": 64,
+        "mode": "throughput",
+        "backend": "lmdb-composed",
+        "baseline_wall_ns_per_request": [
+          136.4801501327393,
+          137.47038540172713
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          136.48442220255714,
+          137.47587806292148
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          136.4929663421928,
+          137.4880839766867
+        ],
+        "candidate_wall_ns_per_request": [
+          141.387263128986,
+          136.69408928625919
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          141.3915351988038,
+          136.69988709529767
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          141.4003844862836,
+          136.71148271337464
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "point-hit",
+        "batch": 1,
+        "mode": "latency",
+        "backend": "composed-directory",
+        "baseline_wall_ns_per_request": [
+          67.76573800006103,
+          68.57007720240456
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          67.77489243538494,
+          68.57987244820116
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          67.78892923621494,
+          68.59146806627811
+        ],
+        "candidate_wall_ns_per_request": [
+          64.02123828995148,
+          64.328827316835
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          64.03008757743126,
+          64.33801226694334
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          64.04290378688475,
+          64.35113362424094
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "point-hit",
+        "batch": 1,
+        "mode": "latency",
+        "backend": "composed-inline",
+        "baseline_wall_ns_per_request": [
+          57.87461475084679,
+          57.30154709956974
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          57.8865765463367,
+          57.31106771230661
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          57.89847731225779,
+          57.32357877391596
+        ],
+        "candidate_wall_ns_per_request": [
+          57.53986756583565,
+          57.39278630496476
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          57.54938817857252,
+          57.403222361234015
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          57.562204388026,
+          57.41634371853163
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "point-hit",
+        "batch": 1,
+        "mode": "latency",
+        "backend": "lmdb-composed",
+        "baseline_wall_ns_per_request": [
+          133.191266668701,
+          135.18693356931433
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          133.1992005126484,
+          135.19581337157854
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          133.21201672210185,
+          135.20740898965548
+        ],
+        "candidate_wall_ns_per_request": [
+          133.1592261450673,
+          133.6410240761649
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          133.16777028470293,
+          133.64932409752524
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          133.17967105062402,
+          133.6609197156022
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "point-hit",
+        "batch": 1,
+        "mode": "throughput",
+        "backend": "composed-directory",
+        "baseline_wall_ns_per_request": [
+          30.761801592871745,
+          30.32544017576516
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          30.775106038875837,
+          30.33596777638766
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          30.786396509108663,
+          30.34786854230875
+        ],
+        "candidate_wall_ns_per_request": [
+          27.155228708309174,
+          26.826584480180646
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          27.16517652802783,
+          26.83592200421104
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          27.17677214610479,
+          26.891458911842786
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "point-hit",
+        "batch": 1,
+        "mode": "throughput",
+        "backend": "composed-inline",
+        "baseline_wall_ns_per_request": [
+          22.013762167770285,
+          21.695798114186324
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          22.021909615208568,
+          21.704250709468738
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          22.033505233285528,
+          21.74941259040005
+        ],
+        "candidate_wall_ns_per_request": [
+          22.676573800006103,
+          22.2310579475756
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          22.685026395288517,
+          22.23856458454121
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          22.696622013365477,
+          22.248939611241646
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "point-hit",
+        "batch": 1,
+        "mode": "throughput",
+        "backend": "lmdb-composed",
+        "baseline_wall_ns_per_request": [
+          72.51536419395197,
+          72.9181593482042
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          72.52177229867871,
+          72.92548289646334
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          72.53214732537914,
+          72.93738366238442
+        ],
+        "candidate_wall_ns_per_request": [
+          73.54343779561198,
+          73.80674987031216
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          73.55012053339843,
+          73.8131579750389
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          73.56019041225474,
+          73.82505874095999
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "point-hit",
+        "batch": 64,
+        "mode": "latency",
+        "backend": "composed-directory",
+        "baseline_wall_ns_per_request": [
+          28.235146928686948,
+          28.26630252357267
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          28.24478960056147,
+          28.277440419883433
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          28.25760581001495,
+          28.28964633364865
+        ],
+        "candidate_wall_ns_per_request": [
+          25.056421836379727,
+          24.727167312562937
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          25.06789539531903,
+          24.73589454090507
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          25.080101309084252,
+          24.748405602514417
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "point-hit",
+        "batch": 64,
+        "mode": "latency",
+        "backend": "composed-inline",
+        "baseline_wall_ns_per_request": [
+          23.59137652192487,
+          23.76042842757316
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          23.600744560739678,
+          23.76982698117238
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          23.637362302035335,
+          23.806139574623906
+        ],
+        "candidate_wall_ns_per_request": [
+          21.050105276006224,
+          21.24665100241067
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          21.061304201885815,
+          21.256629336913736
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          21.346922583991944,
+          21.303622104909827
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "point-hit",
+        "batch": 64,
+        "mode": "latency",
+        "backend": "lmdb-composed",
+        "baseline_wall_ns_per_request": [
+          58.69058008605169,
+          58.24781056421836
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          58.70071099447682,
+          58.2570260291111
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          58.713832351774435,
+          58.26892679503219
+        ],
+        "candidate_wall_ns_per_request": [
+          58.99270696652528,
+          58.67044032833908
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          59.00158676878948,
+          58.68087638460834
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          59.01348753471057,
+          58.71688383021574
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "point-hit",
+        "batch": 64,
+        "mode": "throughput",
+        "backend": "composed-directory",
+        "baseline_wall_ns_per_request": [
+          27.28339080284398,
+          27.376766043147907
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          27.292453693814654,
+          27.3861035671783
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          27.34127734887553,
+          27.39891977663178
+        ],
+        "candidate_wall_ns_per_request": [
+          23.826950657593603,
+          23.756766653443595
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          23.8372341399408,
+          23.76552439657014
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          23.883311464404503,
+          23.77925604955601
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "point-hit",
+        "batch": 64,
+        "mode": "throughput",
+        "backend": "composed-inline",
+        "baseline_wall_ns_per_request": [
+          22.983857679045496,
+          22.782429587134967
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          22.99289005523176,
+          22.791522992890055
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          23.006316560373502,
+          22.803423758811142
+        ],
+        "candidate_wall_ns_per_request": [
+          20.122455829849564,
+          20.10719843764304
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          20.132129016508497,
+          20.116871624301975
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          20.18247841079003,
+          20.168441609960027
+        ]
+      },
+      {
+        "rows": 192,
+        "objects": 64,
+        "workload": "point-hit",
+        "batch": 64,
+        "mode": "throughput",
+        "backend": "lmdb-composed",
+        "baseline_wall_ns_per_request": [
+          56.924384364224466,
+          56.593604101187026
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          56.933599829117206,
+          56.60461993836014
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          56.945195447194166,
+          56.61743614781361
+        ],
+        "candidate_wall_ns_per_request": [
+          57.292392664245824,
+          56.65219248726008
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          57.29883128375698,
+          56.659546550303624
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          57.30951145830155,
+          56.671142168380584
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "dependent-16",
+        "batch": 1,
+        "mode": "latency",
+        "backend": "composed-directory",
+        "baseline_wall_ns_per_request": [
+          1302.6042537609471,
+          1302.3924201275518
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          1302.5311098227091,
+          1302.3955936651307
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          1302.5433157364744,
+          1302.4090201702725
+        ],
+        "candidate_wall_ns_per_request": [
+          1127.0848311006682,
+          1133.247261298099
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          1127.0941991394832,
+          1133.2518080009766
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          1127.1070153489366,
+          1133.2661499496505
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "dependent-16",
+        "batch": 1,
+        "mode": "latency",
+        "backend": "composed-inline",
+        "baseline_wall_ns_per_request": [
+          1175.3481736901529,
+          1180.0092459796772
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          1175.3521100973421,
+          1180.0132739312196
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          1175.3637057154192,
+          1180.0285313234263
+        ],
+        "candidate_wall_ns_per_request": [
+          1189.2257483750877,
+          1187.1176955234812
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          1189.2351469286868,
+          1186.2248329315553
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          1189.2574227213086,
+          1186.236123401788
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "dependent-16",
+        "batch": 1,
+        "mode": "latency",
+        "backend": "lmdb-composed",
+        "baseline_wall_ns_per_request": [
+          1168.6699826065728,
+          1173.7509688444052
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          1168.673980043331,
+          1173.7546611333191
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          1168.6852705135639,
+          1173.7674773427725
+        ],
+        "candidate_wall_ns_per_request": [
+          1166.3005095968997,
+          1163.9489182508926
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          1166.3081688077873,
+          1163.9536175276921
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          1166.319154130176,
+          1163.9655182936133
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "dependent-16",
+        "batch": 1,
+        "mode": "throughput",
+        "backend": "composed-directory",
+        "baseline_wall_ns_per_request": [
+          1261.6980867230172,
+          1264.3613560770193
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          1261.7056543895517,
+          1264.3634921119283
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          1261.7169448597845,
+          1264.374477434317
+        ],
+        "candidate_wall_ns_per_request": [
+          1093.3893381343262,
+          1098.811754294956
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          1093.3936712337127,
+          1098.8149278325347
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          1093.4049617039457,
+          1098.8259131549235
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "dependent-16",
+        "batch": 1,
+        "mode": "throughput",
+        "backend": "composed-inline",
+        "baseline_wall_ns_per_request": [
+          1148.7574379787006,
+          1161.888590522108
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          1148.3422843367612,
+          1161.892069207531
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          1148.3532696591499,
+          1161.9033596777638
+        ],
+        "candidate_wall_ns_per_request": [
+          1150.209667083702,
+          1152.4975740746393
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          1150.2131152543407,
+          1152.3754233926338
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          1150.2228799853528,
+          1152.3867138628666
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "dependent-16",
+        "batch": 1,
+        "mode": "throughput",
+        "backend": "lmdb-composed",
+        "baseline_wall_ns_per_request": [
+          1134.536877116963,
+          1136.4074028866987
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          1134.5391962405786,
+          1136.4100576729425
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          1134.558725702603,
+          1136.4213481431755
+        ],
+        "candidate_wall_ns_per_request": [
+          1125.1883372493974,
+          1126.3810686277502
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          1125.1943486619266,
+          1126.3823197339111
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          1125.2062494278478,
+          1126.3923896127674
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "dependent-16",
+        "batch": 64,
+        "mode": "latency",
+        "backend": "composed-directory",
+        "baseline_wall_ns_per_request": [
+          1245.5453297122456,
+          1261.1243477464832
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          1245.5492966342192,
+          1260.9852003295596
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          1245.562417991517,
+          1260.9980165390132
+        ],
+        "candidate_wall_ns_per_request": [
+          1089.7745567727563,
+          1094.8145921699063
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          1089.611333190931,
+          1094.8205425528668
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          1089.6223185133197,
+          1094.8336639101644
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "dependent-16",
+        "batch": 64,
+        "mode": "latency",
+        "backend": "composed-inline",
+        "baseline_wall_ns_per_request": [
+          1249.3776814866803,
+          1259.2864422812852
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          1249.3810381129658,
+          1259.2900735406304
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          1249.3941594702633,
+          1259.3041103414605
+        ],
+        "candidate_wall_ns_per_request": [
+          1085.8185896066643,
+          1104.1509566384914
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          1085.822922706051,
+          1104.0991730493424
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          1085.8351286198163,
+          1104.1110738152636
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "dependent-16",
+        "batch": 64,
+        "mode": "latency",
+        "backend": "lmdb-composed",
+        "baseline_wall_ns_per_request": [
+          1085.5717250007629,
+          1084.7053187269232
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          1085.5757529523055,
+          1084.709743370663
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          1085.5873485703823,
+          1084.7225595801165
+        ],
+        "candidate_wall_ns_per_request": [
+          1076.6039791278874,
+          1081.27423636752
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          1076.6080986237832,
+          1081.280217265265
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          1076.6203045375485,
+          1081.2930334747184
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "dependent-16",
+        "batch": 64,
+        "mode": "throughput",
+        "backend": "composed-directory",
+        "baseline_wall_ns_per_request": [
+          1248.7570107717188,
+          1258.7109029324708
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          1248.763083213817,
+          1258.721918769644
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          1248.7749839797382,
+          1258.7399224924477
+        ],
+        "candidate_wall_ns_per_request": [
+          1091.2880900796436,
+          1087.6194806383694
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          1091.0971285587868,
+          1087.6233255012053
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          1091.1291690824205,
+          1087.6349211192824
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "dependent-16",
+        "batch": 64,
+        "mode": "throughput",
+        "backend": "composed-inline",
+        "baseline_wall_ns_per_request": [
+          1257.058283238229,
+          1257.9156876506668
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          1254.626834701413,
+          1257.917549052516
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          1254.6402612065547,
+          1257.9288395227488
+        ],
+        "candidate_wall_ns_per_request": [
+          1087.3278508437338,
+          1079.0527295474658
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          1086.8235330017394,
+          1079.054743523237
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          1086.848555124958,
+          1079.0669494370022
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "dependent-16",
+        "batch": 64,
+        "mode": "throughput",
+        "backend": "lmdb-composed",
+        "baseline_wall_ns_per_request": [
+          1085.8777577736414,
+          1087.0818406517958
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          1085.441793048732,
+          1087.084739556315
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          1085.4610173629123,
+          1087.0954197308597
+        ],
+        "candidate_wall_ns_per_request": [
+          1080.2364895792011,
+          1076.90174239419
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          1080.2494278477923,
+          1076.9052821091818
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          1080.279027188673,
+          1076.9165725794148
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "point-hit",
+        "batch": 1,
+        "mode": "latency",
+        "backend": "composed-directory",
+        "baseline_wall_ns_per_request": [
+          138.33822587043423,
+          138.83497604589422
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          138.34765493881787,
+          138.84385584815843
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          138.3610814439596,
+          138.8575875011443
+        ],
+        "candidate_wall_ns_per_request": [
+          127.57499008269507,
+          127.97870068047969
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          127.5842055475878,
+          127.98822129321657
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          127.59793720057368,
+          128.00225809404657
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "point-hit",
+        "batch": 1,
+        "mode": "latency",
+        "backend": "composed-inline",
+        "baseline_wall_ns_per_request": [
+          124.59430594122853,
+          124.48533764608953
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          124.60352140612126,
+          124.49455311098227
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          124.61633761557475,
+          124.50706417259163
+        ],
+        "candidate_wall_ns_per_request": [
+          123.24433187879528,
+          124.48048579536785
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          123.25263190015562,
+          124.49122699948124
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          123.26300692685606,
+          124.50251746971408
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "point-hit",
+        "batch": 1,
+        "mode": "latency",
+        "backend": "lmdb-composed",
+        "baseline_wall_ns_per_request": [
+          162.54691648103505,
+          164.69030545299196
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          162.55506392847334,
+          164.69933782917823
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          162.56696469439444,
+          164.7118488907876
+        ],
+        "candidate_wall_ns_per_request": [
+          162.42549815385556,
+          163.64090201702726
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          162.43392023435354,
+          163.64932409752524
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          162.44582100027463,
+          163.66122486344634
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "point-hit",
+        "batch": 1,
+        "mode": "throughput",
+        "backend": "composed-directory",
+        "baseline_wall_ns_per_request": [
+          99.84666320832443,
+          101.12343230295077
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          99.85416984529004,
+          101.13243416435263
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          99.86515516767874,
+          101.14341948674132
+        ],
+        "candidate_wall_ns_per_request": [
+          89.5210399438528,
+          90.44749931341735
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          89.52857709560281,
+          90.45561624607122
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          89.53925727014739,
+          90.46629642061579
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "point-hit",
+        "batch": 1,
+        "mode": "throughput",
+        "backend": "composed-inline",
+        "baseline_wall_ns_per_request": [
+          88.03313905587257,
+          88.55189039089439
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          88.04006591193433,
+          88.5603429861768
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          88.05257697354368,
+          88.57224375209789
+        ],
+        "candidate_wall_ns_per_request": [
+          88.2436910683226,
+          88.3068566720576
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          88.25183851576088,
+          88.31591956302829
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          88.26312898599372,
+          88.32995636385829
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "point-hit",
+        "batch": 1,
+        "mode": "throughput",
+        "backend": "lmdb-composed",
+        "baseline_wall_ns_per_request": [
+          124.65744103017911,
+          131.7640596869183
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          124.66391016447469,
+          131.77110860211772
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          124.673980043331,
+          131.78300936803882
+        ],
+        "candidate_wall_ns_per_request": [
+          123.61017362912331,
+          124.45332763724025
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          123.61697842604742,
+          124.4607122150682
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          123.62704830490372,
+          124.47230783314515
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "point-hit",
+        "batch": 64,
+        "mode": "latency",
+        "backend": "composed-directory",
+        "baseline_wall_ns_per_request": [
+          88.79295718775747,
+          89.54972384120106
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          88.80202007872815,
+          89.55878673217174
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          88.81300540111684,
+          89.57099264593695
+        ],
+        "candidate_wall_ns_per_request": [
+          77.6702572396326,
+          78.99337829178236
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          77.68121204723688,
+          79.00158676878948
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          77.69311281315798,
+          79.01226694333404
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "point-hit",
+        "batch": 64,
+        "mode": "latency",
+        "backend": "composed-inline",
+        "baseline_wall_ns_per_request": [
+          88.32727106282994,
+          88.64343474413353
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          88.33636446858503,
+          88.654328522169
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          88.34826523450612,
+          88.66683958377834
+        ],
+        "candidate_wall_ns_per_request": [
+          78.36571969119038,
+          77.19544719416557
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          78.37389765341308,
+          77.20335052332855
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          78.38671386286656,
+          77.2149461414055
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "point-hit",
+        "batch": 64,
+        "mode": "latency",
+        "backend": "lmdb-composed",
+        "baseline_wall_ns_per_request": [
+          78.15940923377376,
+          78.68823044765189
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          78.16761771078087,
+          78.69826981172378
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          78.17829788532543,
+          78.71169631686553
+        ],
+        "candidate_wall_ns_per_request": [
+          77.15516767874036,
+          77.34008727228343
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          77.16365078880717,
+          77.34951634066705
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          77.17494125904001,
+          77.36080681089989
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "point-hit",
+        "batch": 64,
+        "mode": "throughput",
+        "backend": "composed-directory",
+        "baseline_wall_ns_per_request": [
+          86.97912788746147,
+          88.52625797198743
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          86.98700070184005,
+          88.53410027158158
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          87.00012205913765,
+          88.54600103750268
+        ],
+        "candidate_wall_ns_per_request": [
+          76.58393091452808,
+          79.13069482164109
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          76.59091880015868,
+          79.13798785511581
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          76.60190412254737,
+          79.14805773397211
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "point-hit",
+        "batch": 64,
+        "mode": "throughput",
+        "backend": "composed-inline",
+        "baseline_wall_ns_per_request": [
+          86.29318604864056,
+          87.96750175460011
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          86.30041805254646,
+          87.97629001251106
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          86.31109822709102,
+          87.98880107412042
+        ],
+        "candidate_wall_ns_per_request": [
+          76.18632327362607,
+          78.17161514753899
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          76.19450123584876,
+          78.17768758963717
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          76.20457111470508,
+          78.18745232064936
+        ]
+      },
+      {
+        "rows": 32768,
+        "objects": 4,
+        "workload": "point-hit",
+        "batch": 64,
+        "mode": "throughput",
+        "backend": "lmdb-composed",
+        "baseline_wall_ns_per_request": [
+          77.15211620029905,
+          78.1026822495499
+        ],
+        "baseline_caller_cpu_ns_per_request": [
+          77.15940923377376,
+          78.11055506392847
+        ],
+        "baseline_process_cpu_ns_per_request": [
+          77.1706997040066,
+          78.12215068200543
+        ],
+        "candidate_wall_ns_per_request": [
+          76.24216532910195,
+          77.53049952702084
+        ],
+        "candidate_caller_cpu_ns_per_request": [
+          76.24915321473254,
+          77.53687711696317
+        ],
+        "candidate_process_cpu_ns_per_request": [
+          76.2607488328095,
+          77.54786243935186
+        ]
+      }
+    ],
+    "limits": "Two ordered observations per arm; complete warm-trace calls, throughput and latency separate. Source-only specialization, common Loom caller and renew control. No PMU/steady-state universality inference.",
+    "byte_identical_regenerated_reports": [
+      "baseline-0/measurements.csv",
+      "baseline-0/summary.csv",
+      "baseline-0/parity.json",
+      "baseline-0/abi.json",
+      "candidate-0/measurements.csv",
+      "candidate-0/summary.csv",
+      "candidate-0/parity.json",
+      "candidate-0/abi.json",
+      "candidate-1/measurements.csv",
+      "candidate-1/summary.csv",
+      "candidate-1/parity.json",
+      "baseline-1/measurements.csv",
+      "baseline-1/summary.csv",
+      "baseline-1/parity.json"
+    ],
+    "measured_codegen": {
+      "functions": {
+        "baseline-0": {
+          "orbital_mvcc::metadata_consumer::compact_law::read_chain_into(orbital_mvcc::metadata_consumer::compact_law::ReadLaw const&, orbital_mvcc::metadata_consumer::compact_law::Part, unsigned long, unsigned int, orbital_bench::Outcome&)": {
+            "code_bytes": 504,
+            "prologue": [
+              "8f8d0:      \tpushq\t%rbp",
+              "8f8d1:      \tpushq\t%r15",
+              "8f8d3:      \tpushq\t%r14",
+              "8f8d5:      \tpushq\t%r13",
+              "8f8d7:      \tpushq\t%r12",
+              "8f8d9:      \tpushq\t%rbx",
+              "8f8da:      \tvxorps\t%xmm0, %xmm0, %xmm0",
+              "8f8de:      \tvmovups\t%xmm0, (%r9)",
+              "8f8e3:      \tmovq\t$0x0, 0x10(%r9)",
+              "8f8eb:      \tmovl\t%r8d, -0x4(%rsp)",
+              "8f8f0:      \ttestl\t%r8d, %r8d",
+              "8f8f3:      \tje\t0x8fabd <orbital_mvcc::metadata_consumer::compact_law::read_chain_into(orbital_mvcc::metadata_consumer::compact_law::ReadLaw const&, orbital_mvcc::metadata_consumer::compact_law::Part, unsigned long, unsigned int, orbital_bench::Outcome&)+0x1ed>"
+            ],
+            "stack_operations": [
+              "8f8d0:      \tpushq\t%rbp",
+              "8f8d1:      \tpushq\t%r15",
+              "8f8d3:      \tpushq\t%r14",
+              "8f8d5:      \tpushq\t%r13",
+              "8f8d7:      \tpushq\t%r12",
+              "8f8d9:      \tpushq\t%rbx",
+              "8f8eb:      \tmovl\t%r8d, -0x4(%rsp)",
+              "8f927:      \taddq\t%rsi, %r15",
+              "8f93b:      \tsubq\t%rbx, %rbp",
+              "8f94f:      \tsubq\t%r13, %r8",
+              "8f98c:      \tsubq\t%rbx, %r14",
+              "8f98f:      \taddq\t%rsi, %rdx",
+              "8f9b1:      \taddq\t%rsi, %r14",
+              "8f9f6:      \taddq\t%r12, %rcx",
+              "8fa11:      \taddq\t%rcx, %r8",
+              "8fa14:      \taddq\t%r8, %r13",
+              "8fa28:      \taddq\t%r12, %rdx",
+              "8fa2b:      \taddq\t%r12, %r14",
+              "8fa2e:      \taddq\t%rdx, %r8",
+              "8fa31:      \taddq\t%rbx, %r8",
+              "8fa45:      \taddq\t%r12, %rcx",
+              "8fa48:      \taddq\t%rcx, %rdx",
+              "8fa4b:      \taddq\t%r15, %rdx",
+              "8fa5f:      \taddq\t%r14, %rcx",
+              "8fa62:      \taddq\t%rcx, %r11",
+              "8fa72:      \tcmpl\t-0x4(%rsp), %r10d",
+              "8fa97:      \taddq\t%rdx, %rcx",
+              "8fa9a:      \taddq\t%rcx, %rax",
+              "8fa9d:      \taddq\t%rax, %rdi",
+              "8fab1:      \taddq\t%rdx, %rax",
+              "8fab4:      \taddq\t%rax, %rsi",
+              "8fabd:      \tpopq\t%rbx",
+              "8fabe:      \tpopq\t%r12",
+              "8fac0:      \tpopq\t%r13",
+              "8fac2:      \tpopq\t%r14",
+              "8fac4:      \tpopq\t%r15",
+              "8fac6:      \tpopq\t%rbp"
+            ],
+            "calls": []
+          },
+          "orbital_mvcc::metadata_consumer::shape_read::read_proven(orbital_mvcc::metadata_consumer::shape_read::TupleProof, compact_shape::Selection, unsigned long, unsigned int, orbital_bench::Outcome&)": {
+            "code_bytes": 79,
+            "prologue": [
+              "8fad0:      \tpushq\t%rax",
+              "8fad1:      \ttestq\t%rsi, %rsi",
+              "8fad4:      \tje\t0x8fae2 <orbital_mvcc::metadata_consumer::shape_read::read_proven(orbital_mvcc::metadata_consumer::shape_read::TupleProof, compact_shape::Selection, unsigned long, unsigned int, orbital_bench::Outcome&)+0x12>",
+              "8fad6:      \tmovq\t(%rsi), %rax",
+              "8fad9:      \tcmpq\t%rdi, %rax",
+              "8fadc:      \tje\t0x8fae9 <orbital_mvcc::metadata_consumer::shape_read::read_proven(orbital_mvcc::metadata_consumer::shape_read::TupleProof, compact_shape::Selection, unsigned long, unsigned int, orbital_bench::Outcome&)+0x19>",
+              "8fade:      \txorl\t%eax, %eax",
+              "8fae0:      \tpopq\t%rcx",
+              "8fae1:      \tretq",
+              "8fae2:      \tmovl\t$0x1, %eax",
+              "8fae7:      \tpopq\t%rcx",
+              "8fae8:      \tretq"
+            ],
+            "stack_operations": [
+              "8fad0:      \tpushq\t%rax",
+              "8fae0:      \tpopq\t%rcx",
+              "8fae7:      \tpopq\t%rcx",
+              "8fb15:      \tpopq\t%rcx"
+            ],
+            "calls": [
+              "8fb06:      \tcallq\t0x8f8d0 <orbital_mvcc::metadata_consumer::compact_law::read_chain_into(orbital_mvcc::metadata_consumer::compact_law::ReadLaw const&, orbital_mvcc::metadata_consumer::compact_law::Part, unsigned long, unsigned int, orbital_bench::Outcome&)>",
+              "8fb1a:      \tcallq\t0x1e9c0 <__clang_call_terminate>"
+            ]
+          }
+        },
+        "candidate-0": {
+          "orbital_mvcc::metadata_consumer::shape_read::read_proven(orbital_mvcc::metadata_consumer::shape_read::TupleProof, compact_shape::Selection, unsigned long, unsigned int, orbital_bench::Outcome&)": {
+            "code_bytes": 413,
+            "prologue": [
+              "8f8d0:      \ttestq\t%rsi, %rsi",
+              "8f8d3:      \tje\t0x8f8dd <orbital_mvcc::metadata_consumer::shape_read::read_proven(orbital_mvcc::metadata_consumer::shape_read::TupleProof, compact_shape::Selection, unsigned long, unsigned int, orbital_bench::Outcome&)+0xd>",
+              "8f8d5:      \tcmpq\t%rdi, (%rsi)",
+              "8f8d8:      \tje\t0x8f8e3 <orbital_mvcc::metadata_consumer::shape_read::read_proven(orbital_mvcc::metadata_consumer::shape_read::TupleProof, compact_shape::Selection, unsigned long, unsigned int, orbital_bench::Outcome&)+0x13>",
+              "8f8da:      \txorl\t%eax, %eax",
+              "8f8dc:      \tretq",
+              "8f8dd:      \tmovl\t$0x1, %eax",
+              "8f8e2:      \tretq",
+              "8f8e3:      \tmovq\t0x8(%rsi), %rdi",
+              "8f8e7:      \tmovq\t0x18(%rsi), %r9",
+              "8f8eb:      \tmovabsq\t$0x100000000, %rax      # imm = 0x100000000",
+              "8f8f5:      \tvxorps\t%xmm0, %xmm0, %xmm0"
+            ],
+            "stack_operations": [
+              "8f90a:      \tpushq\t%r15",
+              "8f90c:      \tpushq\t%r14",
+              "8f90e:      \tpushq\t%r13",
+              "8f910:      \tpushq\t%r12",
+              "8f912:      \tpushq\t%rbx",
+              "8f94b:      \tsubq\t%rbx, %r15",
+              "8f95d:      \tsubq\t%r12, %r13",
+              "8f981:      \tsubq\t%rbx, %r15",
+              "8f99a:      \taddq\t%rsi, %rdx",
+              "8f9b5:      \taddq\t%rsi, %r15",
+              "8f9c6:      \taddq\t%rdx, %r12",
+              "8f9c9:      \taddq\t%rsi, %r14",
+              "8f9cc:      \taddq\t%r12, %r13",
+              "8f9e0:      \taddq\t%rsi, %r11",
+              "8f9e3:      \taddq\t%r11, %r12",
+              "8f9e6:      \taddq\t%rbx, %r12",
+              "8f9fa:      \taddq\t%rdx, %r13",
+              "8f9fd:      \taddq\t%r14, %r13",
+              "8fa11:      \taddq\t%r15, %rdx",
+              "8fa14:      \taddq\t%rdx, %r11",
+              "8fa32:      \taddq\t%rsi, %rdx",
+              "8fa40:      \taddq\t%rdx, %rcx",
+              "8fa43:      \taddq\t%rcx, %r9",
+              "8fa57:      \taddq\t%rsi, %rcx",
+              "8fa5a:      \taddq\t%rcx, %rdi",
+              "8fa63:      \tpopq\t%rbx",
+              "8fa64:      \tpopq\t%r12",
+              "8fa66:      \tpopq\t%r13",
+              "8fa68:      \tpopq\t%r14",
+              "8fa6a:      \tpopq\t%r15"
+            ],
+            "calls": []
+          }
+        }
+      },
+      "scope": "Actual measured executable structural observations, no forwarding-stall claim. Wrapper/kernel emitted text accounting includes separate outlined body, not linked-binary attribution.",
+      "enclosing_Inline_callers_text_bytes": [
+        3030,
+        2771,
+        2840,
+        2653
+      ],
+      "enclosing_Inline_scalar_batch_explicit_reservation_bytes": [
+        296,
+        1336
+      ],
+      "both_repeats_same_abi_and_binary_identity_per_arm": true,
+      "metadata_component_costs_unchanged": true
+    }
+  }
+}

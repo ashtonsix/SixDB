@@ -1,0 +1,51 @@
+{
+  "index_tree": "2af80a948c46ad9962934ad98e8f236b2a67022f",
+  "scope": "Exact staged canonical selected-read specialization: four focused native suites and performance binary; no clocks/SAN",
+  "steps": [
+    {
+      "name": "canonical-selected-read-build",
+      "returncode": 0,
+      "command": [
+        "cmake",
+        "--build",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc/metadata-projected-integration",
+        "--target",
+        "orbital_versioned_performance_bench",
+        "orbital_mvcc_composed_check",
+        "orbital_mvcc_composed_read_fusion_check",
+        "orbital_mvcc_consumer_shape_read_check",
+        "orbital_mvcc_consumer_compact_operations_check",
+        "-j2"
+      ],
+      "log": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc/metadata-projected-integration/canonical-selected-read-build.log",
+      "sha256": "b7746df1f40828030809c472701aafad160745d2819eeca0f931a27a6b89525f"
+    },
+    {
+      "name": "canonical-selected-read-tests",
+      "returncode": 0,
+      "command": [
+        "ctest",
+        "--test-dir",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc/metadata-projected-integration",
+        "-R",
+        "^orbital_mvcc_(composed_check|composed_read_fusion_check|consumer_shape_read_check|consumer_compact_operations_check)$",
+        "--output-on-failure",
+        "--no-tests=error"
+      ],
+      "log": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc/metadata-projected-integration/canonical-selected-read-tests.log",
+      "sha256": "66b29ec68346c5486fbec44abcae7d24b91ffff46079323f2852cadfafaf2a0e"
+    }
+  ],
+  "unstaged_inputs_included": false,
+  "prepare_pass_applied": false,
+  "projection": {
+    "files": 5795,
+    "identical_mtimes_preserved": 5791,
+    "changed_or_added": 4,
+    "removed_extra_files": []
+  },
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)",
+  "passed": true,
+  "timing_comparison": false,
+  "sanitizers": false
+}

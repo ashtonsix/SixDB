@@ -845,3 +845,26 @@ Metadata reduction serves measured performance and simpler ownership; byte count
 alone is not a promotion criterion. Further shrinking is set aside unless it
 has a concrete performance or architectural benefit. The completed comparison
 is retained as negative evidence; it does not queue another Schema sweep.
+
+## Canonical selected read specialization
+
+[Source-correct AB/BA evidence](evidence/zen5-canonical-selected-screen-20261010/source-recipe.json) compares `d9fff3e` plus the common six-path Loom caller and stationary reset/renew mapped reader with only canonical selected-read specialization `9ec3a039`. All 192 trials pass; each actual source archive matches its 887 native/CMake/driver postimages. Logical, body, caller and component counters match across all four captures; all 64 mapped trial lifecycle counts are exact. No other candidate is combined.
+
+Median complete throughput ns/request; baseline→specialized:
+
+| Fixture / read / batch | Inline | Directory | Mapped renew |
+| --- | ---: | ---: | ---: |
+| 192 / point-hit / 1 | 21.85→22.45 | 30.54→26.99 | 72.72→73.68 |
+| 192 / point-hit / 64 | 22.88→20.11 | 27.33→23.79 | 56.76→56.97 |
+| 192 / dependent-16 / 1 | 78.98→78.10 | 95.67→84.02 | 154.20→152.64 |
+| 192 / dependent-16 / 64 | 88.71→76.48 | 92.94→81.11 | 136.98→139.04 |
+| 32768 / point-hit / 1 | 88.29→88.28 | 100.49→89.98 | 128.21→124.03 |
+| 32768 / point-hit / 64 | 87.13→77.18 | 87.75→77.86 | 77.63→76.89 |
+| 32768 / dependent-16 / 1 | 1155.32→1151.35 | 1263.03→1096.10 | 1135.47→1125.78 |
+| 32768 / dependent-16 / 64 | 1257.49→1083.19 | 1253.73→1089.45 | 1086.48→1078.57 |
+
+The intended Inline batch path improves in both observations. CPU costs track wall costs. Inline scalar retains its already canonical fused path; tiny scalar point shifts upward about 3%, and unchanged mapped controls also vary. Directory scalar reaches selected/proven decoding and is a changed path. These short observations support the specialization without establishing universal speed, broad LMDB parity or spare capacity for later Engine/Shore work.
+
+Each batch latency pass retains 513 complete group samples, including its short tail. Tiny point p99 changes 1590/1590→1430/1440 ns; large dependent p99 changes 85791/86471→75361/76620 ns. The p999 observations remain noisy: large point is 11350/12890→14210/10500 ns. Ordered samples and every repetition remain archived.
+
+The actual measured ELF changes a 79-byte wrapper plus 504-byte outlined kernel into a 413-byte specialized body. The enclosing four Inline callers remain 3030/2771/2840/2653 bytes with scalar/batch explicit reservations 296/1336 bytes. The stored law, Schema and all component memory charges remain present and unchanged. Canonical specialization and forced inlining are combined here; this does not isolate their contributions or measure forwarding stalls. Four root native suites qualify the caller semantics; all twelve table/parity and two ABI reports regenerate byte-identically. Both repeated binaries/ABI are byte-identical within each arm.

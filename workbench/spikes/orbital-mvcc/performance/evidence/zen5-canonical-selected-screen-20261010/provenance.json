@@ -1,0 +1,78 @@
+{
+  "files_sha256": {
+    "baseline-0/abi.json": "b267bdeccec582de8fa31bcb54053b24fe5690a9e976fa305db8a3b093694216",
+    "baseline-0/binary-identity.json": "78a0d100d8ae9ac2d1245d56803df4cb03a454a15da81ffd0afe7e4428c85995",
+    "baseline-0/build-cost.json": "f255e1f1c7720daefc20b3032b4c2b922f9c62e48e11b28e86a66b22fbb13255",
+    "baseline-0/measurements.csv": "cf26ec3cd92003ea2fb56b0f9f3e0b37664f3cf0f6e783a18864a852d2de800c",
+    "baseline-0/parity.json": "fd188b200d4e6159b5d4fc615a8dffb57fb70522519b1c66caab7ef328d8c15d",
+    "baseline-0/qualification.json": "bf6dcf7bf0267c72b987fbc48b823a77424ad5506af081fc244a3eae980df4f5",
+    "baseline-0/reader_lease_check.json": "36079af1ddd0bab59360de4f8cb12f56d5a9edc659728d0fc49e6af2af525c52",
+    "baseline-0/summary.csv": "8e424b4849eadcb0491cab86299a0a23bc62f77122e4d00bea371b6e3dfab4af",
+    "baseline-1/binary-identity.json": "78a0d100d8ae9ac2d1245d56803df4cb03a454a15da81ffd0afe7e4428c85995",
+    "baseline-1/build-cost.json": "444769b40197ff2a46ea699ff1963699cb106d27b023be05fdb9af4a26e9cde5",
+    "baseline-1/measurements.csv": "66107834b4289afc3a59d00a567ccf2fe6104dc216afa00f83c4daa54c718bfb",
+    "baseline-1/parity.json": "fd188b200d4e6159b5d4fc615a8dffb57fb70522519b1c66caab7ef328d8c15d",
+    "baseline-1/qualification.json": "bf6dcf7bf0267c72b987fbc48b823a77424ad5506af081fc244a3eae980df4f5",
+    "baseline-1/reader_lease_check.json": "36079af1ddd0bab59360de4f8cb12f56d5a9edc659728d0fc49e6af2af525c52",
+    "baseline-1/summary.csv": "6a6c5fdf6724e4ebbf8b41af24bcc1d0e4e1ebba4281b9e470a23121c63c85f0",
+    "candidate-0/abi.json": "2d71acb2e1b9d414ea15acc66c4f7adad255980f86a8c4630c7c251063c653f7",
+    "candidate-0/binary-identity.json": "d75e01ba5699f88186fa6c811db33d0ebcca0db4dcce76e32a3dfe552289960e",
+    "candidate-0/build-cost.json": "b964cd92d78dabe575850e9c3e46f392adad422d27f508c9af751f7d270c8166",
+    "candidate-0/measurements.csv": "25c91da032b2b0f7d64a111fb8ccd9887edecbe1120477d254520f4ad2a8d06f",
+    "candidate-0/parity.json": "fd188b200d4e6159b5d4fc615a8dffb57fb70522519b1c66caab7ef328d8c15d",
+    "candidate-0/qualification.json": "bf6dcf7bf0267c72b987fbc48b823a77424ad5506af081fc244a3eae980df4f5",
+    "candidate-0/reader_lease_check.json": "36079af1ddd0bab59360de4f8cb12f56d5a9edc659728d0fc49e6af2af525c52",
+    "candidate-0/summary.csv": "fa0376a445af0ee774b5331c09c8f774d0a83530e374616fbd9be711730d0b44",
+    "candidate-1/binary-identity.json": "d75e01ba5699f88186fa6c811db33d0ebcca0db4dcce76e32a3dfe552289960e",
+    "candidate-1/build-cost.json": "411d23fd14224481a58127a6e5bd90bc3ac3c6e0e458d37fb7f760e66c06eea3",
+    "candidate-1/measurements.csv": "8a98bc46a63183234646ebf42cc13b911f5e5ba1bf6b7a7633e7afde1cb4a26b",
+    "candidate-1/parity.json": "fd188b200d4e6159b5d4fc615a8dffb57fb70522519b1c66caab7ef328d8c15d",
+    "candidate-1/qualification.json": "bf6dcf7bf0267c72b987fbc48b823a77424ad5506af081fc244a3eae980df4f5",
+    "candidate-1/reader_lease_check.json": "36079af1ddd0bab59360de4f8cb12f56d5a9edc659728d0fc49e6af2af525c52",
+    "candidate-1/summary.csv": "fdb9a26646a4208ed0543caf8641f19792887011e0b9bc186fe5159c3adb4e64",
+    "host.json": "bf5c11dfca303581d8aa29729be0e1562f3a1db99480d360b9fe45894546e9b4",
+    "worker-result.json": "5e0229edc6e256f26e5b6bbc066178e0abcc2976f243edbe3bf0ce3991150880"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--summarize",
+      "{evidence}/baseline-0"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--summarize",
+      "{evidence}/candidate-0"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--summarize",
+      "{evidence}/candidate-1"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--summarize",
+      "{evidence}/baseline-1"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--abi",
+      "{evidence}/baseline-0"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--abi",
+      "{evidence}/candidate-0"
+    ]
+  ],
+  "regenerate_from": "archive"
+}

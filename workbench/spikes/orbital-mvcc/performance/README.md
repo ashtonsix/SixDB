@@ -260,3 +260,5 @@ keeps the exact source cut, counter scope and negative observations with its com
 
 The [transient schema construction/conversion diagnostics and rejection as measured; source/caller/raw observations](FEEDBACK.md#transient-schema-construction-phase)
 keeps the exact source cut, counter scope and negative observations with its comparison.
+
+[Canonical selected-read comparison](evidence/zen5-canonical-selected-screen-20261010/source-recipe.json) retains complete AB/BA measurements, scalar controls, costs, tails and exact source/ABI context.
