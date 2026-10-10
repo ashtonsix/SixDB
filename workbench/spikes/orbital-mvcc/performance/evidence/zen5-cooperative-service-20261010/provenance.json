@@ -1,0 +1,24 @@
+{
+  "files_sha256": {
+    "cooperative/binary-identity.json": "cb1039289ef43c7fd716e648f464199c5524b5c4ac49ce08609276e8735354e0",
+    "cooperative/build-cost.json": "57fbef08aef569204fd3ac7d5fe963ba47829e538129083a8c9c182e92872215",
+    "cooperative/measurements.csv": "807022d2855bf552415e78d18918a92580c85d4f1a3733b698eadf626281c83e",
+    "cooperative/native-qualification.json": "d400f3d25dc58e6c8065c81f20f568d2364eba0cdb25dfae4e60aa747a78695a",
+    "cooperative/qualification.json": "deb2de092c988ca181646651c8e886d02a9c0fa33959fc0010b15043ddc14486",
+    "cooperative/samples.json": "3ec64a55b332d3d62a2d9630b9b88c2bf750fccd2d46b90ccd4a966ba56e63dd",
+    "cooperative/summary.csv": "98f7f38ebfce0ef9c80004a80cf5066751ff23d983184fd9052d563f2f21d331",
+    "host.json": "ee59b996c06b50e81dba66466b19ea9880cc3fd92c58455188677ee4bdc3a917",
+    "worker-result.json": "784a61721c7434ab81f04627abf4400005321e6148e7093374b2379ae196a451"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/orbital-mvcc/performance/cooperative_run.py",
+    "--report-only",
+    "{evidence}/cooperative",
+    "--output",
+    "{evidence}/cooperative"
+  ]
+}

@@ -1,0 +1,40 @@
+[
+  {
+    "name": "configure",
+    "argv": [
+      "cmake",
+      "-S",
+      "/opt/sixdb/datasets/orbital-cooperative-feedback/source",
+      "-B",
+      "/opt/sixdb/datasets/orbital-cooperative-feedback/build",
+      "-G",
+      "Ninja",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DCMAKE_CXX_COMPILER=clang++-21",
+      "-DSIXDB_SPIKES=orbital-mvcc",
+      "-DSIXDB_MARCH=x86-64-v3",
+      "-DSIXDB_TUNE=zen5"
+    ],
+    "cwd": "/opt/sixdb/source",
+    "required": true,
+    "returncode": 0,
+    "seconds": 0.35352267699998663
+  },
+  {
+    "name": "build",
+    "argv": [
+      "cmake",
+      "--build",
+      "/opt/sixdb/datasets/orbital-cooperative-feedback/build",
+      "--target",
+      "loom_object_polling_control",
+      "loom_object_ring_check",
+      "-j",
+      "1"
+    ],
+    "cwd": "/opt/sixdb/source",
+    "required": true,
+    "returncode": 0,
+    "seconds": 53.796271563000005
+  }
+]

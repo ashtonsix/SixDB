@@ -1101,3 +1101,92 @@ larger ownership records. Mixed transactions, skewed locality, reader-age bursts
 pressure/refusal recovery, conversion followed by useful work, Series4 and
 cross-Object work within one transaction remain unmeasured next questions. The
 exhausted narrow LMDB tuning queue remains closed.
+
+## Ready Message service during large dependent reads
+
+The [complete six-treatment comparison](evidence/zen5-cooperative-service-20261010/cooperative/summary.csv),
+job `20261010T100318Z-09babe4e`, runs the qualified
+[cooperative caller](controls/cooperative-polling/README.md) over 193 MB of Tuple
+bodies: 8388608 rows, 256 Objects, 524291 dependent16 requests, width32 and hints.
+Runtime sources are exactly commit `31becc9`; two Tooling orchestration files
+produce capture `dd8c7271`. The later heap treatment `b69e28b` is excluded.
+All 2940 source postimages match both archived snapshots. CPU0 is pinned on one
+Spot c8a.large Zen5 guest with Clang21.1.8, x86-64-v3 and zen5 tuning.
+
+Each loaded group posts eight caller-owned ready Messages before opening its
+1024 requests. Their real queue handlers consume eight authored words and check
+FIFO ownership/checksum/release. Per-quantum service handles at most one Message
+after Ring returns, before Frame retirement/refill. Deferred service waits for
+read completion. Posting, boundary validation, handling and final drain are
+charged to complete work; no Message is reposted until that group drains.
+An unloaded adapted caller and empty polling are retained controls. Its optional
+service branch and common burst reset make it a different executable from the
+previous ready-read survey; compare treatments within this capture.
+
+Complete throughput ns per read request, with no post/handler timestamp clocks:
+
+| Treatment | Observation A | Observation B |
+| --- | ---: | ---: |
+| Ring, quantum128, unloaded | 1481.5 | 1465.5 |
+| Ring, quantum128, empty polling | 1474.6 | 1426.2 |
+| Ring, quantum128, eight ready Messages | 1485.5 | 1478.2 |
+| Ring, quantum128, service deferred | 1462.2 | 1471.0 |
+| Ring, quantum32, eight ready Messages | 1718.2 | 1639.7 |
+| Manual interleaving, quantum128, eight ready Messages | 2226.2 | 2182.2 |
+
+Ready Message service preserves the useful large-body read performance. Loaded
+Ring128 is within 0.3–0.9% of its unloaded observation; those small differences
+do not establish a precise polling cost. Empty polling's lower times are not a
+free-work claim. The whole Ring caller remains about 1.5 times faster than the
+matched manually interleaved caller; their native state carriage/code generation
+still differs, so that ratio is not isolated scheduler overhead.
+
+Separate delivery-clock passes retain 4104 post-to-handler samples per trial.
+These timestamps include posting/waiting/handler checksum work and end before
+the queue release; complete-work clocks also charge release. Numbers below are
+microseconds, with each observation's own distribution:
+
+| Treatment | Message p50 A / B | Message p99 A / B | Maximum A / B |
+| --- | ---: | ---: | ---: |
+| Loaded Ring128 | 4.190 / 4.180 | 7.290 / 7.190 | 19.930 / 16.900 |
+| Deferred Ring128 | 1517.541 / 1501.650 | 1578.831 / 1554.962 | 1590.630 / 1574.402 |
+| Loaded Ring32 | 1.980 / 1.840 | 2.760 / 2.460 | 11.640 / 6.581 |
+| Loaded manual128 | 5.760 / 5.750 | 9.930 / 10.310 | 18.550 / 18.350 |
+
+Shorter quanta lower the ready-burst p99 by roughly 2.6–2.9 times, while costing
+11–16% in the separate throughput passes. Deferring service saves little work
+here but leaves Messages waiting around a full 1.5 ms read group. These are
+useful negative tradeoffs to retain, not a selected quantum or general fairness
+policy. The eight ready owner-posted Messages are a finite burst; this does not
+model sustained/external arrivals, Task competition or collaborating workers.
+In the loaded quantum-128 treatment, 99.63% of polls find the queue empty;
+the result does not establish sustained completion capacity.
+Read samples are group makespans, not individual request response latency.
+
+All twenty trials return the same independently validated read digest. Both
+orders preserve the six throughput/four delay treatments; observation B reverses
+and rotates arm order and reverses the mode blocks. All 513 groups per trial,
+including the three-request tail, have checked request/quantum/poll/service
+counts and complete drains. Quantum128 has 1114425 returns, 1114426 loaded polls
+and 4104 handled Messages; its tail handles seven before read completion and
+one in the charged drain. Quantum32 has 4456780 returns and polls, and handles
+all eight even in the tail. Unloaded/empty have zero handled Messages and
+throughput passes have no delivery timestamps. Caller CPU closely tracks wall
+work in all arms.
+
+Driver 11712 B and net Ring Arena charge 4408 B are unchanged. The completion
+control is 1328 B, with eight 80 B Message records and 24 B static operations.
+Cold diagnostic storage is identical in both modes: 28728 B group samples plus
+32832 B delivery slots. These are component inventories, not total process memory.
+Ten native control cases, including replacement refusal/drain/reuse, and the
+existing 756 Ring panels/97524 requests pass; no new sanitizer or PMU claim is
+attached. Both compact tables regenerate byte-identically. Full source, ordered
+samples and logs remain in the verified existing archive; executable hashes are
+recorded, but this run did not export the ELFs. The reusable runner now copies
+them after all clocks for future runs. The worker has terminated.
+
+This finite service question is closed. Stage 2 now moves to auditing and
+consolidation, with no further performance campaign queued. Embedded read/write
+mixes, locality skew, retained readers, conversion followed by useful work and
+memory pressure/refusal recovery remain leads for later work. I/O and
+collaborating-worker build/testing are deferred to Stage 3.

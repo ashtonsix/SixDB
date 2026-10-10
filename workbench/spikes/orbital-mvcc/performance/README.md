@@ -55,6 +55,12 @@ wider-survey arms did not poll Messages between Ring returns, so their throughpu
 says nothing about fairness under competing work or worker/I/O headroom. The
 [cooperative-service control](controls/cooperative-polling/README.md) adds explicit
 polling and charges complete Message handling separately from delivery-delay sampling.
+Its [completed large-body comparison](FEEDBACK.md#ready-message-service-during-large-dependent-reads)
+retains all six treatments: ready service preserves Ring throughput, while
+shorter quanta trade throughput for lower Message delay. `cooperative_cloud.sh`
+runs the bounded twenty trials; `cooperative_run.py --report-only INPUT --output OUTPUT`
+regenerates the two compact tables. Each historical result names its exact
+runtime capture, independently of later allocator changes.
 
 The full panel uses two observations, widths 1/8/32 and hints on/off, with the
 complete width/hint cross-section limited to the largest working set. The fused
@@ -74,7 +80,7 @@ The [wider repeat findings](FEEDBACK.md#wider-request-interleaving-and-append-gr
 positive signals and negative width/reservation boundaries. The control is an
 experimental append caller with an explicit reservation, not a selected policy.
 
-The next scenario choices follow the first results and the owning module seams:
+Unmeasured scenario leads follow the results and the owning module seams:
 
 | Scenario | Useful variations and observations |
 | --- | --- |
@@ -85,6 +91,12 @@ The next scenario choices follow the first results and the owning module seams:
 | Mixed transactions | Read/write ratios, hot Objects/keys, repeated keys and multi-Object packets; snapshot size, publication cost and conflict/refusal behavior |
 | History and churn | Reader-age distributions, one stalled reader, bursts, reader release and bounded maintenance; backlog, charged capacity and latency spikes |
 | Embedded host conditions | Foreground computation, bounded memory/refusal/retry, foreign immutable completion, cancellation and shutdown; caller cost and progress alongside latency |
+
+Stage2 now moves to auditing and consolidation; no further performance campaign
+is queued. Embedded read/write mixes, locality skew, retained readers, conversion
+followed by useful work and memory pressure/refusal recovery remain leads for
+later work. I/O and collaborating-worker build/testing are deferred to Stage3.
+The finite ready-Message comparison is complete.
 
 These are experiment directions, not a full Cartesian campaign or new success
 gate. Fixed-count fixture limits must be changed honestly for append; batching

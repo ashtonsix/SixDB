@@ -1,0 +1,30 @@
+{
+  "runtime_commit": "31becc98f271a242b09fef77ba987f1caad96738",
+  "measured_capture_digest": "dd8c72712ebdab26d7043744cfcd23a59fe2f57f30068b00504b2632a3535391",
+  "actual_source_postimages_verified": 2940,
+  "archive_snapshots_verified": [
+    "source.tar.gz",
+    "cooperative/source.tar.gz"
+  ],
+  "owner_release_base": "5d1d7d30313c3d8fce297926d35ef4a91c870e46",
+  "owner_patch_sha256": "2bc0bd50470aced09aee5a529ffb23bed01071745c1776201a4f4be60929f40e",
+  "measured_runner_sha256": "83d7db933566870a4c179c411272c0db2dc91efa50d874f6d30d7aa22eced443",
+  "live_heap_treatment_excluded": "b69e28b",
+  "observations_per_treatment": 2,
+  "timing_trials": 20,
+  "independent_oracle": "map decoded fields/rows/digest; native Message FIFO,checksum,retained/handled/released exactly once; group quantum/service/final-drain formulas",
+  "ordered_group_samples": 10260,
+  "delivery_samples_per_delay_trial": 4104,
+  "group_samples_are_request_latency": false,
+  "handler_delay_includes_queue_release": false,
+  "all_work_clock_includes_final_drain_and_queue_release": true,
+  "arrival_model": "eight owner-posted ready Messages per group; no sustained/external arrivals",
+  "worker_terminated": true,
+  "sanitizer_claim": false,
+  "pmu": "off",
+  "retention": "Complete six throughput/four delay treatments and both observations, including short-quantum/deferred/manual negatives. Ordered CSVs and two actual sources remain in verified archive2073d4cc. Compact samples store native totals,distribution summaries,short tail and ordered CSV hashes.",
+  "compiled_binary_retained": false,
+  "binary_note": "Original executable hashes retained; ELFs were in disposable build cache. Current authored runner adds only post-clock ELF copying for future runs; reporting algorithm and measured runtime unchanged.",
+  "stage2_focus": "embedded read/write,locality,retention,conversion-use,memory pressure; I/O and collaborating-worker build/testing deferredStage3",
+  "stage2_status": "Auditing/consolidation; no further performance campaign queued. Remaining embedded workload opportunities are leads, not required optimisation work."
+}
