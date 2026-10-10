@@ -32,6 +32,13 @@ share an Engine IR; Engine need not accept each source AST directly.
 The IR family, source-to-IR binding and validation seams, representation schemas
 and concrete integration interfaces remain open.
 
+Engine owns the contract of its accepted IRs: their semantic model and supported
+capabilities. Shore takes on source adaptation and interaction so Engine can stay
+focused. Frontend
+compatibility choices do not by themselves impose new core semantics, planning
+constraints or execution requirements. Frontend use cases can motivate changes;
+those changes remain Engine design decisions.
+
 [Orbital Stage 2 outcomes](../workbench/spikes/orbital-mvcc/OUTCOMES.md)
 retain the embedded MVCC and real-codec experiments, temporary caller assumptions,
 and lessons about schema reuse, copy grain, retention and independent work.

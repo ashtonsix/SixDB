@@ -23,6 +23,11 @@ database effects and transaction outcomes. Shore translates source programs into
 those IRs and exposes results and outcomes to callers. Source-specific checks,
 name/type resolution and the binding seam remain to be worked out together.
 
+Shore carries the frontend and UX burden without defining contracts that Engine
+is forced to satisfy. It adapts supported sources and interactions to Engine's
+semantic model and capabilities. Gaps can inform Engine's design; a source
+compatibility goal alone does not commit the core to new behavior.
+
 Candidate front ends include PostgreSQL-compatible SQL, SixDB-native SQL,
 Polars/Pandas-compatible dataframe and pipeline operations, SixDB-native
 dataframes, and other dialects worth investing in. Their compatibility scope
