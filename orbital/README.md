@@ -120,6 +120,14 @@ exclusion until all private owners and entry pins settle. Local cuts are neither
 `SerialPosition` nor `Epoch`, and this embedded protocol does not imply durable
 admission or consensus completion.
 
+Only one packet can be accepted at a time, and preparation requires the current
+global cut even when intervening publications changed other Objects. Finished
+material can wait in an `Owner` before acceptance without excluding publication.
+Keep its original basis or independently validate its dependencies after waiting:
+opening a fresh Scope does not make a result computed from older inputs valid.
+An accepted packet is a short publication reservation; holding it across I/O
+would prevent other publication.
+
 `conversion` seals one selected Object/version and its immutable source. `adopt`
 can replace that version's physical alternative without changing logical time;
 the converter owes exact logical equivalence. `bound` seals a primary selection;

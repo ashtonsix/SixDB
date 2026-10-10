@@ -12,8 +12,11 @@ catalog/history and physical Representation/Part/View ownership now live in
 Orbital. Complete-operation comparisons guide changes to version metadata,
 ownership, interpretation and call boundaries together. Further narrow LMDB
 tuning is set aside in favour of wider workload discovery: the first measured
-survey covers larger working sets and real representation conversion; append
-and interleaved-read callers are qualified for the next measurements.
+surveys cover larger working sets, real representation conversion, append growth
+and interleaved reads. Interleaving helps when independent work overlaps, while
+the single-request Ring regresses on the measured large working set. A bounded
+shared-prefix append control avoids repeated prefix copies; its explicit
+reservation does not establish a container growth policy.
 The [performance study](../../spikes/orbital-mvcc/performance/README.md) owns
 results and remaining questions. Lower latency than LMDB with versioning remains
 an objective; broad parity and headroom for Engine/Shore, worker communication
@@ -46,7 +49,10 @@ independent selected reads on one Worker. Neither caller establishes worker
 scaling or disk/network performance. Local preparation accepts finished material
 for short publication; holding that accepted packet across I/O would exclude
 other preparation. Durable admission and asynchronous construction belong to
-the outer protocol rather than the embedded publication step.
+the outer protocol rather than the embedded publication step. Finished Owners
+can wait before acceptance, but a fresh Scope cannot validate computation from
+older inputs; retain its original basis or establish dependency validity before
+publication. The embedded catalog conservatively rejects any stale global basis.
 The earlier [composition experiments](../../spikes/orbital-stage2-composition/FINDINGS.md)
 provide additional evidence and unresolved alternatives.
 
