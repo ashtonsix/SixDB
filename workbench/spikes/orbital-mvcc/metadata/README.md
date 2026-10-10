@@ -76,7 +76,8 @@ are independent retention roots, not released by the absence of a local reader.
 ## Evidence and executable probes
 
 The selected composed path now uses an inline current version, 16-byte older
-nodes, coherent caller-resident Scopes and a stationary 48-byte `Prepared`.
+nodes with separately charged 8-byte physical-pointer slots, coherent
+caller-resident Scopes and a stationary 48-byte `Prepared`.
 Preparation returns an 8-byte status. The catalog selects and retains physical
 representations without depending on their codec or Shape; full maintenance
 remains the default after bounded maintenance increased retained memory and
