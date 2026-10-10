@@ -1,0 +1,39 @@
+{
+  "base": "58456a02e5b326a09b228a3476cad73b536b3ef4",
+  "source_digest": "f04fe7c9c5fc3107ea7f8841c7e2b2a777c6bde73a1dba0fd699db3a780f8c4d",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)",
+  "reused_byte_identical_ikea_archives": [
+    {
+      "path": "/home/ashtonsix/sixdb/build/reviews/orbital-physical-module/build/ikea/libikea_core.a",
+      "sha256": "70353063ba46a1888afcca746859ad52646e2fd819de3684b36acc3f36f06602"
+    },
+    {
+      "path": "/home/ashtonsix/sixdb/build/reviews/orbital-physical-module/build/ikea/libikea_tuplepack.a",
+      "sha256": "89a5f171151060b799633483bd5bb96567e8774ae1379f584745b9006b4df5e8"
+    },
+    {
+      "path": "/home/ashtonsix/sixdb/build/reviews/orbital-physical-module/build/ikea/libikea_seriespack.a",
+      "sha256": "1372a507f7a35ab2f9225918874140ba6156da6d80cbb2f41bfc52a28a3e049a"
+    }
+  ],
+  "probe_sha256": "e4c1a1e38694d754ab3e9daba41a19b14746cd67c1c28073696f5fe7fd3ad003",
+  "binary_sha256": "28b0f64a2f7674b504a45d94d35a90cf7be26228bc8aafb5a803aee7b7464581",
+  "results_sha256": "d2ed86db53d6ecdd62774099ecd18d4cd27e1d72e5a4b2c082cbe86011cf2280",
+  "no_runtime_edits": true,
+  "no_timing": true,
+  "qualification": {
+    "passed": true,
+    "row_comparisons": 376832,
+    "conversions": 4,
+    "oversized_reuses": 1,
+    "idle_tuple_windows": 1,
+    "after_owner_destruction_arena_charge": 0
+  },
+  "additional_artifacts": {
+    "run.py": "8722aef795e0b254ccf53a2bc4b63f11965609ac94a2460283857a2add86997c",
+    "HANDOFF.txt": "97c5a5cfb00029153111c44e8d66edeb5b56697319abedf45b3bf74cf6383e89",
+    "summary.json": "dc1b5080731de711cfef686e9377f5ee90dc2af0806a3b0429d6dd49e2ef2505",
+    "source-freeze.json": "6329d84cb066341867f9c9ae9aa96bf99745d8882aa7bd5bf902cae4c8c86349",
+    "native-commands.json": "61511ac00f022a51d873d4576e9b109226ced36783a06cb625bc30eb58d1e3bd"
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "phases": [
+    {
+      "phase": "initial_series",
+      "versions": 2,
+      "scopes": 1,
+      "alternative_count": 0,
+      "allocations": 8,
+      "reuses": 0,
+      "active_allocations": 8,
+      "occupied_bytes": 737280,
+      "live_capacity_bytes": 737280,
+      "idle_bytes": 0,
+      "mapped_bytes": 737280,
+      "capacity_slack_bytes": 0
+    },
+    {
+      "phase": "object0_tuple",
+      "versions": 2,
+      "scopes": 1,
+      "alternative_count": 1,
+      "allocations": 9,
+      "reuses": 0,
+      "active_allocations": 9,
+      "occupied_bytes": 1114112,
+      "live_capacity_bytes": 1114112,
+      "idle_bytes": 0,
+      "mapped_bytes": 1114112,
+      "capacity_slack_bytes": 0
+    },
+    {
+      "phase": "both_tuple",
+      "versions": 2,
+      "scopes": 1,
+      "alternative_count": 2,
+      "allocations": 10,
+      "reuses": 0,
+      "active_allocations": 10,
+      "occupied_bytes": 1490944,
+      "live_capacity_bytes": 1490944,
+      "idle_bytes": 0,
+      "mapped_bytes": 1490944,
+      "capacity_slack_bytes": 0
+    },
+    {
+      "phase": "object0_series",
+      "versions": 2,
+      "scopes": 1,
+      "alternative_count": 2,
+      "allocations": 14,
+      "reuses": 0,
+      "active_allocations": 13,
+      "occupied_bytes": 1482752,
+      "live_capacity_bytes": 1482752,
+      "idle_bytes": 376832,
+      "mapped_bytes": 1859584,
+      "capacity_slack_bytes": 0
+    },
+    {
+      "phase": "both_series_reader_live",
+      "versions": 2,
+      "scopes": 1,
+      "alternative_count": 2,
+      "allocations": 18,
+      "reuses": 1,
+      "active_allocations": 16,
+      "occupied_bytes": 1474560,
+      "live_capacity_bytes": 1720320,
+      "idle_bytes": 376832,
+      "mapped_bytes": 2097152,
+      "capacity_slack_bytes": 245760
+    },
+    {
+      "phase": "reader_released",
+      "versions": 2,
+      "scopes": 0,
+      "alternative_count": 2,
+      "allocations": 18,
+      "reuses": 1,
+      "active_allocations": 16,
+      "occupied_bytes": 1474560,
+      "live_capacity_bytes": 1720320,
+      "idle_bytes": 376832,
+      "mapped_bytes": 2097152,
+      "capacity_slack_bytes": 245760
+    }
+  ],
+  "per_address_proof": {
+    "retired_object0_tuple": {
+      "window": 8,
+      "storage": "0xaaaae6a7c800",
+      "address": "0xffffb86b8000",
+      "users": 1,
+      "prepared": 376832,
+      "reserved": 376832,
+      "role": "alternative",
+      "extent": 376832,
+      "object": 0,
+      "part": 0,
+      "realization": "0xaaaae6a7acd0",
+      "realization_references": 1
+    },
+    "current_object1_series_key": {
+      "window": 8,
+      "storage": "0xaaaae6a7c800",
+      "address": "0xffffb86b8000",
+      "users": 1,
+      "prepared": 376832,
+      "reserved": 376832,
+      "role": "alternative",
+      "extent": 131072,
+      "object": 1,
+      "part": 0,
+      "realization": "0xaaaae6a7e530",
+      "realization_references": 1
+    },
+    "remaining_idle": {
+      "window": 9,
+      "storage": "0xaaaae6a7d110",
+      "address": "0xffffb865c000",
+      "users": 0,
+      "prepared": 376832,
+      "reserved": 376832,
+      "role": "idle",
+      "extent": 0
+    }
+  },
+  "qualification": {
+    "passed": true,
+    "row_comparisons": 376832,
+    "conversions": 4,
+    "oversized_reuses": 1,
+    "idle_tuple_windows": 1,
+    "after_owner_destruction_arena_charge": 0
+  }
+}
