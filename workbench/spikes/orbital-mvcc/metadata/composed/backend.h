@@ -102,7 +102,15 @@ public:
           std::size_t used{};
           for (std::size_t i = 0; i < input.size(); ++i) if (objects[i] == object)
             commands[used++] = {input[i].key, input[i].record.value, input[i].record.tag};
-          auto parts = material_.clone(*selected, costs);
+          const auto& initial_shape = material_.shape(material_.format(*selected));
+          v::Shape current_shape;
+          const auto* target_shape = &initial_shape;
+          if (selected->records() != initial_shape.records) {
+            auto shaped = v::shape(corpus().schema, initial_shape.format, selected->records());
+            if (!shaped) return std::unexpected(shaped.error());
+            current_shape = std::move(*shaped); target_shape = &current_shape;
+          }
+          auto parts = material_.clone(*selected, *target_shape, costs);
           if (!parts) return std::unexpected(parts.error());
           auto written = material_.apply(*selected, *parts,
               std::span(commands).first(used), costs.kernel, write_costs);
@@ -121,13 +129,49 @@ public:
     for (auto& outcome : output) { outcome = {}; outcome.changes = 1; detail::mix(outcome.digest, 1); }
     return {};
   }
+  // Disposable one-Object Tuple stream. Row order is supplied by the caller;
+  // the fixture's binary-search readers still require sorted keys. Injection
+  // limits/counters describe the tail; refused private work may copy the prefix.
+  Result<void> append(std::span<const orbital_bench::Row> input, v::ConstructionOptions options = {}) {
+    if (corpus().images.size() != 1 || input.empty()) return std::unexpected(Error::invalid_argument);
+    {
+      typename Store::Prepared accepted(store_);
+      {
+        Scope basis(store_);
+        auto selected = select(basis, 0); // Primary Tuple, not a replaceable alternative.
+        if (!selected) return std::unexpected(selected.error());
+        if (selected->records() > SIZE_MAX - input.size()) return std::unexpected(Error::capacity);
+        auto shaped = v::shape(corpus().schema, v::Format::rows, selected->records() + input.size());
+        if (!shaped) return std::unexpected(shaped.error());
+        const auto target_shape = std::move(*shaped); // Stationary until capture completes.
+        auto parts = material_.append(*selected, target_shape, input, costs, options);
+        if (!parts) return std::unexpected(parts.error());
+        auto owner = capture(*parts);
+        if (!owner) return std::unexpected(owner.error());
+        const std::array<Change, 1> changes{{{corpus().images[0].address.object, std::move(*owner)}}};
+        const auto prepared = store_.prepare(basis, changes, accepted);
+        if (!prepared) return prepared;
+      }
+      const auto installed = store_.install(accepted);
+      if (!installed) return installed;
+    }
+    store_.drain(); poll(128); return {};
+  }
   Result<Conversion> prepare_conversion(const Scope& scope, std::size_t object,
       v::Format format, v::ConstructionOptions options = {}) {
     auto selected = select(scope, object, true);
     if (!selected) return std::unexpected(selected.error());
     auto target = store_.conversion(scope, corpus().images[object].address.object);
     if (!target) return std::unexpected(target.error());
-    auto parts = material_.convert(*selected, format, costs, options);
+    const auto& initial_shape = material_.shape(format);
+    v::Shape current_shape;
+    const auto* target_shape = &initial_shape;
+    if (selected->records() != initial_shape.records) {
+      auto shaped = v::shape(corpus().schema, format, selected->records());
+      if (!shaped) return std::unexpected(shaped.error());
+      current_shape = std::move(*shaped); target_shape = &current_shape;
+    }
+    auto parts = material_.convert(*selected, *target_shape, costs, options);
     if (!parts) return std::unexpected(parts.error());
     auto owner = capture(*parts);
     if (!owner) return std::unexpected(owner.error());

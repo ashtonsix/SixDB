@@ -123,6 +123,11 @@ sixdb_target(orbital_mvcc_composed_check)
 target_link_libraries(orbital_mvcc_composed_check PRIVATE orbital_mvcc_composed)
 add_test(NAME orbital_mvcc_composed_check COMMAND orbital_mvcc_composed_check)
 list(APPEND metadata_checks orbital_mvcc_composed_check)
+add_executable(orbital_mvcc_composed_append_check composed/append_check.cpp)
+sixdb_target(orbital_mvcc_composed_append_check)
+target_link_libraries(orbital_mvcc_composed_append_check PRIVATE orbital_mvcc_composed)
+add_test(NAME orbital_mvcc_composed_append_check COMMAND orbital_mvcc_composed_append_check)
+list(APPEND metadata_checks orbital_mvcc_composed_append_check)
 
 add_executable(loom_object_module_check ../callers/object_module.cpp composed/catalog.cpp)
 sixdb_target(loom_object_module_check)
@@ -130,6 +135,18 @@ target_include_directories(loom_object_module_check PRIVATE "${PROJECT_SOURCE_DI
 target_link_libraries(loom_object_module_check PRIVATE orbital_mvcc_shape loom::loom)
 add_test(NAME loom_object_module_check COMMAND loom_object_module_check)
 list(APPEND metadata_checks loom_object_module_check)
+
+# Disposable selected-Object AMAC caller; Tooling owns its performance consumer.
+add_library(loom_object_ring STATIC ../callers/object_ring.cpp composed/catalog.cpp)
+sixdb_target(loom_object_ring)
+target_include_directories(loom_object_ring PRIVATE "${PROJECT_SOURCE_DIR}/orbital/src")
+target_link_libraries(loom_object_ring PUBLIC orbital_mvcc_shape_read loom::loom)
+
+add_executable(loom_object_ring_check ../callers/object_ring_check.cpp)
+sixdb_target(loom_object_ring_check)
+target_link_libraries(loom_object_ring_check PRIVATE loom_object_ring)
+add_test(NAME loom_object_ring_check COMMAND loom_object_ring_check)
+list(APPEND metadata_checks loom_object_ring_check)
 
 add_executable(orbital_mvcc_actual_adapter_check performance_adapter/check.cpp)
 sixdb_target(orbital_mvcc_actual_adapter_check)

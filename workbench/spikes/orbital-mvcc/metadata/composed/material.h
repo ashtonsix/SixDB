@@ -65,10 +65,13 @@ public:
   Material(const Material&) = delete;
   const p::Corpus& corpus() const { return corpus_; }
   const v::Shape& shape(v::Format format) const;
-  const v::Shape& shape(cs::Selection) const;
+  v::Format format(cs::Selection) const;
   Result<PrivateParts> construct(std::span<const orbital_bench::Row>, v::Format, v::Costs&);
-  Result<PrivateParts> clone(cs::Selection, v::Costs&);
-  Result<PrivateParts> convert(cs::Selection, v::Format, v::Costs&, v::ConstructionOptions = {});
+  // The caller's canonical count-specific target stays stationary through capture.
+  Result<PrivateParts> clone(cs::Selection, const v::Shape&, v::Costs&);
+  Result<PrivateParts> convert(cs::Selection, const v::Shape&, v::Costs&, v::ConstructionOptions = {});
+  Result<PrivateParts> append(cs::Selection, const v::Shape&, std::span<const orbital_bench::Row>,
+      v::Costs&, v::ConstructionOptions = {});
   Result<cs::Shape*> proof(const PrivateParts&);
   v::ReadData generic(cs::Selection) const;
   Result<void> apply(cs::Selection basis, const PrivateParts&, std::span<const pw::Command>,
@@ -89,7 +92,7 @@ struct Body {
   }
   auto row_unchecked(std::size_t row) const { return material->generic(selected).row_unchecked(row); }
   std::size_t size() const { return selected.records(); }
-  v::Format format() const { return material->shape(selected).format; }
+  v::Format format() const { return material->format(selected); }
 };
 static_assert(sizeof(Body) == 16);
 } // namespace orbital_mvcc::composed

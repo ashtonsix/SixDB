@@ -29,7 +29,9 @@ writer remains a separate control. Conversion calls `convert_into`,
 changing one Tuple Part to four
 SeriesPack Parts or back, then adopts at the catalog-issued exact version.
 
-The fixture has fixed membership/count and one common Schema. Default reads
+Point updates keep membership/count fixed and use one common resident Schema.
+The disposable one-Object Tuple append caller can publish a larger count.
+Default reads
 select the primary. `alternative=true` selects a currently adopted alternative,
 falling back to primary when absent. That selection is captured by the Scope;
 an already selected body remains usable when a later adoption replaces it.
@@ -59,6 +61,7 @@ auto held = owner.read();                         // stationary, nonmovable Scop
 auto body = owner.body(held, object, true);        // existing read_operation
 need(owner.update(input, output, objects));       // <=64 offered requests
 need(owner.convert(object, data::Format::columns));
+need(owner.append(tail_rows));                   // one Object, primary Tuple
 ```
 
 `prepare_conversion(scope, object, format)` returns a movable owned pending
@@ -68,6 +71,27 @@ source bytes but does not retain obsolete history. Bodies, Scopes and pending
 conversions must all end before their Backend. The writer's own basis closes
 before install/maintenance. `drain()` is full catalog maintenance and accepts no
 work budget; the driver must call it explicitly with those semantics.
+
+`append(tail_rows, options)` copies the protected primary Tuple prefix into a
+fresh private allocation and initializes the exact suffix through the existing
+`construct_into` adapter. It captures the complete new-count Part and uses real
+Prepared publication. Input order is caller-owned; binary-search reads require
+sorted keys. A refused append may copy a private prefix or initialize part of
+the tail. A partially initialized target is never captured; a complete target
+may be captured before publication refusal, but no refused append is published. Injection row/Part limits
+and KernelCosts describe the tail initializer, while `copied_bytes/spans` account
+for the separately covered prefix copy. Suffix-local effects are resolved by the
+codec before its views expire. This caller imposes no split or navigation policy.
+
+Source descriptors and private target geometry use the actual selected count.
+The initial-count descriptors remain reusable; another count uses transient
+count-specific fixture Shapes, including ordinary heap descriptor storage.
+Every target Shape stays stationary through codec execution and capture; the
+returned `PrivateParts` borrows it only within that phase. Shared captured Shape
+proofs keep format/geometry independently of each Representation's count. Old
+Scopes and selected alternatives retain their original bytes and count, even
+when two Series counts occupy the same rounded tile extent. Conversion preserves
+count; append performs a new logical publication. No constructor plan is rebuilt.
 
 `costs` counts actual construction/clone/conversion requests and native work;
 `write_costs` counts the qualified writer's admission/key work. Failed private
@@ -132,9 +156,9 @@ After configuring the opt-in build as described in the
 
 ```sh
 orb -m ubuntu cmake --build build/orbital-mvcc/metadata-integration \
-  --target orbital_mvcc_composed_check -j2
+  --target orbital_mvcc_composed_check orbital_mvcc_composed_append_check -j2
 orb -m ubuntu ctest --test-dir build/orbital-mvcc/metadata-integration \
-  --output-on-failure -R '^orbital_mvcc_composed_check$'
+  --output-on-failure -R '^orbital_mvcc_composed_(check|append_check)$'
 ```
 
 It is also included in `orbital_mvcc_metadata_validate`. For a captured source
@@ -153,6 +177,13 @@ scan results, sparse duplicate and dense 64-Object publications, late old-cut
 discovery, real bidirectional conversion, replaced-alternative lifetime,
 partial private failure, metadata refusal, and adoption after history expiry.
 Teardown checks zero PMR and actual Runtime checks zero Arena charge.
+
+`append_check.cpp` uses independent wire and logical oracles on the actual Inline
+and Directory callers. It checks 9→16 and 7→9 growth, early and late old-cut
+discovery, replaced alternatives, count-preserving conversion, equal-extent
+wrong-count adoption refusal, the fused appended-tail read, new-count Tuple
+and Series point updates and reverse conversion, private tail and metadata
+refusal, and physical settlement after retained Scopes close.
 
 The selected catalog now lives in `orbital/include/orbital/object.h` and
 `orbital/src/object/`. `catalog.cpp` explicitly instantiates its cold operations
