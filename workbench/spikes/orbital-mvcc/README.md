@@ -23,7 +23,7 @@ the Git bundle requires retained ancestor `8412e5c`. It need not be restored to
 | --- | --- |
 | Selected Objects | [Embedded module](../../../orbital/README.md#embedded-objects), [public header](../../../orbital/include/orbital/object.h), [actual composed driver](metadata/composed/README.md) |
 | Baseline Objects | [Behavior](baseline/objects.md), [structure](baseline/structure.md), [header](baseline/include/orbital/mvcc_baseline.h), [implementation](baseline/src/internal.h), [histories](baseline/test/object.cpp) |
-| Actual Loom composition | [Caller lifetimes](callers/README.md) and [executable histories](callers/loom.cpp) |
+| Actual Loom composition | [Selected ObjectStore caller](callers/object_module.md), [executable histories](callers/object_module.cpp); [rejected-baseline caller](callers/README.md) remains a separate control |
 | Disposable format consumer | [SeriesPack columns ↔ TuplePack rows](consumer/README.md), with four Parts ↔ one Part |
 | Complete-operation comparison | [LMDB controls and runner](performance/README.md), [iteration feedback](performance/FEEDBACK.md), [retained baseline findings](performance/FINDINGS.md) |
 | Metadata alternatives | [Cross-module findings](metadata/README.md), packet census, ordinary ABI probes and candidates |
@@ -74,7 +74,8 @@ orb -m ubuntu cmake --build build/orbital-mvcc/native --target orbital_mvcc_vali
 
 `orbital_validate` and `loom_validate` exercise allocation and worker services.
 Selected Object checks use `orbital_object_catalog_check`, `orbital_object_shape_check`,
-`orbital_mvcc_composed_check` and `orbital_mvcc_composed_read_fusion_check`. The first
+`orbital_mvcc_composed_check`, `orbital_mvcc_composed_read_fusion_check` and
+`loom_object_module_check`. The first
 two run the existing catalog and Shape consequence histories against the actual
 production `ObjectStore` through a test-only observation adapter. These targets
 are included in `orbital_mvcc_metadata_validate`.

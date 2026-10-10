@@ -124,6 +124,13 @@ target_link_libraries(orbital_mvcc_composed_check PRIVATE orbital_mvcc_composed)
 add_test(NAME orbital_mvcc_composed_check COMMAND orbital_mvcc_composed_check)
 list(APPEND metadata_checks orbital_mvcc_composed_check)
 
+add_executable(loom_object_module_check ../callers/object_module.cpp composed/catalog.cpp)
+sixdb_target(loom_object_module_check)
+target_include_directories(loom_object_module_check PRIVATE "${PROJECT_SOURCE_DIR}/orbital/src")
+target_link_libraries(loom_object_module_check PRIVATE orbital_mvcc_shape loom::loom)
+add_test(NAME loom_object_module_check COMMAND loom_object_module_check)
+list(APPEND metadata_checks loom_object_module_check)
+
 add_executable(orbital_mvcc_actual_adapter_check performance_adapter/check.cpp)
 sixdb_target(orbital_mvcc_actual_adapter_check)
 target_link_libraries(orbital_mvcc_actual_adapter_check PRIVATE orbital_versioned_performance_runtime)

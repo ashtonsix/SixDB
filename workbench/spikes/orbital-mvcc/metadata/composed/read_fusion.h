@@ -1,5 +1,7 @@
 #pragma once
-#include "material.h"
+#include "catalog.h"
+
+namespace orbital_bench { struct Operation; struct Outcome; }
 
 namespace orbital_mvcc::composed { template<class Store> class Backend; }
 namespace orbital::object_detail {

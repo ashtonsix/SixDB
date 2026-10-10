@@ -1,12 +1,12 @@
 add_library(orbital_versioned_data STATIC data.cpp)
 sixdb_target(orbital_versioned_data)
-target_link_libraries(orbital_versioned_data PUBLIC orbital_mvcc_baseline ikea::seriespack ikea::tuplepack)
+target_link_libraries(orbital_versioned_data PUBLIC orbital::orbital ikea::seriespack ikea::tuplepack)
 target_include_directories(orbital_versioned_data PUBLIC .
   "${PROJECT_SOURCE_DIR}/workbench/benchmarks/orbital")
 
 add_library(orbital_versioned_consumer STATIC consumer.cpp)
 sixdb_target(orbital_versioned_consumer)
-target_link_libraries(orbital_versioned_consumer PUBLIC orbital_versioned_data)
+target_link_libraries(orbital_versioned_consumer PUBLIC orbital_versioned_data orbital_mvcc_baseline)
 
 add_executable(orbital_versioned_data_check check_data.cpp)
 sixdb_target(orbital_versioned_data_check)

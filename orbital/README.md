@@ -11,6 +11,9 @@ Start with [Loom's caller path](../loom/README.md). A Loom Worker adopts an
 application thread, owns a local allocation Pool and handles completion Messages.
 Ready Ikea work uses ordinary functions over qualified bytes. Longer waits use
 Tasks; independent memory dependencies can use a typed Ring.
+The [ObjectStore caller](../workbench/spikes/orbital-mvcc/callers/object_module.md)
+exercises coherent reads across suspension, publication and catalog teardown,
+then keeps an escaping Part alive through foreign use and owner-Lane completion.
 
 ## Allocation
 

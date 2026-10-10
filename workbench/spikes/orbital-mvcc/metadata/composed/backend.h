@@ -1,4 +1,5 @@
 #pragma once
+#include "material.h"
 #include "read_fusion.h"
 #include "../../performance/request_cache.h"
 #include <algorithm>
