@@ -316,6 +316,9 @@ def summarize(output):
                 f=result.get(field,{})
                 for name in ['cut_capacity_bytes', 'debt_objects', 'maintenance_remaining_entries', 'entry_visits', 'version_visits', 'cut_visits', 'debt_visits', 'plan_work', 'maintenance_restarts', 'debt_reservation_work', 'reclaimed_versions', 'completed_sweeps', 'head_refreshes', 'maintenance_pending', 'maintenance_counters_available']:
                     base[f'{label}_{name}']=f.get(name)
+                if 'census_visits' in f:
+                    for name in ['census_visits', 'census_counter_available', 'census_word_queries', 'census_word_counter_available']:
+                        base[f'{label}_{name}']=f.get(name)
         if result.get('report_schema',1)>=3:
             base['mapped_shape_metadata_bytes']=result['mapped_shape_metadata_bytes']
             # Add fields only for captures which report them, keeping historical

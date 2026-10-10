@@ -1,0 +1,99 @@
+{
+  "passed": true,
+  "trials": 160,
+  "matched_groups": 40,
+  "actual_sources": [
+    {
+      "cut": "baseline-0",
+      "source_sha256": "c8a3eefbbf0bbdd730f60d63d1f837b6fb311b0548ac66f5feb0f8f4429afbbf",
+      "verified_postimages": 887
+    },
+    {
+      "cut": "candidate-0",
+      "source_sha256": "646c1c3ba455f9b97f4c4587c578c4823dceec9c732c049bb209047254d1e4d8",
+      "verified_postimages": 888
+    },
+    {
+      "cut": "candidate-1",
+      "source_sha256": "9c0f4460887543cd073fb5adf4fc0547b61dd56621142d9f896cd2dcf1000b7f",
+      "verified_postimages": 888
+    },
+    {
+      "cut": "baseline-1",
+      "source_sha256": "809b68fbfc3ae1db11b0d5f79d2bc1de7ee21d60596a0920a9811c398bc4237e",
+      "verified_postimages": 887
+    }
+  ],
+  "logical_and_body_cost_parity": true,
+  "all_Inline_final_versions_equal_Objects": true,
+  "all_Inline_final_contexts_retirements_debt_pending_zero": true,
+  "limits": "Short AB/BA observations. Logical maintenance work and physical memory separate from timing; final settlement charged separately and combined; candidate-only page-census algorithm, common observation/caller/renew. Series contextual, no mapped Series match.",
+  "current_optional_census_report_regeneration": [
+    "baseline-0/measurements.csv",
+    "baseline-0/summary.csv",
+    "baseline-0/parity.json",
+    "candidate-0/measurements.csv",
+    "candidate-0/summary.csv",
+    "candidate-0/parity.json",
+    "candidate-1/measurements.csv",
+    "candidate-1/summary.csv",
+    "candidate-1/parity.json",
+    "baseline-1/measurements.csv",
+    "baseline-1/summary.csv",
+    "baseline-1/parity.json"
+  ],
+  "report_regeneration": {
+    "passed": true,
+    "byte_identical": [
+      "baseline-0/measurements.csv",
+      "baseline-0/summary.csv",
+      "baseline-0/parity.json",
+      "baseline-0/abi.json",
+      "candidate-0/measurements.csv",
+      "candidate-0/summary.csv",
+      "candidate-0/parity.json",
+      "candidate-0/abi.json",
+      "candidate-1/measurements.csv",
+      "candidate-1/summary.csv",
+      "candidate-1/parity.json",
+      "baseline-1/measurements.csv",
+      "baseline-1/summary.csv",
+      "baseline-1/parity.json"
+    ],
+    "reports": 14,
+    "reporter_sha256": "47478f212196da739748ac703cc135339eca366bd3d2af0d68eb7d9963787991"
+  },
+  "recipe": {
+    "base_commit": "d9fff3eaf54aed5202b642cb6069b4bfb9e373ac",
+    "common_loom_patch_sha256": "864dedffd2351ca516b24c04aeddea79c2c336d116bd15fef545a21049683394",
+    "common_reader_policy": "renew",
+    "common_reader_context_sha256": "8ff4a4528e41b03f53b4b2c2b85d4e7879f5c8b729673a1a61ee29cea082023f",
+    "common_observation_patch_sha256": "3aee9f0ffa04f3117c97e9ac975ec3f37aadacb904f69599d856255fc19b2e9f",
+    "candidate_patch_sha256": "f921e5de24334192820c4fa4ccadbe87a08a78142b6f5b625ca36c8cd88464e0",
+    "candidate_only_changes": [
+      "orbital/CMakeLists.txt",
+      "orbital/include/orbital/detail/object/directory.h",
+      "orbital/include/orbital/detail/object/history.h",
+      "orbital/include/orbital/object.h",
+      "orbital/src/object/history_impl.h",
+      "orbital/src/object/storage.cpp",
+      "orbital/src/object/store_impl.h",
+      "orbital/test/object_changed_queue.cpp"
+    ],
+    "runtime_postimages_baseline": 887,
+    "runtime_postimages_candidate": 888,
+    "arm_order": [
+      "baseline-0",
+      "candidate-0",
+      "candidate-1",
+      "baseline-1"
+    ],
+    "cases": 7,
+    "total_trials": 160,
+    "state": "Prepared; priority after canonical signal, before independent diagnostics.",
+    "limits": "Complete64Object sparse/batched writes age1/64/held-original, one larger four-Part Series control. Full memory/work/refusal/reclaim observations; unavailable fields remain unavailable. No diagnostic-removal or canonical candidate mixed. Native root receipts qualify original port; worker exact benchmark/checks qualify this common caller composition.",
+    "prepared_source_commit": "5279a8101321edb2299b1fb7332b589dba1de637"
+  },
+  "full_audit_sha256": "f0d8e47efb2e39aa1024af0e563a09cdb56d96cdf0b109d6aef3bcb16944d12b",
+  "comparative_tables": "Complete clock/cost/counter rows in each arm measurements.csv and summary.csv; raw trials and ordered samples in artifact.json archive."
+}

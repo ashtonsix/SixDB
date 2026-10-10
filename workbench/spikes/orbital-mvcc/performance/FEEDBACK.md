@@ -868,3 +868,24 @@ The intended Inline batch path improves in both observations. CPU costs track wa
 Each batch latency pass retains 513 complete group samples, including its short tail. Tiny point p99 changes 1590/1590→1430/1440 ns; large dependent p99 changes 85791/86471→75361/76620 ns. The p999 observations remain noisy: large point is 11350/12890→14210/10500 ns. Ordered samples and every repetition remain archived.
 
 The actual measured ELF changes a 79-byte wrapper plus 504-byte outlined kernel into a 413-byte specialized body. The enclosing four Inline callers remain 3030/2771/2840/2653 bytes with scalar/batch explicit reservations 296/1336 bytes. The stored law, Schema and all component memory charges remain present and unchanged. Canonical specialization and forced inlining are combined here; this does not isolate their contributions or measure forwarding stalls. Four root native suites qualify the caller semantics; all twelve table/parity and two ABI reports regenerate byte-identically. Both repeated binaries/ABI are byte-identical within each arm.
+
+## Masked maintenance: retained-reader gain, fresh-reader regression
+
+The [independent AB/BA comparison](evidence/zen5-masked-maintenance-screen-20261010/source-recipe.json), job `20261010T011823Z-4113fbaa`, uses `d9fff3e`, the common Loom caller and reset/renew reader, and identical observation code in both arms. Only masked page census/changed-entry maintenance differs. All 160 trials and 3550 actual native/CMake/driver postimages pass. Logical outcomes and body work match; every Inline write finishes with one version per Object and zero contexts, retirement records, debt or pending maintenance.
+
+Two complete-throughput observations, Inline ns/request, baseline→candidate:
+
+| 192 rows / 64 Objects | Baseline | Masked maintenance |
+| --- | ---: | ---: |
+| Scalar, original reader held | 1273.40 / 1339.99 | 503.44 / 529.22 |
+| Scalar, reader rotated every 64 publications | 855.76 / 850.97 | 476.62 / 492.79 |
+| Scalar, reader rotated every publication | 557.18 / 544.30 | 596.69 / 612.34 |
+| Batch64, original reader held | 311.61 / 311.08 | 307.53 / 309.35 |
+| Batch64, reader rotated every publication | 319.68 / 316.50 | 310.99 / 312.31 |
+| Batch64, reader rotated every 64 publications | 308.77 / 317.14 | 310.36 / 310.65 |
+
+The 4096-row/four-Object Series context is 132.55/133.61→129.67/127.68 ns. Final settlement is recorded separately and combined; its inclusion does not reverse the scalar results. Directory and mapped controls, both clock modes, all repetitions and tails remain in the complete tables.
+
+Held scalar version visits fall 524675→12233; age64 falls 274444→16390. Age1 retains 16396 visits and adds 4099 census visits/8198 word queries. These cumulative counters include warm and timed histories; they are not timed-request hardware counts. Core grows 688→696 bytes and the capacity64 directory 3088→3104 bytes, with no per-Object field added.
+
+**Keep the measured candidate unselected:** the substantial retained-reader benefit accompanies roughly 10% scalar age1 regression. The later no-state queue refinement is correctness-checked but untimed, and is not part of this pair. Four focused native checks and observer compilation qualify the measured source; there is no sanitizer claim. All twelve table/parity and two ABI reports regenerate byte-identically. Optional census CSV fields also preserve nine older reports where those counters are absent. Full sources, binaries, ordered samples and logs remain recoverable from the existing worker archive.

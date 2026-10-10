@@ -1,0 +1,77 @@
+{
+  "base_commit": "d9fff3eaf54aed5202b642cb6069b4bfb9e373ac",
+  "compiler": "Clang 21.1.8, Linux AArch64, Release/O3/assertions enabled",
+  "native_checks": [
+    {
+      "name": "changed-queue-check",
+      "result": "pass",
+      "log": "changed-queue-check.log"
+    },
+    {
+      "name": "object-shape-check",
+      "result": "pass",
+      "log": "object-shape-check.log",
+      "consequence": "Actual physical capture/refusal/retry, exact alternative replacement and escaped ownership"
+    },
+    {
+      "name": "object-catalog-check",
+      "result": "pass",
+      "log": "object-catalog-check.log",
+      "consequence": "Twelve grouped histories plus final ObjectStore disposal reentry"
+    },
+    {
+      "name": "baseline-changed-queue-check",
+      "result": "pass",
+      "log": "baseline-changed-queue-check.log",
+      "consequence": "Same focused source compiled without candidate macros against exact d9fff3e catalog implementation"
+    }
+  ],
+  "observation_compiles": [
+    "actual performance/main.cpp with common observation",
+    "actual composed/catalog.cpp with candidate ObjectStore",
+    "identical composed/catalog.cpp with exact d9fff3e ObjectStore (explicit zero census)"
+  ],
+  "cmake": "Standard configuration succeeds; changed-queue target is linked into orbital_validate and CTest. Graph only; native tests used existing CMake compile commands and reused warm byte-identical dependency libraries.",
+  "reuse": "native-reuse.json records exact prebuilt library hashes; all current Orbital TUs and physical Shape TU were rebuilt privately, including post-physical-release Allocation changes. No warm source or build altered.",
+  "patch_application": "apply-check.json: both patches apply to exact base and reproduce all source postimages; both also apply-check against root HEAD3a7424b at receipt time.",
+  "limits": "No timing run, worker use, sanitizer matrix or new full benchmark binary. Observation driver/bridge compile validation on this port; runtime JSON schema validation exists on frozen parent cut. Two unused-variable warnings only in macro-disabled baseline test; selected candidate compilation clean.",
+  "counter_results": {
+    "objects": 64,
+    "writes": 128,
+    "changed_objects_per_publication": 1,
+    "original_reader": {
+      "baseline_version_visits": 16512,
+      "masked_version_visits": 384,
+      "masked_census_during_writes": 0,
+      "baseline_close_work": 257,
+      "masked_close_work": 259,
+      "masked_close_census_visits": 64,
+      "masked_close_word_queries": 2
+    },
+    "age1": {
+      "baseline_work": 1664,
+      "masked_work": 1920,
+      "baseline_version_visits": 512,
+      "masked_version_visits": 512,
+      "masked_census_visits": 128,
+      "masked_word_queries": 256
+    },
+    "age64": {
+      "baseline_work": 25604,
+      "masked_work": 1416,
+      "baseline_version_visits": 8576,
+      "masked_version_visits": 512,
+      "masked_census_visits": 128,
+      "masked_word_queries": 4
+    }
+  },
+  "layout": {
+    "entry_bytes": 40,
+    "baseline_core_bytes": 688,
+    "masked_core_bytes": 696,
+    "baseline_directory_64_bytes": 3088,
+    "masked_directory_64_bytes": 3104,
+    "delta_64_bytes": 24,
+    "explanation": "16B page masks plus8B word-query diagnostic; no additional per-Object state or queue."
+  }
+}

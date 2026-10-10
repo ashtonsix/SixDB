@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "reports": [
+    "breadth/measurements.csv",
+    "breadth/summary.csv",
+    "breadth/parity.json",
+    "fresh-reader/measurements.csv",
+    "fresh-reader/summary.csv",
+    "fresh-reader/parity.json",
+    "renew-reader/measurements.csv",
+    "renew-reader/summary.csv",
+    "renew-reader/parity.json"
+  ],
+  "scope": "Historical full-maintenance raw JSON with work-limit field present and census fields absent; all9 reports unchanged. New maintenance and canonical/diagnostics12each also byte-identical."
+}
