@@ -1,14 +1,12 @@
 #pragma once
 #include <orbital/types.h>
+#include <orbital/detail/object/binding.h>
 #include <orbital/detail/object/history.h>
 #include <expected>
 #include <unordered_map>
 
 namespace orbital {
 enum class PublicationState { empty, accepted, installed, aborted };
-
-// Catalog-issued identity snapshot; physical ownership alone grants no labels.
-struct ObjectBinding { ObjectId object{}; std::uint64_t version{}; };
 
 /// Embedded single-owner Objects. Local cuts number completed publications;
 /// they are not SerialPosition, Epoch, journal acceptance or durability proof.
@@ -203,6 +201,7 @@ private:
       dirty = true; ++maintenance_changes;
     }
     void remove_debt(ObjectHandle entry) noexcept { entries.remove_debt(entry); }
+    Result<Selection> capture_selection(const Scope&, Value*);
     void close(Scope& scope) noexcept;
     void abort(Prepared& prepared) noexcept;
     void begin_entries() noexcept {
@@ -242,6 +241,9 @@ public:
   Result<void> install(Prepared& prepared) noexcept;
   Result<ConversionTarget> conversion(const Scope& basis, ObjectId id) const noexcept;
   Result<BoundSelection> bound(const Scope& basis, ObjectId id) const noexcept;
+  // Captures the exact alternative now selected at this Scope's logical cut.
+  // Later adoption cannot redirect its escaping Part to a different realization.
+  Result<BoundSelection> bound_alternative(const Scope& basis, ObjectId id) const noexcept;
   // The cold capability pins this exact ObjectStore incarnation and immutable source.
   // It does not keep obsolete history alive or authorize logical publication.
   Result<void> adopt(const ConversionTarget& target, const Owner& replacement);

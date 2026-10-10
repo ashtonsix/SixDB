@@ -8,11 +8,11 @@ orbital::Result<void> read_proven(TupleProof proof, cs::Selection selected,
     Key key, unsigned steps, Outcome& output) noexcept {
   if (!selected) return std::unexpected(orbital::Error::absent);
   auto* value = selected.realization;
-  if (value->shape != proof.shape()) return std::unexpected(orbital::Error::invalid_argument);
+  if (value->control.shape != proof.shape()) return std::unexpected(orbital::Error::invalid_argument);
   // Factory admitted this immutable one-Part Tuple Shape; capture admitted
   // count/placement. The enclosing owner protects both for this entire call.
-  detail::consume(*cs::law(value->shape), *cs::address_slot(value, 0),
-                  value->count, key, steps, output);
+  detail::consume(*cs::law(value->control.shape), *cs::address_slot(value, 0),
+                  value->control.records, key, steps, output);
   return {};
 }
 

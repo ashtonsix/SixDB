@@ -65,7 +65,7 @@ void selected_origins(cs::probe::NativeFixture& fixture) {
   }
   std::array<cs::Export*, 2> escaped;
   for (std::size_t i = 0; i < 2; ++i) escaped[i] = take(cs::detail::retain_part({value}, 255,
-      {{9,8}, 7}, i ? cs::Interpretation::selected_copy : cs::Interpretation::shared_shape));
+      {{9,8}, 7}, i ? cs::Interpretation::selected_copy : cs::Interpretation::shared_control));
   cs::release(value);
   // Force ownership-vector growth and same-class allocation churn while exports retain identity 255.
   std::vector<oa::Allocation> churn;

@@ -1,4 +1,5 @@
 #include "shape_private.h"
+#include <object/representation_impl.h>
 
 #include <algorithm>
 #include <bit>
@@ -80,64 +81,6 @@ Result<Geometry> series_geometry(const compact_descriptor::PartSource& source, s
   return geometry;
 }
 
-std::size_t realization_bytes(const Shape& shape, Owners owners) {
-  if (grouped(owners)) return sizeof(Realization) + shape.parts * sizeof(const std::byte*) +
-      (shape.parts ? (shared(owners) ? sizeof(std::shared_ptr<const void>) : sizeof(void*)) : 0);
-  return sizeof(Realization) + shape.parts * (shared(owners) ? sizeof(SharedBody) : sizeof(AllocatedBody));
-}
-Result<orbital::allocation::Storage*> hold_source(orbital::allocation::Allocation* allocation) {
-  if (!allocation || !*allocation) return static_cast<orbital::allocation::Storage*>(nullptr);
-  auto retained = orbital::allocation::hold(*allocation, {0, allocation->size + allocation->readable_padding});
-  if (!retained) return std::unexpected(retained.error());
-  return std::exchange(retained->storage, nullptr);
-}
-void drop(orbital::allocation::Storage* owner) {
-  orbital::allocation::Hold use;
-  use.storage = owner;
-  orbital::allocation::release(use);
-}
-Result<orbital::allocation::Storage*> pin(orbital::allocation::Storage* owner) {
-  if (!owner) return static_cast<orbital::allocation::Storage*>(nullptr);
-  // This local borrows its live physical token; duplication can refuse at capacity.
-  orbital::allocation::Hold borrowed;
-  borrowed.storage = owner;
-  auto retained = orbital::allocation::retain(borrowed);
-  borrowed.storage = nullptr;
-  if (!retained) return std::unexpected(retained.error());
-  return std::exchange(retained->storage, nullptr);
-}
-
-bool within(const orbital::allocation::Allocation& allocation, Bytes body, std::uint32_t padding) {
-  if (!allocation || !valid(body, padding) || !valid(orbital::allocation::bytes(allocation), allocation.readable_padding)) return false;
-  const auto begin = std::uintptr_t(allocation.address);
-  const auto part = std::uintptr_t(body.data());
-  const auto extent = allocation.size + allocation.readable_padding;
-  return part >= begin && part - begin <= extent && body.size() + padding <= extent - (part - begin);
-}
-
-bool unique_allocations(std::pmr::memory_resource& memory, std::span<const BodySource> bodies) {
-  const auto storage = [](const BodySource& body) { return body.allocation ? body.allocation->storage : nullptr; };
-  if (bodies.size() <= 8) {
-    for (std::size_t i = 0; i < bodies.size(); ++i)
-      for (std::size_t j = 0; storage(bodies[i]) && j < i; ++j)
-        if (storage(bodies[i]) == storage(bodies[j])) return false;
-    return true;
-  }
-  std::pmr::vector<orbital::allocation::Storage*> owners(&memory);
-  owners.reserve(bodies.size());
-  for (const auto& body : bodies) if (auto* owner = storage(body)) owners.push_back(owner);
-  std::sort(owners.begin(), owners.end(), std::less<orbital::allocation::Storage*>{});
-  return std::adjacent_find(owners.begin(), owners.end()) == owners.end();
-}
-
-std::shared_ptr<const void>& shared_owner(Realization* value, std::size_t index) {
-  if (grouped(value->owners)) return *static_cast<std::shared_ptr<const void>*>(group_owner(value));
-  return shared_bodies(value)[index].owner;
-}
-orbital::allocation::Storage* allocation_owner(Realization* value, std::size_t index) {
-  if (grouped(value->owners)) return *static_cast<orbital::allocation::Storage**>(group_owner(value));
-  return allocated_bodies(value)[index].owner;
-}
 } // namespace
 
 Result<std::uint64_t> Geometry::extent(std::uint64_t count) const noexcept {
@@ -208,213 +151,80 @@ ProgramId program(const Shape* shape) noexcept { return shape->program; }
 const ReadLaw& tuple_law(const Shape* shape) noexcept { assert(shape->kind == Kind::tuple); return *law(const_cast<Shape*>(shape)); }
 Bytes tuple_interpretation(const Shape* shape) noexcept { return wire(shape); }
 
+bool Control::valid(std::pmr::memory_resource& memory) const noexcept {
+  return shape && shape->resource == &memory && (shape->parts || !records);
+}
+void Control::retain() const noexcept { compact_shape::retain(shape); }
+void Control::release() const noexcept { compact_shape::release(shape); }
+std::size_t Control::metadata_bytes() const noexcept { return shape->allocated_bytes; }
+std::size_t Control::selected_bytes(std::size_t) const noexcept {
+  return sizeof(Shape) + sizeof(Geometry) + (shape->kind == Kind::tuple ? sizeof(ReadLaw) + wire(shape).size() : 0);
+}
+Control Control::copy_selected(void* destination, std::size_t index) const noexcept {
+  auto* copy = std::construct_at(static_cast<Shape*>(destination),
+      Shape{shape->resource, 1, static_cast<std::uint32_t>(selected_bytes(index)), shape->program,
+            shape->dependencies, 1, shape->kind});
+  std::construct_at(geometries(copy), geometries(shape)[index]);
+  if (shape->kind == Kind::tuple) {
+    std::construct_at(law(copy), *law(shape));
+    std::memcpy(bytes(copy) + sizeof(Shape) + sizeof(Geometry) + sizeof(ReadLaw), wire(shape).data(), wire(shape).size());
+  }
+  return {copy, records};
+}
+void Control::destroy_selected() const noexcept {
+  if (shape->kind == Kind::tuple) std::destroy_at(law(shape));
+  std::destroy_at(shape);
+}
 Result<Realization*> capture(std::pmr::memory_resource& memory, const Specification& spec,
     std::span<const BodySource> bodies) noexcept {
-  auto* shape = spec.shape;
-  if (!shape || shape->resource != &memory || bodies.size() != shape->parts ||
-      (!shape->parts && spec.records) || static_cast<unsigned>(spec.owners) > 3)
-    return std::unexpected(Error::invalid_argument);
-  for (std::size_t i = 0; i < bodies.size(); ++i) {
-    const auto& body = bodies[i];
-    const auto& geometry = geometries(shape)[i];
-    if (body.id != geometry.id || !placement(body.body, geometry, spec.records)) return std::unexpected(Error::invalid_argument);
-    if (shared(spec.owners)) {
-      if ((body.body.size() || geometry.readable_padding) && !body.backing.use_count()) return std::unexpected(Error::invalid_argument);
-      if (grouped(spec.owners) && i &&
-          (body.backing.owner_before(bodies[0].backing) || bodies[0].backing.owner_before(body.backing)))
-        return std::unexpected(Error::invalid_argument);
-    } else {
-      if ((body.body.size() || geometry.readable_padding) &&
-          (!body.allocation || !within(*body.allocation, body.body, geometry.readable_padding)))
-        return std::unexpected(Error::invalid_argument);
-      if (grouped(spec.owners) && i && body.allocation != bodies[0].allocation) return std::unexpected(Error::invalid_argument);
-    }
-  }
-  const auto size = realization_bytes(*shape, spec.owners);
-  try {
-    if (!shared(spec.owners) && !grouped(spec.owners) && !unique_allocations(memory, bodies))
-      return std::unexpected(Error::invalid_argument);
-    auto* value = std::construct_at(static_cast<Realization*>(memory.allocate(size, alignof(Realization))),
-        Realization{shape, spec.records, 1, spec.owners});
-    retain(shape);
-    if (grouped(spec.owners)) {
-      for (std::size_t i = 0; i < bodies.size(); ++i) std::construct_at(addresses(value) + i, bodies[i].body.data());
-      if (!bodies.empty()) {
-        if (shared(spec.owners)) std::construct_at(static_cast<std::shared_ptr<const void>*>(group_owner(value)), bodies[0].backing);
-        else {
-          auto* owner = static_cast<orbital::allocation::Storage**>(group_owner(value));
-          *owner = nullptr;
-          auto held = hold_source(bodies[0].allocation);
-          if (!held) { release(value); return std::unexpected(held.error()); }
-          *owner = *held;
-        }
-      }
-    } else {
-      for (std::size_t i = 0; i < bodies.size(); ++i) {
-        if (shared(spec.owners)) std::construct_at(shared_bodies(value) + i, SharedBody{bodies[i].body.data(), bodies[i].backing});
-        else std::construct_at(allocated_bodies(value) + i, AllocatedBody{bodies[i].body.data(), nullptr});
-      }
-      if (!shared(spec.owners)) {
-        for (std::size_t i = 0; i < bodies.size(); ++i) {
-          auto held = hold_source(bodies[i].allocation);
-          if (!held) { release(value); return std::unexpected(held.error()); }
-          allocated_bodies(value)[i].owner = *held;
-        }
-      }
-    }
-    if (!shared(spec.owners)) {
-      const auto originals = grouped(spec.owners) ? std::min<std::size_t>(1, bodies.size()) : bodies.size();
-      for (std::size_t i = 0; i < originals; ++i)
-        if (bodies[i].allocation) orbital::allocation::release(*bodies[i].allocation);
-    }
-    return value;
-  } catch (const std::bad_alloc&) { return std::unexpected(Error::capacity); }
+  return orbital::capture_representation(memory, Control{spec.shape, spec.records}, spec.owners, bodies);
 }
-
-void retain(Realization* value) noexcept { if (value) { assert(value->references != UINT32_MAX); ++value->references; } }
-void release(Realization* value) noexcept {
-  if (!value || --value->references) return;
-  auto* shape = value->shape;
-  const auto size = realization_bytes(*shape, value->owners);
-  if (grouped(value->owners)) {
-    if (shape->parts) {
-      if (shared(value->owners)) std::destroy_at(static_cast<std::shared_ptr<const void>*>(group_owner(value)));
-      else drop(*static_cast<orbital::allocation::Storage**>(group_owner(value)));
-    }
-  } else {
-    for (std::size_t i = 0; i < shape->parts; ++i) {
-      if (shared(value->owners)) std::destroy_at(shared_bodies(value) + i);
-      else drop(allocated_bodies(value)[i].owner);
-    }
-  }
-  std::destroy_at(value);
-  shape->resource->deallocate(value, size, alignof(Realization));
-  release(shape);
-}
-std::uint64_t records(const Realization* value) noexcept { return value->count; }
-std::pmr::memory_resource* resource(const Realization* value) noexcept { return value->shape->resource; }
+std::uint64_t Selection::records() const noexcept { return realization->control.records; }
+const Shape* Selection::shape() const noexcept { return realization->control.shape; }
+std::uint64_t records(const Realization* value) noexcept { return value->control.records; }
+std::pmr::memory_resource* resource(const Realization* value) noexcept { return value->control.resource(); }
 bool equivalent(const Realization* a, const Realization* b) noexcept {
-  return a->count == b->count && a->shape->program == b->shape->program;
+  return a->control.records == b->control.records && a->control.shape->program == b->control.shape->program;
 }
-std::uint64_t Selection::records() const noexcept { return realization->count; }
-const Shape* Selection::shape() const noexcept { return realization->shape; }
-Control Selection::control() const noexcept { return {realization->shape, realization->count}; }
-std::size_t Selection::part_count() const noexcept { return realization ? realization->shape->parts : 0; }
-Result<View> Selection::part(std::size_t index) const noexcept {
-  if (!realization || index >= realization->shape->parts) return std::unexpected(Error::absent);
-  return View{address_slot(realization, index)};
+Result<Export*> detail::retain_part(Selection selection, std::size_t index, Binding binding, Interpretation policy) noexcept {
+  return orbital::object_detail::retain_part<Control>(selection, index, binding, policy);
 }
-Result<View> Selection::part(PartId id) const noexcept {
-  if (!realization) return std::unexpected(Error::absent);
-  for (std::size_t i = 0; i < realization->shape->parts; ++i)
-    if (geometries(realization->shape)[i].id == id) return View{address_slot(realization, i)};
-  return std::unexpected(Error::absent);
-}
-
-namespace {
-union ExportOwner {
-  std::shared_ptr<const void> shared;
-  orbital::allocation::Storage* allocation;
-  ExportOwner() {}
-  ~ExportOwner() {}
-};
-} // namespace
-struct Export {
-  Shape* shape;
-  std::uint64_t count;
-  const std::byte* address;
-  Binding binding;
-  std::uint32_t references{1}, index;
-  Owners owners;
-  Interpretation interpretation;
-  ExportOwner owner;
-};
-static_assert(sizeof(Export) == 80);
-
-Result<Export*> detail::retain_part(Selection selection, std::size_t index, Binding binding, Interpretation interpretation) noexcept {
-  if (interpretation != Interpretation::shared_shape && interpretation != Interpretation::selected_copy)
-    return std::unexpected(Error::invalid_argument);
-  if (!selection || index >= selection.part_count()) return std::unexpected(Error::absent);
-  auto* realization = selection.realization;
-  auto* source = realization->shape;
-  const auto& part = geometries(source)[index];
-  auto* memory = source->resource;
-  const auto copy_bytes = sizeof(Shape) + sizeof(Geometry) + (source->kind == Kind::tuple ? sizeof(ReadLaw) + wire(source).size() : 0);
-  const auto size = sizeof(Export) + (interpretation == Interpretation::selected_copy ? copy_bytes : 0);
-  Export* value = nullptr;
-  try {
-    value = static_cast<Export*>(memory->allocate(size, alignof(Export)));
-    std::construct_at(value);
-    value->shape = source; value->count = realization->count;
-    value->address = *address_slot(realization, index); value->binding = binding;
-    value->index = index; value->owners = realization->owners; value->interpretation = interpretation;
-    if (shared(value->owners)) std::construct_at(&value->owner.shared, shared_owner(realization, index));
-    else {
-      auto held = pin(allocation_owner(realization, index));
-      if (!held) {
-        std::destroy_at(value);
-        memory->deallocate(value, size, alignof(Export));
-        return std::unexpected(held.error());
-      }
-      value->owner.allocation = *held;
-    }
-    if (interpretation == Interpretation::shared_shape) retain(source);
-    else {
-      auto* copy = std::construct_at(static_cast<Shape*>(static_cast<void*>(bytes(value) + sizeof(Export))),
-          Shape{memory, 1, static_cast<std::uint32_t>(copy_bytes), source->program, source->dependencies, 1, source->kind});
-      std::construct_at(geometries(copy), part);
-      if (source->kind == Kind::tuple) {
-        std::construct_at(law(copy), *law(source));
-        std::memcpy(bytes(copy) + sizeof(Shape) + sizeof(Geometry) + sizeof(ReadLaw), wire(source).data(), wire(source).size());
-      }
-      value->shape = copy; value->index = 0;
-    }
-    return value;
-  } catch (const std::bad_alloc&) { return std::unexpected(Error::capacity); }
-}
-void retain(Export* value) noexcept { if (value) { assert(value->references != UINT32_MAX); ++value->references; } }
-void release(Export* value) noexcept {
-  if (!value || --value->references) return;
-  auto* shape = value->shape;
-  auto* memory = shape->resource;
-  const auto size = sizeof(Export) + (value->interpretation == Interpretation::selected_copy ? shape->allocated_bytes : 0);
-  const auto copied = value->interpretation == Interpretation::selected_copy;
-  if (shared(value->owners)) std::destroy_at(&value->owner.shared);
-  else drop(value->owner.allocation);
-  std::destroy_at(value);
-  if (copied) {
-    if (shape->kind == Kind::tuple) std::destroy_at(law(shape));
-    std::destroy_at(shape);
-  }
-  memory->deallocate(value, size, alignof(Export));
-  if (!copied) release(shape);
-}
-View view(const Export* value) noexcept { return {&value->address}; }
-Binding binding(const Export* value) noexcept { return value->binding; }
-std::uint64_t records(const Export* value) noexcept { return value->count; }
-const Geometry& geometry(const Export* value) noexcept { return geometries(value->shape)[value->index]; }
-const ReadLaw& tuple_law(const Export* value) noexcept { return tuple_law(value->shape); }
-Bytes tuple_interpretation(const Export* value) noexcept { return wire(value->shape); }
+std::uint64_t records(const Export* value) noexcept { return value->control.records; }
+const Geometry& geometry(const Export* value) noexcept { return geometries(value->control.shape)[value->index]; }
+const ReadLaw& tuple_law(const Export* value) noexcept { return tuple_law(value->control.shape); }
+Bytes tuple_interpretation(const Export* value) noexcept { return wire(value->control.shape); }
 Result<fixture::sp::descriptor_bytes> series_interpretation(const Export* value) noexcept {
-  if (value->shape->kind != Kind::series) return std::unexpected(Error::invalid_argument);
+  if (value->control.shape->kind != Kind::series) return std::unexpected(Error::invalid_argument);
   const auto& part = geometry(value);
   auto encoded = fixture::sp::encode_descriptor({static_cast<unsigned>(part.tile_bytes), 0,
-      fixture::sp::geometry::local, value->count, {part.tile_bytes, 0, 0}});
+      fixture::sp::geometry::local, value->control.records, {part.tile_bytes, 0, 0}});
   if (!encoded) return std::unexpected(Error::invalid_argument);
   return *encoded;
 }
 
 Footprint footprint(const Realization* value) noexcept {
-  const auto owners = (grouped(value->owners) ? (value->shape->parts ? 1 : 0) : value->shape->parts) *
+  const auto owners = (grouped(value->owners) ? (value->control.shape->parts ? 1 : 0) : value->control.shape->parts) *
       (shared(value->owners) ? sizeof(std::shared_ptr<const void>) : sizeof(void*));
-  return {realization_bytes(*value->shape, value->owners), 0, value->shape->allocated_bytes, owners};
+  return {orbital::object_detail::representation_bytes(value->control, value->owners), 0, value->control.shape->allocated_bytes, owners};
 }
 Footprint footprint(const Export* value) noexcept {
-  const auto copied = value->interpretation == Interpretation::selected_copy;
-  return {sizeof(Export) + (copied ? value->shape->allocated_bytes : 0),
-      copied ? wire(value->shape).size() : 0, copied ? 0 : value->shape->allocated_bytes,
+  const auto copied = value->retention == Interpretation::selected_copy;
+  return {sizeof(Export) + (copied ? value->control.shape->allocated_bytes : 0),
+      copied ? wire(value->control.shape).size() : 0, copied ? 0 : value->control.shape->allocated_bytes,
       shared(value->owners) ? sizeof(std::shared_ptr<const void>) : sizeof(void*)};
 }
 std::size_t shape_bytes(const Shape* shape) noexcept { return shape->allocated_bytes; }
 
 } // namespace compact_shape
+
+namespace orbital {
+template struct RepresentationSelection<compact_shape::Control>;
+template Result<Representation<compact_shape::Control>*> capture_representation(
+    std::pmr::memory_resource&, compact_shape::Control, PartOwners, std::span<const PartSource>) noexcept;
+template void retain(Representation<compact_shape::Control>*) noexcept;
+template void release(Representation<compact_shape::Control>*) noexcept;
+template void retain(Part<compact_shape::Control>*) noexcept;
+template void release(Part<compact_shape::Control>*) noexcept;
+template View view(const Part<compact_shape::Control>*) noexcept;
+template ObjectBinding binding(const Part<compact_shape::Control>*) noexcept;
+} // namespace orbital

@@ -50,7 +50,7 @@ int main() {
   const auto normal = physical->users.load();
   const auto before = memory.live;
   physical->users.store(oa::detail::returning - 1);
-  for (auto policy : {cs::Interpretation::shared_shape, cs::Interpretation::selected_copy}) {
+  for (auto policy : {cs::Interpretation::shared_control, cs::Interpretation::selected_copy}) {
     auto refused = cs::detail::retain_part({value}, 0, {{1, 9}, 2}, policy);
     check(!refused && refused.error() == orbital::Error::capacity);
     check(memory.live == before && physical->users.load() == oa::detail::returning - 1);

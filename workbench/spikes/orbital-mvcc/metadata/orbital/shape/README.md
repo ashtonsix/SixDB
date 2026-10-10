@@ -1,7 +1,8 @@
-# Shared physical shape candidate
+# TuplePack/SeriesPack interpretation control
 
-This is a disposable alternative to the [descriptor control](../descriptor/).
-It shares an admitted format and Part directory across physical realizations.
+This disposable driver control shares an admitted format and Part directory
+across Orbital physical Representations. The [descriptor control](../descriptor/)
+remains an experimental comparator.
 The catalog owns Object identity and logical cuts. A realization owns its record
 count, body addresses and actual body ownership. There are no per-realization
 Object labels, portable descriptions, decoded Schema objects or per-Part boxes.
@@ -32,8 +33,12 @@ original description, including count. Native Selection and View are trivial
 is 16 bytes. LLVM IR on local AArch64 returns both pairs in ordinary registers.
 Their validity comes from the protected catalog scope, not from per-read pins.
 
-`shape_private.h` owns the actual Shape/Realization layout and inline addressing
-helpers. A composed native consumer may deliberately depend on this private
+`shape_private.h` owns the caller Shape layout and static geometry operations.
+Orbital's `detail/object/representation.h` owns the actual Representation,
+Part/View and address-tail layouts; `src/object/representation_impl.h` owns
+physical capture, rollback, release and escape. `shape.cpp` explicitly
+instantiates those operations once for the 16-byte caller Control and retains
+format admission, selected interpretation copying and diagnostic accounting. A composed native consumer may deliberately depend on this private
 header to fuse access with its kernels in an ordinary, independently compiled
 TU. This exposes a maintenance dependency without copying layouts, expanding
 the public API or textually including one implementation file in another.
@@ -72,7 +77,9 @@ is the last 8 bytes of a 32-byte allocation. Capture and export run on its owner
 Lane. No writable aliases remain after capture.
 
 The catalog's sealed cold BoundSelection associates old bytes with their exact
-Object/cut and supplies `export_part`. The internal `detail::retain_part` is a
+Object/cut and supplies `export_part`. `bound_alternative` captures that exact
+alternative in the issuing Scope before issuing the same capability; later
+adoption does not redirect an existing export. The internal `detail::retain_part` is a
 fixture forwarding primitive, not an API for assigning logical labels. Export is
 80 bytes including its identity snapshot and selected backing owner. Shared-shape
 escape also pins the whole shape directory. Selected-copy escape copies only the

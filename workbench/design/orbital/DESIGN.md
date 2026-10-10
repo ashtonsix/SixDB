@@ -11,9 +11,8 @@ Performance was qualified too late to guide its architecture. That study now
 compares complete operations while changing version metadata, ownership, physical
 interpretation and call boundaries together. The target is lower latency than
 LMDB with versioning included. A correctness pass or a smaller `sizeof` alone
-does not establish the design. The selected catalog/history implementation now
-lives in Orbital; generic physical Representation/Part/View ownership is still
-being extracted from the study. Whole-collection metadata and broad LMDB
+does not establish the design. The selected catalog/history and physical
+Representation/Part/View ownership now live in Orbital. Whole-collection metadata and broad LMDB
 performance targets remain unmet.
 
 Engine and Ikea's composition of many blocks remain open for Ashton to design.

@@ -2,7 +2,7 @@
 
 #include "../descriptor/descriptor.h"
 #include "../../consumer/compact_law.h"
-#include <orbital/allocation.h>
+#include <orbital/representation.h>
 
 namespace compact_shape {
 using orbital::Bytes;
@@ -15,8 +15,6 @@ using orbital_mvcc::metadata_consumer::compact_law::ReadLaw;
 namespace fixture = orbital_bench::versioned;
 
 struct Shape;
-struct Realization;
-struct Export;
 
 struct Geometry {
   PartId id;
@@ -50,22 +48,40 @@ ProgramId program(const Shape*) noexcept;
 const ReadLaw& tuple_law(const Shape*) noexcept;
 Bytes tuple_interpretation(const Shape*) noexcept;
 
-enum class Owners { independent_shared, grouped_shared, independent_allocation, grouped_allocation };
-struct Specification { Shape* shape{}; std::uint64_t records{}; Owners owners = Owners::independent_shared; };
-struct BodySource {
-  PartId id{};
-  Bytes body;
-  std::shared_ptr<const void> backing;
-  orbital::allocation::Allocation* allocation{};
+using Owners = orbital::PartOwners;
+using Interpretation = orbital::PartRetention;
+using BodySource = orbital::PartSource;
+using View = orbital::View;
+using Binding = orbital::ObjectBinding;
+struct Control {
+  Shape* shape;
+  std::uint64_t records;
+  bool valid(std::pmr::memory_resource&) const noexcept;
+  std::pmr::memory_resource* resource() const noexcept;
+  std::size_t part_count() const noexcept;
+  PartId id(std::size_t) const noexcept;
+  Result<std::uint64_t> extent(std::size_t) const noexcept;
+  std::uint32_t padding(std::size_t) const noexcept;
+  std::uint64_t alignment(std::size_t) const noexcept;
+  void retain() const noexcept;
+  void release() const noexcept;
+  std::size_t selected_bytes(std::size_t) const noexcept;
+  Control copy_selected(void*, std::size_t) const noexcept;
+  void destroy_selected() const noexcept;
+  std::size_t metadata_bytes() const noexcept;
 };
-
+using Realization = orbital::Representation<Control>;
+using Export = orbital::Part<Control>;
+using orbital::retain;
+using orbital::release;
+using orbital::view;
+using orbital::binding;
+struct Specification { Shape* shape{}; std::uint64_t records{}; Owners owners = Owners::independent_shared; };
 // Allocation profiles establish full-range Holds, then release the supplied
 // Allocations only on success. Shared profiles copy supplied owners. Writable
 // aliases end before capture; no Object/version label is a physical authority.
 [[nodiscard]] Result<Realization*> capture(std::pmr::memory_resource&,
     const Specification&, std::span<const BodySource>) noexcept;
-void retain(Realization*) noexcept;
-void release(Realization*) noexcept;
 std::uint64_t records(const Realization*) noexcept;
 std::pmr::memory_resource* resource(const Realization*) noexcept;
 // Conversion compatibility only: equal semantic ProgramId and record count.
@@ -73,39 +89,19 @@ std::pmr::memory_resource* resource(const Realization*) noexcept;
 // this predicate neither compares bytes nor proves a lossless conversion.
 bool equivalent(const Realization*, const Realization*) noexcept;
 
-// Pointer-only native Part borrow. Count and proven geometry stay with its
-// Selection/control; an empty Part still has a valid address slot.
-struct View {
-  const std::byte* const* slot{};
-  explicit operator bool() const noexcept { return slot; }
-  const std::byte* address() const noexcept { return *slot; }
-};
-struct Control { const Shape* shape; std::uint64_t records; };
-struct Selection {
-  Realization* realization{};
-  explicit operator bool() const noexcept { return realization; }
+// The native physical borrow is Orbital's; these two conveniences interpret
+// its static caller Control without adding state or another ownership layer.
+struct Selection : orbital::RepresentationSelection<Control> {
   std::uint64_t records() const noexcept;
   const Shape* shape() const noexcept;
-  Control control() const noexcept;
-  std::size_t part_count() const noexcept;
-  [[nodiscard]] Result<View> part(std::size_t) const noexcept;
-  [[nodiscard]] Result<View> part(PartId) const noexcept;
 };
 
-// This snapshot is created by the catalog's cold exact-version binding path;
-// it is not a capture input or a publication capability.
-struct Binding { ObjectId object{}; std::uint64_t version{}; };
-enum class Interpretation { shared_shape, selected_copy };
 namespace detail {
 // Internal fixture forwarding only. The catalog's sealed BoundSelection supplies
 // this association and exposes export_part(); callers cannot choose its labels.
 [[nodiscard]] Result<Export*> retain_part(Selection, std::size_t, Binding,
-    Interpretation = Interpretation::shared_shape) noexcept;
+    Interpretation = Interpretation::shared_control) noexcept;
 } // namespace detail
-void retain(Export*) noexcept;
-void release(Export*) noexcept;
-View view(const Export*) noexcept;
-Binding binding(const Export*) noexcept;
 std::uint64_t records(const Export*) noexcept;
 const Geometry& geometry(const Export*) noexcept;
 const ReadLaw& tuple_law(const Export*) noexcept;
@@ -125,3 +121,5 @@ static_assert(std::is_trivially_copyable_v<View> && std::is_trivially_copyable_v
     std::is_trivially_copyable_v<Control>);
 
 } // namespace compact_shape
+
+extern template struct orbital::RepresentationSelection<compact_shape::Control>;

@@ -240,15 +240,15 @@ orbital::Result<void> lookup(TupleProof proof, cs::Selection selected,
     Key key, std::size_t& row, Record& output) noexcept {
   if (!selected) return std::unexpected(orbital::Error::absent);
   auto* value = selected.realization;
-  if (value->shape != proof.law().shape()) return std::unexpected(orbital::Error::invalid_argument);
-  return tuple_lookup(*cs::law(value->shape), *cs::address_slot(value, 0), value->count, key, row, output);
+  if (value->control.shape != proof.law().shape()) return std::unexpected(orbital::Error::invalid_argument);
+  return tuple_lookup(*cs::law(value->control.shape), *cs::address_slot(value, 0), value->control.records, key, row, output);
 }
 orbital::Result<void> lookup(SeriesProof proof, cs::Selection selected,
     Key key, std::size_t& row, Record& output) noexcept {
   if (!selected) return std::unexpected(orbital::Error::absent);
   auto* value = selected.realization;
-  if (value->shape != proof.shape()) return std::unexpected(orbital::Error::invalid_argument);
-  const auto count = static_cast<std::size_t>(value->count);
+  if (value->control.shape != proof.shape()) return std::unexpected(orbital::Error::invalid_argument);
+  const auto count = static_cast<std::size_t>(value->control.records);
   const auto keys = decoder<64>(*cs::address_slot(value, 0), count);
   return lookup_row(count, key, row, output,
       [&](std::size_t i) { return keys.get_unchecked(i); },

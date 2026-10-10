@@ -102,8 +102,10 @@ waking; local changes also pulse it. Notifications grant no storage.
 ## Embedded Objects
 
 [object.h](include/orbital/object.h) provides `ObjectStore<Physical>`. The material
-parameter owns immutable Representations, Parts, interpretation and physical
-retention. Orbital owns opaque Object identity, completed logical versions,
+parameter supplies interpretation and conversion compatibility.
+[representation.h](include/orbital/representation.h) owns immutable physical
+Representations, Part borrows, capture/rollback and escaping Part lifetime.
+Orbital also owns opaque Object identity, completed logical versions,
 coherent discovery, publication and selection of an equivalent Representation.
 It does not inspect records or decide clone, container or navigation policy.
 
@@ -117,10 +119,11 @@ admission or consensus completion.
 
 `conversion` seals one selected Object/version and its immutable source. `adopt`
 can replace that version's physical alternative without changing logical time;
-the converter owes exact logical equivalence. A bound primary selection can
-export a Part through its material. Alternative selections are retained by the
-issuing Scope; the current API does not separately seal an alternative for bound
-Part export. A `Borrowed` selection instead requires one uninterrupted owner
+the converter owes exact logical equivalence. `bound` seals a primary selection;
+`bound_alternative` seals and retains the exact alternative selected now. Either
+can export a Part after later adoption or publication while the issuing Scope
+lives; the escaping Part then retains its own physical and interpretation
+lifetime. A `Borrowed` selection instead requires one uninterrupted owner
 operation, with no publication, reentry, suspension or escape.
 
 The metadata resource is an ordinary `std::pmr::memory_resource` and must outlive
@@ -133,9 +136,18 @@ the current version in its Object directory entry and uses 16-byte historical
 nodes with separately charged 8-byte physical-pointer directory slots and
 distinct active-cut retention. Competing layouts stay in the study.
 
-The implementation keeps three compilation seams:
+Representations embed the caller's static Control without per-Part extent
+metadata or read callbacks. The driver Control contains a Shape pointer and
+record count: admitted geometry derives byte extents. Shape construction,
+count rules, TuplePack/SeriesPack laws and cloning remain with the caller.
+Orbital holds the proof and its dependencies through physical capture and
+escape. A selected-copy escape asks that same Control to copy only the needed
+interpretation into the Part's allocation.
 
-- [storage.cpp](src/object/storage.cpp) compiles directory, history-slab and debt-storage allocation once in Orbital.
+The implementation keeps these compilation seams:
+
+- [storage.cpp](src/object/storage.cpp) compiles directory, history-slab and debt-storage allocation once in Orbital. [representation.cpp](src/object/representation.cpp) compiles non-format physical-owner operations.
+- [representation_impl.h](src/object/representation_impl.h) compiles capture, release, selection and Part escape once per admitted Control. The fixture retains only its interpretation operations and measurements in [shape.cpp](../workbench/spikes/orbital-mvcc/metadata/orbital/shape/shape.cpp).
 - [store_impl.h](src/object/store_impl.h) and [history_impl.h](src/object/history_impl.h) compile publication, conversion and maintenance once for each concrete material's explicit-instantiation TU. The driver example is [catalog.cpp](../workbench/spikes/orbital-mvcc/metadata/composed/catalog.cpp).
 - Scope enrollment, ordinary selection and private storage layout remain visible for short reads. A deliberately coupled `object_detail::Access<Physical>` specialization lets one native composition fuse catalog selection with its own interpretation/kernel; Orbital names no driver type or runtime callback.
 

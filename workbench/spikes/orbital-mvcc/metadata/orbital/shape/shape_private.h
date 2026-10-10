@@ -1,6 +1,7 @@
 #pragma once
 
 #include "shape.h"
+#include <orbital/detail/object/representation.h>
 
 // The composed native consumer deliberately depends on this actual layout.
 // Keep addressing here so independent TUs share one definition and inline the
@@ -18,24 +19,12 @@ struct Shape {
   Kind kind;
 };
 
-struct Realization {
-  Shape* shape;
-  std::uint64_t count;
-  std::uint32_t references{1};
-  Owners owners;
-};
-
-struct SharedBody { const std::byte* address; std::shared_ptr<const void> owner; };
-struct AllocatedBody { const std::byte* address; orbital::allocation::Storage* owner; };
-
-inline bool shared(Owners owners) {
-  return owners == Owners::independent_shared || owners == Owners::grouped_shared;
-}
-inline bool grouped(Owners owners) {
-  return owners == Owners::grouped_shared || owners == Owners::grouped_allocation;
-}
-inline std::byte* bytes(void* p) { return static_cast<std::byte*>(p); }
-inline const std::byte* bytes(const void* p) { return static_cast<const std::byte*>(p); }
+using orbital::object_detail::bytes;
+using orbital::object_detail::SharedBody;
+using orbital::object_detail::AllocatedBody;
+using orbital::object_detail::address_slot;
+using orbital::object_detail::shared;
+using orbital::object_detail::grouped;
 
 inline Geometry* geometries(Shape* shape) {
   return static_cast<Geometry*>(static_cast<void*>(bytes(shape) + sizeof(Shape)));
@@ -44,24 +33,15 @@ inline const Geometry* geometries(const Shape* shape) { return geometries(const_
 inline ReadLaw* law(Shape* shape) {
   return static_cast<ReadLaw*>(static_cast<void*>(bytes(shape) + sizeof(Shape) + shape->parts * sizeof(Geometry)));
 }
-inline const std::byte** addresses(Realization* value) {
-  return static_cast<const std::byte**>(static_cast<void*>(bytes(value) + sizeof(Realization)));
-}
-inline SharedBody* shared_bodies(Realization* value) {
-  return static_cast<SharedBody*>(static_cast<void*>(bytes(value) + sizeof(Realization)));
-}
-inline AllocatedBody* allocated_bodies(Realization* value) {
-  return static_cast<AllocatedBody*>(static_cast<void*>(bytes(value) + sizeof(Realization)));
-}
-inline void* group_owner(Realization* value) {
-  return bytes(value) + sizeof(Realization) + value->shape->parts * sizeof(const std::byte*);
-}
-inline const std::byte* const* address_slot(Realization* value, std::size_t index) {
-  if (grouped(value->owners)) return addresses(value) + index;
-  if (shared(value->owners)) return &shared_bodies(value)[index].address;
-  return &allocated_bodies(value)[index].address;
-}
+inline std::size_t Control::part_count() const noexcept { return shape->parts; }
+inline std::pmr::memory_resource* Control::resource() const noexcept { return shape->resource; }
+inline PartId Control::id(std::size_t index) const noexcept { return geometries(shape)[index].id; }
+inline Result<std::uint64_t> Control::extent(std::size_t index) const noexcept { return geometries(shape)[index].extent(records); }
+inline std::uint32_t Control::padding(std::size_t index) const noexcept { return geometries(shape)[index].readable_padding; }
+inline std::uint64_t Control::alignment(std::size_t index) const noexcept { return std::uint64_t{1} << geometries(shape)[index].alignment_log2; }
 
+static_assert(offsetof(Realization, control) == 0 && offsetof(Realization, references) == 16 && offsetof(Realization, owners) == 20);
+static_assert(sizeof(Export) == 80 && offsetof(Export, address) == 16 && offsetof(Export, binding) == 24 && offsetof(Export, owner) == 64);
 static_assert(sizeof(Shape) == 56 && sizeof(Realization) == 24);
 static_assert(sizeof(SharedBody) == 24 && sizeof(AllocatedBody) == 16);
 

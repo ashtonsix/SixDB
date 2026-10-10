@@ -309,6 +309,50 @@ template<class Store> void accepted_while_older_history_retires() {
   check(!memory.live);
 }
 
+#if SIXDB_OBJECT_MODULE_TEST
+template<class Store> void exact_alternative_escape() {
+  ch::Memory memory, foreign_memory;
+  std::array<std::weak_ptr<const void>, 4> first_backing;
+  cs::Export* escaped{};
+  {
+    Store store(memory), foreign(foreign_memory);
+    std::array<typename Store::Change, 1> initial{{{A, encode(store, memory, 301)}}};
+    publish(store, initial); initial = {};
+    typename Store::Scope basis(store), wrong(foreign);
+    check(!store.bound_alternative(basis, A));
+    auto foreign_scope = store.bound_alternative(wrong, A);
+    check(!foreign_scope && foreign_scope.error() == orbital::Error::conflict);
+    auto target = take(store.conversion(basis, A));
+    auto first = encode(store, memory, 301, false, &first_backing);
+    check(store.adopt(target, first)); first = {};
+    memory.limit = memory.live;
+    auto refused = store.bound_alternative(basis, A);
+    check(!refused && refused.error() == orbital::Error::capacity);
+    check(!first_backing[0].expired());
+    memory.limit = SIZE_MAX;
+    auto selected = take(store.bound_alternative(basis, A));
+    const auto calls = memory.calls;
+    auto repeated = take(store.bound_alternative(basis, A));
+    check(memory.calls == calls && repeated.selection().realization == selected.selection().realization);
+    check(selected.binding().object == A && selected.binding().version == 1);
+    auto replacement = encode(store, memory, 301, false);
+    check(store.adopt(target, replacement)); replacement = {};
+    auto current = take(store.bound_alternative(basis, A));
+    check(current.selection().realization != selected.selection().realization);
+    check(!first_backing[0].expired());
+    std::array<typename Store::Change, 1> update{{{A, encode(store, memory, 302)}}};
+    publish(store, update); update = {}; store.drain();
+    check(first_value(selected.selection()) == 301);
+    escaped = take(selected.export_part(0, cs::Interpretation::selected_copy));
+    check(cs::binding(escaped).object == A && cs::binding(escaped).version == 1);
+    check(exported_value(escaped, false) == 301);
+  }
+  check(!first_backing[0].expired() && exported_value(escaped, false) == 301);
+  cs::release(escaped);
+  check(first_backing[0].expired() && !memory.live && !foreign_memory.live);
+}
+#endif
+
 template<class Store> void run(const char* label) {
   repeated_physical_binding<Store>();
   overwrite_erase_recreate<Store>();
@@ -325,6 +369,8 @@ int main() {
   static_assert(!std::is_aggregate_v<Selected::BoundSelection>);
   static_assert(!std::is_constructible_v<Selected::BoundSelection, cs::Selection, cs::Binding>);
   run<Selected>("orbital-object-shape");
+  exact_alternative_escape<Selected>();
+  std::puts("orbital-object-shape: exact alternative escape/refusal/replacement history passed");
 #else
   static_assert(!std::is_aggregate_v<ch::ShapeStore16::BoundSelection>);
   static_assert(!std::is_constructible_v<ch::ShapeStore16::BoundSelection, cs::Selection, cs::Binding>);

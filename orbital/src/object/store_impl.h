@@ -13,14 +13,19 @@ auto ObjectStore<Physical>::Scope::bind_alternative(ObjectId id) const -> Result
   if (!core_) return std::unexpected(Error::invalid_argument);
   auto selected = core_->resolve(cut_, id, true);
   if (!selected) return std::unexpected(Error::absent);
+  return core_->capture_selection(*this, Physical::get(selected));
+}
+
+template<class Physical>
+auto ObjectStore<Physical>::Core::capture_selection(const Scope& scope, Value* value) -> Result<Selection> {
   try {
-    auto [where, inserted] = core_->captures.try_emplace(this); (void)inserted;
+    auto [where, inserted] = captures.try_emplace(&scope); (void)inserted;
     auto& captured = where->second;
-    for (auto* owner : captured) if (owner == Physical::get(selected)) return selected;
-    captured.push_back(Physical::get(selected));
-    Physical::retain(Physical::get(selected));
+    for (auto* owner : captured) if (owner == value) return Physical::selection(value);
+    captured.push_back(value);
+    Physical::retain(value);
   } catch (const std::bad_alloc&) { return std::unexpected(Error::capacity); }
-  return selected;
+  return Physical::selection(value);
 }
 
 template<class Physical>
@@ -254,6 +259,17 @@ auto ObjectStore<Physical>::bound(const Scope& basis, ObjectId id) const noexcep
   auto h = core_->locate(basis.cut_, id);
   if (!h || !core_->primary(h)) return std::unexpected(Error::absent);
   return BoundSelection{Physical::selection(core_->primary(h)), ObjectBinding{id, core_->version_cut(h)}};
+}
+
+template<class Physical>
+auto ObjectStore<Physical>::bound_alternative(const Scope& basis, ObjectId id) const noexcept -> Result<BoundSelection> {
+  if (!core_ || basis.core_ != core_) return std::unexpected(Error::conflict);
+  auto h = core_->locate(basis.cut_, id);
+  auto* value = h ? core_->alternate(h) : nullptr;
+  if (!value) return std::unexpected(Error::absent);
+  const auto selected = core_->capture_selection(basis, value);
+  if (!selected) return std::unexpected(selected.error());
+  return BoundSelection{*selected, ObjectBinding{id, core_->version_cut(h)}};
 }
 
 template<class Physical>

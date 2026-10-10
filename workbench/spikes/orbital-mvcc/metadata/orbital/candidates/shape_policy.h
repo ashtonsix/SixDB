@@ -2,6 +2,7 @@
 
 #include "store.h"
 #include "../shape/shape.h"
+#include <orbital/detail/object/representation.h>
 
 namespace compact_history {
 
@@ -17,7 +18,9 @@ struct ShapePhysical {
   static Value* get(Selection selected) noexcept { return selected.realization; }
   static Selection selection(Value* value) noexcept { return {value}; }
   static auto capture(std::pmr::memory_resource& memory, const Specification& spec,
-      std::span<const PartSource> parts) noexcept { return compact_shape::capture(memory, spec, parts); }
+      std::span<const PartSource> parts) noexcept {
+    return orbital::capture_representation(memory, compact_shape::Control{spec.shape, spec.records}, spec.owners, parts);
+  }
   // Logical identity/cut belongs to the catalog-issued accepted result. Shape
   // capture establishes physical geometry/ownership, not caller-labelled identity.
   static bool accepts(Value*, ObjectId, std::uint64_t) noexcept { return true; }
@@ -28,7 +31,7 @@ struct ShapePhysical {
   static bool compatible(Value* a, Value* b) noexcept { return compact_shape::equivalent(a, b); }
   static auto footprint(Value* value) noexcept { return compact_shape::footprint(value); }
   static auto export_part(Selection selected, std::size_t index, auto binding, ExportPolicy policy) noexcept {
-    return compact_shape::detail::retain_part(selected, index, {binding.object, binding.version}, policy);
+    return orbital::object_detail::retain_part<compact_shape::Control>(selected, index, {binding.object, binding.version}, policy);
   }
 };
 

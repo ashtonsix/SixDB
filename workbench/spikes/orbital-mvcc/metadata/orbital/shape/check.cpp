@@ -109,9 +109,9 @@ void series_retention(std::size_t parts, cs::Interpretation policy) {
     const auto cost = cs::footprint(exported);
     const auto total = cost.requested_bytes + cost.shared_shape_bytes;
     check(metadata.live == total);
-    check(total == (policy == cs::Interpretation::shared_shape ? 80 + 56 + 32 * parts : 168));
+    check(total == (policy == cs::Interpretation::shared_control ? 80 + 56 + 32 * parts : 168));
     std::printf("series Parts=%zu escape=%s requested=%zu shared=%zu total=%zu external=%zu\n",
-        parts, policy == cs::Interpretation::shared_shape ? "shared" : "selected-copy",
+        parts, policy == cs::Interpretation::shared_control ? "shared" : "selected-copy",
         cost.requested_bytes, cost.shared_shape_bytes, total, external.live);
     cs::release(exported);
   }
@@ -307,7 +307,7 @@ void allocated_late_refusal() {
 
 int main() {
   for (auto count : {0U, 1U, 4U, 17U}) {
-    series_retention(count, cs::Interpretation::shared_shape);
+    series_retention(count, cs::Interpretation::shared_control);
     series_retention(count, cs::Interpretation::selected_copy);
   }
   for (auto format : {v::Format::rows, v::Format::columns})

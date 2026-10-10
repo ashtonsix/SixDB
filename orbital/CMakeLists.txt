@@ -1,6 +1,7 @@
 find_package(Threads REQUIRED)
 add_library(orbital STATIC
   src/types.cpp src/worker.cpp src/object/storage.cpp
+  src/object/representation.cpp
   src/allocation/allocation.cpp src/allocation/arena.cpp
   src/allocation/group.cpp src/allocation/window.cpp src/allocation/finite.cpp)
 add_library(orbital::orbital ALIAS orbital)

@@ -285,7 +285,7 @@ void profile(v::Format format, std::size_t records, bool grouped) {
   // This standalone ownership census has no catalog. Its internal fixture call
   // supplies a diagnostic binding; it is not a public logical-selection API.
   auto* escaped = need(cs::detail::retain_part({realizations[0]}, format == v::Format::columns ? 2 : 0,
-      {{0, 1}, 1}, cs::Interpretation::shared_shape));
+      {{0, 1}, 1}, cs::Interpretation::shared_control));
   for (auto* realization : realizations) cs::release(realization);
   cs::release(shared_shape);
   CHECK(exported_value(escaped, format == v::Format::columns, 0) == 3000);

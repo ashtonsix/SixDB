@@ -43,7 +43,7 @@ using namespace orbital_mvcc::composed;
 
   const auto& material = owner.material_;
   using orbital_bench::Kind;
-  if (material.tuple_read_ && value->shape == material.tuple_read_->shape() &&
+  if (material.tuple_read_ && value->control.shape == material.tuple_read_->shape() &&
       (op.kind == Kind::read || op.kind == Kind::chain)) {
     if (op.kind == Kind::chain && op.count > 16)
       throw std::invalid_argument("composed chain exceeds fixture bound");
@@ -53,7 +53,7 @@ using namespace orbital_mvcc::composed;
     // or uninterrupted current borrow protects backing. No runtime Shape
     // count/transfer reload is needed.
     constexpr auto law = orbital_mvcc::metadata_consumer::compact_law::ReadLaw::canonical();
-    const orbital_mvcc::metadata_consumer::compact_law::Control control{law, static_cast<std::size_t>(value->count)};
+    const orbital_mvcc::metadata_consumer::compact_law::Control control{law, static_cast<std::size_t>(value->control.records)};
     const auto cursor = sr::detail::CursorAccess::admitted(*cs::address_slot(value, 0));
     [[clang::always_inline]] orbital_mvcc::metadata_consumer::compact_law::read_chain_into(law, cursor.with(control),
         op.key, op.kind == Kind::chain ? op.count : 1, output);
