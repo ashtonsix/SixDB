@@ -1,4 +1,5 @@
 #include "object_ring.h"
+#include "object_messages.h"
 #include <algorithm>
 #include <cassert>
 
@@ -184,7 +185,7 @@ orbital::Result<void> Driver::close() noexcept {
   return result;
 }
 orbital::Result<Statistics> Driver::run(const Catalog& store, std::span<const Request> input,
-    std::span<Outcome> output, Execution execution, bool hints, std::uint64_t visits) noexcept {
+    std::span<Outcome> output, Execution execution, bool hints, std::uint64_t visits, CompletionBurst* completions) noexcept {
   if (input.size() != output.size() || !width_ || !visits || ring_.pending() ||
       (execution != Execution::serial && execution != Execution::manual && execution != Execution::ring))
     return std::unexpected(orbital::Error::invalid_argument);
@@ -243,6 +244,7 @@ orbital::Result<Statistics> Driver::run(const Catalog& store, std::span<const Re
     if (execution == Execution::ring) {
       if (!ring_.pending()) continue;
       ring_.spin({visits}); ++statistics.returned_quanta;
+      if (completions) completions->boundary();
     } else {
       std::uint64_t dispatched = 0;
       while (live && dispatched < visits) {
@@ -254,7 +256,10 @@ orbital::Result<Statistics> Driver::run(const Catalog& store, std::span<const Re
           if (cursor == --live) cursor = 0;
         } else if (++cursor == live) cursor = 0;
       }
-      if (dispatched) ++statistics.returned_quanta;
+      if (dispatched) {
+        ++statistics.returned_quanta;
+        if (completions) completions->boundary();
+      }
     }
   }
   // Final Ring completion can make the loop condition false before collection.

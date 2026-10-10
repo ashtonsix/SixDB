@@ -51,8 +51,9 @@ key hints use row start, payload hints use row+8. This is a bounded bootstrap,
 not a guarantee that an unaligned key or payload spanning two cache lines has
 both lines covered. Serial, manual and Ring have identical hint opportunities.
 Hardware/pressure policy is the Ring's immutable configured snapshot. No native
-visit reads a clock or hardware profile. No policy refresh or polling occurs
-inside `run()`.
+visit reads a clock or hardware profile. Default `run()` does not refresh policy
+or poll. The optional [ready-Message control](../performance/controls/cooperative-polling/README.md)
+services completions at returned boundaries in a separate disposable experiment.
 
 ## Consequential checks
 

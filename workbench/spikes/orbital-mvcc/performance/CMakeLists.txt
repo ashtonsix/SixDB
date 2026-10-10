@@ -45,3 +45,8 @@ sixdb_target(orbital_prefix_growth_check)
 target_link_libraries(orbital_prefix_growth_check PRIVATE orbital_versioned_performance_composed)
 add_test(NAME orbital_prefix_growth_check COMMAND orbital_prefix_growth_check)
 set_tests_properties(orbital_prefix_growth_check PROPERTIES TIMEOUT 30)
+
+# Disposable ready-Message service control; no worker or scheduling policy added.
+add_executable(loom_object_polling_control controls/cooperative-polling/main.cpp)
+sixdb_target(loom_object_polling_control)
+target_link_libraries(loom_object_polling_control PRIVATE orbital_versioned_performance_fixture loom_object_ring)

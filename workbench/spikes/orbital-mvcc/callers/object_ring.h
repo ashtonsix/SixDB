@@ -8,6 +8,7 @@
 
 // Disposable selected-Object caller, not an Engine/navigation interface.
 namespace loom_object_ring {
+class CompletionBurst;
 using Catalog = orbital_mvcc::composed::Catalog;
 namespace law = orbital_mvcc::metadata_consumer::compact_law;
 using Proof = orbital_mvcc::metadata_consumer::shape_read::TupleProof;
@@ -51,7 +52,8 @@ struct Statistics {
 /// configure() is cold reusable-bank preparation; run() charges each request's
 /// Scope, selection, initial hints, admission, refill and terminal result copy.
 /// Manual and Ring refill only at identical returned visit-budget boundaries.
-/// No polls/publications occur inside run(). Failure retires all borrowers and
+/// By default run() does not poll; the disposable CompletionBurst control may
+/// service Messages after returned quanta. Failure retires all borrowers and
 /// Scopes; earlier completed outputs remain, so a failed trial is abort-only.
 class Driver {
   loom::Worker& worker_;
@@ -66,7 +68,8 @@ public:
   ~Driver();
   [[nodiscard]] orbital::Result<void> configure(std::size_t width) noexcept;
   [[nodiscard]] orbital::Result<Statistics> run(const Catalog&, std::span<const Request>,
-      std::span<Outcome>, Execution, bool hints, std::uint64_t visits = 128) noexcept;
+      std::span<Outcome>, Execution, bool hints, std::uint64_t visits = 128,
+      CompletionBurst* completions = nullptr) noexcept;
   [[nodiscard]] orbital::Result<void> close() noexcept;
 };
 } // namespace loom_object_ring
