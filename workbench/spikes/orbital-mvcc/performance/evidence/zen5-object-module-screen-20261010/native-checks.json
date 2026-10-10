@@ -1,0 +1,95 @@
+{
+  "revision": "final Store disposal reentrancy fix",
+  "previous_qualification": "qualification-before-disposal-fix.json",
+  "base_tree": "e509697457a4a61bee8adcd2c5631bd40ee9f221",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)",
+  "steps": [
+    {
+      "name": "disposal-fix-verify-build",
+      "command": [
+        "cmake",
+        "--build",
+        "build/reviews/orbital-object-module/build",
+        "--target",
+        "orbital_object_catalog_check",
+        "orbital_versioned_performance_bench",
+        "-j2"
+      ],
+      "returncode": 0,
+      "log": "build/reviews/orbital-object-module/disposal-fix-verify-build.log",
+      "sha256": "8c35b1682f73592d30612d7b0fabdb384fcfff35cb5a076cb48b85b1368aa794"
+    },
+    {
+      "name": "disposal-fix-check",
+      "command": [
+        "ctest",
+        "--test-dir",
+        "build/reviews/orbital-object-module/build",
+        "-R",
+        "^orbital_object_catalog_check$",
+        "--output-on-failure",
+        "--no-tests=error",
+        "-V"
+      ],
+      "returncode": 0,
+      "log": "build/reviews/orbital-object-module/disposal-fix-check.log",
+      "sha256": "9435c6bb948e3d74eae1b94883aa31b235cfd6e7f03dae808436bcdeea17d944"
+    },
+    {
+      "name": "disposal-fix-header",
+      "command": [
+        "clang++-21",
+        "-std=c++23",
+        "-O3",
+        "-I",
+        "build/reviews/orbital-object-module/source/orbital/include",
+        "-fsyntax-only",
+        "-MMD",
+        "-MF",
+        "build/reviews/orbital-object-module/public_header.d",
+        "build/reviews/orbital-object-module/public_header.cpp"
+      ],
+      "returncode": 0,
+      "log": "build/reviews/orbital-object-module/disposal-fix-header.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "disposal-fix-patch",
+      "command": [
+        "git",
+        "apply",
+        "--check",
+        "--whitespace=error",
+        "build/reviews/orbital-object-module/integration.patch"
+      ],
+      "returncode": 0,
+      "log": "build/reviews/orbital-object-module/disposal-fix-patch.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "sizes": {
+    "ObjectStore": 8,
+    "Owner": 8,
+    "Scope": 32,
+    "Borrowed": 16,
+    "Prepared": 48,
+    "Change": 24,
+    "ConversionTarget": 40,
+    "BoundSelection": 32
+  },
+  "previous_groups": 18,
+  "new_focused_regression": "Bare ObjectStore final disposal callback drains, borrows and enrolls an empty Scope; one disposal and zero final metadata charge.",
+  "binary": "build/reviews/orbital-object-module/build/workbench/spikes/orbital-mvcc/performance/orbital_versioned_performance_bench",
+  "binary_sha256": "aaf853562fde4cf270108f0c8d12db04301b0a6e280c6857afea9dfe558f4dcd",
+  "timings": false,
+  "sanitizers": false,
+  "limits": [
+    "Local Clang/AArch64 native qualification. Root owns matched performance comparison.",
+    "Normal PMR may add indirect metadata allocation calls versus final counting Memory.",
+    "Cold material-dependent operations now use ordinary compiled boundaries; read layout/Scope enrollment remain visible.",
+    "Allocator callbacks must not reenter the catalog; supported physical-owner callbacks are covered by reused histories.",
+    "No initial metadata-layout reduction or new bound-alternative export is included."
+  ],
+  "passed": true,
+  "scope": "Root native four consequence suites and opaqueheader; corrected final Store disposal. Native hashes/ARM checks are separate from exactx86 worker source/ABI comparison; no SAN claim."
+}

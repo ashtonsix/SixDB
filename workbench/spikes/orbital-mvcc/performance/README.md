@@ -254,3 +254,6 @@ and Series4 controls. Neither profile adds an automatic sweep.
 
 The [selected composition memory/throughput comparison](FEEDBACK.md#selected-prepared-allocation-and-fusion-composition)
 keeps the exact source cut, counter scope and negative observations with its comparison.
+
+The [matched compiled catalog extraction performance/abi and complete component parity](FEEDBACK.md#compiled-object-catalog-boundary)
+keeps the exact source cut, counter scope and negative observations with its comparison.

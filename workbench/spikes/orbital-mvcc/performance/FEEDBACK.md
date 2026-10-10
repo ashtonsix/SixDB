@@ -761,3 +761,41 @@ fields are not zero. That instrumentation remains with the separate maintenance
 and breadth controls. Native target qualification has three consequence checks
 and 26 CLI cases. Six table/parity reports and both ABI reports regenerate
 byte-identically; full captures remain archived.
+
+## Compiled Object catalog boundary
+
+[Matched extraction evidence](evidence/zen5-object-module-screen-20261010/module/measurements.csv)
+from `20261010T003336Z-352a5321` holds selected `768e033`, Direct4, Prepared,
+Schema and mapped renew constant, applying only the revised catalog extraction
+patch `fbc3e315`. Actual source postimages include its corrected final-disposal
+callback boundary. All 184 trials and exact worker lease checks pass. Root's
+four native consequence suites and opaque-header check qualify the extraction;
+this comparison makes no sanitizer claim.
+
+All available logical, copy, body-capacity, version, metadata allocation,
+Schema and caller counters match exactly. Tiny Inline PMR/Pool stay 6563/7376 B.
+Four Inline read callers keep identical code sizes 3030/2771/2840/2653 B and
+explicit scalar/batch stack reservations 296/1336 B. Extraction moves cold
+publication/history to ordinary compiled boundaries while preserving these
+inlined read callers. Ordinary PMR callback devirtualization is not assumed.
+
+Median complete-request throughput, ns; base→module:
+
+| Case | Inline | Mapped control |
+| --- | ---: | ---: |
+| 192/64 hit, scalar | 20.62→20.84 | 75.53→74.13 |
+| 32768/4 dependent16, scalar | 1076.45→1109.68 | 1104.65→1156.13 |
+| 192/64 update, scalar, age8 | 497.62→483.99 | 1540.09→1559.02 |
+| 192/64 update, scalar, held original | 1285.69→1205.23 | 4709.92→4790.77 |
+| 192/64 update, batch64, age8 | 289.92→293.26 | 215.19→216.99 |
+| 192/64 update, batch64, held original | 286.44→286.38 | 261.74→257.98 |
+| 4096/4 Tuple update, batch64 | 112.02→114.32 | 193.38→189.97 |
+
+Series4 batch is 133.81→128.45 ns. The short blocked pair has both favorable
+and unfavorable changes, alongside movement in unchanged mapped controls.
+It supports preserving the read ABI and component costs at this compilation
+boundary, without proving that extraction is cost-free or universally faster.
+Every raw Orbital write finishes with one version per Object and zero contexts
+and retirement records. Six table/parity reports and both ABI reports regenerate
+byte-identically; the source, diagnostics and binaries stay in the existing
+worker archive. This predates the later physical extraction and trim changes.

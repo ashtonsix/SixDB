@@ -1,0 +1,15 @@
+{
+  "user_seconds": 41.76,
+  "system_seconds": 1.34,
+  "largest_process_peak_rss_kib": 474884.0,
+  "wall_seconds": 43.20415802799994,
+  "scope": "combined incremental build of all comparator/check targets; child CPU sum and largest-process RSS, not simultaneous total memory",
+  "jobs": 1,
+  "targets": [
+    "orbital_versioned_performance_bench",
+    "orbital_versioned_performance_check",
+    "orbital_versioned_lmdb_check",
+    "orbital_versioned_body_check",
+    "orbital_versioned_reader_lease_check"
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "files_sha256": {
+    "baseline/abi.json": "626277f18968aef7c4f0b1cca0d41e458540606569f554af16c923c33f6e0f3d",
+    "baseline/binary-identity.json": "f55f2ae2a8812e1473a13c28810e64e233cafa9c949886c56609c3c2d0ef2648",
+    "baseline/build-cost.json": "a1968c13cfd72f98e17b550290520d041cd5fe448c32e138e8127ca24a9e599f",
+    "baseline/measurements.csv": "fb096a936eecf9cf4189ef3c87176dcf833502d57d898c200d428ff2d8c6f4e5",
+    "baseline/parity.json": "aa4656a28a59d562c454b9b45a239d624f9c38ca7cdfe3b6d2d778402c8a772b",
+    "baseline/qualification.json": "bf6dcf7bf0267c72b987fbc48b823a77424ad5506af081fc244a3eae980df4f5",
+    "baseline/reader_lease_check.json": "36079af1ddd0bab59360de4f8cb12f56d5a9edc659728d0fc49e6af2af525c52",
+    "baseline/summary.csv": "5fccc2c16edcaebe685af3b0f744154f73179701f4dc06f714558a90b11c967e",
+    "host.json": "beac043a759a9e8f831b6bdaa01da8ef41a96d6d0f3dec003750e4360b42ccf3",
+    "module/abi.json": "78e50e14ba9a23e1ad5a646f39483ffb55695adae7fa3d2aae1b89e21f3bc1c8",
+    "module/binary-identity.json": "bf1be2507958f41c893ae037753d39045b20057e77952e5b7611e5213e81c95a",
+    "module/build-cost.json": "30b7bd5f76c0d9e21fefd6a3a19ef45a1c1682f99366de0cd601a5a622f0e23b",
+    "module/measurements.csv": "0b83e981ddbedf0a5cc45be7e9d7f9a360ac8fe83a7de798b9caa3997659a3fe",
+    "module/parity.json": "aa4656a28a59d562c454b9b45a239d624f9c38ca7cdfe3b6d2d778402c8a772b",
+    "module/qualification.json": "bf6dcf7bf0267c72b987fbc48b823a77424ad5506af081fc244a3eae980df4f5",
+    "module/reader_lease_check.json": "36079af1ddd0bab59360de4f8cb12f56d5a9edc659728d0fc49e6af2af525c52",
+    "module/summary.csv": "3757dcf567fd0b476e768f3217de18b3e5ddc02de5ea9536c20838b2c25f3d15",
+    "worker-result.json": "9e079cc74d87137827166be8089293ab04f7a3a0c9ae525e5540d4657f6552ed"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/baseline"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/module"
+    ]
+  ],
+  "regenerate_from": "archive"
+}
