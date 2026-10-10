@@ -20,6 +20,42 @@ from experiment import Run
 
 
 def panel(profile="resident"):
+    if profile == 'module-quick':
+        for rows,objects,workload in [(192,64,'point-hit'),(32768,4,'dependent-16')]:
+            yield dict(rows=rows,objects=objects,workload=workload,batch=1,ops=4099,
+                       codec='shape',conditioning='warm-trace',**{'metadata-bytes':16*1024*1024},
+                       backends=['composed-inline','composed-directory','lmdb-composed'])
+        for batch in [1,64]:
+            for age in [8,0]:
+                yield dict(rows=192,objects=64,workload='point-update',batch=batch,ops=4099,
+                           **{'retention-age':age,'metadata-bytes':16*1024*1024},
+                           backends=['composed-inline','composed-directory','lmdb-composed'])
+        for initial,backends in [('rows',['composed-inline','composed-directory','lmdb-composed']),
+                                 ('columns',['composed-inline','composed-directory'])]:
+            yield dict(rows=4096,objects=4,workload='point-update',batch=64,ops=4099,
+                       **{'from':initial,'retention-age':8,'metadata-bytes':16*1024*1024},backends=backends)
+        return
+    if profile == 'composition-feedback':
+        for batch in [1,64]:
+            yield dict(rows=192,objects=64,workload='point-hit',batch=batch,ops=4099,
+                       codec='shape',conditioning='warm-trace',**{'metadata-bytes':16*1024*1024},
+                       backends=['composed-inline','composed-directory','lmdb-composed'])
+            for age in [8,0]:
+                yield dict(rows=192,objects=64,workload='point-update',batch=batch,ops=4099,
+                           **{'retention-age':age,'metadata-bytes':16*1024*1024},
+                           backends=['composed-inline','composed-directory','lmdb-composed'])
+            for initial,backends in [('rows',['composed-inline','composed-directory','lmdb-composed']),
+                                     ('columns',['composed-inline','composed-directory'])]:
+                yield dict(rows=4096,objects=4,workload='point-update',batch=batch,ops=4099,
+                           **{'from':initial,'retention-age':8,'metadata-bytes':16*1024*1024},backends=backends)
+            for workload in ['point-hit','dependent-16']:
+                yield dict(rows=32768,objects=4,workload=workload,batch=batch,ops=32771,
+                           codec='shape',conditioning='warm-trace',**{'metadata-bytes':16*1024*1024},
+                           backends=['composed-inline','composed-directory','lmdb-composed'])
+        yield dict(rows=16384,objects=64,workload='point-update',batch=64,ops=4099,
+                   **{'retention-age':0,'metadata-bytes':16*1024*1024},
+                   backends=['composed-inline','composed-directory','lmdb-composed'])
+        return
     if profile == 'breadth':
         for rows,objects in [(32768,64),(262144,256)]:
             for workload in ['point-hit','dependent-16']:
@@ -148,7 +184,7 @@ def panel(profile="resident"):
 
 def csv_file(path, rows):
     with path.open("w", newline="") as output:
-        writer = csv.DictWriter(output, fieldnames=list(rows[0]))
+        writer = csv.DictWriter(output, fieldnames=list(dict.fromkeys(key for row in rows for key in row)))
         writer.writeheader()
         writer.writerows(rows)
 
@@ -236,6 +272,9 @@ def summarize(output):
         if 'body_cold_start' in result:
             for name,value in result['body_cold_start'].items():
                 base[f'body_cold_start_{name}']=value
+        if 'lmdb_short_reader' in result:
+            for name,value in result['lmdb_short_reader'].items():
+                base[f'lmdb_short_reader_{name}']=value
         if "process_resources" in result:
             base.update(process_peak_rss_kib=result["process_resources"]["peak_rss_kib"])
             for label, field in [("initial", "footprint_initial"), ("held", "footprint_after_interval"), ("released", "footprint_after_reader_release")]:
@@ -437,7 +476,7 @@ def main():
     parser.add_argument("--workspace", type=Path, default=ROOT/"build/workspaces/orbital-mvcc-performance")
     parser.add_argument("--cpu", type=int, default=2)
     parser.add_argument("--repetitions", type=int, default=5)
-    parser.add_argument("--profile", choices=["feedback","catalog","churn","groups","faults","quick","composed-quick","composed-context","fusion-quick","breadth","resident"], default="feedback")
+    parser.add_argument("--profile", choices=["feedback","catalog","churn","groups","faults","quick","composed-quick","composed-context","fusion-quick","breadth","module-quick","composition-feedback","resident"], default="feedback")
     parser.add_argument("--march", default="")
     parser.add_argument("--tune", default="generic")
     parser.add_argument("--jobs", type=int, default=2)

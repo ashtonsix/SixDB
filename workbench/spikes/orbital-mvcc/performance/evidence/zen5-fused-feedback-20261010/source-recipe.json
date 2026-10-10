@@ -1,0 +1,97 @@
+{
+  "job": "20261010T002323Z-2438d29a",
+  "source_authority": "actual233710/fused archive; unchanged3fusion postimages; exact reader/cold driver; eachcutverified beforebuild",
+  "cuts": {
+    "fresh-reader": {
+      "source_tar_sha256": "26ce2aaae03b5caf895d4ec70af58d6fb57108a2f14ad20cd3111297a2a4c823",
+      "fusion_postimages": {
+        "workbench/spikes/orbital-mvcc/performance/bodies.h": "c1a40f9c1955c334b058338df1e9b906e84e5edf97cc00b91e81f4d117d8fa9d",
+        "workbench/spikes/orbital-mvcc/metadata/composed/backend.h": "3a83f67dfea443390833667dd2c2127e3641ab98f30a799ecc630be13f5004ae",
+        "workbench/spikes/orbital-mvcc/metadata/composed/read_fusion.cpp": "6481f71c2a6603b88cc1fb1687578b0c8406f630adb802fd1dbbe195e780a505"
+      },
+      "main_sha256": "6c7e2831370eb114cebde3c815d6dfcca45f8e0d7a6deb886166d886aff565fb",
+      "policy": "fresh",
+      "all_report_files_regenerate": true,
+      "parity": {
+        "passed": true,
+        "trials": 144,
+        "matched_cases": 12,
+        "independent_cli_oracle": true,
+        "scopes_and_modes_checked": true,
+        "all_repetitions_retained": true
+      },
+      "lease_check": {
+        "passed": true,
+        "independent_publication_visibility": true,
+        "old_body_and_value_preserved": true,
+        "moved_lease": true,
+        "nested_and_active_close_refusals": true,
+        "reset_counts_and_final_abort": true,
+        "reprepare": true
+      },
+      "abi_sha256": "74a53dca253f73e36efa0234f91a48484f1a6b8d8633b9b57bad34a893b4ddbd"
+    },
+    "renew-reader": {
+      "source_tar_sha256": "1b4455e4b6348804351012360f9e643e08247b8937fb15717ffa911c7bb9acef",
+      "fusion_postimages": {
+        "workbench/spikes/orbital-mvcc/performance/bodies.h": "c1a40f9c1955c334b058338df1e9b906e84e5edf97cc00b91e81f4d117d8fa9d",
+        "workbench/spikes/orbital-mvcc/metadata/composed/backend.h": "3a83f67dfea443390833667dd2c2127e3641ab98f30a799ecc630be13f5004ae",
+        "workbench/spikes/orbital-mvcc/metadata/composed/read_fusion.cpp": "6481f71c2a6603b88cc1fb1687578b0c8406f630adb802fd1dbbe195e780a505"
+      },
+      "main_sha256": "6c7e2831370eb114cebde3c815d6dfcca45f8e0d7a6deb886166d886aff565fb",
+      "policy": "renew",
+      "all_report_files_regenerate": true,
+      "parity": {
+        "passed": true,
+        "trials": 144,
+        "matched_cases": 12,
+        "independent_cli_oracle": true,
+        "scopes_and_modes_checked": true,
+        "all_repetitions_retained": true
+      },
+      "lease_check": {
+        "passed": true,
+        "independent_publication_visibility": true,
+        "old_body_and_value_preserved": true,
+        "moved_lease": true,
+        "nested_and_active_close_refusals": true,
+        "reset_counts_and_final_abort": true,
+        "reprepare": true
+      },
+      "abi_sha256": "1c487f81d4509d60c3f1e4ae55ebfee07abb570817e0181a3c967c6d73222b37"
+    },
+    "breadth": {
+      "source_tar_sha256": "1d10e8140a585c16ebc1ceedf323eb2c661322354e2fb6f88168e79641222adb",
+      "fusion_postimages": {
+        "workbench/spikes/orbital-mvcc/performance/bodies.h": "c1a40f9c1955c334b058338df1e9b906e84e5edf97cc00b91e81f4d117d8fa9d",
+        "workbench/spikes/orbital-mvcc/metadata/composed/backend.h": "3a83f67dfea443390833667dd2c2127e3641ab98f30a799ecc630be13f5004ae",
+        "workbench/spikes/orbital-mvcc/metadata/composed/read_fusion.cpp": "6481f71c2a6603b88cc1fb1687578b0c8406f630adb802fd1dbbe195e780a505"
+      },
+      "main_sha256": "6c7e2831370eb114cebde3c815d6dfcca45f8e0d7a6deb886166d886aff565fb",
+      "policy": "renew",
+      "all_report_files_regenerate": true,
+      "parity": {
+        "passed": true,
+        "trials": 304,
+        "matched_cases": 26,
+        "independent_cli_oracle": true,
+        "scopes_and_modes_checked": true,
+        "all_repetitions_retained": true
+      },
+      "lease_check": {
+        "passed": true,
+        "independent_publication_visibility": true,
+        "old_body_and_value_preserved": true,
+        "moved_lease": true,
+        "nested_and_active_close_refusals": true,
+        "reset_counts_and_final_abort": true,
+        "reprepare": true
+      },
+      "abi_sha256": "1c487f81d4509d60c3f1e4ae55ebfee07abb570817e0181a3c967c6d73222b37"
+    }
+  },
+  "lease_counts": "all160mappedreadtrials exact begin/renew/reset/abort counts and noactive/retainedlease aftercleanup; Store88/Read16/Lease8",
+  "cold": "all warm/cold oracle,logicalbodycounterparity, rangesObjects/bodybytes rows23; finalwrite maintenancependingfalse",
+  "native_controls": "54body+24reader CLI over originalfusion native composition; exact focused reader lease check additionally runsineachverified worker cut; no sanitizer claim",
+  "abi_dedup": "breadth ABIbyte-identicaltorenew-reader; retained once, full originals archived"
+}

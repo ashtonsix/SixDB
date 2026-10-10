@@ -1,0 +1,220 @@
+diff --git a/workbench/spikes/orbital-mvcc/performance/CMakeLists.txt b/workbench/spikes/orbital-mvcc/performance/CMakeLists.txt
+index 174f785..71f9b15 100644
+--- a/workbench/spikes/orbital-mvcc/performance/CMakeLists.txt
++++ b/workbench/spikes/orbital-mvcc/performance/CMakeLists.txt
+@@ -27,3 +27,7 @@ sixdb_target(orbital_versioned_performance_composed)
+ target_link_libraries(orbital_versioned_performance_composed PUBLIC orbital_versioned_performance_runtime
+   orbital_mvcc_composed orbital_mvcc_write_batch orbital_mvcc_shape_read orbital_mvcc_shape_write orbital_mvcc_point_write)
+ target_link_libraries(orbital_versioned_performance_bench PRIVATE orbital_versioned_performance_composed)
++
++add_executable(orbital_versioned_reader_lease_check reader_lease_check.cpp)
++sixdb_target(orbital_versioned_reader_lease_check)
++target_link_libraries(orbital_versioned_reader_lease_check PRIVATE orbital_versioned_lmdb)
+diff --git a/workbench/spikes/orbital-mvcc/performance/composed_runtime.cpp b/workbench/spikes/orbital-mvcc/performance/composed_runtime.cpp
+index cd176a8..5475973 100644
+--- a/workbench/spikes/orbital-mvcc/performance/composed_runtime.cpp
++++ b/workbench/spikes/orbital-mvcc/performance/composed_runtime.cpp
+@@ -50,14 +50,14 @@ struct MappedBody {
+   }
+ };
+ template<std::size_t Capacity> class MappedBodies {
+-  Lmdb::Read context_;
++  Lmdb::ShortLease context_;
+   const Corpus& corpus_;
+   const MappedShape& shape_;
+   RequestCache<orbital::Bytes, Capacity> cache_;
+ public:
+   std::uint64_t bindings{};
+   MappedBodies(Lmdb& store, const Corpus& corpus, const MappedShape& shape)
+-      : context_(store.read()), corpus_(corpus), shape_(shape) {}
++      : context_(store.short_read()), corpus_(corpus), shape_(shape) {}
+   MappedBody body(std::size_t object) {
+     const auto& image = corpus_.images.at(object);
+     auto bytes = cache_.get(object, [&] {
+diff --git a/workbench/spikes/orbital-mvcc/performance/lmdb.cpp b/workbench/spikes/orbital-mvcc/performance/lmdb.cpp
+index 5c47e58..5bd8a43 100644
+--- a/workbench/spikes/orbital-mvcc/performance/lmdb.cpp
++++ b/workbench/spikes/orbital-mvcc/performance/lmdb.cpp
+@@ -25,10 +25,35 @@ Lmdb::Lmdb(const std::filesystem::path& directory, std::size_t byte_limit) {
+     auto write=edit(); lmdb_check(mdb_dbi_open(write.txn_, nullptr, 0, &db_)); write.publish();
+   } catch (...) { mdb_env_close(env_); env_=nullptr; throw; }
+ }
+-Lmdb::~Lmdb() { if (env_) mdb_env_close(env_); }
++Lmdb::~Lmdb() { short_view_.reset(); if (env_) mdb_env_close(env_); }
+ Lmdb::Read Lmdb::read() const {
+   MDB_txn* txn{}; lmdb_check(mdb_txn_begin(env_,nullptr,MDB_RDONLY,&txn)); return Read(txn,db_);
+ }
++void Lmdb::prepare_short_reader() {
++  if (short_active_) throw std::logic_error("short reader already active");
++  if constexpr (reuse_short_reader) {
++    if (short_view_) throw std::logic_error("short reader already prepared");
++    short_view_.emplace(read());++short_counts_.begins;
++    mdb_txn_reset(short_view_->txn_);++short_counts_.resets;
++  }
++}
++Lmdb::ShortLease Lmdb::short_read() {
++  if (short_active_) throw std::logic_error("nested short reader lease");
++  if constexpr (reuse_short_reader) {
++    if (!short_view_) throw std::logic_error("short reader not prepared");
++    lmdb_check(mdb_txn_renew(short_view_->txn_));++short_counts_.renews;
++  } else {short_view_.emplace(read());++short_counts_.begins;}
++  short_active_=true;return ShortLease(this);
++}
++void Lmdb::end_short_read() noexcept {
++  if constexpr (reuse_short_reader) {mdb_txn_reset(short_view_->txn_);++short_counts_.resets;}
++  else {short_view_.reset();++short_counts_.aborts;}
++  short_active_=false;
++}
++void Lmdb::close_short_reader() {
++  if (short_active_) throw std::logic_error("cannot close active short reader lease");
++  if (short_view_) {short_view_.reset();++short_counts_.aborts;}
++}
+ Lmdb::Write Lmdb::edit() {
+   MDB_txn* txn{}; lmdb_check(mdb_txn_begin(env_,nullptr,0,&txn)); return Write(txn,db_);
+ }
+diff --git a/workbench/spikes/orbital-mvcc/performance/lmdb.h b/workbench/spikes/orbital-mvcc/performance/lmdb.h
+index f853aaa..029b218 100644
+--- a/workbench/spikes/orbital-mvcc/performance/lmdb.h
++++ b/workbench/spikes/orbital-mvcc/performance/lmdb.h
+@@ -73,6 +73,39 @@ public:
+     std::size_t scan(Key first, std::span<Row>) const;
+     std::uint64_t version() const noexcept { return mdb_txn_id(txn_); }
+   };
++  // Unapplied paired control. Short leases own fresh snapshot enrollment, not
++  // a continuously active transaction. Ordinary Read still owns old readers.
++  static constexpr bool reuse_short_reader = false;
++  struct ShortStatistics {
++    std::uint64_t begins{},renews{},resets{},aborts{};
++    bool retained{},active{};
++  };
++private:
++  std::optional<Read> short_view_;
++  bool short_active_{};
++  ShortStatistics short_counts_;
++  void end_short_read() noexcept;
++public:
++  class ShortLease {
++    Lmdb* owner_{};
++    explicit ShortLease(Lmdb* owner) : owner_(owner) {}
++    friend class Lmdb;
++  public:
++    ShortLease(ShortLease&& source) noexcept : owner_(std::exchange(source.owner_,nullptr)) {}
++    ShortLease& operator=(ShortLease&&) = delete;
++    ShortLease(const ShortLease&) = delete;
++    ~ShortLease() {if (owner_) owner_->end_short_read();}
++    auto get(Key key) const {return owner_->short_view_->get(key);}
++    auto part(Address address) const {return owner_->short_view_->part(address);}
++    auto scan(Key first,std::span<Row> target) const {return owner_->short_view_->scan(first,target);}
++    auto version() const {return owner_->short_view_->version();}
++  };
++  void prepare_short_reader(); // Setup outside complete request clocks.
++  ShortLease short_read();
++  void close_short_reader(); // Final abort outside clocks; refuses active lease.
++  ShortStatistics short_statistics() const {
++    auto value=short_counts_;value.retained=bool(short_view_);value.active=short_active_;return value;
++  }
+   class Write {
+     MDB_txn* txn_{};
+     MDB_dbi db_{};
+diff --git a/workbench/spikes/orbital-mvcc/performance/main.cpp b/workbench/spikes/orbital-mvcc/performance/main.cpp
+index 49a3625..54583dd 100644
+--- a/workbench/spikes/orbital-mvcc/performance/main.cpp
++++ b/workbench/spikes/orbital-mvcc/performance/main.cpp
+@@ -335,6 +335,8 @@ int main(int argc,char** argv) try {
+   Interval interval,release,conditioning;
+   data::Costs costs;
+   write_batch::ProbeCosts write_probe;
++  Lmdb::ShortStatistics short_reader_stats,short_reader_cleanup;
++  std::uint64_t short_setup_ns{},short_cleanup_ns{};
+   std::size_t mapped_shape_metadata{}, mapped_shape_record{}, mapped_write_control_live{}, mapped_write_control_slots{};
+   std::uint64_t bindings{},drain_steps{};
+   OrbitalFootprint orbital_initial,orbital_held,orbital_released;
+@@ -447,6 +449,9 @@ int main(int argc,char** argv) try {
+       release.process_cpu_ns=process_cpu_ns()-process_cpu;release_hardware.stop();
+       lmdb_released=store.footprint();
+     } else {
++      if (mapped_shape) {
++        const auto start=clock_ns();store.prepare_short_reader();short_setup_ns=clock_ns()-start;
++      }
+       const auto read=[&](bool timed_latency,std::uint64_t& count) {
+         if (o.backend=="row-lmdb") return run_row_lmdb_reads(store,timed_latency,trace.operations,output,o.batch);
+         if (mapped_shape) return run_lmdb_shape_reads(store,corpus,*mapped_shape,timed_latency,trace.operations,objects,output,o.batch,count);
+@@ -462,6 +467,11 @@ int main(int argc,char** argv) try {
+       active_hardware=o.pmu==orbital_bench::pmu::Mode::off?nullptr:&hardware;
+       interval=read(latency,bindings);active_hardware=nullptr;
+       lmdb_held=lmdb_released=store.footprint();
++      if (mapped_shape) {
++        short_reader_stats=store.short_statistics();
++        const auto start=clock_ns();store.close_short_reader();short_cleanup_ns=clock_ns()-start;
++        short_reader_cleanup=store.short_statistics();
++      }
+     }
+   } else if (o.backend.starts_with("composed-")) {
+     const auto run=[&]<class Backend>() {
+@@ -635,6 +645,20 @@ int main(int argc,char** argv) try {
+       <<",\"memory_source\":\"/proc/self/status VmHWM/VmRSS; rusage high-water may be inherited from launcher\""
+       <<",\"scope\":\"whole process including fixture, oracle, traces and validation\"}";
+   std::cout<<",\"conditioning_interval\":";print_interval(conditioning);
++  if (o.backend=="lmdb-composed" && !updating && !conversion) {
++    std::cout<<",\"lmdb_short_reader\":{\"policy\":\""<<(Lmdb::reuse_short_reader?"renew":"fresh")<<"\""
++        <<",\"setup_wall_ns\":"<<short_setup_ns<<",\"cleanup_wall_ns\":"<<short_cleanup_ns
++        <<",\"begins\":"<<short_reader_stats.begins<<",\"renews\":"<<short_reader_stats.renews
++        <<",\"resets\":"<<short_reader_stats.resets<<",\"aborts_before_cleanup\":"<<short_reader_stats.aborts
++        <<",\"aborts_after_cleanup\":"<<short_reader_cleanup.aborts
++        <<",\"retained_handle_before_cleanup\":"<<(short_reader_stats.retained?"true":"false")
++        <<",\"active_after_interval\":"<<(short_reader_stats.active?"true":"false")
++        <<",\"retained_handle_after_cleanup\":"<<(short_reader_cleanup.retained?"true":"false")
++        <<",\"store_record_bytes\":"<<sizeof(Lmdb)<<",\"read_record_bytes\":"<<sizeof(Lmdb::Read)
++        <<",\"lease_record_bytes\":"<<sizeof(Lmdb::ShortLease)
++        <<",\"transaction_allocation_bytes\":null,\"scope\":\"setup and warm replay plus timed complete read leases; fresh snapshot renew/reset inside every offered group; no active lease between groups; final abort outside clock\"}";
++  }
++
+   std::cout<<",\"old_reader_held\":"<<(updating || conversion?"true":"false")<<",\"release_and_drain\":";
+   print_interval(release);std::cout<<",\"drain_steps\":"<<drain_steps<<",\"physical_poll_budget\":"
+       <<((updating || conversion) && (o.backend=="orbital" || o.backend.starts_with("candidate") || o.backend.starts_with("composed-"))?65536:0);
+diff --git a/workbench/spikes/orbital-mvcc/performance/reader_lease_check.cpp b/workbench/spikes/orbital-mvcc/performance/reader_lease_check.cpp
+new file mode 100644
+index 0000000..ee50d52
+--- /dev/null
++++ b/workbench/spikes/orbital-mvcc/performance/reader_lease_check.cpp
+@@ -0,0 +1,40 @@
++#include "lmdb.h"
++#include <iostream>
++using namespace orbital_versioned_performance;
++static void require(bool yes) {if (!yes) throw std::runtime_error("reader lease oracle failed");}
++int main(int argc,char**argv) {
++  if (argc!=2) return 2;
++  Lmdb store(argv[1],64*1024*1024);
++  const Address address{{31,7},{23,9}};
++  std::array<std::byte,3> first{std::byte{1},std::byte{2},std::byte{3}},second{std::byte{7},std::byte{8},std::byte{9}};
++  {auto write=store.edit();write.put(19,{.next=23,.value=11,.tag=1});write.put_part(address,first);write.publish();}
++  std::optional<Lmdb::Read> old(store.read());const auto old_version=old->version();
++  store.prepare_short_reader();
++  {
++    auto lease=store.short_read();auto moved=std::move(lease);
++    require(moved.get(19)->value==11 && moved.part(address)->front()==std::byte{1});
++    require(moved.version()==old_version && store.short_statistics().active);
++    bool nested=false,close=false;
++    try {auto forbidden=store.short_read();} catch(const std::logic_error&) {nested=true;}
++    try {store.close_short_reader();} catch(const std::logic_error&) {close=true;}
++    require(nested && close && store.short_statistics().active);
++  }
++  require(!store.short_statistics().active);
++  {auto write=store.edit();write.put(19,{.next=29,.value=41,.tag=5});write.put_part(address,second);write.publish();}
++  {
++    auto lease=store.short_read();
++    require(lease.version()>old_version && lease.get(19)->value==41 && lease.get(19)->next==29);
++    require(lease.part(address)->front()==std::byte{7});
++    require(old->get(19)->value==11 && old->part(address)->front()==std::byte{1});
++  }
++  require(!store.short_statistics().active);
++  {auto write=store.edit();write.put(19,{.next=37,.value=61,.tag=6});write.publish();}
++  {auto lease=store.short_read();require(lease.get(19)->value==61);require(!lease.get(21));}
++  const auto held=store.short_statistics();require(!held.active);
++  if constexpr(Lmdb::reuse_short_reader) require(held.begins==1 && held.renews==3 && held.resets==4 && held.aborts==0 && held.retained);
++  else require(held.begins==3 && !held.renews && !held.resets && held.aborts==3 && !held.retained);
++  old.reset();store.close_short_reader();auto final=store.short_statistics();
++  require(!final.active && !final.retained && final.aborts==(Lmdb::reuse_short_reader?1:3));
++  store.prepare_short_reader();{auto lease=store.short_read();require(lease.get(19)->value==61);}store.close_short_reader();
++  std::cout<<"{\"passed\":true,\"independent_publication_visibility\":true,\"old_body_and_value_preserved\":true,\"moved_lease\":true,\"nested_and_active_close_refusals\":true,\"reset_counts_and_final_abort\":true,\"reprepare\":true}\n";
++}

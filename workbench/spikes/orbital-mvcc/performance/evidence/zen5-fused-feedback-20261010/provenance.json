@@ -1,0 +1,53 @@
+{
+  "files_sha256": {
+    "breadth/binary-identity.json": "821845b24d9e63cf4784fbf013965198c5ac6b25d4c4eff61884b08ff17f1c55",
+    "breadth/build-cost.json": "2bea99e2c641e42e27ee99ef40df35309d262510f75d91a1d73f78c85733452f",
+    "breadth/measurements.csv": "c22a8cc34faf7a133081deeb61600a0f25a29eeb1106dcfa78181e4c3aa17e0d",
+    "breadth/parity.json": "d22b3e5ba0d49d8b61b26305e9f587213974109680adc8262e6624125973b33a",
+    "breadth/qualification.json": "bf6dcf7bf0267c72b987fbc48b823a77424ad5506af081fc244a3eae980df4f5",
+    "breadth/reader_lease_check.json": "36079af1ddd0bab59360de4f8cb12f56d5a9edc659728d0fc49e6af2af525c52",
+    "breadth/summary.csv": "e64608033d3336c3105d037108fbe7adac4f47f02ec31dbe4b31f52849f8715a",
+    "fresh-reader/abi.json": "74a53dca253f73e36efa0234f91a48484f1a6b8d8633b9b57bad34a893b4ddbd",
+    "fresh-reader/binary-identity.json": "2c4e3d50ecb3cd3643d4fb3f0f3cbd9a091b87c8fe67bfd0de71d7e2eaba9d15",
+    "fresh-reader/build-cost.json": "1eaefb5e6fa980a7f779e21bcca8375b59de8d6e0559541aba025fe2ab1b314d",
+    "fresh-reader/measurements.csv": "9a8b825e3ede76d9c7199313fbe7de6c5566abf83a645ecbc69e46b6e5a1e4e4",
+    "fresh-reader/parity.json": "c6e2456c9d2b3d4fbc1e202a52af958159f994db46646ba8b8664dbbda336aba",
+    "fresh-reader/qualification.json": "bf6dcf7bf0267c72b987fbc48b823a77424ad5506af081fc244a3eae980df4f5",
+    "fresh-reader/reader_lease_check.json": "36079af1ddd0bab59360de4f8cb12f56d5a9edc659728d0fc49e6af2af525c52",
+    "fresh-reader/summary.csv": "bfb4b9abefeda834a2952262280ef2626e68bf17db5afb2e3407591a77be6f26",
+    "host.json": "2992dedae74f3b867d72a64b5ae34a020e45755ece2656f80dc476564fc38117",
+    "renew-reader/abi.json": "1c487f81d4509d60c3f1e4ae55ebfee07abb570817e0181a3c967c6d73222b37",
+    "renew-reader/binary-identity.json": "821845b24d9e63cf4784fbf013965198c5ac6b25d4c4eff61884b08ff17f1c55",
+    "renew-reader/build-cost.json": "b7c4dbbae6e5c9e60b3724f6b000bbb2c38545e0e35fa9047a632ea587cd0360",
+    "renew-reader/measurements.csv": "de775e540574754a8d9be55d9f1078eaf46301f1815b30edf6e5ef10d8efbfa4",
+    "renew-reader/parity.json": "c6e2456c9d2b3d4fbc1e202a52af958159f994db46646ba8b8664dbbda336aba",
+    "renew-reader/qualification.json": "bf6dcf7bf0267c72b987fbc48b823a77424ad5506af081fc244a3eae980df4f5",
+    "renew-reader/reader_lease_check.json": "36079af1ddd0bab59360de4f8cb12f56d5a9edc659728d0fc49e6af2af525c52",
+    "renew-reader/summary.csv": "d85557da2c3f5a010e13c1a18233c6040a8908a2953ba6fe5ac2ccaad3ba075f",
+    "worker-result.json": "6cfc33ff4e708b41221266ac852a1bb4dfb1adc1d58b3e52c153485c7b2667a1"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/fresh-reader"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/renew-reader"
+    ],
+    [
+      "python3",
+      "workbench/spikes/orbital-mvcc/performance/run.py",
+      "--report",
+      "{evidence}/breadth"
+    ]
+  ],
+  "regenerate_from": "archive"
+}

@@ -242,3 +242,12 @@ ignored output and the verified artifact bundle. Disposable generated databases
 are removed only after their trial passes; they are reproducible fixture state.
 Use the [retention and recovery helper](../../../tools/artifacts.md) to retain a
 chosen run; no benchmark clock establishes a cache-level or durability claim.
+
+The [verified fused feedback](FEEDBACK.md#verified-fused-breadth-and-reusable-mapped-readers)
+retains the intended larger/cold/held-reader panel and a same-wrapper LMDB
+begin/abort versus reset/renew pair. Recover its applied source to replay
+`fused_feedback_screen.sh`; source-postimage assertions run before capture.
+`composition-feedback` compares the selected Prepared/Allocation/fusion composition
+with the frozen measured fused cut. `module-quick` is the smaller extraction
+comparison: coherent reads, tiny writes with held/rotated readers, larger batch
+and Series4 controls. Neither profile adds an automatic sweep.

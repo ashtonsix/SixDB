@@ -654,3 +654,68 @@ fixed, then a modest larger/cold/retained read-write panel. Heap and trim contro
 remain separate; broader residency/catalog/retention generality remains open.
 The source-only baseline range diagnostic explicitly names uncovered allocator,
 map and new snapshot storage; it is not a cold measurement.
+
+## Verified fused breadth and reusable mapped readers
+
+[Complete comparisons](evidence/zen5-fused-feedback-20261010/renew-reader/measurements.csv)
+and [source audit](evidence/zen5-fused-feedback-20261010/source-recipe.json)
+come from `20261010T002323Z-2438d29a`: 144 fresh-reader trials, 144 renew-reader
+trials and 304 breadth trials. Each exact capture retains the original measured
+coherent fusion, point writer, Storage16 and full maintenance; source postimages
+and the 2771-byte scalar caller establish that composition. These replace the
+intended fused coverage missing from the earlier point-only captures. The
+superseded reader control remains recoverable through its
+[thin archive reference](evidence/zen5-fused-feedback-20261010/superseded-reader-artifact.json);
+its complete duplicate export leaves Git. The earlier breadth comparison remains
+explicitly point-only. The new job uses another Spot guest, so compare treatments
+within this capture.
+
+Fresh versus renew uses the same stationary LMDB owner and 8-byte lease. Both
+end each group snapshot inside the complete interval. Renew retains an inactive
+handle between groups; setup and final abort have separate clocks. Independent
+publication/old-view/move/refusal checks pass in each exact cut. All 160 mapped
+read trials have the expected begin/renew/reset/abort counts, no active lease
+between groups, and no retained handle after final cleanup. Store/ordinary
+Read/short lease are 88/16/8 bytes; private transaction allocation is unavailable.
+
+Median mapped throughput, ns per complete request:
+
+| Case | Fresh | Renew |
+| --- | ---: | ---: |
+| 192/64 hit, scalar | 121.62 | 73.06 |
+| 192/64 hit, batch64 | 56.66 | 59.72 |
+| 192/64 dependent16, scalar | 178.77 | 154.12 |
+| 32768/4 hit, scalar | 151.38 | 128.36 |
+| 32768/4 dependent16, scalar | 1149.27 | 1129.58 |
+| 32768/4 dependent16, batch64 | 1052.18 | 1077.43 |
+
+Scalar setup amortization helps; batch results include regressions. Unchanged
+Inline tiny scalar hit is 21.66/21.52 ns and dependent16 78.15/78.23. Larger
+unchanged Inline scalar dependent16 shifts 1137.32/1092.36, while its batch
+shifts 1212.46/1248.32. This blocked two-repetition pair is directional evidence,
+not attribution of every small timing change to the reader policy.
+
+The breadth arm uses renew and the same once-per-trial body cold start. All
+warm/cold pairs preserve oracle and logical/body counters. Exactly 64/256 body
+ranges cover 753664/6029312 bytes. Metadata, trace, execution and translations
+remain warm; the timed replay naturally reheats bodies. Larger scalar medians:
+
+| 262144 rows / 256 Objects | Inline warm / cold | Directory warm / cold | Mapped warm / cold |
+| --- | ---: | ---: | ---: |
+| hit | 111.47 / 289.22 | 166.74 / 317.80 | 177.82 / 383.59 |
+| dependent16 | 995.02 / 1421.07 | 1165.53 / 1510.82 | 1103.21 / 1556.05 |
+
+Fusion keeps an advantage in these cold-start medians. The earlier point-only
+breadth record cannot support a claim about fused cold behavior. Warm batching
+still matters: the renewed 32768/4 hit costs Inline 86.77 versus mapped 75.42 ns,
+and dependent16 batch64 Inline 1248.32 versus mapped 1077.43.
+
+Holding the original reader still makes scalar maintenance expensive. Tiny
+Inline update is 1215.85 ns with age0 versus 812.60 with age64 rotation; batch64
+is 298.73/296.87 versus mapped 265.17/264.45. Larger 16384/64 Inline batch is
+455.93/459.20 versus mapped 1572.77/1605.50; the mapped large-write fault/clock
+limitation discussed above still applies. Series4 batch is 133.54 ns. Every
+write settles to zero pending maintenance/debt after the retained reader ends.
+All nine table/parity reports and three ABI reports regenerate byte-identically;
+breadth shares the byte-identical renew ABI, retained once. Full source, binaries,
+ordered samples and diagnostics remain in the existing worker archive.
