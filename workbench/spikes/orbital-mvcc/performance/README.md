@@ -6,12 +6,57 @@ including negative tail/counter findings and source limits. The earlier
 Each comparison belongs to its captured sources; it does not qualify later
 directory, representation or Allocation changes.
 
-This is the rejected Stage 2 implementation retained as an experimental
-comparison baseline, alongside the fixed-record [consumer](../consumer/).
-Architecture, implementation and performance must now be varied and measured
-together. The primary comparison must select actual Object state, decode real
-Ikea backing and publish real versions.
-Codec-only calls and deliberately outlined seams cannot stand in for it.
+This harness measures the selected ObjectStore composition and retains the
+rejected Stage 2 implementation as a historical comparison baseline, alongside
+the fixed-record [consumer](../consumer/). Each source cut identifies which it
+uses. Complete operations select actual Object state, decode real Ikea backing
+and publish real versions; codec-only calls do not replace those measurements.
+
+## Wider operating conditions
+
+Further narrow LMDB parity tuning is set aside. The next experiments seek useful
+strengths, weaknesses and general improvements across composed workloads.
+Existing timing evidence emphasizes point/dependent reads and fixed-count
+updates, batch1/64, held/rotated readers and maintenance. Large-body cold-start
+evidence reaches approximately 6 MB; it is not a sustained large-working-set
+survey. Actual Loom integration and representation-conversion histories supply
+correctness coverage, which is distinct from performance iteration.
+
+`survey-first` is the first bounded discovery panel: dependent16 over roughly
+0.75/48/193 MB of Tuple bodies with 32768 rows per Object, small/large scan16,
+and two sizes of real Tuple↔Series conversion starting in either format. Read
+traces contain 524291 requests and are replayed before timing. Conversion
+includes allocation, capture, adoption and normal maintenance; the original
+Scope and source bodies remain held until separately timed settlement. It is
+roundtrip performance, not an isolated one-direction bandwidth result. One
+independent map suffices for read validation; mutable and retained-cut expected
+states remain separate for writes. Per-case `bytes` controls the physical budget.
+
+Run `survey_first.sh` on a Zen5 worker with at least 4 GiB RAM. Two repetitions
+produce 36 independently checked trials, with separate throughput and latency
+stores. This panel measures the selected Inline composition without an LMDB
+arm. The worker/source receipts, process memory and actual body capacities give
+the context; larger encoded size alone does not identify the source of each load.
+
+The next scenario choices follow the first results and the owning module seams:
+
+| Scenario | Useful variations and observations |
+| --- | --- |
+| Residency and locality | Large/small bodies at fixed Object count; uniform/skewed/sequential access; row versus column Parts; actual page/NUMA policy; faults and serviceable hardware counters |
+| Interleaved independent work | Actual Loom Ring depths; within one Part, across Parts and across Objects; independent transaction Scopes; throughput, request latency and fairness versus serial execution |
+| Append and tailing | Increasing row count, tiny/batched publication, rollover as a separate caller policy, lagged readers; bytes copied/constructed, memory growth and settlement |
+| Conversion and reuse | Both directions separately, retained old Parts, conversion followed by useful scans/updates; setup amortization and source/destination peak residency |
+| Mixed transactions | Read/write ratios, hot Objects/keys, repeated keys and multi-Object packets; snapshot size, publication cost and conflict/refusal behavior |
+| History and churn | Reader-age distributions, one stalled reader, bursts, reader release and bounded maintenance; backlog, charged capacity and latency spikes |
+| Embedded host conditions | Foreground computation, bounded memory/refusal/retry, foreign immutable completion, cancellation and shutdown; caller cost and progress alongside latency |
+
+These are experiment directions, not a full Cartesian campaign or new success
+gate. Fixed-count fixture limits must be changed honestly for append; batching
+alone does not implement independent transactions in flight. New observations
+must say which conditions were actually exercised before motivating an
+implementation change.
+
+## Historical comparison controls
 
 The primary local comparator stores identical encoded Tuple bodies under opaque
 Object/Part identifiers in Orbital and as LMDB values. Both resolve those IDs

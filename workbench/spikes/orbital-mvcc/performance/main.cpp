@@ -269,13 +269,15 @@ int main(int argc,char** argv) try {
   std::optional<Faults> write_faults;
   orbital_bench::pmu::Session hardware(o.pmu,o.pmu_events);
   orbital_bench::pmu::Session release_hardware(o.pmu,o.pmu_events);
+  const bool conversion=o.workload=="convert", updating=o.workload=="point-update", latency=o.mode=="latency";
   Corpus corpus(o.rows,o.objects,o.seed);
   std::vector<Golden> original(o.objects);
   for (std::size_t object=0;object<o.objects;++object)
     for (const auto& row:corpus.images[object].rows) original[object].emplace(row.key,row.record);
-  auto expected=original;
-  auto last_old_expected=original;
-  const bool conversion=o.workload=="convert", updating=o.workload=="point-update", latency=o.mode=="latency";
+  // Reads need one independent map, not three full copies of a large dataset.
+  // Mutation and retained-cut validation keep their distinct expected states.
+  auto expected=(updating || conversion)?original:std::vector<Golden>{};
+  auto last_old_expected=updating?original:std::vector<Golden>{};
   Trace trace;
   std::vector<std::size_t> objects(o.ops);
   std::vector<Outcome> output(conversion?0:o.ops),expected_output(conversion?0:o.ops);
@@ -300,7 +302,7 @@ int main(int argc,char** argv) try {
         record.value=op.record.value;record.tag=op.record.tag;
         expected_output[i].changes=1;detail::mix(expected_output[i].digest,1);
         if (o.retention_age && i+1==last_old_start) last_old_expected=expected;
-      } else expected_output[i]=oracle(expected[objects[i]],op);
+      } else expected_output[i]=oracle(original[objects[i]],op);
     }
   }
   Interval interval,release,conditioning;

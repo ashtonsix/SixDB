@@ -20,6 +20,26 @@ from experiment import Run
 
 
 def panel(profile="resident"):
+    if profile == 'survey-first':
+        # Discovery over the selected composition, without a parity target.
+        # Keep rows per Object fixed while scaling total bodies (~0.75/48/193 MB).
+        # Long traces revisit the whole population instead of a 4K-request sample.
+        for rows, objects in [(32768, 1), (2097152, 64), (8388608, 256)]:
+            yield dict(rows=rows, objects=objects, workload='dependent-16', batch=1,
+                       ops=524291, codec='shape', conditioning='warm-trace',
+                       **{'bytes': 1024*1024*1024, 'metadata-bytes': 64*1024*1024},
+                       backends=['composed-inline'])
+        for rows, objects in [(32768, 1), (8388608, 256)]:
+            yield dict(rows=rows, objects=objects, workload='scan-16', batch=1,
+                       ops=524291, codec='shape', conditioning='warm-trace',
+                       **{'bytes': 1024*1024*1024, 'metadata-bytes': 64*1024*1024},
+                       backends=['composed-inline'])
+        for rows, objects in [(4096, 4), (262144, 16)]:
+            for initial in ['rows', 'columns']:
+                yield dict(rows=rows, objects=objects, workload='convert', batch=1,
+                           ops=2*objects, **{'from': initial, 'metadata-bytes': 16*1024*1024},
+                           backends=['composed-inline'])
+        return
     if profile == 'module-quick':
         for rows,objects,workload in [(192,64,'point-hit'),(32768,4,'dependent-16')]:
             yield dict(rows=rows,objects=objects,workload=workload,batch=1,ops=4099,
@@ -479,7 +499,7 @@ def main():
     parser.add_argument("--workspace", type=Path, default=ROOT/"build/workspaces/orbital-mvcc-performance")
     parser.add_argument("--cpu", type=int, default=2)
     parser.add_argument("--repetitions", type=int, default=5)
-    parser.add_argument("--profile", choices=["feedback","catalog","churn","groups","faults","quick","composed-quick","composed-context","fusion-quick","breadth","module-quick","composition-feedback","resident"], default="feedback")
+    parser.add_argument("--profile", choices=["feedback","catalog","churn","groups","faults","quick","composed-quick","composed-context","fusion-quick","breadth","module-quick","composition-feedback","survey-first","resident"], default="feedback")
     parser.add_argument("--march", default="")
     parser.add_argument("--tune", default="generic")
     parser.add_argument("--jobs", type=int, default=2)
@@ -575,7 +595,7 @@ def main():
             db = output/f"{name}-db"
             argv = [str(output/"bin"/targets[0]), "--backend", backend, "--mode", mode,
                     "--seed", "8132", "--bytes", str(256*1024*1024), "--db", str(db)]
-            for option in ["rows", "objects", "workload", "batch", "ops", "from", "codec", "conditioning", "retention-age", "metadata-bytes", "sample-storage"]:
+            for option in ["rows", "objects", "workload", "batch", "ops", "from", "codec", "conditioning", "retention-age", "metadata-bytes", "sample-storage", "bytes"]:
                 if option in case: argv += [f"--{option}", str(case[option])]
             if mode == "latency": argv += ["--latency-samples",str(output/f"{name}.latency.csv")]
             run.step(name, argv, f"{name}.json")
@@ -591,7 +611,7 @@ def main():
                           "--seed","8132","--bytes",str(256*1024*1024),"--db",str(db),"--pmu","basic"]
                     for event in ["llc_read_misses:3:0x10002","dtlb_read_misses:3:0x10003","branch_misses:0:5"]:
                         argv += ["--pmu-event",event]
-                    for option in ["rows","objects","workload","batch","ops","from","codec","conditioning","retention-age","metadata-bytes","sample-storage"]:
+                    for option in ["rows","objects","workload","batch","ops","from","codec","conditioning","retention-age","metadata-bytes","sample-storage","bytes"]:
                         if option in case: argv += [f"--{option}",str(case[option])]
                     run.step(name,argv,f"{name}.json")
                     result=json.loads((output/f"{name}.json").read_text())
