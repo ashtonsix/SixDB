@@ -35,3 +35,13 @@ target_link_libraries(loom_object_ring_performance PRIVATE orbital_versioned_per
 add_executable(orbital_append_performance append_bench.cpp)
 sixdb_target(orbital_append_performance)
 target_link_libraries(orbital_append_performance PRIVATE orbital_versioned_performance_composed)
+
+# Private fixed-reservation shared-prefix comparison; no module API changes.
+add_executable(orbital_prefix_growth_bench controls/prefix-growth/append_driver.cpp)
+sixdb_target(orbital_prefix_growth_bench)
+target_link_libraries(orbital_prefix_growth_bench PRIVATE orbital_versioned_performance_composed)
+add_executable(orbital_prefix_growth_check controls/prefix-growth/check.cpp)
+sixdb_target(orbital_prefix_growth_check)
+target_link_libraries(orbital_prefix_growth_check PRIVATE orbital_versioned_performance_composed)
+add_test(NAME orbital_prefix_growth_check COMMAND orbital_prefix_growth_check)
+set_tests_properties(orbital_prefix_growth_check PROPERTIES TIMEOUT 30)

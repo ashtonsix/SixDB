@@ -1,0 +1,62 @@
+{
+  "frozen": true,
+  "base": "df29d705831ec9aec226ea68487a7f2d68a71a74",
+  "scope": "private fixed-reservation append-only Tuple comparison",
+  "no_live_or_index_edits": true,
+  "no_module_api_changes": true,
+  "no_timing_run": true,
+  "unchanged_base_files_verified": 5967,
+  "overlay_apply_and_postimages_checked": true,
+  "source_overlay": {
+    "workbench/spikes/orbital-mvcc/performance/CMakeLists.txt": "c0a2033edb96ba2cddd9e7a7d6c34b60c6f092ad0780b0045154182c4102ec41",
+    "workbench/spikes/orbital-mvcc/performance/controls/prefix-growth/backend.h": "39e0f2ef09e45bf17995292813b96d2596ad03bf633e3a8a00aab4263369968c",
+    "workbench/spikes/orbital-mvcc/performance/controls/prefix-growth/append_driver.cpp": "439552cfb26d529f8e33bc6d46cd46f7202303deb9f5faf3f83f58bc93dae848",
+    "workbench/spikes/orbital-mvcc/performance/controls/prefix-growth/check.cpp": "9c697298a1a9740fa0cd01f58834b4e3ed101a086ad205e90ada579773532501",
+    "workbench/spikes/orbital-mvcc/performance/controls/prefix-growth/README.md": "3fdf9bff7a2313b67e1bf20195d8c3d3f43c25dbd33c15222cbf9b3b2bcac953"
+  },
+  "files": {
+    "overlay.patch": "7d69150e4f94f2e5528fd812b2d9810f203fe277663032133d33da5a3f9b9f01",
+    "append_driver.input.cpp": "a8f2c10e6498976c99b472cae1b696878a3888129e894d653cdc52513917fdea",
+    "build.py": "4e123902a1727079e5666a7814f777fdaf5c8babf7c43a8eb403c5037d0579b4",
+    "qualify.py": "6ed069b4faca8dde0eb17c551fc2f5d444a1576273bae71b8db95b1eec6d8e2d",
+    "freeze.py": "7bfec7f193b0587cfe171a4427b383830e7f4a8af87ab5783c77cc01de484d41",
+    "native-build.json": "2be684cad6c675b3e360676a143d6a5a9abfb21105d80a3a0d52fa9f18c04039",
+    "check-result.json": "9ca83da631ed0e57f7ca57a231e625889f5f879d281d98bdf2c9ecd6b7bed85d",
+    "driver-verification.json": "3798841370cda8ef9d681b3e37a39f66fac8a231b5a59b4400ed84f8cd767149",
+    "reused-feasibility-result.jsonl": "a192faefb0aa302d3d6db77ca95e753304151417a3396c3e6af4d46da1556bbb"
+  },
+  "binaries": {
+    "orbital_prefix_growth_bench": "5c1de52004f78000b0c6391d471eb5ab3a9c32ded7a8aeb219dd7ed326bd8e6e",
+    "orbital_prefix_growth_check": "44422534428ac78ba386e2678fa9aec24a7167d79dbc605f90983a8d551bf370"
+  },
+  "reused_feasibility_release_sha256": "1b0f149c085f8ed1bd154dd3b49d7b0144d70fbff13bbfbd3ca2fba6c74c67a8",
+  "qualification": {
+    "passed": true,
+    "timing_valid": false,
+    "page_bytes": 4096,
+    "rows": 310,
+    "publications": 132,
+    "refusals": 5,
+    "row_checks": 3014,
+    "wire_byte_checks": 69322,
+    "body_allocations": 1,
+    "growth_calls": 63,
+    "relocations": 0,
+    "prefix_copied_bytes": 0,
+    "shared_block_bytes": 56,
+    "representation_bytes": 48,
+    "backend_bytes": 2048,
+    "metadata_live": 3467,
+    "metadata_peak": 3647,
+    "mapped_bytes": 8192,
+    "reserved_bytes": 12288
+  },
+  "driver_qualification": {
+    "paired_clock_free_cases": 3,
+    "negative_reservation_cases": 2,
+    "oracle_digests_equal": true
+  },
+  "normal_cmake": "configured with Clang21.1.8 Release/generic; both target graphs present; native compile uses verified incremental warm recipe",
+  "physical_peak_limit": "shared-prefix only: one monotone successful Window; fresh-copy transient peak unavailable",
+  "accounting_limit": "Schema heap, caller stack high-water, held extent and retirement records unmeasured; subset fields marked; diagnostic input/oracle/sample buffers separate"
+}
