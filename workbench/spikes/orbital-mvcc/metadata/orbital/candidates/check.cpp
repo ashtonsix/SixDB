@@ -1,4 +1,8 @@
+#if SIXDB_OBJECT_MODULE_TEST
+#include "object_module_test.h"
+#else
 #include "candidate_store.h"
+#endif
 #include <array>
 #include <cstring>
 #include <iostream>
@@ -7,7 +11,11 @@
 #include <source_location>
 #include <cstdlib>
 
+#if SIXDB_OBJECT_MODULE_TEST
+using namespace object_module_test;
+#else
 using namespace compact_history;
+#endif
 namespace cd = compact_descriptor;
 
 template<class T> void check(const T& condition,
@@ -548,7 +556,45 @@ template<class Store> void run(const char* name) {
   std::cout << name << ": twelve grouped histories passed\n";
 }
 
+#if SIXDB_OBJECT_MODULE_TEST
+// The last handle clears itself before releasing Core. Physical disposal may
+// call back through that handle, but cannot resurrect the Core being destroyed.
+void final_store_disposal_callback() {
+  Memory metadata;
+  std::size_t called = 0;
+  {
+    using ActualStore = orbital::ObjectStore<DescriptorPhysical>;
+    ActualStore store(metadata);
+    {
+      auto backing = std::shared_ptr<const std::uint64_t>(new std::uint64_t(10), [&](const auto* word) {
+        delete word; ++called;
+        check(store.drain() == 0);
+        check(!store.borrow().bind(A));
+        ActualStore::Scope absent(store);
+        check(!absent.bind(A));
+      });
+      cd::RepresentationSpec spec{.object = A, .version = 1, .replica = {}, .format = {},
+          .logical_metadata = logical, .interpretation = {}, .dependencies = {}};
+      std::array<cd::PartSource, 1> part{{{.id = {0, 0}, .body = std::as_bytes(std::span(backing.get(), 1)),
+          .interpretation = {}, .readable_padding = 0, .alignment = alignof(std::uint64_t), .backing = backing}}};
+      auto physical = store.capture(spec, part); check(physical);
+      std::array<ActualStore::Change, 1> changes{{{A, std::move(*physical)}}};
+      ActualStore::Scope basis(store);
+      ActualStore::Prepared prepared(store);
+      check(store.prepare(basis, changes, prepared)); check(store.install(prepared));
+    }
+    check(called == 0);
+  }
+  check(called == 1 && metadata.live == 0);
+}
+#endif
+
 int main() {
+#if SIXDB_OBJECT_MODULE_TEST
+  run<Selected>("orbital-object");
+  final_store_disposal_callback();
+  std::cout << "orbital-object: final-disposal reentry passed\n";
+#else
   run<Store32>("v32-floor"); run<Store16>("v16-floor"); run<Store8>("v8-floor");
   run<Store<Slab<Version32>, compact_retention::DistinctRetention, DescriptorPhysical>>("v32-distinct");
   run<Store<Slab<Version16>, compact_retention::DistinctRetention, DescriptorPhysical>>("v16-distinct");
@@ -561,4 +607,5 @@ int main() {
   run<Store<Chunks8, compact_retention::DistinctRetention, DescriptorPhysical, CompactObjects>>("compact-v8-distinct");
   run<Store<Slab<Version16>, compact_retention::FloorRetention, DescriptorPhysical, TipObjects>>("inline-v16-floor");
   run<Store<Slab<Version16>, compact_retention::DistinctRetention, DescriptorPhysical, TipObjects>>("inline-v16-distinct");
+#endif
 }

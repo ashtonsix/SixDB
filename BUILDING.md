@@ -48,12 +48,16 @@ Stage 1 allocation, preparation, worker and execution support.
 Select `-DSIXDB_BENCHMARKS=orbital` for the
 [allocation comparison](workbench/benchmarks/orbital/README.md).
 
-The withdrawn Stage 2 Objects implementation is a rejected experimental baseline
-in the [Orbital MVCC spike](workbench/spikes/orbital-mvcc/README.md).
-Select `-DSIXDB_SPIKES=orbital-mvcc` independently of benchmark selection, then
-build `orbital_mvcc_validate` for its Object histories, actual Loom callers,
-consumer and LMDB checks. The earlier Object and consumer target names exist
-only inside that selected spike.
+The embedded `orbital::ObjectStore<Physical>` catalog uses the production
+Orbital storage library. A concrete material compiles its cold operations once
+with `orbital/src/object/store_impl.h`; its ordinary read definitions stay visible.
+The [Orbital MVCC study](workbench/spikes/orbital-mvcc/README.md) retains the rejected
+baseline and experimental controls. Select `-DSIXDB_SPIKES=orbital-mvcc` independently
+of benchmark selection, then build `orbital_mvcc_composed_check` and
+`orbital_mvcc_composed_read_fusion_check` to exercise the selected module through
+the real TuplePack/SeriesPack driver. `orbital_mvcc_validate` also checks baseline
+histories, actual Loom callers, consumers and LMDB. The retained baseline header
+is `orbital/mvcc_baseline.h`; it cannot shadow the production `orbital/object.h`.
 
 Build the `ikea_validate` target to build and run Ikea's behavior checks and
 examples. They are registered with CTest: `ctest --test-dir BUILD -N` lists them;

@@ -5,7 +5,7 @@
 
 namespace orbital_mvcc::composed {
 template<class Store> class Backend {
-  friend struct InlineReadFusion;
+  friend InlineReadFusion;
   Material material_;
   Store store_;
   using Owner = typename Store::Owner;
@@ -50,7 +50,10 @@ public:
   const Store& catalog() const { return store_; }
   Scope read() const { return Scope{store_}; }
   std::uint64_t cut() const { return store_.borrow().cut; }
-  auto statistics() const { return store_.statistics(); }
+  auto statistics() const {
+    if constexpr (std::is_same_v<Store, Catalog>) return InlineReadFusion::statistics(store_, material_.memory);
+    else return store_.statistics();
+  }
   Accounting accounting() const { return material_.accounting(); }
   void metadata_limit(std::size_t bytes) { material_.memory.limit = bytes; }
   std::size_t drain() { return store_.drain(); }
@@ -155,7 +158,7 @@ public:
     // keeps its original escaping-selection/alternative-capture semantics.
     [[gnu::always_inline]] void consume_into(std::size_t object, const orbital_bench::Operation& op,
         orbital_bench::Outcome& output)
-        requires(Capacity == 1 && std::is_same_v<Store, compact_history::InlineShapeStore16>) {
+        requires(Capacity == 1 && std::is_same_v<Store, Catalog>) {
       if (alternative_) { output = body(object).consume(op); return; }
       if (object >= owner_.corpus().images.size())
         p::need(Result<void>{std::unexpected(Error::invalid_argument)});
@@ -174,6 +177,6 @@ public:
   }
   static constexpr std::size_t write_caller_arrays = sizeof(std::array<Change, 64>) + sizeof(std::array<pw::Command, 64>);
 };
-using Inline = Backend<compact_history::InlineShapeStore16>;
+using Inline = Backend<Catalog>;
 using Directory = Backend<compact_history::CompactShapeStore16>;
 } // namespace orbital_mvcc::composed

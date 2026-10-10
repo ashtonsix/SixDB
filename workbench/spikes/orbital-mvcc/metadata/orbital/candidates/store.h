@@ -9,7 +9,6 @@
 // Experimental catalog adapter for real immutable encoded owners. This surface
 // is a comparison fixture, not a promoted Orbital API. The supplied Memory
 // resource must outlive the Store, scopes, physical owners and Part exports.
-namespace orbital_mvcc::composed { struct InlineReadFusion; }
 
 namespace compact_history {
 
@@ -29,7 +28,6 @@ enum class Disposition { empty, accepted, installed, aborted };
 struct Binding { ObjectId object{}; std::uint64_t version{}; };
 
 template<class Nodes, class Retention, class Physical, class Objects = HashObjects> class Store {
-  friend struct orbital_mvcc::composed::InlineReadFusion;
   using Value = typename Physical::Value;
   using Selection = typename Physical::Selection;
   using RepresentationSpec = typename Physical::Specification;
@@ -72,8 +70,7 @@ public:
   // Nonmovable, caller-resident enrollment. A stable address avoids repairing
   // links on moves. One Core pin preserves later discovery after Store reset.
   class Scope {
-    friend struct orbital_mvcc::composed::InlineReadFusion;
-    Core* core_{};
+      Core* core_{};
     std::uint64_t cut_{};
     Scope* previous_{};
     Scope* next_{};

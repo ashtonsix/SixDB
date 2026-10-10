@@ -1,3 +1,6 @@
+#if SIXDB_OBJECT_MODULE_TEST
+#include "object_module_test.h"
+#endif
 #include "shape_policy.h"
 #include <array>
 #include <cstdio>
@@ -317,6 +320,12 @@ template<class Store> void run(const char* label) {
 }
 
 int main() {
+#if SIXDB_OBJECT_MODULE_TEST
+  using Selected = object_module_test::Store<ch::ShapePhysical>;
+  static_assert(!std::is_aggregate_v<Selected::BoundSelection>);
+  static_assert(!std::is_constructible_v<Selected::BoundSelection, cs::Selection, cs::Binding>);
+  run<Selected>("orbital-object-shape");
+#else
   static_assert(!std::is_aggregate_v<ch::ShapeStore16::BoundSelection>);
   static_assert(!std::is_constructible_v<ch::ShapeStore16::BoundSelection, cs::Selection, cs::Binding>);
   run<ch::ShapeStore32>("shape32-distinct");
@@ -326,4 +335,5 @@ int main() {
   run<ch::CompactShapeStore16>("compact-shape16-distinct");
   run<ch::CompactShapeStore8>("compact-shape8-distinct");
   run<ch::InlineShapeStore16>("inline-shape16-distinct");
+#endif
 }

@@ -78,6 +78,10 @@ are independent retention roots, not released by the absence of a local reader.
 The selected composed path now uses an inline current version, 16-byte older
 nodes with separately charged 8-byte physical-pointer slots, coherent
 caller-resident Scopes and a stationary 48-byte `Prepared`.
+Its catalog and history now live in [Orbital](../../../../orbital/README.md#embedded-objects),
+with material-dependent cold operations instantiated once by the caller.
+Physical Representation/Part/View ownership is the remaining module extraction;
+fixture Shapes, record laws and clone policy stay outside Orbital.
 Preparation returns an 8-byte status. The catalog selects and retains physical
 representations without depending on their codec or Shape; full maintenance
 remains the default after bounded maintenance increased retained memory and

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <loom/ring.h>
-#include <orbital/object.h>
+#include <orbital/mvcc_baseline.h>
 
 namespace loom_metadata {
 // Mechanical packet controls, not a proposed version/ownership contract.

@@ -2,7 +2,7 @@
 
 Three ideas organize the baseline access path: a coherent logical selection,
 a complete physical interpretation, and access to its immutable backing.
-The [public header](include/orbital/object.h) owns exact signatures
+The [public header](include/orbital/mvcc_baseline.h) owns exact signatures
 and lifetime rules.
 
 ```mermaid

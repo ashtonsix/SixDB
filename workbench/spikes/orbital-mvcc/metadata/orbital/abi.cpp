@@ -1,5 +1,5 @@
 // Deliberately ordinary external boundaries, without LTO or trivial_abi.
-#include <orbital/object.h>
+#include <orbital/mvcc_baseline.h>
 
 namespace o = orbital::object;
 using orbital::Result;

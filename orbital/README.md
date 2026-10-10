@@ -1,10 +1,10 @@
 # Orbital
 
-Orbital implements allocation, preparation and worker services. Versioned
-Objects, Representations and Views are experimental in the
-[MVCC study](../workbench/spikes/orbital-mvcc/README.md); the Stage 2 attempt was
-withdrawn so measured performance, metadata ownership and interfaces can develop
-together. Journal, Port and distributed execution remain in the
+Orbital implements allocation, preparation, worker services and an embedded
+single-owner Object catalog. The [MVCC study](../workbench/spikes/orbital-mvcc/README.md)
+retains the rejected first implementation, competing layouts and the disposable
+TuplePack/SeriesPack driver used to develop and measure the selected catalog.
+Journal, Port and distributed execution remain in the
 [combined Orbital/Loom design](../workbench/design/orbital/DESIGN.md).
 
 Start with [Loom's caller path](../loom/README.md). A Loom Worker adopts an
@@ -98,6 +98,51 @@ inspectable until `remove_pool` invalidates the handle; Loom removes it before
 releasing the Arena. Legal shared-budget refusal enrolls its Pool for one future
 refund notice. Observe capacity generation before the attempt and recheck after
 waking; local changes also pulse it. Notifications grant no storage.
+
+## Embedded Objects
+
+[object.h](include/orbital/object.h) provides `ObjectStore<Physical>`. The material
+parameter owns immutable Representations, Parts, interpretation and physical
+retention. Orbital owns opaque Object identity, completed logical versions,
+coherent discovery, publication and selection of an equivalent Representation.
+It does not inspect records or decide clone, container or navigation policy.
+
+A stationary `Scope` enrolls at one completed local cut and protects late
+discovery, including absence. `Prepared` is stationary caller-owned storage:
+preparation reserves a finished batch; installation publishes every change at
+one cut without allocation or owner disposal. Aborting uninstalled work retains
+exclusion until all private owners and entry pins settle. Local cuts are neither
+`SerialPosition` nor `Epoch`, and this embedded protocol does not imply durable
+admission or consensus completion.
+
+`conversion` seals one selected Object/version and its immutable source. `adopt`
+can replace that version's physical alternative without changing logical time;
+the converter owes exact logical equivalence. A bound primary selection can
+export a Part through its material. Alternative selections are retained by the
+issuing Scope; the current API does not separately seal an alternative for bound
+Part export. A `Borrowed` selection instead requires one uninterrupted owner
+operation, with no publication, reentry, suspension or escape.
+
+The metadata resource is an ordinary `std::pmr::memory_resource` and must outlive
+all derived lifetimes. Every `Prepared` packet constructed from a live Store
+pins its Core, including empty, refused, installed and aborted packets. Resource allocation/deallocation callbacks must not reenter
+this catalog; the supported physical-owner disposal callbacks are a different
+boundary. Allocation failure refuses preparation; diagnostics and
+refusal injection can remain in the caller's resource. The selected layout keeps
+the current version in its Object directory entry and uses 16-byte historical
+nodes with separately charged 8-byte physical-pointer directory slots and
+distinct active-cut retention. Competing layouts stay in the study.
+
+The implementation keeps three compilation seams:
+
+- [storage.cpp](src/object/storage.cpp) compiles directory, history-slab and debt-storage allocation once in Orbital.
+- [store_impl.h](src/object/store_impl.h) and [history_impl.h](src/object/history_impl.h) compile publication, conversion and maintenance once for each concrete material's explicit-instantiation TU. The driver example is [catalog.cpp](../workbench/spikes/orbital-mvcc/metadata/composed/catalog.cpp).
+- Scope enrollment, ordinary selection and private storage layout remain visible for short reads. A deliberately coupled `object_detail::Access<Physical>` specialization lets one native composition fuse catalog selection with its own interpretation/kernel; Orbital names no driver type or runtime callback.
+
+All catalog calls and material-owner destruction run on the same owner. Physical
+Allocation's foreign final-return support does not make Object operations concurrent.
+The driver keeps whole-resource accounting, structural counters and the matched
+LMDB comparator; extraction alone is no claim of performance parity.
 
 ## Build and exercise
 

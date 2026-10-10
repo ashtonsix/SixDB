@@ -106,13 +106,14 @@ target_link_libraries(orbital_mvcc_consumer_point_write_check PRIVATE orbital_mv
 add_test(NAME orbital_mvcc_consumer_point_write_check COMMAND orbital_mvcc_consumer_point_write_check)
 list(APPEND metadata_checks orbital_mvcc_consumer_point_write_check)
 
-add_library(orbital_mvcc_composed STATIC composed/material.cpp composed/read_fusion.cpp)
+add_library(orbital_mvcc_composed STATIC composed/material.cpp composed/read_fusion.cpp composed/catalog.cpp)
 add_executable(orbital_mvcc_composed_read_fusion_check composed/read_fusion_check.cpp)
 sixdb_target(orbital_mvcc_composed_read_fusion_check)
 target_link_libraries(orbital_mvcc_composed_read_fusion_check PRIVATE orbital_mvcc_composed)
 add_test(NAME orbital_mvcc_composed_read_fusion_check COMMAND orbital_mvcc_composed_read_fusion_check)
 list(APPEND metadata_checks orbital_mvcc_composed_read_fusion_check)
 sixdb_target(orbital_mvcc_composed)
+target_include_directories(orbital_mvcc_composed PRIVATE "${PROJECT_SOURCE_DIR}/orbital/src")
 target_link_libraries(orbital_mvcc_composed PUBLIC
   orbital_versioned_performance_runtime orbital_mvcc_point_write
   orbital_mvcc_shape_read orbital_mvcc_directory)
@@ -141,3 +142,20 @@ add_custom_target(orbital_mvcc_metadata_validate
   DEPENDS ${metadata_checks} orbital_mvcc_descriptor_check orbital_mvcc_descriptor_abi
     orbital_mvcc_shape_check orbital_mvcc_shape_abi orbital_mvcc_candidates_abi
   USES_TERMINAL VERBATIM)
+
+# The selected Object module runs the same consequence histories as the controls.
+foreach(pair IN ITEMS "catalog|check" "shape|shape_store_check")
+  string(REPLACE "|" ";" fields "${pair}")
+  list(GET fields 0 label)
+  list(GET fields 1 source)
+  set(target orbital_object_${label}_check)
+  add_executable(${target} orbital/candidates/${source}.cpp)
+  sixdb_target(${target})
+  target_compile_definitions(${target} PRIVATE SIXDB_OBJECT_MODULE_TEST=1)
+  target_compile_options(${target} PRIVATE -UNDEBUG)
+  target_include_directories(${target} PRIVATE "${PROJECT_SOURCE_DIR}/orbital/src")
+  target_link_libraries(${target} PRIVATE orbital_mvcc_shape orbital_mvcc_descriptor orbital_mvcc_directory)
+  add_test(NAME ${target} COMMAND ${target})
+  set_tests_properties(${target} PROPERTIES LABELS orbital-mvcc-metadata TIMEOUT 60)
+  add_dependencies(orbital_mvcc_metadata_validate ${target})
+endforeach()

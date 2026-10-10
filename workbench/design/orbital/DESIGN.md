@@ -1,17 +1,20 @@
 # Orbital and Loom: runtime and protocol direction
 
-The [Orbital runtime](../../../orbital/README.md) owns supported allocation,
-preparation and worker interfaces. [Loom](../../../loom/README.md) supplies direct
+The [Orbital runtime](../../../orbital/README.md) owns allocation, preparation,
+worker interfaces and the embedded Object catalog. [Loom](../../../loom/README.md) supplies direct
 calls, Tasks and typed Rings. Journal, distributed authority/recovery, Port and
 the read cache remain future protocol work.
 
-**Orbital Stage 2 is experimental again.** Its first embedded Objects/Views
+**Orbital Stage 2 is being rebuilt with measured implementation changes.** Its first embedded Objects/Views
 implementation was withdrawn into the [MVCC study](../../spikes/orbital-mvcc/README.md).
 Performance was qualified too late to guide its architecture. That study now
 compares complete operations while changing version metadata, ownership, physical
 interpretation and call boundaries together. The target is lower latency than
 LMDB with versioning included. A correctness pass or a smaller `sizeof` alone
-does not establish the design.
+does not establish the design. The selected catalog/history implementation now
+lives in Orbital; generic physical Representation/Part/View ownership is still
+being extracted from the study. Whole-collection metadata and broad LMDB
+performance targets remain unmet.
 
 Engine and Ikea's composition of many blocks remain open for Ashton to design.
 The study's consumer is disposable scaffolding: it exercises real SeriesPack
@@ -19,13 +22,17 @@ column Parts and TuplePack row Parts, including bidirectional 4-to-1 Part
 conversion, without defining Engine navigation, membership, indexes, summaries
 or container copy-on-write. Stage 3 adds multiple workers.
 
-## Embedded experiment
+## Embedded implementation and comparisons
 
-Logical selection, complete physical interpretation and access to immutable
-backing remain the questions to compose. The study preserves the rejected
+The selected `ObjectStore<Physical>` owns logical identity, completed local cuts,
+coherent discovery, atomic publication and history retention. Its material
+adapter owns immutable physical representations; interpretation and record
+operations stay with Ikea and the caller. The study preserves the rejected
 [baseline](../../spikes/orbital-mvcc/baseline/objects.md), its actual lifetime and
 publication histories, and [matched LMDB evidence](../../spikes/orbital-mvcc/performance/README.md).
-Its source boundaries and layouts are candidates, not module contracts.
+The [module guide](../../../orbital/README.md#embedded-objects) describes the
+implemented lifetime and compilation seams; competing layouts and unapplied
+controls remain experiments.
 The earlier [composition experiments](../../spikes/orbital-stage2-composition/FINDINGS.md)
 provide additional evidence and unresolved alternatives.
 
@@ -416,8 +423,9 @@ actual Orbital/Loom libraries. Python extracts the
 pages' cpp blocks in reading order; diagnostics point back to Markdown.
 This skeleton checks future Object, Journal, Port and executor call shapes.
 Compilation proves neither correctness nor speed. Module headers own implemented
-allocation, reclamation and scheduling behavior. The MVCC study owns experimental
-Objects; wire layouts remain open.
+allocation, reclamation, scheduling and the embedded Object catalog. The MVCC
+study owns the disposable caller, competing layouts and measured comparisons;
+wire layouts remain open.
 
 The embedded experiment leaves the wider seams open: stored input and
 replay authority, missing-byte reconstruction/Port, distributed cuts and recovery,

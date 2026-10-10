@@ -1,5 +1,5 @@
 // Actual requested metadata for a complete frozen closure, not wrapper sizes.
-#include <orbital/object.h>
+#include <orbital/mvcc_baseline.h>
 #include <array>
 #include <cstdio>
 #include <memory>

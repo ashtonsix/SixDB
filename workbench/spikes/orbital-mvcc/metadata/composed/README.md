@@ -2,7 +2,7 @@
 
 Disposable performance-driver scaffolding joining the actual compact Shape,
 catalog, Allocation and native consumer. It contains no Engine or container
-policy. `Inline` uses `InlineShapeStore16`; `Directory` uses
+policy. `Inline` uses the selected `orbital::ObjectStore<ShapePhysical>`; `Directory` uses
 `CompactShapeStore16`. Both use distinct-cut retention and real independent
 Allocation owners, with no shared-pointer backing wrapper.
 
@@ -126,3 +126,11 @@ scan results, sparse duplicate and dense 64-Object publications, late old-cut
 discovery, real bidirectional conversion, replaced-alternative lifetime,
 partial private failure, metadata refusal, and adoption after history expiry.
 Teardown checks zero PMR and actual Runtime checks zero Arena charge.
+
+The selected catalog now lives in `orbital/include/orbital/object.h` and
+`orbital/src/object/`. `catalog.cpp` explicitly instantiates its cold operations
+once for this fixture's `ShapePhysical`; `read_fusion.cpp` owns the private
+`Access<ShapePhysical>` specialization. Counting/refusal `Memory`, physical Shape,
+row interpretation and all comparison controls remain in this study. Resource
+totals are read from that same Memory exactly once; private structural counters
+are projected into the existing driver observation packet.

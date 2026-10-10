@@ -21,7 +21,8 @@ the Git bundle requires retained ancestor `8412e5c`. It need not be restored to
 
 | Area | Current material |
 | --- | --- |
-| Baseline Objects | [Behavior](baseline/objects.md), [structure](baseline/structure.md), [header](baseline/include/orbital/object.h), [implementation](baseline/src/internal.h), [histories](baseline/test/object.cpp) |
+| Selected Objects | [Embedded module](../../../orbital/README.md#embedded-objects), [public header](../../../orbital/include/orbital/object.h), [actual composed driver](metadata/composed/README.md) |
+| Baseline Objects | [Behavior](baseline/objects.md), [structure](baseline/structure.md), [header](baseline/include/orbital/mvcc_baseline.h), [implementation](baseline/src/internal.h), [histories](baseline/test/object.cpp) |
 | Actual Loom composition | [Caller lifetimes](callers/README.md) and [executable histories](callers/loom.cpp) |
 | Disposable format consumer | [SeriesPack columns ↔ TuplePack rows](consumer/README.md), with four Parts ↔ one Part |
 | Complete-operation comparison | [LMDB controls and runner](performance/README.md), [iteration feedback](performance/FEEDBACK.md), [retained baseline findings](performance/FINDINGS.md) |
@@ -71,11 +72,18 @@ orb -m ubuntu cmake -S . -B build/orbital-mvcc/native -G Ninja \
 orb -m ubuntu cmake --build build/orbital-mvcc/native --target orbital_mvcc_validate
 ```
 
-The module targets `orbital_validate` and `loom_validate` cover Stage 1 only.
-The old Object/consumer check names exist only when this spike is selected.
-`orbital_mvcc_baseline` exports its experimental `<orbital/object.h>` include
-directory locally; the production Orbital include tree contains no Objects API.
-The existing candidate protocol sketch remains separately compileable.
+`orbital_validate` and `loom_validate` exercise allocation and worker services.
+Selected Object checks use `orbital_object_catalog_check`, `orbital_object_shape_check`,
+`orbital_mvcc_composed_check` and `orbital_mvcc_composed_read_fusion_check`. The first
+two run the existing catalog and Shape consequence histories against the actual
+production `ObjectStore` through a test-only observation adapter. These targets
+are included in `orbital_mvcc_metadata_validate`.
+
+`orbital_mvcc_baseline` exports the explicitly experimental
+`<orbital/mvcc_baseline.h>` header. Production `<orbital/object.h>` exposes the
+selected embedded catalog; source ownership and compilation seams are described
+in the [module guide](../../../orbital/README.md#embedded-objects). The other
+comparison policies and protocol sketch remain separately compileable.
 
 Selected historical evidence retains its original bytes and provenance. Moving
 it here does not turn the old machine, source or timing into a new measurement.

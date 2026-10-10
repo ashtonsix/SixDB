@@ -27,7 +27,7 @@ struct ShapePhysical {
   // Program/count compatibility does not prove equal logical content.
   static bool compatible(Value* a, Value* b) noexcept { return compact_shape::equivalent(a, b); }
   static auto footprint(Value* value) noexcept { return compact_shape::footprint(value); }
-  static auto export_part(Selection selected, std::size_t index, Binding binding, ExportPolicy policy) noexcept {
+  static auto export_part(Selection selected, std::size_t index, auto binding, ExportPolicy policy) noexcept {
     return compact_shape::detail::retain_part(selected, index, {binding.object, binding.version}, policy);
   }
 };

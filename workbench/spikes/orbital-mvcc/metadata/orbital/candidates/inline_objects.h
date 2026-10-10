@@ -15,7 +15,6 @@
 // current cut/physical pointer; only older versions need separate history slots. IDs remain full-width; stable
 // entry handles are internal locations, not identities or exported lifetimes.
 // The resource outlives TipDirectory. Its caller owns physical lifetimes and every old-history slot.
-namespace orbital_mvcc::composed { struct InlineReadFusion; }
 
 namespace compact_history::inline_detail {
 
@@ -35,7 +34,6 @@ struct Entry {
 static_assert(sizeof(Entry) == 40);
 
 class TipDirectory {
-  friend struct orbital_mvcc::composed::InlineReadFusion;
   static constexpr Handle empty = 0, deleted = UINT32_MAX;
   static constexpr std::uint32_t live = 1, pinned_bit = 2, debt_bit = 4;
   static constexpr std::uint32_t page_entries = 32;
@@ -215,7 +213,6 @@ inline TipDirectory::~TipDirectory() {
 namespace compact_history {
 
 class TipObjects {
-  friend struct orbital_mvcc::composed::InlineReadFusion;
 public:
   static constexpr bool inline_current = true;
   using Entry = inline_detail::Entry;

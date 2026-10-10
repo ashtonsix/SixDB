@@ -5,7 +5,7 @@
 #include "../consumer/write_batch.h"
 #include "../consumer/shape_write.h"
 #include "../consumer/point_write.h"
-#include "../orbital/candidates/shape_policy.h"
+#include "catalog.h"
 #include <optional>
 
 namespace orbital_mvcc::composed {
@@ -47,7 +47,7 @@ struct Accounting {
 // Tuple Shape are also explicit borrowed write controls, counted separately.
 // Actual captured Shapes own their read law. No per-body shared_ptr is used.
 class Material {
-  friend struct InlineReadFusion;
+  friend InlineReadFusion;
   const p::Corpus& corpus_;
   v::Shape columns_;
   struct ReleaseShape { void operator()(cs::Shape* value) const { cs::release(value); } };

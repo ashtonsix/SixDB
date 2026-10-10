@@ -1,6 +1,6 @@
 #pragma once
 
-#include <orbital/object.h>
+#include <orbital/mvcc_baseline.h>
 #include <algorithm>
 #include <cassert>
 #include <limits>

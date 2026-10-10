@@ -4,7 +4,7 @@ The [MVCC study](../README.md) owns these candidate Object-facing contracts.
 [loom.cpp](loom.cpp) retains real lifetime and cancellation histories from the
 rejected implementation; the production Loom API remains Stage 1.
 
-[Orbital Objects](../baseline/include/orbital/object.h) supply selected versions,
+[Orbital Objects](../baseline/include/orbital/mvcc_baseline.h) supply selected versions,
 physical descriptions and retained Views. A named `BorrowedContext` serves
 uninterrupted ready calls; end its borrowed access before publication, suspension
 or Store destruction, and before replacing a borrowed alternative. For discovery

@@ -2,7 +2,8 @@
 #include "../orbital/shape/shape_private.h"
 #include "../consumer/shape_read_private.h"
 
-namespace orbital_mvcc::composed {
+namespace orbital::object_detail {
+using namespace orbital_mvcc::composed;
 [[gnu::always_inline]] inline Result<void> InlineReadFusion::consume_at(const Owner& owner, Core* core,
     std::uint64_t cut, orbital::ObjectId object, const orbital_bench::Operation& op,
     orbital_bench::Outcome& output) {
@@ -11,11 +12,11 @@ namespace orbital_mvcc::composed {
   // through version selection; find()->handle->get() needlessly reopens it.
   // Full opaque identity, tombstones and bounded probing remain mandatory.
   const auto& directory = core->entries.entries_;
-  using Directory = compact_history::inline_detail::TipDirectory;
+  using Directory = orbital::object_detail::TipDirectory;
   const auto capacity = directory.buckets_.size();
   if (!capacity) return std::unexpected(Error::absent);
   auto index = static_cast<std::size_t>(Directory::hash(object)) & (capacity - 1);
-  const compact_history::inline_detail::Entry* found{};
+  const orbital::object_detail::Entry* found{};
   for (std::size_t probes = 0; probes < capacity; ++probes) {
     const auto handle = directory.buckets_[index];
     if (handle == Directory::empty) break;
@@ -51,10 +52,10 @@ namespace orbital_mvcc::composed {
     // and remain charged. Capture established actual count/placement; Scope
     // or uninterrupted current borrow protects backing. No runtime Shape
     // count/transfer reload is needed.
-    constexpr auto law = metadata_consumer::compact_law::ReadLaw::canonical();
-    const metadata_consumer::compact_law::Control control{law, static_cast<std::size_t>(value->count)};
+    constexpr auto law = orbital_mvcc::metadata_consumer::compact_law::ReadLaw::canonical();
+    const orbital_mvcc::metadata_consumer::compact_law::Control control{law, static_cast<std::size_t>(value->count)};
     const auto cursor = sr::detail::CursorAccess::admitted(*cs::address_slot(value, 0));
-    [[clang::always_inline]] metadata_consumer::compact_law::read_chain_into(law, cursor.with(control),
+    [[clang::always_inline]] orbital_mvcc::metadata_consumer::compact_law::read_chain_into(law, cursor.with(control),
         op.key, op.kind == Kind::chain ? op.count : 1, output);
     return {};
   }
@@ -76,4 +77,4 @@ Result<void> InlineReadFusion::consume_current(const Owner& owner, orbital::Obje
     return std::unexpected(Error::invalid_argument);
   return consume_at(owner, borrowed.core, borrowed.cut, object, op, output);
 }
-} // namespace orbital_mvcc::composed
+} // namespace orbital::object_detail

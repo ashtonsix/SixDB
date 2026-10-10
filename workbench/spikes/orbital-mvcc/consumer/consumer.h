@@ -1,6 +1,6 @@
 #pragma once
 #include "data.h"
-#include <orbital/object.h>
+#include <orbital/mvcc_baseline.h>
 
 namespace orbital_bench::versioned {
 namespace obj = orbital::object;

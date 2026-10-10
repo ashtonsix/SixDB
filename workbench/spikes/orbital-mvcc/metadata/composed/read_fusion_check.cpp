@@ -8,7 +8,7 @@ namespace c = orbital_mvcc::composed;
 namespace p = orbital_versioned_performance;
 namespace v = orbital_bench::versioned;
 using namespace orbital_bench;
-using HistoryStore = compact_history::InlineShapeStore16;
+using HistoryStore = orbital_mvcc::composed::Catalog;
 
 template<class T> void check(const T& test, std::source_location at = std::source_location::current()) {
   if (static_cast<bool>(test)) return;
