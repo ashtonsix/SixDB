@@ -16,11 +16,11 @@ and publish real versions; codec-only calls do not replace those measurements.
 
 Further narrow LMDB parity tuning is set aside. The next experiments seek useful
 strengths, weaknesses and general improvements across composed workloads.
-Existing timing evidence emphasizes point/dependent reads and fixed-count
-updates, batch1/64, held/rotated readers and maintenance. Large-body cold-start
-evidence reaches approximately 6 MB; it is not a sustained large-working-set
-survey. Actual Loom integration and representation-conversion histories supply
-correctness coverage, which is distinct from performance iteration.
+Before the wider surveys below, timing evidence emphasized point/dependent
+reads and fixed-count updates, batch1/64, held/rotated readers and maintenance;
+its cold-start cases reached approximately 6 MB. The completed surveys extend
+read bodies to 193 MB and measure actual conversion, interleaving and append.
+Their correctness histories and performance observations remain distinct evidence.
 
 `survey-first` is the first bounded discovery panel: dependent16 over roughly
 0.75/48/193 MB of Tuple bodies with 32768 rows per Object, small/large scan16,
@@ -50,9 +50,11 @@ request includes its Scope, selection, admission, refill, output and cleanup;
 reusable Driver/Frame construction and Ring storage are reported separately.
 Latency samples cover offered groups, not individual request response times.
 The older fused reader is a contextual anchor with a different input/harness
-layout; direct/manual/Ring comparisons share the new harness. This ready-body
-caller does not poll Messages between Ring returns, so its throughput says
-nothing yet about fairness under competing work or worker/I/O headroom.
+layout; direct/manual/Ring comparisons share the new harness. The measured
+wider-survey arms did not poll Messages between Ring returns, so their throughput
+says nothing about fairness under competing work or worker/I/O headroom. The
+[cooperative-service control](controls/cooperative-polling/README.md) adds explicit
+polling and charges complete Message handling separately from delivery-delay sampling.
 
 The full panel uses two observations, widths 1/8/32 and hints on/off, with the
 complete width/hint cross-section limited to the largest working set. The fused

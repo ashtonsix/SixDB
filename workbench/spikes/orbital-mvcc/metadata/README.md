@@ -109,7 +109,7 @@ remain with the [complete-operation feedback](../performance/FEEDBACK.md).
 - [Consumer and Ikea field/call census](consumer/ikea-census.md), [actual type probes](consumer/census.cpp), [probe runner](consumer/probe.py), and [qualification/native candidates](consumer/candidates.h).
 - [Admitted private write batches](consumer/write-batch.md) compare one batch admission with repeated field-writer binding, including actual effects, private backing and unchanged-error controls.
 - [Shared Shape writer laws](consumer/shape-write.md) remove repeated descriptor admission. The composed driver now uses the narrower [value/tag command](consumer/point-write.md), which also removes a source lookup and preserves untouched fields; the full-record writer remains a comparison control.
-- [Shared-Shape native reads](consumer/shape-read.md) compare public checked access with a composed private-layout path, using the same stored law and kernels for selected and mapped bodies.
+- [Shared-Shape native reads](consumer/shape-read.md) compare checked runtime-law access with proven selected/mapped endpoints that specialize the admitted canonical transfers while preserving the same chain semantics.
 - [Composed Shape adapter](composed/README.md) joins shared Shapes, actual Allocation owners, retained histories, native reads/writes and one-Part/four-Part conversion. [Actual compact adapter checks](performance_adapter/README.md) independently exercise the descriptor-based performance controls.
 - [Loom findings and selected evidence](loom/README.md), [actual frame/type probes](loom/facts.cpp), [ordinary call producers](loom/boundaries.cpp), [consumers](loom/callers.cpp), and [code-generation runner](loom/codegen.py).
 

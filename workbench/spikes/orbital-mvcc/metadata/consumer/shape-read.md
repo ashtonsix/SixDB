@@ -2,9 +2,9 @@
 
 [shape_read.h](shape_read.h) connects a protected actual Orbital `Selection`
 to the existing compact Tuple consumer. The read uses the count and Part0
-address admitted by actual capture, and the four transfers stored in its
+address admitted by actual capture, and the canonical transfers proved by its
 immutable shared Shape. Construction Schema and generated descriptors can
-end before any read. This first cut supports the fixed one-Part Tuple law;
+end before any read. This path supports the fixed one-Part Tuple law;
 Series and distinct Shape identities refuse.
 
 `TupleProof` is an **8-byte borrowed pointer**. Its cold factory checks the
@@ -18,9 +18,9 @@ packets, not complete owning Objects.
 ## Complete call and ownership
 
 `read_proven` refuses absence or a different actual Shape before touching the
-caller Outcome. It then uses capture-proven count/placement and the admitted
-stored law. [shape_read_bridge.cpp](shape_read_bridge.cpp) is an ordinary
-separate translation unit using Orbital's authoritative
+caller Outcome. It then uses capture-proven count/placement and specializes the
+admitted canonical transfers. [shape_read_bridge.cpp](shape_read_bridge.cpp) is an
+ordinary separate translation unit using the caller's authoritative
 [private Shape header](../orbital/shape/shape_private.h). It does not mirror
 layout offsets or include another implementation file. The private
 [cursor factory](shape_read_private.h) skips descriptor and transfer checks
@@ -28,9 +28,10 @@ already established by Shape admission; payload loads and chain execution
 remain the existing Ikea fixed-transfer kernels and compact operations.
 
 `read_checked` is the control: it uses public outlined Shape/Selection
-accessors and the existing `qualify_cursor` on each call. Both paths use the
-**same stored law and complete chain operation**. The control reconstructs
-the body extent from capture's admitted geometry/count; it does not obtain an
+accessors and the existing `qualify_cursor` on each call. It interprets the stored
+law; the proven endpoints specialize canonical transfers whose equality to that
+law was established at admission. Both preserve the same complete chain semantics.
+The control reconstructs the body extent from capture's admitted geometry/count; it does not obtain an
 independent fresh backing measurement.
 
 A live owner or catalog Scope must protect the Selection, its address slot,
@@ -48,14 +49,20 @@ payload bytes cannot authenticate format or Object/version identity. The
 qualification below uses borrowed real bodies and shifted mappings, not an
 LMDB benchmark.
 
-Shared state remains charged: one Tuple Shape requests 227 bytes
-(`Shape56 + Geometry32 + ReadLaw64 + descriptor75`). The Realization header
-is 24 bytes, followed by actual address/owner storage; independent shared
-ownership adds 24 bytes per Part. Allocator rounding/control blocks,
-dependencies, history, catalog Scope and owner closure remain additional.
-No read creates another retained Schema, law, descriptor or payload scratch.
+## Original captured ABI and emitted code
 
-## Ordinary ABI and emitted code
+The sizes and emitted-code observations in this section describe the original
+`shape-read-cut-1` capture, before canonical specialization and later physical
+ownership changes. The selected [canonical-read comparison](../../performance/FEEDBACK.md#canonical-selected-read-specialization)
+owns the subsequent performance and code-generation evidence; this older table
+does not describe the current proven endpoints.
+
+Shared state remains charged. In this original cut, one Tuple Shape requested
+227 bytes (`Shape56 + Geometry32 + ReadLaw64 + descriptor75`). The Realization
+header was 24 bytes, followed by actual address/owner storage; independent shared
+ownership added 24 bytes per Part. Allocator rounding/control blocks,
+dependencies, history, catalog Scope and owner closure remained additional.
+No read created another retained Schema, law, descriptor or payload scratch.
 
 [shape_read_sizes.cpp](shape_read_sizes.cpp) measures the actual records on
 both targets: proof/Selection/View/Cursor8, checked proof/View result16,
@@ -66,8 +73,8 @@ read endpoints return ordinary register status8. The mapped signature's last
 Outcome reference arrives on the x86 stack because its span is split into
 pointer/count. No custom calling convention or extra global Schema exists.
 
-Separate-TU LLVM and assembly confirm the proven endpoints call the same
-emitted `read_chain_into` as the checked control, using the stored runtime
+In that capture, separate-TU LLVM and assembly confirmed that the proven endpoints
+called the same emitted `read_chain_into` as the checked control, using the stored runtime
 transfers. They make no outlined Selection/Shape/law calls, repeat no
 descriptor/transfer qualification, and allocate no owner or preparation
 state. Part0 address selection folds without an owner-profile branch. The
@@ -102,7 +109,7 @@ still counted. External Shape/Ikea/runtime bodies, unwind sections and
 link-time deduplication are excluded. The totals do not establish a timed
 gain or the incremental cost of one selected path.
 
-## Independent qualification
+## Original captured independent qualification
 
 [shape_read_check.cpp](shape_read_check.cpp) builds and publishes through
 actual `ShapeStore16`, with actual charged payload and shared-owner control
