@@ -18,7 +18,8 @@ and shared authority. The current direction is database first.
 The [Orbital research questions](orbital-ideas.md) curate object, execution,
 networking and recovery ideas from Calico and earlier SixDB work.
 The [Orbital/Loom design](../design/orbital/DESIGN.md) keeps the wider structure in view;
-the [runtime guide](../../orbital/README.md) owns implemented Stage 1 services.
+the [runtime guide](../../orbital/README.md) owns implemented allocation, worker
+services and the embedded Object catalog.
 The [MVCC investigation](../spikes/orbital-mvcc/README.md) retains the rejected
 Stage 2 baseline so measurements, architecture and implementation can evolve together.
 [Ashton’s scratch notes](orbital/ASHTON-SCRATCH.md) remain his working outline;

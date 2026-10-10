@@ -7,14 +7,18 @@ the read cache remain future protocol work.
 
 **Orbital Stage 2 is being rebuilt with measured implementation changes.** Its first embedded Objects/Views
 implementation was withdrawn into the [MVCC study](../../spikes/orbital-mvcc/README.md).
-Performance was qualified too late to guide its architecture. That study now
-compares complete operations while changing version metadata, ownership, physical
-interpretation and call boundaries together. The target is lower latency than
-LMDB with versioning included. A correctness pass or a smaller `sizeof` alone
-does not establish the design. The selected catalog/history and physical
-Representation/Part/View ownership now live in Orbital. Complete metadata costs
-remain visible alongside performance; broad LMDB parity and headroom for later
-Engine/Shore work remain unproven.
+Performance was qualified too late to guide its architecture. The selected
+catalog/history and physical Representation/Part/View ownership now live in
+Orbital. Complete-operation comparisons guide changes to version metadata,
+ownership, interpretation and call boundaries together. Further narrow LMDB
+tuning is set aside in favour of wider workload discovery: the first measured
+survey covers larger working sets and real representation conversion; append
+and interleaved-read callers are qualified for the next measurements.
+The [performance study](../../spikes/orbital-mvcc/performance/README.md) owns
+results and remaining questions. Lower latency than LMDB with versioning remains
+an objective; broad parity and headroom for Engine/Shore, worker communication
+and I/O are unproven. Metadata, copies, capacity and settlement costs remain
+visible alongside timings.
 
 Engine and Ikea's composition of many blocks remain open for Ashton to design.
 The study's consumer is disposable scaffolding: it exercises real SeriesPack
@@ -37,6 +41,12 @@ controls remain experiments.
 The [actual Loom caller](../../spikes/orbital-mvcc/callers/object_module.md)
 exercises those seams through suspension, atomic publication, cancellation and
 physical completion after the catalog and caller have ended.
+The [staged Ring caller](../../spikes/orbital-mvcc/callers/object_ring.md) exercises
+independent selected reads on one Worker. Neither caller establishes worker
+scaling or disk/network performance. Local preparation accepts finished material
+for short publication; holding that accepted packet across I/O would exclude
+other preparation. Durable admission and asynchronous construction belong to
+the outer protocol rather than the embedded publication step.
 The earlier [composition experiments](../../spikes/orbital-stage2-composition/FINDINGS.md)
 provide additional evidence and unresolved alternatives.
 

@@ -30,8 +30,9 @@ the Git bundle requires retained ancestor `8412e5c`. It need not be restored to
 | --- | --- |
 | Selected Objects | [Embedded module](../../../orbital/README.md#embedded-objects), [public header](../../../orbital/include/orbital/object.h), [actual composed driver](metadata/composed/README.md) |
 | Baseline Objects | [Behavior](baseline/objects.md), [structure](baseline/structure.md), [header](baseline/include/orbital/mvcc_baseline.h), [implementation](baseline/src/internal.h), [histories](baseline/test/object.cpp) |
-| Actual Loom composition | [Selected ObjectStore caller](callers/object_module.md), [executable histories](callers/object_module.cpp); [rejected-baseline caller](callers/README.md) remains a separate control |
+| Actual Loom composition | [Selected ObjectStore caller](callers/object_module.md), [staged independent reads](callers/object_ring.md); [rejected-baseline caller](callers/README.md) remains a separate control |
 | Disposable format consumer | [SeriesPack columns ↔ TuplePack rows](consumer/README.md), with four Parts ↔ one Part |
+| Growing Objects | [Count-driven Tuple append](metadata/composed/README.md), with old prefixes, changed counts and subsequent conversion |
 | Complete-operation comparison | [LMDB controls and runner](performance/README.md), [iteration feedback](performance/FEEDBACK.md), [retained baseline findings](performance/FINDINGS.md) |
 | Metadata alternatives | [Cross-module findings](metadata/README.md), packet census, ordinary ABI probes and candidates |
 
@@ -85,9 +86,11 @@ Normal `orbital_validate` includes `orbital_object_check` and
 `orbital_representation_check`, independent of the disposable driver and formats.
 Additional selected Object checks use `orbital_object_catalog_check`, `orbital_object_shape_check`,
 `orbital_mvcc_composed_check`, `orbital_mvcc_composed_read_fusion_check` and
-`loom_object_module_check`. The first
-two run the existing catalog and Shape consequence histories against the actual
-production `ObjectStore` through a test-only observation adapter. These targets
+`loom_object_module_check`. `orbital_mvcc_composed_append_check` exercises changing
+record counts; `loom_object_ring_check` compares serial, manually interleaved
+and Ring reads with retained-lifetime histories. These are correctness checks,
+not timing results. The catalog and Shape checks exercise the actual production
+`ObjectStore` through a test-only observation adapter. These targets
 are included in `orbital_mvcc_metadata_validate`.
 
 `orbital_mvcc_baseline` exports the explicitly experimental
