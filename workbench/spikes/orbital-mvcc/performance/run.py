@@ -280,6 +280,9 @@ def summarize(output):
         for label, field in [("initial", "footprint_initial"), ("held", "footprint_after_interval"),
                              ("released", "footprint_after_reader_release")]:
             f = result.get(field, {})
+            for name in ['alternative_count', 'retirement_records_available']:
+                if name in f:
+                    base[f'{label}_{name}'] = f[name]
             unavailable = None if modern else 0
             base.update({f"{label}_arena_charge": f.get("arena_charged_bytes", unavailable),
                          f"{label}_metadata_bytes": f.get("metadata_bytes", unavailable),

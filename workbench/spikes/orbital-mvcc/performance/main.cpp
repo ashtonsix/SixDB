@@ -211,7 +211,12 @@ void print_footprint(const OrbitalFootprint& f) {
   std::cout<<"{\"arena_charged_bytes\":"<<f.arena_charge<<",\"metadata_bytes\":"<<s.metadata_bytes
       <<",\"metadata_peak\":"<<s.metadata_peak<<",\"metadata_limit\":"<<s.metadata_limit
       <<",\"objects\":"<<s.objects<<",\"versions\":"<<s.versions<<",\"contexts\":"<<s.contexts
-      <<",\"retirement_records\":"<<s.retirement_records<<",\"completed_cut\":"<<s.completed_cut
+      <<",\"retirement_records\":";
+  // Compact/selected catalog statistics have no equivalent retirement census.
+  // The legacy adapter's default zero is not an observation.
+  if (f.candidate) std::cout<<"null"; else std::cout<<s.retirement_records;
+  std::cout<<",\"retirement_records_available\":"<<(f.candidate?"false":"true")
+      <<",\"completed_cut\":"<<s.completed_cut
       <<",\"pool_mapped_bytes\":"<<f.pool.mapped_bytes<<",\"pool_reserved_bytes\":"<<f.pool.reserved_bytes
       <<",\"pool_metadata_bytes\":"<<f.pool.metadata_bytes<<",\"pool_idle_bytes\":"<<f.pool.idle_bytes
       <<",\"pool_allocations\":"<<f.pool.allocations<<",\"pool_reuses\":"<<f.pool.reuses
@@ -220,7 +225,8 @@ void print_footprint(const OrbitalFootprint& f) {
       <<",\"version_node_bytes\":"<<f.node_bytes<<",\"metadata_allocation_calls\":"<<f.metadata_allocation_calls;
   if (f.candidate) {
     const auto& c=*f.candidate;
-    std::cout<<",\"history_capacity_bytes\":"<<c.history_capacity_bytes
+    std::cout<<",\"alternative_count\":"<<c.alternative_count
+        <<",\"history_capacity_bytes\":"<<c.history_capacity_bytes
         <<",\"descriptor_directory_capacity_bytes\":"<<c.descriptor_directory_capacity_bytes
         <<",\"object_directory_capacity_bytes\":"<<c.object_directory_capacity_bytes
         <<",\"debt_capacity_bytes\":"<<c.debt_capacity_bytes
