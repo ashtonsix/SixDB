@@ -13,8 +13,10 @@ Shapes are shared across Objects. The scalar Inline trial uses
 coherent Scope selection and consumes the selected Tuple through the canonical
 Ikea kernel. Its friend access reaches the actual catalog, physical Shape and
 Material; it owns no copied directory, layout or cache. Mapped LMDB uses the
-same canonical kernel. Batch and escaped Body reads retain the qualified
-`shape_read::read_proven` bridge. Column reads and scans use existing generic
+same canonical kernel. Batch and escaped Body reads use the qualified
+`shape_read::read_proven` bridge, which specializes the same canonical transfers
+proved by Tuple admission while retaining the selected address and count.
+Column reads and scans use existing generic
 consumer binding. [Measured fusion feedback](../../performance/FEEDBACK.md#coherent-read-fusion)
 records the benefits, code-size cost and remaining negative cases.
 Writes use the shared [value/tag point law](../consumer/point-write.md). It owns

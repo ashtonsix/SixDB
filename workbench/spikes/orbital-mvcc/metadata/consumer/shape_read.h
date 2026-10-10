@@ -24,8 +24,9 @@ public:
 // A live owner/catalog Scope protects Selection, its slot, Shape and backing.
 // Exact Shape identity is required; selected count is the actual captured count.
 // Sorted fixed keys; output is disjoint from encoded bytes and live metadata.
-// Refusal leaves Outcome intact. Both paths borrow the same stored ReadLaw and
-// run the same existing compact kernels; no Schema or payload scratch remains.
+// Refusal leaves Outcome intact. The checked path revalidates the stored law;
+// the proven path specializes its exact canonical transfers admitted by TupleProof.
+// Both use existing compact kernels; no Schema or payload scratch remains.
 [[nodiscard]] orbital::Result<void> read_checked(TupleProof, cs::Selection,
     Key, unsigned steps, Outcome&) noexcept;
 [[nodiscard]] orbital::Result<void> read_proven(TupleProof, cs::Selection,

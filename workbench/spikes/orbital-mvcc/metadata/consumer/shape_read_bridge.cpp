@@ -1,5 +1,5 @@
-// Authoritative private Shape declarations/helpers, owned by Orbital. Ordinary
-// separate TU, no copied layout, assumed offset, or textual implementation seam.
+// Actual caller Shape and Orbital physical layout. Ordinary separate TU,
+// no copied layout, assumed offset, or textual implementation seam.
 #include "../orbital/shape/shape_private.h"
 #include "shape_read_private.h"
 
@@ -11,8 +11,13 @@ orbital::Result<void> read_proven(TupleProof proof, cs::Selection selected,
   if (value->control.shape != proof.shape()) return std::unexpected(orbital::Error::invalid_argument);
   // Factory admitted this immutable one-Part Tuple Shape; capture admitted
   // count/placement. The enclosing owner protects both for this entire call.
-  detail::consume(*cs::law(value->control.shape), *cs::address_slot(value, 0),
-                  value->control.records, key, steps, output);
+  // TupleProof also proves every stored transfer equals this canonical law.
+  // Keep exact Shape identity and the actual selected count for old/current views.
+  constexpr auto law = compact_law::ReadLaw::canonical();
+  const compact_law::Control control{law, static_cast<std::size_t>(value->control.records)};
+  const auto cursor = detail::CursorAccess::admitted(*cs::address_slot(value, 0));
+  [[clang::always_inline]] compact_law::read_chain_into(law, cursor.with(control),
+      key, steps, output);
   return {};
 }
 
