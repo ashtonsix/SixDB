@@ -1,0 +1,71 @@
+{
+  "baseline_authority": "20261009T233710Z-da0d7e25/fused/source.tar.gz",
+  "baseline_fusion_postimages": {
+    "workbench/spikes/orbital-mvcc/performance/bodies.h": "c1a40f9c1955c334b058338df1e9b906e84e5edf97cc00b91e81f4d117d8fa9d",
+    "workbench/spikes/orbital-mvcc/metadata/composed/backend.h": "3a83f67dfea443390833667dd2c2127e3641ab98f30a799ecc630be13f5004ae",
+    "workbench/spikes/orbital-mvcc/metadata/composed/read_fusion.cpp": "6481f71c2a6603b88cc1fb1687578b0c8406f630adb802fd1dbbe195e780a505"
+  },
+  "target_commit": "768e033",
+  "target_tree": "e509697457a4a61bee8adcd2c5631bd40ee9f221",
+  "common": "same8Bshortlease/reset-renew; ordinaryold/basisRead; identical profile/report/qualification driver",
+  "transition_patch_sha256": "e288ad08139049eb30b1fb4da574f85925e1dfc80c4c26c76f19f81b629be678",
+  "postimage_manifests": {
+    "baseline-postimages.json": "0b3b671992757909808ab26510ef5783bc130c7285c5cbac45642dba7b56d231",
+    "selected-postimages.json": "8e4a6e925d5abce48cd23894f64ddb751ca48c1e1eae18d0f540fb852626efad"
+  },
+  "trials": 344,
+  "retention": "native changes already in selected commit; cumulative transition raw/ignored/archive only; exact source captures and postimages comparison authority",
+  "postimage_scope": "Every compiled native file in Orbital/Ikea/Loom/MVCC and relevant CMake, plus common runner; no retained historical measurement exports in cumulative code transition.",
+  "job": "20261010T002940Z-a0983b07",
+  "cuts": {
+    "baseline": {
+      "source_tar_sha256": "00b4b79b14af2eb20b47424058839bf6b65074df7dbcbd82a404471d29a48a7c",
+      "all_runtime_postimages_verified": 376,
+      "postimage_manifest_sha256": "0b3b671992757909808ab26510ef5783bc130c7285c5cbac45642dba7b56d231",
+      "parity": {
+        "passed": true,
+        "trials": 172,
+        "matched_cases": 15,
+        "independent_cli_oracle": true,
+        "scopes_and_modes_checked": true,
+        "all_repetitions_retained": true
+      },
+      "reader_lease_check": {
+        "passed": true,
+        "independent_publication_visibility": true,
+        "old_body_and_value_preserved": true,
+        "moved_lease": true,
+        "nested_and_active_close_refusals": true,
+        "reset_counts_and_final_abort": true,
+        "reprepare": true
+      },
+      "reports_regenerate_byte_identically": true
+    },
+    "selected": {
+      "source_tar_sha256": "ed383e2d10283ebefd8ccf000efaf8e9c70e79fdd8d197572dbddf569c866727",
+      "all_runtime_postimages_verified": 376,
+      "postimage_manifest_sha256": "8e4a6e925d5abce48cd23894f64ddb751ca48c1e1eae18d0f540fb852626efad",
+      "parity": {
+        "passed": true,
+        "trials": 172,
+        "matched_cases": 15,
+        "independent_cli_oracle": true,
+        "scopes_and_modes_checked": true,
+        "all_repetitions_retained": true
+      },
+      "reader_lease_check": {
+        "passed": true,
+        "independent_publication_visibility": true,
+        "old_body_and_value_preserved": true,
+        "moved_lease": true,
+        "nested_and_active_close_refusals": true,
+        "reset_counts_and_final_abort": true,
+        "reprepare": true
+      },
+      "reports_regenerate_byte_identically": true
+    }
+  },
+  "component_parity": "all344 logical/copy/body-capacity/version counters compared; Arena changes with Poolmetadata reduction; all rawOrbitalwrites settleversions=Objects,contexts=0,retirements=0",
+  "available_counter_limit": "This matched composition driver predates detailed maintenance visits/pending/debt flags; those unavailablefields are notzero. Detailed maintained/debt feedback remains with breadth/maintenance controls.",
+  "native_receipt": "selected-composition-native-smoke-v1/receipt.json:3nativechecks+26CLI; exact target768+commonreader; actualworkerarchives source authority"
+}

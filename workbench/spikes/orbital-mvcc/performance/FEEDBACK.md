@@ -719,3 +719,45 @@ write settles to zero pending maintenance/debt after the retained reader ends.
 All nine table/parity reports and three ABI reports regenerate byte-identically;
 breadth shares the byte-identical renew ABI, retained once. Full source, binaries,
 ordered samples and diagnostics remain in the existing worker archive.
+
+## Selected Prepared, Allocation and fusion composition
+
+[Complete paired evidence](evidence/zen5-selected-composition-screen-20261010/selected/measurements.csv)
+from `20261010T002940Z-a0983b07` compares the actual measured fused source with
+runtime commit `768e033` / tree `e509697`, including caller-owned Prepared and
+Direct4 Allocation. Both use the same reset/renew mapped reader, point writer
+and coherent fusion. All 344 trials pass. Every native source/header/CMake/driver
+postimage in both actual captures matches its expected source manifest; the
+previous mislabeled selected run is excluded. This is a combined source change,
+not attribution of timing to one component.
+
+Tiny Inline components change PMR 6579→6563 B, catalog Core 704→688 B and
+Pool metadata 15032→7376 B. Arena charge falls 23224→15568 B, including that
+Pool metadata reduction; body capacity stays 6144 B. Schema 15296 B, Backend
+2048 B, caller arrays 2560 B and writer law 1072 B remain. These components
+remain distinct; the allocator saving is not a whole metadata-budget result.
+
+Median complete-request throughput, ns; base→selected:
+
+| Case | Inline | Mapped control |
+| --- | ---: | ---: |
+| 192/64 hit, scalar | 20.78→20.59 | 73.61→72.45 |
+| 192/64 update, scalar, age8 | 501.18→507.19 | 1538.29→1547.57 |
+| 192/64 update, batch64, age8 | 296.13→292.05 | 212.80→218.44 |
+| 192/64 update, batch64, age0 | 292.91→290.19 | 259.38→262.74 |
+| 4096/4 Tuple update, scalar | 650.70→694.99 | 2382.31→2374.63 |
+| 4096/4 Tuple update, batch64 | 111.96→113.55 | 185.66→196.73 |
+| 32768/4 dependent16, scalar | 1140.72→1102.55 | 1154.48→1105.91 |
+| 32768/4 dependent16, batch64 | 1216.44→1217.12 | 1104.16→1051.08 |
+
+Series4 batch is 131.56→133.85 ns. The memory reduction has no blanket speed
+win: scalar writes include regressions, tiny batched writes still trail mapped,
+and the unchanged mapped scalar-dependent arm shifts alongside Inline. This
+short blocked two-repetition pair does not establish a small treatment benefit.
+All logical/copy/body-capacity/version counters match; every raw Orbital write
+ends with one version per Object and zero contexts/retirement records. This
+driver predates detailed maintenance visits, debt and pending fields; unavailable
+fields are not zero. That instrumentation remains with the separate maintenance
+and breadth controls. Native target qualification has three consequence checks
+and 26 CLI cases. Six table/parity reports and both ABI reports regenerate
+byte-identically; full captures remain archived.

@@ -1,0 +1,118 @@
+{
+  "passed": true,
+  "selected_commit": "768e033",
+  "common": "reset/renew shortreader; ordinaryold/basisRead unchanged",
+  "binary_sha256": "81d37a34164f5e559a3b6fdd499389473b87ed117d9b317c0836b3be4e7fb35f",
+  "checks": [
+    "composed",
+    "readfusion",
+    "independentreaderlease"
+  ],
+  "cases": [
+    {
+      "case": "composed-inline-1-point-hit-a0",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-1-dependent-16-a0",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-1-point-update-a0",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-1-point-update-a8",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-64-point-hit-a0",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-64-dependent-16-a0",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-64-point-update-a0",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-64-point-update-a8",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-1-point-hit-a0",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-1-dependent-16-a0",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-1-point-update-a0",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-1-point-update-a8",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-64-point-hit-a0",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-64-dependent-16-a0",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-64-point-update-a0",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-64-point-update-a8",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-1-point-hit-a0",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-1-dependent-16-a0",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-1-point-update-a0",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-1-point-update-a8",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-64-point-hit-a0",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-64-dependent-16-a0",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-64-point-update-a0",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-64-point-update-a8",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-Series4",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-Series4",
+      "passed": true
+    }
+  ],
+  "scope": "ARM native target768 with common reset/renew; three consequence checks plus26CLI. Exact capturedcompiledsource verified independently in worker archive; no sanitizer claim."
+}
