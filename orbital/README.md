@@ -195,14 +195,17 @@ orb -m ubuntu cmake --build build/orbital-stage1/clang --target orbital_validate
 physical Representation checks. The Object material instantiates cold catalog
 operations in a separate TU; its caller checks coherent discovery, publication
 refusal and abort, conversion authority, and retained lifetimes. These module
-checks require no spike or Ikea format. The opt-in study retains the composed
+checks require no spike or Ikea format. The opt-in study also runs its interrupted
+maintenance histories against the selected catalog, alongside composed
 TuplePack/SeriesPack and Loom integration checks and performance comparisons.
 
 [The maintained consumer driver](../workbench/benchmarks/orbital/README.md) runs
 SeriesPack/TuplePack point operations, scans, appends and dependent reads against
-actual LMDB. It owns retained comparisons and the costs this allocation stage
-omits. Its mutable page layout is comparison machinery; it supplies no Object
-identity or versioning. [Prior research](../workbench/notebook/orbital/reference/README.md)
+actual LMDB. It owns the allocation-only comparisons; the
+[MVCC comparison](../workbench/spikes/orbital-mvcc/performance/README.md) includes
+the selected Object path. The allocation driver's mutable page layout is
+comparison machinery; it supplies no Object identity or versioning.
+[Prior research](../workbench/notebook/orbital/reference/README.md)
 explains the allocation, access and execution choices without establishing runtime
 contracts from prototype behavior. The opt-in MVCC study retains Object and
 caller histories as checks for competing implementations.

@@ -1,4 +1,8 @@
+#if SIXDB_OBJECT_MODULE_TEST
+#include "object_module_test.h"
+#else
 #include "candidate_store.h"
+#endif
 
 #include <array>
 #include <cstdio>
@@ -8,7 +12,11 @@
 #include <optional>
 #include <source_location>
 
+#if SIXDB_OBJECT_MODULE_TEST
+using namespace object_module_test;
+#else
 using namespace compact_history;
+#endif
 namespace cd = compact_descriptor;
 constexpr ObjectId A{31, 1}, B{31, 2};
 constexpr std::array<std::byte, 1> logical{std::byte{0x27}};
@@ -340,6 +348,9 @@ template<class Store> void run(const char* name) {
 }
 
 int main() {
+#if SIXDB_OBJECT_MODULE_TEST
+  run<Selected>("object-module");
+#else
   run<Store32>("v32-floor"); run<Store16>("v16-floor"); run<Store8>("v8-floor");
   run<Store<Slab<Version32>, compact_retention::DistinctRetention, DescriptorPhysical>>("v32-distinct");
   run<Store<Slab<Version16>, compact_retention::DistinctRetention, DescriptorPhysical>>("v16-distinct");
@@ -352,4 +363,5 @@ int main() {
   run<Store<Chunks8, compact_retention::DistinctRetention, DescriptorPhysical, CompactObjects>>("compact-v8-distinct");
   run<Store<Slab<Version16>, compact_retention::FloorRetention, DescriptorPhysical, TipObjects>>("inline-v16-floor");
   run<Store<Slab<Version16>, compact_retention::DistinctRetention, DescriptorPhysical, TipObjects>>("inline-v16-distinct");
+#endif
 }

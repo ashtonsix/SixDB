@@ -168,7 +168,7 @@ add_custom_target(orbital_mvcc_metadata_validate
   USES_TERMINAL VERBATIM)
 
 # The selected Object module runs the same consequence histories as the controls.
-foreach(pair IN ITEMS "catalog|check" "shape|shape_store_check")
+foreach(pair IN ITEMS "catalog|check" "shape|shape_store_check" "bounded|bounded_check")
   string(REPLACE "|" ";" fields "${pair}")
   list(GET fields 0 label)
   list(GET fields 1 source)

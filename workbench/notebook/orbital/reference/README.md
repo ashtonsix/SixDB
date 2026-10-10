@@ -5,11 +5,12 @@
 
 # Historical Orbital reference material
 
-For implemented Stage 1 services, start with the
+For implemented allocation, worker services and embedded Object/Representation
+interfaces, start with the
 [Orbital runtime](../../../../orbital/README.md). The
 [combined design](../../../design/orbital/DESIGN.md) keeps the wider candidate in view.
-The [MVCC investigation](../../../spikes/orbital-mvcc/README.md) owns the withdrawn
-Stage 2 baseline and its performance-led redesign.
+The [MVCC investigation](../../../spikes/orbital-mvcc/README.md) owns rejected
+baselines, disposable callers and performance comparisons.
 
 **[Design workspace](../ASHTON-SCRATCH.md)** — Ashton's outline and open space for reasoning
 about the relationships. Agents contribute there only at his explicit request.

@@ -78,7 +78,7 @@ construction. The [Orbital specifications](../../../orbital/spec/README.md)
 own the wider correctness obligations; this single-owner study does not implement
 Journal replay, consensus, missing-byte I/O or Stage 3 worker distribution.
 
-## Build the experimental baseline
+## Build and checks
 
 ```sh
 orb -m ubuntu cmake -S . -B build/orbital-mvcc/native -G Ninja \
@@ -89,14 +89,17 @@ orb -m ubuntu cmake --build build/orbital-mvcc/native --target orbital_mvcc_vali
 `orbital_validate` and `loom_validate` exercise allocation and worker services.
 Normal `orbital_validate` includes `orbital_object_check` and
 `orbital_representation_check`, independent of the disposable driver and formats.
-Additional selected Object checks use `orbital_object_catalog_check`, `orbital_object_shape_check`,
+Additional selected Object checks use `orbital_object_catalog_check`,
+`orbital_object_shape_check`, `orbital_object_bounded_check`,
 `orbital_mvcc_composed_check`, `orbital_mvcc_composed_read_fusion_check` and
 `loom_object_module_check`. `orbital_mvcc_composed_append_check` exercises changing
 record counts; `loom_object_ring_check` compares serial, manually interleaved
 and Ring reads with retained-lifetime histories. These are correctness checks,
-not timing results. The catalog and Shape checks exercise the actual production
-`ObjectStore` through a test-only observation adapter. These targets
-are included in `orbital_mvcc_metadata_validate`.
+not timing results. The catalog, Shape and bounded-maintenance checks exercise
+the actual production `ObjectStore` through a test-only observation adapter.
+The bounded histories interrupt reclamation with reader changes, publication,
+allocation refusal and disposal callbacks, checking retained values and absence
+throughout. These targets are included in `orbital_mvcc_metadata_validate`.
 
 `orbital_mvcc_baseline` exports the explicitly experimental
 `<orbital/mvcc_baseline.h>` header. Production `<orbital/object.h>` exposes the

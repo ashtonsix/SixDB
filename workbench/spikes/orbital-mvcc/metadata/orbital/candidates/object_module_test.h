@@ -25,14 +25,18 @@ template<class Physical> class Store : public orbital::ObjectStore<Physical> {
   using Base = orbital::ObjectStore<Physical>;
   Memory* memory_{};
 public:
+  static constexpr bool exact_retention = true;
   Store() = default;
   explicit Store(Memory& memory) : Base(memory), memory_(&memory) {}
   Store(Store&&) = default;
   Store& operator=(Store&&) = default;
-  struct Observation { std::size_t objects, versions, allocation_calls; };
+  using CatalogObservation = decltype(orbital::object_detail::Access<Physical>::inspect(
+      std::declval<const Base&>()));
+  struct Observation : CatalogObservation { std::size_t allocation_calls, requested_bytes; };
   Observation statistics() const noexcept {
     const auto observed = orbital::object_detail::Access<Physical>::inspect(*this);
-    return {observed.objects, observed.versions, observed.core_bytes ? memory_->calls : 0};
+    return {observed, observed.core_bytes ? memory_->calls : 0,
+        observed.core_bytes ? memory_->live : 0};
   }
 };
 using Selected = Store<DescriptorPhysical>;

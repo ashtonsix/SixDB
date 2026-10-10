@@ -78,8 +78,9 @@ using orbital::view;
 using orbital::binding;
 struct Specification { Shape* shape{}; std::uint64_t records{}; Owners owners = Owners::independent_shared; };
 // Allocation profiles reserve metadata and validate all sources before taking
-// their existing physical uses. Shared profiles copy supplied owners. Writable
-// aliases end before capture; no Object/version label is a physical authority.
+// their existing physical uses. Shared profiles copy supplied owners. Capture
+// seals the body and readable padding; caller-authorized, physically disjoint
+// writes require stable backing. No Object/version label is physical authority.
 [[nodiscard]] Result<Realization*> capture(std::pmr::memory_resource&,
     const Specification&, std::span<const BodySource>) noexcept;
 std::uint64_t records(const Realization*) noexcept;

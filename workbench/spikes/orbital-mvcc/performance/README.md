@@ -14,8 +14,10 @@ and publish real versions; codec-only calls do not replace those measurements.
 
 ## Wider operating conditions
 
-Further narrow LMDB parity tuning is set aside. The next experiments seek useful
-strengths, weaknesses and general improvements across composed workloads.
+Further narrow LMDB parity tuning is set aside. The completed wider experiments
+looked for strengths, weaknesses and general improvements across composed
+workloads. Stage 2 is now in audit and consolidation; remaining performance
+questions are leads for later work.
 Before the wider surveys below, timing evidence emphasized point/dependent
 reads and fixed-count updates, batch1/64, held/rotated readers and maintenance;
 its cold-start cases reached approximately 6 MB. The completed surveys extend
