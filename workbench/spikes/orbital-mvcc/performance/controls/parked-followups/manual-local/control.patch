@@ -1,0 +1,20 @@
+--- a/workbench/spikes/orbital-mvcc/callers/object_ring.cpp
++++ b/workbench/spikes/orbital-mvcc/callers/object_ring.cpp
+@@ -97,11 +97,13 @@
+ }
+ template<bool Hints> [[gnu::always_inline]] inline void manual(Frame& frame,
+     const loom::HintPolicy& policy) noexcept {
++  auto state = frame.state;
+   switch (frame.stage) {
+-  case Stage::probe: body<Stage::probe, Hints>(frame, frame.state, policy, ManualRoute{}); break;
+-  case Stage::candidate: body<Stage::candidate, Hints>(frame, frame.state, policy, ManualRoute{}); break;
+-  case Stage::payload: body<Stage::payload, Hints>(frame, frame.state, policy, ManualRoute{}); break;
+-  }
++  case Stage::probe: body<Stage::probe, Hints>(frame, state, policy, ManualRoute{}); break;
++  case Stage::candidate: body<Stage::candidate, Hints>(frame, state, policy, ManualRoute{}); break;
++  case Stage::payload: body<Stage::payload, Hints>(frame, state, policy, ManualRoute{}); break;
++  }
++  frame.state = state;
+ }
+ 
+ // Ordinary serial lower_bound/chain; the same hint opportunities have no other

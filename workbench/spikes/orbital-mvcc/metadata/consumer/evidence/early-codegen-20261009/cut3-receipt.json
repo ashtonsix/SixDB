@@ -1,0 +1,799 @@
+{
+  "scope": "candidate ordinary ABI and compiler code; no timing",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "cxx_library": "libstdc++15 both targets",
+  "cpu": 2,
+  "baseline_commit": "7f73c81",
+  "baseline_root": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc/metadata-consumer/frozen",
+  "candidate_root": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc/metadata-consumer/qualified-cut-3/metadata/consumer",
+  "facts": {
+    "aarch64": {
+      "sizes": [
+        {
+          "type": "ReadLaw",
+          "bytes": 64,
+          "alignment": 8,
+          "trivially_copyable": true,
+          "trivial_destructor": true,
+          "trivial_move": true
+        },
+        {
+          "type": "CompactControl",
+          "bytes": 16,
+          "alignment": 8,
+          "trivially_copyable": true,
+          "trivial_destructor": true,
+          "trivial_move": true
+        },
+        {
+          "type": "CompactCursor",
+          "bytes": 8,
+          "alignment": 8,
+          "trivially_copyable": true,
+          "trivial_destructor": true,
+          "trivial_move": true
+        },
+        {
+          "type": "CompactPart",
+          "bytes": 16,
+          "alignment": 8,
+          "trivially_copyable": true,
+          "trivial_destructor": true,
+          "trivial_move": true
+        },
+        {
+          "type": "ResultCompactCursor",
+          "bytes": 16,
+          "alignment": 8,
+          "trivially_copyable": false,
+          "trivial_destructor": true,
+          "trivial_move": true
+        },
+        {
+          "type": "ResultCompactPart",
+          "bytes": 24,
+          "alignment": 8,
+          "trivially_copyable": false,
+          "trivial_destructor": true,
+          "trivial_move": true
+        },
+        {
+          "type": "MaterializedCanonicalTag",
+          "bytes": 1,
+          "alignment": 1,
+          "trivially_copyable": true,
+          "trivial_destructor": true,
+          "trivial_move": true
+        },
+        {
+          "type": "CanonicalControl",
+          "bytes": 8,
+          "alignment": 8,
+          "trivially_copyable": true,
+          "trivial_destructor": true,
+          "trivial_move": true
+        },
+        {
+          "type": "CanonicalCursor",
+          "bytes": 8,
+          "alignment": 8,
+          "trivially_copyable": true,
+          "trivial_destructor": true,
+          "trivial_move": true
+        },
+        {
+          "type": "CanonicalPart",
+          "bytes": 16,
+          "alignment": 8,
+          "trivially_copyable": true,
+          "trivial_destructor": true,
+          "trivial_move": true
+        },
+        {
+          "type": "ResultCanonicalCursor",
+          "bytes": 16,
+          "alignment": 8,
+          "trivially_copyable": false,
+          "trivial_destructor": true,
+          "trivial_move": true
+        },
+        {
+          "type": "ResultCanonicalPart",
+          "bytes": 24,
+          "alignment": 8,
+          "trivially_copyable": false,
+          "trivial_destructor": true,
+          "trivial_move": true
+        }
+      ],
+      "signatures": {
+        "consumer_candidate_part8": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local [2 x i64] @consumer_candidate_part8(ptr noundef nonnull align 8 dereferenceable(16) %0, [2 x i64] %1, [2 x i64] %2) local_unnamed_addr #0 {"
+        },
+        "consumer_candidate_part16": {
+          "ordinary_return": "indirect",
+          "llvm_signature": "define dso_local void @consumer_candidate_part16(ptr dead_on_unwind noalias writable writeonly sret(%\"class.std::expected.0\") align 8 captures(none) initializes((0, 4), (16, 17)) %0, ptr noundef nonnull align 8 dereferenceable(16) %1, [2 x i64] %2, [2 x i64] %3) local_unnamed_addr #0 {"
+        },
+        "consumer_candidate_part16_into": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local range(i64 0, 4294967297) i64 @consumer_candidate_part16_into(ptr noundef nonnull align 8 dereferenceable(16) %0, [2 x i64] %1, [2 x i64] %2, ptr noundef nonnull writeonly align 8 captures(none) dereferenceable(16) %3) local_unnamed_addr #0 {"
+        },
+        "consumer_candidate_descriptor_view8": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local [2 x i64] @consumer_candidate_descriptor_view8(ptr noundef nonnull align 8 dereferenceable(16) %0, ptr %1, [2 x i64] %2) local_unnamed_addr #0 {"
+        },
+        "consumer_candidate_descriptor_selected8": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local [2 x i64] @consumer_candidate_descriptor_selected8(ptr noundef nonnull align 8 dereferenceable(16) %0, ptr %1, [2 x i64] %2, i64 noundef %3, [2 x i64] %4) local_unnamed_addr #0 {"
+        },
+        "consumer_candidate_point8": {
+          "ordinary_return": "void",
+          "llvm_signature": "define dso_local void @consumer_candidate_point8(ptr noundef nonnull readonly align 8 captures(none) dereferenceable(16) %0, ptr %1, i64 noundef %2, ptr noundef nonnull align 8 dereferenceable(24) %3) local_unnamed_addr #0 {"
+        },
+        "consumer_candidate_chain8": {
+          "ordinary_return": "void",
+          "llvm_signature": "define dso_local void @consumer_candidate_chain8(ptr noundef nonnull readonly align 8 captures(none) dereferenceable(16) %0, ptr %1, i64 noundef %2, ptr noundef nonnull align 8 dereferenceable(24) %3) local_unnamed_addr #0 {"
+        },
+        "consumer_candidate_chain16": {
+          "ordinary_return": "void",
+          "llvm_signature": "define dso_local void @consumer_candidate_chain16(ptr noundef nonnull align 64 dereferenceable(10176) %0, [2 x i64] %1, i64 noundef %2, ptr noundef nonnull align 8 dereferenceable(24) %3) local_unnamed_addr #0 {"
+        },
+        "consumer_candidate_descriptor_borrowed8": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local [2 x i64] @consumer_candidate_descriptor_borrowed8(ptr noundef nonnull align 8 dereferenceable(16) %0, ptr %1, [2 x i64] %2, i64 noundef %3, [2 x i64] %4) local_unnamed_addr #0 {"
+        },
+        "consumer_compact_read_law": {
+          "ordinary_return": "indirect",
+          "llvm_signature": "define dso_local void @consumer_compact_read_law(ptr dead_on_unwind noalias writable writeonly sret(%\"class.orbital_mvcc::metadata_consumer::compact_law::ReadLaw\") align 8 captures(none) initializes((0, 64)) %0, ptr noundef readonly captures(none) %1) local_unnamed_addr #0 {"
+        },
+        "consumer_compact_control": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local [2 x i64] @consumer_compact_control([2 x i64] returned %0) local_unnamed_addr #2 {"
+        },
+        "consumer_canonical_control": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local i64 @consumer_canonical_control(i64 returned %0) local_unnamed_addr #2 {"
+        },
+        "consumer_compact_cursor": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local i64 @consumer_compact_cursor(ptr %0) local_unnamed_addr #2 {"
+        },
+        "consumer_compact_part": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local [2 x i64] @consumer_compact_part([2 x i64] returned %0) local_unnamed_addr #2 {"
+        },
+        "consumer_canonical_cursor": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local i64 @consumer_canonical_cursor(ptr %0) local_unnamed_addr #2 {"
+        },
+        "consumer_canonical_part": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local [2 x i64] @consumer_canonical_part([2 x i64] returned %0) local_unnamed_addr #2 {"
+        },
+        "consumer_compact_qualify8": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local [2 x i64] @consumer_compact_qualify8(ptr noundef nonnull align 8 dereferenceable(16) %0, [2 x i64] %1, [2 x i64] %2) local_unnamed_addr #3 {"
+        },
+        "consumer_compact_qualify16": {
+          "ordinary_return": "indirect",
+          "llvm_signature": "define dso_local void @consumer_compact_qualify16(ptr dead_on_unwind noalias writable sret(%\"class.std::expected.0\") align 8 %0, ptr noundef nonnull align 8 dereferenceable(16) %1, [2 x i64] %2, [2 x i64] %3) local_unnamed_addr #3 {"
+        },
+        "consumer_canonical_qualify8": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local [2 x i64] @consumer_canonical_qualify8(ptr noundef nonnull readonly align 8 captures(none) dereferenceable(8) %0, [2 x i64] %1, [2 x i64] %2) local_unnamed_addr #5 {"
+        },
+        "consumer_canonical_qualify16": {
+          "ordinary_return": "indirect",
+          "llvm_signature": "define dso_local void @consumer_canonical_qualify16(ptr dead_on_unwind noalias writable writeonly sret(%\"class.std::expected.6\") align 8 captures(none) %0, ptr noundef nonnull readonly align 8 captures(none) dereferenceable(8) %1, [2 x i64] %2, [2 x i64] %3) local_unnamed_addr #6 {"
+        },
+        "consumer_compact_selected8": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local [2 x i64] @consumer_compact_selected8(ptr noundef nonnull align 8 dereferenceable(16) %0, ptr %1, [2 x i64] %2, i64 noundef %3, [2 x i64] %4) local_unnamed_addr #3 {"
+        },
+        "consumer_canonical_selected8": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local [2 x i64] @consumer_canonical_selected8(ptr noundef nonnull align 8 dereferenceable(8) %0, ptr %1, [2 x i64] %2, i64 noundef %3, [2 x i64] %4) local_unnamed_addr #3 {"
+        },
+        "consumer_compact_point8": {
+          "ordinary_return": "void",
+          "llvm_signature": "define dso_local void @consumer_compact_point8(ptr noundef nonnull readonly align 8 captures(none) dereferenceable(16) %0, ptr %1, i64 noundef %2, ptr noundef nonnull align 8 dereferenceable(24) %3) local_unnamed_addr #3 {"
+        },
+        "consumer_compact_chain8": {
+          "ordinary_return": "void",
+          "llvm_signature": "define dso_local void @consumer_compact_chain8(ptr noundef nonnull readonly align 8 captures(none) dereferenceable(16) %0, ptr %1, i64 noundef %2, ptr noundef nonnull align 8 dereferenceable(24) %3) local_unnamed_addr #3 {"
+        },
+        "consumer_compact_chain16": {
+          "ordinary_return": "void",
+          "llvm_signature": "define dso_local void @consumer_compact_chain16(ptr noundef nonnull align 8 dereferenceable(64) %0, [2 x i64] %1, i64 noundef %2, ptr noundef nonnull align 8 dereferenceable(24) %3) local_unnamed_addr #3 {"
+        },
+        "consumer_canonical_point8": {
+          "ordinary_return": "void",
+          "llvm_signature": "define dso_local void @consumer_canonical_point8(ptr noundef nonnull readonly align 8 captures(none) dereferenceable(8) %0, ptr readonly captures(none) %1, i64 noundef %2, ptr noundef nonnull writeonly align 8 captures(none) dereferenceable(24) initializes((0, 24)) %3) local_unnamed_addr #7 {"
+        },
+        "consumer_canonical_chain8": {
+          "ordinary_return": "void",
+          "llvm_signature": "define dso_local void @consumer_canonical_chain8(ptr noundef nonnull readonly align 8 captures(none) dereferenceable(8) %0, ptr readonly captures(none) %1, i64 noundef %2, ptr noundef nonnull writeonly align 8 captures(none) dereferenceable(24) initializes((0, 24)) %3) local_unnamed_addr #7 {"
+        },
+        "consumer_canonical_chain16": {
+          "ordinary_return": "void",
+          "llvm_signature": "define dso_local void @consumer_canonical_chain16([2 x i64] %0, i64 noundef %1, ptr noundef nonnull writeonly align 8 captures(none) dereferenceable(24) initializes((0, 24)) %2) local_unnamed_addr #8 {"
+        }
+      },
+      "hot_only_object_sections": {
+        "schema": {
+          "text_bytes": 480,
+          "rodata_bytes": 0,
+          "sections": {
+            ".text": 56,
+            ".group": 8,
+            ".text._ZN12orbital_mvcc17metadata_consumer15read_chain_intoERKN13orbital_bench9versioned6SchemaENS0_15ExplicitTuple16EmjRNS1_7OutcomeE": 424,
+            ".comment": 86,
+            ".note.GNU-stack": 0,
+            ".eh_frame": 104,
+            ".llvm_addrsig": 0
+          }
+        },
+        "compact": {
+          "text_bytes": 440,
+          "rodata_bytes": 0,
+          "sections": {
+            ".text": 56,
+            ".group": 8,
+            ".text._ZN12orbital_mvcc17metadata_consumer11compact_law15read_chain_intoERKNS1_7ReadLawENS1_4PartEmjRN13orbital_bench7OutcomeE": 384,
+            ".comment": 86,
+            ".note.GNU-stack": 0,
+            ".eh_frame": 80,
+            ".llvm_addrsig": 0
+          }
+        },
+        "canonical": {
+          "text_bytes": 552,
+          "rodata_bytes": 0,
+          "sections": {
+            ".text": 552,
+            ".comment": 86,
+            ".note.GNU-stack": 0,
+            ".eh_frame": 64,
+            ".llvm_addrsig": 0
+          }
+        }
+      },
+      "extra_default_schema_global_initialization": false
+    },
+    "x86_64": {
+      "sizes": [
+        {
+          "type": "ReadLaw",
+          "bytes": 64,
+          "alignment": 8,
+          "trivially_copyable": true,
+          "trivial_destructor": true,
+          "trivial_move": true
+        },
+        {
+          "type": "CompactControl",
+          "bytes": 16,
+          "alignment": 8,
+          "trivially_copyable": true,
+          "trivial_destructor": true,
+          "trivial_move": true
+        },
+        {
+          "type": "CompactCursor",
+          "bytes": 8,
+          "alignment": 8,
+          "trivially_copyable": true,
+          "trivial_destructor": true,
+          "trivial_move": true
+        },
+        {
+          "type": "CompactPart",
+          "bytes": 16,
+          "alignment": 8,
+          "trivially_copyable": true,
+          "trivial_destructor": true,
+          "trivial_move": true
+        },
+        {
+          "type": "ResultCompactCursor",
+          "bytes": 16,
+          "alignment": 8,
+          "trivially_copyable": false,
+          "trivial_destructor": true,
+          "trivial_move": true
+        },
+        {
+          "type": "ResultCompactPart",
+          "bytes": 24,
+          "alignment": 8,
+          "trivially_copyable": false,
+          "trivial_destructor": true,
+          "trivial_move": true
+        },
+        {
+          "type": "MaterializedCanonicalTag",
+          "bytes": 1,
+          "alignment": 1,
+          "trivially_copyable": true,
+          "trivial_destructor": true,
+          "trivial_move": true
+        },
+        {
+          "type": "CanonicalControl",
+          "bytes": 8,
+          "alignment": 8,
+          "trivially_copyable": true,
+          "trivial_destructor": true,
+          "trivial_move": true
+        },
+        {
+          "type": "CanonicalCursor",
+          "bytes": 8,
+          "alignment": 8,
+          "trivially_copyable": true,
+          "trivial_destructor": true,
+          "trivial_move": true
+        },
+        {
+          "type": "CanonicalPart",
+          "bytes": 16,
+          "alignment": 8,
+          "trivially_copyable": true,
+          "trivial_destructor": true,
+          "trivial_move": true
+        },
+        {
+          "type": "ResultCanonicalCursor",
+          "bytes": 16,
+          "alignment": 8,
+          "trivially_copyable": false,
+          "trivial_destructor": true,
+          "trivial_move": true
+        },
+        {
+          "type": "ResultCanonicalPart",
+          "bytes": 24,
+          "alignment": 8,
+          "trivially_copyable": false,
+          "trivial_destructor": true,
+          "trivial_move": true
+        }
+      ],
+      "signatures": {
+        "consumer_candidate_part8": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local { ptr, i8 } @consumer_candidate_part8(ptr noundef nonnull align 8 dereferenceable(16) %0, ptr %1, i64 %2, ptr %3, i64 %4) local_unnamed_addr #0 {"
+        },
+        "consumer_candidate_part16": {
+          "ordinary_return": "indirect",
+          "llvm_signature": "define dso_local void @consumer_candidate_part16(ptr dead_on_unwind noalias writable writeonly sret(%\"class.std::expected.0\") align 8 captures(none) initializes((0, 4), (16, 17)) %0, ptr noundef nonnull align 8 dereferenceable(16) %1, ptr %2, i64 %3, ptr %4, i64 %5) local_unnamed_addr #0 {"
+        },
+        "consumer_candidate_part16_into": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local range(i64 0, 4294967297) i64 @consumer_candidate_part16_into(ptr noundef nonnull align 8 dereferenceable(16) %0, ptr %1, i64 %2, ptr %3, i64 %4, ptr noundef nonnull writeonly align 8 captures(none) dereferenceable(16) %5) local_unnamed_addr #0 {"
+        },
+        "consumer_candidate_descriptor_view8": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local { ptr, i8 } @consumer_candidate_descriptor_view8(ptr noundef nonnull align 8 dereferenceable(16) %0, ptr %1, i64 %2, i64 %3) local_unnamed_addr #0 {"
+        },
+        "consumer_candidate_descriptor_selected8": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local { ptr, i8 } @consumer_candidate_descriptor_selected8(ptr noundef nonnull align 8 dereferenceable(16) %0, ptr %1, i64 %2, i64 %3, i64 noundef %4, ptr noundef readonly byval(%\"struct.orbital::Id\") align 8 captures(none) %5) local_unnamed_addr #0 {"
+        },
+        "consumer_candidate_point8": {
+          "ordinary_return": "void",
+          "llvm_signature": "define dso_local void @consumer_candidate_point8(ptr noundef nonnull readonly align 8 captures(none) dereferenceable(16) %0, ptr %1, i64 noundef %2, ptr noundef nonnull align 8 dereferenceable(24) %3) local_unnamed_addr #0 {"
+        },
+        "consumer_candidate_chain8": {
+          "ordinary_return": "void",
+          "llvm_signature": "define dso_local void @consumer_candidate_chain8(ptr noundef nonnull readonly align 8 captures(none) dereferenceable(16) %0, ptr %1, i64 noundef %2, ptr noundef nonnull align 8 dereferenceable(24) %3) local_unnamed_addr #0 {"
+        },
+        "consumer_candidate_chain16": {
+          "ordinary_return": "void",
+          "llvm_signature": "define dso_local void @consumer_candidate_chain16(ptr noundef nonnull align 64 dereferenceable(15296) %0, ptr %1, i64 %2, i64 noundef %3, ptr noundef nonnull align 8 dereferenceable(24) %4) local_unnamed_addr #0 {"
+        },
+        "consumer_candidate_descriptor_borrowed8": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local { ptr, i8 } @consumer_candidate_descriptor_borrowed8(ptr noundef nonnull align 8 dereferenceable(16) %0, ptr %1, i64 %2, i64 %3, i64 noundef %4, ptr noundef readonly byval(%\"struct.orbital::Id\") align 8 captures(none) %5) local_unnamed_addr #0 {"
+        },
+        "consumer_compact_read_law": {
+          "ordinary_return": "indirect",
+          "llvm_signature": "define dso_local void @consumer_compact_read_law(ptr dead_on_unwind noalias writable writeonly sret(%\"class.orbital_mvcc::metadata_consumer::compact_law::ReadLaw\") align 8 captures(none) initializes((0, 64)) %0, ptr noundef readonly byval(%\"class.orbital_mvcc::metadata_consumer::compact_law::ReadLaw\") align 8 captures(none) %1) local_unnamed_addr #0 {"
+        },
+        "consumer_compact_control": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local { ptr, i64 } @consumer_compact_control(ptr %0, i64 %1) local_unnamed_addr #2 {"
+        },
+        "consumer_canonical_control": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local i64 @consumer_canonical_control(i64 returned %0) local_unnamed_addr #2 {"
+        },
+        "consumer_compact_cursor": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local ptr @consumer_compact_cursor(ptr readnone returned captures(ret: address, provenance) %0) local_unnamed_addr #2 {"
+        },
+        "consumer_compact_part": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local { ptr, i64 } @consumer_compact_part(ptr %0, i64 %1) local_unnamed_addr #2 {"
+        },
+        "consumer_canonical_cursor": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local ptr @consumer_canonical_cursor(ptr readnone returned captures(ret: address, provenance) %0) local_unnamed_addr #2 {"
+        },
+        "consumer_canonical_part": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local { ptr, i64 } @consumer_canonical_part(ptr %0, i64 %1) local_unnamed_addr #2 {"
+        },
+        "consumer_compact_qualify8": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local { ptr, i8 } @consumer_compact_qualify8(ptr noundef nonnull align 8 dereferenceable(16) %0, ptr %1, i64 %2, ptr %3, i64 %4) local_unnamed_addr #3 {"
+        },
+        "consumer_compact_qualify16": {
+          "ordinary_return": "indirect",
+          "llvm_signature": "define dso_local void @consumer_compact_qualify16(ptr dead_on_unwind noalias writable sret(%\"class.std::expected.0\") align 8 %0, ptr noundef nonnull align 8 dereferenceable(16) %1, ptr %2, i64 %3, ptr %4, i64 %5) local_unnamed_addr #3 {"
+        },
+        "consumer_canonical_qualify8": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local { ptr, i8 } @consumer_canonical_qualify8(ptr noundef nonnull readonly align 8 captures(none) dereferenceable(8) %0, ptr %1, i64 %2, ptr %3, i64 %4) local_unnamed_addr #5 {"
+        },
+        "consumer_canonical_qualify16": {
+          "ordinary_return": "indirect",
+          "llvm_signature": "define dso_local void @consumer_canonical_qualify16(ptr dead_on_unwind noalias writable writeonly sret(%\"class.std::expected.6\") align 8 captures(none) %0, ptr noundef nonnull readonly align 8 captures(none) dereferenceable(8) %1, ptr %2, i64 %3, ptr %4, i64 %5) local_unnamed_addr #6 {"
+        },
+        "consumer_compact_selected8": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local { ptr, i8 } @consumer_compact_selected8(ptr noundef nonnull align 8 dereferenceable(16) %0, ptr %1, i64 %2, i64 %3, i64 noundef %4, ptr noundef readonly byval(%\"struct.orbital::Id.9\") align 8 captures(none) %5) local_unnamed_addr #3 {"
+        },
+        "consumer_canonical_selected8": {
+          "ordinary_return": "register",
+          "llvm_signature": "define dso_local { ptr, i8 } @consumer_canonical_selected8(ptr noundef nonnull align 8 dereferenceable(8) %0, ptr %1, i64 %2, i64 %3, i64 noundef %4, ptr noundef readonly byval(%\"struct.orbital::Id.9\") align 8 captures(none) %5) local_unnamed_addr #3 {"
+        },
+        "consumer_compact_point8": {
+          "ordinary_return": "void",
+          "llvm_signature": "define dso_local void @consumer_compact_point8(ptr noundef nonnull readonly align 8 captures(none) dereferenceable(16) %0, ptr %1, i64 noundef %2, ptr noundef nonnull align 8 dereferenceable(24) %3) local_unnamed_addr #3 {"
+        },
+        "consumer_compact_chain8": {
+          "ordinary_return": "void",
+          "llvm_signature": "define dso_local void @consumer_compact_chain8(ptr noundef nonnull readonly align 8 captures(none) dereferenceable(16) %0, ptr %1, i64 noundef %2, ptr noundef nonnull align 8 dereferenceable(24) %3) local_unnamed_addr #3 {"
+        },
+        "consumer_compact_chain16": {
+          "ordinary_return": "void",
+          "llvm_signature": "define dso_local void @consumer_compact_chain16(ptr noundef nonnull align 8 dereferenceable(64) %0, ptr %1, i64 %2, i64 noundef %3, ptr noundef nonnull align 8 dereferenceable(24) %4) local_unnamed_addr #3 {"
+        },
+        "consumer_canonical_point8": {
+          "ordinary_return": "void",
+          "llvm_signature": "define dso_local void @consumer_canonical_point8(ptr noundef nonnull readonly align 8 captures(none) dereferenceable(8) %0, ptr readonly captures(none) %1, i64 noundef %2, ptr noundef nonnull writeonly align 8 captures(none) dereferenceable(24) initializes((0, 24)) %3) local_unnamed_addr #7 {"
+        },
+        "consumer_canonical_chain8": {
+          "ordinary_return": "void",
+          "llvm_signature": "define dso_local void @consumer_canonical_chain8(ptr noundef nonnull readonly align 8 captures(none) dereferenceable(8) %0, ptr readonly captures(none) %1, i64 noundef %2, ptr noundef nonnull writeonly align 8 captures(none) dereferenceable(24) initializes((0, 24)) %3) local_unnamed_addr #7 {"
+        },
+        "consumer_canonical_chain16": {
+          "ordinary_return": "void",
+          "llvm_signature": "define dso_local void @consumer_canonical_chain16(ptr readonly captures(none) %0, i64 %1, i64 noundef %2, ptr noundef nonnull writeonly align 8 captures(none) dereferenceable(24) initializes((0, 24)) %3) local_unnamed_addr #7 {"
+        }
+      },
+      "hot_only_object_sections": {
+        "schema": {
+          "text_bytes": 665,
+          "rodata_bytes": 0,
+          "sections": {
+            ".text": 59,
+            ".group": 8,
+            ".text._ZN12orbital_mvcc17metadata_consumer15read_chain_intoERKN13orbital_bench9versioned6SchemaENS0_15ExplicitTuple16EmjRNS1_7OutcomeE": 606,
+            ".comment": 86,
+            ".note.GNU-stack": 0,
+            ".eh_frame": 136,
+            ".llvm_addrsig": 0
+          }
+        },
+        "compact": {
+          "text_bytes": 563,
+          "rodata_bytes": 0,
+          "sections": {
+            ".text": 59,
+            ".group": 8,
+            ".text._ZN12orbital_mvcc17metadata_consumer11compact_law15read_chain_intoERKNS1_7ReadLawENS1_4PartEmjRN13orbital_bench7OutcomeE": 504,
+            ".comment": 86,
+            ".note.GNU-stack": 0,
+            ".eh_frame": 136,
+            ".llvm_addrsig": 0
+          }
+        },
+        "canonical": {
+          "text_bytes": 909,
+          "rodata_bytes": 0,
+          "sections": {
+            ".text": 909,
+            ".comment": 86,
+            ".note.GNU-stack": 0,
+            ".eh_frame": 112,
+            ".llvm_addrsig": 0
+          }
+        }
+      },
+      "extra_default_schema_global_initialization": false
+    }
+  },
+  "limits": [
+    "x86 sizeof execution uses qemu, never performance",
+    "hot-only object section sizes exclude cold qualification and linked deduplication",
+    "record sizes are not whole caller frames; ordinary error/owner ABI is separately probed"
+  ],
+  "candidate_hashes": {
+    "consumer/candidates.h": "c0af6069bc32f1fde528fb37624608457ba9e543740f85a212d1c9f9bb5f8cca",
+    "consumer/types.h": "8c66a7c644dab5f29ac1bd5089a40d4a8e0f61652244d70f60c202d2b74cbcb6",
+    "consumer/census.cpp": "7c2688995fad7d48e2caa067cf42a1c2dd68003337ab79051b86524e934f97f4",
+    "consumer/abi.cpp": "5ba59ef58d5f0eb33480b54c6c960c74e63aa555dda03c76b9268c4626acc859",
+    "consumer/candidates_check.cpp": "487d05559f40335b8a8a671b8d802ea8aa98550c58cd92782cb596c0ab3ca4ad",
+    "consumer/locals_data.cpp": "fd562b0a28b547fbdf463d6f5e7243cf897a7daef53c1285ae273bd312f693a4",
+    "consumer/locals_consumer.cpp": "9393ceeddc498e6d1606299326963b647dd76c01c7b767f3ff3328f9bf114e2f",
+    "consumer/adapters.h": "cd13859a4b32d5e6b24621fece51a3448e1db943fed7a655bad63a3ca28af993",
+    "consumer/descriptor_adapter.h": "18d71a190ad54fe69d9a0d275c463bf8262fa1b184a6f2d0304dd2d97e176fe7",
+    "consumer/compact_law.h": "1a64943766d2562707d0a05ccb3bcc2223f2b201a21e8fb8bc1a00e63a245038",
+    "consumer/operations.h": "0b0a500aa217ba9094a6938f5c0125fca2ead1205d10f0b3494a0d59369f8e16",
+    "consumer/candidate_abi.cpp": "39dda387bef95c3bf0fe9ef11ae1d82a24bc69ea632264c6b7ef67c42b70d92c",
+    "consumer/compact_law_check.cpp": "bbf65fdbc299fded70313a5e0949c2f78c92943d6291e4aaa342a29cd6032e24",
+    "consumer/candidate_default_schema.cpp": "8f32ddfaaf46d63480e858573cc8dd88faea80028579018b37f6f26a5f3a42be",
+    "consumer/descriptor_adapter_check.cpp": "14423079956bb6d34d6d3eaeb18a8b05b1b2b9390f2f49dffdb76b26ac156502",
+    "consumer/compact_operations.h": "134cb1129f390d4ba20ec9a9edd4540c2088eaedf64a1a8a048fc82e7cc28219",
+    "consumer/compact_operations_check.cpp": "9ddc619d066c12548b5e8b9c88dc88d799624b65bbd002056a001fb5942dabf4",
+    "consumer/compact_descriptor_adapter.h": "00687d80439e00c6dd6de6f8a7f21eb0a62789127fc69f25842bacb7e00aea5b",
+    "consumer/canonical_law.h": "e312fc6bcea368a839b9004ecf971518a1433c0979329927e2a61b330e3c70b9",
+    "consumer/compact_descriptor_check.cpp": "6116f4e9c9df48f7010cb16b6eb0603378aecdb30959d6c263f34fd5fe967447",
+    "consumer/canonical_law_check.cpp": "49905a9cbba5750b0251d7c54a2f6072b246f34d70291d3c54fcbc494f590400",
+    "consumer/canonical_descriptor_adapter.h": "d99039243751ed25ec76eba0b5ce3c8e4f15386ce5e6d44d455eebc792efd5e8",
+    "consumer/compact_abi.cpp": "ca8ddb466fd58318b971a3b1c1f4ec68f0dd3e44371227c018a6dc37a1eece75",
+    "consumer/compact_sizes.cpp": "f93eb056dfe387fe48807d9dc4a7ce2b3ccb876bfbd0d10e411e2b0ef2c99c43",
+    "orbital/descriptor/descriptor.h": "3081b7b444b4bbf71ab4ef336ee167438e7045e5c9b77719fcfbbccc89e15f30",
+    "orbital/descriptor/descriptor.cpp": "467ccd64d83776c58568598bbd56088c8da24ac9f106eabc90acc9dcf4663449",
+    "orbital/descriptor/check.cpp": "7f15ad6956a2ce594b3b57203f1b9f8c2658f87b05b6a08736ee356dd93be025",
+    "orbital/descriptor/abi.cpp": "2201e0bf667aacddbf0e11d88c0470cc15e84ff6eb5742891375c1ece4f24793"
+  },
+  "baseline_hashes": {
+    "workbench/benchmarks/orbital/workload.cpp": "bb2dc44a6feb6e0c3705b28242bef54d9045013f2533b4700dab3a476583bb5d",
+    "workbench/benchmarks/orbital/workload.h": "e0a5a622c2b290b9c1edbb96b6e8007ac343fa335a801cf090d936312d4c5b60",
+    "workbench/benchmarks/orbital/versioned-performance/read.h": "a0c889e3bafb133db9920e1dceba1c34f9215914f12128af41c8d7781b545d94",
+    "workbench/benchmarks/orbital/versioned/check.cpp": "38ceedd074a65e6204f94bb7ce40653d63896c481ba1967ab856b0e8dce69989",
+    "workbench/benchmarks/orbital/versioned/check_data.cpp": "79e7d3ae18e685e76775e9fd3d836be31f0b7d9d2cb1aa1f25cd84d0e52e2bbc",
+    "workbench/benchmarks/orbital/versioned/consumer.cpp": "8cb8e22ee8aca30b261b7352e80c022f98194e50380025201409ebecf2a08fcb",
+    "workbench/benchmarks/orbital/versioned/consumer.h": "c974db11da805fd17057e588b94e4c30e851ca5fc327b806ee1c78c5ba8815eb",
+    "workbench/benchmarks/orbital/versioned/data.cpp": "ad82c846b5f1b82cff496ad10ebd5f19e8216b30020bd046dd5ce17452fb352b",
+    "workbench/benchmarks/orbital/versioned/data.h": "2a861f4dc64850a4435b7b32b2bc018a8f41a09bf60791dac854ab9818e3984d",
+    "workbench/benchmarks/orbital/versioned/native.h": "a36386e1aa8d41154361bb747b9fb0c4e559a09b03a3a953d1035b8cdd4a3274",
+    "orbital/src/types.cpp": "8fb36e1d5f33cf0cef19243ab72f9907e527d068efec53a3fab22f89d19a962f",
+    "orbital/src/worker.cpp": "8d4593f17951bb40433635de30470ffffa19d8dcbaf026009c2645894df503dd",
+    "orbital/test/allocation.cpp": "012f86769e7a124f39bbf30d95f4a13b5644f804d2327f93cfdbfb921f264b29",
+    "orbital/test/budget.cpp": "3d0fd333dc20cd8831a0251f4c45c11aff4dc60d1ca83347d4dd51e66c656a4b",
+    "orbital/test/finite.cpp": "f36ea890f435ea6a4b7cefe6c4794d545883ec7c310583a448480e7c1cb10193",
+    "orbital/test/lifetime.cpp": "f2a78741bbb03192e1647e287dc7a80344201df2e56219b71c6794faa6d2fd5d",
+    "orbital/test/notification.cpp": "bff8e49a37eee18ea9bcacc19c074e65310ef3901bcda5c40ce19a280282c93f",
+    "orbital/test/object.cpp": "f517ac900296b9a9459f60bde47b6d765a88c10b4d89816e4d3a7f22d01a7bc5",
+    "orbital/test/preparation.cpp": "ccd82411b76ad4e57038933a2f52fcd3584a1c59f7d078147fd27d428e001c76",
+    "orbital/test/reclamation.cpp": "8bfdc552d83ef61e50ae1257840128ecad84ad00322f64909632a75068ed89c1",
+    "orbital/test/returns.cpp": "d070335a4e195b7a339329f8aeed7bf69a9e2fb50e4f76b41c292b6033e637c6",
+    "orbital/test/thread.cpp": "827ae7c3ece12f144dad1e530485f644c96dfd83894a8ab298d52da9b68f5044",
+    "orbital/test/window.cpp": "7838a836cbbc3110c3bd0a41cb7a3dfc5b57afebc135ff0feb407ead73736484",
+    "orbital/test/worker.cpp": "83795a358efafcac28d363554077cb35fc91ff87292aa13577cbbcd469ea05d2",
+    "orbital/src/allocation/allocation.cpp": "7ab583de69714c1e3314abf87b3910b97f81b560801a320d12f164b07b09461d",
+    "orbital/src/allocation/arena.cpp": "5c884a6b17e2d272c4790ac2db729e054c3c086cec4197104bfad00798ca5fb2",
+    "orbital/src/allocation/finite.cpp": "f3f40019d75ea7ead72e6531537ddb88f90204aa15b8be5feb4ecb4b1e5214e3",
+    "orbital/src/allocation/finite.h": "458c446d5cb7e5d19e68070958c9b153760c6fbdf6e9e903f10937f528fd2b22",
+    "orbital/src/allocation/group.cpp": "af93934660c1df3a2d6ce521221e3f97dbbe306b57b57527ee18b833d0492354",
+    "orbital/src/allocation/internal.h": "d6fbc7f04fa3a297501c35a553af2d14655998d33d4c1c16f121c8c86799eae8",
+    "orbital/src/allocation/window.cpp": "798b60d079cb932bac7e632834bc7820e0b7c944f1b9a9763ff6fd3b21b70536",
+    "orbital/src/object/catalog.cpp": "2b20354e6841c2d837aeefa32b3a54e6843e533f1c3359de23f7940fbccbe336",
+    "orbital/src/object/internal.h": "01e8a4bb8091563f4b52923f906963146dc0aa88df8303834dd13a2a59afb702",
+    "orbital/src/object/metadata.cpp": "d7914d62bff14a34a08127fa3867f1945f52c01c1bd78846d2b726fa00a023fc",
+    "orbital/src/object/representation.cpp": "a900892a74d8c259fdf8cd98bbc690cdc6c3f2a20d2fd4f44fe0956fa94f0085",
+    "orbital/include/orbital/allocation.h": "caeab1e7aaefb1b1fb398464cd1673e0ecb19dcede49b644048984a13507f2fe",
+    "orbital/include/orbital/object.h": "0f7ec4d7f6eedc2d3c5ff395d11ed269ddb2f9ef71331edfe0c719c40f5fc0bf",
+    "orbital/include/orbital/preparation.h": "5a50bb22b0e719a6f98be8b97eb57196e2a703324ea9f383a222edfe12110e38",
+    "orbital/include/orbital/types.h": "f16fa83013aadafe0cb539e06dc56834d894605e8419bebf32fa17b53abfe00b",
+    "orbital/include/orbital/worker.h": "5a57d7745ea210734241786178df710bec086d9e4193cb94815132ce668be09f",
+    "ikea/src/overlap.cpp": "ed327d3c978b5503fad1eaf158964a93033d7c9c243171bd790afd0d1eb1a4a2",
+    "ikea/test/bec256/analysis.cpp": "20e7402ca311b168f55463e1ecead10b02ce47d9d2914a89f3f0c690e76273ee",
+    "ikea/test/bec256/check.cpp": "300bb3e73df77904ea640f3a001fbbb4c6751cff92ba985b1334a7de09c82223",
+    "ikea/test/bec256/composition.cpp": "96092e00949935ce0ad06b66a1c65e4d2330fad0ce5f8b366dd5aa6971248182",
+    "ikea/test/bec256/predictor_reference.h": "ee7a9a093b5272c87ca9d218538c5da5b978be13adbc86e2bfb1302c4759382a",
+    "ikea/test/bec256/reference.h": "7aebf12d0b42f81219f750f6912d776a576c329e32b3d4225f0a55837f3e39dd",
+    "ikea/test/seriespack/fixture.h": "24c568588361e639993e426f8bdef35084503d16dead0d6a1451b3f5313d9236",
+    "ikea/test/seriespack/support.cpp": "7c19b2cc656c729ff79b3b59976138b0407b35ecb905397efdcdd9c896eb6862",
+    "ikea/test/seriespack/support.h": "144ee040bc815885d9379692dc02a18f06b694ff427aac7c7668a2b2b59f9506",
+    "ikea/test/tuplepack/execution.cpp": "1fa70b4e0136ddab1b6495bb887303f35255d4ecd67522317494b58355551c50",
+    "ikea/test/tuplepack/gpr.cpp": "ede22b466b18cc3a160d64876952f5e4af10e62f7aa78965f4fc3f7fb5719a8d",
+    "ikea/test/tuplepack/gpr_carriers.cpp": "7bd908f7d46c90b7dd6e837f8c46fa8637084685aa4701693874f59766927736",
+    "ikea/test/tuplepack/gpr_pipeline.cpp": "18567fb7e0cd3824326b4f16fa98aa222bee86cd48d19838915fdeaeedad0ccb",
+    "ikea/test/tuplepack/grouped_maintenance.h": "af20e03ede6fcb2b211a2549ca703cd6dd7c1c3fe381a17a37160c62f040ea7a",
+    "ikea/test/tuplepack/operations.cpp": "6d4f6527782fb8df0cac90ff35ffd856847d30b322882cff525195e15e4f6591",
+    "ikea/test/tuplepack/ownership.cpp": "43a9295e7c0bf2d4ffcf3a10ac50d442e28a9a3aa9ca467313b331e9ee75f9d9",
+    "ikea/test/tuplepack/packet_wire.h": "4dbf2fb8bee621a998ac2188c854065dd9131cea9116147ba9b1a0d1aed732f5",
+    "ikea/test/tuplepack/packets.cpp": "d579ca217ff33e57b6f5954f4edba8c20ca6931e840290b0cd80ff42b73f0582",
+    "ikea/test/tuplepack/transfer.cpp": "3c15b7611c3f2c8e90e140cae247c20a720e3fc974c9159241df7cd34c71240b",
+    "ikea/test/tuplepack/wire.cpp": "c6bcdb8222503333aa1d3861c3d3aea3f38e8888d33586bf72f15b5da64a5673",
+    "ikea/test/seriespack/execution/chain.cpp": "5d8f92a568218dfea610a183aef6dd36a23929593cb0d3cbc1e939b6034ca78f",
+    "ikea/test/seriespack/format/descriptor.cpp": "4ada026326975189c5d50eeed59eab3f98533c5fbd29fa26aa0dc608ba525116",
+    "ikea/test/seriespack/integration/ownership.cpp": "f284c21f958b6f5468cf306d797e01735eeb269c69352bb432ed74bb37e8a424",
+    "ikea/test/seriespack/mutation/admission.cpp": "ebd9e52e1b211b03067d6237d32a58931aa0f9067d8e555b93ef7a3d1009d43c",
+    "ikea/test/seriespack/mutation/cases.h": "67536ae4d69298bc680ac1c697f82808eb227378fc5086370b10ae2bc46766df",
+    "ikea/test/seriespack/mutation/construction.cpp": "6fc0c0ea9c7d22c5248aecc40bbcf656d09f0beb62fd2704bb326fd129151f45",
+    "ikea/test/seriespack/mutation/dense.cpp": "fdd694cdd6e71687b6471e4973f2b50e88323174a1c1d99b7d8a104ea560f705",
+    "ikea/test/seriespack/mutation/range.cpp": "e392f6b891f8b9eedda05063c644a51f8bef9ec5a94fc64e05db0753cf66a0e4",
+    "ikea/test/seriespack/mutation/substitution.cpp": "10c08cc95b6e415f29e7cfc54cac7cb32b4c6573d40531c14548e768123df440",
+    "ikea/test/seriespack/mutation/verify.cpp": "abba5ec2f17e601195b627de366cfbe33b3e01337189f419c61178cd78c6847a",
+    "ikea/test/seriespack/mutation/verify.h": "514162405b543b160a215f8991e17d2847e99f8b8d46cc89ca5834cd60329f5a",
+    "ikea/test/seriespack/mutation/widths_17_24.cpp": "c698f5caf536ecf908624f43e948bcb7ef53703d3009468d3fb3f2ff55293289",
+    "ikea/test/seriespack/mutation/widths_1_8.cpp": "8fa1825aa0c8449c9e3ab5758f2e675c010520bdb8b920ad361e37c7a7bf2c00",
+    "ikea/test/seriespack/mutation/widths_25_32.cpp": "c4f93297741a93c2e12bc6a91736754a505f8a1e6eed5b171f93e3e68bd9c946",
+    "ikea/test/seriespack/mutation/widths_33_40.cpp": "c280671723b5f91f17985f4f6ce264acfaf553259117dc5d2d0c05b59d58980d",
+    "ikea/test/seriespack/mutation/widths_41_48.cpp": "db7514dcf866d0d222db45044ac1b28616628b53658d3713d9f2a41466be73b0",
+    "ikea/test/seriespack/mutation/widths_49_56.cpp": "4f04b9243ec056f203d395416b93e64c0578df3a73d606238dcde16491e36daa",
+    "ikea/test/seriespack/mutation/widths_57_64.cpp": "0b42d5ebccac5a70941da15cbc344af360db8c0245850dfd3a17c6bc28dc7b52",
+    "ikea/test/seriespack/mutation/widths_9_16.cpp": "938405a37364c9ea13bfcdc6ab3b4950bf7dd4bf9f450727de16edc750f1bd8a",
+    "ikea/test/seriespack/read/composition.cpp": "cb1f30b2a5b605cdbdaa8cc6dad568627f93b180d6c9055ca8d531a0728badf0",
+    "ikea/test/seriespack/read/wire.cpp": "1e6cac06b9e56f2fd7f8ef2d8863dfb39a51b252b445104e4dc1a52c998b193f",
+    "ikea/test/seriespack/reference/layout.h": "2f6b28e406189a9f8d623b58294e3956764cd8a5423ae4b2d9c1e2a37817f4b9",
+    "ikea/test/seriespack/reference/physical.h": "1e3118d45f89a6419b7c5289dba0f213c5c56516bd7a24083c6aa9d6ec84e239",
+    "ikea/src/bec256/analysis.cpp": "07c7cdb4e4f4202495add48edea368ad1328b3163e595753f8d49963113b7ab6",
+    "ikea/src/bec256/codec.cpp": "67aa2b59a3bbaab16ba6050a9275065fd04a613795e8de01f8a0003f2f1e0837",
+    "ikea/src/bec256/validation.cpp": "221fdec53099ed1439597288988903278590c0f5f980d9b21d4da4051ee96971",
+    "ikea/src/seriespack/admission.cpp": "7164ad4a3266d47b80f0ea0e051cefb6d6b288820f6ef6664c227ebdc5f5168b",
+    "ikea/src/seriespack/readers.cpp": "0b2c9f7d3d7a82c7180440416486c4d2224bb4336090e81aa2861ae70abcdaa2",
+    "ikea/src/seriespack/representation.cpp": "042b996b473dc0b87f62b90a4f52745940b66e21fa7050b6d9871a75bea3dbb7",
+    "ikea/src/tuplepack/construction.cpp": "e4f71cddd17f39e383075863c7ada2a251ebf2a6537ec75c5c613a026bcbfe28",
+    "ikea/src/tuplepack/description.cpp": "626c1390b03993fe4e0a16e678f9d77fb1489d90ad271a6167f3cec4493f271c",
+    "ikea/src/tuplepack/gpr.cpp": "ec092f56e6d980e8c516261502aa1f529e9a7542c591972789b2521c0fd522cd",
+    "ikea/src/tuplepack/kernels.cpp": "4059bc00c07fcc3b9de9c26c1ccaab1b028af3aad85773cbba61b6b25214984e",
+    "ikea/src/tuplepack/packet.cpp": "d1ba46fd95ee9bfc1efc4ef8ecaab2509c8b37730ff358f0488edcf9849b2c39",
+    "ikea/src/tuplepack/packet_layout.cpp": "d6319be9ad6b9c466e884e691f5c016d6666716bc6a64d09655e30cd9c1e86ad",
+    "ikea/src/tuplepack/packet_prepare.cpp": "db4d74dccf1383319183992a9a028da0ed5f2072dd1881fa8254ec1063f5df06",
+    "ikea/src/tuplepack/prepare.cpp": "7b987d4edf49d9030fe9067f4969f3c4ad884d0432c2351c298e3e65cad714d4",
+    "ikea/src/tuplepack/routes.cpp": "70f8a07552891df9f61424f66700051f010de65f4fdc710ae42bceaee246c552",
+    "ikea/include/ikea/bec256.h": "3ccd02ece4d59c0373125bdca2f991d8e25383b0de833f4c0b18693b788e89ed",
+    "ikea/include/ikea/effects.h": "01c2e39782f985541027fe4d8eae6c09a981359847eb9638392cffc8f9c34208",
+    "ikea/include/ikea/seriespack.h": "0a6b5cac811109114bc0b353f17e51094081ea1d88605cf2cd33b571e0847c78",
+    "ikea/include/ikea/streampack.h": "4040c1fd27cc7745ac69382454d7cbda75f8fb8a13aa837336fc1309fe846edd",
+    "ikea/include/ikea/tuplepack.h": "931e05ca2ecb3bd67cf68a12b3c8be2715bcef4bf604c82eb1ac24d483beef2a",
+    "ikea/include/ikea/bec256/analysis.h": "e7fa7884f6a7942c199b2f34adf5942a02ca1276dd9ef2afc0402967471e1424",
+    "ikea/include/ikea/bec256/codec.h": "251a76fe37a9acb6c734f6cca0267573e5375798f360d9f1e62fcff8b614a1d2",
+    "ikea/include/ikea/detail/native_chain.h": "11672b2ccf161079d30a279056c5b79d00c3859f5d41258bca30d91d2b589a86",
+    "ikea/include/ikea/detail/overlap.h": "69840846e1ca1ab5fdeb6fdcea21d9705ec566ade7e0abff7a6d94b7ff414e44",
+    "ikea/include/ikea/seriespack/effects.h": "3cf5a0b4fb80ff6c673357aa432319e2fcf009521f13d53b24c691353f767acb",
+    "ikea/include/ikea/seriespack/format.h": "adf284014207305ffbeb4d726fc93fa4020220beb7d627a26027ec92711f01b9",
+    "ikea/include/ikea/seriespack/mutation_operation.h": "4a8a2c3d3f2858a57c11db7a860ce0bf2b9f593ea727711658d2b752689c4a8c",
+    "ikea/include/ikea/seriespack/presets.h": "a5c8b2061c83da4c40511b7f7797bfd2d2174097fa65d43171a26fe7d044e1e1",
+    "ikea/include/ikea/seriespack/read.h": "b8e860e444216912a308fd0ce47b8b38c29553606da1b458174c57e7726d16e4",
+    "ikea/include/ikea/seriespack/read_operation.h": "b52426a8019150d16c69d0c25173f16b5a2ac6bfd427d36749f888056bb0bb53",
+    "ikea/include/ikea/seriespack/representation.h": "236c3dfd832fb0151d98571f4334a38bb2e84a5a269bf4adca3f29e26ca42409",
+    "ikea/include/ikea/seriespack/selection.h": "7cbf31ee1fd649c6aaaa752f7a51b89eaabcc82944de9131de84f907f401e489",
+    "ikea/include/ikea/seriespack/status.h": "a19b016e4aad84e22e3f68cccd4aa87445f5595e25f4913dabba26133e44c74c",
+    "ikea/include/ikea/seriespack/view.h": "5842a2222be957836734e851d0a425ce3c85675e49678ac9b825efec868fdca5",
+    "ikea/include/ikea/seriespack/write.h": "8ec6830b81fbc70faee7cbb0c0ef0d82e5906fb0e314f72af308cc4426fdd7ec",
+    "ikea/include/ikea/tuplepack/construction.h": "6fd8db04a4bbe9a818c9931e309d3def87c10cdc0df1dffd7055951a4f0aada8",
+    "ikea/include/ikea/tuplepack/description.h": "e12fd70c9234ce01466ce817098f1287893503325d2a48e9a11bf9d94e6dce4a",
+    "ikea/include/ikea/tuplepack/packet_layout.h": "4f40cec54d800f2b0c84d5019d68141e30faa70d66fc240517320aee57127f1e",
+    "ikea/include/ikea/tuplepack/plan.h": "490c461bd668e840df31f7f94e74198aaf533694085c85341a1095388717de12",
+    "ikea/include/ikea/tuplepack/read.h": "2fad05c3b36b17c8f7825cbcb017995e2fd1503ecd26a01bf64cc7c6cc0d6252",
+    "ikea/include/ikea/tuplepack/selection.h": "b878acb433ba38f44b4fa386da13fabf3d5a964306e21a17fc0ee28ece2dde2b",
+    "ikea/include/ikea/tuplepack/transfer.h": "9975377267b3907e38e22ce4ccf5beb920d4a043c8e8a97f128e2caa49d3afb7",
+    "ikea/include/ikea/tuplepack/view.h": "ef0166a34353706ec51662c99ec8f4c6f1e8fb94c9d0b6ee83355c2ed5914979",
+    "ikea/include/ikea/tuplepack/write.h": "ee29ad753706db8c393e2e77440c15143a28216a5ce52146a84d0dc7ad82de0a",
+    "ikea/include/ikea/tuplepack/author/composition.h": "331aa21f38feefe3065387fce648d376f411b5de047a5435a6483e3b133244a9",
+    "ikea/include/ikea/tuplepack/author/execution.h": "4ecbd3a2d6796d5ae89f6fcdf74c1ec4590f3af58196ac7eff688b774f02dda6",
+    "ikea/include/ikea/tuplepack/author/maintenance.h": "ef57065c282bd28a2d5ad81f82af02609aa0d79241a817dd58a87d110450955c",
+    "ikea/include/ikea/tuplepack/author/native.h": "1411c0de82ebc87415e9677f44ee472cd904b368b34e1f91a29f4d30e9489839",
+    "ikea/include/ikea/tuplepack/author/routes.h": "18797df06c407bcbd472761fc00492604628642189ed9055d331c2f2d220b1ee",
+    "ikea/include/ikea/tuplepack/detail/gpr.h": "cefe2ee0fbd51b4a4391595d5015e13635331bf241a90f080d6a3ea40ca295d0",
+    "ikea/include/ikea/tuplepack/detail/mutation.h": "0d0b7a340de2c764355e8392d903fcd5b26f1b14d0ba1bb8f34ea9fbd2c8ba25",
+    "ikea/include/ikea/tuplepack/detail/packet_plan.h": "c32c9c3b3e10e98b66acf8b230d35ac2cabf4f875cadfb9bdb2d804e981e6a48",
+    "ikea/include/ikea/tuplepack/detail/plan.h": "18f8059941a2bc648967a7d69b275d9a00de474ae83432c708497cce39264de5",
+    "ikea/include/ikea/tuplepack/detail/window.h": "106ba39b37d696e351b0748353e4a2c1d7e1bc493639cd703653ad860377d472",
+    "ikea/include/ikea/tuplepack/detail/native/memory.h": "d44dcd72d6c3dcfb0e160cd4fb568880ee825aacf69c7112e979c544a2fec951",
+    "ikea/include/ikea/tuplepack/detail/native/packet.h": "723f407f80316af22d618d7cda3b158b0b19df693f106117fd1e72804c072f92",
+    "ikea/include/ikea/tuplepack/detail/native/routes.h": "83f3a2e73438e52f4e655968b411392bd83b46a06f291ed461d675723524b05c",
+    "ikea/include/ikea/tuplepack/detail/native/selection.h": "d495e9d02d2837ba26f6244b7e7732ce9a06890c15f35bee5a2f220546fadfc4",
+    "ikea/include/ikea/tuplepack/detail/native/shuffle.h": "c59956d48c1c53e68c255f3a99d98f474f343d7ede10b4cb71d3f491049e516f",
+    "ikea/include/ikea/tuplepack/detail/native/types.h": "bf39a6d3ef916f221211d523d881777fb184a5ff6803375f496ad8ff420b8cb0",
+    "ikea/include/ikea/seriespack/author/chain.h": "7996d90db4d65fc85e5ef9a9ea64a347d94377acd29f7aa5801799af01160c71",
+    "ikea/include/ikea/seriespack/author/expression.h": "4d5e1c79a203b8a937e876a91fba0ec9d68fb2aba9d2cf1c0f2f8bdf1e638e59",
+    "ikea/include/ikea/seriespack/author/native.h": "789d3b86f07a7581ba47f9b2372fd3c864eb7516786740c6999806b4c607ca45",
+    "ikea/include/ikea/seriespack/author/read.h": "a87e14d3de3d4518d2c1b7b57bca4fb2f8b97679a1bb8aa5475a48364eaac703",
+    "ikea/include/ikea/seriespack/author/record.h": "a36ae9f0d5d2a9a89117fe706a45774f88ec7d90a825d6216f836935e3a5aa20",
+    "ikea/include/ikea/seriespack/author/summaries.h": "119d03ef8404ad3f461518201962c6e8042cae43b0a50dcadf05ca5d2e4438a9",
+    "ikea/include/ikea/seriespack/author/write.h": "4b1324df2dfc085a9d3bb26e6c366585a13be2dd5436c3b6073fc8f9366a49cc",
+    "ikea/include/ikea/seriespack/detail/admission.h": "f3c04985ba39675ab9481f8e59b41dda90e928d0ec8c6df1ccc16af4c5c7d6a5",
+    "ikea/include/ikea/seriespack/detail/dense_read.h": "d0140e4ebc352a57ce7cd0081d27720d53da5cc4a5d57b3ce25737b9c355e858",
+    "ikea/include/ikea/seriespack/detail/placed_read.h": "50c2339fe23527c578805665a32380f917de34bff208f8bb7a1b0e9e0d2328dc",
+    "ikea/include/ikea/seriespack/detail/point.h": "23451983f927641e1ace80175c06d1a65e1ce2543b688ef9abbfe08d98a9dbf3",
+    "ikea/include/ikea/seriespack/detail/wire.h": "05b92ca7dcb2864049aae1cf3105426798c46dbcd527f411ee480c3833d92b66",
+    "ikea/include/ikea/seriespack/detail/mutation/admission.h": "5fae5445b3c15402e8328a1c67acd1728760dc826f26b891d2be9dda5a71aaa9",
+    "ikea/include/ikea/seriespack/detail/mutation/admission_state.h": "49f19e40439ffa2dde9dfce51a8f5d627b97d9aa553fd5265683d8a2f8ac93e2",
+    "ikea/include/ikea/seriespack/detail/mutation/assignment.h": "c0d80a6fbe63af266af95eb38a87f96659ee8a9e85ab1cc11e16da78132118f5",
+    "ikea/include/ikea/seriespack/detail/mutation/composed.h": "b56c4d0c0d0ba2d70b559e331518fc34a98cef4f77e260028f9c1e712658658a",
+    "ikea/include/ikea/seriespack/detail/mutation/composed_construction.h": "0de20caeb5f339a864b9c18622bd3fc1ae7c1138bcb99da922cf4b9a8f60a2ab",
+    "ikea/include/ikea/seriespack/detail/mutation/construction.h": "12051f76112d1824e4a36866a660f13e12e3dfc53379a7ecd458f913a8a10b8a",
+    "ikea/include/ikea/seriespack/detail/mutation/fields.h": "54bcd05be66c76f4d6a1dde87afcd62fdcafa4481c71d9dbac423b8326267d2a",
+    "ikea/include/ikea/seriespack/detail/mutation/footprint.h": "8ad67182fbf1edd5535289cca5df12d6aa47b3de8942fe12e24838d6078d9a36",
+    "ikea/include/ikea/seriespack/detail/mutation/physical.h": "78968c3d7fed29dfbe9eef466fd43208489211ef245c2341e691bd941490bf99",
+    "ikea/include/ikea/seriespack/detail/native/avx2/read.h": "d84c2f019a7f84efeb1e729f5e9874fc0b9edecb52daa304b40ab05d94fa64ec",
+    "ikea/include/ikea/seriespack/detail/native/avx2/write.h": "81b9076d474fcfcb11b495bebf138878ad357449d53e7bfbdaf9362b4face721",
+    "ikea/include/ikea/seriespack/detail/native/avx512/read.h": "034230a7e985237f19bb5f56c8c4ec73f6f7067252868ab1b0b61817aff12fcd",
+    "ikea/include/ikea/seriespack/detail/native/avx512/write.h": "6d2dd532222ab80af7119a24af3e1b0d0017b733ad76851486d24e1cbd26318a",
+    "ikea/include/ikea/seriespack/detail/native/neon/groups.h": "251da31571a0b8f1bd572d447ab284f31e48469492d93752b4a64520e263db4c",
+    "ikea/include/ikea/seriespack/detail/native/neon/read.h": "424071ec2197e6b8e9a92d0a4e9f98dcb53b4c9c40a51c9be3d0c89e6e0e7e05",
+    "ikea/include/ikea/seriespack/detail/native/neon/write.h": "205713faf444cf585093def1c8ede6cb31dda0f4b022555703450bc7404d5a70",
+    "ikea/include/ikea/bec256/author/analysis.h": "0f0e9d4f093d5c7b635e04cfcea20d443e9ddf1ea923e3e18d43b8acd2acb8e5",
+    "ikea/include/ikea/bec256/author/chain.h": "8d65f67af3a1c53e912e89aa85211e774de61eaccc9a1eeb66789939311a5a1f",
+    "ikea/include/ikea/bec256/author/native.h": "2762506446048ee7514af77168c6f485b752ee4de18a7648831cafe7006e697a",
+    "ikea/include/ikea/bec256/author/write.h": "b3b49f78922fc60dffe7f4ff8617ebec09ff5f05688d89ab2194e63b19244d60",
+    "ikea/include/ikea/bec256/detail/estimate.h": "7c07cb5708dff1843c68c20a126f31a3cec67a89c8f78f2b388d51283c0f3a32",
+    "ikea/include/ikea/bec256/detail/pack.h": "5d72ee4769b42ca30ec16244ff295762c782e1b19227af1d8bd4e874cacbae64",
+    "ikea/include/ikea/bec256/detail/scalar.h": "74ca49fd7941de284c95b22b89265e16cfebf19d66206227b1003b273486caf0",
+    "ikea/include/ikea/bec256/detail/tables.h": "ab71429079516f0691035b65e45f10ef69f98f6539de787db6266b803540f57f",
+    "ikea/include/ikea/bec256/detail/write.h": "705876a5cf5dc56b7a64af152157a0c5b272e6aa42ae65fbef915dbd44805efb",
+    "ikea/include/ikea/bec256/detail/native/assemble.h": "8f004e28a28697fef30440a71aa530f62018f7cae786eea248ba15961be33750",
+    "ikea/include/ikea/bec256/detail/native/avx512.h": "0e2e092ca24d3404b4828bf3c94b240c24a8496af22b2d0feebaf594547f8819",
+    "ikea/include/ikea/bec256/detail/native/emit.h": "b24e104497505d703a71ab97fb95b301efce5744b9de3b4bcf1c1872a23fbe02",
+    "ikea/include/ikea/bec256/detail/native/neon.h": "55e5fb86d2e52f0a7bcf204d98c5a21669e4d57d44f45acf7e5e3f1cfc53f56b",
+    "ikea/examples/bec256/integration.cpp": "d3e0132b19a79d4da172d4d3f7918d9f9c0141cbd5fbcf6a1b8383778546f3e2",
+    "ikea/examples/bec256/native.cpp": "3bc876b54ba03b06a70318464ae5956fdc7beeb7a25c37cfc48e4f81c871c1ae",
+    "ikea/examples/bec256/ordinary.cpp": "0d6cb0df950ff2c118b1399fc786225b26735d2704b8b7c5d40cfec66e63e59c",
+    "ikea/examples/seriespack/composition.cpp": "243ae82eea25e269f68fcd2d174a2f87a5cdd861ee55a6ba6aaba033c4f014ae",
+    "ikea/examples/seriespack/integration.cpp": "ad23e55facc622f6889da1edf98a7c49d2e0842374d1867db9513096ed9c6ad1",
+    "ikea/examples/seriespack/ordinary.cpp": "6809c1b0cfce657128ec74a3735292ad17cb38389a285e43e0b7faedc68219f5",
+    "ikea/examples/seriespack/pipeline.cpp": "e1377aa0cc3918d36f32cdc6f85261218fe984a636ff2a033f60253fa06613ae",
+    "ikea/examples/tuplepack/composition.cpp": "c27b1fcde013a6b748c8458a35fc7f340438e758ff74576f2b2946c249211c36",
+    "ikea/examples/tuplepack/groups.cpp": "e169c9bc4c4d91d066d4ec5f5e685b360c8d77a1f24f629fd6532e14fbb47c3e",
+    "ikea/examples/tuplepack/integration.cpp": "246d8be85e788becb79ffd92be852afa7b8a50bdbd1595960244d7b9b807473d",
+    "ikea/examples/tuplepack/ordinary.cpp": "888271b7ffd41d2095ca899a93f64108eb68578cc82bb76b17a29e9711c88e87",
+    "ikea/examples/tuplepack/packets.cpp": "bf462608ebd8009ed840a01b3d769d044c503374d163c4736133310231e351fa",
+    "ikea/examples/tuplepack/words.cpp": "4d3ca5ea6e1c5bed369c36a981f129c2d55284ae1ad23a518a71b7b90871b06e"
+  },
+  "probe_hashes": {
+    "candidate_probe.py": "3b1927c7c0d338a8b4292746af0936c29b1e58531d4a5aa4efb83b8898f9dcd7",
+    "native_law_abi.cpp": "1983f448a9fab2fd7836f9bed17ee841fccac7bb24f531f6e5bcd1d9a15f9ce6"
+  },
+  "output_hashes": {
+    "commands.txt": "ab3af30d0badd16a8ccc9a4dc9ad8c30cc02a126c7bee7baf4110fa74f4baee0",
+    "probes/native_law_abi.cpp": "1983f448a9fab2fd7836f9bed17ee841fccac7bb24f531f6e5bcd1d9a15f9ce6",
+    "aarch64/candidate_abi.ll": "4e1234b367699a379707ba2fdd2d3a15327a72708aa2ab29fb0f467a0e40b2ce",
+    "aarch64/candidate_abi.s": "cb63a0d40f926c1bb1e8c9e23f1fb8e9d8faff5c1e4ba5ef7551cf715802f379",
+    "aarch64/candidate_abi.o": "88b5eedb574b2b4855b455793a7117398ccb9d6f695125ad3956b35d10a1cf67",
+    "aarch64/compact_abi.ll": "822c3756dd78a4e41299704b62f1d07881f05ff7586bd5d7268f6b944f81fa8f",
+    "aarch64/compact_abi.s": "6b4d5c14619d39a325dd3c269e790baa92e3ed0fe920c19f4fe084b4527e0b65",
+    "aarch64/compact_abi.o": "fdeedc575ba18ec4bc168e9b11f5ceed7563fcd8d25db2dc3ac6d879ad73312b",
+    "aarch64/sizes": "9f8c37f1357ca54149a7543c9bf90fc417e7c1b5f92ae4b1b5a044f36a7ea10e",
+    "aarch64/hot-schema.ll": "35ee9a92849f7029c80d9783bb59ef981713526fe98704cfdba4681d641e5b60",
+    "aarch64/hot-schema.s": "dfb2c469a057b2075026da952da0aa1f55cd1d0169e9d868a5c9d20c0588a78c",
+    "aarch64/hot-schema.o": "73a2bce86cde711b269b3a2392321864a28ef0f187af81fdbd27be534d28c6f4",
+    "aarch64/hot-schema-sections.txt": "08c42ae6cfd9a69c0846596c50d1b277e70985388c017f50f36e10ae7af9779f",
+    "aarch64/hot-compact.ll": "d0ffde45c0f3bf5b6590c2a8f6b1a994a16447721122f7617b90111454cb2634",
+    "aarch64/hot-compact.s": "394ea23de2c0e291ea4cbea1380c82480c49d8d3ef55bf502e6e5e2b475a2798",
+    "aarch64/hot-compact.o": "52dc58b56e1f8f22caf95c3bbd7f2c05cae27f9c2dc030a19ef91e1497d817a7",
+    "aarch64/hot-compact-sections.txt": "328ec459d26c36f0ab3d9580cd99516d3815c80a163020c4580aec22febc2bd1",
+    "aarch64/hot-canonical.ll": "89973ab131ce03cf6d6f395fbe6c14a71dcfa432342ebd2872fbac0a96d60e48",
+    "aarch64/hot-canonical.s": "097d8bc5dcd765385a130b75c01c3ad1a7d56286b4cdd0c6ab4e1ace32113114",
+    "aarch64/hot-canonical.o": "804827690e8ad28027d344e91ddbacce289af91fe4232f3eafe5defef4afa2cf",
+    "aarch64/hot-canonical-sections.txt": "567183017cdf79b651beac6d1036839328580512524d4d56dbdbc04809095d0c",
+    "x86_64/candidate_abi.ll": "5cdb4958e251607a7fa6a01594c13fc4200b21887181ade20c05ab8078da8338",
+    "x86_64/candidate_abi.s": "450cb9ab632917a8b4321507699c2d7284816ef831104c6d3313233a82a1e932",
+    "x86_64/candidate_abi.o": "2b0265cd26dc7500932f3ee29786493a84407b20abfa5523dae206a604376749",
+    "x86_64/compact_abi.ll": "4c6530bf556c5a6f437ca6c2d77d9c54ec2b27d96928cf91e75f05da0a82ae49",
+    "x86_64/compact_abi.s": "cb4688eebb5d76e8937ba3459f937c78138d35db9aa171bc2b6b7ce556fe5632",
+    "x86_64/compact_abi.o": "030fdfb5e5570a10d9c0ad3f6d55e3ee10b8e67b373b304264c026275a28b082",
+    "x86_64/sizes": "c562ad4cdc5f02c095c860081f2de67bd2e2fecce1fa9d684407929882af1f8e",
+    "x86_64/hot-schema.ll": "7e457b6f948ec7e260ae7e6117e1693707a94f3f9312e5a210e0507b4f2f2201",
+    "x86_64/hot-schema.s": "087df3c5ed5839bccfc137ad9606ff4d6144fb473e51eb206acb400a984d19a5",
+    "x86_64/hot-schema.o": "9a55d359e697ef20174fd7ade430ad29409ffd31d5fd9a319a4aad7f21e150fc",
+    "x86_64/hot-schema-sections.txt": "756330b5b7897ffb7776a1e06488199764d69aefe909782f268f0beb396eb773",
+    "x86_64/hot-compact.ll": "3b92bf94391473d1251138df5c3984e8f5774e9148f51f519d76fb17f08908ac",
+    "x86_64/hot-compact.s": "6a4754b17d0ba10a8b3a2056f800fe6498ca9a3d7c8d60704b1c9a235a19b0c9",
+    "x86_64/hot-compact.o": "c06786b3d6901953cc06dcc663a2cb1d71127892ba4e00f1d1711b48b09b31e3",
+    "x86_64/hot-compact-sections.txt": "19073d4033ce242e168f124869d6d017fcafc20acc9e09edb11b0fb1d2adfd70",
+    "x86_64/hot-canonical.ll": "ef8ba41f34c7a1223f9b16a44eef08b96be67259ef9fd0d03936dbb743d10dbb",
+    "x86_64/hot-canonical.s": "8ff17081a2714cbec242dad25f3e880cc038517b0f3e8f907c4dd79eb3029934",
+    "x86_64/hot-canonical.o": "5fdfcc42d4a260c6e3b3d2fc73c365d969541e8e8446d31622ec27f1f321bd3f",
+    "x86_64/hot-canonical-sections.txt": "6bd16d3760e770d204ae1762ee035afd9ebb97da5bbe4f33841f40fb31c79a2c"
+  }
+}

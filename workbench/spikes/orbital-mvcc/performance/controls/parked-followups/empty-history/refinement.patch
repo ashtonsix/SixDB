@@ -1,0 +1,125 @@
+diff --git a/orbital/include/orbital/detail/object/versions.h b/orbital/include/orbital/detail/object/versions.h
+--- a/orbital/include/orbital/detail/object/versions.h
++++ b/orbital/include/orbital/detail/object/versions.h
+@@ -25,6 +25,7 @@
+     page.occupied &= ~(std::uint64_t{1} << ((h - 1) % 64));
+     get(h).older = free_; free_ = h; --live_;
+   }
++  bool empty() const noexcept { return live_ == 0; }
+   std::size_t capacity_bytes() const noexcept { return pages_.size() * sizeof(Page) + pages_.capacity() * sizeof(Page*); }
+ };
+ 
+diff --git a/orbital/include/orbital/object.h b/orbital/include/orbital/object.h
+--- a/orbital/include/orbital/object.h
++++ b/orbital/include/orbital/object.h
+@@ -223,7 +223,7 @@
+       // Do not consume the follow-up request until a fresh plan can use it.
+       if (!census_next && census_requested && plan_generation == reader_changes) {
+         census_next = 1; census_end = entries.capacity_slots();
+-        census_requested = false; census_turn = true;
++        census_requested = false; census_turn = false;
+       }
+       step = Step::entry;
+     }
+diff --git a/orbital/src/object/store_impl.h b/orbital/src/object/store_impl.h
+--- a/orbital/src/object/store_impl.h
++++ b/orbital/src/object/store_impl.h
+@@ -124,7 +124,9 @@
+       break;
+     }
+     case Step::entry:
+-      if (census_next && !census_mask && census_next > census_end) {
++      // No linked or prepared older nodes means no unseen history. A cached
++      // bit can still own interrupted tombstone cleanup, so never skip it.
++      if (census_next && !census_mask && (census_next > census_end || this->nodes.empty())) {
+         census_next = 0;
+       }
+       if (census_next && (census_turn || !remaining_entries || !entries.front_debt())) {
+@@ -218,7 +220,7 @@
+   }
+ finished:
+   if (step == Step::entry) {
+-    if (census_next && !census_mask && census_next > census_end) {
++    if (census_next && !census_mask && (census_next > census_end || this->nodes.empty())) {
+       census_next = 0;
+     }
+     if (!census_next && !remaining_entries && !census_requested && !changed) {
+diff --git a/orbital/test/object_changed_queue.cpp b/orbital/test/object_changed_queue.cpp
+--- a/orbital/test/object_changed_queue.cpp
++++ b/orbital/test/object_changed_queue.cpp
+@@ -402,11 +402,75 @@
+   }
+   check(!memory.live);
+ }
++
++void empty_history_boundaries() {
++  Memory memory;
++  {
++    Store store(memory); seed(store, memory);
++    std::optional<Store::Scope> old(std::in_place, store);
++    update(store, memory, 1000, 70); // Advances the cut without an older node.
++    auto before = Access::stats(store); auto calls = memory.calls;
++    old.reset(); finish(store);
++    check(memory.calls == calls && Access::core(store)->nodes.empty());
++    check(Access::stats(store).census_word_queries == before.census_word_queries);
++
++    old.emplace(store); update(store, memory, 0, 71);
++    // Closing before queued work runs lets that work remove the sole old node.
++    before = Access::stats(store); calls = memory.calls;
++    old.reset(); finish(store);
++    check(memory.calls == calls && Access::core(store)->nodes.empty());
++    check(Access::stats(store).census_word_queries == before.census_word_queries);
++    check(Access::stats(store).census_visits == before.census_visits);
++    check(store.borrow().bind(object(0))->value == 71);
++
++    old.emplace(store); update(store, memory, 1001, 72);
++    std::array<Store::Change, 1> changes{{{object(0), owner(store, 73)}}};
++    Store::Prepared accepted(store);
++    { Store::Scope basis(store); check(store.prepare(basis, changes, accepted)); }
++    // Reserved nodes conservatively prevent skipping even with no linked history.
++    check(!Access::core(store)->nodes.empty());
++    before = Access::stats(store); calls = memory.calls;
++    old.reset(); finish(store);
++    check(memory.calls == calls && Access::stats(store).census_visits == before.census_visits);
++    check(Access::stats(store).census_word_queries > before.census_word_queries);
++    accepted.abort(); check(Access::core(store)->nodes.empty() && memory.calls == calls);
++    check(store.borrow().bind(object(0))->value == 71);
++  }
++  check(!memory.live);
++}
++struct EmptyHistoryCallback {
++  Store* store; Memory* memory; unsigned calls{};
++  static void run(void* context) {
++    auto& self = *static_cast<EmptyHistoryCallback*>(context); ++self.calls;
++    check(Access::core(*self.store)->nodes.empty());
++    // A new tombstone requests restart but creates no older node. The cached
++    // census bit, not nodes.live_, still owns the interrupted tombstone below.
++    erase(*self.store, *self.memory, 1000);
++    check(Access::core(*self.store)->nodes.empty());
++  }
++};
++void last_empty_history_callback_tombstone() {
++  Memory memory;
++  {
++    Store store(memory); seed(store, memory);
++    EmptyHistoryCallback callback{&store, &memory};
++    update(store, memory, 31, 11, &callback, EmptyHistoryCallback::run); finish(store);
++    std::optional<Store::Scope> reader(std::in_place, store);
++    erase(store, memory, 31); finish(store); check(!callback.calls);
++    reader.reset(); finish(store);
++    check(callback.calls == 1 && Access::core(store)->nodes.empty());
++    check(!store.borrow().bind(object(31)) && !store.borrow().bind(object(1000)));
++    check(Access::stats(store).objects == 63 && Access::stats(store).versions == 63);
++  }
++  check(!memory.live);
++}
++
+ int main() {
+   breadth(); changing_readers_and_head(); accepted_refusal_abort_and_holes(); callbacks_and_fairness();
+   tiny_queue_reservation_and_cut_builder(); interleaved_readers();
+   renewal_counters(1); renewal_counters(64);
+   cached_mask_reuse_and_growth();
+   last_history_callback_tombstone();
++  empty_history_boundaries(); last_empty_history_callback_tombstone();
+   std::puts("changed queue checks passed");
+ }

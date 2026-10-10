@@ -1,0 +1,98 @@
+--- a/orbital/include/orbital/object.h
++++ b/orbital/include/orbital/object.h
+@@ -80,7 +80,7 @@
+   struct Borrowed {
+     Core* core{};
+     std::uint64_t cut{};
+-    // Borrow ends before publication, alternative replacement, suspension or
++    // Borrow ends before publication, either cold choice, alternative replacement, suspension or
+     // final ObjectStore reset. Already-bound native bytes need no version lookup.
+     Selection bind(ObjectId id) const noexcept {
+       return core && cut == core->cut ? core->resolve(cut, id, false) : Selection{};
+@@ -248,6 +248,15 @@
+   // It does not keep obsolete history alive or authorize logical publication.
+   Result<void> adopt(const ConversionTarget& target, const Owner& replacement);
+ 
++  // Private experiment: remove only the current tip's alternative. Existing
++  // Scope-captured alternatives retain their exact bytes; later discovery is absent.
++  // End native Borrowed bytes before this or any other cold catalog mutation.
++  Result<void> discard_alternative(ObjectId id);
++  // Private experiment: choose the current alternative as primary and erase its
++  // alternative slot. Requires no Scopes, accepted publication or pinned entry.
++  // Logical time/identity and separately retained sources/Parts do not change.
++  Result<void> promote_alternative(ObjectId id);
++
+   std::size_t drain() noexcept;
+   // A work limit caps metadata steps, including planning and restart attempts.
+   // It cannot cap malloc, OS calls or arbitrary backing-owner destructor time.
+--- a/orbital/include/orbital/detail/object/history.h
++++ b/orbital/include/orbital/detail/object/history.h
+@@ -97,6 +97,7 @@
+   void drop(Ref version) noexcept;
+   void erase_head(ObjectHandle handle) noexcept;
+   orbital::Result<void> adopt(Ref version, Value* next);
++  Value* take_alternative(Ref version) noexcept;
+   void dispose() noexcept;
+   std::size_t alternative_count() const noexcept { return alternatives.size(); }
+   std::size_t history_capacity_bytes() const noexcept { return nodes.capacity_bytes(); }
+--- a/orbital/src/object/history_impl.h
++++ b/orbital/src/object/history_impl.h
+@@ -106,6 +106,15 @@
+ }
+ 
+ template<class Physical>
++auto History<Physical>::take_alternative(Ref version) noexcept -> Value* {
++  const auto where = alternatives.find(key(version));
++  if (where == alternatives.end()) return nullptr;
++  auto* value = where->second;
++  alternatives.erase(where);
++  return value; // Transfer the map's owning use; disposal belongs to the caller.
++}
++
++template<class Physical>
+ void History<Physical>::dispose() noexcept {
+   entries.for_each_live([&](ObjectHandle handle, Entry& entry) {
+     auto old = older(head(handle));
+--- a/orbital/src/object/store_impl.h
++++ b/orbital/src/object/store_impl.h
+@@ -285,8 +285,39 @@
+   if constexpr (requires { Physical::accepts_resource(next, c.memory); }) {
+     if (!Physical::accepts_resource(next, c.memory)) return std::unexpected(Error::conflict);
+   }
+-  if (!Physical::compatible(c.primary(h), next)) return std::unexpected(Error::conflict);
++  if (!Physical::compatible(target.source_.get(), next)) return std::unexpected(Error::conflict);
+   return c.Layout::adopt(h, next);
++}
++
++template<class Physical>
++Result<void> ObjectStore<Physical>::discard_alternative(ObjectId id) {
++  if (!core_) return std::unexpected(Error::absent);
++  Pin pin(core_); auto& c = *pin.core;
++  const auto h = c.locate(c.cut, id);
++  if (!h || !c.primary(h)) return std::unexpected(Error::absent);
++  auto* value = c.take_alternative(h);
++  if (!value) return std::unexpected(Error::absent);
++  // Detachment is complete before disposal can reenter or reset this Store.
++  Physical::release(value);
++  return {};
++}
++
++template<class Physical>
++Result<void> ObjectStore<Physical>::promote_alternative(ObjectId id) {
++  if (!core_) return std::unexpected(Error::absent);
++  Pin pin(core_); auto& c = *pin.core;
++  if (c.scopes || c.pending) return std::unexpected(Error::unavailable);
++  const auto entry = c.entries.find(id);
++  const auto h = entry ? c.head(entry) : Handle{};
++  if (!h || !c.primary(h)) return std::unexpected(Error::absent);
++  if (c.entries.pinned(entry)) return std::unexpected(Error::unavailable);
++  auto* next = c.take_alternative(h);
++  if (!next) return std::unexpected(Error::absent);
++  auto* old = static_cast<Value*>(std::exchange(c.entries.get(entry).primary, next));
++  // The chosen owner's use moves from alternative to primary. No new retain,
++  // cut change, history node or reader bookkeeping is needed at quiescence.
++  Physical::release(old);
++  return {};
+ }
+ 
+ template<class Physical>

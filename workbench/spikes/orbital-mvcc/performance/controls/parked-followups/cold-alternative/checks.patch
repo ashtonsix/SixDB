@@ -1,0 +1,35 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -33,3 +33,18 @@
+ foreach(module ikea orbital loom engine shore workbench)
+   add_subdirectory(${module})
+ endforeach()
++
++# Private, bounded representation-choice experiment.
++add_executable(orbital_primary_choice_history_check ../probe/history.cpp orbital/test/object_material.cpp)
++sixdb_target(orbital_primary_choice_history_check)
++target_include_directories(orbital_primary_choice_history_check PRIVATE orbital/test orbital/src)
++target_link_libraries(orbital_primary_choice_history_check PRIVATE orbital::orbital)
++add_test(NAME orbital_primary_choice_history_check COMMAND orbital_primary_choice_history_check)
++set_tests_properties(orbital_primary_choice_history_check PROPERTIES TIMEOUT 30)
++
++add_executable(orbital_primary_choice_composed_check ../probe/composed.cpp)
++sixdb_target(orbital_primary_choice_composed_check)
++target_include_directories(orbital_primary_choice_composed_check PRIVATE orbital/src)
++target_link_libraries(orbital_primary_choice_composed_check PRIVATE orbital_mvcc_composed)
++add_test(NAME orbital_primary_choice_composed_check COMMAND orbital_primary_choice_composed_check)
++set_tests_properties(orbital_primary_choice_composed_check PROPERTIES TIMEOUT 60)
+--- a/orbital/test/object_material.h
++++ b/orbital/test/object_material.h
+@@ -48,7 +48,10 @@
+     return value->memory == &memory;
+   }
+   // Both encodings represent the same kind of integer. The converter owes equality.
+-  static bool compatible(Value*, Value*) noexcept { return true; }
++  inline static Value* compatibility_source{}; // Private experiment observer.
++  static bool compatible(Value* source, Value*) noexcept {
++    compatibility_source = source; return true;
++  }
+   static Footprint footprint(Value*) noexcept { return {sizeof(Value), 0}; }
+   static orbital::Result<Export> export_part(Selection, std::size_t,
+       orbital::ObjectBinding, ExportPolicy) noexcept;

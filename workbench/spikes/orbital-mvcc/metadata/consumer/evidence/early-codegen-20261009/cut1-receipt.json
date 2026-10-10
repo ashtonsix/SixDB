@@ -1,0 +1,107 @@
+{
+  "scope": "actual ordinary ABI and optimized isolated candidate/native caller code; no timing, wrapper stack excludes deeper callees",
+  "candidate_cut": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc/metadata-consumer/qualified-cut-1",
+  "candidate_hashes": {
+    "metadata/consumer/candidates.h": "05e8fb750ea38cd1b04d26d06a1511ffc8359e635cc484109600cad57bb6cf67",
+    "metadata/consumer/types.h": "8c66a7c644dab5f29ac1bd5089a40d4a8e0f61652244d70f60c202d2b74cbcb6",
+    "metadata/consumer/census.cpp": "7c2688995fad7d48e2caa067cf42a1c2dd68003337ab79051b86524e934f97f4",
+    "metadata/consumer/abi.cpp": "5ba59ef58d5f0eb33480b54c6c960c74e63aa555dda03c76b9268c4626acc859",
+    "metadata/consumer/ikea-census.md": "9ff16efabcbdd7d90568f1041a829cbe9543f76338dd15e1370065b44ebf194b",
+    "metadata/consumer/candidates_check.cpp": "cbbbc57d2dd19fc83b0b075c9972658c3911b6f90abc8ceea49615c5598ccc0a",
+    "metadata/consumer/locals_data.cpp": "fd562b0a28b547fbdf463d6f5e7243cf897a7daef53c1285ae273bd312f693a4",
+    "metadata/consumer/locals_consumer.cpp": "9393ceeddc498e6d1606299326963b647dd76c01c7b767f3ff3328f9bf114e2f",
+    "metadata/consumer/probe.py": "e850e53b32f6fe996ce7b04d143f80bba27d71abc1d83ba2c870f863eedae0bd",
+    "metadata/consumer/adapters.h": "cd13859a4b32d5e6b24621fece51a3448e1db943fed7a655bad63a3ca28af993",
+    "metadata/consumer/descriptor_adapter.h": "da673faf7bc82cda3d0806f1f8e57494abbed01a69525ac54dde558bf090ea08",
+    "metadata/consumer/compact_law.h": "1a64943766d2562707d0a05ccb3bcc2223f2b201a21e8fb8bc1a00e63a245038",
+    "metadata/consumer/operations.h": "0b0a500aa217ba9094a6938f5c0125fca2ead1205d10f0b3494a0d59369f8e16",
+    "metadata/consumer/candidate_abi.cpp": "689f8be2b8200d3b8ea79c0bb93d7a371f9af515fe6a3686971d461197a3ee28",
+    "metadata/consumer/compact_law_check.cpp": "bbf65fdbc299fded70313a5e0949c2f78c92943d6291e4aaa342a29cd6032e24",
+    "metadata/consumer/candidate_default_schema.cpp": "8f32ddfaaf46d63480e858573cc8dd88faea80028579018b37f6f26a5f3a42be",
+    "metadata/consumer/descriptor_adapter_check.cpp": "111252767b9e9410baee413e4ece7193dcf615e51d923a026450cdca9fdf00c0",
+    "metadata/orbital/descriptor/descriptor.h": "3081b7b444b4bbf71ab4ef336ee167438e7045e5c9b77719fcfbbccc89e15f30",
+    "metadata/orbital/descriptor/descriptor.cpp": "467ccd64d83776c58568598bbd56088c8da24ac9f106eabc90acc9dcf4663449",
+    "metadata/orbital/descriptor/check.cpp": "9334cabc2480d81d3565549c089b93bbce78af5c8e497dad97e2e480f531b059",
+    "metadata/orbital/descriptor/abi.cpp": "2201e0bf667aacddbf0e11d88c0470cc15e84ff6eb5742891375c1ece4f24793",
+    "metadata/orbital/descriptor/CMakeLists.txt": "8b97798b5fb28700efed20d21b77a95daba7d55496b83bf04c947a60fe7f51de",
+    "metadata/orbital/descriptor/README.md": "ff4472c898427cbfa1c30684ae8e6979dd59d61cc231eb0e643c2d1873bf9178"
+  },
+  "extra_default_schema_global_initialization": false,
+  "facts": {
+    "aarch64": {
+      "consumer_candidate_part8": {
+        "ordinary_return": "register/void",
+        "signature": "define dso_local [2 x i64] @consumer_candidate_part8(ptr noundef nonnull align 8 dereferenceable(16) %0, [2 x i64] %1, [2 x i64] %2) local_unnamed_addr #0 {"
+      },
+      "consumer_candidate_part16": {
+        "ordinary_return": "indirect",
+        "signature": "define dso_local void @consumer_candidate_part16(ptr dead_on_unwind noalias writable writeonly sret(%\"class.std::expected.0\") align 8 captures(none) initializes((0, 4), (16, 17)) %0, ptr noundef nonnull align 8 dereferenceable(16) %1, [2 x i64] %2, [2 x i64] %3) local_unnamed_addr #0 {"
+      },
+      "consumer_candidate_part16_into": {
+        "ordinary_return": "register/void",
+        "signature": "define dso_local range(i64 0, 4294967297) i64 @consumer_candidate_part16_into(ptr noundef nonnull align 8 dereferenceable(16) %0, [2 x i64] %1, [2 x i64] %2, ptr noundef nonnull writeonly align 8 captures(none) dereferenceable(16) %3) local_unnamed_addr #0 {"
+      },
+      "consumer_candidate_descriptor_view8": {
+        "ordinary_return": "register/void",
+        "signature": "define dso_local [2 x i64] @consumer_candidate_descriptor_view8(ptr noundef nonnull align 8 dereferenceable(16) %0, ptr %1, [2 x i64] %2) local_unnamed_addr #0 {"
+      },
+      "consumer_candidate_descriptor_selected8": {
+        "ordinary_return": "register/void",
+        "signature": "define dso_local [2 x i64] @consumer_candidate_descriptor_selected8(ptr noundef nonnull align 8 dereferenceable(16) %0, ptr %1, [2 x i64] %2, i64 noundef %3, [2 x i64] %4) local_unnamed_addr #0 {"
+      },
+      "consumer_candidate_point8": {
+        "ordinary_return": "register/void",
+        "signature": "define dso_local void @consumer_candidate_point8(ptr noundef nonnull readonly align 8 captures(none) dereferenceable(16) %0, ptr %1, i64 noundef %2, ptr noundef nonnull align 8 dereferenceable(24) %3) local_unnamed_addr #0 {"
+      },
+      "consumer_candidate_chain8": {
+        "ordinary_return": "register/void",
+        "signature": "define dso_local void @consumer_candidate_chain8(ptr noundef nonnull readonly align 8 captures(none) dereferenceable(16) %0, ptr %1, i64 noundef %2, ptr noundef nonnull align 8 dereferenceable(24) %3) local_unnamed_addr #0 {"
+      },
+      "consumer_candidate_chain16": {
+        "ordinary_return": "register/void",
+        "signature": "define dso_local void @consumer_candidate_chain16(ptr noundef nonnull align 64 dereferenceable(10176) %0, [2 x i64] %1, i64 noundef %2, ptr noundef nonnull align 8 dereferenceable(24) %3) local_unnamed_addr #0 {"
+      }
+    },
+    "x86_64": {
+      "consumer_candidate_part8": {
+        "ordinary_return": "register/void",
+        "signature": "define dso_local { ptr, i8 } @consumer_candidate_part8(ptr noundef nonnull align 8 dereferenceable(16) %0, ptr %1, i64 %2, ptr %3, i64 %4) local_unnamed_addr #0 {"
+      },
+      "consumer_candidate_part16": {
+        "ordinary_return": "indirect",
+        "signature": "define dso_local void @consumer_candidate_part16(ptr dead_on_unwind noalias writable writeonly sret(%\"class.std::expected.0\") align 8 captures(none) initializes((0, 4), (16, 17)) %0, ptr noundef nonnull align 8 dereferenceable(16) %1, ptr %2, i64 %3, ptr %4, i64 %5) local_unnamed_addr #0 {"
+      },
+      "consumer_candidate_part16_into": {
+        "ordinary_return": "register/void",
+        "signature": "define dso_local range(i64 0, 4294967297) i64 @consumer_candidate_part16_into(ptr noundef nonnull align 8 dereferenceable(16) %0, ptr %1, i64 %2, ptr %3, i64 %4, ptr noundef nonnull writeonly align 8 captures(none) dereferenceable(16) %5) local_unnamed_addr #0 {"
+      },
+      "consumer_candidate_descriptor_view8": {
+        "ordinary_return": "register/void",
+        "signature": "define dso_local { ptr, i8 } @consumer_candidate_descriptor_view8(ptr noundef nonnull align 8 dereferenceable(16) %0, ptr %1, i64 %2, i64 %3) local_unnamed_addr #0 {"
+      },
+      "consumer_candidate_descriptor_selected8": {
+        "ordinary_return": "register/void",
+        "signature": "define dso_local { ptr, i8 } @consumer_candidate_descriptor_selected8(ptr noundef nonnull align 8 dereferenceable(16) %0, ptr %1, i64 %2, i64 %3, i64 noundef %4, ptr noundef readonly byval(%\"struct.orbital::Id\") align 8 captures(none) %5) local_unnamed_addr #0 {"
+      },
+      "consumer_candidate_point8": {
+        "ordinary_return": "register/void",
+        "signature": "define dso_local void @consumer_candidate_point8(ptr noundef nonnull readonly align 8 captures(none) dereferenceable(16) %0, ptr %1, i64 noundef %2, ptr noundef nonnull align 8 dereferenceable(24) %3) local_unnamed_addr #0 {"
+      },
+      "consumer_candidate_chain8": {
+        "ordinary_return": "register/void",
+        "signature": "define dso_local void @consumer_candidate_chain8(ptr noundef nonnull readonly align 8 captures(none) dereferenceable(16) %0, ptr %1, i64 noundef %2, ptr noundef nonnull align 8 dereferenceable(24) %3) local_unnamed_addr #0 {"
+      },
+      "consumer_candidate_chain16": {
+        "ordinary_return": "register/void",
+        "signature": "define dso_local void @consumer_candidate_chain16(ptr noundef nonnull align 64 dereferenceable(15296) %0, ptr %1, i64 %2, i64 noundef %3, ptr noundef nonnull align 8 dereferenceable(24) %4) local_unnamed_addr #0 {"
+      }
+    }
+  },
+  "outputs": {
+    "commands.txt": "ae4b80490d0e7a37a3ed0aa71a486ce96c2b4978bab1327bfb0ef5cf79b277ea",
+    "aarch64/candidate_abi.ll": "5515eed891f5560352f291b4ad4f721593099d74523092fa66ca79f2bfae3a1a",
+    "aarch64/candidate_abi.s": "ed7715986b167955fc7397086aa0ca53b574455a5fa25498d3d33a3339caff1a",
+    "x86_64/candidate_abi.ll": "6fe88c7ec232f4184421287bb9100361e117547121c03a4d0fd6b2d507951391",
+    "x86_64/candidate_abi.s": "f712deee7020f883d6f1a9412d67a8e8a4ef4ff42970ae0c267af9d18e3c7659"
+  }
+}

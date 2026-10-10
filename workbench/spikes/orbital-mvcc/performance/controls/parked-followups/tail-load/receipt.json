@@ -1,0 +1,117 @@
+{
+  "status": "parked, unapplied, untimed; no scheduled follow-up",
+  "base_commit": "768e033584bc83e097de34e0f59ee96ba0e491cc",
+  "base_tree": "e509697457a4a61bee8adcd2c5631bd40ee9f221",
+  "original_receipt_sha256": "027694844db930f88e7010a0e8766425abcf2cc4bca7ad92d75acf1c0d468ec6",
+  "original_codegen_sha256": "d30abde153e3208215b86e4b8d108321fe2d8f2c7c3d51e6a1c4766976aae17b",
+  "original_commands_sha256": "b6da565ac204f93dfe49ac04f0c158c51a4db18768b1e2d43577f18a638ff425",
+  "changed_path": "workbench/spikes/orbital-mvcc/metadata/consumer/compact_law.h",
+  "preimage_sha256": "36ccb2a87eaddfd1ce0310b9fcf8cc5c91b5203cb395937ec5e2170a058395ff",
+  "postimage_sha256": "7347e81d0fe04dbc28e2e5472a1a05453172ff41ccf17ead6ae38a86f5614fbf",
+  "patch_sha256": "0a80ffcddcfdd5c3238223f9bbf91595d2b5749ce334f42e94305f9a8f33be5a",
+  "qualification": {
+    "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)",
+    "native": {
+      "build_returncode": 0,
+      "ctest_returncode": 0,
+      "passed": 4,
+      "failed": 0,
+      "targets": [
+        "orbital_mvcc_consumer_compact_law_check",
+        "orbital_mvcc_consumer_compact_operations_check",
+        "orbital_mvcc_consumer_shape_read_check",
+        "orbital_mvcc_composed_read_fusion_check"
+      ],
+      "jobs": 1,
+      "build_log_sha256": "a7b4edf30cda08726ce82c4cb4460a4bd888bbb09dd0f56b459c1498976ec618",
+      "checks_log_sha256": "08c8a9f151aa047bc897d29f3d1ffac0e4f96ec935cd5b4a864d43e1d24f810c",
+      "independent_evidence": {
+        "compact_law_fields": 13296,
+        "compact_complete_calls": 99076,
+        "shape_selected_calls": 32936,
+        "shape_mapped_calls": 32936,
+        "unaligned_mapped_calls": 16,
+        "fusion_comparisons": 2522,
+        "fusion_refusals": 12
+      }
+    },
+    "sanitizers": false,
+    "timings": false
+  },
+  "codegen": {
+    "target": "pinned Clang 21.1.8, x86-64-v3, -mtune=znver5, -O3, assertions, separate TUs, no LTO",
+    "functions": {
+      "before": {
+        "current": {
+          "text_bytes": 930,
+          "saved_gpr_bytes": 48,
+          "explicit_reservation_bytes": 24,
+          "frame_bytes_excluding_return_address": 72,
+          "hot_row_tail_loads": 3,
+          "next_loads": 1,
+          "loop_spills": 0
+        },
+        "coherent": {
+          "text_bytes": 922,
+          "saved_gpr_bytes": 48,
+          "explicit_reservation_bytes": 24,
+          "frame_bytes_excluding_return_address": 72,
+          "hot_row_tail_loads": 3,
+          "next_loads": 1,
+          "loop_spills": 0
+        },
+        "mapped": {
+          "text_bytes": 480,
+          "saved_gpr_bytes": 40,
+          "explicit_reservation_bytes": 0,
+          "frame_bytes_excluding_return_address": 40,
+          "hot_row_tail_loads": 3,
+          "next_loads": 1,
+          "loop_spills": 0
+        }
+      },
+      "after": {
+        "current": {
+          "text_bytes": 939,
+          "saved_gpr_bytes": 48,
+          "explicit_reservation_bytes": 24,
+          "frame_bytes_excluding_return_address": 72,
+          "hot_row_tail_loads": 1,
+          "next_loads": 1,
+          "loop_spills": 0
+        },
+        "coherent": {
+          "text_bytes": 925,
+          "saved_gpr_bytes": 48,
+          "explicit_reservation_bytes": 24,
+          "frame_bytes_excluding_return_address": 72,
+          "hot_row_tail_loads": 1,
+          "next_loads": 1,
+          "loop_spills": 0
+        },
+        "mapped": {
+          "text_bytes": 468,
+          "saved_gpr_bytes": 48,
+          "explicit_reservation_bytes": 0,
+          "frame_bytes_excluding_return_address": 48,
+          "hot_row_tail_loads": 1,
+          "next_loads": 1,
+          "loop_spills": 0
+        }
+      }
+    }
+  },
+  "limits": [
+    "No timing, hardware PMU, sanitizer or modeled-cycle run.",
+    "Native exact-extent buffers alone do not prove absence of overread; static byte bounds and emitted u64 at offset 15 establish this transfer stays within 23-byte record.",
+    "Static load reduction is not a latency prediction; unaligned split loads and mapped extra saved register remain measurement questions."
+  ],
+  "curation_verification": "Git-base header and in-memory patch result exactly match the recorded before/after hashes; no filesystem replay, build or execution.",
+  "recovery": "Git base plus control.patch reconstructs the authored change. The original receipt names its projected source and build commands, but does not supply a complete dependency/binary manifest. Historical raw codegen, logs, binaries, warm libraries and toolchain are not bundled; exact historical binary replay is not established.",
+  "normal_targets": [
+    "orbital_mvcc_consumer_compact_law_check",
+    "orbital_mvcc_consumer_compact_operations_check",
+    "orbital_mvcc_consumer_shape_read_check",
+    "orbital_mvcc_composed_read_fusion_check"
+  ]
+}

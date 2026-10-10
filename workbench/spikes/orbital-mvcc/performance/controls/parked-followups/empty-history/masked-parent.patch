@@ -1,0 +1,813 @@
+diff --git a/orbital/CMakeLists.txt b/orbital/CMakeLists.txt
+--- a/orbital/CMakeLists.txt
++++ b/orbital/CMakeLists.txt
+@@ -78,3 +78,12 @@
+     orbital_window_check orbital_return_check orbital_worker_check
+     orbital_lifetime_check orbital_thread_check orbital_preparation_check orbital_notification_check orbital_budget_check
+   USES_TERMINAL VERBATIM)
++
++add_executable(orbital_object_changed_queue_check EXCLUDE_FROM_ALL test/object_changed_queue.cpp)
++sixdb_target(orbital_object_changed_queue_check)
++target_include_directories(orbital_object_changed_queue_check PRIVATE src)
++target_compile_definitions(orbital_object_changed_queue_check PRIVATE CHANGED_QUEUE=1 PAGE_CENSUS=1)
++target_link_libraries(orbital_object_changed_queue_check PRIVATE orbital)
++add_test(NAME orbital_object_changed_queue_check COMMAND orbital_object_changed_queue_check)
++set_tests_properties(orbital_object_changed_queue_check PROPERTIES LABELS "orbital-runtime" TIMEOUT 60)
++add_dependencies(orbital_validate orbital_object_changed_queue_check)
+diff --git a/orbital/include/orbital/object.h b/orbital/include/orbital/object.h
+--- a/orbital/include/orbital/object.h
++++ b/orbital/include/orbital/object.h
+@@ -3,6 +3,7 @@
+ #include <orbital/detail/object/binding.h>
+ #include <orbital/detail/object/history.h>
+ #include <expected>
++#include <bit>
+ #include <unordered_map>
+ 
+ namespace orbital {
+@@ -147,6 +148,7 @@
+     std::size_t cut_capacity_bytes{}, debt_objects{}, maintenance_remaining_entries{};
+     std::size_t entry_visits{}, version_visits{}, cut_visits{}, debt_visits{}, plan_work{}, maintenance_restarts{};
+     std::size_t debt_reservation_work{}, reclaimed_versions{}, completed_sweeps{}, head_refreshes{};
++    std::size_t census_visits{}, census_word_queries{};
+     bool maintenance_pending{};
+   };
+ 
+@@ -171,34 +173,45 @@
+     std::size_t scopes{};
+     std::size_t copied_metadata_bytes{}, captured_descriptor_bytes{}, reclamation_work{};
+     std::size_t last_sweep_bytes{}, last_sweep_cuts{}, maintenance_refusals{};
+-    std::uint64_t maintenance_changes{};
+     // A cut snapshot is conservative through scope release. New scopes start
+     // at the current cut, so the unsampled suffix is protected through the
+     // plan's boundary until the next sweep. Closing a builder's exact Scope
+     // repairs its pointer before unlinking; unrelated writes cannot restart it.
+     std::uint64_t reader_changes{}, plan_generation = UINT64_MAX;
+-    std::uint64_t pass_generation{}, planned_floor{}, building_cut{}, anchor_cut{};
++    std::uint64_t building_cut{}, anchor_cut{};
+     std::pmr::vector<std::uint64_t> reader_cuts;
+     Scope* next_cut{};
+     ObjectHandle debt_entry{};
++    // Next unqueried page's first position; mask belongs to the preceding page.
++    // Numeric positions survive erasure/reuse. No census borrows a queue slot
++    // promised to accepted publication. Zero means no active census.
++    ObjectHandle census_next{}, census_end{};
++    std::uint32_t census_mask{};
+     Handle anchor{};
+     std::size_t remaining_entries{}, remaining_cuts{};
+     std::size_t entry_visits{}, version_visits{}, cut_visits{}, debt_visits{}, plan_work{}, maintenance_restarts{};
+     std::size_t reclaimed_versions{}, completed_sweeps{}, head_refreshes{};
++    std::size_t census_visits{}, census_word_queries{};
+     enum class Step { idle, cuts, entry, older, consume, finish, seek };
+     Step step{Step::idle};
+     Step resume_step{Step::idle};
+     bool crossed_floor{};
+     bool callback_restart{};
+     bool dirty{}, draining{}, pending{};
++    bool census_requested{}, census_origin{}, census_turn{}, changed{};
+ 
+     explicit Core(std::pmr::memory_resource& resource) : Layout(resource), captures(&resource), reader_cuts(&resource) {}
+     ~Core() { assert(!first_scope && !pending); this->dispose(); }
+     void release() noexcept { if (!--references) object_detail::destroy(memory, this); }
+-    std::uint64_t floor() const noexcept { return first_scope ? first_scope->cut_ : cut; }
++    void changed_work() noexcept {
++      dirty = true; changed = true;
++      // Reentrant cleanup can invalidate a chain cursor. Mutations between
++      // drain calls use its bounded head refresh instead.
++      if (draining && debt_entry) callback_restart = true;
++    }
+     void add_debt(ObjectHandle entry) noexcept {
+       entries.add_debt(entry);
+-      dirty = true; ++maintenance_changes;
++      changed_work();
+     }
+     void remove_debt(ObjectHandle entry) noexcept { entries.remove_debt(entry); }
+     Result<Selection> capture_selection(const Scope&, Value*);
+@@ -206,13 +219,28 @@
+     void abort(Prepared& prepared) noexcept;
+     void begin_entries() noexcept {
+       remaining_entries = entries.debt_count();
++      // A closure during plan construction leaves a conservative snapshot.
++      // Do not consume the follow-up request until a fresh plan can use it.
++      if (!census_next && census_requested && plan_generation == reader_changes) {
++        census_next = 1; census_end = entries.capacity_slots();
++        census_requested = false; census_turn = true;
++      }
+       step = Step::entry;
+     }
+     void restart() noexcept {
+       // A callback may keep changing the front object. Rotation preserves the
+       // progress of other objects even when this particular chain must restart.
+-      if (debt_entry) { assert(entries.front_debt() == debt_entry); entries.rotate_debt(); }
+-      if (step == Step::cuts) plan_generation = UINT64_MAX;
++      if (debt_entry) {
++        if (!census_origin) {
++          assert(entries.front_debt() == debt_entry); entries.rotate_debt();
++        } else if (!entries.indebted(debt_entry)) {
++          // The shortened chain still needs completion. A publication of this
++          // Object instead enrolls it in the queue and takes over that work.
++          assert(census_next > debt_entry && census_next - debt_entry <= entries.page_entries);
++          census_mask |= std::uint32_t{1} << ((debt_entry - 1) % entries.page_entries);
++        }
++        census_turn = !census_origin;
++      }
+       debt_entry = {}; anchor = {}; next_cut = nullptr; step = Step::idle;
+       callback_restart = false; dirty = true; ++maintenance_restarts;
+     }
+diff --git a/orbital/include/orbital/detail/object/directory.h b/orbital/include/orbital/detail/object/directory.h
+--- a/orbital/include/orbital/detail/object/directory.h
++++ b/orbital/include/orbital/detail/object/directory.h
+@@ -35,10 +35,18 @@
+ 
+ class TipDirectory {
+   template<class> friend struct orbital::object_detail::Access;
++public:
++  static constexpr std::uint32_t page_entries = 32;
++private:
+   static constexpr Handle empty = 0, deleted = UINT32_MAX;
+   static constexpr std::uint32_t live = 1, pinned_bit = 2, debt_bit = 4;
+-  static constexpr std::uint32_t page_entries = 32;
+-  struct Page { std::array<Entry, page_entries> entries; };
++  struct Page {
++    std::array<Entry, page_entries> entries;
++    // Only live entries with a nonzero current-tip older link are members.
++    // A free cell's older field is a free-list link, never history membership.
++    std::uint32_t histories{};
++  };
++  static_assert(sizeof(Page) == sizeof(Entry) * page_entries + 8);
+   std::pmr::vector<Page*> pages_;
+   std::pmr::vector<Handle> buckets_;
+   std::size_t size_{}, tombstones_{};
+@@ -63,6 +71,20 @@
+   std::pair<Handle, bool> ensure(ObjectId);
+   Entry& get(Handle handle) noexcept { assert(valid(handle)); return cell(handle); }
+   const Entry& get(Handle handle) const noexcept { assert(valid(handle)); return cell(handle); }
++  void set_older(Handle handle, std::uint32_t older) noexcept {
++    assert(valid(handle));
++    auto& page = *pages_[(handle - 1) / page_entries];
++    const auto slot = (handle - 1) % page_entries;
++    page.entries[slot].older = older;
++    const auto bit = std::uint32_t{1} << slot;
++    if (older) page.histories |= bit; else page.histories &= ~bit;
++  }
++  // One bounded word query. The caller charges it and owns further iteration.
++  std::uint32_t history_word(Handle first) const noexcept {
++    assert(first && (first - 1) % page_entries == 0);
++    assert((first - 1) / page_entries < pages_.size());
++    return pages_[(first - 1) / page_entries]->histories;
++  }
+   bool valid(Handle handle) const noexcept {
+     return handle && handle != deleted && (handle - 1) / page_entries < pages_.size() &&
+         (cell(handle).flags & live);
+@@ -90,6 +112,7 @@
+       }
+   }
+ 
++  Handle capacity_slots() const noexcept { return static_cast<Handle>(pages_.size() * page_entries); }
+   std::size_t size() const noexcept { return size_; }
+   std::size_t tombstones() const noexcept { return tombstones_; }
+   std::size_t bucket_bytes() const noexcept { return buckets_.capacity() * sizeof(Handle); }
+@@ -139,6 +162,7 @@
+ public:
+   using Entry = Entry;
+   using Handle = Handle;
++  static constexpr std::uint32_t page_entries = TipDirectory::page_entries;
+ private:
+   static constexpr std::uint32_t flag_mask = 7;
+   static constexpr std::size_t max_debts = (UINT32_MAX >> 3);
+@@ -156,6 +180,10 @@
+   Entry& get(Handle entry) noexcept { return entries_.get(entry); }
+   const Entry& get(Handle entry) const noexcept { return entries_.get(entry); }
+   orbital::ObjectId object(Handle entry) const noexcept { return entries_.get(entry).object; }
++  bool valid(Handle entry) const noexcept { return entries_.valid(entry); }
++  void set_older(Handle entry, std::uint32_t older) noexcept { entries_.set_older(entry, older); }
++  std::uint32_t history_word(Handle first) const noexcept { return entries_.history_word(first); }
++  Handle capacity_slots() const noexcept { return entries_.capacity_slots(); }
+   bool pinned(Handle entry) const noexcept { return entries_.pinned(entry); }
+   bool indebted(Handle entry) const noexcept { return entries_.indebted(entry); }
+   bool pin(Handle entry) noexcept { return entries_.pin(entry); }
+diff --git a/orbital/include/orbital/detail/object/history.h b/orbital/include/orbital/detail/object/history.h
+--- a/orbital/include/orbital/detail/object/history.h
++++ b/orbital/include/orbital/detail/object/history.h
+@@ -55,7 +55,7 @@
+     assert(!old || entry_of(version) == entry_of(old));
+     const auto node = node_of(version);
+     if (node) nodes.get(node).older = node_of(old);
+-    else entries.get(entry_of(version)).older = node_of(old);
++    else entries.set_older(entry_of(version), node_of(old));
+   }
+   std::uint64_t version_cut(Ref version) const noexcept {
+     const auto node = node_of(version);
+diff --git a/orbital/src/object/store_impl.h b/orbital/src/object/store_impl.h
+--- a/orbital/src/object/store_impl.h
++++ b/orbital/src/object/store_impl.h
+@@ -30,7 +30,6 @@
+ 
+ template<class Physical>
+ void ObjectStore<Physical>::Core::close(Scope& scope) noexcept {
+-  const auto before = floor();
+   const bool removed_distinct = scope.cut_ < cut &&
+       (!scope.previous_ || scope.previous_->cut_ != scope.cut_) &&
+       (!scope.next_ || scope.next_->cut_ != scope.cut_);
+@@ -41,7 +40,10 @@
+   }
+   if (scope.previous_) scope.previous_->next_ = scope.next_; else first_scope = scope.next_;
+   if (scope.next_) scope.next_->previous_ = scope.previous_; else last_scope = scope.previous_;
+-  --scopes; if (floor() != before || removed_distinct) { dirty = true; ++maintenance_changes; }
++  --scopes;
++  if (removed_distinct) {
++    census_requested = true; changed_work();
++  }
+   if (!captures.empty()) {
+     auto at = captures.find(&scope);
+     if (at != captures.end()) {
+@@ -85,8 +87,7 @@
+     }
+     switch (step) {
+     case Step::idle: {
+-      ++work; ++plan_work; building_cut = cut; pass_generation = maintenance_changes;
+-      planned_floor = cut;
++      ++work; ++plan_work; building_cut = cut; changed = false;
+       if (plan_generation != reader_changes) {
+         reader_cuts.clear(); next_cut = nullptr;
+         if (first_scope && first_scope->cut_ < cut) {
+@@ -123,14 +124,43 @@
+       break;
+     }
+     case Step::entry:
+-      if (!remaining_entries || !entries.front_debt()) {
+-        ++completed_sweeps; step = Step::idle;
+-        dirty = maintenance_changes != pass_generation; break;
+-      }
+-      ++work; ++entry_visits;
+-      debt_entry = entries.front_debt(); anchor = head(debt_entry);
++      if (census_next && !census_mask && census_next > census_end) {
++        census_next = 0;
++      }
++      if (census_next && (census_turn || !remaining_entries || !entries.front_debt())) {
++        // Loading one word and visiting one candidate are separate charged
++        // steps. A cached bit can go stale through queue service or reuse;
++        // validate it before taking a chain cursor. New histories enter the queue.
++        census_turn = false;
++        if (!census_mask) {
++          ++work; ++census_word_queries;
++          census_mask = entries.history_word(census_next);
++          census_next += entries.page_entries;
++          break;
++        }
++        ++work; ++census_visits;
++        const auto slot = static_cast<ObjectHandle>(std::countr_zero(census_mask));
++        census_mask &= census_mask - 1;
++        const auto entry = census_next - entries.page_entries + slot;
++        if (!entries.valid(entry) || entries.indebted(entry)) break;
++        const auto current = head(entry);
++        // A cached bit also carries unfinished tombstone cleanup across the
++        // last owner's callback. Its live page bit can already be clear.
++        // Once settled, a zero-history tombstone only survives an accepted pin;
++        // install/abort then owns cleanup through its reserved queue slot.
++        if (!current || (!older(current) && primary(current))) break;
++        debt_entry = entry; census_origin = true;
++      } else {
++        if (!remaining_entries || !entries.front_debt()) {
++          ++completed_sweeps; step = Step::idle;
++          dirty = changed || census_requested; break;
++        }
++        ++work; ++entry_visits; census_turn = true;
++        debt_entry = entries.front_debt(); census_origin = false;
++      }
++      anchor = head(debt_entry);
+       anchor_cut = anchor ? version_cut(anchor) : 0;
+-      crossed_floor = !anchor || version_cut(anchor) <= planned_floor;
++      crossed_floor = !anchor || version_cut(anchor) <= building_cut;
+       remaining_cuts = reader_cuts.size();
+       step = !anchor ? Step::finish : Step::consume;
+       break;
+@@ -142,14 +172,12 @@
+       // Scopes added after this plan can select the suffix above its
+       // boundary or its first predecessor. Keep that range this sweep.
+       const bool newer = !crossed_floor;
+-      if (newer) crossed_floor = old_cut <= planned_floor;
++      if (newer) crossed_floor = old_cut <= building_cut;
+       const bool keep = newer || (remaining_cuts && reader_cuts[remaining_cuts - 1] >= old_cut);
+       if (keep) { anchor = old; anchor_cut = old_cut; step = Step::consume; }
+       else {
+         link_older(anchor, older(old)); --versions; ++reclaimed_versions;
+-        const auto before_callback = maintenance_changes;
+         drop(old); // No directory/node mutation follows the owner callback.
+-        callback_restart = maintenance_changes != before_callback;
+       }
+       break;
+     }
+@@ -162,16 +190,22 @@
+     case Step::finish: {
+       ++work; ++debt_visits;
+       const auto entry = std::exchange(debt_entry, ObjectHandle{});
+-      anchor = {}; --remaining_entries; step = Step::entry;
++      anchor = {}; step = Step::entry;
+       const auto current = head(entry);
+-      // Pins preserve the reserved debt slot across accepted work. Install
+-      // transfers the tip without allocating or disposing any user owner.
+-      if ((!current || !older(current)) && !entries.pinned(entry)) {
+-        if (!current || primary(current)) remove_debt(entry);
+-        else {
+-          remove_debt(entry); ++reclaimed_versions; erase_head(entry);
+-        }
+-      } else entries.rotate_debt();
++      if (!census_origin) {
++        --remaining_entries;
++        // A settled chain leaves the queue even when readers require old nodes.
++        // Pins retain accepted reservations; a head beyond the sampled boundary
++        // needs another pass because its conservative suffix was not settled.
++        if (!entries.pinned(entry) && (!current || version_cut(current) <= building_cut)) remove_debt(entry);
++        else entries.rotate_debt();
++      }
++      // Direct census work cannot remove a queue enrollment added by a callback
++      // or publication during its partial walk. The queue owns that later work.
++      if (!entries.indebted(entry) && !entries.pinned(entry) && current &&
++          !primary(current) && !older(current)) {
++        ++reclaimed_versions; erase_head(entry);
++      }
+       break;
+     }
+     case Step::seek:
+@@ -183,8 +217,13 @@
+     }
+   }
+ finished:
+-  if (step == Step::entry && !remaining_entries && maintenance_changes == pass_generation) {
+-    ++completed_sweeps; step = Step::idle; dirty = false;
++  if (step == Step::entry) {
++    if (census_next && !census_mask && census_next > census_end) {
++      census_next = 0;
++    }
++    if (!census_next && !remaining_entries && !census_requested && !changed) {
++      ++completed_sweeps; step = Step::idle; dirty = false;
++    }
+   }
+   draining = false; reclamation_work += work; return work;
+ }
+@@ -320,6 +359,6 @@
+       core_->reader_cuts.capacity() * sizeof(std::uint64_t), core_->entries.debt_count(), core_->remaining_entries,
+       core_->entry_visits, core_->version_visits, core_->cut_visits, core_->debt_visits, core_->plan_work,
+       core_->maintenance_restarts, core_->entries.debt_reservation_work(), core_->reclaimed_versions,
+-      core_->completed_sweeps, core_->head_refreshes, core_->dirty};
++      core_->completed_sweeps, core_->head_refreshes, core_->census_visits, core_->census_word_queries, core_->dirty};
+ }
+ } // namespace orbital
+diff --git a/orbital/src/object/history_impl.h b/orbital/src/object/history_impl.h
+--- a/orbital/src/object/history_impl.h
++++ b/orbital/src/object/history_impl.h
+@@ -55,7 +55,7 @@
+ bool History<Physical>::install(Mutation& mutation, std::uint64_t cut) noexcept {
+   auto& entry = entries.get(mutation.entry);
+   if (mutation.old) nodes.get(mutation.old).older = entry.older;
+-  entry.older = mutation.old; entry.cut = cut;
++  entries.set_older(mutation.entry, mutation.old); entry.cut = cut;
+   entry.primary = std::exchange(mutation.replacement, nullptr);
+   entries.unpin(mutation.entry); ++versions;
+   return entry.older || !entry.primary;
+@@ -113,7 +113,7 @@
+     auto* alternative = alternate(head(handle));
+     alternatives.erase(key(head(handle)));
+     auto* value = static_cast<Value*>(entry.primary);
+-    entry.primary = nullptr; entry.cut = 0; entry.older = 0;
++    entry.primary = nullptr; entry.cut = 0; entries.set_older(handle, 0);
+     if (alternative) Physical::release(alternative);
+     if (value) Physical::release(value);
+   });
+diff --git a/orbital/src/object/storage.cpp b/orbital/src/object/storage.cpp
+--- a/orbital/src/object/storage.cpp
++++ b/orbital/src/object/storage.cpp
+@@ -100,6 +100,7 @@
+   auto& entry = cell(handle);
+   free_ = entry.older;
+   entry = {id, 0, nullptr, 0, live};
++  set_older(handle, 0);
+   if (buckets_[index] == deleted) --tombstones_;
+   buckets_[index] = handle;
+   ++size_;
+@@ -120,6 +121,7 @@
+   assert(buckets_[index] == handle);
+   buckets_[index] = deleted;
+   ++tombstones_; --size_;
++  set_older(handle, 0);
+   entry = {{}, 0, nullptr, free_, 0}; free_ = handle;
+   return true;
+ }
+diff --git a/orbital/test/object_changed_queue.cpp b/orbital/test/object_changed_queue.cpp
+new file mode 100644
+--- /dev/null
++++ b/orbital/test/object_changed_queue.cpp
+@@ -0,0 +1,412 @@
++#include <orbital/object.h>
++#include <object/store_impl.h>
++#include <algorithm>
++#include <array>
++#include <cstdio>
++#include <cstdlib>
++#include <limits>
++#include <memory>
++#include <optional>
++#include <source_location>
++#include <span>
++
++template<class T> void check(const T& yes, std::source_location at = std::source_location::current()) {
++  if (bool(yes)) return;
++  std::fprintf(stderr, "%s:%u: check failed\n", at.file_name(), at.line()); std::abort();
++}
++struct Memory : std::pmr::memory_resource {
++  std::size_t live{}, peak{}, calls{}, limit = SIZE_MAX;
++  void* do_allocate(std::size_t bytes, std::size_t alignment) override {
++    if (bytes > limit || live > limit - bytes) throw std::bad_alloc();
++    auto* p = std::pmr::new_delete_resource()->allocate(bytes, alignment);
++    live += bytes; peak = std::max(peak, live); ++calls; return p;
++  }
++  void do_deallocate(void* p, std::size_t bytes, std::size_t alignment) override {
++    check(live >= bytes); live -= bytes;
++    std::pmr::new_delete_resource()->deallocate(p, bytes, alignment);
++  }
++  bool do_is_equal(const std::pmr::memory_resource& other) const noexcept override { return this == &other; }
++};
++struct Physical {
++  struct Value {
++    std::pmr::memory_resource* memory; std::size_t refs; std::uint64_t value;
++    void* context; void (*dispose)(void*);
++  };
++  using Selection = Value*;
++  struct Specification { std::uint64_t value; void* context{}; void (*dispose)(void*){}; };
++  struct PartSource {};
++  enum class ExportPolicy {};
++  static orbital::Result<Value*> capture(std::pmr::memory_resource& memory,
++      Specification spec, std::span<const PartSource>) {
++    try { return std::construct_at(static_cast<Value*>(memory.allocate(sizeof(Value), alignof(Value))),
++        Value{&memory, 1, spec.value, spec.context, spec.dispose}); }
++    catch (const std::bad_alloc&) { return std::unexpected(orbital::Error::capacity); }
++  }
++  static void retain(Value* p) { ++p->refs; }
++  static void release(Value* p) {
++    if (--p->refs) return;
++    auto* memory = p->memory; auto context = p->context; auto dispose = p->dispose;
++    std::destroy_at(p); memory->deallocate(p, sizeof(Value), alignof(Value));
++    if (dispose) dispose(context);
++  }
++  static Value* get(Selection p) { return p; }
++  static Selection selection(Value* p) { return p; }
++  static bool accepts(Value*, orbital::ObjectId, std::uint64_t) { return true; }
++  static bool accepts_resource(Value* p, std::pmr::memory_resource& memory) { return p->memory == &memory; }
++  static bool compatible(Value*, Value*) { return true; }
++  struct Footprint { std::size_t requested_bytes, copied_metadata; };
++  static Footprint footprint(Value*) { return {sizeof(Value), 0}; }
++  static orbital::Result<std::uint64_t> export_part(Selection p, std::size_t,
++      orbital::ObjectBinding, ExportPolicy) { return p->value; }
++};
++namespace orbital::object_detail {
++template<> struct Access<Physical> {
++  static auto stats(const ObjectStore<Physical>& store) { return store.statistics(); }
++  static auto core(const ObjectStore<Physical>& store) { return store.core_; }
++};
++}
++using Store = orbital::ObjectStore<Physical>;
++using Access = orbital::object_detail::Access<Physical>;
++constexpr orbital::ObjectId object(std::uint64_t n) { return {73, n + 1}; }
++Store::Owner owner(Store& store, std::uint64_t value, void* context = nullptr, void (*dispose)(void*) = nullptr) {
++  auto result = store.capture({value, context, dispose}, {}); check(result); return std::move(*result);
++}
++void publish(Store& store, std::span<const Store::Change> changes, Memory& memory) {
++  Store::Prepared prepared(store);
++  {
++    Store::Scope basis(store); check(store.prepare(basis, changes, prepared));
++  }
++  auto calls = memory.calls; check(store.install(prepared)); check(memory.calls == calls);
++}
++void update(Store& store, Memory& memory, std::uint64_t id, std::uint64_t value,
++    void* context = nullptr, void (*dispose)(void*) = nullptr) {
++  std::array<Store::Change, 1> changes{{{object(id), owner(store, value, context, dispose)}}};
++  publish(store, changes, memory);
++}
++void erase(Store& store, Memory& memory, std::uint64_t id) {
++  std::array<Store::Change, 1> changes{{{object(id), {}}}}; publish(store, changes, memory);
++}
++void finish(Store& store, std::size_t budget = 1) {
++  unsigned turns = 0;
++  while (Access::stats(store).maintenance_pending) {
++    auto before = Access::stats(store).reclamation_work;
++    auto work = store.drain(budget); check(work && work <= budget);
++    check(Access::stats(store).reclamation_work == before + work); check(++turns < 100000);
++  }
++  check(!store.drain(budget));
++}
++void seed(Store& store, Memory& memory, unsigned count = 64) {
++  std::array<Store::Change, 64> changes;
++  for (unsigned i = 0; i < count; ++i) changes[i] = {object(i), owner(store, 1000 + i)};
++  publish(store, std::span(changes).first(count), memory);
++}
++void replace_all(Store& store, Memory& memory, unsigned count = 64) {
++  std::array<Store::Change, 64> changes;
++  for (unsigned i = 0; i < count; ++i) changes[i] = {object(i), owner(store, 2000 + i)};
++  publish(store, std::span(changes).first(count), memory);
++}
++void breadth() {
++  Memory memory;
++  {
++    Store store(memory); seed(store, memory);
++    std::optional<Store::Scope> original(std::in_place, store);
++    replace_all(store, memory); finish(store);
++    check(Access::stats(store).versions == 128);
++    const auto before = Access::stats(store);
++    for (unsigned i = 0; i < 128; ++i) {
++      update(store, memory, 0, 3000 + i); finish(store, 3);
++      check(original->bind(object(0))->value == 1000);
++      check(original->bind(object(63))->value == 1063);
++    }
++    auto after = Access::stats(store);
++#ifdef CHANGED_QUEUE
++    check(after.debt_objects == 0);
++    check(after.version_visits - before.version_visits == 128 * 3);
++    check(after.census_visits == before.census_visits);
++#ifdef PAGE_CENSUS
++    check(after.census_word_queries == before.census_word_queries);
++#endif
++#endif
++    auto calls = memory.calls;
++    { Store::Scope current(store); }
++    check(memory.calls == calls && !Access::stats(store).maintenance_pending);
++    original.reset(); check(memory.calls == calls); finish(store);
++    check(Access::stats(store).versions == 64);
++    auto closed = Access::stats(store);
++    std::printf("breadth: core=%zu entry=%zu directory=%zu debt_capacity=%zu visits=%zu close_work=%zu",
++        after.core_bytes, after.entry_bytes, after.object_directory_capacity_bytes, after.debt_capacity_bytes,
++        after.version_visits - before.version_visits, closed.reclamation_work - after.reclamation_work);
++#ifdef CHANGED_QUEUE
++    check(closed.census_visits - after.census_visits == 64);
++    std::printf(" census=%zu", closed.census_visits - after.census_visits);
++#ifdef PAGE_CENSUS
++    check(closed.census_word_queries - after.census_word_queries == 2);
++    std::printf(" words=%zu", closed.census_word_queries - after.census_word_queries);
++#endif
++#endif
++    std::puts("");
++  }
++  check(!memory.live);
++}
++void changing_readers_and_head() {
++  Memory memory;
++  {
++    Store store(memory); seed(store, memory);
++    std::optional<Store::Scope> old(std::in_place, store);
++    replace_all(store, memory);
++    std::optional<Store::Scope> middle(std::in_place, store);
++    replace_all(store, memory); finish(store);
++    old.reset();
++    for (unsigned i = 0; i < 7; ++i) check(store.drain(1) <= 1);
++    middle.reset(); // Entries already passed must be revisited with the weaker plan.
++    finish(store); check(Access::stats(store).versions == 64);
++    std::optional<Store::Scope> basis(std::in_place, store);
++    update(store, memory, 0, 77);
++    check(store.drain(1) == 1); check(store.drain(1) == 1);
++    update(store, memory, 0, 88); // Move a partially visited inline tip into history.
++    finish(store); check(basis->bind(object(0))->value == 2000);
++    check(store.borrow().bind(object(0))->value == 88);
++    basis.reset(); finish(store); check(Access::stats(store).versions == 64);
++  }
++  check(!memory.live);
++}
++void accepted_refusal_abort_and_holes() {
++  Memory memory;
++  {
++    Store store(memory); seed(store, memory);
++    std::optional<Store::Scope> old(std::in_place, store);
++    replace_all(store, memory); finish(store);
++    std::array<Store::Change, 1> changes{{{object(0), owner(store, 3000)}}};
++    Store::Prepared prepared(store);
++    { Store::Scope basis(store); check(store.prepare(basis, changes, prepared)); }
++    old.reset(); auto calls = memory.calls; finish(store);
++    check(memory.calls == calls); // Census cannot steal accepted queue reservation.
++    check(store.install(prepared)); check(memory.calls == calls); finish(store);
++    check(store.borrow().bind(object(0))->value == 3000);
++    old.emplace(store); update(store, memory, 0, 4000); finish(store);
++    erase(store, memory, 0); finish(store);
++    Store::Prepared aborted(store);
++    { Store::Scope basis(store); check(store.prepare(basis, changes, aborted)); }
++    old.reset(); finish(store); calls = memory.calls; aborted.abort(); check(memory.calls == calls);
++    finish(store); check(!store.borrow().bind(object(0)));
++    for (unsigned i = 1; i < 48; ++i) erase(store, memory, i);
++    finish(store); old.emplace(store); update(store, memory, 63, 7000); finish(store);
++    const auto before = Access::stats(store); old.reset(); finish(store);
++    check(Access::stats(store).versions == 16);
++#ifdef CHANGED_QUEUE
++#ifdef PAGE_CENSUS
++    check(Access::stats(store).census_visits - before.census_visits == 1);
++    check(Access::stats(store).census_word_queries - before.census_word_queries == 2);
++#else
++    check(Access::stats(store).census_visits - before.census_visits == 64); // Includes free slots.
++#endif
++#endif
++    old.emplace(store); update(store, memory, 63, 8000);
++    // A genuinely larger distinct-cut plan cannot be allocated under the old limit.
++    std::array<std::unique_ptr<Store::Scope>, 8> readers;
++    for (unsigned i = 0; i < readers.size(); ++i) {
++      readers[i] = std::make_unique<Store::Scope>(store); update(store, memory, 63, 8100 + i);
++    }
++    auto versions = Access::stats(store).versions; memory.limit = memory.live;
++    store.drain(1); check(Access::stats(store).versions == versions);
++    check(Access::stats(store).maintenance_refusals > 0);
++    memory.limit = SIZE_MAX; finish(store);
++    for (unsigned i = 0; i < readers.size(); ++i) check(readers[i]->bind(object(63))->value == (i ? 8099 + i : 8000));
++    for (auto& reader : readers) reader.reset(); old.reset(); finish(store);
++  }
++  check(!memory.live);
++}
++struct Callback {
++  Store* store; Memory* memory; unsigned calls{}; bool reset{};
++  static void run(void* context) {
++    auto& self = *static_cast<Callback*>(context); ++self.calls;
++    check(!self.store->drain(10)); // The active drain owns its traversal.
++    if (self.reset) *self.store = Store{};
++    else update(*self.store, *self.memory, 0, 9000);
++  }
++};
++void tiny_queue_reservation_and_cut_builder() {
++  Memory memory;
++  {
++    Store store(memory); seed(store, memory);
++    std::optional<Store::Scope> oldest(std::in_place, store);
++    for (unsigned i = 0; i < 64; ++i) { update(store, memory, i, 2000 + i); finish(store); }
++    std::optional<Store::Scope> middle(std::in_place, store);
++    for (unsigned i = 0; i < 64; ++i) { update(store, memory, i, 3000 + i); finish(store); }
++    check(Access::stats(store).versions == 192);
++#ifdef CHANGED_QUEUE
++    check(Access::stats(store).debt_capacity_bytes == 8);
++#endif
++    std::array<Store::Change, 1> changes{{{object(0), owner(store, 4000)}}};
++    Store::Prepared accepted(store);
++    { Store::Scope basis(store); check(store.prepare(basis, changes, accepted)); }
++    oldest.reset(); const auto calls = memory.calls; finish(store);
++    // Sixty-four retained histories cannot take the single reserved queue slot.
++    check(memory.calls == calls && Access::stats(store).versions == 128);
++    check(store.install(accepted)); check(memory.calls == calls); finish(store);
++    check(middle->bind(object(0))->value == 2000);
++
++    std::optional<Store::Scope> later(std::in_place, store);
++    update(store, memory, 1, 5000); finish(store);
++    update(store, memory, 2, 5001);
++    // Force a new cut plan with two distinct cuts, then close its builder.
++    std::optional<Store::Scope> latest(std::in_place, store);
++    update(store, memory, 3, 5002); check(store.drain(1) == 1);
++    middle.reset(); check(store.drain(1) == 1); later.reset();
++    finish(store); check(latest->bind(object(3))->value == 3003);
++    latest.reset(); finish(store); check(Access::stats(store).versions == 64);
++  }
++  check(!memory.live);
++}
++void callbacks_and_fairness() {
++  Memory memory;
++  {
++    Store store(memory); seed(store, memory);
++    Callback callback{&store, &memory};
++    update(store, memory, 0, 11, &callback, Callback::run); finish(store);
++    std::optional<Store::Scope> old(std::in_place, store);
++    replace_all(store, memory); finish(store); check(!callback.calls);
++    old.reset(); finish(store); // Census disposal publishes onto its own chain.
++    check(callback.calls == 1 && store.borrow().bind(object(0))->value == 9000);
++    check(Access::stats(store).versions == 64);
++
++    // Erasure/reuse behind a census cursor creates no untracked history.
++    old.emplace(store); replace_all(store, memory); finish(store); old.reset();
++    for (unsigned i = 0; i < 8; ++i) check(store.drain(1) <= 1);
++    erase(store, memory, 0); finish(store); update(store, memory, 1000, 77); finish(store);
++    check(!store.borrow().bind(object(0)) && store.borrow().bind(object(1000))->value == 77);
++
++    old.emplace(store); replace_all(store, memory); finish(store); old.reset();
++    const auto before = Access::stats(store);
++    for (unsigned i = 0; i < 512; ++i) {
++      update(store, memory, 0, 10000 + i); check(store.drain(8) <= 8);
++    }
++#ifdef CHANGED_QUEUE
++#ifdef PAGE_CENSUS
++    check(Access::stats(store).census_visits - before.census_visits >= 63);
++    check(Access::stats(store).census_word_queries - before.census_word_queries == 3);
++#else
++    check(Access::stats(store).census_visits - before.census_visits >= 96);
++#endif
++#endif
++    finish(store); check(Access::stats(store).versions == 65);
++
++    Callback reset{&store, &memory, 0, true};
++    update(store, memory, 0, 12, &reset, Callback::run); finish(store);
++    old.emplace(store); update(store, memory, 0, 13); finish(store); old.reset();
++    store.drain(); check(reset.calls == 1 && !store.borrow().bind(object(0)));
++  }
++  check(!memory.live);
++}
++void interleaved_readers() {
++  Memory memory;
++  {
++    Store store(memory);
++    using Values = std::array<std::uint64_t, 32>;
++    struct Reader { std::optional<Store::Scope> scope; Values values{}; };
++    Values values{};
++    std::array<Reader, 6> readers;
++    std::uint64_t random = 731;
++    auto next = [&] { random ^= random << 13; random ^= random >> 7; random ^= random << 17; return random; };
++    for (unsigned operation = 1; operation <= 2000; ++operation) {
++      const auto id = next() % values.size();
++      auto& reader = readers[next() % readers.size()];
++      switch (next() % 6) {
++      case 0: case 1: update(store, memory, id, operation); values[id] = operation; break;
++      case 2: erase(store, memory, id); values[id] = 0; break;
++      case 3:
++        if (!reader.scope) { reader.scope.emplace(store); reader.values = values; }
++        break;
++      case 4: {
++        const auto calls = memory.calls; reader.scope.reset(); check(memory.calls == calls); break;
++      }
++      default: { const auto budget = next() % 4; check(store.drain(budget) <= budget); break; }
++      }
++      if (!(operation % 31)) finish(store, 3);
++      for (std::size_t i = 0; i < values.size(); ++i) {
++        auto current = store.borrow().bind(object(i)); check((current ? current->value : 0) == values[i]);
++        for (auto& held : readers) if (held.scope) {
++          auto selected = held.scope->bind(object(i));
++          check((selected ? selected->value : 0) == held.values[i]);
++        }
++      }
++    }
++    for (auto& reader : readers) reader.scope.reset(); finish(store);
++    const auto expected = std::count_if(values.begin(), values.end(), [](auto value) { return value != 0; });
++    check(Access::stats(store).versions == static_cast<std::size_t>(expected));
++  }
++  check(!memory.live);
++}
++void renewal_counters(unsigned age) {
++  Memory memory;
++  {
++    Store store(memory); seed(store, memory);
++    std::optional<Store::Scope> reader(std::in_place, store);
++    const auto before = Access::stats(store);
++    for (unsigned i = 0; i < 128; ++i) {
++      update(store, memory, i % 64, 3000 + i); finish(store);
++      if (!((i + 1) % age)) { reader.reset(); reader.emplace(store); finish(store); }
++    }
++    reader.reset(); finish(store);
++    const auto after = Access::stats(store); check(after.versions == 64);
++    std::printf("renewal: objects=64 changed=1 writes=128 age=%u work=%zu visits=%zu entries=%zu",
++        age, after.reclamation_work - before.reclamation_work,
++        after.version_visits - before.version_visits, after.entry_visits - before.entry_visits);
++#ifdef CHANGED_QUEUE
++    std::printf(" census=%zu", after.census_visits - before.census_visits);
++#ifdef PAGE_CENSUS
++    std::printf(" words=%zu", after.census_word_queries - before.census_word_queries);
++#endif
++#endif
++    std::puts("");
++  }
++  check(!memory.live);
++}
++void cached_mask_reuse_and_growth() {
++  Memory memory;
++  {
++    Store store(memory); seed(store, memory);
++    std::optional<Store::Scope> reader(std::in_place, store);
++    replace_all(store, memory); finish(store);
++    erase(store, memory, 31); reader.reset();
++    // The first census word includes this queued tombstone. Queue service
++    // erases it before that cached bit is consumed.
++    unsigned steps = 0;
++    while (Access::stats(store).objects != 63) { check(store.drain(1) == 1); check(++steps < 1000); }
++    update(store, memory, 1000, 7000); // Reuses the deleted position.
++    update(store, memory, 1001, 8000); // Grows beyond the census's snapshotted bound.
++    update(store, memory, 1001, 8001); // Its new history must be owned by the queue.
++    finish(store);
++    check(!store.borrow().bind(object(31)));
++    check(store.borrow().bind(object(1000))->value == 7000);
++    check(store.borrow().bind(object(1001))->value == 8001);
++    check(Access::stats(store).versions == 65);
++    reader.emplace(store); update(store, memory, 1000, 7001); finish(store);
++    reader.reset(); finish(store); check(Access::stats(store).versions == 65);
++  }
++  check(!memory.live);
++}
++void last_history_callback_tombstone() {
++  Memory memory;
++  {
++    Store store(memory); seed(store, memory);
++    Callback callback{&store, &memory};
++    update(store, memory, 31, 11, &callback, Callback::run); finish(store);
++    std::optional<Store::Scope> reader(std::in_place, store);
++    erase(store, memory, 31); finish(store); check(!callback.calls);
++    reader.reset(); finish(store);
++    // The last old owner publishes on another Object. Restart must finish the
++    // now-empty tombstone even though its live page mask is already clear.
++    check(callback.calls == 1 && store.borrow().bind(object(0))->value == 9000);
++    check(Access::stats(store).objects == 63 && Access::stats(store).versions == 63);
++  }
++  check(!memory.live);
++}
++int main() {
++  breadth(); changing_readers_and_head(); accepted_refusal_abort_and_holes(); callbacks_and_fairness();
++  tiny_queue_reservation_and_cut_builder(); interleaved_readers();
++  renewal_counters(1); renewal_counters(64);
++  cached_mask_reuse_and_growth();
++  last_history_callback_tombstone();
++  std::puts("changed queue checks passed");
++}

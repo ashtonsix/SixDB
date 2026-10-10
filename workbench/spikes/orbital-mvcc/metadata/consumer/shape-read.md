@@ -143,7 +143,7 @@ allocation/MVCC candidate qualification. Runtime owner coverage here is
 independent shared capture. Whole-container storage and paired
 native/LMDB timings belong to the enclosing composition experiment.
 
-The immutable behavior archive is
+The original behavior capture remains local at
 `build/orbital-mvcc/metadata-consumer/shape-read-cut-1`, source-map SHA256
 `99fc684bba10a7b3960fef700bb8dc14db5c83097762b7af436f13d29bc147c4`.
 `shape-read-1-native/receipt.json` and `shape-read-1-sanitize/receipt.json`
@@ -152,6 +152,12 @@ source/object/binary/output hashes and sanitizer settings. Lower libraries
 reuse qualified cut3 objects only after all 118 source hashes and linked
 library hashes match. x86 evidence is limited to compiler ABI/code and size
 reporting; it is not executed read qualification.
+
+These local paths are not a shared recovery archive. The separately retained
+[early cut1/cut3 codegen receipts](evidence/early-codegen-20261009/README.md)
+identify their own older consumer experiments; they do not recover this Shape
+capture, its native/sanitizer executions or its codegen outputs. Exact replay of
+this section still requires the original local capture and dependencies.
 
 [shape_read_probe.py](shape_read_probe.py) records ordinary signatures,
 actual compiler dependencies, separate LLVM/assembly/objects, section sizes,

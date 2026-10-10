@@ -1,0 +1,97 @@
+{
+  "status": "parked, unapplied and untimed; no scheduled follow-up",
+  "base_commit": "f80e8be9e76fe7109870eaa40687d6d0a32800b8",
+  "apply_order": [
+    "source-context.patch",
+    "control.patch"
+  ],
+  "original_private_release_sha256": "38de12159fb59807c623a50ce53bbb12ab65cbc8ba7408fee594ae9faa3d5902",
+  "original_qualification_sha256": "79d592ae0743f2bbdfcdf816c11a7576df2a8d0b334ae2da5d84091cb64a1ba3",
+  "original_recipe_sha256": "b43d687743f5a38886463b691f20fb0079123f5b78a5f61e020716c791bc41ae",
+  "source_inputs": {
+    "count": 140,
+    "sorted_json_sha256": "703e207ca8e2a71c5b397b0dd1a7266e1bf14296d9b4eb18b92f2157d250b68e",
+    "verified_against_git_base_plus_patches": true,
+    "common_difference": "orbital/include/orbital/representation.h: frozen input predates the capture-footprint comment; source-context.patch restores its exact bytes"
+  },
+  "changed_path": "workbench/spikes/orbital-mvcc/callers/object_ring.cpp",
+  "preimage_sha256": "7a6977ef2fc4881e1326cd208e1633f750db16482505224dcb9b558ad8a04f29",
+  "postimage_sha256": "fd3167298d1ca12e69f2e0a9838db43c42727c1ffe0eef6eaa2be63e48cb2f81",
+  "patches": {
+    "source-context.patch": "e472385e90c294c9294c5bd37b209078ad623e907dc5b06a3a3c26b450fe3371",
+    "control.patch": "254670f2d6066365f42a5f1e3b99b8aaa8255eb1c40c9961e39f2b4e89ec20fb"
+  },
+  "qualification": {
+    "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)",
+    "native": {
+      "passed": true,
+      "checks": 8702,
+      "matched_panels": 756,
+      "requests_checked": 97524,
+      "consequence_histories": 1,
+      "timing": false
+    },
+    "sanitizers": false,
+    "timing": false,
+    "warm_inputs_sha256": {
+      "workbench/spikes/orbital-mvcc/metadata/CMakeFiles/loom_object_ring_check.dir/__/callers/object_ring_check.cpp.o": "abaf13963d04ce2e168f2fc7f75fffd28e7b5e4acfaaedc2fca2ab8331fbd1c5",
+      "workbench/spikes/orbital-mvcc/metadata/CMakeFiles/loom_object_ring.dir/composed/catalog.cpp.o": "3cb3d25457529d5f360ef080151ac444302b52af578f40a36e52dec5f4cc365a",
+      "workbench/spikes/orbital-mvcc/metadata/liborbital_mvcc_shape_read.a": "158a0574b8f35c693623e5a3ffd4010e67ea07ad9467ed3bdf8105600ee3fdd5",
+      "workbench/spikes/orbital-mvcc/metadata/orbital/shape/liborbital_mvcc_shape.a": "a74a7ac988a38bb892b8600d49679fc489e02e2579ce846aa0817f7f6d7c34ab",
+      "workbench/spikes/orbital-mvcc/consumer/liborbital_versioned_data.a": "63ffa61234b6892f9bc46c36135a8f5cfab2bab18e09927a0941816797f09ba5",
+      "ikea/libikea_seriespack.a": "e0acdcef5aa1146d199f038dc040b308f75eb73a623f4fe6d92c684f1eff756e",
+      "ikea/libikea_tuplepack.a": "af7268392a263b259237099dee189906001f6fc6f2256e65399a1c69703f388f",
+      "ikea/libikea_core.a": "2d40e36ff205702de6746fa0ba9a4ce06bf95d7fd32ee34d22eb94b62580f098",
+      "loom/libloom.a": "b11cdeeaee60fba7377054400fe4fbc77eee18c80e9f703299be9fbf02ea1c07",
+      "orbital/liborbital.a": "2f6af8c3500293e1e8928aeda8f18c8a7e221555c66ec16a53cc3951553f0df3"
+    }
+  },
+  "codegen": {
+    "target": "x86-64-v3 / Clang -mtune=znver5 (CMake SIXDB_TUNE=zen5), pinned Clang 21.1.8, O3, g0, assertions, cross sysroot libstdc++15",
+    "driver_text_bytes": {
+      "base": 12232,
+      "candidate": 12070,
+      "delta": -162
+    },
+    "driver_local_frame_bytes": {
+      "base": 1064,
+      "candidate": 1064
+    },
+    "driver_saved_register_bytes": {
+      "base": 48,
+      "candidate": 48
+    },
+    "native_callback_disassembly_identical": {
+      "Disassembly of section .text._ZN16loom_object_ring12_GLOBAL__N_16nativeILNS_5StageE0ELb1EEEvPN4loom6detail10MemoryRingISt16integer_sequenceImJLm0ELm1ELm2ELm3ELm4ELm5EEEJPNS_5FrameEmmmmmEEEPNSA_4SlotES9_mmmmm:": true,
+      "Disassembly of section .text._ZN16loom_object_ring12_GLOBAL__N_16nativeILNS_5StageE0ELb0EEEvPN4loom6detail10MemoryRingISt16integer_sequenceImJLm0ELm1ELm2ELm3ELm4ELm5EEEJPNS_5FrameEmmmmmEEEPNSA_4SlotES9_mmmmm:": true,
+      "Disassembly of section .text._ZN16loom_object_ring12_GLOBAL__N_16nativeILNS_5StageE1ELb1EEEvPN4loom6detail10MemoryRingISt16integer_sequenceImJLm0ELm1ELm2ELm3ELm4ELm5EEEJPNS_5FrameEmmmmmEEEPNSA_4SlotES9_mmmmm:": true,
+      "Disassembly of section .text._ZN16loom_object_ring12_GLOBAL__N_16nativeILNS_5StageE2ELb1EEEvPN4loom6detail10MemoryRingISt16integer_sequenceImJLm0ELm1ELm2ELm3ELm4ELm5EEEJPNS_5FrameEmmmmmEEEPNSA_4SlotES9_mmmmm:": true,
+      "Disassembly of section .text._ZN16loom_object_ring12_GLOBAL__N_16nativeILNS_5StageE1ELb0EEEvPN4loom6detail10MemoryRingISt16integer_sequenceImJLm0ELm1ELm2ELm3ELm4ELm5EEEJPNS_5FrameEmmmmmEEEPNSA_4SlotES9_mmmmm:": true,
+      "Disassembly of section .text._ZN16loom_object_ring12_GLOBAL__N_16nativeILNS_5StageE2ELb0EEEvPN4loom6detail10MemoryRingISt16integer_sequenceImJLm0ELm1ELm2ELm3ELm4ELm5EEEJPNS_5FrameEmmmmmEEEPNSA_4SlotES9_mmmmm:": true
+    },
+    "nohint_probe_direction": {
+      "base": "Driver::run +0x8cb compare, +0x8ce jae; selected first/last writes through Frame",
+      "candidate": "Driver::run +0x913 compare, +0x916 cmovb, +0x91a cmovae"
+    },
+    "payload_digest_writes": {
+      "base": "Three intermediate Frame.digest stores at Driver::run +0xb18/+0xb4a/+0xb6e",
+      "candidate": "Only common final State writeback includes Frame.digest at +0x13d8"
+    },
+    "tradeoffs": [
+      "Candidate loads all five recurrence words at +0x818..+0x828 and writes all five at +0x13c8..+0x13d8 on every manual visit.",
+      "A continuing no-hint baseline probe loads key/first/last and writes only the chosen bound; candidate adds otherwise-unneeded remaining/digest loads and unchanged-word stores.",
+      "Manual cursor is register-resident through candidate probes; candidate payload saves/restores cursor to the existing stack frame. No frame growth; this is not a blanket no-spills claim.",
+      "Runtime hints/stage dispatch, completion memmove, quantum rotate, and Ring implementation remain unchanged at source.",
+      "All six Ring native callback disassemblies are identical between arms.",
+      "No performance timing or hardware/PMU claims; register optimization alone does not select this control."
+    ]
+  },
+  "recovery_limits": "Changed TU and all 140 recorded dependency source hashes are reconstructible from the Git base and these two patches. Existing native dependencies were reused; their object/archive hashes are retained but bytes, historical toolchain/sysroot, commands and binaries are not bundled. Fresh build/replay not run during curation.",
+  "normal_target": "loom_object_ring_check",
+  "curation_verification": {
+    "method": "Unified patch hunks applied to Git blobs in memory only; no working tree changes, builds or execution",
+    "postimages_matching": 140,
+    "changed_paths": 2,
+    "fresh_rebuild_or_test": false
+  }
+}

@@ -1,0 +1,197 @@
+diff --git a/workbench/spikes/orbital-mvcc/metadata/composed/backend.h b/workbench/spikes/orbital-mvcc/metadata/composed/backend.h
+--- a/workbench/spikes/orbital-mvcc/metadata/composed/backend.h
++++ b/workbench/spikes/orbital-mvcc/metadata/composed/backend.h
+@@ -2,6 +2,7 @@
+ #include "read_fusion.h"
+ #include "../../performance/request_cache.h"
+ #include <algorithm>
++#include <limits>
+ 
+ namespace orbital_mvcc::composed {
+ template<class Store> class Backend {
+@@ -57,6 +58,11 @@
+   Accounting accounting() const { return material_.accounting(); }
+   void metadata_limit(std::size_t bytes) { material_.memory.limit = bytes; }
+   std::size_t drain() { return store_.drain(); }
++  static constexpr std::size_t publication_work_limit = std::numeric_limits<std::size_t>::max();
++  std::size_t publication_drain() {
++    if constexpr (publication_work_limit == std::numeric_limits<std::size_t>::max()) return store_.drain();
++    else return store_.drain(publication_work_limit);
++  }
+   void poll(std::size_t count) { orbital::worker::poll(material_.runtime.lane, count); }
+ 
+   Result<cs::Selection> select(const Scope& scope, std::size_t object, bool alternative = false) const {
+@@ -115,7 +121,7 @@
+       auto installed = store_.install(accepted);
+       if (!installed) return installed;
+     }
+-    store_.drain(); poll(128);
++    publication_drain(); poll(128);
+     for (auto& outcome : output) { outcome = {}; outcome.changes = 1; detail::mix(outcome.digest, 1); }
+     return {};
+   }
+diff --git a/workbench/spikes/orbital-mvcc/metadata/composed/catalog.cpp b/workbench/spikes/orbital-mvcc/metadata/composed/catalog.cpp
+--- a/workbench/spikes/orbital-mvcc/metadata/composed/catalog.cpp
++++ b/workbench/spikes/orbital-mvcc/metadata/composed/catalog.cpp
+@@ -10,6 +10,20 @@
+   if (!store.core_) return {};
+   const auto s = store.statistics();
+   compact_history::CompactShapeStore16::Statistics result{memory.live, memory.peak, s.objects, s.versions, s.scopes, s.core_bytes, s.entry_bytes, s.node_bytes, s.alternative_count, memory.calls, s.history_capacity_bytes, s.descriptor_directory_capacity_bytes, s.copied_metadata_bytes, s.captured_descriptor_bytes, s.reclamation_work, s.last_sweep_bytes, s.last_sweep_cuts, s.maintenance_refusals, s.object_directory_capacity_bytes, s.debt_capacity_bytes, s.cut_capacity_bytes, s.debt_objects, s.maintenance_remaining_entries, s.entry_visits, s.version_visits, s.cut_visits, s.debt_visits, s.plan_work, s.maintenance_restarts, s.debt_reservation_work, s.reclaimed_versions, s.completed_sweeps, s.head_refreshes, s.maintenance_pending};
++  // This paired module baseline has no census by construction. The candidate
++  // exposes its measured visits; other comparison adapters remain unavailable.
++  result.census_visits = []<class Stats>(const Stats& observed) {
++    if constexpr (requires { observed.census_visits; }) return observed.census_visits;
++    else return std::size_t{0};
++  }(s);
++  result.census_counter_available = true;
++  // Both the pre-census module and unfiltered comparison perform zero mask
++  // queries by construction. The page-filtered candidate counts them directly.
++  result.census_word_queries = []<class Stats>(const Stats& observed) {
++    if constexpr (requires { observed.census_word_queries; }) return observed.census_word_queries;
++    else return std::size_t{0};
++  }(s);
++  result.census_word_counter_available = true;
+   return result;
+ }
+ } // namespace orbital::object_detail
+diff --git a/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/store.h b/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/store.h
+--- a/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/store.h
++++ b/workbench/spikes/orbital-mvcc/metadata/orbital/candidates/store.h
+@@ -172,6 +172,12 @@
+     std::size_t entry_visits{}, version_visits{}, cut_visits{}, debt_visits{}, plan_work{}, maintenance_restarts{};
+     std::size_t debt_reservation_work{}, reclaimed_versions{}, completed_sweeps{}, head_refreshes{};
+     bool maintenance_pending{};
++    // Comparison observation only; unavailable for historical adapters unless
++    // their owning bridge explicitly supplies this counter.
++    std::size_t census_visits{};
++    bool census_counter_available{};
++    std::size_t census_word_queries{};
++    bool census_word_counter_available{};
+   };
+ 
+ private:
+diff --git a/workbench/spikes/orbital-mvcc/performance/main.cpp b/workbench/spikes/orbital-mvcc/performance/main.cpp
+--- a/workbench/spikes/orbital-mvcc/performance/main.cpp
++++ b/workbench/spikes/orbital-mvcc/performance/main.cpp
+@@ -160,15 +160,40 @@
+       <<",\"completed_parts\":"<<k.completed_parts<<",\"completed_rows\":"<<k.completed_rows
+       <<",\"scratch_bound_bytes\":"<<k.scratch_bound_bytes<<"}";
+ }
++struct MaintenanceCounters {
++  std::size_t cut_capacity_bytes{}, debt_objects{}, maintenance_remaining_entries{}, entry_visits{}, version_visits{}, cut_visits{}, debt_visits{}, plan_work{}, maintenance_restarts{}, debt_reservation_work{}, reclaimed_versions{}, completed_sweeps{}, head_refreshes{};
++  bool maintenance_pending{};
++  std::size_t census_visits{};
++  bool census_counter_available{};
++  std::size_t census_word_queries{};
++  bool census_word_counter_available{};
++};
+ struct OrbitalFootprint {
+   obj::Statistics metadata;
+   std::uint64_t arena_charge{};
+   orbital::allocation::Statistics pool;
+   std::size_t core_bytes{},entry_bytes{},node_bytes{},metadata_allocation_calls{};
+   std::optional<compact_history::Store32::Statistics> candidate;
++  std::optional<MaintenanceCounters> maintenance;
+   std::optional<composed::Accounting> composed_accounting;
+   std::size_t backend_record_bytes{},write_caller_arrays_bytes{};
+ };
++template<class Statistics> void copy_maintenance(OrbitalFootprint& result, const Statistics& s) {
++  if constexpr (requires { s.cut_capacity_bytes; s.maintenance_pending; })
++    result.maintenance = MaintenanceCounters{s.cut_capacity_bytes, s.debt_objects, s.maintenance_remaining_entries, s.entry_visits, s.version_visits, s.cut_visits, s.debt_visits, s.plan_work, s.maintenance_restarts, s.debt_reservation_work, s.reclaimed_versions, s.completed_sweeps, s.head_refreshes, s.maintenance_pending};
++  if constexpr (requires { s.census_visits; s.census_counter_available; }) {
++    if (result.maintenance) {
++      result.maintenance->census_visits = s.census_visits;
++      result.maintenance->census_counter_available = s.census_counter_available;
++    }
++  }
++  if constexpr (requires { s.census_word_queries; s.census_word_counter_available; }) {
++    if (result.maintenance) {
++      result.maintenance->census_word_queries = s.census_word_queries;
++      result.maintenance->census_word_counter_available = s.census_word_counter_available;
++    }
++  }
++}
+ OrbitalFootprint footprint(const Orbital& store) {
+   OrbitalFootprint result;result.metadata=store.statistics();result.arena_charge=store.charged_bytes();
+   result.pool=store.pool_statistics();return result;
+@@ -186,6 +211,7 @@
+       s.history_capacity_bytes,s.descriptor_directory_capacity_bytes,s.copied_metadata_bytes,s.captured_descriptor_bytes,
+       s.reclamation_work,s.last_sweep_bytes,s.last_sweep_cuts,s.maintenance_refusals,
+       s.object_directory_capacity_bytes,s.debt_capacity_bytes};
++  copy_maintenance(result,s);
+   return result;
+ }
+ template<class Store> OrbitalFootprint footprint(const composed::Backend<Store>& store) {
+@@ -202,6 +228,7 @@
+       s.history_capacity_bytes,s.descriptor_directory_capacity_bytes,s.copied_metadata_bytes,s.captured_descriptor_bytes,
+       s.reclamation_work,s.last_sweep_bytes,s.last_sweep_cuts,s.maintenance_refusals,
+       s.object_directory_capacity_bytes,s.debt_capacity_bytes};
++  copy_maintenance(result,s);
+   result.composed_accounting=a;result.backend_record_bytes=sizeof(store);
+   result.write_caller_arrays_bytes=composed::Backend<Store>::write_caller_arrays;
+   return result;
+@@ -229,6 +256,30 @@
+         <<",\"reclamation_work\":"<<c.reclamation_work
+         <<",\"last_sweep_bytes\":"<<c.last_sweep_bytes<<",\"last_sweep_cuts\":"<<c.last_sweep_cuts
+         <<",\"maintenance_refusals\":"<<c.maintenance_refusals;
++  }
++  std::cout<<",\"maintenance_counters_available\":"<<(f.maintenance ? "true" : "false");
++  if (f.maintenance) {
++    const auto& c=*f.maintenance;
++    std::cout<<",\"cut_capacity_bytes\":"<<c.cut_capacity_bytes
++        <<",\"debt_objects\":"<<c.debt_objects
++        <<",\"maintenance_remaining_entries\":"<<c.maintenance_remaining_entries
++        <<",\"entry_visits\":"<<c.entry_visits
++        <<",\"version_visits\":"<<c.version_visits
++        <<",\"cut_visits\":"<<c.cut_visits
++        <<",\"debt_visits\":"<<c.debt_visits
++        <<",\"plan_work\":"<<c.plan_work
++        <<",\"maintenance_restarts\":"<<c.maintenance_restarts
++        <<",\"debt_reservation_work\":"<<c.debt_reservation_work
++        <<",\"reclaimed_versions\":"<<c.reclaimed_versions
++        <<",\"completed_sweeps\":"<<c.completed_sweeps
++        <<",\"head_refreshes\":"<<c.head_refreshes
++        <<",\"maintenance_pending\":"<<(c.maintenance_pending ? "true" : "false");
++    std::cout<<",\"census_counter_available\":"<<(c.census_counter_available ? "true" : "false")
++        <<",\"census_visits\":";
++    if (c.census_counter_available) std::cout<<c.census_visits; else std::cout<<"null";
++    std::cout<<",\"census_word_counter_available\":"<<(c.census_word_counter_available ? "true" : "false")
++        <<",\"census_word_queries\":";
++    if (c.census_word_counter_available) std::cout<<c.census_word_queries; else std::cout<<"null";
+   }
+   if (f.composed_accounting) {
+     const auto& a=*f.composed_accounting;
+@@ -448,7 +499,7 @@
+             need(store.update(input,target,std::span{objects}.subspan(first,input.size())));first+=input.size();
+             if (o.retention_age && ++published%o.retention_age==0) {
+               witnesses[witness]=read_operation(store.body(*old,witness_objects[witness]),witness_operations[witness]);++witness;
+-              old.reset();old.emplace(store.catalog());store.drain();store.poll(128);
++              old.reset();old.emplace(store.catalog());store.publication_drain();store.poll(128);
+             }
+           },trace.operations,output);
+         } else {
+@@ -585,7 +636,11 @@
+   std::cout<<",\"hardware_scope\":\"complete trial loop and boundary clock reads; setup, qualification before direct control, conditioning and post-clock logical accounting excluded\""
+       <<",\"metadata_allocation_counts_available\":"<<(o.backend.starts_with("candidate") || o.backend.starts_with("composed-")?"true":"false");
+   std::cout<<",\"cost_counter_scope\":\"clone/update/conversion native kernels only; read decode counters unavailable\""
+-      <<",\"maintenance_policy\":\""<<(o.backend.starts_with("candidate") || o.backend.starts_with("composed-")?"full catalog drain plus bounded physical poll":o.backend=="orbital"?"bounded drain plus bounded physical poll":"transaction release")<<"\"";
++      <<",\"maintenance_policy\":\""<<(o.backend.starts_with("composed-") && composed::Inline::publication_work_limit != SIZE_MAX ? "bounded catalog metadata work plus bounded physical poll" : o.backend.starts_with("candidate") || o.backend.starts_with("composed-")?"full catalog drain plus bounded physical poll":o.backend=="orbital"?"bounded drain plus bounded physical poll":"transaction release")<<"\"";
++  std::cout<<",\"metadata_maintenance_work_limit\":";
++  if (o.backend.starts_with("composed-") && composed::Inline::publication_work_limit != SIZE_MAX)
++    std::cout<<composed::Inline::publication_work_limit;
++  else std::cout<<"null";
+   std::cout<<",\"mapped_shape_metadata_bytes\":"<<mapped_shape_metadata
+       <<",\"mapped_shape_record_bytes\":"<<mapped_shape_record
+       <<",\"mapped_write_control_live_bytes\":"<<mapped_write_control_live
+diff --git a/workbench/spikes/orbital-mvcc/performance/run.py b/workbench/spikes/orbital-mvcc/performance/run.py
+--- a/workbench/spikes/orbital-mvcc/performance/run.py
++++ b/workbench/spikes/orbital-mvcc/performance/run.py
+@@ -314,7 +314,7 @@
+             base['publication_plus_final_settlement_ns_per_request']=(interval['wall_ns']+result['release_and_drain']['wall_ns'])/result['operations']
+             for label,field in [('initial','footprint_initial'),('held','footprint_after_interval'),('released','footprint_after_reader_release')]:
+                 f=result.get(field,{})
+-                for name in ['cut_capacity_bytes', 'debt_objects', 'maintenance_remaining_entries', 'entry_visits', 'version_visits', 'cut_visits', 'debt_visits', 'plan_work', 'maintenance_restarts', 'debt_reservation_work', 'reclaimed_versions', 'completed_sweeps', 'head_refreshes', 'maintenance_pending', 'maintenance_counters_available']:
++                for name in ['cut_capacity_bytes', 'debt_objects', 'maintenance_remaining_entries', 'entry_visits', 'version_visits', 'cut_visits', 'debt_visits', 'plan_work', 'maintenance_restarts', 'debt_reservation_work', 'reclaimed_versions', 'completed_sweeps', 'head_refreshes', 'maintenance_pending', 'maintenance_counters_available', 'census_visits', 'census_counter_available', 'census_word_queries', 'census_word_counter_available']:
+                     base[f'{label}_{name}']=f.get(name)
+         if result.get('report_schema',1)>=3:
+             base['mapped_shape_metadata_bytes']=result['mapped_shape_metadata_bytes']

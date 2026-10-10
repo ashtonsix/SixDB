@@ -1,0 +1,103 @@
+{
+  "status": "parked experiment, not selected; no timing or scheduled implementation",
+  "base_commit": "7ae1726c5e9edf2ba130aeee49bd3e234064595c",
+  "apply_order": [
+    "module.patch",
+    "checks.patch"
+  ],
+  "layout": "Recovered Git tree is source/; copy probe/ beside source/. The original added CMake targets use ../probe/.",
+  "original_private_release_sha256": "6a8598d98f2ae8c7bd7c26d2ba0d185d58acd77bc13223d80f46ab6c7e0ca852",
+  "original_source_manifest_sha256": "a9595f36de7ec0733dedc19ea3e5dbe66fe3f1c8b9eb0bf3f774fcf9b6e54dc8",
+  "source_manifest_files": 5963,
+  "source_postimages": {
+    "orbital/include/orbital/object.h": "ee3ba54f4a900d8f412aa6c438b4a710764950395bc40d44b24941701953dcf5",
+    "orbital/include/orbital/detail/object/history.h": "ac50ac19a3c736b3319003abddf05d318455ee42bc34beadb2ff6e14e02d07a5",
+    "orbital/src/object/history_impl.h": "75f8bce174951475738b5112dc80ddbc857ea87d5738030df7db0026fb5efe1e",
+    "orbital/src/object/store_impl.h": "6e4e75ba8d0b802c5a7d71ddc8e65255d367df943fadea8640d338c8875eed8f",
+    "CMakeLists.txt": "039b013ffe7eb1d5aa9e5ec0bbd11f629f6ff543e646568dd67f96743793c856",
+    "orbital/test/object_material.h": "c7611dc06e89039d584df937319f86edbb4df4fb8ab1ee07cef30d050dbef79f"
+  },
+  "retained_files_sha256": {
+    "checks.patch": "ee643ed735f25a1e16672815a632be70d254ed8c0261b70502cbd73b51ac2e49",
+    "module.patch": "bb29d7267cd61ee558c3064fdf9449a355ff960695c76a3847207196c246e6ed",
+    "probe/composed.cpp": "0c50c2166456230bb3e0962a3595c46a7db143c29af2d6cddbff3160561fb503",
+    "probe/history.cpp": "fdcf2cea061de16e9d51836775ca366591e6d0a1b8ae971cc72b0400a3734cf6",
+    "probe/read.cpp": "496298310c03189ad950fc008f45346c3da8c02c70324a3d5d6fecfa9a513bd6"
+  },
+  "qualification": {
+    "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)",
+    "platform": "aarch64",
+    "native": "5/5; six actual8192row cases,427664 oracle comparisons",
+    "sanitizers": "2/2; ASan+UBSan+UAR+LSan; stderr empty",
+    "sanitizer_environment": {
+      "ASAN_OPTIONS": "detect_stack_use_after_return=1:detect_leaks=1:halt_on_error=1",
+      "UBSAN_OPTIONS": "halt_on_error=1:print_stacktrace=1",
+      "LSAN_OPTIONS": "exitcode=23"
+    },
+    "sanitizer_limits": "Focused executed paths; no race-freedom or throughput/latency claim. ASan cannot fully model logical lifetime of custom mapped storage. External liblmdb is uninstrumented and not exercised by this control.",
+    "native_binary_hashes": [
+      {
+        "path": "native/orbital_primary_choice_history_check",
+        "sha256": "93198ce46e0de5d90f4c1f693e10e0e6a7b225e189e6881e30c567c19c197303"
+      },
+      {
+        "path": "native/orbital_primary_choice_composed_check",
+        "sha256": "dfb47214dbb6126f08159deff464c4337d05f1cdbb6c33f0a0fe235dc49fa6ac"
+      },
+      {
+        "path": "native/orbital/orbital_object_check",
+        "sha256": "7dba691f54bf4fcb24cf1a84ece623329c55a1e7f697b5d5e32a990d0ee7fabc"
+      },
+      {
+        "path": "native/orbital/orbital_representation_check",
+        "sha256": "61a3f2c29e3f983577447e9b54a9938451942e65c6e622943ca17ea35fca5db8"
+      },
+      {
+        "path": "native/workbench/spikes/orbital-mvcc/metadata/orbital_mvcc_composed_read_fusion_check",
+        "sha256": "c593da8a64d3bbb5dc763062d15b7822b083ad982118b6f312ebb20aab566ae2"
+      }
+    ]
+  },
+  "read_probe": {
+    "identical_assembly": true,
+    "sha256": "fd50143bf17a9cf8b3dde134612217df8c370a44ad98e8be32952a07f91e6d8d",
+    "assertions": {
+      "Store": 8,
+      "Scope": 32,
+      "Entry": 40
+    },
+    "limits": "Native AArch64 direct Scope and Borrowed probes; macro prefix map removes differing assertion filenames; no latency measurement"
+  },
+  "observations": {
+    "rows_per_object": 8192,
+    "objects": 1,
+    "oracle_comparisons": 427664,
+    "tuple_live_capacity_bytes": {
+      "keep": 376832,
+      "discard": 188416,
+      "promote": 188416
+    },
+    "series_live_capacity_bytes": {
+      "keep": 368640,
+      "discard": 184320,
+      "promote": 184320
+    },
+    "tuple_mapped_bytes_all_choices": 561152,
+    "tuple_idle_bytes": {
+      "keep": 184320,
+      "discard": 372736,
+      "promote": 372736
+    }
+  },
+  "recovery_limits": "The four module files, two fixture edits and three probes match the frozen release hashes. Other source is the named Git base according to the original capture. Full source tree, binaries, logs and toolchain are not copied; this package was not rebuilt or replayed during curation.",
+  "normal_targets": [
+    "orbital_primary_choice_history_check",
+    "orbital_primary_choice_composed_check"
+  ],
+  "curation_verification": {
+    "method": "Unified patch hunks applied to Git blobs in memory only; no working tree changes, builds or execution",
+    "postimages_matching": 6,
+    "changed_paths": 6,
+    "fresh_rebuild_or_test": false
+  }
+}

@@ -1,0 +1,22 @@
+--- a/workbench/spikes/orbital-mvcc/metadata/consumer/compact_law.h
++++ b/workbench/spikes/orbital-mvcc/metadata/consumer/compact_law.h
+@@ -157,8 +157,18 @@
+   // Trusted row<size(); law and caller-protected backing remain live.
+   [[gnu::always_inline]] Row row_unchecked(const ReadLaw& law, std::size_t row) const {
+     const auto* source = address(row);
++    // Both ReadLaw factories admit this exact canonical layout. One bounded
++    // Ikea transfer covers the value/tag tail, including the last row; it
++    // consumes byte 15 but ignores it and requires no readable padding.
++    static_assert(v::tuple_bytes == 23 && 15 + 8 == v::tuple_bytes);
++    static_assert(detail::offsets[2] == 16 && detail::offsets[3] == 19);
++    tp::detail::gpr_read tail_control{};
++    tail_control.slots = 8;
++    tail_control.transfer = {UINT64_MAX, 15, 0, 8};
++    const auto tail = tp::detail::read_gpr_transfer<1, 8>(tail_control,
++        [&](unsigned) { return source; }, tp::detail::all_rows<1>, v::tuple_bytes);
+     return {law.read_unchecked<0>(source), {law.read_unchecked<1>(source),
+-        std::uint32_t(law.read_unchecked<2>(source)), std::uint32_t(law.read_unchecked<3>(source))}};
++        std::uint32_t((tail >> 8) & orbital_bench::value_mask), std::uint32_t(tail >> 32)}};
+   }
+   [[nodiscard]] orbital::Result<Row> row(const ReadLaw& law, std::size_t row) const {
+     if (row >= records_) return std::unexpected(orbital::Error::invalid_argument);

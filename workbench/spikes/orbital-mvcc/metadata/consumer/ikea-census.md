@@ -8,6 +8,11 @@ field, lifetime and call-chain inventory; it contains no inferred object sizes,
 ABI classifications, instruction counts or timing claims. Actual layout and
 generated-call evidence belong to the accompanying probes.
 
+The early consumer [codegen receipts and recovery limits](evidence/early-codegen-20261009/README.md)
+preserve cut1/cut3 compiler facts and source identities. Their frozen candidate
+overlays and full compiler outputs remain local; the retained summaries are not
+a complete replay archive or evidence for current-source code generation.
+
 The consumer uses TuplePack and SeriesPack. Bec256, erased mutation operations,
 CPS carriers and aggregate-maintenance state are not invoked on these paths.
 Logical `Row`/`Record` and SIMD input/output packets are payload, not ownership

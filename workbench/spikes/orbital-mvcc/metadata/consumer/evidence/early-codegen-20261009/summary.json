@@ -1,0 +1,75 @@
+{
+  "status": "historical compiler observations, not timing or current-source qualification",
+  "curated": "2026-10-10",
+  "complete_archive": false,
+  "captures": {
+    "cut1": {
+      "retained_receipt": "cut1-receipt.json",
+      "sha256": "fd5862a01a23f11825e8ff33dd160758a65ee29351eded9ea4d52505a0fa8987",
+      "local_source": "build/orbital-mvcc/metadata-consumer/cut-1-codegen",
+      "baseline_commit": "7f73c818548c9c52b53818f2eb5af3c1d2451124",
+      "local_hashes_checked": {
+        "candidate": 23,
+        "outputs": 5
+      },
+      "commands_sha256": "ae4b80490d0e7a37a3ed0aa71a486ce96c2b4978bab1327bfb0ef5cf79b277ea",
+      "raw_outputs_retained": false,
+      "frozen_candidate_sources_retained": false
+    },
+    "cut3": {
+      "retained_receipt": "cut3-receipt.json",
+      "sha256": "46a6f25600c58da2c2db2082f6b6ce0a875380f6b6e63258a46c50f05116dd1f",
+      "local_source": "build/orbital-mvcc/metadata-consumer/cut-3-codegen",
+      "baseline_commit": "7f73c818548c9c52b53818f2eb5af3c1d2451124",
+      "local_hashes_checked": {
+        "candidate": 28,
+        "outputs": 40,
+        "baseline": 197
+      },
+      "commands_sha256": "ab3af30d0badd16a8ccc9a4dc9ad8c30cc02a126c7bee7baf4110fa74f4baee0",
+      "raw_outputs_retained": false,
+      "frozen_candidate_sources_retained": false
+    }
+  },
+  "compiler_and_recipe": {
+    "compiler": "Ubuntu Clang 21.1.8 (2078da43e25a), libstdc++15",
+    "common_flags": [
+      "-std=c++23",
+      "-O3",
+      "-g0",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-DCONSUMER_METADATA_FROZEN=1",
+      "-DSIXDB_TUNE_NEOVERSE_V3=0"
+    ],
+    "cut3_additional": [
+      "-UNDEBUG"
+    ],
+    "aarch64": [
+      "-march=armv8-a+simd",
+      "-mtune=neoverse-v2"
+    ],
+    "x86_64": [
+      "--target=x86_64-linux-gnu",
+      "--gcc-install-dir=/usr/lib/gcc-cross/x86_64-linux-gnu/15",
+      "--sysroot=/",
+      "-isystem",
+      "/usr/x86_64-linux-gnu/include",
+      "-march=x86-64-v3",
+      "-mtune=znver5"
+    ],
+    "limits": "Summarized flags only; exact original commands are identified by hash in each receipt and remain local. x86 sizeof used QEMU, never performance."
+  },
+  "survives": [
+    "Original ordinary-ABI signatures, sizes and object-section summaries in the retained receipts",
+    "Original source/probe/output identities, with all listed local input/output hashes rechecked",
+    "Existing authored frame and call-chain analyses in codegen-control.md and codegen-candidates.md"
+  ],
+  "not_recoverable_from_this_package": [
+    "Exact qualified-cut-1 and qualified-cut-3 candidate source overlays",
+    "Complete original LLVM/assembly, objects and sizeof executables",
+    "Exact command files, sysroot/toolchain bytes and reused libraries"
+  ],
+  "limits": "No shared full-source/output artifact was identified for these two local captures. Hashes identify unavailable bytes; they do not recover them. Current source must not be substituted for the frozen candidate. No compilation, execution or fresh codegen audit was performed during curation."
+}

@@ -1,0 +1,86 @@
+{
+  "status": "parked untimed refinement of unselected measured parent; no scheduled follow-up",
+  "base_commit": "d9fff3eaf54aed5202b642cb6069b4bfb9e373ac",
+  "apply_order": [
+    "masked-parent.patch",
+    "observation.patch",
+    "refinement.patch"
+  ],
+  "original_private_release_sha256": "29ef231ff0dac3b29f991eddbdb07a06e773a5fb03e949638fc80f722688c67b",
+  "parent_release_sha256": "5605472c8e972347d1c0fa9c1de7edb926bc47cbe1ee28ed53809535cd8df32c",
+  "patches": {
+    "masked-parent.patch": "f921e5de24334192820c4fa4ccadbe87a08a78142b6f5b625ca36c8cd88464e0",
+    "observation.patch": "3aee9f0ffa04f3117c97e9ac975ec3f37aadacb904f69599d856255fc19b2e9f",
+    "refinement.patch": "bb4d94fa690b5a72bc2d6626a8bd0399d0f3038c33d4085d3950acf10c27dc70"
+  },
+  "source_postimages": {
+    "orbital/CMakeLists.txt": "1bfdb7315a56b6509bfde65a8e8d3bebfcf8df88a0f84591499b686c8a382808",
+    "orbital/include/orbital/object.h": "7b229b4967dc7cc1bb3922cd37bec5a20de64fe140b8fbaa50d9d439e71e87eb",
+    "orbital/include/orbital/detail/object/directory.h": "713d1e38110f02a0815d057c0d5388911d468e51270599bf66323e38865de660",
+    "orbital/include/orbital/detail/object/history.h": "9c6cb8bd35a58aa7cfac111e3b2d1b3bb2430382fd79bd4ec1f68dbd65e5fd2a",
+    "orbital/src/object/store_impl.h": "1c88a893f41e44107b0510528f38403dd385daf334acc159baddb45e00bf010b",
+    "orbital/src/object/history_impl.h": "16054355ea2a09d6374785eca682978fd24853641e1516f669c6aae5b0a2e373",
+    "orbital/src/object/storage.cpp": "dcc02c70541f8b09cf2be32eff54efe6379bd2d3034af5068d15cfa23ba0a99a",
+    "orbital/test/object_changed_queue.cpp": "25bc029b558911a92001c3a4b72e3afd29879aeaf2ec34a12ae0dc5e0b199870",
+    "workbench/spikes/orbital-mvcc/metadata/composed/backend.h": "6e27f13733197062100e1b36facff0fae7f3297d8620420419411d8c588bc158",
+    "workbench/spikes/orbital-mvcc/metadata/composed/catalog.cpp": "70ad2ce248dcc8e5be67a33f92ad7ebc577988cb24ea26f1dbc13d294444aa1a",
+    "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/store.h": "0d06f2c5fc9aed5304314264d7fe333ccb8c6cdbbfecedbedf70252d01fae1c3",
+    "workbench/spikes/orbital-mvcc/performance/main.cpp": "69df89b88dd34b50704c4f0d73360abe0a195091f7ce3c1fd9f491b9681facf0",
+    "workbench/spikes/orbital-mvcc/performance/run.py": "a4c15f129975f51f1b42fb1c54539f46c9619ca3e48ef0d2ca02a2fd06c2af10",
+    "orbital/include/orbital/detail/object/versions.h": "45580c7b70c786f6030069c639f7424b69263535a0e77e2ddb4bb9246477f0cb"
+  },
+  "scope": "Serve one queued Object before the first census word; stop unstarted or empty-mask census when HistoryNodes live_ is zero. Never discard a cached mask. No new field, metadata allocation, queue, per-Object generation or history index.",
+  "qualification": {
+    "compiler": "Clang 21.1.8, Linux AArch64, O3/assertions enabled",
+    "native": "Existing bounded/reentrant/cut-builder/accepted/abort/refusal/oracle checks plus empty-history boundary and zero-node callback tombstone tests all pass.",
+    "new_checks": [
+      "No words for an unstarted census with zero older nodes",
+      "Queued work reclaims the only older node before any census word",
+      "Accepted prepared older node conservatively keeps census enabled without borrowing its queue reservation",
+      "Cached census bit completes zero-history tombstone after callback creates another tombstone with no older node"
+    ],
+    "sanitizer": false,
+    "timing": false,
+    "qualified_binary_sha256": "6c047b8d5226ed5051e55981298d8d9aab4b34ff45cb608b3cee01f38d4ea78b"
+  },
+  "counters": {
+    "original_reader_version_visits": 384,
+    "original_reader_close_work": 259,
+    "age1": {
+      "baseline_work": 1664,
+      "measured_masked_work": 1920,
+      "refined_work": 1856,
+      "measured_masked_words": 256,
+      "refined_words": 192
+    },
+    "age64_work": 1416,
+    "core_bytes": 696,
+    "entry_bytes": 40,
+    "directory_64_bytes": 3104
+  },
+  "counterexample": {
+    "deliberate_fault": "Removed !census_mask guard from the empty-history early-completion condition",
+    "selected_test": "last_empty_history_callback_tombstone",
+    "exit_code": -6,
+    "consequence": "Callback creates a new tombstone without an older node. The interrupted original tombstone has no live older node but still requires cached-bit completion; dropping that work leaves incorrect object/version counts.",
+    "selected_guard_passes": true
+  },
+  "metadata_delta_bytes": 0,
+  "codegen": {
+    "scope": "Generic Physical test ObjectStore::Core::drain, Clang21.1.8 AArch64 O3; static instruction size only",
+    "measured_masked_bytes": 3440,
+    "refined_bytes": 3480,
+    "delta_bytes": 40
+  },
+  "limits": "The complete-write caller drains before closing the reader. Its changed Object is already dequeued at closure, so queue-first does not remove its first word scan; only trailing empty words are removed. No timing or worker run. It does not eliminate the measured age1 regression by construction.",
+  "decision_limit": "Saves 64 of 256 excess age1 work units (25% of excess; 3.33% of masked total) for this counter profile, while adding 40 B to generic drain code. This does not establish latency recovery.",
+  "measured_parent_evidence": "../../../evidence/zen5-masked-maintenance-screen-20261010/artifact.json",
+  "recovery_limits": "Exact parent runtime/common observation/refinement patches and all 14 final changed source hashes are retained. The focused test addition is in the patches. Native qualification reused the frozen parent library; historical binaries/logs and toolchain are not bundled. No filesystem source replay, build or test was rerun during curation; patch reconstruction was checked in memory.",
+  "normal_target": "orbital_object_changed_queue_check",
+  "curation_verification": {
+    "method": "Unified patch hunks applied to Git blobs in memory only; no working tree changes, builds or execution",
+    "postimages_matching": 14,
+    "changed_paths": 14,
+    "fresh_rebuild_or_test": false
+  }
+}
