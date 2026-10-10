@@ -10,7 +10,7 @@ class HistoryNodes {
   std::pmr::vector<Page*> pages_;
   std::uint32_t free_{};
   std::size_t live_{};
-  std::uint32_t allocate(std::uint64_t cut);
+  std::uint32_t allocate();
 public:
   using Node = Version;
   using Handle = std::uint32_t;
@@ -18,7 +18,7 @@ public:
   ~HistoryNodes();
   Node& get(Handle h) const noexcept { return pages_[(h - 1) / 64]->nodes[(h - 1) % 64]; }
   std::uint64_t cut(Handle h) const noexcept { return get(h).cut; }
-  std::pmr::vector<Handle> batch(std::size_t count, std::uint64_t cut);
+  std::pmr::vector<Handle> batch(std::size_t count);
   void erase(Handle h) noexcept {
     auto& page = *pages_[(h - 1) / 64];
     assert(page.occupied & (std::uint64_t{1} << ((h - 1) % 64)));

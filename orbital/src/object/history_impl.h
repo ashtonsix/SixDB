@@ -12,7 +12,7 @@ void History<Physical>::reserve(std::span<const Change> changes) {
 }
 
 template<class Physical>
-void History<Physical>::prepare(std::span<const Change> changes, std::uint64_t, std::pmr::vector<Mutation>& output) {
+void History<Physical>::prepare(std::span<const Change> changes, std::pmr::vector<Mutation>& output) {
   std::size_t count = 0;
   for (const auto& change : changes) {
     const auto entry = entries.find(change.object); count += entry && head(entry);
@@ -20,7 +20,7 @@ void History<Physical>::prepare(std::span<const Change> changes, std::uint64_t, 
   std::pmr::vector<Node> allocated(&memory);
   std::size_t initialized = 0;
   try {
-    output.reserve(changes.size()); allocated = nodes.batch(count, 0);
+    output.reserve(changes.size()); allocated = nodes.batch(count);
     for (const auto& change : changes) {
       const auto [handle, inserted] = entries.ensure(change.object); (void)inserted;
       const auto& entry = entries.get(handle);

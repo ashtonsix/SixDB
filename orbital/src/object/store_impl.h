@@ -222,7 +222,7 @@ Result<void> ObjectStore<Physical>::prepare(const Scope& basis, std::span<const 
   assert(prepared.changes_.empty());
   try {
     c.reserve(changes);
-    c.Layout::prepare(changes, c.cut + 1, prepared.changes_);
+    c.Layout::prepare(changes, prepared.changes_);
   } catch (const std::bad_alloc&) {
     prepared.changes_.clear(); // Layout rolled back owners/slots; retry must not revisit them.
     return std::unexpected(Error::capacity);

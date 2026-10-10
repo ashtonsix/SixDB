@@ -5,13 +5,13 @@ worker interfaces and the embedded Object catalog. [Loom](../../../loom/README.m
 calls, Tasks and typed Rings. Journal, distributed authority/recovery, Port and
 the read cache remain future protocol work.
 
-**Orbital Stage 2 is being rebuilt with measured implementation changes.** Its first embedded Objects/Views
+**Orbital Stage 2's embedded implementation is in audit and consolidation.** Its first Objects/Views
 implementation was withdrawn into the [MVCC study](../../spikes/orbital-mvcc/README.md).
 Performance was qualified too late to guide its architecture. The selected
 catalog/history and physical Representation/Part/View ownership now live in
 Orbital. Complete-operation comparisons guide changes to version metadata,
 ownership, interpretation and call boundaries together. Further narrow LMDB
-tuning is set aside in favour of wider workload discovery: the first measured
+tuning was set aside for wider workload discovery: the completed measured
 surveys cover larger working sets, real representation conversion, append growth
 and interleaved reads. Interleaving helps when independent work overlaps, while
 the single-request Ring regresses on the measured large working set. A bounded
@@ -27,7 +27,8 @@ Engine and Ikea's composition of many blocks remain open for Ashton to design.
 The study's consumer is disposable scaffolding: it exercises real SeriesPack
 column Parts and TuplePack row Parts, including bidirectional 4-to-1 Part
 conversion, without defining Engine navigation, membership, indexes, summaries
-or container copy-on-write. Stage 3 adds multiple workers.
+or container copy-on-write. I/O and collaborating workers are Stage 3 build items;
+their constraints remain visible here without expanding the embedded closeout.
 
 ## Embedded implementation and comparisons
 
@@ -460,9 +461,9 @@ retains large point-read and insertion-tail gaps; same-CPU preparation did not
 repair the tails. It measures the earlier `595e07fa` cut, with snapshot/publication
 costs omitted. That headroom cannot price the Object path. The
 [versioned comparison](../../spikes/orbital-mvcc/performance/README.md)
-retains the rejected baseline's selection and publication with matched reader groups,
-identical encoded Tuple payloads and the same legal Ikea native body. Its local
-ARM results retain small scalar-read deficits; the fixed updates include unequal
+retains selected-module and rejected-baseline selection/publication with matched reader groups,
+identical encoded Tuple payloads and the same legal Ikea native body. The captured
+ARM and Zen5 comparisons retain both gains and deficits; the fixed updates include unequal
 adapter preparation and cannot isolate publication cost. It does not price
 insertion/split tails, durability or multiple workers. Shared orchestration stays
 compiled once; native specialization remains local and evidence-led.

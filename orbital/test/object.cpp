@@ -10,6 +10,12 @@ namespace {
 using namespace object_test;
 using orbital::Error;
 using orbital::PublicationState;
+// Keep the selected module's ordinary packets covered independently of the
+// historical candidate ABI probes and the disposable format driver.
+static_assert(sizeof(Selection) == 8 && sizeof(Store::Owner) == 8);
+static_assert(sizeof(Store::Borrowed) == 16 && sizeof(Store::Change) == 24);
+static_assert(sizeof(Store::Scope) == 32 && sizeof(Store::BoundSelection) == 32);
+static_assert(sizeof(Store::Prepared) == 48 && sizeof(Store::ConversionTarget) == 40);
 constexpr orbital::ObjectId a{3, 11}, b{5, 13}, c{7, 17};
 void check(bool condition, const char* expression,
     std::source_location where = std::source_location::current()) noexcept {

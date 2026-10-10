@@ -6,12 +6,13 @@ metadata ownership and interfaces develop together, while preserving actual
 lifetime and publication behavior. Engine and Ikea's future multi-block
 containers remain outside this investigation.
 
-The current performance work explores a wider range of composed workloads:
-sustained large working sets, append-style growth, conversion, history/churn and
-interleaved independent work through Loom. LMDB remains a useful comparator;
-broad parity remains unproved. Further narrow parity tuning is set aside.
-The aim is to find worthwhile
-strengths and weaknesses, including opportunities that generalize across cases.
+Stage 2 is in audit and consolidation. The embedded implementation and its
+disposable callers exercise coherent reads/writes, physical conversion and
+retained lifetimes. Completed comparisons cover larger working sets, append-style
+growth, conversion, history/churn and interleaved work through Loom. LMDB remains
+a useful comparator; broad parity remains unproved. Further performance ideas
+are leads rather than a queued campaign. I/O and collaborating workers remain
+Stage 3 build items.
 
 The first Stage 2 implementation was withdrawn from the modules on 9 October
 2026. Its performance comparison came after implementation and left material
@@ -36,7 +37,7 @@ the Git bundle requires retained ancestor `8412e5c`. It need not be restored to
 | Complete-operation comparison | [LMDB controls and runner](performance/README.md), [iteration feedback](performance/FEEDBACK.md), [retained baseline findings](performance/FINDINGS.md) |
 | Metadata alternatives | [Cross-module findings](metadata/README.md), packet census, ordinary ABI probes and candidates |
 
-## Questions driving the next candidates
+## Evidence and remaining leads
 
 The census distinguishes persistent records from arguments, returned values and
 stable caller frames. For each, charge real ownership and shared state as well
@@ -52,6 +53,10 @@ remain available as controls. Further metadata changes need a concrete ownership
 or performance benefit; charge slab/chunk headers, unused capacity, sparse
 publication, alternatives, retirement debt and dependent loads. Keep resolved
 Part access cheap without weakening coherent later discovery or hiding retention.
+The [preparation-pass lead](metadata/orbital/candidates/controls/prepare-pass/README.md)
+records repeated directory work and duplicate validation; it is not a selected
+algorithm change or a closeout blocker. The [performance study](performance/README.md#wider-operating-conditions)
+owns remaining workload questions and the limits of measured gains.
 
 Each candidate needs complete-operation feedback early enough to change its
 seams: the same encoded data, legal native body, read cut, lifetime, work and

@@ -12,7 +12,7 @@ std::uint32_t Registry::add(void* value) {
   slots_[id - 1].value = value;
   return id;
 }
-std::uint32_t HistoryNodes::allocate(std::uint64_t cut) {
+std::uint32_t HistoryNodes::allocate() {
   if (!free_) {
     if (pages_.size() >= (std::numeric_limits<std::uint32_t>::max() - 1) / 64) throw std::bad_alloc();
     auto* page = make<Page>(memory_);
@@ -22,16 +22,16 @@ std::uint32_t HistoryNodes::allocate(std::uint64_t cut) {
     for (std::uint32_t i = 0; i < 64; ++i) { page->nodes[i].older = free_; free_ = base + i + 1; }
   }
   auto result = free_;
-  auto& n = get(result); free_ = n.older; n = {}; n.cut = cut;
+  auto& n = get(result); free_ = n.older; n = {};
   pages_[(result - 1) / 64]->occupied |= std::uint64_t{1} << ((result - 1) % 64);
   ++live_;
   return result;
 }
 HistoryNodes::~HistoryNodes() { assert(!live_); for (auto* page : pages_) destroy(memory_, page); }
-auto HistoryNodes::batch(std::size_t count, std::uint64_t cut) -> std::pmr::vector<Handle> {
+auto HistoryNodes::batch(std::size_t count) -> std::pmr::vector<Handle> {
   std::pmr::vector<Handle> result(&memory_);
   result.reserve(count);
-  try { for (std::size_t i = 0; i < count; ++i) result.push_back(allocate(cut)); }
+  try { for (std::size_t i = 0; i < count; ++i) result.push_back(allocate()); }
   catch (...) { for (auto h : result) erase(h); throw; }
   return result;
 }

@@ -1,5 +1,15 @@
 # One preparation pass
 
+This remains a performance lead at the selected embedded implementation's
+2026-10-10 consolidation. Its debt and old-tip counts still make separate
+directory passes before `ensure`; merging them could remove one lookup per
+Change without new storage. The selected Store also validates duplicate Object
+IDs with `N(N-1)/2` comparisons. Reusing entry pins could avoid that scan, but
+would move entry allocation before duplicate refusal and require different
+rollback. Neither algorithm is changed for closeout. Unused cut arguments in
+the selected private preparation/node-allocation seam have been removed; the
+historical patch below retains its original source and qualification.
+
 [`prepare-pass.patch`](prepare-pass.patch) is an unapplied control against
 `0acd622de2e0219f2029843ec6b553ffc640e435`. Each History now reserves its own
 debt capacity inside `prepare`; Store no longer calls a separate `reserve`.

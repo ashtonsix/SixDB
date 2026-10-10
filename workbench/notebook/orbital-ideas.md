@@ -1,9 +1,12 @@
 # Orbital research questions
 
-For implemented Stage 1 interfaces, start with the [Orbital runtime](../../orbital/README.md).
+For implemented Allocation and embedded Objects/Representations/Views, start with
+the [Orbital runtime](../../orbital/README.md).
 The [cross-module design](../design/orbital/DESIGN.md) keeps future protocol direction
-separate from the withdrawn Stage 2 baseline in the
-[MVCC investigation](../spikes/orbital-mvcc/README.md). The
+separate from the selected embedded implementation and withdrawn baseline in the
+[MVCC investigation](../spikes/orbital-mvcc/README.md). Stage 2 is in audit and
+consolidation; its [remaining workload leads](../spikes/orbital-mvcc/performance/README.md#wider-operating-conditions)
+are not a queued campaign. I/O and collaborating workers are Stage 3 build items. The
 [historical reference](orbital/reference/README.md) organizes earlier research.
 
 This is a consultable list of questions, useful examples and evidence from older

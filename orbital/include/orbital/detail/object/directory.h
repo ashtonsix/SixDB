@@ -91,7 +91,6 @@ public:
   }
 
   std::size_t size() const noexcept { return size_; }
-  std::size_t tombstones() const noexcept { return tombstones_; }
   std::size_t bucket_bytes() const noexcept { return buckets_.capacity() * sizeof(Handle); }
   std::size_t entry_bytes() const noexcept { return pages_.size() * sizeof(Page); }
   std::size_t page_pointer_bytes() const noexcept { return pages_.capacity() * sizeof(Page*); }
@@ -155,7 +154,6 @@ public:
   std::pair<Handle, bool> ensure(orbital::ObjectId id) { return entries_.ensure(id); }
   Entry& get(Handle entry) noexcept { return entries_.get(entry); }
   const Entry& get(Handle entry) const noexcept { return entries_.get(entry); }
-  orbital::ObjectId object(Handle entry) const noexcept { return entries_.get(entry).object; }
   bool pinned(Handle entry) const noexcept { return entries_.pinned(entry); }
   bool indebted(Handle entry) const noexcept { return entries_.indebted(entry); }
   bool pin(Handle entry) noexcept { return entries_.pin(entry); }

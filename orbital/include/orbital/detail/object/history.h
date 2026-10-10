@@ -91,7 +91,7 @@ template<class Physical> struct History {
     if (nodes.get(node).primary) directory.erase(nodes.get(node).primary);
     nodes.erase(node);
   }
-  void prepare(std::span<const Change> changes, std::uint64_t, std::pmr::vector<Mutation>& output);
+  void prepare(std::span<const Change> changes, std::pmr::vector<Mutation>& output);
   bool install(Mutation& mutation, std::uint64_t cut) noexcept;
   void abort(Mutation& mutation) noexcept;
   void drop(Ref version) noexcept;
