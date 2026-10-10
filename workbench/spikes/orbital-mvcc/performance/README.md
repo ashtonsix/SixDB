@@ -38,6 +38,22 @@ stores. This panel measures the selected Inline composition without an LMDB
 arm. The worker/source receipts, process memory and actual body capacities give
 the context; larger encoded size alone does not identify the source of each load.
 
+`broader_first.sh --pilot` compares direct, manually interleaved and actual Loom
+Ring dependent reads at the two larger sizes. Without `--pilot`, it repeats
+matched width/hint controls and adds growing Tuple appends with held or rotating
+readers. `loom_object_ring_performance` and `orbital_append_performance` are the
+standalone CMake targets. Append accounting runs separately from timing; its
+fresh-body control copies the old prefix and constructs only the new tail.
+
+Ring throughput divides complete execution time by completed requests. Each
+request includes its Scope, selection, admission, refill, output and cleanup;
+reusable Driver/Frame construction and Ring storage are reported separately.
+Latency samples cover offered groups, not individual request response times.
+The older fused reader is a contextual anchor with a different input/harness
+layout; direct/manual/Ring comparisons share the new harness. This ready-body
+caller does not poll Messages between Ring returns, so its throughput says
+nothing yet about fairness under competing work or worker/I/O headroom.
+
 The next scenario choices follow the first results and the owning module seams:
 
 | Scenario | Useful variations and observations |
