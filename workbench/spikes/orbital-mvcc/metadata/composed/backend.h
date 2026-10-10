@@ -1,10 +1,11 @@
 #pragma once
-#include "material.h"
+#include "read_fusion.h"
 #include "../../performance/request_cache.h"
 #include <algorithm>
 
 namespace orbital_mvcc::composed {
 template<class Store> class Backend {
+  friend struct InlineReadFusion;
   Material material_;
   Store store_;
   using Owner = typename Store::Owner;
@@ -150,6 +151,19 @@ public:
     std::uint64_t bindings{};
     explicit Bodies(const Backend& owner, bool alternative = false)
         : owner_(owner), scope_(owner.catalog()), alternative_(alternative) {}
+    // One-shot scalar trial seam. Existing body() still binds immediately and
+    // keeps its original escaping-selection/alternative-capture semantics.
+    [[gnu::always_inline]] void consume_into(std::size_t object, const orbital_bench::Operation& op,
+        orbital_bench::Outcome& output)
+        requires(Capacity == 1 && std::is_same_v<Store, compact_history::InlineShapeStore16>) {
+      if (alternative_) { output = body(object).consume(op); return; }
+      if (object >= owner_.corpus().images.size())
+        p::need(Result<void>{std::unexpected(Error::invalid_argument)});
+      const auto status = InlineReadFusion::consume(owner_, scope_,
+          owner_.corpus().images[object].address.object, op, output);
+      if (!status) p::need(status);
+      ++bindings;
+    }
     Body body(std::size_t object) {
       auto selected = cache_.get(object, [&] { return p::need(owner_.select(scope_, object, alternative_)); }, bindings);
       return {&owner_.material_, selected};

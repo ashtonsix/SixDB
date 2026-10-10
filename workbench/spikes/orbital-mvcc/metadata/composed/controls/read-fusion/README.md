@@ -1,11 +1,28 @@
-# Fused Inline read control
+# Fused Inline reads
+
+Coherent scalar fusion is selected in the live composed spike. The
+[288-trial feedback](../../../../performance/FEEDBACK.md#coherent-read-fusion)
+compares it with the narrow point writer fixed in both cuts, using the same
+canonical Ikea consumer for mapped LMDB. Tiny/larger Inline scalar point reads
+move 26.38 → 21.46 ns and 98.26 → 88.14 ns; larger dependent reads still trail
+mapped LMDB slightly. Batch Inline is not fused. Current-borrow remains a
+separate, untimed lifetime mode. These quick, time-blocked comparisons are
+directional, not a broad below-LMDB result.
+
+Live integration preserves the generic Physical seam: friend access now resides
+in `candidates/store.h`, and the focused check uses caller-owned
+`Prepared(store)` with status returned from `prepare(scope, changes, output)`.
+The authored patch below remains the original experimental treatment, not an
+apply instruction for the current tree.
+
+## Original isolated control
 
 `read-fusion.patch` is an authored treatment against
 `0acd622de2e0219f2029843ec6b553ffc640e435`, qualified in an isolated source tree.
 SHA-256: `bfecbfc7b2aee1c6f408ad482ab00a04f04a6710bb8e404e3fe32172022a1bca`.
 It passes `git apply --check` against both that qualified base and integrated
 baseline `3fabe9e34f4f81886e62fee1a025e950b473e3e9`; the latter composition has not
-been executed here. The live baseline is unchanged.
+been executed by that qualification run. Its live baseline was unchanged.
 
 The executed patch had SHA-256
 `4639e4efbc202854cb857821532a93483317da4c7cdd1d063727f88e95d96770`.
@@ -14,8 +31,9 @@ library and registration in `metadata_checks`, which supplies assertions,
 the metadata test label, timeout and validation-target dependency. All nine
 behavioral postimages are byte-identical on the qualified base; the frozen
 executed source, binaries and codegen are unchanged. `qualification.json`
-records the distinction. The revised CMake wiring has not been rebuilt. No
-benchmark or sanitizer campaign ran.
+records the distinction. That original qualification did not rebuild the revised
+CMake wiring or run a benchmark or sanitizer campaign. Subsequent measured
+feedback and live integration are separate evidence.
 
 One ordinary TU combines opaque Object lookup, actual Inline history selection
 and complete native Tuple consumption. Its explicitly friended dependencies are
@@ -73,28 +91,28 @@ operation calls. Its Scope/current entry bodies are 922/930 bytes, each with a
 entry is 480 bytes with a 40-byte frame and no native-operation call. Whole trial
 text grows and still includes cold alternative/fallback paths. Frames include
 saved registers but exclude return addresses and are not whole-path stack peaks.
-The original measured Zen5 executable is the baseline; control objects are
-cross-compiled codegen, not measured performance.
+In this original qualification the measured Zen5 executable was the baseline;
+control objects were cross-compiled codegen, not measured performance. Use the
+linked later feedback for measured caller code and timings.
 
 Private source/build, commands, recovered baseline disassembly, `codegen.json`,
 `checks.log` and `qualification.json` are under
 `build/orbital-mvcc/composed/read-fusion/`. No additional retained metadata or
 catalog-sized cache is introduced.
 
-Apply in an isolated source tree, configure with `-DSIXDB_SPIKES=orbital-mvcc`,
-and use these focused targets (prefix Linux commands with `orb -m ubuntu` from
+Configure the current tree with `-DSIXDB_SPIKES=orbital-mvcc` and use these
+focused targets (prefix Linux commands with `orb -m ubuntu` from
 macOS). The check also belongs to the normal `orbital_mvcc_metadata_validate`
 target:
 
 ```sh
-git apply workbench/spikes/orbital-mvcc/metadata/composed/controls/read-fusion/read-fusion.patch
 cmake --build BUILD --target orbital_mvcc_composed_read_fusion_check \
   orbital_mvcc_composed_check orbital_mvcc_consumer_shape_read_check -j2
 ctest --test-dir BUILD \
   -R '^orbital_mvcc_(composed(_read_fusion)?|consumer_shape_read)_check$' --output-on-failure
 ```
 
-For the next timed treatment, the patch hooks the existing composed Inline
-scalar read trial and matched mapped-LMDB bridge. Keep the same command, host,
-CPU and cases as its untreated pair. The current-borrow entry needs a separately
-identified caller; do not report it as a retained/coherent Scope measurement.
+The scalar Inline trial and matched mapped-LMDB bridge now use this treatment.
+Further comparisons must keep the same command, host, CPU and cases as their
+untreated pair. The current-borrow entry needs a separately identified caller;
+do not report it as a retained/coherent Scope measurement.

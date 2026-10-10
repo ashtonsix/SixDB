@@ -8,9 +8,15 @@ Allocation owners, with no shared-pointer backing wrapper.
 
 `backend.h` owns the catalog composition. `material.cpp` owns construction,
 private clones, conversion and the explicit native-read seam. Immutable proven
-Shapes are shared across Objects. Tuple point/dependent reads call Ikea's
-qualified `shape_read::read_proven` bridge using the authoritative private Shape
-layout. Column reads and scans use existing generic consumer binding.
+Shapes are shared across Objects. The scalar Inline trial uses
+`InlineReadFusion::consume`: one ordinary TU keeps the directory cell through
+coherent Scope selection and consumes the selected Tuple through the canonical
+Ikea kernel. Its friend access reaches the actual catalog, physical Shape and
+Material; it owns no copied directory, layout or cache. Mapped LMDB uses the
+same canonical kernel. Batch and escaped Body reads retain the qualified
+`shape_read::read_proven` bridge. Column reads and scans use existing generic
+consumer binding. [Measured fusion feedback](../../performance/FEEDBACK.md#coherent-read-fusion)
+records the benefits, code-size cost and remaining negative cases.
 Writes use the shared [value/tag point law](../consumer/point-write.md). It owns
 its writer plans, admits every fresh private clone and resolves keys once in
 that clone. Key/next bytes remain as cloned; only value/tag are written. All
@@ -31,10 +37,16 @@ representation-choice policy is inferred from this test convention.
 ## Driver integration
 
 Link the compiled `orbital_mvcc_composed` CMake target and include
-`metadata/composed/backend.h`. It compiles `material.cpp` once and reuses
+`metadata/composed/backend.h`. It compiles `material.cpp` and `read_fusion.cpp`
+once and reuses
 `orbital_versioned_performance_runtime`, `orbital_mvcc_point_write`,
 `orbital_mvcc_shape_read` and `orbital_mvcc_directory`. Each source remains an
 ordinary independent translation unit.
+
+`Bodies<1>::consume_into` selects the fused primary read; alternative selection
+uses the existing captured Body path. The separately qualified
+`InlineReadFusion::consume_current` borrows only for an uninterrupted call and
+is not used by the coherent Scope benchmark.
 
 ```cpp
 using Backend = orbital_mvcc::composed::Inline; // or Directory

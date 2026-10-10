@@ -47,6 +47,7 @@ struct Accounting {
 // Tuple Shape are also explicit borrowed write controls, counted separately.
 // Actual captured Shapes own their read law. No per-body shared_ptr is used.
 class Material {
+  friend struct InlineReadFusion;
   const p::Corpus& corpus_;
   v::Shape columns_;
   struct ReleaseShape { void operator()(cs::Shape* value) const { cs::release(value); } };

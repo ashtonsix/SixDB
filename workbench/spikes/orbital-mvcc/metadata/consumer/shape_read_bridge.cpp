@@ -20,8 +20,15 @@ orbital::Result<void> read_mapped_proven(TupleProof proof, std::uint64_t count,
     orbital::Bytes body, Key key, unsigned steps, Outcome& output) noexcept {
   // Mapping has no capture placement proof: keep its actual range admission.
   if (!detail::mapped_extent(count, body)) return std::unexpected(orbital::Error::invalid_argument);
-  detail::consume(*cs::law(const_cast<cs::Shape*>(proof.shape())), body.data(),
-                  count, key, steps, output);
+  // The same exact TupleProof used by the fused catalog caller admits every
+  // canonical transfer. Retain fresh mapped range admission above and the
+  // caller's protecting transaction; specialize the identical Ikea body.
+  (void)proof;
+  constexpr auto law = compact_law::ReadLaw::canonical();
+  const compact_law::Control control{law, static_cast<std::size_t>(count)};
+  const auto cursor = detail::CursorAccess::admitted(body.data());
+  [[clang::always_inline]] compact_law::read_chain_into(law, cursor.with(control),
+      key, steps, output);
   return {};
 }
 } // namespace orbital_mvcc::metadata_consumer::shape_read

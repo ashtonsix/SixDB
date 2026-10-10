@@ -56,7 +56,11 @@ Interval opaque_read_trial(Acquire&& acquire,std::span<const orbital_bench::Oper
     if constexpr (Latency) batch_start=clock_ns();
     {
       auto selected=acquire();
-      for (std::size_t i=first;i<first+count;++i) output[i]=read_operation(selected.body(objects[i]),input[i]);
+      for (std::size_t i=first;i<first+count;++i) {
+        if constexpr (requires { selected.consume_into(objects[i],input[i],output[i]); })
+          selected.consume_into(objects[i],input[i],output[i]);
+        else output[i]=read_operation(selected.body(objects[i]),input[i]);
+      }
       bindings+=selected.bindings;
     }
     if constexpr (Latency) interval.batch_ns.push_back(clock_ns()-batch_start);

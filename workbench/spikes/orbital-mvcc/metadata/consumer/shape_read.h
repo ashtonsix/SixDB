@@ -35,6 +35,8 @@ public:
 // transaction associates these bytes with the admitted format/count and protects
 // them; neither path can infer encoding or Object/version identity from payload.
 // Both admit the new mapping's exact extent/null/overflow before any output.
+// The proven entry specializes the canonical kernel established by TupleProof;
+// the checked entry continues to validate the stored law on each call.
 [[nodiscard]] orbital::Result<void> read_mapped_checked(TupleProof, std::uint64_t count,
     orbital::Bytes, Key, unsigned steps, Outcome&) noexcept;
 [[nodiscard]] orbital::Result<void> read_mapped_proven(TupleProof, std::uint64_t count,
