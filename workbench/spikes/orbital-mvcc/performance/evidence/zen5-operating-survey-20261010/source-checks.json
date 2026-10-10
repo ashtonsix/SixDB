@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "trials": 36,
+  "matched_case_modes": 18,
+  "source_digest": "b5b6202a71d08cad44b1167e1bf862551f5308155956fdfa6e0b76799d3eb6ef",
+  "verified_actual_source_postimages": 2909,
+  "actual_source_archive_sha256": "b19a08da0b2c43fa0c24c57bca7b07ab9dcc31f23128f40611cc2177b079ef4d",
+  "all_repetition_logical_body_component_parity": true,
+  "conversion_final_versions_equal_Objects": true,
+  "byte_identical_reports": [
+    "measurements.csv",
+    "summary.csv",
+    "parity.json"
+  ],
+  "qualification": "Local3CTests+14independentCLI plus exactworker3checks+36trialoracles. NoSAN/PMUclaim.",
+  "limits": "SinglepinnedCPU, twoobservations, warmedlongtraces, perObjectrowsfixed whilebody/Objectbreadthincreases; conversionclockalternatesdirections withoriginalprimariesheld, per-directionlatencysamples derived separately. Noappend/Ring/mixedtransactions yet.",
+  "source_release_commit": "58456a0",
+  "worker_job": "20261010T014836Z-f9ba15fb",
+  "worker_instance": "i-0e4c1bf53b49b3c74",
+  "worker_terminated": true,
+  "conversion_final_contexts_zero": true,
+  "retirement_records_available": false,
+  "retirement_field_correction": "Historical zero came from a default legacy Statistics member, not a measured retirement census. No retirement-queue closure claim."
+}

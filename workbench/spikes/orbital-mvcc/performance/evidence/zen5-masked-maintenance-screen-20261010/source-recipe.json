@@ -26,7 +26,6 @@
   ],
   "logical_and_body_cost_parity": true,
   "all_Inline_final_versions_equal_Objects": true,
-  "all_Inline_final_contexts_retirements_debt_pending_zero": true,
   "limits": "Short AB/BA observations. Logical maintenance work and physical memory separate from timing; final settlement charged separately and combined; candidate-only page-census algorithm, common observation/caller/renew. Series contextual, no mapped Series match.",
   "current_optional_census_report_regeneration": [
     "baseline-0/measurements.csv",
@@ -95,5 +94,7 @@
     "prepared_source_commit": "5279a8101321edb2299b1fb7332b589dba1de637"
   },
   "full_audit_sha256": "f0d8e47efb2e39aa1024af0e563a09cdb56d96cdf0b109d6aef3bcb16944d12b",
-  "comparative_tables": "Complete clock/cost/counter rows in each arm measurements.csv and summary.csv; raw trials and ordered samples in artifact.json archive."
+  "comparative_tables": "Complete clock/cost/counter rows in each arm measurements.csv and summary.csv; raw trials and ordered samples in artifact.json archive.",
+  "all_Inline_final_contexts_debt_pending_zero": true,
+  "retirement_field_correction": "Legacy retirement_records was default-zero, not an observed census. Its value provides no extra closure proof; version/context and supported maintenance fields remain measured. Historical raw tables and full audit snapshots retain their original bytes."
 }

@@ -32,7 +32,7 @@ roundtrip performance, not an isolated one-direction bandwidth result. One
 independent map suffices for read validation; mutable and retained-cut expected
 states remain separate for writes. Per-case `bytes` controls the physical budget.
 
-Run `survey_first.sh` on a Zen5 worker with at least 4 GiB RAM. Two repetitions
+The [first completed survey](FEEDBACK.md#first-wider-operating-survey) retains all nine cases and the source/qualification limits. Run `survey_first.sh` on a Zen5 worker with at least 4 GiB RAM. Two repetitions
 produce 36 independently checked trials, with separate throughput and latency
 stores. This panel measures the selected Inline composition without an LMDB
 arm. The worker/source receipts, process memory and actual body capacities give

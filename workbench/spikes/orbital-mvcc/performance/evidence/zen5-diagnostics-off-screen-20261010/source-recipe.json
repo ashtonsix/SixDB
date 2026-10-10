@@ -103,5 +103,6 @@
     "prepared_source_commit": "f04218dd200fb250690cad310049f94f5aa4c6ee"
   },
   "full_audit_sha256": "1710c59869debd48f7f037ef6ffaa7f48ae1343238f4896182e4dc38373b9765",
-  "comparative_tables": "Complete clock/cost/counter rows in each arm measurements.csv and summary.csv; raw trials and ordered samples in artifact.json archive."
+  "comparative_tables": "Complete clock/cost/counter rows in each arm measurements.csv and summary.csv; raw trials and ordered samples in artifact.json archive.",
+  "retirement_field_correction": "Legacy retirement_records was default-zero, not an observed census. Its value provides no extra closure proof; version/context and supported maintenance fields remain measured. Historical raw tables and full audit snapshots retain their original bytes."
 }

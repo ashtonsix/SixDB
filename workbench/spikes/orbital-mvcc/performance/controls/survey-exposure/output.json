@@ -1,0 +1,104 @@
+{
+  "method": "Pure integer reproduction of starting ranks and shuffled per-Object cycles; interval union on each cycle, no database execution or clocks.",
+  "parameters": {
+    "corpus_seed": 8132,
+    "trace_seed": 8133,
+    "object_seed_stride": 109,
+    "requests": 524291,
+    "rows_per_object": 32768,
+    "chain_steps_or_scan_limit": 16,
+    "row_bytes": 23,
+    "modeled_line_bytes": 64,
+    "modeled_body_base_modulo_line": 0,
+    "object_assignment": "request_index % objects"
+  },
+  "interpretation": "Line exposure counts complete 23-byte spans of distinct matched rows in one pass. It does not extract actual compiled load spans or observe hardware cache lines serviced. It excludes binary-search probe spans, metadata, input/output streams, speculative loads and prefetch. Repeating warm-trace reuses this same set.",
+  "limitations": "Unique span exposure does not establish reuse distance, cache residency, cache misses, DRAM service, bandwidth or latency. The aligned-base model corresponds to the page-aligned large-Window construction path but records no worker addresses.",
+  "results": [
+    {
+      "workload": "dependent-16",
+      "objects": 1,
+      "rows_per_object": 32768,
+      "requests": 524291,
+      "matched_rows_including_revisits": 8388656,
+      "distinct_matched_rows": 32768,
+      "distinct_row_fraction": 1.0,
+      "per_object_distinct_rows_min_max": [
+        32768,
+        32768
+      ],
+      "modeled_matched_row_span_64B_lines": 11776,
+      "modeled_body_64B_lines": 11776,
+      "modeled_matched_row_span_line_fraction": 1.0,
+      "body_bytes": 753664
+    },
+    {
+      "workload": "dependent-16",
+      "objects": 64,
+      "rows_per_object": 32768,
+      "requests": 524291,
+      "matched_rows_including_revisits": 8388656,
+      "distinct_matched_rows": 2058377,
+      "distinct_row_fraction": 0.9815106391906738,
+      "per_object_distinct_rows_min_max": [
+        31981,
+        32303
+      ],
+      "modeled_matched_row_span_64B_lines": 753664,
+      "modeled_body_64B_lines": 753664,
+      "modeled_matched_row_span_line_fraction": 1.0,
+      "body_bytes": 48234496
+    },
+    {
+      "workload": "dependent-16",
+      "objects": 256,
+      "rows_per_object": 32768,
+      "requests": 524291,
+      "matched_rows_including_revisits": 8388656,
+      "distinct_matched_rows": 5304992,
+      "distinct_row_fraction": 0.6324043273925781,
+      "per_object_distinct_rows_min_max": [
+        20270,
+        21140
+      ],
+      "modeled_matched_row_span_64B_lines": 2935069,
+      "modeled_body_64B_lines": 3014656,
+      "modeled_matched_row_span_line_fraction": 0.9735999729322351,
+      "body_bytes": 192937984
+    },
+    {
+      "workload": "scan-16",
+      "objects": 1,
+      "rows_per_object": 32768,
+      "requests": 524291,
+      "matched_rows_including_revisits": 8386574,
+      "distinct_matched_rows": 32768,
+      "distinct_row_fraction": 1.0,
+      "per_object_distinct_rows_min_max": [
+        32768,
+        32768
+      ],
+      "modeled_matched_row_span_64B_lines": 11776,
+      "modeled_body_64B_lines": 11776,
+      "modeled_matched_row_span_line_fraction": 1.0,
+      "body_bytes": 753664
+    },
+    {
+      "workload": "scan-16",
+      "objects": 256,
+      "rows_per_object": 32768,
+      "requests": 524291,
+      "matched_rows_including_revisits": 8386574,
+      "distinct_matched_rows": 5301663,
+      "distinct_row_fraction": 0.6320074796676636,
+      "per_object_distinct_rows_min_max": [
+        20003,
+        21315
+      ],
+      "modeled_matched_row_span_64B_lines": 2079395,
+      "modeled_body_64B_lines": 3014656,
+      "modeled_matched_row_span_line_fraction": 0.6897619496221128,
+      "body_bytes": 192937984
+    }
+  ]
+}

@@ -755,7 +755,7 @@ win: scalar writes include regressions, tiny batched writes still trail mapped,
 and the unchanged mapped scalar-dependent arm shifts alongside Inline. This
 short blocked two-repetition pair does not establish a small treatment benefit.
 All logical/copy/body-capacity/version counters match; every raw Orbital write
-ends with one version per Object and zero contexts/retirement records. This
+ends with one version per Object and zero contexts. This
 driver predates detailed maintenance visits, debt and pending fields; unavailable
 fields are not zero. That instrumentation remains with the separate maintenance
 and breadth controls. Native target qualification has three consequence checks
@@ -795,8 +795,7 @@ Series4 batch is 133.81→128.45 ns. The short blocked pair has both favorable
 and unfavorable changes, alongside movement in unchanged mapped controls.
 It supports preserving the read ABI and component costs at this compilation
 boundary, without proving that extraction is cost-free or universally faster.
-Every raw Orbital write finishes with one version per Object and zero contexts
-and retirement records. Six table/parity reports and both ABI reports regenerate
+Every raw Orbital write finishes with one version per Object and zero contexts. Six table/parity reports and both ABI reports regenerate
 byte-identically; the source, diagnostics and binaries stay in the existing
 worker archive. This predates the later physical extraction and trim changes.
 
@@ -871,7 +870,7 @@ The actual measured ELF changes a 79-byte wrapper plus 504-byte outlined kernel 
 
 ## Masked maintenance: retained-reader gain, fresh-reader regression
 
-The [independent AB/BA comparison](evidence/zen5-masked-maintenance-screen-20261010/source-recipe.json), job `20261010T011823Z-4113fbaa`, uses `d9fff3e`, the common Loom caller and reset/renew reader, and identical observation code in both arms. Only masked page census/changed-entry maintenance differs. All 160 trials and 3550 actual native/CMake/driver postimages pass. Logical outcomes and body work match; every Inline write finishes with one version per Object and zero contexts, retirement records, debt or pending maintenance.
+The [independent AB/BA comparison](evidence/zen5-masked-maintenance-screen-20261010/source-recipe.json), job `20261010T011823Z-4113fbaa`, uses `d9fff3e`, the common Loom caller and reset/renew reader, and identical observation code in both arms. Only masked page census/changed-entry maintenance differs. All 160 trials and 3550 actual native/CMake/driver postimages pass. Logical outcomes and body work match; every Inline write finishes with one version per Object and zero contexts, debt or pending maintenance.
 
 Two complete-throughput observations, Inline ns/request, baseline→candidate:
 
@@ -911,7 +910,7 @@ Five native checks and three CLI cases qualify the source, without a sanitizer c
 
 ## Existing-use capture transfer
 
-The [final single-pass capture pair](evidence/zen5-capture-transfer-screen-20261010/source-recipe.json), job `20261010T012600Z-e2e91bd2`, compares exact `9ec1467` plus common mapped reset/renew with only `c0cb95e5` existing-use transfer. All eight candidate postimages match the native-qualified tree `e50ec5af`; baseline contract comments account for the difference from the earlier owner's patch receipt. All 88 trials and 3560 actual source postimages pass. Logical, body, caller and every available initial/held/released component counter match exactly. Final Inline histories have one version per Object and zero contexts/retirements.
+The [final single-pass capture pair](evidence/zen5-capture-transfer-screen-20261010/source-recipe.json), job `20261010T012600Z-e2e91bd2`, compares exact `9ec1467` plus common mapped reset/renew with only `c0cb95e5` existing-use transfer. All eight candidate postimages match the native-qualified tree `e50ec5af`; baseline contract comments account for the difference from the earlier owner's patch receipt. All 88 trials and 3560 actual source postimages pass. Logical, body, caller and every available initial/held/released component counter match exactly. Final Inline histories have one version per Object and zero contexts.
 
 Two complete-throughput observations, Inline ns/request, baseline→candidate:
 
@@ -927,3 +926,25 @@ Directory tiny scalar improves 483.02/487.13→444.38/451.16 ns and batch64 276.
 Capture validates sources/geometry/aliases once after resource and Control callbacks, establishes every source before transferring any use, and consumes nonthrowingly with scratch still alive. It avoids the immediate retain/drop pair. On invalid input, allocation or Control retention may precede refusal; capacity may win, and a callback may repair input before final validation. No source use is consumed on refusal, but callback effects are not undone. Saturation refusal remains.
 
 Seven native suites qualify the exact integrated source. The separate focused ASan/UBSan receipt instruments all nine runtime TUs plus the maintained physical ownership test, including leak and always-on use-after-return checks; it is not a full composed sanitizer matrix. All twelve table/parity and two ABI reports regenerate byte-identically. Sources, actual ELF/disassembly, ordered samples and full qualification logs stay in the existing worker archive.
+
+## First wider operating survey
+
+Reporting correction: composed and compact candidate footprints inherited a default-zero legacy `retirement_records` field without observing a retirement census. Those historical zeros provide no extra closure proof; the findings use actual versions and contexts. Archived measurements remain unchanged. Subsequent reports mark the field unavailable and expose actual alternative counts.
+
+[Complete discovery evidence](evidence/zen5-operating-survey-20261010/survey/measurements.csv), job `20261010T014836Z-f9ba15fb`, measures the selected Inline composition with capture digest `b5b6202a` (authored harness commit `58456a0`). All 36 trials pass; all 2909 actual source postimages match the capture. Two observations per case use separate throughput/latency stores and one pinned Zen5 CPU. The first survey includes no LMDB arm or optimization candidate. Existing read-only validation now keeps one independent map rather than three, and larger cases have an explicit 1 GiB physical budget/64 MiB metadata partition. Those are harness changes outside request clocks, not an ObjectStore speed claim.
+
+Each read has 524291 requests after replaying that trace. Every Object has 32768 rows, so per-Object binary-search depth stays fixed while total body and Object breadth grow. Each dependency request follows sixteen decoded next keys in one selected snapshot; each scan starts at a uniform sparse key and consumes up to sixteen consecutive rows. The [deterministic exposure replay](controls/survey-exposure/README.md) reaches 63.24% of logical rows in the largest dependency trace; its modeled complete-row span regions are separate from actual load observations. Median complete throughput ns/request:
+
+| Total rows / Objects / Tuple bodies | Dependent16 | Scan16 |
+| --- | ---: | ---: |
+| 32768 / 1 / 753664 B | 1244.32 | 285.51 |
+| 2097152 / 64 / 48234496 B | 4521.97 | — |
+| 8388608 / 256 / 192937984 B | 7225.42 | 762.38 |
+
+Dependent costs rise about 5.8× versus about 2.7× for scans. CPU clocks track wall; both repetitions show the scaling. This makes staged independent work a promising next discriminator. Object/catalog breadth changes alongside total bodies; the comparison does not isolate a hardware latency source. The larger process reaches about 1135 MiB RSS, including input rows/encoded bodies, independent oracle, trace/output buffers and the actual store. That is not catalog metadata residency. Actual allocation capacities and component charges remain in each row.
+
+Real conversions retain original selected primary bodies and Scope, alternately adopt the other format for each Object, then separately release/drain. Complete roundtrip throughput costs per decoded row (starting Tuple / starting Series) are about 20.6/17.3 ns at 1024 rows/Object and 15.1/13.9 ns at 16384 rows/Object. Directions are mixed in those complete clocks. Ordered latency samples distinguish them: at 16384 rows/Object, Tuple→Series per-call medians are 6.78/6.96 ns per row when first and 5.15/5.22 when returning; Series→Tuple is 21.68–22.20 either order. There are only 16 calls per direction/repetition (four at the smaller size), so these are diagnostic samples, not production tail qualification or an isolated throughput comparison. Direction/order and useful reads after conversion deserve their own next control.
+
+Conversion also exposes a capacity difference after logical settlement. Starting Tuple, live capacity grows 6.029→12.059 MB; starting Series, 5.898→15.483 MB. Ending the original reader does not shrink either: the catalog still retains primary and final alternative. All cases finish with one logical version per Object and zero contexts. The additional 3.686 MB over two tight Series images is consistent with 15 reuses of 376832-byte retired Tuple windows for 131072-byte first Series columns. The allocator picks a ready zero-extra idle window and retains its larger prepared extent (`orbital/src/allocation/window.cpp`). This is a code-supported inference, awaiting per-address inventory confirmation; live capacity differs from occupied bytes and idle pages. Measure reuse latency and pressure alongside capacity before selecting a policy.
+
+All logical/body/component costs match across repetitions; three table/parity reports regenerate byte-identically. Local qualification passed three CTests and 14 independent-oracle CLI cases; the worker ran its three checks and all 36 exact-source trial oracles. No sanitizer or PMU claim is attached. Full sources, binaries, ordered samples and logs remain in the verified worker archive; the worker is terminated. Append, actual Ring interleaving, mixed transactions and reader-age distributions remain unmeasured here. Their private fixtures are being prepared separately; this first panel does not close the wider investigation.

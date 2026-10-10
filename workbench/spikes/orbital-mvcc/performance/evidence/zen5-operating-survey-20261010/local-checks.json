@@ -1,0 +1,129 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "workload": "point-hit",
+      "mode": "throughput",
+      "rows": 4096,
+      "objects": 4,
+      "ops": 67,
+      "batch": 1
+    },
+    {
+      "workload": "point-hit",
+      "mode": "latency",
+      "rows": 4096,
+      "objects": 4,
+      "ops": 67,
+      "batch": 1
+    },
+    {
+      "workload": "point-miss",
+      "mode": "throughput",
+      "rows": 4096,
+      "objects": 4,
+      "ops": 67,
+      "batch": 1
+    },
+    {
+      "workload": "point-miss",
+      "mode": "latency",
+      "rows": 4096,
+      "objects": 4,
+      "ops": 67,
+      "batch": 1
+    },
+    {
+      "workload": "dependent-16",
+      "mode": "throughput",
+      "rows": 4096,
+      "objects": 4,
+      "ops": 67,
+      "batch": 1
+    },
+    {
+      "workload": "dependent-16",
+      "mode": "latency",
+      "rows": 4096,
+      "objects": 4,
+      "ops": 67,
+      "batch": 1
+    },
+    {
+      "workload": "scan-16",
+      "mode": "throughput",
+      "rows": 4096,
+      "objects": 4,
+      "ops": 67,
+      "batch": 1
+    },
+    {
+      "workload": "scan-16",
+      "mode": "latency",
+      "rows": 4096,
+      "objects": 4,
+      "ops": 67,
+      "batch": 1
+    },
+    {
+      "workload": "convert",
+      "mode": "throughput",
+      "rows": 68,
+      "objects": 4,
+      "ops": 3,
+      "batch": 1,
+      "from": "rows"
+    },
+    {
+      "workload": "convert",
+      "mode": "latency",
+      "rows": 68,
+      "objects": 4,
+      "ops": 3,
+      "batch": 1,
+      "from": "rows"
+    },
+    {
+      "workload": "convert",
+      "mode": "throughput",
+      "rows": 68,
+      "objects": 4,
+      "ops": 3,
+      "batch": 1,
+      "from": "columns"
+    },
+    {
+      "workload": "convert",
+      "mode": "latency",
+      "rows": 68,
+      "objects": 4,
+      "ops": 3,
+      "batch": 1,
+      "from": "columns"
+    },
+    {
+      "workload": "point-update",
+      "mode": "throughput",
+      "rows": 192,
+      "objects": 64,
+      "ops": 67,
+      "batch": 1,
+      "retention-age": 1
+    },
+    {
+      "workload": "point-update",
+      "mode": "throughput",
+      "rows": 192,
+      "objects": 64,
+      "ops": 67,
+      "batch": 64,
+      "retention-age": 1
+    }
+  ],
+  "binary_sha256": "67426e2c4a5bf06a8ee4bab4ab6f7729b42bbc2adef602123bc0d1155a9be525",
+  "source_sha256": {
+    "workbench/spikes/orbital-mvcc/performance/main.cpp": "d39a3e33ade9b5a9814702ec326de7190fc35e3e7b666998ed387157714cde93",
+    "workbench/spikes/orbital-mvcc/performance/run.py": "ae27e634534d9f7b48e82137db593aa524d3641db117f0528f2a4b4cb945a570"
+  },
+  "scope": "Local Linux AArch64 pinnedClang21.1.8 Release qualification; clocks are not Zen5 performance evidence; no sanitizer claim"
+}

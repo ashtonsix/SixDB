@@ -1,0 +1,30 @@
+{
+  "source_commit": "58456a02e5b326a09b228a3476cad73b536b3ef4",
+  "command": "orb -m ubuntu python3 build/reviews/orbital-survey-first-exposure/replay.py",
+  "source_manifest": "sources.json",
+  "sha256": {
+    "replay.py": "5c688c0ae4a5ae45e3a28989d7d5928b4551f189f39c2810d6500a6641e6d20b",
+    "output.json": "855ff2a74e3d5a7d8a4f1ebfbf8e1494786cfbff78f3ce7ca04d8525f2753472",
+    "sources.json": "240331b129c310f1250f67e629f3e2af249fd9bbee2c47c464134b8f32cadbd2"
+  },
+  "parameters": {
+    "corpus_seed": 8132,
+    "trace_seed": 8133,
+    "object_seed_stride": 109,
+    "requests": 524291,
+    "rows_per_object": 32768,
+    "chain_steps_or_scan_limit": 16,
+    "row_bytes": 23,
+    "modeled_line_bytes": 64,
+    "modeled_body_base_modulo_line": 0,
+    "object_assignment": "request_index % objects"
+  },
+  "parameters_sha256": "b403a8910f9355f0f482189c852922454074ecad2a27deb8b7f71d3b4088295c",
+  "parameters_hash_encoding": "UTF-8 JSON with sorted keys, compact separators, no trailing newline",
+  "source_generator_sha256": "bb2dc44a6feb6e0c3705b28242bef54d9045013f2533b4700dab3a476583bb5d",
+  "label": "Modeled full23-byte matched-row span exposure at64-byte granularity; not compiled load spans or observed hardware service.",
+  "db_execution": false,
+  "build": false,
+  "timings": false,
+  "live_edits": false
+}

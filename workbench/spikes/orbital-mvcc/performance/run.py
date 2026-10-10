@@ -23,7 +23,7 @@ def panel(profile="resident"):
     if profile == 'survey-first':
         # Discovery over the selected composition, without a parity target.
         # Keep rows per Object fixed while scaling total bodies (~0.75/48/193 MB).
-        # Long traces revisit the whole population instead of a 4K-request sample.
+        # Long traces sample broadly across the population, rather than 4K requests.
         for rows, objects in [(32768, 1), (2097152, 64), (8388608, 256)]:
             yield dict(rows=rows, objects=objects, workload='dependent-16', batch=1,
                        ops=524291, codec='shape', conditioning='warm-trace',

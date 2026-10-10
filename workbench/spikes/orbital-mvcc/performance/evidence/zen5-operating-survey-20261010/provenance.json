@@ -1,0 +1,22 @@
+{
+  "files_sha256": {
+    "host.json": "5ce7b78eb15059808b978d60a7fc16dbd14c04010b010d27eeedc912c84be731",
+    "survey/binary-identity.json": "2a2e394b80eb0b0daad8447c62b25f077594d3e4d569edb4c13da36aa4b92393",
+    "survey/build-cost.json": "88400fd1e5e1b65311d71e9e0fa4b0d62c197db70a7a1c37833f3790391ab360",
+    "survey/measurements.csv": "e3ad72223828a2f032deedbd9e30eb60e89b5756bba516059e5eddc6c82c81a7",
+    "survey/parity.json": "ccf3db4abf6b897147c6ac8bf171d6c4c4de5b8a37f52aff4c88046e0bf53d50",
+    "survey/qualification.json": "caa851c8c39541755caa04647921c83f47410f52b056301c09c732dacfde7d28",
+    "survey/summary.csv": "8307473eea59b05d6bbff633404aa1cd91dc193f958de9f2a57a2ed21b21d13e",
+    "worker-result.json": "2a1dc4a8651b9cbc8b148dc23490195cc330fbfda322a04e550d5af5fd2a4f9b"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/orbital-mvcc/performance/run.py",
+    "--summarize",
+    "{evidence}/survey"
+  ],
+  "regenerate_from": "archive"
+}
