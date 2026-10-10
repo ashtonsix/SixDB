@@ -152,6 +152,12 @@ existing Allocation uses without a retain/release round trip. No source is
 consumed on refusal; metadata exhaustion can precede an invalid-source error.
 Geometry queries observe immutable proof. Existing Holds keep their own uses,
 and the transferred use preserves the allocation's pin and final return route.
+Shared-backing capture instead retains the supplied shared owner. Its caller
+must preserve the captured body's address and full readable footprint; shared
+ownership alone does not prevent a growable Allocation from relocating. Capture
+seals those bytes, including readable padding, while caller/Ikea authority may
+permit physically disjoint writes. Unpublished captured owners and accepted
+packets also protect their footprints until those owners end.
 
 The implementation keeps these compilation seams:
 

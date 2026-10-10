@@ -42,8 +42,11 @@ template<class Control> struct RepresentationSelection {
 
 /// Reserve metadata and validate all sources before transferring Allocation uses.
 /// A refusal leaves original Allocations intact. Metadata reservation can fail
-/// before sources are checked. Writable aliases end before
-/// capture; an Object/version label is never physical ownership authority.
+/// before sources are checked. Capture seals the initialized body and readable
+/// padding for its owners and derived access. The caller controls write authority
+/// over physically disjoint storage. A shared backing owner must cover the full
+/// readable footprint and keep its address stable; lifetime alone proves neither.
+/// An Object/version label is never physical ownership authority.
 template<class Control> [[nodiscard]] Result<Representation<Control>*> capture_representation(
     std::pmr::memory_resource&, Control, PartOwners, std::span<const PartSource>) noexcept;
 template<class Control> void retain(Representation<Control>*) noexcept;
