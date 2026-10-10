@@ -1,6 +1,6 @@
 #pragma once
 #include <orbital/object.h>
-#include "../orbital/candidates/shape_policy.h"
+#include "../orbital/shape/material.h"
 
 namespace orbital_mvcc::composed {
 using Catalog = orbital::ObjectStore<compact_history::ShapePhysical>;

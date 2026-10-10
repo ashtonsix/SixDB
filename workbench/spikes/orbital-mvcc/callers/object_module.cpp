@@ -1,4 +1,5 @@
 #include "../metadata/composed/catalog.h"
+#include "../metadata/orbital/candidates/common.h"
 #include <loom/worker.h>
 #include <array>
 #include <chrono>
@@ -55,7 +56,7 @@ struct Worker {
 
 // Construct through the existing codec, then end Schema, descriptors and every
 // writable alias. Only admitted Shape interpretation and Orbital body owners live.
-Catalog::Owner construct(Worker& worker, compact_history::Memory& memory,
+Catalog::Owner construct(Worker& worker, compact_version_probe::Memory& memory,
     Catalog& store, std::uint32_t value) {
   v::Schema schema;
   const std::array<orbital_bench::Row,2> rows{{{11,{31,value,71}}, {31,{11,value+1,73}}}};
@@ -178,7 +179,7 @@ struct Reader {
 
 void direct_ready() {
   Worker owner(0);
-  compact_history::Memory memory;
+  compact_version_probe::Memory memory;
   {
     Catalog store(memory);
     {
@@ -196,7 +197,7 @@ void direct_ready() {
 
 void history(bool cancel) {
   Worker owner(1);
-  compact_history::Memory memory;
+  compact_version_probe::Memory memory;
   Catalog store(memory);
   {
     const std::array<Catalog::Change,2> initial{{{a,construct(owner,memory,store,101)},

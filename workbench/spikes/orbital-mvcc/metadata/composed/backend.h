@@ -1,6 +1,7 @@
 #pragma once
 #include "material.h"
 #include "read_fusion.h"
+#include "../orbital/candidates/shape_policy.h"
 #include "../../performance/request_cache.h"
 #include <algorithm>
 

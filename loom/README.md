@@ -67,12 +67,15 @@ calls, including their wake callbacks, have returned.
 
 ## Experimental Object callers
 
-The [MVCC study](../workbench/spikes/orbital-mvcc/README.md) owns the experimental
-versioned caller composition. Its [actual Loom callers](../workbench/spikes/orbital-mvcc/callers/loom.cpp)
-exercise coherent reads across suspension, exact resolved retention, native Rings,
-and delayed private fills with current, cancelled and stale completion. They use
-this module's existing mechanisms; the study revisits their Object-facing state
-and signatures together with complete-operation performance.
+The [selected ObjectStore caller](../workbench/spikes/orbital-mvcc/callers/object_module.md)
+uses an actual Worker to exercise coherent reads across suspension, publication,
+catalog teardown and escaping Part completion. It reuses the selected Shape
+material; interpretation and physical ownership follow the
+[Object module's seams](../orbital/README.md#embedded-objects).
+The [MVCC study](../workbench/spikes/orbital-mvcc/README.md) also retains the
+[rejected-baseline callers](../workbench/spikes/orbital-mvcc/callers/README.md)
+for native Rings and delayed private fills with current, cancelled and stale
+completion. These caller compositions remain experimental scaffolding.
 
 ## Memory Rings
 

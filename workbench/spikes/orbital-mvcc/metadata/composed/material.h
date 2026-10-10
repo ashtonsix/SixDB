@@ -6,6 +6,7 @@
 #include "../consumer/shape_write.h"
 #include "../consumer/point_write.h"
 #include "catalog.h"
+#include "../orbital/candidates/common.h"
 #include <optional>
 
 namespace orbital_mvcc::composed {
@@ -57,7 +58,7 @@ class Material {
   std::optional<sw::SeriesProof> columns_write_;
   Result<PrivateParts> allocate(const v::Shape&, v::Costs&);
 public:
-  compact_history::Memory memory;
+  compact_version_probe::Memory memory;
   p::Runtime runtime;
   Material(const p::Corpus&, std::size_t total_bytes, std::size_t metadata_bytes);
   ~Material();

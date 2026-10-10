@@ -6,6 +6,26 @@
 // geometry, a resource and nonthrowing proof lifetime/copy operations. Its
 // selected copy fits selected_bytes() bytes aligned as Part<Control> and preserves
 // the selected Part at index zero. No control operation adds a read-side call.
+// Control is a trivially copyable, non-owning handle; copying it alone retains
+// no proof. Its operations are nonthrowing, and admitted geometry stays fixed.
+//
+// valid(memory) admits only a Control whose resource() is &memory. That resource
+// outlives every Representation, Part and proof operation, including cleanup.
+// part_count(), id(), extent(), padding() and alignment() describe the admitted
+// Parts; extent is body bytes, padding is readable bytes beyond that body.
+// retain()/release() preserve the exact proof and its interpretation dependencies.
+// Orbital releases physical owners before releasing or destroying that proof.
+//
+// selected_bytes(index) is the exact metadata byte count for a selected copy.
+// copy_selected(destination, index) constructs that copy wholly in the supplied
+// tail, which has selected_bytes(index) bytes and alignof(Part<Control>) alignment.
+// It retains every needed dependency independently of the source proof, preserves
+// the selected Part's interpretation at index zero, and returns a Control with
+// the same resource() and metadata_bytes() equal to that selected_bytes(index).
+// Those resource and size values must remain stable: Orbital uses them to return
+// the entire Part allocation. destroy_selected() destroys the in-place proof and
+// its retained dependencies without deallocating the tail; Orbital deallocates it.
+// A selected copy does not also receive retain()/release().
 namespace orbital {
 namespace object_detail {
 template<class Control> std::size_t representation_bytes(Control control, PartOwners owners) {

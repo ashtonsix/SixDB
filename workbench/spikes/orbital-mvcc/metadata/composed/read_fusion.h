@@ -1,5 +1,7 @@
 #pragma once
 #include "catalog.h"
+#include "../orbital/candidates/common.h"
+#include "../orbital/statistics.h"
 
 namespace orbital_bench { struct Operation; struct Outcome; }
 
@@ -16,7 +18,7 @@ private:
   static inline Result<void> consume_at(const Owner&, Core*, std::uint64_t, orbital::ObjectId,
       const orbital_bench::Operation&, orbital_bench::Outcome&);
 public:
-  static compact_history::CompactShapeStore16::Statistics statistics(const Catalog&, const compact_history::Memory&) noexcept;
+  static compact_history::Statistics statistics(const Catalog&, const compact_version_probe::Memory&) noexcept;
   // Scope belongs to owner; missing Object/cross-owner refusal preserves output.
   // Existing invalid-operation exceptions and non-Tuple fallback are retained.
   static Result<void> consume(const Owner&, const Scope&, orbital::ObjectId,
