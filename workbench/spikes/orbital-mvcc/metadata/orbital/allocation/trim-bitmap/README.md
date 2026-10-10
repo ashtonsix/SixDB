@@ -1,13 +1,16 @@
 # Finite trim membership
 
-Selected Allocation now keeps two page bitmaps in its control mapping: immutable
+Selected Allocation keeps two trim bitmaps in its control block: immutable
 trim membership and helper success. They replace the reserved span/result vectors.
 The helper emits maximal runs across word boundaries; a failed discard or
 protection keeps the whole run unavailable and charged until retry. Owner
-statistics use separate scratch. Group width, heat policy and full-batch jobs
+statistics use a third bitmap as separate scratch. Group width, heat policy and full-batch jobs
 are unchanged. The obsolete compact-span API was removed.
 
-At 256 identities on the 4 KiB AArch64 guest, requested Group metadata falls
+The figures below record the bitmap change before the later
+[heap-backing selection](../heap-control/README.md), which preserves these bitmaps
+and removes page rounding from their control block.
+At 256 identities on the 4 KiB AArch64 guest, the bitmap change reduced requested Group metadata
 from **7,384 to 6,008 B** for palette A and **8,400 to 6,072 B** for B. The new
 160/288 B planes fit the existing 4,096 B mapping. These figures exclude
 Arena/Pool setup, the first 8 B owner-vector capacity, Object/Representation and

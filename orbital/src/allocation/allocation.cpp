@@ -605,7 +605,7 @@ Statistics statistics(const Pool& pool) noexcept {
     if (group->control_preparing) {
       result.metadata_bytes += group->metadata_charge;
       result.preparing_reserved_bytes += group->geometry->native_page() *
-          (1 + group->geometry->payload_pages());
+          group->geometry->payload_pages();
       continue;
     }
     if (group->retiring) {

@@ -1,4 +1,5 @@
 #include <orbital/allocation.h>
+#include "finite.h"
 #include <algorithm>
 #include <array>
 #include <cerrno>
@@ -50,6 +51,8 @@ enum class Decision { normal, fail, paused, partial_preparation };
 
 thread_local bool observe_vm{};
 thread_local unsigned observed_vm_calls{};
+thread_local bool fail_metadata{}, metadata_reservation_seen{};
+thread_local std::size_t metadata_size{};
 
 void note_vm() noexcept { if (observe_vm) ++observed_vm_calls; }
 
@@ -171,11 +174,11 @@ void unchanged_inventory(const Statistics& before, const Statistics& after) {
   check(after.trim_pages == before.trim_pages, "unsettled reclamation counted trimmed pages");
 }
 
-void finite_preparation_and_cleanup_failure() {
+void finite_payload_preparation_and_cleanup_failure() {
   Fixture fixture;
   arm(Call::protect, Action::fail_preparation);
   auto refused = allocate(*fixture.pool, {64, 0, 16, 0, Initialization::zero});
-  check(!refused && refused.error() == Error::io, "partial control preparation did not fail");
+  check(!refused && refused.error() == Error::io, "partial payload preparation did not fail");
   wait_finished();
   const auto before = statistics(*fixture.pool);
   const auto charged = fixture.arena->charged_bytes.load();
@@ -186,13 +189,47 @@ void finite_preparation_and_cleanup_failure() {
   expect_io(finish(fixture.lane, [&] { return trim_cold(*fixture.pool, 0); }));
   check(fixture.pool->state == Pool::State::open && fixture.pool->lane == &fixture.lane,
       "failed preparation cleanup lost its owner route");
-  check(fixture.arena->charged_bytes.load() == charged, "failed cleanup refunded partial control mappings");
+  check(fixture.arena->charged_bytes.load() == charged, "failed cleanup refunded quarantined backing");
   unchanged_inventory(before, statistics(*fixture.pool));
   trim(fixture);
   const auto after = statistics(*fixture.pool);
   check(after.mapped_bytes == 0 && after.reserved_bytes == 0 && after.metadata_bytes == 0 &&
-      fixture.arena->charged_bytes.load() == 0, "cleanup retry stranded control mappings or metadata");
+      fixture.arena->charged_bytes.load() == 0, "cleanup retry stranded reservation or metadata");
+  check(after.trim_pages == before.trim_pages, "unconfirmed payload cleanup was counted as trimmed payload");
+  auto value = take(allocate(*fixture.pool, {64, 0, 16, 0, Initialization::zero}));
+  for (auto byte : bytes(value)) check(byte == std::byte{0}, "new finite allocation exposed failed preparation data");
+  release(value); close_fixture(fixture);
+}
+
+void finite_heap_preparation_and_cleanup_failure(std::size_t alignment) {
+  Fixture fixture;
+  const auto references = fixture.arena->references.load();
+  auto planned = take(detail::FiniteGroup::create({alignment >= 64 ? detail::Palette::b : detail::Palette::a, 256}));
+  metadata_size = planned->control_bytes();
+  metadata_reservation_seen = false; fail_metadata = true;
+  auto refused = allocate(*fixture.pool, {64, 0, alignment, 0, Initialization::zero});
+  check(!refused && refused.error() == Error::capacity && !fail_metadata && metadata_reservation_seen,
+        "metadata ENOMEM after payload reservation was lost");
+  const auto before = statistics(*fixture.pool);
+  const auto charged = fixture.arena->charged_bytes.load();
+  check(before.allocations == 0 && before.mapped_bytes == 0 && before.preparing_bytes == 0 &&
+      before.uncertain_bytes == 0 && before.reserved_bytes > 0 &&
+      before.metadata_bytes > 0 && charged == before.metadata_bytes,
+      "failed preparation lost ownership or exposed payload inventory");
+  check(fixture.arena->references.load() == references, "heap failure exposed an active allocation pin");
+  arm(Call::unmap, Action::fail);
+  expect_io(finish(fixture.lane, [&] { return trim_cold(*fixture.pool, 0); }));
+  check(fixture.pool->state == Pool::State::open && fixture.pool->lane == &fixture.lane,
+      "failed preparation cleanup lost its owner route");
+  check(fixture.arena->charged_bytes.load() == charged, "failed cleanup refunded quarantined backing");
+  unchanged_inventory(before, statistics(*fixture.pool));
+  check(fixture.arena->references.load() == references, "failed cleanup retained a transient trim pin");
+  trim(fixture);
+  const auto after = statistics(*fixture.pool);
+  check(after.mapped_bytes == 0 && after.reserved_bytes == 0 && after.metadata_bytes == 0 &&
+      fixture.arena->charged_bytes.load() == 0, "cleanup retry stranded reservation or metadata");
   check(after.trim_pages == before.trim_pages, "control cleanup was counted as trimmed payload");
+  check(fixture.arena->references.load() == references, "successful retry retained a transient pin");
   auto value = take(allocate(*fixture.pool, {64, 0, 16, 0, Initialization::zero}));
   for (auto byte : bytes(value)) check(byte == std::byte{0}, "new finite allocation exposed failed preparation data");
   release(value); close_fixture(fixture);
@@ -478,7 +515,19 @@ extern "C" void* __real_mmap(void*, std::size_t, int, int, int, off_t) noexcept;
 extern "C" void* __wrap_mmap(void* address, std::size_t size, int rights, int flags,
     int descriptor, off_t offset) noexcept {
   note_vm();
-  return __real_mmap(address, size, rights, flags, descriptor, offset);
+  auto* result = __real_mmap(address, size, rights, flags, descriptor, offset);
+  if (fail_metadata && rights == PROT_NONE && result != MAP_FAILED) metadata_reservation_seen = true;
+  return result;
+}
+
+extern "C" void* __real__ZnwmRKSt9nothrow_t(std::size_t, const std::nothrow_t&) noexcept;
+extern "C" void* __wrap__ZnwmRKSt9nothrow_t(std::size_t bytes, const std::nothrow_t& tag) noexcept {
+  if (fail_metadata && bytes == metadata_size) {
+    check(metadata_reservation_seen, "metadata allocation preceded actual payload reservation");
+    fail_metadata = false;
+    return nullptr;
+  }
+  return __real__ZnwmRKSt9nothrow_t(bytes, tag);
 }
 
 extern "C" int __wrap_madvise(void* address, std::size_t size, int advice) noexcept {
@@ -497,7 +546,7 @@ extern "C" int __wrap_mprotect(void* address, std::size_t size, int rights) noex
   if (decision == Decision::partial_preparation) {
     const auto page = static_cast<std::size_t>(::sysconf(_SC_PAGESIZE));
     check(size >= page && __real_mprotect(address, page, rights) == 0,
-        "could not make a real partial control preparation");
+        "could not make a real partial payload preparation");
     after(decision);
     errno = EIO;
     return -1;
@@ -518,7 +567,9 @@ extern "C" int __wrap_munmap(void* address, std::size_t size) noexcept {
 
 int main() {
   budget_refusal_before_vm();
-  finite_preparation_and_cleanup_failure();
+  finite_payload_preparation_and_cleanup_failure();
+  finite_heap_preparation_and_cleanup_failure(16);
+  finite_heap_preparation_and_cleanup_failure(64);
   finite_discard_failure(Call::discard);
   finite_discard_failure(Call::protect);
   pool_wide_retention_floor();

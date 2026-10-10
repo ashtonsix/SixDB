@@ -3,7 +3,13 @@
 Production Allocation uses compact shared controls, a four-byte Storage record,
 one active Arena pin per Group, Group-level advice and pure growth.
 [Finite trim bitmaps](trim-bitmap/README.md) now remove the reserved span/result
-vectors. The historical controls below retain their own source cuts and measured
+vectors. [Exact heap backing](heap-control/README.md) removes the separate
+page-rounded control mapping while retaining those bitmaps and dense packing.
+On the measured 4 KiB AArch64 guest, a 256-identity Group charges 4,040 / 4,752 B
+for palettes A / B, excluding payload and Arena/Pool setup. Local composed timing
+is mixed; the selection simplifies cleanup and reduces requested bookkeeping,
+without claiming an RSS or general throughput win.
+The historical controls below retain their own source cuts and measured
 tradeoffs; a smaller record alone does not settle a choice.
 [The frozen census](../allocation-worker.md) counts a 256-identity Group at
 30,616 / 34,392 requested metadata bytes for palettes A / B. The
@@ -61,7 +67,8 @@ here. Fetch either with `workbench/tools/artifacts.py fetch` into ignored output
 These compose after the three-control patch through their identified source
 cuts. Each treatment keeps its own inputs; later placement/batching controls
 are alternatives rather than a required sequence. Direct4 and pure growth are
-selected; heap placement and bounded16 batching remain experimental.
+selected. Heap placement is now selected with the later full-span trim bitmaps;
+the historical vector and bounded16 compositions below remain separate controls.
 
 | Treatment | Populated A Pool metadata | What changes |
 | --- | ---: | --- |

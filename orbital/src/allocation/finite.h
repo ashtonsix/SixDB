@@ -121,7 +121,7 @@ public:
 
   [[nodiscard]] std::size_t reserved_bytes() const noexcept { return reservation_ ? reserved_bytes_ : 0; }
 
-  // Prepared writable control page(s) + page-rounded owner metadata mapping.
+  // Exact requested bytes of the stable writable owner metadata heap block.
   // The separately allocated sizeof(FiniteGroup) is not included.
   [[nodiscard]] std::size_t control_bytes() const noexcept { return control_bytes_; }
 

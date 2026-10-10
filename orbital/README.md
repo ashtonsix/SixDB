@@ -40,6 +40,11 @@ resolved ordinary pointer; native access needs no repeated trampoline resolution
 entry. Owner-local selection caches suggest candidates; geometry and actual page
 state authorize each claim. Owning records stay at stable addresses.
 Each Group embeds 256 four-byte identity records and shares release advice.
+Bindings, placement grids, page state and trim bitmaps share one stable heap
+block, sized to its contents without base-page rounding. Preparation allocates
+and initializes this control block before the owner exposes the Group. Payload
+reservation and protection still use virtual memory. Heap refusal reports
+`capacity`; failed payload unmapping retains the Group's charge until cleanup succeeds.
 The owning Group or Window's Domain immediately precedes its identity records;
 the immutable slot identity recovers that return route. Pool-owned Group and
 Window inventories grow with demand; their movable ownership handles preserve

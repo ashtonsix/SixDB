@@ -264,7 +264,9 @@ void finite_prepare_handle(worker::Message& message, worker::Lane&) noexcept {
   auto& record = *static_cast<FinitePreparation*>(message.context);
   auto& geometry = *record.group->geometry;
   if (record.phase == FinitePreparation::Phase::control) {
-    record.control_ok = geometry.prepare().has_value();
+    const auto prepared = geometry.prepare();
+    record.control_ok = prepared.has_value();
+    if (!prepared) record.error = prepared.error();
     return;
   }
   const auto page = geometry.native_page();
@@ -345,7 +347,7 @@ void finite_prepare_reply_release(worker::Message& message) noexcept {
       group.retiring = true;
       group.retire_charge = group.metadata_charge;
       group.retire_reserved = group.geometry->reserved_bytes();
-      finite_prepare_finish(record, std::unexpected(record.control_ok ? Error::rejected : Error::io));
+      finite_prepare_finish(record, std::unexpected(record.control_ok ? Error::rejected : record.error));
       return;
     }
     add_available(group);

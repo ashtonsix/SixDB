@@ -1,82 +1,96 @@
-# Exact metadata heap control
+# Exact metadata heap backing
 
-Replace the separately page-rounded writable metadata mapping with one stable
-heap block. The same patch composes with original Direct4 or
-[bounded16 Direct4](../trim-batch16/README.md). [Heap-only](heap-only.md) retains
-the full trim inventory and charges 5,256 / 6,792 B per Group; the bounded16
-combination charges 4,016 / 4,600 B with separately measured batching costs. Bindings,
-grids, per-page state and trim scratch need at most 8-byte alignment and never
-use metadata protection or discard operations. Ordinary nothrow `operator new`
-provides that alignment; payload reservation and preparation keep their VM path.
+Selected on 2026-10-10 for simpler resource ownership/cleanup and smaller explicit
+charge. The current implementation retains **full-span trim with three bitmaps**;
+payload geometry, placement, hot access and packing are unchanged. This is not
+a selection of the older bounded16 policy. [Current source identity and
+receipts](current-selection.json) record the exact baseline, patch hash, eight
+postimages, checks, CLI inputs and every retained timing repetition.
 
-[`heap-control.patch`](heap-control.patch) is the isolated runtime change;
-[`heap-control-cut.json`](heap-control-cut.json) identifies its exact bounded16
-base and runtime inputs. `create` computes the exact extent before the owner's
-budget claim. The existing preparation helper allocates and initializes that
-block after payload reservation, and publishes completion before any identity
-becomes available. Binding pointers and acquire/release publication remain
-unchanged. Group, FiniteGroup and their embedded replies stay separate owners.
+The control block contains byte bindings, Grids, per-page state and three trim
+scratch bitmaps. They need at most 8-byte alignment and no metadata protection
+or discard operations. One exact-size nothrow heap allocation replaces the
+page-rounded mapping. The existing preparer initializes it after reserving the
+payload; owner completion still gates availability. Group/FiniteGroup sizes,
+embedded reply ownership and hot pointers remain unchanged.
 
-Heap ENOMEM reports `capacity`, including through deferred replies; payload VM
-failure reports `io`. Retirement frees metadata and retains any failed payload
-unmap for retry. The quarantined Group retains the full logical charge until
-its owner handles confirmed completion. Pending reserved-VA statistics include
-only the planned payload reservation.
+Heap ENOMEM is `capacity`, including deferred replies; payload mmap failure is
+`io`. Metadata is freed once, while failed payload unmap retains its reservation
+and full saved charge until successful retry. This removes the second fallible
+metadata unmap. Pending sparse-VA statistics count only planned payload bytes.
 
-At 256 identities with bounded16 trim buffers:
+## Requested bytes and qualification
 
-| Per-Group bytes | 4 KiB A | 4 KiB B | Modeled 16 KiB A | Modeled 16 KiB B |
-|---|---:|---:|---:|---:|
-| Previous metadata mapping | 4,096 | 4,096 | 16,384 | 16,384 |
-| Exact metadata heap request | 1,968 | 2,488 | 1,432 | 1,568 |
-| Group metadata charge | **4,016** | **4,600** | **3,424** | **3,576** |
-| Observed summed heap usable extent | 4,064 | 4,640 | 3,456 | 3,616 |
+At 256 identities, control is `align8(256 + 16*62 + payload_pages)` plus three
+`ceil(payload_pages/64)`-word bitmaps. Larger native pages are modeled only.
 
-Usable extents were sampled with glibc 2.42 on the 4 KiB AArch64 guest, including
-the allocations sized for modeled 16 KiB geometry. They are an alternative
-observation, not bytes to add to requested charge. Neither column includes
-allocator chunk headers/arenas, RSS, Arena/Pool setup, the first 8-byte owner-vector
-capacity, or Object metadata. Heap allocation/free may lock, perform internal VM
-work or retain allocator pages; this establishes no timing or RSS advantage.
+| Page | Palette | Previous mapping | Exact heap request | Saving |
+|---|---|---:|---:|---:|
+| 4 KiB | A | 4,096 | 2,128 | 1,968 |
+| 4 KiB | B | 4,096 | 2,776 | 1,320 |
+| 16 KiB | A | 16,384 | 1,480 | 14,904 |
+| 16 KiB | B | 16,384 | 1,648 | 14,736 |
+| 64 KiB | A | 65,536 | 1,320 | 64,216 |
+| 64 KiB | B | 65,536 | 1,368 | 64,168 |
 
-[`qualification.json`](qualification.json) records six native checks using
-Clang 21.1.8, `-O3 -g`, with assertions enabled. The isolated
-[`test adaptations`](qualification-tests.patch) replace the control page-rounding
-expectation and second metadata mmap fault with exact heap ENOMEM after a real
-payload reservation, for both palettes. They check synchronous/deferred error
-status, no exposed value or retained allocation/preparation pin, conserved charge
-and partial ownership, and payload unmap failure followed by successful retry.
-Existing prepared cancellation, shared live-neighbor cleanup, paused retirement,
-retained readers and tight-budget histories also pass.
+The executed 4 KiB AArch64 census has Group 1,384 B, FiniteGroup 448 B and
+separate live bitmaps 80/144 B. Total Group metadata charge falls
+6,008→4,040 B/A and 6,072→4,752 B/B. These are **requested bytes, not RSS or
+malloc usable extent**. They exclude allocator headers/retained arenas,
+Arena/Pool setup, the first 8-byte owning-vector capacity and Object metadata.
+Heap calls may lock or perform VM work; free need not return pages to the OS.
+Incidental page/cache-line alignment is lost; required 8-byte alignment remains.
 
-Independent review verified the runtime/test patch replays and recorded hashes.
-Only preparation/reclamation outputs remained in the original test logs; root
-confirmed the other four native binaries and preserved their outputs. The
-[matched trim comparison](../trim-batch16/comparison-qualification.json) adds
-ten explicit `-DNDEBUG` reclamation histories for this heap cut. It confirms
-the same logical work as batch16, rather than a new trim policy or a speed win.
+Clang 21.1.8 native checks pass allocation, finite, lifetime, preparation,
+reclamation and budget. ASan+UBSan pass finite, lifetime, preparation and
+reclamation, with leak detection. Both palettes exercise synchronous/deferred
+heap ENOMEM after real payload reservation, cancellation, pin conservation,
+failed payload unmap and retry; the existing partial-payload failure check is
+retained. Allocation runtime/checks are instrumented; reused Ikea fixture
+archives are native. This is not full Orbital/Loom or TSan qualification.
 
-The separate [heap-only control](heap-only.md) applies the same runtime patch
-directly to frozen Direct4 with its original full trim reserve. Its requested
-metadata totals are 5,256 bytes for A and 6,792 for B. The
-[heap-only receipt](heap-only-native-readiness.json) covers one ordinary native
-smoke and actual census; the six suites above qualify bounded16 plus heap.
-The receipt also records the corrected explicit-target patch application after
-an initial ignored-subtree application skipped the patch.
+## Local feedback
 
-The local control and qualification inputs are under
-`build/orbital-mvcc-metadata/heap-control/`. From the repository on Linux:
+Three alternating pairs per case, unpinned OrbStack AArch64, identical inputs
+and flags within each pair. Cold clocks cover the first allocation in 24 fresh
+Groups; warm clocks cover 65,536 packed allocate/touch/release operations in
+batches of 16. Requests are 64 B/alignment 16 for A, 112 B/alignment 64 for B.
 
-```sh
-cmake -S build/orbital-mvcc-metadata/heap-control \
-  -B build/orbital-mvcc-metadata/heap-control/native -G Ninja \
-  -DCMAKE_CXX_COMPILER=clang++-21
-cmake --build build/orbital-mvcc-metadata/heap-control/native --target \
-  heap_smoke heap_allocation heap_lifetime heap_preparation \
-  heap_reclamation heap_budget heap_finite
-ctest --test-dir build/orbital-mvcc-metadata/heap-control/native \
-  --output-on-failure -R '^heap_(allocation|lifetime|preparation|reclamation|budget|finite)$'
-```
+| Median ns | Baseline | Heap |
+|---|---:|---:|
+| Cold first allocation, A | 6,378 | 3,951 |
+| Cold first allocation, B | 6,213 | 4,028 |
+| Warm allocate/touch/release, A | 67.10 | 69.67 |
+| Warm allocate/touch/release, B | 67.32 | 68.33 |
+| Composed point read | 45.84 | 47.24 |
+| Composed scalar update | 1,739.79 | 1,723.79 |
+| Composed batch-64 update, per request | 538.18 | 477.99 |
 
-Prefix Linux commands with `orb -m ubuntu` from this macOS/OrbStack workspace.
-The original Direct4 routing's pinned Clang/Linux reachability limits still apply.
+The unchanged selected MVCC driver uses 64 Tuple Objects × 16 rows, 8,192 reads
+or 513 updates; batch 64 includes a short final publication. Writes retain the
+original reader and then drain/poll normally. All 18 runs pass independent row,
+outcome and retained-reader checks. Both write arms copy 188,784 B; versions and
+active allocations move 64→128→64 and released contexts are zero. Live capacity
+is 24,576→49,152→24,576 B. Catalog/Schema bytes, payload mappings and allocation
+counts match; the one Palette B Group saves 1,320 B throughout.
+
+Cold and batch observations favor heap backing; warm allocations and composed
+reads are slightly slower. These short, variable observations establish no
+speed or RSS advantage. The resource simplification and explicit charge motivate
+the selection; the mixed results remain in [current-selection.json](current-selection.json).
+Private reproduction inputs are `build/reviews/orbital-current-heap-control/`;
+the adjacent receipt identifies commands, artifacts and their hashes without
+turning private outputs into another maintained implementation.
+
+## Historical controls
+
+[`heap-control.patch`](heap-control.patch), its [cut](heap-control-cut.json),
+[test adaptations](qualification-tests.patch) and [qualification](qualification.json)
+belong to the older bounded16-plus-heap experiment. Its six native suites and
+[trim comparison](../trim-batch16/comparison-qualification.json) remain historical;
+they do not qualify a new trim policy here. The separate
+[heap-only control](heap-only.md) retains the original full trim-span vectors
+and has smoke/census qualification only. Its 5,256/6,792 B totals describe that
+older inventory, not the selected three-bitmap layout. Historical patches and
+receipts are unchanged; use current production source and the selection receipt
+for this implementation.

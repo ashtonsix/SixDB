@@ -73,9 +73,10 @@ void geometry(Palette palette, std::uint16_t width) {
   check(bool(group->prepare()), "prepare geometry");
   check(group->native_page() == static_cast<std::size_t>(::sysconf(_SC_PAGESIZE)),
         "uses native page granule");
-  check(group->control_bytes() % group->native_page() == 0, "control charge page rounded");
+  check(group->control_bytes() >= width && group->control_bytes() % alignof(std::uint64_t) == 0,
+        "heap control extent includes bindings and complete aligned scratch");
   check(group->reserved_bytes() == group->payload_pages() * group->native_page(),
-        "payload reservation excludes separately charged control mapping");
+        "payload reservation excludes separately charged control heap");
   const auto& capacities = palette == Palette::a ? capacities_a : capacities_b;
   std::vector<Identity> identities;
   for (unsigned index = 0; index < width; ++index) {

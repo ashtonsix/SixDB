@@ -1,0 +1,424 @@
+{
+  "status": "selected",
+  "date": "2026-10-10",
+  "reason": "Simpler metadata ownership/cleanup and smaller explicit requested charge; mixed local timing outcomes retained, no established speed or RSS advantage.",
+  "runtime": "Exact stable heap backing with current full-span three-bitmap trim inventory; unchanged payload geometry, hot access, selection and packing.",
+  "identity": {
+    "baseline": "f80e8be9e76fe7109870eaa40687d6d0a32800b8",
+    "patch_path": "build/reviews/orbital-current-heap-control/heap-control.patch",
+    "patch_sha256": "f24b8ea168726bc906e54aeaeddac2996ec7563613f46c230ce708c0a0aaac58",
+    "source_manifest_sha256": "f7642303d04625321d6bb11397cf75867e0acd2b8686273776beb949f1e4a4d3",
+    "postimages": {
+      "orbital/CMakeLists.txt": "77354ffbf43f6e9b75523e96d236a40baaf001a5be7e4b9e5642ca760c17dec4",
+      "orbital/src/allocation/allocation.cpp": "a142813d6ea072ac483b878c55b7f5edbac8e51ef200ccb1c84ee6fc605d2caf",
+      "orbital/src/allocation/finite.cpp": "97886e925b24764d0879e9eacad882337b4c7b22d50501f5dc6bb52f17a04975",
+      "orbital/src/allocation/finite.h": "8aa8f26c5a0477380950b9c6ced4e2f80c9607859c9536266af6d758a3904eb5",
+      "orbital/src/allocation/group.cpp": "85e6d5f1fda722ef0294bc9f86c2d694cf14822323ca2a744ade3dc1826b1196",
+      "orbital/test/finite.cpp": "46115582e0a0052cdc91d8b02f9b5182e357416635928a96896ecc9f2071150c",
+      "orbital/test/preparation.cpp": "8e9872258ca619d11f1c8d6fd1940902c92f9964af32f95718de1a41e202f398",
+      "orbital/test/reclamation.cpp": "036bb43a5aa879b85322c45dfeaeffe456aebf6fee9c8b421eeb5572e10cf340"
+    },
+    "live_postimages_verified": true
+  },
+  "receipts": {
+    "native_and_sanitizer": {
+      "path": "build/reviews/orbital-current-heap-control/release.json",
+      "sha256": "9a752d323251b97f8dd6b5d1b9ef84f869001e39dad11f71e3ca027a6cbd411c"
+    },
+    "allocation_feedback": {
+      "path": "build/reviews/orbital-current-heap-control/feedback.json",
+      "sha256": "d43a33219d493221174886369517e0ed15d6efbaebe75b05b9abde7ac6a830f5"
+    },
+    "composed_feedback": {
+      "path": "build/reviews/orbital-current-heap-control/composed/addendum.json",
+      "sha256": "ecb6177d038f8af5b17490262b3305583b068ea8772b1d3a3df31d93acf52b34"
+    },
+    "composed_samples": {
+      "path": "build/reviews/orbital-current-heap-control/composed/results.json",
+      "sha256": "08525146b33076ca4f2a229b862e8832d1ebe2d613d7fde2873c75536d253279"
+    }
+  },
+  "qualification": {
+    "compiler": "Clang 21.1.8",
+    "platform": "local Linux OrbStack AArch64, 4096-byte native pages",
+    "native_flags": "-O3 -g, assertions enabled",
+    "native_passed": [
+      "allocation",
+      "finite",
+      "lifetime",
+      "preparation",
+      "reclamation",
+      "budget"
+    ],
+    "asan_ubsan_passed": [
+      "finite",
+      "lifetime",
+      "preparation",
+      "reclamation"
+    ],
+    "sanitizer_flags": "-O1 -fsanitize=address,undefined -fno-omit-frame-pointer",
+    "sanitizer_environment": {
+      "ASAN_OPTIONS": "detect_leaks=1:halt_on_error=1",
+      "UBSAN_OPTIONS": "halt_on_error=1:print_stacktrace=1"
+    },
+    "failures_exercised": [
+      "both palettes: synchronous/deferred heap ENOMEM after real payload reservation returns capacity",
+      "payload mmap failure remains io",
+      "partial payload protection failure retained",
+      "cancellation/close and pin conservation",
+      "payload unmap failure conserves quarantine charge, successful retry disposes once"
+    ],
+    "limits": "Allocation runtime/checks instrumented; reused Ikea archives native/uninstrumented. Not full Orbital/Loom or TSan qualification."
+  },
+  "layout": {
+    "identities": 256,
+    "source_formula": "align8(256 + 16*62 + payload_pages) + 3*ceil(payload_pages/64)*8",
+    "page_models": [
+      {
+        "page_bytes": 4096,
+        "palette": "A",
+        "payload_pages": 636,
+        "old_control_mapping": 4096,
+        "exact_heap_request": 2128,
+        "saving": 1968
+      },
+      {
+        "page_bytes": 4096,
+        "palette": "B",
+        "payload_pages": 1096,
+        "old_control_mapping": 4096,
+        "exact_heap_request": 2776,
+        "saving": 1320
+      },
+      {
+        "page_bytes": 16384,
+        "palette": "A",
+        "payload_pages": 159,
+        "old_control_mapping": 16384,
+        "exact_heap_request": 1480,
+        "saving": 14904
+      },
+      {
+        "page_bytes": 16384,
+        "palette": "B",
+        "payload_pages": 274,
+        "old_control_mapping": 16384,
+        "exact_heap_request": 1648,
+        "saving": 14736
+      },
+      {
+        "page_bytes": 65536,
+        "palette": "A",
+        "payload_pages": 41,
+        "old_control_mapping": 65536,
+        "exact_heap_request": 1320,
+        "saving": 64216
+      },
+      {
+        "page_bytes": 65536,
+        "palette": "B",
+        "payload_pages": 71,
+        "old_control_mapping": 65536,
+        "exact_heap_request": 1368,
+        "saving": 64168
+      }
+    ],
+    "native_group_bytes": 1384,
+    "native_finite_group_bytes": 448,
+    "native_metadata_charge": {
+      "A": [
+        6008,
+        4040
+      ],
+      "B": [
+        6072,
+        4752
+      ]
+    },
+    "models_only": [
+      16384,
+      65536
+    ]
+  },
+  "allocation_feedback": {
+    "repetitions": 3,
+    "order": "baseline/heap, heap/baseline, baseline/heap for each palette",
+    "command": "<baseline-native|native>/heap_feedback <A|B> under build/reviews/orbital-current-heap-control",
+    "byte_limit": 1073741824,
+    "clock_scope": "Cold: first allocate only, fixture startup/retirement excluded. Warm: packed allocate/touch/release including loop/checksum.",
+    "checks": "Retained Hold bytes, independent checksum, 65536 exact warm allocations/reuses, stable warm charge, final charge zero.",
+    "cases": [
+      {
+        "palette": "A",
+        "request_bytes": 64,
+        "alignment": 16,
+        "cold_groups_per_run": 24,
+        "warm_batches": 4096,
+        "allocations_per_batch": 16,
+        "baseline": {
+          "cold_allocate_ns": [
+            121418,
+            284166,
+            153083
+          ],
+          "warm_allocate_touch_release_ns": [
+            4397609,
+            4452567,
+            4327484
+          ],
+          "median_cold_ns_per_group": 6378.458333333333,
+          "median_warm_ns_per_allocation": 67.10218811035156
+        },
+        "heap": {
+          "cold_allocate_ns": [
+            85375,
+            104500,
+            94834
+          ],
+          "warm_allocate_touch_release_ns": [
+            4620317,
+            4565983,
+            4493233
+          ],
+          "median_cold_ns_per_group": 3951.4166666666665,
+          "median_warm_ns_per_allocation": 69.67137145996094
+        }
+      },
+      {
+        "palette": "B",
+        "request_bytes": 112,
+        "alignment": 64,
+        "cold_groups_per_run": 24,
+        "warm_batches": 4096,
+        "allocations_per_batch": 16,
+        "baseline": {
+          "cold_allocate_ns": [
+            146585,
+            182585,
+            149123
+          ],
+          "warm_allocate_touch_release_ns": [
+            4521484,
+            4353276,
+            4412192
+          ],
+          "median_cold_ns_per_group": 6213.458333333333,
+          "median_warm_ns_per_allocation": 67.32470703125
+        },
+        "heap": {
+          "cold_allocate_ns": [
+            108627,
+            95128,
+            96668
+          ],
+          "warm_allocate_touch_release_ns": [
+            4643400,
+            4291901,
+            4478317
+          ],
+          "median_cold_ns_per_group": 4027.8333333333335,
+          "median_warm_ns_per_allocation": 68.33369445800781
+        }
+      }
+    ]
+  },
+  "composed_feedback": {
+    "repetitions": 3,
+    "order": "baseline/heap, heap/baseline, baseline/heap for each case",
+    "command_common": [
+      "<composed/baseline|composed/heap>",
+      "--backend",
+      "composed-inline",
+      "--mode",
+      "throughput",
+      "--rows",
+      "1024",
+      "--objects",
+      "64",
+      "--seed",
+      "8132",
+      "--bytes",
+      "268435456"
+    ],
+    "command_case_flags": [
+      "--workload <case.workload>",
+      "--batch <case.batch>",
+      "--ops <case.operations>"
+    ],
+    "defaults": {
+      "from": "rows",
+      "retention_age": 0,
+      "conditioning": "none",
+      "sample_storage": "equal",
+      "pmu": "off"
+    },
+    "new_driver_tus": 2,
+    "reused_composed_tus": 3,
+    "matching_source_files": 326,
+    "dependency_exception": "finite.h control_bytes comment changed; identical C++ tokens.",
+    "checks": "All 18 final runs pass independent outcome/full-row/retained-reader oracle; paired traces, copies, allocation/reuse/live counters match. Writes: 513*16*23=188784 copied bytes; versions/active allocations 64->128->64; released contexts zero.",
+    "palette": "B, one Group",
+    "pool_metadata_charge": [
+      6072,
+      4752
+    ],
+    "initial_arena_charge": [
+      30648,
+      29328
+    ],
+    "schema_bytes_each": 10176,
+    "cases": [
+      {
+        "case": "read",
+        "workload": "point-hit",
+        "batch": 1,
+        "operations": 8192,
+        "baseline": {
+          "wall_ns": [
+            440590,
+            366755,
+            375505
+          ],
+          "median_ns_per_request": 45.8380126953125
+        },
+        "heap": {
+          "wall_ns": [
+            422214,
+            373005,
+            386964
+          ],
+          "median_ns_per_request": 47.23681640625
+        },
+        "copied_bytes_each": 0,
+        "requested_parts_each": 0,
+        "active_allocations_each": [
+          64,
+          64,
+          64
+        ],
+        "live_capacity_bytes_each": [
+          24576,
+          24576,
+          24576
+        ],
+        "catalog_metadata_bytes_each": [
+          6563,
+          6563,
+          6563
+        ],
+        "mapped_bytes_each": [
+          24576,
+          24576,
+          24576
+        ],
+        "pool_allocations_each": 64,
+        "pool_reuses_each": 58
+      },
+      {
+        "case": "scalar",
+        "workload": "point-update",
+        "batch": 1,
+        "operations": 513,
+        "baseline": {
+          "wall_ns": [
+            980889,
+            869970,
+            892512
+          ],
+          "median_ns_per_request": 1739.7894736842106
+        },
+        "heap": {
+          "wall_ns": [
+            941013,
+            865929,
+            884303
+          ],
+          "median_ns_per_request": 1723.7875243664716
+        },
+        "copied_bytes_each": 188784,
+        "requested_parts_each": 513,
+        "active_allocations_each": [
+          64,
+          128,
+          64
+        ],
+        "live_capacity_bytes_each": [
+          24576,
+          49152,
+          24576
+        ],
+        "catalog_metadata_bytes_each": [
+          6563,
+          12747,
+          10187
+        ],
+        "mapped_bytes_each": [
+          24576,
+          53248,
+          53248
+        ],
+        "pool_allocations_each": 577,
+        "pool_reuses_each": 564
+      },
+      {
+        "case": "batch64",
+        "workload": "point-update",
+        "batch": 64,
+        "operations": 513,
+        "baseline": {
+          "wall_ns": [
+            260004,
+            322671,
+            276087
+          ],
+          "median_ns_per_request": 538.1812865497076
+        },
+        "heap": {
+          "wall_ns": [
+            245211,
+            252420,
+            236961
+          ],
+          "median_ns_per_request": 477.99415204678365
+        },
+        "copied_bytes_each": 188784,
+        "requested_parts_each": 513,
+        "active_allocations_each": [
+          64,
+          128,
+          64
+        ],
+        "live_capacity_bytes_each": [
+          24576,
+          49152,
+          24576
+        ],
+        "catalog_metadata_bytes_each": [
+          6563,
+          12747,
+          10187
+        ],
+        "mapped_bytes_each": [
+          24576,
+          73728,
+          73728
+        ],
+        "pool_allocations_each": 577,
+        "pool_reuses_each": 559
+      }
+    ],
+    "postprocessing_correction": "Initial script assumed Palette A saving; corrected to observed Palette B and reran fixed three-pair script. No runtime change; failure retained in private composed/run.log."
+  },
+  "limits": [
+    "Unpinned short local observations; no remote measurement or established speed advantage. Slower warm/read observations retained.",
+    "Requested charge excludes allocator chunk/arena overhead, RSS, Arena/Pool setup, first 8-byte Group owner-vector capacity and Object metadata.",
+    "Heap needs 8-byte alignment; incidental page/cache-line alignment is no longer guaranteed.",
+    "Heap allocation/free may lock, perform VM work and retain allocator pages; helper allocation can be freed on another thread.",
+    "Saved full logical charge remains until payload retirement succeeds, even if heap metadata was already freed."
+  ],
+  "historical_controls": {
+    "heap-control.patch": "Older bounded16/full-span-vector experiment, not this selected source patch.",
+    "qualification.json": "Historical six native suites for bounded16 plus heap.",
+    "heap-only.md": "Historical original full-span-vector control with smoke/census only; old totals do not describe selected three-bitmap layout."
+  }
+}

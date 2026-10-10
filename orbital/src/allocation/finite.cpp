@@ -83,8 +83,7 @@ Result<std::unique_ptr<FiniteGroup>> FiniteGroup::create(FiniteConfig config) no
   const auto grids_bytes = group->grid_count_ * sizeof(Grid);
   const auto scratch_offset = round_up(grids_offset + grids_bytes + group->payload_pages_ * sizeof(Page),
                                       alignof(std::uint64_t));
-  group->metadata_bytes_ = round_up(scratch_offset + 3 * group->live_words() * sizeof(std::uint64_t),
-                                   group->native_page_);
+  group->metadata_bytes_ = scratch_offset + 3 * group->live_words() * sizeof(std::uint64_t);
   group->control_bytes_ = group->metadata_bytes_;
   return group;
 }
@@ -101,12 +100,12 @@ Result<void> FiniteGroup::prepare() noexcept {
     return std::unexpected(Error::io);
   reservation_ = static_cast<std::byte*>(reservation);
   payload_ = reservation_;
-  // Bindings and owner control share one rounded mapping. Their accessors stay
+  // Bindings and owner control share one stable heap block. Their accessors stay
   // distinct; no binding address or payload offset is inferred from the other.
-  auto* metadata = ::mmap(nullptr, metadata_bytes_, PROT_READ | PROT_WRITE,
-                          MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-  if (metadata == MAP_FAILED)
-    return std::unexpected(Error::io);
+  // Ordinary new covers the maximum required alignment: the uint64_t scratch.
+  auto* metadata = ::operator new(metadata_bytes_, std::nothrow);
+  if (!metadata)
+    return std::unexpected(Error::capacity);
   metadata_ = metadata;
   std::memset(metadata, 0, metadata_bytes_);
   bindings_ = ::new (metadata) std::uint8_t[identities_];
@@ -135,15 +134,12 @@ Result<void> FiniteGroup::retire() noexcept {
     }
   }
   if (metadata_) {
-    if (::munmap(metadata_, metadata_bytes_) != 0) {
-      failed = true;
-    } else {
-      metadata_ = nullptr;
-      bindings_ = nullptr;
-      grids_ = nullptr;
-      pages_ = nullptr;
-      trim_scratch_ = nullptr;
-    }
+    ::operator delete(metadata_);
+    metadata_ = nullptr;
+    bindings_ = nullptr;
+    grids_ = nullptr;
+    pages_ = nullptr;
+    trim_scratch_ = nullptr;
   }
   if (failed)
     return std::unexpected(Error::io);
