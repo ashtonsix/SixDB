@@ -257,3 +257,6 @@ keeps the exact source cut, counter scope and negative observations with its com
 
 The [matched compiled catalog extraction performance/abi and complete component parity](FEEDBACK.md#compiled-object-catalog-boundary)
 keeps the exact source cut, counter scope and negative observations with its comparison.
+
+The [transient schema construction/conversion diagnostics and rejection as measured; source/caller/raw observations](FEEDBACK.md#transient-schema-construction-phase)
+keeps the exact source cut, counter scope and negative observations with its comparison.

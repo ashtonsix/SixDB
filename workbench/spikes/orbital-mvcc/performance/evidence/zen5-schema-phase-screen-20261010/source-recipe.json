@@ -1,0 +1,219 @@
+{
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "cpu": 0,
+  "native_machine": "x86_64",
+  "march": "x86-64-v3",
+  "tune": "zen5",
+  "codegen": false,
+  "base_tree": "e509697457a4a61bee8adcd2c5631bd40ee9f221",
+  "probe_sha256": "68168b8debbe92e3ac384d7b734cf28250fbf84b83d7992daec1ba9479be3d7f",
+  "execution": "benchmark",
+  "scope": "actual ordinary native data calls; allocation and admission outside clocks; no Store/publication",
+  "base": {
+    "source_root": "/tmp/sixdb-schema-phase-pjnvwdhn/base",
+    "binary_sha256": "5bbbb2f9a58168d1d789faba3e73368291210d88b5a8bf69fbc6e1e7b7fd81b1",
+    "archives_sha256": {
+      "workbench/spikes/orbital-mvcc/consumer/liborbital_versioned_data.a": "0a07799e967766290929d039fecddfcd2915acf34adf332a66bb7c28680b5a77",
+      "ikea/libikea_tuplepack.a": "0b8fd1c10e2ac47082d4a1d8e603f862773505f4df30a910b6cf1bc66ee7be00",
+      "ikea/libikea_seriespack.a": "a0017a63a53d291148107c5a8dc6a8c20545856c18f8a3bff882108f2bcf7302",
+      "ikea/libikea_core.a": "4f402b113769c9b7329c8de5ba9b3a2c6739621e7cdc7c4f553f04067786cedb",
+      "orbital/liborbital.a": "571b344651f801538471e832e50aa2f6e5c30b8c275b44dfefe77fea92f1727e"
+    },
+    "sizes": {
+      "schema_retains_constructor": true,
+      "packets": [
+        {
+          "type": "Schema",
+          "bytes": 15296,
+          "alignment": 64
+        },
+        {
+          "type": "TupleConstructor",
+          "bytes": 13120,
+          "alignment": 64
+        },
+        {
+          "type": "ExpectedTupleConstructor",
+          "bytes": 13184,
+          "alignment": 64
+        },
+        {
+          "type": "TupleLayout",
+          "bytes": 392,
+          "alignment": 4
+        },
+        {
+          "type": "TupleReader8",
+          "bytes": 96,
+          "alignment": 8
+        },
+        {
+          "type": "TupleWriter8",
+          "bytes": 336,
+          "alignment": 8
+        },
+        {
+          "type": "TupleWriter64",
+          "bytes": 6528,
+          "alignment": 64
+        },
+        {
+          "type": "TupleReaders4",
+          "bytes": 384,
+          "alignment": 8
+        },
+        {
+          "type": "TupleWriters4",
+          "bytes": 1344,
+          "alignment": 8
+        },
+        {
+          "type": "ReadData",
+          "bytes": 56,
+          "alignment": 8
+        },
+        {
+          "type": "KernelCosts",
+          "bytes": 72,
+          "alignment": 8
+        },
+        {
+          "type": "ConstructionInput",
+          "bytes": 128,
+          "alignment": 1
+        },
+        {
+          "type": "ConstructionOperation",
+          "bytes": 16,
+          "alignment": 8
+        }
+      ]
+    }
+  },
+  "candidate": {
+    "source_root": "/tmp/sixdb-schema-phase-pjnvwdhn/candidate",
+    "binary_sha256": "e3648348d20505a6d1d275abbf70809386a4a5687ba79dcd05ca744e1735c5a0",
+    "archives_sha256": {
+      "workbench/spikes/orbital-mvcc/consumer/liborbital_versioned_data.a": "1217b16d11437723953f1d13547f3d80e79723d07c2fc970e06de688572dd594",
+      "ikea/libikea_tuplepack.a": "6a4ddbfc728f877be7f3c7317813c51f726febd7044cc2282c084f8a363a8e52",
+      "ikea/libikea_seriespack.a": "1e843a119e7630681738b0210a8280f61aab1b44172ad74bffc641d14cbf69db",
+      "ikea/libikea_core.a": "e28b2262b952d6f4319db174f1939162511c3814f347a39598591bf843a3055f",
+      "orbital/liborbital.a": "63e817636d0ceff9fb2f4414c793a651ccb9244d618c002788f877fcbd0d9f46"
+    },
+    "sizes": {
+      "schema_retains_constructor": false,
+      "packets": [
+        {
+          "type": "Schema",
+          "bytes": 2120,
+          "alignment": 8
+        },
+        {
+          "type": "TupleConstructor",
+          "bytes": 13120,
+          "alignment": 64
+        },
+        {
+          "type": "ExpectedTupleConstructor",
+          "bytes": 13184,
+          "alignment": 64
+        },
+        {
+          "type": "TupleLayout",
+          "bytes": 392,
+          "alignment": 4
+        },
+        {
+          "type": "TupleReader8",
+          "bytes": 96,
+          "alignment": 8
+        },
+        {
+          "type": "TupleWriter8",
+          "bytes": 336,
+          "alignment": 8
+        },
+        {
+          "type": "TupleWriter64",
+          "bytes": 6528,
+          "alignment": 64
+        },
+        {
+          "type": "TupleReaders4",
+          "bytes": 384,
+          "alignment": 8
+        },
+        {
+          "type": "TupleWriters4",
+          "bytes": 1344,
+          "alignment": 8
+        },
+        {
+          "type": "ReadData",
+          "bytes": 56,
+          "alignment": 8
+        },
+        {
+          "type": "KernelCosts",
+          "bytes": 72,
+          "alignment": 8
+        },
+        {
+          "type": "ConstructionInput",
+          "bytes": 128,
+          "alignment": 1
+        },
+        {
+          "type": "ConstructionOperation",
+          "bytes": 16,
+          "alignment": 8
+        }
+      ]
+    }
+  },
+  "source_unchanged": true,
+  "probe_unchanged": true,
+  "job": "20261010T003705Z-b8c33ff7",
+  "actual_runtime_postimages_verified_per_projection": 374,
+  "owned_source": {
+    "workbench/spikes/orbital-mvcc/consumer/data.h": {
+      "before_sha256": "51248707c22d1d5e6fc2ed3265678a86979a258074f83fb26797d77ef87824de",
+      "after_sha256": "83acf496a1366f993b503b4c4e9e085046c4f8e630d2a9b8cda2b69c48b09900"
+    },
+    "workbench/spikes/orbital-mvcc/consumer/data.cpp": {
+      "before_sha256": "ad82c846b5f1b82cff496ad10ebd5f19e8216b30020bd046dd5ce17452fb352b",
+      "after_sha256": "655e8d8f6d65de75a0e425b151cd9269d4401bb8471dcef78fb4d5d8d2d8d350"
+    },
+    "workbench/spikes/orbital-mvcc/consumer/README.md": {
+      "before_sha256": "f2b8cd0cf6232ac886e811e104cec74e208832c0e52ab8aed1eac08173c8efcf",
+      "after_sha256": "1eb21a82bc078354338c44974e7ef73d340679f215ca759f83d3c481b5b56f7a"
+    },
+    "workbench/spikes/orbital-mvcc/metadata/consumer/candidates.h": {
+      "before_sha256": "c0af6069bc32f1fde528fb37624608457ba9e543740f85a212d1c9f9bb5f8cca",
+      "after_sha256": "58605c89a7511e5702d7affd1833352936698cef06148bfbc175e9d3bdfef659"
+    },
+    "workbench/spikes/orbital-mvcc/metadata/consumer/README.md": {
+      "before_sha256": "7145bd51ca77d3650ff043e11989e3b7234dfe5dca1d558ba6882258db307519",
+      "after_sha256": "adb4ebc10bce748b209eb69eaa764cc0285c1e0a95a7d807c966151d5f91439f"
+    },
+    "workbench/spikes/orbital-mvcc/performance/README.md": {
+      "before_sha256": "a68b74dc174d880a17cb6795959c512f13b160fb45e14ba7959eb3f2be8f5a2b",
+      "after_sha256": "9c80550cac9d5b4c5ae6f1697767f98f7bfe20c840ed95cd1e75f512eed90c3c"
+    }
+  },
+  "full_receipt_archived_sha256": "9e47080f274bf6328fb19d1873fefbc116328d507856fc8ee96c32a5ae3c7f12",
+  "all_logical_costs_match": true,
+  "source_audit": "All native runtimeC++/headers/CMake matchexact768/e509+sixfilepatch; build cache copies infullreceipt excluded from source authority; no leftovermodule orreader code.",
+  "raw_reports": {
+    "phase/base/report-0.json": "c5858804ec604e07e37a4771644ebb54705d5456baa7e741117a1f10fe2048f6",
+    "phase/base/report-1.json": "20128ef6b781b56aeef45fc0d3536fff134745a3aef02f80919eb4c68c3e960d",
+    "phase/candidate/report-0.json": "33ae56e58ee1dde9d0302005afcdaf3b28eac498e42f48daae2557cdcc1664ff",
+    "phase/candidate/report-1.json": "86381f3c266c5f04be45db120eaf5159bcb0e820ef258ca8b53260e8337d95d7"
+  },
+  "independent_checks_per_invocation": {
+    "rows": 143156,
+    "wire_bytes": 2530822,
+    "held_old_source": 12,
+    "physical_close_zero_charge": true
+  }
+}

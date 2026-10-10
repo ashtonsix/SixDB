@@ -1,0 +1,509 @@
+{
+  "scope": "three repetitions; complete native data calls; allocation, source admission, lookup, Store publication, target readback and release excluded",
+  "timing_enabled": true,
+  "repetitions": 3,
+  "schema_retains_constructor": true,
+  "packets": [
+    {
+      "type": "Schema",
+      "bytes": 15296,
+      "alignment": 64
+    },
+    {
+      "type": "TupleConstructor",
+      "bytes": 13120,
+      "alignment": 64
+    },
+    {
+      "type": "ExpectedTupleConstructor",
+      "bytes": 13184,
+      "alignment": 64
+    },
+    {
+      "type": "TupleLayout",
+      "bytes": 392,
+      "alignment": 4
+    },
+    {
+      "type": "TupleReader8",
+      "bytes": 96,
+      "alignment": 8
+    },
+    {
+      "type": "TupleWriter8",
+      "bytes": 336,
+      "alignment": 8
+    },
+    {
+      "type": "TupleWriter64",
+      "bytes": 6528,
+      "alignment": 64
+    },
+    {
+      "type": "TupleReaders4",
+      "bytes": 384,
+      "alignment": 8
+    },
+    {
+      "type": "TupleWriters4",
+      "bytes": 1344,
+      "alignment": 8
+    },
+    {
+      "type": "ReadData",
+      "bytes": 56,
+      "alignment": 8
+    },
+    {
+      "type": "KernelCosts",
+      "bytes": 72,
+      "alignment": 8
+    },
+    {
+      "type": "ConstructionInput",
+      "bytes": 128,
+      "alignment": 1
+    },
+    {
+      "type": "ConstructionOperation",
+      "bytes": 16,
+      "alignment": 8
+    }
+  ],
+  "schema_setup": {
+    "operation": "schema_setup",
+    "rows_per_body": 0,
+    "complete_calls_per_sample": 1,
+    "median_thread_cpu_ns_per_complete_call": 2630,
+    "median_wall_ns_per_complete_call": 2470,
+    "constructor_factories_in_sample_source_inferred_not_instrumented": 1,
+    "samples_total_ns": [
+      {
+        "thread_cpu": 26660,
+        "wall": 22890
+      },
+      {
+        "thread_cpu": 2630,
+        "wall": 2470
+      },
+      {
+        "thread_cpu": 2250,
+        "wall": 2070
+      }
+    ],
+    "last_sample_logical_kernel_costs": {
+      "decoded_values": 0,
+      "encoded_values": 0,
+      "bindings": 0,
+      "constructor_calls": 0,
+      "issued_bytes": 0,
+      "issued_spans": 0,
+      "completed_parts": 0,
+      "completed_rows": 0,
+      "scratch_bound_bytes": 0
+    }
+  },
+  "schema_setup_constructor_factories_source_inferred_not_instrumented": 1,
+  "observations": [
+    {
+      "operation": "construct_tuple",
+      "rows_per_body": 129,
+      "complete_calls_per_sample": 1,
+      "median_thread_cpu_ns_per_complete_call": 3080,
+      "median_wall_ns_per_complete_call": 2940,
+      "constructor_factories_in_sample_source_inferred_not_instrumented": 0,
+      "samples_total_ns": [
+        {
+          "thread_cpu": 3260,
+          "wall": 3050
+        },
+        {
+          "thread_cpu": 3080,
+          "wall": 2940
+        },
+        {
+          "thread_cpu": 3070,
+          "wall": 2920
+        }
+      ],
+      "last_sample_logical_kernel_costs": {
+        "decoded_values": 0,
+        "encoded_values": 516,
+        "bindings": 1,
+        "constructor_calls": 129,
+        "issued_bytes": 2967,
+        "issued_spans": 129,
+        "completed_parts": 1,
+        "completed_rows": 129,
+        "scratch_bound_bytes": 160
+      }
+    },
+    {
+      "operation": "construct_series",
+      "rows_per_body": 129,
+      "complete_calls_per_sample": 1,
+      "median_thread_cpu_ns_per_complete_call": 990,
+      "median_wall_ns_per_complete_call": 840,
+      "constructor_factories_in_sample_source_inferred_not_instrumented": 0,
+      "samples_total_ns": [
+        {
+          "thread_cpu": 1190,
+          "wall": 1000
+        },
+        {
+          "thread_cpu": 990,
+          "wall": 840
+        },
+        {
+          "thread_cpu": 970,
+          "wall": 820
+        }
+      ],
+      "last_sample_logical_kernel_costs": {
+        "decoded_values": 0,
+        "encoded_values": 516,
+        "bindings": 8,
+        "constructor_calls": 8,
+        "issued_bytes": 3060,
+        "issued_spans": 8,
+        "completed_parts": 4,
+        "completed_rows": 129,
+        "scratch_bound_bytes": 2048
+      }
+    },
+    {
+      "operation": "tuple_to_series",
+      "rows_per_body": 129,
+      "complete_calls_per_sample": 1,
+      "median_thread_cpu_ns_per_complete_call": 930,
+      "median_wall_ns_per_complete_call": 770,
+      "constructor_factories_in_sample_source_inferred_not_instrumented": 0,
+      "samples_total_ns": [
+        {
+          "thread_cpu": 1180,
+          "wall": 1010
+        },
+        {
+          "thread_cpu": 930,
+          "wall": 770
+        },
+        {
+          "thread_cpu": 830,
+          "wall": 680
+        }
+      ],
+      "last_sample_logical_kernel_costs": {
+        "decoded_values": 516,
+        "encoded_values": 516,
+        "bindings": 16,
+        "constructor_calls": 8,
+        "issued_bytes": 3060,
+        "issued_spans": 8,
+        "completed_parts": 4,
+        "completed_rows": 129,
+        "scratch_bound_bytes": 2048
+      }
+    },
+    {
+      "operation": "series_to_tuple",
+      "rows_per_body": 129,
+      "complete_calls_per_sample": 1,
+      "median_thread_cpu_ns_per_complete_call": 2650,
+      "median_wall_ns_per_complete_call": 2510,
+      "constructor_factories_in_sample_source_inferred_not_instrumented": 0,
+      "samples_total_ns": [
+        {
+          "thread_cpu": 2800,
+          "wall": 2640
+        },
+        {
+          "thread_cpu": 2650,
+          "wall": 2510
+        },
+        {
+          "thread_cpu": 2610,
+          "wall": 2460
+        }
+      ],
+      "last_sample_logical_kernel_costs": {
+        "decoded_values": 516,
+        "encoded_values": 516,
+        "bindings": 9,
+        "constructor_calls": 129,
+        "issued_bytes": 2967,
+        "issued_spans": 129,
+        "completed_parts": 1,
+        "completed_rows": 129,
+        "scratch_bound_bytes": 4256
+      }
+    },
+    {
+      "operation": "construct_tuple",
+      "rows_per_body": 4097,
+      "complete_calls_per_sample": 1,
+      "median_thread_cpu_ns_per_complete_call": 88580,
+      "median_wall_ns_per_complete_call": 88401,
+      "constructor_factories_in_sample_source_inferred_not_instrumented": 0,
+      "samples_total_ns": [
+        {
+          "thread_cpu": 88580,
+          "wall": 88401
+        },
+        {
+          "thread_cpu": 112041,
+          "wall": 111851
+        },
+        {
+          "thread_cpu": 88370,
+          "wall": 88210
+        }
+      ],
+      "last_sample_logical_kernel_costs": {
+        "decoded_values": 0,
+        "encoded_values": 16388,
+        "bindings": 1,
+        "constructor_calls": 4097,
+        "issued_bytes": 94231,
+        "issued_spans": 4097,
+        "completed_parts": 1,
+        "completed_rows": 4097,
+        "scratch_bound_bytes": 160
+      }
+    },
+    {
+      "operation": "construct_series",
+      "rows_per_body": 4097,
+      "complete_calls_per_sample": 1,
+      "median_thread_cpu_ns_per_complete_call": 10360,
+      "median_wall_ns_per_complete_call": 10190,
+      "constructor_factories_in_sample_source_inferred_not_instrumented": 0,
+      "samples_total_ns": [
+        {
+          "thread_cpu": 10470,
+          "wall": 10270
+        },
+        {
+          "thread_cpu": 10320,
+          "wall": 10170
+        },
+        {
+          "thread_cpu": 10360,
+          "wall": 10190
+        }
+      ],
+      "last_sample_logical_kernel_costs": {
+        "decoded_values": 0,
+        "encoded_values": 16388,
+        "bindings": 132,
+        "constructor_calls": 132,
+        "issued_bytes": 92340,
+        "issued_spans": 132,
+        "completed_parts": 4,
+        "completed_rows": 4097,
+        "scratch_bound_bytes": 2048
+      }
+    },
+    {
+      "operation": "tuple_to_series",
+      "rows_per_body": 4097,
+      "complete_calls_per_sample": 1,
+      "median_thread_cpu_ns_per_complete_call": 10460,
+      "median_wall_ns_per_complete_call": 10250,
+      "constructor_factories_in_sample_source_inferred_not_instrumented": 0,
+      "samples_total_ns": [
+        {
+          "thread_cpu": 10930,
+          "wall": 10750
+        },
+        {
+          "thread_cpu": 10460,
+          "wall": 10250
+        },
+        {
+          "thread_cpu": 10420,
+          "wall": 10250
+        }
+      ],
+      "last_sample_logical_kernel_costs": {
+        "decoded_values": 16388,
+        "encoded_values": 16388,
+        "bindings": 264,
+        "constructor_calls": 132,
+        "issued_bytes": 92340,
+        "issued_spans": 132,
+        "completed_parts": 4,
+        "completed_rows": 4097,
+        "scratch_bound_bytes": 2048
+      }
+    },
+    {
+      "operation": "series_to_tuple",
+      "rows_per_body": 4097,
+      "complete_calls_per_sample": 1,
+      "median_thread_cpu_ns_per_complete_call": 71910,
+      "median_wall_ns_per_complete_call": 71701,
+      "constructor_factories_in_sample_source_inferred_not_instrumented": 0,
+      "samples_total_ns": [
+        {
+          "thread_cpu": 72100,
+          "wall": 71930
+        },
+        {
+          "thread_cpu": 71650,
+          "wall": 71491
+        },
+        {
+          "thread_cpu": 71910,
+          "wall": 71701
+        }
+      ],
+      "last_sample_logical_kernel_costs": {
+        "decoded_values": 16388,
+        "encoded_values": 16388,
+        "bindings": 133,
+        "constructor_calls": 4097,
+        "issued_bytes": 94231,
+        "issued_spans": 4097,
+        "completed_parts": 1,
+        "completed_rows": 4097,
+        "scratch_bound_bytes": 4256
+      }
+    },
+    {
+      "operation": "setup64_tuple_calls",
+      "rows_per_body": 1,
+      "complete_calls_per_sample": 64,
+      "median_thread_cpu_ns_per_complete_call": 125.469,
+      "median_wall_ns_per_complete_call": 123.125,
+      "constructor_factories_in_sample_source_inferred_not_instrumented": 0,
+      "samples_total_ns": [
+        {
+          "thread_cpu": 8090,
+          "wall": 7920
+        },
+        {
+          "thread_cpu": 8030,
+          "wall": 7880
+        },
+        {
+          "thread_cpu": 7990,
+          "wall": 7850
+        }
+      ],
+      "last_sample_logical_kernel_costs": {
+        "decoded_values": 0,
+        "encoded_values": 256,
+        "bindings": 64,
+        "constructor_calls": 64,
+        "issued_bytes": 1472,
+        "issued_spans": 64,
+        "completed_parts": 64,
+        "completed_rows": 64,
+        "scratch_bound_bytes": 160
+      }
+    },
+    {
+      "operation": "setup64_series_calls",
+      "rows_per_body": 1,
+      "complete_calls_per_sample": 64,
+      "median_thread_cpu_ns_per_complete_call": 291.562,
+      "median_wall_ns_per_complete_call": 289.062,
+      "constructor_factories_in_sample_source_inferred_not_instrumented": 0,
+      "samples_total_ns": [
+        {
+          "thread_cpu": 18671,
+          "wall": 18500
+        },
+        {
+          "thread_cpu": 18660,
+          "wall": 18510
+        },
+        {
+          "thread_cpu": 18600,
+          "wall": 18441
+        }
+      ],
+      "last_sample_logical_kernel_costs": {
+        "decoded_values": 0,
+        "encoded_values": 256,
+        "bindings": 256,
+        "constructor_calls": 256,
+        "issued_bytes": 11520,
+        "issued_spans": 256,
+        "completed_parts": 256,
+        "completed_rows": 64,
+        "scratch_bound_bytes": 2048
+      }
+    },
+    {
+      "operation": "setup64_tuple_calls",
+      "rows_per_body": 64,
+      "complete_calls_per_sample": 64,
+      "median_thread_cpu_ns_per_complete_call": 1483.75,
+      "median_wall_ns_per_complete_call": 1481.11,
+      "constructor_factories_in_sample_source_inferred_not_instrumented": 0,
+      "samples_total_ns": [
+        {
+          "thread_cpu": 102010,
+          "wall": 101820
+        },
+        {
+          "thread_cpu": 94830,
+          "wall": 94670
+        },
+        {
+          "thread_cpu": 94960,
+          "wall": 94791
+        }
+      ],
+      "last_sample_logical_kernel_costs": {
+        "decoded_values": 0,
+        "encoded_values": 16384,
+        "bindings": 64,
+        "constructor_calls": 4096,
+        "issued_bytes": 94208,
+        "issued_spans": 4096,
+        "completed_parts": 64,
+        "completed_rows": 4096,
+        "scratch_bound_bytes": 160
+      }
+    },
+    {
+      "operation": "setup64_series_calls",
+      "rows_per_body": 64,
+      "complete_calls_per_sample": 64,
+      "median_thread_cpu_ns_per_complete_call": 375.328,
+      "median_wall_ns_per_complete_call": 371.875,
+      "constructor_factories_in_sample_source_inferred_not_instrumented": 0,
+      "samples_total_ns": [
+        {
+          "thread_cpu": 24021,
+          "wall": 23800
+        },
+        {
+          "thread_cpu": 24300,
+          "wall": 24130
+        },
+        {
+          "thread_cpu": 23920,
+          "wall": 23750
+        }
+      ],
+      "last_sample_logical_kernel_costs": {
+        "decoded_values": 0,
+        "encoded_values": 16384,
+        "bindings": 256,
+        "constructor_calls": 256,
+        "issued_bytes": 92160,
+        "issued_spans": 256,
+        "completed_parts": 256,
+        "completed_rows": 4096,
+        "scratch_bound_bytes": 2048
+      }
+    }
+  ],
+  "independent_checked_rows": 143156,
+  "independent_checked_wire_bytes": 2530822,
+  "held_old_source_checks": 12,
+  "physical_close_zero_charge": true
+}

@@ -799,3 +799,49 @@ Every raw Orbital write finishes with one version per Object and zero contexts
 and retirement records. Six table/parity reports and both ABI reports regenerate
 byte-identically; the source, diagnostics and binaries stay in the existing
 worker archive. This predates the later physical extraction and trim changes.
+
+## Transient Schema construction phase
+
+[Raw AB/BA observations](evidence/zen5-schema-phase-screen-20261010/phase/candidate/report-0.json)
+from `20261010T003705Z-b8c33ff7` compare exact `768e033` with the reviewed six-file
+Schema patch `1f559f5f`. Schema shrinks from 15296 B/alignment64 to
+2120 B/alignment8 by preparing the unchanged Tuple constructor in each complete
+construction or Series→Tuple conversion call. Its constructor and expected
+constructor remain 13120/13184 B; resident savings do not establish transient
+compiler-frame savings. All 374 native source/header/CMake postimages per actual
+projection match the expected cut; no preceding module or reader code remains.
+
+Each binary runs twice in AB/BA order, with three raw observations per case.
+All kernel costs match. Each invocation independently checks 143156 rows,
+2530822 wire bytes and 12 retained-source histories, and closes physical memory
+to zero charge. These are complete native codec calls with allocation, discovery,
+source admission, Store publication, readback and destruction outside clocks.
+The [diagnostic caller and replay](controls/schema-phase/README.md) retain that
+scope; the full receipt and source/ELF/archives remain in S3.
+
+Median wall ns per complete call in the two invocations:
+
+| Case | Resident constructor | Per-call constructor |
+| --- | ---: | ---: |
+| Schema setup | 2470 / 2490 | 1170 / 1150 |
+| 129-row Tuple construction | 2940 / 2940 | 3890 / 3940 |
+| 129-row Series→Tuple | 2510 / 2640 | 3250 / 3250 |
+| 4097-row Tuple construction | 88401 / 88230 | 84180 / 83840 |
+| 4097-row Series→Tuple | 71701 / 71990 | 66891 / 66970 |
+| 64 separate one-row Tuple calls, each | 123.13 / 120.78 | 1089.22 / 1080.48 |
+| 64 separate 64-row Tuple calls, each | 1481.11 / 1485.02 | 2370.31 / 2368.45 |
+
+Series construction and Tuple→Series controls remain near their original costs.
+The source-inferred constructor factory count for each 64-Tuple-call sample
+changes 0→64; it is not an instrumented counter or the row initializer count.
+These groups expose repeated setup, not complete Backend startup or steady
+request performance. All first-call samples are retained alongside the medians.
+
+**Recommendation: keep the resident Schema and reject this per-call version as
+measured.** Saving 13176 resident bytes does not justify roughly 9× tiny Tuple
+construction cost. Larger-call observations improve, so this is a workload and
+lifetime tradeoff, not a claim that transient construction always loses.
+Metadata reduction serves measured performance and simpler ownership; byte count
+alone is not a promotion criterion. Further shrinking is set aside unless it
+has a concrete performance or architectural benefit. The completed comparison
+is retained as negative evidence; it does not queue another Schema sweep.

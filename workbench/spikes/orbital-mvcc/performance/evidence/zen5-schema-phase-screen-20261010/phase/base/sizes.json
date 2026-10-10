@@ -1,0 +1,70 @@
+{
+  "schema_retains_constructor": true,
+  "packets": [
+    {
+      "type": "Schema",
+      "bytes": 15296,
+      "alignment": 64
+    },
+    {
+      "type": "TupleConstructor",
+      "bytes": 13120,
+      "alignment": 64
+    },
+    {
+      "type": "ExpectedTupleConstructor",
+      "bytes": 13184,
+      "alignment": 64
+    },
+    {
+      "type": "TupleLayout",
+      "bytes": 392,
+      "alignment": 4
+    },
+    {
+      "type": "TupleReader8",
+      "bytes": 96,
+      "alignment": 8
+    },
+    {
+      "type": "TupleWriter8",
+      "bytes": 336,
+      "alignment": 8
+    },
+    {
+      "type": "TupleWriter64",
+      "bytes": 6528,
+      "alignment": 64
+    },
+    {
+      "type": "TupleReaders4",
+      "bytes": 384,
+      "alignment": 8
+    },
+    {
+      "type": "TupleWriters4",
+      "bytes": 1344,
+      "alignment": 8
+    },
+    {
+      "type": "ReadData",
+      "bytes": 56,
+      "alignment": 8
+    },
+    {
+      "type": "KernelCosts",
+      "bytes": 72,
+      "alignment": 8
+    },
+    {
+      "type": "ConstructionInput",
+      "bytes": 128,
+      "alignment": 1
+    },
+    {
+      "type": "ConstructionOperation",
+      "bytes": 16,
+      "alignment": 8
+    }
+  ]
+}
