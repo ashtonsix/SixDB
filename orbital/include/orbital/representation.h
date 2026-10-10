@@ -7,8 +7,9 @@
 namespace orbital {
 /// Embedded single-owner physical storage. The caller's static Control owns
 /// interpretation, geometry and its dependencies; Orbital owns body lifetime.
-/// Control operations are nonthrowing. They retain the exact admitted proof;
-/// geometry and selected-copy storage requirements are part of that static seam.
+/// Control operations are nonthrowing. They retain immutable admitted geometry.
+/// Geometry queries read that proof without mutating capture sources or reentering
+/// capture. Selected-copy storage requirements are part of the static seam.
 /// The memory resource outlives every Representation and escaping Part; its
 /// allocation/deallocation callbacks must not reenter the owning ObjectStore.
 /// Physical-owner disposal callbacks may reenter the catalog during cleanup.
@@ -39,8 +40,9 @@ template<class Control> struct RepresentationSelection {
   [[nodiscard]] Result<View> part(PartId) const noexcept;
 };
 
-/// Establish full-allocation Holds before relinquishing any supplied Allocation.
-/// A refusal leaves original Allocations intact. Writable aliases end before
+/// Reserve metadata and validate all sources before transferring Allocation uses.
+/// A refusal leaves original Allocations intact. Metadata reservation can fail
+/// before sources are checked. Writable aliases end before
 /// capture; an Object/version label is never physical ownership authority.
 template<class Control> [[nodiscard]] Result<Representation<Control>*> capture_representation(
     std::pmr::memory_resource&, Control, PartOwners, std::span<const PartSource>) noexcept;

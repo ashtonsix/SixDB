@@ -1,3 +1,4 @@
+#include "capture.h"
 // Allocation/Hold lifetimes, growth and Pool-wide trim/close coordination.
 
 #include "internal.h"
@@ -387,6 +388,24 @@ Result<Hold> hold(const Allocation& allocation, ByteRange footprint) {
   result.footprint = footprint;
   return result;
 }
+
+namespace detail {
+Result<void> ready_for_capture(const Allocation& allocation) noexcept {
+  if (!allocation) return std::unexpected(Error::conflict);
+  auto& use = *allocation.storage;
+  const auto state = use.users.state.load(std::memory_order_relaxed);
+  if (!worker::on_lane(*route(use, state)->pool->lane))
+    return std::unexpected(Error::conflict);
+  if (!(allocation.size + allocation.readable_padding))
+    return std::unexpected(Error::invalid_argument);
+  const auto users = state & UseState::user_mask;
+  // Preserve capture's previous full-Hold refusal at saturation. Transfer itself
+  // needs no extra user; relaxing this boundary would be a separate API change.
+  if (!users || users >= returning - 1) return std::unexpected(Error::capacity);
+  return {};
+}
+
+} // namespace detail
 
 Result<Hold> retain(const Hold& original) {
   if (!original) return std::unexpected(Error::invalid_argument);

@@ -147,6 +147,12 @@ Orbital holds the proof and its dependencies through physical capture and
 escape. A selected-copy escape asks that same Control to copy only the needed
 interpretation into the Part's allocation.
 
+Capture reserves metadata before validating the sources, then transfers their
+existing Allocation uses without a retain/release round trip. No source is
+consumed on refusal; metadata exhaustion can precede an invalid-source error.
+Geometry queries observe immutable proof. Existing Holds keep their own uses,
+and the transferred use preserves the allocation's pin and final return route.
+
 The implementation keeps these compilation seams:
 
 - [storage.cpp](src/object/storage.cpp) compiles directory, history-slab and debt-storage allocation once in Orbital. [representation.cpp](src/object/representation.cpp) compiles non-format physical-owner operations.

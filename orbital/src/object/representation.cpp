@@ -1,6 +1,6 @@
 #include "representation_ops.h"
 #include <algorithm>
-#include <vector>
+#include <cassert>
 namespace orbital::object_detail {
 bool valid(Bytes input, std::size_t padding) {
   if (padding > SIZE_MAX - input.size()) return false;
@@ -8,12 +8,6 @@ bool valid(Bytes input, std::size_t padding) {
   return !extent || (input.data() && extent <= UINTPTR_MAX - std::uintptr_t(input.data()));
 }
 
-Result<orbital::allocation::Storage*> hold_source(orbital::allocation::Allocation* allocation) {
-  if (!allocation || !*allocation) return static_cast<orbital::allocation::Storage*>(nullptr);
-  auto retained = orbital::allocation::hold(*allocation, {0, allocation->size + allocation->readable_padding});
-  if (!retained) return std::unexpected(retained.error());
-  return std::exchange(retained->storage, nullptr);
-}
 void drop(orbital::allocation::Storage* owner) {
   orbital::allocation::Hold use;
   use.storage = owner;
@@ -38,7 +32,7 @@ bool within(const orbital::allocation::Allocation& allocation, Bytes body, std::
   return part >= begin && part - begin <= extent && body.size() + padding <= extent - (part - begin);
 }
 
-bool unique_allocations(std::pmr::memory_resource& memory, std::span<const PartSource> bodies) {
+bool unique_allocations(std::span<const PartSource> bodies, std::span<orbital::allocation::Storage*> scratch) {
   const auto storage = [](const PartSource& body) { return body.allocation ? body.allocation->storage : nullptr; };
   if (bodies.size() <= 8) {
     for (std::size_t i = 0; i < bodies.size(); ++i)
@@ -46,9 +40,10 @@ bool unique_allocations(std::pmr::memory_resource& memory, std::span<const PartS
         if (storage(bodies[i]) == storage(bodies[j])) return false;
     return true;
   }
-  std::pmr::vector<orbital::allocation::Storage*> owners(&memory);
-  owners.reserve(bodies.size());
-  for (const auto& body : bodies) if (auto* owner = storage(body)) owners.push_back(owner);
+  assert(scratch.size() >= bodies.size());
+  std::size_t used{};
+  for (const auto& body : bodies) if (auto* owner = storage(body)) scratch[used++] = owner;
+  auto owners = scratch.first(used);
   std::sort(owners.begin(), owners.end(), std::less<orbital::allocation::Storage*>{});
   return std::adjacent_find(owners.begin(), owners.end()) == owners.end();
 }

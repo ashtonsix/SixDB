@@ -2,6 +2,7 @@
 #include "representation_ops.h"
 #include <algorithm>
 #include <cassert>
+#include <vector>
 // Instantiate once beside the concrete interpretation. Control supplies admitted
 // geometry, a resource and nonthrowing proof lifetime/copy operations. Its
 // selected copy fits selected_bytes() bytes aligned as Part<Control> and preserves
@@ -48,69 +49,87 @@ template<class Control> Result<Representation<Control>*> capture_representation(
   using Realization = Representation<Control>;
   if (!control.valid(memory) || bodies.size() != control.part_count() || static_cast<unsigned>(owners) > 3)
     return std::unexpected(Error::invalid_argument);
-  for (std::size_t i = 0; i < bodies.size(); ++i) {
-    const auto& body = bodies[i];
-    const auto extent = control.extent(i);
-    const auto padding = control.padding(i);
-    const auto alignment = control.alignment(i);
-    if (body.id != control.id(i) || !extent || *extent != body.body.size() ||
-        !valid(body.body, padding) || ((!body.body.empty() || padding) &&
-         (!alignment || std::uintptr_t(body.body.data()) % alignment)))
-      return std::unexpected(Error::invalid_argument);
-    if (shared(owners)) {
-      if ((body.body.size() || padding) && !body.backing.use_count()) return std::unexpected(Error::invalid_argument);
-      if (grouped(owners) && i &&
-          (body.backing.owner_before(bodies[0].backing) || bodies[0].backing.owner_before(body.backing)))
-        return std::unexpected(Error::invalid_argument);
-    } else {
-      if ((body.body.size() || padding) &&
-          (!body.allocation || !within(*body.allocation, body.body, padding)))
-        return std::unexpected(Error::invalid_argument);
-      if (grouped(owners) && i && body.allocation != bodies[0].allocation) return std::unexpected(Error::invalid_argument);
+  const auto validate = [&]() -> std::optional<Error> {
+    for (std::size_t i = 0; i < bodies.size(); ++i) {
+      const auto& body = bodies[i];
+      const auto extent = control.extent(i);
+      const auto padding = control.padding(i);
+      const auto alignment = control.alignment(i);
+      if (body.id != control.id(i) || !extent || *extent != body.body.size() ||
+          !valid(body.body, padding) || ((!body.body.empty() || padding) &&
+           (!alignment || std::uintptr_t(body.body.data()) % alignment)))
+        return Error::invalid_argument;
+      if (shared(owners)) {
+        if ((body.body.size() || padding) && !body.backing.use_count()) return Error::invalid_argument;
+        if (grouped(owners) && i &&
+            (body.backing.owner_before(bodies[0].backing) || bodies[0].backing.owner_before(body.backing)))
+          return Error::invalid_argument;
+      } else {
+        if ((body.body.size() || padding) &&
+            (!body.allocation || !within(*body.allocation, body.body, padding)))
+          return Error::invalid_argument;
+        if (grouped(owners) && i && body.allocation != bodies[0].allocation) return Error::invalid_argument;
+      }
     }
-  }
+    return {};
+  };
   const auto stride = grouped(owners) ? sizeof(const std::byte*) :
       (shared(owners) ? sizeof(SharedBody) : sizeof(AllocatedBody));
   const auto group_bytes = grouped(owners) && !bodies.empty() ?
       (shared(owners) ? sizeof(std::shared_ptr<const void>) : sizeof(void*)) : 0;
   if (bodies.size() > (SIZE_MAX - sizeof(Realization) - group_bytes) / stride)
     return std::unexpected(Error::capacity);
-  const auto size = representation_bytes(control, owners);
+  const auto size = sizeof(Realization) + group_bytes + bodies.size() * stride;
   try {
-    if (!shared(owners) && !grouped(owners) && !unique_allocations(memory, bodies))
-      return std::unexpected(Error::invalid_argument);
+    std::pmr::vector<orbital::allocation::Storage*> scratch(&memory);
+    if (!shared(owners) && !grouped(owners) && bodies.size() > 8)
+      scratch.resize(bodies.size());
     auto* value = std::construct_at(static_cast<Realization*>(memory.allocate(size, alignof(Realization))),
         Realization{control, 1, owners});
     control.retain();
+    // Empty slots make every later refusal safe to dispose. No source ownership
+    // or address is copied before the final validation after all callbacks.
     if (grouped(owners)) {
-      for (std::size_t i = 0; i < bodies.size(); ++i) std::construct_at(addresses(value) + i, bodies[i].body.data());
+      for (std::size_t i = 0; i < bodies.size(); ++i) std::construct_at(addresses(value) + i, nullptr);
       if (!bodies.empty()) {
-        if (shared(owners)) std::construct_at(static_cast<std::shared_ptr<const void>*>(group_owner(value)), bodies[0].backing);
-        else {
-          auto* owner = static_cast<orbital::allocation::Storage**>(group_owner(value));
-          *owner = nullptr;
-          auto held = hold_source(bodies[0].allocation);
-          if (!held) { release(value); return std::unexpected(held.error()); }
-          *owner = *held;
-        }
+        if (shared(owners)) std::construct_at(static_cast<std::shared_ptr<const void>*>(group_owner(value)));
+        else std::construct_at(static_cast<orbital::allocation::Storage**>(group_owner(value)), nullptr);
       }
     } else {
       for (std::size_t i = 0; i < bodies.size(); ++i) {
-        if (shared(owners)) std::construct_at(shared_bodies(value) + i, SharedBody{bodies[i].body.data(), bodies[i].backing});
-        else std::construct_at(allocated_bodies(value) + i, AllocatedBody{bodies[i].body.data(), nullptr});
-      }
-      if (!shared(owners)) {
-        for (std::size_t i = 0; i < bodies.size(); ++i) {
-          auto held = hold_source(bodies[i].allocation);
-          if (!held) { release(value); return std::unexpected(held.error()); }
-          allocated_bodies(value)[i].owner = *held;
-        }
+        if (shared(owners)) std::construct_at(shared_bodies(value) + i, SharedBody{nullptr, {}});
+        else std::construct_at(allocated_bodies(value) + i, AllocatedBody{nullptr, nullptr});
       }
     }
+    if (auto error = validate()) { release(value); return std::unexpected(*error); }
     if (!shared(owners)) {
+      if (!grouped(owners) && !unique_allocations(bodies, scratch)) {
+        release(value); return std::unexpected(Error::invalid_argument);
+      }
       const auto originals = grouped(owners) ? std::min<std::size_t>(1, bodies.size()) : bodies.size();
-      for (std::size_t i = 0; i < originals; ++i)
-        if (bodies[i].allocation) orbital::allocation::release(*bodies[i].allocation);
+      for (std::size_t i = 0; i < originals; ++i) {
+        auto ready = capture_ready(bodies[i].allocation);
+        if (!ready) { release(value); return std::unexpected(ready.error()); }
+      }
+    }
+    // No failure or callback remains. Geometry queries only observed immutable
+    // admitted proof; source changes made by earlier callbacks were validated.
+    if (grouped(owners)) {
+      for (std::size_t i = 0; i < bodies.size(); ++i) addresses(value)[i] = bodies[i].body.data();
+      if (!bodies.empty()) {
+        if (shared(owners)) *static_cast<std::shared_ptr<const void>*>(group_owner(value)) = bodies[0].backing;
+        else *static_cast<orbital::allocation::Storage**>(group_owner(value)) = take_source(bodies[0].allocation);
+      }
+    } else {
+      for (std::size_t i = 0; i < bodies.size(); ++i) {
+        if (shared(owners)) {
+          shared_bodies(value)[i].address = bodies[i].body.data();
+          shared_bodies(value)[i].owner = bodies[i].backing;
+        } else {
+          allocated_bodies(value)[i].address = bodies[i].body.data();
+          allocated_bodies(value)[i].owner = take_source(bodies[i].allocation);
+        }
+      }
     }
     return value;
   } catch (const std::bad_alloc&) { return std::unexpected(Error::capacity); }
