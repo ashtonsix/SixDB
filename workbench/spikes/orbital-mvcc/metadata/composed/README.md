@@ -13,7 +13,7 @@ Shapes are shared across Objects. The scalar Inline trial uses
 coherent Scope selection and consumes the selected Tuple through the canonical
 Ikea kernel. Its friend access reaches the actual catalog, physical Shape and
 Material; it owns no copied directory, layout or cache. Mapped LMDB uses the
-same canonical kernel. Batch and escaped Body reads use the qualified
+same canonical kernel. Batch and borrowed Body reads use the qualified
 `shape_read::read_proven` bridge, which specializes the same canonical transfers
 proved by Tuple admission while retaining the selected address and count.
 Column reads and scans use existing generic
@@ -42,7 +42,8 @@ representation-choice policy is inferred from this test convention.
 
 Link the compiled `orbital_mvcc_composed` CMake target and include
 `metadata/composed/backend.h`. It compiles `material.cpp` and `read_fusion.cpp`
-once and reuses
+once. The shared `orbital_mvcc_catalog` library compiles `catalog.cpp` once for
+this Backend and the Loom callers. The composition also reuses
 `orbital_versioned_performance_runtime`, `orbital_mvcc_point_write`,
 `orbital_mvcc_shape_read` and `orbital_mvcc_directory`. Each source remains an
 ordinary independent translation unit.
@@ -124,22 +125,47 @@ metadata. No 4–8 KiB total-metadata or below-LMDB target is claimed.
 stack-frame or peak-stack measurements. Read caches are bounded by offered work,
 never by catalog size. The fixed 64-entry write arrays remain a performance lead.
 
+## Disposable assumptions
+
+The fixture deliberately fixes choices that Engine and real containers must own:
+
+- Four fields with a 23-byte Tuple encoding or four particular Local Series
+  columns; sorted fixed records, no variable-length values, schema evolution,
+  index/summary maintenance, insertion/split or membership policy.
+- Updates clone every Part, including unchanged columns. Default reads prefer
+  primary; updates prefer an adopted alternative. Conversion compatibility checks
+  count and interpretation, while the converter owes actual content equivalence.
+- At most 64 offered update commands, with repeated scans for grouping. Duplicate
+  commands apply in offered order and same-value commands still store. Each
+  successful Outcome has `changes = 1` per offered command, not per distinct or
+  actually changed row. This is a benchmark witness, not SQL affected-row semantics.
+- One initial shared Schema, explicitly reused Shapes without interning, and a
+  Backend that borrows Corpus/Schema. Four-Part arrays and empty writer-law slots
+  are charged scaffolding, not production capacity requirements.
+- `Body` borrows both its issuing Scope and Material. It is not an owning Part
+  export. Append supports one primary Tuple Object; the separate shared-prefix
+  control adds an explicit bounded reservation, without rollover policy.
+
+The [handover](../../OUTCOMES.md#lessons-for-ikea-engine-and-schema-work) explains
+what these choices taught us and what the next real caller should reconsider.
+
 ## Initial collection inventory
 
-[Actual initial counters](initial-metadata.json) at `e5a9492` cover 64 Objects,
-three records each, independent Allocations, the selected trim bitmaps and
-the extracted Object/Representation module. These are local AArch64 with 4 KiB
-pages; x86 Schema storage differs. Persistent requested and inline bytes:
+[Current initial counters](current-metadata.json) at `f836ca9` cover 64 Objects,
+three records each, independent Allocations, the selected trim bitmaps, exact heap
+control backing and extracted Object/Representation module. These are local
+AArch64 with 4 KiB pages; x86 Schema storage differs. Persistent requested and
+inline bytes, before any update:
 
 | Component | Tuple, 1 Part | Series, 4 Parts |
 | --- | ---: | ---: |
 | Catalog, Representations and shared proof (one PMR total) | 6,563 | 9,592 |
-| Allocation Group | 6,008 | 6,072 |
+| Allocation Group | 4,040 | 4,752 |
 | Arena/Pool setup and owning vectors | 688 | 688 |
 | Backend, including Lane and writer-law slots | 2,048 | 2,048 |
 | Shared Schema | 10,176 | 10,176 |
 | Borrowed write-Shape record and writer descriptions | 587 | 587 |
-| **Total** | **26,070** | **29,163** |
+| **Total** | **24,102** | **27,843** |
 
 Payload, trace/oracle, libc rounding and OS/thread overhead are excluded.
 Initial history, alternative and debt allocations are zero. The writer-law
@@ -148,6 +174,13 @@ Transient caller records and actual peak stack remain separate. This inventory
 does not meet the earlier 4–8 KiB aspiration. The larger resident Schema remains
 selected because the measured transient replacement penalizes tiny construction;
 further reductions need a performance or ownership benefit.
+
+The existing CLI's one-update oracle checks passed in both formats; only its
+pre-operation counters are retained here, with incidental timings discarded.
+The [earlier census](initial-metadata.json) at `e5a9492` remains unchanged at
+26,070/29,163 B. The difference in this same-sized collection is the
+[heap-control selection](../orbital/allocation/heap-control/README.md); these
+requested-byte totals are not RSS or a whole-process peak.
 
 ## Qualification
 

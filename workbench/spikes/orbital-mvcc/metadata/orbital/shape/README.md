@@ -67,14 +67,18 @@ profile cannot plausibly meet a 128 B/Object complete budget.
 Grouped shared ownership is admitted only when the supplied controlblocks are
 actually identical, including aliasing owners with a null pointee. Grouped
 Allocation ownership requires the actual same Allocation. Independent ownership
-is supported separately. Every native Allocation establishes a genuine full-range
-Hold before any original is released. Refusal drops all temporary Holds and
-preserves every original. Success costs one retain/drop pair per physical owner;
-export duplicates the live Hold token through the real allocator. The stored
+is supported separately. Selected native capture reserves metadata and validates
+every source after callbacks, then transfers the existing Allocation uses without
+an immediate retain/drop pair. Refusal consumes none of the original uses;
+allocation or Control callbacks may already have run. Export retains its own
+physical use through the real allocator. The stored
 8-byte token does not remove the allocator's Storage/region/Arena state. A grouped
 escape retains the entire physical allocation, including when the selected Part
 is the last 8 bytes of a 32-byte allocation. Capture and export run on its owner
-Lane. No writable aliases remain after capture.
+Lane. Captured body and readable padding are immutable; caller-authorized writes
+to physically disjoint bytes require stable backing. The
+[capture comparison](../../../performance/FEEDBACK.md#existing-use-capture-transfer)
+retains the ownership change and mixed performance results.
 
 The catalog's sealed cold BoundSelection associates old bytes with their exact
 Object/cut and supplies `export_part`. `bound_alternative` captures that exact

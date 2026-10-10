@@ -9,8 +9,9 @@ mapped LMDB slightly. Batch Inline is not fused. Current-borrow remains a
 separate, untimed lifetime mode. These quick, time-blocked comparisons are
 directional, not a broad below-LMDB result.
 
-Live integration preserves the generic Physical seam: friend access now resides
-in `candidates/store.h`, and the focused check uses caller-owned
+Live integration preserves the generic Physical seam through production
+`orbital::object_detail::Access<Physical>`, specialized in the caller's
+`composed/read_fusion.cpp`. The focused check uses caller-owned
 `Prepared(store)` with status returned from `prepare(scope, changes, output)`.
 The authored patch below remains the original experimental treatment, not an
 apply instruction for the current tree.
@@ -55,7 +56,7 @@ the patch in a paired comparison; codec improvement is not catalog improvement.
 `InlineReadFusion::consume(owner, scope, object_id, operation, output)` returns
 small status into caller-owned output. The existing scalar performance trial
 calls it through `Bodies<1>::consume_into`; acquisition and destruction stay
-inside the complete trial. Batch, escaped Body and Selection behavior remain
+inside the complete trial. Batch, borrowed Body and Selection behavior remain
 unchanged. Converted Series primary and scan use the established fallback.
 
 `consume_current(owner, object_id, operation, output)` is a separate entry which

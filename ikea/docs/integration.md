@@ -15,10 +15,14 @@ in-place mutation with explicit retained state.
 | Ikea | Admitted operations, composition, physical descriptions and issued-byte coverage |
 
 This working division follows the [candidate Orbital/Loom design](../../workbench/design/orbital/DESIGN.md).
-The current runtime implements allocation and worker support; object versions and
-publication remain design proposals.
-Engine declares a mutation's semantic effects and dependencies. Orbital establishes
-its position and retained logical inputs; Loom prepares the corresponding storage
+The current runtime implements allocation, worker support and an embedded
+single-owner Object/Representation catalog with coherent reads and atomic local
+publication. Durable admission, distributed ordering and recovery remain proposals.
+The [Stage 2 handover](../../workbench/spikes/orbital-mvcc/OUTCOMES.md#lessons-for-ikea-engine-and-schema-work)
+records the actual format-consumer lessons and its disposable assumptions.
+In that wider proposed protocol, Engine declares a mutation's semantic effects
+and dependencies. Orbital establishes its position and retained logical inputs;
+Loom prepares the corresponding storage
 and completion resources. Ikea performs bounded local work. The enclosing owner
 then coordinates verification, installation and publication through Orbital.
 

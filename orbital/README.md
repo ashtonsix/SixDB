@@ -117,6 +117,12 @@ Orbital also owns opaque Object identity, completed logical versions,
 coherent discovery, publication and selection of an equivalent Representation.
 It does not inspect records or decide clone, container or navigation policy.
 
+For a minimal material integration, read the format-independent
+[test material](test/object_material.h) and its
+[explicit-instantiation TU](test/object_material.cpp) before the larger driver.
+The [Stage 2 handover](../workbench/spikes/orbital-mvcc/OUTCOMES.md) maps the
+implementation, evidence and lessons for the next real Ikea/Engine caller.
+
 A stationary `Scope` enrolls at one completed local cut and protects late
 discovery, including absence. `Prepared` is stationary caller-owned storage:
 preparation reserves a finished batch; installation publishes every change at

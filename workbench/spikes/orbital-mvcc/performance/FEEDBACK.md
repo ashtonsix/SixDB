@@ -1188,5 +1188,7 @@ them after all clocks for future runs. The worker has terminated.
 This finite service question is closed. Stage 2 now moves to auditing and
 consolidation, with no further performance campaign queued. Embedded read/write
 mixes, locality skew, retained readers, conversion followed by useful work and
-memory pressure/refusal recovery remain leads for later work. I/O and
-collaborating-worker build/testing are deferred to Stage 3.
+memory pressure/refusal recovery remain leads for later work. Ashton has since
+dropped Stage 3 from the plan; future Orbital work will follow real Ikea/Engine
+requirements. The [handover](../OUTCOMES.md) consolidates these lessons without
+changing the captured experiments or their limits.

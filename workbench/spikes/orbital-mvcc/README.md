@@ -12,7 +12,11 @@ retained lifetimes. Completed comparisons cover larger working sets, append-styl
 growth, conversion, history/churn and interleaved work through Loom. LMDB remains
 a useful comparator; broad parity remains unproved. Further performance ideas
 are leads rather than a queued campaign. I/O and collaborating workers remain
-Stage 3 build items.
+future questions. Ashton has dropped Stage 3 from the plan and will develop
+Ikea and Engine before returning to Orbital with a real caller.
+
+Start with [Stage 2 outcomes and handover](OUTCOMES.md) for what was demonstrated,
+the unresolved limits, lessons for that work, and a map of code and evidence.
 
 The first Stage 2 implementation was withdrawn from the modules on 9 October
 2026. Its performance comparison came after implementation and left material
@@ -76,7 +80,7 @@ single-use authority, and actual late physical completion after cancellation or
 replacement. Keep these meaningful outcomes while revisiting their internal
 construction. The [Orbital specifications](../../../orbital/spec/README.md)
 own the wider correctness obligations; this single-owner study does not implement
-Journal replay, consensus, missing-byte I/O or Stage 3 worker distribution.
+Journal replay, consensus, missing-byte I/O or coordination of a concurrent catalog.
 
 ## Build and checks
 

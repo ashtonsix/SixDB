@@ -97,7 +97,8 @@ Unmeasured scenario leads follow the results and the owning module seams:
 Stage2 now moves to auditing and consolidation; no further performance campaign
 is queued. Embedded read/write mixes, locality skew, retained readers, conversion
 followed by useful work and memory pressure/refusal recovery remain leads for
-later work. I/O and collaborating-worker build/testing are deferred to Stage3.
+later work. Stage 3 has been dropped from the plan; future I/O and collaborating-
+worker work will follow real Ikea/Engine requirements.
 The finite ready-Message comparison is complete.
 
 These are experiment directions, not a full Cartesian campaign or new success

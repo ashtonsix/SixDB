@@ -18,11 +18,17 @@ from `arbor`; see the [Calico reference map](../workbench/notebook/calico.md).
   semantics as other operations.
 
 Engine composes [Ikea](../ikea/README.md) parts and binds their work through
-[Loom](../loom/README.md). Orbital provides shared transaction and recovery
-semantics; Engine defines their database meaning. The [earlier Orbital brief](../workbench/notebook/orbital/reference/BRIEF.md)
-records the protocol investigated so far.
+[Loom](../loom/README.md). Orbital's embedded runtime supplies local versioning;
+its wider transaction and recovery protocol remains proposed. Engine defines
+their database meaning. The [earlier Orbital brief](../workbench/notebook/orbital/reference/BRIEF.md)
+records that broader protocol investigation.
 [Shore](../shore/README.md) supplies external protocols and formats. Representation
 schemas and concrete integration interfaces remain open.
+
+[Orbital Stage 2 outcomes](../workbench/spikes/orbital-mvcc/OUTCOMES.md)
+retain the embedded MVCC and real-codec experiments, temporary caller assumptions,
+and lessons about schema reuse, copy grain, retention and independent work.
+They inform this design without supplying an Engine or multi-block container.
 
 The [layout-analyser investigation](../workbench/spikes/layout-analyser/README.md)
 explores workload objectives, plane organization and hardware fitting, with

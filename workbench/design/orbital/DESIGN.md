@@ -27,8 +27,10 @@ Engine and Ikea's composition of many blocks remain open for Ashton to design.
 The study's consumer is disposable scaffolding: it exercises real SeriesPack
 column Parts and TuplePack row Parts, including bidirectional 4-to-1 Part
 conversion, without defining Engine navigation, membership, indexes, summaries
-or container copy-on-write. I/O and collaborating workers are Stage 3 build items;
-their constraints remain visible here without expanding the embedded closeout.
+or container copy-on-write. Ashton has dropped Stage 3 from the plan to develop
+Ikea and Engine next. Future Orbital work, including I/O and collaborating workers,
+will follow that real composition. The [Stage 2 handover](../../spikes/orbital-mvcc/OUTCOMES.md)
+connects the evidence, temporary caller assumptions and remaining questions.
 
 ## Embedded implementation and comparisons
 

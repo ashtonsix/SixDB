@@ -24,3 +24,7 @@ Protocols, compatibility targets, serialization envelopes and the division of
 streaming adapters remain open. They will develop through
 [Workbench](../workbench/README.md) and concrete consumers; no interface is
 implemented here yet.
+
+The [Orbital Stage 2 handover](../workbench/spikes/orbital-mvcc/OUTCOMES.md#what-carries-into-later-composition)
+records relevant ownership, completion and cancellation distinctions. It contains
+no measured Shore, external I/O or end-to-end database cost.

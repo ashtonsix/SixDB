@@ -1,7 +1,10 @@
 # Caller-owned private state control
 
 `private-state.patch` is a separate treatment against
-`e9926e13f1e85c24e9b70ee20cd92267ba995685`; the live composed baseline is unchanged.
+`e9926e13f1e85c24e9b70ee20cd92267ba995685`. This is a historical control;
+the [completed comparison](../../../../performance/FEEDBACK.md#caller-owned-private-state)
+retains scalar improvements and negative batch/tail observations. Current code
+has subsequent ownership and call-boundary changes.
 Patch SHA-256: `f8e785135330fd08014f163715b1fbdc68104cbd64142ef28867a6090eaf7d18`.
 
 Private Parts are constructed, cloned and converted directly in fresh,
@@ -38,10 +41,10 @@ scalar/batch arrays are 48/3,072 B. The existing performance field
 `write_caller_arrays_bytes` still reports the batch maximum; the control check
 adds `scalar_write_arrays`. Neither field measures peak stack.
 
-For the next paired capture, use an isolated copy of Tooling's released composed
-driver with these four composed files matching the base. From that source root,
-apply the patch, then run the same host/CPU/ISA profile as its untreated pair.
-The following matches the current EPYC quick screen; it has not been run here:
+To replay the historical treatment, recover the source named by the completed
+comparison and match these four composed files to the patch base. The following
+is the original application recipe, not a pending capture or an instruction to
+apply the patch to the current tree:
 
 ```sh
 git apply --check workbench/spikes/orbital-mvcc/metadata/composed/controls/private-state/private-state.patch
