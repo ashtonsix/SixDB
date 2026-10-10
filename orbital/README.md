@@ -172,6 +172,13 @@ orb -m ubuntu cmake -S . -B build/orbital-stage1/clang -G Ninja -DCMAKE_BUILD_TY
 orb -m ubuntu cmake --build build/orbital-stage1/clang --target orbital_validate loom_validate
 ```
 
+`orbital_validate` includes format-independent logical Object histories and
+physical Representation checks. The Object material instantiates cold catalog
+operations in a separate TU; its caller checks coherent discovery, publication
+refusal and abort, conversion authority, and retained lifetimes. These module
+checks require no spike or Ikea format. The opt-in study retains the composed
+TuplePack/SeriesPack and Loom integration checks and performance comparisons.
+
 [The maintained consumer driver](../workbench/benchmarks/orbital/README.md) runs
 SeriesPack/TuplePack point operations, scans, appends and dependent reads against
 actual LMDB. It owns retained comparisons and the costs this allocation stage
