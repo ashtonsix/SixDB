@@ -350,6 +350,70 @@ void scratch_branch_final_alias_check() {
   check(!memory.live && !geometry.uses, "large-Part retry leaked scratch, metadata or proof");
 }
 
+void shared_backing_prefix_growth() {
+  Fixture fixture;
+  Memory memory;
+  const auto system_page = ::sysconf(_SC_PAGESIZE);
+  check(system_page > 0, "runtime page size unavailable");
+  const auto page = static_cast<std::size_t>(system_page);
+  struct Backing { alloc::Allocation allocation; alloc::Hold guard; };
+  unsigned destroyed = 0;
+  auto writer = std::shared_ptr<Backing>(new Backing{
+      take(alloc::allocate(*fixture.pool, {.bytes = page, .reserved_bytes = 3 * page,
+          .alignment = 64, .initialization = alloc::Initialization::zero})), {}},
+      [&destroyed](auto* pointer) { ++destroyed; delete pointer; });
+  std::weak_ptr<Backing> lifetime = writer;
+  auto& allocation = writer->allocation;
+  auto* address = allocation.address;
+  auto* storage = allocation.storage;
+  check(alloc::reserved_bytes(allocation) == 3 * page, "fixed reservation changed");
+  for (std::size_t i = 0; i < page; ++i) address[i] = std::byte{0x29};
+  // Shared ownership retains storage; this Hold independently prevents relocation.
+  writer->guard = take(alloc::hold(allocation, {0, page}));
+  Geometry short_geometry{&memory, {page}}, long_geometry{&memory, {2 * page}};
+  const auto capture = [&](Control control) {
+    const std::array bodies{PartSource{control.id(0),
+        {address, take(control.extent(0))}, writer, nullptr}};
+    return take(capture_representation(memory, control, PartOwners::independent_shared, bodies));
+  };
+  auto* old = capture({&short_geometry});
+  const RepresentationSelection<Control> old_selection{old};
+  const auto old_view = take(old_selection.part(std::size_t{0}));
+  check(bool(alloc::grow(allocation, {.bytes = 2 * page, .reserved_bytes = 3 * page,
+        .alignment = 64})), "held in-reservation growth refused");
+  check(allocation.address == address, "held growth relocated the shared backing");
+  // Only the disjoint, previously uncaptured suffix is writable.
+  for (std::size_t i = page; i < 2 * page; ++i) address[i] = std::byte{0x92};
+  auto* newer = capture({&long_geometry});
+  const RepresentationSelection<Control> new_selection{newer};
+  const auto new_view = take(new_selection.part(std::size_t{0}));
+  const auto before = alloc::statistics(*fixture.pool);
+  const auto charge = fixture.arena->charged_bytes.load();
+  refusal(alloc::grow(allocation, {.bytes = 4 * page, .reserved_bytes = 4 * page,
+      .alignment = 64}), Error::conflict, "held beyond-reservation growth relocated backing");
+  const auto after = alloc::statistics(*fixture.pool);
+  check(allocation.address == address && allocation.size == 2 * page && !allocation.readable_padding &&
+        alloc::reserved_bytes(allocation) == 3 * page && fixture.arena->charged_bytes.load() == charge &&
+        after.allocations == before.allocations && after.growths == before.growths &&
+        after.relocations == before.relocations, "refused growth changed storage or extent");
+  check(old_view.address() == address && new_view.address() == address &&
+        take(old_selection.control().extent(0)) == page &&
+        take(new_selection.control().extent(0)) == 2 * page, "growth changed immutable captured geometry");
+  for (std::size_t i = 0; i < 2 * page; ++i)
+    check(new_view.address()[i] == (i < page ? std::byte{0x29} : std::byte{0x92}),
+          "growth or refusal changed sealed prefix or initialized suffix");
+  writer.reset(); orbital::release(newer);
+  check(!lifetime.expired() && !destroyed && short_geometry.uses == 1 && !long_geometry.uses &&
+        users(storage) == 2, "old prefix failed to retain backing and address guard");
+  check(old_view.address() == address && take(old_selection.control().extent(0)) == page,
+        "writer release changed old address or extent");
+  for (std::size_t i = 0; i < page; ++i)
+    check(old_view.address()[i] == std::byte{0x29}, "old prefix lost its sealed bytes");
+  orbital::release(old);
+  check(lifetime.expired() && destroyed == 1 && !short_geometry.uses && !long_geometry.uses &&
+        !memory.live && users(storage) == 0, "final prefix did not settle owner, Hold, proof and metadata once");
+}
+
 void shared_body_ownership() {
   Memory memory;
   Geometry geometry{&memory, {8, 8}, 2};
@@ -406,5 +470,6 @@ int main() {
   final_preflight_after_callbacks();
   scratch_branch_final_alias_check();
   shared_body_ownership();
+  shared_backing_prefix_growth();
   std::puts("Representation capture: lifetime, refusal and callback checks passed");
 }
