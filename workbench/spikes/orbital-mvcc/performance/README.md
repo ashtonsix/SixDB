@@ -192,7 +192,7 @@ excluded. The replay adapts only include context in its isolated source,
 restoring the common publication helper's `<limits>` afterward. The retained
 recipe identifies the mechanically adapted author patch.
 
-`breadth_screen.sh` replays the frozen measured point/fusion cut with the
+`breadth_screen.sh` replays the captured point-only cut with the
 isolated `controls/body-cold-start.patch` already applied. `breadth` adds
 64/256-Object body reads, verified warm versus body-only flushed starts,
 original-held versus age64 readers, and real Series4 writes. Preparation and

@@ -550,9 +550,14 @@ fusion remain separate.
 
 [Worker 20261009T234913Z-0fbfd058](evidence/zen5-breadth-screen-20261009/)
 passes 304 oracle trials, two repetitions/both modes, on the same frozen
-Storage16/new-full/point/coherent-scalar-fusion source. No later Prepared,
-Direct4, origin or heap changes enter it. Reads span 32768 rows / 64 Objects
+Storage16/new-full/point source with the original unfused protected Shape
+read bridge. No later Prepared, fusion, Direct4, origin or heap changes enter it. Reads span 32768 rows / 64 Objects
 and 262144 / 256; writes span 192 / 64, 16384 / 64 and actual Series4.
+A later source audit corrected the original fusion label: patch application
+before nested Git initialization had silently skipped the fusion changes.
+The actual worker capture and 2537 B scalar caller establish this point-only
+cut; the comparisons below remain valid for it. The intended fused breadth
+remains separate work.
 The body-only cold start uses capability-tested CLFLUSH+MFENCE after the
 verified warm replay, once per process before the timed replay. It flushes
 exact admitted current Tuple extents while their Scope/transaction is live.
@@ -591,8 +596,11 @@ ahead at 261.26 ns held / 268.23 rotating; its scalar held/rotating values are
 previous large-write clock-mode limitation still applicable. Series4 Inline
 scalar/batch is 975.09 / 130.93 ns with real old-reader rotation.
 
-Fifty-four native CLI cases pass, including exact body range/byte counts,
-actual ARM cache maintenance, old/current rows and settlement. Git keeps
+Fifty-four native CLI cases pass for the conditioning control over the earlier
+point-plus-fusion native build, including exact body range/byte counts, ARM
+cache maintenance, old/current rows and settlement. That native composition
+is not byte-identical to this unfused worker cut; the worker independently
+checks every actual outcome and old/current row. Git keeps
 compact native/source receipts, all competitors/repetitions/modes, three
 regenerating reports and the exact executable ABI. Source cuts, ELF, full
 latency, logs and per-process JSON stay in the existing verified worker bundle.
