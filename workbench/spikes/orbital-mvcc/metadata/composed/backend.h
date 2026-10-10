@@ -200,8 +200,8 @@ public:
     std::uint64_t bindings{};
     explicit Bodies(const Backend& owner, bool alternative = false)
         : owner_(owner), scope_(owner.catalog()), alternative_(alternative) {}
-    // One-shot scalar trial seam. Existing body() still binds immediately and
-    // keeps its original escaping-selection/alternative-capture semantics.
+    // One-shot scalar trial seam. body() returns a borrow protected by this
+    // Scope, including a captured alternative; owning Part export is separate.
     [[gnu::always_inline]] void consume_into(std::size_t object, const orbital_bench::Operation& op,
         orbital_bench::Outcome& output)
         requires(Capacity == 1 && std::is_same_v<Store, Catalog>) {

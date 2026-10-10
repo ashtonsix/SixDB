@@ -47,13 +47,13 @@ void run(v::Format initial) {
   const auto old_cut=unseen->cut();
   const auto opposite=initial==v::Format::rows ? v::Format::columns : v::Format::rows;
   {
-    auto escaped_scope=owner.read();
+    auto retained_scope=owner.read();
     check(owner.convert(7, opposite));
-    const auto escaped=owner.body(escaped_scope, 7, true);
-    auto* const realization=escaped.selected.realization;
+    const auto borrowed_body=owner.body(retained_scope, 7, true);
+    auto* const realization=borrowed_body.selected.realization;
     check(owner.convert(7, initial));
-    check(escaped.selected.realization==realization && escaped.format()==opposite);
-    check(p::read_operation(escaped, {.kind=Kind::read, .key=original[7].begin()->first, .record={}}) ==
+    check(borrowed_body.selected.realization==realization && borrowed_body.format()==opposite);
+    check(p::read_operation(borrowed_body, {.kind=Kind::read, .key=original[7].begin()->first, .record={}}) ==
         p::oracle(original[7], {.kind=Kind::read, .key=original[7].begin()->first, .record={}}));
     ++comparisons;
   }

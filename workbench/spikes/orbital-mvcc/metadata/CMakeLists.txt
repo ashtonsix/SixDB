@@ -106,16 +106,20 @@ target_link_libraries(orbital_mvcc_consumer_point_write_check PRIVATE orbital_mv
 add_test(NAME orbital_mvcc_consumer_point_write_check COMMAND orbital_mvcc_consumer_point_write_check)
 list(APPEND metadata_checks orbital_mvcc_consumer_point_write_check)
 
-add_library(orbital_mvcc_composed STATIC composed/material.cpp composed/read_fusion.cpp composed/catalog.cpp)
+add_library(orbital_mvcc_catalog STATIC composed/catalog.cpp)
+sixdb_target(orbital_mvcc_catalog)
+target_include_directories(orbital_mvcc_catalog PRIVATE "${PROJECT_SOURCE_DIR}/orbital/src")
+target_link_libraries(orbital_mvcc_catalog PUBLIC orbital_mvcc_shape)
+
+add_library(orbital_mvcc_composed STATIC composed/material.cpp composed/read_fusion.cpp)
 add_executable(orbital_mvcc_composed_read_fusion_check composed/read_fusion_check.cpp)
 sixdb_target(orbital_mvcc_composed_read_fusion_check)
 target_link_libraries(orbital_mvcc_composed_read_fusion_check PRIVATE orbital_mvcc_composed)
 add_test(NAME orbital_mvcc_composed_read_fusion_check COMMAND orbital_mvcc_composed_read_fusion_check)
 list(APPEND metadata_checks orbital_mvcc_composed_read_fusion_check)
 sixdb_target(orbital_mvcc_composed)
-target_include_directories(orbital_mvcc_composed PRIVATE "${PROJECT_SOURCE_DIR}/orbital/src")
 target_link_libraries(orbital_mvcc_composed PUBLIC
-  orbital_versioned_performance_runtime orbital_mvcc_point_write
+  orbital_mvcc_catalog orbital_versioned_performance_runtime orbital_mvcc_point_write
   orbital_mvcc_shape_read orbital_mvcc_directory)
 
 add_executable(orbital_mvcc_composed_check composed/check.cpp)
@@ -129,18 +133,16 @@ target_link_libraries(orbital_mvcc_composed_append_check PRIVATE orbital_mvcc_co
 add_test(NAME orbital_mvcc_composed_append_check COMMAND orbital_mvcc_composed_append_check)
 list(APPEND metadata_checks orbital_mvcc_composed_append_check)
 
-add_executable(loom_object_module_check ../callers/object_module.cpp composed/catalog.cpp)
+add_executable(loom_object_module_check ../callers/object_module.cpp)
 sixdb_target(loom_object_module_check)
-target_include_directories(loom_object_module_check PRIVATE "${PROJECT_SOURCE_DIR}/orbital/src")
-target_link_libraries(loom_object_module_check PRIVATE orbital_mvcc_shape loom::loom)
+target_link_libraries(loom_object_module_check PRIVATE orbital_mvcc_catalog loom::loom)
 add_test(NAME loom_object_module_check COMMAND loom_object_module_check)
 list(APPEND metadata_checks loom_object_module_check)
 
 # Disposable selected-Object AMAC caller; Tooling owns its performance consumer.
-add_library(loom_object_ring STATIC ../callers/object_ring.cpp composed/catalog.cpp)
+add_library(loom_object_ring STATIC ../callers/object_ring.cpp)
 sixdb_target(loom_object_ring)
-target_include_directories(loom_object_ring PRIVATE "${PROJECT_SOURCE_DIR}/orbital/src")
-target_link_libraries(loom_object_ring PUBLIC orbital_mvcc_shape_read loom::loom)
+target_link_libraries(loom_object_ring PUBLIC orbital_mvcc_catalog orbital_mvcc_shape_read loom::loom)
 
 add_executable(loom_object_ring_check ../callers/object_ring_check.cpp)
 sixdb_target(loom_object_ring_check)
