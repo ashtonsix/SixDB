@@ -1,15 +1,18 @@
 # Engine
 
-The database core: the main SQL query interface, planning, execution, and core
-data structures. Multi-shard transactions are in scope.
+The database core: a small set of high-level intermediate representation (IR)
+dialects, their conversion into structured plans, execution, and core data
+structures. Multi-shard transactions are in scope.
 
 Successor to Calico's `engine` and `foyer`, with database-structural concerns
 from `arbor`; see the [Calico reference map](../workbench/notebook/calico.md).
 
 ## Provisional scope and seams
 
-- SQL semantics, catalog/schema, planning and execution. Retained plans and
-  inspectable compositions can support improvement as evidence accumulates.
+- Definition and semantics of the accepted high-level IR dialects, structured
+  plan construction, optimization and execution. Retained plans and inspectable
+  compositions can support improvement as evidence accumulates.
+- Catalog/schema and the database meaning of operations represented in those IRs.
 - Core data structures: logical keys and identity, routing, record membership,
   columns, indexes and the mapping to actual representations.
 - Database access and effect scopes, including atomic visibility of data,
@@ -22,8 +25,12 @@ Engine composes [Ikea](../ikea/README.md) parts and binds their work through
 its wider transaction and recovery protocol remains proposed. Engine defines
 their database meaning. The [earlier Orbital brief](../workbench/notebook/orbital/reference/BRIEF.md)
 records that broader protocol investigation.
-[Shore](../shore/README.md) supplies external protocols and formats. Representation
-schemas and concrete integration interfaces remain open.
+[Shore](../shore/README.md) owns source dialects, parsing and initial abstract
+syntax trees (ASTs), and lowers supported sources into Engine's accepted IRs.
+It also supplies external protocols and formats. Several source dialects can
+share an Engine IR; Engine need not accept each source AST directly.
+The IR family, source-to-IR binding and validation seams, representation schemas
+and concrete integration interfaces remain open.
 
 [Orbital Stage 2 outcomes](../workbench/spikes/orbital-mvcc/OUTCOMES.md)
 retain the embedded MVCC and real-codec experiments, temporary caller assumptions,

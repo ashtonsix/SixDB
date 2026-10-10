@@ -20,8 +20,8 @@ scope. This is a starting description, not an exhaustive list of constraints.
 | [ikea](ikea/README.md) | Composition-ready containers and kernel stages |
 | [orbital](orbital/README.md) | Durable objects, transactions and recovery, with memory, transport and OS services |
 | [loom](loom/README.md) | Binding to Orbital, task scheduling/routing, latency hiding, and the buffer pool |
-| [engine](engine/README.md) | Database core: SQL interface, planning, execution, and core data structures |
-| [shore](shore/README.md) | UI, shell, bindings, connectors, formats, and external utilities |
+| [engine](engine/README.md) | Database core: high-level IR dialects, structured plans, execution, and core data structures |
+| [shore](shore/README.md) | Source dialects, parsing, ASTs and lowering, plus UI, shell, bindings, connectors and formats |
 | [workbench](workbench/README.md) | Science, design development, spikes, benchmarks, datasets, and tooling |
 
 Design develops through experiments; priorities and architecture follow the signal.
