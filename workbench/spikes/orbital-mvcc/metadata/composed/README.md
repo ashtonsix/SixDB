@@ -98,6 +98,31 @@ metadata. No 4–8 KiB total-metadata or below-LMDB target is claimed.
 stack-frame or peak-stack measurements. Read caches are bounded by offered work,
 never by catalog size. The fixed 64-entry write arrays remain a performance lead.
 
+## Initial collection inventory
+
+[Actual initial counters](initial-metadata.json) at `e5a9492` cover 64 Objects,
+three records each, independent Allocations, the selected trim bitmaps and
+the extracted Object/Representation module. These are local AArch64 with 4 KiB
+pages; x86 Schema storage differs. Persistent requested and inline bytes:
+
+| Component | Tuple, 1 Part | Series, 4 Parts |
+| --- | ---: | ---: |
+| Catalog, Representations and shared proof (one PMR total) | 6,563 | 9,592 |
+| Allocation Group | 6,008 | 6,072 |
+| Arena/Pool setup and owning vectors | 688 | 688 |
+| Backend, including Lane and writer-law slots | 2,048 | 2,048 |
+| Shared Schema | 10,176 | 10,176 |
+| Borrowed write-Shape record and writer descriptions | 587 | 587 |
+| **Total** | **26,070** | **29,163** |
+
+Payload, trace/oracle, libc rounding and OS/thread overhead are excluded.
+Initial history, alternative and debt allocations are zero. The writer-law
+slots and shared proof are already included above; do not add them again.
+Transient caller records and actual peak stack remain separate. This inventory
+does not meet the earlier 4–8 KiB aspiration. The larger resident Schema remains
+selected because the measured transient replacement penalizes tiny construction;
+further reductions need a performance or ownership benefit.
+
 ## Qualification
 
 After configuring the opt-in build as described in the

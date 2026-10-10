@@ -33,6 +33,13 @@ external control blocks separately; moving costs outside its resource does not
 establish a reduction. Retained history and escaped access are additional
 workloads, not silently included in that initial-collection target.
 
+That figure is a sizing aspiration, not a selection gate. Reductions must serve
+performance and simpler ownership. The measured per-call Schema factory is
+[rejected](../performance/FEEDBACK.md#transient-schema-construction-phase): its
+resident saving does not justify repeated tiny-construction cost. The selected
+[complete initial inventory](composed/README.md#initial-collection-inventory)
+keeps the remaining costs visible without making byte reduction its own campaign.
+
 Allocation metadata is part of this same pass; the existing layer is a
 comparison point, not a frozen base. Show a new Arena/Pool's complete setup and
 retained capacity alongside the marginal cost in an existing Pool. A small
