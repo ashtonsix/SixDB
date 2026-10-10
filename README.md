@@ -21,7 +21,7 @@ scope. This is a starting description, not an exhaustive list of constraints.
 | [orbital](orbital/README.md) | Durable objects, transactions and recovery, with memory, transport and OS services |
 | [loom](loom/README.md) | Binding to Orbital, task scheduling/routing, latency hiding, and the buffer pool |
 | [engine](engine/README.md) | Database core: high-level IR dialects, structured plans, execution, and core data structures |
-| [shore](shore/README.md) | Source dialects, parsing, ASTs and lowering, plus UI, shell, bindings, connectors and formats |
+| [shore](shore/README.md) | Source dialects, parsing, ASTs and lowering, plus UI, shell, bindings, connectors, formats and the separately deployable edge program |
 | [workbench](workbench/README.md) | Science, design development, spikes, benchmarks, datasets, and tooling |
 
 Design develops through experiments; priorities and architecture follow the signal.

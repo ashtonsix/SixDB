@@ -16,6 +16,10 @@ Successor to `~/calico-ui/`, with a broader integration remit.
   export and ELT workflows.
 - Arrow, Parquet and other format adapters; batch/stream interchange and
   utilities for exporting or restoring database contents.
+- [Edge](edge/README.md), a separately deployable program for client gateways,
+  connection multiplexing, forwarding to suitable replicas and regional
+  replication broadcast. Candidate environments include Cloudflare Workers,
+  NetActuate and colocation in carrier hotels.
 
 [Engine](../engine/README.md) defines a small family of high-level IR dialects
 and their conversion into structured plans. It owns IR semantics, catalog/schema,
