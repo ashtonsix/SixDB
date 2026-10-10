@@ -1,0 +1,23 @@
+{
+  "files_sha256": {
+    "breadth/abi.json": "25248465fef28cf4cf53852c872647a03a42f1a0be281721fad37c69c3d42cac",
+    "breadth/binary-identity.json": "1f741ff9d443b5b59e732f5df3307679715107763e7a2901a116d5593892fded",
+    "breadth/build-cost.json": "a302e97f68dad260c89b3b4650e00c14312e293b89641e6ff529128d4f1deceb",
+    "breadth/measurements.csv": "103f4009c32bb59f9d28cf06e008808c1e50e9c4f86741838d89a5c0bcb05dcd",
+    "breadth/parity.json": "d22b3e5ba0d49d8b61b26305e9f587213974109680adc8262e6624125973b33a",
+    "breadth/qualification.json": "caa851c8c39541755caa04647921c83f47410f52b056301c09c732dacfde7d28",
+    "breadth/summary.csv": "ecee62c59ce49512db4116109ecb609274c4a3959721025ff3c516bc3a725a61",
+    "host.json": "5fc8fd8c9718e7d193a166f88d19f49753bc4332729bb18433cf17a264779ba1",
+    "worker-result.json": "573c0243d73041c5aec71d904385d9b6103dc8b5a9773605d911c5ee773d19ad"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/orbital-mvcc/performance/run.py",
+    "--report",
+    "{evidence}/breadth"
+  ],
+  "regenerate_from": "archive"
+}

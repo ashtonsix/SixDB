@@ -20,6 +20,25 @@ from experiment import Run
 
 
 def panel(profile="resident"):
+    if profile == 'breadth':
+        for rows,objects in [(32768,64),(262144,256)]:
+            for workload in ['point-hit','dependent-16']:
+                for batch in [1,64]:
+                    for conditioning in ['warm-trace','flush-bodies']:
+                        yield dict(rows=rows,objects=objects,workload=workload,batch=batch,ops=4099,
+                                   codec='shape',conditioning=conditioning,**{'metadata-bytes':16*1024*1024},
+                                   backends=['composed-inline','composed-directory','lmdb-composed'])
+        for rows,objects in [(192,64),(16384,64)]:
+            for batch in [1,64]:
+                for age in [0,64]:
+                    yield dict(rows=rows,objects=objects,workload='point-update',batch=batch,ops=4099,
+                               **{'retention-age':age,'metadata-bytes':16*1024*1024},
+                               backends=['composed-inline','composed-directory','lmdb-composed'])
+        for batch in [1,64]:
+            yield dict(rows=4096,objects=4,workload='point-update',batch=batch,ops=4099,
+                       **{'from':'columns','retention-age':64,'metadata-bytes':16*1024*1024},
+                       backends=['composed-inline','composed-directory'])
+        return
     if profile == 'fusion-quick':
         for rows,objects in [(192,64),(32768,4)]:
             for workload in ['point-hit','point-miss','dependent-16']:
@@ -214,6 +233,9 @@ def summarize(output):
             base.update(codec=result["codec"], conditioning=result["conditioning"],
                         process_cpu_ns=interval["process_cpu_ns"],
                         conditioning_wall_ns=result["conditioning_interval"]["wall_ns"])
+        if 'body_cold_start' in result:
+            for name,value in result['body_cold_start'].items():
+                base[f'body_cold_start_{name}']=value
         if "process_resources" in result:
             base.update(process_peak_rss_kib=result["process_resources"]["peak_rss_kib"])
             for label, field in [("initial", "footprint_initial"), ("held", "footprint_after_interval"), ("released", "footprint_after_reader_release")]:
@@ -415,7 +437,7 @@ def main():
     parser.add_argument("--workspace", type=Path, default=ROOT/"build/workspaces/orbital-mvcc-performance")
     parser.add_argument("--cpu", type=int, default=2)
     parser.add_argument("--repetitions", type=int, default=5)
-    parser.add_argument("--profile", choices=["feedback","catalog","churn","groups","faults","quick","composed-quick","composed-context","fusion-quick","resident"], default="feedback")
+    parser.add_argument("--profile", choices=["feedback","catalog","churn","groups","faults","quick","composed-quick","composed-context","fusion-quick","breadth","resident"], default="feedback")
     parser.add_argument("--march", default="")
     parser.add_argument("--tune", default="generic")
     parser.add_argument("--jobs", type=int, default=2)

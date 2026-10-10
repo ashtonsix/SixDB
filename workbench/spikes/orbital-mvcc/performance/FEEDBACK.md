@@ -546,6 +546,60 @@ Architecture selected coherent scalar fusion. Larger/cold-start and retained
 reader breadth follows before more metadata controls; current-borrow and batch
 fusion remain separate.
 
+## Broader bodies and retained readers
+
+[Worker 20261009T234913Z-0fbfd058](evidence/zen5-breadth-screen-20261009/)
+passes 304 oracle trials, two repetitions/both modes, on the same frozen
+Storage16/new-full/point/coherent-scalar-fusion source. No later Prepared,
+Direct4, origin or heap changes enter it. Reads span 32768 rows / 64 Objects
+and 262144 / 256; writes span 192 / 64, 16384 / 64 and actual Series4.
+The body-only cold start uses capability-tested CLFLUSH+MFENCE after the
+verified warm replay, once per process before the timed replay. It flushes
+exact admitted current Tuple extents while their Scope/transaction is live.
+Metadata, trace/output and execution state remain warm; requests subsequently
+rewarm their own bodies. The retained tables report coverage, preparation and
+first-batch latency separately. This is a cold start, not a cold request loop.
+
+| 262144 rows / 256 Objects, scalar ns/request | Inline warm → flushed | Directory warm → flushed | Mapped warm → flushed |
+| --- | ---: | ---: | ---: |
+| Point hit | 163.10 → 317.78 | 193.37 → 316.11 | 225.00 → 405.05 |
+| Dependent16 | 1159.07 → 1667.44 | 1195.47 → 1545.90 | 1371.56 → 1727.76 |
+
+Inline's warm point advantage over Directory disappears with flushed bodies;
+Directory is ahead in the flushed dependent scalar case. Smaller 32768/64
+Inline hit moves 72.64 → 127.04 ns. Flush coverage is 753664 B / 64 ranges
+or 6029312 B / 256 ranges. For larger scalar hit, median preparation is
+120860 ns Inline, 104755 Directory and 161986 mapped. First latency batches
+are 570 → 905 ns, 585 → 770 and 575 → 860 respectively; these first samples
+are observations, without a tail claim. Matching warm/cold traces/outcomes
+are checked independently of the condition-specific report grouping.
+
+| Full-maintenance update ns/request | Original reader held | Rotate every 64 publications |
+| --- | ---: | ---: |
+| 192/64 Inline scalar | 1232.92 | 826.80 |
+| 192/64 Inline batch64 | 323.61 | 322.97 |
+| 16384/64 Inline scalar | 1278.21 | 901.91 |
+| 16384/64 Inline batch64 | 457.60 | 470.62 |
+
+Scalar retained-reader age matters even with full drain. Tiny held-original
+has 128 versions / 12763 B PMR and 524675 version visits; rotating has
+67 / 8771 B and 274444 visits. Both reclaim intermediate versions and end
+with zero debt/pending after charged final settlement. Batch amortizes the
+same publication work and is much less sensitive. Mapped tiny batch remains
+ahead at 261.26 ns held / 268.23 rotating; its scalar held/rotating values are
+4465.62 / 1631.48 ns. Larger mapped batch is 1612.47 / 1635.06 ns, with the
+previous large-write clock-mode limitation still applicable. Series4 Inline
+scalar/batch is 975.09 / 130.93 ns with real old-reader rotation.
+
+Fifty-four native CLI cases pass, including exact body range/byte counts,
+actual ARM cache maintenance, old/current rows and settlement. Git keeps
+compact native/source receipts, all competitors/repetitions/modes, three
+regenerating reports and the exact executable ABI. Source cuts, ELF, full
+latency, logs and per-process JSON stay in the existing verified worker bundle.
+Body conditioning is an isolated source treatment, not a change to historical
+runs. Fresh versus reset/renew LMDB reader handles follow separately; these
+results do not yet price that stronger short-reader control.
+
 ## Clock-mode fault discriminator
 
 [Worker 20261009T213742Z-b9d498d3](evidence/zen5-fault-controls-20261009/feedback/measurements.csv)

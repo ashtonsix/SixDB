@@ -1,0 +1,211 @@
+diff --git a/workbench/spikes/orbital-mvcc/performance/body_conditioning.h b/workbench/spikes/orbital-mvcc/performance/body_conditioning.h
+new file mode 100644
+index 0000000..44a16c7
+--- /dev/null
++++ b/workbench/spikes/orbital-mvcc/performance/body_conditioning.h
+@@ -0,0 +1,100 @@
++#pragma once
++#include "trial.h"
++#include <limits>
++#include <sys/resource.h>
++#include <sys/wait.h>
++#include <unistd.h>
++#if defined(__x86_64__)
++#include <cpuid.h>
++#include <immintrin.h>
++#endif
++
++namespace orbital_versioned_performance {
++// Explicit body-only cold start. Borrowed ranges are used while the issuing
++// Scope/transaction is live, and never dereferenced by the timed request loop.
++// Same capability check/barriers as memory-characterisation's cache probe.
++class BodyConditioning {
++  struct Range { const void* address; std::size_t bytes; };
++  std::vector<Range> ranges_;
++  std::uint64_t begin_{},cpu_{},process_cpu_{};
++  static void flush_line(const void* address) {
++#if defined(__x86_64__)
++    _mm_clflush(address);
++#elif defined(__aarch64__)
++    asm volatile("dc civac, %0" :: "r"(address) : "memory");
++#endif
++  }
++  static void finish() {
++#if defined(__x86_64__)
++    _mm_mfence();
++#elif defined(__aarch64__)
++    asm volatile("dsb ish" ::: "memory");
++#endif
++  }
++  static std::size_t capability() {
++#if defined(__x86_64__)
++    unsigned a,b,c,d;
++    if (!__get_cpuid(1,&a,&b,&c,&d) || !(d&(1u<<19))) return 0;
++    const auto line=((b>>8)&255u)*8u;
++#elif defined(__aarch64__)
++    const auto reported=sysconf(_SC_LEVEL1_DCACHE_LINESIZE);
++    if (reported<=0) return 0;
++    const auto line=static_cast<std::size_t>(reported);
++#else
++    return 0;
++#endif
++#if defined(__x86_64__) || defined(__aarch64__)
++    if (!line || (line&(line-1))) return 0;
++    const auto child=fork();
++    if (!child) {
++      rlimit limit{0,0};setrlimit(RLIMIT_CORE,&limit);
++      alignas(256) std::uint64_t value=1;
++      flush_line(&value);finish();_exit(value==1?0:1);
++    }
++    if (child<0) return 0;
++    int status{};
++    if (waitpid(child,&status,0)<0 || !WIFEXITED(status) || WEXITSTATUS(status)) return 0;
++    return line;
++#endif
++  }
++public:
++  std::size_t line_bytes{},body_bytes{},line_operations{};
++  Interval interval;
++  explicit BodyConditioning(bool requested) {
++    if (requested && !(line_bytes=capability())) throw std::runtime_error("body cache maintenance unsupported");
++  }
++  void start() {process_cpu_=process_cpu_ns();cpu_=caller_cpu_ns();begin_=clock_ns();}
++  void add(const void* address,std::size_t bytes) {
++    if (!bytes) return;
++    const auto first=reinterpret_cast<std::uintptr_t>(address);
++    if (!first || bytes>std::numeric_limits<std::uintptr_t>::max()-first ||
++        bytes>std::numeric_limits<std::size_t>::max()-body_bytes)
++      throw std::invalid_argument("invalid body conditioning range");
++    ranges_.push_back({address,bytes});body_bytes+=bytes;
++  }
++  void flush() {
++    if (!line_bytes || !begin_) throw std::logic_error("body conditioning not started");
++    for (const auto& range:ranges_) {
++      const auto first=reinterpret_cast<std::uintptr_t>(range.address);
++      const auto end=first+range.bytes;
++      for (auto line=first&~std::uintptr_t(line_bytes-1);line<end;) {
++        flush_line(reinterpret_cast<const void*>(line));++line_operations;
++        if (end-line<=line_bytes) break;
++        line+=line_bytes;
++      }
++    }
++    finish();interval.wall_ns=clock_ns()-begin_;
++    interval.caller_cpu_ns=caller_cpu_ns()-cpu_;interval.process_cpu_ns=process_cpu_ns()-process_cpu_;
++  }
++  std::size_t range_count() const {return ranges_.size();}
++  static const char* method() {
++#if defined(__x86_64__)
++    return "CLFLUSH+MFENCE";
++#elif defined(__aarch64__)
++    return "DC_CIVAC+DSB_ISH";
++#else
++    return "unsupported";
++#endif
++  }
++};
++} // namespace orbital_versioned_performance
+diff --git a/workbench/spikes/orbital-mvcc/performance/main.cpp b/workbench/spikes/orbital-mvcc/performance/main.cpp
+index 49a3625..e3f290f 100644
+--- a/workbench/spikes/orbital-mvcc/performance/main.cpp
++++ b/workbench/spikes/orbital-mvcc/performance/main.cpp
+@@ -3,6 +3,7 @@
+ #include "pmu.h"
+ #include "candidate_runtime.h"
+ #include "composed_runtime.h"
++#include "body_conditioning.h"
+ #include <algorithm>
+ #include <charconv>
+ #include <cstdlib>
+@@ -39,7 +40,7 @@ Options options(int argc,char** argv) {
+     if (key=="--help") {
+       std::cout<<"--backend orbital|borrowed|lmdb|lmdb-composed|direct|row-lmdb|candidate8|candidate16|candidate32|composed-inline|composed-directory --workload point-hit|point-miss|dependent-16|scan-16|point-update|convert\n"
+           "--mode throughput|latency --rows N --objects 1..4096 --batch 1|64 --ops N --seed N --bytes N --metadata-bytes N --db NEW_DIRECTORY --from rows|columns\n";
+-      std::cout<<"--codec legacy|direct16|consume16|shape --conditioning none|warm-trace --latency-samples NEW_FILE --sample-storage equal|mode --retention-age N_PUBLICATIONS (0 holds old reader)\n";
++      std::cout<<"--codec legacy|direct16|consume16|shape --conditioning none|warm-trace|flush-bodies --latency-samples NEW_FILE --sample-storage equal|mode --retention-age N_PUBLICATIONS (0 holds old reader)\n";
+       std::exit(0);
+     }
+     if (++i==argc) throw std::invalid_argument("missing option value");
+@@ -82,7 +83,9 @@ Options options(int argc,char** argv) {
+   if (result.sample_storage!="equal" && result.sample_storage!="mode") throw std::invalid_argument("sample storage must be equal or mode");
+   if (result.codec!="legacy" && result.codec!="direct16" && result.codec!="consume16" && result.codec!="shape") throw std::invalid_argument("unknown codec treatment");
+   if (result.codec=="shape" && !composed && !mapped_composed) throw std::invalid_argument("Shape codec requires a composed backend");
+-  if (result.conditioning!="none" && result.conditioning!="warm-trace") throw std::invalid_argument("unknown conditioning");
++  if (result.conditioning!="none" && result.conditioning!="warm-trace" && result.conditioning!="flush-bodies") throw std::invalid_argument("unknown conditioning");
++  if (result.conditioning=="flush-bodies" && (!composed && !mapped_composed || result.from!="rows"))
++    throw std::invalid_argument("body cold start requires composed Tuple reads");
+   if (result.pmu!=orbital_bench::pmu::Mode::off && result.mode!="throughput")
+     throw std::invalid_argument("PMU requires a separate throughput replay");
+   if (!result.pmu_events.empty() && result.pmu==orbital_bench::pmu::Mode::off)
+@@ -333,6 +336,7 @@ int main(int argc,char** argv) try {
+     }
+   }
+   Interval interval,release,conditioning;
++  BodyConditioning cold(o.conditioning=="flush-bodies");
+   data::Costs costs;
+   write_batch::ProbeCosts write_probe;
+   std::size_t mapped_shape_metadata{}, mapped_shape_record{}, mapped_write_control_live{}, mapped_write_control_slots{};
+@@ -455,10 +459,20 @@ int main(int argc,char** argv) try {
+             run_lmdb_codec_reads(store,corpus,timed_latency,trace.operations,objects,output,o.batch,count):
+             run_lmdb_reads(store,corpus,timed_latency,trace.operations,objects,output,o.batch,count);
+       };
+-      if (o.conditioning=="warm-trace") {
++      if (o.conditioning=="warm-trace" || o.conditioning=="flush-bodies") {
+         std::uint64_t ignored{};conditioning=read(false,ignored);
+         require(output==expected_output,"warm trace differs from independent oracle");
+       }
++      if (o.conditioning=="flush-bodies") {
++        cold.start();auto selected=store.read();
++        for (const auto& image:corpus.images) {
++          const auto bytes=selected.part(image.address);require(bool(bytes),"cold mapped body absent");
++          cold.add(bytes->data(),bytes->size());
++        }
++        cold.flush();conditioning.wall_ns+=cold.interval.wall_ns;
++        conditioning.caller_cpu_ns+=cold.interval.caller_cpu_ns;
++        conditioning.process_cpu_ns+=cold.interval.process_cpu_ns;
++      }
+       active_hardware=o.pmu==orbital_bench::pmu::Mode::off?nullptr:&hardware;
+       interval=read(latency,bindings);active_hardware=nullptr;
+       lmdb_held=lmdb_released=store.footprint();
+@@ -520,10 +534,24 @@ int main(int argc,char** argv) try {
+       const auto read=[&](bool timed_latency,std::uint64_t& count) {
+         return composed_reads(store,timed_latency,trace.operations,objects,output,o.batch,count);
+       };
+-      if (o.conditioning=="warm-trace") {
++      if (o.conditioning=="warm-trace" || o.conditioning=="flush-bodies") {
+         std::uint64_t ignored{};conditioning=read(false,ignored);
+         require(output==expected_output,"composed warm trace differs from independent oracle");
+       }
++      if (o.conditioning=="flush-bodies") {
++        cold.start();auto selected=store.read();
++        for (std::size_t object=0;object<o.objects;++object) {
++          const auto body=need(store.select(selected,object));
++          for (std::size_t part=0;part<body.part_count();++part) {
++            const auto view=need(body.part(part));
++            const auto bytes=need(composed::cs::geometry(body.shape(),part).extent(body.records()));
++            cold.add(view.address(),bytes);
++          }
++        }
++        cold.flush();conditioning.wall_ns+=cold.interval.wall_ns;
++        conditioning.caller_cpu_ns+=cold.interval.caller_cpu_ns;
++        conditioning.process_cpu_ns+=cold.interval.process_cpu_ns;
++      }
+       active_hardware=o.pmu==orbital_bench::pmu::Mode::off?nullptr:&hardware;
+       interval=read(latency,bindings);active_hardware=nullptr;
+       orbital_held=orbital_released=footprint(store);costs=store.costs;
+@@ -635,6 +663,16 @@ int main(int argc,char** argv) try {
+       <<",\"memory_source\":\"/proc/self/status VmHWM/VmRSS; rusage high-water may be inherited from launcher\""
+       <<",\"scope\":\"whole process including fixture, oracle, traces and validation\"}";
+   std::cout<<",\"conditioning_interval\":";print_interval(conditioning);
++  if (o.conditioning=="warm-trace" || o.conditioning=="flush-bodies") {
++    std::cout<<",\"body_cold_start\":{\"requested\":"<<(cold.line_bytes?"true":"false")
++        <<",\"method\":\""<<(cold.line_bytes?BodyConditioning::method():"warm trace")<<"\""
++        <<",\"line_bytes\":"<<cold.line_bytes<<",\"ranges\":"<<cold.range_count()
++        <<",\"body_bytes\":"<<cold.body_bytes<<",\"line_operations\":"<<cold.line_operations
++        <<",\"preparation_wall_ns\":"<<cold.interval.wall_ns
++        <<",\"first_batch_ns\":"<<(interval.batch_ns.empty()?0:interval.batch_ns.front())
++        <<",\"coverage\":\"selected current Tuple body extents; once after oracle warmup; metadata, trace, output, execution and translations remain warm\"}";
++  }
++
+   std::cout<<",\"old_reader_held\":"<<(updating || conversion?"true":"false")<<",\"release_and_drain\":";
+   print_interval(release);std::cout<<",\"drain_steps\":"<<drain_steps<<",\"physical_poll_budget\":"
+       <<((updating || conversion) && (o.backend=="orbital" || o.backend.starts_with("candidate") || o.backend.starts_with("composed-"))?65536:0);

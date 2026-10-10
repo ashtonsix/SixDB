@@ -1,0 +1,223 @@
+{
+  "passed": true,
+  "binary_sha256": "e78e66a3ad93e66e095a96028715bb56c1d32a8628a77b951ef137556372924d",
+  "cases": [
+    {
+      "case": "composed-inline-1-warm-trace-point-hit",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-1-warm-trace-point-miss",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-1-warm-trace-dependent-16",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-1-flush-bodies-point-hit",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-1-flush-bodies-point-miss",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-1-flush-bodies-dependent-16",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-1-write-age0",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-1-write-age64",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-64-warm-trace-point-hit",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-64-warm-trace-point-miss",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-64-warm-trace-dependent-16",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-64-flush-bodies-point-hit",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-64-flush-bodies-point-miss",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-64-flush-bodies-dependent-16",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-64-write-age0",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-64-write-age64",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-1-warm-trace-point-hit",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-1-warm-trace-point-miss",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-1-warm-trace-dependent-16",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-1-flush-bodies-point-hit",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-1-flush-bodies-point-miss",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-1-flush-bodies-dependent-16",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-1-write-age0",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-1-write-age64",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-64-warm-trace-point-hit",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-64-warm-trace-point-miss",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-64-warm-trace-dependent-16",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-64-flush-bodies-point-hit",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-64-flush-bodies-point-miss",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-64-flush-bodies-dependent-16",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-64-write-age0",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-64-write-age64",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-1-warm-trace-point-hit",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-1-warm-trace-point-miss",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-1-warm-trace-dependent-16",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-1-flush-bodies-point-hit",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-1-flush-bodies-point-miss",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-1-flush-bodies-dependent-16",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-1-write-age0",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-1-write-age64",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-64-warm-trace-point-hit",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-64-warm-trace-point-miss",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-64-warm-trace-dependent-16",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-64-flush-bodies-point-hit",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-64-flush-bodies-point-miss",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-64-flush-bodies-dependent-16",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-64-write-age0",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-64-write-age64",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-1-Series4",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-64-Series4",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-1-Series4",
+      "passed": true
+    },
+    {
+      "case": "composed-directory-64-Series4",
+      "passed": true
+    },
+    {
+      "case": "composed-inline-large-cold",
+      "passed": true
+    },
+    {
+      "case": "lmdb-composed-large-cold",
+      "passed": true
+    }
+  ],
+  "qualification": "54 meaningful CLI oracle cases, exact admitted byte/range counts, real held/rotating readers and final zero debt/pending; native ARM cache maintenance capability exercised."
+}

@@ -192,6 +192,16 @@ excluded. The replay adapts only include context in its isolated source,
 restoring the common publication helper's `<limits>` afterward. The retained
 recipe identifies the mechanically adapted author patch.
 
+`breadth_screen.sh` replays the frozen measured point/fusion cut with the
+isolated `controls/body-cold-start.patch` already applied. `breadth` adds
+64/256-Object body reads, verified warm versus body-only flushed starts,
+original-held versus age64 readers, and real Series4 writes. Preparation and
+first batch are recorded separately; only body extents are flushed once, with
+metadata/execution warm. The source control patch supplies the new CLI option;
+recover the captured source to repeat the panel rather than applying it across
+unrelated live metadata changes. See the [broader feedback](FEEDBACK.md#broader-bodies-and-retained-readers)
+for temperature and retained-age negatives.
+
 Composed reads use the protected native Tuple bridge. `--from columns` instead
 uses four real Series Parts and the generic consumer with its resident Schema;
 this is a contextual Orbital case, without a fictitious mapped-LMDB counterpart.
