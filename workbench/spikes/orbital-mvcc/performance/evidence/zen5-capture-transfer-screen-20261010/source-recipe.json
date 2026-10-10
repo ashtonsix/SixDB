@@ -1,0 +1,86 @@
+{
+  "passed": true,
+  "trials": 88,
+  "matched_groups": 22,
+  "actual_sources": [
+    {
+      "cut": "baseline-0",
+      "source_sha256": "52c73faffa0c7f4717f83a5036ff189f3693c9db75185c9ab57698c86a4ff620",
+      "verified_postimages": 889
+    },
+    {
+      "cut": "candidate-0",
+      "source_sha256": "ccf77f0787867b04eb16422f7b98400edc3636611f471f616007a0af78f6fadf",
+      "verified_postimages": 891
+    },
+    {
+      "cut": "candidate-1",
+      "source_sha256": "e4e6b98d91209d218250efdda6d6ec3d978e9491ac0dab9c01a8216f545f8532",
+      "verified_postimages": 891
+    },
+    {
+      "cut": "baseline-1",
+      "source_sha256": "b55911f0d1fa4ebadef98f11131081b2020ffed4d23f8d7642c961e82b9b1f3b",
+      "verified_postimages": 889
+    }
+  ],
+  "logical_body_caller_and_all_component_cost_parity": true,
+  "all_Inline_final_versions_equal_Objects": true,
+  "all_Inline_final_contexts_and_retirements_zero": true,
+  "limits": "Independent9ec1467+commonrenew vs finalsingle-pass existing-use transfer. All8 postimages match exact native-qualified tree with baseline contract comments. Native7suite/focusedSAN scopes separate from exact worker oracles. ShortAB/BA complete-operation CPU/wall/settlement; no full general performance qualification.",
+  "report_regeneration": {
+    "passed": true,
+    "byte_identical": [
+      "baseline-0/measurements.csv",
+      "baseline-0/summary.csv",
+      "baseline-0/parity.json",
+      "baseline-0/abi.json",
+      "candidate-0/measurements.csv",
+      "candidate-0/summary.csv",
+      "candidate-0/parity.json",
+      "candidate-0/abi.json",
+      "candidate-1/measurements.csv",
+      "candidate-1/summary.csv",
+      "candidate-1/parity.json",
+      "baseline-1/measurements.csv",
+      "baseline-1/summary.csv",
+      "baseline-1/parity.json"
+    ],
+    "reports": 14,
+    "reporter_sha256": "47478f212196da739748ac703cc135339eca366bd3d2af0d68eb7d9963787991"
+  },
+  "recipe": {
+    "base_commit": "9ec1467ad7d7f89125492ff54f080a8aa9148c76",
+    "candidate_patch_sha256": "c0cb95e5cc1db61d49340bb08dfecb8f71bf6447117b8fcd66985ce551a02e7b",
+    "root_qualified_tree": "e50ec5afdb9835d250d9a1ce41425978ccdd8a74",
+    "root_native_receipt_sha256": "1b325d064cfd0b3f4661d5af3c9129caa3afcf100138cba4f07b369389872153",
+    "root_sanitizer_receipt_sha256": "f0c7f209e5a907d05b173e486ca8ae28e9abcd8baa56a4e6122e6a2113d8c313",
+    "common_reader_policy": "renew",
+    "arm_order": [
+      "baseline-0",
+      "candidate-0",
+      "candidate-1",
+      "baseline-1"
+    ],
+    "candidate_only_changes": [
+      "orbital/CMakeLists.txt",
+      "orbital/include/orbital/representation.h",
+      "orbital/src/allocation/allocation.cpp",
+      "orbital/src/allocation/capture.h",
+      "orbital/src/object/representation.cpp",
+      "orbital/src/object/representation_impl.h",
+      "orbital/src/object/representation_ops.h",
+      "orbital/test/representation.cpp"
+    ],
+    "runtime_postimages_baseline": 889,
+    "runtime_postimages_candidate": 891,
+    "cases": 4,
+    "trials": 88,
+    "state": "Qualified and ready for final finite launch.",
+    "contract_comment_postimage_note": "representation_impl.h preserves20 contract-comment lines already selected in baseline9ec1467; all8 candidate postimages match exact root native qualified tree,7 match original d9 frozen candidate SHA. No runtime divergence.",
+    "limits": "Complete publication operations, tiny64Objects scalar/batch andlarger4ObjectTuple/Series batch. Existing-use transfer only; no masked maintenance or diagnostics mixed. Current canonical/header baseline common. Native7 suite and separately focused9runtimeTU/maintained-testSAN scopes distinguished from exact worker check. No conversion extension.",
+    "prepared_source_commit": "17f40cdc3cd2eb5042dda24e3c1379ce7c1e268e"
+  },
+  "full_audit_sha256": "eafe99241cb92986223093afb930564d4765e04ef6248f515786f48b1e862c1a",
+  "comparative_tables": "Complete clock/cost/counter rows in each arm measurements.csv and summary.csv; raw trials and ordered samples in artifact.json archive."
+}

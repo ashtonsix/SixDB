@@ -1,0 +1,54 @@
+{
+  "index_tree": "e50ec5afdb9835d250d9a1ce41425978ccdd8a74",
+  "scope": "Exact staged single-pass Allocation-use transfer with selected canonical reads/material seam: performance build and seven focused native ownership/catalog/caller suites; separate focused sanitizer receipt",
+  "steps": [
+    {
+      "name": "capture-transfer-build",
+      "returncode": 0,
+      "command": [
+        "cmake",
+        "--build",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc/metadata-projected-integration",
+        "--target",
+        "orbital_versioned_performance_bench",
+        "orbital_mvcc_composed_check",
+        "orbital_mvcc_composed_read_fusion_check",
+        "orbital_object_catalog_check",
+        "orbital_object_shape_check",
+        "orbital_mvcc_shape_check",
+        "orbital_representation_check",
+        "loom_object_module_check",
+        "-j2"
+      ],
+      "log": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc/metadata-projected-integration/capture-transfer-build.log",
+      "sha256": "68df2cbdb3f3835b3835a4c1fa2bb1755b2e9556f08b708375c9cc28ca1576c0"
+    },
+    {
+      "name": "capture-transfer-tests",
+      "returncode": 0,
+      "command": [
+        "ctest",
+        "--test-dir",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc/metadata-projected-integration",
+        "-R",
+        "^(orbital_mvcc_(composed_check|composed_read_fusion_check|shape_check)|orbital_object_(catalog|shape)_check|orbital_representation_check|loom_object_module_check)$",
+        "--output-on-failure",
+        "--no-tests=error"
+      ],
+      "log": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc/metadata-projected-integration/capture-transfer-tests.log",
+      "sha256": "38ed3d5304f40be433ce8fbddf841fd5c80923cbd9da010920c3973e708a8dea"
+    }
+  ],
+  "unstaged_inputs_included": false,
+  "prepare_pass_applied": false,
+  "projection": {
+    "files": 5799,
+    "identical_mtimes_preserved": 5791,
+    "changed_or_added": 8,
+    "removed_extra_files": []
+  },
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)",
+  "passed": true,
+  "timing_comparison": false,
+  "sanitizers": false
+}

@@ -908,3 +908,22 @@ Two complete-throughput observations, Inline ns/request, baseline→candidate:
 The smaller capture/Core-drain/PMR allocation code does not yield a consistent complete-operation gain. **Reject this version as measured:** tiny batches regress while useful observability is lost. Layouts, signatures, live bytes, limits and correctness state stay intact. Disabled fields are null with explicit availability false, checked in all 48 candidate composed trials. An unavailable allocation-call counter cannot prove allocation freedom. The compact source receipt names every unavailable Core field; the actual candidate captures retain the implementation.
 
 Five native checks and three CLI cases qualify the source, without a sanitizer claim. Final settlement, CPU clocks, Directory/mapped controls and every tail/repetition remain available. All twelve table/parity and two ABI reports regenerate byte-identically. This negative comparison closes the diagnostics-removal screen.
+
+## Existing-use capture transfer
+
+The [final single-pass capture pair](evidence/zen5-capture-transfer-screen-20261010/source-recipe.json), job `20261010T012600Z-e2e91bd2`, compares exact `9ec1467` plus common mapped reset/renew with only `c0cb95e5` existing-use transfer. All eight candidate postimages match the native-qualified tree `e50ec5af`; baseline contract comments account for the difference from the earlier owner's patch receipt. All 88 trials and 3560 actual source postimages pass. Logical, body, caller and every available initial/held/released component counter match exactly. Final Inline histories have one version per Object and zero contexts/retirements.
+
+Two complete-throughput observations, Inline ns/request, baseline→candidate:
+
+| Fixture / update / age8 | Baseline | Existing-use transfer |
+| --- | ---: | ---: |
+| 192/64 scalar | 511.96 / 515.70 | 490.43 / 498.30 |
+| 192/64 batch64 | 310.71 / 307.53 | 300.86 / 294.58 |
+| 4096/4 Tuple batch64 | 108.81 / 108.68 | 109.70 / 113.16 |
+| 4096/4 Series batch64 | 128.13 / 125.27 | 128.14 / 127.64 |
+
+Directory tiny scalar improves 483.02/487.13→444.38/451.16 ns and batch64 276.61/279.38→268.56/267.68. Mapped tiny scalar remains 1551.13/1541.97→1537.74/1541.38. The useful tiny-call signal accompanies a larger Tuple negative and mixed Series observations; selection rests on simpler existing-use ownership plus that signal, not a universal speed claim. Both modes, all competitors, settlement, samples and repetitions are retained.
+
+Capture validates sources/geometry/aliases once after resource and Control callbacks, establishes every source before transferring any use, and consumes nonthrowingly with scratch still alive. It avoids the immediate retain/drop pair. On invalid input, allocation or Control retention may precede refusal; capacity may win, and a callback may repair input before final validation. No source use is consumed on refusal, but callback effects are not undone. Saturation refusal remains.
+
+Seven native suites qualify the exact integrated source. The separate focused ASan/UBSan receipt instruments all nine runtime TUs plus the maintained physical ownership test, including leak and always-on use-after-return checks; it is not a full composed sanitizer matrix. All twelve table/parity and two ABI reports regenerate byte-identically. Sources, actual ELF/disassembly, ordered samples and full qualification logs stay in the existing worker archive.

@@ -266,3 +266,5 @@ keeps the exact source cut, counter scope and negative observations with its com
 The [masked-maintenance screen](evidence/zen5-masked-maintenance-screen-20261010/source-recipe.json) retains the independent complete-operation comparison and its selection limits in [iteration feedback](FEEDBACK.md).
 
 The [diagnostics-off screen](evidence/zen5-diagnostics-off-screen-20261010/source-recipe.json) retains the independent complete-operation comparison and its selection limits in [iteration feedback](FEEDBACK.md).
+
+The [capture-transfer screen](evidence/zen5-capture-transfer-screen-20261010/source-recipe.json) retains the independent complete-operation comparison and its selection limits in [iteration feedback](FEEDBACK.md).
