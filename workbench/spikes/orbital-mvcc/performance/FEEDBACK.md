@@ -948,3 +948,156 @@ Real conversions retain original selected primary bodies and Scope, alternately 
 Conversion also exposes a capacity difference after logical settlement. Starting Tuple, live capacity grows 6.029→12.059 MB; starting Series, 5.898→15.483 MB. Ending the original reader does not shrink either: the catalog still retains primary and final alternative. All cases finish with one logical version per Object and zero contexts. The additional 3.686 MB over two tight Series images is consistent with 15 reuses of 376832-byte retired Tuple windows for 131072-byte first Series columns. The allocator picks a ready zero-extra idle window and retains its larger prepared extent (`orbital/src/allocation/window.cpp`). The separate [native allocation identity census](controls/conversion-capacity/README.md) confirms that exact reuse mechanism for two Objects: one 245760-byte slack interval, one remaining idle Tuple window, independent live/idle sums, and zero charge after owner destruction. It does not instrument addresses in this remote sixteen-Object run. At the decisive allocation the retired Tuple is the only idle Window, so a better-fit search cannot remove the slack. Fresh smaller backing and trimming trade capacity for new mapping/preparation work and possible budget refusal. Measure reuse latency and pressure before selecting a policy; this is not an established allocator regression.
 
 All logical/body/component costs match across repetitions; three table/parity reports regenerate byte-identically. Local qualification passed three CTests and 14 independent-oracle CLI cases; the worker ran its three checks and all 36 exact-source trial oracles. No sanitizer or PMU claim is attached. Full sources, binaries, ordered samples and logs remain in the verified worker archive; the worker is terminated. Append, actual Ring interleaving, mixed transactions and reader-age distributions remain unmeasured here. Their private fixtures are being prepared separately; this first panel does not close the wider investigation.
+
+
+## Wider request interleaving and append growth
+
+The [ten-trial pilot](evidence/zen5-interleave-pilot-20261010/broad/summary.csv)
+and [complete repeat panel](evidence/zen5-growth-ring-survey-20261010/broad/summary.csv)
+use capture `db82521f`, whose five authored harness paths were subsequently
+integrated in `f80e8be`. That commit is not the full measured snapshot. Jobs
+`20261010T084755Z-2abedd4f` and `20261010T085533Z-614e5bcd` have identical three
+ELF hashes and all 2923 actual source postimages verified. The latter passes
+96 timing trials plus eight untimed accounting replays. Oracle outputs and all
+18 matched manual/Ring admission/refill pairs agree. Both complete tables
+regenerate byte-identically from retained samples.
+
+Each read has 524291 requests following sixteen decoded links under a per-request
+Scope. Corpus, request order, Object/key/steps and result consumption match.
+The matched new harness compares direct proven, staged serial, manual and actual
+Ring execution. Widths 1/8/32 and hints on/off have a complete cross-section at
+193 MB of Tuple bodies; smaller sets have a bounded subset. Median complete
+throughput, microseconds/request (two observations each):
+
+| Bodies / Objects | Direct proven | Staged serial, no hints | Manual8, no hints | Ring8, no hints | Ring32, hints |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 0.75 MB / 1 | 1.229 | 1.279 | 1.879 | 0.580 | 0.723 |
+| 48 MB / 64 | 4.974 | 5.029 | 3.478 | 2.534 | 1.299 |
+| 193 MB / 256 | 7.355 | 7.748 | 3.978 | 3.238 | 1.455 |
+
+The large hinted Ring32 treatment is about five times faster than matched
+direct execution. Caller CPU tracks wall time. At that size, Ring32 without
+hints takes 2.884 us; manual32 takes 3.724 us without hints and 2.242 us with
+hints. Hints plus independent work are useful here. **Keep the width1 negative:**
+Ring1 takes 19.137 us without hints and 20.187 us with hints. Serial hints take
+8.208 us versus 7.748 us without. These large-set negatives are not measurements
+of small-set width1. Hinting/Ring entry should not be applied indiscriminately
+when there is no independent work to overlap.
+
+The ordinary fused reader is a contextual anchor: 1.230/4.770/8.259 us over those
+sizes. It uses Operation/Object-index input and 524291 reserved sample slots;
+the new harness resolves ObjectIds and reserves 513 group slots. Use the matched
+new arms for attribution. Manual and Ring share the law and refill boundaries,
+but carry state differently; their whole-caller gap includes code generation
+and intermediate state access, not just scheduling. A qualified private local-
+state diagnostic remains untimed and unselected.
+
+Request Scope/selection, Frame opening, admission, refill, completion copying and
+Scope retirement are charged. Cold Driver construction/configuration and its net
+Arena charge are reported separately. The fixed bank has 64 Frames, each
+176 bytes; Driver is 11712 bytes even at width1. Ready warmed groups run through
+128-visit returns without servicing Messages. The gain establishes neither
+fairness under competing work, per-request response latency nor future
+worker/Engine/I/O headroom. Separate latency passes retain 513 offered-group
+samples including a three-request tail. Large Ring32 hinted group p99 is
+1.593/1.576 ms; direct group p99 is 9.198/8.972 ms. Those are group makespans,
+not request p99. Within-Part Tuple reads and independent Scopes across Objects
+are exercised; Series4 and cross-Object work under one transaction remain open.
+
+Fresh-copy append uses one Tuple Object, 513 appended rows, prefixes of 1024 or
+65536 rows, tails1/64 and the original reader held or refreshed every eight
+publications. The clock includes tail-array preparation, actual allocation,
+prefix copying, native tail construction, capture/prepare/install, full drain,
+bounded poll and reader witnesses/rotation. Count, unchanged prefix and every
+tail row match an independent vector; independent formulas match all copy,
+request and codec counts. Median complete throughput, us per appended row:
+
+| Initial rows / old reader | Tail1 | Tail64 |
+| --- | ---: | ---: |
+| 1024 / held | 1.122 | 0.158 |
+| 1024 / refresh8 | 1.211 | 0.158 |
+| 65536 / held | 30.174 | 3.529 |
+| 65536 / refresh8 | 31.537 | 3.587 |
+
+At prefix65536 the 513 scalar publications copy 776279808 bytes; nine batched
+publications copy 13618944 bytes. Tail construction still encodes exactly 2052
+values with 513 native constructor calls. Two versions, not every intervening
+version, remain under the held original reader. Ending the reader leaves one
+version and zero contexts. The held scalar case has 3026944 bytes of live capacity;
+settlement leaves 1519616 live, while mapped inventory remains 10600448 including
+9080832 idle bytes. Untimed accounting replays observe post-publication capacity;
+transient physical peak and unavailable held extents remain null. Final logical
+settlement is not physical trimming.
+
+Local qualification covers 30 Ring and 24 append cases with partial groups and
+retained count boundaries; owning fixtures have separate native/SAN receipts.
+No additional sanitizer or PMU claim attaches to these harness timings. Full
+sources, ELFs, ordered samples and logs remain recoverable through verified
+worker archives. Both timing workers have terminated. This wider signal selects
+follow-up questions, not a universal read path or append policy.
+
+
+## Bounded shared-prefix append alternative
+
+The [matched AB/BA pair](evidence/zen5-prefix-growth-pair-20261010/prefix-pair/summary.csv),
+job `20261010T091405Z-c4a6e2f1`, uses captured source `f4491ddd`: exact released
+private control plus the existing selected native runtime. All 2929 actual
+postimages match. The normal focused CTest passes; eight timing trials and two
+clock-free accounting replays have equal independent digests and identical
+row/publication/copy/codec formulas. Both tables regenerate byte-identically.
+
+One serial Object starts with 65536 rows and receives 513 single-row appends
+while an original reader retains its exact old count and prefix. The candidate
+has an explicit caller-supplied **2 MiB virtual reservation**, established with
+initial construction outside request clocks. Both arms share the driver loop,
+tail preparation, per-publication capture/prepare/install and maintenance, old
+reader validation and final release. Complete throughput ns per appended row:
+
+| Arm | Observation A | Observation B |
+| --- | ---: | ---: |
+| Fresh copy | 29103 | 29156 |
+| Shared prefix | 678 | 691 |
+
+The bounded alternative is about 42.6 times faster here. Separate scalar latency
+passes agree in their complete elapsed averages: fresh29036/29364 ns versus
+shared712/695 ns. Ordered per-publication samples remain archived. This is a
+whole append alternative: Hold/grow and shared ownership replace allocate/copy,
+its initial Shape is reused without the cached-proof/four-Part carrier path,
+and suffix placement is in the caller TU. The comparison does not isolate
+memcpy or any single mechanism.
+
+Fresh copy performs 514 body allocations with 507 reuses and copies 776279808
+prefix bytes. Shared prefix performs one Allocation, 513 actual grow calls,
+zero relocation/reuse/idle bytes and **zero prefix copies**. Both still request
+the sum of logical prefix extents and construct/encode all 513 new rows. Requested
+extent is not newly allocated bytes in the shared arm. Both retain two logical
+versions and settle to one with zero contexts; old readable counts remain65536,
+current count66049. The candidate's final mapped/live capacity1519616 B and
+virtual reservation2097152 B are distinct. Fresh settled mapped inventory is
+10600448 B, including9080832 idle bytes and1519616 live capacity.
+
+The current candidate Representation is48 B versus40 B, and its counted shared
+block is56 B. Released PMR is3443 B versus3379 B; tracked PMR peaks3567/3487 B.
+Both backend records remain2048 B and the resident Schema stays present. The
+candidate's one monotonically prepared Window makes its successful no-refusal
+final physical capacity also its peak; fresh within-publication peak remains
+unavailable. The known persistent metadata subset is22414/24222 B (shared/fresh),
+mostly reflecting Pool inventory differences. It excludes Schema heap, body
+mappings and diagnostic buffers; it is not total memory or a metadata target.
+
+**Retain this as an experimental append caller**, not a default container policy
+or a replacement for the general conversion/update fixture. Reservation exhausts
+with refusal; there is no rollover, recovery policy, reserve prediction or
+multithreaded writer protocol. Actual in-reservation OS-grow failure injection
+is not qualified. Earlier owner checks cover five other refusals, immutable
+prefix lifetimes and byte-level validation. The new timing harness has no
+additional sanitizer claim. The frozen control, qualification and complete
+comparison remain in Git; full source, ELF, ordered samples and logs are
+recoverable from the verified worker archive. The worker is terminated.
+
+These new signals justify wider discovery: interleaving with enough independent
+work and avoiding append prefix amplification offer substantial gains despite
+larger ownership records. Mixed transactions, skewed locality, reader-age bursts,
+pressure/refusal recovery, conversion followed by useful work, Series4 and
+cross-Object work within one transaction remain unmeasured next questions. The
+exhausted narrow LMDB tuning queue remains closed.

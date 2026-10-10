@@ -54,6 +54,24 @@ layout; direct/manual/Ring comparisons share the new harness. This ready-body
 caller does not poll Messages between Ring returns, so its throughput says
 nothing yet about fairness under competing work or worker/I/O headroom.
 
+The full panel uses two observations, widths 1/8/32 and hints on/off, with the
+complete width/hint cross-section limited to the largest working set. The fused
+anchor retains Operation/Object-index input and 524291 reserved sample slots;
+the matched new arms resolve ObjectIds and reserve 513 group slots. Latency
+samples cover complete 1024-request offered groups, including the short tail.
+
+Append uses one Tuple Object, prefixes of 1024/65536 rows, 513 appended rows,
+tails of 1/64 and reader refresh every eight publications or an original reader
+held throughout. The independent row vector checks count, prefix and tail;
+separate formulas check copied/requested bytes and tail codec work. Untimed
+accounting samples post-publication capacity; transient physical peak and
+unavailable held-extent diagnostics remain null.
+
+The [wider repeat findings](FEEDBACK.md#wider-request-interleaving-and-append-growth) and
+[bounded shared-prefix control](controls/prefix-growth/README.md) retain the new
+positive signals and negative width/reservation boundaries. The control is an
+experimental append caller with an explicit reservation, not a selected policy.
+
 The next scenario choices follow the first results and the owning module seams:
 
 | Scenario | Useful variations and observations |

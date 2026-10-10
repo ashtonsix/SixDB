@@ -1,0 +1,29 @@
+{
+  "measured_capture_digest": "f4491ddd88a021a5719fe017198b7282034d936f975fb65134d91ff5a0469a88",
+  "actual_source_postimages_verified": 2929,
+  "owner_release_sha256": "83c5182f9803ada092297c5a1e263ecf5074ef94723d65a9643211f92f62c6ba",
+  "owner_base": "df29d705831ec9aec226ea68487a7f2d68a71a74",
+  "native_runtime_files_matching_owner_source": 350,
+  "harness_foundation_digest": "db82521f39696e7d4777791b0f5c1a17c7a607adcc6fe557d5c4b96a240e0061",
+  "source_composition": "Exact released four control files plus report/worker recipe and added CMake targets. Existing f80e8be targets preserved. Explicit expected include and ownership comments overlaid from owner to match native source.",
+  "normal_native_check": {
+    "name": "orbital_prefix_growth_check",
+    "returncode": 0
+  },
+  "candidate_selected": false,
+  "reservation_input_bytes": 2097152,
+  "bundled_differences": [
+    "shared ownership and Hold/grow",
+    "cached proof/carrier bypass",
+    "caller-TU suffix placement",
+    "48B versus40B Representation;56B shared block"
+  ],
+  "limits": [
+    "Initial reservation/preparation outside clock",
+    "One serial append-only Object, held original reader",
+    "No rollover or exhaustion recovery; actual in-reservation OS-grow refusal injection unavailable",
+    "Shared one-window physical peak exact in successful no-refusal run; fresh transient physical peak null",
+    "Schema heap, retirement census and held extent unavailable"
+  ],
+  "sanitizer_claim_for_harness": false
+}

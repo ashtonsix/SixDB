@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "trials": 10,
+  "performance_trials": 10,
+  "accounting_replays": 0,
+  "independent_oracle": "map lookup for reads, row vector plus count/prefix/tail checks and independent copy/codec formulas for append",
+  "manual_ring_refill_parity": true,
+  "sanitizer_claim": false
+}

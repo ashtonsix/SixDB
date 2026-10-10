@@ -1,0 +1,22 @@
+{
+  "files_sha256": {
+    "host.json": "fe6fc4008688e587f91b5b91a6dfcf4109cd7835b99017e5795638b3b3ce296e",
+    "prefix-pair/binary-identity.json": "0dfedf8f5ccf84fe20f340eb17989487e3cf6c91ffe1b3720ca1916422588884",
+    "prefix-pair/measurements.csv": "4c1e10c9cdf29cd2813237d58d337ce111dd417e87ba68d3cebd5a4cefbb9fb9",
+    "prefix-pair/qualification.json": "a45294677891055e890b95fffe5ce225ff3de3db2f9cdacb6ea9ee87f958307e",
+    "prefix-pair/samples.json": "67a2a4eec0af8df1ef60826124f1392b7ae8102a1b54586a10a2a0d06313ecb3",
+    "prefix-pair/summary.csv": "8e55210324ec4a869d5fed0c7fa99469ca11c9c1b45ceaec9aa7528d6518bebf",
+    "worker-result.json": "c1996f6a2095727c5c40a09afda602e35bfd25ca857e3ea48ec5201df421875a"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/orbital-mvcc/performance/controls/prefix-growth/run.py",
+    "--report-only",
+    "{evidence}/prefix-pair",
+    "--output",
+    "{evidence}/prefix-pair"
+  ]
+}

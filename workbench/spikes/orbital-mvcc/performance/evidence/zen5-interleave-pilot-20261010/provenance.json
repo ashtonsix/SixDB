@@ -1,0 +1,23 @@
+{
+  "files_sha256": {
+    "broad/binary-identity.json": "0604e9be901e313fdbe764845ec90892133033f99614cdf611463be85994126e",
+    "broad/build-cost.json": "c790d98683ff7373cb9dd52f101b4a6f857e60c933a77dba9ac899f51d873e50",
+    "broad/measurements.csv": "20d8ebdb1a7715cda68171a2c666907048c1996cee2679fa6e7554d89af1b7cf",
+    "broad/qualification.json": "ad0341f7cd990a80d0f5d8f8ab8f03e936219d03ed48b7cabe95c52d6cd8d8d7",
+    "broad/samples.json": "f112d5545a470478c2264c3deb3566c62a0cf94018e4fa70885dcd00f01573fb",
+    "broad/summary.csv": "80361ca6c02d023fa1b0e8aea83bec6dc09123367f615110792ea55c6945310e",
+    "host.json": "c3b3b535304f0baa4266cf64a67a88313e0e7ffdf209e6b1885a3dd25144df27",
+    "worker-result.json": "fffda160ede28ccf8e0b078bc016c79c3a39e4249bdc9c5dda5f608d17355760"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/orbital-mvcc/performance/broader_run.py",
+    "--report-only",
+    "{evidence}/broad",
+    "--output",
+    "{evidence}/broad"
+  ]
+}

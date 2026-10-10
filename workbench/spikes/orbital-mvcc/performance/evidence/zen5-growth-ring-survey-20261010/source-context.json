@@ -1,0 +1,28 @@
+{
+  "measured_capture_digest": "db82521f39696e7d4777791b0f5c1a17c7a607adcc6fe557d5c4b96a240e0061",
+  "native_qualification": "30 Ring and 24 append CLI cases plus direct/fused exact outcome anchor; owning fixture release999a9f0 has separate native/SAN qualification",
+  "actual_source_postimages_verified": 2923,
+  "cold_driver_record_bytes": 11712,
+  "fixed_frame_bank": 64,
+  "matched_attribution_arms": [
+    "direct",
+    "serial",
+    "manual",
+    "ring"
+  ],
+  "contextual_anchor_limit": "Fused uses Operation/Object-index input and524291 reserved sample slots; new arms use resolvedObjectIds and513 reserved group slots. All logical requests/outcomes match.",
+  "latency_limit": "Throughput of ready warm requests; no Message service between Ring returns. Does not measure response latency/fairness or future Engine/worker/I/O headroom.",
+  "pilot_limit": "Independent pilot has one observation; this full panel has two per timed arm and eight untimed accounting replays.",
+  "sanitizer_claim_for_new_harness": false,
+  "pmu": "off",
+  "harness_integration_commit": "f80e8be",
+  "measured_source_identity": "Exact full snapshot is the measured_capture_digest and archived source.tar.gz postimages; integration commit names authored harness only.",
+  "capture_foundation_commit": "baadb8ba17c9033430cd92ed15a3d854cd86fafb",
+  "capture_foundation_note": "Captured uncommitted released Ring/append paths and authored harness overlays are named by exact digest; this is not an exact commit checkout.",
+  "full_panel_trials": 104,
+  "one_large_width_hint_cross_section": true,
+  "ready_group_size": 1024,
+  "manual_ring_refill_pairs": 18,
+  "worker_terminated": true,
+  "manual_ring_attribution": "Matched native law and refill boundaries, different state carriage/code generation: whole-caller comparison."
+}
