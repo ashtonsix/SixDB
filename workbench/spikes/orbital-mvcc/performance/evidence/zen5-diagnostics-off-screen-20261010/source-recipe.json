@@ -1,0 +1,107 @@
+{
+  "passed": true,
+  "trials": 136,
+  "matched_groups": 34,
+  "actual_sources": [
+    {
+      "cut": "baseline-0",
+      "source_sha256": "20f427797fad3d65731ba228c31878abe85391bd8facbe0710ea81da4e387112",
+      "verified_postimages": 885
+    },
+    {
+      "cut": "candidate-0",
+      "source_sha256": "c1b882368c4734af63a78bf2540c9cd8feb3ca1250339dad511bc24b40f2adb3",
+      "verified_postimages": 885
+    },
+    {
+      "cut": "candidate-1",
+      "source_sha256": "a99124b44411276127ec387bd60925fde95b298ad6ddc631a031735471d15ac1",
+      "verified_postimages": 885
+    },
+    {
+      "cut": "baseline-1",
+      "source_sha256": "9099f5778c98eb78d265c9af27e6579a311f935570f6575f2da2680b4d2061b5",
+      "verified_postimages": 885
+    }
+  ],
+  "logical_and_body_cost_parity": true,
+  "disabled_observation_checks": 48,
+  "unavailable_core_fields": [
+    "copied_metadata_bytes",
+    "captured_descriptor_bytes",
+    "reclamation_work",
+    "last_sweep_bytes",
+    "last_sweep_cuts",
+    "entry_visits",
+    "version_visits",
+    "cut_visits",
+    "debt_visits",
+    "plan_work",
+    "maintenance_restarts",
+    "reclaimed_versions",
+    "completed_sweeps",
+    "head_refreshes"
+  ],
+  "limits": "Independent d9 diagnostic-removal control; disabled observations null/unavailable, not zero. Allocation-call assertions no longer prove allocation freedom. Layout/signatures and live allocation/limits preserved; no canonical/maintenance/transfer candidate combined. Two observations per arm, complete operations and settlement retained.",
+  "current_optional_census_report_regeneration": [
+    "baseline-0/measurements.csv",
+    "baseline-0/summary.csv",
+    "baseline-0/parity.json",
+    "candidate-0/measurements.csv",
+    "candidate-0/summary.csv",
+    "candidate-0/parity.json",
+    "candidate-1/measurements.csv",
+    "candidate-1/summary.csv",
+    "candidate-1/parity.json",
+    "baseline-1/measurements.csv",
+    "baseline-1/summary.csv",
+    "baseline-1/parity.json"
+  ],
+  "report_regeneration": {
+    "passed": true,
+    "byte_identical": [
+      "baseline-0/measurements.csv",
+      "baseline-0/summary.csv",
+      "baseline-0/parity.json",
+      "baseline-0/abi.json",
+      "candidate-0/measurements.csv",
+      "candidate-0/summary.csv",
+      "candidate-0/parity.json",
+      "candidate-0/abi.json",
+      "candidate-1/measurements.csv",
+      "candidate-1/summary.csv",
+      "candidate-1/parity.json",
+      "baseline-1/measurements.csv",
+      "baseline-1/summary.csv",
+      "baseline-1/parity.json"
+    ],
+    "reports": 14,
+    "reporter_sha256": "47478f212196da739748ac703cc135339eca366bd3d2af0d68eb7d9963787991"
+  },
+  "recipe": {
+    "base_commit": "d9fff3eaf54aed5202b642cb6069b4bfb9e373ac",
+    "patch_sha256": "2194b345cac0ad3717d2e231efb65212f12805fb9f8d8a8188f1d8d259b5e8be",
+    "qualified_receipt_sha256": "c14a8c634c18f3c8c14eca373cb7bfebf685723f700fe8294e5014415ed09b87",
+    "arm_order": [
+      "baseline-0",
+      "candidate-0",
+      "candidate-1",
+      "baseline-1"
+    ],
+    "runtime_postimages_per_arm": 885,
+    "candidate_only_changes": [
+      "orbital/include/orbital/object.h",
+      "orbital/src/object/storage.cpp",
+      "orbital/src/object/store_impl.h",
+      "workbench/spikes/orbital-mvcc/metadata/orbital/candidates/common.h",
+      "workbench/spikes/orbital-mvcc/performance/main.cpp"
+    ],
+    "cases": 6,
+    "total_trials": 136,
+    "state": "Prepared only; defer launch until canonical signal and root direction.",
+    "limits": "Independent d9fff3e diagnostic-removal control; no Loom/canonical/reader/maintenance candidates mixed. Disabled observations null/unavailable, no zero-work or allocation-free inference. Tiny scalar/batch age8/held original, larger Tuple/Series batch age8.",
+    "prepared_source_commit": "f04218dd200fb250690cad310049f94f5aa4c6ee"
+  },
+  "full_audit_sha256": "1710c59869debd48f7f037ef6ffaa7f48ae1343238f4896182e4dc38373b9765",
+  "comparative_tables": "Complete clock/cost/counter rows in each arm measurements.csv and summary.csv; raw trials and ordered samples in artifact.json archive."
+}

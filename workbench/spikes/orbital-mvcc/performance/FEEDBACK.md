@@ -889,3 +889,22 @@ The 4096-row/four-Object Series context is 132.55/133.61→129.67/127.68 ns. Fin
 Held scalar version visits fall 524675→12233; age64 falls 274444→16390. Age1 retains 16396 visits and adds 4099 census visits/8198 word queries. These cumulative counters include warm and timed histories; they are not timed-request hardware counts. Core grows 688→696 bytes and the capacity64 directory 3088→3104 bytes, with no per-Object field added.
 
 **Keep the measured candidate unselected:** the substantial retained-reader benefit accompanies roughly 10% scalar age1 regression. The later no-state queue refinement is correctness-checked but untimed, and is not part of this pair. Four focused native checks and observer compilation qualify the measured source; there is no sanitizer claim. All twelve table/parity and two ABI reports regenerate byte-identically. Optional census CSV fields also preserve nine older reports where those counters are absent. Full sources, binaries, ordered samples and logs remain recoverable from the existing worker archive.
+
+## Removing diagnostics: rejected complete-operation tradeoff
+
+The [independent diagnostics-off pair](evidence/zen5-diagnostics-off-screen-20261010/source-recipe.json), job `20261010T012155Z-695f365d`, holds `d9fff3e` fixed and changes only optional Core/debt/capture/PMR observation. No specialization, masked maintenance or ownership-transfer candidate is combined. All 136 trials and 3540 actual source postimages pass; outcomes and body work match, and final Inline histories settle completely.
+
+Two complete-throughput observations, Inline ns/request, baseline→candidate:
+
+| Fixture / update | Baseline | Diagnostics off |
+| --- | ---: | ---: |
+| 192/64 scalar, age8 | 510.17 / 504.23 | 501.26 / 500.40 |
+| 192/64 scalar, original reader held | 1235.91 / 1239.28 | 1232.13 / 1225.51 |
+| 192/64 batch64, age8 | 305.51 / 308.01 | 313.79 / 313.01 |
+| 192/64 batch64, original reader held | 302.83 / 298.92 | 312.73 / 312.51 |
+| 4096/4 Tuple batch64 | 111.22 / 103.69 | 111.82 / 108.99 |
+| 4096/4 Series batch64 | 126.82 / 129.22 | 125.49 / 127.69 |
+
+The smaller capture/Core-drain/PMR allocation code does not yield a consistent complete-operation gain. **Reject this version as measured:** tiny batches regress while useful observability is lost. Layouts, signatures, live bytes, limits and correctness state stay intact. Disabled fields are null with explicit availability false, checked in all 48 candidate composed trials. An unavailable allocation-call counter cannot prove allocation freedom. The compact source receipt names every unavailable Core field; the actual candidate captures retain the implementation.
+
+Five native checks and three CLI cases qualify the source, without a sanitizer claim. Final settlement, CPU clocks, Directory/mapped controls and every tail/repetition remain available. All twelve table/parity and two ABI reports regenerate byte-identically. This negative comparison closes the diagnostics-removal screen.
