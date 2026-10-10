@@ -352,56 +352,63 @@ void prepared_home_selection() {
   okay(group->release_identity(identity), "release selection identity");
 }
 
-void compact_trim_inventory() {
+void bitmap_trim_admission() {
   for (const auto palette : {Palette::a, Palette::b}) {
     for (const auto width : {64, 256, 1024}) {
       auto group = take(FiniteGroup::create({palette, static_cast<std::uint16_t>(width)}),
-                        "create compact trim geometry");
-      okay(group->prepare(), "prepare compact trim geometry");
-      check(group->payload_pages() <= std::numeric_limits<std::uint16_t>::max(),
-            "every supported geometry fits compact trim coordinates");
+                        "create bitmap trim geometry");
+      okay(group->prepare(), "prepare bitmap trim geometry");
+      auto membership = group->trim_membership();
+      check(!group->has_trim(), "fresh trim membership is empty");
       const auto page = group->native_page();
       check(::mprotect(group->page_address(0), 3 * page, PROT_READ | PROT_WRITE) == 0,
             "prepare three actual idle pages");
-      okay(group->mark_mapped({0, 3}), "publish compact trim pages");
+      okay(group->mark_mapped({0, 3}), "publish bitmap trim pages");
       group->page_address(0)[0] = std::byte{0x71};
       group->page_address(2)[page - 1] = std::byte{0x93};
       const auto unchanged = [&] {
         check(group->mapped_pages() == 3, "rejected trim keeps all mapped charge");
         for (std::size_t p = 0; p < 3; ++p)
           check(group->mapped(p) && !group->trimming(p),
-                "invalid middle range partially quarantined the trim list");
+                "rejected bitmap partially quarantined earlier valid pages");
+        check(group->page_address(0)[0] == std::byte{0x71} &&
+            group->page_address(2)[page - 1] == std::byte{0x93},
+            "rejected bitmap changed readable idle contents");
       };
 
-      const std::array<TrimSpan, 3> bad{{
-          {0, 1}, {static_cast<std::uint16_t>(group->payload_pages()), 1}, {2, 1}}};
-      check(!group->begin_trim(bad), "compact out-of-range middle span refuses");
+      membership[0] = 0xdu; // Valid pages 0/2 followed by absent page 3.
+      const auto absent = group->begin_trim();
+      check(!absent && absent.error() == Error::conflict, "absent selected page refuses complete bitmap");
       unchanged();
-      const std::array<TrimSpan, 3> empty{{{0, 1}, {1, 0}, {2, 1}}};
-      check(!group->begin_trim(empty), "compact empty middle span refuses");
-      unchanged();
-      const std::array<TrimSpan, 3> compact_overflow{{
-          {0, 1}, {1, std::numeric_limits<std::uint16_t>::max()}, {2, 1}}};
-      check(!group->begin_trim(compact_overflow), "maximum compact count cannot overrun geometry");
-      unchanged();
+      membership[0] = 0x5u;
+      if (const auto tail = group->payload_pages() % 64; tail) {
+        membership.back() |= std::uint64_t{1} << tail;
+        const auto beyond = group->begin_trim();
+        check(!beyond && beyond.error() == Error::invalid_argument,
+              "unused bitmap tail cannot select a page outside geometry");
+        unchanged();
+        membership.back() &= ~(std::uint64_t{1} << tail);
+      }
       const std::array<PageSpan, 3> overflow{{
           {0, 1}, {1, std::numeric_limits<std::size_t>::max()}, {2, 1}}};
       check(!group->begin_trim(overflow), "wide overflow count is not narrowed to a legal range");
       unchanged();
-      const std::array<PageSpan, 3> wrapped_first{{{0, 1}, {65536, 1}, {2, 1}}};
-      check(!group->begin_trim(wrapped_first), "wide first page is not truncated to zero");
+      const std::array<PageSpan, 3> invalid_first{{
+          {0, 1}, {std::numeric_limits<std::size_t>::max(), 1}, {2, 1}}};
+      check(!group->begin_trim(invalid_first), "wide first page outside geometry refuses complete selection");
       unchanged();
 
-      const std::array<TrimSpan, 3> valid{{{0, 1}, {1, 1}, {2, 1}}};
-      okay(group->begin_trim(valid), "reserve complete compact trim list");
+      membership[0] = 0x7u;
+      okay(group->begin_trim(), "reserve complete bitmap selection");
       for (std::size_t p = 0; p < 3; ++p)
-        check(group->trimming(p), "valid compact list quarantines every range");
+        check(group->trimming(p), "valid bitmap quarantines every selected page");
       okay(group->finish_trim({0, 1}, false), "failed first discard restores mapping");
       check(::madvise(group->page_address(1), page, MADV_DONTNEED) == 0 &&
           ::mprotect(group->page_address(1), page, PROT_NONE) == 0,
           "discard actual middle page");
       okay(group->finish_trim({1, 1}, true), "successful middle discard refunds only its range");
       okay(group->finish_trim({2, 1}, false), "failed last discard restores mapping");
+      membership[0] = 0;
       check(group->mapped_pages() == 2 && !group->mapped(1) &&
           group->page_address(0)[0] == std::byte{0x71} &&
           group->page_address(2)[page - 1] == std::byte{0x93},
@@ -412,18 +419,90 @@ void compact_trim_inventory() {
             "prepare last legal payload page");
       okay(group->mark_mapped({last, 1}), "publish last legal payload page");
       group->page_address(last)[page - 1] = std::byte{0xb5};
-      const std::array<TrimSpan, 1> beyond{{{static_cast<std::uint16_t>(last), 2}}};
-      check(!group->begin_trim(beyond) && !group->trimming(last),
-            "compact last-page range cannot cross payload boundary");
-      const std::array<TrimSpan, 1> endpoint{{{static_cast<std::uint16_t>(last), 1}}};
-      okay(group->begin_trim(endpoint), "compact last legal page is representable");
-      check(group->trimming(last), "compact endpoint is quarantined");
-      okay(group->finish_trim({last, 1}, false), "restore compact endpoint after discard refusal");
+      membership[last / 64] = std::uint64_t{1} << (last % 64);
+      okay(group->begin_trim(), "bitmap accepts last legal payload page");
+      check(group->trimming(last), "bitmap endpoint is quarantined");
+      okay(group->finish_trim({last, 1}, false), "restore bitmap endpoint after discard refusal");
+      membership[last / 64] = 0;
       check(group->mapped_pages() == 3 && group->mapped(last) &&
           group->page_address(last)[page - 1] == std::byte{0xb5},
-          "maximum geometry endpoint preserves bytes and charge");
+          "bitmap endpoint preserves bytes and charge");
     }
   }
+}
+
+void bitmap_trim_cross_word() {
+  auto group = take(FiniteGroup::create({Palette::a, 1024}), "create cross-word trim geometry");
+  okay(group->prepare(), "prepare cross-word trim geometry");
+  check(group->payload_pages() > 67, "geometry has both neighbours of the cross-word run");
+  const auto page = group->native_page();
+  check(::mprotect(group->page_address(61), 7 * page, PROT_READ | PROT_WRITE) == 0,
+        "prepare cross-word run and both neighbour pages");
+  okay(group->mark_mapped({61, 7}), "publish cross-word run and neighbours");
+  group->page_address(61)[page - 1] = std::byte{0xa1};
+  group->page_address(67)[0] = std::byte{0xb2};
+  const auto identity = take(group->claim_identity(~(std::uint64_t{1} << 63)),
+                             "select last-grid active identity");
+  const auto active = take(group->claim_home(identity, 3072, 16), "retain late active home");
+  check(active.pages.first > 67, "active home follows the cross-word selection");
+  prepare(*group, active);
+  active.address[0] = active.address[active.capacity - 1] = std::byte{0xc3};
+  const auto mapped = 7 + active.pages.count;
+  auto membership = group->trim_membership();
+  membership[0] = 0xc000000000000000ull;
+  membership[1] = 0x7u;
+  const auto unchanged = [&] {
+    check(group->mapped_pages() == mapped, "refused cross-word trim preserves full charge");
+    for (std::size_t p = 61; p <= 67; ++p)
+      check(group->mapped(p) && !group->trimming(p), "refusal partially admitted the earlier run");
+    for (auto p = active.pages.first; p < active.pages.first + active.pages.count; ++p)
+      check(group->mapped(p) && !group->trimming(p), "refusal quarantined an active page");
+    check(group->page_address(61)[page - 1] == std::byte{0xa1} &&
+        group->page_address(67)[0] == std::byte{0xb2} && active.address[0] == std::byte{0xc3} &&
+        active.address[active.capacity - 1] == std::byte{0xc3}, "refusal changed protected contents");
+  };
+  for (auto p = active.pages.first; p < active.pages.first + active.pages.count; ++p)
+    membership[p / 64] |= std::uint64_t{1} << (p % 64);
+  const auto occupied = group->begin_trim();
+  check(!occupied && occupied.error() == Error::conflict, "late active page refuses complete selection");
+  unchanged();
+  std::fill(membership.begin(), membership.end(), 0);
+  membership[0] = 0xc000000000000000ull;
+  membership[1] = 0x7u;
+  if (const auto tail = group->payload_pages() % 64; tail) {
+    membership.back() |= std::uint64_t{1} << tail;
+    const auto beyond = group->begin_trim();
+    check(!beyond && beyond.error() == Error::invalid_argument, "late tail bit refuses cross-word selection");
+    unchanged();
+    membership.back() &= ~(std::uint64_t{1} << tail);
+  }
+  std::size_t cursor = 0;
+  PageSpan span;
+  check(next_trim_span(membership, cursor, span) && span.first == 62 && span.count == 5,
+        "literal bitmap coalesces exactly the five pages [62,67)");
+  check(!next_trim_span(membership, cursor, span), "cross-word selection contains only one run");
+  okay(group->begin_trim(), "admit complete cross-word run");
+  for (std::size_t p = 62; p < 67; ++p)
+    check(group->trimming(p), "cross-word admission missed a selected page");
+  check(group->mapped(61) && group->mapped(67), "cross-word admission reserved a neighbour");
+  check(::madvise(group->page_address(62), 5 * page, MADV_DONTNEED) == 0 &&
+      ::mprotect(group->page_address(62), 5 * page, PROT_NONE) == 0, "discard the actual complete cross-word run");
+  auto success = group->trim_success();
+  set_trim_span(success, {62, 5}, true);
+  check(success[0] == 0xc000000000000000ull && success[1] == 0x7u &&
+      std::all_of(success.begin() + 2, success.end(), [](auto word) { return word == 0; }),
+      "successful run mask includes exactly [62,67)");
+  okay(group->finish_trim({62, 5}, true), "publish cross-word discard");
+  set_trim_span(membership, {62, 5}, false);
+  check(!group->has_trim() && group->mapped_pages() == mapped - 5,
+        "cross-word completion clears membership and returns exactly five mapped pages");
+  for (std::size_t p = 62; p < 67; ++p)
+    check(!group->mapped(p) && !group->trimming(p), "successful cross-word page remained mapped or pending");
+  check(group->page_address(61)[page - 1] == std::byte{0xa1} &&
+      group->page_address(67)[0] == std::byte{0xb2} && active.address[0] == std::byte{0xc3} &&
+      active.address[active.capacity - 1] == std::byte{0xc3}, "cross-word discard changed neighbour or active bytes");
+  okay(group->release_home(active), "release active home after cross-word trim");
+  okay(group->release_identity(identity), "release cross-word identity");
 }
 } // namespace
 
@@ -436,6 +515,7 @@ int main() {
   grid_selection();
   alignment_and_validation();
   prepared_home_selection();
-  compact_trim_inventory();
+  bitmap_trim_admission();
+  bitmap_trim_cross_word();
   std::puts("finite: six native geometries, retained homes, binding, page unions and trim races passed");
 }

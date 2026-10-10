@@ -1,0 +1,27 @@
+{
+  "base_commit": "768e033584bc83e097de34e0f59ee96ba0e491cc",
+  "patch_sha256": "efed1638cf17b39cc7087778c8962d03933e78638b2d8bf75daddec0deb12f40",
+  "source_manifest_sha256": "000901e9abcfae3c8a9fb2feb4a15bd3f871d56da484ccfb1392776845cf1087",
+  "native_build_logs": {
+    "native-build-final-api.log": "62c42e5f1781ed9f576ca3266182c0b383121c73227f73a8cbe6970633079e8b"
+  },
+  "checks": [
+    "orbital_allocation_check",
+    "orbital_finite_check",
+    "orbital_reclamation_check",
+    "orbital_window_check",
+    "orbital_return_check",
+    "orbital_worker_check",
+    "orbital_lifetime_check",
+    "orbital_thread_check",
+    "orbital_preparation_check",
+    "orbital_notification_check",
+    "orbital_budget_check",
+    "loom_worker_check",
+    "loom_example_allocation"
+  ],
+  "native_check_log_sha256": "8fe46cdd5ce91aa12b48b781fdb31bb8d7958e12971d59828c4ba0cff5baaa51",
+  "finite_compile_command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=1 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/trim-bitmap/projection/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/trim-bitmap/projection=. -ffunction-sections -fdata-sections -mtune=generic -o orbital/CMakeFiles/orbital.dir/src/allocation/finite.cpp.o -c /home/ashtonsix/sixdb/build/orbital-mvcc-metadata/trim-bitmap/projection/orbital/src/allocation/finite.cpp",
+  "source_hashes_rechecked_after_native": true,
+  "limits": "Focused Linux AArch64 native checks. No new sanitizer/target-machine campaign; full collection metadata and composed LMDB targets remain parent-owned and open."
+}

@@ -1,0 +1,35 @@
+cmake_minimum_required(VERSION 3.24)
+project(trim_bitmap_probe LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+find_package(Threads REQUIRED)
+add_compile_options(-O3 -g -UNDEBUG -fno-fast-math -ffp-contract=off)
+foreach(cut baseline projection)
+  set(runtime ${CMAKE_CURRENT_SOURCE_DIR}/../${cut}/orbital)
+  add_library(${cut}_runtime STATIC
+    ${runtime}/src/types.cpp ${runtime}/src/worker.cpp
+    ${runtime}/src/allocation/allocation.cpp ${runtime}/src/allocation/arena.cpp
+    ${runtime}/src/allocation/group.cpp ${runtime}/src/allocation/window.cpp
+    ${runtime}/src/allocation/finite.cpp)
+  target_include_directories(${cut}_runtime PUBLIC ${runtime}/include ${runtime}/src/allocation)
+  target_link_libraries(${cut}_runtime PUBLIC Threads::Threads)
+  foreach(mode plain meter)
+    add_executable(${cut}_${mode}_probe trim_probe.cpp)
+    target_link_libraries(${cut}_${mode}_probe PRIVATE ${cut}_runtime)
+    if(cut STREQUAL projection)
+      target_compile_definitions(${cut}_${mode}_probe PRIVATE TRIM_BITMAP=1)
+    endif()
+    if(mode STREQUAL meter)
+      target_compile_definitions(${cut}_${mode}_probe PRIVATE TRIM_FAULT_PROBE=1)
+      target_link_options(${cut}_${mode}_probe PRIVATE
+        -Wl,--wrap=madvise,--wrap=mprotect
+        -Wl,--wrap=_ZN7orbital10allocation6detail8scheduleERNS0_5ArenaERNS1_3JobE)
+    endif()
+  endforeach()
+  add_executable(${cut}_census census.cpp)
+  target_link_libraries(${cut}_census PRIVATE ${cut}_runtime)
+  if(cut STREQUAL projection)
+    target_compile_definitions(${cut}_census PRIVATE TRIM_BITMAP=1)
+  endif()
+endforeach()

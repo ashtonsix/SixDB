@@ -6,7 +6,9 @@
 
 #include <orbital/types.h>
 
+#include <algorithm>
 #include <array>
+#include <bit>
 #include <atomic>
 #include <cstddef>
 #include <cstdint>
@@ -31,12 +33,39 @@ struct PageSpan {
   std::size_t first{}, count{};
 };
 
-// Cold trim inventory only. Geometry admits at most UINT16_MAX payload pages;
-// wider preparation and caller spans keep their original validation boundary.
-struct TrimSpan {
-  std::uint16_t first{}, count{};
-};
-static_assert(sizeof(TrimSpan) == 4);
+// Enumerate maximal runs, including those crossing uint64 word boundaries.
+inline bool next_trim_span(std::span<const std::uint64_t> bits,
+    std::size_t& cursor, PageSpan& span) noexcept {
+  const auto end = bits.size() * 64;
+  while (cursor < end) {
+    const auto word = bits[cursor / 64] & (~std::uint64_t{0} << (cursor % 64));
+    if (word) { cursor = cursor / 64 * 64 + std::countr_zero(word); break; }
+    cursor = (cursor / 64 + 1) * 64;
+  }
+  if (cursor == end) return false;
+  const auto first = cursor;
+  while (cursor < end) {
+    const auto offset = cursor % 64;
+    const auto count = static_cast<std::size_t>(std::countr_one(bits[cursor / 64] >> offset));
+    cursor += count;
+    if (count < 64 - offset) break;
+  }
+  span = {first, cursor - first};
+  return true;
+}
+
+inline void set_trim_span(std::span<std::uint64_t> bits, PageSpan span, bool set) noexcept {
+  const auto end = span.first + span.count;
+  for (auto page = span.first; page < end;) {
+    const auto offset = page % 64;
+    const auto count = std::min(end - page, 64 - offset);
+    const auto mask = count == 64 ? ~std::uint64_t{0}
+        : ((std::uint64_t{1} << count) - 1) << offset;
+    if (set) bits[page / 64] |= mask;
+    else bits[page / 64] &= ~mask;
+    page += count;
+  }
+}
 
 struct Home {
   std::uint16_t grid{};
@@ -124,7 +153,23 @@ public:
   [[nodiscard]] Result<void> mark_mapped(PageSpan) noexcept;
   [[nodiscard]] Result<void> begin_trim(PageSpan) noexcept;
   [[nodiscard]] Result<void> begin_trim(std::span<const PageSpan>) noexcept;
-  [[nodiscard]] Result<void> begin_trim(std::span<const TrimSpan>) noexcept;
+  // Separate from owner scratch. Membership remains immutable through helper
+  // completion; failed membership survives reply/retry. Success is helper-only
+  // until reply and is cleared by the owner before dispatch.
+  [[nodiscard]] std::span<std::uint64_t> trim_membership() noexcept {
+    return {trim_scratch_ + live_words(), live_words()};
+  }
+  [[nodiscard]] std::span<const std::uint64_t> trim_membership() const noexcept {
+    return {trim_scratch_ + live_words(), live_words()};
+  }
+  [[nodiscard]] std::span<std::uint64_t> trim_success() noexcept {
+    return {trim_scratch_ + 2 * live_words(), live_words()};
+  }
+  [[nodiscard]] bool has_trim() const noexcept {
+    for (const auto word : trim_membership()) if (word) return true;
+    return false;
+  }
+  [[nodiscard]] Result<void> begin_trim() noexcept;
   [[nodiscard]] Result<void> finish_trim(PageSpan, bool discarded) noexcept;
   [[nodiscard]] std::size_t live_words() const noexcept { return (payload_pages_ + 63) / 64; }
 
@@ -143,8 +188,6 @@ private:
   [[nodiscard]] bool occupied(const Home&) const noexcept;
   [[nodiscard]] bool bound(const Home&) const noexcept;
   [[nodiscard]] bool valid(PageSpan) const noexcept;
-  template<class Span>
-  [[nodiscard]] Result<void> begin_trim_spans(std::span<const Span>) noexcept;
   [[nodiscard]] Result<std::size_t> preparation_spans(
       const Home&, std::span<const PageSpan>) const noexcept;
   [[nodiscard]] Home home(std::size_t grid, unsigned cls, unsigned slot) const noexcept;

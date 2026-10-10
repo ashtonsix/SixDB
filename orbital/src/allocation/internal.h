@@ -93,8 +93,6 @@ struct Group {
   bool advice_pending{};
   std::vector<std::uint64_t> live;
   std::array<std::uint64_t, (group_identities + 63) / 64> returned{};
-  std::vector<TrimSpan> trimming;
-  std::vector<bool> discarded;
   std::uint64_t metadata_charge{};
   Job job;
   worker::Message trimmed;

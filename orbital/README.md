@@ -81,9 +81,11 @@ ready-candidate cache and search prepared homes before unprepared homes.
 HOT/WARM/COLD advice guides reclamation; timestamps reject stale advice and
 omitted fields preserve earlier hints. Advice does not prove cache residency.
 Explicit trim reclaims idle ranges on one Arena helper and returns budget after
-owner completion. Its retained-byte floor
-and cold-first selection preserve useful inventory; fully idle groups and windows
-can retire their metadata too. Failed ranges remain unavailable until retry.
+owner completion. Dedicated page bitmaps keep admitted membership separate from
+owner scratch; whole-run success permits exact refunds without pressure-time
+container growth. The retained-byte floor and cold-first selection preserve
+useful inventory; fully idle groups and windows can retire their metadata too.
+Failed runs keep their complete membership, exclusion and charge until retry.
 `open_arena` can place the helper on a CPU; its default inherits caller affinity.
 
 The budget counts prepared payload, retained allocation metadata and unresolved

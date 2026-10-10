@@ -1,9 +1,10 @@
 # Allocation metadata controls
 
-These are isolated comparison controls, not a promoted allocator design. The
-performance study measures complete operations while these treatments reduce
-the backing layer's costs; neither a smaller record nor a passing history alone
-settles the choice.
+Production Allocation uses compact shared controls, a four-byte Storage record,
+one active Arena pin per Group, Group-level advice and pure growth.
+[Finite trim bitmaps](trim-bitmap/README.md) now remove the reserved span/result
+vectors. The historical controls below retain their own source cuts and measured
+tradeoffs; a smaller record alone does not settle a choice.
 [The frozen census](../allocation-worker.md) counts a 256-identity Group at
 30,616 / 34,392 requested metadata bytes for palettes A / B. The
 [prototype patch](compact-controls.patch) changes three independent costs:
@@ -59,7 +60,8 @@ here. Fetch either with `workbench/tools/artifacts.py fetch` into ignored output
 
 These compose after the three-control patch through their identified source
 cuts. Each treatment keeps its own inputs; later placement/batching controls
-are alternatives rather than a required sequence. Production Allocation is unchanged.
+are alternatives rather than a required sequence. Direct4 and pure growth are
+selected; heap placement and bounded16 batching remain experimental.
 
 | Treatment | Populated A Pool metadata | What changes |
 | --- | ---: | --- |

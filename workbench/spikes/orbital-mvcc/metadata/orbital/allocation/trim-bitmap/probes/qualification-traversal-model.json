@@ -1,0 +1,77 @@
+{
+  "kind": "source-derived traversal model, not measured visit counters",
+  "source_inputs": {
+    "baseline": {
+      "orbital/include/orbital/allocation.h": "f8d070ca801238c8581761fcc6cf48d297d7ef5c1bd723139ec25089516ea317",
+      "orbital/include/orbital/preparation.h": "5a50bb22b0e719a6f98be8b97eb57196e2a703324ea9f383a222edfe12110e38",
+      "orbital/include/orbital/types.h": "f16fa83013aadafe0cb539e06dc56834d894605e8419bebf32fa17b53abfe00b",
+      "orbital/include/orbital/worker.h": "5a57d7745ea210734241786178df710bec086d9e4193cb94815132ce668be09f",
+      "orbital/src/types.cpp": "8fb36e1d5f33cf0cef19243ab72f9907e527d068efec53a3fab22f89d19a962f",
+      "orbital/src/worker.cpp": "8d4593f17951bb40433635de30470ffffa19d8dcbaf026009c2645894df503dd",
+      "orbital/src/allocation/allocation.cpp": "ed4087c4210013521e41d72032ee8353edc6ac80ddae5c49651cc4dd5f6bf023",
+      "orbital/src/allocation/arena.cpp": "5c884a6b17e2d272c4790ac2db729e054c3c086cec4197104bfad00798ca5fb2",
+      "orbital/src/allocation/group.cpp": "a97e092ad5914f88b97b8850fd7c538c78bf2af87600e2bc90122ccb978725d7",
+      "orbital/src/allocation/window.cpp": "f527db3f07c0cdeb23fc3d22b9cfc9829cc4a93bf4ba3e71281f3b0608ea02ce",
+      "orbital/src/allocation/finite.cpp": "2c1c8f88e4733213926f81ab2b580c61892c80105a0a5464505421b3e046c432",
+      "orbital/src/allocation/finite.h": "fc479f5419b2f74f84ecd492fb0ceb9fc05cc9ee638dd2eaa0d44bdbb7ed03bb",
+      "orbital/src/allocation/internal.h": "26652252acaa75f3590944c4776a9071a8c7a7ecac15b42e4fe7c75aa9e29d78"
+    },
+    "projection": {
+      "orbital/include/orbital/allocation.h": "f8d070ca801238c8581761fcc6cf48d297d7ef5c1bd723139ec25089516ea317",
+      "orbital/include/orbital/preparation.h": "5a50bb22b0e719a6f98be8b97eb57196e2a703324ea9f383a222edfe12110e38",
+      "orbital/include/orbital/types.h": "f16fa83013aadafe0cb539e06dc56834d894605e8419bebf32fa17b53abfe00b",
+      "orbital/include/orbital/worker.h": "5a57d7745ea210734241786178df710bec086d9e4193cb94815132ce668be09f",
+      "orbital/src/types.cpp": "8fb36e1d5f33cf0cef19243ab72f9907e527d068efec53a3fab22f89d19a962f",
+      "orbital/src/worker.cpp": "8d4593f17951bb40433635de30470ffffa19d8dcbaf026009c2645894df503dd",
+      "orbital/src/allocation/allocation.cpp": "36270a2104a261fd19d48d90f49fdc808a912cbd2b8da803d08bf8657394299d",
+      "orbital/src/allocation/arena.cpp": "5c884a6b17e2d272c4790ac2db729e054c3c086cec4197104bfad00798ca5fb2",
+      "orbital/src/allocation/group.cpp": "99ddd5fabdff1ddab93822ff684bcf335c95bb1fb9b4a365c8ac04b54b018247",
+      "orbital/src/allocation/window.cpp": "f527db3f07c0cdeb23fc3d22b9cfc9829cc4a93bf4ba3e71281f3b0608ea02ce",
+      "orbital/src/allocation/finite.cpp": "51bd073b819b7166681a387499eb3a27e9f2a0416ad339bd555157aa393d0bd4",
+      "orbital/src/allocation/finite.h": "f2481119bb25bdc7997cb5a8ea6b09048e27ed84c4bcddd893fe5b94f9cff803",
+      "orbital/src/allocation/internal.h": "750d7ddf4ff765915e5f3f2d533e53e2022c29d388df5965a1d0273a2612e372"
+    }
+  },
+  "symbols": {
+    "N": "payload pages",
+    "W": "ceil(N / 64)",
+    "P": "selected pages",
+    "R": "maximal selected runs",
+    "T": "membership-word reads in one complete next_trim_span traversal",
+    "M": "word fragments touched by set_trim_span across selected runs"
+  },
+  "bounds": {
+    "T": "at most 2 * R + 2 * W; a fragmented word can be read again for each run",
+    "M": "at most R + W; source-level upper bound, not emitted-instruction count"
+  },
+  "same_in_both": [
+    "Owner idle census examines N payload indices for each eligible Group visit and builds current live coverage.",
+    "Enrollment examines at most N payload indices per eligible Group; polling/scheduling determines total visits.",
+    "Admission validates P selected page states/live bits before writing P states to trimming.",
+    "Confirmed completion validates P page states before writing P states absent.",
+    "Full-batch run count and Group jobs remain equal in the wrapped histories; no repeated batch16 census."
+  ],
+  "baseline": {
+    "admission": "Two R-span passes around P validation reads and P state writes. Enrollment coalesces pages into the pre-reserved vector.",
+    "helper": "R span reads and R discard-result bit assignments; one madvise and then one mprotect per successful discard attempt.",
+    "reply": "R span reads and R discard-result bit reads; failed spans compacted in place; successful spans call finish_trim."
+  },
+  "bitmap": {
+    "admission": "Two membership traversals (2*T) around the same P validation reads and P state writes. Enrollment sets P page-membership bits; success clearing writes W words. has_trim adds at most W word reads per call.",
+    "helper": "One membership traversal (T), R run emissions, and at most M success-word updates after successful whole-run syscalls. It does not read mutable Page state.",
+    "reply": "One membership traversal (T), R success-bit reads, and at most M membership-word clears for successful runs; the same finish_trim page checks/writes.",
+    "retry": "Retained membership avoids new candidate-page enrollment/admission; has_trim reads at most W words and clears W success words before the same full run traversal."
+  },
+  "selected_geometry": {
+    "A": {
+      "N": 636,
+      "W": 10
+    },
+    "B": {
+      "N": 1096,
+      "W": 18
+    }
+  },
+  "interpretation": "One forward cursor emits each maximal run once and preserves cross-word coalescing. It does not guarantee that each bitmap word is loaded only once. No actual visit count or speed claim is inferred.",
+  "qualification_scope": "Final dead-TrimSpan API cleanup; full-batch bitmap admission/helper/reply processing remains represented by these source-derived bounds. No measured visit counters."
+}

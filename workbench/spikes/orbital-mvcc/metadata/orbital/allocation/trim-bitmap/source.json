@@ -1,0 +1,16 @@
+{
+  "baseline_commit": "768e033584bc83e097de34e0f59ee96ba0e491cc",
+  "runtime_postimages": {
+    "orbital/README.md": "b63717d446bb0e1e09bbfe597dec4f6e3b2848129be6fe426932060715ffb9ce",
+    "orbital/src/allocation/allocation.cpp": "36270a2104a261fd19d48d90f49fdc808a912cbd2b8da803d08bf8657394299d",
+    "orbital/src/allocation/finite.cpp": "51bd073b819b7166681a387499eb3a27e9f2a0416ad339bd555157aa393d0bd4",
+    "orbital/src/allocation/finite.h": "f2481119bb25bdc7997cb5a8ea6b09048e27ed84c4bcddd893fe5b94f9cff803",
+    "orbital/src/allocation/group.cpp": "99ddd5fabdff1ddab93822ff684bcf335c95bb1fb9b4a365c8ac04b54b018247",
+    "orbital/src/allocation/internal.h": "750d7ddf4ff765915e5f3f2d533e53e2022c29d388df5965a1d0273a2612e372",
+    "orbital/test/finite.cpp": "32a12393e8dd6db614d1da76b346692d4e15bc4453b6e4f2639b6257b9ddecd0"
+  },
+  "native_qualification": "native-qualification.json",
+  "consequences": "probes/qualification-summary.json",
+  "timing": "feedback.json",
+  "selected_commit_query": "git log -1 --diff-filter=A --format=%H -- workbench/spikes/orbital-mvcc/metadata/orbital/allocation/trim-bitmap/source.json"
+}

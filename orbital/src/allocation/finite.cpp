@@ -75,8 +75,7 @@ Result<std::unique_ptr<FiniteGroup>> FiniteGroup::create(FiniteConfig config) no
   }
   const auto payload_bytes = round_up(offset, group->native_page_);
   group->payload_pages_ = payload_bytes / group->native_page_;
-  // The cold trim inventory uses bounded coordinates. Wide validation and
-  // preparation spans remain unchanged; unsupported geometry never truncates.
+  // Keep finite page-state inventory bounded independently of trim encoding.
   if (group->payload_pages_ > std::numeric_limits<std::uint16_t>::max())
     return std::unexpected(Error::unavailable);
   group->reserved_bytes_ = payload_bytes;
@@ -84,7 +83,7 @@ Result<std::unique_ptr<FiniteGroup>> FiniteGroup::create(FiniteConfig config) no
   const auto grids_bytes = group->grid_count_ * sizeof(Grid);
   const auto scratch_offset = round_up(grids_offset + grids_bytes + group->payload_pages_ * sizeof(Page),
                                       alignof(std::uint64_t));
-  group->metadata_bytes_ = round_up(scratch_offset + group->live_words() * sizeof(std::uint64_t),
+  group->metadata_bytes_ = round_up(scratch_offset + 3 * group->live_words() * sizeof(std::uint64_t),
                                    group->native_page_);
   group->control_bytes_ = group->metadata_bytes_;
   return group;
@@ -115,7 +114,7 @@ Result<void> FiniteGroup::prepare() noexcept {
   grids_ = ::new (static_cast<std::byte*>(metadata) + grids_offset) Grid[grid_count_]{};
   pages_ = ::new (static_cast<std::byte*>(metadata) + grids_offset + grids_bytes) Page[payload_pages_]{};
   trim_scratch_ = ::new (static_cast<std::byte*>(metadata) + scratch_offset)
-      std::uint64_t[live_words()]{};
+      std::uint64_t[3 * live_words()]{};
   available_identity_grids_ = grid_count_ == 64
       ? ~std::uint64_t{0} : (std::uint64_t{1} << grid_count_) - 1;
   return {};
@@ -455,20 +454,32 @@ Result<void> FiniteGroup::live_pages(std::span<std::uint64_t> live) const noexce
   return {};
 }
 
+Result<void> FiniteGroup::begin_trim() noexcept {
+  const auto membership = std::span<const std::uint64_t>(trim_membership());
+  const auto tail = payload_pages_ % 64;
+  if (tail && (membership.back() >> tail)) return std::unexpected(Error::invalid_argument);
+  const auto live = std::span(trim_scratch_, live_words());
+  const auto counted = live_pages(live);
+  if (!counted) return std::unexpected(counted.error());
+  std::size_t cursor = 0;
+  PageSpan span;
+  while (next_trim_span(membership, cursor, span))
+    for (auto page = span.first; page < span.first + span.count; ++page)
+      if (pages_[page] != Page::mapped || (live[page / 64] & (std::uint64_t{1} << (page % 64))))
+        return std::unexpected(Error::conflict);
+  // Admit the complete immutable selection before changing any page state.
+  cursor = 0;
+  while (next_trim_span(membership, cursor, span))
+    for (auto page = span.first; page < span.first + span.count; ++page)
+      pages_[page] = Page::trimming;
+  return {};
+}
+
 Result<void> FiniteGroup::begin_trim(PageSpan span) noexcept {
   return begin_trim(std::span(&span, 1));
 }
 
 Result<void> FiniteGroup::begin_trim(std::span<const PageSpan> spans) noexcept {
-  return begin_trim_spans(spans);
-}
-
-Result<void> FiniteGroup::begin_trim(std::span<const TrimSpan> spans) noexcept {
-  return begin_trim_spans(spans);
-}
-
-template<class Span>
-Result<void> FiniteGroup::begin_trim_spans(std::span<const Span> spans) noexcept {
   const auto live = std::span(trim_scratch_, live_words());
   const auto counted = live_pages(live);
   assert(counted);

@@ -17,14 +17,18 @@ void group_trim_run(Job& job) noexcept {
     worker::post(*group.uses.domain.pool->lane, group.trimmed);
     return;
   }
-  for (std::size_t i = 0; i < group.trimming.size(); ++i) {
-    const auto span = group.trimming[i];
+  const auto membership = std::span<const std::uint64_t>(group.geometry->trim_membership());
+  auto success = group.geometry->trim_success();
+  std::size_t cursor = 0;
+  PageSpan span;
+  while (next_trim_span(membership, cursor, span)) {
     auto* address = group.geometry->page_address(span.first);
     const auto amount = group.geometry->native_page() * span.count;
     // No active home overlaps a reserved trim page. Even failed protection
     // changes cannot invalidate readable contents: this was idle capacity.
-    group.discarded[i] = ::madvise(address, amount, MADV_DONTNEED) == 0 &&
-        ::mprotect(address, amount, PROT_NONE) == 0;
+    if (::madvise(address, amount, MADV_DONTNEED) == 0 &&
+        ::mprotect(address, amount, PROT_NONE) == 0)
+      set_trim_span(success, span, true);
   }
   worker::post(*group.uses.domain.pool->lane, group.trimmed);
 }
@@ -42,22 +46,23 @@ void group_trim_handle(worker::Message& message, worker::Lane&) noexcept {
     return;
   }
   std::uint64_t amount = 0;
-  std::size_t failed = 0;
-  for (std::size_t i = 0; i < group.trimming.size(); ++i) {
-    const auto span = group.trimming[i];
-    if (!group.discarded[i]) {
+  auto membership = group.geometry->trim_membership();
+  const auto success = group.geometry->trim_success();
+  std::size_t cursor = 0;
+  PageSpan span;
+  while (next_trim_span(membership, cursor, span)) {
+    // The helper records success for a whole run, so its first bit suffices.
+    if (!(success[span.first / 64] & (std::uint64_t{1} << (span.first % 64)))) {
       // A failed range operation may have changed some pages. Keep the entire
       // range unavailable until a retry establishes one known protection state.
       pool.internal->trim_failed = true;
-      group.trimming[failed++] = span;
     } else {
-      verify(group.geometry->finish_trim({span.first, span.count}, true));
+      verify(group.geometry->finish_trim(span, true));
       amount += group.geometry->native_page() * span.count;
       pool.internal->counts.trim_pages += span.count;
+      set_trim_span(membership, span, false);
     }
   }
-  group.trimming.resize(failed);
-  group.discarded.resize(failed);
   refund(pool, amount);
 }
 
@@ -86,16 +91,10 @@ Result<Group*> make_group(Pool& pool, Palette palette, bool deferred = false) {
     const auto count = group->geometry->identity_count();
     assert(count == group->uses.size());
     group->live.resize(group->geometry->live_words());
-    // N pages contain at most ceil(N/2) separated runs, attained by alternating pages.
-    const auto runs = (group->geometry->payload_pages() + 1) / 2;
-    group->trimming.reserve(runs);
-    group->discarded.reserve(runs);
     // sizeof(Group) includes its fixed identity records and hints.
     // Account concrete prepared bookkeeping, separately from sparse VA/RSS.
     group->metadata_charge = group->geometry->control_bytes() + sizeof(FiniteGroup) + sizeof(Group) +
-        group->live.capacity() * sizeof(std::uint64_t) +
-        group->trimming.capacity() * sizeof(TrimSpan) +
-        (group->discarded.capacity() + 7) / 8;
+        group->live.capacity() * sizeof(std::uint64_t);
     if (!claim(pool, group->metadata_charge)) return std::unexpected(Error::capacity);
     initialize(group->uses.domain, pool, group.get(), true);
     group->job = {nullptr, group.get(), group_trim_run};

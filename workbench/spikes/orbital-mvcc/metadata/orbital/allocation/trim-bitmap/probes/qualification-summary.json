@@ -1,0 +1,192 @@
+{
+  "phase": "qualification",
+  "base_commit": "768e033584bc83e097de34e0f59ee96ba0e491cc",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)",
+  "machine": "aarch64",
+  "owner_cpu": 2,
+  "helper_cpu": 3,
+  "flags": "-O3 -g -UNDEBUG -fno-fast-math -ffp-contract=off; assertions enabled in both cuts",
+  "runtime_inputs": {
+    "baseline": {
+      "orbital/include/orbital/allocation.h": "f8d070ca801238c8581761fcc6cf48d297d7ef5c1bd723139ec25089516ea317",
+      "orbital/include/orbital/preparation.h": "5a50bb22b0e719a6f98be8b97eb57196e2a703324ea9f383a222edfe12110e38",
+      "orbital/include/orbital/types.h": "f16fa83013aadafe0cb539e06dc56834d894605e8419bebf32fa17b53abfe00b",
+      "orbital/include/orbital/worker.h": "5a57d7745ea210734241786178df710bec086d9e4193cb94815132ce668be09f",
+      "orbital/src/types.cpp": "8fb36e1d5f33cf0cef19243ab72f9907e527d068efec53a3fab22f89d19a962f",
+      "orbital/src/worker.cpp": "8d4593f17951bb40433635de30470ffffa19d8dcbaf026009c2645894df503dd",
+      "orbital/src/allocation/allocation.cpp": "ed4087c4210013521e41d72032ee8353edc6ac80ddae5c49651cc4dd5f6bf023",
+      "orbital/src/allocation/arena.cpp": "5c884a6b17e2d272c4790ac2db729e054c3c086cec4197104bfad00798ca5fb2",
+      "orbital/src/allocation/group.cpp": "a97e092ad5914f88b97b8850fd7c538c78bf2af87600e2bc90122ccb978725d7",
+      "orbital/src/allocation/window.cpp": "f527db3f07c0cdeb23fc3d22b9cfc9829cc4a93bf4ba3e71281f3b0608ea02ce",
+      "orbital/src/allocation/finite.cpp": "2c1c8f88e4733213926f81ab2b580c61892c80105a0a5464505421b3e046c432",
+      "orbital/src/allocation/finite.h": "fc479f5419b2f74f84ecd492fb0ceb9fc05cc9ee638dd2eaa0d44bdbb7ed03bb",
+      "orbital/src/allocation/internal.h": "26652252acaa75f3590944c4776a9071a8c7a7ecac15b42e4fe7c75aa9e29d78"
+    },
+    "projection": {
+      "orbital/include/orbital/allocation.h": "f8d070ca801238c8581761fcc6cf48d297d7ef5c1bd723139ec25089516ea317",
+      "orbital/include/orbital/preparation.h": "5a50bb22b0e719a6f98be8b97eb57196e2a703324ea9f383a222edfe12110e38",
+      "orbital/include/orbital/types.h": "f16fa83013aadafe0cb539e06dc56834d894605e8419bebf32fa17b53abfe00b",
+      "orbital/include/orbital/worker.h": "5a57d7745ea210734241786178df710bec086d9e4193cb94815132ce668be09f",
+      "orbital/src/types.cpp": "8fb36e1d5f33cf0cef19243ab72f9907e527d068efec53a3fab22f89d19a962f",
+      "orbital/src/worker.cpp": "8d4593f17951bb40433635de30470ffffa19d8dcbaf026009c2645894df503dd",
+      "orbital/src/allocation/allocation.cpp": "36270a2104a261fd19d48d90f49fdc808a912cbd2b8da803d08bf8657394299d",
+      "orbital/src/allocation/arena.cpp": "5c884a6b17e2d272c4790ac2db729e054c3c086cec4197104bfad00798ca5fb2",
+      "orbital/src/allocation/group.cpp": "99ddd5fabdff1ddab93822ff684bcf335c95bb1fb9b4a365c8ac04b54b018247",
+      "orbital/src/allocation/window.cpp": "f527db3f07c0cdeb23fc3d22b9cfc9829cc4a93bf4ba3e71281f3b0608ea02ce",
+      "orbital/src/allocation/finite.cpp": "51bd073b819b7166681a387499eb3a27e9f2a0416ad339bd555157aa393d0bd4",
+      "orbital/src/allocation/finite.h": "f2481119bb25bdc7997cb5a8ea6b09048e27ed84c4bcddd893fe5b94f9cff803",
+      "orbital/src/allocation/internal.h": "750d7ddf4ff765915e5f3f2d533e53e2022c29d388df5965a1d0273a2612e372"
+    }
+  },
+  "probe_inputs": {
+    "CMakeLists.txt": "c8a4a52e0a351e2084e56e01d2520c71e94c448dc255f2377e9d4e0c6e51c7b3",
+    "trim_probe.cpp": "24e8a8afda346659eb8fd7941733c81fe0d4124510fb233a523d841f77aab93e",
+    "fixture.h": "9e9c507da474295814438e717659bc369efdb77e31bb66f07355d6b2db16edf3",
+    "census.cpp": "cdc005bc53850b378d27f449c4652b80e245985cbb1196deecf9f2c8939db668",
+    "run.py": "3ed642985e45dc4c78f1869394e4a3315c84075bb28cdd03669ef01a052c4736"
+  },
+  "source_hashes_checked_before_and_after": true,
+  "census": {
+    "baseline": [
+      {
+        "palette": "A",
+        "Group": 1448,
+        "FiniteGroup": 448,
+        "control_mapping": 4096,
+        "live_capacity": 80,
+        "trim_capacity": 1272,
+        "discard_capacity": 40,
+        "mapped_membership_bytes": 0,
+        "mapped_success_bytes": 0,
+        "payload_pages": 636,
+        "group_metadata_charge": 7384,
+        "empty_pool": 0,
+        "populated_pool": 7384,
+        "excluded_group_vector_capacity_bytes": 8,
+        "native_page_bytes": 4096
+      },
+      {
+        "palette": "B",
+        "Group": 1448,
+        "FiniteGroup": 448,
+        "control_mapping": 4096,
+        "live_capacity": 144,
+        "trim_capacity": 2192,
+        "discard_capacity": 72,
+        "mapped_membership_bytes": 0,
+        "mapped_success_bytes": 0,
+        "payload_pages": 1096,
+        "group_metadata_charge": 8400,
+        "empty_pool": 0,
+        "populated_pool": 8400,
+        "excluded_group_vector_capacity_bytes": 8,
+        "native_page_bytes": 4096
+      }
+    ],
+    "projection": [
+      {
+        "palette": "A",
+        "Group": 1384,
+        "FiniteGroup": 448,
+        "control_mapping": 4096,
+        "live_capacity": 80,
+        "trim_capacity": 0,
+        "discard_capacity": 0,
+        "mapped_membership_bytes": 80,
+        "mapped_success_bytes": 80,
+        "payload_pages": 636,
+        "group_metadata_charge": 6008,
+        "empty_pool": 0,
+        "populated_pool": 6008,
+        "excluded_group_vector_capacity_bytes": 8,
+        "native_page_bytes": 4096
+      },
+      {
+        "palette": "B",
+        "Group": 1384,
+        "FiniteGroup": 448,
+        "control_mapping": 4096,
+        "live_capacity": 144,
+        "trim_capacity": 0,
+        "discard_capacity": 0,
+        "mapped_membership_bytes": 144,
+        "mapped_success_bytes": 144,
+        "payload_pages": 1096,
+        "group_metadata_charge": 6072,
+        "empty_pool": 0,
+        "populated_pool": 6072,
+        "excluded_group_vector_capacity_bytes": 8,
+        "native_page_bytes": 4096
+      }
+    ]
+  },
+  "consequence_histories": 26,
+  "consequences_sha256": "ef8fb837ac837a5cf1a893ca4833614d89caf2e24053d5b1850285b2516b9e1f",
+  "counter_definition": "Wrapped detail::schedule counts actual finite Group jobs and submitted page/range inventory; wrapped madvise/mprotect count attempted trim run syscalls. Retry jobs reuse a previously submitted Group. No visit counters claimed.",
+  "limits": [
+    "AArch64 OrbStack guest with 4 KiB pages; no target-machine conclusion.",
+    "Synthetic real mapped and charged idle inventory, not database traffic.",
+    "Consequence binaries include wrapper and independent topology-decoding work; their durations are not performance evidence.",
+    "Requested metadata excludes Arena/Pool/thread/libc setup, first owner-vector capacity and Object state; not RSS.",
+    "No sanitizer or weak-memory qualification; lifetime review and existing runtime histories remain separate.",
+    "Production Group identity width remains 256. Parent geometry census shows 1024-identity palette A control mapping grows from 8192 to 12288 bytes; 64/256 A and all tested B widths are unchanged."
+  ],
+  "timing_rounds_run": 0,
+  "qualification_scope": "Final runtime source: 26 wrapped consequence histories plus actual census; no plain timing runs, timing fields or medians.",
+  "prior_candidate_evidence": {
+    "summary_path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/orbital-mvcc-metadata/trim-bitmap/measured-candidate/probes/comparison-summary.json",
+    "summary_sha256": "9612e8e82f362b4ad08f55dbe9f967c9832681fd767e9cd58c2b878f0156219a",
+    "runtime_inputs": {
+      "baseline": {
+        "orbital/include/orbital/allocation.h": "f8d070ca801238c8581761fcc6cf48d297d7ef5c1bd723139ec25089516ea317",
+        "orbital/include/orbital/preparation.h": "5a50bb22b0e719a6f98be8b97eb57196e2a703324ea9f383a222edfe12110e38",
+        "orbital/include/orbital/types.h": "f16fa83013aadafe0cb539e06dc56834d894605e8419bebf32fa17b53abfe00b",
+        "orbital/include/orbital/worker.h": "5a57d7745ea210734241786178df710bec086d9e4193cb94815132ce668be09f",
+        "orbital/src/types.cpp": "8fb36e1d5f33cf0cef19243ab72f9907e527d068efec53a3fab22f89d19a962f",
+        "orbital/src/worker.cpp": "8d4593f17951bb40433635de30470ffffa19d8dcbaf026009c2645894df503dd",
+        "orbital/src/allocation/allocation.cpp": "ed4087c4210013521e41d72032ee8353edc6ac80ddae5c49651cc4dd5f6bf023",
+        "orbital/src/allocation/arena.cpp": "5c884a6b17e2d272c4790ac2db729e054c3c086cec4197104bfad00798ca5fb2",
+        "orbital/src/allocation/group.cpp": "a97e092ad5914f88b97b8850fd7c538c78bf2af87600e2bc90122ccb978725d7",
+        "orbital/src/allocation/window.cpp": "f527db3f07c0cdeb23fc3d22b9cfc9829cc4a93bf4ba3e71281f3b0608ea02ce",
+        "orbital/src/allocation/finite.cpp": "2c1c8f88e4733213926f81ab2b580c61892c80105a0a5464505421b3e046c432",
+        "orbital/src/allocation/finite.h": "fc479f5419b2f74f84ecd492fb0ceb9fc05cc9ee638dd2eaa0d44bdbb7ed03bb",
+        "orbital/src/allocation/internal.h": "26652252acaa75f3590944c4776a9071a8c7a7ecac15b42e4fe7c75aa9e29d78"
+      },
+      "projection": {
+        "orbital/include/orbital/allocation.h": "f8d070ca801238c8581761fcc6cf48d297d7ef5c1bd723139ec25089516ea317",
+        "orbital/include/orbital/preparation.h": "5a50bb22b0e719a6f98be8b97eb57196e2a703324ea9f383a222edfe12110e38",
+        "orbital/include/orbital/types.h": "f16fa83013aadafe0cb539e06dc56834d894605e8419bebf32fa17b53abfe00b",
+        "orbital/include/orbital/worker.h": "5a57d7745ea210734241786178df710bec086d9e4193cb94815132ce668be09f",
+        "orbital/src/types.cpp": "8fb36e1d5f33cf0cef19243ab72f9907e527d068efec53a3fab22f89d19a962f",
+        "orbital/src/worker.cpp": "8d4593f17951bb40433635de30470ffffa19d8dcbaf026009c2645894df503dd",
+        "orbital/src/allocation/allocation.cpp": "36270a2104a261fd19d48d90f49fdc808a912cbd2b8da803d08bf8657394299d",
+        "orbital/src/allocation/arena.cpp": "5c884a6b17e2d272c4790ac2db729e054c3c086cec4197104bfad00798ca5fb2",
+        "orbital/src/allocation/group.cpp": "99ddd5fabdff1ddab93822ff684bcf335c95bb1fb9b4a365c8ac04b54b018247",
+        "orbital/src/allocation/window.cpp": "f527db3f07c0cdeb23fc3d22b9cfc9829cc4a93bf4ba3e71281f3b0608ea02ce",
+        "orbital/src/allocation/finite.cpp": "9ccacfdc0c1119e07d522f268cfa2b34c5f1901662db43a26a796b161a7e621b",
+        "orbital/src/allocation/finite.h": "389634e019be5d3d196af5fe9e4df2298b752c73421a9619c6077c3e139f341c",
+        "orbital/src/allocation/internal.h": "750d7ddf4ff765915e5f3f2d533e53e2022c29d388df5965a1d0273a2612e372"
+      }
+    },
+    "interpretation": "Prior-candidate timing belongs to the preserved earlier source and recipe, with concurrent native build load and strong variation. It establishes no performance winner or absence of regression in this final source."
+  },
+  "traversal_model_sha256": "4f2d887bb1d23236c240db8cd0ba19951b4f67cf44eb3a208c2011327218ac27",
+  "binary_wrapper_verification": {
+    "baseline": {
+      "binary_sha256": "cb9ccded78fb00245905630f326bac00fd02053fab387dbeb48bed5fbdcf649f",
+      "trim_wrapper_symbols": [
+        "__wrap_madvise",
+        "__wrap_mprotect",
+        "__wrap__ZN7orbital10allocation6detail8scheduleERNS0_5ArenaERNS1_3JobE"
+      ]
+    },
+    "projection": {
+      "binary_sha256": "0b5430654b6841d58d97ae21702b633e6f702919a7dbc50c66adbc86aece21fb",
+      "trim_wrapper_symbols": [
+        "__wrap_madvise",
+        "__wrap_mprotect",
+        "__wrap__ZN7orbital10allocation6detail8scheduleERNS0_5ArenaERNS1_3JobE"
+      ]
+    }
+  }
+}

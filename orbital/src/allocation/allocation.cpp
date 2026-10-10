@@ -449,13 +449,15 @@ Progress trim_cold(Pool& pool, std::uint64_t keep_bytes) {
   std::uint64_t idle = 0;
   for (auto& group : pool.internal->groups) {
     if (group->trim_pending || group->control_preparing) { pending = true; continue; }
-    if (!group->trimming.empty()) {
+    if (group->retiring) continue;
+    if (group->geometry->has_trim()) {
+      auto success = group->geometry->trim_success();
+      std::fill(success.begin(), success.end(), 0);
       group->trim_pending = true;
       group->trim_lifetime = Ref<Arena>::retain(*pool.arena);
       schedule(*pool.arena, group->job); pending = true;
       continue;
     }
-    if (group->retiring) continue;
     verify(group->geometry->live_pages(group->live));
     for (std::size_t p = 0; p < group->geometry->payload_pages(); ++p)
       if (group->geometry->mapped(p) && !(group->live[p / 64] & (std::uint64_t{1} << (p % 64))))
@@ -495,20 +497,17 @@ Progress trim_cold(Pool& pool, std::uint64_t keep_bytes) {
         continue;
       }
       const auto page = group->geometry->native_page();
-      assert(group->geometry->payload_pages() <= UINT16_MAX);
+      auto membership = group->geometry->trim_membership();
       for (std::size_t p = 0; p < group->geometry->payload_pages() && idle > keep_bytes; ++p) {
         if (!group->geometry->mapped(p) || (group->live[p / 64] & (std::uint64_t{1} << (p % 64)))) continue;
         if (idle - page < keep_bytes) break;
-        if (!group->trimming.empty() && group->trimming.back().first + group->trimming.back().count == p)
-          ++group->trimming.back().count;
-        else {
-          group->trimming.push_back({static_cast<std::uint16_t>(p), 1});
-          group->discarded.push_back(false);
-        }
+        membership[p / 64] |= std::uint64_t{1} << (p % 64);
         idle -= page;
       }
-      if (!group->trimming.empty()) {
-        verify(group->geometry->begin_trim(group->trimming));
+      if (group->geometry->has_trim()) {
+        verify(group->geometry->begin_trim());
+        auto success = group->geometry->trim_success();
+        std::fill(success.begin(), success.end(), 0);
         group->trim_pending = true;
         group->trim_lifetime = Ref<Arena>::retain(*pool.arena);
         schedule(*pool.arena, group->job); pending = true;
