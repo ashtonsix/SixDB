@@ -1,10 +1,17 @@
 # Orbital MVCC
 
-How can coherent versioned access, representation changes and short native calls
-fit together while broadly outperforming LMDB? Performance, metadata ownership and interfaces
-must be measured and changed together, while preserving the actual lifetime and
-publication behavior. Engine and Ikea's future multi-block containers remain
-outside this investigation.
+Coherent versioned access, representation changes and short native calls across
+different working sets, access patterns and retention lifetimes. Performance,
+metadata ownership and interfaces develop together, while preserving actual
+lifetime and publication behavior. Engine and Ikea's future multi-block
+containers remain outside this investigation.
+
+The current performance work explores a wider range of composed workloads:
+sustained large working sets, append-style growth, conversion, history/churn and
+interleaved independent work through Loom. LMDB remains a useful comparator;
+broad parity remains unproved. Further narrow parity tuning is set aside.
+The aim is to find worthwhile
+strengths and weaknesses, including opportunities that generalize across cases.
 
 The first Stage 2 implementation was withdrawn from the modules on 9 October
 2026. Its performance comparison came after implementation and left material
@@ -38,11 +45,12 @@ wrappers and the complete caller can outweigh nominal size. Ordinary calls are
 the starting point; special calling conventions cannot stand in for a simpler
 interface.
 
-Compare genuinely different layouts and ownership arrangements, including
-8-, 16- and 32-byte version candidates where their semantics permit. Include
-slab/chunk headers, unused capacity, sparse publication, alternative
-Representations, retirement debt and dependent loads. Keep resolved Part access
-cheap without making coherent later discovery incorrect or hiding retention.
+The selected catalog keeps current versions inline and historical records at
+16 bytes plus separately charged physical-directory slots. Competing layouts
+remain available as controls. Further metadata changes need a concrete ownership
+or performance benefit; charge slab/chunk headers, unused capacity, sparse
+publication, alternatives, retirement debt and dependent loads. Keep resolved
+Part access cheap without weakening coherent later discovery or hiding retention.
 
 Each candidate needs complete-operation feedback early enough to change its
 seams: the same encoded data, legal native body, read cut, lifetime, work and
@@ -73,7 +81,9 @@ orb -m ubuntu cmake --build build/orbital-mvcc/native --target orbital_mvcc_vali
 ```
 
 `orbital_validate` and `loom_validate` exercise allocation and worker services.
-Selected Object checks use `orbital_object_catalog_check`, `orbital_object_shape_check`,
+Normal `orbital_validate` includes `orbital_object_check` and
+`orbital_representation_check`, independent of the disposable driver and formats.
+Additional selected Object checks use `orbital_object_catalog_check`, `orbital_object_shape_check`,
 `orbital_mvcc_composed_check`, `orbital_mvcc_composed_read_fusion_check` and
 `loom_object_module_check`. The first
 two run the existing catalog and Shape consequence histories against the actual
