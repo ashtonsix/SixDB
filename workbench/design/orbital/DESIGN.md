@@ -12,8 +12,9 @@ compares complete operations while changing version metadata, ownership, physica
 interpretation and call boundaries together. The target is lower latency than
 LMDB with versioning included. A correctness pass or a smaller `sizeof` alone
 does not establish the design. The selected catalog/history and physical
-Representation/Part/View ownership now live in Orbital. Whole-collection metadata and broad LMDB
-performance targets remain unmet.
+Representation/Part/View ownership now live in Orbital. Complete metadata costs
+remain visible alongside performance; broad LMDB parity and headroom for later
+Engine/Shore work remain unproven.
 
 Engine and Ikea's composition of many blocks remain open for Ashton to design.
 The study's consumer is disposable scaffolding: it exercises real SeriesPack
@@ -25,13 +26,17 @@ or container copy-on-write. Stage 3 adds multiple workers.
 
 The selected `ObjectStore<Physical>` owns logical identity, completed local cuts,
 coherent discovery, atomic publication and history retention. Its material
-adapter owns immutable physical representations; interpretation and record
-operations stay with Ikea and the caller. The study preserves the rejected
+adapter connects that logical lifetime to Orbital's `Representation`, `Part`
+and `View`, which own physical retention and escape. Interpretation, geometry
+and record operations stay with Ikea and the caller. The study preserves the rejected
 [baseline](../../spikes/orbital-mvcc/baseline/objects.md), its actual lifetime and
 publication histories, and [matched LMDB evidence](../../spikes/orbital-mvcc/performance/README.md).
 The [module guide](../../../orbital/README.md#embedded-objects) describes the
 implemented lifetime and compilation seams; competing layouts and unapplied
 controls remain experiments.
+The [actual Loom caller](../../spikes/orbital-mvcc/callers/object_module.md)
+exercises those seams through suspension, atomic publication, cancellation and
+physical completion after the catalog and caller have ended.
 The earlier [composition experiments](../../spikes/orbital-stage2-composition/FINDINGS.md)
 provide additional evidence and unresolved alternatives.
 
