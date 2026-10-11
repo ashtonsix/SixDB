@@ -260,7 +260,7 @@ bool training_measure(const HardwareContext& context, const Mapping& memory,
 }
 
 detail::HardwareCalibrationResult calibrate(const HardwareContext& context,
-    HardwareCalibrationLimits limits, std::stop_token stop, void*) noexcept {
+    HardwareCalibrationLimits limits, std::stop_token stop, const HardwareSnapshot& known) noexcept {
   detail::HardwareCalibrationResult result;
   const auto deadline = Clock::now() + limits.wall_time;
   try {
@@ -270,18 +270,28 @@ detail::HardwareCalibrationResult calibrate(const HardwareContext& context,
     if (sched_setaffinity(0, sizeof(set), &set)) return result;
     auto before = discover_hardware(context.cpu);
     if (!before || !compatible_hardware_context(*before, context)) return result;
+    const bool measure_width = !known.width_qualified;
+    const bool measure_training = !known.training_qualified && flush_supported() &&
+        (detail::hardware_training.back() + 8) * context.geometry.line_bytes < context.geometry.page_bytes;
+    // A partial hit must not repeat its qualified sweep. Unsupported missing
+    // fields stay unknown without allocating scratch or disturbing memory.
+    if (!measure_width && !measure_training) {
+      result.state = stopped(stop, deadline) ? stop_state(stop) : HardwareState::calibrated_local;
+      return result;
+    }
     Mapping memory(limits.mapping_bytes);
     if (memory.data == MAP_FAILED) return result;
     const auto line = context.geometry.line_bytes;
     const auto order_size = limits.mapping_bytes / line;
-    auto order_storage = std::make_unique_for_overwrite<Word[]>(order_size);
-    const std::span<Word> order(order_storage.get(), order_size);
-    for (std::size_t i = 0; i < order.size(); ++i) {
+    auto order_storage = measure_width ? std::make_unique_for_overwrite<Word[]>(order_size) : nullptr;
+    const std::span<Word> order(order_storage.get(), measure_width ? order_size : 0);
+    for (std::size_t i = 0; i < order_size; ++i) {
       if (!(i & 4095) && stopped(stop, deadline)) { result.state = stop_state(stop); return result; }
-      order[i] = reinterpret_cast<Word>(memory.data) + i * line;
-      std::construct_at(reinterpret_cast<Word*>(order[i]), Word(i));
+      auto* address = reinterpret_cast<Word*>(static_cast<char*>(memory.data) + i * line);
+      if (measure_width) order[i] = reinterpret_cast<Word>(address);
+      std::construct_at(address, Word(i));
     }
-    for (unsigned seed = 0; seed < 2; ++seed) {
+    if (measure_width) for (unsigned seed = 0; seed < 2; ++seed) {
       std::mt19937_64 random(357712151618ULL + seed);
       // Fisher-Yates with cancellation, instead of an uninterruptible shuffle
       // over the whole mapping. The two seeds generate independent permutations.
@@ -295,8 +305,8 @@ detail::HardwareCalibrationResult calibrate(const HardwareContext& context,
       LOOM_WIDTH(16); LOOM_WIDTH(24); LOOM_WIDTH(32); LOOM_WIDTH(48); LOOM_WIDTH(64);
 #undef LOOM_WIDTH
     }
-    result.evidence.width_complete = true;
-    if (flush_supported() && (detail::hardware_training.back() + 8) * line < context.geometry.page_bytes) {
+    result.evidence.width_complete = measure_width;
+    if (measure_training) {
       for (unsigned seed = 0; seed < 2; ++seed) {
         std::mt19937_64 random(357712151618ULL + seed);
         for (unsigned rep = 0; rep < 2; ++rep) for (unsigned i = 0; i < detail::hardware_training.size(); ++i)
@@ -506,7 +516,8 @@ orbital::Result<std::shared_ptr<HardwareProfile>> HardwareService::request(Hardw
         snapshot.profile.training_accesses = entry.training_accesses; snapshot.training_qualified = true;
       }
       snapshot.profile.revision = snapshot.width_qualified || snapshot.training_qualified;
-      snapshot.state = HardwareState::lookup;
+      snapshot.state = options_.calibrate && !(snapshot.width_qualified && snapshot.training_qualified) ?
+          HardwareState::pending : HardwareState::lookup;
       break;
     }
     if (profile->snapshot_.state == HardwareState::pending && !options_.calibrate)
@@ -540,8 +551,10 @@ void HardwareService::run(std::stop_token stop) noexcept {
     }
     if (!selected) continue;
     const auto begin = Clock::now();
-    const auto function = options_.calibrator ? options_.calibrator : calibrate;
-    const auto result = function(selected->context_, options_.limits, stop, options_.calibrator_context);
+    const auto known = selected->snapshot();
+    const auto result = options_.calibrator ?
+        options_.calibrator(selected->context_, options_.limits, stop, options_.calibrator_context) :
+        calibrate(selected->context_, options_.limits, stop, known);
     std::lock_guard snapshot_lock(selected->mutex_);
     auto& snapshot = selected->snapshot_;
     if (stop.stop_requested()) snapshot.state = HardwareState::cancelled;
@@ -550,9 +563,14 @@ void HardwareService::run(std::stop_token stop) noexcept {
       snapshot.state = result.state == HardwareState::timed_out ? HardwareState::timed_out : HardwareState::failed;
     } else {
       const auto inference = detail::qualify_hardware(result.evidence);
-      if (inference.preferred_width) { snapshot.profile.preferred_width = inference.preferred_width; snapshot.width_qualified = true; }
-      if (inference.training_accesses) { snapshot.profile.training_accesses = inference.training_accesses; snapshot.training_qualified = true; }
-      snapshot.profile.revision = snapshot.width_qualified || snapshot.training_qualified;
+      bool learned = false;
+      if (!snapshot.width_qualified && inference.preferred_width) {
+        snapshot.profile.preferred_width = inference.preferred_width; snapshot.width_qualified = true; learned = true;
+      }
+      if (!snapshot.training_qualified && inference.training_accesses) {
+        snapshot.profile.training_accesses = inference.training_accesses; snapshot.training_qualified = true; learned = true;
+      }
+      if (learned) ++snapshot.profile.revision;
       snapshot.state = HardwareState::calibrated_local;
     }
   }

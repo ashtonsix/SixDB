@@ -130,6 +130,7 @@ void lookup_checks(const loom::HardwareContext& real) {
     Probe probe;
     auto config = options(probe);
     config.table = {&entry, 1};
+    config.calibrate = false;
     loom::HardwareService service(config);
     auto context = real;
     context.signature = entry.signature;
@@ -177,6 +178,7 @@ void lookup_checks(const loom::HardwareContext& real) {
   }
   const loom::HardwareTableEntry partial{real.signature, real.geometry, 0, 3};
   config.table = {&partial, 1};
+  config.calibrate = false;
   loom::HardwareService partial_service(config);
   auto partial_handle = partial_service.request(real);
   check(partial_handle, "partial lookup request");
@@ -184,6 +186,61 @@ void lookup_checks(const loom::HardwareContext& real) {
   check(partial_snapshot.state == loom::HardwareState::lookup && partial_snapshot.profile.preferred_width == 8 &&
         !partial_snapshot.width_qualified && partial_snapshot.profile.training_accesses == 3,
         "unknown table width discarded qualified training");
+}
+
+void partial_lookup_checks(const loom::HardwareContext& real) {
+  // The probe deliberately disagrees with known table values. Only missing
+  // fields may be learned, and duplicate requests must share the same job.
+  for (unsigned missing = 0; missing < 3; ++missing) {
+    Probe probe;
+    probe.wait = true;
+    const loom::HardwareTableEntry entry{real.signature, real.geometry,
+        missing == 0 ? 16u : 0u, missing == 1 ? 6u : 0u};
+    auto config = options(probe);
+    config.table = {&entry, 1};
+    loom::HardwareService service(config);
+    auto handle = service.request(real);
+    check(handle, "partial hit request");
+    const auto initial = (*handle)->snapshot();
+    check(initial.state == loom::HardwareState::pending &&
+        initial.profile.preferred_width == (missing == 0 ? 16u : 8u) &&
+        initial.profile.training_accesses == (missing == 1 ? 6u : 0u) &&
+        initial.width_qualified == (missing == 0) && initial.training_qualified == (missing == 1) &&
+        initial.profile.revision == (missing == 2 ? 0u : 1u), "partial hit did not return known/default fields while learning");
+    until([&] { return probe.entered.load(); }, "partial hit did not calibrate");
+    auto duplicate = service.request(real);
+    check(duplicate && *duplicate == *handle && probe.calls == 1, "partial hit duplicated calibration");
+    probe.release = true;
+    const auto learned = settled(*handle);
+    check(learned.state == loom::HardwareState::calibrated_local && learned.width_qualified &&
+        learned.training_qualified && learned.profile.preferred_width == (missing == 0 ? 16u : 4u) &&
+        learned.profile.training_accesses == (missing == 1 ? 6u : 3u) &&
+        learned.profile.revision == (missing == 2 ? 1u : 2u), "missing field adoption overwrote table knowledge or lost its revision");
+    duplicate = service.request(real);
+    check(duplicate && *duplicate == *handle && probe.calls == 1, "settled partial hit restarted calibration");
+  }
+
+  for (const auto outcome : {loom::HardwareState::calibrated_local, loom::HardwareState::failed,
+       loom::HardwareState::timed_out, loom::HardwareState::cancelled}) {
+    Probe probe;
+    probe.wait = true;
+    probe.outcome = outcome;
+    probe.evidence = {};
+    const loom::HardwareTableEntry entry{real.signature, real.geometry, 16, 0};
+    auto config = options(probe);
+    config.table = {&entry, 1};
+    loom::HardwareService service(config);
+    auto handle = service.request(real);
+    check(handle, "partial unsuccessful request");
+    until([&] { return probe.entered.load(); }, "partial unsuccessful calibration not entered");
+    if (outcome == loom::HardwareState::cancelled) service.cancel();
+    else probe.release = true;
+    const auto retained = settled(*handle);
+    check(retained.state == outcome && retained.profile.revision == 1 &&
+        retained.width_qualified && !retained.training_qualified &&
+        retained.profile.preferred_width == 16 && !retained.profile.training_accesses,
+        "unsuccessful learning erased known table fields or invented a revision");
+  }
 }
 
 void lifecycle_checks(const loom::HardwareContext& real) {
@@ -292,6 +349,24 @@ void lifecycle_checks(const loom::HardwareContext& real) {
   auto handle = bounded.request(real);
   check(handle, "bounded real calibration request");
   defaults(settled(*handle), loom::HardwareState::timed_out, "real probe wall cap did not retain defaults");
+
+  // Real partial calibration exercises a training-only sweep (or unsupported
+  // training without a mapping), and a width-only sweep. No measured value is
+  // required; the independently known field must survive any probe outcome.
+  for (bool known_width : {false, true}) {
+    const loom::HardwareTableEntry entry{real.signature, real.geometry,
+        known_width ? 16u : 0u, known_width ? 0u : 6u};
+    config.table = {&entry, 1};
+    loom::HardwareService partial(config);
+    auto partial_handle = partial.request(real);
+    check(partial_handle, "bounded real partial calibration request");
+    const auto result = settled(*partial_handle);
+    check(result.state != loom::HardwareState::lookup && result.profile.revision >= 1 &&
+        result.profile.revision <= 2, "bounded real partial hit did not attempt missing-field learning");
+    check(known_width ? result.width_qualified && result.profile.preferred_width == 16 :
+        result.training_qualified && result.profile.training_accesses == 6,
+        "bounded real partial calibration replaced known table evidence");
+  }
 }
 
 struct Job { const std::uint64_t* values{}; std::uint64_t result{}, completed{}; };
@@ -303,10 +378,13 @@ LOOM_NATIVE_CC void native(Ring* ring, Ring::Slot* slot, std::uint64_t cursor,
   if (!--remaining) { job->result = sum; ++job->completed; ring->complete(*slot); }
   [[clang::musttail]] return Ring::yield(ring, slot, cursor, remaining, sum, job);
 }
-void foreground_checks(const loom::HardwareContext& context) {
+void foreground_checks(const loom::HardwareContext& context, bool partial_hit) {
   Probe probe;
   probe.wait = true;
-  loom::HardwareService service(options(probe));
+  const loom::HardwareTableEntry entry{context.signature, context.geometry, 16, 0};
+  auto config = options(probe);
+  if (partial_hit) config.table = {&entry, 1};
+  loom::HardwareService service(config);
   auto handle = service.request(context);
   check(handle, "foreground miss request");
   until([&] { return probe.entered.load(); }, "foreground probe not entered");
@@ -340,12 +418,20 @@ void foreground_checks(const loom::HardwareContext& context) {
   for (unsigned i = 0; i < jobs.size(); ++i)
     check(ring.push(native, {i, 17, 0, &jobs[i]}, *dependency), "foreground Ring admission");
   check(ring.spin({12}) == 12 && ring.pending() == 6 && !probe.finished, "foreground did not progress during miss");
-  check(!ring.hint_policy().profile.revision && !worker.hints.profile.revision, "pending calibration mutated native policy");
+  const auto initial_revision = partial_hit ? 1u : 0u;
+  check(ring.hint_policy().profile.revision == initial_revision &&
+      worker.hints.profile.revision == initial_revision, "pending calibration mutated native policy");
   probe.release = true;
   const auto result = settled(*handle);
-  check(result.profile.revision == 1, "foreground calibrated result");
-  check(loom::refresh_hints(worker) && ring.refresh_hints(), "returned-boundary policy adoption");
-  check(ring.hint_policy().profile.training_accesses == 3 && worker.hints.profile.preferred_width == 4,
+  const auto learned_revision = partial_hit ? 2u : 1u;
+  check(result.profile.revision == learned_revision, "foreground calibrated result");
+  check(loom::refresh_hints(worker) && worker.hints.profile.revision == learned_revision &&
+      ring.hint_policy().profile.revision == initial_revision && ring.pending() == 6,
+      "Worker adoption changed Ring snapshot or pending work");
+  check(ring.refresh_hints() && ring.hint_policy().profile.revision == learned_revision,
+      "returned-boundary Ring policy adoption");
+  check(ring.hint_policy().profile.training_accesses == 3 &&
+      worker.hints.profile.preferred_width == (partial_hit ? 16u : 4u),
         "policy adoption fields missing");
   while (ring.pending()) check(ring.spin({5}) > 0, "foreground resumed progress");
   for (unsigned i = 0; i < jobs.size(); ++i) {
@@ -372,7 +458,9 @@ int main() {
   check(!loom::discover_hardware(-2), "invalid discovery CPU accepted");
   inference_checks();
   lookup_checks(*context);
+  partial_lookup_checks(*context);
   lifecycle_checks(*context);
-  foreground_checks(*context);
+  foreground_checks(*context, false);
+  foreground_checks(*context, true);
   std::cout << "hardware discovery, exact lookup, bounded calibration, coalescing, cancellation and native progress passed\n";
 }

@@ -9,6 +9,9 @@ lives in [Loom](../../../loom/README.md#memory-rings): abstract demands, bounded
 inline hint selection, owner-boundary snapshots and shared C++ startup calibration.
 The receipts below describe the original spike inputs and their limits; they
 do not measure the implemented policy's performance.
+Loom also calibrates unresolved fields after partial table hits, preserving
+known values and publishing learned fields at a later revision. The original
+controller below calibrated only complete context misses.
 
 ## Implemented path
 

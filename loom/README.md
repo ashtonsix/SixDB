@@ -110,8 +110,11 @@ to load the remainder of a cache line.
 
 A [HardwareService](include/loom/hardware.h) is shared explicitly at startup.
 It compares the complete reported CPU/environment context with the retained
-table. A miss returns defaults immediately and queues bounded calibration on
-one background thread. Independent qualified fields may replace defaults;
+table. A miss or partial hit returns known fields and defaults immediately and
+queues bounded calibration of missing fields on one background thread. A fully
+known hit needs no calibration. Newly qualified fields advance the profile
+revision; retained table fields survive failed or contradictory probes.
+Independent qualified fields may replace defaults;
 censored, inconsistent, failed or cancelled observations cannot invent knowledge.
 Background results stay local and conditional on foreground overlap. The caller
 chooses the memory/time allowance and keeps the service until cancellation/join.

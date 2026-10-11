@@ -45,6 +45,7 @@ enum class HardwareState {
 };
 struct HardwareSnapshot {
   HintProfile profile;
+  /// Pending learning may already carry independently qualified table fields.
   HardwareState state{HardwareState::pending};
   bool width_qualified{}, training_qualified{};
 };
@@ -120,8 +121,9 @@ public:
   ~HardwareService();
   HardwareService(const HardwareService&) = delete;
   HardwareService& operator=(const HardwareService&) = delete;
-  /// Defaults are available on return. A hit does not launch calibration;
-  /// misses queue once. No caller waits for a probe or background allocation.
+  /// Known fields and defaults are available on return. Missing fields queue
+  /// once unless calibration is disabled; a fully known hit needs no job.
+  /// No caller waits for a probe or background allocation.
   [[nodiscard]] orbital::Result<std::shared_ptr<HardwareProfile>> request(HardwareContext);
   /// Cooperative cancellation for the owned service; joining remains destruction's duty.
   void cancel() noexcept;
