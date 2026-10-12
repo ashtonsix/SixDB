@@ -1,0 +1,172 @@
+{
+  "production_shape": "15 classes,16 homes,320-byte FiniteGroup",
+  "platforms": {
+    "linux4": {
+      "job": "20261012T033148Z-d080fe14",
+      "passed": {
+        "orbital": 14,
+        "loom": 12
+      },
+      "context": {
+        "native_page": 4096,
+        "kernel": "7.0.0-1012-aws",
+        "machine": "x86_64",
+        "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+        "source_sha256": {
+          "orbital/src/allocation/finite.cpp": "948252c8d198b2a574323e603687223f69734020358eaceba4e3e444849bf117",
+          "orbital/src/allocation/finite.h": "f3e024ab37e6083f420fd66da435bc0791104ec2c53121eb9937bc4f0f6b574b",
+          "orbital/src/allocation/group.cpp": "b159c98b4bfd31f0fd68f5ec1a89384b25cd9c66a08d6e9157d07055008e34d0",
+          "orbital/test/finite.cpp": "4d869836f4cc78d755c4f6a8e16f65ec9a378e0d6c49f9db144e7ee4985f93e1",
+          "orbital/test/palettes.cpp": "686448958429e9ad0db84c3db7cfccfaeca303a758a3f9b37ce6410a24510362",
+          "orbital/test/preparation.cpp": "ecc32f3479f92026b269d9148080ae097dc929dbc5372750f07628bfbe447cfc"
+        }
+      },
+      "recovery": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 19695484,
+        "files": 231,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/1f2dbeb1f4e2df8db7943247ca488ea58ccf9cc069fbf812fae9e177c399eaef.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "1f2dbeb1f4e2df8db7943247ca488ea58ccf9cc069fbf812fae9e177c399eaef",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/1f2dbeb1f4e2df8db7943247ca488ea58ccf9cc069fbf812fae9e177c399eaef.tar.gz"
+      }
+    },
+    "linux64": {
+      "job": "20261012T033148Z-638dd010",
+      "passed": {
+        "orbital": 14,
+        "loom": 12
+      },
+      "context": {
+        "native_page": 65536,
+        "kernel": "7.0.0-1014-aws-64k",
+        "machine": "aarch64",
+        "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+        "source_sha256": {
+          "orbital/src/allocation/finite.cpp": "948252c8d198b2a574323e603687223f69734020358eaceba4e3e444849bf117",
+          "orbital/src/allocation/finite.h": "f3e024ab37e6083f420fd66da435bc0791104ec2c53121eb9937bc4f0f6b574b",
+          "orbital/src/allocation/group.cpp": "b159c98b4bfd31f0fd68f5ec1a89384b25cd9c66a08d6e9157d07055008e34d0",
+          "orbital/test/finite.cpp": "4d869836f4cc78d755c4f6a8e16f65ec9a378e0d6c49f9db144e7ee4985f93e1",
+          "orbital/test/palettes.cpp": "686448958429e9ad0db84c3db7cfccfaeca303a758a3f9b37ce6410a24510362",
+          "orbital/test/preparation.cpp": "ecc32f3479f92026b269d9148080ae097dc929dbc5372750f07628bfbe447cfc"
+        }
+      },
+      "recovery": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 19339412,
+        "files": 231,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/3c065cec64a1252106e8e522dcdf369e029893f52cd18e92861e8003322b169e.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "3c065cec64a1252106e8e522dcdf369e029893f52cd18e92861e8003322b169e",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/3c065cec64a1252106e8e522dcdf369e029893f52cd18e92861e8003322b169e.tar.gz"
+      }
+    },
+    "mac16": {
+      "receipt": {
+        "native_page_bytes": 16384,
+        "system": "macOS-26.0.1-arm64-arm-64bit-Mach-O",
+        "compiler": "Homebrew clang version 21.1.8\nTarget: arm64-apple-darwin25.0.0\nThread model: posix\nInstalledDir: /opt/homebrew/Cellar/llvm@21/21.1.8/bin\nConfiguration file: /opt/homebrew/etc/clang/arm64-apple-darwin25.cfg\n",
+        "sdk": "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+        "command": [
+          "bash",
+          "build/allocation-palettes/macos-fixed-qualification/qualify.sh"
+        ],
+        "source_sha256": {
+          "orbital/src/allocation/finite.cpp": "948252c8d198b2a574323e603687223f69734020358eaceba4e3e444849bf117",
+          "orbital/src/allocation/finite.h": "f3e024ab37e6083f420fd66da435bc0791104ec2c53121eb9937bc4f0f6b574b",
+          "orbital/include/orbital/types.h": "f16fa83013aadafe0cb539e06dc56834d894605e8419bebf32fa17b53abfe00b",
+          "orbital/test/finite.cpp": "4d869836f4cc78d755c4f6a8e16f65ec9a378e0d6c49f9db144e7ee4985f93e1",
+          "build/allocation-palettes/macos-fixed-qualification/profile.cpp": "f7912730aa5bafb406e12afc805a06dde803d5fef3bc58f4ee29b39bfbcced68",
+          "build/allocation-palettes/macos-fixed-qualification/qualify.sh": "1551dc5f5e286d43dcc025cb751017f77170eb8f85da35cdb68e9998a518dac5"
+        },
+        "results": {
+          "finite-release.log": "finite: six native geometries, retained homes, binding, page unions and trim races passed\n",
+          "profile-release.log": "native16: selected B profile,3840 Home coordinates, natural alignment, binding and byte/page checks passed\n",
+          "finite-sanitize.log": "finite: six native geometries, retained homes, binding, page unions and trim races passed\n",
+          "profile-sanitize.log": "native16: selected B profile,3840 Home coordinates, natural alignment, binding and byte/page checks passed\n"
+        },
+        "binary_sha256": {
+          "finite-release": "995dcd38f68166bd4ff04d4b2caa5174888dd2421e75ac3ecd8bf8e1f8c67cfa",
+          "profile-release": "abc74edc6018e95b1afb4144e11d3c963be100ee48fb79ddf987a319b02676a6",
+          "finite-sanitize": "09a3bceb2b091b827c8a0047693b63fdb5eaaa5513ffffe5ffa3c7917b2c82ed",
+          "profile-sanitize": "c3e8c68191b27c88b4278a0f025b42fa527bee6aa368ac237473d89e013d8ee0"
+        },
+        "limits": [
+          "Darwin native16KiB geometry/VM qualification; no Linux Worker runtime claim",
+          "Not a timing measurement; CPU placement is uncontrolled"
+        ]
+      },
+      "recovery": {
+        "format": 1,
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/1f2a017db780778c4e133d81b75be4c4ae733872ecddefb5be0d68aa5198691c.tar.gz",
+        "bucket": "calico-fleet-artifacts",
+        "region": "us-east-1",
+        "key": "sixdb/artifacts/sha256/1f2a017db780778c4e133d81b75be4c4ae733872ecddefb5be0d68aa5198691c.tar.gz",
+        "sha256": "1f2a017db780778c4e133d81b75be4c4ae733872ecddefb5be0d68aa5198691c",
+        "bytes": 907699,
+        "files": 25
+      }
+    }
+  },
+  "sanitizers": "ASan/UBSan: Linux4KiB finite/profile/reclamation/lifetime/preparation and experimental backend; Mac16KiB finite/profile",
+  "limits": [
+    "Darwin qualifies production finite geometry, not the Linux Loom worker runtime",
+    "Block medians and batch percentiles are not per-operation latency percentiles"
+  ],
+  "historical_geometry_recovery": {
+    "format": 1,
+    "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/95e9ba0bf0401b3dbf769eb3ae3e40c80f34135260ddc71c1d9a97155923e856.tar.gz",
+    "bucket": "calico-fleet-artifacts",
+    "region": "us-east-1",
+    "key": "sixdb/artifacts/sha256/95e9ba0bf0401b3dbf769eb3ae3e40c80f34135260ddc71c1d9a97155923e856.tar.gz",
+    "sha256": "95e9ba0bf0401b3dbf769eb3ae3e40c80f34135260ddc71c1d9a97155923e856",
+    "bytes": 182058,
+    "files": 21
+  },
+  "aws_cleanup": {
+    "format": 1,
+    "region": "us-east-1",
+    "bootstrap_job": "20261012T013809Z-c67e3f32",
+    "bootstrap_instance": "i-0f147fcaf7e61d5a0",
+    "temporary_ami": "ami-0b048dd0b2b4a907d",
+    "temporary_snapshot": "snap-07429b3335975eade",
+    "state": "cleaned-up",
+    "cleanup": "Completed: temporary image deregistered and snapshot deleted; no active bootstrap or matching native workers.",
+    "bootstrap_state": "terminated",
+    "native_job": "20261012T015415Z-b0b921c2",
+    "native_instance": "i-0b098f709447d4faf",
+    "native_receipt": "build/workers/20261012T015415Z-b0b921c2/results/native-platform.json",
+    "cleanup_receipt": {
+      "requested_at": "2026-10-12T03:51:52.989555+00:00",
+      "image": {
+        "id": "ami-0b048dd0b2b4a907d",
+        "deregister_request": "accepted"
+      },
+      "snapshot": {
+        "id": "snap-07429b3335975eade",
+        "delete_request": "accepted"
+      },
+      "bootstrap": {
+        "id": "i-0f147fcaf7e61d5a0",
+        "previously_verified_state": "terminated",
+        "current_describe": "absent from returned instance list"
+      },
+      "native_instances": {
+        "i-0b098f709447d4faf": "absent from returned instance list after prior idle expiry",
+        "i-03cbb64210f7d3858": "terminated",
+        "i-001792d4ae995ee43": "terminated"
+      },
+      "verified_at": "2026-10-12T03:52:37.436066+00:00",
+      "verification": {
+        "registered_images": [],
+        "owned_snapshots": [],
+        "active_bootstrap_instances": [],
+        "active_native_image_instances": []
+      }
+    }
+  }
+}

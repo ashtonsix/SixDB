@@ -1,0 +1,823 @@
+{
+  "kind": "Select native palette evidence; leave original runs and geometry evidence alone.",
+  "selector_sha256": "6d25978e7fda2fe15f4ac16310ddce5396d156243be3d4ee064227b684f2f0b4",
+  "command": [
+    "workbench/spikes/allocation-palettes/retain-native.py",
+    "--public",
+    "zen5-original=build/workers/20261012T192545Z-5054e023/results/public",
+    "--public",
+    "zen5-ready-class=build/workers/20261012T192545Z-5054e023/results/ready-class",
+    "--public",
+    "graviton-original=build/workers/20261012T193917Z-34ed0864/results/public",
+    "--public",
+    "graviton-ready-class=build/workers/20261012T193917Z-34ed0864/results/ready-class",
+    "--qualification",
+    "zen5-original=build/workers/20261012T192545Z-5054e023/results/validation",
+    "--qualification",
+    "graviton-original=build/workers/20261012T193917Z-34ed0864/results/validation",
+    "--qualification",
+    "mac16=build/allocation-palettes/macos-current-qualification",
+    "--recovery",
+    "zen5-original=build/workers/20261012T192545Z-5054e023/artifact.json",
+    "--recovery",
+    "zen5-ready-class=build/workers/20261012T192545Z-5054e023/artifact.json",
+    "--recovery",
+    "graviton-original=build/workers/20261012T193917Z-34ed0864/artifact.json",
+    "--recovery",
+    "graviton-ready-class=build/workers/20261012T193917Z-34ed0864/artifact.json",
+    "--recovery",
+    "mac16=build/allocation-palettes/review/macos.artifact.json",
+    "--output",
+    "build/allocation-palettes/review/final"
+  ],
+  "origins": {
+    "zen5-original": {
+      "public": {
+        "inputs": {
+          "context.json": {
+            "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261012T192545Z-5054e023/results/public/context.json",
+            "sha256": "bc7566df506264bed656eb1d1e3c838bdb51476bdf7cdf4d60c8843bbed89267",
+            "bytes": 78325
+          },
+          "summary.csv": {
+            "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261012T192545Z-5054e023/results/public/summary.csv",
+            "sha256": "e7eb7b64b230e3f5ce02edd1d1c46f2d22d78bf796843d991c83e3d7fefc94ab",
+            "bytes": 1662
+          },
+          "samples.csv": {
+            "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261012T192545Z-5054e023/results/public/samples.csv",
+            "sha256": "763b22164b511ea8eee0b56ee1e79e1ce20dcda635ea87354360ba2efbbc9dfd",
+            "bytes": 133958
+          }
+        },
+        "identity": {
+          "native_page": 4096,
+          "cpu": 0,
+          "system": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39",
+          "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+          "march": "znver5",
+          "tune": "zen5",
+          "trials": 8,
+          "rounds": 8,
+          "operations": 65536,
+          "slots": 256,
+          "warmup": 3,
+          "workloads": [
+            "finite-control",
+            "finite-fallback",
+            "hot-loop"
+          ],
+          "touch_widths": [
+            "64",
+            "full"
+          ],
+          "driver_sha256": "b642b2b76eaa6865ca90c8bf1ed1bc9c39530d9ac8a60fe50a32ad9b045ded50",
+          "changed_inputs": [
+            "orbital/include/orbital/allocation.h",
+            "orbital/src/allocation/finite.cpp",
+            "orbital/src/allocation/finite.h",
+            "orbital/src/allocation/group.cpp",
+            "orbital/test/finite.cpp",
+            "orbital/test/finite_qualification.h",
+            "orbital/test/lifetime.cpp",
+            "orbital/test/palettes.cpp",
+            "orbital/test/preparation.cpp",
+            "orbital/test/reclamation.cpp"
+          ],
+          "limits": [
+            "Block means are not individual-operation latency percentiles",
+            "Same consumer, toolchain and CPU; platform results are not pooled",
+            "Window controls use unchanged 3KiB finite cutoff",
+            "Compiler input inventory includes unbuilt owner tests"
+          ],
+          "sources": {
+            "baseline": {
+              "path": "/opt/sixdb/source/build/allocation-palettes/public-baseline/20261012T192545Z-5054e023/source",
+              "capture_source_digest": "7a8c6ddbfa7093a4244782025cc5860f53a04b8c35f3080815b1ab28c74b5d64",
+              "capture_receipt_sha256": "1c6a898ce24557cc122fa1c0a19c22384ee021aa2a66f2588000752e9148c335",
+              "input_inventory_sha256": "fe910800e944e77da75f052197fdc5d587533f43c40ead0a9a60871c6c500e38"
+            },
+            "candidate": {
+              "path": "/opt/sixdb/source",
+              "worker_source_digest": "35be2f98f4d4df1f5abb83da9c49113c8eed3c1b945be76315ae8b098865c241",
+              "worker_manifest_sha256": "cd3ccba2ae8f24092baa28da14c65b4e1861aa00c0919c7fcf88bdf3c1118147",
+              "worker_job": "20261012T192545Z-5054e023",
+              "input_inventory_sha256": "20e6c1fee6b1f23649654fd741486c749309fa547c56b7ce2be07b991d4042e1"
+            }
+          },
+          "binaries": {
+            "baseline": {
+              "sha256": "72b7f6810929e0b4f7d85cd034218a734462f37bf137ca43bb3cb24778d539b6",
+              "binary_present_and_hash_verified": false,
+              "configure": [
+                "cmake",
+                "-S",
+                "/opt/sixdb/source/build/allocation-palettes/public-baseline/20261012T192545Z-5054e023/source",
+                "-B",
+                "/opt/sixdb/jobs/20261012T192545Z-5054e023/results/public/build-baseline",
+                "-G",
+                "Ninja",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DSIXDB_SPIKES=allocation-reuse-temperature",
+                "-DSIXDB_MARCH=znver5",
+                "-DSIXDB_TUNE=zen5"
+              ],
+              "build": [
+                "cmake",
+                "--build",
+                "/opt/sixdb/jobs/20261012T192545Z-5054e023/results/public/build-baseline",
+                "--target",
+                "allocation_reuse_temperature_allocator",
+                "-j",
+                "1"
+              ]
+            },
+            "candidate": {
+              "sha256": "ff14753ea33c3951d2be2a685bba0f620a040f520a03d5463f016f1c1b7b6502",
+              "binary_present_and_hash_verified": false,
+              "configure": [
+                "cmake",
+                "-S",
+                "/opt/sixdb/source",
+                "-B",
+                "/opt/sixdb/jobs/20261012T192545Z-5054e023/results/public/build-candidate",
+                "-G",
+                "Ninja",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DSIXDB_SPIKES=allocation-reuse-temperature",
+                "-DSIXDB_MARCH=znver5",
+                "-DSIXDB_TUNE=zen5"
+              ],
+              "build": [
+                "cmake",
+                "--build",
+                "/opt/sixdb/jobs/20261012T192545Z-5054e023/results/public/build-candidate",
+                "--target",
+                "allocation_reuse_temperature_allocator",
+                "-j",
+                "1"
+              ]
+            }
+          }
+        }
+      },
+      "qualification": {
+        "receipt_sha256": "c89a1416afb63c5f2fd8ec6f1b5316182e120fb079152e3c19d7d345df313074",
+        "identity": {
+          "native_page": 4096,
+          "kernel": "7.0.0-1012-aws",
+          "machine": "x86_64",
+          "cpu": 0,
+          "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+          "binary_sha256": {
+            "orbital/orbital_allocation_check": "e297c25ee662431cbe1fb889b46d3a1330b3044c5ba77c3adfcba0057d0468fb",
+            "orbital/orbital_budget_check": "77dc17534315ea3a3c75dec4fb3997bcb1e7ab98c64b382d8b38460b801cc4f5",
+            "orbital/orbital_finite_check": "ab3aaae2a84d5a810214a38957aa5701b659536a6d6b4ec86af877b94b7ed92b",
+            "orbital/orbital_lifetime_check": "181fdf0ffa51bae2eadf559372e55989024464bffc655ab6f9905033d86f87a0",
+            "orbital/orbital_notification_check": "fb5f9558a3e5275054574f5d05fba616510a58e94ff4fb24a78fe28181e43ed2",
+            "orbital/orbital_object_check": "d51c5aebf32574ee0effffe61ede6a126a47e327a1a7f81164493299c64e0ce2",
+            "orbital/orbital_palette_check": "324dd271379d85a3d4572e61ac3fab9ef4f2cbd412ee207ae44139b1088067b8",
+            "orbital/orbital_preparation_check": "741d86ecb7957481ef5fabcc10c5851f2237178a2f6ceee04c32402f5ab189bc",
+            "orbital/orbital_reclamation_check": "76cb70ac2c6ec1d1f44a4dd05ba340c23df873adc646be945f75a7ffaa7d4d66",
+            "orbital/orbital_representation_check": "9ac662f057475e37cc6c8f04b16142c0f0b149e663cbc21f14922beb56d5ca69",
+            "orbital/orbital_return_check": "786767641c47d532bcb4b3e1aaf0d7bec72c5382f6a64b1b78a0c847a01853ff",
+            "orbital/orbital_thread_check": "121eabddfcdb8fe8fbf9fa00efe72452fce205ffc78f7962ace5931b5474d5cb",
+            "orbital/orbital_window_check": "e81fdcbe962af05f985aaa431a2f945456062796f03da63023028184de85a533",
+            "orbital/orbital_worker_check": "ee9fb65ef4c277d91520908b41a192fef5db10ada277d5f1b34a941e19134fb9",
+            "loom/loom_budget_check": "1ca224c1e20c09eba5f98cbf874ed0b55605abaab059ccd9311bec4396332352",
+            "loom/loom_capacity_check": "3df6f7de6768b50759f34e7d69060d47d91a554fd9eb485d8dcfea394b66b9ec",
+            "loom/loom_hardware_check": "4427bf2fdc3d677a8e15e875e50fefbc87de5269f8a930e9ec8b0b7e9795ce53",
+            "loom/loom_hint_check": "7084b86a122d97458d572acbac74fe2fbfffcff01451b73e44e99829efa62db2",
+            "loom/loom_ring_check": "3beb08725af4d65e8a086cbdffe54f6e6e543ec4e3344f3992d67ed5e81cba15",
+            "loom/loom_worker_check": "7d99185482fc83bc50f8484fa0108fe0acd81bce9e9a52bea1ae5422fe5d4109"
+          },
+          "input_inventory_sha256": "88922da6183f629903588e7017d24aff2357c7b32965e8a6ad92462910b4468a",
+          "orbital_source_sha256": {
+            "orbital/CMakeLists.txt": "b6ef87a9f361df0b62b22f3165a69a0477fe2e145d7e77153a5d105e53c3f419",
+            "orbital/include/orbital/allocation.h": "2cefa580af1b77c2f65e93c78305f7e07a08c8de42e8e60bc2f10689cab811c7",
+            "orbital/include/orbital/detail/object/binding.h": "b8aa265e1b42e266572123042ec52efb308686100fb3b6188689366b13013891",
+            "orbital/include/orbital/detail/object/debt_queue.h": "07b81f9ede72b33bbb37ca917d4d1ceab1dfab7cc324bc5bab348feff6382152",
+            "orbital/include/orbital/detail/object/directory.h": "597e9d1e9518b537a8772df0da8b894321e7066f8b585f6868c07fbbb9a53dca",
+            "orbital/include/orbital/detail/object/history.h": "548aa06bc961686feff21a262754ec6e2a97c5f18de9c45f7fda863a09d3a1a7",
+            "orbital/include/orbital/detail/object/memory.h": "cf42ddd687f93c139b152d874789baf3a31e72dcedc863b31b076cd18fa6b51d",
+            "orbital/include/orbital/detail/object/physical.h": "2ab5b7d8eb0e75e8b48978980f349fe22eb27b0de754f73a8ec9c77b7511ac4a",
+            "orbital/include/orbital/detail/object/representation.h": "8d2f658e58c66b78e96e3a4a2e3346c016bccae6d33e52e9ac6dd638188ff77f",
+            "orbital/include/orbital/detail/object/versions.h": "91326ec0bf97543bf841316b9e9078c187feb8e545249ef0c498067d4c09ab3c",
+            "orbital/include/orbital/object.h": "10303c156733191d3d67404e570c629b69f2eb96246ffa63227a0b369ecf09e6",
+            "orbital/include/orbital/preparation.h": "5a50bb22b0e719a6f98be8b97eb57196e2a703324ea9f383a222edfe12110e38",
+            "orbital/include/orbital/representation.h": "ed0870277597e8bda717cc78ea3916dc32153e067f72f4f55c1304b1ced412e7",
+            "orbital/include/orbital/types.h": "f16fa83013aadafe0cb539e06dc56834d894605e8419bebf32fa17b53abfe00b",
+            "orbital/include/orbital/worker.h": "5a57d7745ea210734241786178df710bec086d9e4193cb94815132ce668be09f",
+            "orbital/src/allocation/allocation.cpp": "a142813d6ea072ac483b878c55b7f5edbac8e51ef200ccb1c84ee6fc605d2caf",
+            "orbital/src/allocation/arena.cpp": "5c884a6b17e2d272c4790ac2db729e054c3c086cec4197104bfad00798ca5fb2",
+            "orbital/src/allocation/capture.h": "6a390b8a7d82181b14517f7c01382eaa4773e65e037e5b72dbb4968c210c82f5",
+            "orbital/src/allocation/finite.cpp": "e333e07d606db5ada84ebc525855ea0ab2f1c094b3726cf3d2c28166ce5fac75",
+            "orbital/src/allocation/finite.h": "e1f34b98450446c5bc4c44407eb77ff93babea542d5794c412184c20f06defbc",
+            "orbital/src/allocation/group.cpp": "b159c98b4bfd31f0fd68f5ec1a89384b25cd9c66a08d6e9157d07055008e34d0",
+            "orbital/src/allocation/internal.h": "750d7ddf4ff765915e5f3f2d533e53e2022c29d388df5965a1d0273a2612e372",
+            "orbital/src/allocation/window.cpp": "f527db3f07c0cdeb23fc3d22b9cfc9829cc4a93bf4ba3e71281f3b0608ea02ce",
+            "orbital/src/object/history_impl.h": "0df64cfbef70c90f81b772c25f55cd90a64a1cd6ff6c57765ec97ead7660cf39",
+            "orbital/src/object/representation.cpp": "84f91f27cd873f88d051527f43c4bae19422cc08a6a9ebdaeec98f6dd3833069",
+            "orbital/src/object/representation_impl.h": "8380bc6845d97072cd0ed45eb43c45b4c9b440ff6e0b6b6c5a817103d3e3c9d8",
+            "orbital/src/object/representation_ops.h": "33f99e95ec683f19ac0f22d546d0e601412dbd8468cbd34c1850ed4ecae33173",
+            "orbital/src/object/storage.cpp": "cbdc0fa4a3ef8ce2b0f7a48684a97ead0501dfb48f9d1e4c10185ee17e87cf9c",
+            "orbital/src/object/store_impl.h": "410fac68fd1954d6ad154d61f3366ebefc030ae9b4a3d26e2b15489ebc874a67",
+            "orbital/src/types.cpp": "8fb36e1d5f33cf0cef19243ab72f9907e527d068efec53a3fab22f89d19a962f",
+            "orbital/src/worker.cpp": "8d4593f17951bb40433635de30470ffffa19d8dcbaf026009c2645894df503dd",
+            "orbital/test/allocation.cpp": "e99d0efcfce8242c48f7122e0ed9ebb9dd6d0b7888e2588a25a2bf2e14d38fcc",
+            "orbital/test/budget.cpp": "3d0fd333dc20cd8831a0251f4c45c11aff4dc60d1ca83347d4dd51e66c656a4b",
+            "orbital/test/finite.cpp": "4d869836f4cc78d755c4f6a8e16f65ec9a378e0d6c49f9db144e7ee4985f93e1",
+            "orbital/test/finite_qualification.h": "4d2780c9d4085613492d16649b7b30c149fe08a7bd763a2923cf42612b437e4e",
+            "orbital/test/lifetime.cpp": "920ad638d6391ffc4929ee4787d2f3958b54172e17ae8ab0ecbf08509fdd7d68",
+            "orbital/test/notification.cpp": "bff8e49a37eee18ea9bcacc19c074e65310ef3901bcda5c40ce19a280282c93f",
+            "orbital/test/object.cpp": "ceb564f858aee27b2a3a8874a86865279462152bb2a1f833ba45e1b01a27d68f",
+            "orbital/test/object_material.cpp": "f75ef7e06610aef8f386edb5da86d63bc69c92200c00251fac1cacf7b614d646",
+            "orbital/test/object_material.h": "725dc4094e32696c3f50d46112b8ad79066f6b108e5605c66afe46ec71cddea9",
+            "orbital/test/palettes.cpp": "342b88eae390fb105105a78983340c702131ed1f8dd3414f69e2d9d9f795523a",
+            "orbital/test/preparation.cpp": "ecc32f3479f92026b269d9148080ae097dc929dbc5372750f07628bfbe447cfc",
+            "orbital/test/reclamation.cpp": "6d72a75bb0e7a468c8921e1ac5d9405b04dcd16961621f091b84c9e7e777c430",
+            "orbital/test/representation.cpp": "9d254aac21d2bfab033abc405aa31132b95dc366f27f7f247d0fab719e352052",
+            "orbital/test/returns.cpp": "d070335a4e195b7a339329f8aeed7bf69a9e2fb50e4f76b41c292b6033e637c6",
+            "orbital/test/thread.cpp": "827ae7c3ece12f144dad1e530485f644c96dfd83894a8ab298d52da9b68f5044",
+            "orbital/test/window.cpp": "5992f0c755bf0de89510490ca0f11686f3b4278aa6423d77b263e8ce813d4b2b",
+            "orbital/test/worker.cpp": "83795a358efafcac28d363554077cb35fc91ff87292aa13577cbbcd469ea05d2"
+          },
+          "validation_log_sha256": "07094b7d173a1ff3138f7ba2b188b48d6629905225df32449a50440aa4b53fc8",
+          "recorded_passed": true
+        }
+      },
+      "recovery": {
+        "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261012T192545Z-5054e023/artifact.json",
+        "sha256": "f9d455a959e3c252b31cc9b25610413986918ca896767d85b9ef4c352b95ff80",
+        "reference": {
+          "bucket": "calico-fleet-artifacts",
+          "bytes": 28401420,
+          "files": 644,
+          "format": 1,
+          "key": "sixdb/artifacts/sha256/18b7739e9cba70672ccfec0cd16fd0007bef8d6a030c013b6757e2f908665873.tar.gz",
+          "kind": "files",
+          "region": "us-east-1",
+          "sha256": "18b7739e9cba70672ccfec0cd16fd0007bef8d6a030c013b6757e2f908665873",
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/18b7739e9cba70672ccfec0cd16fd0007bef8d6a030c013b6757e2f908665873.tar.gz"
+        }
+      }
+    },
+    "zen5-ready-class": {
+      "public": {
+        "inputs": {
+          "context.json": {
+            "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261012T192545Z-5054e023/results/ready-class/context.json",
+            "sha256": "ab4483f26ebda228962e3599560fb0a9fa90a5edcfa89554aa6826d3ceddc9eb",
+            "bytes": 78201
+          },
+          "summary.csv": {
+            "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261012T192545Z-5054e023/results/ready-class/summary.csv",
+            "sha256": "8a7679d755d64cadeee514dd5fbae30bd1d56cbd9649d5b2bb5c7d56b087a37d",
+            "bytes": 1688
+          },
+          "samples.csv": {
+            "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261012T192545Z-5054e023/results/ready-class/samples.csv",
+            "sha256": "23d1bdab30a0fcb01436aa17f804de62b709e70fcce34afde9463aae7d73633d",
+            "bytes": 133993
+          }
+        },
+        "identity": {
+          "native_page": 4096,
+          "cpu": 0,
+          "system": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39",
+          "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+          "march": "znver5",
+          "tune": "zen5",
+          "trials": 8,
+          "rounds": 8,
+          "operations": 65536,
+          "slots": 256,
+          "warmup": 3,
+          "workloads": [
+            "finite-control",
+            "finite-fallback",
+            "hot-loop"
+          ],
+          "touch_widths": [
+            "64",
+            "full"
+          ],
+          "driver_sha256": "b642b2b76eaa6865ca90c8bf1ed1bc9c39530d9ac8a60fe50a32ad9b045ded50",
+          "changed_inputs": [
+            "orbital/src/allocation/group.cpp",
+            "orbital/src/allocation/internal.h"
+          ],
+          "limits": [
+            "Block means are not individual-operation latency percentiles",
+            "Same consumer, toolchain and CPU; platform results are not pooled",
+            "Window controls use unchanged 3KiB finite cutoff",
+            "Compiler input inventory includes unbuilt owner tests"
+          ],
+          "sources": {
+            "baseline": {
+              "path": "/opt/sixdb/source",
+              "input_inventory_sha256": "20e6c1fee6b1f23649654fd741486c749309fa547c56b7ce2be07b991d4042e1"
+            },
+            "candidate": {
+              "path": "/opt/sixdb/source/build/allocation-palettes/ready-class/20261012T192545Z-5054e023/source",
+              "input_inventory_sha256": "a751cbd5b02ba4bc348ab292298ee16a379798850b00afbc92006909f94588c4"
+            }
+          },
+          "binaries": {
+            "baseline": {
+              "sha256": "e87dcd8059a2ecfa6e7e8d4b0d1eb14369b7e5f804327da9f2e5c9ca01d7fe6e",
+              "binary_present_and_hash_verified": false,
+              "configure": [
+                "cmake",
+                "-S",
+                "/opt/sixdb/source",
+                "-B",
+                "/opt/sixdb/jobs/20261012T192545Z-5054e023/results/ready-class/build-baseline",
+                "-G",
+                "Ninja",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DSIXDB_SPIKES=allocation-reuse-temperature",
+                "-DSIXDB_MARCH=znver5",
+                "-DSIXDB_TUNE=zen5"
+              ],
+              "build": [
+                "cmake",
+                "--build",
+                "/opt/sixdb/jobs/20261012T192545Z-5054e023/results/ready-class/build-baseline",
+                "--target",
+                "allocation_reuse_temperature_allocator",
+                "-j",
+                "1"
+              ]
+            },
+            "candidate": {
+              "sha256": "ad6a55694f094d57ed99a64e2e022cf8653d43290f1380dbe87558159ac439de",
+              "binary_present_and_hash_verified": false,
+              "configure": [
+                "cmake",
+                "-S",
+                "/opt/sixdb/source/build/allocation-palettes/ready-class/20261012T192545Z-5054e023/source",
+                "-B",
+                "/opt/sixdb/jobs/20261012T192545Z-5054e023/results/ready-class/build-candidate",
+                "-G",
+                "Ninja",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DSIXDB_SPIKES=allocation-reuse-temperature",
+                "-DSIXDB_MARCH=znver5",
+                "-DSIXDB_TUNE=zen5"
+              ],
+              "build": [
+                "cmake",
+                "--build",
+                "/opt/sixdb/jobs/20261012T192545Z-5054e023/results/ready-class/build-candidate",
+                "--target",
+                "allocation_reuse_temperature_allocator",
+                "-j",
+                "1"
+              ]
+            }
+          }
+        }
+      },
+      "recovery": {
+        "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261012T192545Z-5054e023/artifact.json",
+        "sha256": "f9d455a959e3c252b31cc9b25610413986918ca896767d85b9ef4c352b95ff80",
+        "reference": {
+          "bucket": "calico-fleet-artifacts",
+          "bytes": 28401420,
+          "files": 644,
+          "format": 1,
+          "key": "sixdb/artifacts/sha256/18b7739e9cba70672ccfec0cd16fd0007bef8d6a030c013b6757e2f908665873.tar.gz",
+          "kind": "files",
+          "region": "us-east-1",
+          "sha256": "18b7739e9cba70672ccfec0cd16fd0007bef8d6a030c013b6757e2f908665873",
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/18b7739e9cba70672ccfec0cd16fd0007bef8d6a030c013b6757e2f908665873.tar.gz"
+        }
+      }
+    },
+    "graviton-original": {
+      "public": {
+        "inputs": {
+          "context.json": {
+            "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261012T193917Z-34ed0864/results/public/context.json",
+            "sha256": "ee61b40bf5fdb27dbdcf590e932093d7af91b7404164bf0254b12a32d5fecc44",
+            "bytes": 78382
+          },
+          "summary.csv": {
+            "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261012T193917Z-34ed0864/results/public/summary.csv",
+            "sha256": "eda3afa6eafc9d6c23eb89626da8d759309e303e205dafaf39a98e6ee31c694b",
+            "bytes": 1674
+          },
+          "samples.csv": {
+            "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261012T193917Z-34ed0864/results/public/samples.csv",
+            "sha256": "648069fb18fde5c6b1cc6c1f6486b73e03d30ae67aca751b8581e37ae33ed755",
+            "bytes": 134323
+          }
+        },
+        "identity": {
+          "native_page": 65536,
+          "cpu": 0,
+          "system": "Linux-7.0.0-1014-aws-64k-aarch64-with-glibc2.39",
+          "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+          "march": "armv8.2-a+simd",
+          "tune": "neoverse-v2",
+          "trials": 8,
+          "rounds": 8,
+          "operations": 65536,
+          "slots": 256,
+          "warmup": 3,
+          "workloads": [
+            "finite-control",
+            "finite-fallback",
+            "hot-loop"
+          ],
+          "touch_widths": [
+            "64",
+            "full"
+          ],
+          "driver_sha256": "b642b2b76eaa6865ca90c8bf1ed1bc9c39530d9ac8a60fe50a32ad9b045ded50",
+          "changed_inputs": [
+            "orbital/include/orbital/allocation.h",
+            "orbital/src/allocation/finite.cpp",
+            "orbital/src/allocation/finite.h",
+            "orbital/src/allocation/group.cpp",
+            "orbital/test/finite.cpp",
+            "orbital/test/finite_qualification.h",
+            "orbital/test/lifetime.cpp",
+            "orbital/test/palettes.cpp",
+            "orbital/test/preparation.cpp",
+            "orbital/test/reclamation.cpp"
+          ],
+          "limits": [
+            "Block means are not individual-operation latency percentiles",
+            "Same consumer, toolchain and CPU; platform results are not pooled",
+            "Window controls use unchanged 3KiB finite cutoff",
+            "Compiler input inventory includes unbuilt owner tests"
+          ],
+          "sources": {
+            "baseline": {
+              "path": "/opt/sixdb/source/build/allocation-palettes/public-baseline/20261012T193917Z-34ed0864/source",
+              "capture_source_digest": "7a8c6ddbfa7093a4244782025cc5860f53a04b8c35f3080815b1ab28c74b5d64",
+              "capture_receipt_sha256": "1c6a898ce24557cc122fa1c0a19c22384ee021aa2a66f2588000752e9148c335",
+              "input_inventory_sha256": "fe910800e944e77da75f052197fdc5d587533f43c40ead0a9a60871c6c500e38"
+            },
+            "candidate": {
+              "path": "/opt/sixdb/source",
+              "worker_source_digest": "fb443cc2b43398faf09348253d1f87ec75813d4429aaa66d1a8d23a210b3ed81",
+              "worker_manifest_sha256": "b0124e8c5ab5648deff8d1e1559953df0d10ea1b04fed83d077a248d4df54174",
+              "worker_job": "20261012T193917Z-34ed0864",
+              "input_inventory_sha256": "20e6c1fee6b1f23649654fd741486c749309fa547c56b7ce2be07b991d4042e1"
+            }
+          },
+          "binaries": {
+            "baseline": {
+              "sha256": "5c1c314af48da98ed772f97ae4a8ad79839021db1cf8806573b40978f5db0506",
+              "binary_present_and_hash_verified": false,
+              "configure": [
+                "cmake",
+                "-S",
+                "/opt/sixdb/source/build/allocation-palettes/public-baseline/20261012T193917Z-34ed0864/source",
+                "-B",
+                "/opt/sixdb/jobs/20261012T193917Z-34ed0864/results/public/build-baseline",
+                "-G",
+                "Ninja",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DSIXDB_SPIKES=allocation-reuse-temperature",
+                "-DSIXDB_MARCH=armv8.2-a+simd",
+                "-DSIXDB_TUNE=neoverse-v2"
+              ],
+              "build": [
+                "cmake",
+                "--build",
+                "/opt/sixdb/jobs/20261012T193917Z-34ed0864/results/public/build-baseline",
+                "--target",
+                "allocation_reuse_temperature_allocator",
+                "-j",
+                "1"
+              ]
+            },
+            "candidate": {
+              "sha256": "fec41912e7a174aa033cdde73b37b7f304458e09771f983d268b86817c4e7fd5",
+              "binary_present_and_hash_verified": false,
+              "configure": [
+                "cmake",
+                "-S",
+                "/opt/sixdb/source",
+                "-B",
+                "/opt/sixdb/jobs/20261012T193917Z-34ed0864/results/public/build-candidate",
+                "-G",
+                "Ninja",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DSIXDB_SPIKES=allocation-reuse-temperature",
+                "-DSIXDB_MARCH=armv8.2-a+simd",
+                "-DSIXDB_TUNE=neoverse-v2"
+              ],
+              "build": [
+                "cmake",
+                "--build",
+                "/opt/sixdb/jobs/20261012T193917Z-34ed0864/results/public/build-candidate",
+                "--target",
+                "allocation_reuse_temperature_allocator",
+                "-j",
+                "1"
+              ]
+            }
+          }
+        }
+      },
+      "qualification": {
+        "receipt_sha256": "12cc7c492a4573f0685df8c7e91a2dd16354c3fa9f37b359dd6d92072e674a7b",
+        "identity": {
+          "native_page": 65536,
+          "kernel": "7.0.0-1014-aws-64k",
+          "machine": "aarch64",
+          "cpu": 0,
+          "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+          "binary_sha256": {
+            "orbital/orbital_allocation_check": "1d645d69080a97f1c7727e7a0740d61b8e511bcf2133d4edc292f9184669504f",
+            "orbital/orbital_budget_check": "e7042884307377071a635c8c6be6e2bbb4f8566afacdf2079372c1f6df8938a0",
+            "orbital/orbital_finite_check": "9a04c53d3b50eb019b1e8990eb1c61fc32770adeef6c2566fffe70d948c761b0",
+            "orbital/orbital_lifetime_check": "800767cd35c7bd958419a9f999d12c805108e885ee87f3c2238fc21db7d93433",
+            "orbital/orbital_notification_check": "eb4122187ca8c80b77161ebb401431b5e509ec70601b073694c9d5ec1913eab5",
+            "orbital/orbital_object_check": "b9afd712b581244c3c428a4857cd70997a8c9ddc1938b150ac5ac6b4875567b5",
+            "orbital/orbital_palette_check": "5d22e5046cc404cf7e13ceee1b77e1b6f0544ea659e5a9a295d2c399aca2e803",
+            "orbital/orbital_preparation_check": "3e9daeba5177c4d5f6af424f6619a3c4f757e774b635e95424d9d0466b30677a",
+            "orbital/orbital_reclamation_check": "a5c2786a40766134c649d2a34ab5212ad958eb5341755206f2bcd73d206e5a3a",
+            "orbital/orbital_representation_check": "002dd3b98c12b0d41ffa5bfa62b0e6094bfe48095d1882bb68ad809110255c20",
+            "orbital/orbital_return_check": "a0040a1739b5b525f2fca4aa82df51add56cb36122ab196975772ae125da81c5",
+            "orbital/orbital_thread_check": "02810b49272790736c691e53effcd4cc9334920a3c61ec038e3aefce9105ae0a",
+            "orbital/orbital_window_check": "670c25b421755e8adae030ab63d5314176f2f55b61b39c3b49713ef133aed3a1",
+            "orbital/orbital_worker_check": "85278fd7b59be812102b5616c36986c1399878086d250ceee86720d320e54ae4",
+            "loom/loom_budget_check": "c52520a064b16493e00b3e36e3b0c464c9f9eb10edc199d837d7632c8bbd656c",
+            "loom/loom_capacity_check": "67aa93d1cb78f9b22b90a7129fa166227ae9752488d470e60f3d3ab8293a60a0",
+            "loom/loom_hardware_check": "e0989b5a399b04c111a6c6cdb80027694d273614b4743dd5a89c62da10ea07ea",
+            "loom/loom_hint_check": "c1d8af848da262fc3dfe3ba073a558314d73145434f2c2733678a4df0647420f",
+            "loom/loom_ring_check": "e060ab53989e02182964d590d02eab1365f136ec710b8ef09e99c758353fc665",
+            "loom/loom_worker_check": "cee8b3bf92f982ed4cd3f099c4f0a414e0d17e7bae9c115be6bcfcfe9190bb61"
+          },
+          "input_inventory_sha256": "88922da6183f629903588e7017d24aff2357c7b32965e8a6ad92462910b4468a",
+          "orbital_source_sha256": {
+            "orbital/CMakeLists.txt": "b6ef87a9f361df0b62b22f3165a69a0477fe2e145d7e77153a5d105e53c3f419",
+            "orbital/include/orbital/allocation.h": "2cefa580af1b77c2f65e93c78305f7e07a08c8de42e8e60bc2f10689cab811c7",
+            "orbital/include/orbital/detail/object/binding.h": "b8aa265e1b42e266572123042ec52efb308686100fb3b6188689366b13013891",
+            "orbital/include/orbital/detail/object/debt_queue.h": "07b81f9ede72b33bbb37ca917d4d1ceab1dfab7cc324bc5bab348feff6382152",
+            "orbital/include/orbital/detail/object/directory.h": "597e9d1e9518b537a8772df0da8b894321e7066f8b585f6868c07fbbb9a53dca",
+            "orbital/include/orbital/detail/object/history.h": "548aa06bc961686feff21a262754ec6e2a97c5f18de9c45f7fda863a09d3a1a7",
+            "orbital/include/orbital/detail/object/memory.h": "cf42ddd687f93c139b152d874789baf3a31e72dcedc863b31b076cd18fa6b51d",
+            "orbital/include/orbital/detail/object/physical.h": "2ab5b7d8eb0e75e8b48978980f349fe22eb27b0de754f73a8ec9c77b7511ac4a",
+            "orbital/include/orbital/detail/object/representation.h": "8d2f658e58c66b78e96e3a4a2e3346c016bccae6d33e52e9ac6dd638188ff77f",
+            "orbital/include/orbital/detail/object/versions.h": "91326ec0bf97543bf841316b9e9078c187feb8e545249ef0c498067d4c09ab3c",
+            "orbital/include/orbital/object.h": "10303c156733191d3d67404e570c629b69f2eb96246ffa63227a0b369ecf09e6",
+            "orbital/include/orbital/preparation.h": "5a50bb22b0e719a6f98be8b97eb57196e2a703324ea9f383a222edfe12110e38",
+            "orbital/include/orbital/representation.h": "ed0870277597e8bda717cc78ea3916dc32153e067f72f4f55c1304b1ced412e7",
+            "orbital/include/orbital/types.h": "f16fa83013aadafe0cb539e06dc56834d894605e8419bebf32fa17b53abfe00b",
+            "orbital/include/orbital/worker.h": "5a57d7745ea210734241786178df710bec086d9e4193cb94815132ce668be09f",
+            "orbital/src/allocation/allocation.cpp": "a142813d6ea072ac483b878c55b7f5edbac8e51ef200ccb1c84ee6fc605d2caf",
+            "orbital/src/allocation/arena.cpp": "5c884a6b17e2d272c4790ac2db729e054c3c086cec4197104bfad00798ca5fb2",
+            "orbital/src/allocation/capture.h": "6a390b8a7d82181b14517f7c01382eaa4773e65e037e5b72dbb4968c210c82f5",
+            "orbital/src/allocation/finite.cpp": "e333e07d606db5ada84ebc525855ea0ab2f1c094b3726cf3d2c28166ce5fac75",
+            "orbital/src/allocation/finite.h": "e1f34b98450446c5bc4c44407eb77ff93babea542d5794c412184c20f06defbc",
+            "orbital/src/allocation/group.cpp": "b159c98b4bfd31f0fd68f5ec1a89384b25cd9c66a08d6e9157d07055008e34d0",
+            "orbital/src/allocation/internal.h": "750d7ddf4ff765915e5f3f2d533e53e2022c29d388df5965a1d0273a2612e372",
+            "orbital/src/allocation/window.cpp": "f527db3f07c0cdeb23fc3d22b9cfc9829cc4a93bf4ba3e71281f3b0608ea02ce",
+            "orbital/src/object/history_impl.h": "0df64cfbef70c90f81b772c25f55cd90a64a1cd6ff6c57765ec97ead7660cf39",
+            "orbital/src/object/representation.cpp": "84f91f27cd873f88d051527f43c4bae19422cc08a6a9ebdaeec98f6dd3833069",
+            "orbital/src/object/representation_impl.h": "8380bc6845d97072cd0ed45eb43c45b4c9b440ff6e0b6b6c5a817103d3e3c9d8",
+            "orbital/src/object/representation_ops.h": "33f99e95ec683f19ac0f22d546d0e601412dbd8468cbd34c1850ed4ecae33173",
+            "orbital/src/object/storage.cpp": "cbdc0fa4a3ef8ce2b0f7a48684a97ead0501dfb48f9d1e4c10185ee17e87cf9c",
+            "orbital/src/object/store_impl.h": "410fac68fd1954d6ad154d61f3366ebefc030ae9b4a3d26e2b15489ebc874a67",
+            "orbital/src/types.cpp": "8fb36e1d5f33cf0cef19243ab72f9907e527d068efec53a3fab22f89d19a962f",
+            "orbital/src/worker.cpp": "8d4593f17951bb40433635de30470ffffa19d8dcbaf026009c2645894df503dd",
+            "orbital/test/allocation.cpp": "e99d0efcfce8242c48f7122e0ed9ebb9dd6d0b7888e2588a25a2bf2e14d38fcc",
+            "orbital/test/budget.cpp": "3d0fd333dc20cd8831a0251f4c45c11aff4dc60d1ca83347d4dd51e66c656a4b",
+            "orbital/test/finite.cpp": "4d869836f4cc78d755c4f6a8e16f65ec9a378e0d6c49f9db144e7ee4985f93e1",
+            "orbital/test/finite_qualification.h": "4d2780c9d4085613492d16649b7b30c149fe08a7bd763a2923cf42612b437e4e",
+            "orbital/test/lifetime.cpp": "920ad638d6391ffc4929ee4787d2f3958b54172e17ae8ab0ecbf08509fdd7d68",
+            "orbital/test/notification.cpp": "bff8e49a37eee18ea9bcacc19c074e65310ef3901bcda5c40ce19a280282c93f",
+            "orbital/test/object.cpp": "ceb564f858aee27b2a3a8874a86865279462152bb2a1f833ba45e1b01a27d68f",
+            "orbital/test/object_material.cpp": "f75ef7e06610aef8f386edb5da86d63bc69c92200c00251fac1cacf7b614d646",
+            "orbital/test/object_material.h": "725dc4094e32696c3f50d46112b8ad79066f6b108e5605c66afe46ec71cddea9",
+            "orbital/test/palettes.cpp": "342b88eae390fb105105a78983340c702131ed1f8dd3414f69e2d9d9f795523a",
+            "orbital/test/preparation.cpp": "ecc32f3479f92026b269d9148080ae097dc929dbc5372750f07628bfbe447cfc",
+            "orbital/test/reclamation.cpp": "6d72a75bb0e7a468c8921e1ac5d9405b04dcd16961621f091b84c9e7e777c430",
+            "orbital/test/representation.cpp": "9d254aac21d2bfab033abc405aa31132b95dc366f27f7f247d0fab719e352052",
+            "orbital/test/returns.cpp": "d070335a4e195b7a339329f8aeed7bf69a9e2fb50e4f76b41c292b6033e637c6",
+            "orbital/test/thread.cpp": "827ae7c3ece12f144dad1e530485f644c96dfd83894a8ab298d52da9b68f5044",
+            "orbital/test/window.cpp": "5992f0c755bf0de89510490ca0f11686f3b4278aa6423d77b263e8ce813d4b2b",
+            "orbital/test/worker.cpp": "83795a358efafcac28d363554077cb35fc91ff87292aa13577cbbcd469ea05d2"
+          },
+          "validation_log_sha256": "602ae379f3f0ff92a82d831d2bfaac44fe36dbe0153f30d07ea1fb0a43fe82e2",
+          "recorded_passed": true
+        }
+      },
+      "recovery": {
+        "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261012T193917Z-34ed0864/artifact.json",
+        "sha256": "99a571f2d82ec232bfd058a4618e2a10e89995a1a4ec0f7e2e829dd3ce0db165",
+        "reference": {
+          "bucket": "calico-fleet-artifacts",
+          "bytes": 27716259,
+          "files": 644,
+          "format": 1,
+          "key": "sixdb/artifacts/sha256/189e0a153172c6b2ed5e8b83cd5b606fd503ade8560c19e89850017ca9a1a25b.tar.gz",
+          "kind": "files",
+          "region": "us-east-1",
+          "sha256": "189e0a153172c6b2ed5e8b83cd5b606fd503ade8560c19e89850017ca9a1a25b",
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/189e0a153172c6b2ed5e8b83cd5b606fd503ade8560c19e89850017ca9a1a25b.tar.gz"
+        }
+      }
+    },
+    "graviton-ready-class": {
+      "public": {
+        "inputs": {
+          "context.json": {
+            "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261012T193917Z-34ed0864/results/ready-class/context.json",
+            "sha256": "117695b3c4833d7336764c0eb83a2ca7834c8d60b00b475bda267547d2259e99",
+            "bytes": 78258
+          },
+          "summary.csv": {
+            "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261012T193917Z-34ed0864/results/ready-class/summary.csv",
+            "sha256": "e082b5866aa656c160d10c9efbd932af2cce4174acb2306536f436f6aa3ccb23",
+            "bytes": 1747
+          },
+          "samples.csv": {
+            "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261012T193917Z-34ed0864/results/ready-class/samples.csv",
+            "sha256": "8ac01f63b742d48eb3f9b785585aefe3f4be889625455a54b0ec9da004fb9833",
+            "bytes": 134323
+          }
+        },
+        "identity": {
+          "native_page": 65536,
+          "cpu": 0,
+          "system": "Linux-7.0.0-1014-aws-64k-aarch64-with-glibc2.39",
+          "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+          "march": "armv8.2-a+simd",
+          "tune": "neoverse-v2",
+          "trials": 8,
+          "rounds": 8,
+          "operations": 65536,
+          "slots": 256,
+          "warmup": 3,
+          "workloads": [
+            "finite-control",
+            "finite-fallback",
+            "hot-loop"
+          ],
+          "touch_widths": [
+            "64",
+            "full"
+          ],
+          "driver_sha256": "b642b2b76eaa6865ca90c8bf1ed1bc9c39530d9ac8a60fe50a32ad9b045ded50",
+          "changed_inputs": [
+            "orbital/src/allocation/group.cpp",
+            "orbital/src/allocation/internal.h"
+          ],
+          "limits": [
+            "Block means are not individual-operation latency percentiles",
+            "Same consumer, toolchain and CPU; platform results are not pooled",
+            "Window controls use unchanged 3KiB finite cutoff",
+            "Compiler input inventory includes unbuilt owner tests"
+          ],
+          "sources": {
+            "baseline": {
+              "path": "/opt/sixdb/source",
+              "input_inventory_sha256": "20e6c1fee6b1f23649654fd741486c749309fa547c56b7ce2be07b991d4042e1"
+            },
+            "candidate": {
+              "path": "/opt/sixdb/source/build/allocation-palettes/ready-class/20261012T193917Z-34ed0864/source",
+              "input_inventory_sha256": "a751cbd5b02ba4bc348ab292298ee16a379798850b00afbc92006909f94588c4"
+            }
+          },
+          "binaries": {
+            "baseline": {
+              "sha256": "1098d7a4016e5a11012daaa78ca9f84f0346aa699743b7617b4f7114c5236b7a",
+              "binary_present_and_hash_verified": false,
+              "configure": [
+                "cmake",
+                "-S",
+                "/opt/sixdb/source",
+                "-B",
+                "/opt/sixdb/jobs/20261012T193917Z-34ed0864/results/ready-class/build-baseline",
+                "-G",
+                "Ninja",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DSIXDB_SPIKES=allocation-reuse-temperature",
+                "-DSIXDB_MARCH=armv8.2-a+simd",
+                "-DSIXDB_TUNE=neoverse-v2"
+              ],
+              "build": [
+                "cmake",
+                "--build",
+                "/opt/sixdb/jobs/20261012T193917Z-34ed0864/results/ready-class/build-baseline",
+                "--target",
+                "allocation_reuse_temperature_allocator",
+                "-j",
+                "1"
+              ]
+            },
+            "candidate": {
+              "sha256": "09a8e36990a0f313bcc0a191038de1e5e4cfc90f6e9950dfb9553c50545bebe4",
+              "binary_present_and_hash_verified": false,
+              "configure": [
+                "cmake",
+                "-S",
+                "/opt/sixdb/source/build/allocation-palettes/ready-class/20261012T193917Z-34ed0864/source",
+                "-B",
+                "/opt/sixdb/jobs/20261012T193917Z-34ed0864/results/ready-class/build-candidate",
+                "-G",
+                "Ninja",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DSIXDB_SPIKES=allocation-reuse-temperature",
+                "-DSIXDB_MARCH=armv8.2-a+simd",
+                "-DSIXDB_TUNE=neoverse-v2"
+              ],
+              "build": [
+                "cmake",
+                "--build",
+                "/opt/sixdb/jobs/20261012T193917Z-34ed0864/results/ready-class/build-candidate",
+                "--target",
+                "allocation_reuse_temperature_allocator",
+                "-j",
+                "1"
+              ]
+            }
+          }
+        }
+      },
+      "recovery": {
+        "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261012T193917Z-34ed0864/artifact.json",
+        "sha256": "99a571f2d82ec232bfd058a4618e2a10e89995a1a4ec0f7e2e829dd3ce0db165",
+        "reference": {
+          "bucket": "calico-fleet-artifacts",
+          "bytes": 27716259,
+          "files": 644,
+          "format": 1,
+          "key": "sixdb/artifacts/sha256/189e0a153172c6b2ed5e8b83cd5b606fd503ade8560c19e89850017ca9a1a25b.tar.gz",
+          "kind": "files",
+          "region": "us-east-1",
+          "sha256": "189e0a153172c6b2ed5e8b83cd5b606fd503ade8560c19e89850017ca9a1a25b",
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/189e0a153172c6b2ed5e8b83cd5b606fd503ade8560c19e89850017ca9a1a25b.tar.gz"
+        }
+      }
+    },
+    "mac16": {
+      "qualification": {
+        "receipt_sha256": "0ba8b3d8cf2b5fc649d0c0bd048995edfc6438760443d049411d9426f42bc058",
+        "identity": {
+          "native_page": 16384,
+          "system": "macOS-26.0.1-arm64-arm-64bit-Mach-O",
+          "compiler": "Homebrew clang version 21.1.8\nTarget: arm64-apple-darwin25.0.0\nThread model: posix\nInstalledDir: /opt/homebrew/Cellar/llvm@21/21.1.8/bin\nConfiguration file: /opt/homebrew/etc/clang/arm64-apple-darwin25.cfg\n",
+          "sdk": "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+          "binary_sha256": {
+            "finite-release": "bf96f3328eb2aaaf788af7432509b0ca273e948c0354cb83591cfbc6673781d8",
+            "finite-sanitize": "43e27549115eb84c5ffa6523679a921a7a4e4a160b8bf961446f6cb3abf437dc"
+          },
+          "results": {
+            "finite-release.log": "finite: six native geometries, retained homes, binding, page unions and trim races passed\n",
+            "finite-sanitize.log": "finite: six native geometries, retained homes, binding, page unions and trim races passed\n"
+          },
+          "limits": [
+            "Production finite geometry/VM only; no Linux Orbital/Loom runtime qualification",
+            "Correctness checks, not timing; CPU placement uncontrolled"
+          ],
+          "input_inventory_sha256": "5f819cbdcdc2cee5de85222c4d2dc6d064d1ab65b7eb2e6300b7a2c0072c5188",
+          "orbital_source_sha256": {
+            "orbital/src/allocation/finite.cpp": "e333e07d606db5ada84ebc525855ea0ab2f1c094b3726cf3d2c28166ce5fac75",
+            "orbital/src/allocation/finite.h": "e1f34b98450446c5bc4c44407eb77ff93babea542d5794c412184c20f06defbc",
+            "orbital/include/orbital/types.h": "f16fa83013aadafe0cb539e06dc56834d894605e8419bebf32fa17b53abfe00b",
+            "orbital/test/finite.cpp": "4d869836f4cc78d755c4f6a8e16f65ec9a378e0d6c49f9db144e7ee4985f93e1"
+          },
+          "recorded_passed": true
+        }
+      },
+      "recovery": {
+        "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/allocation-palettes/review/macos.artifact.json",
+        "sha256": "e51e1d427da766565aeb64dccc5b60ba1df701ed1e503b40d4986fcbe126f8fe",
+        "reference": {
+          "format": 1,
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/69ada9929865f221d6ddb39d348a299d890683b9b680a4b866ce54e3fbd73b01.tar.gz",
+          "bucket": "calico-fleet-artifacts",
+          "region": "us-east-1",
+          "key": "sixdb/artifacts/sha256/69ada9929865f221d6ddb39d348a299d890683b9b680a4b866ce54e3fbd73b01.tar.gz",
+          "sha256": "69ada9929865f221d6ddb39d348a299d890683b9b680a4b866ce54e3fbd73b01",
+          "bytes": 543648,
+          "files": 11
+        }
+      }
+    }
+  },
+  "selected": {
+    "mechanism_rows": 0,
+    "public_rows": 48,
+    "process_rows": 384
+  },
+  "limits": [
+    "All medians remain within their original host and run; platforms are not pooled",
+    "Mechanism batch percentiles and public block means are not point-operation latency percentiles",
+    "Growth has the same trace under each workload label; only mixed-labelled rows are retained",
+    "Geometric class spacing and geometric reservation growth are separate axes; the latter doubles reserve while the logical extent grows in 16-byte steps",
+    "Public touch_bytes=0 means full requested payload; 64 means one cache line",
+    "Source and build identities are recorded from input receipts, not reconstructed from current files",
+    "A missing recovered binary is not claimed verified; raw file hashes identify the original evidence",
+    "Public source input inventories include unbuilt owner tests; driver checksums and shutdown checks are separate"
+  ]
+}

@@ -1,0 +1,20 @@
+add_executable(allocation_palettes_native native.cpp)
+sixdb_target(allocation_palettes_native)
+target_include_directories(allocation_palettes_native PRIVATE "${PROJECT_SOURCE_DIR}/orbital/include")
+target_link_libraries(allocation_palettes_native PRIVATE orbital::orbital)
+
+add_library(allocation_palettes_backend STATIC backend/finite.cpp)
+sixdb_target(allocation_palettes_backend)
+target_include_directories(allocation_palettes_backend PUBLIC "${PROJECT_SOURCE_DIR}/orbital/include")
+
+add_executable(allocation_palettes_timing timing.cpp)
+sixdb_target(allocation_palettes_timing)
+target_link_libraries(allocation_palettes_timing PRIVATE allocation_palettes_backend)
+
+add_executable(allocation_palettes_backend_check EXCLUDE_FROM_ALL backend_check.cpp)
+sixdb_target(allocation_palettes_backend_check)
+target_link_libraries(allocation_palettes_backend_check PRIVATE allocation_palettes_backend)
+target_link_options(allocation_palettes_backend_check PRIVATE
+  -Wl,--wrap=_ZnwmRKSt9nothrow_t,--wrap=_ZnwmSt11align_val_tRKSt9nothrow_t)
+add_test(NAME allocation_palettes_backend_check COMMAND allocation_palettes_backend_check)
+set_tests_properties(allocation_palettes_backend_check PROPERTIES LABELS "allocation-palettes")

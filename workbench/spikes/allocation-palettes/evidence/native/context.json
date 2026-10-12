@@ -1,0 +1,2625 @@
+{
+  "kind": "Select native palette evidence; leave original runs and geometry evidence alone.",
+  "selector_sha256": "a7e994ac6625087ad9746f3760c6c703f2e79aa70d4cd584471f56379a6c1104",
+  "command": [
+    "workbench/spikes/allocation-palettes/retain-native.py",
+    "--mechanism",
+    "zen5=build/workers/20261012T025001Z-b2a56451/results/mechanism/matrix",
+    "--mechanism",
+    "mac16=build/allocation-palettes/perf-macos16k-final",
+    "--mechanism",
+    "arm64=build/workers/20261012T025807Z-62b3a7c5/results/mechanism/matrix",
+    "--public",
+    "zen5-final=build/workers/20261012T033148Z-d080fe14/results/public",
+    "--public",
+    "arm64-final=build/workers/20261012T033148Z-638dd010/results/public",
+    "--public",
+    "zen5-rejected=build/workers/20261012T030108Z-63c52a07/results/public",
+    "--public",
+    "arm64-rejected=build/workers/20261012T025807Z-62b3a7c5/results/public",
+    "--recovery",
+    "zen5=build/workers/20261012T025001Z-b2a56451/artifact.json",
+    "--recovery",
+    "mac16=build/allocation-palettes/perf-macos16k-final.artifact.json",
+    "--recovery",
+    "arm64=build/workers/20261012T025807Z-62b3a7c5/artifact.json",
+    "--recovery",
+    "zen5-final=build/workers/20261012T033148Z-d080fe14/artifact.json",
+    "--recovery",
+    "arm64-final=build/workers/20261012T033148Z-638dd010/artifact.json",
+    "--recovery",
+    "zen5-rejected=build/workers/20261012T030108Z-63c52a07/artifact.json",
+    "--recovery",
+    "arm64-rejected=build/workers/20261012T025807Z-62b3a7c5/artifact.json",
+    "--output",
+    "build/allocation-palettes/native-selection"
+  ],
+  "origins": {
+    "zen5": {
+      "mechanism": {
+        "inputs": {
+          "context.json": {
+            "path": "/home/ashtonsix/sixdb/build/workers/20261012T025001Z-b2a56451/results/mechanism/matrix/context.json",
+            "sha256": "5fb2b5e6cee4cb6c3b05e48d0d7b07550aa25e3c32c9b4593be3af390c1b8fc6",
+            "bytes": 10736
+          },
+          "summary.csv": {
+            "path": "/home/ashtonsix/sixdb/build/workers/20261012T025001Z-b2a56451/results/mechanism/matrix/summary.csv",
+            "sha256": "2cfde28e2d13f29fc8061796f81eaaeaae77204a529c2232368e58c1ccc5683e",
+            "bytes": 83614
+          },
+          "samples.csv": {
+            "path": "/home/ashtonsix/sixdb/build/workers/20261012T025001Z-b2a56451/results/mechanism/matrix/samples.csv",
+            "sha256": "723f97f68b2aa8049868f654e7eac61780964f2c3ab128167c9f3d032d414054",
+            "bytes": 366771
+          }
+        },
+        "identity": {
+          "native_page": 4096,
+          "host": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39",
+          "binary_sha256": "2ea5fa8a3293dda71facebc37ee57995bfb8456d7a884b02f2dfaec05a478562",
+          "runner_recorded_source_sha256": {
+            "/opt/sixdb/source/workbench/spikes/allocation-palettes/performance.py": "93803a0b2b86fd1b7246f6ba5cdbefd36c7f58fa879d43d0d058a582959214a7",
+            "/opt/sixdb/source/workbench/spikes/allocation-palettes/timing.cpp": "29de477de53bcbd810d1e0b286fa214f063c6cd0c270c4c5c753198bb0985f0d",
+            "orbital/src/allocation/finite.cpp": "242d649bac3001c0736c685d24903c571ef8a2d4d41e4c2709961c63cf536c61",
+            "orbital/src/allocation/finite.h": "c802980e5d8c869e75eceb322168950f7a08f5e054f345658347fd53ac852011"
+          },
+          "build_receipt": null,
+          "cases": [
+            {
+              "name": "current",
+              "bits": 4,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  640,
+                  768,
+                  896,
+                  1024,
+                  1280,
+                  1536,
+                  1792,
+                  2048,
+                  2560,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "partition-only",
+              "bits": 5,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  640,
+                  768,
+                  896,
+                  1024,
+                  1280,
+                  1536,
+                  1792,
+                  2048,
+                  2560,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "full-geometric-16",
+              "bits": 4,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  80,
+                  96,
+                  128,
+                  192,
+                  272,
+                  368,
+                  528,
+                  752,
+                  1072,
+                  1520,
+                  2160,
+                  3072
+                ]
+              ],
+              "pack": 0,
+              "route": "best"
+            },
+            {
+              "name": "band-geometric-16",
+              "bits": 4,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  576,
+                  704,
+                  832,
+                  960,
+                  1152,
+                  1344,
+                  1600,
+                  1856,
+                  2176,
+                  2624,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "full-even-16",
+              "bits": 4,
+              "palettes": [
+                [
+                  16,
+                  224,
+                  416,
+                  624,
+                  832,
+                  1040,
+                  1232,
+                  1440,
+                  1648,
+                  1856,
+                  2048,
+                  2256,
+                  2464,
+                  2672,
+                  2864,
+                  3072
+                ]
+              ],
+              "pack": 0,
+              "route": "best"
+            },
+            {
+              "name": "band-even-16",
+              "bits": 4,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  448,
+                  640,
+                  832,
+                  1024,
+                  1216,
+                  1408,
+                  1600,
+                  1728,
+                  1920,
+                  2112,
+                  2304,
+                  2496,
+                  2688,
+                  2880,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "full-geometric-32",
+              "bits": 5,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  80,
+                  96,
+                  112,
+                  128,
+                  144,
+                  160,
+                  176,
+                  192,
+                  208,
+                  224,
+                  240,
+                  256,
+                  272,
+                  288,
+                  336,
+                  400,
+                  480,
+                  560,
+                  672,
+                  784,
+                  944,
+                  1104,
+                  1312,
+                  1552,
+                  1840,
+                  2192,
+                  2592,
+                  3072
+                ]
+              ],
+              "pack": 0,
+              "route": "best"
+            },
+            {
+              "name": "band-geometric-32",
+              "bits": 5,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  576,
+                  640,
+                  704,
+                  768,
+                  832,
+                  896,
+                  960,
+                  1024,
+                  1088,
+                  1152,
+                  1216,
+                  1280,
+                  1344,
+                  1408,
+                  1472,
+                  1536,
+                  1600,
+                  1664,
+                  1728,
+                  1792,
+                  1920,
+                  2048,
+                  2240,
+                  2432,
+                  2624,
+                  2816,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "full-even-32",
+              "bits": 5,
+              "palettes": [
+                [
+                  16,
+                  112,
+                  208,
+                  304,
+                  416,
+                  512,
+                  608,
+                  704,
+                  800,
+                  896,
+                  1008,
+                  1104,
+                  1200,
+                  1296,
+                  1392,
+                  1488,
+                  1600,
+                  1696,
+                  1792,
+                  1888,
+                  1984,
+                  2080,
+                  2192,
+                  2288,
+                  2384,
+                  2480,
+                  2576,
+                  2672,
+                  2784,
+                  2880,
+                  2976,
+                  3072
+                ]
+              ],
+              "pack": 0,
+              "route": "best"
+            },
+            {
+              "name": "band-even-32",
+              "bits": 5,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  448,
+                  512,
+                  640,
+                  704,
+                  832,
+                  896,
+                  960,
+                  1088,
+                  1152,
+                  1280,
+                  1344,
+                  1408,
+                  1536,
+                  1600,
+                  1728,
+                  1792,
+                  1920,
+                  1984,
+                  2048,
+                  2176,
+                  2240,
+                  2368,
+                  2432,
+                  2496,
+                  2624,
+                  2688,
+                  2816,
+                  2880,
+                  3008,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "only-b",
+              "bits": 4,
+              "palettes": [
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  640,
+                  768,
+                  896,
+                  1024,
+                  1280,
+                  1536,
+                  1792,
+                  2048,
+                  2560,
+                  3072
+                ]
+              ],
+              "pack": 0,
+              "route": "best"
+            },
+            {
+              "name": "band-geometric-15",
+              "bits": 4,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  640,
+                  768,
+                  896,
+                  1088,
+                  1280,
+                  1536,
+                  1792,
+                  2176,
+                  2560,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "band-geometric-31",
+              "bits": 5,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  576,
+                  640,
+                  704,
+                  768,
+                  832,
+                  896,
+                  960,
+                  1024,
+                  1088,
+                  1152,
+                  1216,
+                  1280,
+                  1344,
+                  1408,
+                  1472,
+                  1536,
+                  1600,
+                  1664,
+                  1728,
+                  1856,
+                  2048,
+                  2176,
+                  2368,
+                  2624,
+                  2816,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "selected",
+              "bits": 4,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  640,
+                  768,
+                  896,
+                  1024,
+                  1280,
+                  1536,
+                  1792,
+                  2048,
+                  2560,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            }
+          ],
+          "options": {
+            "binary": "/opt/sixdb/jobs/20261012T025001Z-b2a56451/results/mechanism/matrix/allocation_palettes_timing",
+            "output": "/opt/sixdb/jobs/20261012T025001Z-b2a56451/results/mechanism/matrix",
+            "page": 0,
+            "repetitions": 3,
+            "population": 1024,
+            "rounds": 4,
+            "workloads": "mixed,tiny,cluster,log,max",
+            "cases": "current,selected,partition-only,full-geometric-16,full-geometric-32,full-even-16,full-even-32,band-geometric-16,band-geometric-32,band-even-16,band-even-32,band-geometric-15,band-geometric-31,only-b",
+            "stages": "all",
+            "alignment": 16,
+            "selection": "unrestricted",
+            "class_lookup": 1,
+            "class_once": 1,
+            "cpu": 0,
+            "build_context": null
+          },
+          "limits": [
+            "FiniteGroup is production code; controller omits Loom, four ready hints and async scheduling",
+            "Batch-mean percentiles are not individual-operation latency percentiles",
+            "Different OS/CPU/compiler-library results are not pooled"
+          ],
+          "binary_present_and_hash_verified": true
+        }
+      },
+      "recovery": {
+        "path": "/home/ashtonsix/sixdb/build/workers/20261012T025001Z-b2a56451/artifact.json",
+        "sha256": "3a62c7f7caaf74ed6116ee5dbef378a1506053d9fe0205f6414a8e7eb1935cf8",
+        "reference": {
+          "bucket": "calico-fleet-artifacts",
+          "bytes": 20082318,
+          "files": 232,
+          "format": 1,
+          "key": "sixdb/artifacts/sha256/881385b15eea52d7d177a939c3d0437cdfe524f430b6c3c6b67d84cbae3215d6.tar.gz",
+          "kind": "files",
+          "region": "us-east-1",
+          "sha256": "881385b15eea52d7d177a939c3d0437cdfe524f430b6c3c6b67d84cbae3215d6",
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/881385b15eea52d7d177a939c3d0437cdfe524f430b6c3c6b67d84cbae3215d6.tar.gz"
+        }
+      }
+    },
+    "mac16": {
+      "mechanism": {
+        "inputs": {
+          "context.json": {
+            "path": "/home/ashtonsix/sixdb/build/allocation-palettes/perf-macos16k-final/context.json",
+            "sha256": "57692b6f5a4f811547e8aae94dd3ba865eff6db6a896e715534350ebca916602",
+            "bytes": 12188
+          },
+          "summary.csv": {
+            "path": "/home/ashtonsix/sixdb/build/allocation-palettes/perf-macos16k-final/summary.csv",
+            "sha256": "dd8bb697759c7b450668c98d5f945befb131bfcd57d01325dc60b7fa1df20335",
+            "bytes": 85346
+          },
+          "samples.csv": {
+            "path": "/home/ashtonsix/sixdb/build/allocation-palettes/perf-macos16k-final/samples.csv",
+            "sha256": "f58eeac3244b46b6fc79e99e9461fb1ce31a4197609ebc9d8e2b30d7f1c1eeda",
+            "bytes": 375062
+          }
+        },
+        "identity": {
+          "native_page": 16384,
+          "host": "macOS-26.0.1-arm64-arm-64bit-Mach-O",
+          "binary_sha256": "5fe232d67d43f652329ba70c640d68c22e8b2cf2de9a49bdb78938b627882563",
+          "runner_recorded_source_sha256": {
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/palette-final/workbench/spikes/allocation-palettes/performance.py": "93803a0b2b86fd1b7246f6ba5cdbefd36c7f58fa879d43d0d058a582959214a7",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/captures/palette-final/workbench/spikes/allocation-palettes/timing.cpp": "29de477de53bcbd810d1e0b286fa214f063c6cd0c270c4c5c753198bb0985f0d",
+            "orbital/src/allocation/finite.cpp": "242d649bac3001c0736c685d24903c571ef8a2d4d41e4c2709961c63cf536c61",
+            "orbital/src/allocation/finite.h": "c802980e5d8c869e75eceb322168950f7a08f5e054f345658347fd53ac852011"
+          },
+          "build_receipt": {
+            "format": 1,
+            "native_page_bytes": 16384,
+            "system": "macOS-26.0.1-arm64-arm-64bit-Mach-O",
+            "compiler": "/opt/homebrew/opt/llvm@21/bin/clang++",
+            "sdk": "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+            "compiler_version": "Homebrew clang version 21.1.8\nTarget: arm64-apple-darwin25.0.0\nThread model: posix\nInstalledDir: /opt/homebrew/Cellar/llvm@21/21.1.8/bin\nConfiguration file: /opt/homebrew/etc/clang/arm64-apple-darwin25.cfg\n",
+            "source_sha256": {
+              "orbital/src/allocation/finite.cpp": "242d649bac3001c0736c685d24903c571ef8a2d4d41e4c2709961c63cf536c61",
+              "orbital/src/allocation/finite.h": "c802980e5d8c869e75eceb322168950f7a08f5e054f345658347fd53ac852011",
+              "orbital/include/orbital/types.h": "f16fa83013aadafe0cb539e06dc56834d894605e8419bebf32fa17b53abfe00b",
+              "workbench/spikes/allocation-palettes/timing.cpp": "29de477de53bcbd810d1e0b286fa214f063c6cd0c270c4c5c753198bb0985f0d"
+            },
+            "binary_sha256": "5fe232d67d43f652329ba70c640d68c22e8b2cf2de9a49bdb78938b627882563",
+            "limits": [
+              "macOS has no Linux sched_setaffinity; hardware placement is uncontrolled",
+              "Darwin reclamation is measured separately from Linux reclamation"
+            ]
+          },
+          "cases": [
+            {
+              "name": "current",
+              "bits": 4,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  640,
+                  768,
+                  896,
+                  1024,
+                  1280,
+                  1536,
+                  1792,
+                  2048,
+                  2560,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "partition-only",
+              "bits": 5,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  640,
+                  768,
+                  896,
+                  1024,
+                  1280,
+                  1536,
+                  1792,
+                  2048,
+                  2560,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "full-geometric-16",
+              "bits": 4,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  80,
+                  96,
+                  128,
+                  192,
+                  272,
+                  368,
+                  528,
+                  752,
+                  1072,
+                  1520,
+                  2160,
+                  3072
+                ]
+              ],
+              "pack": 0,
+              "route": "best"
+            },
+            {
+              "name": "band-geometric-16",
+              "bits": 4,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  576,
+                  704,
+                  832,
+                  960,
+                  1152,
+                  1344,
+                  1600,
+                  1856,
+                  2176,
+                  2624,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "full-even-16",
+              "bits": 4,
+              "palettes": [
+                [
+                  16,
+                  224,
+                  416,
+                  624,
+                  832,
+                  1040,
+                  1232,
+                  1440,
+                  1648,
+                  1856,
+                  2048,
+                  2256,
+                  2464,
+                  2672,
+                  2864,
+                  3072
+                ]
+              ],
+              "pack": 0,
+              "route": "best"
+            },
+            {
+              "name": "band-even-16",
+              "bits": 4,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  448,
+                  640,
+                  832,
+                  1024,
+                  1216,
+                  1408,
+                  1600,
+                  1728,
+                  1920,
+                  2112,
+                  2304,
+                  2496,
+                  2688,
+                  2880,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "full-geometric-32",
+              "bits": 5,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  80,
+                  96,
+                  112,
+                  128,
+                  144,
+                  160,
+                  176,
+                  192,
+                  208,
+                  224,
+                  240,
+                  256,
+                  272,
+                  288,
+                  336,
+                  400,
+                  480,
+                  560,
+                  672,
+                  784,
+                  944,
+                  1104,
+                  1312,
+                  1552,
+                  1840,
+                  2192,
+                  2592,
+                  3072
+                ]
+              ],
+              "pack": 0,
+              "route": "best"
+            },
+            {
+              "name": "band-geometric-32",
+              "bits": 5,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  576,
+                  640,
+                  704,
+                  768,
+                  832,
+                  896,
+                  960,
+                  1024,
+                  1088,
+                  1152,
+                  1216,
+                  1280,
+                  1344,
+                  1408,
+                  1472,
+                  1536,
+                  1600,
+                  1664,
+                  1728,
+                  1792,
+                  1920,
+                  2048,
+                  2240,
+                  2432,
+                  2624,
+                  2816,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "full-even-32",
+              "bits": 5,
+              "palettes": [
+                [
+                  16,
+                  112,
+                  208,
+                  304,
+                  416,
+                  512,
+                  608,
+                  704,
+                  800,
+                  896,
+                  1008,
+                  1104,
+                  1200,
+                  1296,
+                  1392,
+                  1488,
+                  1600,
+                  1696,
+                  1792,
+                  1888,
+                  1984,
+                  2080,
+                  2192,
+                  2288,
+                  2384,
+                  2480,
+                  2576,
+                  2672,
+                  2784,
+                  2880,
+                  2976,
+                  3072
+                ]
+              ],
+              "pack": 0,
+              "route": "best"
+            },
+            {
+              "name": "band-even-32",
+              "bits": 5,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  448,
+                  512,
+                  640,
+                  704,
+                  832,
+                  896,
+                  960,
+                  1088,
+                  1152,
+                  1280,
+                  1344,
+                  1408,
+                  1536,
+                  1600,
+                  1728,
+                  1792,
+                  1920,
+                  1984,
+                  2048,
+                  2176,
+                  2240,
+                  2368,
+                  2432,
+                  2496,
+                  2624,
+                  2688,
+                  2816,
+                  2880,
+                  3008,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "only-b",
+              "bits": 4,
+              "palettes": [
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  640,
+                  768,
+                  896,
+                  1024,
+                  1280,
+                  1536,
+                  1792,
+                  2048,
+                  2560,
+                  3072
+                ]
+              ],
+              "pack": 0,
+              "route": "best"
+            },
+            {
+              "name": "band-geometric-15",
+              "bits": 4,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  640,
+                  768,
+                  896,
+                  1088,
+                  1280,
+                  1536,
+                  1792,
+                  2176,
+                  2560,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "band-geometric-31",
+              "bits": 5,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  576,
+                  640,
+                  704,
+                  768,
+                  832,
+                  896,
+                  960,
+                  1024,
+                  1088,
+                  1152,
+                  1216,
+                  1280,
+                  1344,
+                  1408,
+                  1472,
+                  1536,
+                  1600,
+                  1664,
+                  1728,
+                  1856,
+                  2048,
+                  2176,
+                  2368,
+                  2624,
+                  2816,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "selected",
+              "bits": 4,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  640,
+                  768,
+                  896,
+                  1088,
+                  1280,
+                  1536,
+                  1792,
+                  2176,
+                  2560,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            }
+          ],
+          "options": {
+            "binary": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/allocation-palettes/perf-macos16k-final/allocation_palettes_timing",
+            "output": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/allocation-palettes/perf-macos16k-final",
+            "page": 0,
+            "repetitions": 3,
+            "population": 1024,
+            "rounds": 4,
+            "workloads": "mixed,tiny,cluster,log,max",
+            "cases": "current,selected,partition-only,full-geometric-16,full-geometric-32,full-even-16,full-even-32,band-geometric-16,band-geometric-32,band-even-16,band-even-32,band-geometric-15,band-geometric-31,only-b",
+            "stages": "all",
+            "alignment": 16,
+            "selection": "unrestricted",
+            "class_lookup": 1,
+            "class_once": 1,
+            "cpu": null,
+            "build_context": "build/allocation-palettes/macos/toolchain.json"
+          },
+          "limits": [
+            "FiniteGroup is production code; controller omits Loom, four ready hints and async scheduling",
+            "Batch-mean percentiles are not individual-operation latency percentiles",
+            "Different OS/CPU/compiler-library results are not pooled"
+          ],
+          "binary_present_and_hash_verified": true
+        }
+      },
+      "recovery": {
+        "path": "/home/ashtonsix/sixdb/build/allocation-palettes/perf-macos16k-final.artifact.json",
+        "sha256": "6ad87d061232de0ee0e889212618ba02820327d4fba97493f855512d718750d3",
+        "reference": {
+          "format": 1,
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/02553f00b46ae6ca8dcd904f31f90f03389fd53287ac9e204dfdaf86996a38bf.tar.gz",
+          "bucket": "calico-fleet-artifacts",
+          "region": "us-east-1",
+          "key": "sixdb/artifacts/sha256/02553f00b46ae6ca8dcd904f31f90f03389fd53287ac9e204dfdaf86996a38bf.tar.gz",
+          "sha256": "02553f00b46ae6ca8dcd904f31f90f03389fd53287ac9e204dfdaf86996a38bf",
+          "bytes": 101782,
+          "files": 4
+        }
+      }
+    },
+    "arm64": {
+      "mechanism": {
+        "inputs": {
+          "context.json": {
+            "path": "/home/ashtonsix/sixdb/build/workers/20261012T025807Z-62b3a7c5/results/mechanism/matrix/context.json",
+            "sha256": "104f3b60c6d7201b763575ca8a94f3a4dfec8c204d19dbe5e1b6949a809827c5",
+            "bytes": 10495
+          },
+          "summary.csv": {
+            "path": "/home/ashtonsix/sixdb/build/workers/20261012T025807Z-62b3a7c5/results/mechanism/matrix/summary.csv",
+            "sha256": "685fdfe0d3b55b18bbde3b8c25360c85427f90d3cded79888f4527935b96dd56",
+            "bytes": 84192
+          },
+          "samples.csv": {
+            "path": "/home/ashtonsix/sixdb/build/workers/20261012T025807Z-62b3a7c5/results/mechanism/matrix/samples.csv",
+            "sha256": "e648feff5c3586085ca2ed3c3c8132741a5fe0b1113b49d2e0ae15a3dbb08368",
+            "bytes": 365185
+          }
+        },
+        "identity": {
+          "native_page": 65536,
+          "host": "Linux-7.0.0-1014-aws-64k-aarch64-with-glibc2.39",
+          "binary_sha256": "682dbb4b9737763f48b3e1daa3923ba210924ea65e19284fe0cac447bf1cec37",
+          "runner_recorded_source_sha256": {
+            "/opt/sixdb/source/workbench/spikes/allocation-palettes/performance.py": "93803a0b2b86fd1b7246f6ba5cdbefd36c7f58fa879d43d0d058a582959214a7",
+            "/opt/sixdb/source/workbench/spikes/allocation-palettes/timing.cpp": "29de477de53bcbd810d1e0b286fa214f063c6cd0c270c4c5c753198bb0985f0d",
+            "orbital/src/allocation/finite.cpp": "242d649bac3001c0736c685d24903c571ef8a2d4d41e4c2709961c63cf536c61",
+            "orbital/src/allocation/finite.h": "c802980e5d8c869e75eceb322168950f7a08f5e054f345658347fd53ac852011"
+          },
+          "build_receipt": null,
+          "cases": [
+            {
+              "name": "current",
+              "bits": 4,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  640,
+                  768,
+                  896,
+                  1024,
+                  1280,
+                  1536,
+                  1792,
+                  2048,
+                  2560,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "partition-only",
+              "bits": 5,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  640,
+                  768,
+                  896,
+                  1024,
+                  1280,
+                  1536,
+                  1792,
+                  2048,
+                  2560,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "full-geometric-16",
+              "bits": 4,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  80,
+                  96,
+                  128,
+                  192,
+                  272,
+                  368,
+                  528,
+                  752,
+                  1072,
+                  1520,
+                  2160,
+                  3072
+                ]
+              ],
+              "pack": 0,
+              "route": "best"
+            },
+            {
+              "name": "band-geometric-16",
+              "bits": 4,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  576,
+                  704,
+                  832,
+                  960,
+                  1152,
+                  1344,
+                  1600,
+                  1856,
+                  2176,
+                  2624,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "full-even-16",
+              "bits": 4,
+              "palettes": [
+                [
+                  16,
+                  224,
+                  416,
+                  624,
+                  832,
+                  1040,
+                  1232,
+                  1440,
+                  1648,
+                  1856,
+                  2048,
+                  2256,
+                  2464,
+                  2672,
+                  2864,
+                  3072
+                ]
+              ],
+              "pack": 0,
+              "route": "best"
+            },
+            {
+              "name": "band-even-16",
+              "bits": 4,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  448,
+                  640,
+                  832,
+                  1024,
+                  1216,
+                  1408,
+                  1600,
+                  1728,
+                  1920,
+                  2112,
+                  2304,
+                  2496,
+                  2688,
+                  2880,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "full-geometric-32",
+              "bits": 5,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  80,
+                  96,
+                  112,
+                  128,
+                  144,
+                  160,
+                  176,
+                  192,
+                  208,
+                  224,
+                  240,
+                  256,
+                  272,
+                  288,
+                  336,
+                  400,
+                  480,
+                  560,
+                  672,
+                  784,
+                  944,
+                  1104,
+                  1312,
+                  1552,
+                  1840,
+                  2192,
+                  2592,
+                  3072
+                ]
+              ],
+              "pack": 0,
+              "route": "best"
+            },
+            {
+              "name": "band-geometric-32",
+              "bits": 5,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  576,
+                  640,
+                  704,
+                  768,
+                  832,
+                  896,
+                  960,
+                  1024,
+                  1088,
+                  1152,
+                  1216,
+                  1280,
+                  1344,
+                  1408,
+                  1472,
+                  1536,
+                  1600,
+                  1664,
+                  1728,
+                  1792,
+                  1920,
+                  2048,
+                  2240,
+                  2432,
+                  2624,
+                  2816,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "full-even-32",
+              "bits": 5,
+              "palettes": [
+                [
+                  16,
+                  112,
+                  208,
+                  304,
+                  416,
+                  512,
+                  608,
+                  704,
+                  800,
+                  896,
+                  1008,
+                  1104,
+                  1200,
+                  1296,
+                  1392,
+                  1488,
+                  1600,
+                  1696,
+                  1792,
+                  1888,
+                  1984,
+                  2080,
+                  2192,
+                  2288,
+                  2384,
+                  2480,
+                  2576,
+                  2672,
+                  2784,
+                  2880,
+                  2976,
+                  3072
+                ]
+              ],
+              "pack": 0,
+              "route": "best"
+            },
+            {
+              "name": "band-even-32",
+              "bits": 5,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  448,
+                  512,
+                  640,
+                  704,
+                  832,
+                  896,
+                  960,
+                  1088,
+                  1152,
+                  1280,
+                  1344,
+                  1408,
+                  1536,
+                  1600,
+                  1728,
+                  1792,
+                  1920,
+                  1984,
+                  2048,
+                  2176,
+                  2240,
+                  2368,
+                  2432,
+                  2496,
+                  2624,
+                  2688,
+                  2816,
+                  2880,
+                  3008,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "only-b",
+              "bits": 4,
+              "palettes": [
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  640,
+                  768,
+                  896,
+                  1024,
+                  1280,
+                  1536,
+                  1792,
+                  2048,
+                  2560,
+                  3072
+                ]
+              ],
+              "pack": 0,
+              "route": "best"
+            },
+            {
+              "name": "band-geometric-15",
+              "bits": 4,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  640,
+                  768,
+                  896,
+                  1088,
+                  1280,
+                  1536,
+                  1792,
+                  2176,
+                  2560,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "band-geometric-31",
+              "bits": 5,
+              "palettes": [
+                [
+                  16,
+                  32,
+                  48,
+                  64,
+                  96,
+                  128,
+                  192,
+                  256,
+                  384,
+                  512,
+                  768,
+                  1024,
+                  1536,
+                  2048,
+                  3072
+                ],
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  576,
+                  640,
+                  704,
+                  768,
+                  832,
+                  896,
+                  960,
+                  1024,
+                  1088,
+                  1152,
+                  1216,
+                  1280,
+                  1344,
+                  1408,
+                  1472,
+                  1536,
+                  1600,
+                  1664,
+                  1728,
+                  1856,
+                  2048,
+                  2176,
+                  2368,
+                  2624,
+                  2816,
+                  3072
+                ]
+              ],
+              "pack": 1,
+              "route": "baseline"
+            },
+            {
+              "name": "selected",
+              "bits": 4,
+              "palettes": [
+                [
+                  256,
+                  320,
+                  384,
+                  448,
+                  512,
+                  640,
+                  768,
+                  896,
+                  1088,
+                  1280,
+                  1536,
+                  1792,
+                  2176,
+                  2560,
+                  3072
+                ]
+              ],
+              "pack": 0,
+              "route": "best"
+            }
+          ],
+          "options": {
+            "binary": "/opt/sixdb/jobs/20261012T025807Z-62b3a7c5/results/mechanism/matrix/allocation_palettes_timing",
+            "output": "/opt/sixdb/jobs/20261012T025807Z-62b3a7c5/results/mechanism/matrix",
+            "page": 0,
+            "repetitions": 3,
+            "population": 1024,
+            "rounds": 4,
+            "workloads": "mixed,tiny,cluster,log,max",
+            "cases": "current,selected,partition-only,full-geometric-16,full-geometric-32,full-even-16,full-even-32,band-geometric-16,band-geometric-32,band-even-16,band-even-32,band-geometric-15,band-geometric-31,only-b",
+            "stages": "all",
+            "alignment": 16,
+            "selection": "unrestricted",
+            "class_lookup": 1,
+            "class_once": 1,
+            "cpu": 0,
+            "build_context": null
+          },
+          "limits": [
+            "FiniteGroup is production code; controller omits Loom, four ready hints and async scheduling",
+            "Batch-mean percentiles are not individual-operation latency percentiles",
+            "Different OS/CPU/compiler-library results are not pooled"
+          ],
+          "binary_present_and_hash_verified": true
+        }
+      },
+      "recovery": {
+        "path": "/home/ashtonsix/sixdb/build/workers/20261012T025807Z-62b3a7c5/artifact.json",
+        "sha256": "ce81a9db3603570362fd4aa40c1a6b7d1cdc75ca171f1d81b498cf347c97758f",
+        "reference": {
+          "bucket": "calico-fleet-artifacts",
+          "bytes": 19674535,
+          "files": 232,
+          "format": 1,
+          "key": "sixdb/artifacts/sha256/808930240e98c865b02cb82d6302e6847cc4c58fcc4119fe966a7330c82796d6.tar.gz",
+          "kind": "files",
+          "region": "us-east-1",
+          "sha256": "808930240e98c865b02cb82d6302e6847cc4c58fcc4119fe966a7330c82796d6",
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/808930240e98c865b02cb82d6302e6847cc4c58fcc4119fe966a7330c82796d6.tar.gz"
+        }
+      }
+    },
+    "zen5-final": {
+      "public": {
+        "inputs": {
+          "context.json": {
+            "path": "/home/ashtonsix/sixdb/build/workers/20261012T033148Z-d080fe14/results/public/context.json",
+            "sha256": "f3cf205d2899910d42e736304a3f8d587d07e972585c01c789dca68fb8894570",
+            "bytes": 49550
+          },
+          "summary.csv": {
+            "path": "/home/ashtonsix/sixdb/build/workers/20261012T033148Z-d080fe14/results/public/summary.csv",
+            "sha256": "d969a4b7ea26bc2cd410a3ca623051e1894bc8a64f0cb08f805182795da62938",
+            "bytes": 2181
+          },
+          "samples.csv": {
+            "path": "/home/ashtonsix/sixdb/build/workers/20261012T033148Z-d080fe14/results/public/samples.csv",
+            "sha256": "743912246caa9f04dc00f8b1d73a87c641ff63b3b6c14c4e246e70e9dadba088",
+            "bytes": 67301
+          }
+        },
+        "identity": {
+          "native_page": 4096,
+          "cpu": 0,
+          "system": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39",
+          "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+          "march": "znver5",
+          "tune": "zen5",
+          "trials": 3,
+          "rounds": 8,
+          "operations": 65536,
+          "slots": 256,
+          "warmup": 3,
+          "workloads": [
+            "finite-control",
+            "finite-fallback",
+            "hot-loop",
+            "mixed-sizes"
+          ],
+          "touch_widths": [
+            "64",
+            "full"
+          ],
+          "driver_sha256": "b642b2b76eaa6865ca90c8bf1ed1bc9c39530d9ac8a60fe50a32ad9b045ded50",
+          "changed_inputs": [
+            "orbital/src/allocation/finite.cpp",
+            "orbital/src/allocation/finite.h",
+            "orbital/src/allocation/group.cpp",
+            "orbital/test/finite.cpp",
+            "orbital/test/lifetime.cpp",
+            "orbital/test/palettes.cpp",
+            "orbital/test/preparation.cpp",
+            "orbital/test/reclamation.cpp"
+          ],
+          "limits": [
+            "Block means are not individual-operation latency percentiles",
+            "Same consumer, toolchain and CPU; platform results are not pooled",
+            "Window controls use unchanged 3KiB finite cutoff",
+            "Compiler input inventory includes unbuilt owner tests"
+          ],
+          "sources": {
+            "baseline": {
+              "path": "/opt/sixdb/source/build/allocation-palettes/public-baseline/20261012T033148Z-d080fe14/source",
+              "capture_source_digest": "7a8c6ddbfa7093a4244782025cc5860f53a04b8c35f3080815b1ab28c74b5d64",
+              "capture_receipt_sha256": "1c6a898ce24557cc122fa1c0a19c22384ee021aa2a66f2588000752e9148c335",
+              "input_inventory_sha256": "fe910800e944e77da75f052197fdc5d587533f43c40ead0a9a60871c6c500e38"
+            },
+            "candidate": {
+              "path": "/opt/sixdb/source",
+              "worker_source_digest": "2d483079b214b7c130c6c995ef70d1a7230a5897e918d4d2be7cfe5865a6b171",
+              "worker_manifest_sha256": "fcd271903dd489f7f3eddd30ffcd364a0e56e240932f046d7eeb41b320a003e4",
+              "worker_job": "20261012T033148Z-d080fe14",
+              "input_inventory_sha256": "07be5fcf8f35ee2af6f6f505d007c94c8edd8134f69b1809ce889280cea146d4"
+            }
+          },
+          "binaries": {
+            "baseline": {
+              "sha256": "c291632266d15b6e6af54c395e67e5c8519dd81e885aa2a0ec6cb1a7a13621ad",
+              "binary_present_and_hash_verified": false,
+              "configure": [
+                "cmake",
+                "-S",
+                "/opt/sixdb/source/build/allocation-palettes/public-baseline/20261012T033148Z-d080fe14/source",
+                "-B",
+                "/opt/sixdb/jobs/20261012T033148Z-d080fe14/results/public/build-baseline",
+                "-G",
+                "Ninja",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DSIXDB_SPIKES=allocation-reuse-temperature",
+                "-DSIXDB_MARCH=znver5",
+                "-DSIXDB_TUNE=zen5"
+              ],
+              "build": [
+                "cmake",
+                "--build",
+                "/opt/sixdb/jobs/20261012T033148Z-d080fe14/results/public/build-baseline",
+                "--target",
+                "allocation_reuse_temperature_allocator",
+                "-j",
+                "1"
+              ]
+            },
+            "candidate": {
+              "sha256": "b8e059878c4a9126ca9123fb8bab302558f6bd4a28152975f255eb18ea47320e",
+              "binary_present_and_hash_verified": false,
+              "configure": [
+                "cmake",
+                "-S",
+                "/opt/sixdb/source",
+                "-B",
+                "/opt/sixdb/jobs/20261012T033148Z-d080fe14/results/public/build-candidate",
+                "-G",
+                "Ninja",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DSIXDB_SPIKES=allocation-reuse-temperature",
+                "-DSIXDB_MARCH=znver5",
+                "-DSIXDB_TUNE=zen5"
+              ],
+              "build": [
+                "cmake",
+                "--build",
+                "/opt/sixdb/jobs/20261012T033148Z-d080fe14/results/public/build-candidate",
+                "--target",
+                "allocation_reuse_temperature_allocator",
+                "-j",
+                "1"
+              ]
+            }
+          }
+        }
+      },
+      "recovery": {
+        "path": "/home/ashtonsix/sixdb/build/workers/20261012T033148Z-d080fe14/artifact.json",
+        "sha256": "9ca70508cc607be6b15536af4de81ba93979f621c9e8efcd86c4496b459a2d2e",
+        "reference": {
+          "bucket": "calico-fleet-artifacts",
+          "bytes": 19695484,
+          "files": 231,
+          "format": 1,
+          "key": "sixdb/artifacts/sha256/1f2dbeb1f4e2df8db7943247ca488ea58ccf9cc069fbf812fae9e177c399eaef.tar.gz",
+          "kind": "files",
+          "region": "us-east-1",
+          "sha256": "1f2dbeb1f4e2df8db7943247ca488ea58ccf9cc069fbf812fae9e177c399eaef",
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/1f2dbeb1f4e2df8db7943247ca488ea58ccf9cc069fbf812fae9e177c399eaef.tar.gz"
+        }
+      }
+    },
+    "arm64-final": {
+      "public": {
+        "inputs": {
+          "context.json": {
+            "path": "/home/ashtonsix/sixdb/build/workers/20261012T033148Z-638dd010/results/public/context.json",
+            "sha256": "bc5b01a07c4b725f1206927b2fe2bd652548c9d79488cb352698defeb1178838",
+            "bytes": 49607
+          },
+          "summary.csv": {
+            "path": "/home/ashtonsix/sixdb/build/workers/20261012T033148Z-638dd010/results/public/summary.csv",
+            "sha256": "da6a83ed74882e1878ab83d5a87c4dca03782d5d87e696bb8a2cb587dceacb38",
+            "bytes": 2199
+          },
+          "samples.csv": {
+            "path": "/home/ashtonsix/sixdb/build/workers/20261012T033148Z-638dd010/results/public/samples.csv",
+            "sha256": "a911cdd1fa24d742a25223282a674a56afde90cb12dcb3e81dec8d05453225dc",
+            "bytes": 67643
+          }
+        },
+        "identity": {
+          "native_page": 65536,
+          "cpu": 0,
+          "system": "Linux-7.0.0-1014-aws-64k-aarch64-with-glibc2.39",
+          "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+          "march": "armv8.2-a+simd",
+          "tune": "neoverse-v2",
+          "trials": 3,
+          "rounds": 8,
+          "operations": 65536,
+          "slots": 256,
+          "warmup": 3,
+          "workloads": [
+            "finite-control",
+            "finite-fallback",
+            "hot-loop",
+            "mixed-sizes"
+          ],
+          "touch_widths": [
+            "64",
+            "full"
+          ],
+          "driver_sha256": "b642b2b76eaa6865ca90c8bf1ed1bc9c39530d9ac8a60fe50a32ad9b045ded50",
+          "changed_inputs": [
+            "orbital/src/allocation/finite.cpp",
+            "orbital/src/allocation/finite.h",
+            "orbital/src/allocation/group.cpp",
+            "orbital/test/finite.cpp",
+            "orbital/test/lifetime.cpp",
+            "orbital/test/palettes.cpp",
+            "orbital/test/preparation.cpp",
+            "orbital/test/reclamation.cpp"
+          ],
+          "limits": [
+            "Block means are not individual-operation latency percentiles",
+            "Same consumer, toolchain and CPU; platform results are not pooled",
+            "Window controls use unchanged 3KiB finite cutoff",
+            "Compiler input inventory includes unbuilt owner tests"
+          ],
+          "sources": {
+            "baseline": {
+              "path": "/opt/sixdb/source/build/allocation-palettes/public-baseline/20261012T033148Z-638dd010/source",
+              "capture_source_digest": "7a8c6ddbfa7093a4244782025cc5860f53a04b8c35f3080815b1ab28c74b5d64",
+              "capture_receipt_sha256": "1c6a898ce24557cc122fa1c0a19c22384ee021aa2a66f2588000752e9148c335",
+              "input_inventory_sha256": "fe910800e944e77da75f052197fdc5d587533f43c40ead0a9a60871c6c500e38"
+            },
+            "candidate": {
+              "path": "/opt/sixdb/source",
+              "worker_source_digest": "2d483079b214b7c130c6c995ef70d1a7230a5897e918d4d2be7cfe5865a6b171",
+              "worker_manifest_sha256": "fcd271903dd489f7f3eddd30ffcd364a0e56e240932f046d7eeb41b320a003e4",
+              "worker_job": "20261012T033148Z-638dd010",
+              "input_inventory_sha256": "07be5fcf8f35ee2af6f6f505d007c94c8edd8134f69b1809ce889280cea146d4"
+            }
+          },
+          "binaries": {
+            "baseline": {
+              "sha256": "dd0f775e70e70e772c29a326363c21fde78da490d51a8c1a8e9d9cc4ba4cc0f3",
+              "binary_present_and_hash_verified": false,
+              "configure": [
+                "cmake",
+                "-S",
+                "/opt/sixdb/source/build/allocation-palettes/public-baseline/20261012T033148Z-638dd010/source",
+                "-B",
+                "/opt/sixdb/jobs/20261012T033148Z-638dd010/results/public/build-baseline",
+                "-G",
+                "Ninja",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DSIXDB_SPIKES=allocation-reuse-temperature",
+                "-DSIXDB_MARCH=armv8.2-a+simd",
+                "-DSIXDB_TUNE=neoverse-v2"
+              ],
+              "build": [
+                "cmake",
+                "--build",
+                "/opt/sixdb/jobs/20261012T033148Z-638dd010/results/public/build-baseline",
+                "--target",
+                "allocation_reuse_temperature_allocator",
+                "-j",
+                "1"
+              ]
+            },
+            "candidate": {
+              "sha256": "70c183207ab4079ffde4322c0b5379de2b6f80fb2120e6c59a3afa46e985e924",
+              "binary_present_and_hash_verified": false,
+              "configure": [
+                "cmake",
+                "-S",
+                "/opt/sixdb/source",
+                "-B",
+                "/opt/sixdb/jobs/20261012T033148Z-638dd010/results/public/build-candidate",
+                "-G",
+                "Ninja",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DSIXDB_SPIKES=allocation-reuse-temperature",
+                "-DSIXDB_MARCH=armv8.2-a+simd",
+                "-DSIXDB_TUNE=neoverse-v2"
+              ],
+              "build": [
+                "cmake",
+                "--build",
+                "/opt/sixdb/jobs/20261012T033148Z-638dd010/results/public/build-candidate",
+                "--target",
+                "allocation_reuse_temperature_allocator",
+                "-j",
+                "1"
+              ]
+            }
+          }
+        }
+      },
+      "recovery": {
+        "path": "/home/ashtonsix/sixdb/build/workers/20261012T033148Z-638dd010/artifact.json",
+        "sha256": "12dce90effe2b9d6f89d7b103126d153a653a7390f48e6f5028b1fc43a80b495",
+        "reference": {
+          "bucket": "calico-fleet-artifacts",
+          "bytes": 19339412,
+          "files": 231,
+          "format": 1,
+          "key": "sixdb/artifacts/sha256/3c065cec64a1252106e8e522dcdf369e029893f52cd18e92861e8003322b169e.tar.gz",
+          "kind": "files",
+          "region": "us-east-1",
+          "sha256": "3c065cec64a1252106e8e522dcdf369e029893f52cd18e92861e8003322b169e",
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/3c065cec64a1252106e8e522dcdf369e029893f52cd18e92861e8003322b169e.tar.gz"
+        }
+      }
+    },
+    "zen5-rejected": {
+      "public": {
+        "inputs": {
+          "context.json": {
+            "path": "/home/ashtonsix/sixdb/build/workers/20261012T030108Z-63c52a07/results/public/context.json",
+            "sha256": "0efcc09710090213c11503a9213997d4ba420d364af7815201797d6bfd80bef6",
+            "bytes": 49550
+          },
+          "summary.csv": {
+            "path": "/home/ashtonsix/sixdb/build/workers/20261012T030108Z-63c52a07/results/public/summary.csv",
+            "sha256": "0894281e31c1285aaf910400a55eb4c9c75b15a5ea7927ef8ccc0c846d94df04",
+            "bytes": 2220
+          },
+          "samples.csv": {
+            "path": "/home/ashtonsix/sixdb/build/workers/20261012T030108Z-63c52a07/results/public/samples.csv",
+            "sha256": "2fb475414ebaf49b6d887982f65d616bff02da28afd02d2983eedf6449f1839d",
+            "bytes": 67267
+          }
+        },
+        "identity": {
+          "native_page": 4096,
+          "cpu": 0,
+          "system": "Linux-7.0.0-1012-aws-x86_64-with-glibc2.39",
+          "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+          "march": "znver5",
+          "tune": "zen5",
+          "trials": 3,
+          "rounds": 8,
+          "operations": 65536,
+          "slots": 256,
+          "warmup": 3,
+          "workloads": [
+            "finite-control",
+            "finite-fallback",
+            "hot-loop",
+            "mixed-sizes"
+          ],
+          "touch_widths": [
+            "64",
+            "full"
+          ],
+          "driver_sha256": "b642b2b76eaa6865ca90c8bf1ed1bc9c39530d9ac8a60fe50a32ad9b045ded50",
+          "changed_inputs": [
+            "orbital/src/allocation/finite.cpp",
+            "orbital/src/allocation/finite.h",
+            "orbital/src/allocation/group.cpp",
+            "orbital/test/finite.cpp",
+            "orbital/test/lifetime.cpp",
+            "orbital/test/palettes.cpp",
+            "orbital/test/preparation.cpp",
+            "orbital/test/reclamation.cpp"
+          ],
+          "limits": [
+            "Block means are not individual-operation latency percentiles",
+            "Same consumer, toolchain and CPU; platform results are not pooled",
+            "Window controls use unchanged 3KiB finite cutoff",
+            "Compiler input inventory includes unbuilt owner tests"
+          ],
+          "sources": {
+            "baseline": {
+              "path": "/opt/sixdb/source/build/allocation-palettes/public-baseline/20261012T030108Z-63c52a07/source",
+              "capture_source_digest": "7a8c6ddbfa7093a4244782025cc5860f53a04b8c35f3080815b1ab28c74b5d64",
+              "capture_receipt_sha256": "1c6a898ce24557cc122fa1c0a19c22384ee021aa2a66f2588000752e9148c335",
+              "input_inventory_sha256": "fe910800e944e77da75f052197fdc5d587533f43c40ead0a9a60871c6c500e38"
+            },
+            "candidate": {
+              "path": "/opt/sixdb/source",
+              "worker_source_digest": "70a709ce3f8537abc1192ca16624fdc203c54e533ec94a5bee8f5b424cfa522e",
+              "worker_manifest_sha256": "83adfd4543f8efbb64bba3fe1c18d8b538bc2f9212a1bebec26b0462a1393201",
+              "worker_job": "20261012T030108Z-63c52a07",
+              "input_inventory_sha256": "f7fb277d59ad04ffaab02808074f0655a962b37bed566add3f4b6f3eb2bfe9a1"
+            }
+          },
+          "binaries": {
+            "baseline": {
+              "sha256": "d337276f0667b93304c703ab6d48d7dc310ed6d24cf4cb823d9e5385553a85ce",
+              "binary_present_and_hash_verified": false,
+              "configure": [
+                "cmake",
+                "-S",
+                "/opt/sixdb/source/build/allocation-palettes/public-baseline/20261012T030108Z-63c52a07/source",
+                "-B",
+                "/opt/sixdb/jobs/20261012T030108Z-63c52a07/results/public/build-baseline",
+                "-G",
+                "Ninja",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DSIXDB_SPIKES=allocation-reuse-temperature",
+                "-DSIXDB_MARCH=znver5",
+                "-DSIXDB_TUNE=zen5"
+              ],
+              "build": [
+                "cmake",
+                "--build",
+                "/opt/sixdb/jobs/20261012T030108Z-63c52a07/results/public/build-baseline",
+                "--target",
+                "allocation_reuse_temperature_allocator",
+                "-j",
+                "1"
+              ]
+            },
+            "candidate": {
+              "sha256": "ecd3a369f2b0847acec05fef0ab95a405ad088a9c4550325ac90f456884e5073",
+              "binary_present_and_hash_verified": false,
+              "configure": [
+                "cmake",
+                "-S",
+                "/opt/sixdb/source",
+                "-B",
+                "/opt/sixdb/jobs/20261012T030108Z-63c52a07/results/public/build-candidate",
+                "-G",
+                "Ninja",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DSIXDB_SPIKES=allocation-reuse-temperature",
+                "-DSIXDB_MARCH=znver5",
+                "-DSIXDB_TUNE=zen5"
+              ],
+              "build": [
+                "cmake",
+                "--build",
+                "/opt/sixdb/jobs/20261012T030108Z-63c52a07/results/public/build-candidate",
+                "--target",
+                "allocation_reuse_temperature_allocator",
+                "-j",
+                "1"
+              ]
+            }
+          }
+        }
+      },
+      "recovery": {
+        "path": "/home/ashtonsix/sixdb/build/workers/20261012T030108Z-63c52a07/artifact.json",
+        "sha256": "1bde574a0f389736474e3c4930c0eef4248fb1c1652956f2b40719959e22e432",
+        "reference": {
+          "bucket": "calico-fleet-artifacts",
+          "bytes": 19716939,
+          "files": 228,
+          "format": 1,
+          "key": "sixdb/artifacts/sha256/1ba597d0ee22afcdf083f80bce7a6699937d81a4fda008e21e9ca9aca2c0c9b3.tar.gz",
+          "kind": "files",
+          "region": "us-east-1",
+          "sha256": "1ba597d0ee22afcdf083f80bce7a6699937d81a4fda008e21e9ca9aca2c0c9b3",
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/1ba597d0ee22afcdf083f80bce7a6699937d81a4fda008e21e9ca9aca2c0c9b3.tar.gz"
+        }
+      }
+    },
+    "arm64-rejected": {
+      "public": {
+        "inputs": {
+          "context.json": {
+            "path": "/home/ashtonsix/sixdb/build/workers/20261012T025807Z-62b3a7c5/results/public/context.json",
+            "sha256": "ebbfdc489455428d85ae614ac92284403790fa272a2bf75b2feccd705442426e",
+            "bytes": 49555
+          },
+          "summary.csv": {
+            "path": "/home/ashtonsix/sixdb/build/workers/20261012T025807Z-62b3a7c5/results/public/summary.csv",
+            "sha256": "51091008d7526532d1fc84cb0316452f57a12953a73d17f844fb04289ebea07d",
+            "bytes": 2166
+          },
+          "samples.csv": {
+            "path": "/home/ashtonsix/sixdb/build/workers/20261012T025807Z-62b3a7c5/results/public/samples.csv",
+            "sha256": "ea08a1ceb9e68033c41403e3ade4c36b0ce25315b52d3565cbb1bb717675f4c3",
+            "bytes": 67643
+          }
+        },
+        "identity": {
+          "native_page": 65536,
+          "cpu": 0,
+          "system": "Linux-7.0.0-1014-aws-64k-aarch64-with-glibc2.39",
+          "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+          "march": "armv8.2-a+simd",
+          "tune": "neoverse-v2",
+          "trials": 3,
+          "rounds": 8,
+          "operations": 65536,
+          "slots": 256,
+          "warmup": 3,
+          "workloads": [
+            "finite-control",
+            "finite-fallback",
+            "hot-loop",
+            "mixed-sizes"
+          ],
+          "touch_widths": [
+            "64",
+            "full"
+          ],
+          "driver_sha256": "b642b2b76eaa6865ca90c8bf1ed1bc9c39530d9ac8a60fe50a32ad9b045ded50",
+          "changed_inputs": [
+            "orbital/src/allocation/finite.cpp",
+            "orbital/src/allocation/finite.h",
+            "orbital/src/allocation/group.cpp",
+            "orbital/test/finite.cpp",
+            "orbital/test/lifetime.cpp",
+            "orbital/test/palettes.cpp",
+            "orbital/test/preparation.cpp",
+            "orbital/test/reclamation.cpp"
+          ],
+          "limits": [
+            "Block means are not individual-operation latency percentiles",
+            "Same consumer, toolchain and CPU; platform results are not pooled",
+            "Window controls use unchanged 3KiB finite cutoff",
+            "Compiler input inventory includes unbuilt owner tests"
+          ],
+          "sources": {
+            "baseline": {
+              "path": "/opt/sixdb/source/build/allocation-palettes/public-baseline/source",
+              "capture_source_digest": "7a8c6ddbfa7093a4244782025cc5860f53a04b8c35f3080815b1ab28c74b5d64",
+              "capture_receipt_sha256": "1c6a898ce24557cc122fa1c0a19c22384ee021aa2a66f2588000752e9148c335",
+              "input_inventory_sha256": "fe910800e944e77da75f052197fdc5d587533f43c40ead0a9a60871c6c500e38"
+            },
+            "candidate": {
+              "path": "/opt/sixdb/source",
+              "worker_source_digest": "5025f126039890905a50aa417072ae6c4d98077708afe85311940b8def0c4ee3",
+              "worker_manifest_sha256": "a9a014ff1a74a79a7b2c7cae1e7758e744c4ab77d026fa4ee93952b0a8347e72",
+              "worker_job": "20261012T025807Z-62b3a7c5",
+              "input_inventory_sha256": "f7fb277d59ad04ffaab02808074f0655a962b37bed566add3f4b6f3eb2bfe9a1"
+            }
+          },
+          "binaries": {
+            "baseline": {
+              "sha256": "fa331108523b444c23e6bafdf3a75570e3b3b01983cbe562266f4abf97c9275a",
+              "binary_present_and_hash_verified": false,
+              "configure": [
+                "cmake",
+                "-S",
+                "/opt/sixdb/source/build/allocation-palettes/public-baseline/source",
+                "-B",
+                "/opt/sixdb/jobs/20261012T025807Z-62b3a7c5/results/public/build-baseline",
+                "-G",
+                "Ninja",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DSIXDB_SPIKES=allocation-reuse-temperature",
+                "-DSIXDB_MARCH=armv8.2-a+simd",
+                "-DSIXDB_TUNE=neoverse-v2"
+              ],
+              "build": [
+                "cmake",
+                "--build",
+                "/opt/sixdb/jobs/20261012T025807Z-62b3a7c5/results/public/build-baseline",
+                "--target",
+                "allocation_reuse_temperature_allocator",
+                "-j",
+                "1"
+              ]
+            },
+            "candidate": {
+              "sha256": "31cbc49baf7d8dff1757ae0cbdb60cdd8005b93fa41f413e6a3fce0235e90b22",
+              "binary_present_and_hash_verified": false,
+              "configure": [
+                "cmake",
+                "-S",
+                "/opt/sixdb/source",
+                "-B",
+                "/opt/sixdb/jobs/20261012T025807Z-62b3a7c5/results/public/build-candidate",
+                "-G",
+                "Ninja",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DSIXDB_SPIKES=allocation-reuse-temperature",
+                "-DSIXDB_MARCH=armv8.2-a+simd",
+                "-DSIXDB_TUNE=neoverse-v2"
+              ],
+              "build": [
+                "cmake",
+                "--build",
+                "/opt/sixdb/jobs/20261012T025807Z-62b3a7c5/results/public/build-candidate",
+                "--target",
+                "allocation_reuse_temperature_allocator",
+                "-j",
+                "1"
+              ]
+            }
+          }
+        }
+      },
+      "recovery": {
+        "path": "/home/ashtonsix/sixdb/build/workers/20261012T025807Z-62b3a7c5/artifact.json",
+        "sha256": "ce81a9db3603570362fd4aa40c1a6b7d1cdc75ca171f1d81b498cf347c97758f",
+        "reference": {
+          "bucket": "calico-fleet-artifacts",
+          "bytes": 19674535,
+          "files": 232,
+          "format": 1,
+          "key": "sixdb/artifacts/sha256/808930240e98c865b02cb82d6302e6847cc4c58fcc4119fe966a7330c82796d6.tar.gz",
+          "kind": "files",
+          "region": "us-east-1",
+          "sha256": "808930240e98c865b02cb82d6302e6847cc4c58fcc4119fe966a7330c82796d6",
+          "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/808930240e98c865b02cb82d6302e6847cc4c58fcc4119fe966a7330c82796d6.tar.gz"
+        }
+      }
+    }
+  },
+  "selected": {
+    "mechanism_rows": 362,
+    "public_rows": 64
+  },
+  "limits": [
+    "All medians remain within their original host and run; platforms are not pooled",
+    "Mechanism batch percentiles and public block means are not point-operation latency percentiles",
+    "Growth has the same trace under each workload label; only mixed-labelled rows are retained",
+    "Geometric class spacing and geometric reservation growth are separate axes; the latter doubles reserve while the logical extent grows in 16-byte steps",
+    "Public touch_bytes=0 means full requested payload; 64 means one cache line",
+    "Source and build identities are recorded from input receipts, not reconstructed from current files",
+    "A missing recovered binary is not claimed verified; raw file hashes identify the original evidence",
+    "Public source input inventories include unbuilt owner tests; driver checksums and shutdown checks are separate"
+  ]
+}

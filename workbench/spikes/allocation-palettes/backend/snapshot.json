@@ -1,0 +1,17 @@
+{
+  "source_capture": "40c90d3401b98b6a318de5b783d4a93b13c390520d2b05c16410f6c592dbf633",
+  "changes": [
+    "Namespace renamed to avoid ODR collision with Orbital",
+    "Snapshot comment added; geometry/VM algorithms unchanged"
+  ],
+  "files": {
+    "orbital/src/allocation/finite.h": {
+      "source_sha256": "c802980e5d8c869e75eceb322168950f7a08f5e054f345658347fd53ac852011",
+      "snapshot_sha256": "0ad7d00d7cd279906b65e52511e83e381bb2a07d3fb0c8b4d9d24b0a1d520528"
+    },
+    "orbital/src/allocation/finite.cpp": {
+      "source_sha256": "242d649bac3001c0736c685d24903c571ef8a2d4d41e4c2709961c63cf536c61",
+      "snapshot_sha256": "d0e437a3d45d047feacd3134b59444f1ebc08e32e99b6c4e6ba49f6041f1ed65"
+    }
+  }
+}
