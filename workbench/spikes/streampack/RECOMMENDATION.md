@@ -50,7 +50,7 @@ allocator, transaction layer or fixed cleaning cadence would hide the wrong
 decision inside Ikea. [Lifecycle evidence](RESULTS.md#sustained-allocation-and-publication-control)
 belongs with the owning collection.
 
-## Initial storage choices
+## Selected storage choices
 
 Keep **Direct** and **Width** as the semantic geometry names. Endpoint width,
 checkpoint width and ISA are implementation choices, not additional public
@@ -58,10 +58,10 @@ families such as Direct16/Direct32. All fields derive their legal range from the
 schema. Native 8/16/32-bit storage can be the first implementation of those ranges;
 a 12-bit maximum does not require every caller to pay generic packed extraction.
 
-| Initial choice | Layout and intended use |
+| Geometry | Layout and intended use |
 | --- | --- |
-| Direct | Exclusive reservation endpoints, optional used-length plane, optional tombstone bitmap. Begin with native separated fields as the simple mutable baseline; preserve running endpoints for scans. |
-| Width | Exactly `(N+15)/16` group-start checkpoints, with no terminal checkpoint, plus groups of sixteen reserved and sixteen used widths. Put the full tombstone/checkpoint directory first; the caller can grow the length region. This is the compact general-purpose candidate. |
+| Direct | Exclusive reservation endpoints, optional used-length plane, optional tombstone bitmap. Use native separated fields for cheap point access; preserve running endpoints for scans. |
+| Width | Sixteen group-start checkpoints with no terminal checkpoint, plus groups of sixteen reserved and optional sixteen used widths. Keep the full tombstone/checkpoint directory first; the caller can grow the length region. This is the default variable geometry. |
 
 Direct value lookup needs a preceding endpoint; Width needs a local width prefix.
 That different input set is a reason to allow different physical recipes beneath
@@ -74,13 +74,25 @@ the directory owns 64B. These are format/alignment facts, not a requirement for 
 particular allocator capacity class. Growth measurements used a captured Orbital
 runtime; verify current allocation economics in the implementation caller.
 
-Keep a dense separate-U option available for length-dominated consumers, but do
-not make every application choose independent padding, planes and decode knobs.
-The common schema facts should eliminate metadata: full reservations derive U;
+Keep a dense separate-U option for length-dominated consumers. The explicit
+16M-row, maximum-4,095 field controls favor it on ARM, AMD and Intel, while complete
+overlapping value lookups favor grouped R/U in that comparison. These are
+different consumers; selecting grouped as the default does not justify deleting
+separated. [Field evidence](RESULTS.md#field-requirements-change-the-answer) and
+[complete lookup evidence](RESULTS.md#latency-and-overlapping-throughput-answer-different-questions)
+retain their workload and sampling limits.
+
+Do not make every application choose independent padding, planes and decode knobs.
+Apply schema facts before field placement: full reservations derive U;
 immortal slots omit tombstones; fixed width can derive geometry. A maximum-zero
 schema must work, including count-only appends. Those are semantic specializations,
 not reasons to create unrelated containers. An unsupported mutation of an omitted
 fact must refuse or require an explicit representation transition.
+
+Omitting U leaves a single R stream in either Width placement; an R/U locality
+comparison then does not apply. Grouped and separated still admit different
+length-window alignments. Direct and fixed geometry ignore the placement selector.
+These cases need no additional preset or speculative encoding normalization.
 
 Do not select padded Direct groups or generic packed SeriesPack/TuplePack adapters
 as the universal mutable default. Their read gains have countervailing update,
@@ -109,6 +121,29 @@ constant, absent from the schema and encoded description; transfer needs only
 Keep the body-byte limit independent: forcing 16-bit endpoints would still cause
 premature sealing and extra allocations. The production [reference](../../../ikea/docs/streampack/reference.md)
 owns the exact encoding; the comparative research retains other sizes as evidence.
+
+### Audit of the remaining choices
+
+The fixed-capacity decision does not make other independent facts redundant.
+Keep the existing API and eight-byte encoding; the remaining choices have the
+following owners and purposes:
+
+| Choice | Decision and reason |
+| --- | --- |
+| Direct / Width | Keep both. Point dependencies, metadata footprint, occupancy and mutation work differ; full reservations can change the ranking. Use Width by default, Direct for the point-oriented case. |
+| Grouped / separated R/U | Keep both with grouped as the ordinary Width default; use separated when U-only access dominates. Omit U altogether when full reservations are a schema fact. |
+| Maximum / byte limit | Keep both. A short-string dictionary and its long-tail dictionary can enforce different whole-block budgets independently of legal slot size. The bound sizes persistent geometry; current allocation size cannot substitute for it. |
+| Full / immortal / fixed reservation | Keep these schema promises. They eliminate stored facts and constrain valid mutations. Fixed reservation already supplies a tighter bound for U without changing the declared maximum. |
+| Preserve / shrink live reservations during packing and transfer | Keep both semantics. Preserving slack retains in-place edit capacity; shrinking reclaims it. This belongs to the owner's maintenance decision. |
+| Sparse / scratch-backed dense selection | Keep both operation forms. Paying for a complete starts array benefits dense reuse but penalizes sparse queries. |
+| Native calls / native groups / CPS | Keep the composition boundaries shared with other Ikea primitives. Scheduling and prefetch policy remain outside StreamPack. |
+
+There is no production padding or checkpoint-interval knob. Padded Direct units,
+generic SeriesPack/TuplePack geometry adapters and SVE2 are not production recipes.
+Native lane sizes and ISA are already derived implementation choices. No further
+capability removal is justified by this audit. The [usage guide](../../../ikea/docs/streampack/usage.md#prepare-a-schema-bind-storage)
+makes the selection order concrete, including omitted-U dictionaries and partial
+occupancy; it does not turn those examples into additional format families.
 
 ## A small ordinary interface, with native composition underneath
 

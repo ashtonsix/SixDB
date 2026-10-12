@@ -37,6 +37,12 @@ alignment (16/32/64 bytes); other recipes require W-byte alignment. Directory an
 control use bounded byte loads and need no additional alignment. The API does not
 require windows to be separately allocated or separately published Parts.
 
+When U is omitted, both Width placements store a single R stream, with no gap for
+an absent U plane; the alignment rule above still applies. Placement does not
+change Direct or fixed geometry. `byte_limit` is an encoding bound independent of
+the supplied payload span: writes must fit both. A smaller span cannot implicitly
+narrow a shared schema's endpoint/checkpoint fields.
+
 Unassigned tail R/U fields in the last assigned group are zero. Unassigned
 Direct endpoints and future checkpoints are initialized by construction but have
 no semantic value. A checkpoint is the sum of reservations before its group.

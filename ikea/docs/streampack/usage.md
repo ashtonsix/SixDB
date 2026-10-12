@@ -30,10 +30,41 @@ to StreamPack.
   adds a native masked width sum; traversal carries a running position. Its default
   length groups contain sixteen R followed by sixteen U fields.
 
-`full` derives U from R. `immortal` omits tombstones. `fixed_reservation` derives
-all geometry; zero-width schemas need only count and optional tombstones. Mutation
+Choose the facts the schema can promise before choosing field placement. `full`
+derives U from R and stores no used lengths; it is useful for exactly reserved
+dictionary values. `immortal` omits tombstones. `fixed_reservation` derives all
+geometry; zero-width schemas need only count and optional tombstones. Mutation
 cannot introduce a fact the schema omitted. Native lane sizes are implementation
 choices derived from schema bounds, not additional public geometry names.
+
+For variable Width with both R and U, use the default grouped layout for complete
+value lookups. Select `placement::separated` for a workload dominated by U-only
+scans. With `full`, both placements store only R: there is no U plane or R/U
+interleaving. Their alignment requirements still differ. Direct has separate
+endpoints and optional U regardless of the placement selector; fixed geometry
+also ignores that selector. Do not make a placement decision in those cases.
+
+Keep reservation maximum and block byte limit distinct. For example, an object
+with common-short and long-tail dictionaries can use these schema bounds:
+
+```cpp
+sp::description common{.maximum = 255, .byte_limit = 16384, .full = true};
+sp::description tail{.maximum = 65535, .byte_limit = 65535, .full = true};
+```
+
+Both omit U and admit two-byte geometry entries. The long-tail bound permits an
+individual 65,535-byte value without requiring four-byte checkpoints for the
+theoretical 256 × 65,535 extent. An allocated payload span alone cannot establish
+that persistent encoding bound. The owner can grow within the schema bound or
+seal and start another block; schema bounds do not change with allocation size.
+
+Width is useful when byte limits leave blocks partly occupied because its length
+groups grow with occupancy. Direct pays its endpoint directory upfront and favors
+cheap point lookup. For the long-tail schema above, full Direct needs 546 metadata
+bytes versus Width's 582 at 256 assigned slots, but Width needs only 102 at
+1–16 slots. These totals include directory, lengths and control, omit allocator
+padding, and are layout arithmetic, not measured timing. Full reservations and
+occupancy can therefore change the geometry decision too.
 
 The [ordinary example](../../examples/streampack/ordinary.cpp) constructs a Width
 block, appends a value and an empty value, retires a rank and packs it. It also

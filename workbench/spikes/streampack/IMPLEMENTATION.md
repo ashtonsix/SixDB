@@ -12,7 +12,7 @@ AVX2 and AVX-512 geometry. Schema bounds determine native field widths. Fixed,
 full, immortal and maximum-zero facts remove fields. Width has exactly one start
 checkpoint per sixteen ranks and grouped R/U by default; separate U remains an
 option. Capacity is fixed at **256** for both geometries, independently of byte
-limits. The [capacity decision](RECOMMENDATION.md#initial-storage-choices) replaces
+limits. The [capacity decision](RECOMMENDATION.md#selected-storage-choices) replaces
 the earlier three-capacity API; the portable schema is now eight bytes (version 2).
 
 The implementation supplies point/length/reverse reads, carried ordered ranges,
@@ -29,7 +29,7 @@ resolves the geometry and native lane types before a rank loop or CPS chain.
 ## Fixed capacity and schema simplification
 
 The implementation now fixes N=256 instead of exposing 128/256/512. The choice
-and its publication trade-offs are recorded in the [recommendation](RECOMMENDATION.md#initial-storage-choices).
+and its publication trade-offs are recorded in the [recommendation](RECOMMENDATION.md#selected-storage-choices).
 Capacity is absent from `description` and its wire representation. The eight-byte
 version-2 encoding combines version/flags, a u16 maximum, u24 block limit and u16
 optional fixed reservation. It rejects the old 16-byte version. Native N256
