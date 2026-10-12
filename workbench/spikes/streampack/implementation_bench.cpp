@@ -28,7 +28,7 @@ struct population {
     std::vector<descriptor> flat;
     std::vector<sp::view> views;
     population(unsigned n, sp::geometry family, unsigned maximum)
-        : rows(n), layout(*sp::layout::prepare({family, sp::placement::grouped, 256,
+        : rows(n), layout(*sp::layout::prepare({family, sp::placement::grouped,
             std::uint16_t(maximum), 256 * maximum, {}, false, false})),
           payload(std::size_t(n) * 48), flat(n) {
         const auto dir = (layout.directory_bytes() + 63) & ~63u;

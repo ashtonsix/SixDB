@@ -205,7 +205,7 @@ void run(const Case& c, const Options& o, unsigned repeat) {
     Runtime runtime(o.cpu);
     auto& worker = runtime.worker;
     material::Store store(*std::pmr::new_delete_resource());
-    const auto format = take(material::prepare_format({c.family, sp::placement::grouped, 256,
+    const auto format = take(material::prepare_format({c.family, sp::placement::grouped,
         std::uint16_t(c.zero ? 0 : 48), unsigned(c.zero ? 0 : 256 * 48), {}, false, false}), "format");
     const auto original = rows(c);
     const auto original_extent = extent(original);

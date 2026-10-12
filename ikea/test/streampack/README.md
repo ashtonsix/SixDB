@@ -2,8 +2,8 @@
 
 `ikea_streampack_check` compares actual value histories with independent vectors,
 checks each reserved byte's reverse owner, replays damage into old byte snapshots,
-and verifies sparse/dense/range/native reads plus transfer and packing. Capacities
-128/256/512, grouped/separated lengths, Direct/Width, empty/fixed values and independent
+and verifies sparse/dense/range/native reads plus transfer and packing. The fixed
+256-slot capacity, grouped/separated lengths, Direct/Width, empty/fixed values and independent
 omitted-fact combinations are covered.
 
 `ikea_streampack_boundaries_check` places directory, partial-group lengths and
@@ -14,7 +14,12 @@ transfer journal/source overlap, count-only and extent-only changes.
 
 `boundaries.cpp` also consumes and reproduces a literal byte fixture independently
 of the writer/reader pair, including a second checkpoint, retired reservation,
-empty ranks and partial-tail padding; corrupt geometry/U/count is refused.
+empty ranks and partial-tail padding; corrupt geometry/U/count is refused. The
+eight-byte schema fixtures cover every flag combination, fixed zero versus absent,
+maximal bounds, noncanonical/legacy rejection and a protected-page boundary. A full
+256 × 65,535-byte block checks rank 255, count 256, final-byte reverse ownership,
+last tombstone and refusal of the next append; oversized transfer also preserves
+bytes and effects.
 
 Both targets and executable guides disable both compiler vectorizers. The
 composition guide instantiates the scalar and native register carriers through

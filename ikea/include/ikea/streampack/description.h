@@ -9,6 +9,7 @@
 namespace ikea::streampack {
 using byte = std::byte;
 using bytes = std::span<const byte>;
+inline constexpr unsigned slot_capacity = 256;
 enum class error {
     description,
     capacity,
@@ -29,9 +30,8 @@ enum class placement : std::uint8_t { grouped, separated };
 struct description {
     geometry family = geometry::width;
     placement lengths = placement::grouped;
-    std::uint16_t capacity = 256;
     std::uint16_t maximum = 65535;
-    std::uint32_t byte_limit = std::uint32_t(capacity) * maximum;
+    std::uint32_t byte_limit = slot_capacity * maximum;
     std::optional<std::uint16_t> fixed_reservation = std::nullopt;
     bool full = false;
     bool immortal = false;
@@ -53,8 +53,8 @@ class layout {
     const description& schema() const noexcept {
         return description_;
     }
-    unsigned capacity() const noexcept {
-        return description_.capacity;
+    static constexpr unsigned capacity() noexcept {
+        return slot_capacity;
     }
     bool fixed() const noexcept {
         return fixed_;
@@ -111,7 +111,7 @@ class layout {
     unsigned pack_effect_capacity(unsigned count) const noexcept {
         return count * 4 + 1;
     }
-    std::array<byte, 16> encode() const noexcept;
+    std::array<byte, 8> encode() const noexcept;
     [[nodiscard]] static std::expected<layout, error> decode(bytes);
 };
 } // namespace ikea::streampack

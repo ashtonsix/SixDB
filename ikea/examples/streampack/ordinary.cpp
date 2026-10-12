@@ -4,12 +4,11 @@
 
 int main() {
     namespace sp = ikea::streampack;
-    const auto format = sp::layout::prepare(
-        {sp::geometry::width, sp::placement::grouped, 128, 255, 4096, {}, false, false});
+    const auto format = sp::layout::prepare({.maximum = 255, .byte_limit = 4096});
     assert(format);
     std::array<std::byte, 4096> payload;
-    std::array<std::byte, 32> directory;            // 16 tombstone bytes + eight u16 checkpoints
-    alignas(64) std::array<std::byte, 256> lengths; // Room for 128 u8 R/U pairs
+    std::array<std::byte, 64> directory;            // 32 tombstone bytes + sixteen u16 checkpoints
+    alignas(64) std::array<std::byte, 512> lengths; // Room for 256 u8 R/U pairs
     std::array<std::byte, 6> control;               // Count + occupied extent, both little endian
     auto bound = sp::view::bind(*format, {payload, directory, lengths, control});
     assert(bound);

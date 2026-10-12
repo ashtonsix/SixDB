@@ -1,7 +1,7 @@
 # Using StreamPack
 
 StreamPack stores variable-length values in caller-owned byte storage. A block
-assigns up to 128, 256 or 512 stable ranks; each reservation contains 0–65535 bytes,
+assigns up to **256** stable ranks; each reservation contains 0–65535 bytes,
 subject to a smaller schema maximum and an independent block byte limit. Live
 empty values have ranks. Retired values keep their reservations until packing.
 
@@ -17,8 +17,9 @@ commands and borrowing. Link `ikea::streampack` and include `<ikea/streampack.h>
 
 ## Prepare a schema, bind storage
 
-Prepare `layout` once for all blocks with that schema. `view::bind` accepts four
-windows: payload, directory, lengths and control. The layout reports directory,
+Prepare `layout` once for all blocks with that schema. Slot capacity is fixed at
+256; the schema supplies the reservation maximum and optional tighter byte limit.
+`view::bind` accepts four windows: payload, directory, lengths and control. The layout reports directory,
 control and lengths extents plus lengths alignment. The windows may live in one
 allocation; the supplied spans must be disjoint. Alignment gaps need not belong
 to StreamPack.

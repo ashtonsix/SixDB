@@ -11,7 +11,9 @@ Direct and Width share checked commands, typed author bodies and explicit NEON,
 AVX2 and AVX-512 geometry. Schema bounds determine native field widths. Fixed,
 full, immortal and maximum-zero facts remove fields. Width has exactly one start
 checkpoint per sixteen ranks and grouped R/U by default; separate U remains an
-option. All capacities 128/256/512 remain available independently of byte limits.
+option. Capacity is fixed at **256** for both geometries, independently of byte
+limits. The [capacity decision](RECOMMENDATION.md#initial-storage-choices) replaces
+the earlier three-capacity API; the portable schema is now eight bytes (version 2).
 
 The implementation supplies point/length/reverse reads, carried ordered ranges,
 sparse and paid dense selection, append/replacement/retirement, rank-preserving
@@ -24,6 +26,32 @@ contents. External content validation is separate. Whole-operation author dispat
 resolves the geometry and native lane types before a rank loop or CPS chain.
 `rebind` changes block windows while retaining the exact shared immutable schema.
 
+## Fixed capacity and schema simplification
+
+The implementation now fixes N=256 instead of exposing 128/256/512. The choice
+and its publication trade-offs are recorded in the [recommendation](RECOMMENDATION.md#initial-storage-choices).
+Capacity is absent from `description` and its wire representation. The eight-byte
+version-2 encoding combines version/flags, a u16 maximum, u24 block limit and u16
+optional fixed reservation. It rejects the old 16-byte version. Native N256
+payload/sidecar bytes, lane widths and effects are unchanged; transfer coordinate
+scratch falls from 4 KiB to 2 KiB.
+
+The six selected module/example and real Loom/Orbital checks pass locally in
+Release and ASan/UBSan, including stack-use-after-return and leak detection. The
+fixed-capacity Loom matrix now has 262 panels over twenty schemas. New independent
+wire fixtures cover all flags, bounds, absent versus fixed zero and rejected old
+versions; maximal blocks exercise all 256 ranks and the final byte of 16,776,960.
+
+A local OrbStack ARM before/after check ran both process orders, with two internal
+repetitions, at 256 and 1,048,576 values and maxima 255/4095. All 216 timing cells
+validated their checksums. Unchanged controls varied substantially too, so the
+run supports no speedup or strict timing-parity claim. Linked disassembly has the
+same mnemonic sequence in all 200 matched measurement bodies; native schema-field
+displacements change. Both compiler vectorizers remain disabled. These are
+regression checks, not replacement native architecture measurements. Local details
+are in ignored `build/streampack-n256`; the retained native evidence below remains
+qualified to its original source capture.
+
 ## Corrections made during implementation
 
 Performance inspection changed the implementation while correctness was being
@@ -35,7 +63,7 @@ keeps both its fold and callback invocation inline, eliminating a second packet
 buffer. The final ARM cut has 24 typed stages with no calls or stack traffic;
 linked native-host confirmation is recorded below.
 
-Selected transfer first admits a bounded 4 KiB coordinate plan, then writes it.
+Selected transfer first admits a bounded 2 KiB coordinate plan, then writes it.
 This avoids a source × destination codec instantiation cross-product and duplicate
 prefix decoding. It retains refusal-before-write semantics and preserves ordered
 selection and duplicates. It does not impose scratch on point reads.
@@ -50,8 +78,9 @@ only on small values under a large declared maximum.
 
 The production history and guarded-boundary checks use independent value/byte-owner
 oracles, damage afterimage replay and refusal snapshots. They cover empty/live/
-retired values, tails, native group output, aliasing, omitted facts, all capacities,
-byte-limit boundaries and packing/transfer. The four module checks/examples passed
+retired values, tails, native group output, aliasing, omitted facts, full blocks,
+byte-limit boundaries and packing/transfer. The original captured checks also
+covered the then-selectable 128/512 capacities. The four module checks/examples passed
 locally in Release and ASan/UBSan. The broader Ikea validation passed all 31 checks.
 Ten public/author headers compile
 independently. The final local checks also consume and reproduce a literal stored
@@ -81,7 +110,7 @@ production consumers are assessed separately below.
 
 ## Native primitive findings
 
-The final measured source capture is
+The original native qualification source capture is
 `dfd278c9010f775c2faf64a7bac5c034e5e8320b35994623978166f851e646da`.
 The subsequently added literal wire fixture, explicit empty optional initializer
 and repository formatting do not change the measured hot bodies. Clang 21.1.8
@@ -230,4 +259,6 @@ schema-routing cost, and scheduling overhead where manual overlap already wins.
 These are measured limits of the implemented composition, not reasons to hide
 more machinery inside StreamPack. Flat location/length descriptors still win many
 read-only controls. This work does not claim an optimal transactional container,
-a full string vertical, SVE2 tuning or a universal capacity/preset winner.
+a full string vertical, SVE2 tuning or a universal preset winner. The fixed
+256-slot capacity is a product decision informed by the opposing measured costs,
+not a claim of winning every publication pattern.

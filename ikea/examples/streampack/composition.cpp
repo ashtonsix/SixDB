@@ -47,11 +47,10 @@ void lengths(void* raw, std::size_t, std::uint16_t active, sp::native::packet p)
 #endif
 int main() {
 #if defined(__aarch64__) || defined(__AVX2__)
-    const auto format = sp::layout::prepare(
-        {sp::geometry::width, sp::placement::grouped, 128, 255, 4096, {}, false, false});
+    const auto format = sp::layout::prepare({.maximum = 255, .byte_limit = 4096});
     assert(format);
     std::array<std::byte, 4096> payload;
-    std::array<std::byte, 32> directory;
+    std::array<std::byte, 64> directory;
     alignas(64) std::array<std::byte, 256> widths;
     std::array<std::byte, 6> control;
     auto source = sp::view::bind(*format, {payload, directory, widths, control});

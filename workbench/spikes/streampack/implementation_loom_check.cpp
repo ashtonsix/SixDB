@@ -88,7 +88,7 @@ struct Population {
 
     Population(loom::Worker& worker, sp::description d, unsigned block_count, unsigned assigned)
         : layout(take(sp::layout::prepare(d), "prepare shared layout")) {
-        require(block_count && assigned <= d.capacity, "population dimensions");
+        require(block_count && assigned <= sp::slot_capacity, "population dimensions");
         const auto begin = Clock::now();
         blocks.reserve(block_count); views.reserve(block_count);
         for (unsigned b = 0; b < block_count; ++b) {
@@ -328,42 +328,41 @@ void same_counts(const lc::Sample& a, const lc::Sample& b) {
 void qualification() {
     Runtime runtime(256ull << 20);
     unsigned schema_index = 0;
-    // Cover both geometries/placements, all capacities, W1/W2 and O1/O2/O4.
-    // O4/W1 is only representable at capacity512; that is a schema constraint.
+    // Cover both geometries/placements, W1/W2 and O1/O2/O4.
+    // Variable W1 geometry cannot reach O4 at the fixed 256-slot capacity.
     for (auto family : {sp::geometry::direct, sp::geometry::width})
         for (auto placement : {sp::placement::grouped, sp::placement::separated})
-            for (unsigned capacity : {128u, 256u, 512u})
-                for (unsigned w : {1u, 2u})
-                    for (unsigned o : {1u, 2u, 4u}) {
-                        if (o == 4 && w == 1 && capacity != 512) continue;
-                        sp::description d{family, placement, std::uint16_t(capacity),
-                            std::uint16_t(w == 1 ? 255 : 1023), o == 1 ? 255u : o == 2 ? 24000u : 100000u,
-                            {}, bool(schema_index & 1), bool(schema_index & 2)};
-                        const std::array<unsigned, 4> assigned{1, 15, 16, 17};
-                        Population population(runtime.worker, d, 4, assigned[schema_index % assigned.size()]);
-                        require(population.layout.width_bytes() == w && population.layout.offset_bytes() == o,
-                            "requested schema width/offset class");
-                        require(population.unaligned_tails != 0, "unaligned tail coverage");
-                        population.release_allocations();
-                        auto input = requests(population, 73);
-                        check(population, runtime.worker, input, {lc::Route::direct}, true);
-                        check(population, runtime.worker, input, {lc::Route::point_chain}, true);
-                        lc::Options options{lc::Route::manual,
-                            std::array<unsigned, 3>{1, 8, 32}[schema_index % 3],
-                            (schema_index & 1) ? 4u : 0u,
-                            std::array<unsigned, 3>{1, 17, 128}[(schema_index / 3) % 3]};
-                        for (bool hints : {false, true}) {
-                            options.hints = hints; options.route = lc::Route::manual;
-                            auto manual = check(population, runtime.worker, input, options, true);
-                            options.route = lc::Route::ring;
-                            auto ring = check(population, runtime.worker, input, options, true);
-                            same_counts(manual.samples.front(), ring.samples.front());
-                        }
-                        ++schema_index;
+            for (unsigned w : {1u, 2u})
+                for (unsigned o : {1u, 2u, 4u}) {
+                    if (o == 4 && w == 1) continue;
+                    sp::description d{family, placement,
+                        std::uint16_t(w == 1 ? 255 : 1023), o == 1 ? 255u : o == 2 ? 24000u : 100000u,
+                        {}, bool(schema_index & 1), bool(schema_index & 2)};
+                    const std::array<unsigned, 4> assigned{1, 15, 16, 17};
+                    Population population(runtime.worker, d, 4, assigned[schema_index % assigned.size()]);
+                    require(population.layout.width_bytes() == w && population.layout.offset_bytes() == o,
+                        "requested schema width/offset class");
+                    require(population.unaligned_tails != 0, "unaligned tail coverage");
+                    population.release_allocations();
+                    auto input = requests(population, 73);
+                    check(population, runtime.worker, input, {lc::Route::direct}, true);
+                    check(population, runtime.worker, input, {lc::Route::point_chain}, true);
+                    lc::Options options{lc::Route::manual,
+                        std::array<unsigned, 3>{1, 8, 32}[schema_index % 3],
+                        (schema_index & 1) ? 4u : 0u,
+                        std::array<unsigned, 3>{1, 17, 128}[(schema_index / 3) % 3]};
+                    for (bool hints : {false, true}) {
+                        options.hints = hints; options.route = lc::Route::manual;
+                        auto manual = check(population, runtime.worker, input, options, true);
+                        options.route = lc::Route::ring;
+                        auto ring = check(population, runtime.worker, input, options, true);
+                        same_counts(manual.samples.front(), ring.samples.front());
                     }
+                    ++schema_index;
+                }
     // Complete scheduler option matrix on ragged overlapping requests with more
     // work than the inventory. Width changes neither requests nor their work.
-    sp::description d{sp::geometry::width, sp::placement::separated, 256, 255, 24000, {}, false, false};
+    sp::description d{sp::geometry::width, sp::placement::separated, 255, 24000, {}, false, false};
     {
         Population population(runtime.worker, d, 5, 127);
         population.release_allocations(); auto input = requests(population, 93);
@@ -408,7 +407,7 @@ void qualification() {
     // Full immortal fixed-width blocks omit all value metadata. Hinted native
     // admission must accept an empty geometry dependency and reach payload work.
     for (auto family : {sp::geometry::direct, sp::geometry::width}) {
-        sp::description fixed{family, sp::placement::grouped, 128, 63, 128 * 12,
+        sp::description fixed{family, sp::placement::grouped, 63, sp::slot_capacity * 12,
             std::uint16_t(12), true, true};
         Population population(runtime.worker, fixed, 2, 17);
         require(!population.layout.directory_bytes() && !population.layout.lengths_bytes(),
@@ -480,7 +479,7 @@ void bench(int argc, char** argv) {
     Runtime runtime((std::uint64_t(block_count) * 20000 * 4) + (64ull << 20));
     sp::description d{family == "direct" ? sp::geometry::direct : sp::geometry::width,
         placement == "grouped" ? sp::placement::grouped : sp::placement::separated,
-        256, 63, 256 * 63, {}, false, false};
+        63, sp::slot_capacity * 63, {}, false, false};
     Population population(runtime.worker, d, block_count, 256);
     population.release_allocations();
     const auto request_setup_begin = Clock::now();

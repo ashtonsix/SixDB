@@ -1,7 +1,8 @@
 # StreamPack
 
 StreamPack is a headless packing primitive for variable-sized byte values.
-A block holds up to 128, 256 or 512 slots, each reserving up to 65,535 bytes.
+A production block holds up to **256** slots, each reserving up to 65,535 bytes.
+The comparative research retains 128/512 controls; they are not production options.
 Caller-owned sidecars locate values and describe used lengths and tombstones;
 the enclosing collection owns allocations, logical references and version visibility.
 Strings, blobs, optional fields and mixed field groups can share this model.

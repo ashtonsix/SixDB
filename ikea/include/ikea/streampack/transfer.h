@@ -31,8 +31,8 @@ template <class Byte, class Effects>
     }
     // Reuse admitted coordinates during writing, and keep source/destination
     // dispatch additive rather than instantiating every codec pair. The bounded
-    // 4 KiB scratch belongs to this complete rewrite operation, not point reads.
-    std::array<location, 512> values;
+    // 2 KiB scratch belongs to this complete rewrite operation, not point reads.
+    std::array<location, slot_capacity> values;
     const auto admitted = author::dispatch(source, [&](auto a) -> std::expected<void, error> {
         std::uint32_t total = 0;
         unsigned index = 0;

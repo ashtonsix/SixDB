@@ -7,18 +7,21 @@ production recipes.
 
 ## Schema and representation
 
-`description` contains family, length placement, rank capacity, maximum reservation,
-block byte limit, optional fixed reservation, full-reservation flag and immortal
-flag. Capacity is 128/256/512. The byte limit is at most capacity × maximum and can
-be zero. When omitted in aggregate construction, it defaults to the selected
-capacity × maximum. A fixed reservation cannot exceed maximum. Values and reservations can
-both be zero; a retired zero-width slot still has a rank and tombstone.
+`description` contains family, length placement, maximum reservation, block byte
+limit, optional fixed reservation, full-reservation flag and immortal flag. Every
+block has capacity **256** (`slot_capacity`); capacity is not a schema choice. The
+byte limit is at most 256 × maximum and can be zero. When omitted in aggregate
+construction, it defaults to 256 × maximum. A fixed reservation cannot exceed
+maximum. Values and reservations can both be zero; a retired zero-width slot still
+has a rank and tombstone.
 
-All multibyte fields are little endian. Let N be rank capacity, G = ceil(N/16),
+All multibyte fields are little endian. N = 256 and G = 16; let
 W be one byte when the reservation upper bound is ≤255, otherwise two, and O be
 one/two/four bytes for a block byte limit ≤255/≤65535/larger. Fixed reservations
 supply the tighter bound for W. D occupies N/8 bytes when tombstones are present.
-Within D, rank r is bit r%8 of byte r/8; one means retired.
+Within D, rank r is bit r%8 of byte r/8; one means retired. Ranks are 0–255;
+count remains u16 to represent both empty and fully assigned blocks without a
+sentinel. Checked rank arguments remain wide enough to reject out-of-range input.
 
 | Window / effect plane | Stored fields |
 | --- | --- |
@@ -40,11 +43,20 @@ no semantic value. A checkpoint is the sum of reservations before its group.
 Positive reservations are disjoint. Used lengths never exceed reservations.
 Occupied extent is the sum of all assigned reservations, retired or live.
 
-`layout::encode()` produces exactly 16 bytes: version 1, family (Direct=0/Width=1),
-placement (grouped=0/separated=1), flags (full bit 0, immortal bit 1), capacity u16,
-maximum u16, byte limit u32, fixed reservation u32 (`0xffffffff` means variable).
-Offsets are respectively 0,1,2,3,4,6,8,12. Unknown enums, flag bits, versions and
-invalid bounds are rejected. Native layout objects and pointers are never the wire
+`layout::encode()` produces an eight-byte version-2 description:
+
+| Byte offset | Encoding |
+| --- | --- |
+| 0 | Version 2 in bits 5–7; Width bit 0, separated lengths bit 1, full bit 2, immortal bit 3, fixed reservation present bit 4. |
+| 1–2 | Maximum reservation, u16. |
+| 3–5 | Block byte limit, u24. The largest legal value is 16,776,960 (256 × 65,535). |
+| 6–7 | Fixed reservation, u16; must be zero when absent. Presence distinguishes fixed zero from variable geometry. |
+
+There is no encoded capacity, reserved padding or fixed-width sentinel. Unknown
+versions, invalid sizes, noncanonical absent-fixed bytes and invalid bounds are
+rejected. The experimental 16-byte version-1 description is not accepted. The u24
+field is cold schema storage; hot endpoint/checkpoint lanes still use native
+one/two/four-byte loads. Native layout objects and pointers are never the wire
 format. The owner persists block schema identity and the four windows coherently.
 
 ## Admission, lifetime and commands

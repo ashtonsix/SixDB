@@ -1,7 +1,7 @@
 # StreamPack implementation recommendation
 
-This records the decision preceding implementation. The production API and its
-qualification are now described in the [Ikea guide](../../../ikea/docs/streampack/usage.md)
+This records the implementation decisions, including the subsequent fixed-capacity
+selection. The production API and its qualification are now described in the [Ikea guide](../../../ikea/docs/streampack/usage.md)
 and [implementation findings](IMPLEMENTATION.md).
 
 Implement StreamPack in Ikea now, using the spike as evidence and a source of
@@ -90,11 +90,25 @@ bit codec. Shared schema preparation and native group outputs should compose
 without per-slot generic routing. The small fixed tombstone bitmap needs no
 compressed-bitset machinery in the initial recipes.
 
-Retain all three schema capacities, 128/256/512. The evidence favors 128 for
-isolated whole-copy edits and 512 for batched whole-copy publication. It does not
-establish 256 as the best compromise. Choose rank capacity separately from the
-body-byte limit; forcing 16-bit endpoints can cause premature sealing and many
-extra allocations. Layout timing at N256 does not reselect capacity.
+Use **256 slots per block**, for both Direct and Width. This replaces the earlier
+recommendation to retain 128/256/512. The decision balances measured whole-copy
+publication costs for mixed transactional/analytical use; it does not assert that
+256 wins each workload. On Zen 5, batched work takes 13.852/9.876/6.833 seconds at
+128/256/512, while isolated edit+admission+maintenance takes
+15.318/20.648/33.654 µs/edit. We accept the smaller block's isolated-edit advantage
+and the larger block's batched advantage to have one physical grain. The same
+opposing trends appear on c9g; [capacity evidence](RESULTS.md#capacity-and-reader-phase-controls)
+and [isolated edits](RESULTS.md#one-edit-publication-and-byte-budget-sealing) retain
+exact workload definitions and their whole-copy-owner limitations.
+
+256 gives byte-sized rank identities, a 32-byte tombstone bitmap and exactly
+sixteen Width checkpoints: a 64-byte directory for maximum 255, or 96 bytes with
+32-bit checkpoints. The maximum body extent fits 24 bits. Capacity is a compile-time
+constant, absent from the schema and encoded description; transfer needs only
+2 KiB of coordinate scratch. The version-2 description occupies eight bytes.
+Keep the body-byte limit independent: forcing 16-bit endpoints would still cause
+premature sealing and extra allocations. The production [reference](../../../ikea/docs/streampack/reference.md)
+owns the exact encoding; the comparative research retains other sizes as evidence.
 
 ## A small ordinary interface, with native composition underneath
 
@@ -108,7 +122,7 @@ Specify stored byte/bit order and occupied-tail rules independently of execution
 ISA, so the same representation can be consumed on ARM and x86.
 Resolve dynamic recipe selection outside rank loops. Specialize the small native
 width/execution cases without instantiating a whole container for every combination
-of capacity, maximum, placement and ISA.
+of maximum, placement and ISA.
 
 | Surface | Required behavior |
 | --- | --- |

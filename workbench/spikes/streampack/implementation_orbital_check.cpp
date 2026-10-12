@@ -125,7 +125,7 @@ void replay(Snapshot before, const sp::view& source, const ikea::source_write_jo
 
 om::FormatOwner format(sp::geometry geometry = sp::geometry::width,
     sp::placement placement = sp::placement::grouped) {
-    return take(om::prepare_format({geometry, placement, 128, 255, 128u * 255, {}, false, false}),
+    return take(om::prepare_format({geometry, placement, 255, sp::slot_capacity * 255, {}, false, false}),
         "prepare shared format");
 }
 
@@ -260,7 +260,7 @@ void boundary_and_refusal(Runtime& runtime) {
         }
 
     const auto zero = take(om::prepare_format({sp::geometry::direct, sp::placement::grouped,
-        128, 0, 0, 0, true, true}), "prepare count-only format");
+        0, 0, 0, true, true}), "prepare count-only format");
     auto z = take(om::Draft::create(runtime.worker, zero, *std::pmr::new_delete_resource(), 0), "allocate count-only object");
     std::array<ikea::owner_write, 1> entry{};
     ikea::source_write_journal effects{entry};

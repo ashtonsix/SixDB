@@ -127,7 +127,7 @@ void verify(const sp::view& v, const std::vector<slot>& model) {
     std::vector<std::uint16_t> ranks;
     for (unsigned i = 0; i < model.size(); ++i)
         ranks.push_back((i * 19) % model.size());
-    std::array<std::uint32_t, 512> scratch;
+    std::array<std::uint32_t, sp::slot_capacity> scratch;
     std::vector<unsigned> sparse, dense;
     auto consumer = [&](std::vector<unsigned>& out) {
         return [&](unsigned r, sp::bytes b) {
@@ -149,7 +149,7 @@ void history(sp::description d) {
     assert(sp::initialize(f.view, log));
     old.coverage(f.view, log, 0);
     std::vector<slot> model;
-    for (unsigned rank = 0; rank < d.capacity; ++rank) {
+    for (unsigned rank = 0; rank < sp::slot_capacity; ++rank) {
         const unsigned reserve = d.fixed_reservation.value_or(
             std::uint16_t(std::min(unsigned(d.maximum), (rank * 31) % 57)));
         slot s{std::vector<byte>(d.full ? reserve : reserve / 2), reserve};
@@ -160,7 +160,7 @@ void history(sp::description d) {
         assert(sp::append(f.view, s.value, reserve, log));
         before.coverage(f.view, log, n);
         model.push_back(s);
-        if (rank == 0 || rank == 14 || rank == 15 || rank == 16 || rank + 1 == d.capacity)
+        if (rank == 0 || rank == 14 || rank == 15 || rank == 16 || rank + 1 == sp::slot_capacity)
             verify(f.view, model);
     }
     snapshot full(f.view);
@@ -210,6 +210,13 @@ void history(sp::description d) {
     assert(sp::transfer(f.view, ranks, dest.view, false, moved));
     before.coverage(dest.view, moved, 0);
     verify(dest.view, transferred);
+    const snapshot before_oversized(dest.view);
+    const auto before_effects = moved.entries.size();
+    const std::array<std::uint16_t, sp::slot_capacity + 1> too_many{};
+    const auto oversized = sp::transfer(f.view, too_many, dest.view, false, moved);
+    assert(!oversized && oversized.error() == sp::error::capacity);
+    before_oversized.unchanged(dest.view);
+    assert(moved.entries.size() == before_effects);
     recording none;
     none.limit = 0;
     snapshot refused(dest.view);
@@ -220,26 +227,24 @@ void history(sp::description d) {
 int main() {
     for (auto family : {sp::geometry::direct, sp::geometry::width})
         for (auto placement : {sp::placement::grouped, sp::placement::separated})
-            for (auto cap : {128u, 256u, 512u})
-                for (auto maximum : {0u, 1u, 255u, 256u, 4095u, 65535u}) {
-                    sp::description d{family,
-                                      placement,
-                                      std::uint16_t(cap),
-                                      std::uint16_t(maximum),
-                                      std::min(cap * maximum, 65536u),
-                                      {},
-                                      false,
-                                      false};
-                    history(d);
-                    d.full = true;
-                    d.immortal = true;
-                    history(d);
-                }
+            for (auto maximum : {0u, 1u, 255u, 256u, 4095u, 65535u}) {
+                sp::description d{family,
+                                  placement,
+                                  std::uint16_t(maximum),
+                                  std::min(sp::slot_capacity * maximum, 65536u),
+                                  {},
+                                  false,
+                                  false};
+                history(d);
+                d.full = true;
+                d.immortal = true;
+                history(d);
+            }
     for (auto family : {sp::geometry::direct, sp::geometry::width}) {
-        history({family, sp::placement::grouped, 128, 255, 128 * 255, {}, true, false});
-        history({family, sp::placement::grouped, 128, 255, 128 * 255, {}, false, true});
-        history({family, sp::placement::grouped, 128, 255, 128 * 255, 0, false, false});
-        history({family, sp::placement::grouped, 128, 255, 128 * 255, 7, false, false});
+        history({family, sp::placement::grouped, 255, sp::slot_capacity * 255, {}, true, false});
+        history({family, sp::placement::grouped, 255, sp::slot_capacity * 255, {}, false, true});
+        history({family, sp::placement::grouped, 255, sp::slot_capacity * 255, 0, false, false});
+        history({family, sp::placement::grouped, 255, sp::slot_capacity * 255, 7, false, false});
     }
     std::cout << "StreamPack histories, reverse byte owners, transfer, effects and omitted facts "
                  "passed\n";

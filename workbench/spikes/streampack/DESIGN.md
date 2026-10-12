@@ -1,8 +1,8 @@
 # StreamPack: variable-sized values in packed blocks
 
-StreamPack is a proposed Ikea primitive for storing short byte sequences densely.
+StreamPack is an Ikea primitive for storing short byte sequences densely.
 It can hold strings, blobs, optional values, or fields with different meanings.
-A block has room for 128, 256 or 512 slots. Each slot can reserve 0–65,535 bytes;
+A production block has room for 256 slots. Each slot can reserve 0–65,535 bytes;
 a schema may choose a smaller maximum of `2^k - 1`, including zero.
 
 The payload is headless: it contains only the reserved bytes. The caller supplies
@@ -11,8 +11,10 @@ StreamPack borrows those spans. It does not allocate memory, own records, choose
 transaction visibility, or interpret strings. A schema may keep string prefixes
 in SeriesPack and suffixes in StreamPack.
 
-This document explains the model and intended interface. The executable code is
-research code; the production surface and presets remain open. [Results](RESULTS.md)
+This document explains the model and comparative research. The production
+[reference](../../../ikea/docs/streampack/reference.md) specifies its fixed 256-slot
+capacity and native recipes. Research controls retain the alternative capacities
+and layouts used to make that selection. [Results](RESULTS.md)
 records measured behavior. [Investigation](PLAN.md) identifies comparisons, prior
 art and remaining questions without making them requirements of every caller.
 The [implementation recommendation](RECOMMENDATION.md) selects the initial scope
@@ -90,7 +92,8 @@ seal a block; choosing 16-bit endpoints with wider slots needs an enforced byte
 limit or earlier sealing.
 
 Width needs **`ceil(assigned_count/16)` group starts**, with capacity for
-`ceil(N/16)` entries: 8, 16 or 32 at the three candidate capacities. The first
+`ceil(N/16)` entries: sixteen in production; eight and thirty-two were research
+controls for the rejected 128/512 capacities. The first
 entry is zero. There is no terminal checkpoint in the new layout comparison.
 The owner supplies an authoritative occupied byte extent along with assigned
 count; allocation capacity cannot substitute for that extent. This also makes
@@ -298,7 +301,7 @@ execution, not by extrapolating a single-field probe.
 Keep three layers explicit, with only the first two ordinarily visible to a
 caller:
 
-1. A schema states slot capacity, inclusive slot and body bounds, and whether
+1. A schema states inclusive slot and body bounds, and whether
    used lengths or liveness can be derived. A curated recipe resolves a physical
    description, required extents/alignment and execution preparation.
 2. A named borrowed binding supplies payload, metadata windows and authoritative
