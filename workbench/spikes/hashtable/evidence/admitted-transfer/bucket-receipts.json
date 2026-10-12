@@ -1,0 +1,88 @@
+{
+  "scope": "full16-slot warmed hit-only bucket consumer; no complete-table, residence, memory-advantage or Abseil claim",
+  "tuple_recipes": {
+    "0": "generic TuplePack body",
+    "1": "fixed raw-load control",
+    "2": "admitted existing TuplePack transfer body"
+  },
+  "receipts": [
+    {
+      "machine": "neoverse-v2",
+      "job": "20261012T231828Z-1221bfea",
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 11709320,
+        "files": 17,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/d141b7261471512bee1cb868514311bdd4c0e7343b9affa3c27b635b53b9280b.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "d141b7261471512bee1cb868514311bdd4c0e7343b9affa3c27b635b53b9280b",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/d141b7261471512bee1cb868514311bdd4c0e7343b9affa3c27b635b53b9280b.tar.gz"
+      },
+      "sample_hashes": {
+        "base-16.csv": "c11e0792806b65ce95bfce11945361805320dec0aa90bc1d727db3ae76dbddcc",
+        "base-4096.csv": "58c5c4b98be5c3724fd383ea68a906488eb9e032c51871c30e56d4c5521a730f"
+      },
+      "source_hashes": "31f5b872f0d58bd9d57d426d92a8e5bb2a8dceae1a939b70e63e374ec8394216  workbench/spikes/hashtable/bucket.cpp\n9542c202a7d14b356ecb74a9d8ccb81e598f2769ba65e752d1406753b76f44b3  workbench/spikes/hashtable/bucket.h\n1e05d04c6c341f28bde4cb91a6872fbe61d9e3b4cc291da2de2f8a9c88b6c7eb  workbench/spikes/hashtable/codegen.cpp\nb3c34bf1ad37e2a38aed34b54295aa0ed396adaeda5cc048f52ec56e8e8defd3  workbench/spikes/hashtable/native.sh\n",
+      "hardware_sha256": "6f93a0de396e59f5d3ff3f1feffb0ad1cbffef39b872e54eabcf4e10fed2737f",
+      "checks": {
+        "base-check.txt": "fingerprints K=1..8; all occupancies; all 64 phases; guard-page tails; suffix boundaries: passed\n"
+      }
+    },
+    {
+      "machine": "granite-rapids",
+      "job": "20261012T231828Z-06243631",
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 12560599,
+        "files": 23,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/694469a1345c6f731fc34afe989e853483385ccd33d1374f07ceaedbf623c2dc.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "694469a1345c6f731fc34afe989e853483385ccd33d1374f07ceaedbf623c2dc",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/694469a1345c6f731fc34afe989e853483385ccd33d1374f07ceaedbf623c2dc.tar.gz"
+      },
+      "sample_hashes": {
+        "base-16.csv": "7e75dc8847423fd35aa22517260a96107b94932760be30999f6fc6d17fe9b90f",
+        "base-4096.csv": "8eca745bea22087b7667ddcf29d0a4eaca0bfacf96b0391a918ec02dc08e8452",
+        "wide-16.csv": "65f1804f28f9367736c1c9fbc4f8ab25ac2630473f832fe21b4ff20ca77ca870",
+        "wide-4096.csv": "61350708e98f062d01fc14b1422dded112ef93373d2d2f8573b8d575177cf79e"
+      },
+      "source_hashes": "31f5b872f0d58bd9d57d426d92a8e5bb2a8dceae1a939b70e63e374ec8394216  workbench/spikes/hashtable/bucket.cpp\n9542c202a7d14b356ecb74a9d8ccb81e598f2769ba65e752d1406753b76f44b3  workbench/spikes/hashtable/bucket.h\n1e05d04c6c341f28bde4cb91a6872fbe61d9e3b4cc291da2de2f8a9c88b6c7eb  workbench/spikes/hashtable/codegen.cpp\nb3c34bf1ad37e2a38aed34b54295aa0ed396adaeda5cc048f52ec56e8e8defd3  workbench/spikes/hashtable/native.sh\n",
+      "hardware_sha256": "345851e5e0405bbd4b6ab42d83debba1ef675b4693e6ff1cbf8ed567fb1dfbf5",
+      "checks": {
+        "base-check.txt": "fingerprints K=1..8; all occupancies; all 64 phases; guard-page tails; suffix boundaries: passed\n",
+        "wide-check.txt": "fingerprints K=1..8; all occupancies; all 64 phases; guard-page tails; suffix boundaries: passed\n"
+      }
+    },
+    {
+      "machine": "zen5",
+      "job": "20261012T231828Z-06fa80bd",
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 12601933,
+        "files": 23,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/3ce6d3344e517149e2055ce77aaba11543983fc8a300aff7e1b52e2259b493c2.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "3ce6d3344e517149e2055ce77aaba11543983fc8a300aff7e1b52e2259b493c2",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/3ce6d3344e517149e2055ce77aaba11543983fc8a300aff7e1b52e2259b493c2.tar.gz"
+      },
+      "sample_hashes": {
+        "base-16.csv": "62f987f5a8a53768d7d8dc89a20341248b73d03206bf95ec8908760ee385dd19",
+        "base-4096.csv": "7ed473ef8c43b90e7122e9a797c0d0c987bb9ba409c5e7ab762ea41969a0e308",
+        "wide-16.csv": "bccbbb76cec7093954cee651b1ec25bbd805abbf6bee548a22ba2b24887f7938",
+        "wide-4096.csv": "4df1567f053dd8da05bd396ea875a6bc815fb0d8378587112ee112fafec4f309"
+      },
+      "source_hashes": "31f5b872f0d58bd9d57d426d92a8e5bb2a8dceae1a939b70e63e374ec8394216  workbench/spikes/hashtable/bucket.cpp\n9542c202a7d14b356ecb74a9d8ccb81e598f2769ba65e752d1406753b76f44b3  workbench/spikes/hashtable/bucket.h\n1e05d04c6c341f28bde4cb91a6872fbe61d9e3b4cc291da2de2f8a9c88b6c7eb  workbench/spikes/hashtable/codegen.cpp\nb3c34bf1ad37e2a38aed34b54295aa0ed396adaeda5cc048f52ec56e8e8defd3  workbench/spikes/hashtable/native.sh\n",
+      "hardware_sha256": "4048af4039c42eeabe5e9d42a01543693c9b6140a3904e7c0316e117f92a411b",
+      "checks": {
+        "base-check.txt": "fingerprints K=1..8; all occupancies; all 64 phases; guard-page tails; suffix boundaries: passed\n",
+        "wide-check.txt": "fingerprints K=1..8; all occupancies; all 64 phases; guard-page tails; suffix boundaries: passed\n"
+      }
+    }
+  ]
+}
