@@ -84,19 +84,8 @@ unsigned number(std::string_view value) {
   const auto parsed = std::from_chars(value.data(), value.data() + value.size(), result);
   return parsed.ec == std::errc{} && parsed.ptr == value.data() + value.size() ? result : 0;
 }
-unsigned cpu_count(const std::optional<std::string>& text) {
-  if (!text || text->empty()) return 0;
-  unsigned count{};
-  std::stringstream parts(*text);
-  std::string part;
-  while (std::getline(parts, part, ',')) {
-    const auto dash = part.find('-');
-    const auto first = number(part.substr(0, dash));
-    const auto last = dash == std::string::npos ? first : number(part.substr(dash + 1));
-    if (last < first || last - first >= CPU_SETSIZE || count > CPU_SETSIZE - (last - first + 1)) return 0;
-    count += last - first + 1;
-  }
-  return count;
+unsigned cpu_count(const std::optional<std::string>& value) {
+  return value ? detail::hardware_cpu_count(*value) : 0;
 }
 std::vector<fs::path> children(const fs::path& path, std::string_view prefix) {
   std::vector<fs::path> result;
@@ -206,9 +195,12 @@ void flush(Word address) noexcept {
 void flush_done() noexcept {
 #if defined(__x86_64__)
   _mm_mfence();
+  _mm_lfence();
 #endif
 }
-[[gnu::noinline]] void train_touch(Word address) noexcept { consume(load(address)); fence(); }
+// Fence at entry as well as after the load: a conditional hot/stimulus call
+// must not fetch the target on a mispredicted path before its guard resolves.
+[[gnu::noinline]] void train_touch(Word address) noexcept { fence(); consume(load(address)); fence(); }
 struct Mapping {
   void* data{MAP_FAILED};
   std::size_t bytes{};
@@ -220,6 +212,73 @@ struct Mapping {
   }
   ~Mapping() { if (data != MAP_FAILED) munmap(data, bytes); }
 };
+
+HardwareMappingReceipt mapping_receipt(const Mapping& memory, std::stop_token stop,
+    Clock::time_point deadline) {
+  HardwareMappingReceipt result;
+  result.mapping_bytes = memory.bytes;
+  const auto first = reinterpret_cast<std::uintptr_t>(memory.data);
+  auto integer = [](std::string_view text, std::size_t& value, int base = 10) {
+    const auto parsed = std::from_chars(text.data(), text.data() + text.size(), value, base);
+    return !text.empty() && parsed.ec == std::errc{} && parsed.ptr == text.data() + text.size();
+  };
+  std::ifstream smaps("/proc/self/smaps");
+  std::string line;
+  bool selected{}, kernel{}, mmu{}, huge{}, flags{};
+  unsigned lines{};
+  while (std::getline(smaps, line)) {
+    if (line.size() > 4096 || ++lines > 262144 || (!(lines & 255) && stopped(stop, deadline))) break;
+    const auto space = line.find(' '), dash = line.find('-');
+    if (dash < space) {
+      std::size_t begin{}, end{};
+      if (!integer(std::string_view(line).substr(0, dash), begin, 16) ||
+          !integer(std::string_view(line).substr(dash + 1, space - dash - 1), end, 16)) break;
+      if (selected) break;
+      // An enclosing/merged VMA's page totals cannot be attributed to our span.
+      selected = begin == first && end - begin == memory.bytes;
+      continue;
+    }
+    if (!selected) continue;
+    const auto colon = line.find(':');
+    if (colon == std::string::npos) continue;
+    const auto name = std::string_view(line).substr(0, colon);
+    if (name == "VmFlags") {
+      const auto value = ' ' + trim(line.substr(colon + 1)) + ' ';
+      result.no_hugepage = value.find(" nh ") != std::string::npos;
+      flags = true;
+      continue;
+    }
+    auto kilobytes = [&](std::size_t& destination) {
+      std::stringstream words(line.substr(colon + 1));
+      std::string text, unit, extra;
+      std::size_t value{};
+      if (!(words >> text >> unit) || words >> extra || unit != "kB" ||
+          !integer(text, value) || value > std::numeric_limits<std::size_t>::max() / 1024) return false;
+      destination = value * 1024;
+      return true;
+    };
+    if (name == "KernelPageSize") kernel = kilobytes(result.kernel_page_bytes);
+    if (name == "MMUPageSize") mmu = kilobytes(result.mmu_page_bytes);
+    if (name == "AnonHugePages") huge = kilobytes(result.anonymous_huge_bytes);
+  }
+  result.smaps_known = selected && kernel && mmu && huge && flags &&
+      result.kernel_page_bytes && result.mmu_page_bytes && result.anonymous_huge_bytes <= memory.bytes;
+  std::ifstream numa("/proc/self/numa_maps");
+  lines = 0;
+  while (std::getline(numa, line)) {
+    if (line.size() > 4096 || ++lines > 262144 || (!(lines & 255) && stopped(stop, deadline))) break;
+    std::stringstream words(line);
+    std::string token;
+    std::size_t address{};
+    if (!(words >> token) || !integer(token, address, 16) || address != first) continue;
+    if (result.smaps_known)
+      result.residence = detail::hardware_numa_pages(std::string_view(line).substr(token.size()),
+          memory.bytes, result.kernel_page_bytes);
+    result.numa_known = !result.residence.empty();
+    break;
+  }
+  return result;
+}
 
 bool training_measure(const HardwareContext& context, const Mapping& memory,
     std::mt19937_64& random, unsigned training, std::stop_token stop,
@@ -259,9 +318,52 @@ bool training_measure(const HardwareContext& context, const Mapping& memory,
   return true;
 }
 
+bool forward_measure(const HardwareContext& context, const Mapping& memory,
+    std::mt19937_64& random, unsigned parity, std::stop_token stop,
+    Clock::time_point deadline, detail::HardwareControl& result) {
+  // One predecessor demand per randomized page, not a stream-training walk.
+  // CLFLUSH conditions both lines; it does not reset prefetch history. Balanced
+  // arm order and fresh region choices prevent a sequential target walk.
+  std::array<std::array<double, 20>, 3> samples{};
+  std::array<unsigned, 60> arms;
+  for (unsigned i = 0; i < arms.size(); ++i) arms[i] = i % 3;
+  std::shuffle(arms.begin(), arms.end(), random);
+  std::array<unsigned, 3> counts{};
+  const auto geometry = context.geometry;
+  const auto pages = memory.bytes / geometry.page_bytes;
+  for (auto arm : arms) {
+    if (stopped(stop, deadline)) return false;
+    const auto page = random() % pages;
+    const Word base = reinterpret_cast<Word>(memory.data) + page * geometry.page_bytes +
+        (4 + parity) * geometry.line_bytes;
+    const Word target = base + geometry.line_bytes;
+    // Randomize maintenance order too; demand and hot controls never load both
+    // lines. The cold arm repeats target maintenance as in the retained probe.
+    if (random() & 1) { flush(base); flush(target); }
+    else { flush(target); flush(base); }
+    flush_done();
+    if (arm == 1) train_touch(base);
+    if (arm == 0) { flush(target); flush_done(); }
+    if (arm == 2) train_touch(target);
+    fence();
+    const auto begin = Clock::now();
+    const auto value = load(target);
+    fence();
+    const auto elapsed = std::chrono::duration<double, std::nano>(Clock::now() - begin).count();
+    consume(value);
+    samples[arm][counts[arm]++] = elapsed;
+  }
+  for (auto& values : samples) std::sort(values.begin(), values.end());
+  result = {samples[0][1], (samples[0][9] + samples[0][10]) * .5,
+            (samples[2][9] + samples[2][10]) * .5, samples[2][17],
+            (samples[1][9] + samples[1][10]) * .5};
+  return true;
+}
+
 detail::HardwareCalibrationResult calibrate(const HardwareContext& context,
     HardwareCalibrationLimits limits, std::stop_token stop, const HardwareSnapshot& known) noexcept {
   detail::HardwareCalibrationResult result;
+  result.native_protocol = true;
   const auto deadline = Clock::now() + limits.wall_time;
   try {
     if (stopped(stop, deadline)) { result.state = stop_state(stop); return result; }
@@ -270,12 +372,23 @@ detail::HardwareCalibrationResult calibrate(const HardwareContext& context,
     if (sched_setaffinity(0, sizeof(set), &set)) return result;
     auto before = discover_hardware(context.cpu);
     if (!before || !compatible_hardware_context(*before, context)) return result;
+    result.measurement_cpu = sched_getcpu();
     const bool measure_width = !known.width_qualified;
+    const bool maintenance = flush_supported();
+    result.unsupported[1] = !known.training_qualified && (!maintenance ||
+        (detail::hardware_training.back() + 8) * context.geometry.line_bytes >= context.geometry.page_bytes);
+    for (unsigned parity = 0; parity < 2; ++parity)
+      result.unsupported[2 + parity] = known.adjacent_forward[parity] == ForwardObservation::unknown &&
+          (!maintenance || context.geometry.page_bytes / context.geometry.line_bytes < 8);
     const bool measure_training = !known.training_qualified && flush_supported() &&
         (detail::hardware_training.back() + 8) * context.geometry.line_bytes < context.geometry.page_bytes;
+    std::array<bool, 2> measure_forward{};
+    for (unsigned parity = 0; parity < measure_forward.size(); ++parity)
+      measure_forward[parity] = known.adjacent_forward[parity] == ForwardObservation::unknown &&
+          flush_supported() && context.geometry.page_bytes / context.geometry.line_bytes >= 8;
     // A partial hit must not repeat its qualified sweep. Unsupported missing
     // fields stay unknown without allocating scratch or disturbing memory.
-    if (!measure_width && !measure_training) {
+    if (!measure_width && !measure_training && !measure_forward[0] && !measure_forward[1]) {
       result.state = stopped(stop, deadline) ? stop_state(stop) : HardwareState::calibrated_local;
       return result;
     }
@@ -291,6 +404,7 @@ detail::HardwareCalibrationResult calibrate(const HardwareContext& context,
       if (measure_width) order[i] = reinterpret_cast<Word>(address);
       std::construct_at(address, Word(i));
     }
+    result.mapping_receipts[0] = mapping_receipt(memory, stop, deadline);
     if (measure_width) for (unsigned seed = 0; seed < 2; ++seed) {
       std::mt19937_64 random(357712151618ULL + seed);
       // Fisher-Yates with cancellation, instead of an uninterruptible shuffle
@@ -306,6 +420,19 @@ detail::HardwareCalibrationResult calibrate(const HardwareContext& context,
 #undef LOOM_WIDTH
     }
     result.evidence.width_complete = measure_width;
+    // Single-demand observations precede any stream-training sweep. Each parity
+    // is independent, so a partial table hit probes only its unresolved parity.
+    if (measure_forward[0] || measure_forward[1]) {
+      for (unsigned seed = 0; seed < 2; ++seed) {
+        std::mt19937_64 random(7164136223846793005ULL + seed);
+        for (unsigned rep = 0; rep < 2; ++rep) for (unsigned parity = 0; parity < 2; ++parity)
+          if (measure_forward[parity] && !forward_measure(context, memory, random, parity, stop, deadline,
+                result.evidence.adjacent_forward[seed * 2 + rep][parity])) {
+            result.state = stop_state(stop); return result;
+          }
+      }
+      result.evidence.adjacent_complete = measure_forward;
+    }
     if (measure_training) {
       for (unsigned seed = 0; seed < 2; ++seed) {
         std::mt19937_64 random(357712151618ULL + seed);
@@ -317,6 +444,7 @@ detail::HardwareCalibrationResult calibrate(const HardwareContext& context,
       }
       result.evidence.training_complete = true;
     }
+    result.mapping_receipts[1] = mapping_receipt(memory, stop, deadline);
     auto after = discover_hardware(context.cpu);
     if (!after || !compatible_hardware_context(*after, context)) return result;
     result.state = stopped(stop, deadline) ? stop_state(stop) : HardwareState::calibrated_local;
@@ -324,6 +452,66 @@ detail::HardwareCalibrationResult calibrate(const HardwareContext& context,
   return result;
 }
 } // namespace
+
+unsigned detail::hardware_cpu_count(std::string_view text) noexcept {
+  if (text.empty()) return 0;
+  unsigned count{}, previous{};
+  bool have_previous{};
+  while (!text.empty()) {
+    const auto comma = text.find(',');
+    const auto part = text.substr(0, comma);
+    const auto dash = part.find('-');
+    auto parse = [](std::string_view value, unsigned& output) {
+      const auto parsed = std::from_chars(value.data(), value.data() + value.size(), output);
+      return !value.empty() && parsed.ec == std::errc{} && parsed.ptr == value.data() + value.size();
+    };
+    unsigned first{}, last{};
+    if (!parse(part.substr(0, dash), first)) return 0;
+    if (dash == std::string_view::npos) last = first;
+    else if (!parse(part.substr(dash + 1), last)) return 0;
+    if (last < first || last - first >= CPU_SETSIZE || (have_previous && first <= previous) ||
+        count > CPU_SETSIZE - (last - first + 1)) return 0;
+    count += last - first + 1;
+    previous = last; have_previous = true;
+    if (comma == std::string_view::npos) break;
+    text.remove_prefix(comma + 1);
+    if (text.empty()) return 0;
+  }
+  return count;
+}
+
+std::vector<HardwareNumaPages> detail::hardware_numa_pages(std::string_view text,
+    std::size_t mapping_bytes, std::size_t page_bytes) {
+  std::vector<HardwareNumaPages> result;
+  if (!mapping_bytes || !page_bytes || mapping_bytes % page_bytes) return result;
+  const auto expected_pages = mapping_bytes / page_bytes;
+  auto parse = [](std::string_view value, std::size_t& output) {
+    const auto parsed = std::from_chars(value.data(), value.data() + value.size(), output);
+    return !value.empty() && parsed.ec == std::errc{} && parsed.ptr == value.data() + value.size();
+  };
+  std::stringstream words{std::string(text)};
+  std::string token;
+  std::size_t total{};
+  bool page_unit{};
+  while (words >> token) {
+    if (token.starts_with("kernelpagesize_kB=")) {
+      std::size_t kilobytes{};
+      if (page_unit || !parse(std::string_view(token).substr(18), kilobytes) ||
+          kilobytes > std::numeric_limits<std::size_t>::max() / 1024 || kilobytes * 1024 != page_bytes) return {};
+      page_unit = true;
+    } else if (token.starts_with('N')) {
+      const auto equal = token.find('=');
+      std::size_t node{}, pages{};
+      if (equal == std::string::npos || !parse(std::string_view(token).substr(1, equal - 1), node) ||
+          !parse(std::string_view(token).substr(equal + 1), pages) || !pages ||
+          node > std::numeric_limits<unsigned>::max() || pages > expected_pages - total || result.size() >= 256 ||
+          std::any_of(result.begin(), result.end(), [&](const auto& value) { return value.node == node; })) return {};
+      result.push_back({static_cast<unsigned>(node), pages});
+      total += pages;
+    }
+  }
+  return page_unit && total == expected_pages ? result : std::vector<HardwareNumaPages>{};
+}
 
 std::span<const HardwareTableEntry> hardware_table() noexcept { return retained_table; }
 
@@ -449,7 +637,8 @@ detail::HardwareInference detail::qualify_hardware(const HardwareEvidence& evide
     if (valid && !censored && std::max(best[0], best[1]) <= 1.3 * std::min(best[0], best[1]))
       for (unsigned i = 0; i < hardware_widths.size(); ++i)
         if (evidence.ns_per_load[0][i] <= 1.15 * best[0] && evidence.ns_per_load[1][i] <= 1.15 * best[1]) {
-          result.preferred_width = hardware_widths[i]; break;
+          result.width_candidates |= std::uint16_t(1u << i);
+          if (!result.preferred_width) result.preferred_width = hardware_widths[i];
         }
   }
   if (evidence.training_complete) {
@@ -471,12 +660,137 @@ detail::HardwareInference detail::qualify_hardware(const HardwareEvidence& evide
         result.training_accesses = hardware_training[i]; break;
       }
   }
+  for (unsigned parity = 0; parity < result.adjacent_forward.size(); ++parity) {
+    if (!evidence.adjacent_complete[parity]) continue;
+    bool benefit = true, no_benefit = true;
+    for (const auto& row : evidence.adjacent_forward) {
+      const auto p = row[parity];
+      const auto gap = p.cold_median - p.hot_median;
+      const bool separated = std::isfinite(p.cold_p10) && std::isfinite(p.cold_median) &&
+          std::isfinite(p.hot_median) && std::isfinite(p.hot_p90) && std::isfinite(p.trained_median) &&
+          p.hot_median > 0 && p.trained_median > 0 && p.cold_p10 > 1.2 * p.hot_p90 &&
+          p.cold_median >= p.cold_p10 && p.hot_p90 >= p.hot_median && gap > 0;
+      const auto saving = separated ? (p.cold_median - p.trained_median) / gap : 0;
+      benefit &= separated && saving >= .3;
+      no_benefit &= separated && saving < .15;
+    }
+    if (benefit) result.adjacent_forward[parity] = ForwardObservation::observed_benefit;
+    else if (no_benefit) result.adjacent_forward[parity] = ForwardObservation::no_observed_benefit;
+  }
   return result;
 }
+
+namespace {
+bool digest(std::string_view value) {
+  return value.size() == 64 && std::all_of(value.begin(), value.end(), [](char c) {
+    return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f');
+  });
+}
+bool retained(const HardwareRetainedEvidence& evidence) {
+  if (!digest(evidence.source_sha256) || evidence.probe_format != 1 ||
+      evidence.measurement_source_count < 2 || evidence.measurement_source_count > 4 ||
+      !evidence.mapping_bytes || evidence.width_candidates >> detail::hardware_widths.size()) return false;
+  for (unsigned i = 0; i < evidence.measurement_source_count; ++i)
+    if (!digest(evidence.measurement_source_digests[i])) return false;
+  return true;
+}
+HardwarePageMode page_mode(const HardwareMappingReceipt& receipt, std::size_t base_page) {
+  if (!receipt.smaps_known) return HardwarePageMode::unknown;
+  if (receipt.anonymous_huge_bytes == receipt.mapping_bytes) return HardwarePageMode::huge;
+  if (receipt.anonymous_huge_bytes) return HardwarePageMode::mixed;
+  if (receipt.kernel_page_bytes == base_page && receipt.mmu_page_bytes == base_page)
+    return HardwarePageMode::base;
+  return HardwarePageMode::unknown;
+}
+bool separated(const HardwareControl& p) {
+  return std::isfinite(p.cold_p10) && std::isfinite(p.cold_median) && std::isfinite(p.hot_median) &&
+      std::isfinite(p.hot_p90) && std::isfinite(p.trained_median) && p.hot_median > 0 &&
+      p.trained_median > 0 && p.cold_p10 > 1.2 * p.hot_p90 && p.cold_median >= p.cold_p10 &&
+      p.hot_p90 >= p.hot_median && p.cold_median > p.hot_median;
+}
+int benefit(const HardwareControl& p) {
+  const auto saving = (p.cold_median - p.trained_median) / (p.cold_median - p.hot_median);
+  return saving >= .3 ? 2 : saving < .15 ? 0 : 1;
+}
+HardwareQualification width_qualification(const HardwareEvidence& evidence,
+    const detail::HardwareInference& inference) {
+  if (!evidence.width_complete) return HardwareQualification::incomplete;
+  if (inference.preferred_width) return HardwareQualification::qualified;
+  std::array<double, 2> best{};
+  bool censored{};
+  for (unsigned seed = 0; seed < 2; ++seed) {
+    const auto& curve = evidence.ns_per_load[seed];
+    for (auto value : curve) if (!std::isfinite(value) || value <= 0) return HardwareQualification::weak;
+    best[seed] = *std::min_element(curve.begin(), curve.end());
+    unsigned knee{};
+    while (knee < curve.size() && curve[knee] > 1.1 * best[seed]) ++knee;
+    censored |= knee + 1 == curve.size();
+  }
+  if (censored) return HardwareQualification::censored;
+  return HardwareQualification::mixed;
+}
+HardwareQualification training_qualification(const HardwareEvidence& evidence,
+    const detail::HardwareInference& inference) {
+  if (!evidence.training_complete) return HardwareQualification::incomplete;
+  if (inference.training_accesses) return HardwareQualification::qualified;
+  bool mixed{};
+  for (unsigned i = 0; i < detail::hardware_training.size(); ++i) {
+    int first{-1};
+    for (const auto& row : evidence.training) {
+      if (!separated(row[i])) return HardwareQualification::weak;
+      const auto value = benefit(row[i]);
+      if (first == -1) first = value;
+      else mixed |= first != value;
+    }
+  }
+  return mixed ? HardwareQualification::mixed : HardwareQualification::weak;
+}
+HardwareQualification forward_qualification(const HardwareEvidence& evidence,
+    const detail::HardwareInference& inference, unsigned parity) {
+  if (!evidence.adjacent_complete[parity]) return HardwareQualification::incomplete;
+  if (inference.adjacent_forward[parity] != ForwardObservation::unknown) return HardwareQualification::qualified;
+  int first{-1};
+  bool mixed{};
+  for (const auto& row : evidence.adjacent_forward) {
+    if (!separated(row[parity])) return HardwareQualification::weak;
+    const auto value = benefit(row[parity]);
+    if (first == -1) first = value;
+    else mixed |= first != value;
+  }
+  return mixed ? HardwareQualification::mixed : HardwareQualification::weak;
+}
+void candidates(HardwareObservations& observations, std::uint16_t mask) {
+  observations.width_candidates.clear();
+  for (unsigned i = 0; i < detail::hardware_widths.size(); ++i)
+    if (mask & (1u << i)) observations.width_candidates.push_back(detail::hardware_widths[i]);
+}
+void terminal_unknowns(HardwareObservations& observations, HardwareQualification reason,
+    const HardwareSnapshot* known = nullptr) {
+  const std::array fields{&observations.width, &observations.training,
+      &observations.adjacent_forward[0], &observations.adjacent_forward[1]};
+  for (unsigned i = 0; i < fields.size(); ++i) {
+    const bool qualified = known ? (i == 0 ? known->width_qualified : i == 1 ? known->training_qualified :
+        known->adjacent_forward[i - 2] != ForwardObservation::unknown) :
+        fields[i]->qualification == HardwareQualification::qualified;
+    if (!qualified && (reason != HardwareQualification::disabled ||
+        fields[i]->qualification == HardwareQualification::not_measured)) fields[i]->qualification = reason;
+  }
+}
+} // namespace
 
 HardwareSnapshot HardwareProfile::snapshot() const noexcept {
   std::lock_guard lock(mutex_);
   return snapshot_;
+}
+
+std::shared_ptr<const HardwareObservations> HardwareProfile::observations() const noexcept {
+  std::lock_guard lock(mutex_);
+  return observations_;
+}
+
+HardwareInspection HardwareProfile::inspect() const noexcept {
+  std::lock_guard lock(mutex_);
+  return {snapshot_, observations_};
 }
 
 HardwareService::~HardwareService() { cancel(); if (thread_.joinable()) thread_.join(); }
@@ -505,23 +819,71 @@ orbital::Result<std::shared_ptr<HardwareProfile>> HardwareService::request(Hardw
     auto profile = std::make_shared<HardwareProfile>();
     profile->context_ = std::move(context);
     profile->snapshot_.profile.geometry = profile->context_.geometry;
+    auto observations = std::make_shared<HardwareObservations>();
     for (const auto& entry : options_.table) {
       if (!profile->context_.qualified || entry.format != 1 || !entry.validated ||
           entry.geometry != profile->context_.geometry || entry.signature != profile->context_.signature) continue;
       auto& snapshot = profile->snapshot_;
+      const bool has_retained = retained(entry.evidence);
+      HardwareObservationScope scope;
+      if (has_retained) {
+        scope = {1, entry.evidence.control_protocol, entry.evidence.mapping_bytes,
+            entry.geometry.page_bytes, -1, HardwarePageMode::base, HardwareInterference::isolated};
+        observations->retained_source_sha256 = entry.evidence.source_sha256;
+        observations->retained_probe_format = entry.evidence.probe_format;
+        observations->retained_control_protocol = entry.evidence.control_protocol;
+        for (unsigned i = 0; i < detail::hardware_widths.size(); ++i)
+          if (entry.evidence.width_candidates & (1u << i))
+            observations->retained_width_candidates.push_back(detail::hardware_widths[i]);
+        if (!entry.preferred_width && (entry.evidence.width_qualification == HardwareQualification::censored ||
+            entry.evidence.width_qualification == HardwareQualification::incomplete ||
+            entry.evidence.width_qualification == HardwareQualification::weak ||
+            entry.evidence.width_qualification == HardwareQualification::mixed)) {
+          observations->width = {HardwareOrigin::retained, entry.evidence.width_qualification,
+              HardwareMethod::random_encoded_chains, scope};
+          observations->width.scope.control_protocol = 0;
+        }
+        for (unsigned i = 0; i < entry.evidence.measurement_source_count; ++i)
+          observations->retained_measurement_source_digests.emplace_back(entry.evidence.measurement_source_digests[i]);
+      }
+      auto known = [&](HardwareFieldObservation& field, HardwareMethod method) {
+        const bool applicable = has_retained && (method == HardwareMethod::random_encoded_chains ||
+            entry.evidence.control_protocol == 2);
+        field = {applicable ? HardwareOrigin::retained : HardwareOrigin::supplied,
+            HardwareQualification::qualified, applicable ? method : HardwareMethod::supplied,
+            applicable ? scope : HardwareObservationScope{}};
+        if (method == HardwareMethod::random_encoded_chains) field.scope.control_protocol = 0;
+      };
       if (entry.preferred_width && entry.preferred_width <= 64) {
         snapshot.profile.preferred_width = entry.preferred_width; snapshot.width_qualified = true;
+        known(observations->width, HardwareMethod::random_encoded_chains);
+        if (has_retained) candidates(*observations, entry.evidence.width_candidates);
+        else observations->width_candidates.push_back(entry.preferred_width);
       }
       if (entry.training_accesses >= 2 && entry.training_accesses <= 64) {
         snapshot.profile.training_accesses = entry.training_accesses; snapshot.training_qualified = true;
+        known(observations->training, HardwareMethod::stream_training);
       }
-      snapshot.profile.revision = snapshot.width_qualified || snapshot.training_qualified;
-      snapshot.state = options_.calibrate && !(snapshot.width_qualified && snapshot.training_qualified) ?
+      for (unsigned parity = 0; parity < snapshot.adjacent_forward.size(); ++parity)
+        if (entry.adjacent_forward[parity] == ForwardObservation::observed_benefit ||
+            entry.adjacent_forward[parity] == ForwardObservation::no_observed_benefit)
+        {
+          snapshot.adjacent_forward[parity] = entry.adjacent_forward[parity];
+          known(observations->adjacent_forward[parity], HardwareMethod::single_demand_forward);
+        }
+      const bool any_forward = snapshot.adjacent_forward[0] != ForwardObservation::unknown ||
+          snapshot.adjacent_forward[1] != ForwardObservation::unknown;
+      const bool all_forward = snapshot.adjacent_forward[0] != ForwardObservation::unknown &&
+          snapshot.adjacent_forward[1] != ForwardObservation::unknown;
+      snapshot.profile.revision = snapshot.width_qualified || snapshot.training_qualified || any_forward;
+      snapshot.state = options_.calibrate && !(snapshot.width_qualified && snapshot.training_qualified && all_forward) ?
           HardwareState::pending : HardwareState::lookup;
       break;
     }
     if (profile->snapshot_.state == HardwareState::pending && !options_.calibrate)
       profile->snapshot_.state = HardwareState::disabled;
+    if (!options_.calibrate) terminal_unknowns(*observations, HardwareQualification::disabled);
+    profile->observations_ = std::move(observations);
     if (profile->snapshot_.state == HardwareState::pending && !thread_.joinable())
       thread_ = std::jthread([this](std::stop_token stop) { run(stop); });
     profiles_.push_back(profile);
@@ -543,18 +905,61 @@ void HardwareService::run(std::stop_token stop) noexcept {
       if (stop.stop_requested() || closing_) {
         for (const auto& profile : profiles_) {
           std::lock_guard snapshot_lock(profile->mutex_);
-          if (profile->snapshot_.state == HardwareState::pending) profile->snapshot_.state = HardwareState::cancelled;
+          if (profile->snapshot_.state == HardwareState::pending) {
+            try {
+              auto observations = std::make_shared<HardwareObservations>(*profile->observations_);
+              terminal_unknowns(*observations, HardwareQualification::cancelled);
+              profile->observations_ = std::move(observations);
+            } catch (...) {} // State still records cancellation if evidence allocation fails.
+            profile->snapshot_.state = HardwareState::cancelled;
+          }
         }
         return;
       }
       for (const auto& profile : profiles_) if (profile->snapshot().state == HardwareState::pending) { selected = profile; break; }
     }
     if (!selected) continue;
+    std::shared_ptr<HardwareObservations> observations;
+    try {
+      observations = std::make_shared<HardwareObservations>(*selected->observations());
+      observations->width_candidates.reserve(detail::hardware_widths.size());
+    }
+    catch (...) {
+      std::lock_guard snapshot_lock(selected->mutex_);
+      selected->snapshot_.state = HardwareState::failed;
+      continue;
+    }
     const auto begin = Clock::now();
     const auto known = selected->snapshot();
-    const auto result = options_.calibrator ?
+    auto result = options_.calibrator ?
         options_.calibrator(selected->context_, options_.limits, stop, options_.calibrator_context) :
         calibrate(selected->context_, options_.limits, stop, known);
+    observations->local_attempted = true;
+    observations->local_evidence = result.evidence;
+    observations->mapping_receipts = std::move(result.mapping_receipts);
+    auto inference = detail::qualify_hardware(result.evidence);
+    if (result.unsupported[0]) { inference.preferred_width = 0; inference.width_candidates = 0; }
+    if (result.unsupported[1]) inference.training_accesses = 0;
+    for (unsigned parity = 0; parity < 2; ++parity)
+      if (result.unsupported[2 + parity]) inference.adjacent_forward[parity] = ForwardObservation::unknown;
+    const HardwareObservationScope scope{result.native_protocol ? 2u : 0u,
+        result.native_protocol ? 2u : 0u, observations->mapping_receipts[0].mapping_bytes,
+        selected->context_.geometry.page_bytes, result.measurement_cpu,
+        page_mode(observations->mapping_receipts[0], selected->context_.geometry.page_bytes),
+        result.native_protocol ? HardwareInterference::foreground_conditional : HardwareInterference::unknown};
+    auto observed = [&](HardwareFieldObservation& field, unsigned index,
+        HardwareMethod method, HardwareQualification qualification) {
+      if (field.qualification == HardwareQualification::qualified) return;
+      field = {result.native_protocol ? HardwareOrigin::local : HardwareOrigin::supplied,
+          result.unsupported[index] ? HardwareQualification::unsupported : qualification,
+          result.native_protocol ? method : HardwareMethod::supplied, scope};
+      if (method == HardwareMethod::random_encoded_chains) field.scope.control_protocol = 0;
+    };
+    observed(observations->width, 0, HardwareMethod::random_encoded_chains, width_qualification(result.evidence, inference));
+    observed(observations->training, 1, HardwareMethod::stream_training, training_qualification(result.evidence, inference));
+    for (unsigned parity = 0; parity < 2; ++parity)
+      observed(observations->adjacent_forward[parity], 2 + parity, HardwareMethod::single_demand_forward,
+          forward_qualification(result.evidence, inference, parity));
     std::lock_guard snapshot_lock(selected->mutex_);
     auto& snapshot = selected->snapshot_;
     if (stop.stop_requested()) snapshot.state = HardwareState::cancelled;
@@ -562,17 +967,26 @@ void HardwareService::run(std::stop_token stop) noexcept {
     else if (result.state != HardwareState::calibrated_local) {
       snapshot.state = result.state == HardwareState::timed_out ? HardwareState::timed_out : HardwareState::failed;
     } else {
-      const auto inference = detail::qualify_hardware(result.evidence);
       bool learned = false;
       if (!snapshot.width_qualified && inference.preferred_width) {
         snapshot.profile.preferred_width = inference.preferred_width; snapshot.width_qualified = true; learned = true;
+        candidates(*observations, inference.width_candidates);
       }
       if (!snapshot.training_qualified && inference.training_accesses) {
         snapshot.profile.training_accesses = inference.training_accesses; snapshot.training_qualified = true; learned = true;
       }
+      for (unsigned parity = 0; parity < snapshot.adjacent_forward.size(); ++parity)
+        if (snapshot.adjacent_forward[parity] == ForwardObservation::unknown &&
+            inference.adjacent_forward[parity] != ForwardObservation::unknown) {
+          snapshot.adjacent_forward[parity] = inference.adjacent_forward[parity]; learned = true;
+        }
       if (learned) ++snapshot.profile.revision;
       snapshot.state = HardwareState::calibrated_local;
     }
+    if (snapshot.state == HardwareState::cancelled) terminal_unknowns(*observations, HardwareQualification::cancelled, &known);
+    else if (snapshot.state == HardwareState::timed_out) terminal_unknowns(*observations, HardwareQualification::timed_out, &known);
+    else if (snapshot.state == HardwareState::failed) terminal_unknowns(*observations, HardwareQualification::failed, &known);
+    selected->observations_ = std::move(observations);
   }
 }
 } // namespace loom

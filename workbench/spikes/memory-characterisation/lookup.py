@@ -55,6 +55,19 @@ def consistent(points):
     return 'unresolved'
 
 
+def merge_prefetch_observations(previous, incoming):
+    # Every contributing capture must use corrected conditional controls.
+    # Keep the gate conservative and independent of separately pooled MLP data.
+    protocols = [entry.get('prefetch_control_protocol', 0) for entry in (previous, incoming)]
+    previous['prefetch_control_protocol'] = 2 if all(type(v) is int and v == 2 for v in protocols) else 0
+    for parity, value in incoming['adjacent_forward_observation'].items():
+        if previous['adjacent_forward_observation'][parity] != value:
+            previous['adjacent_forward_observation'][parity] = 'unresolved'
+    for stride, value in incoming['consistent_training_suffix'].items():
+        prior = previous['consistent_training_suffix'][stride]
+        previous['consistent_training_suffix'][stride] = max(prior, value) if prior and value else None
+
+
 def build():
     campaign = json.loads((STUDY / 'campaign.json').read_text())
     database = {'format': FORMAT, 'date': campaign['date'], 'entries': {},
@@ -103,7 +116,13 @@ def build():
             suffix = [n for n in lengths if n >= 2 and sum(v >= n for v in lengths) >= 2 and
                       all(consistent(points[v]) == 'observed-benefit' for v in lengths if v >= n)]
             learning[str(stride)] = min(suffix) if suffix else None
-        entry = {'probe_format': FORMAT, 'status': qualification['status'],
+        # Control provenance is independent of the CSV/table encoding version.
+        # Older directional results remain historical observations; their
+        # conditional stimulus helpers lacked an entry speculation barrier.
+        control_protocols = [p.get('config', {}).get('prefetch_control_protocol') for p in provenance]
+        controlled = all(type(v) is int and v == 2 for v in control_protocols)
+        entry = {'probe_format': FORMAT, 'prefetch_control_protocol': 2 if controlled else 0,
+            'status': qualification['status'],
             'instance_examples': [machine['name']], 'architecture': arch, 'lookup_context': h['lookup_context'],
             'line_bytes_reported': h['line_bytes'], 'mlp': qualification,
             'adjacent_forward_observation': adjacent, 'consistent_training_suffix': learning,
@@ -136,12 +155,7 @@ def build():
             previous['conditional_mlp_observations'] += entry['conditional_mlp_observations']
             previous['mlp'] = qualify(pooled_curves[key])
             previous['status'] = previous['mlp']['status']
-            for parity, value in adjacent.items():
-                if previous['adjacent_forward_observation'][parity] != value:
-                    previous['adjacent_forward_observation'][parity] = 'unresolved'
-            for stride, value in learning.items():
-                prior = previous['consistent_training_suffix'][stride]
-                previous['consistent_training_suffix'][stride] = max(prior, value) if prior and value else None
+            merge_prefetch_observations(previous, entry)
         else:
             database['entries'][key] = entry
         init = json.loads((roots[1] / 'initialisation.json').read_text())

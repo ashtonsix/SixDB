@@ -4,7 +4,7 @@ from copy import deepcopy
 import json
 import hashlib
 from pathlib import Path
-from lookup import consistent, match, qualify
+from lookup import consistent, match, merge_prefetch_observations, qualify
 
 
 def curve(values):
@@ -27,6 +27,26 @@ assert consistent(points) == 'unresolved'
 points[-1]['controls_separated'] = True
 points[-1]['normalised_saving'] = -.1
 assert consistent(points) == 'unresolved'
+# Equal confident summaries must not hide old/malformed control provenance in
+# either merge order. MLP qualification remains independently usable.
+frozen = {'mlp': {'status': 'validated', 'candidate_k': [16, 24]},
+          'adjacent_forward_observation': {'parity0': 'observed-benefit', 'parity1': 'no-clear-benefit'},
+          'consistent_training_suffix': {'1': 3}}
+for protocol in (0, 1, None, '2', 2.0, True, {}, []):
+    for corrected_first in (False, True):
+        corrected = deepcopy(frozen) | {'prefetch_control_protocol': 2}
+        other = deepcopy(frozen) | {'prefetch_control_protocol': protocol}
+        previous, incoming = (corrected, other) if corrected_first else (other, corrected)
+        merge_prefetch_observations(previous, incoming)
+        assert previous['prefetch_control_protocol'] == 0
+        assert previous['mlp'] == frozen['mlp']
+        assert previous['adjacent_forward_observation'] == frozen['adjacent_forward_observation']
+        assert previous['consistent_training_suffix'] == frozen['consistent_training_suffix']
+corrected = deepcopy(frozen) | {'prefetch_control_protocol': 2}
+merge_prefetch_observations(corrected, deepcopy(corrected))
+assert corrected['prefetch_control_protocol'] == 2 and corrected['mlp'] == frozen['mlp']
+merge_prefetch_observations(corrected, deepcopy(frozen))
+assert corrected['prefetch_control_protocol'] == 0 and corrected['mlp'] == frozen['mlp']
 root = Path(__file__).resolve().parent
 database = json.loads((root / 'lookup.json').read_text())
 for key, entry in database['entries'].items():
@@ -46,4 +66,4 @@ assert match(hardware, {'format': 999, 'entries': database['entries']}) is None
 for manifest in (root / 'evidence').rglob('provenance.json'):
     for name, digest in json.loads(manifest.read_text()).get('selected_files_sha256', {}).items():
         assert hashlib.sha256((manifest.parent / name).read_bytes()).hexdigest() == digest
-print(f'PASS: inference refusal, repeatability and {len(database["entries"])} lookup invalidation cases')
+print(f'PASS: inference refusal, repeatability, mixed-protocol merge and {len(database["entries"])} lookup invalidation cases')

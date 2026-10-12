@@ -1,0 +1,18 @@
+{
+  "files_sha256": {
+    "distributions.csv": "facfffcabd931843afcd7357538ad261c72f91f921c8ecd0597320d5fc08aa48",
+    "hardware.json": "54f2d093e3017d6ecaab87b857bc3b7fc61471621f52144e8fd72dabec416eec",
+    "runtime-forward.json": "392d9cee7148d05bb97b7b6701f7d09b654dd2a53a33d5086a9ac8abd98bcc91",
+    "seed-13579.txt": "c0216f213909be78966903a51c03638849dad040be9a00bb967c13b8efb8c472",
+    "seed-918273.txt": "e4e366c35848baeb5328d8a2da90081c6483215efd24d6115f13993be046e90e"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/memory-characterisation/adjacent_report.py",
+    "{evidence}"
+  ],
+  "regenerate_from": "archive"
+}

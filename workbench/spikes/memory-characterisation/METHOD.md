@@ -20,8 +20,11 @@ The initialization experiment has a lookup path and a bounded fallback. The
 quick profile limits the largest footprint, repetitions, training patterns
 and time per throughput sample. Total time includes allocation, prefaulting,
 chain construction/validation and calibration. Scheduling delays and OS calls
-mean this is a work bound, not a wall-clock deadline. A production caller could
-supply a deadline and defer optional probes; that cancellation API is not built.
+mean this is a work bound, not a hard wall-clock deadline. The graduated
+[Loom service](../../../loom/docs/hardware.md) supplies bounded native missing-field
+learning with cooperative cancellation, deadlines and cold observation records.
+Its local foreground-conditioned sweeps remain distinct from this study's
+isolated fleet runs.
 Storage/network measurements are explicitly optional and never imported as
 CPU constants. They depend on volume, filesystem, instance size, provisioning,
 route, congestion and endpoint, not just instruction-set identity.

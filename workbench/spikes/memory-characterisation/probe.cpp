@@ -84,6 +84,8 @@ void calibrate() {
 inline U load(U p) { return *reinterpret_cast<volatile U*>(p); }
 // Keep one demand-load instruction per call site, including the shared-PC arm.
 template<int Id> [[gnu::noinline]] void touch(U p) {
+    // Conditional hot/training arms must not launch an untimed wrong-path load.
+    fence();
     const auto value = load(p);
     asm volatile("" :: "r"(value), "i"(Id) : "memory");
     fence();
@@ -102,6 +104,7 @@ void flush(U p) {
 void flush_done() {
 #if defined(__x86_64__)
     _mm_mfence();
+    _mm_lfence();
 #else
     fence();
 #endif

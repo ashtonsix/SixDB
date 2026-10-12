@@ -5,6 +5,12 @@ architecture. The [module outline](../../loom/README.md) supplies the current
 scope; the questions below could change its seams. No runtime or analyser is
 being promoted by this note.
 
+October 2026 update: [native platform knowledge](../../loom/docs/hardware.md)
+now separates Orbital's reported inventory, Loom's conditioned observations and
+owner-boundary policy. The broader objective and placement questions below
+remain exploration; their earlier analyser-placement alternatives predate that
+implemented cold seam.
+
 ## What would we want Loom to achieve?
 
 [SixDB's direction](../../README.md) puts mixed transactional and analytical

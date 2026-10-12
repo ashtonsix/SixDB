@@ -1,5 +1,6 @@
 #include <loom/hardware.h>
 #include <loom/ring.h>
+#include <algorithm>
 #include <atomic>
 #include <cmath>
 #include <cstdlib>
@@ -8,6 +9,7 @@
 
 namespace {
 using Clock = std::chrono::steady_clock;
+using Forward = loom::ForwardObservation;
 void check(bool condition, const char* message) {
   if (!condition) { std::cerr << "loom_hardware_check: " << message << '\n'; std::abort(); }
 }
@@ -25,12 +27,32 @@ loom::detail::HardwareEvidence useful_evidence() {
   for (auto& curve : evidence.ns_per_load) curve = {100, 60, 10, 10, 11, 11, 12, 12, 13, 14};
   for (auto& row : evidence.training) for (unsigned i = 0; i < row.size(); ++i)
     row[i] = {90, 100, 10, 15, i < 2 ? 80.0 : 40.0};
+  evidence.adjacent_complete = {true, true};
+  for (auto& row : evidence.adjacent_forward) {
+    row[0] = {90, 100, 10, 15, 40};
+    row[1] = {90, 100, 10, 15, 95};
+  }
   return evidence;
+}
+void parser_checks() {
+  check(loom::detail::hardware_cpu_count("0") == 1 &&
+      loom::detail::hardware_cpu_count("0-2,8,10-11") == 6, "valid CPU lists changed canonical sharing width");
+  for (auto value : {"", "junk", "-1", "1-", "0,,1", "0,", "1-0", "1--2", "0-2,2", "4,2", "0-1024", "4294967296"})
+    check(!loom::detail::hardware_cpu_count(value), "malformed/overlapping CPU list became reported sharing width");
+  const auto pages = loom::detail::hardware_numa_pages("default anon=4 N0=1 N3=3 kernelpagesize_kB=4", 16384, 4096);
+  check(pages.size() == 2 && pages[0].node == 0 && pages[0].pages == 1 && pages[1].node == 3 && pages[1].pages == 3,
+      "full unique NUMA receipt lost membership");
+  for (auto value : {"N0=2 N0=2 kernelpagesize_kB=4", "N0=3 kernelpagesize_kB=4",
+      "N0=5 kernelpagesize_kB=4", "N0=4", "N0=4 kernelpagesize_kB=2", "N0=4 kernelpagesize_kB=4 kernelpagesize_kB=4",
+      "N0=0 N1=4 kernelpagesize_kB=4", "Ngarbage=4 kernelpagesize_kB=4", "N0=4294967296 kernelpagesize_kB=4"})
+    check(loom::detail::hardware_numa_pages(value, 16384, 4096).empty(), "duplicate/partial/malformed NUMA receipt qualified full mapping");
 }
 void inference_checks() {
   auto evidence = useful_evidence();
   auto result = loom::detail::qualify_hardware(evidence);
   check(result.preferred_width == 4 && result.training_accesses == 3, "independent common width/forward suffix");
+  check(result.adjacent_forward == std::array{Forward::observed_benefit, Forward::no_observed_benefit},
+        "separated consistent single-demand parities did not qualify independently");
   evidence.width_complete = false;
   result = loom::detail::qualify_hardware(evidence);
   check(!result.preferred_width && result.training_accesses == 3, "missing width erased independent training");
@@ -62,6 +84,33 @@ void inference_checks() {
   evidence.training_complete = false;
   result = loom::detail::qualify_hardware(evidence);
   check(result.preferred_width == 4 && !result.training_accesses, "unsupported training erased independent width");
+
+  evidence = useful_evidence();
+  evidence.adjacent_complete[0] = false;
+  result = loom::detail::qualify_hardware(evidence);
+  check(result.adjacent_forward == std::array{Forward::unknown, Forward::no_observed_benefit},
+        "incomplete forward parity invented facts or erased independent parity");
+  evidence = useful_evidence();
+  evidence.adjacent_forward[3][0].trained_median = 95;
+  check(loom::detail::qualify_hardware(evidence).adjacent_forward[0] == Forward::unknown,
+        "one inconsistent forward repetition qualified");
+  evidence = useful_evidence();
+  evidence.adjacent_forward[1][1].cold_p10 = 10;
+  result = loom::detail::qualify_hardware(evidence);
+  check(result.adjacent_forward == std::array{Forward::observed_benefit, Forward::unknown},
+        "overlapping controls became no-benefit knowledge");
+  evidence = useful_evidence();
+  for (auto& row : evidence.adjacent_forward) row[0].trained_median = 82;
+  check(loom::detail::qualify_hardware(evidence).adjacent_forward[0] == Forward::unknown,
+        "intermediate forward observation escaped unknown band");
+  evidence = useful_evidence();
+  evidence.adjacent_forward[0][0].trained_median = std::numeric_limits<double>::quiet_NaN();
+  check(loom::detail::qualify_hardware(evidence).adjacent_forward[0] == Forward::unknown,
+        "nonfinite forward observation qualified");
+  evidence = useful_evidence();
+  evidence.adjacent_forward[0][1].hot_median = 0;
+  check(loom::detail::qualify_hardware(evidence).adjacent_forward[1] == Forward::unknown,
+        "invalid hot control qualified no-benefit");
 }
 
 struct Probe {
@@ -69,7 +118,9 @@ struct Probe {
   std::atomic<bool> entered{}, release{}, cancelled{};
   loom::HardwareState outcome{loom::HardwareState::calibrated_local};
   loom::detail::HardwareEvidence evidence{useful_evidence()};
-  bool wait{};
+  bool wait{}, native_protocol{};
+  std::array<bool, 4> unsupported{};
+  std::array<loom::HardwareMappingReceipt, 2> mapping_receipts;
   loom::HardwareService* reentrant_service{};
   std::atomic<bool> reentered{};
 };
@@ -96,7 +147,7 @@ loom::detail::HardwareCalibrationResult controlled(const loom::HardwareContext& 
   ++probe.finished;
   if (stop.stop_requested()) { probe.cancelled = true; return {loom::HardwareState::cancelled, {}}; }
   if (Clock::now() >= deadline) return {loom::HardwareState::timed_out, {}};
-  return {probe.outcome, probe.evidence};
+  return {probe.outcome, probe.evidence, probe.native_protocol, hardware.cpu, probe.unsupported, probe.mapping_receipts};
 }
 loom::HardwareOptions options(Probe& probe) {
   loom::HardwareOptions result;
@@ -111,7 +162,8 @@ loom::HardwareSnapshot settled(const std::shared_ptr<loom::HardwareProfile>& pro
 }
 void defaults(const loom::HardwareSnapshot& snapshot, loom::HardwareState state, const char* message) {
   check(snapshot.state == state && snapshot.profile.revision == 0 && snapshot.profile.preferred_width == 8 &&
-        snapshot.profile.training_accesses == 0 && !snapshot.width_qualified && !snapshot.training_qualified, message);
+        snapshot.profile.training_accesses == 0 && !snapshot.width_qualified && !snapshot.training_qualified &&
+        snapshot.adjacent_forward == std::array{Forward::unknown, Forward::unknown}, message);
 }
 
 void lookup_checks(const loom::HardwareContext& real) {
@@ -140,11 +192,13 @@ void lookup_checks(const loom::HardwareContext& real) {
     check(handle, "retained table request");
     const auto snapshot = (*handle)->snapshot();
     check(snapshot.state == loom::HardwareState::lookup && snapshot.profile.preferred_width == (entry.preferred_width ? entry.preferred_width : 8) &&
-          snapshot.profile.training_accesses == entry.training_accesses && !probe.calls, "compiled table missed or calibrated");
+          snapshot.profile.training_accesses == entry.training_accesses && snapshot.adjacent_forward == entry.adjacent_forward &&
+          !probe.calls, "compiled table missed, dropped forward observations or calibrated");
   }
   Probe probe;
   auto config = options(probe);
-  const loom::HardwareTableEntry hit{real.signature, real.geometry, 4, 3};
+  const loom::HardwareTableEntry hit{real.signature, real.geometry, 4, 3, 1, true,
+      {Forward::observed_benefit, Forward::no_observed_benefit}};
   config.table = {&hit, 1};
   loom::HardwareService service(config);
   auto handle = service.request(real);
@@ -240,6 +294,274 @@ void partial_lookup_checks(const loom::HardwareContext& real) {
         retained.width_qualified && !retained.training_qualified &&
         retained.profile.preferred_width == 16 && !retained.profile.training_accesses,
         "unsuccessful learning erased known table fields or invented a revision");
+  }
+}
+
+void forward_lookup_checks(const loom::HardwareContext& real) {
+  {
+    Probe probe;
+    probe.wait = true;
+    const loom::HardwareTableEntry entry{real.signature, real.geometry, 0, 0, 1, true,
+        {Forward::no_observed_benefit, Forward::no_observed_benefit}};
+    auto config = options(probe);
+    config.table = {&entry, 1};
+    loom::HardwareService service(config);
+    auto handle = service.request(real);
+    check(handle, "forward-only table knowledge request");
+    const auto initial = (*handle)->snapshot();
+    check(initial.state == loom::HardwareState::pending && initial.profile.revision == 1 &&
+        !initial.width_qualified && !initial.training_qualified && initial.profile.preferred_width == 8 &&
+        !initial.profile.training_accesses && initial.adjacent_forward == entry.adjacent_forward,
+        "forward-only table knowledge lost defaults or revision");
+    until([&] { return probe.entered.load(); }, "forward-only table did not learn missing scheduling fields");
+    probe.release = true;
+    const auto learned = settled(*handle);
+    check(learned.profile.revision == 2 && learned.width_qualified && learned.training_qualified &&
+        learned.profile.preferred_width == 4 && learned.profile.training_accesses == 3 &&
+        learned.adjacent_forward == entry.adjacent_forward, "missing scheduling fields overwrote forward-only table knowledge");
+  }
+  // Both scheduling fields are known. Only one forward parity is missing;
+  // the controlled probe deliberately contradicts the retained parity.
+  for (unsigned missing = 0; missing < 2; ++missing) {
+    Probe probe;
+    probe.wait = true;
+    loom::HardwareTableEntry entry{real.signature, real.geometry, 16, 6, 1, true,
+        {Forward::no_observed_benefit, Forward::observed_benefit}};
+    entry.adjacent_forward[missing] = Forward::unknown;
+    auto config = options(probe);
+    config.table = {&entry, 1};
+    loom::HardwareService service(config);
+    auto handle = service.request(real);
+    check(handle, "single unresolved forward parity request");
+    const auto initial = (*handle)->snapshot();
+    check(initial.state == loom::HardwareState::pending && initial.profile.revision == 1 &&
+        initial.profile.preferred_width == 16 && initial.profile.training_accesses == 6 &&
+        initial.adjacent_forward == entry.adjacent_forward, "known scheduling fields hid missing forward learning");
+    until([&] { return probe.entered.load(); }, "missing forward parity did not calibrate");
+    const auto duplicate = service.request(real);
+    check(duplicate && *duplicate == *handle && probe.calls == 1, "missing forward parity duplicated calibration");
+    probe.release = true;
+    const auto learned = settled(*handle);
+    auto expected = entry.adjacent_forward;
+    expected[missing] = missing == 0 ? Forward::observed_benefit : Forward::no_observed_benefit;
+    check(learned.state == loom::HardwareState::calibrated_local && learned.profile.revision == 2 &&
+        learned.adjacent_forward == expected && learned.profile.preferred_width == 16 &&
+        learned.profile.training_accesses == 6, "forward adoption overwrote retained knowledge or scheduling fields");
+  }
+
+  for (const auto outcome : {loom::HardwareState::calibrated_local, loom::HardwareState::failed,
+       loom::HardwareState::timed_out, loom::HardwareState::cancelled}) {
+    Probe probe;
+    probe.wait = true;
+    probe.outcome = outcome;
+    probe.evidence.adjacent_complete[1] = false;
+    // Parity zero contradicts the table, and parity one has no complete row.
+    const loom::HardwareTableEntry entry{real.signature, real.geometry, 16, 6, 1, true,
+        {Forward::no_observed_benefit, Forward::unknown}};
+    auto config = options(probe);
+    config.table = {&entry, 1};
+    loom::HardwareService service(config);
+    auto handle = service.request(real);
+    check(handle, "unsuccessful forward observation request");
+    until([&] { return probe.entered.load(); }, "unsuccessful forward observation did not enter");
+    if (outcome == loom::HardwareState::cancelled) service.cancel();
+    else probe.release = true;
+    const auto retained = settled(*handle);
+    check(retained.state == outcome && retained.profile.revision == 1 &&
+        retained.adjacent_forward == entry.adjacent_forward && retained.profile.preferred_width == 16 &&
+        retained.profile.training_accesses == 6, "unknown/failed/cancelled forward probe changed retained facts");
+  }
+
+  Probe invalid;
+  auto config = options(invalid);
+  const loom::HardwareTableEntry invalid_entry{real.signature, real.geometry, 16, 6, 1, true,
+      {static_cast<Forward>(999), Forward::no_observed_benefit}};
+  config.table = {&invalid_entry, 1};
+  config.calibrate = false;
+  loom::HardwareService service(config);
+  auto handle = service.request(real);
+  check(handle && (*handle)->snapshot().adjacent_forward ==
+      std::array{Forward::unknown, Forward::no_observed_benefit}, "invalid retained forward enum became knowledge");
+
+  // Exercise the actual partial calibration path with only forward observations
+  // unresolved. On ARM no EL0 maintenance is attempted: unknown settles without
+  // erasing independent table facts. On x86 a tiny allowance may censor a probe.
+  const loom::HardwareTableEntry known{real.signature, real.geometry, 16, 6};
+  loom::HardwareOptions local;
+  local.table = {&known, 1};
+  local.limits.mapping_bytes = 1024 * 1024;
+  local.limits.memory_bytes = 2 * 1024 * 1024;
+  local.limits.wall_time = std::chrono::milliseconds(1);
+  loom::HardwareService bounded(local);
+  auto actual = bounded.request(real);
+  check(actual, "actual forward-only calibration request");
+  const auto result = settled(*actual);
+  check(result.state != loom::HardwareState::lookup && result.profile.preferred_width == 16 &&
+      result.profile.training_accesses == 6 && result.profile.revision >= 1 && result.profile.revision <= 2,
+      "actual forward-only path dropped retained facts or skipped missing observations");
+#if defined(__aarch64__)
+  check(result.adjacent_forward == std::array{Forward::unknown, Forward::unknown},
+      "unsupported ARM maintenance invented forward observations");
+#endif
+}
+
+void observation_checks(const loom::HardwareContext& real) {
+  using Origin = loom::HardwareOrigin;
+  using Reason = loom::HardwareQualification;
+  using Method = loom::HardwareMethod;
+  const auto compiled = loom::hardware_table();
+  check(!compiled.empty(), "retained corpus absent");
+  for (const auto& entry : compiled) {
+    Probe probe;
+    auto config = options(probe);
+    config.table = {&entry, 1}; config.calibrate = false;
+    auto context = real;
+    context.signature = entry.signature; context.geometry = entry.geometry; context.qualified = true;
+    loom::HardwareService service(config);
+    auto handle = service.request(context);
+    check(handle, "retained observation request");
+    const auto record = (*handle)->observations();
+    check(record && record->retained_source_sha256.size() == 64 && record->retained_probe_format == 1 &&
+        record->retained_measurement_source_digests.size() == entry.evidence.measurement_source_count &&
+        !record->local_attempted, "retained source/probe metadata absent or falsely local");
+    if (entry.preferred_width) {
+      check(record->width.origin == Origin::retained && record->width.qualification == Reason::qualified &&
+          record->width.method == Method::random_encoded_chains && record->width.scope.mapping_bytes == 256 * 1024 * 1024 &&
+          record->width.scope.interference == loom::HardwareInterference::isolated &&
+          record->width.scope.measurement_cpu == -1 && record->width.scope.page_mode == loom::HardwarePageMode::base &&
+          std::find(record->width_candidates.begin(), record->width_candidates.end(), entry.preferred_width) !=
+              record->width_candidates.end(), "historical width candidates lost isolated footprint/provenance");
+    }
+  }
+  {
+    Probe probe;
+    const loom::HardwareTableEntry synthetic{real.signature, real.geometry, 4, 3, 1, true,
+        {Forward::observed_benefit, Forward::no_observed_benefit}};
+    auto config = options(probe); config.table = {&synthetic, 1};
+    loom::HardwareService service(config);
+    auto handle = service.request(real);
+    check(handle, "supplied observations request");
+    const auto record = (*handle)->observations();
+    check(record->width.origin == Origin::supplied && record->training.origin == Origin::supplied &&
+        record->adjacent_forward[0].origin == Origin::supplied && record->retained_source_sha256.empty() &&
+        record->width.scope.mapping_bytes == 0 && record->width.scope.page_mode == loom::HardwarePageMode::unknown &&
+        record->width_candidates == std::vector<unsigned>{4}, "synthetic table acquired retained measurement provenance");
+  }
+  {
+    Probe probe;
+    probe.wait = true; probe.native_protocol = true;
+    for (auto& receipt : probe.mapping_receipts) {
+      receipt = {true, true, 1024 * 1024, real.geometry.page_bytes, real.geometry.page_bytes, 0, true,
+          {{3, 1024 * 1024 / real.geometry.page_bytes}}};
+    }
+    auto entry = *std::find_if(compiled.begin(), compiled.end(), [](const auto& value) { return value.preferred_width != 0; });
+    entry.training_accesses = 0;
+    entry.adjacent_forward = {Forward::unknown, Forward::unknown};
+    auto context = real; context.signature = entry.signature; context.geometry = entry.geometry; context.qualified = true;
+    auto config = options(probe); config.table = {&entry, 1};
+    loom::HardwareService service(config);
+    auto handle = service.request(context);
+    check(handle, "mixed origin observations request");
+    const auto initial_inspection = (*handle)->inspect();
+    const auto initial = initial_inspection.observations;
+    until([&] { return probe.entered.load(); }, "mixed origin calibration did not enter");
+    std::atomic<bool> inspected{};
+    std::jthread inspector([&] {
+      while (!inspected.load()) {
+        const auto together = (*handle)->inspect();
+        check((together.snapshot.state == loom::HardwareState::pending && !together.observations->local_attempted) ||
+            (together.snapshot.state == loom::HardwareState::calibrated_local && together.observations->local_attempted &&
+             together.observations->training.qualification == Reason::qualified), "inspection paired policy with another evidence update");
+      }
+    });
+    probe.release = true;
+    const auto snapshot = settled(*handle);
+    inspected = true;
+    inspector.join();
+    const auto final_inspection = (*handle)->inspect();
+    const auto final = final_inspection.observations;
+    check(initial_inspection.snapshot.profile.revision == 1 && final_inspection.snapshot.profile.revision == 2 &&
+        final_inspection.snapshot.profile.training_accesses == 3, "combined inspection lost matching policy revision");
+    check(final != initial && !initial->local_attempted && initial->training.origin == Origin::provisional &&
+        final->width.origin == Origin::retained && final->width.scope.mapping_bytes == 256 * 1024 * 1024 &&
+        final->training.origin == Origin::local && final->training.qualification == Reason::qualified &&
+        final->training.method == Method::stream_training && final->training.scope.mapping_bytes == 1024 * 1024 &&
+        final->training.scope.control_protocol == 2 && final->training.scope.measurement_cpu == context.cpu &&
+        final->training.scope.interference == loom::HardwareInterference::foreground_conditional &&
+        final->local_evidence.training[3][2].trained_median == 40 &&
+        final->local_evidence.ns_per_load[0][0] == 100 && final->mapping_receipts[1].residence[0].node == 3 &&
+        snapshot.profile.preferred_width == entry.preferred_width,
+        "partial learning lost immutable evidence, mixed origins, controls or actual mapping receipt");
+  }
+  for (unsigned failure = 0; failure < 5; ++failure) {
+    Probe probe;
+    probe.wait = true; probe.native_protocol = true;
+    const loom::HardwareTableEntry known{real.signature, real.geometry, 16, 0};
+    auto config = options(probe); config.table = {&known, 1};
+    if (failure == 0) probe.outcome = loom::HardwareState::failed;
+    if (failure == 1) probe.outcome = loom::HardwareState::timed_out;
+    if (failure == 3) probe.unsupported[1] = true;
+    if (failure == 4) probe.evidence.training_complete = false;
+    loom::HardwareService service(config);
+    auto handle = service.request(real);
+    check(handle, "failed conditional observations request");
+    until([&] { return probe.entered.load(); }, "failed conditional observations did not enter");
+    if (failure == 2) service.cancel(); else probe.release = true;
+    settled(*handle);
+    const auto record = (*handle)->observations();
+    const std::array expected{Reason::failed, Reason::timed_out, Reason::cancelled, Reason::unsupported, Reason::incomplete};
+    check(record->width.origin == Origin::supplied && record->width.qualification == Reason::qualified &&
+        record->training.qualification == expected[failure], "failed/unsupported/incomplete learning misreported known or missing field");
+  }
+  for (unsigned uncertainty = 0; uncertainty < 3; ++uncertainty) {
+    Probe probe;
+    if (uncertainty == 0) probe.evidence.adjacent_forward[1][0].cold_p10 = 10;
+    if (uncertainty == 1) probe.evidence.adjacent_forward[1][0].trained_median = 95;
+    if (uncertainty == 2) { probe.evidence.ns_per_load[1].fill(100); probe.evidence.ns_per_load[1].back() = 10; }
+    loom::HardwareService service(options(probe));
+    auto handle = service.request(real);
+    check(handle, "uncertain observations request");
+    settled(*handle);
+    const auto record = (*handle)->observations();
+    check(uncertainty == 2 ? record->width.qualification == Reason::censored :
+        record->adjacent_forward[0].qualification == (uncertainty == 0 ? Reason::weak : Reason::mixed),
+        "weak/mixed/censored evidence lost its unknown reason");
+  }
+}
+
+void actual_observation_receipts(const loom::HardwareContext& real) {
+  // Only width is unresolved; this actual native sweep makes a 1 MiB mapping,
+  // rather than relying on the supplied receipt fixtures above.
+  const loom::HardwareTableEntry prefetch_known{real.signature, real.geometry, 0, 3, 1, true,
+      {Forward::observed_benefit, Forward::no_observed_benefit}};
+  loom::HardwareOptions config;
+  config.table = {&prefetch_known, 1};
+  config.limits.mapping_bytes = 1024 * 1024;
+  config.limits.memory_bytes = 2 * 1024 * 1024;
+  config.limits.wall_time = std::chrono::milliseconds(1000);
+  loom::HardwareService service(config);
+  auto handle = service.request(real);
+  check(handle, "actual receipt calibration request");
+  const auto snapshot = settled(*handle);
+  const auto record = (*handle)->observations();
+  check(snapshot.state == loom::HardwareState::calibrated_local && record->local_attempted &&
+      record->local_evidence.width_complete && record->width.origin == loom::HardwareOrigin::local &&
+      record->width.scope.mapping_bytes == 1024 * 1024 && record->width.scope.measurement_cpu == real.cpu &&
+      record->width.scope.interference == loom::HardwareInterference::foreground_conditional &&
+      record->training.origin == loom::HardwareOrigin::supplied, "actual width observation lost mapping or conditional origin");
+  for (const auto& curve : record->local_evidence.ns_per_load)
+    for (auto value : curve) check(std::isfinite(value) && value > 0, "actual width controls not retained");
+  for (const auto& receipt : record->mapping_receipts) {
+    check(receipt.mapping_bytes == 1024 * 1024, "actual mapping footprint changed in receipt");
+    if (receipt.smaps_known)
+      check(receipt.no_hugepage && receipt.kernel_page_bytes == real.geometry.page_bytes &&
+          receipt.mmu_page_bytes == real.geometry.page_bytes && !receipt.anonymous_huge_bytes,
+          "MADV_NOHUGEPAGE contradicted actual smaps without being reported");
+    if (receipt.numa_known) {
+      std::size_t pages{};
+      for (const auto& residence : receipt.residence) pages += residence.pages;
+      check(pages == 1024 * 1024 / real.geometry.page_bytes, "NUMA receipt attributes an enclosing/partial mapping");
+    }
   }
 }
 
@@ -456,9 +778,13 @@ int main() {
   auto context = loom::discover_hardware();
   check(context && loom::valid_hint_geometry(context->geometry) && !context->signature.empty(), "Linux hardware discovery");
   check(!loom::discover_hardware(-2), "invalid discovery CPU accepted");
+  parser_checks();
   inference_checks();
   lookup_checks(*context);
   partial_lookup_checks(*context);
+  forward_lookup_checks(*context);
+  observation_checks(*context);
+  actual_observation_receipts(*context);
   lifecycle_checks(*context);
   foreground_checks(*context, false);
   foreground_checks(*context, true);

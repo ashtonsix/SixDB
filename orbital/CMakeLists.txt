@@ -1,6 +1,6 @@
 find_package(Threads REQUIRED)
 add_library(orbital STATIC
-  src/types.cpp src/worker.cpp src/object/storage.cpp
+  src/types.cpp src/worker.cpp src/platform.cpp src/object/storage.cpp
   src/object/representation.cpp
   src/allocation/allocation.cpp src/allocation/arena.cpp
   src/allocation/group.cpp src/allocation/window.cpp src/allocation/finite.cpp)
@@ -79,6 +79,11 @@ add_executable(orbital_notification_check EXCLUDE_FROM_ALL test/notification.cpp
 sixdb_target(orbital_notification_check)
 target_link_libraries(orbital_notification_check PRIVATE orbital)
 add_test(NAME orbital_notification_check COMMAND orbital_notification_check)
+add_executable(orbital_platform_check EXCLUDE_FROM_ALL test/platform.cpp)
+sixdb_target(orbital_platform_check)
+target_link_libraries(orbital_platform_check PRIVATE orbital)
+add_test(NAME orbital_platform_check COMMAND orbital_platform_check)
+set_tests_properties(orbital_platform_check PROPERTIES TIMEOUT 30)
 add_executable(orbital_budget_check EXCLUDE_FROM_ALL test/budget.cpp)
 sixdb_target(orbital_budget_check)
 target_link_libraries(orbital_budget_check PRIVATE orbital)
@@ -89,7 +94,7 @@ set_tests_properties(orbital_budget_check PROPERTIES TIMEOUT 60)
 set_tests_properties(orbital_allocation_check orbital_object_check orbital_representation_check orbital_finite_check orbital_palette_check
   orbital_reclamation_check orbital_window_check orbital_return_check
   orbital_worker_check orbital_lifetime_check orbital_thread_check
-  orbital_preparation_check orbital_notification_check orbital_budget_check
+  orbital_preparation_check orbital_notification_check orbital_budget_check orbital_platform_check
   PROPERTIES LABELS "orbital-runtime")
 
 add_custom_target(orbital_validate
@@ -97,5 +102,5 @@ add_custom_target(orbital_validate
     --output-on-failure --no-tests=error -L "^orbital-runtime$"
   DEPENDS orbital_allocation_check orbital_object_check orbital_representation_check orbital_finite_check orbital_palette_check orbital_reclamation_check
     orbital_window_check orbital_return_check orbital_worker_check
-    orbital_lifetime_check orbital_thread_check orbital_preparation_check orbital_notification_check orbital_budget_check
+    orbital_lifetime_check orbital_thread_check orbital_preparation_check orbital_notification_check orbital_budget_check orbital_platform_check
   USES_TERMINAL VERBATIM)

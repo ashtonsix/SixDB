@@ -15,6 +15,18 @@ The [ObjectStore caller](../workbench/spikes/orbital-mvcc/callers/object_module.
 exercises coherent reads across suspension, publication and catalog teardown,
 then keeps an escaping Part alive through foreign use and owner-Lane completion.
 
+## Reported platform
+
+[platform.h](include/orbital/platform.h) exposes a cold Linux inventory of allowed
+CPUs, distinct identities and advertised features, cache geometry and physical
+memberships, SMT/package/NUMA relationships, and page options. Unreadable or
+malformed fields remain unknown. Allowed affinity stays separate from reported
+sharing membership; advertised capabilities and page options confer no execution
+or allocation guarantee. Discovery changes no affinity or global policy.
+[Loom](../loom/docs/hardware.md) owns conditioned experiments and policy derived
+from these reports. The [platform check](test/platform.cpp) covers malformed and
+limited topology, heterogeneous CPUs and actual Linux reporting.
+
 ## Allocation
 
 [allocation.h](include/orbital/allocation.h) exposes these lifetimes:

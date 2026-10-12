@@ -1,0 +1,22 @@
+cache index=index0 level=1 type=Data size=48K line_bytes=64 sets=64 ways=12 shared_cpu_list=0
+cache index=index1 level=1 type=Instruction size=32K line_bytes=64 sets=64 ways=8 shared_cpu_list=0
+cache index=index2 level=2 type=Unified size=1024K line_bytes=64 sets=1024 ways=16 shared_cpu_list=0
+cache index=index3 level=3 type=Unified size=4096K line_bytes=64 sets=32768 ways=2 shared_cpu_list=0
+mapping bytes=134217728 virtual_begin=124359259717632 physical_contiguity_known=false request=base-MADV_NOHUGEPAGE
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+AnonHugePages:         0 kB
+VmFlags: rd wr mr mw me ac sd nh 
+numa_mapping=711aa5800000 default anon=32768 dirty=32768 active=27 N0=32768 kernelpagesize_kB=4
+config schema=1 cpu=0 observed_cpu=0 aux=0 line_bytes=64 page_bytes=4096 ns_per_tick=0.38462140272667972 seed=918273 reps=3 trials_per_arm=128 trials_per_rep=331776 regions=8192 load_bytes=8 physical_contiguity_known=false
+method=balanced-shuffle-all-cases-arms-targets-per-repetition; random-with-replacement-regions; distinct-anchor-target-PCs; LFENCE-before-every-conditional-demand-or-hint; CLFLUSH-conditioned-not-history-reset; one-target-load-per-trial; delay-from-completed-demand-or-issued-hint; reflush-after-delay; TSC-timebase-not-core-cycles
+completed_rep=0 trials=331776 elapsed_ns=367531053
+completed_rep=1 trials=331776 elapsed_ns=734311565
+completed_rep=2 trials=331776 elapsed_ns=1114670417
+complete rows=995328 sink=58409728 elapsed_ns=1114674117
+mapping bytes=134217728 virtual_begin=124359259717632 physical_contiguity_known=false request=base-MADV_NOHUGEPAGE
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+AnonHugePages:         0 kB
+VmFlags: rd wr mr mw me ac sd nh 
+numa_mapping=711aa5800000 default anon=32768 dirty=32768 active=0 N0=32768 kernelpagesize_kB=4

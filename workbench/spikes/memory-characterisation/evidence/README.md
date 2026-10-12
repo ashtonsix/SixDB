@@ -1,5 +1,22 @@
 # Retained evidence
 
+`adjacent-{zen5,granite-rapids}-20261012/` retains every seed/repetition
+distribution from the corrected adjacent-fetch matrix, including negative
+controls, with reported hardware and actual mapping receipts. Its archive-based
+report recipe recovers raw trials and regenerates classifications. The separate
+`adjacent-runtime-*` exports check the final compiled table quarantine and real
+bounded fallback. `adjacent-unfenced-20261012/` keeps the rejected control cut by
+archive reference only. [Method and results](../ADJACENT.md) explain the selection
+and conditional conclusions.
+
+`adjacent-neoverse-v2-20261012/` keeps the corrected safe standalone ARM matrix;
+its instruction/timer/stamp metadata is distinct from x86. The three
+`platform-*-20261012/` exports retain actual typed native inventory and
+conditioned Loom observation records, independently compared with Linux on each
+host. These do not infer DRAM service from footprint or turn local candidates
+into shared hardware constants. [Loom's account](../../../../loom/docs/hardware.md)
+owns their architectural use and native inspection commands.
+
 The `screen` and `repeat` directories retain complete sweep rows (including
 controls and all repetitions), hardware/page/topology facts, initialization
 cost, selected timer and actual mapping receipts, and optional filesystem /

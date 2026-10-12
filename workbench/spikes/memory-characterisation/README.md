@@ -8,6 +8,16 @@ filesystem I/O and transport diagnostics. This spike does not select a module
 boundary or a production API. [Findings](FINDINGS.md) cover 13 instance types;
 [fleet comparison](FLEET.md) and [lookup](lookup.json) retain the results.
 
+Pertinent initialization findings have graduated into
+[Loom's native hardware service](../../../loom/docs/hardware.md): reported
+geometry, exact-context lookup, conditional overlap/training candidates, bounded
+missing-field learning and independent forward-neighbor observations. The
+[adjacent-fetch diagnostic](ADJACENT.md) extends the existing one-demand probe
+with software-prefetch, page-edge, far-target and raw-distribution controls.
+Old training/adjacency facts are quarantined from production imports because
+their conditional helpers lacked an entry barrier. Independent overlap-width
+evidence remains usable; corrected calibration learns missing prefetch facts.
+
 Start with reported cache geometry, CPU identity, topology and OS page options.
 Measure behaviour separately: effective independent-miss concurrency, spatial
 fetching, training length, lookahead, page-boundary effects, stream retention,

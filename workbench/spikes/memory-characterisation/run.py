@@ -60,7 +60,8 @@ def main():
                 subprocess.run([sys.executable, str(STUDY / 'system_probe.py'), str(output)], check=True)
             print(f'Static lookup: {output}', flush=True)
             return 0
-    config = {k: str(v) if isinstance(v, Path) else v for k, v in vars(args).items()} | {'cpu': cpu}
+    config = {k: str(v) if isinstance(v, Path) else v for k, v in vars(args).items()} | {
+        'cpu': cpu, 'prefetch_control_protocol': 2}
     run = Run(ROOT, output, config, workspace=args.build_dir.resolve())
     error = None
     try:

@@ -124,6 +124,24 @@ delay return beyond that allowance. The retained table is compiled into Loom;
 keys and records the input hash. Runtime lookup needs no Python or subprocess.
 Workers without a service use reported geometry and provisional defaults.
 
+The cold snapshot also exposes `adjacent_forward[2]`: independent starting-line
+parity observations for a forward neighbor after one demand access within a
+native page. Each is unknown, observed benefit, or no observed benefit. Exact
+table hits preserve the retained observation; bounded x86 fallback probes only
+missing parities. Unsupported maintenance and disagreeing controls stay unknown.
+This is demand-triggered evidence, with no cache-level or current-residency claim.
+Software-prefetch behavior needs its own controls. The
+[hardware account](docs/hardware.md) maps graduated findings to their owners and
+explains what callers can use.
+
+Orbital's [typed platform inventory](../orbital/include/orbital/platform.h) keeps
+reported topology separate from reusable context keys. A startup handle also
+provides immutable cold observations with independent field origins, unknown
+reasons, candidate widths, controls and actual mapping receipts. `inspect()`
+pairs them coherently with policy; ordinary adoption still copies only a small
+snapshot. The [hardware example](examples/hardware.cpp) prints both reported
+facts and conditioned evidence, with experiments disabled by default.
+
 Attach the startup handle in `configure`, then call `refresh_hints(worker)` and
 `ring.refresh_hints()` at returned boundaries. `set_hint_pressure` accepts a
 coarse resource-pressure observation; mapping heuristics remain provisional.

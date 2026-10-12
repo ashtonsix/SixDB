@@ -37,6 +37,12 @@ target_link_libraries(loom_example_hints PRIVATE loom)
 add_test(NAME loom_example_hints COMMAND loom_example_hints --force-miss)
 set_tests_properties(loom_example_hints PROPERTIES TIMEOUT 30)
 
+add_executable(loom_example_hardware EXCLUDE_FROM_ALL examples/hardware.cpp)
+sixdb_target(loom_example_hardware)
+target_link_libraries(loom_example_hardware PRIVATE loom)
+add_test(NAME loom_example_hardware COMMAND loom_example_hardware)
+set_tests_properties(loom_example_hardware PROPERTIES TIMEOUT 30)
+
 add_executable(loom_ring_probe EXCLUDE_FROM_ALL test/ring_probe.cpp)
 sixdb_target(loom_ring_probe)
 target_link_libraries(loom_ring_probe PRIVATE loom)
@@ -75,7 +81,7 @@ set_tests_properties(loom_budget_check PROPERTIES TIMEOUT 60)
 
 set_tests_properties(
   loom_worker_check loom_capacity_check loom_ring_check loom_hint_check
-  loom_hardware_check loom_example_hints loom_example_allocation
+  loom_hardware_check loom_example_hints loom_example_hardware loom_example_allocation
   loom_example_capacity loom_example_partition loom_example_preparation_window
   loom_example_preparation_finite loom_budget_check
   PROPERTIES LABELS loom-runtime)
@@ -83,5 +89,5 @@ set_tests_properties(
 add_custom_target(loom_validate
   COMMAND "${CMAKE_CTEST_COMMAND}" --test-dir "${PROJECT_BINARY_DIR}"
     --output-on-failure --no-tests=error -L "^loom-runtime$"
-  DEPENDS loom_worker_check loom_capacity_check loom_ring_check loom_hint_check loom_hardware_check loom_example_hints loom_example_allocation loom_example_capacity loom_example_partition loom_example_preparation loom_budget_check
+  DEPENDS loom_worker_check loom_capacity_check loom_ring_check loom_hint_check loom_hardware_check loom_example_hints loom_example_hardware loom_example_allocation loom_example_capacity loom_example_partition loom_example_preparation loom_budget_check
   USES_TERMINAL VERBATIM)

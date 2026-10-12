@@ -1,5 +1,12 @@
 # Findings: automatic memory and host characterisation
 
+October 2026 update: pertinent startup behavior is now implemented in
+[Loom](../../../loom/docs/hardware.md). The original conditional prefetch
+helpers lacked an entry speculation barrier. Their training and adjacency
+results remain historical and are quarantined from production table imports;
+independent random-chain width evidence remains usable. The
+[corrected adjacent study](ADJACENT.md) retains fresh native controls and results.
+
 2026-09-13. The spike ran on **13 EC2 instance types** plus the local Apple ARM
 Linux VM. It produced **12 qualified lookup contexts**: `c6i.xlarge` and
 `i4i.xlarge` expose the same CPU/environment key and their four runs are pooled.
