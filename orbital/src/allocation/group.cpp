@@ -144,12 +144,14 @@ void finite_prepare_post(FinitePreparation&) noexcept;
 // A class-blocked grid cannot hide legal Homes in later grids.
 Result<std::pair<Identity, Home>> claim_finite_candidate(Group& group,
     std::size_t size, std::size_t alignment, std::uint64_t& excluded) noexcept {
+  const auto cls = group.geometry->class_for(size);
+  if (!cls) return std::unexpected(cls.error());
   for (;;) {
     auto identity = group.geometry->claim_identity(excluded);
     if (!identity) return std::unexpected(identity.error());
-    auto home = group.geometry->claim_home(*identity, size, alignment);
+    auto home = group.geometry->claim_home_class(*identity, *cls, alignment);
     if (home) return std::pair{*identity, *home};
-    excluded |= std::uint64_t{1} << (identity->index / 16);
+    excluded |= std::uint64_t{1} << (group.geometry->grid_of(*identity));
     verify(group.geometry->release_identity(*identity));
     if (home.error() != Error::capacity) return std::unexpected(home.error());
   }
@@ -159,7 +161,7 @@ void release_finite_candidate(Group& group, const std::pair<Identity, Home>& can
     std::uint64_t& excluded) noexcept {
   verify(group.geometry->release_home(candidate.second));
   verify(group.geometry->release_identity(candidate.first));
-  excluded |= std::uint64_t{1} << (candidate.first.index / 16);
+  excluded |= std::uint64_t{1} << (group.geometry->grid_of(candidate.first));
 }
 
 std::size_t missing_pages(const Group& group, const Home& home) noexcept {
@@ -474,7 +476,7 @@ Result<void> prepare_finite(Pool& pool, Preparation& request,
   }
   if (!record.group && refusal == Error::capacity) {
     const auto reserve = std::max(allocation.bytes + allocation.readable_padding, allocation.reserved_bytes);
-    const auto palette = allocation.alignment >= 64 || reserve > 192 ? Palette::b : Palette::a;
+    const auto palette = preferred_palette(page_size(), reserve, allocation.alignment);
     // One fresh control preparation per compatible palette. Capacity wakes the
     // caller after publication; prediction policy need not queue N empty Groups.
     const bool waiting = std::any_of(pool.internal->groups.begin(), pool.internal->groups.end(),
@@ -557,7 +559,7 @@ Result<void> finite_allocate(Pool& pool, const AllocationRequest& request, std::
     }
   }
   if (!selected) {
-    auto made = make_group(pool, alignment >= 64 || size > 192 ? Palette::b : Palette::a);
+    auto made = make_group(pool, preferred_palette(page_size(), size, alignment));
     if (!made) return std::unexpected(made.error());
     selected = *made;
     auto id = selected->geometry->claim_identity();

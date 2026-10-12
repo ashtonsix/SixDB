@@ -269,9 +269,15 @@ void release_and_growth_overlap(std::size_t body) {
   worker::Lane lane;
   check(bool(worker::adopt(lane)), "adopt release/growth Lane");
   auto& pool = *take(add_pool(*arena, lane));
-  unsigned relocation_refusals = 0;
+  GrowthRequest larger{body * 5, body * 8, 64, 16};
   for (unsigned round = 0; round < 48; ++round) {
     auto value = take(allocate(pool, request(body)));
+    if (!round) {
+      // Force one real move beyond page/class rounding. Keep that target fixed:
+      // later reused Windows may offer in-place growth without doubling forever.
+      larger.bytes = std::max(larger.bytes, reserved_bytes(value) + 1);
+      larger.reserved_bytes = std::max(larger.reserved_bytes, 2 * reserved_bytes(value));
+    }
     fill(value, round);
     auto previous = take(hold(value, {0, body + 16}));
     std::atomic<bool> begin{};
@@ -281,12 +287,11 @@ void release_and_growth_overlap(std::size_t body) {
       release(owned, {.temperature = Temperature::warm,
           .last_access = std::chrono::steady_clock::now()});
     });
-    const GrowthRequest larger{body * 5, body * 8, 64, 16};
     auto* original = value.address;
     auto initial = grow(value, larger);
+    if (!round) check(!initial, "growth beyond retained reservation did not refuse relocation");
     if (!initial) {
       check(initial.error() == Error::conflict, "held growth failed for an unrelated reason");
-      ++relocation_refusals;
     }
     check(value.address == original, "growth relocated storage with a live physical reader");
     for (std::size_t index = 0; index < body + 16; ++index)
@@ -313,7 +318,6 @@ void release_and_growth_overlap(std::size_t body) {
     verify(copy_after_owner, body, round);
     release(copy_after_owner);
   }
-  check(relocation_refusals != 0, "release/growth history never exercised relocation refusal");
   // Holds pin the address; they do not restrict disjoint in-place growth.
   auto value = take(allocate(pool, request(body)));
   fill(value, 23);

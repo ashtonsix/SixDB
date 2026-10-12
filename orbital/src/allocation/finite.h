@@ -19,10 +19,18 @@ namespace orbital::allocation::detail {
 
 enum class Palette : std::uint8_t { a, b };
 
+[[nodiscard]] constexpr Palette preferred_palette(std::size_t page, std::size_t bytes,
+                                                 std::size_t alignment) noexcept {
+  // 256 identities × 256 B fill one 64 KiB page, including mixed tiny sizes.
+  return page >= 65536 || alignment >= 64 || bytes > 192 ? Palette::b : Palette::a;
+}
+
 struct FiniteConfig {
   Palette palette{Palette::a};
   std::uint16_t identities{256};
 };
+
+struct FiniteQualification;
 
 struct Identity {
   std::uint16_t index{};
@@ -96,6 +104,10 @@ public:
   [[nodiscard]] Result<void> release_identity(Identity) noexcept;
   [[nodiscard]] Result<Home> claim_home(Identity, std::size_t bytes,
                                       std::size_t alignment) noexcept;
+  // Select once while trying several identity grids in the same Group.
+  [[nodiscard]] Result<std::uint8_t> class_for(std::size_t bytes) const noexcept;
+  [[nodiscard]] Result<Home> claim_home_class(Identity, std::uint8_t cls,
+                                            std::size_t alignment) noexcept;
   [[nodiscard]] Result<void> release_home(const Home&) noexcept;
   [[nodiscard]] Result<void> bind(Identity, const Home&) noexcept;
   // Protected identity only. Read path touches its binding and immutable
@@ -104,7 +116,7 @@ public:
   [[nodiscard]] Result<Home> bound_home(Identity) const noexcept;
   [[nodiscard]] std::size_t bound_capacity(Identity identity) const noexcept {
     if (identity.index >= identities_) return 0;
-    const auto coordinate = std::atomic_ref<const std::uint8_t>(bindings_[identity.index])
+    const auto coordinate = std::atomic_ref<std::uint8_t>(bindings_[identity.index])
         .load(std::memory_order_acquire);
     return coordinate == unbound ? 0 : capacities_[coordinate & 15];
   }
@@ -114,6 +126,14 @@ public:
   [[nodiscard]] std::size_t class_minimum(std::uint8_t cls) const noexcept;
 
   [[nodiscard]] std::size_t native_page() const noexcept { return native_page_; }
+
+  [[nodiscard]] std::size_t host_page() const noexcept { return host_page_; }
+  [[nodiscard]] constexpr std::size_t slots_per_grid() const noexcept { return 16; }
+  [[nodiscard]] constexpr std::size_t class_count() const noexcept { return 15; }
+  [[nodiscard]] constexpr std::size_t grid_of(Identity id) const noexcept { return id.index >> 4; }
+  [[nodiscard]] std::size_t capacity(std::size_t cls) const noexcept {
+    return cls < capacities_.size() ? capacities_[cls] : 0;
+  }
 
   [[nodiscard]] std::size_t identity_count() const noexcept { return identities_; }
 
@@ -176,6 +196,9 @@ public:
   [[nodiscard]] Result<void> live_pages(std::span<std::uint64_t>) const noexcept;
 
 private:
+  friend struct FiniteQualification;
+  [[nodiscard]] static Result<std::unique_ptr<FiniteGroup>> create_geometry(
+      FiniteConfig, std::size_t page_granule) noexcept;
   static constexpr std::uint8_t unbound = 0xff;
   FiniteGroup() = default;
   struct Grid {
@@ -200,10 +223,12 @@ private:
   Grid* grids_{};
   Page* pages_{};
   std::uint64_t* trim_scratch_{};
-  std::size_t native_page_{}, reserved_bytes_{}, control_bytes_{};
+  std::size_t native_page_{}, host_page_{}, reserved_bytes_{}, control_bytes_{};
   std::size_t identities_{}, grid_count_{}, payload_pages_{};
-  std::array<std::size_t, 15> capacities_{};
-  std::array<std::size_t, 15> offsets_{};
+  std::array<std::uint16_t, 15> capacities_{};
+  std::array<std::uint32_t, 15> offsets_{};
+  const std::uint8_t* class_lookup_{};
+  std::uint8_t class_lookup_shift_{};
   alignas(64) std::uint64_t available_identity_grids_{};
   std::size_t mapped_pages_{}, preparing_pages_{};
 };

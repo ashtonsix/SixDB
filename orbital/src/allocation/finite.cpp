@@ -16,6 +16,24 @@ constexpr std::array<std::size_t, 15> palette_a{
     16, 32, 48, 64, 96, 128, 192, 256, 384, 512, 768, 1024, 1536, 2048, 3072};
 constexpr std::array<std::size_t, 15> palette_b{
     256, 320, 384, 448, 512, 640, 768, 896, 1024, 1280, 1536, 1792, 2048, 2560, 3072};
+constexpr std::array<std::size_t, 15> palette_b_large{
+    256, 320, 384, 448, 512, 640, 768, 896, 1088, 1280, 1536, 1792, 2176, 2560, 3072};
+
+template<std::size_t Entries, std::size_t Classes>
+constexpr auto lookup_table(const std::array<std::size_t, Classes>& capacities,
+                            std::size_t quantum) noexcept {
+  std::array<std::uint8_t, Entries> result{};
+  unsigned cls = 0;
+  for (std::size_t index = 0; index < Entries; ++index) {
+    while ((index + 1) * quantum > capacities[cls]) ++cls;
+    result[index] = static_cast<std::uint8_t>(cls);
+  }
+  return result;
+}
+
+constexpr auto lookup_a = lookup_table<192>(palette_a, 16);
+constexpr auto lookup_b = lookup_table<48>(palette_b, 64);
+constexpr auto lookup_b_large = lookup_table<48>(palette_b_large, 64);
 
 constexpr std::size_t round_up(std::size_t value, std::size_t unit) noexcept {
   return (value + unit - 1) & ~(unit - 1);
@@ -34,8 +52,8 @@ std::uint16_t aligned_slots(std::size_t capacity, std::size_t offset,
   return repeating[std::min(step, 4)];
 }
 
-std::uint8_t load(const std::uint8_t& value) noexcept {
-  return std::atomic_ref<const std::uint8_t>(value).load(std::memory_order_acquire);
+std::uint8_t load(std::uint8_t& value) noexcept {
+  return std::atomic_ref<std::uint8_t>(value).load(std::memory_order_acquire);
 }
 
 void store(std::uint8_t& value, std::uint8_t next) noexcept {
@@ -44,33 +62,48 @@ void store(std::uint8_t& value, std::uint8_t next) noexcept {
 } // namespace
 
 Result<std::unique_ptr<FiniteGroup>> FiniteGroup::create(FiniteConfig config) noexcept {
+  return create_geometry(config, 0);
+}
+
+Result<std::unique_ptr<FiniteGroup>> FiniteGroup::create_geometry(
+    FiniteConfig config, std::size_t page_granule) noexcept {
   if ((config.palette != Palette::a && config.palette != Palette::b) ||
       (config.identities != 64 && config.identities != 256 && config.identities != 1024))
     return std::unexpected(Error::invalid_argument);
   const auto native = ::sysconf(_SC_PAGESIZE);
-  if (native <= 0 || !std::has_single_bit(static_cast<std::size_t>(native)) ||
-      static_cast<std::size_t>(native) < config.identities)
+  if (native <= 0 || !std::has_single_bit(static_cast<std::size_t>(native)))
     return std::unexpected(Error::unavailable);
+  const auto page = page_granule ? page_granule : static_cast<std::size_t>(native);
+  if (!std::has_single_bit(page) || page > 65536 || page < static_cast<std::size_t>(native) ||
+      page < config.identities || page < palette_a.back())
+    return std::unexpected(Error::invalid_argument);
   auto group = std::unique_ptr<FiniteGroup>(new (std::nothrow) FiniteGroup);
   if (!group)
     return std::unexpected(Error::capacity);
-  group->native_page_ = static_cast<std::size_t>(native);
+  group->host_page_ = static_cast<std::size_t>(native);
+  group->native_page_ = page;
   group->identities_ = config.identities;
   group->grid_count_ = config.identities / 16;
-  group->capacities_ = config.palette == Palette::a ? palette_a : palette_b;
+  const auto& capacities = config.palette == Palette::a ? palette_a
+      : page >= 16384 ? palette_b_large : palette_b;
+  std::copy(capacities.begin(), capacities.end(), group->capacities_.begin());
+  group->class_lookup_ = config.palette == Palette::a ? lookup_a.data()
+      : page >= 16384 ? lookup_b_large.data() : lookup_b.data();
+  group->class_lookup_shift_ = config.palette == Palette::a ? 4 : 6;
 
+  // The fixed tables, at most 1024 identities and <=64 KiB pages bound offsets to uint32.
   std::size_t offset = 0;
   if (config.palette == Palette::a) {
     // Class runs pack small homes across grids. This order aligns the 64 B
     // run without padding the mixed-size aperture into five separate pages.
     for (const auto cls : {3u, 0u, 2u, 1u, 4u}) {
-      group->offsets_[cls] = offset;
+      group->offsets_[cls] = static_cast<std::uint32_t>(offset);
       offset += group->identities_ * group->capacities_[cls];
     }
   }
   for (unsigned cls = config.palette == Palette::a ? 5 : 0; cls < 15; ++cls) {
     offset = round_up(offset, group->native_page_);
-    group->offsets_[cls] = offset;
+    group->offsets_[cls] = static_cast<std::uint32_t>(offset);
     offset += group->identities_ * group->capacities_[cls];
   }
   const auto payload_bytes = round_up(offset, group->native_page_);
@@ -78,7 +111,7 @@ Result<std::unique_ptr<FiniteGroup>> FiniteGroup::create(FiniteConfig config) no
   // Keep finite page-state inventory bounded independently of trim encoding.
   if (group->payload_pages_ > std::numeric_limits<std::uint16_t>::max())
     return std::unexpected(Error::unavailable);
-  group->reserved_bytes_ = payload_bytes;
+  group->reserved_bytes_ = payload_bytes + (page > group->host_page_ ? page : 0);
   const auto grids_offset = round_up(group->identities_, alignof(Grid));
   const auto grids_bytes = group->grid_count_ * sizeof(Grid);
   const auto scratch_offset = round_up(grids_offset + grids_bytes + group->payload_pages_ * sizeof(Page),
@@ -99,7 +132,7 @@ Result<void> FiniteGroup::prepare() noexcept {
   if (reservation == MAP_FAILED)
     return std::unexpected(Error::io);
   reservation_ = static_cast<std::byte*>(reservation);
-  payload_ = reservation_;
+  payload_ = reinterpret_cast<std::byte*>(round_up(reinterpret_cast<std::uintptr_t>(reservation_), native_page_));
   // Bindings and owner control share one stable heap block. Their accessors stay
   // distinct; no binding address or payload offset is inferred from the other.
   // Ordinary new covers the maximum required alignment: the uint64_t scratch.
@@ -190,14 +223,22 @@ std::size_t FiniteGroup::class_minimum(std::uint8_t cls) const noexcept {
   return cls < capacities_.size() ? (cls ? capacities_[cls - 1] + 1 : 1) : 0;
 }
 
+Result<std::uint8_t> FiniteGroup::class_for(std::size_t bytes) const noexcept {
+  if (!bytes || bytes > 3072) return std::unexpected(Error::invalid_argument);
+  return class_lookup_[(bytes - 1) >> class_lookup_shift_];
+}
+
 Result<Home> FiniteGroup::claim_home(Identity identity, std::size_t bytes,
                                     std::size_t alignment) noexcept {
-  if (!valid(identity) || !bytes || bytes > capacities_.back() ||
-      !std::has_single_bit(alignment) || alignment > native_page_)
+  const auto cls = class_for(bytes);
+  if (!cls) return std::unexpected(cls.error());
+  return claim_home_class(identity, *cls, alignment);
+}
+
+Result<Home> FiniteGroup::claim_home_class(Identity identity, std::uint8_t cls,
+                                          std::size_t alignment) noexcept {
+  if (!valid(identity) || cls >= 15 || !std::has_single_bit(alignment) || alignment > native_page_)
     return std::unexpected(Error::invalid_argument);
-  unsigned cls = 0;
-  while (capacities_[cls] < bytes)
-    ++cls;
   const auto grid = identity.index / 16;
   auto& occupied = grids_[grid].occupied[cls];
   auto available = static_cast<std::uint16_t>(~occupied);

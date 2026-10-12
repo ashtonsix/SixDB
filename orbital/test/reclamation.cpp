@@ -204,7 +204,9 @@ void finite_payload_preparation_and_cleanup_failure() {
 void finite_heap_preparation_and_cleanup_failure(std::size_t alignment) {
   Fixture fixture;
   const auto references = fixture.arena->references.load();
-  auto planned = take(detail::FiniteGroup::create({alignment >= 64 ? detail::Palette::b : detail::Palette::a, 256}));
+  const auto palette = alignment >= 64 || ::sysconf(_SC_PAGESIZE) == 65536
+      ? detail::Palette::b : detail::Palette::a;
+  auto planned = take(detail::FiniteGroup::create({palette, 256}));
   metadata_size = planned->control_bytes();
   metadata_reservation_seen = false; fail_metadata = true;
   auto refused = allocate(*fixture.pool, {64, 0, alignment, 0, Initialization::zero});

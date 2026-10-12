@@ -40,6 +40,12 @@ resolved ordinary pointer; native access needs no repeated trampoline resolution
 entry. Owner-local selection caches suggest candidates; geometry and actual page
 state authorize each claim. Owning records stay at stable addresses.
 Each Group embeds 256 four-byte identity records and shares release advice.
+The finite cutoff is 3 KiB. Native 4 KiB pages retain the original A/B palettes;
+16 KiB pages adjust two upper B classes, and 64 KiB pages use B's 256-byte minimum
+for fresh Groups. The [palette study](../workbench/spikes/allocation-palettes/README.md)
+owns the measured trade-offs. Reuse may select another Group's palette, so equal
+requests need not have equal capacities. Natural alignment follows reserved capacity
+(`gcd(capacity, 64)`); explicit alignment is checked separately.
 Bindings, placement grids, page state and trim bitmaps share one stable heap
 block, sized to its contents without base-page rounding. Preparation allocates
 and initializes this control block before the owner exposes the Group. Payload

@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <limits>
+#include <numeric>
 #include <set>
 #include <sys/mman.h>
 #include <unistd.h>
@@ -33,6 +34,12 @@ constexpr std::array<std::size_t, 15> capacities_a{
     16,32,48,64,96,128,192,256,384,512,768,1024,1536,2048,3072};
 constexpr std::array<std::size_t, 15> capacities_b{
     256,320,384,448,512,640,768,896,1024,1280,1536,1792,2048,2560,3072};
+constexpr std::array<std::size_t, 15> capacities_b_large{
+    256,320,384,448,512,640,768,896,1088,1280,1536,1792,2176,2560,3072};
+
+const auto& expected_b(std::size_t page) {
+  return page >= 16384 ? capacities_b_large : capacities_b;
+}
 
 std::set<std::size_t> pages_of(const FiniteGroup& group, const std::vector<Home>& homes) {
   std::set<std::size_t> pages;
@@ -77,7 +84,7 @@ void geometry(Palette palette, std::uint16_t width) {
         "heap control extent includes bindings and complete aligned scratch");
   check(group->reserved_bytes() == group->payload_pages() * group->native_page(),
         "payload reservation excludes separately charged control heap");
-  const auto& capacities = palette == Palette::a ? capacities_a : capacities_b;
+  const auto& capacities = palette == Palette::a ? capacities_a : expected_b(group->native_page());
   std::vector<Identity> identities;
   for (unsigned index = 0; index < width; ++index) {
     auto identity = take(group->claim_identity(), "claim all identities");
@@ -102,7 +109,8 @@ void geometry(Palette palette, std::uint16_t width) {
               "exact unique finite coordinate");
         seen |= static_cast<std::uint16_t>(1u << home.slot);
         check(home.capacity == capacities[cls], "palette capacity");
-        check(reinterpret_cast<std::uintptr_t>(home.address) % 16 == 0, "native alignment");
+        check(reinterpret_cast<std::uintptr_t>(home.address) % std::gcd(capacities[cls], std::size_t{64}) == 0,
+              "class reservation lost natural alignment");
         if (!slot)
           first = home.address - home.slot * capacities[cls];
         check(home.address == first + home.slot * capacities[cls], "same-class homes are contiguous");
@@ -284,9 +292,10 @@ void alignment_and_validation() {
   auto group = take(FiniteGroup::create({Palette::b, 64}), "create B alignment");
   check(bool(group->prepare()), "prepare B alignment");
   auto identity = take(group->claim_identity(), "B identity");
-  for (const auto capacity : capacities_b) {
+  for (const auto capacity : expected_b(group->native_page())) {
     const auto home = take(group->claim_home(identity, capacity, 64), "B 64B alignment");
-    check(reinterpret_cast<std::uintptr_t>(home.address) % 64 == 0, "every B home 64B aligned");
+    check(home.capacity == capacity && reinterpret_cast<std::uintptr_t>(home.address) % 64 == 0,
+        "every selected-profile B home has its expected capacity/alignment");
     okay(group->release_home(home), "release B home");
   }
   check(!group->claim_home(identity, 0, 16), "reject empty home");
@@ -305,7 +314,7 @@ void alignment_and_validation() {
   okay(group->release_home(original), "valid home remains after rejected releases");
   check(!group->mark_mapped({group->payload_pages(), 1}), "reject out-of-range page");
   check(!group->mark_mapped({0, std::numeric_limits<std::size_t>::max()}), "reject overflow span");
-  std::array<std::uint64_t, 1> short_live{};
+  std::vector<std::uint64_t> short_live(group->live_words() - 1);
   check(!group->live_pages(short_live), "reject insufficient live-page scratch");
   okay(group->release_identity(identity), "release B identity");
   check(!group->release_identity(identity), "double identity release fails");
@@ -325,30 +334,32 @@ void prepared_home_selection() {
   });
   prepare(*group, homes.back());
   const auto page = group->native_page();
+  const auto capacity = page >= 16384 ? 1088u : 1024u;
+  check(homes.back().capacity == capacity, "selected profile has the wrong 1024-byte reservation class");
   const auto mapped_begin = reinterpret_cast<std::uintptr_t>(homes.back().address) / page * page;
-  const auto mapped_end = (reinterpret_cast<std::uintptr_t>(homes.back().address) + 1024 + page - 1) / page * page;
+  const auto mapped_end = (reinterpret_cast<std::uintptr_t>(homes.back().address) + capacity + page - 1) / page * page;
   for (const auto& home : homes) okay(group->release_home(home), "return enumerated home");
   const auto expected = std::find_if(homes.begin(), homes.end(), [&](const auto& home) {
     const auto address = reinterpret_cast<std::uintptr_t>(home.address);
-    return address >= mapped_begin && address + 1024 <= mapped_end;
+    return address >= mapped_begin && address + capacity <= mapped_end;
   });
   check(expected != homes.end(), "independent prepared byte interval has a legal home");
   auto selected = take(group->claim_home(identity, 1024, 64), "reuse existing prepared pages");
   check(selected.address == expected->address, "unprepared earlier slot hid prepared same-grid capacity");
-  selected.address[0] = selected.address[1023] = std::byte{0x37};
+  selected.address[0] = selected.address[capacity-1] = std::byte{0x37};
   okay(group->release_home(selected), "return prepared selected home");
   okay(group->begin_trim(selected.pages), "exclude prepared pages during reclamation");
   auto alternative = group->claim_home(identity, 1024, 64);
   if (alternative) {
     const auto address = reinterpret_cast<std::uintptr_t>(alternative->address);
-    check(address + 1024 <= mapped_begin || address >= mapped_end,
+    check(address + capacity <= mapped_begin || address >= mapped_end,
           "prepared preference claimed an in-flight trim range");
     okay(group->release_home(*alternative), "return non-trimming alternative");
   }
   okay(group->finish_trim(selected.pages, false), "failed trim restores prepared selection");
   selected = take(group->claim_home(identity, 1024, 64), "reuse after failed trim");
   check(selected.address == expected->address && selected.address[0] == std::byte{0x37} &&
-      selected.address[1023] == std::byte{0x37}, "failed trim lost prepared selection or actual contents");
+      selected.address[capacity-1] == std::byte{0x37}, "failed trim lost prepared selection or actual contents");
   okay(group->release_home(selected), "release restored home");
   okay(group->release_identity(identity), "release selection identity");
 }
