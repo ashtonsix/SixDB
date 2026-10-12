@@ -2,6 +2,27 @@ add_library(ikea_core STATIC src/overlap.cpp)
 sixdb_target(ikea_core)
 target_include_directories(ikea_core PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
+add_library(ikea_streampack STATIC src/streampack/description.cpp src/streampack/view.cpp)
+add_library(ikea::streampack ALIAS ikea_streampack)
+sixdb_target(ikea_streampack)
+target_include_directories(ikea_streampack PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_compile_features(ikea_streampack PUBLIC cxx_std_23)
+target_link_libraries(ikea_streampack PUBLIC ikea_core)
+add_executable(ikea_streampack_check EXCLUDE_FROM_ALL test/streampack/check.cpp)
+sixdb_target(ikea_streampack_check)
+target_compile_options(ikea_streampack_check PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(ikea_streampack_check PRIVATE ikea::streampack)
+add_executable(ikea_streampack_boundaries_check EXCLUDE_FROM_ALL test/streampack/boundaries.cpp)
+sixdb_target(ikea_streampack_boundaries_check)
+target_compile_options(ikea_streampack_boundaries_check PRIVATE -fno-vectorize -fno-slp-vectorize)
+target_link_libraries(ikea_streampack_boundaries_check PRIVATE ikea::streampack)
+foreach(example ordinary composition)
+  add_executable(ikea_example_streampack_${example} EXCLUDE_FROM_ALL examples/streampack/${example}.cpp)
+  sixdb_target(ikea_example_streampack_${example})
+  target_compile_options(ikea_example_streampack_${example} PRIVATE -fno-vectorize -fno-slp-vectorize)
+  target_link_libraries(ikea_example_streampack_${example} PRIVATE ikea::streampack)
+endforeach()
+
 add_library(ikea_seriespack STATIC
   src/seriespack/readers.cpp src/seriespack/admission.cpp src/seriespack/representation.cpp)
 add_library(ikea::seriespack ALIAS ikea_seriespack)
@@ -105,6 +126,7 @@ foreach(example ordinary composition integration packets words groups)
   target_link_libraries(ikea_example_tuplepack_${example} PRIVATE ikea::tuplepack)
 endforeach()
 set(ikea_example_targets
+  ikea_example_streampack_ordinary ikea_example_streampack_composition
   ikea_example_seriespack_ordinary ikea_example_seriespack_composition
   ikea_example_seriespack_pipeline ikea_example_seriespack_integration
   ikea_example_tuplepack_ordinary ikea_example_tuplepack_composition
@@ -112,6 +134,7 @@ set(ikea_example_targets
   ikea_example_tuplepack_words ikea_example_tuplepack_groups
   ikea_example_bec256_ordinary ikea_example_bec256_native ikea_example_bec256_integration)
 set(ikea_check_targets
+  ikea_streampack_check ikea_streampack_boundaries_check
   ikea_seriespack_check ikea_seriespack_descriptor_check ikea_seriespack_ownership_check
   ikea_seriespack_admission_check
   ikea_tuplepack_wire_check ikea_tuplepack_transfer_check

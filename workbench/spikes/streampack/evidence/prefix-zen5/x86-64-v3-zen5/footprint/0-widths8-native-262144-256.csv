@@ -1,0 +1,10 @@
+method,rows,capacity,operation,repetition,iterations,ns_per_row,logical_bytes,payload_bytes,metadata_bytes,base_bytes,touched_planes
+widths8-native,262144,256,dependent-tail4,0,8,22.382,5111776,5111776,262144,65536,metadata+bases+payload
+widths8-native,262144,256,dependent-tail4,1,8,20.550,5111776,5111776,262144,65536,metadata+bases+payload
+widths8-native,262144,256,dependent-tail4,2,8,20.276,5111776,5111776,262144,65536,metadata+bases+payload
+widths8-native,262144,256,eight-chain-tail4,0,64,2.657,5111776,5111776,262144,65536,metadata+bases+payload
+widths8-native,262144,256,eight-chain-tail4,1,64,2.660,5111776,5111776,262144,65536,metadata+bases+payload
+widths8-native,262144,256,eight-chain-tail4,2,64,2.654,5111776,5111776,262144,65536,metadata+bases+payload
+widths8-native,262144,256,independent-length,0,512,0.415,5111776,5111776,262144,65536,metadata
+widths8-native,262144,256,independent-length,1,512,0.416,5111776,5111776,262144,65536,metadata
+widths8-native,262144,256,independent-length,2,512,0.416,5111776,5111776,262144,65536,metadata

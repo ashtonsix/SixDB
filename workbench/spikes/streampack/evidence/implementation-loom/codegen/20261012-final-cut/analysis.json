@@ -1,0 +1,646 @@
+{
+  "source_sha256": "d973cd0310d981856f6d60ced7e04f2b7cedda88d9f8fb6abd4a7b61880fd76c",
+  "recipe_sha256": "e400eafba847a9f5037bf4caef1e9ba193616e3b459b4965196538dcd6c8ddcd",
+  "passed": true,
+  "targets": {
+    "v2": {
+      "stable_dependencies": 346,
+      "dependencies_still_match_after_analysis": true,
+      "dependency_drift_vs_previous": [
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/author/chain.h",
+          "previous_sha256": "087ff13f7c9c2e74ddd2bd225d8babfd427be3c510e57fb031aaa136bec4c811",
+          "current_sha256": "82bcfa7fa4c48b58875d4ca00838aa908bdcede363112d79b8d22c94bbb679f1"
+        },
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/author/native.h",
+          "previous_sha256": "2ba4c93e1854be81f5f1ac3ff41e9915f8d3b18408baecdf3dd197d1f20b4d53",
+          "current_sha256": "88d56da8934e1dcc1f2674b195b97b5761f30db487c6c4b27f9a8fd47c890403"
+        },
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/author/read.h",
+          "previous_sha256": "7cd72d8b69f75595035fbd2fd0de310d24f3136fd172b765de0316d3798dda5f",
+          "current_sha256": "43a77b6277a87b9f6919bd28e6183a07d994cabe1bc5d6234cec3b3ec172f858"
+        },
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/description.h",
+          "previous_sha256": "b5db1423976573e064df20e0e30e4c69a8f028e49ea611048e8e28f3ab8e084f",
+          "current_sha256": "87e4ce88a58156ae35f631ba081d475e56888130d70b741f9d245ae29300b22e"
+        },
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/detail/bytes.h",
+          "previous_sha256": "26c5f78c061eb57f3be50c9ebe3ab0bdedab7b0fa6740c642b4ebd22d4ae4cb9",
+          "current_sha256": "baa5181b23c93e47d4f7dd8cc0b01215d2c479f82ac0f35dd21718aba28cef8f"
+        },
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/detail/prefix.h",
+          "previous_sha256": "ade1146dc6bb3c5b3b607bbc9d1b229c68dc556ab920ebb7a180e44b7fec53d8",
+          "current_sha256": "fe2731a3a39e294c09b64fe702f5868021f7f8926cfc3b0119332e6167d4a7b1"
+        },
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/detail/simd.h",
+          "previous_sha256": "a9518a501f2334a8976def7b3c9cea29de6ecb8d33cb8bc864cc56ff5bf9b78d",
+          "current_sha256": "57573d3110b81722615ca259ba1580213637a07d2e52278ac862fc09f5c83252"
+        },
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/view.h",
+          "previous_sha256": "f0f51c8d9051439773fcc9b8a4cd6d35e3f23f35f840c6d37111d4b23d369268",
+          "current_sha256": "8f57c67f32459f180fcf50f6b1b2387e005f96b8d2fbb8c0f02b54eb5d29eb6e"
+        }
+      ],
+      "callback_count": 96,
+      "callbacks_with_musttail": 96,
+      "callbacks_with_ordinary_calls": 0,
+      "callbacks_with_vector_stack_sites": 0,
+      "machine_code_equal_to_previous": 96,
+      "instructions_and_relocations_equal_to_previous": 96,
+      "before_visitor_inline_helper_call_callbacks": 24,
+      "final_helper_call_callbacks": 0,
+      "callbacks": {
+        "ring_geometry": {
+          "count": 24,
+          "text_bytes_range": [
+            368,
+            1728
+          ],
+          "ordinary_calls_range": [
+            0,
+            0
+          ],
+          "stack_memory_sites_range": [
+            0,
+            0
+          ],
+          "vector_stack_memory_sites_range": [
+            0,
+            0
+          ],
+          "prefetch_sites_range": [
+            0,
+            124
+          ],
+          "conditional_branch_sites_range": [
+            10,
+            23
+          ],
+          "indirect_transfer_sites_range": [
+            1,
+            2
+          ]
+        },
+        "ring_payload": {
+          "count": 24,
+          "text_bytes_range": [
+            232,
+            2800
+          ],
+          "ordinary_calls_range": [
+            0,
+            0
+          ],
+          "stack_memory_sites_range": [
+            0,
+            0
+          ],
+          "vector_stack_memory_sites_range": [
+            0,
+            0
+          ],
+          "prefetch_sites_range": [
+            0,
+            257
+          ],
+          "conditional_branch_sites_range": [
+            5,
+            33
+          ],
+          "indirect_transfer_sites_range": [
+            1,
+            5
+          ]
+        },
+        "point_chain_geometry": {
+          "count": 24,
+          "text_bytes_range": [
+            300,
+            1500
+          ],
+          "ordinary_calls_range": [
+            0,
+            0
+          ],
+          "stack_memory_sites_range": [
+            0,
+            0
+          ],
+          "vector_stack_memory_sites_range": [
+            0,
+            0
+          ],
+          "prefetch_sites_range": [
+            0,
+            130
+          ],
+          "conditional_branch_sites_range": [
+            7,
+            9
+          ],
+          "indirect_transfer_sites_range": [
+            2,
+            16
+          ]
+        },
+        "point_chain_payload": {
+          "count": 24,
+          "text_bytes_range": [
+            156,
+            2788
+          ],
+          "ordinary_calls_range": [
+            0,
+            0
+          ],
+          "stack_memory_sites_range": [
+            0,
+            0
+          ],
+          "vector_stack_memory_sites_range": [
+            0,
+            0
+          ],
+          "prefetch_sites_range": [
+            0,
+            263
+          ],
+          "conditional_branch_sites_range": [
+            1,
+            22
+          ],
+          "indirect_transfer_sites_range": [
+            1,
+            17
+          ]
+        }
+      }
+    },
+    "zen5": {
+      "stable_dependencies": 466,
+      "dependencies_still_match_after_analysis": true,
+      "dependency_drift_vs_previous": [
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/author/chain.h",
+          "previous_sha256": "087ff13f7c9c2e74ddd2bd225d8babfd427be3c510e57fb031aaa136bec4c811",
+          "current_sha256": "82bcfa7fa4c48b58875d4ca00838aa908bdcede363112d79b8d22c94bbb679f1"
+        },
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/author/native.h",
+          "previous_sha256": "2ba4c93e1854be81f5f1ac3ff41e9915f8d3b18408baecdf3dd197d1f20b4d53",
+          "current_sha256": "88d56da8934e1dcc1f2674b195b97b5761f30db487c6c4b27f9a8fd47c890403"
+        },
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/author/read.h",
+          "previous_sha256": "7cd72d8b69f75595035fbd2fd0de310d24f3136fd172b765de0316d3798dda5f",
+          "current_sha256": "43a77b6277a87b9f6919bd28e6183a07d994cabe1bc5d6234cec3b3ec172f858"
+        },
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/description.h",
+          "previous_sha256": "b5db1423976573e064df20e0e30e4c69a8f028e49ea611048e8e28f3ab8e084f",
+          "current_sha256": "87e4ce88a58156ae35f631ba081d475e56888130d70b741f9d245ae29300b22e"
+        },
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/detail/bytes.h",
+          "previous_sha256": "26c5f78c061eb57f3be50c9ebe3ab0bdedab7b0fa6740c642b4ebd22d4ae4cb9",
+          "current_sha256": "baa5181b23c93e47d4f7dd8cc0b01215d2c479f82ac0f35dd21718aba28cef8f"
+        },
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/detail/prefix.h",
+          "previous_sha256": "ade1146dc6bb3c5b3b607bbc9d1b229c68dc556ab920ebb7a180e44b7fec53d8",
+          "current_sha256": "fe2731a3a39e294c09b64fe702f5868021f7f8926cfc3b0119332e6167d4a7b1"
+        },
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/detail/simd.h",
+          "previous_sha256": "a9518a501f2334a8976def7b3c9cea29de6ecb8d33cb8bc864cc56ff5bf9b78d",
+          "current_sha256": "57573d3110b81722615ca259ba1580213637a07d2e52278ac862fc09f5c83252"
+        },
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/view.h",
+          "previous_sha256": "f0f51c8d9051439773fcc9b8a4cd6d35e3f23f35f840c6d37111d4b23d369268",
+          "current_sha256": "8f57c67f32459f180fcf50f6b1b2387e005f96b8d2fbb8c0f02b54eb5d29eb6e"
+        }
+      ],
+      "callback_count": 96,
+      "callbacks_with_musttail": 96,
+      "callbacks_with_ordinary_calls": 0,
+      "callbacks_with_vector_stack_sites": 0,
+      "machine_code_equal_to_previous": 96,
+      "instructions_and_relocations_equal_to_previous": 96,
+      "before_visitor_inline_helper_call_callbacks": 24,
+      "final_helper_call_callbacks": 0,
+      "callbacks": {
+        "ring_geometry": {
+          "count": 24,
+          "text_bytes_range": [
+            370,
+            1696
+          ],
+          "ordinary_calls_range": [
+            0,
+            0
+          ],
+          "stack_memory_sites_range": [
+            0,
+            14
+          ],
+          "vector_stack_memory_sites_range": [
+            0,
+            0
+          ],
+          "prefetch_sites_range": [
+            0,
+            146
+          ],
+          "conditional_branch_sites_range": [
+            10,
+            11
+          ],
+          "indirect_transfer_sites_range": [
+            1,
+            2
+          ]
+        },
+        "ring_payload": {
+          "count": 24,
+          "text_bytes_range": [
+            240,
+            3022
+          ],
+          "ordinary_calls_range": [
+            0,
+            0
+          ],
+          "stack_memory_sites_range": [
+            0,
+            41
+          ],
+          "vector_stack_memory_sites_range": [
+            0,
+            0
+          ],
+          "prefetch_sites_range": [
+            0,
+            276
+          ],
+          "conditional_branch_sites_range": [
+            5,
+            40
+          ],
+          "indirect_transfer_sites_range": [
+            1,
+            5
+          ]
+        },
+        "point_chain_geometry": {
+          "count": 24,
+          "text_bytes_range": [
+            280,
+            1498
+          ],
+          "ordinary_calls_range": [
+            0,
+            0
+          ],
+          "stack_memory_sites_range": [
+            0,
+            2
+          ],
+          "vector_stack_memory_sites_range": [
+            0,
+            0
+          ],
+          "prefetch_sites_range": [
+            0,
+            146
+          ],
+          "conditional_branch_sites_range": [
+            7,
+            8
+          ],
+          "indirect_transfer_sites_range": [
+            2,
+            2
+          ]
+        },
+        "point_chain_payload": {
+          "count": 24,
+          "text_bytes_range": [
+            136,
+            2818
+          ],
+          "ordinary_calls_range": [
+            0,
+            0
+          ],
+          "stack_memory_sites_range": [
+            0,
+            26
+          ],
+          "vector_stack_memory_sites_range": [
+            0,
+            0
+          ],
+          "prefetch_sites_range": [
+            0,
+            277
+          ],
+          "conditional_branch_sites_range": [
+            2,
+            28
+          ],
+          "indirect_transfer_sites_range": [
+            1,
+            5
+          ]
+        }
+      }
+    },
+    "granite-rapids": {
+      "stable_dependencies": 466,
+      "dependencies_still_match_after_analysis": true,
+      "dependency_drift_vs_previous": [
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/author/chain.h",
+          "previous_sha256": "087ff13f7c9c2e74ddd2bd225d8babfd427be3c510e57fb031aaa136bec4c811",
+          "current_sha256": "82bcfa7fa4c48b58875d4ca00838aa908bdcede363112d79b8d22c94bbb679f1"
+        },
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/author/native.h",
+          "previous_sha256": "2ba4c93e1854be81f5f1ac3ff41e9915f8d3b18408baecdf3dd197d1f20b4d53",
+          "current_sha256": "88d56da8934e1dcc1f2674b195b97b5761f30db487c6c4b27f9a8fd47c890403"
+        },
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/author/read.h",
+          "previous_sha256": "7cd72d8b69f75595035fbd2fd0de310d24f3136fd172b765de0316d3798dda5f",
+          "current_sha256": "43a77b6277a87b9f6919bd28e6183a07d994cabe1bc5d6234cec3b3ec172f858"
+        },
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/description.h",
+          "previous_sha256": "b5db1423976573e064df20e0e30e4c69a8f028e49ea611048e8e28f3ab8e084f",
+          "current_sha256": "87e4ce88a58156ae35f631ba081d475e56888130d70b741f9d245ae29300b22e"
+        },
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/detail/bytes.h",
+          "previous_sha256": "26c5f78c061eb57f3be50c9ebe3ab0bdedab7b0fa6740c642b4ebd22d4ae4cb9",
+          "current_sha256": "baa5181b23c93e47d4f7dd8cc0b01215d2c479f82ac0f35dd21718aba28cef8f"
+        },
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/detail/prefix.h",
+          "previous_sha256": "ade1146dc6bb3c5b3b607bbc9d1b229c68dc556ab920ebb7a180e44b7fec53d8",
+          "current_sha256": "fe2731a3a39e294c09b64fe702f5868021f7f8926cfc3b0119332e6167d4a7b1"
+        },
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/detail/simd.h",
+          "previous_sha256": "a9518a501f2334a8976def7b3c9cea29de6ecb8d33cb8bc864cc56ff5bf9b78d",
+          "current_sha256": "57573d3110b81722615ca259ba1580213637a07d2e52278ac862fc09f5c83252"
+        },
+        {
+          "path": "/home/ashtonsix/sixdb/ikea/include/ikea/streampack/view.h",
+          "previous_sha256": "f0f51c8d9051439773fcc9b8a4cd6d35e3f23f35f840c6d37111d4b23d369268",
+          "current_sha256": "8f57c67f32459f180fcf50f6b1b2387e005f96b8d2fbb8c0f02b54eb5d29eb6e"
+        }
+      ],
+      "callback_count": 96,
+      "callbacks_with_musttail": 96,
+      "callbacks_with_ordinary_calls": 0,
+      "callbacks_with_vector_stack_sites": 0,
+      "machine_code_equal_to_previous": 96,
+      "instructions_and_relocations_equal_to_previous": 96,
+      "before_visitor_inline_helper_call_callbacks": 24,
+      "final_helper_call_callbacks": 0,
+      "callbacks": {
+        "ring_geometry": {
+          "count": 24,
+          "text_bytes_range": [
+            370,
+            1684
+          ],
+          "ordinary_calls_range": [
+            0,
+            0
+          ],
+          "stack_memory_sites_range": [
+            0,
+            13
+          ],
+          "vector_stack_memory_sites_range": [
+            0,
+            0
+          ],
+          "prefetch_sites_range": [
+            0,
+            146
+          ],
+          "conditional_branch_sites_range": [
+            10,
+            11
+          ],
+          "indirect_transfer_sites_range": [
+            1,
+            2
+          ]
+        },
+        "ring_payload": {
+          "count": 24,
+          "text_bytes_range": [
+            240,
+            3082
+          ],
+          "ordinary_calls_range": [
+            0,
+            0
+          ],
+          "stack_memory_sites_range": [
+            0,
+            33
+          ],
+          "vector_stack_memory_sites_range": [
+            0,
+            0
+          ],
+          "prefetch_sites_range": [
+            0,
+            278
+          ],
+          "conditional_branch_sites_range": [
+            5,
+            38
+          ],
+          "indirect_transfer_sites_range": [
+            1,
+            5
+          ]
+        },
+        "point_chain_geometry": {
+          "count": 24,
+          "text_bytes_range": [
+            280,
+            1494
+          ],
+          "ordinary_calls_range": [
+            0,
+            0
+          ],
+          "stack_memory_sites_range": [
+            0,
+            2
+          ],
+          "vector_stack_memory_sites_range": [
+            0,
+            0
+          ],
+          "prefetch_sites_range": [
+            0,
+            146
+          ],
+          "conditional_branch_sites_range": [
+            7,
+            8
+          ],
+          "indirect_transfer_sites_range": [
+            2,
+            2
+          ]
+        },
+        "point_chain_payload": {
+          "count": 24,
+          "text_bytes_range": [
+            135,
+            2838
+          ],
+          "ordinary_calls_range": [
+            0,
+            0
+          ],
+          "stack_memory_sites_range": [
+            0,
+            30
+          ],
+          "vector_stack_memory_sites_range": [
+            0,
+            0
+          ],
+          "prefetch_sites_range": [
+            0,
+            277
+          ],
+          "conditional_branch_sites_range": [
+            2,
+            28
+          ],
+          "indirect_transfer_sites_range": [
+            1,
+            5
+          ]
+        }
+      }
+    }
+  },
+  "continuation": {
+    "ring_tuple_bytes": 40,
+    "slot_offsets": {
+      "length": 8,
+      "offset": 16,
+      "digest": 24,
+      "left": 32,
+      "row": 36,
+      "frame": 40
+    },
+    "field_bytes": {
+      "length": 8,
+      "offset": 8,
+      "digest": 8,
+      "left": 4,
+      "row": 4,
+      "frame": 8
+    },
+    "point_chain_location_scalar_arguments": 2,
+    "frame_offsets": {
+      "row": 88,
+      "left": 92,
+      "digest": 96
+    },
+    "note": "The continuing Ring writes the tuple before its budget check and reloads it for dispatch. This is Slot storage, not stack scratch. Point-chain continuation instead persists in Frame.",
+    "final_cut_evidence": {
+      "v2": {
+        "asm": "v2/implementation_loom.asm",
+        "geometry_stores": [
+          8608,
+          8612
+        ],
+        "geometry_reloads": [
+          8622,
+          8625
+        ],
+        "geometry_tail": 8627,
+        "payload_stores": [
+          8659,
+          8663
+        ],
+        "payload_reloads": [
+          8687,
+          8690
+        ],
+        "payload_tail": 8692,
+        "current_slot_register": "x21",
+        "point_frame_register": "x21",
+        "point_frame_row_left_store": 8382,
+        "point_frame_digest_store": 8385,
+        "ir": "v2/implementation_loom.ll",
+        "tuple_assignment_lines": [
+          15082,
+          15085
+        ],
+        "continuing_musttail": 15097
+      },
+      "zen5": {
+        "asm": "zen5/implementation_loom.asm",
+        "geometry_stores": [
+          8388,
+          8395
+        ],
+        "geometry_reloads": [
+          8407,
+          8413
+        ],
+        "geometry_tail": 8414,
+        "payload_stores": [
+          8440,
+          8445
+        ],
+        "payload_reloads": [
+          8471,
+          8477
+        ],
+        "payload_tail": 8478,
+        "current_slot_register": "r13",
+        "point_frame_register": "r13",
+        "point_frame_stores": [
+          8164,
+          8166
+        ],
+        "ir": "zen5/implementation_loom.ll",
+        "tuple_assignment_lines": [
+          15174,
+          15177
+        ],
+        "continuing_musttail": 15189
+      },
+      "note": "Current direct/u8/u8/no-hint Ring geometry/payload were inspected independently; they have no stack accesses. Tuple extent is Slot [0x08,0x30); stores precede budget return and dispatch reloads. Frontend IR allocas are not emitted stack accesses."
+    }
+  },
+  "limits": [
+    "Instruction/call/branch/hint/stack counts are static sites across alternate paths, not executed counts or timing.",
+    "Stack-memory sites include explicit push/pop. Scalar scratch is separate from persistent Slot arguments.",
+    "Machine-code equality compares ELF function bytes; instruction/relocation equality separately checks symbolic targets in retained disassembly.",
+    "The previously qualified capture had eight drifting Ikea header hashes. This fresh cut hashes current inputs before/after compilation and across all targets."
+  ]
+}

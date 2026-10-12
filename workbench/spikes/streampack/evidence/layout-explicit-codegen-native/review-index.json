@@ -1,0 +1,805 @@
+{
+  "scope": "Final actual linked native codegen audit before timing: explicit raw field scans; complete C1/C8 payload chains; scalar-prefix and native-prefix bulk projection. Read-only diagnosis; no timings, builds, worker launches or source changes by reviewer.",
+  "decision": "No codegen launch blocker found in reviewed final admitted fixtures. Root-owned native and local behavior checks passed before timing. This receipt is not a production promotion or a benchmark result.",
+  "source": {
+    "tree_digest": "7fd83f199cb60326e8865de6898e5bcd09d96754619e1d776653c46a5ac8f7ce",
+    "compressed_archive_sha256": "91087b812af3c56eca192fdc83f8248ebd03303de49e400324f94c6aa67fd489",
+    "capture": {
+      "path": "build/captures/streampack-explicit-reviewed.capture.json",
+      "sha256": "b9a54fe4e038979be713f2cacc38ed5c584b247a6bde2150e597fe3c29187a2e"
+    },
+    "members_sha256": {
+      "workbench/spikes/streampack/CMakeLists.txt": "a8968300606d1bf7243c718cef6bb75aecd86876ac7426cbdcfafce58febd6a0",
+      "workbench/spikes/streampack/layout.cpp": "8d2046739edda4b0ab4b0d45894d597b87112974902a7e5b7c768fff7f71f8c6",
+      "workbench/spikes/streampack/layout_hybrid.h": "2166287df055295370542ca5b5cdf03594229c69f5d7a4eff5b95ba7c14d3d4c",
+      "workbench/spikes/streampack/layout_native.h": "9f9dcd4f943fd7b4ad33cdc91df1e2b9dc8b1886586e00c74f98c0d745c1f8db",
+      "workbench/spikes/streampack/prefix.h": "32cb944e31d70af020a4263c3f408fd5d6c6575b8ee1260db1d908b8a67d71c9"
+    },
+    "toolchain": "Clang/LLVM 21.1.8; ordinary linked native Release binaries; both explicit targets -fno-vectorize -fno-slp-vectorize",
+    "flags_qualification": "Disabling automatic loop and SLP vectorization does not prohibit compiler unrolling, integer reassociation, integer MADD/MLA, or intrinsic lowering. -ffp-contract=off is a floating-point restriction."
+  },
+  "native_pairs": [
+    {
+      "source_tree_digest": "7fd83f199cb60326e8865de6898e5bcd09d96754619e1d776653c46a5ac8f7ce",
+      "source_archive_sha256": "91087b812af3c56eca192fdc83f8248ebd03303de49e400324f94c6aa67fd489",
+      "worker": "20261012T011501Z-b5df5a11",
+      "instance_type": "c9g.4xlarge",
+      "asm": "build/workers/20261012T011501Z-b5df5a11/results/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit.asm",
+      "asm_sha256": "21f888852203999aa76619e57e0c887d616dde395a2dc71f60754d7e210fdf90",
+      "profile": "armv8.2-a+simd-neoverse-v3",
+      "binary": "streampack_layout_explicit",
+      "binary_sha256_from_manifest": "6b855374c71b04d4c6650a157560e664e5bd8df5c70d041541f2b4b096aa05bb",
+      "binary_manifest_sha256": "e96c49a01770fde4b8497f770b9cf5057e9430f87fe2a9b10f3cc79aabd6b185",
+      "body_report": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/c9g/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit/functions.json",
+        "sha256": "ce4b7c28bc6840c1cc0b89cf27e3f95ba12d7fc88045f07636ba1c55309c5b4c"
+      },
+      "selected_bodies": 198,
+      "original_binary_manifest": "build/workers/20261012T011501Z-b5df5a11/results/armv8.2-a+simd-neoverse-v3/binaries.sha256",
+      "original_job": {
+        "path": "build/workers/20261012T011501Z-b5df5a11/job.json",
+        "sha256": "fcb2606b38eeaf0f1f0fd7757232a89c9558475d4c9b16c3f7e00540144f2d08"
+      },
+      "selected_modes": [
+        "C1",
+        "C8",
+        "bulk-true",
+        "scan-0-false",
+        "scan-0-true",
+        "scan-1-false",
+        "scan-1-true",
+        "scan-2-false",
+        "scan-2-true",
+        "scan-3-false",
+        "scan-3-true",
+        "scan-4-false",
+        "scan-4-true",
+        "scan-5-false",
+        "scan-5-true"
+      ]
+    },
+    {
+      "source_tree_digest": "7fd83f199cb60326e8865de6898e5bcd09d96754619e1d776653c46a5ac8f7ce",
+      "source_archive_sha256": "91087b812af3c56eca192fdc83f8248ebd03303de49e400324f94c6aa67fd489",
+      "worker": "20261012T011501Z-b5df5a11",
+      "instance_type": "c9g.4xlarge",
+      "asm": "build/workers/20261012T011501Z-b5df5a11/results/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit_bulk.asm",
+      "asm_sha256": "5b59eb0e20bcaedd305822834c243f2d98ca4a0beb3fc15f8889b7e92c35af74",
+      "profile": "armv8.2-a+simd-neoverse-v3",
+      "binary": "streampack_layout_explicit_bulk",
+      "binary_sha256_from_manifest": "69720e13973a7b57606342f31c577f62d88c7e4202571560ead31a6d132115eb",
+      "binary_manifest_sha256": "e96c49a01770fde4b8497f770b9cf5057e9430f87fe2a9b10f3cc79aabd6b185",
+      "body_report": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/c9g/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit_bulk/functions.json",
+        "sha256": "678e98aea496929fb3cdccd23aea0be4e09bd6c533751a7181843bc3e53eddcf"
+      },
+      "selected_bodies": 58,
+      "original_binary_manifest": "build/workers/20261012T011501Z-b5df5a11/results/armv8.2-a+simd-neoverse-v3/binaries.sha256",
+      "original_job": {
+        "path": "build/workers/20261012T011501Z-b5df5a11/job.json",
+        "sha256": "fcb2606b38eeaf0f1f0fd7757232a89c9558475d4c9b16c3f7e00540144f2d08"
+      },
+      "selected_modes": [
+        "C1",
+        "C8",
+        "bulk-false",
+        "bulk-true"
+      ]
+    },
+    {
+      "source_tree_digest": "7fd83f199cb60326e8865de6898e5bcd09d96754619e1d776653c46a5ac8f7ce",
+      "source_archive_sha256": "91087b812af3c56eca192fdc83f8248ebd03303de49e400324f94c6aa67fd489",
+      "worker": "20261012T011501Z-4d581180",
+      "instance_type": "m8i.4xlarge",
+      "asm": "build/streampack-final-native-granite/x86-64-v3-granite-rapids/streampack_layout_explicit.asm",
+      "asm_sha256": "44262a955e01c4dac68b96361d5f21ced4f616cc738b08df0e4528c375c2644f",
+      "profile": "x86-64-v3-granite-rapids",
+      "binary": "streampack_layout_explicit",
+      "binary_sha256_from_manifest": "d5a5475a6b7356a8b92406b52e0125986341cf97e9a2e09390bcab49e16de930",
+      "binary_manifest_sha256": "bd412419f7f23c7eb900e6275e19193ac7f77dbf20b5fa85c43630f62ffb607b",
+      "body_report": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/granite/x86-64-v3-granite-rapids/streampack_layout_explicit/functions.json",
+        "sha256": "06df8fedda2bfcc5f22fef6396a518281b2030c65c26d72e1b3712413a402844"
+      },
+      "selected_bodies": 40,
+      "original_binary_manifest": "build/workers/20261012T011501Z-4d581180/results/x86-64-v3-granite-rapids/binaries.sha256",
+      "original_job": {
+        "path": "build/workers/20261012T011501Z-4d581180/job.json",
+        "sha256": "3b9a97db3875fc6725550522121e3424ea36e7685614799e89daccff4c519ee9"
+      },
+      "selected_modes": [
+        "C1",
+        "C8",
+        "bulk-false",
+        "bulk-true"
+      ]
+    },
+    {
+      "source_tree_digest": "7fd83f199cb60326e8865de6898e5bcd09d96754619e1d776653c46a5ac8f7ce",
+      "source_archive_sha256": "91087b812af3c56eca192fdc83f8248ebd03303de49e400324f94c6aa67fd489",
+      "worker": "20261012T011501Z-4d581180",
+      "instance_type": "m8i.4xlarge",
+      "asm": "build/streampack-final-native-granite/x86-64-v3-granite-rapids/streampack_layout_explicit_bulk.asm",
+      "asm_sha256": "0c7004f2d73ad0c51cf4cd4509234270373baee477e2cf05693cba3de1cf1e53",
+      "profile": "x86-64-v3-granite-rapids",
+      "binary": "streampack_layout_explicit_bulk",
+      "binary_sha256_from_manifest": "0cd6fe084df39cd39dd69e6ddd797e4dabc7490db842bc0137f5da5f133d3ca3",
+      "binary_manifest_sha256": "bd412419f7f23c7eb900e6275e19193ac7f77dbf20b5fa85c43630f62ffb607b",
+      "body_report": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/granite/x86-64-v3-granite-rapids/streampack_layout_explicit_bulk/functions.json",
+        "sha256": "31113d3bc204321d649c9b265f43b3ec2e57a4828c8ce6f8ddd06771f0b9bc9a"
+      },
+      "selected_bodies": 57,
+      "original_binary_manifest": "build/workers/20261012T011501Z-4d581180/results/x86-64-v3-granite-rapids/binaries.sha256",
+      "original_job": {
+        "path": "build/workers/20261012T011501Z-4d581180/job.json",
+        "sha256": "3b9a97db3875fc6725550522121e3424ea36e7685614799e89daccff4c519ee9"
+      },
+      "selected_modes": [
+        "C1",
+        "C8",
+        "bulk-false",
+        "bulk-true"
+      ]
+    },
+    {
+      "source_tree_digest": "7fd83f199cb60326e8865de6898e5bcd09d96754619e1d776653c46a5ac8f7ce",
+      "source_archive_sha256": "91087b812af3c56eca192fdc83f8248ebd03303de49e400324f94c6aa67fd489",
+      "worker": "20261012T011501Z-4d581180",
+      "instance_type": "m8i.4xlarge",
+      "asm": "build/streampack-final-native-granite/x86-64-v4-granite-rapids/streampack_layout_explicit.asm",
+      "asm_sha256": "9b27f029a579940a08b68187ac6510c6af93845fbc21d967ecb2deaa64820314",
+      "profile": "x86-64-v4-granite-rapids",
+      "binary": "streampack_layout_explicit",
+      "binary_sha256_from_manifest": "9c64d152309aedf411626bb6b87f27f4aaeadee47c7ae5881129b5bdd4263fb3",
+      "binary_manifest_sha256": "64e3889406d3d9800b03bb5e9227507ba50d360ee949f338c269a6f2b207ce45",
+      "body_report": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/granite/x86-64-v4-granite-rapids/streampack_layout_explicit/functions.json",
+        "sha256": "f9d303c4f49735debf2a3ada0e7a97d5bf6cf3ebf2a9e4a3bd7bca01576ee341"
+      },
+      "selected_bodies": 40,
+      "original_binary_manifest": "build/workers/20261012T011501Z-4d581180/results/x86-64-v4-granite-rapids/binaries.sha256",
+      "original_job": {
+        "path": "build/workers/20261012T011501Z-4d581180/job.json",
+        "sha256": "3b9a97db3875fc6725550522121e3424ea36e7685614799e89daccff4c519ee9"
+      },
+      "selected_modes": [
+        "C1",
+        "C8",
+        "bulk-false",
+        "bulk-true"
+      ]
+    },
+    {
+      "source_tree_digest": "7fd83f199cb60326e8865de6898e5bcd09d96754619e1d776653c46a5ac8f7ce",
+      "source_archive_sha256": "91087b812af3c56eca192fdc83f8248ebd03303de49e400324f94c6aa67fd489",
+      "worker": "20261012T011501Z-4d581180",
+      "instance_type": "m8i.4xlarge",
+      "asm": "build/streampack-final-native-granite/x86-64-v4-granite-rapids/streampack_layout_explicit_bulk.asm",
+      "asm_sha256": "67312a32f2cf3766fed014604d55f1ad3925aa16a767c358c811f382eb67be20",
+      "profile": "x86-64-v4-granite-rapids",
+      "binary": "streampack_layout_explicit_bulk",
+      "binary_sha256_from_manifest": "93ecef6ae690cec75da3465ead79584c607e7dc3be0a79e7bf8780cf7720c56c",
+      "binary_manifest_sha256": "64e3889406d3d9800b03bb5e9227507ba50d360ee949f338c269a6f2b207ce45",
+      "body_report": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/granite/x86-64-v4-granite-rapids/streampack_layout_explicit_bulk/functions.json",
+        "sha256": "aca7bc1c9ff5ae412667873816e9cb4b5ec7bf6825bb432061a1b5f7ce48a59d"
+      },
+      "selected_bodies": 57,
+      "original_binary_manifest": "build/workers/20261012T011501Z-4d581180/results/x86-64-v4-granite-rapids/binaries.sha256",
+      "original_job": {
+        "path": "build/workers/20261012T011501Z-4d581180/job.json",
+        "sha256": "3b9a97db3875fc6725550522121e3424ea36e7685614799e89daccff4c519ee9"
+      },
+      "selected_modes": [
+        "C1",
+        "C8",
+        "bulk-false",
+        "bulk-true"
+      ]
+    },
+    {
+      "source_tree_digest": "7fd83f199cb60326e8865de6898e5bcd09d96754619e1d776653c46a5ac8f7ce",
+      "source_archive_sha256": "91087b812af3c56eca192fdc83f8248ebd03303de49e400324f94c6aa67fd489",
+      "worker": "20261012T011501Z-5c4325e1",
+      "instance_type": "m8a.4xlarge",
+      "asm": "build/workers/20261012T011501Z-5c4325e1/results/x86-64-v3-zen5/streampack_layout_explicit.asm",
+      "asm_sha256": "b5bc16a59c9ff91f68c59a89a9b5dbd12145f95c01bbba017b5ba2130a582bf8",
+      "profile": "x86-64-v3-zen5",
+      "binary": "streampack_layout_explicit",
+      "binary_sha256_from_manifest": "ba58e83877d0925cbb9ac00935b530f69af592242bb489fcef0b864416010d69",
+      "binary_manifest_sha256": "48d5b2963a012b65c0900d40f6db176db800e97e6184d835d83a8a716779c9a9",
+      "body_report": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/zen5/x86-64-v3-zen5/streampack_layout_explicit/functions.json",
+        "sha256": "ddc811c434065ac2f74e823cccbc42c7a84a2a0b6b846805496b110b6b3a025c"
+      },
+      "selected_bodies": 40,
+      "original_binary_manifest": "build/workers/20261012T011501Z-5c4325e1/results/x86-64-v3-zen5/binaries.sha256",
+      "original_job": {
+        "path": "build/workers/20261012T011501Z-5c4325e1/job.json",
+        "sha256": "79d3d77ca9f29c609a6445c2b5938e3c68372d7876656f754be43fd3194d92ac"
+      },
+      "selected_modes": [
+        "C1",
+        "C8",
+        "bulk-false",
+        "bulk-true"
+      ]
+    },
+    {
+      "source_tree_digest": "7fd83f199cb60326e8865de6898e5bcd09d96754619e1d776653c46a5ac8f7ce",
+      "source_archive_sha256": "91087b812af3c56eca192fdc83f8248ebd03303de49e400324f94c6aa67fd489",
+      "worker": "20261012T011501Z-5c4325e1",
+      "instance_type": "m8a.4xlarge",
+      "asm": "build/workers/20261012T011501Z-5c4325e1/results/x86-64-v3-zen5/streampack_layout_explicit_bulk.asm",
+      "asm_sha256": "10f567d6df5841fd57c1a8d00c0e33d26f5e7cde2c7e091dcdf1c742bf003c54",
+      "profile": "x86-64-v3-zen5",
+      "binary": "streampack_layout_explicit_bulk",
+      "binary_sha256_from_manifest": "58809648b6594b12b8a71bcf9f27ddf7840491453eb16e023b1ede226bd255d6",
+      "binary_manifest_sha256": "48d5b2963a012b65c0900d40f6db176db800e97e6184d835d83a8a716779c9a9",
+      "body_report": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/zen5/x86-64-v3-zen5/streampack_layout_explicit_bulk/functions.json",
+        "sha256": "8d7b9cc66267c689fcc668ac6a796a62cc91738bf2fc8dfd70aff8392a931266"
+      },
+      "selected_bodies": 57,
+      "original_binary_manifest": "build/workers/20261012T011501Z-5c4325e1/results/x86-64-v3-zen5/binaries.sha256",
+      "original_job": {
+        "path": "build/workers/20261012T011501Z-5c4325e1/job.json",
+        "sha256": "79d3d77ca9f29c609a6445c2b5938e3c68372d7876656f754be43fd3194d92ac"
+      },
+      "selected_modes": [
+        "C1",
+        "C8",
+        "bulk-false",
+        "bulk-true"
+      ]
+    },
+    {
+      "source_tree_digest": "7fd83f199cb60326e8865de6898e5bcd09d96754619e1d776653c46a5ac8f7ce",
+      "source_archive_sha256": "91087b812af3c56eca192fdc83f8248ebd03303de49e400324f94c6aa67fd489",
+      "worker": "20261012T011501Z-5c4325e1",
+      "instance_type": "m8a.4xlarge",
+      "asm": "build/workers/20261012T011501Z-5c4325e1/results/x86-64-v4-zen5/streampack_layout_explicit.asm",
+      "asm_sha256": "d9fa9b50ca81ffee8d3d6b5e6b3f4d4af048c1672346a21e156f91bc794f9fc1",
+      "profile": "x86-64-v4-zen5",
+      "binary": "streampack_layout_explicit",
+      "binary_sha256_from_manifest": "99429dc74442859cde2df252455432f9dfd5c838f42740a11d70df177faf4e1f",
+      "binary_manifest_sha256": "e15d2791b6258e5e32fd02fc95dcf9d8be7d7d1ccd34a58b1b7090b406d15f5f",
+      "body_report": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/zen5/x86-64-v4-zen5/streampack_layout_explicit/functions.json",
+        "sha256": "bff372cb35e9fc1d4ed4896c5fd4f3b844eb9072ee121fab4b38dd2cfbf309e9"
+      },
+      "selected_bodies": 40,
+      "original_binary_manifest": "build/workers/20261012T011501Z-5c4325e1/results/x86-64-v4-zen5/binaries.sha256",
+      "original_job": {
+        "path": "build/workers/20261012T011501Z-5c4325e1/job.json",
+        "sha256": "79d3d77ca9f29c609a6445c2b5938e3c68372d7876656f754be43fd3194d92ac"
+      },
+      "selected_modes": [
+        "C1",
+        "C8",
+        "bulk-false",
+        "bulk-true"
+      ]
+    },
+    {
+      "source_tree_digest": "7fd83f199cb60326e8865de6898e5bcd09d96754619e1d776653c46a5ac8f7ce",
+      "source_archive_sha256": "91087b812af3c56eca192fdc83f8248ebd03303de49e400324f94c6aa67fd489",
+      "worker": "20261012T011501Z-5c4325e1",
+      "instance_type": "m8a.4xlarge",
+      "asm": "build/workers/20261012T011501Z-5c4325e1/results/x86-64-v4-zen5/streampack_layout_explicit_bulk.asm",
+      "asm_sha256": "cd5af3817fa5399d356095f0671f901b977829e3327bbcac22ef9127062d1f19",
+      "profile": "x86-64-v4-zen5",
+      "binary": "streampack_layout_explicit_bulk",
+      "binary_sha256_from_manifest": "6b8c8d61ccf660a00ee856a485d70e2f8f5bfb63849ca076d346382a48d6e5ef",
+      "binary_manifest_sha256": "e15d2791b6258e5e32fd02fc95dcf9d8be7d7d1ccd34a58b1b7090b406d15f5f",
+      "body_report": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/zen5/x86-64-v4-zen5/streampack_layout_explicit_bulk/functions.json",
+        "sha256": "7ca3ff9962b5693fbcff86522dcce92c38f635ec31b249dde9cc89dba2f07a3a"
+      },
+      "selected_bodies": 57,
+      "original_binary_manifest": "build/workers/20261012T011501Z-5c4325e1/results/x86-64-v4-zen5/binaries.sha256",
+      "original_job": {
+        "path": "build/workers/20261012T011501Z-5c4325e1/job.json",
+        "sha256": "79d3d77ca9f29c609a6445c2b5938e3c68372d7876656f754be43fd3194d92ac"
+      },
+      "selected_modes": [
+        "C1",
+        "C8",
+        "bulk-false",
+        "bulk-true"
+      ]
+    }
+  ],
+  "explicit_scan_reports": [
+    {
+      "host": "zen5",
+      "worker": "20261012T011501Z-5c4325e1",
+      "report": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/zen5-scans/summary.json",
+        "sha256": "cabc569db99b250b371a072485c4a92f8e404c092bd6ebc54bb88511fe07c720"
+      },
+      "selected_bodies_per_profile": {
+        "x86-64-v3": 31,
+        "x86-64-v4": 31
+      }
+    },
+    {
+      "host": "granite",
+      "worker": "20261012T011501Z-4d581180",
+      "report": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/granite-scans/summary.json",
+        "sha256": "d835d2f4c50081dd86e8d22d713ca9b15240a0d1baa6494d254a6c423a4fdeab"
+      },
+      "selected_bodies_per_profile": {
+        "x86-64-v3": 31,
+        "x86-64-v4": 31
+      }
+    }
+  ],
+  "coverage": [
+    "c9g: all 168 raw explicit scan bodies covering F0..F5, ordered and shuffled, seven layouts, M255/M4095. Selected native C1/C8 and bulk bodies are in the per-binary receipts.",
+    "Each x86 host: 31 selected scans per ISA, 62 per host; F1 used across raw layouts/maxima and ordered/staged/gather modes, M255 checkpoint-width controls and representative M4095 compound live-used/reserve+used. Selected C1/C8 and bulk bodies separately retained for both ISA levels.",
+    "Final correct Granite job 20261012T011501Z-4d581180 uses granite-rapids. Earlier 20261012T010715Z-631e73d1 default-zen5 build is excluded.",
+    "Instance names taken from final worker receipts: c9g.4xlarge, m8a.4xlarge and m8i.4xlarge. Executable hashes are worker binary-manifest values; exact assembly/body hashes independently verified here."
+  ],
+  "findings": [
+    "Named consume and chase helper changes removed avoidable hot outlined wrappers. All inspected raw explicit scans are call-free; no surviving packet fold helper is needed. Raw and Series C1/C8 inspected hot bodies are call-free. Tuple64 retains genuine start/state prepared routes: two C1 call sites and sixteen C8 call sites.",
+    "Staged field requests explicitly form SIMD ranks/addresses, then scalar byte/u16 loads construct SIMD carriers on x86; staged address/value arrays disappear in selected single-field bodies. Separate x86 gather controls emit actual VPGATHERDD plus rounded dword address, variable shift and narrow-field mask. No hardware gather is attributed to staged lanes.",
+    "NEON selected explicit scan bodies use only callee-save stack locations, with no staged address/value or decoded arrays. All selected x86 F1 used and F3 checkpoint bodies are stack-free. Explicit SIMD request arithmetic uses YMM u32 in v3 and ZMM u32 in v4.",
+    "Selected plane/split used bodies normalize identically per x86 mode/max/ISA, and grouped CP16/CP32 used bodies normalize identically. This isolates their shared used-field instruction route; it does not establish constant-pool identity, cache behavior or equal timing.",
+    "Compound x86 AVX2 controls still have real homes: sampled F4 live-used gather has 168 B deepest own frame (40 B reservation plus 128 B red-zone). Sampled F4/F5 staged lanes save 32 B. F5 gather is stack-free on Zen and has 40 B own reservation on Granite; sampled AVX512 compound counterparts are stack-free.",
+    "Native starts16 prefix widens u8/u16 lanes to u32 before accumulation. NEON uses four-lane carry, AVX2 includes eight-lane sublane carry and second-half propagation, and AVX512 propagates across sixteen lanes. Whole-group projection uses the authored native prefix/group decoders, with no generic per-row prefix helper boundary.",
+    "Bulk projection has only libc memcpy hot call sites; static call-site multiplicity reflects unrolled alternatives. Source body+selected-block offset is hoisted outside individual row-copy sites for raw, Series and Tuple group consumers. Ordered copies retain compiler scalar staging; shuffled Series/TP copies retain large intentional scratch starts/lengths.",
+    "Series reconstruction and Tuple prepared routing remain format-specific emitted work. This review does not replace that work with a fabricated equivalent raw decoder."
+  ],
+  "addressing": {
+    "qualification": "Same used field, M4095, first staged native subpacket after permutation. Counts exclude preheader constants, rank permutation, loads, reduction and other subpackets. Integer address site deltas establish no cheapness, elapsed-cost ratio, traffic, cache or prefetch cause. Split=2*rows+2*r; grouped=4*(r&~15)+2*(r&15)+32.",
+    "snippets": [
+      {
+        "isa": "x86-64-v3",
+        "layout": "split",
+        "case": "M4095 used shuffled lanes, first native subpacket only",
+        "formula": "2*rows+2*r",
+        "start": "0xe1a11",
+        "last_address_instruction_inclusive": "0xe1a19",
+        "extract": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/zen5-scans/x86-64-v3/split-M4095-F1-lanes.addressing.asm",
+        "extract_sha256": "b0495d970db1723ea9e9179f9a1aac7e14d8163bd623ed5dc350d8b5cee411ac",
+        "host": "zen5",
+        "instructions": [
+          {
+            "address": "0xe1a15",
+            "instruction": "vpaddd %ymm6, %ymm6, %ymm6"
+          },
+          {
+            "address": "0xe1a19",
+            "instruction": "vpaddd %ymm6, %ymm1, %ymm6"
+          }
+        ],
+        "address_operation_sites": 2
+      },
+      {
+        "isa": "x86-64-v3",
+        "layout": "grouped32",
+        "case": "M4095 used shuffled lanes, first native subpacket only",
+        "formula": "4*(r&~15)+2*(r&15)+32",
+        "start": "0xf7424",
+        "last_address_instruction_inclusive": "0xf7441",
+        "extract": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/zen5-scans/x86-64-v3/grouped32-M4095-F1-lanes.addressing.asm",
+        "extract_sha256": "fcc926703f2ddf2927b8b352e8031530fdbea392c27cbac039fbf86dcbbc36f1",
+        "host": "zen5",
+        "instructions": [
+          {
+            "address": "0xf7429",
+            "instruction": "vpslld $0x2, %ymm8, %ymm9"
+          },
+          {
+            "address": "0xf742f",
+            "instruction": "vpaddd %ymm8, %ymm8, %ymm8"
+          },
+          {
+            "address": "0xf7434",
+            "instruction": "vpand %ymm3, %ymm9, %ymm9"
+          },
+          {
+            "address": "0xf7438",
+            "instruction": "vpand %ymm4, %ymm8, %ymm8"
+          },
+          {
+            "address": "0xf743c",
+            "instruction": "vpor %ymm8, %ymm9, %ymm8"
+          },
+          {
+            "address": "0xf7441",
+            "instruction": "vpor %ymm5, %ymm8, %ymm8"
+          }
+        ],
+        "address_operation_sites": 6
+      },
+      {
+        "isa": "x86-64-v4",
+        "layout": "split",
+        "case": "M4095 used shuffled lanes, first native subpacket only",
+        "formula": "2*rows+2*r",
+        "start": "0x12639b",
+        "last_address_instruction_inclusive": "0x1263a7",
+        "extract": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/zen5-scans/x86-64-v4/split-M4095-F1-lanes.addressing.asm",
+        "extract_sha256": "5c6ce4ce46c6bcd6e5bc5456bc8b5ded9d7b489a823db871a27b358164075d68",
+        "host": "zen5",
+        "instructions": [
+          {
+            "address": "0x1263a1",
+            "instruction": "vpaddd %zmm7, %zmm7, %zmm7"
+          },
+          {
+            "address": "0x1263a7",
+            "instruction": "vpaddd %zmm3, %zmm7, %zmm7"
+          }
+        ],
+        "address_operation_sites": 2
+      },
+      {
+        "isa": "x86-64-v4",
+        "layout": "grouped32",
+        "case": "M4095 used shuffled lanes, first native subpacket only",
+        "formula": "4*(r&~15)+2*(r&15)+32",
+        "start": "0x142c4b",
+        "last_address_instruction_inclusive": "0x142c6a",
+        "extract": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/zen5-scans/x86-64-v4/grouped32-M4095-F1-lanes.addressing.asm",
+        "extract_sha256": "c47b55168e3c52ba418e129e0e8e140ad7e7f4d212cbb27559df9892d6304b87",
+        "host": "zen5",
+        "instructions": [
+          {
+            "address": "0x142c51",
+            "instruction": "vpslld $0x2, %zmm9, %zmm10"
+          },
+          {
+            "address": "0x142c58",
+            "instruction": "vpaddd %zmm9, %zmm9, %zmm9"
+          },
+          {
+            "address": "0x142c5e",
+            "instruction": "vpandd %zmm5, %zmm10, %zmm10"
+          },
+          {
+            "address": "0x142c64",
+            "instruction": "vpandd %zmm6, %zmm9, %zmm9"
+          },
+          {
+            "address": "0x142c6a",
+            "instruction": "vpternlogd $0xfe, %zmm7, %zmm10, %zmm9"
+          }
+        ],
+        "address_operation_sites": 5
+      },
+      {
+        "isa": "x86-64-v3",
+        "layout": "split",
+        "case": "M4095 used shuffled lanes, first native subpacket only",
+        "formula": "2*rows+2*r",
+        "start": "0xda1be",
+        "last_address_instruction_inclusive": "0xda1c6",
+        "extract": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/granite-scans/x86-64-v3/split-M4095-F1-lanes.addressing.asm",
+        "extract_sha256": "7b6a1f85979d0bad77320b31a2def8af8abb10c44a8307869e471a880d135d1c",
+        "host": "granite",
+        "instructions": [
+          {
+            "address": "0xda1c2",
+            "instruction": "vpaddd %ymm6, %ymm6, %ymm6"
+          },
+          {
+            "address": "0xda1c6",
+            "instruction": "vpaddd %ymm6, %ymm1, %ymm6"
+          }
+        ],
+        "address_operation_sites": 2
+      },
+      {
+        "isa": "x86-64-v3",
+        "layout": "grouped32",
+        "case": "M4095 used shuffled lanes, first native subpacket only",
+        "formula": "4*(r&~15)+2*(r&15)+32",
+        "start": "0xef041",
+        "last_address_instruction_inclusive": "0xef05e",
+        "extract": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/granite-scans/x86-64-v3/grouped32-M4095-F1-lanes.addressing.asm",
+        "extract_sha256": "bd88e45fe21fa5a77490b44eeedb67c824543cb5e40ef0771e6b46f85139de72",
+        "host": "granite",
+        "instructions": [
+          {
+            "address": "0xef046",
+            "instruction": "vpslld $0x2, %ymm8, %ymm9"
+          },
+          {
+            "address": "0xef04c",
+            "instruction": "vpand %ymm3, %ymm9, %ymm9"
+          },
+          {
+            "address": "0xef050",
+            "instruction": "vpaddd %ymm8, %ymm8, %ymm8"
+          },
+          {
+            "address": "0xef055",
+            "instruction": "vpand %ymm4, %ymm8, %ymm8"
+          },
+          {
+            "address": "0xef059",
+            "instruction": "vpor %ymm8, %ymm9, %ymm8"
+          },
+          {
+            "address": "0xef05e",
+            "instruction": "vpor %ymm5, %ymm8, %ymm8"
+          }
+        ],
+        "address_operation_sites": 6
+      },
+      {
+        "isa": "x86-64-v4",
+        "layout": "split",
+        "case": "M4095 used shuffled lanes, first native subpacket only",
+        "formula": "2*rows+2*r",
+        "start": "0x11dd18",
+        "last_address_instruction_inclusive": "0x11dd24",
+        "extract": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/granite-scans/x86-64-v4/split-M4095-F1-lanes.addressing.asm",
+        "extract_sha256": "5844f48c1981c29fa0618000096a3acd9def60905dd7ec764604381975c3ccf3",
+        "host": "granite",
+        "instructions": [
+          {
+            "address": "0x11dd1e",
+            "instruction": "vpaddd %zmm7, %zmm7, %zmm7"
+          },
+          {
+            "address": "0x11dd24",
+            "instruction": "vpaddd %zmm3, %zmm7, %zmm7"
+          }
+        ],
+        "address_operation_sites": 2
+      },
+      {
+        "isa": "x86-64-v4",
+        "layout": "grouped32",
+        "case": "M4095 used shuffled lanes, first native subpacket only",
+        "formula": "4*(r&~15)+2*(r&15)+32",
+        "start": "0x139a08",
+        "last_address_instruction_inclusive": "0x139a27",
+        "extract": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/granite-scans/x86-64-v4/grouped32-M4095-F1-lanes.addressing.asm",
+        "extract_sha256": "afa1da9855ff0aeb699e929bb30fc0c75e19a2c001e1628a53c0a8071430f559",
+        "host": "granite",
+        "instructions": [
+          {
+            "address": "0x139a0e",
+            "instruction": "vpslld $0x2, %zmm9, %zmm10"
+          },
+          {
+            "address": "0x139a15",
+            "instruction": "vpandd %zmm5, %zmm10, %zmm10"
+          },
+          {
+            "address": "0x139a1b",
+            "instruction": "vpaddd %zmm9, %zmm9, %zmm9"
+          },
+          {
+            "address": "0x139a21",
+            "instruction": "vpandd %zmm6, %zmm9, %zmm9"
+          },
+          {
+            "address": "0x139a27",
+            "instruction": "vpternlogd $0xfe, %zmm7, %zmm10, %zmm9"
+          }
+        ],
+        "address_operation_sites": 5
+      },
+      {
+        "host": "c9g",
+        "isa": "armv8.2-a+simd",
+        "layout": "split32",
+        "case": "M4095 used shuffled staged first4-rank subpacket",
+        "formula": "2*rows +2*row",
+        "body": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/c9g/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit/split32-M4095-scan-1-true-8c560.asm",
+        "body_sha256": "faac2a80120dc12a82824f89aee875c4bb7027a3b278afe6d30492e62a83193c",
+        "instructions": [
+          {
+            "address": "0x8c64c",
+            "instruction": "add\tv5.4s, v5.4s, v5.4s"
+          },
+          {
+            "address": "0x8c658",
+            "instruction": "add\tv5.4s, v2.4s, v5.4s"
+          }
+        ],
+        "address_operation_sites": 2
+      },
+      {
+        "host": "c9g",
+        "isa": "armv8.2-a+simd",
+        "layout": "grouped32",
+        "case": "M4095 used shuffled staged first4-rank subpacket",
+        "formula": "4*(row &~15)+2*(row &15)+32",
+        "body": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/c9g/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit/grouped32-M4095-scan-1-true-99b60.asm",
+        "body_sha256": "53e193c588a27c0f6c1dca460c4c162cdbdf4679507f08e0ee60eb98e63d6b5b",
+        "instructions": [
+          {
+            "address": "0x99bf0",
+            "instruction": "shl\tv6.4s, v5.4s, #0x2"
+          },
+          {
+            "address": "0x99bf4",
+            "instruction": "add\tv5.4s, v5.4s, v5.4s"
+          },
+          {
+            "address": "0x99bf8",
+            "instruction": "bic\tv6.4s, #0x3c"
+          },
+          {
+            "address": "0x99bfc",
+            "instruction": "and\tv5.16b, v5.16b, v4.16b"
+          },
+          {
+            "address": "0x99c00",
+            "instruction": "orr\tv5.16b, v6.16b, v5.16b"
+          },
+          {
+            "address": "0x99c0c",
+            "instruction": "orr\tv5.4s, #0x20"
+          }
+        ],
+        "address_operation_sites": 6
+      }
+    ],
+    "arm_report": {
+      "path": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/c9g/address-snippets.json",
+      "sha256": "273267696455d72c3121ff6fe377ec3bd766a79a1f6771e68b7c6a591fe064a5"
+    }
+  },
+  "accumulator": {
+    "native_x86_representatives": [
+      {
+        "host": "zen5",
+        "isa": "x86-64-v3",
+        "tag": "planes-M4095-F1-ordered",
+        "start": "0x1389e0",
+        "backedge_inclusive": "0x138afb",
+        "logical_ranks_per_main_iteration": 64,
+        "carried_lo_hi_registers": [
+          "ymm0",
+          "ymm1"
+        ],
+        "dependent_updates_per_accumulator_per_main_iteration": 4,
+        "hot_extract": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/zen5-scans/x86-64-v3/planes-M4095-F1-ordered.hot.asm",
+        "hot_extract_sha256": "a376d40508e05e126d1fe7ef0da84d52d7814bf0aa053a1cfeeb1b6324853c90"
+      },
+      {
+        "host": "zen5",
+        "isa": "x86-64-v4",
+        "tag": "planes-M4095-F1-ordered",
+        "start": "0x198c60",
+        "backedge_inclusive": "0x198dc7",
+        "logical_ranks_per_main_iteration": 128,
+        "carried_lo_hi_registers": [
+          "zmm0",
+          "zmm1"
+        ],
+        "dependent_updates_per_accumulator_per_main_iteration": 4,
+        "hot_extract": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/zen5-scans/x86-64-v4/planes-M4095-F1-ordered.hot.asm",
+        "hot_extract_sha256": "9025f5b7048d969b93e89da761cf1cb789f9e46054f39b95e3667ba7f08752ba"
+      },
+      {
+        "host": "granite",
+        "isa": "x86-64-v3",
+        "tag": "planes-M4095-F1-ordered",
+        "start": "0x12e890",
+        "backedge_inclusive": "0x12e922",
+        "logical_ranks_per_main_iteration": 32,
+        "carried_lo_hi_registers": [
+          "ymm0",
+          "ymm1"
+        ],
+        "dependent_updates_per_accumulator_per_main_iteration": 3,
+        "hot_extract": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/granite-scans/x86-64-v3/planes-M4095-F1-ordered.hot.asm",
+        "hot_extract_sha256": "e7090c07f662c903a9a751ee0bfddb8d01256f1455692ad954dc327e833b49a9"
+      },
+      {
+        "host": "granite",
+        "isa": "x86-64-v4",
+        "tag": "planes-M4095-F1-ordered",
+        "start": "0x18d4a0",
+        "backedge_inclusive": "0x18d553",
+        "logical_ranks_per_main_iteration": 64,
+        "carried_lo_hi_registers": [
+          "zmm0",
+          "zmm1"
+        ],
+        "dependent_updates_per_accumulator_per_main_iteration": 3,
+        "hot_extract": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/granite-scans/x86-64-v4/planes-M4095-F1-ordered.hot.asm",
+        "hot_extract_sha256": "123ff374ad97a889908f7f07954cbb213496c0be2c78ad2daf351340e29bfbb3"
+      }
+    ],
+    "arm": "Actual NEON ordered M4095 consumer has four UADALP writes to the same carried v0 per sixteen ranks. This is a real recurrence, not proof that it limits elapsed throughput.",
+    "model_report": {
+      "path": "build/streampack-fresh-results/codegen-review/layout-explicit-native/reduction-model/summary.json",
+      "sha256": "5f4b0c0dd8f1642f8a7ec8102cfb35f1925109d018d275ba1bb3080e2375dd9b"
+    },
+    "model_result": "Bounded local-v3 nineteen-instruction diagnostic: actual one-sum and destination-renamed four-sum snippets both report BRT 4.0 cycles and 2014 cycles/500 iterations. No modeled uplift established. UADALP latency 4 does not justify sixteen cycles/packet.",
+    "model_limits": "LLVM neoverse-v3 selection uses V2Unit resource labels, a V2-derived scheduling model. Diagnostic is not emitted C++, excludes setup/final merge and models no measured V3 cache, branch, fetch or timing behavior. No tuning campaign justified from this result alone."
+  },
+  "stack_examples": {
+    "qualification": "Own maximum address depth below entry SP/RSP includes prologue saves, local reservation, outgoing adjustments and observed red-zone homes. ARM/x86 alignment produces ranges where necessary. Excludes incoming return address and callees; no additive concurrent peak or memory-traffic claim. Exact breakdowns/body boundaries are in receipts.",
+    "M4095_native_prefix_bulk_target": {
+      "c9g_C1_C8_bytes": {
+        "planes": [
+          16,
+          176
+        ],
+        "series": [
+          64,
+          400
+        ],
+        "tuple64": [
+          64,
+          224
+        ]
+      },
+      "x86_C1_C8_bytes": {
+        "planes": [
+          40,
+          200
+        ],
+        "series": [
+          88,
+          328
+        ],
+        "tuple64": [
+          56,
+          248
+        ],
+        "Granite_v4_Series_C8": 344
+      },
+      "ordered_bulk_bytes": {
+        "c9g_planes": 192,
+        "c9g_series": 208,
+        "c9g_tuple64": 192,
+        "x86_v3_planes_series_tuple64": 232,
+        "x86_v4_planes_tuple64": 280,
+        "x86_v4_series": 296
+      },
+      "shuffled_bulk_ranges_bytes": {
+        "c9g_series_tuple64": [
+          1728,
+          1776
+        ],
+        "x86_series": [
+          1720,
+          1768
+        ],
+        "x86_tuple64": [
+          1848,
+          1896
+        ]
+      }
+    }
+  },
+  "interpretation_limits": [
+    "C1 is dependent complete payload service latency. C8 is achieved overlap of eight explicit independent chains; it is not peak reciprocal throughput. Ordered/independent field packets measure the complete read+address+u64 checksum consumer, not isolated field latency or automatically peak decoder/memory bandwidth.",
+    "One/two carried checksum accumulators remain despite compiler unrolling and local reassociation. Different static body or gather-site counts must not be treated as equal logical packet costs; exact loop trip and recurrence sites are retained.",
+    "Bulk timing includes scalar/libc payload copy and group preparation; it is not an isolated metadata-decode measurement. Metadata/group geometry, fields and consumer semantics must stay matched when comparing cells.",
+    "grouped-narrow-eligible is CP16 at M255 and CP32 at M4095; checkpoint-width control is distinct from used-field layout.",
+    "Earlier scalar/automatic-vectorization field results do not establish grouped R/U performance conclusions. This final source supersedes that confound with explicit matched kernels and disabled automatic vectorizers.",
+    "Admissions/bounds qualified to current whole256-row fixtures, power-of-two row counts, metadata offsets below2^31 and proven field extents. This review found no semantic blocker within that scope; no production API, partial arbitrary geometry or measured causal architecture claim is certified."
+  ],
+  "integrity": {
+    "verified_unique_asm_body_model_files": 919,
+    "verification": "Every referenced native asm and extracted body in the retained reports verified against stored SHA256, plus worker executable manifests and model extracts/reports. Final report hashes below supersede earlier pre-frame additions."
+  },
+  "optional_root_formula_diagnostic": {
+    "files": [
+      {
+        "path": "build/streampack-address-formulas.cpp",
+        "sha256": "22a48f59c005cbcfec96b1b39d4fe0209ffbf2526f9ca809691ccf0a7fabb1f9"
+      },
+      {
+        "path": "build/streampack-address-formulas.s",
+        "sha256": "5725992821761b0b56d2b7a0850827fc206c694bba55ff102b021174e99da2de"
+      }
+    ],
+    "qualification": "Root-owned isolated formula scratch, outside frozen source. Equivalent grouped expression width*(row+(row&~15))+16*width can emit fewer NEON address operations; no full-consumer evidence, timings or source promotion, and no campaign restart."
+  }
+}

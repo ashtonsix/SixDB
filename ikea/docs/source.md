@@ -33,6 +33,24 @@ as the leaf kernel: a vector aggregate or outlined helper can introduce memory
 handoff. Compare complete operations, including their admission and effects.
 Research history and timing comparisons belong with Workbench evidence.
 
+Point, range and selected access can need different lowerings of the same format.
+Keep a useful batch visible so sequential traversal can carry a running position
+and dense selections can reuse decoding. Charge temporary preparation to that
+operation; sparse selections must retain a cheap point path. Neither an obligatory
+decoded array nor repeated generic point calls is a suitable universal interface.
+Likewise, a narrow consumer should request its useful projection rather than a
+full record whose unused fields require opaque helper calls. Resolve that
+projection outside the loop; a dynamic fact-mask interpreter is not a required
+alternative. Shared immutable schema/operation preparation belongs apart from
+block-local storage windows and count-dependent admission. Preparing native
+controls once does not by itself remove their runtime routing costs; inspect
+the resulting composed body before treating a codec choice as a layout result.
+
+Place CPS boundaries around useful work or unresolved memory dependencies. Keep
+ready arithmetic and native decoding inline within that work. A scheduler can
+overlap independent lookups; splitting one dependent decode into more stages does
+not create independent accesses. Share the semantic body between those callers.
+
 ## Shared facilities
 
 | Facility | Shared mechanism | Module-owned behavior |
@@ -131,6 +149,35 @@ The optional heuristic shares byte populations and rank widths with encoding,
 and can decline before count-tree construction or destination/effect access.
 `detail/write.h` adapts this to the ordinary result. Unconditional encoding has
 no heuristic branch; the statistical model is separate from exact write admission.
+
+## StreamPack source boundaries
+
+Paths are relative to [include/ikea/streampack](../include/ikea/streampack)
+unless marked `src/`.
+
+| Responsibility | Owning files |
+| --- | --- |
+| Physical description and preparation | `description.h`; `src/streampack/description.cpp` |
+| Borrowed windows and separate content admission | `view.h`; `src/streampack/view.cpp` |
+| Checked ordinary commands | `{read,write,transfer}.h` |
+| Typed geometry and issued-store bodies | `author/{read,write}.h` |
+| Native groups and CPS carriers | `author/{native,chain}.h` |
+| Shared explicit prefix and SIMD instructions | `detail/{prefix,simd}.h` |
+
+Shared immutable schema preparation remains separate from rank-dependent block
+windows. `author::dispatch` chooses a whole useful operation; `access::rebind`
+changes its block while retaining the exact shared layout identity. Checked point
+admission stays inline to avoid a hidden `expected<span>` result buffer. Range
+traversal carries geometry, and paid selection decoding shares native prefix bodies.
+Resolve StreamPack dispatch before constructing a typed CPS stage; `native::read16`
+and its chunk callbacks stay fused so the native packet does not acquire a hidden
+stack result buffer. The point `value` and `get` boundaries likewise stay inline.
+Explicit SIMD Direct start loads and Width prefix bodies serve paid decoding.
+Selected transfer preflights a bounded coordinate plan to keep source/destination
+codec dispatch additive instead of generating every codec pair.
+Allocation, transaction integration and maintenance policies remain with callers.
+The [StreamPack guide](streampack/usage.md) and
+[checks](../test/streampack/README.md) cover these boundaries.
 
 ## Shared execution entry
 

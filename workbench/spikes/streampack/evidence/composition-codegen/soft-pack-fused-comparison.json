@@ -1,0 +1,61 @@
+{
+  "scope": "Read-only follow-up of preserved actual linked inline and fused soft_pack bodies. No source edits, builds or execution.",
+  "effects_source": {
+    "file": "ikea/include/ikea/effects.h",
+    "sha256": "01c2e39782f985541027fe4d8eae6c09a981359847eb9638392cffc8f9c34208",
+    "lines": [
+      57,
+      64
+    ]
+  },
+  "interpretation": "Fused soft_pack executes redundant plane stores on successful coalescing paths already guarded by equal source and plane. These are semantically permitted stores to journal output, not new mutated geometry-plane writes; output coalescing results remain the same. No timing inference. Parent owns behavioral and native validation.",
+  "functions": [
+    {
+      "file": "direct16-soft-pack.asm",
+      "inline_sha256": "a752510db861283c8724b465b2b37e2991a01f81bf1cf2f43a8b9f1000f42ce3",
+      "fused_sha256": "177853fae77803ea27d46944a79a84efd66aa352d9eaf96c3bad23e1c6e6b7d9",
+      "non_nop_counts_inline_fused": [
+        162,
+        165
+      ],
+      "extra_same_plane_stores": [
+        "9028: b81e811a     \tstur\tw26, [x8, #-0x18]",
+        "9048: b81e810e     \tstur\tw14, [x8, #-0x18]",
+        "9078: b81e817f     \tstur\twzr, [x11, #-0x18]"
+      ],
+      "sp_frame_bytes": 96
+    },
+    {
+      "file": "direct32-soft-pack.asm",
+      "inline_sha256": "dfcdaa2d32bd9e23e49ad6abd67c24f8b03ebef6af527d09647b2247bf6fcec5",
+      "fused_sha256": "d4ced73a045fe60a37a2a8aa1ce988656c7ffa3e9abe6b1b9fa0317ac61a8c72",
+      "non_nop_counts_inline_fused": [
+        164,
+        168
+      ],
+      "extra_same_plane_stores": [
+        "109cc: b81e810c     \tstur\tw12, [x8, #-0x18]",
+        "109dc: b81e810e     \tstur\tw14, [x8, #-0x18]",
+        "10a0c: b81e817f     \tstur\twzr, [x11, #-0x18]"
+      ],
+      "sp_frame_bytes": 96
+    },
+    {
+      "file": "widths8-soft-pack.asm",
+      "inline_sha256": "b373fe4ea635941fbe3f5366cf6c08e631ca131a8742909b277f6e0d8c098bb3",
+      "fused_sha256": "44ec63497205fd2b86f36adca94f85342eb7bafe789fe8775c60bfe003ca8859",
+      "non_nop_counts_inline_fused": [
+        245,
+        253
+      ],
+      "extra_same_plane_stores": [
+        "1851c: b81e810a     \tstur\tw10, [x8, #-0x18]",
+        "18534: b81e813c     \tstur\tw28, [x9, #-0x18]",
+        "1856c: b81e814b     \tstur\tw11, [x10, #-0x18]",
+        "18584: b81e813f     \tstur\twzr, [x9, #-0x18]",
+        "18660: b81e812a     \tstur\tw10, [x9, #-0x18]"
+      ],
+      "sp_frame_bytes": 112
+    }
+  ]
+}

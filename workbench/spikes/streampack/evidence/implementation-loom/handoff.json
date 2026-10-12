@@ -1,0 +1,360 @@
+{
+  "scope": "Loom-owned production StreamPack consumer assessment; main only, no commits",
+  "authored_files_sha256": {
+    "workbench/spikes/streampack/implementation_loom.cpp": "d973cd0310d981856f6d60ced7e04f2b7cedda88d9f8fb6abd4a7b61880fd76c",
+    "workbench/spikes/streampack/implementation_loom.h": "964989d2ea125f498adce71057b1d1548608aff9b9c2fcfb2e1e1e606ea5e428",
+    "workbench/spikes/streampack/implementation_loom_check.cpp": "2a6e760d893c6309b99815a3f0a668060535e83c0fefa54b61eef02a08c8fce6",
+    "workbench/spikes/streampack/implementation_loom_codegen.py": "e400eafba847a9f5037bf4caef1e9ba193616e3b459b4965196538dcd6c8ddcd",
+    "workbench/spikes/streampack/implementation_loom_measure.py": "812005cf69d884dbb8ad55385f37d3332cdea8b7cae967a7648d437ce0b58135"
+  },
+  "selection": "All64 matched arms and all3 samples; hot/large Direct/Width, direct/point-chain/manual/Ring, hints off/on, widths1/8/32; retain losses. Before and final actual callback captures explain the metadata visitor inline correction.",
+  "correctness": {
+    "independent_panels": 526,
+    "schema_variants": 64,
+    "native_and_asan_ubsan": "pass; always-UAR/leak enabled",
+    "receipt": "correctness-receipt.json"
+  },
+  "orbital": {
+    "owner": "Orbital LEAD",
+    "retained_context": "workbench/spikes/streampack/evidence/implementation-orbital-zen5/context.json",
+    "sha256": "b02fcf26609d31bd21addf2b093af7dbd006712cf6060be5066ea745fb500de0",
+    "source_digest": "5e8ed954f9441c512399940078681bd404b456c8ef3e1162477cb1ccd9892146",
+    "native_checks": [
+      {
+        "profile": "x86-64-v3-zen5",
+        "sha256": "8a2e750c342e7fcf1858df095a3404c275f62482bdde805a5e0865b79b81787b",
+        "pass": true
+      },
+      {
+        "profile": "x86-64-v4-zen5",
+        "sha256": "8682573fbaec74495b998bb9b92b7ef78abfddfb5880baea96ad09927597f955",
+        "pass": true
+      }
+    ],
+    "local_release_asan_ubsan": "Passed per owner report",
+    "histories": "Actual old Scope/source held through Ring overflow and drain; sealed clone published through returned-boundary hook; fresh-current read checked independently; old SIMD-readable planes unchanged; escaping Parts qualified separately",
+    "limits": "Synchronous in-block successor assessment; no cross-Object traversal or cancellation history is claimed"
+  },
+  "codegen": {
+    "final": "codegen/20261012-final-cut/analysis.json",
+    "before": "codegen/20261012-current",
+    "compiler": "Clang21.1.8/O3/noLTO/both auto-vectorizers disabled",
+    "targets": [
+      "Neoverse V2",
+      "Zen5",
+      "Granite Rapids"
+    ],
+    "callbacks_per_target": 96,
+    "musttail": true,
+    "ordinary_calls": 0,
+    "vector_stack_sites": 0,
+    "continuation_slot_bytes": 40,
+    "scalar_stack_static_sites_max": {
+      "V2": 0,
+      "Zen5": 41,
+      "Granite Rapids": 33
+    },
+    "provenance": "Final dependencies stable; callbacks byte-identical to prior inlined cut despite eight header hash changes",
+    "limits": "Static site counts and tuple persistence are not cycles or hardware PMU observations"
+  },
+  "timings": {
+    "scope": "CPU0-pinned local OrbStack Linux VM;3 contiguous samples/arm",
+    "comparisons": [
+      {
+        "best_control": "hot-direct-grouped-manual-c32-h0",
+        "best_control_over_best_ring": 0.7830974506180408,
+        "best_ring": "hot-direct-grouped-ring-c8-h0",
+        "direct_no_hint": "hot-direct-grouped-direct-c8-h0",
+        "group": [
+          "hot",
+          "direct",
+          "grouped",
+          4,
+          8192
+        ],
+        "manual_ring_pairs": [
+          {
+            "hints": 0,
+            "manual": "hot-direct-grouped-manual-c1-h0",
+            "manual_over_ring": 0.9295851363870843,
+            "ring": "hot-direct-grouped-ring-c1-h0",
+            "width": 1
+          },
+          {
+            "hints": 1,
+            "manual": "hot-direct-grouped-manual-c1-h1",
+            "manual_over_ring": 0.8686127676685833,
+            "ring": "hot-direct-grouped-ring-c1-h1",
+            "width": 1
+          },
+          {
+            "hints": 0,
+            "manual": "hot-direct-grouped-manual-c8-h0",
+            "manual_over_ring": 0.8144157513895246,
+            "ring": "hot-direct-grouped-ring-c8-h0",
+            "width": 8
+          },
+          {
+            "hints": 1,
+            "manual": "hot-direct-grouped-manual-c8-h1",
+            "manual_over_ring": 0.8462185690132739,
+            "ring": "hot-direct-grouped-ring-c8-h1",
+            "width": 8
+          },
+          {
+            "hints": 0,
+            "manual": "hot-direct-grouped-manual-c32-h0",
+            "manual_over_ring": 0.7421491424174127,
+            "ring": "hot-direct-grouped-ring-c32-h0",
+            "width": 32
+          },
+          {
+            "hints": 1,
+            "manual": "hot-direct-grouped-manual-c32-h1",
+            "manual_over_ring": 0.814922394165601,
+            "ring": "hot-direct-grouped-ring-c32-h1",
+            "width": 32
+          }
+        ],
+        "matched_payload_coverage": {
+          "consumed": 238514,
+          "distinct_source_ranks": 1024,
+          "distinct_sources": 4,
+          "line_bytes": 128,
+          "page_bytes": 4096,
+          "payload_line_bytes": 33920,
+          "payload_lines": 265,
+          "scratch_peak_bytes": 5120,
+          "scratch_released": 1
+        }
+      },
+      {
+        "best_control": "hot-width-grouped-manual-c8-h0",
+        "best_control_over_best_ring": 0.7597200062130912,
+        "best_ring": "hot-width-grouped-ring-c8-h0",
+        "direct_no_hint": "hot-width-grouped-direct-c8-h0",
+        "group": [
+          "hot",
+          "width",
+          "grouped",
+          4,
+          8192
+        ],
+        "manual_ring_pairs": [
+          {
+            "hints": 0,
+            "manual": "hot-width-grouped-manual-c1-h0",
+            "manual_over_ring": 0.9889296836355783,
+            "ring": "hot-width-grouped-ring-c1-h0",
+            "width": 1
+          },
+          {
+            "hints": 1,
+            "manual": "hot-width-grouped-manual-c1-h1",
+            "manual_over_ring": 0.8971891448242573,
+            "ring": "hot-width-grouped-ring-c1-h1",
+            "width": 1
+          },
+          {
+            "hints": 0,
+            "manual": "hot-width-grouped-manual-c8-h0",
+            "manual_over_ring": 0.7597200062130912,
+            "ring": "hot-width-grouped-ring-c8-h0",
+            "width": 8
+          },
+          {
+            "hints": 1,
+            "manual": "hot-width-grouped-manual-c8-h1",
+            "manual_over_ring": 0.8607032294467799,
+            "ring": "hot-width-grouped-ring-c8-h1",
+            "width": 8
+          },
+          {
+            "hints": 0,
+            "manual": "hot-width-grouped-manual-c32-h0",
+            "manual_over_ring": 0.7164264596377287,
+            "ring": "hot-width-grouped-ring-c32-h0",
+            "width": 32
+          },
+          {
+            "hints": 1,
+            "manual": "hot-width-grouped-manual-c32-h1",
+            "manual_over_ring": 0.8201887568409902,
+            "ring": "hot-width-grouped-ring-c32-h1",
+            "width": 32
+          }
+        ],
+        "matched_payload_coverage": {
+          "consumed": 238514,
+          "distinct_source_ranks": 1024,
+          "distinct_sources": 4,
+          "line_bytes": 128,
+          "page_bytes": 4096,
+          "payload_line_bytes": 33920,
+          "payload_lines": 265,
+          "scratch_peak_bytes": 5120,
+          "scratch_released": 1
+        }
+      },
+      {
+        "best_control": "large-direct-grouped-manual-c32-h1",
+        "best_control_over_best_ring": 0.8813527619981866,
+        "best_ring": "large-direct-grouped-ring-c32-h1",
+        "direct_no_hint": "large-direct-grouped-direct-c8-h0",
+        "group": [
+          "large",
+          "direct",
+          "grouped",
+          16384,
+          262144
+        ],
+        "manual_ring_pairs": [
+          {
+            "hints": 0,
+            "manual": "large-direct-grouped-manual-c1-h0",
+            "manual_over_ring": 1.1688870318989821,
+            "ring": "large-direct-grouped-ring-c1-h0",
+            "width": 1
+          },
+          {
+            "hints": 1,
+            "manual": "large-direct-grouped-manual-c1-h1",
+            "manual_over_ring": 1.1580143972487575,
+            "ring": "large-direct-grouped-ring-c1-h1",
+            "width": 1
+          },
+          {
+            "hints": 0,
+            "manual": "large-direct-grouped-manual-c8-h0",
+            "manual_over_ring": 0.945751209617283,
+            "ring": "large-direct-grouped-ring-c8-h0",
+            "width": 8
+          },
+          {
+            "hints": 1,
+            "manual": "large-direct-grouped-manual-c8-h1",
+            "manual_over_ring": 1.0635618416561095,
+            "ring": "large-direct-grouped-ring-c8-h1",
+            "width": 8
+          },
+          {
+            "hints": 0,
+            "manual": "large-direct-grouped-manual-c32-h0",
+            "manual_over_ring": 0.8126384981609835,
+            "ring": "large-direct-grouped-ring-c32-h0",
+            "width": 32
+          },
+          {
+            "hints": 1,
+            "manual": "large-direct-grouped-manual-c32-h1",
+            "manual_over_ring": 0.8813527619981866,
+            "ring": "large-direct-grouped-ring-c32-h1",
+            "width": 32
+          }
+        ],
+        "matched_payload_coverage": {
+          "consumed": 7647088,
+          "distinct_source_ranks": 3515866,
+          "distinct_sources": 16384,
+          "line_bytes": 128,
+          "page_bytes": 4096,
+          "payload_line_bytes": 138832512,
+          "payload_lines": 1084629,
+          "scratch_peak_bytes": 20971520,
+          "scratch_released": 1
+        }
+      },
+      {
+        "best_control": "large-width-grouped-manual-c32-h1",
+        "best_control_over_best_ring": 0.9337484867404586,
+        "best_ring": "large-width-grouped-ring-c32-h1",
+        "direct_no_hint": "large-width-grouped-direct-c8-h0",
+        "group": [
+          "large",
+          "width",
+          "grouped",
+          16384,
+          262144
+        ],
+        "manual_ring_pairs": [
+          {
+            "hints": 0,
+            "manual": "large-width-grouped-manual-c1-h0",
+            "manual_over_ring": 1.019522570718472,
+            "ring": "large-width-grouped-ring-c1-h0",
+            "width": 1
+          },
+          {
+            "hints": 1,
+            "manual": "large-width-grouped-manual-c1-h1",
+            "manual_over_ring": 0.9832147074705883,
+            "ring": "large-width-grouped-ring-c1-h1",
+            "width": 1
+          },
+          {
+            "hints": 0,
+            "manual": "large-width-grouped-manual-c8-h0",
+            "manual_over_ring": 0.8537049505403295,
+            "ring": "large-width-grouped-ring-c8-h0",
+            "width": 8
+          },
+          {
+            "hints": 1,
+            "manual": "large-width-grouped-manual-c8-h1",
+            "manual_over_ring": 0.9196628461097383,
+            "ring": "large-width-grouped-ring-c8-h1",
+            "width": 8
+          },
+          {
+            "hints": 0,
+            "manual": "large-width-grouped-manual-c32-h0",
+            "manual_over_ring": 0.8466781314303286,
+            "ring": "large-width-grouped-ring-c32-h0",
+            "width": 32
+          },
+          {
+            "hints": 1,
+            "manual": "large-width-grouped-manual-c32-h1",
+            "manual_over_ring": 0.9337484867404586,
+            "ring": "large-width-grouped-ring-c32-h1",
+            "width": 32
+          }
+        ],
+        "matched_payload_coverage": {
+          "consumed": 7647088,
+          "distinct_source_ranks": 3515866,
+          "distinct_sources": 16384,
+          "line_bytes": 128,
+          "page_bytes": 4096,
+          "payload_line_bytes": 138832512,
+          "payload_lines": 1084629,
+          "scratch_peak_bytes": 20971520,
+          "scratch_released": 1
+        }
+      }
+    ],
+    "retained": "local/summary.json",
+    "raw_commands_context_resources": "local/measure.json",
+    "semantics": "Every process compares all Outcomes to independent pre-encoding application facts and verifies source bytes unchanged; no serialized digest inference",
+    "included": "Frame resets, native admission, refusal/retry, refill, hints, returned quantum accounting, drain and result delivery",
+    "separate": "Worker/material/request-oracle setup, consumer frame/chain/Ring setup, close and frame free; printed per-arm, not included in ns/link table",
+    "memory": "152B Frame +24B Outcome per request =176B combined; CLI frames_bytes includes Outcome, so outcome_bytes is an overlapping breakdown",
+    "large_demand_payload_line_bytes": 138832512,
+    "hot_demand_payload_line_bytes": 33920,
+    "large_payload_capacity": 264241152,
+    "oracle": "Row facts and coverage scratch released before assess; expected Outcomes remain and are accounted",
+    "limits": [
+      "Reported64MiB LLC does not prove physical cache or DRAM residency",
+      "Loads are first8 identity and tail4 link, not complete-value bandwidth",
+      "No HardwareService/background calibration, PMU, IPC or measured stalls in this local route comparison",
+      "Persistent per-request inventory remains allocated through the operation; scheduling frontier alone is bounded",
+      "Sequential arm order and3 contiguous observations are local screening; no universal admission/pressure policy"
+    ]
+  },
+  "observations": [
+    "Large hinted Ring32 is roughly2.6x serial throughput but7-14% behind best matchedmanual",
+    "Hot hints lose, and the tuned manual path wins; negative width1/regular-ring evidence stays explicit",
+    "Use direct/CPS for ready work and interleaving only where its full operation costs pay"
+  ],
+  "owner_handoff": "Ikea owns CMake, public kernels/API and IMPLEMENTATION.md curation; Loom additions and explicit findings supplied, no CMake/kernel/document owner edits or commits by Loom"
+}

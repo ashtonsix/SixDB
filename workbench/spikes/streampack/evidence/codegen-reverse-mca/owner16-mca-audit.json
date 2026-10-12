@@ -1,0 +1,113 @@
+{
+  "LLVM_version": "Ubuntu LLVM version 21.1.8",
+  "actual_capture_file": "scattered-native-owner16-with-load-offset.asm",
+  "actual_capture_sha256": "ccafcbfcccd76343bc99b6f2c9d22f3888ca1a4af8e17ee49a66c819c5894dfd",
+  "mca_input_file": "owner16-scattered-actual25.s",
+  "mca_input_sha256": "e7c4be9b958a7d6738d248630200e255c26d88140fd4bc4675cfc9fed86d63b0",
+  "results": [
+    {
+      "cpu": "neoverse-v2",
+      "iterations": 1,
+      "command": [
+        "llvm-mca-21",
+        "-mtriple=aarch64",
+        "-mcpu=neoverse-v2",
+        "-iterations=1",
+        "-bottleneck-analysis",
+        "/home/ashtonsix/sixdb/build/streampack-fresh-results/codegen-review/fair-c9g-linked/owner16-scattered-actual25.s",
+        "-timeline",
+        "-timeline-max-cycles=200",
+        "-timeline-max-iterations=1"
+      ],
+      "metrics": {
+        "Iterations": 1.0,
+        "Instructions": 25.0,
+        "Total Cycles": 38.0,
+        "Total uOps": 27.0,
+        "Dispatch Width": 6.0,
+        "Block RThroughput": 4.8
+      },
+      "output_file": "owner16-actual25.neoverse-v2.iterations1.mca.txt",
+      "output_sha256": "7dcf036f72d80737c7a1f494e3f12b66fa206502969e19043c0e97679a9acb1d"
+    },
+    {
+      "cpu": "neoverse-v2",
+      "iterations": 1000,
+      "command": [
+        "llvm-mca-21",
+        "-mtriple=aarch64",
+        "-mcpu=neoverse-v2",
+        "-iterations=1000",
+        "-bottleneck-analysis",
+        "/home/ashtonsix/sixdb/build/streampack-fresh-results/codegen-review/fair-c9g-linked/owner16-scattered-actual25.s"
+      ],
+      "metrics": {
+        "Iterations": 1000.0,
+        "Instructions": 25000.0,
+        "Total Cycles": 17021.0,
+        "Total uOps": 27000.0,
+        "Dispatch Width": 6.0,
+        "Block RThroughput": 4.8
+      },
+      "output_file": "owner16-actual25.neoverse-v2.iterations1000.mca.txt",
+      "output_sha256": "6c82c13a6d53ebf5d005c8b0c6285c025c083b53cb1440f63b3fb3eb5495d8de"
+    },
+    {
+      "cpu": "neoverse-v3",
+      "iterations": 1,
+      "command": [
+        "llvm-mca-21",
+        "-mtriple=aarch64",
+        "-mcpu=neoverse-v3",
+        "-iterations=1",
+        "-bottleneck-analysis",
+        "/home/ashtonsix/sixdb/build/streampack-fresh-results/codegen-review/fair-c9g-linked/owner16-scattered-actual25.s",
+        "-timeline",
+        "-timeline-max-cycles=200",
+        "-timeline-max-iterations=1"
+      ],
+      "metrics": {
+        "Iterations": 1.0,
+        "Instructions": 25.0,
+        "Total Cycles": 38.0,
+        "Total uOps": 27.0,
+        "Dispatch Width": 6.0,
+        "Block RThroughput": 4.8
+      },
+      "output_file": "owner16-actual25.neoverse-v3.iterations1.mca.txt",
+      "output_sha256": "7dcf036f72d80737c7a1f494e3f12b66fa206502969e19043c0e97679a9acb1d"
+    },
+    {
+      "cpu": "neoverse-v3",
+      "iterations": 1000,
+      "command": [
+        "llvm-mca-21",
+        "-mtriple=aarch64",
+        "-mcpu=neoverse-v3",
+        "-iterations=1000",
+        "-bottleneck-analysis",
+        "/home/ashtonsix/sixdb/build/streampack-fresh-results/codegen-review/fair-c9g-linked/owner16-scattered-actual25.s"
+      ],
+      "metrics": {
+        "Iterations": 1000.0,
+        "Instructions": 25000.0,
+        "Total Cycles": 17021.0,
+        "Total uOps": 27000.0,
+        "Dispatch Width": 6.0,
+        "Block RThroughput": 4.8
+      },
+      "output_file": "owner16-actual25.neoverse-v3.iterations1000.mca.txt",
+      "output_sha256": "6c82c13a6d53ebf5d005c8b0c6285c025c083b53cb1440f63b3fb3eb5495d8de"
+    }
+  ],
+  "v2_v3_outputs_byte_identical": {
+    "1": true,
+    "1000": true
+  },
+  "initial_limits": [
+    "The region inputs (zero vector, one vector, geometry pointers, checkpoint base and hashed relative offset) are assumed already available; checkpoint/query/caller work is excluded.",
+    "Each synthetic repeated iteration feeds prior final fmov w6 into the next sub w6,w19,w6, an artificial loop-carried dependency absent from the complete consumer. Repeated cycles are therefore not actual independent-query throughput.",
+    "Single-iteration total cycles include simulated dispatch/retire startup and assumed hot load latency; Block RThroughput is a resource lower-bound estimate, not latency or hardware timing.",
+    "No branch prediction, LLC/DRAM, page translation, or actual c9g service is measured."
+  ]
+}

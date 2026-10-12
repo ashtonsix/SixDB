@@ -1,0 +1,217 @@
+{
+  "scope": "Independent validity/model review only; no duplicate MCA, build, benchmark, worker call or source edit.",
+  "inputs": {
+    "scattered-native-owner16-with-load-offset.asm": {
+      "sha256": "ccafcbfcccd76343bc99b6f2c9d22f3888ca1a4af8e17ee49a66c819c5894dfd",
+      "bytes": 876
+    },
+    "block-native-owner16-with-load-offset.asm": {
+      "sha256": "b5054cc1d76d0a2bf3e2f36546d34090d3b281ee469031c6fe8384c95717fbfb",
+      "bytes": 879
+    },
+    "widths8-native-reverse_scattered.asm": {
+      "sha256": "422cf171672204b5b14b5e36160adf95038d78eff568ee317622755c9db3f066",
+      "bytes": 5099
+    },
+    "widths8-native-reverse_trace.asm": {
+      "sha256": "8802b065fe991f40347be0d45d9eebeacae37caaf8f1d6bfb642f08875a991aa",
+      "bytes": 5694
+    },
+    "owner16-scattered-actual25.s": {
+      "sha256": "e7c4be9b958a7d6738d248630200e255c26d88140fd4bc4675cfc9fed86d63b0",
+      "bytes": 1257
+    },
+    "owner16-mca-audit.json": {
+      "sha256": "6567091495819720238f07069e7aa3e6fc64c30cefda5205a5721bbcda31ea52",
+      "bytes": 4314
+    },
+    "owner16-actual25.neoverse-v2.iterations1.mca.txt": {
+      "sha256": "7dcf036f72d80737c7a1f494e3f12b66fa206502969e19043c0e97679a9acb1d",
+      "bytes": 10907
+    },
+    "owner16-actual25.neoverse-v2.iterations1000.mca.txt": {
+      "sha256": "6c82c13a6d53ebf5d005c8b0c6285c025c083b53cb1440f63b3fb3eb5495d8de",
+      "bytes": 9102
+    },
+    "owner16-actual25.neoverse-v3.iterations1.mca.txt": {
+      "sha256": "7dcf036f72d80737c7a1f494e3f12b66fa206502969e19043c0e97679a9acb1d",
+      "bytes": 10907
+    },
+    "owner16-actual25.neoverse-v3.iterations1000.mca.txt": {
+      "sha256": "6c82c13a6d53ebf5d005c8b0c6285c025c083b53cb1440f63b3fb3eb5495d8de",
+      "bytes": 9102
+    }
+  },
+  "actual_25_instruction_input_verified": true,
+  "observations": [
+    {
+      "cpu": "neoverse-v2",
+      "iterations": 1,
+      "metrics": {
+        "Iterations": 1.0,
+        "Instructions": 25.0,
+        "Total Cycles": 38.0,
+        "Total uOps": 27.0,
+        "Dispatch Width": 6.0,
+        "Block RThroughput": 4.8
+      },
+      "resource_names": [
+        "V2UnitB",
+        "V2UnitD",
+        "V2UnitFlg",
+        "V2UnitL01",
+        "V2UnitL2",
+        "V2UnitM0",
+        "V2UnitM1",
+        "V2UnitS0",
+        "V2UnitS1",
+        "V2UnitS2",
+        "V2UnitS3",
+        "V2UnitV0",
+        "V2UnitV1",
+        "V2UnitV2",
+        "V2UnitV3"
+      ],
+      "explicit_loop_carried_w6_dependency": false,
+      "file": "owner16-actual25.neoverse-v2.iterations1.mca.txt"
+    },
+    {
+      "cpu": "neoverse-v2",
+      "iterations": 1000,
+      "metrics": {
+        "Iterations": 1000.0,
+        "Instructions": 25000.0,
+        "Total Cycles": 17021.0,
+        "Total uOps": 27000.0,
+        "Dispatch Width": 6.0,
+        "Block RThroughput": 4.8
+      },
+      "resource_names": [
+        "V2UnitB",
+        "V2UnitD",
+        "V2UnitFlg",
+        "V2UnitL01",
+        "V2UnitL2",
+        "V2UnitM0",
+        "V2UnitM1",
+        "V2UnitS0",
+        "V2UnitS1",
+        "V2UnitS2",
+        "V2UnitS3",
+        "V2UnitV0",
+        "V2UnitV1",
+        "V2UnitV2",
+        "V2UnitV3"
+      ],
+      "explicit_loop_carried_w6_dependency": true,
+      "file": "owner16-actual25.neoverse-v2.iterations1000.mca.txt"
+    },
+    {
+      "cpu": "neoverse-v3",
+      "iterations": 1,
+      "metrics": {
+        "Iterations": 1.0,
+        "Instructions": 25.0,
+        "Total Cycles": 38.0,
+        "Total uOps": 27.0,
+        "Dispatch Width": 6.0,
+        "Block RThroughput": 4.8
+      },
+      "resource_names": [
+        "V2UnitB",
+        "V2UnitD",
+        "V2UnitFlg",
+        "V2UnitL01",
+        "V2UnitL2",
+        "V2UnitM0",
+        "V2UnitM1",
+        "V2UnitS0",
+        "V2UnitS1",
+        "V2UnitS2",
+        "V2UnitS3",
+        "V2UnitV0",
+        "V2UnitV1",
+        "V2UnitV2",
+        "V2UnitV3"
+      ],
+      "explicit_loop_carried_w6_dependency": false,
+      "file": "owner16-actual25.neoverse-v3.iterations1.mca.txt"
+    },
+    {
+      "cpu": "neoverse-v3",
+      "iterations": 1000,
+      "metrics": {
+        "Iterations": 1000.0,
+        "Instructions": 25000.0,
+        "Total Cycles": 17021.0,
+        "Total uOps": 27000.0,
+        "Dispatch Width": 6.0,
+        "Block RThroughput": 4.8
+      },
+      "resource_names": [
+        "V2UnitB",
+        "V2UnitD",
+        "V2UnitFlg",
+        "V2UnitL01",
+        "V2UnitL2",
+        "V2UnitM0",
+        "V2UnitM1",
+        "V2UnitS0",
+        "V2UnitS1",
+        "V2UnitS2",
+        "V2UnitS3",
+        "V2UnitV0",
+        "V2UnitV1",
+        "V2UnitV2",
+        "V2UnitV3"
+      ],
+      "explicit_loop_carried_w6_dependency": true,
+      "file": "owner16-actual25.neoverse-v3.iterations1000.mca.txt"
+    }
+  ],
+  "v2_v3_output_bytes_identical": {
+    "1": true,
+    "1000": true
+  },
+  "isolated_repeat_dependencies": [
+    {
+      "consumer": "scattered",
+      "last_output": "0x18e74 fmov w6,s2",
+      "next_isolated_read": "0x18e18 sub w6,w19,w6",
+      "classification": "Artificial rank output to checkpoint-base input recurrence",
+      "real_consumer_definition_that_breaks_recurrence": "0x18e10 ldr w6,[x6,w20,uxtw#2], before each group region; query w19 is also regenerated."
+    },
+    {
+      "consumer": "block",
+      "last_output": "0x190e8 fmov w19,s2",
+      "next_isolated_read": "0x1908c sub w19,w19,w20",
+      "classification": "Artificial rank output to query-offset input recurrence",
+      "real_consumer_definition_that_breaks_recurrence": "0x18ffc add w19,w17,w16 and 0x19018 msub w19,w20,w5,w19 regenerate offset; 0x19084 reloads checkpoint w20."
+    }
+  ],
+  "other_register_behavior": [
+    "Leading ldr q2 defines a fresh width vector each iteration; ushll/ushll2 define fresh v3/v4 temporaries. These do not create a comparable loop-carried vector live-in.",
+    "v0 zero and v1 one-mask vectors are read-only live-ins assumed ready by this extraction.",
+    "Load base/index registers and initial scalar query/checkpoint data are assumed ready, rather than obtained through checkpoint search and query generation."
+  ],
+  "primary_model_source": {
+    "url": "https://raw.githubusercontent.com/llvm/llvm-project/llvmorg-21.1.8/llvm/lib/Target/AArch64/AArch64Processors.td",
+    "line_range": [
+      1224,
+      1227
+    ],
+    "observed_definition": "Both neoverse-v2 and neoverse-v3 ProcessorModel definitions select NeoverseV2Model. ProcessorFeatures and Tune definitions remain distinct.",
+    "terminology": "Shared scheduling model, not a complete CPU alias.",
+    "line_numbering": "one-based source lines",
+    "sha256": "a9907ad0e7eac68f20ad78d3de4798fedcbc8bc32362c82b182c9b371dd8f2e5"
+  },
+  "interpretation": [
+    "38 single-iteration total cycles include simulated dispatch/retirement start and drain and the model 6-cycle load; not measured c9g latency.",
+    "17021/1000=17.021 cycles per repeated region includes the artificial scalar recurrence explicitly present in the critical-sequence report; not independent-query throughput.",
+    "Block RThroughput4.8 is the scheduling model reciprocal-throughput estimate ignoring dependency chains; not latency, measured throughput or a guaranteed sustained rate.",
+    "Identical V2/V3 output is expected from the shared NeoverseV2Model and supplies no independent evidence about actual V3 relative scheduling uplift.",
+    "Instruction latencies and V2Unit resource use are assumptions of this model. They do not measure cache tier, page translation, branch prediction, LLC or DRAM service.",
+    "The complete query additionally pays query generation, checkpoint selection/base load, group-base rank addition, tomb lookup and output/checksum work."
+  ],
+  "review_disposition": "Parent initial_limits correctly identify the extraction recurrence and synthetic nature of totals. No interpretation error found when those limits are preserved."
+}

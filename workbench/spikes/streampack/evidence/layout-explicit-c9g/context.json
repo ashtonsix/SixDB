@@ -1,0 +1,30 @@
+{
+  "worker": {
+    "id": "20261012T010715Z-219947f8",
+    "instance_id": "i-0d6cdc00199ed562d",
+    "reused": true,
+    "reuse_count": 2,
+    "max_end": 1791781642.3697343
+  },
+  "instance_type": "c9g.4xlarge",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "source": {
+    "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+    "digest": "7fd83f199cb60326e8865de6898e5bcd09d96754619e1d776653c46a5ac8f7ce",
+    "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+    "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+    "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+    "sha256": "91087b812af3c56eca192fdc83f8248ebd03303de49e400324f94c6aa67fd489"
+  },
+  "source_commit": "7eb0002dbf81c06cd64d67bdbd35d7a3e97798a5",
+  "worker_result": {
+    "state": "complete",
+    "script_returncode": 0,
+    "script_seconds": 578.6465909481049,
+    "worker_seconds_before_collection": 581.9811890125275
+  },
+  "derivation": "python3 analysis/summarize_layout.py inputs REGENERATED_DIRECTORY; if bulk inputs are present, repeat with --prefix bulk --output-name bulk-summary.csv",
+  "summary_script_sha256": "b2617c2f82fca9f2631063b15b59dcd3fb27a9302c4d5ef5bcb24e8efa20fc87",
+  "provenance": "Derived bundle contains exact CSV inputs and analysis. worker-artifact.json recovers original sources, binaries, disassembly and logs. Summaries generated after collection.",
+  "interpretation": "Explicit NEON field packets and full C1/C8; both compiler vectorizers disabled. Ordered M255 field timings include an avoidable byte-widening dependency on the sum, diagnosed after timing; use the later layout-byte-c9g ordered-field correction before selecting those paths. C1/C8, M4095, shuffled fields and separate bulk consumer do not use that four-byte ordered bridge. C1 is dependent operation service; C8 achieved overlap, not peak reciprocal throughput. Main six placements reverse process order; CP16 was last in both orders."
+}

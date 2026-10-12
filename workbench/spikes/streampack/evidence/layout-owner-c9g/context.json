@@ -1,0 +1,30 @@
+{
+  "worker": {
+    "id": "20261012T002223Z-898d614f",
+    "instance_id": "i-01fe1f2b23d7c5c3e",
+    "reused": true,
+    "reuse_count": 1,
+    "max_end": 1791778951.0402956
+  },
+  "instance_type": "c9g.4xlarge",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "source": {
+    "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+    "digest": "3eb31d598a34784018fafb48c40775febf481bee12d0500d5c2c22f441669aad",
+    "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+    "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+    "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+    "sha256": "18ba2d96a38f53bf0a6a2d14994dfc36117605a3b3ab523280ccb281e9cdba44"
+  },
+  "source_commit": "7eb0002dbf81c06cd64d67bdbd35d7a3e97798a5",
+  "worker_result": {
+    "state": "complete",
+    "script_returncode": 0,
+    "script_seconds": 175.010155916214,
+    "worker_seconds_before_collection": 178.3477189540863
+  },
+  "derivation": "python3 analysis/summarize_layout.py inputs REGENERATED_DIRECTORY",
+  "summary_script_sha256": "eca7aa9bc440e5e0984c71740dc9d96098d21355c1c29c65a82782539a67067d",
+  "provenance": "Derived bundle contains exact CSV inputs and analysis. worker-artifact.json recovers original sources, binaries, disassembly and logs. Summaries generated after collection.",
+  "interpretation": "Read-layout and bulk timings are historical compiler-generated-consumer observations: loop vectorization remained enabled; layout selection conclusions withdrawn. Private allocation counters and checked byte layouts remain valid. Replacement explicit-ISA consumers have separate evidence."
+}

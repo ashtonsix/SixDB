@@ -1,0 +1,15 @@
+{
+  "scope": "All completed composition comparison samples, both process orders and losses; full worker archive owns binaries, logs and mappings.",
+  "counts": {
+    "ring": 1080,
+    "mutable": 1248,
+    "lifecycle": 28,
+    "phase": 4
+  },
+  "limits": [
+    "MVCC phase clocks are separate diagnostic runs and leave an unclassified edit remainder.",
+    "Projection selected rank includes empty and dead selections; ns/input-row multiplied by 16 for the 1of16 query.",
+    "Same-reservation command timing edits only one in four input rows.",
+    "Ring traces have equal-length chains, no irregular refill, and consume lengths plus tail4, not complete payload bandwidth."
+  ]
+}

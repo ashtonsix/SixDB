@@ -1,0 +1,41 @@
+{
+  "scope": "Standalone production StreamPack consumer correctness",
+  "checks": {
+    "native": {
+      "panels": 526,
+      "requests": 36502,
+      "consumed": 1090248,
+      "schema_variants": 64,
+      "log": "native-check.log",
+      "sha256": "ada4d5461abff93e4db584bf24efaf1c5bf1603997a0e56eae77bf50e6866864"
+    },
+    "asan_ubsan": {
+      "panels": 526,
+      "log": "asan-check.log",
+      "sha256": "ba120d5fbdee64b0a039e12e30fc1eca89d0eeb3aeccec41f5e36315abce0ad6",
+      "flags": "RelWithDebInfo/O2, address+undefined, always-UAR, detect_leaks=1, detect_stack_use_after_return=1, halt_on_error=1"
+    }
+  },
+  "source_sha256": {
+    "workbench/spikes/streampack/implementation_loom.cpp": "d973cd0310d981856f6d60ced7e04f2b7cedda88d9f8fb6abd4a7b61880fd76c",
+    "workbench/spikes/streampack/implementation_loom.h": "964989d2ea125f498adce71057b1d1548608aff9b9c2fcfb2e1e1e606ea5e428",
+    "workbench/spikes/streampack/implementation_loom_check.cpp": "2a6e760d893c6309b99815a3f0a668060535e83c0fefa54b61eef02a08c8fce6"
+  },
+  "binary_sha256": {
+    "native": "36322ad09948a2f2553f3e9cda82f371212dc598e79527a8d957bbe16c662d7f",
+    "asan": "de4db43e2b1406d613d81a705b724965cfc08e4ebc68d5339768dfcb98b3bef2"
+  },
+  "meaningful_boundaries": [
+    "Independent pre-encoding Row facts, not a production read oracle",
+    "Actual Allocation released with Hold retaining all four planes through drain",
+    "64 schema variants; ragged overlapping requests; bounded refusal/retry and overflow promotion",
+    "Empty/zero-step/no-metadata fixed-full-immortal; rank/retired/short/link failures",
+    "Manual and Ring exact scheduling/work counters",
+    "Warmup and repeated returned-hook epochs; shutdown physical Message drain and zero Arena charge"
+  ],
+  "limits": [
+    "No cross-Object successor traversal in this operation",
+    "Actual ObjectStore retained-version publication and escaping Parts qualified separately by Orbital owner",
+    "No cancellation history is claimed for synchronous assess"
+  ]
+}

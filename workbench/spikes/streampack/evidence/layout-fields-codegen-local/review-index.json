@@ -1,0 +1,409 @@
+{
+  "scope": "Read-only actual saved local AArch64 field decode/accessor audit. Width M255 and M4095; planes, Series, Tuple64, Hybrid32 and Hybrid128.",
+  "provenance": {
+    "source_tree_digest": "2e3610eb6e2120c98fd61123cbe7387ff36e4098e4fbdf8eb88b61209cb1027a",
+    "archive": "build/workers/20261012T002223Z-76506be1/source.tar.gz",
+    "archive_sha256": "616b7a5acad6aab586e3766d47a41a9d0dab46d65ca09b20b1207639e7719f4d",
+    "source_members": {
+      "workbench/spikes/streampack/layout.cpp": "dfb2b65ed042edcc6398a934f4dbc1e05d8d43114ef4d434ba24098af3b376bc",
+      "workbench/spikes/streampack/layout.h": "daa7c34b61d13e3b2db475ba6bc1b3a3b5c8abc25d229a24ef8fd58da37830d8",
+      "workbench/spikes/streampack/layout_tuple_group.h": "2fb041da6eec14b8f8cda28c8fc16b71ea00772e14e579e783735903bfc00ad1",
+      "workbench/spikes/streampack/layout_hybrid.h": "d9a29a67e58384250dd6f589c17b410ad374d41209cb861a2d6d99ef4ba9ffb2",
+      "workbench/spikes/streampack/prefix.h": "c7aae1bc25444d567e6510b8f96e12a45e0504e14f907e8a7be7daea936d20c9"
+    },
+    "saved_asm": "build/streampack-fields-local.asm",
+    "saved_asm_sha256": "506d78cbdb8f4786ec301bd397ba80c19a94baabc3f31218efc60243a2e34607",
+    "qualification": "Parent identified saved asm as original final fields cut. Mutable binary and live layout files subsequently changed for paid projection; neither was used. Hardware measurement/source campaign remains parent-owned."
+  },
+  "receipts": {
+    "emitted_functions": {
+      "path": "build/streampack-fresh-results/codegen-review/layout-fields-local/functions.json",
+      "sha256": "8c56a147346581f6f6722f4cfb83359feb6fb7b60efe107ebe5a54bdab4271f3"
+    },
+    "source_review": {
+      "path": "build/streampack-fresh-results/codegen-review/layout-fields-local/source-review.json",
+      "sha256": "627fdd447adcb2a75385d50c00568de645717b121140597b72525c45e6ee36c7"
+    }
+  },
+  "decode_fields": [
+    "geometry16",
+    "used16",
+    "dead256 popcount",
+    "base16"
+  ],
+  "decode_table": [
+    {
+      "layout": "planes",
+      "maximum": 255,
+      "static_whole_body_counts_including_padding": [
+        48,
+        56,
+        216,
+        40
+      ],
+      "own_SP_reservations": [
+        16,
+        16,
+        0,
+        0
+      ],
+      "entry_addresses": [
+        "0x000000000003f4c0",
+        "0x000000000003f580",
+        "0x000000000003f660",
+        "0x000000000003f9c0"
+      ]
+    },
+    {
+      "layout": "series",
+      "maximum": 255,
+      "static_whole_body_counts_including_padding": [
+        48,
+        48,
+        216,
+        48
+      ],
+      "own_SP_reservations": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "entry_addresses": [
+        "0x00000000000508a0",
+        "0x0000000000050960",
+        "0x0000000000050a20",
+        "0x0000000000050d80"
+      ]
+    },
+    {
+      "layout": "tuple64",
+      "maximum": 255,
+      "static_whole_body_counts_including_padding": [
+        336,
+        336,
+        120,
+        72
+      ],
+      "own_SP_reservations": [
+        0,
+        0,
+        0,
+        32
+      ],
+      "entry_addresses": [
+        "0x0000000000036320",
+        "0x0000000000036860",
+        "0x0000000000036da0",
+        "0x0000000000036f80"
+      ]
+    },
+    {
+      "layout": "hybrid32",
+      "maximum": 255,
+      "static_whole_body_counts_including_padding": [
+        56,
+        56,
+        32,
+        40
+      ],
+      "own_SP_reservations": [
+        16,
+        16,
+        0,
+        0
+      ],
+      "entry_addresses": [
+        "0x00000000000185e0",
+        "0x00000000000186c0",
+        "0x00000000000187a0",
+        "0x0000000000018820"
+      ]
+    },
+    {
+      "layout": "hybrid128",
+      "maximum": 255,
+      "static_whole_body_counts_including_padding": [
+        56,
+        56,
+        32,
+        40
+      ],
+      "own_SP_reservations": [
+        16,
+        16,
+        0,
+        0
+      ],
+      "entry_addresses": [
+        "0x0000000000029380",
+        "0x0000000000029460",
+        "0x0000000000029540",
+        "0x00000000000295c0"
+      ]
+    },
+    {
+      "layout": "planes",
+      "maximum": 4095,
+      "static_whole_body_counts_including_padding": [
+        56,
+        56,
+        216,
+        40
+      ],
+      "own_SP_reservations": [
+        16,
+        16,
+        0,
+        0
+      ],
+      "entry_addresses": [
+        "0x000000000008c780",
+        "0x000000000008c860",
+        "0x000000000008c940",
+        "0x000000000008cca0"
+      ]
+    },
+    {
+      "layout": "series",
+      "maximum": 4095,
+      "static_whole_body_counts_including_padding": [
+        96,
+        96,
+        216,
+        104
+      ],
+      "own_SP_reservations": [
+        0,
+        0,
+        0,
+        32
+      ],
+      "entry_addresses": [
+        "0x000000000009ea20",
+        "0x000000000009eba0",
+        "0x000000000009ed20",
+        "0x000000000009f080"
+      ]
+    },
+    {
+      "layout": "tuple64",
+      "maximum": 4095,
+      "static_whole_body_counts_including_padding": [
+        424,
+        424,
+        120,
+        72
+      ],
+      "own_SP_reservations": [
+        0,
+        0,
+        0,
+        32
+      ],
+      "entry_addresses": [
+        "0x0000000000083220",
+        "0x00000000000838c0",
+        "0x0000000000083f60",
+        "0x0000000000084140"
+      ]
+    },
+    {
+      "layout": "hybrid32",
+      "maximum": 4095,
+      "static_whole_body_counts_including_padding": [
+        56,
+        56,
+        32,
+        40
+      ],
+      "own_SP_reservations": [
+        16,
+        16,
+        0,
+        0
+      ],
+      "entry_addresses": [
+        "0x00000000000659e0",
+        "0x0000000000065ac0",
+        "0x0000000000065ba0",
+        "0x0000000000065c20"
+      ]
+    },
+    {
+      "layout": "hybrid128",
+      "maximum": 4095,
+      "static_whole_body_counts_including_padding": [
+        56,
+        56,
+        32,
+        40
+      ],
+      "own_SP_reservations": [
+        16,
+        16,
+        0,
+        0
+      ],
+      "entry_addresses": [
+        "0x0000000000076360",
+        "0x0000000000076440",
+        "0x0000000000076520",
+        "0x00000000000765a0"
+      ]
+    }
+  ],
+  "point_calls_per_item": {
+    "planes": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "series": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "tuple64": [
+      1,
+      1,
+      1,
+      0,
+      1
+    ],
+    "hybrid32": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "hybrid128": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "field_order": [
+      "geometry",
+      "used",
+      "dead",
+      "base",
+      "start"
+    ],
+    "qualification": "Same counts at M255/M4095, sequential/shuffled; no cold/helper calls in any selected decode body. Tuple helpers themselves call-free and stack-free. Base is inline even for Tuple64."
+  },
+  "tuple_helper_table": [
+    {
+      "maximum": 255,
+      "helper": "dead",
+      "boundary": [
+        "0x000000000002feb0",
+        "0x0000000000030150"
+      ],
+      "static_whole_body_count_including_padding": 168,
+      "own_SP": 0,
+      "calls": 0
+    },
+    {
+      "maximum": 255,
+      "helper": "used_length",
+      "boundary": [
+        "0x0000000000030150",
+        "0x0000000000030400"
+      ],
+      "static_whole_body_count_including_padding": 172,
+      "own_SP": 0,
+      "calls": 0
+    },
+    {
+      "maximum": 255,
+      "helper": "start",
+      "boundary": [
+        "0x00000000000328b0",
+        "0x0000000000032d20"
+      ],
+      "static_whole_body_count_including_padding": 284,
+      "own_SP": 0,
+      "calls": 0
+    },
+    {
+      "maximum": 255,
+      "helper": "geometry",
+      "boundary": [
+        "0x0000000000032d20",
+        "0x0000000000032fc0"
+      ],
+      "static_whole_body_count_including_padding": 168,
+      "own_SP": 0,
+      "calls": 0
+    },
+    {
+      "maximum": 4095,
+      "helper": "dead",
+      "boundary": [
+        "0x000000000007d2f0",
+        "0x000000000007d590"
+      ],
+      "static_whole_body_count_including_padding": 168,
+      "own_SP": 0,
+      "calls": 0
+    },
+    {
+      "maximum": 4095,
+      "helper": "used_length",
+      "boundary": [
+        "0x000000000007d590",
+        "0x000000000007d8a0"
+      ],
+      "static_whole_body_count_including_padding": 196,
+      "own_SP": 0,
+      "calls": 0
+    },
+    {
+      "maximum": 4095,
+      "helper": "start",
+      "boundary": [
+        "0x000000000007f5e0",
+        "0x000000000007fbc0"
+      ],
+      "static_whole_body_count_including_padding": 376,
+      "own_SP": 0,
+      "calls": 0
+    },
+    {
+      "maximum": 4095,
+      "helper": "geometry",
+      "boundary": [
+        "0x000000000007fbc0",
+        "0x000000000007fec0"
+      ],
+      "static_whole_body_count_including_padding": 192,
+      "own_SP": 0,
+      "calls": 0
+    }
+  ],
+  "findings": [
+    "All forty selected decode bodies are call-free. No decoded lane array or 64-byte Tuple packet survives; observed decode stack references are only 16/32-byte callee-save areas. Source decode and sum are compiler-visible, with no array escape barrier.",
+    "Tuple64 bulk hoists bound plan/view pointers and some control fields before traversal. Each group still tests runtime chunk extents/count/routes and executes native shuffle/shift/mask alternatives. M255 one-byte fields still use prepared routes; M4095 low-byte/high-nibble codes already produce native u16 lanes without per-rank scalar reassembly.",
+    "Series M255 body format is identity; local checksum lowering splits native input into scalar byte loads and D-lane extraction. Series M4095 uses fixed 8-byte body plus 4-byte residual tail per eight values, scalar butterfly residual expansion and native widening/OR. No runtime prepared-plan route in Series.",
+    "Planes/hybrid group checksums lower to sixteen scalar byte/halfword loads plus scalar add reduction. Tuple64/Series M4095 extract sixteen native u16 lanes and add in scalar registers. Shared no-SLP control does not disable explicit intrinsics or loop vectorization; these are fused decode-plus-sum consumers.",
+    "Tuple64 point geometry/used/dead/start remain outlined, with ordinary per-rank prepared GPR controls for selected fields. M4095 used helper0x7d590 selects rank modulo16 using0x68-byte plan stride and branches on slot/transfer controls. Point drivers request only the selected field; no unused aggregate-state collateral remains.",
+    "Shuffled ranks are the common computed full-domain permutation, with no query table. Series point M4095 selects one body byte and one shared4-byte residual tail, then fixed extraction; planes/hybrid use selected scalar loads. Tuple point routing is additional to this rank/address work, not intrinsic to the low-byte/high-nibble bits.",
+    "Dead bulk controls use the same four-u64 popcounts for planes/Series/hybrid. Planes/Series local compiler vectorizes across eight blocks with CNT/widen/zip accumulation; hybrids retain one-block four-D CNT/ADDV reductions. Tuple64 performs sixteen strided u16 mask popcounts per block. Whole-body counts do not give per-block instruction ratios.",
+    "Checkpoint bulk consumes each group base once: planes/hybrid use dense u32 values, Tuple64 uses u32 at64-byte stride, Series fixed16/20-bit formats. Point checkpoint test weights each base sixteen times; bulk ns_per_item denominator is checkpoints, not rows. Physical load reuse may differ from logical requests.",
+    "Hybrid32 and Hybrid128 R/U source formulas and local decoder shapes are the same; checkpoint/dead control stride96 versus128 changes physical placement. No intrinsic decoder change is established by any timing difference.",
+    "No source fairness blocker found. Concrete routing control if needed: same-format direct unpack of requested TupleGroup lanes, charged same byte bounds/checksum, to separate plan interpretation from format transform. An explicit horizontal checksum control would need symmetric logical sums/overflow semantics."
+  ],
+  "limits": [
+    "Static counts include alignment padding and generic alternatives, not executed per item.",
+    "Point and bulk consumers differ: point checkpoint repeats group base per row; decode bases consumes each once. Dead bulk is popcount, not materialization.",
+    "No SLP shared control still permits loop vectorization and explicit native code; decoded values feed sum without a barrier, so it measures fused decode+sum.",
+    "Saved asm source correspondence follows parent-owned final capture and verified captured source hashes; mutable live binary/source were not used. Not native hardware measurement; current compile commands belong to a later rebuild and are not charged to this asm."
+  ]
+}

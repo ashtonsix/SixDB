@@ -1,0 +1,93 @@
+{
+  "scope": "Actual final native c9g3f57 ordered byte-load correction review, build-only job. All84 ordered F0..F5 bodies at M255/M4095, seven layouts; no broader tuning or timing claims.",
+  "decision": "No codegen or admitted-source-semantic blocker for exact-hash bounded ordered-only timing rerun. Root reports Release and ASan/UBSan explicit checks passed. No timing or source changes by reviewer.",
+  "source": {
+    "tree_digest": "3f57b6882cc417804c81e34636b8e0489eefcd089ecba83d7ec2447e4b752b4e",
+    "base_tree_digest": "7fd83f199cb60326e8865de6898e5bcd09d96754619e1d776653c46a5ac8f7ce",
+    "compressed_source_archive_sha256": "60ed5edb2bc784f63b1f1e9f91e8b7ec34d0bfef609233b6cd8cfe28e3748ae1",
+    "capture": {
+      "path": "build/captures/streampack-byte-reviewed.capture.json",
+      "sha256": "84eae6fee9778f696795ccb2fa49839bab63f36678eddb89dff7c68526560ea0"
+    },
+    "replacements": [
+      {
+        "directory": false,
+        "from": "/home/ashtonsix/sixdb/workbench/spikes/streampack/layout_native.h",
+        "replace": "workbench/spikes/streampack/layout_native.h",
+        "sha256": "5ff3dc2a9d76f5f294f59f747a7f180f6a31eceffa119cbd46fe317037457956"
+      },
+      {
+        "directory": false,
+        "from": "/home/ashtonsix/sixdb/workbench/spikes/streampack/layout.cpp",
+        "replace": "workbench/spikes/streampack/layout.cpp",
+        "sha256": "ec0817a91f061f5e74d477b21d5f8829706e3358ad6c41514ddd41f95332028c"
+      },
+      {
+        "directory": false,
+        "from": "/home/ashtonsix/sixdb/workbench/spikes/streampack/layout-neon-byte-control.sh",
+        "replace": "workbench/spikes/streampack/layout-neon-byte-control.sh",
+        "sha256": "9a785a43313f6c63792de37498892635e286645b3024e5aabd721e3ff33d56a9"
+      },
+      {
+        "directory": false,
+        "from": "/home/ashtonsix/sixdb/workbench/spikes/streampack/summarize_layout.py",
+        "replace": "workbench/spikes/streampack/summarize_layout.py",
+        "sha256": "9eef328a87552e5823aabd79f5cc630ea5c60ca6834e53157d5beb9f6d30313b"
+      }
+    ]
+  },
+  "native": {
+    "worker": "20261012T014356Z-1c0c86b6",
+    "profile": "armv8.2-a+simd-neoverse-v3",
+    "job": {
+      "path": "build/workers/20261012T014356Z-1c0c86b6/job.json",
+      "sha256": "011660df75ba164443f57f47c043a4ecea6464b69a3009743b1de897e5319861"
+    },
+    "asm": {
+      "path": "build/workers/20261012T014356Z-1c0c86b6/results/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit.asm",
+      "sha256": "7515efccf48d6a6ed81df2dbeeb10b5fff7f5bcf84035971ff3f02734a12969a"
+    },
+    "executable_sha256_from_manifest": "c396737a36fb4654a6854639810eaa58c2d84f776767dd4fac6293b2c79e991c",
+    "original_binary_manifest": {
+      "path": "build/workers/20261012T014356Z-1c0c86b6/results/armv8.2-a+simd-neoverse-v3/binaries.sha256",
+      "sha256": "621123800371db24e1f20df2f59b97b36bae9eb1b897bf3f4e31bb94e609b29d"
+    },
+    "compile_commands": {
+      "path": "build/workers/20261012T014356Z-1c0c86b6/results/armv8.2-a+simd-neoverse-v3/compile_commands.json",
+      "sha256": "79980aef4ff0af57590f64ff276c4db80b95770c4f79a29f7bc7354115c502ba"
+    },
+    "body_report": {
+      "path": "build/streampack-fresh-results/codegen-review/layout-explicit-byte-control/native-c9g/summary.json",
+      "sha256": "bec6b733a82921bd3ead07ff77e854f2b2f6e69e1e2dae2e1516a8c298fad976"
+    },
+    "selected_bodies": 84,
+    "stable_asm_size_mtime_during_review": true
+  },
+  "local_report": {
+    "path": "build/streampack-fresh-results/codegen-review/layout-explicit-byte-control/local-arm/summary.json",
+    "sha256": "21cf9b21e54aa36457fa66353e9045a8b38a5c4224104363b3723835ad21cd97"
+  },
+  "original_final_index": {
+    "path": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/review-index.json",
+    "sha256": "8238aff6ceae8052e37d60b2280cb69237e21a026188ee99b1d460f222ff977f"
+  },
+  "original_gap_diagnostic": {
+    "path": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/c9g/ordered-byte-bridge-followup.json",
+    "sha256": "b5dfc4e359ab2d53d4ef23356fa0a7992dcb7cb3a62adaca14f2cdd042149022"
+  },
+  "source_semantics": [
+    "vld1_dup_u32 reads one4-byte word into duplicated8-byte SIMD carrier; low four bytes after unsigned widen\u2192lowhalf\u2192widen exactly match original values. Current whole256-row R/U origins and segments are multiples4; orderedfirst aligns4 and final four-lane packet stays within group lane12..15.",
+    "STREAMPACK_LAYOUT_ORDERED_ONLY is presence-based getenv, evaluated outside measured scan bodies. It skips C1/C8 and shuffled/staged/gather timings, preserving seeded U/dead state, independent expected checksums, allsix ordered fields, exact row denominators and admissions.",
+    "Same frozen base7fd83 source preserved except four named StreamPack replacements; peer allocator edits are outside this source."
+  ],
+  "codegen_findings": [
+    "All84 ordered bodies are call-free and stack-free, with no ZIP1 or GP-to-SIMD FMOV. Native M255 R/U four-byte loads lower to SIMD LDR S or paired LDP S and widen/combine independently of carried checksum. F4 live-used and F5 R+U compound routes also verified.",
+    "M255 planes used main0x61440..0x61498 consumes16 ranks in23instructions, including four UADALP updates. Corrected byte-widening input registers do not read current sum. The semantic reduction recurrence remains; this is not a peak-throughput or measured-speedup assertion.",
+    "M4095 keeps its existing vector-D input route. Byte load continues to read4bytes per subpacket; no full16-byte read or group-overread introduced."
+  ],
+  "limits": [
+    "Only explicit ordered read consumers in admitted frozen fixtures certified; no arbitrary partial geometry or production contract. R+U may legally fuse source intrinsics to UADDL before final widening.",
+    "Original automatic-vectorization and original byte-bridge cells must not establish inherent byte-layout or placement conclusions. Corrected timings are separate source-qualified evidence.",
+    "No measured speedup, throughput ceiling, ISA latency ratio, traffic/cache/prefetch causality from this receipt. Remaining UADALP recurrence is real but has no demonstrated limiting-throughput claim."
+  ]
+}

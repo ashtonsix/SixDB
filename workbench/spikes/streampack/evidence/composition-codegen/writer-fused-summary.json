@@ -1,0 +1,31 @@
+{
+  "scope": "Read-only follow-up of built spike-only streampack_mutable_fused; no builds, timing or source edits.",
+  "function_receipt": {
+    "file": "writer-fused-functions.json",
+    "sha256": "231e961cd1f8471577c033c39ad7fa631c93caa4efb842efc3a645bfed608587"
+  },
+  "binary_sha256": "27b58dc811c59bd0f97b601d96e357255cde3bb338d9abd047e15c771d84d767",
+  "targeted_helper_calls_remaining": 0,
+  "behavior_observed": [
+    "No Mutable before()/metadata_alias or source_write_journal::before calls remain anywhere in this binary. All geometry append bodies call only memmove/memset; replace bodies call only memmove.",
+    "Append frames are 64 B for all formats (baseline 80 B, previous inline 128 B). Replace frames are 48 B for all formats (previous inline direct 96 B / width 112 B); previous baseline replace was inlined in write_trace.",
+    "Command drivers retain outlined initialize/append/replace/soft_pack calls, existing error checks and fprintf/abort refusal handling. Driver frames/instruction counts match the previous helper-inline driver shape.",
+    "Width replace still calculates prefix at 0x180dc\u20130x18110 before the empty-input branch at 0x18114. Fusing effects alone does not restore the baseline whole-driver empty-input shortcut.",
+    "No new borrowed-source identity or temporary lifetime issue was found. Source identities remain the named writer; no kernel returns a pointer to a local argument.",
+    "Already-inlined soft_pack bodies also change: successful same-plane journal coalescing paths now store the plane again. Non-NOP counts inline to fused: direct16 162 to 165, direct32 164 to 168, widths8 245 to 253. These are static paths, not executed work counts; frames and libc-only call shape remain unchanged."
+  ],
+  "text_bytes": {
+    "baseline": 169368,
+    "helper_inline": 170200,
+    "fused": 172408,
+    "fused_increase_vs_baseline": 3040,
+    "fused_increase_vs_helper_inline": 2208,
+    "rodata_all_variants": 5282
+  },
+  "limits": [
+    "Per-function SP descents include save areas, not total process peak; libc frames excluded.",
+    "Instruction counts/body boundaries include cold refusal/coalescing paths; they are not executed instruction counts or performance predictions.",
+    "Semantic replay/refusal/capacity/alias and native performance results remain root-owned evidence."
+  ],
+  "possible_followup_control": "If empty point edits matter, explicitly make start calculation conditional on touched != 0 in both writers while preserving hook order, nonempty copy/clear behavior and all refusal checks. This would be another source-level control, not established by current emitted fusion."
+}

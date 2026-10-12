@@ -1,0 +1,207 @@
+{
+  "scope": "Bounded diagnostic for old frozen7fd83 Zen5 M4095 ordered reserve+used split/grouped gap. Exact linked primary steady loops plus LLVM21 model; no source edits, compiler rebuilds, new agents or benchmark launches. Current203b Direct and3f57 byte correction excluded.",
+  "source": {
+    "tree_digest": "7fd83f199cb60326e8865de6898e5bcd09d96754619e1d776653c46a5ac8f7ce",
+    "compressed_archive_sha256": "91087b812af3c56eca192fdc83f8248ebd03303de49e400324f94c6aa67fd489",
+    "original_worker": "20261012T011501Z-5c4325e1",
+    "job": {
+      "path": "build/workers/20261012T011501Z-5c4325e1/job.json",
+      "sha256": "79d3d77ca9f29c609a6445c2b5938e3c68372d7876656f754be43fd3194d92ac"
+    },
+    "original_final_review_index": {
+      "path": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/review-index.json",
+      "sha256": "8238aff6ceae8052e37d60b2280cb69237e21a026188ee99b1d460f222ff977f"
+    }
+  },
+  "extract_and_model_receipt": {
+    "path": "build/streampack-fresh-results/codegen-review/zen5-old-ru-model/extracts.json",
+    "sha256": "52cc44d68cbb5c424fe159e3973f601bc9e810028ce289edc236b4ce0e2a05ce"
+  },
+  "cells": [
+    {
+      "ISA": "x86-64-v3-zen5",
+      "layout": "split",
+      "loop_boundary": [
+        "0xe6090",
+        "0xe6166"
+      ],
+      "ranks_per_loop": 32,
+      "instructions_per_rank": 1.4375,
+      "explicit_load_bytes_per_rank": 4,
+      "vector_ops_per_rank": {
+        "vpmovzxwd": 0.25,
+        "vpaddd": 0.125,
+        "vpmovzxdq": 0.25,
+        "vextracti128": 0.125,
+        "vpaddq": 0.25
+      },
+      "address_MOV_AND_LEA_sites_per_rank": 0.3125,
+      "carried_lo_hi_writes_per_rank": 0.1875,
+      "model": {
+        "Iterations": 1000.0,
+        "Instructions": 46000.0,
+        "Total Cycles": 16563.0,
+        "Total uOps": 49000.0,
+        "Dispatch Width": 6.0,
+        "Block RThroughput": 16.0,
+        "BRT_cycles_per_rank": 0.5,
+        "finite_cycles_per_rank": 0.51759375
+      },
+      "model_resource_prefix": "Zn4 inherited resources under -mcpu=znver5",
+      "main_loop": {
+        "path": "build/streampack-fresh-results/codegen-review/zen5-old-ru-model/x86-64-v3-zen5-split.hot.asm",
+        "sha256": "041128bb25f6d5a8f1ce3cf1cf035e05138a264676f385e46caf8e12f3921268"
+      },
+      "mca_input": {
+        "path": "build/streampack-fresh-results/codegen-review/zen5-old-ru-model/x86-64-v3-zen5-split.mca.s",
+        "sha256": "790bb1fb9a30b57a6d2c0b48021da73602fb13c486cd924c30d29f824fd73a10"
+      },
+      "model_report": {
+        "path": "build/streampack-fresh-results/codegen-review/zen5-old-ru-model/x86-64-v3-zen5-split.mca.txt",
+        "sha256": "8b1234ff18f7bc529e9904c510d71d8ffd61a7d2ff45a7b40f69c57f8c00c159"
+      }
+    },
+    {
+      "ISA": "x86-64-v3-zen5",
+      "layout": "grouped",
+      "loop_boundary": [
+        "0xfba00",
+        "0xfbba2"
+      ],
+      "ranks_per_loop": 64,
+      "instructions_per_rank": 1.3125,
+      "explicit_load_bytes_per_rank": 4,
+      "vector_ops_per_rank": {
+        "vpmovzxwd": 0.25,
+        "vpaddd": 0.125,
+        "vpmovzxdq": 0.25,
+        "vextracti128": 0.125,
+        "vpaddq": 0.25
+      },
+      "address_MOV_AND_LEA_sites_per_rank": 0.25,
+      "carried_lo_hi_writes_per_rank": 0.125,
+      "model": {
+        "Iterations": 1000.0,
+        "Instructions": 84000.0,
+        "Total Cycles": 33016.0,
+        "Total uOps": 84000.0,
+        "Dispatch Width": 6.0,
+        "Block RThroughput": 32.0,
+        "BRT_cycles_per_rank": 0.5,
+        "finite_cycles_per_rank": 0.515875
+      },
+      "model_resource_prefix": "Zn4 inherited resources under -mcpu=znver5",
+      "main_loop": {
+        "path": "build/streampack-fresh-results/codegen-review/zen5-old-ru-model/x86-64-v3-zen5-grouped.hot.asm",
+        "sha256": "ad85a57b4aacffedd0691312f4997e2a34da045603ee99b6ba7e8de923fe7a00"
+      },
+      "mca_input": {
+        "path": "build/streampack-fresh-results/codegen-review/zen5-old-ru-model/x86-64-v3-zen5-grouped.mca.s",
+        "sha256": "94bb015fefa97df21463583d455ffe411b345fc0c7b93926be492c9ac594bead"
+      },
+      "model_report": {
+        "path": "build/streampack-fresh-results/codegen-review/zen5-old-ru-model/x86-64-v3-zen5-grouped.mca.txt",
+        "sha256": "c295851d4f6fc96ec5a0fd9a4b5ad9874920b64e944a662df2bd6f0ea901888d"
+      }
+    },
+    {
+      "ISA": "x86-64-v4-zen5",
+      "layout": "split",
+      "loop_boundary": [
+        "0x12aca0",
+        "0x12adaa"
+      ],
+      "ranks_per_loop": 64,
+      "instructions_per_rank": 0.75,
+      "explicit_load_bytes_per_rank": 4,
+      "vector_ops_per_rank": {
+        "vpmovzxwd": 0.125,
+        "vpaddd": 0.0625,
+        "vpmovzxdq": 0.125,
+        "vextracti64x4": 0.0625,
+        "vpaddq": 0.125
+      },
+      "address_MOV_AND_LEA_sites_per_rank": 0.1875,
+      "carried_lo_hi_writes_per_rank": 0.09375,
+      "model": {
+        "Iterations": 1000.0,
+        "Instructions": 48000.0,
+        "Total Cycles": 23011.0,
+        "Total uOps": 51000.0,
+        "Dispatch Width": 6.0,
+        "Block RThroughput": 20.0,
+        "BRT_cycles_per_rank": 0.3125,
+        "finite_cycles_per_rank": 0.359546875
+      },
+      "model_resource_prefix": "Zn4 inherited resources under -mcpu=znver5",
+      "main_loop": {
+        "path": "build/streampack-fresh-results/codegen-review/zen5-old-ru-model/x86-64-v4-zen5-split.hot.asm",
+        "sha256": "be6cd278a0f54bd85350d0bdf4c75427cdcb42a03edcb255eec483832e005ef7"
+      },
+      "mca_input": {
+        "path": "build/streampack-fresh-results/codegen-review/zen5-old-ru-model/x86-64-v4-zen5-split.mca.s",
+        "sha256": "9339b33dbebbf6c4a61b2d995a9eb63598a55e79cbbbfefbc57cb3a56046223b"
+      },
+      "model_report": {
+        "path": "build/streampack-fresh-results/codegen-review/zen5-old-ru-model/x86-64-v4-zen5-split.mca.txt",
+        "sha256": "045b54e4fbe40896434eba9d67d8134fd8dc273d7a4edb3c3294cfbf7f7b86d6"
+      }
+    },
+    {
+      "ISA": "x86-64-v4-zen5",
+      "layout": "grouped",
+      "loop_boundary": [
+        "0x147470",
+        "0x147676"
+      ],
+      "ranks_per_loop": 128,
+      "instructions_per_rank": 0.65625,
+      "explicit_load_bytes_per_rank": 4,
+      "vector_ops_per_rank": {
+        "vpmovzxwd": 0.125,
+        "vpaddd": 0.0625,
+        "vpmovzxdq": 0.125,
+        "vextracti64x4": 0.0625,
+        "vpaddq": 0.125
+      },
+      "address_MOV_AND_LEA_sites_per_rank": 0.125,
+      "carried_lo_hi_writes_per_rank": 0.0625,
+      "model": {
+        "Iterations": 1000.0,
+        "Instructions": 84000.0,
+        "Total Cycles": 47513.0,
+        "Total uOps": 84000.0,
+        "Dispatch Width": 6.0,
+        "Block RThroughput": 40.0,
+        "BRT_cycles_per_rank": 0.3125,
+        "finite_cycles_per_rank": 0.3711953125
+      },
+      "model_resource_prefix": "Zn4 inherited resources under -mcpu=znver5",
+      "main_loop": {
+        "path": "build/streampack-fresh-results/codegen-review/zen5-old-ru-model/x86-64-v4-zen5-grouped.hot.asm",
+        "sha256": "ce0c192509a5f0805693ce3258c0be64c1e8cae6ff18b41570aa909a09cd8523"
+      },
+      "mca_input": {
+        "path": "build/streampack-fresh-results/codegen-review/zen5-old-ru-model/x86-64-v4-zen5-grouped.mca.s",
+        "sha256": "41c3f9aad2bd1afbc6ba2131adedd7dd460f18e93c6851cf67c3821df02b0295"
+      },
+      "model_report": {
+        "path": "build/streampack-fresh-results/codegen-review/zen5-old-ru-model/x86-64-v4-zen5-grouped.mca.txt",
+        "sha256": "b94e4722cbf32e5f067c49d33dabc8d61dd52654f73444ca580a31c04411ce56"
+      }
+    }
+  ],
+  "findings": [
+    "Actual loops are unrolled differently: AVX2 split32/group64 ranks; AVX512 split64/group128. Normalize all counts/resource cycles by these ranks. All four bodies are call-free and stack-free. No hardware gather, staged scratch or additional per-row field request hides in grouped R+U.",
+    "Normalized vector work is identical within each ISA: two narrow R/U loads, widened u32 addition, u64 extensions/extraction and checksum additions. Both issue4 explicit payload bytes/rank. Grouped has fewer total instructions and address-MOV/AND/LEA sites per rank, and fewer loop-carried lo/hi checksum writes; temporary checksum reassociation remains genuine work.",
+    "Split loads progress through two R/U planes; grouped loads16-row R/U chunks from one interleaved stream. Byte footprints/counts match logically; codegen alone does not establish actual lines fetched, resident sets, hit/miss service or prefetch behavior.",
+    "LLVM21 accepts -mcpu=znver5 for both instruction sets but scheduling resources are named Zn4*. Modeled reciprocal resource throughput/rank is equal: .5 cycles AVX2 and.3125 AVX512. Finite1000-loop simulation gives grouped approximately0.33% lower cycles/rank in AVX2 and3.24% higher in AVX512. No modeled gap comparable with the root-reported approximately18% large-set grouped penalty.",
+    "Emitted compute differences and this inherited model do not provide a compelling explanation for that large-set gap. Hot256 approximately level and size-dependent separation keep memory geometry/whole-machine behavior unresolved. This is an inference about which question remains, not a specific measured memory cause or exclusion of every unmodeled compute effect."
+  ],
+  "model_limits": [
+    "Scheduling diagnostic only; not measured cycles, peak throughput or hardware causality. Branch prediction/frontend fetch, caches/prefetchers, physical addresses, TLBs, outstanding requests, clock and operating interference not resolved.",
+    "MCA assumes scheduled repeating instruction streams and abstract load service. BRT is a resource bound; finite cycles also reflect dependencies. Different unroll counts normalized; setup, tail and final reduction excluded, so no full-cell timing prediction.",
+    "The znver5 selection uses inherited Zn4 resource names and instruction data; no assertion the model captures the actual Zen5 SIMD implementation or all resource capacities. No exact hardware gain/loss ratio or tuning recommendation from the model alone."
+  ],
+  "commands": "taskset -c2 llvm-mca-21 -mtriple=x86_64 -mcpu=znver5 -iterations=1000 -instruction-info -resource-pressure <exact .mca.s>; individual argument arrays and stdout/stderr hashes in extracts.json."
+}

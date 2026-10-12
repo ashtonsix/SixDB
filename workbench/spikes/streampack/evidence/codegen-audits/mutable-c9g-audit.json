@@ -1,0 +1,676 @@
+{
+  "job": "20261011T201709Z-6ea6a65a",
+  "platform": "c9g, armv8.2-a+simd, neoverse-v3 tune",
+  "source_hashes": {
+    "mutable_population.cpp": {
+      "archive_member": "workbench/spikes/streampack/mutable_population.cpp",
+      "sha256": "d0508fc0da6cc9541c2606037224026d3b74078e7e4ddb6c94779d8ab7551af5",
+      "bytes": 16753
+    },
+    "mutable-control.sh": {
+      "archive_member": "workbench/spikes/streampack/mutable-control.sh",
+      "sha256": "31c8ff875f0735f004699012dab024d7feddbc5bb0102917000d4890f166ff3c",
+      "bytes": 3924
+    },
+    "grouped.h": {
+      "archive_member": "workbench/spikes/streampack/grouped.h",
+      "sha256": "dfc58f97bca04928dde80d7e42e965a3e9c4660c954e20790de925f55f63a475",
+      "bytes": 14253
+    },
+    "direct.h": {
+      "archive_member": "workbench/spikes/streampack/direct.h",
+      "sha256": "228ed8ebaaf40bedc7800f4ae3dde8ebf34920cb8804fb04d3374eb75a503d84",
+      "bytes": 10353
+    },
+    "prefix.h": {
+      "archive_member": "workbench/spikes/streampack/prefix.h",
+      "sha256": "87c1966330db5c504e6a514238496891a6b0f46dfe9eb32ee0e675aa03365c72",
+      "bytes": 2448
+    },
+    "geometry.cpp": {
+      "archive_member": "workbench/spikes/streampack/geometry.cpp",
+      "sha256": "e61134fa32c155b2e7aff993d14583e4ff3f6b65d335aae400977fcbd3f65aeb",
+      "bytes": 28045
+    }
+  },
+  "linked": {
+    "binary_sha256": "eec1cdf7269a87d5354084736e7e8b5c64cdbd74f4be82948f3577da9b133eea",
+    "asm_sha256": "896bc2f070bea1ed48812a94c085431cc52bdaf6451326917658880dc35fe1f6",
+    "functions": [
+      {
+        "method": "direct16",
+        "symbol": "unsigned long reverse_trace<Population<(Method)0>>(Population<(Method)0>&)",
+        "start": "0x76c0",
+        "exclusive_end": "0x7884",
+        "text_bytes": 452,
+        "instruction_count": 113,
+        "non_nop_instruction_count": 108,
+        "calls": [],
+        "body_sha256": "f610d80f988f399b91ec8700b52d961d7105e7cf2149572b28f8a9854953ee24",
+        "actual_sp_frame_bytes": 2096,
+        "hot_temporary_spills": false,
+        "owned_output_array_bytes": 2048
+      },
+      {
+        "method": "direct32",
+        "symbol": "unsigned long reverse_trace<Population<(Method)1>>(Population<(Method)1>&)",
+        "start": "0xaae0",
+        "exclusive_end": "0xacb0",
+        "text_bytes": 464,
+        "instruction_count": 116,
+        "non_nop_instruction_count": 112,
+        "calls": [],
+        "body_sha256": "2b6127c08b08ac3c72486b4443a0b8c1bd30a96fde21d140f840ee06ad7ceed8",
+        "actual_sp_frame_bytes": 2112,
+        "hot_temporary_spills": false,
+        "owned_output_array_bytes": 2048
+      },
+      {
+        "method": "widths8",
+        "symbol": "unsigned long reverse_trace<Population<(Method)2>>(Population<(Method)2>&)",
+        "start": "0xde20",
+        "exclusive_end": "0xe038",
+        "text_bytes": 536,
+        "instruction_count": 134,
+        "non_nop_instruction_count": 134,
+        "calls": [],
+        "body_sha256": "02599237ad4521142a028ab7254f17f839a992dbcc346d214d52dfc455ff61cb",
+        "actual_sp_frame_bytes": 2112,
+        "hot_temporary_spills": false,
+        "owned_output_array_bytes": 2048
+      }
+    ],
+    "loops": [
+      {
+        "name": "direct16-binary",
+        "start": "0x7800",
+        "last": "0x7824",
+        "instructions": 10,
+        "loads": 1,
+        "conditional_selects": 2,
+        "branches": [
+          {
+            "address": "0x7824",
+            "instruction": "b.gt\t0x7800 <unsigned long reverse_trace<Population<(Method)0>>(Population<(Method)0>&)+0x140>"
+          }
+        ],
+        "stack_references": 0,
+        "sha256": "962a879b756dc4527215d219de865f2a760ac1f7fc5f5d0f6f149f1a97d12296"
+      },
+      {
+        "name": "direct32-binary",
+        "start": "0xac28",
+        "last": "0xac4c",
+        "instructions": 10,
+        "loads": 1,
+        "conditional_selects": 2,
+        "branches": [
+          {
+            "address": "0xac4c",
+            "instruction": "b.gt\t0xac28 <unsigned long reverse_trace<Population<(Method)1>>(Population<(Method)1>&)+0x148>"
+          }
+        ],
+        "stack_references": 0,
+        "sha256": "8b06cde2a3f9be2723bf9c699b9df707fca2174da8a2b7fb0f57cea91b0f0fa1"
+      },
+      {
+        "name": "widths8-checkpoint-binary",
+        "start": "0xdf68",
+        "last": "0xdf8c",
+        "instructions": 10,
+        "loads": 1,
+        "conditional_selects": 2,
+        "branches": [
+          {
+            "address": "0xdf8c",
+            "instruction": "b.gt\t0xdf68 <unsigned long reverse_trace<Population<(Method)2>>(Population<(Method)2>&)+0x148>"
+          }
+        ],
+        "stack_references": 0,
+        "sha256": "8003d451cbea0153ab615f022a0b618ddec0f9b4c8717327f7a0a72ba649b92c"
+      },
+      {
+        "name": "widths8-local-prefix",
+        "start": "0xdfc8",
+        "last": "0xdfe0",
+        "instructions": 7,
+        "loads": 1,
+        "conditional_selects": 0,
+        "branches": [
+          {
+            "address": "0xdfd4",
+            "instruction": "b.lo\t0xdf00 <unsigned long reverse_trace<Population<(Method)2>>(Population<(Method)2>&)+0xe0>"
+          },
+          {
+            "address": "0xdfe0",
+            "instruction": "b.ne\t0xdfc8 <unsigned long reverse_trace<Population<(Method)2>>(Population<(Method)2>&)+0x1a8>"
+          }
+        ],
+        "stack_references": 0,
+        "sha256": "ce4162620f697d7a91ef677980efa11446c15c3a65ba05bb0e5034530d987957"
+      }
+    ],
+    "findings": [
+      "All three reverse consumers use scalar common hash/modulo and no SIMD/gather or helper calls.",
+      "Direct and checkpoint upper_bound comparison decisions lower to csel; loop exit branch only.",
+      "Widths local prefix has a data-dependent exit per width plus its bounded-loop backedge. Hit path executes first four of seven instructions; miss path executes all seven.",
+      "Direct16 hoists/caches both source extent uses per block; widths and direct32 retain one extra extent load per query, a compiler placement difference.",
+      "Owners array stores are real consumer output; stack frames have 2048 B owners plus 48/64 B save area. No decoded endpoints or hot spills.",
+      "Whole reverse timings do not isolate branch-miss, division latency or cache service."
+    ]
+  },
+  "selected_medians": [
+    {
+      "condition": "16384|256|slack-dead-empty|after-soft-project-physical",
+      "direct16": {
+        "samples_ns": [
+          1.4649,
+          1.4684,
+          1.4614
+        ],
+        "median_ns": 1.4649
+      },
+      "direct32": {
+        "samples_ns": [
+          1.4863,
+          1.4893,
+          1.4879
+        ],
+        "median_ns": 1.4879
+      },
+      "widths8": {
+        "samples_ns": [
+          1.4883,
+          1.5124,
+          1.4971
+        ],
+        "median_ns": 1.4971
+      },
+      "widths8_over_direct16": 1.021981022595399
+    },
+    {
+      "condition": "16384|256|slack-dead-empty|after-soft-project-shuffled-blocks-ranks",
+      "direct16": {
+        "samples_ns": [
+          1.5286,
+          1.522,
+          1.5221
+        ],
+        "median_ns": 1.5221
+      },
+      "direct32": {
+        "samples_ns": [
+          1.509,
+          1.5055,
+          1.5067
+        ],
+        "median_ns": 1.5067
+      },
+      "widths8": {
+        "samples_ns": [
+          1.791,
+          1.7919,
+          1.7917
+        ],
+        "median_ns": 1.7917
+      },
+      "widths8_over_direct16": 1.1771237106629
+    },
+    {
+      "condition": "16384|256|slack-dead-empty|after-soft-reverse-geometry",
+      "direct16": {
+        "samples_ns": [
+          12.4332,
+          12.4388,
+          12.4382
+        ],
+        "median_ns": 12.4382
+      },
+      "direct32": {
+        "samples_ns": [
+          12.6117,
+          12.6245,
+          12.6399
+        ],
+        "median_ns": 12.6245
+      },
+      "widths8": {
+        "samples_ns": [
+          22.2512,
+          22.2526,
+          22.2834
+        ],
+        "median_ns": 22.2526
+      },
+      "widths8_over_direct16": 1.7890530784197072
+    },
+    {
+      "condition": "16384|256|slack-dead-empty|before-soft-project-physical",
+      "direct16": {
+        "samples_ns": [
+          1.4704,
+          1.4693,
+          1.4648
+        ],
+        "median_ns": 1.4693
+      },
+      "direct32": {
+        "samples_ns": [
+          1.5169,
+          1.4878,
+          1.4803
+        ],
+        "median_ns": 1.4878
+      },
+      "widths8": {
+        "samples_ns": [
+          1.4708,
+          1.4668,
+          1.4656
+        ],
+        "median_ns": 1.4668
+      },
+      "widths8_over_direct16": 0.9982985094943171
+    },
+    {
+      "condition": "16384|256|slack-dead-empty|before-soft-project-shuffled-blocks-ranks",
+      "direct16": {
+        "samples_ns": [
+          1.5196,
+          1.5143,
+          1.5248
+        ],
+        "median_ns": 1.5196
+      },
+      "direct32": {
+        "samples_ns": [
+          1.5197,
+          1.5182,
+          1.5149
+        ],
+        "median_ns": 1.5182
+      },
+      "widths8": {
+        "samples_ns": [
+          1.8282,
+          1.8336,
+          1.8299
+        ],
+        "median_ns": 1.8299
+      },
+      "widths8_over_direct16": 1.2041984732824427
+    },
+    {
+      "condition": "16384|256|slack-dead-empty|before-soft-reverse-geometry",
+      "direct16": {
+        "samples_ns": [
+          12.4018,
+          12.3966,
+          12.3951
+        ],
+        "median_ns": 12.3966
+      },
+      "direct32": {
+        "samples_ns": [
+          12.5787,
+          12.572,
+          12.578
+        ],
+        "median_ns": 12.578
+      },
+      "widths8": {
+        "samples_ns": [
+          20.2618,
+          21.2021,
+          21.1635
+        ],
+        "median_ns": 21.1635
+      },
+      "widths8_over_direct16": 1.707201974735008
+    },
+    {
+      "condition": "16777216|256|slack-dead-empty|after-soft-project-physical",
+      "direct16": {
+        "samples_ns": [
+          2.301,
+          2.2914
+        ],
+        "median_ns": 2.2962
+      },
+      "direct32": {
+        "samples_ns": [
+          2.2978,
+          2.3051
+        ],
+        "median_ns": 2.30145
+      },
+      "widths8": {
+        "samples_ns": [
+          2.3501,
+          2.321
+        ],
+        "median_ns": 2.33555
+      },
+      "widths8_over_direct16": 1.017137008971344
+    },
+    {
+      "condition": "16777216|256|slack-dead-empty|after-soft-project-shuffled-blocks-ranks",
+      "direct16": {
+        "samples_ns": [
+          4.1376,
+          4.0931
+        ],
+        "median_ns": 4.115349999999999
+      },
+      "direct32": {
+        "samples_ns": [
+          4.1837,
+          4.1665
+        ],
+        "median_ns": 4.1751000000000005
+      },
+      "widths8": {
+        "samples_ns": [
+          4.5209,
+          4.5367
+        ],
+        "median_ns": 4.5288
+      },
+      "widths8_over_direct16": 1.100465331016803
+    },
+    {
+      "condition": "16777216|256|slack-dead-empty|after-soft-reverse-geometry",
+      "direct16": {
+        "samples_ns": [
+          13.1783,
+          13.2035
+        ],
+        "median_ns": 13.1909
+      },
+      "direct32": {
+        "samples_ns": [
+          13.5223,
+          13.513
+        ],
+        "median_ns": 13.51765
+      },
+      "widths8": {
+        "samples_ns": [
+          24.6614,
+          24.6769
+        ],
+        "median_ns": 24.669150000000002
+      },
+      "widths8_over_direct16": 1.8701642799202483
+    },
+    {
+      "condition": "16777216|256|slack-dead-empty|before-soft-project-physical",
+      "direct16": {
+        "samples_ns": [
+          2.6463,
+          2.6863
+        ],
+        "median_ns": 2.6663
+      },
+      "direct32": {
+        "samples_ns": [
+          2.6935,
+          2.7
+        ],
+        "median_ns": 2.6967499999999998
+      },
+      "widths8": {
+        "samples_ns": [
+          2.6958,
+          2.7087
+        ],
+        "median_ns": 2.7022500000000003
+      },
+      "widths8_over_direct16": 1.01348310392679
+    },
+    {
+      "condition": "16777216|256|slack-dead-empty|before-soft-project-shuffled-blocks-ranks",
+      "direct16": {
+        "samples_ns": [
+          4.6633,
+          4.6128
+        ],
+        "median_ns": 4.63805
+      },
+      "direct32": {
+        "samples_ns": [
+          4.6332,
+          4.6961
+        ],
+        "median_ns": 4.66465
+      },
+      "widths8": {
+        "samples_ns": [
+          5.0817,
+          5.0633
+        ],
+        "median_ns": 5.0725
+      },
+      "widths8_over_direct16": 1.093670831491683
+    },
+    {
+      "condition": "16777216|256|slack-dead-empty|before-soft-reverse-geometry",
+      "direct16": {
+        "samples_ns": [
+          13.1568,
+          13.1732
+        ],
+        "median_ns": 13.165
+      },
+      "direct32": {
+        "samples_ns": [
+          13.4828,
+          13.4877
+        ],
+        "median_ns": 13.48525
+      },
+      "widths8": {
+        "samples_ns": [
+          24.4848,
+          24.4968
+        ],
+        "median_ns": 24.4908
+      },
+      "widths8_over_direct16": 1.8602962400303837
+    },
+    {
+      "condition": "4194304|256|slack-dead-empty|after-soft-project-physical",
+      "direct16": {
+        "samples_ns": [
+          2.1819,
+          2.2115,
+          2.2187
+        ],
+        "median_ns": 2.2115
+      },
+      "direct32": {
+        "samples_ns": [
+          2.2171,
+          2.254,
+          2.1979
+        ],
+        "median_ns": 2.2171
+      },
+      "widths8": {
+        "samples_ns": [
+          2.2498,
+          2.2429,
+          2.2537
+        ],
+        "median_ns": 2.2498
+      },
+      "widths8_over_direct16": 1.017318562061949
+    },
+    {
+      "condition": "4194304|256|slack-dead-empty|after-soft-project-shuffled-blocks-ranks",
+      "direct16": {
+        "samples_ns": [
+          3.7144,
+          3.6203,
+          3.6656
+        ],
+        "median_ns": 3.6656
+      },
+      "direct32": {
+        "samples_ns": [
+          3.7542,
+          3.7172,
+          3.6542
+        ],
+        "median_ns": 3.7172
+      },
+      "widths8": {
+        "samples_ns": [
+          3.9717,
+          4.0221,
+          4.0559
+        ],
+        "median_ns": 4.0221
+      },
+      "widths8_over_direct16": 1.097255565255347
+    },
+    {
+      "condition": "4194304|256|slack-dead-empty|after-soft-reverse-geometry",
+      "direct16": {
+        "samples_ns": [
+          12.9897,
+          13.0004,
+          12.988
+        ],
+        "median_ns": 12.9897
+      },
+      "direct32": {
+        "samples_ns": [
+          13.3455,
+          13.3292,
+          13.2748
+        ],
+        "median_ns": 13.3292
+      },
+      "widths8": {
+        "samples_ns": [
+          24.8163,
+          24.8123,
+          24.7516
+        ],
+        "median_ns": 24.8123
+      },
+      "widths8_over_direct16": 1.9101518895740472
+    },
+    {
+      "condition": "4194304|256|slack-dead-empty|before-soft-project-physical",
+      "direct16": {
+        "samples_ns": [
+          2.5318,
+          2.5391,
+          2.5214
+        ],
+        "median_ns": 2.5318
+      },
+      "direct32": {
+        "samples_ns": [
+          2.6068,
+          2.5815,
+          2.5468
+        ],
+        "median_ns": 2.5815
+      },
+      "widths8": {
+        "samples_ns": [
+          2.632,
+          2.6367,
+          2.6866
+        ],
+        "median_ns": 2.6367
+      },
+      "widths8_over_direct16": 1.041432972588672
+    },
+    {
+      "condition": "4194304|256|slack-dead-empty|before-soft-project-shuffled-blocks-ranks",
+      "direct16": {
+        "samples_ns": [
+          4.246,
+          4.2733,
+          4.3223
+        ],
+        "median_ns": 4.2733
+      },
+      "direct32": {
+        "samples_ns": [
+          4.1825,
+          4.2945,
+          4.1427
+        ],
+        "median_ns": 4.1825
+      },
+      "widths8": {
+        "samples_ns": [
+          4.6283,
+          4.668,
+          4.7776
+        ],
+        "median_ns": 4.668
+      },
+      "widths8_over_direct16": 1.0923642150094774
+    },
+    {
+      "condition": "4194304|256|slack-dead-empty|before-soft-reverse-geometry",
+      "direct16": {
+        "samples_ns": [
+          12.9632,
+          12.9685,
+          12.9472
+        ],
+        "median_ns": 12.9632
+      },
+      "direct32": {
+        "samples_ns": [
+          13.1941,
+          13.2627,
+          13.2144
+        ],
+        "median_ns": 13.2144
+      },
+      "widths8": {
+        "samples_ns": [
+          24.3297,
+          24.3207,
+          24.2657
+        ],
+        "median_ns": 24.3207
+      },
+      "widths8_over_direct16": 1.876133979264379
+    }
+  ],
+  "interpretation": [
+    "The source-level comparison charges equal complete caller outputs. No hidden width decoding/admission was found.",
+    "c9g direct16 binary search uses conditional selects for endpoint decisions. Widths8 has the same checkpoint loop then a scalar cumulative width walk with data-dependent exit.",
+    "The selected 16 widths native reverse candidate is justified by actual local scan work and the roughly 1.86 to 1.91 times reverse cost at 4M/16M sparse N256. It is still unimplemented and unmeasured here.",
+    "Queries are blocked: 256 probes reuse one N256 geometry block. Direct geometry is 514 B/block; widths plus checkpoints 324 B/block. This amortizes population-level misses and prevents extrapolation to unrelated-row point probes.",
+    "Shuffled projection native prefix is correctly guarded by both live and nonzero used length. It still reconstructs start and loses vector/pointer registers across real memcpy calls. The approximately 9 to 10 percent large-set width penalty is complete composed projection cost.",
+    "Physical projection only streams widths with a running cursor; it pays no checkpoint reconstruction or SIMD prefix. Large physical differences are small and variable.",
+    "Allocated body remains 64 B/input rank and common sidecars 2.1328125 B/input rank at N256. Width geometry 1.265625 B/rank vs direct 2.0078125 B/rank saves 37 percent of geometry but only about 1.09 percent of all allocated planes; reverse does not touch body/used.",
+    "No mutable PMU capture was taken. Instruction dependencies and branch placement are observed; branch misses, LLC/DRAM service, and projected native speedups are not measured."
+  ],
+  "commands": [
+    "orb -m ubuntu python3 workbench/tools/worker.py fetch 20261011T201709Z-6ea6a65a --file armv8.2-a+simd-neoverse-v3/streampack_mutable_population.asm --file armv8.2-a+simd-neoverse-v3/streampack_mutable_population --file armv8.2-a+simd-neoverse-v3/binaries.sha256 --file armv8.2-a+simd-neoverse-v3/geometry-check.txt",
+    "orb -m ubuntu llvm-nm-21 -S --size-sort --demangle build/workers/20261011T201709Z-6ea6a65a/results/armv8.2-a+simd-neoverse-v3/streampack_mutable_population",
+    "orb -m ubuntu sha256sum <verified binary and linked asm>",
+    "orb -m ubuntu llvm-readelf-21 -p .comment build/workers/20261011T201709Z-6ea6a65a/results/armv8.2-a+simd-neoverse-v3/streampack_mutable_population"
+  ],
+  "artifacts": {
+    "read_medians_sha256": "294e2350fbc6e2730e248aea73f5d16a88a6c58a6e4a00f6878288250b030dde",
+    "reverse_audit_sha256": "e9cb19a0718d37d95ede2a2c5b87217e3ae23a74dd7730e3c4bc2cdc43767356"
+  },
+  "scope": "Completed c9g linked reverse/project audit and data interpretation. No source changes, builds, timings or worker launches. Root owns integration and subsequent scattered/native paired experiments.",
+  "binary_comment": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)",
+  "projection_audit": {
+    "path": "build/streampack-fresh-results/codegen-review/mutable-consumer-review/c9g-projection-audit.json",
+    "sha256": "5e3fccde9880b97a8995266ee5c81676071b826d2a9da265f6ab9e8d3a48a18a"
+  }
+}

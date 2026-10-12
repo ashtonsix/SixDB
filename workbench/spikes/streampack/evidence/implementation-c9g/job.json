@@ -1,0 +1,147 @@
+{
+  "args": [
+    "bench"
+  ],
+  "config": {
+    "ami": "ami-0246d714afcc1d494",
+    "architecture": "arm64",
+    "bucket": "calico-fleet-artifacts",
+    "capacity": "spot",
+    "checkpoint_seconds": 300,
+    "checkpoint_timeout": 90,
+    "data_volumes": [],
+    "deadline_seconds": 3600,
+    "disk_gb": 24,
+    "env": {
+      "STREAMPACK_TUNE": "neoverse-v3"
+    },
+    "fresh": false,
+    "hardware": {
+      "EbsInfo": {
+        "AttachmentLimitType": "dedicated",
+        "EbsOptimizedInfo": {
+          "BaselineBandwidthInMbps": 760,
+          "BaselineIops": 3600,
+          "BaselineThroughputInMBps": 95.0,
+          "MaximumBandwidthInMbps": 12000,
+          "MaximumIops": 48000,
+          "MaximumThroughputInMBps": 1500.0
+        },
+        "EbsOptimizedSupport": "default",
+        "EncryptionSupport": "supported",
+        "MaximumEbsAttachments": 32,
+        "NvmeSupport": "required"
+      },
+      "Hypervisor": "nitro",
+      "MemoryInfo": {
+        "SizeInMiB": 4096
+      },
+      "NetworkInfo": {
+        "BandwidthWeightings": [
+          "default",
+          "ebs-1",
+          "vpc-1"
+        ],
+        "DefaultNetworkCardIndex": 0,
+        "EfaSupported": false,
+        "EnaSrdSupported": false,
+        "EnaSupport": "required",
+        "EncryptionInTransitSupported": true,
+        "FlexibleEnaQueuesSupport": "supported",
+        "Ipv4AddressesPerInterface": 20,
+        "Ipv6AddressesPerInterface": 20,
+        "Ipv6Supported": true,
+        "MaximumNetworkCards": 1,
+        "MaximumNetworkInterfaces": 3,
+        "NetworkCards": [
+          {
+            "BaselineBandwidthInGbps": 1.0,
+            "DefaultEnaQueueCountPerInterface": 2,
+            "MaximumEnaQueueCount": 6,
+            "MaximumEnaQueueCountPerInterface": 2,
+            "MaximumNetworkInterfaces": 3,
+            "NetworkCardIndex": 0,
+            "NetworkPerformance": "Up to 15 Gigabit",
+            "PeakBandwidthInGbps": 15.0
+          }
+        ],
+        "NetworkPerformance": "Up to 15 Gigabit"
+      },
+      "ProcessorInfo": {
+        "Manufacturer": "AWS",
+        "SupportedArchitectures": [
+          "arm64"
+        ],
+        "SustainedClockSpeedInGhz": 3.3
+      },
+      "VCpuInfo": {
+        "DefaultCores": 2,
+        "DefaultThreadsPerCore": 1,
+        "DefaultVCpus": 2,
+        "ValidCores": [
+          1,
+          2
+        ],
+        "ValidThreadsPerCore": [
+          1
+        ]
+      }
+    },
+    "idle_seconds": 900,
+    "image_name": "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-20260904",
+    "instance_profile": "sixdb-worker",
+    "instance_store_mappings": [],
+    "instance_store_nvme": false,
+    "instance_type": "c9g.large",
+    "machine": "neoverse-v2",
+    "max_age_seconds": 14400,
+    "region": "us-east-1",
+    "root_device": "/dev/sda1",
+    "security_group_id": "sg-079dafaf1d39f43b0",
+    "setup": "toolchain",
+    "subnets": [
+      {
+        "id": "subnet-75288838",
+        "zone": "us-east-1a"
+      },
+      {
+        "id": "subnet-c29a879e",
+        "zone": "us-east-1b"
+      },
+      {
+        "id": "subnet-800010e7",
+        "zone": "us-east-1c"
+      },
+      {
+        "id": "subnet-d1aeb1ff",
+        "zone": "us-east-1d"
+      }
+    ],
+    "sync_seconds": 0,
+    "vpc_id": "vpc-5e2d0124",
+    "actual_capacity": "spot"
+  },
+  "created_at": 1791778794.4546947,
+  "format": 2,
+  "id": "20261012T041943Z-01f7f947",
+  "prefix": "sixdb/workers/20261012T041943Z-01f7f947",
+  "profile": "b8841c5776a3aba65580c53b33a6c9440c90559a182f25679fc02bf8a2d2735c",
+  "script": "workbench/spikes/streampack/implementation-native.sh",
+  "source": {
+    "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+    "digest": "dfd278c9010f775c2faf64a7bac5c034e5e8320b35994623978166f851e646da",
+    "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+    "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+    "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+    "sha256": "72efe123df1a30cf7245a255b52336cbbdc977ba6faa328e8363a8e9e02b17e2"
+  },
+  "source_commit": "7eb0002dbf81c06cd64d67bdbd35d7a3e97798a5",
+  "uri": "s3://calico-fleet-artifacts/sixdb/workers/20261012T041943Z-01f7f947",
+  "worker": {
+    "id": "20261012T035600Z-045e89a5",
+    "instance_id": "i-07c345eb76b71230c",
+    "reused": true,
+    "reuse_count": 2,
+    "max_end": 1791791767.6356218
+  }
+}

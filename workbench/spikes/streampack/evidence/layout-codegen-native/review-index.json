@@ -1,0 +1,368 @@
+{
+  "scope": "Completed bounded read-only actual original native Width4095 C1/C8 audit: native planes, SeriesPack planes, per-row TuplePack; v3/v4 where captured. No builds, target runs, workers, source edits or timing calculations.",
+  "hosts": [
+    {
+      "host": "c9g",
+      "worker": "20261011T233241Z-ec811c98",
+      "instance_type": "c9g.4xlarge",
+      "architecture": "arm64",
+      "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)",
+      "host_receipt": "build/workers/20261011T233241Z-ec811c98/results/host.json",
+      "host_receipt_sha256": "78cc93d2ef304f39dab559f2a0e394bf0cca45fd52ea7fcc5e8a543462879083",
+      "source_tree_digest": "c6c8f6d437c5f9943d3e9673a5d996088f39c08b43251d12c388dc68c78ba491",
+      "source_archive_sha256": "43f38e0b64b43cb4ea55dde0162cab02f4df099552c10a73ee33f3a2c77d6956",
+      "source_manifest_sha256": "ad8aa802b4fe09d37da2a24bed19274022eac227829ce873641fa880b0070d5f",
+      "relevant_source_hashes": {
+        "workbench/spikes/streampack/layout.cpp": "dc998cb849c8306fd57a87a7c9534a84c28e04332d5116163b3430fe8a58faab",
+        "workbench/spikes/streampack/layout.h": "a8d1c2e797cd4235557fa6f406473a42e6b2d26994155cb5c2e4caf7c8d61b25",
+        "workbench/spikes/streampack/prefix.h": "c7aae1bc25444d567e6510b8f96e12a45e0504e14f907e8a7be7daea936d20c9"
+      },
+      "reports": [
+        {
+          "file": "c9g/summary.json",
+          "sha256": "1cb7c9c18c2ec44e2d6b40507ee83093a3e0cf7d7999b0c78b486b7d3ebc231e"
+        },
+        {
+          "file": "c9g/functions.json",
+          "sha256": "d0a1c4b97e3763968c4a146f702d20a5292ec218ecf0ed84813e591a2b060c72"
+        }
+      ]
+    },
+    {
+      "host": "zen5",
+      "worker": "20261011T233241Z-45f0101e",
+      "instance_type": "c8a.4xlarge",
+      "architecture": "x86_64",
+      "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)",
+      "host_receipt": "build/workers/20261011T233241Z-45f0101e/results/host.json",
+      "host_receipt_sha256": "8c2de337986d9353d6ebdfe8012f400e4b7e60ddf058d086b7ff7be7247b5c13",
+      "source_tree_digest": "c6c8f6d437c5f9943d3e9673a5d996088f39c08b43251d12c388dc68c78ba491",
+      "source_archive_sha256": "43f38e0b64b43cb4ea55dde0162cab02f4df099552c10a73ee33f3a2c77d6956",
+      "source_manifest_sha256": "ad8aa802b4fe09d37da2a24bed19274022eac227829ce873641fa880b0070d5f",
+      "relevant_source_hashes": {
+        "workbench/spikes/streampack/layout.cpp": "dc998cb849c8306fd57a87a7c9534a84c28e04332d5116163b3430fe8a58faab",
+        "workbench/spikes/streampack/layout.h": "a8d1c2e797cd4235557fa6f406473a42e6b2d26994155cb5c2e4caf7c8d61b25",
+        "workbench/spikes/streampack/prefix.h": "c7aae1bc25444d567e6510b8f96e12a45e0504e14f907e8a7be7daea936d20c9"
+      },
+      "reports": [
+        {
+          "file": "zen5/summary.json",
+          "sha256": "bd9af0252f9918a86ad0b49735bd591b5bfed15a9b6cdf2f25798c47462066f1"
+        },
+        {
+          "file": "zen5/functions.json",
+          "sha256": "a150ba57a239ed1726bca000157c4ce5c7fe3db6866a21ccb21463e23a8c633a"
+        }
+      ]
+    },
+    {
+      "host": "granite",
+      "worker": "20261011T233241Z-48a57a2d",
+      "instance_type": "c8i.4xlarge",
+      "architecture": "x86_64",
+      "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)",
+      "host_receipt": "build/workers/20261011T233241Z-48a57a2d/results/host.json",
+      "host_receipt_sha256": "0c9c4802b2e4a7b3392ae1c31a2507ee3b10dab46bf2b575a1acca631517d991",
+      "source_tree_digest": "c6c8f6d437c5f9943d3e9673a5d996088f39c08b43251d12c388dc68c78ba491",
+      "source_archive_sha256": "43f38e0b64b43cb4ea55dde0162cab02f4df099552c10a73ee33f3a2c77d6956",
+      "source_manifest_sha256": "ad8aa802b4fe09d37da2a24bed19274022eac227829ce873641fa880b0070d5f",
+      "relevant_source_hashes": {
+        "workbench/spikes/streampack/layout.cpp": "dc998cb849c8306fd57a87a7c9534a84c28e04332d5116163b3430fe8a58faab",
+        "workbench/spikes/streampack/layout.h": "a8d1c2e797cd4235557fa6f406473a42e6b2d26994155cb5c2e4caf7c8d61b25",
+        "workbench/spikes/streampack/prefix.h": "c7aae1bc25444d567e6510b8f96e12a45e0504e14f907e8a7be7daea936d20c9"
+      },
+      "reports": [
+        {
+          "file": "granite/summary.json",
+          "sha256": "050e489619370a6d293b7c06293863a0d554fb4d6b5bd5373b5cf58f06ef9295"
+        }
+      ]
+    }
+  ],
+  "profiles": [
+    {
+      "host": "c9g",
+      "profile": "armv8.2-a+simd-neoverse-v3",
+      "asm": "build/workers/20261011T233241Z-ec811c98/results/armv8.2-a+simd-neoverse-v3/streampack_layout.asm",
+      "asm_sha256": "5d1cbbd492f374431412e29286929dfce9214418ec7a9a824deaf6bc3d610f7e",
+      "binary_sha256_from_worker_manifest": "d0082b66e0a89b0045dba064973061bd454ca8fd2983bca7897d31e9e329656e",
+      "C8": [
+        {
+          "reader": "planes",
+          "boundary": [
+            "0x6bae0",
+            "0x6c1e0"
+          ],
+          "static_instructions": 448,
+          "hot_calls": 0,
+          "own_stack_depth_below_entry": 160
+        },
+        {
+          "reader": "series",
+          "boundary": [
+            "0x81140",
+            "0x81620"
+          ],
+          "static_instructions": 312,
+          "hot_calls": 0,
+          "own_stack_depth_below_entry": 192
+        },
+        {
+          "reader": "row-tuple",
+          "boundary": [
+            "0x88de0",
+            "0x89420"
+          ],
+          "static_instructions": 400,
+          "hot_calls": 24,
+          "own_stack_depth_below_entry": 176
+        }
+      ],
+      "row_tuple_start": {
+        "boundary": [
+          "0x87400",
+          "0x88720"
+        ],
+        "static_instructions": 1224,
+        "own_stack_depth_below_entry": 16,
+        "explicit_save_reservation": 16,
+        "redzone_max_below_reserved_RSP": 0
+      }
+    },
+    {
+      "host": "zen5",
+      "profile": "x86-64-v3-zen5",
+      "asm": "build/workers/20261011T233241Z-45f0101e/results/x86-64-v3-zen5/streampack_layout.asm",
+      "asm_sha256": "6345ec7d1ab7d02a27ac8bd58641d6e56e72303ec248ac8e3df787b35574bde3",
+      "binary_sha256_from_worker_manifest": "b532d90e4a04e5eff254143a45fdc373b97c9e0d3be888669a7d200d86d02923",
+      "C8": [
+        {
+          "reader": "planes",
+          "boundary": [
+            "0x8bc60",
+            "0x8c130"
+          ],
+          "static_instructions": 323,
+          "hot_calls": 0,
+          "own_stack_depth_below_entry": 168
+        },
+        {
+          "reader": "series",
+          "boundary": [
+            "0xa6b20",
+            "0xa70a0"
+          ],
+          "static_instructions": 381,
+          "hot_calls": 0,
+          "own_stack_depth_below_entry": 200
+        },
+        {
+          "reader": "row-tuple",
+          "boundary": [
+            "0xaf440",
+            "0xafae0"
+          ],
+          "static_instructions": 454,
+          "hot_calls": 24,
+          "own_stack_depth_below_entry": 184
+        }
+      ],
+      "row_tuple_start": {
+        "boundary": [
+          "0xad580",
+          "0xaec10"
+        ],
+        "static_instructions": 1311,
+        "own_stack_depth_below_entry": 120,
+        "explicit_save_reservation": 48,
+        "redzone_max_below_reserved_RSP": 72
+      }
+    },
+    {
+      "host": "zen5",
+      "profile": "x86-64-v4-zen5",
+      "asm": "build/workers/20261011T233241Z-45f0101e/results/x86-64-v4-zen5/streampack_layout.asm",
+      "asm_sha256": "009e7aca3593671c9495bc46fc1c85ae2488debe16b697887281136f946b9212",
+      "binary_sha256_from_worker_manifest": "98c91f1a9a3a20183e9f8270fc53d0771b93749d62b7a4e89afc2dd42ce4af7e",
+      "C8": [
+        {
+          "reader": "planes",
+          "boundary": [
+            "0x9ade0",
+            "0x9b5d0"
+          ],
+          "static_instructions": 510,
+          "hot_calls": 0,
+          "own_stack_depth_below_entry": 136
+        },
+        {
+          "reader": "series",
+          "boundary": [
+            "0xb7f60",
+            "0xb84f0"
+          ],
+          "static_instructions": 381,
+          "hot_calls": 0,
+          "own_stack_depth_below_entry": 200
+        },
+        {
+          "reader": "row-tuple",
+          "boundary": [
+            "0xc0b20",
+            "0xc11c0"
+          ],
+          "static_instructions": 454,
+          "hot_calls": 24,
+          "own_stack_depth_below_entry": 184
+        }
+      ],
+      "row_tuple_start": {
+        "boundary": [
+          "0xbec60",
+          "0xc02f0"
+        ],
+        "static_instructions": 1307,
+        "own_stack_depth_below_entry": 120,
+        "explicit_save_reservation": 48,
+        "redzone_max_below_reserved_RSP": 72
+      }
+    },
+    {
+      "host": "granite",
+      "profile": "x86-64-v3-granite-rapids",
+      "asm": "build/workers/20261011T233241Z-48a57a2d/results/x86-64-v3-granite-rapids/streampack_layout.asm",
+      "asm_sha256": "7cb0ea3e422378789f628a0a4eda8b49655e3ec29498d6177b1e11e33138c621",
+      "binary_sha256_from_worker_manifest": "3c6fd075c7d3620ce0bfffabcf4e5109b97274ad4741b37e95e7581b0097098a",
+      "C8": [
+        {
+          "reader": "planes",
+          "boundary": [
+            "0x88440",
+            "0x88880"
+          ],
+          "static_instructions": 285,
+          "hot_calls": 0,
+          "own_stack_depth_below_entry": 152
+        },
+        {
+          "reader": "series",
+          "boundary": [
+            "0xa2a20",
+            "0xa2f90"
+          ],
+          "static_instructions": 377,
+          "hot_calls": 0,
+          "own_stack_depth_below_entry": 200
+        },
+        {
+          "reader": "row-tuple",
+          "boundary": [
+            "0xaafb0",
+            "0xab650"
+          ],
+          "static_instructions": 454,
+          "hot_calls": 24,
+          "own_stack_depth_below_entry": 184
+        }
+      ],
+      "row_tuple_start": {
+        "boundary": [
+          "0xa91c0",
+          "0xaa810"
+        ],
+        "static_instructions": 1309,
+        "own_stack_depth_below_entry": 120,
+        "explicit_save_reservation": 48,
+        "redzone_max_below_reserved_RSP": 72
+      }
+    },
+    {
+      "host": "granite",
+      "profile": "x86-64-v4-granite-rapids",
+      "asm": "build/workers/20261011T233241Z-48a57a2d/results/x86-64-v4-granite-rapids/streampack_layout.asm",
+      "asm_sha256": "b1733c7161416e737555bc7558f3d1591ed26c3824da32b8edee444325adbb5c",
+      "binary_sha256_from_worker_manifest": "b8ac116aa2dd044faa2f498e2d5bbb87c6cff0fae9bcdd0037a24355cb4bc938",
+      "C8": [
+        {
+          "reader": "planes",
+          "boundary": [
+            "0x8bf40",
+            "0x8c780"
+          ],
+          "static_instructions": 511,
+          "hot_calls": 0,
+          "own_stack_depth_below_entry": 184
+        },
+        {
+          "reader": "series",
+          "boundary": [
+            "0xa68b0",
+            "0xa6e30"
+          ],
+          "static_instructions": 381,
+          "hot_calls": 0,
+          "own_stack_depth_below_entry": 200
+        },
+        {
+          "reader": "row-tuple",
+          "boundary": [
+            "0xaf370",
+            "0xafa10"
+          ],
+          "static_instructions": 454,
+          "hot_calls": 24,
+          "own_stack_depth_below_entry": 184
+        }
+      ],
+      "row_tuple_start": {
+        "boundary": [
+          "0xad580",
+          "0xaebd0"
+        ],
+        "static_instructions": 1305,
+        "own_stack_depth_below_entry": 120,
+        "explicit_save_reservation": 48,
+        "redzone_max_below_reserved_RSP": 72
+      }
+    }
+  ],
+  "selection_relevant_findings": [
+    "Original rowTuple C1 performs state/start/geometry calls. C8 executes eight unrolled triplets, 24 hot calls. The geometry return is discarded before payload next-rank load; this is avoidable aggregate-get consumer work, not required geometry semantics.",
+    "Native planes and Series C8 have zero hot helper calls. They retain visible native prefix logic in the consumer; rowTuple start performs prepared-control dispatch, sixteen strided halfword loads assembled into lanes, shuffle/shift-mask and widened prefix reduction. No hardware gather instruction occurs in the inspected bodies.",
+    "RowTuple completes each helper triplet and issues that chain payload load before the next triplet. This exposes ordinary call/ABI boundaries in independent-chain work; emitted scheduling alone does not establish the measured timing cause.",
+    "RowTuple C8 caller frame is comparable to native/Series frames, not uniquely larger. ARM prefix helper only saves 16 B; no decoded-width stack array. X86 selected grain-2 path genuinely spills one stride-derived 8 B address term at post-save RSP-72, after 48 B pushes: deepest observed address 120 B below helper entry. This is not 72 B of traffic or a decoded geometry buffer.",
+    "X86 rowTuple C1/C8 drivers normalize identically v3/v4 after relocations/targets. V4 rowTuple helper uses Boolean vpternlogd folds, retains short-load/lane-insert/shuffle/multiply route, and shrinks four static instructions. No new AVX-512 gather or VBMI route is used.",
+    "V4 native-plane C8 changes to full eight-chain unroll from rolled lane loops in v3 (Zen paired lanes, Granite single lanes). Series stays rolled. ISA-profile timing differences therefore include compiler scheduling/register-allocation changes."
+  ],
+  "specific_call_examples": [
+    {
+      "host": "c9g",
+      "C8_state": "0x88f58",
+      "C8_start": "0x88f68",
+      "C8_discarded_geometry": "0x88f78",
+      "payload_next_rank_load": "0x88fb4"
+    },
+    {
+      "host": "zen5-v3",
+      "C8_state": "0xaf60b",
+      "C8_start": "0xaf618",
+      "C8_geometry": "0xaf625",
+      "discarding_geometry_result": "0xaf62a",
+      "payload_next_rank_load": "0xaf65d"
+    },
+    {
+      "host": "granite-v3",
+      "C1_geometry": "0xaaf01",
+      "discarding_geometry_result": "0xaaf06",
+      "C8_geometry": "0xab195",
+      "discarding_geometry_result_C8": "0xab19a"
+    }
+  ],
+  "recovery": "This compact index records all worker IDs, machine/profiles, assembly hashes and binary manifest hashes. Detailed source-verified body report hashes are under hosts[].reports; bodies and source snapshots may be archive-only. Original source archive SHA is verified locally for the shared source cut.",
+  "followup_boundary": "Original frozen source tree c6c8f6d4 uses aggregate-get chase and prior layout recipe. Running eb27b5f4 follow-up normalizes chase to state.first/start and adds whole-group controls; compare its matched native/Series/rowTP controls before attributing a gain to layout.",
+  "limits": [
+    "Static instruction counts contain generic alternative routes/alignment and are not per-row executed counts.",
+    "Stack depths are per-body, include save/red-zone addresses, exclude incoming return address/callees and are not an additive concurrent peak.",
+    "No cache, LLC, DRAM, PMU service or architectural-causality inference. Parent owns measured timings and native follow-up interpretation."
+  ]
+}

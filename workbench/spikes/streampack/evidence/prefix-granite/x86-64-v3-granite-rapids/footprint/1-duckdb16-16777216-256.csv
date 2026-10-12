@@ -1,0 +1,10 @@
+method,rows,capacity,operation,repetition,iterations,ns_per_row,logical_bytes,payload_bytes,metadata_bytes,base_bytes,touched_planes
+duckdb16,16777216,256,dependent-tail4,0,1,285.086,327155650,289406897,268435456,0,metadata+payload
+duckdb16,16777216,256,dependent-tail4,1,1,284.710,327155650,289406897,268435456,0,metadata+payload
+duckdb16,16777216,256,dependent-tail4,2,1,284.716,327155650,289406897,268435456,0,metadata+payload
+duckdb16,16777216,256,eight-chain-tail4,0,1,49.241,327155650,289406897,268435456,0,metadata+payload
+duckdb16,16777216,256,eight-chain-tail4,1,1,49.132,327155650,289406897,268435456,0,metadata+payload
+duckdb16,16777216,256,eight-chain-tail4,2,1,49.159,327155650,289406897,268435456,0,metadata+payload
+duckdb16,16777216,256,independent-length,0,1,9.036,327155650,289406897,268435456,0,metadata
+duckdb16,16777216,256,independent-length,1,1,9.032,327155650,289406897,268435456,0,metadata
+duckdb16,16777216,256,independent-length,2,1,9.058,327155650,289406897,268435456,0,metadata

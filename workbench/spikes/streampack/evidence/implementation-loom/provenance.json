@@ -1,0 +1,19 @@
+{
+  "files_sha256": {
+    "codegen/20261012-final-cut/analysis.json": "1c5a61a0ad739b49ee2d8eff092ea8449c202e370471d668c6510d60b0e62a33",
+    "correctness-receipt.json": "0aa956f4121146c02968c39c5f8cdc07ad01bcc7bf4a508b9e9c91b54c071603",
+    "handoff.json": "8acab6f159720b2f8ec4c203ffca80d0f3b829c9c7b8e65686014dffcdf6de2b",
+    "local/measure.json": "a8ad43b6577c95d8f8098bc74fb31eb489a841794371dd6ac43a2850c96f203e",
+    "local/summary.json": "d4c46904c22b232fb8c37335d8526fa688f48d3eb5dbd692946eb1840122b4d1"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "workbench/spikes/streampack/implementation_loom_measure.py",
+    "--summarize",
+    "{evidence}/local"
+  ],
+  "regenerate_from": "archive"
+}

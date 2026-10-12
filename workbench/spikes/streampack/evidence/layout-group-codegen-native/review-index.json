@@ -1,0 +1,488 @@
+{
+  "scope": "Actual linked native Width4095 packed-group follow-up; read-only codegen audit. Timings remain parent-owned.",
+  "source": {
+    "tree_digest": "eb27b5f4768d071cc63d4eda0a47e5a6b645fcfcd4af9740577a6a0677ad52dc",
+    "compressed_archive_sha256": "6a9979d8b560a644d14813d3358d724665a466869dc2a7931f78024e28eafbc2",
+    "members": {
+      "workbench/spikes/streampack/layout.cpp": "b182eee9e1401608df80d1b6b2eff30b62ff1f4ff2e8156cc492c643261e3e2a",
+      "workbench/spikes/streampack/layout.h": "759c870b4ef70c03818d133e3e4bf091ecc3916dd54d2636fd27d73d69aac2cf",
+      "workbench/spikes/streampack/layout_tuple_group.h": "c3bda0d9f99f784b2ca1050c86455adb90da5aad4c696b476ef6aa1d8f05a03f"
+    }
+  },
+  "hosts": [
+    {
+      "host": "c9g",
+      "instance_type": "c9g.4xlarge",
+      "worker": "20261011T235632Z-0372924c",
+      "profile": "armv8.2-a+simd-neoverse-v3",
+      "asm": "build/workers/20261011T235632Z-0372924c/results/armv8.2-a+simd-neoverse-v3/streampack_layout.asm",
+      "asm_sha256": "d1725560795b87df65fc2b3018a10071646e330d18ed724a15d8a90f7998170b",
+      "binary_sha256": "3620140cd2e1799d4d85ce6b35feae72c50ed222cb40335914bbbc8c413895e1",
+      "report": "build/streampack-fresh-results/codegen-review/layout-group-native/c9g/summary.json",
+      "report_sha256": "a859ba41835f69aabb84536e307b644179518f55652b0a5e25c236cf3ee1b1c3",
+      "body_report": {
+        "file": "build/streampack-fresh-results/codegen-review/layout-group-native/c9g/functions.json",
+        "sha256": "07e82198d36718fbda0b3c2e026f39d7fa623e443e39101cbadb27507bce05e9"
+      },
+      "C8": [
+        {
+          "reader": "planes",
+          "boundary": [
+            "0x53e40",
+            "0x54500"
+          ],
+          "static_instructions": 432,
+          "hot_calls": 0,
+          "stack": {
+            "min": 128,
+            "max": 128
+          }
+        },
+        {
+          "reader": "series",
+          "boundary": [
+            "0x6ad20",
+            "0x6b200"
+          ],
+          "static_instructions": 312,
+          "hot_calls": 0,
+          "stack": {
+            "min": 192,
+            "max": 192
+          }
+        },
+        {
+          "reader": "tuple64",
+          "boundary": [
+            "0x4fca0",
+            "0x50260"
+          ],
+          "static_instructions": 368,
+          "hot_calls": 16,
+          "stack": {
+            "min": 176,
+            "max": 176
+          }
+        }
+      ],
+      "tuple64_start": {
+        "boundary": [
+          "0x4f0f0",
+          "0x4f6d0"
+        ],
+        "static_instructions": 376,
+        "hot_calls": 0,
+        "own_depth": {
+          "min": 0,
+          "max": 0
+        }
+      },
+      "reverse": {
+        "tuple64": {
+          "boundary": [
+            "0x4d3a0",
+            "0x4da80"
+          ],
+          "static_instructions": 440,
+          "hot_calls": 1,
+          "own_depth": {
+            "min": 64,
+            "max": 112,
+            "alignment": "64 B downward realignment adds 0/16/32/48 B under AArch64 entry alignment."
+          }
+        },
+        "planes_driver": {
+          "boundary": [
+            "0x54800",
+            "0x54a40"
+          ],
+          "static_instructions": 144,
+          "hot_calls": 0,
+          "own_depth": {
+            "min": 128,
+            "max": 176,
+            "alignment": "64 B downward realignment adds 0/16/32/48 B under AArch64 entry alignment."
+          }
+        },
+        "series_helper": {
+          "boundary": [
+            "0x6a0e0",
+            "0x6a320"
+          ],
+          "static_instructions": 144,
+          "hot_calls": 0,
+          "own_depth": {
+            "min": 64,
+            "max": 112,
+            "alignment": "64 B downward realignment adds 0/16/32/48 B under AArch64 entry alignment."
+          }
+        }
+      },
+      "update_helpers": {
+        "tuple64": {
+          "boundary": [
+            "0x4da80",
+            "0x4eb40"
+          ],
+          "static_instructions": 1072,
+          "hot_calls": 0,
+          "own_depth": {
+            "min": 0,
+            "max": 0
+          }
+        },
+        "planes": {
+          "boundary": [
+            "0x53a20",
+            "0x53b60"
+          ],
+          "static_instructions": 80,
+          "hot_calls": 0,
+          "own_depth": {
+            "min": 0,
+            "max": 0
+          }
+        },
+        "series": {
+          "boundary": [
+            "0x6a320",
+            "0x6a580"
+          ],
+          "static_instructions": 152,
+          "hot_calls": 0,
+          "own_depth": {
+            "min": 0,
+            "max": 0
+          }
+        }
+      },
+      "common_update_driver_depth": 656
+    },
+    {
+      "host": "zen5",
+      "instance_type": "c8a.4xlarge",
+      "worker": "20261011T235835Z-f55b2623",
+      "profile": "x86-64-v3-zen5",
+      "asm": "build/workers/20261011T235835Z-f55b2623/results/x86-64-v3-zen5/streampack_layout.asm",
+      "asm_sha256": "183b443dc73caea4abd5352c1fc6e0605c7f65b97a6fe30579ed985439db9770",
+      "binary_sha256": "6fc341b5ae45b0ac6a82d26ed14f827a8101a9c223dce5a9703a3001a8ccd536",
+      "report": "build/streampack-fresh-results/codegen-review/layout-group-native/zen5/summary.json",
+      "report_sha256": "c6bb3c998481886b4e2c7dff34eeb3d472b0fa508adcd0b20869c3e42f988793",
+      "body_report": {
+        "file": "build/streampack-fresh-results/codegen-review/layout-group-native/zen5/functions.json",
+        "sha256": "b6f315ca66b625bbbce7819886005e3ee136307f77dcc7f8e50b6c10e39e5214"
+      },
+      "C8": [
+        {
+          "reader": "planes",
+          "boundary": [
+            "0x651c0",
+            "0x65690"
+          ],
+          "static_instructions": 323,
+          "hot_calls": 0,
+          "stack": {
+            "min": 168,
+            "max": 168,
+            "qualification": "Includes deepest red-zone address, not bytes of traffic."
+          }
+        },
+        {
+          "reader": "series",
+          "boundary": [
+            "0x81bf0",
+            "0x82140"
+          ],
+          "static_instructions": 372,
+          "hot_calls": 0,
+          "stack": {
+            "min": 184,
+            "max": 184,
+            "qualification": "Includes deepest red-zone address, not bytes of traffic."
+          }
+        },
+        {
+          "reader": "tuple64",
+          "boundary": [
+            "0x5fe20",
+            "0x60440"
+          ],
+          "static_instructions": 421,
+          "hot_calls": 16,
+          "stack": {
+            "min": 184,
+            "max": 184,
+            "qualification": "Includes deepest red-zone address, not bytes of traffic."
+          }
+        }
+      ],
+      "tuple64_start": {
+        "boundary": [
+          "0x5f430",
+          "0x5f9a0"
+        ],
+        "static_instructions": 332,
+        "hot_calls": 0,
+        "own_depth": {
+          "min": 24,
+          "max": 24,
+          "qualification": "Includes deepest red-zone address, not bytes of traffic."
+        }
+      },
+      "reverse": {
+        "tuple64": {
+          "boundary": [
+            "0x5dda0",
+            "0x5e450"
+          ],
+          "static_instructions": 414,
+          "hot_calls": 1,
+          "own_depth": {
+            "min": 248,
+            "max": 296,
+            "qualification": "Six 8 B pushes precede downward 64 B realignment; SysV entry RSP is 8 modulo16, adding 8/24/40/56 B. Incoming return address excluded."
+          }
+        },
+        "planes_driver": {
+          "boundary": [
+            "0x65a90",
+            "0x65d00"
+          ],
+          "static_instructions": 170,
+          "hot_calls": 0,
+          "own_depth": {
+            "min": 184,
+            "max": 232,
+            "qualification": "Six 8 B pushes precede downward 64 B realignment; SysV entry RSP is 8 modulo16, adding 8/24/40/56 B. Incoming return address excluded."
+          }
+        },
+        "series_helper": {
+          "boundary": [
+            "0x80cc0",
+            "0x80f20"
+          ],
+          "static_instructions": 174,
+          "hot_calls": 0,
+          "own_depth": {
+            "min": 184,
+            "max": 232,
+            "qualification": "Six 8 B pushes precede downward 64 B realignment; SysV entry RSP is 8 modulo16, adding 8/24/40/56 B. Incoming return address excluded."
+          }
+        }
+      },
+      "update_helpers": {
+        "tuple64": {
+          "boundary": [
+            "0x5e450",
+            "0x5eec0"
+          ],
+          "static_instructions": 609,
+          "hot_calls": 0,
+          "own_depth": {
+            "min": 64,
+            "max": 64,
+            "qualification": "Includes deepest red-zone address, not bytes of traffic."
+          }
+        },
+        "planes": {
+          "boundary": [
+            "0x647d0",
+            "0x64950"
+          ],
+          "static_instructions": 103,
+          "hot_calls": 0,
+          "own_depth": {
+            "min": 40,
+            "max": 40,
+            "qualification": "Includes deepest red-zone address, not bytes of traffic."
+          }
+        },
+        "series": {
+          "boundary": [
+            "0x80f20",
+            "0x811e0"
+          ],
+          "static_instructions": 178,
+          "hot_calls": 0,
+          "own_depth": {
+            "min": 48,
+            "max": 48,
+            "qualification": "Includes deepest red-zone address, not bytes of traffic."
+          }
+        }
+      },
+      "common_update_driver_depth": 600
+    },
+    {
+      "host": "granite",
+      "instance_type": "c8i.4xlarge",
+      "worker": "20261011T235734Z-7b19420e",
+      "profile": "x86-64-v3-granite-rapids",
+      "asm": "build/workers/20261011T235734Z-7b19420e/results/x86-64-v3-granite-rapids/streampack_layout.asm",
+      "asm_sha256": "890a655369ef507caa358fcd16d1d524169507654eb04eda7726f42090f262bc",
+      "binary_sha256": "995d2c20dfe124b1517d79e2e05bd1db76e230940193acfb63b6b972ba8ce7b9",
+      "report": "build/streampack-fresh-results/codegen-review/layout-group-native/granite/summary.json",
+      "report_sha256": "a8cde3fcc4f547e13f4d37766af5ef17d598bfdab85c496c236f3401bf7a7081",
+      "C8": [
+        {
+          "reader": "planes",
+          "boundary": [
+            "0x62510",
+            "0x62950"
+          ],
+          "static_instructions": 285,
+          "hot_calls": 0,
+          "own_depth": {
+            "min": 152,
+            "max": 152
+          }
+        },
+        {
+          "reader": "series",
+          "boundary": [
+            "0x7e690",
+            "0x7ec10"
+          ],
+          "static_instructions": 379,
+          "hot_calls": 0,
+          "own_depth": {
+            "min": 184,
+            "max": 184
+          }
+        },
+        {
+          "reader": "tuple64",
+          "boundary": [
+            "0x5d0f0",
+            "0x5d710"
+          ],
+          "static_instructions": 421,
+          "hot_calls": 16,
+          "own_depth": {
+            "min": 184,
+            "max": 184
+          }
+        }
+      ],
+      "tuple64_start": {
+        "boundary": [
+          "0x5c700",
+          "0x5cc70"
+        ],
+        "static_instructions": 332,
+        "hot_calls": 0,
+        "own_depth": {
+          "min": 24,
+          "max": 24
+        }
+      },
+      "reverse": {
+        "tuple64": {
+          "boundary": [
+            "0x5b070",
+            "0x5b720"
+          ],
+          "static_instructions": 414,
+          "hot_calls": 1,
+          "own_depth": {
+            "min": 248,
+            "max": 296
+          }
+        },
+        "planes_driver": {
+          "boundary": [
+            "0x62c80",
+            "0x62ef0"
+          ],
+          "static_instructions": 170,
+          "hot_calls": 0,
+          "own_depth": {
+            "min": 184,
+            "max": 232
+          }
+        },
+        "series_helper": {
+          "boundary": [
+            "0x7d840",
+            "0x7daa0"
+          ],
+          "static_instructions": 174,
+          "hot_calls": 0,
+          "own_depth": {
+            "min": 184,
+            "max": 232
+          }
+        }
+      },
+      "update_helpers": {
+        "tuple64": {
+          "boundary": [
+            "0x5b720",
+            "0x5c1a0"
+          ],
+          "static_instructions": 610,
+          "hot_calls": 0,
+          "own_depth": {
+            "min": 64,
+            "max": 64
+          }
+        },
+        "planes": {
+          "boundary": [
+            "0x619b0",
+            "0x61b30"
+          ],
+          "static_instructions": 103,
+          "hot_calls": 0,
+          "own_depth": {
+            "min": 40,
+            "max": 40
+          }
+        },
+        "series": {
+          "boundary": [
+            "0x7daa0",
+            "0x7dd60"
+          ],
+          "static_instructions": 181,
+          "hot_calls": 0,
+          "own_depth": {
+            "min": 48,
+            "max": 48
+          }
+        }
+      },
+      "common_update_driver_depth": 600
+    }
+  ],
+  "findings": [
+    "Tuple64 C8 has eight state/start pairs (16 hot calls); native planes and Series have zero hot helper calls. Geometry read formerly discarded by aggregate-get has been removed.",
+    "Tuple64 start uses contiguous 16 B unit chunks, followed by native prepared route/shift/mask/prefix. Known plan reads 32 B across two chunks, including admitted base/used neighbors. No original per-row halfword lane gather and no decoded prefix scratch.",
+    "Prefix and state helpers remain outlined; each prefix call reloads the bound plan/view pointers and runtime chunk/route fields. State selects a prepared point plan by row modulo 16; generic slot/transfer/map interpretation remains. This is residual composition work, not a dataformat timing verdict.",
+    "Wide reverse decodes the selected group once and materializes 32 B u16 widths for bounded scalar owner walk. Tuple64 adds outlined dead() for the selected owner. No repeated point geometry read occurs in this walk.",
+    "Update driver calls tuple64 dead() then metadata-update; controls read dead inline and call only metadata-update. All update drivers use the same preallocated 512 B journal. Group update helper is call-free, but scans 54 B write-mask coordinates and executes generic prepared point-writer paths.",
+    "For Width4095, tuple64 writes the selected low-used byte, shared high-used nibble byte and dead byte: 3 effect runs / 3 issued bytes. Native planes use 2 runs / 3 issued bytes. Series covers 6 issued bytes with 2\u20133 runs because the last row body byte can coalesce with its shared tail. Sibling bits survive; these are issued write/effect costs, not changed-bit counts."
+  ],
+  "effect_work_Width4095": {
+    "tuple64": {
+      "runs": 3,
+      "issued_bytes": 3
+    },
+    "planes": {
+      "runs": 2,
+      "issued_bytes": 3
+    },
+    "series": {
+      "runs_min": 2,
+      "runs_max": 3,
+      "issued_bytes": 6
+    },
+    "qualification": "Issued source-qualified writes, not changed-bit counts; Series final tile-row body may coalesce with shared tail."
+  },
+  "limits": [
+    "Whole-body static counts include generic alternatives and cold branches; not instructions executed per row.",
+    "Stack depths are own-body address/reservation ranges, including red-zone and dynamic realignment where used; incoming x86 return address and caller/callee composition excluded. No additive peak or traffic claim.",
+    "No timing, microarchitectural, LLC/DRAM service, dataformat causality or headroom quantification inferred. All selected bodies contain no hardware gather instructions.",
+    "Frozen eb27 uses normalized state.first/start consumer; original c6c8 aggregate-get and subsequent field campaign are separate source cuts."
+  ]
+}

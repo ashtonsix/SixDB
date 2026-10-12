@@ -1,0 +1,444 @@
+{
+  "scope": "Read-only worker observation/recovery, captured-source inspection, existing measurement analysis and linked-code review. No relaunch, source edits, builds or timing runs.",
+  "captured_sources": {
+    "workbench/spikes/streampack/footprint.cpp": "311401da732c48e5a2c68c9d6615b124798d6aa8df2b40e27bdf3f20d01b1eda",
+    "workbench/spikes/streampack/prefix.h": "87c1966330db5c504e6a514238496891a6b0f46dfe9eb32ee0e675aa03365c72",
+    "workbench/spikes/streampack/slp-control.sh": "fc5a19fd761566062b53456f2ca3e0fb437b38eae1a8497e512769b3d447eaf6",
+    "workbench/spikes/streampack/CMakeLists.txt": "37184f333c638aac2d4bace3074e8fac214c09f65185dd5e245b892d3743a90d"
+  },
+  "zen5": {
+    "worker": "20261011T200235Z-e134c03f",
+    "status": "complete",
+    "verified_inputs": 130,
+    "paired_medians": [
+      {
+        "rows": 1024,
+        "method": "direct16",
+        "operation": "dependent-tail4",
+        "normal_ns_per_row": 2.993,
+        "no_slp_ns_per_row": 2.949,
+        "normal_trial_medians": [
+          2.993,
+          2.991
+        ],
+        "no_slp_trial_medians": [
+          2.893,
+          2.989
+        ],
+        "normal_range": [
+          2.987,
+          2.996
+        ],
+        "no_slp_range": [
+          2.889,
+          2.991
+        ],
+        "samples_per_variant": 6
+      },
+      {
+        "rows": 1024,
+        "method": "direct16",
+        "operation": "eight-chain-tail4",
+        "normal_ns_per_row": 0.477,
+        "no_slp_ns_per_row": 0.45399999999999996,
+        "normal_trial_medians": [
+          0.475,
+          0.478
+        ],
+        "no_slp_trial_medians": [
+          0.428,
+          0.475
+        ],
+        "normal_range": [
+          0.475,
+          0.478
+        ],
+        "no_slp_range": [
+          0.428,
+          0.476
+        ],
+        "samples_per_variant": 6
+      },
+      {
+        "rows": 1024,
+        "method": "location8",
+        "operation": "dependent-tail4",
+        "normal_ns_per_row": 2.439,
+        "no_slp_ns_per_row": 2.4375,
+        "normal_trial_medians": [
+          2.442,
+          2.437
+        ],
+        "no_slp_trial_medians": [
+          2.436,
+          2.438
+        ],
+        "normal_range": [
+          2.432,
+          2.446
+        ],
+        "no_slp_range": [
+          2.435,
+          2.451
+        ],
+        "samples_per_variant": 6
+      },
+      {
+        "rows": 1024,
+        "method": "location8",
+        "operation": "eight-chain-tail4",
+        "normal_ns_per_row": 1.114,
+        "no_slp_ns_per_row": 0.321,
+        "normal_trial_medians": [
+          1.112,
+          1.117
+        ],
+        "no_slp_trial_medians": [
+          0.32,
+          0.321
+        ],
+        "normal_range": [
+          1.111,
+          1.12
+        ],
+        "no_slp_range": [
+          0.32,
+          0.321
+        ],
+        "samples_per_variant": 6
+      },
+      {
+        "rows": 262144,
+        "method": "direct16",
+        "operation": "dependent-tail4",
+        "normal_ns_per_row": 19.432499999999997,
+        "no_slp_ns_per_row": 19.557000000000002,
+        "normal_trial_medians": [
+          19.415,
+          19.45
+        ],
+        "no_slp_trial_medians": [
+          19.516,
+          19.581
+        ],
+        "normal_range": [
+          19.407,
+          19.484
+        ],
+        "no_slp_range": [
+          19.495,
+          19.649
+        ],
+        "samples_per_variant": 6
+      },
+      {
+        "rows": 262144,
+        "method": "direct16",
+        "operation": "eight-chain-tail4",
+        "normal_ns_per_row": 2.638,
+        "no_slp_ns_per_row": 2.628,
+        "normal_trial_medians": [
+          2.631,
+          2.648
+        ],
+        "no_slp_trial_medians": [
+          2.642,
+          2.622
+        ],
+        "normal_range": [
+          2.627,
+          2.649
+        ],
+        "no_slp_range": [
+          2.619,
+          2.649
+        ],
+        "samples_per_variant": 6
+      },
+      {
+        "rows": 262144,
+        "method": "location8",
+        "operation": "dependent-tail4",
+        "normal_ns_per_row": 24.0635,
+        "no_slp_ns_per_row": 23.9325,
+        "normal_trial_medians": [
+          23.783,
+          25.029
+        ],
+        "no_slp_trial_medians": [
+          23.733,
+          24.058
+        ],
+        "normal_range": [
+          23.741,
+          26.186
+        ],
+        "no_slp_range": [
+          23.694,
+          24.776
+        ],
+        "samples_per_variant": 6
+      },
+      {
+        "rows": 262144,
+        "method": "location8",
+        "operation": "eight-chain-tail4",
+        "normal_ns_per_row": 4.541,
+        "no_slp_ns_per_row": 3.058,
+        "normal_trial_medians": [
+          4.52,
+          4.561
+        ],
+        "no_slp_trial_medians": [
+          3.051,
+          3.064
+        ],
+        "normal_range": [
+          4.518,
+          4.576
+        ],
+        "no_slp_range": [
+          3.051,
+          3.069
+        ],
+        "samples_per_variant": 6
+      },
+      {
+        "rows": 4194304,
+        "method": "direct16",
+        "operation": "dependent-tail4",
+        "normal_ns_per_row": 220.2145,
+        "no_slp_ns_per_row": 216.579,
+        "normal_trial_medians": [
+          221.22,
+          219.209
+        ],
+        "no_slp_trial_medians": [
+          219.685,
+          213.473
+        ],
+        "normal_range": [
+          207.368,
+          234.499
+        ],
+        "no_slp_range": [
+          172.472,
+          227.138
+        ],
+        "samples_per_variant": 6
+      },
+      {
+        "rows": 4194304,
+        "method": "direct16",
+        "operation": "eight-chain-tail4",
+        "normal_ns_per_row": 22.779,
+        "no_slp_ns_per_row": 23.165,
+        "normal_trial_medians": [
+          23.232,
+          22.449
+        ],
+        "no_slp_trial_medians": [
+          23.361,
+          23.15
+        ],
+        "normal_range": [
+          22.427,
+          24.129
+        ],
+        "no_slp_range": [
+          22.893,
+          25.252
+        ],
+        "samples_per_variant": 6
+      },
+      {
+        "rows": 4194304,
+        "method": "location8",
+        "operation": "dependent-tail4",
+        "normal_ns_per_row": 279.639,
+        "no_slp_ns_per_row": 277.909,
+        "normal_trial_medians": [
+          279.935,
+          279.379
+        ],
+        "no_slp_trial_medians": [
+          278.061,
+          277.757
+        ],
+        "normal_range": [
+          271.364,
+          281.864
+        ],
+        "no_slp_range": [
+          267.335,
+          282.867
+        ],
+        "samples_per_variant": 6
+      },
+      {
+        "rows": 4194304,
+        "method": "location8",
+        "operation": "eight-chain-tail4",
+        "normal_ns_per_row": 42.03,
+        "no_slp_ns_per_row": 31.821,
+        "normal_trial_medians": [
+          42.475,
+          41.857
+        ],
+        "no_slp_trial_medians": [
+          30.662,
+          32.907
+        ],
+        "normal_range": [
+          41.653,
+          42.545
+        ],
+        "no_slp_range": [
+          29.535,
+          32.922
+        ],
+        "samples_per_variant": 6
+      },
+      {
+        "rows": 16777216,
+        "method": "direct16",
+        "operation": "dependent-tail4",
+        "normal_ns_per_row": 284.08050000000003,
+        "no_slp_ns_per_row": 283.0005,
+        "normal_trial_medians": [
+          286.42,
+          282.473
+        ],
+        "no_slp_trial_medians": [
+          282.104,
+          283.897
+        ],
+        "normal_range": [
+          266.317,
+          288.126
+        ],
+        "no_slp_range": [
+          274.93,
+          288.217
+        ],
+        "samples_per_variant": 6
+      },
+      {
+        "rows": 16777216,
+        "method": "direct16",
+        "operation": "eight-chain-tail4",
+        "normal_ns_per_row": 34.638999999999996,
+        "no_slp_ns_per_row": 33.371,
+        "normal_trial_medians": [
+          34.784,
+          34.597
+        ],
+        "no_slp_trial_medians": [
+          34.388,
+          32.277
+        ],
+        "normal_range": [
+          34.303,
+          34.956
+        ],
+        "no_slp_range": [
+          31.86,
+          34.41
+        ],
+        "samples_per_variant": 6
+      },
+      {
+        "rows": 16777216,
+        "method": "location8",
+        "operation": "dependent-tail4",
+        "normal_ns_per_row": 303.6095,
+        "no_slp_ns_per_row": 301.64599999999996,
+        "normal_trial_medians": [
+          303.681,
+          302.674
+        ],
+        "no_slp_trial_medians": [
+          304.566,
+          295.867
+        ],
+        "normal_range": [
+          302.03,
+          304.822
+        ],
+        "no_slp_range": [
+          295.507,
+          304.675
+        ],
+        "samples_per_variant": 6
+      },
+      {
+        "rows": 16777216,
+        "method": "location8",
+        "operation": "eight-chain-tail4",
+        "normal_ns_per_row": 44.293000000000006,
+        "no_slp_ns_per_row": 36.982,
+        "normal_trial_medians": [
+          44.163,
+          44.402
+        ],
+        "no_slp_trial_medians": [
+          37.019,
+          36.945
+        ],
+        "normal_range": [
+          44.038,
+          44.439
+        ],
+        "no_slp_range": [
+          36.616,
+          37.141
+        ],
+        "samples_per_variant": 6
+      }
+    ],
+    "linked_review": "zen5-slp-linked-audit.json",
+    "pmu_review": "zen5-slp-results.json",
+    "code_findings": [
+      "Both C1 normalized hot loops are identical across builds: direct16 83 instructions/8 dependent rows and location8 43/8.",
+      "Location8 C8 normal has 114 instructions/16 row transitions, two four-lane vpgatherqd and scalar/vector rank/address transfers. No-SLP has 90/16, all scalar, no gather/vector moves/spills.",
+      "Direct16 C8 both have 90 instructions/8 transitions with four hot red-zone stores and four reloads. They differ only in loop counter register and one reload scheduling position.",
+      "Large-count retired instructions/row match hot code: location8 C8 7.125 normal vs5.625 no-SLP; direct16 C8 11.25 both. PMU groups complete, unscaled, no multiplexing/errors.",
+      "Zen5 generic L1D-miss event reports zero for all populations; do not interpret these zeros as absence of cache misses."
+    ],
+    "interpretation": [
+      "At 1K competent scalar location8 is the strongest C8 baseline: .321ns vs direct16 no-SLP .454ns. Normal location8 was1.114ns.",
+      "Location8 no-SLP C8 wins every timing repetition against every normal repetition at every population; speedups 3.470x/1.485x/1.321x/1.198x at 1K/262K/4M/16M.",
+      "Direct16 remains faster than scalar location8 in C8 at 262K/4M/16M (2.628/23.165/33.371ns vs3.058/31.821/36.982ns). C1 changes are small/inconsistent, matching unchanged hot code.",
+      "The data establish a compiler-lowering confound. They do not establish an intrinsic AVX-512 or descriptor-format weakness, nor justify globally disabling SLP in production."
+    ]
+  },
+  "granite": {
+    "worker": "20261011T200235Z-f7b22d30",
+    "status": "interrupted by Spot during running",
+    "audit": "granite-slp-review/audit.json",
+    "audit_sha256": "5b427dba415ea69b06b6f002fb8f7d72017b531ed1c6b5137d1cb07c528b7abd",
+    "coverage": "Paired trial0 at 1K/262K/4M only. At 16M normal direct16 alone completed. No reversed trial1; asm/binaries never copied before interruption, hence exact no-SLP emitted code cannot be verified from this worker.",
+    "location8_C8_normal_to_no_slp": [
+      {
+        "rows": 1024,
+        "normal": 1.367,
+        "no_slp": 0.418
+      },
+      {
+        "rows": 262144,
+        "normal": 11.48,
+        "no_slp": 7.635
+      },
+      {
+        "rows": 4194304,
+        "normal": 27.728,
+        "no_slp": 16.95
+      }
+    ],
+    "interpretation": "Partial measurements support the same baseline correction: at 1K no-SLP location8 .418ns beats direct16 .536ns. Direct16 remains ahead 262K/4M. Treat Granite as one-order three-repetition evidence;16M paired/reversed/code verification remains unavailable. Normal direct16 C1 at 1K isunstable, so apparent latencygain is inconclusive."
+  },
+  "artifact_hashes": {
+    "zen5-slp-results.json": "557b25fade87badad7a84cbc8368d6bf3d93c3df47e63035be9cde6258041041",
+    "zen5-slp-linked-audit.json": "a56c9e8cf9dab3e19193362d1c6040cdc98e05388794a17a6fcc65e27f8d03d6"
+  }
+}

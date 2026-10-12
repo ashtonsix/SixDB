@@ -1,0 +1,31 @@
+{
+  "worker": {
+    "id": "20261012T010715Z-219947f8",
+    "instance_id": "i-0d6cdc00199ed562d",
+    "reused": true,
+    "reuse_count": 4,
+    "max_end": 1791781642.3697343
+  },
+  "instance_type": "c9g.4xlarge",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "source": {
+    "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+    "digest": "3f57b6882cc417804c81e34636b8e0489eefcd089ecba83d7ec2447e4b752b4e",
+    "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+    "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+    "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+    "sha256": "60ed5edb2bc784f63b1f1e9f91e8b7ec34d0bfef609233b6cd8cfe28e3748ae1"
+  },
+  "source_commit": "7eb0002dbf81c06cd64d67bdbd35d7a3e97798a5",
+  "worker_result": {
+    "state": "complete",
+    "script_returncode": 0,
+    "script_seconds": 39.11593723297119,
+    "worker_seconds_before_collection": 42.507617473602295
+  },
+  "derivation": "python3 analysis/summarize_layout.py inputs REGENERATED_DIRECTORY; if bulk inputs are present, repeat with --prefix bulk --output-name bulk-summary.csv",
+  "summary_script_sha256": "9eef328a87552e5823aabd79f5cc630ea5c60ca6834e53157d5beb9f6d30313b",
+  "provenance": "Derived bundle contains exact CSV inputs and analysis. worker-artifact.json recovers original sources, binaries, disassembly and logs. Summaries generated after collection.",
+  "interpretation": "Corrected explicit NEON ordered field consumers only. Based on immutable7fd83 sources with four StreamPack replacements; allocator/runtime bytes held fixed. vld1_dup_u32 spelling removes the previous scalar bridge and ZIP1 false dependency on checksum, preserving bounded four-byte loads. Both maxima and all three populations, two fully reversed placement orders including CP16, two samples per process. Use these ordered ARM timings in preference to layout-explicit-c9g; complete lookup, shuffled fields and bulk belong to the earlier matched campaign.",
+  "base_source": "7fd83f199cb60326e8865de6898e5bcd09d96754619e1d776653c46a5ac8f7ce"
+}

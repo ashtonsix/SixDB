@@ -1,0 +1,482 @@
+{
+  "scope": "Read-only final linked v5 qualification across c9g, Zen5 v3/v4 and Granite Rapids v3/v4. No source edits, compiler builds, worker launches, benchmark reruns or new MCA model.",
+  "source_tree_digest": "dfd278c9010f775c2faf64a7bac5c034e5e8320b35994623978166f851e646da",
+  "source_archive_sha256": "72efe123df1a30cf7245a255b52336cbbdc977ba6faa328e8363a8e9e02b17e2",
+  "capture": {
+    "path": "build/captures/streampack-implementation-native-v5.capture.json",
+    "sha256": "328c2daf21cba834559165526b71d8859a86a6839e5546e9781c736a70e4e94d",
+    "bytes": 605471
+  },
+  "source_files": {
+    "ikea/include/ikea/streampack/detail/prefix.h": {
+      "path": "build/captures/streampack-implementation-native-v5/ikea/include/ikea/streampack/detail/prefix.h",
+      "sha256": "ade1146dc6bb3c5b3b607bbc9d1b229c68dc556ab920ebb7a180e44b7fec53d8",
+      "bytes": 6073
+    },
+    "ikea/include/ikea/streampack/detail/simd.h": {
+      "path": "build/captures/streampack-implementation-native-v5/ikea/include/ikea/streampack/detail/simd.h",
+      "sha256": "a9518a501f2334a8976def7b3c9cea29de6ecb8d33cb8bc864cc56ff5bf9b78d",
+      "bytes": 5441
+    },
+    "ikea/include/ikea/streampack/author/read.h": {
+      "path": "build/captures/streampack-implementation-native-v5/ikea/include/ikea/streampack/author/read.h",
+      "sha256": "85146a3b0879f974575971efc3417d750c675183997c00f678981eeb8ca62ac1",
+      "bytes": 12463
+    },
+    "ikea/include/ikea/streampack/author/native.h": {
+      "path": "build/captures/streampack-implementation-native-v5/ikea/include/ikea/streampack/author/native.h",
+      "sha256": "dce7b152a9f7d6e955a51236bfbf57212e0ae2ef9be4d61c9f56e5738edc9efc",
+      "bytes": 3401
+    },
+    "ikea/include/ikea/detail/native_chain.h": {
+      "path": "build/captures/streampack-implementation-native-v5/ikea/include/ikea/detail/native_chain.h",
+      "sha256": "11672b2ccf161079d30a279056c5b79d00c3859f5d41258bca30d91d2b589a86",
+      "bytes": 4836
+    },
+    "workbench/spikes/streampack/implementation_bench.cpp": {
+      "path": "build/captures/streampack-implementation-native-v5/workbench/spikes/streampack/implementation_bench.cpp",
+      "sha256": "5c6a7762e21f030094fbc9e985b54b40358c9a892c321381a61d3216fbc2dedc",
+      "bytes": 11453
+    },
+    "ikea/examples/streampack/composition.cpp": {
+      "path": "build/captures/streampack-implementation-native-v5/ikea/examples/streampack/composition.cpp",
+      "sha256": "3c9e05838ec85de29407d493259f55c2c5d70dd44bbc726cf5d18915c8a2599f",
+      "bytes": 3452
+    }
+  },
+  "audit_script": {
+    "path": "build/streampack-implementation/codegen-review/v5/audit.py",
+    "sha256": "b7e532b12717930f40a0805002066a38ea0292505442649980b76f96b59bba7f",
+    "bytes": 3617
+  },
+  "profiles": {
+    "c9g": {
+      "worker_id": "20261012T041943Z-01f7f947",
+      "body_report": {
+        "path": "build/streampack-implementation/codegen-review/v5/c9g/body-report.json",
+        "sha256": "3c167d53a9104da85517f198dfa62b171f87ca5bcc74d5cb08e83216eb8f1087",
+        "bytes": 142770
+      },
+      "result_dir": "build/workers/20261012T041943Z-01f7f947/results/armv8.2-a+simd-neoverse-v3",
+      "files": {
+        "streampack_implementation_bench": {
+          "path": "build/workers/20261012T041943Z-01f7f947/results/armv8.2-a+simd-neoverse-v3/streampack_implementation_bench",
+          "bytes": 4799936,
+          "sha256": "89246fd9b82f8f537ba2c945055df584b2ee736abad89445a5cc7f186f9f7146"
+        },
+        "ikea_example_streampack_composition": {
+          "path": "build/workers/20261012T041943Z-01f7f947/results/armv8.2-a+simd-neoverse-v3/ikea_example_streampack_composition",
+          "bytes": 753336,
+          "sha256": "1aa1ee66122283a821671dc65076a79934dfa3f51dc344aba7abebe60b78ebe5"
+        },
+        "binaries.sha256": {
+          "path": "build/workers/20261012T041943Z-01f7f947/results/armv8.2-a+simd-neoverse-v3/binaries.sha256",
+          "bytes": 363,
+          "sha256": "33c5928a03f1e5340dd1973ea13ecef17c9ae24f1009b1edadf749abfc43b7aa"
+        },
+        "bench.asm": {
+          "path": "build/workers/20261012T041943Z-01f7f947/results/armv8.2-a+simd-neoverse-v3/bench.asm",
+          "bytes": 13755977,
+          "sha256": "c77fb1f0b4af7614eabde19d7fa55c2523c25eb323bb5feb44c188ad8dbdb894"
+        },
+        "composition.asm": {
+          "path": "build/workers/20261012T041943Z-01f7f947/results/armv8.2-a+simd-neoverse-v3/composition.asm",
+          "bytes": 1149983,
+          "sha256": "a061dce4e0a75c0200f54ac2371dc88009efa5bd6a32a05728cc3f8086b75e55"
+        },
+        "compile_commands.json": {
+          "path": "build/workers/20261012T041943Z-01f7f947/results/armv8.2-a+simd-neoverse-v3/compile_commands.json",
+          "bytes": 153797,
+          "sha256": "49ed0747f18c3475e575f3d77c1d0263027dbca79943be7c21e2c93ff34e1ad6"
+        },
+        "checks.txt": {
+          "path": "build/workers/20261012T041943Z-01f7f947/results/armv8.2-a+simd-neoverse-v3/checks.txt",
+          "bytes": 780,
+          "sha256": "c0e4a5d7a96a234f0eebc59f850a485a7d40d2115c9543237851bebf39a3f012"
+        }
+      },
+      "counts": {
+        "C1": 16,
+        "C8": 16,
+        "projection": 16,
+        "point-stage": 12,
+        "batch-stage": 12,
+        "enter": 2
+      },
+      "job": {
+        "path": "build/workers/20261012T041943Z-01f7f947/job.json",
+        "sha256": "77c44f83d0bc1c46a62bfc07583c9490a579ac735cef6d924fc22b80a26129ba",
+        "bytes": 4247
+      },
+      "source_manifest": {
+        "path": "build/workers/20261012T041943Z-01f7f947/results/source-manifest.json",
+        "sha256": "3a33693ab1e15e38ede34088b9cd34b0e65d72aba9129d05c14227a91ae3ca8d",
+        "bytes": 393507
+      },
+      "vector_preparation_snippet": {
+        "path": "build/streampack-implementation/codegen-review/v5/c9g/Direct-paid-vector-snippet.txt",
+        "sha256": "c32db848fec73218f7367a014b60d1d3d886be84eb6dd59805bc858c1e867fc1",
+        "bytes": 2304
+      },
+      "stage_frame_bytes": 0,
+      "AAPCS_entry_shim_bytes": 160,
+      "paid_selection_below_entry_SP_bytes": 1072,
+      "paid_selection_CFA_bytes": 1072,
+      "qualified_u16_paths": {
+        "path": "build/streampack-implementation/codegen-review/v5/c9g/u16-C8-qualified-paths.json",
+        "sha256": "8ca573c0c6c0b08bad88b8b12ebc3989ff124458c4464e999ccba7314b1cb030",
+        "bytes": 3163
+      },
+      "qualified_u16_path_extracts": [
+        {
+          "path": "build/streampack-implementation/codegen-review/v5/c9g/typed-u16-C8-used-variable-path.txt",
+          "sha256": "d8f807a76cd072b6989fd69bf542dcdac67a844899292de24ebfef3c4635573d",
+          "bytes": 8008
+        },
+        {
+          "path": "build/streampack-implementation/codegen-review/v5/c9g/spike-u16-C8-used-variable-path.txt",
+          "sha256": "8758ade930d5b77cf5d9b7edc435a85e06d06909b0ecdf52761fdbb6d1ba53d7",
+          "bytes": 6822
+        }
+      ],
+      "source_archive_verified": true,
+      "source_files_verified_against_worker_manifest": true
+    },
+    "granite-v3": {
+      "worker_id": "20261012T041953Z-3c44dbfd",
+      "body_report": {
+        "path": "build/streampack-implementation/codegen-review/v5/granite-v3/body-report.json",
+        "sha256": "a42435456276bd390b103e686280d5d931f6244003a46494a5156bd7b0bc30e9",
+        "bytes": 322150
+      },
+      "result_dir": "build/workers/20261012T041953Z-3c44dbfd/results/x86-64-v3-granite-rapids",
+      "files": {
+        "streampack_implementation_bench": {
+          "path": "build/workers/20261012T041953Z-3c44dbfd/results/x86-64-v3-granite-rapids/streampack_implementation_bench",
+          "bytes": 5117632,
+          "sha256": "7277e389bb2c76d1287fa5f5890ed98df0b06db4724494ea6d7fcbdec3dae783"
+        },
+        "ikea_example_streampack_composition": {
+          "path": "build/workers/20261012T041953Z-3c44dbfd/results/x86-64-v3-granite-rapids/ikea_example_streampack_composition",
+          "bytes": 686368,
+          "sha256": "59ef96ec3d2df1ee6d49440c4728feb182e1165ac64f7df9a0288e3b67b6b13b"
+        },
+        "binaries.sha256": {
+          "path": "build/workers/20261012T041953Z-3c44dbfd/results/x86-64-v3-granite-rapids/binaries.sha256",
+          "bytes": 359,
+          "sha256": "be775b5ace98d170ce553089386583bb64675fdcc6dcef107a8e6bd8f1994e7a"
+        },
+        "bench.asm": {
+          "path": "build/workers/20261012T041953Z-3c44dbfd/results/x86-64-v3-granite-rapids/bench.asm",
+          "bytes": 16575971,
+          "sha256": "35980e46f7d8fe96dcf01207b73f74608f73121c25cbc38b9a5676cc4f333779"
+        },
+        "composition.asm": {
+          "path": "build/workers/20261012T041953Z-3c44dbfd/results/x86-64-v3-granite-rapids/composition.asm",
+          "bytes": 993149,
+          "sha256": "84419595e3684b00ebead41f13e4983fcf80c7942cc0c7b84d059a30752987ff"
+        },
+        "compile_commands.json": {
+          "path": "build/workers/20261012T041953Z-3c44dbfd/results/x86-64-v3-granite-rapids/compile_commands.json",
+          "bytes": 152922,
+          "sha256": "3c700430f24c5cc37cdebff3fdaa4477fd273a617b083657cc71bf7105d490c9"
+        },
+        "checks.txt": {
+          "path": "build/workers/20261012T041953Z-3c44dbfd/results/x86-64-v3-granite-rapids/checks.txt",
+          "bytes": 776,
+          "sha256": "357fd05270ef141fd9cfbca59a6e4df94685efd7162697a7d5a6df67e222f34b"
+        }
+      },
+      "counts": {
+        "C1": 16,
+        "C8": 16,
+        "projection": 16,
+        "point-stage": 0,
+        "batch-stage": 12,
+        "enter": 0
+      },
+      "job": {
+        "path": "build/workers/20261012T041953Z-3c44dbfd/job.json",
+        "sha256": "9e09ed64382e417142db43c25d301767ddd545bce011171913dbfcf0f96f27e3",
+        "bytes": 4479
+      },
+      "source_manifest": {
+        "path": "build/workers/20261012T041953Z-3c44dbfd/results/source-manifest.json",
+        "sha256": "3a33693ab1e15e38ede34088b9cd34b0e65d72aba9129d05c14227a91ae3ca8d",
+        "bytes": 393507
+      },
+      "vector_preparation_snippet": {
+        "path": "build/streampack-implementation/codegen-review/v5/granite-v3/Direct-paid-vector-snippet.txt",
+        "sha256": "56e484da2fbede12c363cd8d839b5a8367d48126c4847cc38c93c7a4c0cb89e0",
+        "bytes": 1849
+      },
+      "native_stage_frame_bytes": 0,
+      "paid_selection_below_entry_SP_bytes": 1144,
+      "paid_selection_CFA_bytes": 1152,
+      "frame_notes": "Six8 B saves+0x448(v3)/0x438(v4) locals; includes caller scratch. No outgoing call adjustments; sole call cold assert. Stage claims exclude caller.",
+      "source_archive_verified": true,
+      "source_files_verified_against_worker_manifest": true
+    },
+    "granite-v4": {
+      "worker_id": "20261012T041953Z-3c44dbfd",
+      "body_report": {
+        "path": "build/streampack-implementation/codegen-review/v5/granite-v4/body-report.json",
+        "sha256": "41c2ced24a62e2aed8c2595f7cc1da8c8544521af15c17aba34b4a70ac7d4b86",
+        "bytes": 313094
+      },
+      "result_dir": "build/workers/20261012T041953Z-3c44dbfd/results/x86-64-v4-granite-rapids",
+      "files": {
+        "streampack_implementation_bench": {
+          "path": "build/workers/20261012T041953Z-3c44dbfd/results/x86-64-v4-granite-rapids/streampack_implementation_bench",
+          "bytes": 5116152,
+          "sha256": "029527047ceb275ecb16ae5949a2a70d4cd298e28751ab3083707e4b5f69030a"
+        },
+        "ikea_example_streampack_composition": {
+          "path": "build/workers/20261012T041953Z-3c44dbfd/results/x86-64-v4-granite-rapids/ikea_example_streampack_composition",
+          "bytes": 637624,
+          "sha256": "a2ecf1eeed5dfcb0b0d7c95c9e28318cd7b09dc75c04d70c223ef18b484f110d"
+        },
+        "binaries.sha256": {
+          "path": "build/workers/20261012T041953Z-3c44dbfd/results/x86-64-v4-granite-rapids/binaries.sha256",
+          "bytes": 359,
+          "sha256": "255e00cb445bec20815721b9f33da19c2d38eb226858515ed2046995e8563a82"
+        },
+        "bench.asm": {
+          "path": "build/workers/20261012T041953Z-3c44dbfd/results/x86-64-v4-granite-rapids/bench.asm",
+          "bytes": 16542372,
+          "sha256": "2c97a83079b6c336c77eb9f4a2adae242b20924c2b8e2c9f9e796f6b3c921934"
+        },
+        "composition.asm": {
+          "path": "build/workers/20261012T041953Z-3c44dbfd/results/x86-64-v4-granite-rapids/composition.asm",
+          "bytes": 852971,
+          "sha256": "db227af59967c880aa573cc3da8a61b10cbd0171096ed810a3fae74da4368928"
+        },
+        "compile_commands.json": {
+          "path": "build/workers/20261012T041953Z-3c44dbfd/results/x86-64-v4-granite-rapids/compile_commands.json",
+          "bytes": 152922,
+          "sha256": "e54f158d8429d3dc1e7bbc2e7d23db1f224f08b5db525211a792965b2564b226"
+        },
+        "checks.txt": {
+          "path": "build/workers/20261012T041953Z-3c44dbfd/results/x86-64-v4-granite-rapids/checks.txt",
+          "bytes": 776,
+          "sha256": "780701ac9c4fd89db1ed1282d906ae3bbaa17af85e03f44e4ef858ed55e8be71"
+        }
+      },
+      "counts": {
+        "C1": 16,
+        "C8": 16,
+        "projection": 16,
+        "point-stage": 0,
+        "batch-stage": 12,
+        "enter": 0
+      },
+      "job": {
+        "path": "build/workers/20261012T041953Z-3c44dbfd/job.json",
+        "sha256": "9e09ed64382e417142db43c25d301767ddd545bce011171913dbfcf0f96f27e3",
+        "bytes": 4479
+      },
+      "source_manifest": {
+        "path": "build/workers/20261012T041953Z-3c44dbfd/results/source-manifest.json",
+        "sha256": "3a33693ab1e15e38ede34088b9cd34b0e65d72aba9129d05c14227a91ae3ca8d",
+        "bytes": 393507
+      },
+      "vector_preparation_snippet": {
+        "path": "build/streampack-implementation/codegen-review/v5/granite-v4/Direct-paid-vector-snippet.txt",
+        "sha256": "6c285e12601b1236264dfdcf64806854b42b152fa6ba10edb26236ef0b888720",
+        "bytes": 1016
+      },
+      "native_stage_frame_bytes": 0,
+      "paid_selection_below_entry_SP_bytes": 1128,
+      "paid_selection_CFA_bytes": 1136,
+      "frame_notes": "Six8 B saves+0x448(v3)/0x438(v4) locals; includes caller scratch. No outgoing call adjustments; sole call cold assert. Stage claims exclude caller.",
+      "source_archive_verified": true,
+      "source_files_verified_against_worker_manifest": true
+    },
+    "zen-v3": {
+      "worker_id": "20261012T042734Z-a8e86322",
+      "body_report": {
+        "path": "build/streampack-implementation/codegen-review/v5/zen-v3/body-report.json",
+        "sha256": "cef8e491e27f8a53c67b6766d93bb03d5dbe5315cc6ce465433accc705934b59",
+        "bytes": 405054
+      },
+      "result_dir": "build/workers/20261012T042734Z-a8e86322/results/x86-64-v3-zen5",
+      "files": {
+        "streampack_implementation_bench": {
+          "path": "build/workers/20261012T042734Z-a8e86322/results/x86-64-v3-zen5/streampack_implementation_bench",
+          "bytes": 5510328,
+          "sha256": "365074f84b4c4255b956ed5acc0b4148a8a73d8b351d827d2761442e33ec573b"
+        },
+        "ikea_example_streampack_composition": {
+          "path": "build/workers/20261012T042734Z-a8e86322/results/x86-64-v3-zen5/ikea_example_streampack_composition",
+          "bytes": 698160,
+          "sha256": "6acfe8fa71484ab4dc89b869920b932b82e9be91bcbc13ab2a5fd34ecddd3b71"
+        },
+        "binaries.sha256": {
+          "path": "build/workers/20261012T042734Z-a8e86322/results/x86-64-v3-zen5/binaries.sha256",
+          "bytes": 339,
+          "sha256": "b98b98c9f178850c0887ed448e3f444be6a599537de593e564e6d33f0c28a088"
+        },
+        "bench.asm": {
+          "path": "build/workers/20261012T042734Z-a8e86322/results/x86-64-v3-zen5/bench.asm",
+          "bytes": 17453104,
+          "sha256": "2b6695452c3c62949dc59e2f1e5671c129bdc886c686af334e8cfc56ceb3fb93"
+        },
+        "composition.asm": {
+          "path": "build/workers/20261012T042734Z-a8e86322/results/x86-64-v3-zen5/composition.asm",
+          "bytes": 993136,
+          "sha256": "780b3e57383335f186c94748186744992f09a30b6722cf709e1f0eebfc5be1df"
+        },
+        "compile_commands.json": {
+          "path": "build/workers/20261012T042734Z-a8e86322/results/x86-64-v3-zen5/compile_commands.json",
+          "bytes": 149915,
+          "sha256": "f3ec60a3b811209f694ceb44e2ffaf78bbf730c22e73c193088e0657cdb20b07"
+        },
+        "checks.txt": {
+          "path": "build/workers/20261012T042734Z-a8e86322/results/x86-64-v3-zen5/checks.txt",
+          "bytes": 756,
+          "sha256": "12d28159daea3b4c0cbfd471e6738d9d8aeef1e8bf233729b57dbc382ebfdcfa"
+        }
+      },
+      "counts": {
+        "C1": 16,
+        "C8": 16,
+        "projection": 16,
+        "point-stage": 0,
+        "batch-stage": 12,
+        "enter": 0
+      },
+      "job": {
+        "path": "build/workers/20261012T042734Z-a8e86322/job.json",
+        "sha256": "7afe5e51574de13b22c3a142b9cba12c1ab0bdaaedbdd8b554a34eab75d9036d",
+        "bytes": 4310
+      },
+      "source_manifest": {
+        "path": "build/workers/20261012T042734Z-a8e86322/results/source-manifest.json",
+        "sha256": "3a33693ab1e15e38ede34088b9cd34b0e65d72aba9129d05c14227a91ae3ca8d",
+        "bytes": 393507
+      },
+      "vector_preparation_snippet": {
+        "path": "build/streampack-implementation/codegen-review/v5/zen-v3/Direct-paid-vector-snippet.txt",
+        "sha256": "55890b3a752e62c09edc3103dfe102fc72bc5bd7f50fe28e15412e4c044f41e5",
+        "bytes": 1605
+      },
+      "native_stage_frame_bytes": 0,
+      "paid_selection_below_entry_SP_bytes": 1176,
+      "paid_selection_CFA_bytes": 1184,
+      "frame_notes": "Six8 B saves+0x468 locals; includes caller1024 B starts scratch. No outgoing call adjustment. Sole cold assert call; native stage claims exclude caller.",
+      "source_archive_verified": true,
+      "source_files_verified_against_worker_manifest": true
+    },
+    "zen-v4": {
+      "worker_id": "20261012T042734Z-a8e86322",
+      "body_report": {
+        "path": "build/streampack-implementation/codegen-review/v5/zen-v4/body-report.json",
+        "sha256": "1c0cb13711f6d856247e93591ebc7712358b585ae918112fa4b3096a2ba9b762",
+        "bytes": 402999
+      },
+      "result_dir": "build/workers/20261012T042734Z-a8e86322/results/x86-64-v4-zen5",
+      "files": {
+        "streampack_implementation_bench": {
+          "path": "build/workers/20261012T042734Z-a8e86322/results/x86-64-v4-zen5/streampack_implementation_bench",
+          "bytes": 5500912,
+          "sha256": "36e113ad15612d12b932e2b705a951eb41cf661b48f03e3ebef37211a34cc23f"
+        },
+        "ikea_example_streampack_composition": {
+          "path": "build/workers/20261012T042734Z-a8e86322/results/x86-64-v4-zen5/ikea_example_streampack_composition",
+          "bytes": 648608,
+          "sha256": "530c287c1920c1aecdd19267023595a2a664d436e45b3f29d3734a1c30b0fbfc"
+        },
+        "binaries.sha256": {
+          "path": "build/workers/20261012T042734Z-a8e86322/results/x86-64-v4-zen5/binaries.sha256",
+          "bytes": 339,
+          "sha256": "0a63495b02b4b482090cb89607d2feec72ab680ef9317fe6247608ce06431ebb"
+        },
+        "bench.asm": {
+          "path": "build/workers/20261012T042734Z-a8e86322/results/x86-64-v4-zen5/bench.asm",
+          "bytes": 17426525,
+          "sha256": "3b9ee2825702b510e78a67a537c0e0f116fadebacaae3e77b7e15830e39ff896"
+        },
+        "composition.asm": {
+          "path": "build/workers/20261012T042734Z-a8e86322/results/x86-64-v4-zen5/composition.asm",
+          "bytes": 852790,
+          "sha256": "72bdcd763d7ac03f387149afcb789a1e1fd070d2b5315ca138663be2c536bd4e"
+        },
+        "compile_commands.json": {
+          "path": "build/workers/20261012T042734Z-a8e86322/results/x86-64-v4-zen5/compile_commands.json",
+          "bytes": 149915,
+          "sha256": "236850d4002134962005a9661ce5e8956a55d75d0f14472d77fdc733ce51fcd0"
+        },
+        "checks.txt": {
+          "path": "build/workers/20261012T042734Z-a8e86322/results/x86-64-v4-zen5/checks.txt",
+          "bytes": 756,
+          "sha256": "59c409f67cc247d543f66241af45ca560dc96577a7e5d123c02e218d9ad455fa"
+        }
+      },
+      "counts": {
+        "C1": 16,
+        "C8": 16,
+        "projection": 16,
+        "point-stage": 0,
+        "batch-stage": 12,
+        "enter": 0
+      },
+      "job": {
+        "path": "build/workers/20261012T042734Z-a8e86322/job.json",
+        "sha256": "7afe5e51574de13b22c3a142b9cba12c1ab0bdaaedbdd8b554a34eab75d9036d",
+        "bytes": 4310
+      },
+      "source_manifest": {
+        "path": "build/workers/20261012T042734Z-a8e86322/results/source-manifest.json",
+        "sha256": "3a33693ab1e15e38ede34088b9cd34b0e65d72aba9129d05c14227a91ae3ca8d",
+        "bytes": 393507
+      },
+      "vector_preparation_snippet": {
+        "path": "build/streampack-implementation/codegen-review/v5/zen-v4/Direct-paid-vector-snippet.txt",
+        "sha256": "df0c2b261f63ca2a71d43bcdc97c20bdb67025651a2f948636f80b98408c1e31",
+        "bytes": 1592
+      },
+      "native_stage_frame_bytes": 0,
+      "paid_selection_below_entry_SP_bytes": 1176,
+      "paid_selection_CFA_bytes": 1184,
+      "frame_notes": "Six8 B saves+0x468 locals; includes caller1024 B starts scratch. No outgoing call adjustment. Sole cold assert call; native stage claims exclude caller.",
+      "source_archive_verified": true,
+      "source_files_verified_against_worker_manifest": true
+    }
+  },
+  "prior_receipts": [
+    {
+      "path": "build/streampack-implementation/codegen-review/v2-review-index.json",
+      "sha256": "69ab2ab82f8ed4a2add3ef8efaa0cc9e2de74fc85218e1adf0af575fde3e095d",
+      "bytes": 14109
+    },
+    {
+      "path": "build/streampack-implementation/codegen-review/v3-c9g-point/review-index.json",
+      "sha256": "204d77a13e6cd47122ec1baeb53c4ddd8f5e6505576cdb14bbe5ce45bafcc364",
+      "bytes": 34108
+    }
+  ],
+  "limits": [
+    "C1 includes dependent geometry/state/payload service. C8 is achieved overlap of eight complete reads, not peak reciprocal throughput.",
+    "Instructions, calls and SP-reference counts in reports cover entire emitted bodies, including alternative schemas and cold failure paths; they are not dynamic work counts unless qualified explicitly.",
+    "Checked reads retain cold abort paths; paid selection retains cold __assert_fail. Successful path helper calls are absent.",
+    "Borrowed typed reader rebind preserves shared schema; this audit does not establish owning/container lifetime guarantees beyond the captured source contract.",
+    "Generic cache-miss PMU does not identify LLC or DRAM service; no code choice is assigned measured causal cost.",
+    "Existing prefix arithmetic is byte-identical to v3; no new MCA run was justified for the residual full-consumer gap involving layout branches, spills and memory service. Previous bounded models remain diagnostic only.",
+    "x86 point stages are optimized away in this example; emitted native packet hops are directly verified. ARM point/native hops both verified. ARM AAPCS entry shim saves are charged separately from stage bodies."
+  ],
+  "findings": {
+    "pointer_hot_paths": "M255 u8/u16 and M4095 u16/u32, Direct and Width, typed and same-byte spike: all unchecked C1/C8/projection bodies call-free; checked versions have exactly one cold abort and no successful-read helper boundary. Former Width/u8 value boundary removed.",
+    "CPS": "ARM:12 point +12 native packet stages,0 calls/SP references,1 indirect BR each. Zen5/Granite each ISA:12 native packet stages,0 calls/SP references,1 indirect JMP each; vector carrier arity4YMM(v3)/2ZMM(v4),ARM8Q. No group hidden-result or materialized packet buffer remains.",
+    "paid_Direct_selection": "Fully inlined admission/preparation/consumer except cold __assert_fail. Explicit preceding-endpoint packet loads/stores; first packet previous uses ARM EXT, AVX2 VPERMD+mask, AVX512 VALIGND. 1024 B caller-owned starts scratch remains intentional paid preparation.",
+    "c9g_u16_C8": "has_used=true/fixed=false steady path typed299 vs spike254 instructions,8 vs0 fixed-flag tests,16UADDLV each,27 vs26 dynamic SP-transfer instructions,192 vs176 B own SP allocation. Exact paths retained. Establishes extra schema/CFG/address work; does not prove measured13% cause.",
+    "PMU_correspondence": "Root reports final c9g hot Width/u16 C8 retired instructions/value37.375 typed vs31.750 spike, exactly299/8 vs254/8. This independently matches the qualified paths. Root reports~5.99/5.28cycles and negligible branch misses. This review did not collect PMU or time kernels; no single instruction or branch is assigned the full timing gap."
+  },
+  "bounded_model_disposition": {
+    "new_MCA_run": false,
+    "reason": "An isolated unchanged prefix cannot explain the schema-qualified whole consumer; a whole-loop memory model would misrepresent measured service. Exact dynamic path counts are the bounded new diagnostic.",
+    "existing_prefix_model_owner": "build/streampack-fresh-results/codegen-review/layout-explicit-native/reduction-model/summary.json"
+  },
+  "review_decision": "No successful-path call/result-buffer/CPS codegen blocker. Final five native profiles correspond to the same frozen v5 source tree and archive.",
+  "retention": "Keep this index, selected bundle and original worker archives for full source/executable/ASM recovery. Body reports include complete exact symbols/boundaries/extract hashes; audit.py recreates all324 extracts from archived assembly. Selected bundle intentionally contains only relevant representative extracts, not all body paths referenced by full reports.",
+  "body_extract_count": 324
+}

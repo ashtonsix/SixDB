@@ -1,2 +1,4 @@
 #pragma once
-namespace ikea::streampack {} // namespace ikea::streampack
+#include <ikea/streampack/read.h>
+#include <ikea/streampack/write.h>
+#include <ikea/streampack/transfer.h>

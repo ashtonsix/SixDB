@@ -1,0 +1,932 @@
+{
+  "scope": "Frozen203b Direct actual native review before timing: five binary profiles, C1/C8 payload chains, ordinary and paid group projection, reverse and source-qualified metadata updates. Source/local review separately retained. No builds/timings/workers/source changes by reviewer.",
+  "decision": "No codegen or admitted-source-semantic timing-release blocker; exact executable SHA256 pairs below. Root reports native checks and final Release+ASan/UBSan26 combinations plus four-block exact bytes/chains/reverse/damage pass.",
+  "source": {
+    "tree_digest": "203b74b1fee61c19e85726b2736f7cd66fe62c224f29c6900119cd5cedf58a10",
+    "base_tree_digest": "3f57b6882cc417804c81e34636b8e0489eefcd089ecba83d7ec2447e4b752b4e",
+    "compressed_archive_sha256": "f7f2dc2760083ad74511f997624a8ab916d557ec309e52ec81ee3a73719f7301",
+    "capture": {
+      "path": "build/captures/streampack-direct-reviewed.capture.json",
+      "sha256": "cc8a527120870fc67b62f3437b536fadce0d4cd405851e60786344507413afa7"
+    },
+    "five_replacements_sha256": {
+      "workbench/spikes/streampack/CMakeLists.txt": "bd7828fdc048a918612295dcdd800887e23ede8cc1d21606ce70549320abf01a",
+      "workbench/spikes/streampack/layout.cpp": "cff852a49565d27a30af63ad85c9937ef86f6bdb754d90f1c44cddc80d8055f3",
+      "workbench/spikes/streampack/layout.h": "bab5f7614648796d5cbd77942e4d0221a063207375ff8bfbea5ffa5caf8ca394",
+      "workbench/spikes/streampack/prefix.h": "b8c45f5cb25999ab372957f3cf613d041ee85a8aa4e2ae16431a78db0c0a4cd1",
+      "workbench/spikes/streampack/layout-direct-control.sh": "af7a9de4b296cc748b6628f694a2eddf06f9a66af8da6a36a75066b93efd0507"
+    },
+    "toolchain": "Pinned Clang/LLVM21; both automatic vectorizers disabled; integer SIMD intrinsic lowering and compiler unrolling/reassociation/scalarization remain permitted."
+  },
+  "native_profiles": [
+    {
+      "source_tree_digest": "203b74b1fee61c19e85726b2736f7cd66fe62c224f29c6900119cd5cedf58a10",
+      "source_archive_sha256": "f7f2dc2760083ad74511f997624a8ab916d557ec309e52ec81ee3a73719f7301",
+      "worker": "20261012T021510Z-e6d38693",
+      "profile": "armv8.2-a+simd-neoverse-v3",
+      "job": {
+        "path": "build/workers/20261012T021510Z-e6d38693/job.json",
+        "sha256": "e4022ba66ce272b776857524d0111238fdb05ce7edbfca7b2e4448aed2fed7ee"
+      },
+      "asm": {
+        "path": "build/workers/20261012T021510Z-e6d38693/results/armv8.2-a+simd-neoverse-v3/streampack_layout_direct.asm",
+        "sha256": "531de7e26c878f331fd4fc3e9f6a2e212117c31b766dcbb3646414c58dd2c8d8"
+      },
+      "binary_sha256_from_worker_manifest": "a8f2b5e51c5caa6b9fe5e5a23ef82aeb42a667d92d1fd6962ab04ba843e93778",
+      "binary_manifest": {
+        "path": "build/workers/20261012T021510Z-e6d38693/results/armv8.2-a+simd-neoverse-v3/binaries.sha256",
+        "sha256": "1f22416cecde943d50a8ae43d66b73462e260562e9c0203e0d1c2a507f121c32"
+      },
+      "stable_asm_size_mtime": true,
+      "unexpected_assembly_helpers": [],
+      "body_report": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/c9g/armv8.2-a+simd-neoverse-v3/summary.json",
+        "sha256": "0b907f08cb11bde9d6d30b061dbdc1a9e7fcb164a0db5e4fb62cf43979f14a0a"
+      },
+      "selected_body_count": 131
+    },
+    {
+      "source_tree_digest": "203b74b1fee61c19e85726b2736f7cd66fe62c224f29c6900119cd5cedf58a10",
+      "source_archive_sha256": "f7f2dc2760083ad74511f997624a8ab916d557ec309e52ec81ee3a73719f7301",
+      "worker": "20261012T021510Z-0e1bec8c",
+      "profile": "x86-64-v3-zen5",
+      "job": {
+        "path": "build/workers/20261012T021510Z-0e1bec8c/job.json",
+        "sha256": "8b289f8ae3d3f05759d7b5cf94c55bbb1fa3560916ac9f01e1fa2a84dd4718e0"
+      },
+      "asm": {
+        "path": "build/workers/20261012T021510Z-0e1bec8c/results/x86-64-v3-zen5/streampack_layout_direct.asm",
+        "sha256": "3e5f0177e0f4b99327f17b73d2270e6d0f6b654c2550cb27a1ef04e741de85aa"
+      },
+      "binary_sha256_from_worker_manifest": "5910352a969fe67853af88f9451a39e88539e0e0403dba50db0173d7bb0864cc",
+      "binary_manifest": {
+        "path": "build/workers/20261012T021510Z-0e1bec8c/results/x86-64-v3-zen5/binaries.sha256",
+        "sha256": "18ff97b3b476000b19ae6cbcda884dfb8528c78e1471cfcfeca2d36d2fb78dbe"
+      },
+      "stable_asm_size_mtime": true,
+      "unexpected_assembly_helpers": [],
+      "body_report": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/zen5/x86-64-v3-zen5/summary.json",
+        "sha256": "8552494afae4dda8dbf8daad395e32ac964a2b700df84d767325fcb5decffa97"
+      },
+      "selected_body_count": 131
+    },
+    {
+      "source_tree_digest": "203b74b1fee61c19e85726b2736f7cd66fe62c224f29c6900119cd5cedf58a10",
+      "source_archive_sha256": "f7f2dc2760083ad74511f997624a8ab916d557ec309e52ec81ee3a73719f7301",
+      "worker": "20261012T021510Z-0e1bec8c",
+      "profile": "x86-64-v4-zen5",
+      "job": {
+        "path": "build/workers/20261012T021510Z-0e1bec8c/job.json",
+        "sha256": "8b289f8ae3d3f05759d7b5cf94c55bbb1fa3560916ac9f01e1fa2a84dd4718e0"
+      },
+      "asm": {
+        "path": "build/workers/20261012T021510Z-0e1bec8c/results/x86-64-v4-zen5/streampack_layout_direct.asm",
+        "sha256": "9b4d0a64213a6ed93434504b26eafb8be35559b4de41b6d9549f62e6e8c177c2"
+      },
+      "binary_sha256_from_worker_manifest": "c699a1622eabf3bbcb02ec7c211923ff852b1999b6cc6312be704ff142c40117",
+      "binary_manifest": {
+        "path": "build/workers/20261012T021510Z-0e1bec8c/results/x86-64-v4-zen5/binaries.sha256",
+        "sha256": "af4fb5e3e72a2e6a6ee09e76919589994bba6608f7a3043e2ada5b02b59438c6"
+      },
+      "stable_asm_size_mtime": true,
+      "unexpected_assembly_helpers": [],
+      "body_report": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/zen5/x86-64-v4-zen5/summary.json",
+        "sha256": "fae699f4b7828fb99042f101ce98e4017d0f98579e7b09aa067e66678acc7333"
+      },
+      "selected_body_count": 140
+    },
+    {
+      "source_tree_digest": "203b74b1fee61c19e85726b2736f7cd66fe62c224f29c6900119cd5cedf58a10",
+      "source_archive_sha256": "f7f2dc2760083ad74511f997624a8ab916d557ec309e52ec81ee3a73719f7301",
+      "worker": "20261012T021510Z-96fbc8b2",
+      "profile": "x86-64-v3-granite-rapids",
+      "job": {
+        "path": "build/workers/20261012T021510Z-96fbc8b2/job.json",
+        "sha256": "98a03a15e130c40766775930f30f835d800a334a57052bd193d0f928dad6c97a"
+      },
+      "asm": {
+        "path": "build/workers/20261012T021510Z-96fbc8b2/results/x86-64-v3-granite-rapids/streampack_layout_direct.asm",
+        "sha256": "be7461e6069f4885727c5ab9b547ff513f01405d15ccd2005a9616fd47da1c28"
+      },
+      "binary_sha256_from_worker_manifest": "e621467b044c0931131923aee8eb6716c0707db85447a27bb686fbdaee60e559",
+      "binary_manifest": {
+        "path": "build/workers/20261012T021510Z-96fbc8b2/results/x86-64-v3-granite-rapids/binaries.sha256",
+        "sha256": "3fd579bfed401b04fa1bdaa2fe64d52655e1256cb1320d0c0586d25e1dbf41c5"
+      },
+      "stable_asm_size_mtime": true,
+      "unexpected_assembly_helpers": [],
+      "body_report": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/granite/x86-64-v3-granite-rapids/summary.json",
+        "sha256": "5f81c4669d412d3e558af936747c08586e5fb807243442dde58346881a724315"
+      },
+      "selected_body_count": 131
+    },
+    {
+      "source_tree_digest": "203b74b1fee61c19e85726b2736f7cd66fe62c224f29c6900119cd5cedf58a10",
+      "source_archive_sha256": "f7f2dc2760083ad74511f997624a8ab916d557ec309e52ec81ee3a73719f7301",
+      "worker": "20261012T021510Z-96fbc8b2",
+      "profile": "x86-64-v4-granite-rapids",
+      "job": {
+        "path": "build/workers/20261012T021510Z-96fbc8b2/job.json",
+        "sha256": "98a03a15e130c40766775930f30f835d800a334a57052bd193d0f928dad6c97a"
+      },
+      "asm": {
+        "path": "build/workers/20261012T021510Z-96fbc8b2/results/x86-64-v4-granite-rapids/streampack_layout_direct.asm",
+        "sha256": "7d5b760eb28a9ebb1d6d9b2011275acc0042411a414cf6682bef831d3febb2c0"
+      },
+      "binary_sha256_from_worker_manifest": "888edfb634685afc2073cf3c20f7ad259230ba7d76df1ee994f98e310f96668d",
+      "binary_manifest": {
+        "path": "build/workers/20261012T021510Z-96fbc8b2/results/x86-64-v4-granite-rapids/binaries.sha256",
+        "sha256": "336940b4ef6c59460bf948df3d42b4c0a1c65625f7471ccbf0d31df9510b0ea5"
+      },
+      "stable_asm_size_mtime": true,
+      "unexpected_assembly_helpers": [],
+      "body_report": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/granite/x86-64-v4-granite-rapids/summary.json",
+        "sha256": "5be135b8748d8742261c16b23b5a2de9eb8ba385c3905b4bddea044f2473891f"
+      },
+      "selected_body_count": 140
+    }
+  ],
+  "local_report": {
+    "path": "build/streampack-fresh-results/codegen-review/layout-direct/local-arm/summary.json",
+    "sha256": "ddb2592341ad3c4ab0028fae79a51cee01ffdfa3f6f9ca7ed5324a89102a0423"
+  },
+  "findings": [
+    "No surviving assemble16_native, endpoint_starts16_native, chase_step or chase_packet helper on any native profile. Native TP code-plane prepared packet routes and explicit widening/shift/OR reconstruction are inline; Series actual format-specific reconstruction remains.",
+    "Tuple dead_mask16 is intentionally retained outlined and charged once per group dynamically. Compiler unrolling creates differing static sites. It uses actual prepared16-row dead-code projection, not sixteen erased point calls.",
+    "Raw native/Series C1/C8 hot bodies have no prepared helper boundary in sampled cases; TP keeps geometry/state API bodies. ARM block-first alternative duplicates static state sites: one state call executes per request, and previous-geometry call executes except at block-first. Static count is not dynamic work.",
+    "Native TP/Series paid group bodies emit SIMD reconstruction. Scattered endpoint shift uses NEON EXT, AVX2 VPERMD, AVX512 VALIGND. Ordered natural-plane endpoint shift can be scalarized/fused into the scalar memcpy consumer; not every paid-group body retains a vector shift. This is valid full-consumer lowering with automatic vectorizers disabled.",
+    "Source pointer body+blocks[b].offset stays outside individual row copies. Ordinary projection remains the matched cheap point/scalar+libc alternative; paid groups include complete endpoint/used/dead decode and scattered scratch preparation.",
+    "Native raw G/U group planes are natural u16/u32 lanes. TP per-code groups are16-byte planes and reconstruct G20/U12,G21/U13,G24/U16 explicitly. No custom per-point erased decode loop added."
+  ],
+  "representative_M4095_frames": [
+    {
+      "profile": "armv8.2-a+simd-neoverse-v3",
+      "placement": 0,
+      "operation": "chase<8u>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/c9g/armv8.2-a+simd-neoverse-v3/P0-S0-M4095-chase-8u-43e80.asm",
+        "sha256": "9cfc791769e398680558fcd67ba9f24df9b3b1e7b8dfc1a2645893bcb1f1904a"
+      },
+      "own_frame": {
+        "min": 0,
+        "max": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "armv8.2-a+simd-neoverse-v3",
+      "placement": 0,
+      "operation": "project_bulk_block<false>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/c9g/armv8.2-a+simd-neoverse-v3/P0-S0-M4095-project_bulk_block-false-46a80.asm",
+        "sha256": "fa24f89286b884c13de75956b35597908be04cbc0dde134014edc0e89ed18bd4"
+      },
+      "own_frame": {
+        "min": 0,
+        "max": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "armv8.2-a+simd-neoverse-v3",
+      "placement": 2,
+      "operation": "chase<8u>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/c9g/armv8.2-a+simd-neoverse-v3/P2-S0-M4095-chase-8u-5a060.asm",
+        "sha256": "e5bf379a1f0b368f5f7ce8fe14e49f04239b0f76ac89798d028d2b9479c7ea1b"
+      },
+      "own_frame": {
+        "min": 0,
+        "max": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "armv8.2-a+simd-neoverse-v3",
+      "placement": 2,
+      "operation": "project_bulk_block<true>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/c9g/armv8.2-a+simd-neoverse-v3/P2-S0-M4095-project_bulk_block-true-5d0e0.asm",
+        "sha256": "3b37aef9b1caed1887b64a4890f62af9162006e1bf20c26e66906d016f02ca72"
+      },
+      "own_frame": {
+        "min": 0,
+        "max": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "armv8.2-a+simd-neoverse-v3",
+      "placement": 2,
+      "operation": "project_bulk_block<false>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/c9g/armv8.2-a+simd-neoverse-v3/P2-S0-M4095-project_bulk_block-false-5d3c0.asm",
+        "sha256": "229d1305dedfe0d2b68483a2b9876833ae846b28c864475c5757c68ebf3342e0"
+      },
+      "own_frame": {
+        "min": 0,
+        "max": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "armv8.2-a+simd-neoverse-v3",
+      "placement": 3,
+      "operation": "chase<8u>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/c9g/armv8.2-a+simd-neoverse-v3/P3-S0-M4095-chase-8u-62cc0.asm",
+        "sha256": "cd5f6662492a91f1a9c5c2d2212b4b2f717919da747c8b1ac3374e5923a04a35"
+      },
+      "own_frame": {
+        "min": 0,
+        "max": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "armv8.2-a+simd-neoverse-v3",
+      "placement": 3,
+      "operation": "project_bulk_block<true>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/c9g/armv8.2-a+simd-neoverse-v3/P3-S0-M4095-project_bulk_block-true-68640.asm",
+        "sha256": "8e8799d00a288d991550831069ebc5b62620ded05e33403d3cd0730b200831ce"
+      },
+      "own_frame": {
+        "min": 0,
+        "max": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "armv8.2-a+simd-neoverse-v3",
+      "placement": 3,
+      "operation": "project_bulk_block<false>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/c9g/armv8.2-a+simd-neoverse-v3/P3-S0-M4095-project_bulk_block-false-6b000.asm",
+        "sha256": "c4272df3ba6b84c54c07323b5a77a7b6c55ec880e886256a682541dbd34e8225"
+      },
+      "own_frame": {
+        "min": 0,
+        "max": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v3-zen5",
+      "placement": 0,
+      "operation": "chase<8u>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/zen5/x86-64-v3-zen5/P0-S0-M4095-chase-8u-593a0.asm",
+        "sha256": "be8b861dacdfcf68afe0fbd0e4c06f5b67a9561b0b280dfe1f1b1d6fe526e8d8"
+      },
+      "own_frame": {
+        "min": 216,
+        "max": 216,
+        "push_bytes": 48,
+        "reservation": [
+          168
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v3-zen5",
+      "placement": 0,
+      "operation": "project_bulk_block<false>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/zen5/x86-64-v3-zen5/P0-S0-M4095-project_bulk_block-false-5cdd0.asm",
+        "sha256": "b76c5d3c7351980858848d43c5f3daec8892de15e090292a65bd87a7d5f0824f"
+      },
+      "own_frame": {
+        "min": 200,
+        "max": 200,
+        "push_bytes": 48,
+        "reservation": [
+          152
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v3-zen5",
+      "placement": 2,
+      "operation": "chase<8u>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/zen5/x86-64-v3-zen5/P2-S0-M4095-chase-8u-75e20.asm",
+        "sha256": "aa4e254cc308793a9490879c24f55baf7414abd31bfd215cf4651a017903c9a8"
+      },
+      "own_frame": {
+        "min": 376,
+        "max": 376,
+        "push_bytes": 48,
+        "reservation": [
+          328
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v3-zen5",
+      "placement": 2,
+      "operation": "project_bulk_block<true>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/zen5/x86-64-v3-zen5/P2-S0-M4095-project_bulk_block-true-79920.asm",
+        "sha256": "f8bd9eae74c3bdcff4b941d273b993ca648ea6c167b79a4867946c1a26c4a2e0"
+      },
+      "own_frame": {
+        "min": 1720,
+        "max": 1768,
+        "push_bytes": 48,
+        "reservation": [
+          1664
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": true
+      }
+    },
+    {
+      "profile": "x86-64-v3-zen5",
+      "placement": 2,
+      "operation": "project_bulk_block<false>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/zen5/x86-64-v3-zen5/P2-S0-M4095-project_bulk_block-false-79d30.asm",
+        "sha256": "1ffd0409ea370b61dda4a0486b11bbdfc7fe0010d4e5a6692cdac49bfbb7a09e"
+      },
+      "own_frame": {
+        "min": 216,
+        "max": 216,
+        "push_bytes": 48,
+        "reservation": [
+          168
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v3-zen5",
+      "placement": 3,
+      "operation": "chase<8u>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/zen5/x86-64-v3-zen5/P3-S0-M4095-chase-8u-807c0.asm",
+        "sha256": "06fae5f581f5fc897e9307989ea19ebee87065dde4c7a29a2d9853aca5f6c47f"
+      },
+      "own_frame": {
+        "min": 216,
+        "max": 216,
+        "push_bytes": 48,
+        "reservation": [
+          168
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v3-zen5",
+      "placement": 3,
+      "operation": "project_bulk_block<true>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/zen5/x86-64-v3-zen5/P3-S0-M4095-project_bulk_block-true-87550.asm",
+        "sha256": "7322ee98b0fdca67b80ebdc979aa085e8b625aacefe9959772aa2af081be7471"
+      },
+      "own_frame": {
+        "min": 1848,
+        "max": 1896,
+        "push_bytes": 48,
+        "reservation": [
+          1792
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": true
+      }
+    },
+    {
+      "profile": "x86-64-v3-zen5",
+      "placement": 3,
+      "operation": "project_bulk_block<false>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/zen5/x86-64-v3-zen5/P3-S0-M4095-project_bulk_block-false-8a830.asm",
+        "sha256": "19536d39c33b105a7ad44f5af0afefaefe48c1c84ea6c6040c5b0b8b48cf4da8"
+      },
+      "own_frame": {
+        "min": 312,
+        "max": 312,
+        "push_bytes": 48,
+        "reservation": [
+          264
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v4-zen5",
+      "placement": 0,
+      "operation": "chase<8u>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/zen5/x86-64-v4-zen5/P0-S0-M4095-chase-8u-59260.asm",
+        "sha256": "d74c0e5ab4f091532446596e040257c0700ede28d9720e1fd2a9e1f90b9d6d14"
+      },
+      "own_frame": {
+        "min": 216,
+        "max": 216,
+        "push_bytes": 48,
+        "reservation": [
+          168
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v4-zen5",
+      "placement": 0,
+      "operation": "project_bulk_block<true>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/zen5/x86-64-v4-zen5/P0-S0-M4095-project_bulk_block-true-5ca90.asm",
+        "sha256": "285ea3704e7ceb3888c5ca18f966004ec669a60f92f1b203de61f2d18e2fdb50"
+      },
+      "own_frame": {
+        "min": 1720,
+        "max": 1768,
+        "push_bytes": 48,
+        "reservation": [
+          1664
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": true
+      }
+    },
+    {
+      "profile": "x86-64-v4-zen5",
+      "placement": 0,
+      "operation": "project_bulk_block<false>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/zen5/x86-64-v4-zen5/P0-S0-M4095-project_bulk_block-false-5ce50.asm",
+        "sha256": "0b43adbc94773f1a52dd4765827f520c97dc0d4978333375499065df0a3c06b9"
+      },
+      "own_frame": {
+        "min": 200,
+        "max": 200,
+        "push_bytes": 48,
+        "reservation": [
+          152
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v4-zen5",
+      "placement": 2,
+      "operation": "chase<8u>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/zen5/x86-64-v4-zen5/P2-S0-M4095-chase-8u-75ea0.asm",
+        "sha256": "f0a58c1d2c85199b5f783c91a8b9203a5344d07f45c93005667f97ffab210669"
+      },
+      "own_frame": {
+        "min": 376,
+        "max": 376,
+        "push_bytes": 48,
+        "reservation": [
+          328
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v4-zen5",
+      "placement": 2,
+      "operation": "project_bulk_block<true>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/zen5/x86-64-v4-zen5/P2-S0-M4095-project_bulk_block-true-79900.asm",
+        "sha256": "dc276918a103bdfa7794603568a9451f464517844d9c49b1f019bad0385263b6"
+      },
+      "own_frame": {
+        "min": 1720,
+        "max": 1768,
+        "push_bytes": 48,
+        "reservation": [
+          1664
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": true
+      }
+    },
+    {
+      "profile": "x86-64-v4-zen5",
+      "placement": 2,
+      "operation": "project_bulk_block<false>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/zen5/x86-64-v4-zen5/P2-S0-M4095-project_bulk_block-false-79cf0.asm",
+        "sha256": "b347fd061a6e35069e5dc2af257dbd66398d72b91a6f8e3eeebf763fe7008955"
+      },
+      "own_frame": {
+        "min": 248,
+        "max": 248,
+        "push_bytes": 48,
+        "reservation": [
+          200
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v4-zen5",
+      "placement": 3,
+      "operation": "chase<8u>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/zen5/x86-64-v4-zen5/P3-S0-M4095-chase-8u-80800.asm",
+        "sha256": "880c1dec288db4a0f23ae512f889b3a0db03d6268e3407cbfb33ac36ccda7067"
+      },
+      "own_frame": {
+        "min": 216,
+        "max": 216,
+        "push_bytes": 48,
+        "reservation": [
+          168
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v4-zen5",
+      "placement": 3,
+      "operation": "project_bulk_block<true>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/zen5/x86-64-v4-zen5/P3-S0-M4095-project_bulk_block-true-87510.asm",
+        "sha256": "22c23bf520a28e28faad308f21186af1e178439a29c6aeca7a19e87545198278"
+      },
+      "own_frame": {
+        "min": 1848,
+        "max": 1896,
+        "push_bytes": 48,
+        "reservation": [
+          1792
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": true
+      }
+    },
+    {
+      "profile": "x86-64-v4-zen5",
+      "placement": 3,
+      "operation": "project_bulk_block<false>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/zen5/x86-64-v4-zen5/P3-S0-M4095-project_bulk_block-false-8a7b0.asm",
+        "sha256": "a01d1bb63926ee70e798fff41619faa5cdcec52150527a9e1ba2ff96d674fc8d"
+      },
+      "own_frame": {
+        "min": 312,
+        "max": 312,
+        "push_bytes": 48,
+        "reservation": [
+          264
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v3-granite-rapids",
+      "placement": 0,
+      "operation": "chase<8u>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/granite/x86-64-v3-granite-rapids/P0-S0-M4095-chase-8u-55140.asm",
+        "sha256": "07c84be03769a36a2f922cf15c562cab373334fa2556f3e292e154061421ca2e"
+      },
+      "own_frame": {
+        "min": 216,
+        "max": 216,
+        "push_bytes": 48,
+        "reservation": [
+          168
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v3-granite-rapids",
+      "placement": 0,
+      "operation": "project_bulk_block<false>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/granite/x86-64-v3-granite-rapids/P0-S0-M4095-project_bulk_block-false-58a30.asm",
+        "sha256": "58fbc0a5059c72884638c2cbdd762b319a508a7058bc3f9fc8d89f81192ae6d9"
+      },
+      "own_frame": {
+        "min": 200,
+        "max": 200,
+        "push_bytes": 48,
+        "reservation": [
+          152
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v3-granite-rapids",
+      "placement": 2,
+      "operation": "chase<8u>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/granite/x86-64-v3-granite-rapids/P2-S0-M4095-chase-8u-702e0.asm",
+        "sha256": "ce27857b6bbe33d4ca7a6abcd91ee09c3b05360d6a07a1acb6f1de5c1174be2e"
+      },
+      "own_frame": {
+        "min": 376,
+        "max": 376,
+        "push_bytes": 48,
+        "reservation": [
+          328
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v3-granite-rapids",
+      "placement": 2,
+      "operation": "project_bulk_block<true>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/granite/x86-64-v3-granite-rapids/P2-S0-M4095-project_bulk_block-true-73bd0.asm",
+        "sha256": "4028afefc400b10cc345b8232918b15a875be891904a1e443e779de32f83ea5b"
+      },
+      "own_frame": {
+        "min": 1720,
+        "max": 1768,
+        "push_bytes": 48,
+        "reservation": [
+          1664
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": true
+      }
+    },
+    {
+      "profile": "x86-64-v3-granite-rapids",
+      "placement": 2,
+      "operation": "project_bulk_block<false>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/granite/x86-64-v3-granite-rapids/P2-S0-M4095-project_bulk_block-false-73f50.asm",
+        "sha256": "e5966448d74d62d8926b757aa96f4ef013d03abb5a8a8dabd4be53c05c9a8a86"
+      },
+      "own_frame": {
+        "min": 216,
+        "max": 216,
+        "push_bytes": 48,
+        "reservation": [
+          168
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v3-granite-rapids",
+      "placement": 3,
+      "operation": "chase<8u>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/granite/x86-64-v3-granite-rapids/P3-S0-M4095-chase-8u-7a660.asm",
+        "sha256": "8f575fe04d2a0ef34f74ff787c0049845e7fb76f30ce143137523903799b1b4d"
+      },
+      "own_frame": {
+        "min": 216,
+        "max": 216,
+        "push_bytes": 48,
+        "reservation": [
+          168
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v3-granite-rapids",
+      "placement": 3,
+      "operation": "project_bulk_block<true>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/granite/x86-64-v3-granite-rapids/P3-S0-M4095-project_bulk_block-true-81090.asm",
+        "sha256": "ce543ad8fb1cf2971e3feef9a80c7f599fa23dc3fc8642b709394c8296031f4c"
+      },
+      "own_frame": {
+        "min": 1848,
+        "max": 1896,
+        "push_bytes": 48,
+        "reservation": [
+          1792
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": true
+      }
+    },
+    {
+      "profile": "x86-64-v3-granite-rapids",
+      "placement": 3,
+      "operation": "project_bulk_block<false>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/granite/x86-64-v3-granite-rapids/P3-S0-M4095-project_bulk_block-false-84400.asm",
+        "sha256": "83a31a786404d88dab3e53e45affae393af58b848f11f31ce0780050bbbf6d00"
+      },
+      "own_frame": {
+        "min": 312,
+        "max": 312,
+        "push_bytes": 48,
+        "reservation": [
+          264
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v4-granite-rapids",
+      "placement": 0,
+      "operation": "chase<8u>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/granite/x86-64-v4-granite-rapids/P0-S0-M4095-chase-8u-55ae0.asm",
+        "sha256": "8222a494680a5db1b830724f6a0d5c44bbdf18b059ab286cb6815492a769de79"
+      },
+      "own_frame": {
+        "min": 216,
+        "max": 216,
+        "push_bytes": 48,
+        "reservation": [
+          168
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v4-granite-rapids",
+      "placement": 0,
+      "operation": "project_bulk_block<true>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/granite/x86-64-v4-granite-rapids/P0-S0-M4095-project_bulk_block-true-59170.asm",
+        "sha256": "4cc5185012cdb2ca6cf2b20af7bde76c10bea138ff533853b5d889f0261d3951"
+      },
+      "own_frame": {
+        "min": 1720,
+        "max": 1768,
+        "push_bytes": 48,
+        "reservation": [
+          1664
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": true
+      }
+    },
+    {
+      "profile": "x86-64-v4-granite-rapids",
+      "placement": 0,
+      "operation": "project_bulk_block<false>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/granite/x86-64-v4-granite-rapids/P0-S0-M4095-project_bulk_block-false-59450.asm",
+        "sha256": "dcf91496fa177433d53f6ed4257528b45f065f858022142cb1a7c17d6782232e"
+      },
+      "own_frame": {
+        "min": 200,
+        "max": 200,
+        "push_bytes": 48,
+        "reservation": [
+          152
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v4-granite-rapids",
+      "placement": 2,
+      "operation": "chase<8u>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/granite/x86-64-v4-granite-rapids/P2-S0-M4095-chase-8u-71080.asm",
+        "sha256": "f7683619a5baf385782b55f936b11f73008500197dc45e7734b80923bb17315b"
+      },
+      "own_frame": {
+        "min": 376,
+        "max": 376,
+        "push_bytes": 48,
+        "reservation": [
+          328
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v4-granite-rapids",
+      "placement": 2,
+      "operation": "project_bulk_block<true>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/granite/x86-64-v4-granite-rapids/P2-S0-M4095-project_bulk_block-true-748e0.asm",
+        "sha256": "6e3420401f1df86b18d4cbac82274f1ec212503ce42f74dcd139b3e638b01843"
+      },
+      "own_frame": {
+        "min": 1720,
+        "max": 1768,
+        "push_bytes": 48,
+        "reservation": [
+          1664
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": true
+      }
+    },
+    {
+      "profile": "x86-64-v4-granite-rapids",
+      "placement": 2,
+      "operation": "project_bulk_block<false>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/granite/x86-64-v4-granite-rapids/P2-S0-M4095-project_bulk_block-false-74c40.asm",
+        "sha256": "451b0a1abc79ac70bc0333c053a740b2bda65e9e264370a704dcca5b4f78b7be"
+      },
+      "own_frame": {
+        "min": 248,
+        "max": 248,
+        "push_bytes": 48,
+        "reservation": [
+          200
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v4-granite-rapids",
+      "placement": 3,
+      "operation": "chase<8u>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/granite/x86-64-v4-granite-rapids/P3-S0-M4095-chase-8u-7b460.asm",
+        "sha256": "43f62f625782ad88b6c300eaa2c171e0edabdbd457c51f222d01bb43e5e5115d"
+      },
+      "own_frame": {
+        "min": 216,
+        "max": 216,
+        "push_bytes": 48,
+        "reservation": [
+          168
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    },
+    {
+      "profile": "x86-64-v4-granite-rapids",
+      "placement": 3,
+      "operation": "project_bulk_block<true>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/granite/x86-64-v4-granite-rapids/P3-S0-M4095-project_bulk_block-true-81ea0.asm",
+        "sha256": "3243c98deec92137ee5732f8f9ffeb3dbb89b9f1b542434372466e2e6a6e27e9"
+      },
+      "own_frame": {
+        "min": 1848,
+        "max": 1896,
+        "push_bytes": 48,
+        "reservation": [
+          1792
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": true
+      }
+    },
+    {
+      "profile": "x86-64-v4-granite-rapids",
+      "placement": 3,
+      "operation": "project_bulk_block<false>",
+      "body": {
+        "path": "build/streampack-fresh-results/codegen-review/layout-direct/granite/x86-64-v4-granite-rapids/P3-S0-M4095-project_bulk_block-false-851b0.asm",
+        "sha256": "a453b4d180bb1e67469f8b1cfb1f3b62f548ce3c2effe1f7b8306065570d8c3b"
+      },
+      "own_frame": {
+        "min": 328,
+        "max": 328,
+        "push_bytes": 48,
+        "reservation": [
+          280
+        ],
+        "deepest_redzone_displacement": 0,
+        "alignment64": false
+      }
+    }
+  ],
+  "frame_qualification": "Own depth includes actual prologue saves/reservation, observed red-zone depth and64-byte alignment range. Representative x86 cases have no extra push/sub outgoing adjustment beyond prologue; all adjustments retained per body. Excludes incoming return address, callee frames and traffic; no additive concurrent peak claim.",
+  "limits": [
+    "Current admitted whole256-row fixtures and aligned16-row group windows, timed maxima255/4095; independent4096/65535 correctness boundary checks root-owned. No production contract/benchmark claim.",
+    "C1 complete dependent service, C8 achieved eight-chain overlap, neither decoder latency alone nor peak reciprocal throughput. Group projection includes scalar/libc payload copies.",
+    "Static SIMD/body/call-site counts include unrolled, generic dispatch and alternative routes; do not compare as normalized per-request cost. TP prepared dispatch/control footprint is retained; no instruction choice establishes measured cheapness.",
+    "No measured causal cache/prefetch/traffic/architecture claims. Earlier withdrawn automatic-vectorization comparisons do not supply missing evidence."
+  ]
+}

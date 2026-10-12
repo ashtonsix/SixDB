@@ -1,0 +1,24 @@
+# StreamPack checks
+
+`ikea_streampack_check` compares actual value histories with independent vectors,
+checks each reserved byte's reverse owner, replays damage into old byte snapshots,
+and verifies sparse/dense/range/native reads plus transfer and packing. Capacities
+128/256/512, grouped/separated lengths, Direct/Width, empty/fixed values and independent
+omitted-fact combinations are covered.
+
+`ikea_streampack_boundaries_check` places directory, partial-group lengths and
+control against protected pages. It exercises actual 65535-byte reservations,
+widened prefix carries, byte-limit boundaries 255/256/4095/65535/65536, preserving
+write coverage, insufficient journal/capacity refusal, metadata/input aliases,
+transfer journal/source overlap, count-only and extent-only changes.
+
+`boundaries.cpp` also consumes and reproduces a literal byte fixture independently
+of the writer/reader pair, including a second checkpoint, retired reservation,
+empty ranks and partial-tail padding; corrupt geometry/U/count is refused.
+
+Both targets and executable guides disable both compiler vectorizers. The
+composition guide instantiates the scalar and native register carriers through
+Ikea's real `preserve_none`/`musttail` chain. Run `ikea_validate`, or build these
+four targets and use `ctest --test-dir BUILD -R '^ikea_.*streampack'`.
+Native worker checks, sanitizer runs, consumer assembly/performance comparisons
+and owner integration evidence belong to the [implementation study](../../../workbench/spikes/streampack/README.md).

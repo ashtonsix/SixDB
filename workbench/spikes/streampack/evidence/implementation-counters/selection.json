@@ -1,0 +1,68 @@
+{
+  "source_tree_digest": "dfd278c9010f775c2faf64a7bac5c034e5e8320b35994623978166f851e646da",
+  "selection": "All hot (256 rows) Width typed/same-byte, checked/unchecked, C1/C8 samples: both declared maxima and both repetitions on all five native profiles. Counter counts divided by values; unavailable remains empty with its status. Raw records, errors, scope and hardware context recover from the original worker archives.",
+  "scope": "calling_thread_user_space",
+  "samples": 160,
+  "sources": [
+    {
+      "job": "20261012T041943Z-01f7f947",
+      "member": "armv8.2-a+simd-neoverse-v3/pmu-256-255.jsonl",
+      "sha256": "2e93a8a523654930f8b089295ba67528f872f07287aa66b970095dab4a045932",
+      "recovery": "workbench/spikes/streampack/evidence/implementation-c9g/artifact.json"
+    },
+    {
+      "job": "20261012T041943Z-01f7f947",
+      "member": "armv8.2-a+simd-neoverse-v3/pmu-256-4095.jsonl",
+      "sha256": "a5bf42ec7d624508b5b88599243cb144fb12dc96fe0f1fb3538be203d48e8467",
+      "recovery": "workbench/spikes/streampack/evidence/implementation-c9g/artifact.json"
+    },
+    {
+      "job": "20261012T041953Z-3c44dbfd",
+      "member": "x86-64-v3-granite-rapids/pmu-256-255.jsonl",
+      "sha256": "38386b0728b89d55211cfe01264c40e46f6b12b6e2d34c85b731dc5229fa99a2",
+      "recovery": "workbench/spikes/streampack/evidence/implementation-granite/artifact.json"
+    },
+    {
+      "job": "20261012T041953Z-3c44dbfd",
+      "member": "x86-64-v3-granite-rapids/pmu-256-4095.jsonl",
+      "sha256": "c617528ad8ecc8ede4b872cc575822b55c84697190df2711fd524bf5f49d55ad",
+      "recovery": "workbench/spikes/streampack/evidence/implementation-granite/artifact.json"
+    },
+    {
+      "job": "20261012T041953Z-3c44dbfd",
+      "member": "x86-64-v4-granite-rapids/pmu-256-255.jsonl",
+      "sha256": "55e0863380cb3ae4c7b9729ff64ba44367efe9a84ac8c67e9dfb0c106155d5c4",
+      "recovery": "workbench/spikes/streampack/evidence/implementation-granite/artifact.json"
+    },
+    {
+      "job": "20261012T041953Z-3c44dbfd",
+      "member": "x86-64-v4-granite-rapids/pmu-256-4095.jsonl",
+      "sha256": "0287733241dfcc7ec70714a9bf52f42b4c036ab4e5f77efbb640753ae6b79565",
+      "recovery": "workbench/spikes/streampack/evidence/implementation-granite/artifact.json"
+    },
+    {
+      "job": "20261012T042734Z-a8e86322",
+      "member": "x86-64-v3-zen5/pmu-256-255.jsonl",
+      "sha256": "de226f380ca74653184260a19ba8bf8773a3ece42b836ab85ea4c46f81397ba8",
+      "recovery": "workbench/spikes/streampack/evidence/implementation-zen5/artifact.json"
+    },
+    {
+      "job": "20261012T042734Z-a8e86322",
+      "member": "x86-64-v3-zen5/pmu-256-4095.jsonl",
+      "sha256": "b3b8fe0c1534c9e2335ac551fffab462b33f01fd7dc86669412882e27572fcb7",
+      "recovery": "workbench/spikes/streampack/evidence/implementation-zen5/artifact.json"
+    },
+    {
+      "job": "20261012T042734Z-a8e86322",
+      "member": "x86-64-v4-zen5/pmu-256-255.jsonl",
+      "sha256": "01f8c63f530e155edf4c9f2608a0a53b2f0cb9edb7477a51aea1b41db0d23f89",
+      "recovery": "workbench/spikes/streampack/evidence/implementation-zen5/artifact.json"
+    },
+    {
+      "job": "20261012T042734Z-a8e86322",
+      "member": "x86-64-v4-zen5/pmu-256-4095.jsonl",
+      "sha256": "51f08ca7880144504044ad444eccd01ffc640db8db6dcee253a0a1fa672de08d",
+      "recovery": "workbench/spikes/streampack/evidence/implementation-zen5/artifact.json"
+    }
+  ]
+}

@@ -1,0 +1,170 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 15K of event 'cpu-clock:u'
+# Event count (approx.): 15596789950
+#
+# Overhead  Command          Shared Object         Symbol                                                                                                                                                                                                                                                                                                                                                                                                                           
+# ........  ...............  ....................  .................................................................................................................................................................................................................................................................................................................................................................................................................................
+#
+    41.35%  streampack_life  streampack_lifecycle  [.] check(orbital::RepresentationSelection<streampack_material::Control>, unsigned int, unsigned int, unsigned int)
+    10.94%  streampack_life  streampack_lifecycle  [.] main
+     8.33%  streampack_life  libc.so.6             [.] 0x00000000001a1653
+     6.84%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::FiniteGroup::claim_home(orbital::allocation::detail::Identity, unsigned long, unsigned long)
+     5.98%  streampack_life  libc.so.6             [.] 0x00000000001a1668
+     4.08%  streampack_life  streampack_lifecycle  [.] streampack_material::Draft::finish()
+     3.36%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::finite_allocate(orbital::allocation::Pool&, orbital::allocation::AllocationRequest const&, unsigned long, orbital::allocation::Allocation&)
+     2.86%  streampack_life  streampack_lifecycle  [.] streampack_material::read(orbital::RepresentationSelection<streampack_material::Control>, unsigned int)
+     1.99%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::FiniteGroup::mapped(unsigned long) const
+     1.93%  streampack_life  libc.so.6             [.] 0x00000000001a197f
+     1.77%  streampack_life  streampack_lifecycle  [.] orbital::allocation::trim_cold(orbital::allocation::Pool&, unsigned long)
+     1.10%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::FiniteGroup::release_home(orbital::allocation::detail::Home const&)
+     0.87%  streampack_life  streampack_lifecycle  [.] orbital::object_detail::History<streampack_material::Physical>::resolve(unsigned long, orbital::Id<orbital::ObjectTag>, bool)
+     0.85%  streampack_life  streampack_lifecycle  [.] orbital::ObjectStore<streampack_material::Physical>::Core::drain(unsigned long)
+     0.78%  streampack_life  streampack_lifecycle  [.] streampack_material::holders(orbital::RepresentationSelection<streampack_material::Control>)
+     0.73%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::FiniteGroup::claim_identity(unsigned long)
+     0.57%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::drop(orbital::allocation::Storage&, orbital::allocation::ReleaseHint)
+     0.50%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::FiniteGroup::live_pages(std::span<unsigned long, 18446744073709551615ul>) const
+     0.30%  streampack_life  libc.so.6             [.] malloc
+     0.27%  streampack_life  libc.so.6             [.] 0x00000000001a1676
+     0.23%  streampack_life  libc.so.6             [.] 0x00000000001a166e
+     0.21%  streampack_life  libc.so.6             [.] 0x00000000001a180e
+     0.19%  streampack_life  streampack_lifecycle  [.] orbital::RepresentationSelection<streampack_material::Control>::control() const
+     0.19%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::FiniteGroup::release_identity(orbital::allocation::detail::Identity)
+     0.17%  streampack_life  streampack_lifecycle  [.] streampack_material::hard(orbital::allocation::Pool&, orbital::RepresentationSelection<streampack_material::Control>, bool, bool, bool)
+     0.17%  streampack_life  libc.so.6             [.] 0x00000000001a1647
+     0.17%  streampack_life  streampack_lifecycle  [.] memcpy@plt
+     0.16%  streampack_life  [vdso]                [.] 0x000000000000099a
+     0.15%  streampack_life  streampack_lifecycle  [.] edit(orbital::ObjectStore<streampack_material::Physical>&, orbital::allocation::Pool&, unsigned int, unsigned int, unsigned int, bool, Accounting&)
+     0.15%  streampack_life  streampack_lifecycle  [.] void orbital::release<streampack_material::Control>(orbital::Representation<streampack_material::Control>*)
+     0.14%  streampack_life  streampack_lifecycle  [.] streampack_next::Error streampack_next::MutableDirect<unsigned int, true, true>::append<ikea::source_write_journal>(std::span<std::byte const, 18446744073709551615ul>, unsigned short, ikea::source_write_journal&)
+     0.14%  streampack_life  streampack_lifecycle  [.] void streampack_next::MutableDirect<unsigned int, true, true>::before<ikea::source_write_journal>(ikea::source_write_journal&, unsigned int, unsigned long, unsigned long) const
+     0.12%  streampack_life  streampack_lifecycle  [.] orbital::allocation::statistics(orbital::allocation::Pool const&)
+     0.12%  streampack_life  streampack_lifecycle  [.] orbital::object_detail::History<streampack_material::Physical>::alternate(unsigned long) const
+     0.10%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::window_allocate(orbital::allocation::Pool&, orbital::allocation::AllocationRequest const&, unsigned long, orbital::allocation::Allocation&)
+     0.10%  streampack_life  streampack_lifecycle  [.] streampack_next::Error streampack_next::MutableDirect<unsigned int, true, true>::append<ikea::no_coverage>(std::span<std::byte const, 18446744073709551615ul>, unsigned short, ikea::no_coverage&)
+     0.09%  streampack_life  streampack_lifecycle  [.] streampack_material::Draft::create(orbital::allocation::Pool&, streampack_material::Control, std::array<unsigned long, 2ul>)
+     0.07%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::FiniteGroup::bind(orbital::allocation::detail::Identity, orbital::allocation::detail::Home const&)
+     0.06%  streampack_life  libc.so.6             [.] __mprotect
+     0.06%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::recycle(orbital::allocation::Storage&, bool)
+     0.05%  streampack_life  libc.so.6             [.] 0x00000000001a165a
+     0.05%  streampack_life  libc.so.6             [.] 0x00000000001a1f0f
+     0.05%  streampack_life  libc.so.6             [.] 0x00000000000ab115
+     0.05%  streampack_life  libc.so.6             [.] 0x00000000001a185b
+     0.05%  streampack_life  streampack_lifecycle  [.] orbital::allocation::allocate(orbital::allocation::Pool&, orbital::allocation::AllocationRequest const&)
+     0.05%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::ArenaState::reclaim(void*)
+     0.05%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::FiniteGroup::trimming(unsigned long) const
+     0.05%  streampack_life  streampack_lifecycle  [.] orbital::object_detail::History<streampack_material::Physical>::prepare(std::span<orbital::object_detail::ChangeOf<orbital::object_detail::PhysicalOwner<streampack_material::Physical> > const, 18446744073709551615ul>, std::vector<orbital::object_detail::History<streampack_material::Physical>::Mutation, std::pmr::polymorphic_allocator<orbital::object_detail::History<streampack_material::Physical>::Mutation> >&)
+     0.05%  streampack_life  streampack_lifecycle  [.] streampack_next::Error streampack_next::MutableDirect<unsigned int, true, true>::replace<false, ikea::source_write_journal>(unsigned short, std::span<std::byte const, 18446744073709551615ul>, ikea::source_write_journal&)
+     0.04%  streampack_life  libc.so.6             [.] __mmap
+     0.04%  streampack_life  libc.so.6             [.] 0x00000000000a9bc3
+     0.04%  streampack_life  libc.so.6             [.] 0x00000000001a1644
+     0.04%  streampack_life  libc.so.6             [.] 0x00000000001a1846
+     0.04%  streampack_life  libc.so.6             [.] 0x00000000001a1efa
+     0.04%  streampack_life  libc.so.6             [.] 0x00000000001a1f47
+     0.04%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::activate(orbital::allocation::Storage&)
+     0.04%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::window_trim_run(orbital::allocation::detail::Job&)
+     0.03%  streampack_life  libc.so.6             [.] 0x00000000001a184d
+     0.03%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::claim_ready_candidate(orbital::allocation::Pool&, unsigned long, unsigned long)
+     0.03%  streampack_life  streampack_lifecycle  [.] orbital::object_detail::HistoryNodes::allocate()
+     0.03%  streampack_life  streampack_lifecycle  [.] orbital::object_detail::Registry::add(void*)
+     0.03%  streampack_life  libc.so.6             [.] pthread_mutex_unlock
+     0.03%  streampack_life  libc.so.6             [.] 0x00000000000a9be1
+     0.03%  streampack_life  libc.so.6             [.] 0x00000000001a1e9a
+     0.03%  streampack_life  libc.so.6             [.] 0x00000000001a1f40
+     0.03%  streampack_life  streampack_lifecycle  [.] orbital::object_detail::within(orbital::allocation::Allocation const&, std::span<std::byte const, 18446744073709551615ul>, unsigned int)
+     0.03%  streampack_life  streampack_lifecycle  [.] std::expected<orbital::Representation<streampack_material::Control>*, orbital::Error> orbital::capture_representation<streampack_material::Control>(std::pmr::memory_resource&, streampack_material::Control, orbital::PartOwners, std::span<orbital::PartSource const, 18446744073709551615ul>)
+     0.02%  streampack_life  libc.so.6             [.] __munmap
+     0.02%  streampack_life  libc.so.6             [.] cfree
+     0.02%  streampack_life  libc.so.6             [.] 0x00000000001a1f4e
+     0.02%  streampack_life  streampack_lifecycle  [.] initialize(orbital::ObjectStore<streampack_material::Physical>&, orbital::allocation::Pool&, unsigned int, unsigned int, Accounting&)
+     0.02%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::refund(orbital::allocation::Pool&, unsigned long)
+     0.02%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::remember_ready_candidate(orbital::allocation::Pool&, orbital::allocation::detail::Group&, orbital::allocation::detail::Home const&, unsigned long)
+     0.02%  streampack_life  streampack_lifecycle  [.] orbital::object_detail::History<streampack_material::Physical>::drop(unsigned long)
+     0.02%  streampack_life  streampack_lifecycle  [.] orbital::object_detail::drop(orbital::allocation::Storage*)
+     0.02%  streampack_life  streampack_lifecycle  [.] streampack_material::Draft::write(unsigned int)
+     0.01%  streampack_life  [vdso]                [.] 0x000000000000099c
+     0.01%  streampack_life  libc.so.6             [.] pthread_cond_signal
+     0.01%  streampack_life  libc.so.6             [.] pthread_mutex_lock
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000000ab51e
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000000ac28c
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000001a1816
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000001a1854
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000001a18c3
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000001a18eb
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000001a1f5c
+     0.01%  streampack_life  libstdc++.so.6.0.33   [.] operator delete(void*)
+     0.01%  streampack_life  libstdc++.so.6.0.33   [.] operator new(unsigned long)
+     0.01%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::FiniteGroup::begin_trim()
+     0.01%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::ready_for_capture(orbital::allocation::Allocation const&)
+     0.01%  streampack_life  streampack_lifecycle  [.] orbital::capture_representation<streampack_material::Control>(std::pmr::memory_resource&, streampack_material::Control, orbital::PartOwners, std::span<orbital::PartSource const, 18446744073709551615ul>)::{lambda()#1}::operator()() const
+     0.01%  streampack_life  streampack_lifecycle  [.] orbital::worker::on_lane(orbital::worker::Lane const&)
+     0.01%  streampack_life  streampack_lifecycle  [.] orbital::worker::poll(orbital::worker::Lane&, unsigned long)
+     0.01%  streampack_life  streampack_lifecycle  [.] streampack_material::Draft::clone(orbital::allocation::Pool&, orbital::RepresentationSelection<streampack_material::Control>, std::array<unsigned long, 2ul>)
+     0.01%  streampack_life  streampack_lifecycle  [.] void orbital::allocation::detail::erase_owner<orbital::allocation::detail::Window>(std::vector<std::unique_ptr<orbital::allocation::detail::Window, std::default_delete<orbital::allocation::detail::Window> >, std::allocator<std::unique_ptr<orbital::allocation::detail::Window, std::default_delete<orbital::allocation::detail::Window> > > >&, orbital::allocation::detail::Window&)
+     0.01%  streampack_life  [vdso]                [.] 0x000000000000094a
+     0.01%  streampack_life  [vdso]                [.] 0x0000000000000981
+     0.01%  streampack_life  [vdso]                [.] 0x00000000000009c1
+     0.01%  streampack_life  [vdso]                [.] 0x00000000000009ce
+     0.01%  streampack_life  [vdso]                [.] 0x00000000000009e5
+     0.01%  streampack_life  ld-linux-x86-64.so.2  [.] 0x000000000000b146
+     0.01%  streampack_life  libc.so.6             [.] _IO_file_open
+     0.01%  streampack_life  libc.so.6             [.] __madvise
+     0.01%  streampack_life  libc.so.6             [.] 0x0000000000061ae8
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000000a9ce6
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000000ab0b4
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000000ab120
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000000ab13a
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000000ab508
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000000ab50c
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000000ab943
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000000abbe1
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000000abdc4
+     0.01%  streampack_life  libc.so.6             [.] 0x000000000019bc62
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000001a182d
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000001a1890
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000001a18bc
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000001a18d2
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000001a18da
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000001a18f2
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000001a190d
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000001a1987
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000001a19ab
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000001a1e8a
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000001a1ea2
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000001a1efc
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000001a1f07
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000001a1f09
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000001a1f55
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000001a1f7d
+     0.01%  streampack_life  libc.so.6             [.] 0x00000000001a1f84
+     0.01%  streampack_life  libstdc++.so.6.0.33   [.] .plt
+     0.01%  streampack_life  libstdc++.so.6.0.33   [.] operator delete(void*, unsigned long, std::align_val_t)
+     0.01%  streampack_life  libstdc++.so.6.0.33   [.] operator new(unsigned long, std::nothrow_t const&)
+     0.01%  streampack_life  libstdc++.so.6.0.33   [.] 0x00000000001b4eb0
+     0.01%  streampack_life  streampack_lifecycle  [.] capture(orbital::ObjectStore<streampack_material::Physical>&, streampack_material::Draft&)
+     0.01%  streampack_life  streampack_lifecycle  [.] orbital::ObjectStore<streampack_material::Physical>::Core::close(orbital::ObjectStore<streampack_material::Physical>::Scope&)
+     0.01%  streampack_life  streampack_lifecycle  [.] orbital::ObjectStore<streampack_material::Physical>::Scope::bind_alternative(orbital::Id<orbital::ObjectTag>) const
+     0.01%  streampack_life  streampack_lifecycle  [.] orbital::ObjectStore<streampack_material::Physical>::adopt(orbital::ObjectStore<streampack_material::Physical>::ConversionTarget const&, orbital::object_detail::PhysicalOwner<streampack_material::Physical> const&)
+     0.01%  streampack_life  streampack_lifecycle  [.] orbital::allocation::Allocation::Allocation(orbital::allocation::Allocation&&)
+     0.01%  streampack_life  streampack_lifecycle  [.] orbital::allocation::Allocation::operator=(orbital::allocation::Allocation&&)
+     0.01%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::FiniteGroup::mark_mapped(orbital::allocation::detail::PageSpan)
+     0.01%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::make_group(orbital::allocation::Pool&, orbital::allocation::detail::Palette, bool)
+     0.01%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::map_home(orbital::allocation::detail::Group&, orbital::allocation::detail::Home const&)
+     0.01%  streampack_life  streampack_lifecycle  [.] orbital::allocation::detail::window_trim_handle(orbital::worker::Message&, orbital::worker::Lane&)
+     0.01%  streampack_life  streampack_lifecycle  [.] orbital::allocation::release_ref(orbital::allocation::Arena&)
+     0.01%  streampack_life  streampack_lifecycle  [.] orbital::object_detail::History<streampack_material::Physical>::install(orbital::object_detail::History<streampack_material::Physical>::Mutation&, unsigned long)
+     0.01%  streampack_life  streampack_lifecycle  [.] orbital::object_detail::History<streampack_material::Physical>::reserve(std::span<orbital::object_detail::ChangeOf<orbital::object_detail::PhysicalOwner<streampack_material::Physical> > const, 18446744073709551615ul>)
+     0.01%  streampack_life  streampack_lifecycle  [.] orbital::object_detail::TipDirectory::pin(unsigned int)
+     0.01%  streampack_life  streampack_lifecycle  [.] orbital::object_detail::TipObjects::add_debt(unsigned int)
+     0.01%  streampack_life  streampack_lifecycle  [.] orbital::object_detail::unique_allocations(std::span<orbital::PartSource const, 18446744073709551615ul>, std::span<orbital::allocation::Storage*, 18446744073709551615ul>)
+     0.01%  streampack_life  streampack_lifecycle  [.] orbital::worker::post(orbital::worker::Lane&, orbital::worker::Message&)
+     0.01%  streampack_life  streampack_lifecycle  [.] std::vector<std::unique_ptr<orbital::allocation::detail::Window, std::default_delete<orbital::allocation::detail::Window> >, std::allocator<std::unique_ptr<orbital::allocation::detail::Window, std::default_delete<orbital::allocation::detail::Window> > > >::push_back(std::unique_ptr<orbital::allocation::detail::Window, std::default_delete<orbital::allocation::detail::Window> >&&)
+     0.01%  streampack_life  streampack_lifecycle  [.] streampack_material::Draft::sources()
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

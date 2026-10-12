@@ -1,0 +1,64 @@
+{
+  "scope": "Read-only source-only review of immutable campaign capture for job20261011T204358Z-016ec459. No live source substitution, builds, benchmark runs, worker calls or source edits.",
+  "source_directory": "build/streampack-fresh-results/codegen-review/fair-c9g-source",
+  "verified_sources": {
+    "mutable_population.cpp": {
+      "sha256": "8be9861c2bd844d39dd2dd2925d10bea4ef2da98cc255edd44519d0044875998",
+      "bytes": 20420
+    },
+    "scan-control.sh": {
+      "sha256": "4756e8c4bc15951f9ac012630d1ca78488f07a19124a622bb6bcd73ac53cd817",
+      "bytes": 3095
+    },
+    "prefix.h": {
+      "sha256": "c7aae1bc25444d567e6510b8f96e12a45e0504e14f907e8a7be7daea936d20c9",
+      "bytes": 4190
+    },
+    "grouped.h": {
+      "sha256": "dfe89f1fff90e6714747762c59eaf9e42662c8e0637b13454867b2893f080bc0",
+      "bytes": 14868
+    },
+    "direct.h": {
+      "sha256": "228ed8ebaaf40bedc7800f4ae3dde8ebf34920cb8804fb04d3374eb75a503d84",
+      "bytes": 10353
+    },
+    "geometry.cpp": {
+      "sha256": "30a22fb9bae7675ec6719fb348876562b3ddc660c6de043659bfc8bc97402096",
+      "bytes": 31892
+    }
+  },
+  "benchmark_fairness_blockers": [],
+  "findings": [
+    {
+      "source": "mutable_population.cpp:18,210-248,338",
+      "finding": "Query populations are identical by construction. Block-amortized reverse enumerates q=b*cap+j for every block under a bijective block permutation and every j in [0,cap). Scattered reverse enumerates q=permute(i+j,rows-1) for every input row once. Both use block=q/cap and offset=mix(q)%extent for that block. Odd multiplication modulo a power of two and right xorshift are bijective within the masked domain. Accepted row counts are multiples of512, so scattered batches cannot overrun the query domain."
+    },
+    {
+      "source": "mutable_population.cpp:55-56,63-66,79-93,219,242",
+      "finding": "Scalar and native widths candidates have identical metadata allocations, construction/mutation histories and view representations. The compile-time flag selects only reverse implementation and its oracle checks; no decoded owner/request/endpoint array is retained."
+    },
+    {
+      "source": "mutable_population.cpp:228-246",
+      "finding": "Scattered is a distinct composed consumer: view construction/extent lookup and permutation occur per query, while block-amortized reverse performs setup once per cap probes. Both store one packed owner per query. Scattered escapes a512-entry batch versus cap-entry batches in reverse_trace (cap256 in this campaign). Empty asm barriers emit no hardware fences, but compiler scheduling and output-buffer touched extent differ. Within either pattern these caller costs are equal across layouts; differences between patterns cannot be attributed solely to memory service."
+    },
+    {
+      "source": "grouped.h:12-13,36-57; prefix.h:50-76",
+      "finding": "Native selected-group owner calculation is correct under admitted geometry. The extent guard rejects invalid offsets; upper_bound on checkpoint endpoints skips zero-width groups. Byte lanes widen before inclusive prefix additions (maximum total4080), and counting endpoints<=offset returns the first endpoint>offset, skipping zero-width ranks. For a partial final group, any initialized nonnegative padding leaves valid ownership unchanged because valid offsets are below that group true extent and the first greater endpoint is already among valid ranks. AVX2 signed16 comparisons are safe because byte prefix totals and supported offsets are<=4080; ARM uses unsigned16 comparisons."
+    },
+    {
+      "source": "mutable_population.cpp:118-138,302; geometry.cpp:50-58,276-294,296-343",
+      "finding": "Every timed q offset has an independent physical-width owner oracle in verify(), and native positive-owner boundary/interior tests use reverse_native. Small populations additionally check every reserved byte. Geometry correctness covers unaligned full unsigned byte lanes, every offset through full16-lane inclusive prefixes, zero/partial counts, empty internal groups and poisoned padding. Equality of scattered and block sums is only an aggregate cross-check; the bijection proof and exact query oracle establish identity/correctness."
+    },
+    {
+      "kind": "nonblocking validation gap",
+      "source": "mutable_population.cpp:131; geometry.cpp:63",
+      "finding": "Out-of-extent assertions still call scalar reverse, even for native candidates. Empty-block geometry fixtures therefore do not independently exercise the native wrapper guard. The captured native source explicitly and correctly rejects x>=extent at grouped.h:54, so this does not invalidate campaign queries, all of which are valid for generated nonempty blocks. Extend guard/sentinel checks to reverse_native before relying on the checks as full native-wrapper coverage. Raw owner16_native coverage does exercise offset==full16-lane extent and expected rank16 at geometry.cpp:290-293. The gap concerns Grouped::reverse_native nullopt/empty-body wrapper coverage, not the raw helper no-owner sentinel."
+    },
+    {
+      "source": "scan-control.sh:32-52",
+      "finding": "c9g reverse populations are16384,4194304,16777216, capacity256, sparse1, two repetitions per process. Trial0 methods direct16,direct32,widths8,widths8-native-reverse; trial1 reverses that order. Scalar/native widths are adjacent in reciprocal orders and direct32 is present in both. Scans-only family remains direct16/widths8 with sparse0/1 and three repetitions; direct32 was not added there. x86-v4 source explicitly omits16M for both families."
+    }
+  ],
+  "capture_source_tree_digest": "1846f5305dde67359a4d364ea447a71471f4c4120a6d62dc0a5345048f1721dc",
+  "capture_digest_provenance": "build/workers/20261011T204358Z-016ec459/job.json:source.digest; capture.py source-tree digest, distinct from individual file hashes and compressed archive hash."
+}

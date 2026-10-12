@@ -1,0 +1,68 @@
+{
+  "job": "20261011T204358Z-016ec459",
+  "source_tree_digest": "1846f5305dde67359a4d364ea447a71471f4c4120a6d62dc0a5345048f1721dc",
+  "source_archive_sha256": "f9f52d2cf5b0058ad70fd5b8d5c4ae8f2a5c3bca3a09a54e565c3febc6e1bf23",
+  "source_file_hashes": {
+    "mutable_population.cpp": {
+      "sha256": "8be9861c2bd844d39dd2dd2925d10bea4ef2da98cc255edd44519d0044875998",
+      "archive_member": "workbench/spikes/streampack/mutable_population.cpp",
+      "bytes": 20420
+    },
+    "scan-control.sh": {
+      "sha256": "4756e8c4bc15951f9ac012630d1ca78488f07a19124a622bb6bcd73ac53cd817",
+      "archive_member": "workbench/spikes/streampack/scan-control.sh",
+      "bytes": 3095
+    },
+    "prefix.h": {
+      "sha256": "c7aae1bc25444d567e6510b8f96e12a45e0504e14f907e8a7be7daea936d20c9",
+      "archive_member": "workbench/spikes/streampack/prefix.h",
+      "bytes": 4190
+    },
+    "grouped.h": {
+      "sha256": "dfe89f1fff90e6714747762c59eaf9e42662c8e0637b13454867b2893f080bc0",
+      "archive_member": "workbench/spikes/streampack/grouped.h",
+      "bytes": 14868
+    },
+    "direct.h": {
+      "sha256": "228ed8ebaaf40bedc7800f4ae3dde8ebf34920cb8804fb04d3374eb75a503d84",
+      "archive_member": "workbench/spikes/streampack/direct.h",
+      "bytes": 10353
+    },
+    "geometry.cpp": {
+      "sha256": "30a22fb9bae7675ec6719fb348876562b3ddc660c6de043659bfc8bc97402096",
+      "archive_member": "workbench/spikes/streampack/geometry.cpp",
+      "bytes": 31892
+    }
+  },
+  "binary_sha256": "6c4bfe640a0ed67fcdfc1b9fc973dab92f0f2fc28491e27b26aeabbc6bd7ea5a",
+  "binary_comment": "String dump of section '.comment':\n[     0] GCC: (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\n[    2d] Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)",
+  "linked_audit": {
+    "path": "build/streampack-fresh-results/codegen-review/fair-c9g-linked/audit.json",
+    "sha256": "e6d79c5fa5fc66572a062b122c5dc5d89d0cf7a2d00a808b995851b08773c18f"
+  },
+  "source_fairness_audit": {
+    "path": "build/streampack-fresh-results/codegen-review/mutable-consumer-review/fair-c9g-source-audit.json",
+    "sha256": "71ed5800d2b6da0d17c332d0f047bdbfc08bdf78e3a6eb3e21100d6331d94dca"
+  },
+  "medians": {
+    "path": "build/streampack-fresh-results/codegen-review/fair-c9g-reverse-medians.json",
+    "sha256": "e3aac13b89f1c79229788e0c0556aaf84c09ca7fa4eda4e59ba4a3fcee784e39"
+  },
+  "interpretation": [
+    "Actual native local owner selection is bounded to 16 initialized width bytes, using one q load and in-register widened prefix/comparison/reduction. Checkpoint search remains the same conditional-select upper_bound. No libc/helper calls, decoded array, vector spills or payload touch.",
+    "Scattered direct16/direct32 each use the same 10-instruction conditional-select binary-search shape. Scalar widths retain the variable-prefix loop. No branchy direct baseline has been forced into this c9g comparison.",
+    "Same exact query population, different order: blocked processes all 256 probes per geometry block; scattered uses full-domain query permutation and rebinds/loads extent per query. Common hash, runtime divisions, owner stores and checksum are charged.",
+    "Before shrink 16M native/direct16/direct32/scalar-width medians: scattered 38.18095/62.2342/99.1578/83.83125 ns; blocked 10.03225/13.1301/13.4263/24.44425 ns. Native gains 1.63x versus direct16 scattered and 1.31x blocked; scalar-width/native gains 2.20x scattered and 2.44x blocked.",
+    "Every native sample is faster than every baseline sample at 16M for both before/after shrink and both blocked/scattered families, across two reciprocal process orders and two repetitions each.",
+    "Compact width geometry and fewer dependent checkpoint steps plausibly matter to scattered performance; same-format scalar/native pairing establishes the advantage for the composed trace. The capture does not isolate branch misses, LLC/DRAM service or an architecture-specific instruction cause.",
+    "At N256, allocated geometry is 1.265625 B/rank for widths, 2.0078125 B/rank direct16 and 4.015625 B/rank direct32. Reverse touches geometry/tombs/counts only; reserved body and used-length plane must not be labeled touched reverse footprint.",
+    "Promotion validation follow-up: raw owner16 sentinel and exact valid-byte ownership are checked, but Grouped::reverse_native outside-extent/nullopt and empty-body assertions should be added explicitly; existing extent assertions call scalar reverse."
+  ],
+  "limits": [
+    "Two process orders, two history repetitions per condition; no confidence interval or independent cold-cache claim.",
+    "Warm deterministic query set; physical offsets change when soft-shrink changes extent.",
+    "No reverse PMU capture; no generic modeled cache service attribution.",
+    "Emitted native sequence is ordinary NEON, available beyond V3; this c9g-only pairing does not establish V3-specific uplift or V2 timing."
+  ],
+  "scope": "Read-only source/emitted-code/data review. Selectively fetched verified immutable binary/asm; no source changes, builds, timings or worker launches."
+}

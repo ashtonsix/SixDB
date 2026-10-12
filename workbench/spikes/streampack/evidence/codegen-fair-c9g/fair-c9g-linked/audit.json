@@ -1,0 +1,263 @@
+{
+  "binary_sha256": "6c4bfe640a0ed67fcdfc1b9fc973dab92f0f2fc28491e27b26aeabbc6bd7ea5a",
+  "asm_sha256": "566116979f6698640803d3bf44c7994d99298d213c58b4bbafa0cb18bbb3da2f",
+  "functions": [
+    {
+      "method": "direct16",
+      "consumer": "reverse_trace",
+      "start": "0x8ce0",
+      "exclusive_end": "0x8ea4",
+      "text_bytes": 452,
+      "instructions": 113,
+      "non_nop_instructions": 108,
+      "calls": [],
+      "actual_sp_frame_bytes": 2096,
+      "output_array_bytes": 2048,
+      "hot_temporary_spills": false,
+      "body_sha256": "a8ace9400e1a656aa0e681035fbd5c03367c75d2c3974f27fb2ba1976ef080f4"
+    },
+    {
+      "method": "direct32",
+      "consumer": "reverse_trace",
+      "start": "0xe660",
+      "exclusive_end": "0xe830",
+      "text_bytes": 464,
+      "instructions": 116,
+      "non_nop_instructions": 112,
+      "calls": [],
+      "actual_sp_frame_bytes": 2112,
+      "output_array_bytes": 2048,
+      "hot_temporary_spills": false,
+      "body_sha256": "727c5a1c6945346d26b1654e130bc93748452e7199b323c3864a9547e3bacf8f"
+    },
+    {
+      "method": "widths8",
+      "consumer": "reverse_trace",
+      "start": "0x13f00",
+      "exclusive_end": "0x14118",
+      "text_bytes": 536,
+      "instructions": 134,
+      "non_nop_instructions": 134,
+      "calls": [],
+      "actual_sp_frame_bytes": 2112,
+      "output_array_bytes": 2048,
+      "hot_temporary_spills": false,
+      "body_sha256": "aeec1dafc848ddcf663950d884f21039377190435a0def3478fff118000eeaad"
+    },
+    {
+      "method": "widths8-native",
+      "consumer": "reverse_trace",
+      "start": "0x18ee0",
+      "exclusive_end": "0x19140",
+      "text_bytes": 608,
+      "instructions": 152,
+      "non_nop_instructions": 145,
+      "calls": [],
+      "actual_sp_frame_bytes": 2112,
+      "output_array_bytes": 2048,
+      "hot_temporary_spills": false,
+      "body_sha256": "8802b065fe991f40347be0d45d9eebeacae37caaf8f1d6bfb642f08875a991aa"
+    },
+    {
+      "method": "direct16",
+      "consumer": "reverse_scattered",
+      "start": "0x8b20",
+      "exclusive_end": "0x8cd8",
+      "text_bytes": 440,
+      "instructions": 110,
+      "non_nop_instructions": 110,
+      "calls": [],
+      "actual_sp_frame_bytes": 2112,
+      "output_array_bytes": 2048,
+      "hot_temporary_spills": false,
+      "body_sha256": "d5551f02e08c5877081a51156608113e2bd3bdeb65be4f6d3071db591cf0b411"
+    },
+    {
+      "method": "direct32",
+      "consumer": "reverse_scattered",
+      "start": "0xe4a0",
+      "exclusive_end": "0xe658",
+      "text_bytes": 440,
+      "instructions": 110,
+      "non_nop_instructions": 110,
+      "calls": [],
+      "actual_sp_frame_bytes": 2112,
+      "output_array_bytes": 2048,
+      "hot_temporary_spills": false,
+      "body_sha256": "999a1e1395400447207fef3fa3c206c75f70fa061278bd28fdb7eea972fcaee0"
+    },
+    {
+      "method": "widths8",
+      "consumer": "reverse_scattered",
+      "start": "0x13ce0",
+      "exclusive_end": "0x13ee4",
+      "text_bytes": 516,
+      "instructions": 129,
+      "non_nop_instructions": 123,
+      "calls": [],
+      "actual_sp_frame_bytes": 2128,
+      "output_array_bytes": 2048,
+      "hot_temporary_spills": false,
+      "body_sha256": "41010ac0d9f144c7c7a6dd7ec39689998f842a67a6c142157afa1cac5594cf28"
+    },
+    {
+      "method": "widths8-native",
+      "consumer": "reverse_scattered",
+      "start": "0x18ca0",
+      "exclusive_end": "0x18ecc",
+      "text_bytes": 556,
+      "instructions": 139,
+      "non_nop_instructions": 135,
+      "calls": [],
+      "actual_sp_frame_bytes": 2112,
+      "output_array_bytes": 2048,
+      "hot_temporary_spills": false,
+      "body_sha256": "422cf171672204b5b14b5e36160adf95038d78eff568ee317622755c9db3f066"
+    }
+  ],
+  "regions": [
+    {
+      "name": "scattered-native-checkpoint",
+      "first": "0x18dc8",
+      "last": "0x18dec",
+      "instructions": 10,
+      "loads": [
+        {
+          "address": "0x18dd4",
+          "instruction": "ldr\tw24, [x23], #0x4"
+        }
+      ],
+      "branches": [
+        {
+          "address": "0x18dec",
+          "instruction": "b.gt\t0x18dc8 <unsigned long reverse_scattered<Population<(Method)3>>(Population<(Method)3>&)+0x128>"
+        }
+      ],
+      "stack_refs": 0,
+      "sha256": "4b0f01f2d6914e70df665747608c3fe51d0376e5e4881b878a942a005ee0334b"
+    },
+    {
+      "name": "block-native-checkpoint",
+      "first": "0x1904c",
+      "last": "0x19070",
+      "instructions": 10,
+      "loads": [
+        {
+          "address": "0x19058",
+          "instruction": "ldr\tw24, [x23], #0x4"
+        }
+      ],
+      "branches": [
+        {
+          "address": "0x19070",
+          "instruction": "b.gt\t0x1904c <unsigned long reverse_trace<Population<(Method)3>>(Population<(Method)3>&)+0x16c>"
+        }
+      ],
+      "stack_refs": 0,
+      "sha256": "e9015152f96ec72bcc571a34ec436ee96a062bb5a2da892e7a8ee3549deed648"
+    },
+    {
+      "name": "scattered-native-owner16-with-load-offset",
+      "first": "0x18e14",
+      "last": "0x18e74",
+      "instructions": 25,
+      "loads": [
+        {
+          "address": "0x18e14",
+          "instruction": "ldr\tq2, [x21, w22, uxtw]"
+        }
+      ],
+      "branches": [],
+      "stack_refs": 0,
+      "sha256": "ccafcbfcccd76343bc99b6f2c9d22f3888ca1a4af8e17ee49a66c819c5894dfd"
+    },
+    {
+      "name": "block-native-owner16-with-load-offset",
+      "first": "0x19088",
+      "last": "0x190e8",
+      "instructions": 25,
+      "loads": [
+        {
+          "address": "0x19088",
+          "instruction": "ldr\tq2, [x1, w21, uxtw]"
+        }
+      ],
+      "branches": [],
+      "stack_refs": 0,
+      "sha256": "b5054cc1d76d0a2bf3e2f36546d34090d3b281ee469031c6fe8384c95717fbfb"
+    },
+    {
+      "name": "scattered-direct16-binary",
+      "first": "0x8c48",
+      "last": "0x8c6c",
+      "instructions": 10,
+      "loads": [
+        {
+          "address": "0x8c54",
+          "instruction": "ldrh\tw23, [x22], #0x2"
+        }
+      ],
+      "branches": [
+        {
+          "address": "0x8c6c",
+          "instruction": "b.gt\t0x8c48 <unsigned long reverse_scattered<Population<(Method)0>>(Population<(Method)0>&)+0x128>"
+        }
+      ],
+      "stack_refs": 0,
+      "sha256": "8271c4429eebd4291c894da2dad5675c9d596c373c4463dd16d17e8959f502d3"
+    },
+    {
+      "name": "scattered-direct32-binary",
+      "first": "0xe5c8",
+      "last": "0xe5ec",
+      "instructions": 10,
+      "loads": [
+        {
+          "address": "0xe5d4",
+          "instruction": "ldr\tw23, [x22], #0x4"
+        }
+      ],
+      "branches": [
+        {
+          "address": "0xe5ec",
+          "instruction": "b.gt\t0xe5c8 <unsigned long reverse_scattered<Population<(Method)1>>(Population<(Method)1>&)+0x128>"
+        }
+      ],
+      "stack_refs": 0,
+      "sha256": "bdd9d48830043b87c3ca8976801243295056273d3846b5dcece814a9f880d29c"
+    },
+    {
+      "name": "scattered-scalar-width-prefix",
+      "first": "0x13e80",
+      "last": "0x13e98",
+      "instructions": 7,
+      "loads": [
+        {
+          "address": "0x13e80",
+          "instruction": "ldrb\tw23, [x22, x21]"
+        }
+      ],
+      "branches": [
+        {
+          "address": "0x13e8c",
+          "instruction": "b.lo\t0x13d80 <unsigned long reverse_scattered<Population<(Method)2>>(Population<(Method)2>&)+0xa0>"
+        },
+        {
+          "address": "0x13e98",
+          "instruction": "b.ne\t0x13e80 <unsigned long reverse_scattered<Population<(Method)2>>(Population<(Method)2>&)+0x1a0>"
+        }
+      ],
+      "stack_refs": 0,
+      "sha256": "7a1e224c2d4fb8006a5d579e7b09f5bc16bdf3bd6d062d2aaca14f8ab09f5513"
+    }
+  ],
+  "findings": [
+    "Native reverse is inline in both composed consumers; same checkpoint upper_bound retains 10 instructions per iteration with two csel selections.",
+    "Exactly one 16-byte selected-group width q load per query, followed by widened two-half prefix additions, low-to-high carry, unsigned comparisons and rank reduction. No decoded geometry, libc calls, vector spill stores, or whole-block preprocessing.",
+    "Loaded-group region includes 25 instructions: one q load, one local offset subtraction, then 23 vector/reduction instructions. Rank group-base addition and checkpoint selection are separately charged.",
+    "The compiler combines first-stage widening additions into uaddw/uaddw2. Reduction folds high true mask FFFF as subtraction from low true count bit 1, yielding 0/1/2 per lane; addv sums valid endpoints<=offset.",
+    "Direct16/direct32 scattered functions both 440 B and same 10-instruction csel binary-search shape; endpoint widths/strides differ. No SIMD, calls or hot spills in those baselines.",
+    "Scattered query generation performs a runtime udiv for block=query/cap and another udiv/msub for hashed byte offset, common across formats. Count and terminal extent reads, tomb lookup, output stores and checksum remain charged.",
+    "All output arrays are 2048 B. Native scattered/block frames 2112 B; scalar scattered 2128 B due an extra save slot; direct scattered 2112 B. These are save areas plus output, not temporary decoded geometry."
+  ]
+}

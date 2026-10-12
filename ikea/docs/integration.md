@@ -85,6 +85,20 @@ before continuing or rebinding. It must also release resources carried by stale
 replies. An OS write-protection fault preserves machine state through the OS;
 explicit Loom suspension occurs at the returned work frontier.
 
+Retain the coherent interpretation, including geometry and sidecars, throughout
+that use. Two individually valid, equal-sized planes can still belong to different
+versions. Geometry-derived addresses become hintable only after their dependencies
+are available. Qualify disjoint planes separately; a bounding address range cannot
+authorize hints into gaps. Empty values need no payload dependency.
+
+Caller-owned count and occupied byte extent are part of that interpretation when
+the format uses them. A zero-byte append can change count alone; shrinking the
+last reservation can change extent without changing checkpoints. Bind one
+coherent observation and publish any control stores with its sidecars. Logical
+field separation also does not imply disjoint physical writes: packed fields
+can share a byte, and an append can reissue bytes covering prior rows. Admit
+those preserving stores against reader isolation, not only payload disjointness.
+
 Loom can reorder physical work around waits; local readiness does not choose
 replicated outcomes or epoch membership. Completion capacity must remain available
 under pressure, without implying a separate thread or pool for each kind of work.

@@ -1,0 +1,143 @@
+{
+  "scope": "Completed bounded read-only confirmation using actual fetched native target disassemblies. No builds, target execution, workers, source edits, MCA or independent timing analysis.",
+  "artifacts": [
+    {
+      "file": "c9g.json",
+      "sha256": "b5aeacc16ac87f23051b5fbf3e2d1adb97eab849e3b4d070357a637aa9599611"
+    },
+    {
+      "file": "zen5.json",
+      "sha256": "440804229c4ff3791ee8a77aa98f27ec255b752498b74893941e8840b3b7ad1e"
+    },
+    {
+      "file": "granite.json",
+      "sha256": "0ff738bdb7960d7b169729a169226aa67e5a640ebedc5c88e544f0b9a4ce258d"
+    }
+  ],
+  "common_capture": [
+    {
+      "host": "c9g",
+      "job": "20261011T220947Z-c3fd7a3c",
+      "target": "armv8.2-a+simd-neoverse-v3",
+      "job_file_sha256": "c19696aa2a8a3730085c2a2a154cfa6df8a75d6c4ecf07a7c2cff11a22d58d3e",
+      "source_tree_digest": "800da5d04b29fd2860089300673a44176ce84e715317208635f0ca947ae7fef9",
+      "source_archive_sha256_from_job": "c4cca33a7dd435db8e80711ffeb0b69322a402c4851b6e2ebd850201cbf7fa20",
+      "variants": [
+        {
+          "variant": "streampack_mutable_fused",
+          "asm": "build/workers/20261011T220947Z-c3fd7a3c/results/armv8.2-a+simd-neoverse-v3/streampack_mutable_fused.asm",
+          "asm_sha256": "5f81f78898de31ad4ef84dc8d8e211bfc261c5b0da53f12c8c9b81f4b5769373",
+          "binary_sha256_from_worker_manifest": "3e7978cd2b7e7b3704d0381fa3194ad0ef4e2fa252337b92acd46d325f6dc7e7"
+        },
+        {
+          "variant": "streampack_ring_inline",
+          "asm": "build/workers/20261011T220947Z-c3fd7a3c/results/armv8.2-a+simd-neoverse-v3/streampack_ring_inline.asm",
+          "asm_sha256": "cb4cd55ddf483bf3dc390b3f9a435a53a92233959901614891fe06196d0a14ed",
+          "binary_sha256_from_worker_manifest": "1a80d8f3585db8ee8a973b9110d8d8bd68eae18bee681e7db97e312f61612720"
+        }
+      ],
+      "body_report": {
+        "file": "c9g.json",
+        "sha256": "b5aeacc16ac87f23051b5fbf3e2d1adb97eab849e3b4d070357a637aa9599611"
+      }
+    },
+    {
+      "host": "zen5",
+      "job": "20261011T220947Z-312ca65d",
+      "target": "x86-64-v3-zen5",
+      "job_file_sha256": "b847b5b938754bf77fccafc172a3c2635055a3b0dab46d627f4cb4fb03985f7d",
+      "source_tree_digest": "800da5d04b29fd2860089300673a44176ce84e715317208635f0ca947ae7fef9",
+      "source_archive_sha256_from_job": "c4cca33a7dd435db8e80711ffeb0b69322a402c4851b6e2ebd850201cbf7fa20",
+      "variants": [
+        {
+          "variant": "streampack_mutable_fused",
+          "asm": "build/workers/20261011T220947Z-312ca65d/results/x86-64-v3-zen5/streampack_mutable_fused.asm",
+          "asm_sha256": "fcbaa3e1161c147ed309845faf21681cec2dcfe015f0a4098bcf3aef87fdb34d",
+          "binary_sha256_from_worker_manifest": "ef2b45a626a23096593024ab754746311c9e92f6548ea3f72e3fb74152192f17"
+        },
+        {
+          "variant": "streampack_ring_inline",
+          "asm": "build/workers/20261011T220947Z-312ca65d/results/x86-64-v3-zen5/streampack_ring_inline.asm",
+          "asm_sha256": "68258eed1ca44ba7b1e8d36dca89087f0a8d2a91e5df91c9d1e0179e568da3c3",
+          "binary_sha256_from_worker_manifest": "058d4a94fb53ac7e9597d48b97cdbd416c98334967d6c0505ef05068357887f9"
+        }
+      ],
+      "body_report": {
+        "file": "zen5.json",
+        "sha256": "440804229c4ff3791ee8a77aa98f27ec255b752498b74893941e8840b3b7ad1e"
+      }
+    },
+    {
+      "host": "granite",
+      "job": "20261011T220947Z-1cf88cff",
+      "target": "x86-64-v3-granite-rapids",
+      "job_file_sha256": "621189ca3fca83a66e5361eea66047811786b528e86186c2d812215d62c247ae",
+      "source_tree_digest": "800da5d04b29fd2860089300673a44176ce84e715317208635f0ca947ae7fef9",
+      "source_archive_sha256_from_job": "c4cca33a7dd435db8e80711ffeb0b69322a402c4851b6e2ebd850201cbf7fa20",
+      "variants": [
+        {
+          "variant": "streampack_mutable_fused",
+          "asm": "build/workers/20261011T220947Z-1cf88cff/results/x86-64-v3-granite-rapids/streampack_mutable_fused.asm",
+          "asm_sha256": "8f6baaa2cca5068a05325f9394c49031896ee2f42d9fa1f023ba0844eac7ec34",
+          "binary_sha256_from_worker_manifest": "27739c1329cbdf5f76350dfe844cfdfd71fe67da61ad81c8d629407ab1857365"
+        },
+        {
+          "variant": "streampack_ring_inline",
+          "asm": "build/workers/20261011T220947Z-1cf88cff/results/x86-64-v3-granite-rapids/streampack_ring_inline.asm",
+          "asm_sha256": "bb9c7066b49d6d4bd474a40318b8cb79878f9cc361407da127c715a249cf85c0",
+          "binary_sha256_from_worker_manifest": "63b94b7a760291c25f2e11412923b18784d1d26f183d40773503f5def68ccad0"
+        }
+      ],
+      "body_report": {
+        "file": "granite.json",
+        "sha256": "0ff738bdb7960d7b169729a169226aa67e5a640ebedc5c88e544f0b9a4ce258d"
+      }
+    }
+  ],
+  "writer_confirmation": {
+    "all_hosts_targeted_helper_definitions_or_calls": 0,
+    "replace_outlined_all_hosts": true,
+    "replace_bodies_per_host": 3,
+    "body_calls": "Replacement bodies call memmove only; no journal-before/Mutable-before/metadata_alias boundary remains.",
+    "c9g_append_frame_bytes": 64,
+    "c9g_replace_frame_bytes": 48
+  },
+  "ring_confirmation": {
+    "native_geometry_payload_stages_per_host": 16,
+    "calls_across_native_stages_per_host": 0,
+    "indirect_continuation_transfers_remain": true,
+    "c9g_all_native_stages_sp_free": true,
+    "x86_all_unhinted_stages_sp_free": true,
+    "x86_hinted_geometry_all_four_readers_explicit_push_bytes": 8,
+    "hinted_payload_stack_below_entry_rsp_including_redzone": [
+      {
+        "host": "zen5",
+        "direct16": 40,
+        "widths8_native": 24,
+        "location8": 0,
+        "duckdb16": 0
+      },
+      {
+        "host": "granite",
+        "direct16": 24,
+        "widths8_native": 24,
+        "location8": 0,
+        "duckdb16": 0
+      }
+    ],
+    "x86_hint_stack_detail": "RBP is saved as an ordinary scratch/address register, not a frame pointer. Direct/width payload include 8 B explicit push plus policy-temporary red-zone scratch on wide hint paths. Exact instructions and exits are in host receipts."
+  },
+  "interpretation": [
+    "Targeted call elimination succeeds in the actual benchmarked binaries on all three hosts.",
+    "Replacement remains an ordinary outlined helper, so this does not establish one fused command loop.",
+    "Native Ring stages remain a staged continuation/scheduler design with indirect tail transfers; call-free does not mean one flat kernel.",
+    "Stack-free result is specific to ARM here. X86 hinted stages retain small register-pressure saves/red-zone scratch.",
+    "Codegen confirmation does not overturn the parent-owned measured conclusion rejecting global inlining, and does not attribute a timing regression to any particular instruction or microarchitectural cause."
+  ],
+  "limits": [
+    "Body boundaries use next symbols and may include alignment. Static instruction counts are not executed counts.",
+    "Per-stage SP/RSP footprint excludes caller return-address or scheduler/libc costs and is not an additive concurrent peak.",
+    "No new source or semantic review performed beyond already recorded local controls; parent retains native results, behavior validation and integration."
+  ],
+  "retention": "Retain this index; complete per-host body reports may be archived. Their exact hashes identify all detailed boundaries and SP/call observations, while worker IDs and variant paths identify original worker archive recovery."
+}

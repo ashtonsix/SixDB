@@ -1,0 +1,46 @@
+{
+  "source_hashes": {
+    "20261011T201709Z-6ea6a65a": {
+      "mutable_population.cpp": "d0508fc0da6cc9541c2606037224026d3b74078e7e4ddb6c94779d8ab7551af5",
+      "mutable-control.sh": "31c8ff875f0735f004699012dab024d7feddbc5bb0102917000d4890f166ff3c",
+      "grouped.h": "dfc58f97bca04928dde80d7e42e965a3e9c4660c954e20790de925f55f63a475",
+      "direct.h": "228ed8ebaaf40bedc7800f4ae3dde8ebf34920cb8804fb04d3374eb75a503d84",
+      "prefix.h": "87c1966330db5c504e6a514238496891a6b0f46dfe9eb32ee0e675aa03365c72"
+    },
+    "20261011T201709Z-8a6d1444": {
+      "mutable_population.cpp": "d0508fc0da6cc9541c2606037224026d3b74078e7e4ddb6c94779d8ab7551af5",
+      "mutable-control.sh": "31c8ff875f0735f004699012dab024d7feddbc5bb0102917000d4890f166ff3c",
+      "grouped.h": "dfc58f97bca04928dde80d7e42e965a3e9c4660c954e20790de925f55f63a475",
+      "direct.h": "228ed8ebaaf40bedc7800f4ae3dde8ebf34920cb8804fb04d3374eb75a503d84",
+      "prefix.h": "87c1966330db5c504e6a514238496891a6b0f46dfe9eb32ee0e675aa03365c72"
+    },
+    "20261011T201709Z-36e84386": {
+      "mutable_population.cpp": "d0508fc0da6cc9541c2606037224026d3b74078e7e4ddb6c94779d8ab7551af5",
+      "mutable-control.sh": "31c8ff875f0735f004699012dab024d7feddbc5bb0102917000d4890f166ff3c",
+      "grouped.h": "dfc58f97bca04928dde80d7e42e965a3e9c4660c954e20790de925f55f63a475",
+      "direct.h": "228ed8ebaaf40bedc7800f4ae3dde8ebf34920cb8804fb04d3374eb75a503d84",
+      "prefix.h": "87c1966330db5c504e6a514238496891a6b0f46dfe9eb32ee0e675aa03365c72"
+    }
+  },
+  "zen5_audit": {
+    "path": "build/streampack-fresh-results/codegen-review/zen5-mutable-reverse-review/audit.json",
+    "sha256": "f6fcd6fb4d3d939fdb9fcbddb42251209f5ba5597df5b0de0e342667117ab26c"
+  },
+  "granite_audit": {
+    "path": "build/streampack-fresh-results/codegen-review/granite-mutable-reverse-review/audit.json",
+    "sha256": "90e91626c24ab2cc83b951362a658650042622acf4bc2bf5754d729eb3b1984e"
+  },
+  "medians": {
+    "path": "build/streampack-fresh-results/codegen-review/mutable-x86-reverse-medians.json",
+    "sha256": "24f5861e03cc4d9eff60b4177139801ea1ed76c3fd003441b9a444af6f6b904a"
+  },
+  "findings": [
+    "Zen5 direct16 is direction-branchy; direct32 uses two cmovb selections per comparison. Both scalar consumers unroll two sequential queries. No SIMD/gathers/calls.",
+    "Granite direct16 and direct32 both use direction branches, one query at a time. Direct16 adds three instructions per comparison path and a per-probe scalar count reload; direct32 retains a per-probe extent endpoint compare from memory.",
+    "For each method on each architecture, entire captured x86-v3/v4 function opcode bytes are identical. Function placement may differ; timing ISA labels do not establish an AVX512 effect in these kernels.",
+    "Direct32 is a necessary reverse baseline. The strong Zen5 baseline is direct32, while Granite blocked sparse widths8 remains competitive with both direct geometries in this particular trace.",
+    "These are codegen differences and measured associations, not identified microarchitectural causes. No matched forced-lowering experiment or branch PMU exists in this capture.",
+    "Blocked query reuse and changed before/after-soft physical offsets retain the limits recorded in the c9g audit."
+  ],
+  "scope": "Read-only review of verified captured binaries and CSVs. Selectively fetched immutable asm/binaries; no source changes, builds, benchmark runs or worker launches."
+}

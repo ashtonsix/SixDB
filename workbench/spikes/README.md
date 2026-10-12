@@ -17,6 +17,7 @@ experiments and checks under Object, Allocation, Journal, Port and Worker.
 - [Ikea composition](ikea-composition/README.md): reusable stages, ergonomics and interface seams.
 - [Layout analyser](layout-analyser/README.md): workload objectives, plane splitting, hardware fitting and reusable layout selection.
 - [Tuple layout](tuple-layout/README.md): physical layout, bound operations and native batching.
+- [StreamPack](streampack/README.md): variable-byte packing and sidecar comparisons, with production qualification through Ikea, Loom and Orbital.
 - [Bec256 with current Ikea](bec256-composition/README.md): exact codec operations, native pairs and larger-bitset population/length directories built with SeriesPack and TuplePack.
 - [Ikea on Neoverse V3](ikea-neoverse-v3/README.md): C8g/C9g comparisons, compiler scheduling, lookup and exact-span experiments.
 - [Ikea CPU comparison](ikea-cpu-comparison/README.md): October 2026 snapshot across six processors, matched case evidence and a frozen cloud-price model.

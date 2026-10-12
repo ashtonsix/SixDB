@@ -1,0 +1,61 @@
+{
+  "scope": "Completed read-only local AArch64 writer and Ring codegen diagnostics, including helper-inline, effects-fused and inline-hint controls. No compiler builds, benchmark execution, workers, MCA or source edits.",
+  "artifacts": [
+    {
+      "file": "writer-initial-audit.json",
+      "sha256": "1103143bce6da879837cdb99dab415650b79c22a55c5536a97ef8a5b6d0d8842"
+    },
+    {
+      "file": "writer-complete-functions.json",
+      "sha256": "f3e0bfd300010b6723e8c6a4134507ce317e86cdc4a0a6882087b901169afec3"
+    },
+    {
+      "file": "writer-summary.json",
+      "sha256": "18c00ea1e49026ecbc95b0bf9d19ad2923728f58d5d6aaba9e2d64336ba7abb8"
+    },
+    {
+      "file": "callsite-inline-recommendation.json",
+      "sha256": "5ab0742871b678987bcbbec5ab262fe891abe8a414735b4f761c362ec1a691cd"
+    },
+    {
+      "file": "writer-fused-functions.json",
+      "sha256": "231e961cd1f8471577c033c39ad7fa631c93caa4efb842efc3a645bfed608587"
+    },
+    {
+      "file": "writer-fused-summary.json",
+      "sha256": "a8d6f89c8c8185b74dab8ba5236829344e918a20698f4dba7ee93c1c345a7ae6"
+    },
+    {
+      "file": "soft-pack-fused-comparison.json",
+      "sha256": "ea08f2d98e1a1da889892e4240bdaf989b7577c1a9236ae673bf8c3addfb46fe"
+    },
+    {
+      "file": "ring/audit.json",
+      "sha256": "0b74000c306a6769b36b142fd842db21da20e70b9292d6acdc2f5d1ea745f4e5"
+    },
+    {
+      "file": "ring_inline/audit.json",
+      "sha256": "2376f968077b4f89c2b4259e762ec76c6dd8e5f53ca0a25ffa86c67634308768"
+    }
+  ],
+  "writer_outcome": "Fused removes all targeted Mutable before/metadata_alias and source_write_journal::before call sites. Append frames shrink to 64 B; replace frames to 48 B. All geometry append/replace bodies call only libc copy/clear routines. Whole drivers retain outlined command helpers and their capacity/refusal checks.",
+  "writer_caveats": [
+    "Helper-inline alone outlined journal-before and widened append frames from 80 B to 128 B; it is not isolated fusion.",
+    "Replace stays outlined in fused, and widths prefix remains before the empty-input branch.",
+    "Fused changes already-inlined soft_pack coalescing lowering, adding redundant plane stores; whole-variant delta cannot isolate append/replace call removal.",
+    "Writer text grows from 169368 to 172408 B; rodata remains 5282 B."
+  ],
+  "ring_outcome": "All 28 hint-lambda helpers disappear. All 16 native geometry/payload callbacks become call-free and stack-free; four hinted payload frames shrink from 48 B to 0.",
+  "ring_caveats": [
+    "Hinted manual C8 kernels change from unrolled stages to explicit row loops with a 64 B tails array; policy terms become live across loops. Duck C8 frame increases from 160 B to 176 B.",
+    "No-hint manual frame and static instruction counts remain unchanged, with some equivalent load/register allocation differences.",
+    "Ring text grows from 204908 to 214892 B. Static instruction/prefetch counts include policy cases and alignment, not dynamic work."
+  ],
+  "correctness_review": "No new borrowed-source, callback ABI or lifetime issue found. Writer named source identities persist through journal consumption; Ring signatures, musttail transfers, hint guards, cold bounded admission, job lifetime through drain and oracle escapes remain intact.",
+  "limits": [
+    "Actual local emitted-code evidence only; no performance claims.",
+    "SP descents include save areas for individual bodies, exclude libc and do not establish concurrent peak.",
+    "Current source hashes and compile entries are contemporaneous provenance; these local controls have no immutable archived build source manifest. Exact binary and body hashes identify all inspected output.",
+    "Parent retains ownership of semantic replay, sanitizers, native matched campaigns, full MVCC performance closure and integration."
+  ]
+}

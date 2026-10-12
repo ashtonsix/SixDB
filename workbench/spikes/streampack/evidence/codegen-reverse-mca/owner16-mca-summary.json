@@ -1,0 +1,76 @@
+{
+  "scope": "LLVM 21 MCA of the actual linked c9g selected-group straight-line region only; no build, worker launch, benchmark, source edit or modified instruction sequence.",
+  "capture": {
+    "job": "20261011T204358Z-016ec459",
+    "source_tree_digest": "1846f5305dde67359a4d364ea447a71471f4c4120a6d62dc0a5345048f1721dc",
+    "source_tar_gz_sha256": "f9f52d2cf5b0058ad70fd5b8d5c4ae8f2a5c3bca3a09a54e565c3febc6e1bf23",
+    "binary_sha256": "6c4bfe640a0ed67fcdfc1b9fc973dab92f0f2fc28491e27b26aeabbc6bd7ea5a",
+    "region_start": "0x18e14",
+    "region_last_instruction": "0x18e74",
+    "instruction_count": 25
+  },
+  "receipts": {
+    "owner16-mca-audit.json": {
+      "sha256": "6567091495819720238f07069e7aa3e6fc64c30cefda5205a5721bbcda31ea52",
+      "bytes": 4314
+    },
+    "owner16-model-review.json": {
+      "sha256": "5f5f807b114d6adce5cb03e516fffe7e0603dae22a1bc82589b5150496196328",
+      "bytes": 7874
+    },
+    "owner16-scattered-actual25.s": {
+      "sha256": "e7c4be9b958a7d6738d248630200e255c26d88140fd4bc4675cfc9fed86d63b0",
+      "bytes": 1257
+    }
+  },
+  "model": {
+    "version": "LLVM 21.1.8",
+    "tested_cpus": [
+      "neoverse-v2",
+      "neoverse-v3"
+    ],
+    "shared_schedule": "NeoverseV2Model",
+    "primary_source": {
+      "url": "https://raw.githubusercontent.com/llvm/llvm-project/llvmorg-21.1.8/llvm/lib/Target/AArch64/AArch64Processors.td",
+      "line_range": [
+        1224,
+        1227
+      ],
+      "observed_definition": "Both neoverse-v2 and neoverse-v3 ProcessorModel definitions select NeoverseV2Model. ProcessorFeatures and Tune definitions remain distinct.",
+      "terminology": "Shared scheduling model, not a complete CPU alias.",
+      "line_numbering": "one-based source lines",
+      "sha256": "a9907ad0e7eac68f20ad78d3de4798fedcbc8bc32362c82b182c9b371dd8f2e5"
+    },
+    "outputs_byte_identical_for_iterations": [
+      1,
+      1000
+    ],
+    "dispatch_width": 6,
+    "instructions": 25,
+    "uops": 27,
+    "block_rthroughput_cycles": 4.8,
+    "single_iteration_total_cycles": 38,
+    "thousand_iteration_total_cycles": 17021
+  },
+  "useful_instruction_model_observations": [
+    "The q-load is modeled as latency 6; widening, prefix and most vector operations as latency 2.",
+    "GPR-to-vector dup is modeled as latency 3; addv as 2 uOps/latency 5; fmov as 2 uOps/latency 2.",
+    "The four V2Unit vector resources carry the prefix/compare/reduction work. These are model assumptions and do not describe measured c9g scheduling."
+  ],
+  "interpretation": [
+    "38 single-iteration total cycles include simulated dispatch/retirement start and drain and the model 6-cycle load; not measured c9g latency.",
+    "17021/1000=17.021 cycles per repeated region includes the artificial scalar recurrence explicitly present in the critical-sequence report; not independent-query throughput.",
+    "Block RThroughput4.8 is the scheduling model reciprocal-throughput estimate ignoring dependency chains; not latency, measured throughput or a guaranteed sustained rate.",
+    "Identical V2/V3 output is expected from the shared NeoverseV2Model and supplies no independent evidence about actual V3 relative scheduling uplift.",
+    "Instruction latencies and V2Unit resource use are assumptions of this model. They do not measure cache tier, page translation, branch prediction, LLC or DRAM service.",
+    "The complete query additionally pays query generation, checkpoint selection/base load, group-base rank addition, tomb lookup and output/checksum work."
+  ],
+  "repeat_dependency": {
+    "consumer": "scattered",
+    "last_output": "0x18e74 fmov w6,s2",
+    "next_isolated_read": "0x18e18 sub w6,w19,w6",
+    "classification": "Artificial rank output to checkpoint-base input recurrence",
+    "real_consumer_definition_that_breaks_recurrence": "0x18e10 ldr w6,[x6,w20,uxtw#2], before each group region; query w19 is also regenerated."
+  },
+  "conclusion": "The model can describe dependencies and resource assumptions in this slice, but the V2/V3 CPU flags do not distinguish scheduling uplift. The 1000-iteration total contains an extraction-created scalar recurrence, so neither 17.021 cycles/region nor 38 single-iteration cycles is an actual consumer cost. Preserve the independent full-consumer benchmark evidence."
+}

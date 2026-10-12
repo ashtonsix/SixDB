@@ -10,9 +10,11 @@ Ikea operates over storage supplied by its caller.
 | SeriesPack | Packed unsigned arrays, 1–64 bits per value; tiled payload and optional head planes | [Use](docs/seriespack/usage.md) · [Physical tour](docs/seriespack/representation.md) · [Compose](docs/seriespack/extending.md) · [Reference](docs/seriespack/reference.md) |
 | TuplePack | Fixed-layout units containing byte-contained unsigned codes; ordered projections with caller-chosen packet grouping | [Use](docs/tuplepack/usage.md) · [Compose](docs/tuplepack/extending.md) · [Reference](docs/tuplepack/reference.md) |
 | Bec256 | Headless 256-position bitsets; caller retains population, exact body length and location | [Use and compose](docs/bec256/usage.md) · [Representation](docs/bec256/representation.md) |
+| StreamPack | Variable-length byte values; caller-owned Direct/Width sidecars and coherent count/extent | [Use and compose](docs/streampack/usage.md) · [Reference](docs/streampack/reference.md) |
 
 These modules support construction, reads and replacement, native composition
-and source-qualified byte effects. StreamPack is reserved and has no operations.
+and source-qualified byte effects. StreamPack also supplies retirement, reverse
+byte ownership, rank-preserving packing and selected transfer for owner rewrites.
 
 Modules keep logical interpretation, physical placement and execution distinct.
 A parent can retain its logical contract across different child representations;
@@ -42,10 +44,12 @@ For ARM, use a separate directory with `-DSIXDB_MARCH=armv8-a+simd` and
 `-DSIXDB_TUNE=neoverse-v2`. Run binaries only on compatible CPUs. ISA-specific
 requirements live in the [SeriesPack](docs/seriespack/reference.md#execution-profiles)
 and [TuplePack](docs/tuplepack/reference.md#routes-and-native-execution) references,
-and the [Bec256 guide](docs/bec256/usage.md#compose-native-values).
+the [Bec256 guide](docs/bec256/usage.md#compose-native-values), and the
+[StreamPack reference](docs/streampack/reference.md).
 
-Link `ikea::seriespack`, `ikea::tuplepack` or `ikea::bec256` and include the
-corresponding `<ikea/seriespack.h>`, `<ikea/tuplepack.h>` or `<ikea/bec256.h>`.
+Link `ikea::seriespack`, `ikea::tuplepack`, `ikea::bec256` or `ikea::streampack` and
+include the corresponding `<ikea/seriespack.h>`, `<ikea/tuplepack.h>`,
+`<ikea/bec256.h>` or `<ikea/streampack.h>`.
 `ikea_validate` runs the modules' correctness checks, independent wire checks
 and examples. For performance measurement and retained comparisons, use the
 [SeriesPack](../workbench/benchmarks/seriespack/README.md),

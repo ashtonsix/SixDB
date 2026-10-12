@@ -1,0 +1,1506 @@
+{
+  "csv_hashes": {
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-0-direct16-16384.csv": "ed246586241c4c5fcb9416f4bf8b087d2c85a6eb71d239600131028a4049a642",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-0-direct16-16777216.csv": "50a8c035acd1d56d2607ca4d082173708cbea65eb1fc2503cdfc430a6df2b02d",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-0-direct16-4194304.csv": "0c0406ae425d7df63fd87107e63f1e96be90f684c96613d4bb381bf6ef2440e8",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-0-direct32-16384.csv": "78954571a12ddb85eb9f6609a5c9d516709b483c15570862e34f11c8d8d30eb1",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-0-direct32-16777216.csv": "f655db65240f09b23542884ccdb40dc4d03a98edd3b8047ae1ec9189e78c6e4c",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-0-direct32-4194304.csv": "43eefdd606499cbbb3aa0d91ced1a8a4e0d7cab73c2d961abbd4a21ccbe50660",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-0-widths8-16384.csv": "552be7b2cb7a314e2b6d2c5c77bb7170d7341052dd09c76534c766c579b9bed3",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-0-widths8-16777216.csv": "5392d0a6eb575210c9510a3c31842831f24d221600a50ff5f74e5d8cb2027961",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-0-widths8-4194304.csv": "4bf38352d75828df6252926863cc7f13e56ecc52946ecc13899f1ddfc46f6063",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-0-widths8-native-reverse-16384.csv": "b9d05f277f6fc0ac959712905750eaecffef64885b703a76ecd374eab6b15f58",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-0-widths8-native-reverse-16777216.csv": "c14def42548c343808dee354164e12c1cc952b16ff219be5b2649b5fc46cae14",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-0-widths8-native-reverse-4194304.csv": "2cf0359a295b9b2798a450c03312d7f29410c5bc14af9f9e0fce80e835334620",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-1-direct16-16384.csv": "b5555e6d81c0c78500146221b0cb663ba205965071a0499d400fd972474ec4d0",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-1-direct16-16777216.csv": "ba1389b8d0edb84291a4283587336204c4a3f5195b30b5a0c26fe597a3d27f5d",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-1-direct16-4194304.csv": "58ec8bc5a008e04eee30c232e9d0cff69b018431185fbb09abbb625957e4975f",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-1-direct32-16384.csv": "44ab4988b9faef533c8ff5e09768d4b2929495eccb57ab31b779dabc1c42291a",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-1-direct32-16777216.csv": "2e0fa919046c7f713cf0448f4c861e9c96b3b800a192e5516587c80d9fad385d",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-1-direct32-4194304.csv": "4f30cc26cfd3f4d37ec35433b43c0eaaf6c06887532007410d77091d7b39d11d",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-1-widths8-16384.csv": "d921b6d59e9ae088d066a317f03f26682bec1290ac7f032d5f4b2297fa9af96b",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-1-widths8-16777216.csv": "c74e37d9b3d1e54901a4faa4be39a090e8aa16ac830dff26d6a8b97b756d6dfc",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-1-widths8-4194304.csv": "d69750f6758731cc545139a4b642144463604481aa8ef279ab6001883162330a",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-1-widths8-native-reverse-16384.csv": "eb7a04c3309b8d3cf4611639af7d4b901aaa3ba80a5abfdd85f426a77ce20783",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-1-widths8-native-reverse-16777216.csv": "7ab14a6e7c974d4931b40fc2ec44435bddde841215f2139330eb5d2624b6d8ce",
+    "build/workers/20261011T204358Z-016ec459/results/armv8.2-a+simd-neoverse-v3/reverse-1-widths8-native-reverse-4194304.csv": "e33b02213780497d84c3ae466ffbccf543945789b743d79815199b21fe5562eb"
+  },
+  "medians": [
+    {
+      "condition": "16384|256|slack-dead-empty|after-soft-reverse-geometry",
+      "methods": {
+        "direct16": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 12.421
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 12.4468
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 12.42
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 12.4261
+            }
+          ],
+          "median_ns": 12.423549999999999,
+          "min_ns": 12.42,
+          "max_ns": 12.4468
+        },
+        "direct32": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 12.6304
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 12.6347
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 12.6719
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 12.6087
+            }
+          ],
+          "median_ns": 12.63255,
+          "min_ns": 12.6087,
+          "max_ns": 12.6719
+        },
+        "widths8": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 22.7169
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 22.6985
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 22.0188
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 21.936
+            }
+          ],
+          "median_ns": 22.358649999999997,
+          "min_ns": 21.936,
+          "max_ns": 22.7169
+        },
+        "widths8-native-reverse": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 8.5301
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 8.5386
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 8.4119
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 8.5424
+            }
+          ],
+          "median_ns": 8.53435,
+          "min_ns": 8.4119,
+          "max_ns": 8.5424
+        }
+      },
+      "speedup_native_vs_baseline": {
+        "direct16": 1.4557113312671732,
+        "direct32": 1.4802006011002595,
+        "widths8": 2.619842167241793
+      },
+      "native_all_samples_faster_than_all_baseline_samples": {
+        "direct16": true,
+        "direct32": true,
+        "widths8": true
+      }
+    },
+    {
+      "condition": "16384|256|slack-dead-empty|after-soft-reverse-scattered-geometry",
+      "methods": {
+        "direct16": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 16.1153
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 16.118
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 16.1293
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 16.1112
+            }
+          ],
+          "median_ns": 16.11665,
+          "min_ns": 16.1112,
+          "max_ns": 16.1293
+        },
+        "direct32": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 16.2847
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 16.2722
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 16.2556
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 16.2575
+            }
+          ],
+          "median_ns": 16.264850000000003,
+          "min_ns": 16.2556,
+          "max_ns": 16.2847
+        },
+        "widths8": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 27.7122
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 27.6599
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 27.8998
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 28.2343
+            }
+          ],
+          "median_ns": 27.805999999999997,
+          "min_ns": 27.6599,
+          "max_ns": 28.2343
+        },
+        "widths8-native-reverse": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 11.4508
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 11.6968
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 11.324
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 11.7063
+            }
+          ],
+          "median_ns": 11.573799999999999,
+          "min_ns": 11.324,
+          "max_ns": 11.7063
+        }
+      },
+      "speedup_native_vs_baseline": {
+        "direct16": 1.3925115346731411,
+        "direct32": 1.405316317890408,
+        "widths8": 2.402495291088493
+      },
+      "native_all_samples_faster_than_all_baseline_samples": {
+        "direct16": true,
+        "direct32": true,
+        "widths8": true
+      }
+    },
+    {
+      "condition": "16384|256|slack-dead-empty|before-soft-reverse-geometry",
+      "methods": {
+        "direct16": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 12.3949
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 12.3783
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 12.3802
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 12.3697
+            }
+          ],
+          "median_ns": 12.379249999999999,
+          "min_ns": 12.3697,
+          "max_ns": 12.3949
+        },
+        "direct32": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 12.6038
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 12.5846
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 12.5802
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 12.5879
+            }
+          ],
+          "median_ns": 12.58625,
+          "min_ns": 12.5802,
+          "max_ns": 12.6038
+        },
+        "widths8": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 21.2424
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 21.1114
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 20.9101
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 21.0899
+            }
+          ],
+          "median_ns": 21.10065,
+          "min_ns": 20.9101,
+          "max_ns": 21.2424
+        },
+        "widths8-native-reverse": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 8.3937
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 8.3986
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 8.3763
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 8.4208
+            }
+          ],
+          "median_ns": 8.39615,
+          "min_ns": 8.3763,
+          "max_ns": 8.4208
+        }
+      },
+      "speedup_native_vs_baseline": {
+        "direct16": 1.4743960029299141,
+        "direct32": 1.4990501598947135,
+        "widths8": 2.513133995938615
+      },
+      "native_all_samples_faster_than_all_baseline_samples": {
+        "direct16": true,
+        "direct32": true,
+        "widths8": true
+      }
+    },
+    {
+      "condition": "16384|256|slack-dead-empty|before-soft-reverse-scattered-geometry",
+      "methods": {
+        "direct16": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 16.0736
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 16.0503
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 16.0624
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 16.05
+            }
+          ],
+          "median_ns": 16.056350000000002,
+          "min_ns": 16.05,
+          "max_ns": 16.0736
+        },
+        "direct32": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 16.249
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 16.2497
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 16.2143
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 16.2014
+            }
+          ],
+          "median_ns": 16.231650000000002,
+          "min_ns": 16.2014,
+          "max_ns": 16.2497
+        },
+        "widths8": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 27.2599
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 27.3241
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 25.9681
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 26.1507
+            }
+          ],
+          "median_ns": 26.7053,
+          "min_ns": 25.9681,
+          "max_ns": 27.3241
+        },
+        "widths8-native-reverse": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 11.4931
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 11.6346
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 11.6984
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 11.6084
+            }
+          ],
+          "median_ns": 11.621500000000001,
+          "min_ns": 11.4931,
+          "max_ns": 11.6984
+        }
+      },
+      "speedup_native_vs_baseline": {
+        "direct16": 1.381607365658478,
+        "direct32": 1.3966914770038292,
+        "widths8": 2.297921954997203
+      },
+      "native_all_samples_faster_than_all_baseline_samples": {
+        "direct16": true,
+        "direct32": true,
+        "widths8": true
+      }
+    },
+    {
+      "condition": "16777216|256|slack-dead-empty|after-soft-reverse-geometry",
+      "methods": {
+        "direct16": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 13.1767
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 13.1708
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 13.1598
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 13.1839
+            }
+          ],
+          "median_ns": 13.17375,
+          "min_ns": 13.1598,
+          "max_ns": 13.1839
+        },
+        "direct32": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 13.4789
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 13.4922
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 13.4709
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 13.4832
+            }
+          ],
+          "median_ns": 13.48105,
+          "min_ns": 13.4709,
+          "max_ns": 13.4922
+        },
+        "widths8": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 24.5465
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 24.5186
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 24.5582
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 24.5557
+            }
+          ],
+          "median_ns": 24.5511,
+          "min_ns": 24.5186,
+          "max_ns": 24.5582
+        },
+        "widths8-native-reverse": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 10.1225
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 10.1017
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 10.1149
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 10.0895
+            }
+          ],
+          "median_ns": 10.1083,
+          "min_ns": 10.0895,
+          "max_ns": 10.1225
+        }
+      },
+      "speedup_native_vs_baseline": {
+        "direct16": 1.3032606867623637,
+        "direct32": 1.3336614465340364,
+        "widths8": 2.428806030687653
+      },
+      "native_all_samples_faster_than_all_baseline_samples": {
+        "direct16": true,
+        "direct32": true,
+        "widths8": true
+      }
+    },
+    {
+      "condition": "16777216|256|slack-dead-empty|after-soft-reverse-scattered-geometry",
+      "methods": {
+        "direct16": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 60.9491
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 59.3942
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 65.6517
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 61.897
+            }
+          ],
+          "median_ns": 61.42305,
+          "min_ns": 59.3942,
+          "max_ns": 65.6517
+        },
+        "direct32": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 96.4672
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 97.2785
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 97.7145
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 96.4536
+            }
+          ],
+          "median_ns": 96.87285,
+          "min_ns": 96.4536,
+          "max_ns": 97.7145
+        },
+        "widths8": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 85.2349
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 85.2373
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 83.8734
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 83.8834
+            }
+          ],
+          "median_ns": 84.55914999999999,
+          "min_ns": 83.8734,
+          "max_ns": 85.2373
+        },
+        "widths8-native-reverse": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 38.9807
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 37.3885
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 38.5566
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 36.482
+            }
+          ],
+          "median_ns": 37.97255,
+          "min_ns": 36.482,
+          "max_ns": 38.9807
+        }
+      },
+      "speedup_native_vs_baseline": {
+        "direct16": 1.6175645301671868,
+        "direct32": 2.5511283808962,
+        "widths8": 2.226849395155184
+      },
+      "native_all_samples_faster_than_all_baseline_samples": {
+        "direct16": true,
+        "direct32": true,
+        "widths8": true
+      }
+    },
+    {
+      "condition": "16777216|256|slack-dead-empty|before-soft-reverse-geometry",
+      "methods": {
+        "direct16": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 13.1236
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 13.1204
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 13.1366
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 13.1422
+            }
+          ],
+          "median_ns": 13.130099999999999,
+          "min_ns": 13.1204,
+          "max_ns": 13.1422
+        },
+        "direct32": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 13.4384
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 13.4524
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 13.4142
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 13.4139
+            }
+          ],
+          "median_ns": 13.4263,
+          "min_ns": 13.4139,
+          "max_ns": 13.4524
+        },
+        "widths8": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 24.3993
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 24.3727
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 24.4892
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 24.5127
+            }
+          ],
+          "median_ns": 24.44425,
+          "min_ns": 24.3727,
+          "max_ns": 24.5127
+        },
+        "widths8-native-reverse": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 10.0241
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 10.0415
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 10.0325
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 10.032
+            }
+          ],
+          "median_ns": 10.032250000000001,
+          "min_ns": 10.0241,
+          "max_ns": 10.0415
+        }
+      },
+      "speedup_native_vs_baseline": {
+        "direct16": 1.3087891549752046,
+        "direct32": 1.3383139375513966,
+        "widths8": 2.4365670711953946
+      },
+      "native_all_samples_faster_than_all_baseline_samples": {
+        "direct16": true,
+        "direct32": true,
+        "widths8": true
+      }
+    },
+    {
+      "condition": "16777216|256|slack-dead-empty|before-soft-reverse-scattered-geometry",
+      "methods": {
+        "direct16": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 60.9426
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 64.4291
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 58.3407
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 63.5258
+            }
+          ],
+          "median_ns": 62.2342,
+          "min_ns": 58.3407,
+          "max_ns": 64.4291
+        },
+        "direct32": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 99.311
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 99.0046
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 95.4465
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 100.1108
+            }
+          ],
+          "median_ns": 99.15780000000001,
+          "min_ns": 95.4465,
+          "max_ns": 100.1108
+        },
+        "widths8": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 84.6981
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 83.615
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 84.0475
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 83.6084
+            }
+          ],
+          "median_ns": 83.83125,
+          "min_ns": 83.6084,
+          "max_ns": 84.6981
+        },
+        "widths8-native-reverse": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 40.934
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 37.0054
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 38.8987
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 37.4632
+            }
+          ],
+          "median_ns": 38.180949999999996,
+          "min_ns": 37.0054,
+          "max_ns": 40.934
+        }
+      },
+      "speedup_native_vs_baseline": {
+        "direct16": 1.6299803959828136,
+        "direct32": 2.5970490519486815,
+        "widths8": 2.1956302815933078
+      },
+      "native_all_samples_faster_than_all_baseline_samples": {
+        "direct16": true,
+        "direct32": true,
+        "widths8": true
+      }
+    },
+    {
+      "condition": "4194304|256|slack-dead-empty|after-soft-reverse-geometry",
+      "methods": {
+        "direct16": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 12.978
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 13.0237
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 12.9175
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 13.0064
+            }
+          ],
+          "median_ns": 12.9922,
+          "min_ns": 12.9175,
+          "max_ns": 13.0237
+        },
+        "direct32": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 13.2817
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 13.2624
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 13.2756
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 13.2689
+            }
+          ],
+          "median_ns": 13.27225,
+          "min_ns": 13.2624,
+          "max_ns": 13.2817
+        },
+        "widths8": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 24.4067
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 24.407
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 24.4027
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 24.3494
+            }
+          ],
+          "median_ns": 24.4047,
+          "min_ns": 24.3494,
+          "max_ns": 24.407
+        },
+        "widths8-native-reverse": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 9.5937
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 9.7439
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 9.6944
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 9.7061
+            }
+          ],
+          "median_ns": 9.70025,
+          "min_ns": 9.5937,
+          "max_ns": 9.7439
+        }
+      },
+      "speedup_native_vs_baseline": {
+        "direct16": 1.339367542073658,
+        "direct32": 1.3682379320120615,
+        "widths8": 2.5158836112471326
+      },
+      "native_all_samples_faster_than_all_baseline_samples": {
+        "direct16": true,
+        "direct32": true,
+        "widths8": true
+      }
+    },
+    {
+      "condition": "4194304|256|slack-dead-empty|after-soft-reverse-scattered-geometry",
+      "methods": {
+        "direct16": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 35.6615
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 35.776
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 36.3221
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 36.4382
+            }
+          ],
+          "median_ns": 36.04905,
+          "min_ns": 35.6615,
+          "max_ns": 36.4382
+        },
+        "direct32": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 42.7704
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 42.3932
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 42.3318
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 42.3005
+            }
+          ],
+          "median_ns": 42.3625,
+          "min_ns": 42.3005,
+          "max_ns": 42.7704
+        },
+        "widths8": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 52.0496
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 51.9007
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 52.2309
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 51.7518
+            }
+          ],
+          "median_ns": 51.97515,
+          "min_ns": 51.7518,
+          "max_ns": 52.2309
+        },
+        "widths8-native-reverse": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 23.9
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 23.9162
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 24.0997
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 24.1672
+            }
+          ],
+          "median_ns": 24.00795,
+          "min_ns": 23.9,
+          "max_ns": 24.1672
+        }
+      },
+      "speedup_native_vs_baseline": {
+        "direct16": 1.5015463627673333,
+        "direct32": 1.764519669526136,
+        "widths8": 2.1649141221970223
+      },
+      "native_all_samples_faster_than_all_baseline_samples": {
+        "direct16": true,
+        "direct32": true,
+        "widths8": true
+      }
+    },
+    {
+      "condition": "4194304|256|slack-dead-empty|before-soft-reverse-geometry",
+      "methods": {
+        "direct16": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 12.9241
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 12.9442
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 12.9444
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 12.9354
+            }
+          ],
+          "median_ns": 12.9398,
+          "min_ns": 12.9241,
+          "max_ns": 12.9444
+        },
+        "direct32": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 13.2473
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 13.2567
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 13.2419
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 13.2033
+            }
+          ],
+          "median_ns": 13.244599999999998,
+          "min_ns": 13.2033,
+          "max_ns": 13.2567
+        },
+        "widths8": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 24.2281
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 24.2565
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 24.2308
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 24.2106
+            }
+          ],
+          "median_ns": 24.22945,
+          "min_ns": 24.2106,
+          "max_ns": 24.2565
+        },
+        "widths8-native-reverse": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 9.7559
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 9.7398
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 9.5426
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 9.6935
+            }
+          ],
+          "median_ns": 9.716650000000001,
+          "min_ns": 9.5426,
+          "max_ns": 9.7559
+        }
+      },
+      "speedup_native_vs_baseline": {
+        "direct16": 1.3317141195782496,
+        "direct32": 1.3630829555453778,
+        "widths8": 2.493601189710445
+      },
+      "native_all_samples_faster_than_all_baseline_samples": {
+        "direct16": true,
+        "direct32": true,
+        "widths8": true
+      }
+    },
+    {
+      "condition": "4194304|256|slack-dead-empty|before-soft-reverse-scattered-geometry",
+      "methods": {
+        "direct16": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 35.6905
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 36.7298
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 36.3628
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 36.2071
+            }
+          ],
+          "median_ns": 36.284949999999995,
+          "min_ns": 35.6905,
+          "max_ns": 36.7298
+        },
+        "direct32": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 42.8979
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 42.8451
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 43.6033
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 42.0656
+            }
+          ],
+          "median_ns": 42.8715,
+          "min_ns": 42.0656,
+          "max_ns": 43.6033
+        },
+        "widths8": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 51.7083
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 51.9235
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 51.7866
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 52.061
+            }
+          ],
+          "median_ns": 51.85505,
+          "min_ns": 51.7083,
+          "max_ns": 52.061
+        },
+        "widths8-native-reverse": {
+          "samples": [
+            {
+              "process_trial": 0,
+              "repetition": 0,
+              "ns": 23.8602
+            },
+            {
+              "process_trial": 0,
+              "repetition": 1,
+              "ns": 23.8468
+            },
+            {
+              "process_trial": 1,
+              "repetition": 0,
+              "ns": 24.1084
+            },
+            {
+              "process_trial": 1,
+              "repetition": 1,
+              "ns": 24.1136
+            }
+          ],
+          "median_ns": 23.984299999999998,
+          "min_ns": 23.8468,
+          "max_ns": 24.1136
+        }
+      },
+      "speedup_native_vs_baseline": {
+        "direct16": 1.5128625809383638,
+        "direct32": 1.787481811018041,
+        "widths8": 2.16204141876144
+      },
+      "native_all_samples_faster_than_all_baseline_samples": {
+        "direct16": true,
+        "direct32": true,
+        "widths8": true
+      }
+    }
+  ]
+}

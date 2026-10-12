@@ -1,0 +1,336 @@
+{
+  "scope": "Bounded follow-up after root observed ordered M255 gap. Exact frozen-source native ARM F1 ordered bodies only; no new compilation, timings or source changes. Original final index remains unchanged.",
+  "source_tree_digest": "7fd83f199cb60326e8865de6898e5bcd09d96754619e1d776653c46a5ac8f7ce",
+  "worker": "20261012T011501Z-b5df5a11",
+  "asm": "build/workers/20261012T011501Z-b5df5a11/results/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit.asm",
+  "asm_sha256": "21f888852203999aa76619e57e0c887d616dde395a2dc71f60754d7e210fdf90",
+  "original_index": {
+    "path": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/review-index.json",
+    "sha256": "8238aff6ceae8052e37d60b2280cb69237e21a026188ee99b1d460f222ff977f"
+  },
+  "body_report": {
+    "path": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/c9g/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit/functions.json",
+    "sha256": "ce4b7c28bc6840c1cc0b89cf27e3f95ba12d7fc88045f07636ba1c55309c5b4c"
+  },
+  "findings": [
+    "All seven M255 placements emit four ZIP1 sites using current sum v0 as high-byte filler, four GP-to-SIMD FMOV sites, and four subsequent USHLL/AND/UADALP sequences. All corresponding M4095 placements lack ZIP1 and GP-to-SIMD FMOV and widen directly from vector D loads. All fourteen bodies are stack-free and call-free.",
+    "M255 planes main loop 0x619c0..0x61a38 consumes16 ranks in31 instructions; M4095 0xc1dc0..0xc1e08 consumes16 ranks in19 instructions. This loop comparison is semantically normalized, unlike whole-body static instruction counts.",
+    "The compiler ZIP1 result interleaves four loaded bytes with live accumulator bytes; USHLL widens pairs and AND0x000000ff-per-u32 discards the accumulator bytes. Correctness is preserved, but the emitted path introduces v0(previous)->ZIP1->USHLL->AND->UADALP->v0(next) four times. Thus widening cannot issue independently of the preceding reduction. M4095 only couples the later UADALP update to v0.",
+    "This identifies avoidable load-bridge/reduction coupling independent of placement, not an inherent byte-layout cost and not a measured-cycle attribution. No latency/model ratio or architectural cache cause claimed."
+  ],
+  "source_spelling": "contiguous<u8>: vcreate_u8(load<uint32_t>(p)), vmovl_u8, low vmovl_u16; contiguous<u16>: vmovl_u16(vld1_u16(p)).",
+  "control_recommendation": [
+    "A vld1_dup_u32/reinterpret spelling may remove GP transfer but must be checked for the same dead-fill ZIP1 dependence.",
+    "A full16-byte ordered vector load followed by all four widened subpackets preserves every input byte, reducing optimizer freedom to synthesize masked irrelevant filler. Require actual emitted review and matched consumer/oracle before attributing performance."
+  ],
+  "selected_bodies": [
+    {
+      "layout": "blockplanes",
+      "maximum": 255,
+      "boundary": [
+        "0x0000000000011780",
+        "0x0000000000011860"
+      ],
+      "body": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/c9g/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit/blockplanes-M255-scan-1-false-11780.asm",
+      "body_sha256": "2cb1b4ae6137b40de2106fa40ff508dbc56e50fe43e7813d6ec307b21e41ccfa",
+      "own_SP_depth_range": {
+        "min": 0,
+        "max": 0
+      },
+      "zip_sum_filler_sites": [
+        "117c8: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b",
+        "117ec: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b",
+        "11800: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b",
+        "11814: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b"
+      ],
+      "GP_to_SIMD_sites": [
+        "117bc: 9e670182     \tfmov\td2, x12",
+        "117d8: 9e670182     \tfmov\td2, x12",
+        "117fc: 9e670182     \tfmov\td2, x12",
+        "11810: 9e670162     \tfmov\td2, x11"
+      ],
+      "hot_calls": []
+    },
+    {
+      "layout": "blockgrouped",
+      "maximum": 255,
+      "boundary": [
+        "0x000000000001f220",
+        "0x000000000001f300"
+      ],
+      "body": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/c9g/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit/blockgrouped-M255-scan-1-false-1f220.asm",
+      "body_sha256": "18fdaa1fc7d57d10c47c98170bf96f403a73a30aff0b793cf24129e724572e32",
+      "own_SP_depth_range": {
+        "min": 0,
+        "max": 0
+      },
+      "zip_sum_filler_sites": [
+        "1f26c: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b",
+        "1f290: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b",
+        "1f2a4: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b",
+        "1f2b8: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b"
+      ],
+      "GP_to_SIMD_sites": [
+        "1f260: 9e6701a2     \tfmov\td2, x13",
+        "1f27c: 9e6701a2     \tfmov\td2, x13",
+        "1f2a0: 9e6701a2     \tfmov\td2, x13",
+        "1f2b4: 9e670182     \tfmov\td2, x12"
+      ],
+      "hot_calls": []
+    },
+    {
+      "layout": "split32",
+      "maximum": 255,
+      "boundary": [
+        "0x000000000002c460",
+        "0x000000000002c520"
+      ],
+      "body": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/c9g/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit/split32-M255-scan-1-false-2c460.asm",
+      "body_sha256": "4772f96b2dcbd69225c8e1c647b6cd6850514c0ba9600e32640e0bf61bd73a01",
+      "own_SP_depth_range": {
+        "min": 0,
+        "max": 0
+      },
+      "zip_sum_filler_sites": [
+        "2c498: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b",
+        "2c4b4: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b",
+        "2c4d4: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b",
+        "2c4e8: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b"
+      ],
+      "GP_to_SIMD_sites": [
+        "2c48c: 9e670182     \tfmov\td2, x12",
+        "2c4a8: 9e670182     \tfmov\td2, x12",
+        "2c4c4: 9e670182     \tfmov\td2, x12",
+        "2c4e4: 9e670182     \tfmov\td2, x12"
+      ],
+      "hot_calls": []
+    },
+    {
+      "layout": "grouped32",
+      "maximum": 255,
+      "boundary": [
+        "0x00000000000399c0",
+        "0x0000000000039a80"
+      ],
+      "body": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/c9g/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit/grouped32-M255-scan-1-false-399c0.asm",
+      "body_sha256": "9eaa358ace47bdc77cf9dd9ef923850e75c1bade079a23c5dc37d66001821987",
+      "own_SP_depth_range": {
+        "min": 0,
+        "max": 0
+      },
+      "zip_sum_filler_sites": [
+        "399fc: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b",
+        "39a18: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b",
+        "39a34: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b",
+        "39a48: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b"
+      ],
+      "GP_to_SIMD_sites": [
+        "399f0: 9e670182     \tfmov\td2, x12",
+        "39a0c: 9e670182     \tfmov\td2, x12",
+        "39a28: 9e670182     \tfmov\td2, x12",
+        "39a44: 9e670182     \tfmov\td2, x12"
+      ],
+      "hot_calls": []
+    },
+    {
+      "layout": "grouped-narrow-eligible",
+      "maximum": 255,
+      "boundary": [
+        "0x0000000000047020",
+        "0x00000000000470e0"
+      ],
+      "body": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/c9g/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit/grouped-narrow-eligible-M255-scan-1-false-47020.asm",
+      "body_sha256": "02b56bf58a7d022f802d44e47abc8c31bbc092d9910d563354a51bc1a28c8d49",
+      "own_SP_depth_range": {
+        "min": 0,
+        "max": 0
+      },
+      "zip_sum_filler_sites": [
+        "4705c: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b",
+        "47078: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b",
+        "47094: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b",
+        "470a8: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b"
+      ],
+      "GP_to_SIMD_sites": [
+        "47050: 9e670182     \tfmov\td2, x12",
+        "4706c: 9e670182     \tfmov\td2, x12",
+        "47088: 9e670182     \tfmov\td2, x12",
+        "470a4: 9e670182     \tfmov\td2, x12"
+      ],
+      "hot_calls": []
+    },
+    {
+      "layout": "hybrid128",
+      "maximum": 255,
+      "boundary": [
+        "0x0000000000054a60",
+        "0x0000000000054b20"
+      ],
+      "body": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/c9g/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit/hybrid128-M255-scan-1-false-54a60.asm",
+      "body_sha256": "5ab076f8a747b1be79040d00b439dadc3707e013b68465c84d2ea0fa266054b8",
+      "own_SP_depth_range": {
+        "min": 0,
+        "max": 0
+      },
+      "zip_sum_filler_sites": [
+        "54a9c: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b",
+        "54ab8: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b",
+        "54ad4: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b",
+        "54ae8: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b"
+      ],
+      "GP_to_SIMD_sites": [
+        "54a90: 9e670182     \tfmov\td2, x12",
+        "54aac: 9e670182     \tfmov\td2, x12",
+        "54ac8: 9e670182     \tfmov\td2, x12",
+        "54ae4: 9e670182     \tfmov\td2, x12"
+      ],
+      "hot_calls": []
+    },
+    {
+      "layout": "planes",
+      "maximum": 255,
+      "boundary": [
+        "0x00000000000619a0",
+        "0x0000000000061a60"
+      ],
+      "body": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/c9g/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit/planes-M255-scan-1-false-619a0.asm",
+      "body_sha256": "2b76312b6cf7c94e18624e9ddbc7132ee395c0de4ac716dc40e269d0733410ab",
+      "own_SP_depth_range": {
+        "min": 0,
+        "max": 0
+      },
+      "zip_sum_filler_sites": [
+        "619d8: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b",
+        "619f4: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b",
+        "61a14: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b",
+        "61a28: 0e003842     \tzip1\tv2.8b, v2.8b, v0.8b"
+      ],
+      "GP_to_SIMD_sites": [
+        "619cc: 9e670182     \tfmov\td2, x12",
+        "619e8: 9e670182     \tfmov\td2, x12",
+        "61a04: 9e670182     \tfmov\td2, x12",
+        "61a24: 9e670182     \tfmov\td2, x12"
+      ],
+      "hot_calls": []
+    },
+    {
+      "layout": "blockplanes",
+      "maximum": 4095,
+      "boundary": [
+        "0x00000000000715e0",
+        "0x0000000000071680"
+      ],
+      "body": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/c9g/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit/blockplanes-M4095-scan-1-false-715e0.asm",
+      "body_sha256": "8841b5121f8af7316d9d72de968d106beaf5dbcbf7ffbbf2ac489829ed805e8c",
+      "own_SP_depth_range": {
+        "min": 0,
+        "max": 0
+      },
+      "zip_sum_filler_sites": [],
+      "GP_to_SIMD_sites": [],
+      "hot_calls": []
+    },
+    {
+      "layout": "blockgrouped",
+      "maximum": 4095,
+      "boundary": [
+        "0x000000000007f160",
+        "0x000000000007f200"
+      ],
+      "body": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/c9g/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit/blockgrouped-M4095-scan-1-false-7f160.asm",
+      "body_sha256": "21ec687c995de74b605780acd2ed2668e4e333682e1665a1f726017eb07d3f9d",
+      "own_SP_depth_range": {
+        "min": 0,
+        "max": 0
+      },
+      "zip_sum_filler_sites": [],
+      "GP_to_SIMD_sites": [],
+      "hot_calls": []
+    },
+    {
+      "layout": "split32",
+      "maximum": 4095,
+      "boundary": [
+        "0x000000000008c4c0",
+        "0x000000000008c560"
+      ],
+      "body": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/c9g/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit/split32-M4095-scan-1-false-8c4c0.asm",
+      "body_sha256": "1951687c75b77f024459d41f498d3c6b4b0647a9da75855b3b029e5cbc8c5365",
+      "own_SP_depth_range": {
+        "min": 0,
+        "max": 0
+      },
+      "zip_sum_filler_sites": [],
+      "GP_to_SIMD_sites": [],
+      "hot_calls": []
+    },
+    {
+      "layout": "grouped32",
+      "maximum": 4095,
+      "boundary": [
+        "0x0000000000099ac0",
+        "0x0000000000099b60"
+      ],
+      "body": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/c9g/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit/grouped32-M4095-scan-1-false-99ac0.asm",
+      "body_sha256": "27a0958ecbd8a70cb98f3e545f6ea7d4dee60170346c167409f44c73bf46e178",
+      "own_SP_depth_range": {
+        "min": 0,
+        "max": 0
+      },
+      "zip_sum_filler_sites": [],
+      "GP_to_SIMD_sites": [],
+      "hot_calls": []
+    },
+    {
+      "layout": "grouped-narrow-eligible",
+      "maximum": 4095,
+      "boundary": [
+        "0x00000000000a7180",
+        "0x00000000000a7220"
+      ],
+      "body": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/c9g/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit/grouped-narrow-eligible-M4095-scan-1-false-a7180.asm",
+      "body_sha256": "3db373a9a8e4430975207ddf6cfd4e7e29ed3e58c23baf64e0bd270288e78837",
+      "own_SP_depth_range": {
+        "min": 0,
+        "max": 0
+      },
+      "zip_sum_filler_sites": [],
+      "GP_to_SIMD_sites": [],
+      "hot_calls": []
+    },
+    {
+      "layout": "hybrid128",
+      "maximum": 4095,
+      "boundary": [
+        "0x00000000000b4cc0",
+        "0x00000000000b4d60"
+      ],
+      "body": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/c9g/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit/hybrid128-M4095-scan-1-false-b4cc0.asm",
+      "body_sha256": "61935c510d1dcada64d1e9b4db006008159222ac5c245bc87ea6c0bd409ad711",
+      "own_SP_depth_range": {
+        "min": 0,
+        "max": 0
+      },
+      "zip_sum_filler_sites": [],
+      "GP_to_SIMD_sites": [],
+      "hot_calls": []
+    },
+    {
+      "layout": "planes",
+      "maximum": 4095,
+      "boundary": [
+        "0x00000000000c1da0",
+        "0x00000000000c1e40"
+      ],
+      "body": "build/streampack-fresh-results/codegen-review/layout-explicit-final-native/c9g/armv8.2-a+simd-neoverse-v3/streampack_layout_explicit/planes-M4095-scan-1-false-c1da0.asm",
+      "body_sha256": "c0aa8470817c8678e51fbbcc0384bf2591f954b5ef23fce9d2846b9742c727cc",
+      "own_SP_depth_range": {
+        "min": 0,
+        "max": 0
+      },
+      "zip_sum_filler_sites": [],
+      "GP_to_SIMD_sites": [],
+      "hot_calls": []
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "scope": "Read-only actual local AArch64 linked-code diagnosis. No build, kernel execution, timing, MCA or worker launch. Header helper macro is symmetric; all body extracts refer to the binary hashes in writer-complete-functions.json.",
+  "receipts": {
+    "writer-initial-audit.json": {
+      "sha256": "1103143bce6da879837cdb99dab415650b79c22a55c5536a97ef8a5b6d0d8842",
+      "bytes": 50886
+    },
+    "writer-complete-functions.json": {
+      "sha256": "f3e0bfd300010b6723e8c6a4134507ce317e86cdc4a0a6882087b901169afec3",
+      "bytes": 57853
+    }
+  },
+  "compile_commands": [
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/streampack-fresh",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=1 -DSIXDB_TUNE_ZEN5=0 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/ikea/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb=. -ffunction-sections -fdata-sections -march=armv8.2-a+simd -mtune=neoverse-v3 -o workbench/spikes/streampack/CMakeFiles/streampack_mutable_population.dir/mutable_population.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/streampack/mutable_population.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/streampack/mutable_population.cpp",
+      "output": "workbench/spikes/streampack/CMakeFiles/streampack_mutable_population.dir/mutable_population.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/streampack-fresh",
+      "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=1 -DSIXDB_TUNE_ZEN5=0 -DSTREAMPACK_INLINE_HELPERS=1 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/ikea/include -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb=. -ffunction-sections -fdata-sections -march=armv8.2-a+simd -mtune=neoverse-v3 -o workbench/spikes/streampack/CMakeFiles/streampack_mutable_inline.dir/mutable_population.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/streampack/mutable_population.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/streampack/mutable_population.cpp",
+      "output": "workbench/spikes/streampack/CMakeFiles/streampack_mutable_inline.dir/mutable_population.cpp.o"
+    }
+  ],
+  "targeted_change": "All MutableDirect/MutableWidths before() and metadata_alias calls disappear in the inline binary. Baseline has nineteen such call sites across all functions; inline has zero. This includes duplicate width command drivers.",
+  "remaining_effect_boundary": "The inline binary outlines source_write_journal::before instead. Direct append keeps five journal call sites; width append six. A 24-byte byte_write argument is stored to caller stack and passed indirectly through x2, replacing the baseline wrapper scalar arguments. Each journal helper reserves 32 bytes of SP but has no visible own SP load/store, and no nested calls. This is not full journal fusion.",
+  "frame_bytes": {
+    "baseline": {
+      "direct16_write_trace": 65792,
+      "direct32_write_trace": 65792,
+      "widths8_write_trace": 65840,
+      "all_append": 80,
+      "mutable_before_wrapper": 0,
+      "direct16_soft_pack": 96,
+      "direct32_soft_pack": 96,
+      "widths8_soft_pack": 112
+    },
+    "inline": {
+      "direct16_write_trace": 65776,
+      "direct32_write_trace": 65776,
+      "widths8_write_trace": 65792,
+      "all_append": 128,
+      "journal_before": 32,
+      "direct16_replace": 96,
+      "direct32_replace": 96,
+      "widths8_replace": 112,
+      "direct16_soft_pack": 96,
+      "direct32_soft_pack": 96,
+      "widths8_soft_pack": 112
+    },
+    "limits": "Actual per-function maximum SP descent includes save areas. The write_trace frame includes the existing 64 KiB journal storage. No whole-process peak is claimed; libc callee frames and full call-stack accounting are excluded."
+  },
+  "command_loop_change": "Replace was inlined into all baseline write_trace functions. Inline variant outlines replace for all geometries. Baseline/inline driver instruction counts: direct16/32 348/252, width 332/260. Those smaller drivers do not imply less command work because the newly outlined replace bodies execute per edit.",
+  "empty_width_replace_change": "Baseline branches around width prefix for empty input. Inline outlined width replace computes prefix at 0x17918\u20130x17954 before the empty-input branch at 0x17958. The control therefore changes empty-input execution work despite preserving source semantics.",
+  "text_cost": {
+    "baseline_text": 169368,
+    "inline_text": 170200,
+    "increase": 832,
+    "baseline_rodata": 5282,
+    "inline_rodata": 5282
+  },
+  "lifetime_review": "Named writer w still lives through each command, and source_write_journal source identities refer to that same object. Journal argument temporaries live through the outlined calls; the emitted code does not introduce ownership or escaped temporary addresses. This inspection found no ABI/lifetime violation; runtime damage replay remains separate evidence.",
+  "interpretation": "Describe native measurements as the compiled helper-macro variant, not isolated elimination/fusion of journal calls. If testing true effect fusion, a further control must also inline the journal implementation and verify that its calls disappear. No performance effect is inferred from these local bodies."
+}

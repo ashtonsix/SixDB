@@ -1,0 +1,20 @@
+{
+  "files_sha256": {
+    "context.json": "55663187987ae62bf2316f95df55d44ad30417a4311a08cb52cbef01cf1ac77c",
+    "lifecycle-samples.csv": "695ff1b54fcb5d8ddff3d2d5bb0fbfa8bccb6c822a2ad73b495fad1dc2da1839",
+    "mutable-samples.csv": "d469165774df05f9f8bdc705ba18978af5e14f214c1e30f183fcc524b3ae7fed",
+    "phase-samples.csv": "b4c982412067ecb0648b48174f729e6ac96ca30e214ba91a5b5a49d27effa7b8",
+    "ring-samples.csv": "c238b2879b0747e400a651bfa3b5fe6134e82f27de5d131393e8375f167aa093",
+    "selection.json": "efe89ce2233f6089018b826258bc3a9e5279ce685b610e76929eb8548f76935d",
+    "worker-artifact.json": "762889969f5e371fe40e250bf528bd708ed921e21ec4fcb5ce2acc473b9bd980"
+  },
+  "format": 2,
+  "full_bundle": "artifact.json",
+  "kind": "files",
+  "regenerate": [
+    "python3",
+    "analysis/summarize_composition.py",
+    "inputs",
+    "REGENERATED_DIRECTORY"
+  ]
+}

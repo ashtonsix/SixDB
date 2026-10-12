@@ -1,0 +1,30 @@
+{
+  "worker": {
+    "id": "20261011T220359Z-933f4551",
+    "instance_id": "i-08959f337a110dd70",
+    "reused": true,
+    "reuse_count": 2,
+    "max_end": 1791770648.1912205
+  },
+  "instance_type": "c8i.large",
+  "variant": "x86-64-v3-granite-rapids",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "source": {
+    "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+    "digest": "0c6ccfb8f91440fa1b67998445ede90afda38413817ab2468a7cbfba8a860893",
+    "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+    "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+    "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+    "sha256": "09ebe6ed8fc91123f436aabcac0a559dc71d900cd0c167fdb5ee011095f39dec"
+  },
+  "source_commit": "a2f0a4d15438ad8d25b63c8744cf0c1a26b552ef",
+  "worker_result": {
+    "state": "complete",
+    "script_returncode": 0,
+    "script_seconds": 145.23221111297607,
+    "worker_seconds_before_collection": 149.21424102783203
+  },
+  "derivation": "python3 analysis/summarize_composition.py inputs REGENERATED_DIRECTORY",
+  "summary_script_sha256": "1503541244df620430a7ccbb87952eb82968db4a5df1b9d6bd117904e41e590b",
+  "provenance": "This derived bundle contains its exact CSV/phase inputs and analysis. worker-artifact.json recovers original sources, binaries, disassembly, logs and mappings; summaries were generated after worker collection."
+}
