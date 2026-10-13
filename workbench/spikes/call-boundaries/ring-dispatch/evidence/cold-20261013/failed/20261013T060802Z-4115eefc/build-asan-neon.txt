@@ -1,0 +1,7 @@
+[1/205] Building CXX object ikea/CMakeFiles/ikea_core.dir/src/overlap.cpp.o
+[2/205] Linking CXX static library ikea/libikea_core.a
+[3/205] Building CXX object ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/readers.cpp.o
+FAILED: ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/readers.cpp.o 
+/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/ikea/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -MD -MT ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/readers.cpp.o -MF ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/readers.cpp.o.d -o ikea/CMakeFiles/ikea_seriespack.dir/src/seriespack/readers.cpp.o -c /opt/sixdb/source/ikea/src/seriespack/readers.cpp
+Killed
+ninja: build stopped: subcommand failed.

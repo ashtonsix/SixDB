@@ -30,7 +30,7 @@ header-factor comparison keeps the old wrapper, same kernels/windows and the
 same shared-context signature to qualify that change. Actual downstream fallback
 calls remain part of complete lookup work.
 
-The final header-factor campaign fixes the shared Context, cold-positive windows,
+The callable header-factor campaign fixes the shared Context, cold-positive windows,
 Ring core, driver and all eight execution arms. It compares the outlined wrapper
 with direct invocation plus the state-base snapshot, at grains one/four, 128/4M
 keys and one/32 chains, with seven repetitions. Its three source-identical jobs
@@ -178,3 +178,84 @@ factor uses `run-cohort-direct.sh`, seven repetitions, V2 `neon` or x86
 original experimental driver; rebuilding current Ikea would answer a different
 question. The [local packet control](evidence/20261013/static-restore-scratch/reproduction.txt)
 has its own small source capture and reproduction script.
+
+## Prepared facts and cold continuations
+
+The next matched source cut keeps the selected Ring/Cohort headers and compares
+six caller compositions: the original 16-byte Cohort frame; a 40-byte frame with
+synchronous fallback; its same-visit native cold tail; prepared immutable facts
+with that tail; a 48-byte snapshot frame that reconstructs those facts after an
+ordinary helper; and completion-pass fusion using the existing Cohort API.
+The latter five keep the original Map/manual lookup bodies and qualified hint
+windows. Frame adaptation, kernel preparation, cold transfer and helper costs
+remain distinct factors.
+
+An opaque shared Context avoids restoring its pointer from each Slot, but
+callbacks still reload its Map fields. The prepared variant carries Map/base
+pointer bits, seed/mask and geometry in three 128-bit vector carriers, plus a
+line-size scalar. Those common values stay in the native transfer; the Slot
+still restores one eight-byte frame pointer. Its kernel preparation and fact
+representation change together, so timings do not isolate an ABI-only gain.
+These facts fit only a rotation where every pending frame uses them; different
+microtask owners must qualify their own common prefix.
+
+At 4M keys/32 chains, grain four and hints, these are merged reciprocal-throughput
+medians from seven repetitions in each of two opposite executable orders:
+
+| Host | Original Cohort | Prepared facts + cold tail | Its matched manual | Residual ns/lookup |
+| --- | ---: | ---: | ---: | ---: |
+| V2 NEON | 17.24 | 14.70 | 13.74 | 0.96 |
+| Granite AVX512 | 15.74 | 13.61 | 12.88 | 0.73 |
+| Zen5 AVX512 | 13.95 | 12.53 | 12.11 | 0.42 |
+
+The prepared composition improves throughput over the original reference by
+11–17% here, with a repeated gain in both orders. Pointer cold-tail isolation
+alone does not close the gap. Snapshot reconstruction and completion fusion
+do not establish a general additional win. Hot and singleton controls remain
+in the evidence: hot work retains Ring overhead, and nine descriptive
+five-percent direction-drift flags all concern large single-chain comparisons.
+No generic ABI or scheduling default changes follow from this matrix.
+
+Actual V2 ready metadata/payload callbacks in the tail/prepared variants have
+no ordinary calls or stack accesses. X86 prepared grain-four payload remains
+call-free but has 36 static red-zone memory instructions versus the pointer
+tail's 24, despite faster whole-operation throughput. Cold saves still matter:
+V2 grain-four tail/prepared frames allocate 48/144 bytes; the snapshot wrapper
+and ordinary helper allocate 16+160 bytes, before nested callees. Independent
+ARM parsing includes x29-relative accesses omitted by the original SP-only
+list. These are static emitted instructions and frames, not dynamic traffic,
+IPC, stalls or cache-source measurements.
+
+The ordinary timing trace contains 4,190,897 primary and 3,407 secondary keys,
+with no overflow: only 0.0812% downstream. It mainly tests ready-path costs.
+Separate forced controls exercise 32 real secondary and 80 overflow keys,
+ragged masks, exact budgets, promotion and cancellation. The current Ikea
+[complete hierarchy comparison](../../hashtable/RESULTS.md#complete-hierarchy-through-loom)
+owns the genuine aged-chain workload. Its independently checked Zen5 AVX2
+large-table Ring/manual gaps are 0.32 ns for fresh hits and 0.74 ns after eight
+turnovers; its ready callback is call-free and stack-free. That source/value
+shape and its later local probe-reset edit are separate from this matrix.
+The same caller's V2 32-stream gaps are 1.49/1.21 ns (4.8/3.5%), while its aged
+single-stream Ring/manual times are 175.87/140.17 ns. Large throughput closeness
+does not establish single-stream or hot-work parity.
+
+All 16,128 rows and 24 summary cells qualify against source commit
+`8d640b9e3a2a384eaad733f61a92c1c1e019a879`, digest
+`e1294dfb1e593aa7d0338d1502678aa8731dcef9498f65d88907d135b5704d19`.
+Each host passes 16 native and six O3 ASan/UBSan always-UAR Loom checks, plus
+ten release and ten sanitized forced caller controls before timing. V2 uses
+`c8g.large`, 4 GiB/two vCPUs pinned to CPU0; the preceding 2 GiB compiler-killed
+attempt supplies no timings. The initial Zen Spot setup interruption likewise
+supplies none. Older V2 medium-instance absolute timings are not matched controls.
+
+The [cold-factor evidence](evidence/cold-20261013/recovery.json) retains all
+repetitions, singleton/no-hint negatives, qualifiers, source identities and
+compact native assembly with full worker recovery references. The selected
+report verifies every indexed payload and recomputes medians and ratios using
+checkout-owned analysis code:
+
+```sh
+python3 workbench/tools/artifacts.py report \
+  workbench/spikes/call-boundaries/ring-dispatch/evidence/cold-20261013 \
+  build/reports/loom-ring-cold
+```

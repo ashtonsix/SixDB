@@ -1,0 +1,5584 @@
+{
+  "isa": "neon",
+  "limit": "Exact Hint1 prologue, stack/call and native handoff excerpts; dynamic execution and total nested stack cannot be inferred from static counts. Full ASM remains in the named worker archive.",
+  "policies": {
+    "cold_reference_grain1": {
+      "mode": "reference",
+      "configured_grain": 1,
+      "assembly_member": "assembly-neon-cold_reference_grain1.txt",
+      "assembly_sha256": "f7d2c53a63f15595c4c474eb4e0a5c8b04eac30dc1f735e7a1d26e1071146fc2",
+      "reported_codegen_member": "cold-codegen-neon.json",
+      "reported_codegen_sha256": "1d01d2434bf6fb19f7c1a46e5463401392f3a87dd185763c48ccb811467892c5",
+      "selected_headers": {
+        "controls/new/loom/ring.h": "c20f1d37871f9652035e63b0bfd33068e394e06ad91e55a1be29f9976ae0f117",
+        "controls/new/loom/cohort.h": "aaecd2c4ada55186e1a19011a8ab6a119924f002ef3e523f4c03ab3ebe7c0c97",
+        "workbench/spikes/hashtable/map.h": "865404bd45748f1a08aba58a55b0bb8f19546c65a397171e3a9765c0821eb548"
+      },
+      "bodies": [
+        {
+          "phase": "metadata",
+          "address": "00000000000120e0",
+          "assembly_line": 13508,
+          "emitted_all_path_instructions": 80,
+          "ordinary_call_sites": 0,
+          "entry_frame_bytes_excluding_red_zone": 0,
+          "stack_instruction_count": 0,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": false,
+          "native_tail_sites": [
+            "121fc"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "d911f1a59e97f91cf4df14f272122f20789e805dc80d26ae45cfcd9fe76ea588",
+          "selected_instructions": [
+            {
+              "line": 13509,
+              "text": "   120e0:      \tldrb\tw8, [x24, #0x8]"
+            },
+            {
+              "line": 13510,
+              "text": "   120e4:      \ttbz\tw8, #0x0, 0x121d8"
+            },
+            {
+              "line": 13511,
+              "text": "   120e8:      \tldr\tx9, [x23, #0x40]"
+            },
+            {
+              "line": 13512,
+              "text": "   120ec:      \tldr\tx11, [x24]"
+            },
+            {
+              "line": 13513,
+              "text": "   120f0:      \tldp\tx8, x10, [x11, #0x10]"
+            },
+            {
+              "line": 13514,
+              "text": "   120f4:      \tldr\tw12, [x9, #0x5c]"
+            },
+            {
+              "line": 13515,
+              "text": "   120f8:      \tldr\tw13, [x9, #0x54]"
+            },
+            {
+              "line": 13516,
+              "text": "   120fc:      \tldr\tq0, [x10, x12]"
+            },
+            {
+              "line": 13517,
+              "text": "   12100:      \tldr\tw12, [x9, #0x4c]"
+            },
+            {
+              "line": 13518,
+              "text": "   12104:      \tcmp\tw13, #0x40"
+            },
+            {
+              "line": 13519,
+              "text": "   12108:      \tlsr\tx8, x8, x12"
+            },
+            {
+              "line": 13520,
+              "text": "   1210c:      \tmov\tx12, #-0x1              // =-1"
+            },
+            {
+              "line": 13565,
+              "text": "   121c0:      \tb.hi\t0x1218c"
+            },
+            {
+              "line": 13566,
+              "text": "   121c4:      \tprfm\tpldl1keep, [x15]"
+            },
+            {
+              "line": 13567,
+              "text": "   121c8:      \tadd\tx15, x15, x11"
+            },
+            {
+              "line": 13568,
+              "text": "   121cc:      \tcmp\tx15, x14"
+            },
+            {
+              "line": 13569,
+              "text": "   121d0:      \tb.ls\t0x121c4"
+            },
+            {
+              "line": 13570,
+              "text": "   121d4:      \tb\t0x1218c"
+            },
+            {
+              "line": 13571,
+              "text": "   121d8:      \tadrp\tx8, 0x12000"
+            },
+            {
+              "line": 13572,
+              "text": "   121dc:      \tadd\tx8, x8, #0x220"
+            },
+            {
+              "line": 13573,
+              "text": "   121e0:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 13574,
+              "text": "   121e4:      \tcbz\tx21, 0x12200"
+            },
+            {
+              "line": 13575,
+              "text": "   121e8:      \tldr\tx22, [x20, #0xa8]"
+            },
+            {
+              "line": 13576,
+              "text": "   121ec:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 13577,
+              "text": "   121f0:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 13578,
+              "text": "   121f4:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 13579,
+              "text": "   121f8:      \tstr\tx8, [x20, #0xa8]"
+            },
+            {
+              "line": 13580,
+              "text": "   121fc:      \tbr\tx0"
+            },
+            {
+              "line": 13581,
+              "text": "   12200:      \tstr\txzr, [x20, #0x110]"
+            }
+          ]
+        },
+        {
+          "phase": "payload",
+          "address": "0000000000012220",
+          "assembly_line": 13590,
+          "emitted_all_path_instructions": 136,
+          "ordinary_call_sites": 1,
+          "entry_frame_bytes_excluding_red_zone": 16,
+          "stack_instruction_count": 5,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": true,
+          "native_tail_sites": [
+            "1240c"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "e9edc4bb891451ccc5acb609b4ef3f5455f9c7f73d33c383a05ad630dd21c7f3",
+          "selected_instructions": [
+            {
+              "line": 13591,
+              "text": "   12220:      \tstp\tx29, x30, [sp, #-0x10]!"
+            },
+            {
+              "line": 13592,
+              "text": "   12224:      \tmov\tx29, sp"
+            },
+            {
+              "line": 13593,
+              "text": "   12228:      \tldr\tx25, [x24, #0x8]"
+            },
+            {
+              "line": 13594,
+              "text": "   1222c:      \ttbz\tw25, #0x0, 0x123dc"
+            },
+            {
+              "line": 13595,
+              "text": "   12230:      \tldr\tx26, [x24]"
+            },
+            {
+              "line": 13596,
+              "text": "   12234:      \tldr\tx19, [x23, #0x40]"
+            },
+            {
+              "line": 13597,
+              "text": "   12238:      \tldr\tx10, [x26, #0x28]"
+            },
+            {
+              "line": 13598,
+              "text": "   1223c:      \tldr\tx9, [x26, #0x18]"
+            },
+            {
+              "line": 13599,
+              "text": "   12240:      \tcbz\tx10, 0x122ac"
+            },
+            {
+              "line": 13600,
+              "text": "   12244:      \tldrb\tw12, [x19, #0x68]"
+            },
+            {
+              "line": 13601,
+              "text": "   12248:      \tldp\tw15, w11, [x19, #0x4c]"
+            },
+            {
+              "line": 13602,
+              "text": "   1224c:      \tmov\tx16, #-0x1              // =-1"
+            },
+            {
+              "line": 13627,
+              "text": "   122b0:      \tcbz\tw8, 0x122e8"
+            },
+            {
+              "line": 13628,
+              "text": "   122b4:      \tldr\tx1, [x26, #0x8]"
+            },
+            {
+              "line": 13629,
+              "text": "   122b8:      \tmov\tx0, x19"
+            },
+            {
+              "line": 13630,
+              "text": "   122bc:      \tbl\t0xffa0"
+            },
+            {
+              "line": 13631,
+              "text": "   122c0:      \ttst\tw1, #0x1"
+            },
+            {
+              "line": 13632,
+              "text": "   122c4:      \tand\tx8, x1, #0x1"
+            },
+            {
+              "line": 13633,
+              "text": "   122c8:      \tcsel\tx9, x0, xzr, ne"
+            },
+            {
+              "line": 13699,
+              "text": "   123d0:      \tand\tx9, x25, #0xfffffffffffffffe"
+            },
+            {
+              "line": 13700,
+              "text": "   123d4:      \tcmp\tx8, #0x0"
+            },
+            {
+              "line": 13701,
+              "text": "   123d8:      \tcsel\tx25, x9, x25, eq"
+            },
+            {
+              "line": 13702,
+              "text": "   123dc:      \tstr\tx25, [x24, #0x8]"
+            },
+            {
+              "line": 13703,
+              "text": "   123e0:      \tcbz\tx25, 0x12410"
+            },
+            {
+              "line": 13704,
+              "text": "   123e4:      \tadrp\tx8, 0x12000"
+            },
+            {
+              "line": 13705,
+              "text": "   123e8:      \tadd\tx8, x8, #0xe0"
+            },
+            {
+              "line": 13706,
+              "text": "   123ec:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 13707,
+              "text": "   123f0:      \tcbz\tx21, 0x12418"
+            },
+            {
+              "line": 13708,
+              "text": "   123f4:      \tldr\tx22, [x20, #0xa8]"
+            },
+            {
+              "line": 13709,
+              "text": "   123f8:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 13710,
+              "text": "   123fc:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 13711,
+              "text": "   12400:      \tstr\tx8, [x20, #0xa8]"
+            },
+            {
+              "line": 13712,
+              "text": "   12404:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 13713,
+              "text": "   12408:      \tldp\tx29, x30, [sp], #0x10"
+            },
+            {
+              "line": 13714,
+              "text": "   1240c:      \tbr\tx0"
+            },
+            {
+              "line": 13715,
+              "text": "   12410:      \tldp\tx29, x30, [sp], #0x10"
+            },
+            {
+              "line": 13718,
+              "text": "   1241c:      \tldp\tx29, x30, [sp], #0x10"
+            }
+          ]
+        }
+      ]
+    },
+    "cold_sync_grain1": {
+      "mode": "sync",
+      "configured_grain": 1,
+      "assembly_member": "assembly-neon-cold_sync_grain1.txt",
+      "assembly_sha256": "e897ed1e8cc3e93d1493fb37a165aef7df533606fb74cf5edf835b17e8d1449a",
+      "reported_codegen_member": "cold-codegen-neon.json",
+      "reported_codegen_sha256": "1d01d2434bf6fb19f7c1a46e5463401392f3a87dd185763c48ccb811467892c5",
+      "selected_headers": {
+        "controls/new/loom/ring.h": "c20f1d37871f9652035e63b0bfd33068e394e06ad91e55a1be29f9976ae0f117",
+        "controls/new/loom/cohort.h": "aaecd2c4ada55186e1a19011a8ab6a119924f002ef3e523f4c03ab3ebe7c0c97",
+        "controls/cold/map.h": "8bb867672aa7c4265f95a97f9960b2d6c35901bccc547e0729480917707ff130"
+      },
+      "bodies": [
+        {
+          "phase": "metadata",
+          "address": "00000000000148c0",
+          "assembly_line": 16072,
+          "emitted_all_path_instructions": 80,
+          "ordinary_call_sites": 0,
+          "entry_frame_bytes_excluding_red_zone": 0,
+          "stack_instruction_count": 0,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": false,
+          "native_tail_sites": [
+            "149dc"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "a463a143846457e9e95d7f6a2dd951ec2f6a0ebb3fccb0eeeb71ef651aad5d65",
+          "selected_instructions": [
+            {
+              "line": 16073,
+              "text": "   148c0:      \tldrb\tw8, [x24, #0x8]"
+            },
+            {
+              "line": 16074,
+              "text": "   148c4:      \ttbz\tw8, #0x0, 0x149b8"
+            },
+            {
+              "line": 16075,
+              "text": "   148c8:      \tldr\tx9, [x23, #0x40]"
+            },
+            {
+              "line": 16076,
+              "text": "   148cc:      \tldr\tx11, [x24]"
+            },
+            {
+              "line": 16077,
+              "text": "   148d0:      \tldp\tx8, x10, [x11, #0x10]"
+            },
+            {
+              "line": 16078,
+              "text": "   148d4:      \tldr\tw12, [x9, #0x5c]"
+            },
+            {
+              "line": 16079,
+              "text": "   148d8:      \tldr\tw13, [x9, #0x54]"
+            },
+            {
+              "line": 16080,
+              "text": "   148dc:      \tldr\tq0, [x10, x12]"
+            },
+            {
+              "line": 16081,
+              "text": "   148e0:      \tldr\tw12, [x9, #0x4c]"
+            },
+            {
+              "line": 16082,
+              "text": "   148e4:      \tcmp\tw13, #0x40"
+            },
+            {
+              "line": 16083,
+              "text": "   148e8:      \tlsr\tx8, x8, x12"
+            },
+            {
+              "line": 16084,
+              "text": "   148ec:      \tmov\tx12, #-0x1              // =-1"
+            },
+            {
+              "line": 16129,
+              "text": "   149a0:      \tb.hi\t0x1496c"
+            },
+            {
+              "line": 16130,
+              "text": "   149a4:      \tprfm\tpldl1keep, [x15]"
+            },
+            {
+              "line": 16131,
+              "text": "   149a8:      \tadd\tx15, x15, x11"
+            },
+            {
+              "line": 16132,
+              "text": "   149ac:      \tcmp\tx15, x14"
+            },
+            {
+              "line": 16133,
+              "text": "   149b0:      \tb.ls\t0x149a4"
+            },
+            {
+              "line": 16134,
+              "text": "   149b4:      \tb\t0x1496c"
+            },
+            {
+              "line": 16135,
+              "text": "   149b8:      \tadrp\tx8, 0x14000"
+            },
+            {
+              "line": 16136,
+              "text": "   149bc:      \tadd\tx8, x8, #0xa00"
+            },
+            {
+              "line": 16137,
+              "text": "   149c0:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 16138,
+              "text": "   149c4:      \tcbz\tx21, 0x149e0"
+            },
+            {
+              "line": 16139,
+              "text": "   149c8:      \tldr\tx22, [x20, #0xa8]"
+            },
+            {
+              "line": 16140,
+              "text": "   149cc:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 16141,
+              "text": "   149d0:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 16142,
+              "text": "   149d4:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 16143,
+              "text": "   149d8:      \tstr\tx8, [x20, #0xa8]"
+            },
+            {
+              "line": 16144,
+              "text": "   149dc:      \tbr\tx0"
+            },
+            {
+              "line": 16145,
+              "text": "   149e0:      \tstr\txzr, [x20, #0x110]"
+            }
+          ]
+        },
+        {
+          "phase": "payload",
+          "address": "0000000000014a00",
+          "assembly_line": 16154,
+          "emitted_all_path_instructions": 184,
+          "ordinary_call_sites": 1,
+          "entry_frame_bytes_excluding_red_zone": 16,
+          "stack_instruction_count": 5,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": true,
+          "native_tail_sites": [
+            "14cb8"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "1e21ef670e0f6195acbcc40a3431e9cf5359edc0f5898adfbda083a85df3509c",
+          "selected_instructions": [
+            {
+              "line": 16155,
+              "text": "   14a00:      \tstp\tx29, x30, [sp, #-0x10]!"
+            },
+            {
+              "line": 16156,
+              "text": "   14a04:      \tmov\tx29, sp"
+            },
+            {
+              "line": 16157,
+              "text": "   14a08:      \tldr\tx8, [x24, #0x18]"
+            },
+            {
+              "line": 16158,
+              "text": "   14a0c:      \tcbz\tx8, 0x14c70"
+            },
+            {
+              "line": 16159,
+              "text": "   14a10:      \tldr\tx25, [x24, #0x10]"
+            },
+            {
+              "line": 16160,
+              "text": "   14a14:      \tldr\tx26, [x25, #0x40]"
+            },
+            {
+              "line": 16161,
+              "text": "   14a18:      \tcbz\tx26, 0x14c70"
+            },
+            {
+              "line": 16162,
+              "text": "   14a1c:      \tldr\tx19, [x23, #0x40]"
+            },
+            {
+              "line": 16163,
+              "text": "   14a20:      \tldr\tx10, [x25, #0x28]"
+            },
+            {
+              "line": 16164,
+              "text": "   14a24:      \tldr\tx9, [x25, #0x18]"
+            },
+            {
+              "line": 16165,
+              "text": "   14a28:      \tcbz\tx10, 0x14a8c"
+            },
+            {
+              "line": 16166,
+              "text": "   14a2c:      \tldrb\tw12, [x19, #0x68]"
+            },
+            {
+              "line": 16191,
+              "text": "   14a90:      \tcbz\tw8, 0x14b8c"
+            },
+            {
+              "line": 16192,
+              "text": "   14a94:      \tldr\tx1, [x25, #0x8]"
+            },
+            {
+              "line": 16193,
+              "text": "   14a98:      \tmov\tx0, x19"
+            },
+            {
+              "line": 16194,
+              "text": "   14a9c:      \tbl\t0x8780"
+            },
+            {
+              "line": 16195,
+              "text": "   14aa0:      \tldp\tx9, x10, [x25, #0x30]"
+            },
+            {
+              "line": 16196,
+              "text": "   14aa4:      \ttst\tw1, #0x1"
+            },
+            {
+              "line": 16197,
+              "text": "   14aa8:      \tand\tx11, x1, #0x1"
+            },
+            {
+              "line": 16314,
+              "text": "   14c7c:      \tldr\tx9, [x9, #0x40]"
+            },
+            {
+              "line": 16315,
+              "text": "   14c80:      \tcbnz\tx9, 0x14c90"
+            },
+            {
+              "line": 16316,
+              "text": "   14c84:      \tand\tx8, x8, #0xfffffffffffffffe"
+            },
+            {
+              "line": 16317,
+              "text": "   14c88:      \tstr\tx8, [x24, #0x8]"
+            },
+            {
+              "line": 16318,
+              "text": "   14c8c:      \tcbz\tx8, 0x14cc8"
+            },
+            {
+              "line": 16319,
+              "text": "   14c90:      \tadrp\tx8, 0x14000"
+            },
+            {
+              "line": 16320,
+              "text": "   14c94:      \tadd\tx8, x8, #0x8c0"
+            },
+            {
+              "line": 16321,
+              "text": "   14c98:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 16322,
+              "text": "   14c9c:      \tcbz\tx21, 0x14cbc"
+            },
+            {
+              "line": 16323,
+              "text": "   14ca0:      \tldr\tx22, [x20, #0xa8]"
+            },
+            {
+              "line": 16324,
+              "text": "   14ca4:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 16325,
+              "text": "   14ca8:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 16326,
+              "text": "   14cac:      \tstr\tx8, [x20, #0xa8]"
+            },
+            {
+              "line": 16327,
+              "text": "   14cb0:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 16328,
+              "text": "   14cb4:      \tldp\tx29, x30, [sp], #0x10"
+            },
+            {
+              "line": 16329,
+              "text": "   14cb8:      \tbr\tx0"
+            },
+            {
+              "line": 16330,
+              "text": "   14cbc:      \tstr\txzr, [x20, #0x110]"
+            },
+            {
+              "line": 16331,
+              "text": "   14cc0:      \tldp\tx29, x30, [sp], #0x10"
+            },
+            {
+              "line": 16333,
+              "text": "   14cc8:      \tldp\tx29, x30, [sp], #0x10"
+            }
+          ]
+        }
+      ]
+    },
+    "cold_tail_grain1": {
+      "mode": "tail",
+      "configured_grain": 1,
+      "assembly_member": "assembly-neon-cold_tail_grain1.txt",
+      "assembly_sha256": "253454032d41aa7a506e67941cb0496d102ccc19980114184a5088eeb71aa462",
+      "reported_codegen_member": "cold-codegen-neon.json",
+      "reported_codegen_sha256": "1d01d2434bf6fb19f7c1a46e5463401392f3a87dd185763c48ccb811467892c5",
+      "selected_headers": {
+        "controls/new/loom/ring.h": "c20f1d37871f9652035e63b0bfd33068e394e06ad91e55a1be29f9976ae0f117",
+        "controls/new/loom/cohort.h": "aaecd2c4ada55186e1a19011a8ab6a119924f002ef3e523f4c03ab3ebe7c0c97",
+        "controls/cold/map.h": "8bb867672aa7c4265f95a97f9960b2d6c35901bccc547e0729480917707ff130"
+      },
+      "bodies": [
+        {
+          "phase": "payload_cold",
+          "address": "0000000000006030",
+          "assembly_line": 1038,
+          "emitted_all_path_instructions": 179,
+          "ordinary_call_sites": 2,
+          "entry_frame_bytes_excluding_red_zone": 16,
+          "stack_instruction_count": 5,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": true,
+          "native_tail_sites": [
+            "6164"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "f03be3a77ee7dc98d7118f379171276f2791af5f7d49d285b2365e51e32fc723",
+          "selected_instructions": [
+            {
+              "line": 1039,
+              "text": "    6030:      \tstp\tx29, x30, [sp, #-0x10]!"
+            },
+            {
+              "line": 1040,
+              "text": "    6034:      \tmov\tx29, sp"
+            },
+            {
+              "line": 1041,
+              "text": "    6038:      \tldr\tx25, [x24, #0x10]"
+            },
+            {
+              "line": 1042,
+              "text": "    603c:      \tldr\tx26, [x24, #0x20]"
+            },
+            {
+              "line": 1043,
+              "text": "    6040:      \tmov\tw8, #0x48               // =72"
+            },
+            {
+              "line": 1044,
+              "text": "    6044:      \tldr\tx19, [x23, #0x40]"
+            },
+            {
+              "line": 1045,
+              "text": "    6048:      \tmadd\tx27, x26, x8, x25"
+            },
+            {
+              "line": 1046,
+              "text": "    604c:      \tmov\tx0, x19"
+            },
+            {
+              "line": 1047,
+              "text": "    6050:      \tldr\tx1, [x27, #0x8]"
+            },
+            {
+              "line": 1048,
+              "text": "    6054:      \tbl\t0x9240"
+            },
+            {
+              "line": 1049,
+              "text": "    6058:      \tldp\tx9, x10, [x27, #0x30]"
+            },
+            {
+              "line": 1050,
+              "text": "    605c:      \ttst\tw1, #0x1"
+            },
+            {
+              "line": 1051,
+              "text": "    6060:      \tand\tx11, x1, #0x1"
+            },
+            {
+              "line": 1101,
+              "text": "    6128:      \tldr\tx9, [x9, #0x40]"
+            },
+            {
+              "line": 1102,
+              "text": "    612c:      \tcbnz\tx9, 0x613c"
+            },
+            {
+              "line": 1103,
+              "text": "    6130:      \tand\tx8, x8, #0xfffffffffffffffe"
+            },
+            {
+              "line": 1104,
+              "text": "    6134:      \tstr\tx8, [x24, #0x8]"
+            },
+            {
+              "line": 1105,
+              "text": "    6138:      \tcbz\tx8, 0x6210"
+            },
+            {
+              "line": 1106,
+              "text": "    613c:      \tadrp\tx8, 0x15000"
+            },
+            {
+              "line": 1107,
+              "text": "    6140:      \tadd\tx8, x8, #0x340"
+            },
+            {
+              "line": 1108,
+              "text": "    6144:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 1109,
+              "text": "    6148:      \tcbz\tx21, 0x6204"
+            },
+            {
+              "line": 1110,
+              "text": "    614c:      \tldr\tx22, [x20, #0xa8]"
+            },
+            {
+              "line": 1111,
+              "text": "    6150:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 1112,
+              "text": "    6154:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 1113,
+              "text": "    6158:      \tstr\tx8, [x20, #0xa8]"
+            },
+            {
+              "line": 1114,
+              "text": "    615c:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 1115,
+              "text": "    6160:      \tldp\tx29, x30, [sp], #0x10"
+            },
+            {
+              "line": 1116,
+              "text": "    6164:      \tbr\tx0"
+            },
+            {
+              "line": 1117,
+              "text": "    6168:      \tldr\tx8, [x24, #0x18]"
+            },
+            {
+              "line": 1148,
+              "text": "    61e4:      \tcbz\tw8, 0x6230"
+            },
+            {
+              "line": 1149,
+              "text": "    61e8:      \tldr\tx1, [x25, #0x8]"
+            },
+            {
+              "line": 1150,
+              "text": "    61ec:      \tmov\tx0, x19"
+            },
+            {
+              "line": 1151,
+              "text": "    61f0:      \tbl\t0x9240"
+            },
+            {
+              "line": 1152,
+              "text": "    61f4:      \ttst\tw1, #0x1"
+            },
+            {
+              "line": 1153,
+              "text": "    61f8:      \tand\tx9, x1, #0x1"
+            },
+            {
+              "line": 1154,
+              "text": "    61fc:      \tcsel\tx8, x0, xzr, ne"
+            },
+            {
+              "line": 1157,
+              "text": "    6208:      \tldp\tx29, x30, [sp], #0x10"
+            },
+            {
+              "line": 1159,
+              "text": "    6210:      \tldp\tx29, x30, [sp], #0x10"
+            }
+          ]
+        },
+        {
+          "phase": "metadata",
+          "address": "0000000000015340",
+          "assembly_line": 16752,
+          "emitted_all_path_instructions": 80,
+          "ordinary_call_sites": 0,
+          "entry_frame_bytes_excluding_red_zone": 0,
+          "stack_instruction_count": 0,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": false,
+          "native_tail_sites": [
+            "1545c"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "1e3b170c5069884c78ed43063b9e43f9f2bee5c15f2d984407aca07dde61630c",
+          "selected_instructions": [
+            {
+              "line": 16753,
+              "text": "   15340:      \tldrb\tw8, [x24, #0x8]"
+            },
+            {
+              "line": 16754,
+              "text": "   15344:      \ttbz\tw8, #0x0, 0x15438"
+            },
+            {
+              "line": 16755,
+              "text": "   15348:      \tldr\tx9, [x23, #0x40]"
+            },
+            {
+              "line": 16756,
+              "text": "   1534c:      \tldr\tx11, [x24]"
+            },
+            {
+              "line": 16757,
+              "text": "   15350:      \tldp\tx8, x10, [x11, #0x10]"
+            },
+            {
+              "line": 16758,
+              "text": "   15354:      \tldr\tw12, [x9, #0x5c]"
+            },
+            {
+              "line": 16759,
+              "text": "   15358:      \tldr\tw13, [x9, #0x54]"
+            },
+            {
+              "line": 16760,
+              "text": "   1535c:      \tldr\tq0, [x10, x12]"
+            },
+            {
+              "line": 16761,
+              "text": "   15360:      \tldr\tw12, [x9, #0x4c]"
+            },
+            {
+              "line": 16762,
+              "text": "   15364:      \tcmp\tw13, #0x40"
+            },
+            {
+              "line": 16763,
+              "text": "   15368:      \tlsr\tx8, x8, x12"
+            },
+            {
+              "line": 16764,
+              "text": "   1536c:      \tmov\tx12, #-0x1              // =-1"
+            },
+            {
+              "line": 16809,
+              "text": "   15420:      \tb.hi\t0x153ec"
+            },
+            {
+              "line": 16810,
+              "text": "   15424:      \tprfm\tpldl1keep, [x15]"
+            },
+            {
+              "line": 16811,
+              "text": "   15428:      \tadd\tx15, x15, x11"
+            },
+            {
+              "line": 16812,
+              "text": "   1542c:      \tcmp\tx15, x14"
+            },
+            {
+              "line": 16813,
+              "text": "   15430:      \tb.ls\t0x15424"
+            },
+            {
+              "line": 16814,
+              "text": "   15434:      \tb\t0x153ec"
+            },
+            {
+              "line": 16815,
+              "text": "   15438:      \tadrp\tx8, 0x15000"
+            },
+            {
+              "line": 16816,
+              "text": "   1543c:      \tadd\tx8, x8, #0x480"
+            },
+            {
+              "line": 16817,
+              "text": "   15440:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 16818,
+              "text": "   15444:      \tcbz\tx21, 0x15460"
+            },
+            {
+              "line": 16819,
+              "text": "   15448:      \tldr\tx22, [x20, #0xa8]"
+            },
+            {
+              "line": 16820,
+              "text": "   1544c:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 16821,
+              "text": "   15450:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 16822,
+              "text": "   15454:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 16823,
+              "text": "   15458:      \tstr\tx8, [x20, #0xa8]"
+            },
+            {
+              "line": 16824,
+              "text": "   1545c:      \tbr\tx0"
+            },
+            {
+              "line": 16825,
+              "text": "   15460:      \tstr\txzr, [x20, #0x110]"
+            }
+          ]
+        },
+        {
+          "phase": "payload",
+          "address": "0000000000015480",
+          "assembly_line": 16834,
+          "emitted_all_path_instructions": 128,
+          "ordinary_call_sites": 0,
+          "entry_frame_bytes_excluding_red_zone": 0,
+          "stack_instruction_count": 0,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": false,
+          "native_tail_sites": [
+            "15654"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "1e7e1b7d6c28c74e0e331525ae073a0af80edd458fbd85732b5357509cef135a",
+          "selected_instructions": [
+            {
+              "line": 16835,
+              "text": "   15480:      \tldr\tx8, [x24, #0x18]"
+            },
+            {
+              "line": 16836,
+              "text": "   15484:      \tcbz\tx8, 0x15610"
+            },
+            {
+              "line": 16837,
+              "text": "   15488:      \tldr\tx8, [x24, #0x10]"
+            },
+            {
+              "line": 16838,
+              "text": "   1548c:      \tldr\tx10, [x8, #0x40]"
+            },
+            {
+              "line": 16839,
+              "text": "   15490:      \tcbz\tx10, 0x15610"
+            },
+            {
+              "line": 16840,
+              "text": "   15494:      \tldr\tx9, [x23, #0x40]"
+            },
+            {
+              "line": 16841,
+              "text": "   15498:      \tldr\tx13, [x8, #0x28]"
+            },
+            {
+              "line": 16842,
+              "text": "   1549c:      \tldr\tx12, [x8, #0x18]"
+            },
+            {
+              "line": 16843,
+              "text": "   154a0:      \tcbz\tx13, 0x1550c"
+            },
+            {
+              "line": 16844,
+              "text": "   154a4:      \tldrb\tw15, [x9, #0x68]"
+            },
+            {
+              "line": 16845,
+              "text": "   154a8:      \tldp\tw18, w14, [x9, #0x4c]"
+            },
+            {
+              "line": 16846,
+              "text": "   154ac:      \tmov\tx19, #-0x1              // =-1"
+            },
+            {
+              "line": 16937,
+              "text": "   15618:      \tldr\tx9, [x24]"
+            },
+            {
+              "line": 16938,
+              "text": "   1561c:      \tldr\tx9, [x9, #0x40]"
+            },
+            {
+              "line": 16939,
+              "text": "   15620:      \tcbnz\tx9, 0x15630"
+            },
+            {
+              "line": 16940,
+              "text": "   15624:      \tand\tx8, x8, #0xfffffffffffffffe"
+            },
+            {
+              "line": 16941,
+              "text": "   15628:      \tstr\tx8, [x24, #0x8]"
+            },
+            {
+              "line": 16942,
+              "text": "   1562c:      \tcbz\tx8, 0x15660"
+            },
+            {
+              "line": 16943,
+              "text": "   15630:      \tadrp\tx8, 0x15000"
+            },
+            {
+              "line": 16944,
+              "text": "   15634:      \tadd\tx8, x8, #0x340"
+            },
+            {
+              "line": 16945,
+              "text": "   15638:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 16946,
+              "text": "   1563c:      \tcbz\tx21, 0x15658"
+            },
+            {
+              "line": 16947,
+              "text": "   15640:      \tldr\tx22, [x20, #0xa8]"
+            },
+            {
+              "line": 16948,
+              "text": "   15644:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 16949,
+              "text": "   15648:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 16950,
+              "text": "   1564c:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 16951,
+              "text": "   15650:      \tstr\tx8, [x20, #0xa8]"
+            },
+            {
+              "line": 16952,
+              "text": "   15654:      \tbr\tx0"
+            },
+            {
+              "line": 16953,
+              "text": "   15658:      \tstr\txzr, [x20, #0x110]"
+            }
+          ]
+        }
+      ]
+    },
+    "cold_reference_grain4": {
+      "mode": "reference",
+      "configured_grain": 4,
+      "assembly_member": "assembly-neon-cold_reference_grain4.txt",
+      "assembly_sha256": "8b00ba3438792d893276247aae8fd0bc8e36456e08394374007cfcbeecce4d2d",
+      "reported_codegen_member": "cold-codegen-neon.json",
+      "reported_codegen_sha256": "1d01d2434bf6fb19f7c1a46e5463401392f3a87dd185763c48ccb811467892c5",
+      "selected_headers": {
+        "controls/new/loom/ring.h": "c20f1d37871f9652035e63b0bfd33068e394e06ad91e55a1be29f9976ae0f117",
+        "controls/new/loom/cohort.h": "aaecd2c4ada55186e1a19011a8ab6a119924f002ef3e523f4c03ab3ebe7c0c97",
+        "workbench/spikes/hashtable/map.h": "865404bd45748f1a08aba58a55b0bb8f19546c65a397171e3a9765c0821eb548"
+      },
+      "bodies": [
+        {
+          "phase": "metadata",
+          "address": "0000000000012420",
+          "assembly_line": 13716,
+          "emitted_all_path_instructions": 272,
+          "ordinary_call_sites": 0,
+          "entry_frame_bytes_excluding_red_zone": 0,
+          "stack_instruction_count": 0,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": false,
+          "native_tail_sites": [
+            "12838"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "d052251d9d8fc43131b09ee96b23a26c5101b6c6ff2beb78eede3457260a3e0e",
+          "selected_instructions": [
+            {
+              "line": 13717,
+              "text": "   12420:      \tldr\tx8, [x23, #0x40]"
+            },
+            {
+              "line": 13718,
+              "text": "   12424:      \tldp\tx9, x10, [x24]"
+            },
+            {
+              "line": 13719,
+              "text": "   12428:      \ttbz\tw10, #0x0, 0x12514"
+            },
+            {
+              "line": 13720,
+              "text": "   1242c:      \tldp\tx11, x12, [x9, #0x10]"
+            },
+            {
+              "line": 13721,
+              "text": "   12430:      \tldr\tw13, [x8, #0x5c]"
+            },
+            {
+              "line": 13722,
+              "text": "   12434:      \tldr\tw14, [x8, #0x54]"
+            },
+            {
+              "line": 13723,
+              "text": "   12438:      \tcmp\tw14, #0x40"
+            },
+            {
+              "line": 13724,
+              "text": "   1243c:      \tldr\tq0, [x12, x13]"
+            },
+            {
+              "line": 13725,
+              "text": "   12440:      \tldr\tw13, [x8, #0x4c]"
+            },
+            {
+              "line": 13726,
+              "text": "   12444:      \tlsr\tx11, x11, x13"
+            },
+            {
+              "line": 13727,
+              "text": "   12448:      \tmov\tx13, #-0x1              // =-1"
+            },
+            {
+              "line": 13728,
+              "text": "   1244c:      \tlsl\tx15, x13, x14"
+            },
+            {
+              "line": 13964,
+              "text": "   127fc:      \tnop"
+            },
+            {
+              "line": 13965,
+              "text": "   12800:      \tprfm\tpldl1keep, [x15]"
+            },
+            {
+              "line": 13966,
+              "text": "   12804:      \tadd\tx15, x15, x11"
+            },
+            {
+              "line": 13967,
+              "text": "   12808:      \tcmp\tx15, x14"
+            },
+            {
+              "line": 13968,
+              "text": "   1280c:      \tb.ls\t0x12800"
+            },
+            {
+              "line": 13969,
+              "text": "   12810:      \tb\t0x127c0"
+            },
+            {
+              "line": 13970,
+              "text": "   12814:      \tadrp\tx8, 0x12000"
+            },
+            {
+              "line": 13971,
+              "text": "   12818:      \tadd\tx8, x8, #0x860"
+            },
+            {
+              "line": 13972,
+              "text": "   1281c:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 13973,
+              "text": "   12820:      \tcbz\tx21, 0x1283c"
+            },
+            {
+              "line": 13974,
+              "text": "   12824:      \tldr\tx22, [x20, #0xa8]"
+            },
+            {
+              "line": 13975,
+              "text": "   12828:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 13976,
+              "text": "   1282c:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 13977,
+              "text": "   12830:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 13978,
+              "text": "   12834:      \tstr\tx8, [x20, #0xa8]"
+            },
+            {
+              "line": 13979,
+              "text": "   12838:      \tbr\tx0"
+            },
+            {
+              "line": 13980,
+              "text": "   1283c:      \tstr\txzr, [x20, #0x110]"
+            }
+          ]
+        },
+        {
+          "phase": "payload",
+          "address": "0000000000012860",
+          "assembly_line": 13990,
+          "emitted_all_path_instructions": 160,
+          "ordinary_call_sites": 1,
+          "entry_frame_bytes_excluding_red_zone": 48,
+          "stack_instruction_count": 21,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": true,
+          "native_tail_sites": [
+            "12a98"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "03184994c7385f21404bd03c709e20c1f817be47759d97614c211073e18bbd51",
+          "selected_instructions": [
+            {
+              "line": 13991,
+              "text": "   12860:      \tsub\tsp, sp, #0x30"
+            },
+            {
+              "line": 13992,
+              "text": "   12864:      \tstp\tx29, x30, [sp, #0x20]"
+            },
+            {
+              "line": 13993,
+              "text": "   12868:      \tadd\tx29, sp, #0x20"
+            },
+            {
+              "line": 13994,
+              "text": "   1286c:      \tldr\tx19, [x23, #0x40]"
+            },
+            {
+              "line": 13995,
+              "text": "   12870:      \tldp\tx27, x26, [x24]"
+            },
+            {
+              "line": 13996,
+              "text": "   12874:      \tstr\tx22, [sp]"
+            },
+            {
+              "line": 13997,
+              "text": "   12878:      \tmov\tw28, #0x1               // =1"
+            },
+            {
+              "line": 13998,
+              "text": "   1287c:      \tstr\tx21, [sp, #0x10]"
+            },
+            {
+              "line": 13999,
+              "text": "   12880:      \tstur\tx20, [x29, #-0x8]"
+            },
+            {
+              "line": 14000,
+              "text": "   12884:      \tstr\tx24, [sp, #0x8]"
+            },
+            {
+              "line": 14001,
+              "text": "   12888:      \tmov\tw0, #0x48               // =72"
+            },
+            {
+              "line": 14002,
+              "text": "   1288c:      \tmov\tx24, #-0x1              // =-1"
+            },
+            {
+              "line": 14043,
+              "text": "   12930:      \tcbz\tw8, 0x1296c"
+            },
+            {
+              "line": 14044,
+              "text": "   12934:      \tldr\tx1, [x20, #0x8]"
+            },
+            {
+              "line": 14045,
+              "text": "   12938:      \tmov\tx0, x19"
+            },
+            {
+              "line": 14046,
+              "text": "   1293c:      \tbl\t0x10360"
+            },
+            {
+              "line": 14047,
+              "text": "   12940:      \ttst\tw1, #0x1"
+            },
+            {
+              "line": 14048,
+              "text": "   12944:      \tand\tx9, x1, #0x1"
+            },
+            {
+              "line": 14049,
+              "text": "   12948:      \tcsel\tx8, x0, xzr, ne"
+            },
+            {
+              "line": 14116,
+              "text": "   12a54:      \tldr\tx24, [sp, #0x8]"
+            },
+            {
+              "line": 14118,
+              "text": "   12a5c:      \tcbz\tx21, 0x12a9c"
+            },
+            {
+              "line": 14119,
+              "text": "   12a60:      \tldr\tx9, [sp]"
+            },
+            {
+              "line": 14120,
+              "text": "   12a64:      \tadrp\tx8, 0x12000"
+            },
+            {
+              "line": 14121,
+              "text": "   12a68:      \tadd\tx8, x8, #0x420"
+            },
+            {
+              "line": 14122,
+              "text": "   12a6c:      \tstr\tx8, [x9]"
+            },
+            {
+              "line": 14123,
+              "text": "   12a70:      \tldr\tx9, [sp, #0x10]"
+            },
+            {
+              "line": 14124,
+              "text": "   12a74:      \tcbz\tx9, 0x12ab4"
+            },
+            {
+              "line": 14125,
+              "text": "   12a78:      \tldur\tx20, [x29, #-0x8]"
+            },
+            {
+              "line": 14126,
+              "text": "   12a7c:      \tsub\tx21, x9, #0x1"
+            },
+            {
+              "line": 14127,
+              "text": "   12a80:      \tldr\tx22, [x20, #0xa8]"
+            },
+            {
+              "line": 14128,
+              "text": "   12a84:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 14129,
+              "text": "   12a88:      \tstr\tx8, [x20, #0xa8]"
+            },
+            {
+              "line": 14130,
+              "text": "   12a8c:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 14131,
+              "text": "   12a90:      \tldp\tx29, x30, [sp, #0x20]"
+            },
+            {
+              "line": 14132,
+              "text": "   12a94:      \tadd\tsp, sp, #0x30"
+            },
+            {
+              "line": 14133,
+              "text": "   12a98:      \tbr\tx0"
+            },
+            {
+              "line": 14134,
+              "text": "   12a9c:      \tldur\tx20, [x29, #-0x8]"
+            },
+            {
+              "line": 14135,
+              "text": "   12aa0:      \tldr\tx21, [sp, #0x10]"
+            },
+            {
+              "line": 14136,
+              "text": "   12aa4:      \tldr\tx22, [sp]"
+            },
+            {
+              "line": 14137,
+              "text": "   12aa8:      \tldp\tx29, x30, [sp, #0x20]"
+            },
+            {
+              "line": 14138,
+              "text": "   12aac:      \tadd\tsp, sp, #0x30"
+            },
+            {
+              "line": 14140,
+              "text": "   12ab4:      \tldur\tx8, [x29, #-0x8]"
+            },
+            {
+              "line": 14142,
+              "text": "   12abc:      \tldp\tx29, x30, [sp, #0x20]"
+            },
+            {
+              "line": 14143,
+              "text": "   12ac0:      \tadd\tsp, sp, #0x30"
+            }
+          ]
+        }
+      ]
+    },
+    "cold_sync_grain4": {
+      "mode": "sync",
+      "configured_grain": 4,
+      "assembly_member": "assembly-neon-cold_sync_grain4.txt",
+      "assembly_sha256": "a2fa0c7339d5db4e1ca046747e1574e53a6aebf0c67868b9bd8ad268f73af917",
+      "reported_codegen_member": "cold-codegen-neon.json",
+      "reported_codegen_sha256": "1d01d2434bf6fb19f7c1a46e5463401392f3a87dd185763c48ccb811467892c5",
+      "selected_headers": {
+        "controls/new/loom/ring.h": "c20f1d37871f9652035e63b0bfd33068e394e06ad91e55a1be29f9976ae0f117",
+        "controls/new/loom/cohort.h": "aaecd2c4ada55186e1a19011a8ab6a119924f002ef3e523f4c03ab3ebe7c0c97",
+        "controls/cold/map.h": "8bb867672aa7c4265f95a97f9960b2d6c35901bccc547e0729480917707ff130"
+      },
+      "bodies": [
+        {
+          "phase": "metadata",
+          "address": "0000000000014de0",
+          "assembly_line": 16400,
+          "emitted_all_path_instructions": 272,
+          "ordinary_call_sites": 0,
+          "entry_frame_bytes_excluding_red_zone": 0,
+          "stack_instruction_count": 0,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": false,
+          "native_tail_sites": [
+            "151f8"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "d3e2b77f5c7feca766906dbf75ce74a1dfa3107fffabfddb9917d5a09da6c0ee",
+          "selected_instructions": [
+            {
+              "line": 16401,
+              "text": "   14de0:      \tldr\tx8, [x23, #0x40]"
+            },
+            {
+              "line": 16402,
+              "text": "   14de4:      \tldp\tx9, x10, [x24]"
+            },
+            {
+              "line": 16403,
+              "text": "   14de8:      \ttbz\tw10, #0x0, 0x14ed4"
+            },
+            {
+              "line": 16404,
+              "text": "   14dec:      \tldp\tx11, x12, [x9, #0x10]"
+            },
+            {
+              "line": 16405,
+              "text": "   14df0:      \tldr\tw13, [x8, #0x5c]"
+            },
+            {
+              "line": 16406,
+              "text": "   14df4:      \tldr\tw14, [x8, #0x54]"
+            },
+            {
+              "line": 16407,
+              "text": "   14df8:      \tcmp\tw14, #0x40"
+            },
+            {
+              "line": 16408,
+              "text": "   14dfc:      \tldr\tq0, [x12, x13]"
+            },
+            {
+              "line": 16409,
+              "text": "   14e00:      \tldr\tw13, [x8, #0x4c]"
+            },
+            {
+              "line": 16410,
+              "text": "   14e04:      \tlsr\tx11, x11, x13"
+            },
+            {
+              "line": 16411,
+              "text": "   14e08:      \tmov\tx13, #-0x1              // =-1"
+            },
+            {
+              "line": 16412,
+              "text": "   14e0c:      \tlsl\tx15, x13, x14"
+            },
+            {
+              "line": 16648,
+              "text": "   151bc:      \tnop"
+            },
+            {
+              "line": 16649,
+              "text": "   151c0:      \tprfm\tpldl1keep, [x15]"
+            },
+            {
+              "line": 16650,
+              "text": "   151c4:      \tadd\tx15, x15, x11"
+            },
+            {
+              "line": 16651,
+              "text": "   151c8:      \tcmp\tx15, x14"
+            },
+            {
+              "line": 16652,
+              "text": "   151cc:      \tb.ls\t0x151c0"
+            },
+            {
+              "line": 16653,
+              "text": "   151d0:      \tb\t0x15180"
+            },
+            {
+              "line": 16654,
+              "text": "   151d4:      \tadrp\tx8, 0x15000"
+            },
+            {
+              "line": 16655,
+              "text": "   151d8:      \tadd\tx8, x8, #0x220"
+            },
+            {
+              "line": 16656,
+              "text": "   151dc:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 16657,
+              "text": "   151e0:      \tcbz\tx21, 0x151fc"
+            },
+            {
+              "line": 16658,
+              "text": "   151e4:      \tldr\tx22, [x20, #0xa8]"
+            },
+            {
+              "line": 16659,
+              "text": "   151e8:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 16660,
+              "text": "   151ec:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 16661,
+              "text": "   151f0:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 16662,
+              "text": "   151f4:      \tstr\tx8, [x20, #0xa8]"
+            },
+            {
+              "line": 16663,
+              "text": "   151f8:      \tbr\tx0"
+            },
+            {
+              "line": 16664,
+              "text": "   151fc:      \tstr\txzr, [x20, #0x110]"
+            }
+          ]
+        },
+        {
+          "phase": "payload",
+          "address": "0000000000015220",
+          "assembly_line": 16674,
+          "emitted_all_path_instructions": 224,
+          "ordinary_call_sites": 1,
+          "entry_frame_bytes_excluding_red_zone": 48,
+          "stack_instruction_count": 18,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": true,
+          "native_tail_sites": [
+            "1550c"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "bbd28a158b697a8adf8fd020c73c2be28fd1833aa6c59f7e183ab7758f0a397d",
+          "selected_instructions": [
+            {
+              "line": 16675,
+              "text": "   15220:      \tsub\tsp, sp, #0x30"
+            },
+            {
+              "line": 16676,
+              "text": "   15224:      \tstp\tx29, x30, [sp, #0x20]"
+            },
+            {
+              "line": 16677,
+              "text": "   15228:      \tadd\tx29, sp, #0x20"
+            },
+            {
+              "line": 16678,
+              "text": "   1522c:      \tldr\tx19, [x23, #0x40]"
+            },
+            {
+              "line": 16679,
+              "text": "   15230:      \tldp\tx28, x26, [x24, #0x10]"
+            },
+            {
+              "line": 16680,
+              "text": "   15234:      \tstp\tx22, x21, [sp, #0x8]"
+            },
+            {
+              "line": 16681,
+              "text": "   15238:      \tmov\tw22, #0x48              // =72"
+            },
+            {
+              "line": 16682,
+              "text": "   1523c:      \tmov\tx21, #-0x1              // =-1"
+            },
+            {
+              "line": 16683,
+              "text": "   15240:      \tstur\tx20, [x29, #-0x8]"
+            },
+            {
+              "line": 16684,
+              "text": "   15244:      \tmov\tx25, xzr"
+            },
+            {
+              "line": 16685,
+              "text": "   15248:      \tb\t0x15258"
+            },
+            {
+              "line": 16686,
+              "text": "   1524c:      \tadd\tx25, x25, #0x1"
+            },
+            {
+              "line": 16720,
+              "text": "   152d4:      \tcbz\tw8, 0x153cc"
+            },
+            {
+              "line": 16721,
+              "text": "   152d8:      \tldr\tx1, [x20, #0x8]"
+            },
+            {
+              "line": 16722,
+              "text": "   152dc:      \tmov\tx0, x19"
+            },
+            {
+              "line": 16723,
+              "text": "   152e0:      \tbl\t0x8780"
+            },
+            {
+              "line": 16724,
+              "text": "   152e4:      \tldp\tx9, x10, [x20, #0x30]"
+            },
+            {
+              "line": 16725,
+              "text": "   152e8:      \ttst\tw1, #0x1"
+            },
+            {
+              "line": 16726,
+              "text": "   152ec:      \tand\tx11, x1, #0x1"
+            },
+            {
+              "line": 16846,
+              "text": "   154cc:      \tldr\tx21, [sp, #0x10]"
+            },
+            {
+              "line": 16847,
+              "text": "   154d0:      \tstr\tx8, [x24, #0x8]"
+            },
+            {
+              "line": 16848,
+              "text": "   154d4:      \tcbz\tx8, 0x15568"
+            },
+            {
+              "line": 16849,
+              "text": "   154d8:      \tldr\tx9, [sp, #0x8]"
+            },
+            {
+              "line": 16850,
+              "text": "   154dc:      \tadrp\tx8, 0x14000"
+            },
+            {
+              "line": 16851,
+              "text": "   154e0:      \tadd\tx8, x8, #0xde0"
+            },
+            {
+              "line": 16852,
+              "text": "   154e4:      \tstr\tx8, [x9]"
+            },
+            {
+              "line": 16853,
+              "text": "   154e8:      \tcbz\tx21, 0x1557c"
+            },
+            {
+              "line": 16854,
+              "text": "   154ec:      \tldur\tx20, [x29, #-0x8]"
+            },
+            {
+              "line": 16855,
+              "text": "   154f0:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 16856,
+              "text": "   154f4:      \tldr\tx22, [x20, #0xa8]"
+            },
+            {
+              "line": 16857,
+              "text": "   154f8:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 16858,
+              "text": "   154fc:      \tstr\tx8, [x20, #0xa8]"
+            },
+            {
+              "line": 16859,
+              "text": "   15500:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 16860,
+              "text": "   15504:      \tldp\tx29, x30, [sp, #0x20]"
+            },
+            {
+              "line": 16861,
+              "text": "   15508:      \tadd\tsp, sp, #0x30"
+            },
+            {
+              "line": 16862,
+              "text": "   1550c:      \tbr\tx0"
+            },
+            {
+              "line": 16863,
+              "text": "   15510:      \tldr\tx8, [x10, #0x40]"
+            },
+            {
+              "line": 16882,
+              "text": "   1555c:      \tldr\tx21, [sp, #0x10]"
+            },
+            {
+              "line": 16885,
+              "text": "   15568:      \tldur\tx20, [x29, #-0x8]"
+            },
+            {
+              "line": 16886,
+              "text": "   1556c:      \tldr\tx22, [sp, #0x8]"
+            },
+            {
+              "line": 16887,
+              "text": "   15570:      \tldp\tx29, x30, [sp, #0x20]"
+            },
+            {
+              "line": 16888,
+              "text": "   15574:      \tadd\tsp, sp, #0x30"
+            },
+            {
+              "line": 16890,
+              "text": "   1557c:      \tldur\tx8, [x29, #-0x8]"
+            },
+            {
+              "line": 16892,
+              "text": "   15584:      \tldp\tx29, x30, [sp, #0x20]"
+            },
+            {
+              "line": 16893,
+              "text": "   15588:      \tadd\tsp, sp, #0x30"
+            }
+          ]
+        }
+      ]
+    },
+    "cold_tail_grain4": {
+      "mode": "tail",
+      "configured_grain": 4,
+      "assembly_member": "assembly-neon-cold_tail_grain4.txt",
+      "assembly_sha256": "b760f3337a2535c4c377d7e8fc07a8c19943659337c4d2f70e78a42db5bcb44a",
+      "reported_codegen_member": "cold-codegen-neon.json",
+      "reported_codegen_sha256": "1d01d2434bf6fb19f7c1a46e5463401392f3a87dd185763c48ccb811467892c5",
+      "selected_headers": {
+        "controls/new/loom/ring.h": "c20f1d37871f9652035e63b0bfd33068e394e06ad91e55a1be29f9976ae0f117",
+        "controls/new/loom/cohort.h": "aaecd2c4ada55186e1a19011a8ab6a119924f002ef3e523f4c03ab3ebe7c0c97",
+        "controls/cold/map.h": "8bb867672aa7c4265f95a97f9960b2d6c35901bccc547e0729480917707ff130"
+      },
+      "bodies": [
+        {
+          "phase": "payload_cold",
+          "address": "0000000000006088",
+          "assembly_line": 1060,
+          "emitted_all_path_instructions": 203,
+          "ordinary_call_sites": 2,
+          "entry_frame_bytes_excluding_red_zone": 48,
+          "stack_instruction_count": 16,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": true,
+          "native_tail_sites": [
+            "6388"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "ab94deb9b4837b0aa2020a149ec553b45cd773e1f8f387108133c15a6f786f9d",
+          "selected_instructions": [
+            {
+              "line": 1061,
+              "text": "    6088:      \tsub\tsp, sp, #0x30"
+            },
+            {
+              "line": 1062,
+              "text": "    608c:      \tstp\tx29, x30, [sp, #0x20]"
+            },
+            {
+              "line": 1063,
+              "text": "    6090:      \tadd\tx29, sp, #0x20"
+            },
+            {
+              "line": 1064,
+              "text": "    6094:      \tstp\tx22, x21, [sp, #0x8]"
+            },
+            {
+              "line": 1065,
+              "text": "    6098:      \tstur\tx20, [x29, #-0x8]"
+            },
+            {
+              "line": 1066,
+              "text": "    609c:      \tldr\tx27, [x24, #0x10]"
+            },
+            {
+              "line": 1067,
+              "text": "    60a0:      \tldr\tx20, [x24, #0x20]"
+            },
+            {
+              "line": 1068,
+              "text": "    60a4:      \tmov\tw8, #0x48               // =72"
+            },
+            {
+              "line": 1069,
+              "text": "    60a8:      \tldr\tx19, [x23, #0x40]"
+            },
+            {
+              "line": 1070,
+              "text": "    60ac:      \tmov\tx26, #0x11eb            // =4587"
+            },
+            {
+              "line": 1071,
+              "text": "    60b0:      \tmovk\tx26, #0x1331, lsl #16"
+            },
+            {
+              "line": 1072,
+              "text": "    60b4:      \tmovk\tx26, #0x49bb, lsl #32"
+            },
+            {
+              "line": 1074,
+              "text": "    60bc:      \tmadd\tx21, x20, x8, x27"
+            },
+            {
+              "line": 1075,
+              "text": "    60c0:      \tmov\tx0, x19"
+            },
+            {
+              "line": 1076,
+              "text": "    60c4:      \tldr\tx1, [x21, #0x8]"
+            },
+            {
+              "line": 1077,
+              "text": "    60c8:      \tbl\t0x93c0"
+            },
+            {
+              "line": 1078,
+              "text": "    60cc:      \tldp\tx9, x10, [x21, #0x30]"
+            },
+            {
+              "line": 1079,
+              "text": "    60d0:      \ttst\tw1, #0x1"
+            },
+            {
+              "line": 1080,
+              "text": "    60d4:      \tand\tx11, x1, #0x1"
+            },
+            {
+              "line": 1158,
+              "text": "    620c:      \tcbz\tw8, 0x6244"
+            },
+            {
+              "line": 1159,
+              "text": "    6210:      \tldr\tx1, [x21, #0x8]"
+            },
+            {
+              "line": 1160,
+              "text": "    6214:      \tmov\tx0, x19"
+            },
+            {
+              "line": 1161,
+              "text": "    6218:      \tbl\t0x93c0"
+            },
+            {
+              "line": 1162,
+              "text": "    621c:      \ttst\tw1, #0x1"
+            },
+            {
+              "line": 1163,
+              "text": "    6220:      \tand\tx9, x1, #0x1"
+            },
+            {
+              "line": 1164,
+              "text": "    6224:      \tcsel\tx8, x0, xzr, ne"
+            },
+            {
+              "line": 1238,
+              "text": "    634c:      \tstr\tx12, [x24, #0x8]"
+            },
+            {
+              "line": 1239,
+              "text": "    6350:      \tcbz\tx12, 0x638c"
+            },
+            {
+              "line": 1240,
+              "text": "    6354:      \tldp\tx10, x9, [sp, #0x8]"
+            },
+            {
+              "line": 1241,
+              "text": "    6358:      \tadrp\tx8, 0x15000"
+            },
+            {
+              "line": 1242,
+              "text": "    635c:      \tadd\tx8, x8, #0x9a0"
+            },
+            {
+              "line": 1243,
+              "text": "    6360:      \tstr\tx8, [x10]"
+            },
+            {
+              "line": 1244,
+              "text": "    6364:      \tcbz\tx9, 0x63a0"
+            },
+            {
+              "line": 1245,
+              "text": "    6368:      \tldur\tx20, [x29, #-0x8]"
+            },
+            {
+              "line": 1246,
+              "text": "    636c:      \tsub\tx21, x9, #0x1"
+            },
+            {
+              "line": 1247,
+              "text": "    6370:      \tldr\tx22, [x20, #0xa8]"
+            },
+            {
+              "line": 1248,
+              "text": "    6374:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 1249,
+              "text": "    6378:      \tstr\tx8, [x20, #0xa8]"
+            },
+            {
+              "line": 1250,
+              "text": "    637c:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 1251,
+              "text": "    6380:      \tldp\tx29, x30, [sp, #0x20]"
+            },
+            {
+              "line": 1252,
+              "text": "    6384:      \tadd\tsp, sp, #0x30"
+            },
+            {
+              "line": 1253,
+              "text": "    6388:      \tbr\tx0"
+            },
+            {
+              "line": 1254,
+              "text": "    638c:      \tldur\tx20, [x29, #-0x8]"
+            },
+            {
+              "line": 1255,
+              "text": "    6390:      \tldp\tx22, x21, [sp, #0x8]"
+            },
+            {
+              "line": 1256,
+              "text": "    6394:      \tldp\tx29, x30, [sp, #0x20]"
+            },
+            {
+              "line": 1257,
+              "text": "    6398:      \tadd\tsp, sp, #0x30"
+            },
+            {
+              "line": 1259,
+              "text": "    63a0:      \tldur\tx8, [x29, #-0x8]"
+            },
+            {
+              "line": 1261,
+              "text": "    63a8:      \tldp\tx29, x30, [sp, #0x20]"
+            },
+            {
+              "line": 1262,
+              "text": "    63ac:      \tadd\tsp, sp, #0x30"
+            }
+          ]
+        },
+        {
+          "phase": "metadata",
+          "address": "00000000000159a0",
+          "assembly_line": 17160,
+          "emitted_all_path_instructions": 272,
+          "ordinary_call_sites": 0,
+          "entry_frame_bytes_excluding_red_zone": 0,
+          "stack_instruction_count": 0,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": false,
+          "native_tail_sites": [
+            "15db8"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "d70b2f4392e38fc613b9ce9909bd3e42a1224f7e571a714735374baa1765966f",
+          "selected_instructions": [
+            {
+              "line": 17161,
+              "text": "   159a0:      \tldr\tx8, [x23, #0x40]"
+            },
+            {
+              "line": 17162,
+              "text": "   159a4:      \tldp\tx9, x10, [x24]"
+            },
+            {
+              "line": 17163,
+              "text": "   159a8:      \ttbz\tw10, #0x0, 0x15a94"
+            },
+            {
+              "line": 17164,
+              "text": "   159ac:      \tldp\tx11, x12, [x9, #0x10]"
+            },
+            {
+              "line": 17165,
+              "text": "   159b0:      \tldr\tw13, [x8, #0x5c]"
+            },
+            {
+              "line": 17166,
+              "text": "   159b4:      \tldr\tw14, [x8, #0x54]"
+            },
+            {
+              "line": 17167,
+              "text": "   159b8:      \tcmp\tw14, #0x40"
+            },
+            {
+              "line": 17168,
+              "text": "   159bc:      \tldr\tq0, [x12, x13]"
+            },
+            {
+              "line": 17169,
+              "text": "   159c0:      \tldr\tw13, [x8, #0x4c]"
+            },
+            {
+              "line": 17170,
+              "text": "   159c4:      \tlsr\tx11, x11, x13"
+            },
+            {
+              "line": 17171,
+              "text": "   159c8:      \tmov\tx13, #-0x1              // =-1"
+            },
+            {
+              "line": 17172,
+              "text": "   159cc:      \tlsl\tx15, x13, x14"
+            },
+            {
+              "line": 17408,
+              "text": "   15d7c:      \tnop"
+            },
+            {
+              "line": 17409,
+              "text": "   15d80:      \tprfm\tpldl1keep, [x15]"
+            },
+            {
+              "line": 17410,
+              "text": "   15d84:      \tadd\tx15, x15, x11"
+            },
+            {
+              "line": 17411,
+              "text": "   15d88:      \tcmp\tx15, x14"
+            },
+            {
+              "line": 17412,
+              "text": "   15d8c:      \tb.ls\t0x15d80"
+            },
+            {
+              "line": 17413,
+              "text": "   15d90:      \tb\t0x15d40"
+            },
+            {
+              "line": 17414,
+              "text": "   15d94:      \tadrp\tx8, 0x15000"
+            },
+            {
+              "line": 17415,
+              "text": "   15d98:      \tadd\tx8, x8, #0xde0"
+            },
+            {
+              "line": 17416,
+              "text": "   15d9c:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 17417,
+              "text": "   15da0:      \tcbz\tx21, 0x15dbc"
+            },
+            {
+              "line": 17418,
+              "text": "   15da4:      \tldr\tx22, [x20, #0xa8]"
+            },
+            {
+              "line": 17419,
+              "text": "   15da8:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 17420,
+              "text": "   15dac:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 17421,
+              "text": "   15db0:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 17422,
+              "text": "   15db4:      \tstr\tx8, [x20, #0xa8]"
+            },
+            {
+              "line": 17423,
+              "text": "   15db8:      \tbr\tx0"
+            },
+            {
+              "line": 17424,
+              "text": "   15dbc:      \tstr\txzr, [x20, #0x110]"
+            }
+          ]
+        },
+        {
+          "phase": "payload",
+          "address": "0000000000015de0",
+          "assembly_line": 17434,
+          "emitted_all_path_instructions": 160,
+          "ordinary_call_sites": 0,
+          "entry_frame_bytes_excluding_red_zone": 0,
+          "stack_instruction_count": 0,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": false,
+          "native_tail_sites": [
+            "15fd8"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "f9eace2dfb631600572a38aa7daf6e8d437dae07b45aa771f6383c8d71c66c01",
+          "selected_instructions": [
+            {
+              "line": 17435,
+              "text": "   15de0:      \tldr\tx9, [x23, #0x40]"
+            },
+            {
+              "line": 17436,
+              "text": "   15de4:      \tldp\tx10, x11, [x24, #0x10]"
+            },
+            {
+              "line": 17437,
+              "text": "   15de8:      \tmov\tx13, #0xe5b9            // =58809"
+            },
+            {
+              "line": 17438,
+              "text": "   15dec:      \tmov\tx14, #0x11eb            // =4587"
+            },
+            {
+              "line": 17439,
+              "text": "   15df0:      \tmov\tw12, #0x48              // =72"
+            },
+            {
+              "line": 17440,
+              "text": "   15df4:      \tmovk\tx13, #0x1ce4, lsl #16"
+            },
+            {
+              "line": 17441,
+              "text": "   15df8:      \tmovk\tx14, #0x1331, lsl #16"
+            },
+            {
+              "line": 17442,
+              "text": "   15dfc:      \tmov\tx15, #-0x1              // =-1"
+            },
+            {
+              "line": 17443,
+              "text": "   15e00:      \tmov\tx8, xzr"
+            },
+            {
+              "line": 17444,
+              "text": "   15e04:      \tmovk\tx13, #0x476d, lsl #32"
+            },
+            {
+              "line": 17445,
+              "text": "   15e08:      \tmovk\tx14, #0x49bb, lsl #32"
+            },
+            {
+              "line": 17446,
+              "text": "   15e0c:      \tmovk\tx13, #0xbf58, lsl #48"
+            },
+            {
+              "line": 17546,
+              "text": "   15f9c:      \ttbnz\tw9, #0x0, 0x15fdc"
+            },
+            {
+              "line": 17547,
+              "text": "   15fa0:      \ttbnz\tw9, #0x1, 0x15ff0"
+            },
+            {
+              "line": 17548,
+              "text": "   15fa4:      \ttbnz\tw9, #0x2, 0x16004"
+            },
+            {
+              "line": 17549,
+              "text": "   15fa8:      \ttbnz\tw9, #0x3, 0x16018"
+            },
+            {
+              "line": 17550,
+              "text": "   15fac:      \tstr\tx8, [x24, #0x8]"
+            },
+            {
+              "line": 17551,
+              "text": "   15fb0:      \tcbz\tx8, 0x16030"
+            },
+            {
+              "line": 17552,
+              "text": "   15fb4:      \tadrp\tx8, 0x15000"
+            },
+            {
+              "line": 17553,
+              "text": "   15fb8:      \tadd\tx8, x8, #0x9a0"
+            },
+            {
+              "line": 17554,
+              "text": "   15fbc:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 17555,
+              "text": "   15fc0:      \tcbz\tx21, 0x16034"
+            },
+            {
+              "line": 17556,
+              "text": "   15fc4:      \tldr\tx22, [x20, #0xa8]"
+            },
+            {
+              "line": 17557,
+              "text": "   15fc8:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 17558,
+              "text": "   15fcc:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 17559,
+              "text": "   15fd0:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 17560,
+              "text": "   15fd4:      \tstr\tx8, [x20, #0xa8]"
+            },
+            {
+              "line": 17561,
+              "text": "   15fd8:      \tbr\tx0"
+            },
+            {
+              "line": 17562,
+              "text": "   15fdc:      \tldr\tx8, [x10, #0x40]"
+            }
+          ]
+        }
+      ]
+    },
+    "cold_vector_grain1": {
+      "mode": "vector",
+      "configured_grain": 1,
+      "assembly_member": "assembly-neon-cold_vector_grain1.txt",
+      "assembly_sha256": "292a810a68dee8808bee795d7e17ad2d22c6387cc4b7a1f82535c53b1c9961fb",
+      "reported_codegen_member": "cold-codegen-neon.json",
+      "reported_codegen_sha256": "1d01d2434bf6fb19f7c1a46e5463401392f3a87dd185763c48ccb811467892c5",
+      "selected_headers": {
+        "controls/new/loom/ring.h": "c20f1d37871f9652035e63b0bfd33068e394e06ad91e55a1be29f9976ae0f117",
+        "controls/new/loom/cohort.h": "aaecd2c4ada55186e1a19011a8ab6a119924f002ef3e523f4c03ab3ebe7c0c97",
+        "controls/prepared-tail/map.h": "113dd0c3acff82bcb26c97282a48b2167754fa3e67f0d51f79ee070098cbbd4a"
+      },
+      "bodies": [
+        {
+          "phase": "payload_cold",
+          "address": "000000000000602c",
+          "assembly_line": 1037,
+          "emitted_all_path_instructions": 169,
+          "ordinary_call_sites": 2,
+          "entry_frame_bytes_excluding_red_zone": 80,
+          "stack_instruction_count": 19,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": true,
+          "native_tail_sites": [
+            "6170"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "134bcd1fbcb722cb9d090d6f08cf6d213512d98332ec7b307d018cd90c9e87b5",
+          "selected_instructions": [
+            {
+              "line": 1038,
+              "text": "    602c:      \tsub\tsp, sp, #0x50"
+            },
+            {
+              "line": 1039,
+              "text": "    6030:      \tstp\tx29, x30, [sp, #0x40]"
+            },
+            {
+              "line": 1040,
+              "text": "    6034:      \tadd\tx29, sp, #0x40"
+            },
+            {
+              "line": 1041,
+              "text": "    6038:      \tldr\tx25, [x24, #0x10]"
+            },
+            {
+              "line": 1042,
+              "text": "    603c:      \tldr\tx28, [x24, #0x20]"
+            },
+            {
+              "line": 1043,
+              "text": "    6040:      \tmov\tw8, #0x48               // =72"
+            },
+            {
+              "line": 1044,
+              "text": "    6044:      \tfmov\tx19, d0"
+            },
+            {
+              "line": 1045,
+              "text": "    6048:      \tmov\tx0, x19"
+            },
+            {
+              "line": 1046,
+              "text": "    604c:      \tstur\tq2, [x29, #-0x10]"
+            },
+            {
+              "line": 1047,
+              "text": "    6050:      \tstur\tx22, [x29, #-0x18]"
+            },
+            {
+              "line": 1048,
+              "text": "    6054:      \tmov\tx22, v0.d[1]"
+            },
+            {
+              "line": 1049,
+              "text": "    6058:      \tstp\tq0, q1, [sp]"
+            },
+            {
+              "line": 1050,
+              "text": "    605c:      \tmadd\tx26, x28, x8, x25"
+            },
+            {
+              "line": 1051,
+              "text": "    6060:      \tfmov\tx27, d1"
+            },
+            {
+              "line": 1052,
+              "text": "    6064:      \tldr\tx1, [x26, #0x8]"
+            },
+            {
+              "line": 1053,
+              "text": "    6068:      \tbl\t0x9960"
+            },
+            {
+              "line": 1054,
+              "text": "    606c:      \tldp\tx9, x10, [x26, #0x30]"
+            },
+            {
+              "line": 1055,
+              "text": "    6070:      \ttst\tw1, #0x1"
+            },
+            {
+              "line": 1056,
+              "text": "    6074:      \tand\tx11, x1, #0x1"
+            },
+            {
+              "line": 1057,
+              "text": "    6078:      \tldur\tq2, [x29, #-0x10]"
+            },
+            {
+              "line": 1104,
+              "text": "    6134:      \tstr\tx8, [x24, #0x8]"
+            },
+            {
+              "line": 1105,
+              "text": "    6138:      \tcbz\tx8, 0x6208"
+            },
+            {
+              "line": 1106,
+              "text": "    613c:      \tldur\tx9, [x29, #-0x18]"
+            },
+            {
+              "line": 1107,
+              "text": "    6140:      \tadrp\tx8, 0x15000"
+            },
+            {
+              "line": 1108,
+              "text": "    6144:      \tadd\tx8, x8, #0xca0"
+            },
+            {
+              "line": 1109,
+              "text": "    6148:      \tstr\tx8, [x9]"
+            },
+            {
+              "line": 1110,
+              "text": "    614c:      \tcbz\tx21, 0x61f8"
+            },
+            {
+              "line": 1111,
+              "text": "    6150:      \tldr\tx22, [x20, #0xe8]"
+            },
+            {
+              "line": 1112,
+              "text": "    6154:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 1113,
+              "text": "    6158:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 1114,
+              "text": "    615c:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 1115,
+              "text": "    6160:      \tstr\tx8, [x20, #0xe8]"
+            },
+            {
+              "line": 1116,
+              "text": "    6164:      \tldp\tq0, q1, [sp]"
+            },
+            {
+              "line": 1117,
+              "text": "    6168:      \tldp\tx29, x30, [sp, #0x40]"
+            },
+            {
+              "line": 1118,
+              "text": "    616c:      \tadd\tsp, sp, #0x50"
+            },
+            {
+              "line": 1119,
+              "text": "    6170:      \tbr\tx0"
+            },
+            {
+              "line": 1120,
+              "text": "    6174:      \tldr\tx8, [x24, #0x18]"
+            },
+            {
+              "line": 1127,
+              "text": "    6190:      \tldr\tq0, [sp, #0x10]"
+            },
+            {
+              "line": 1144,
+              "text": "    61d4:      \tcbz\tw8, 0x6234"
+            },
+            {
+              "line": 1145,
+              "text": "    61d8:      \tldr\tx1, [x25, #0x8]"
+            },
+            {
+              "line": 1146,
+              "text": "    61dc:      \tmov\tx0, x19"
+            },
+            {
+              "line": 1147,
+              "text": "    61e0:      \tbl\t0x9960"
+            },
+            {
+              "line": 1148,
+              "text": "    61e4:      \tldur\tq2, [x29, #-0x10]"
+            },
+            {
+              "line": 1149,
+              "text": "    61e8:      \ttst\tw1, #0x1"
+            },
+            {
+              "line": 1150,
+              "text": "    61ec:      \tand\tx9, x1, #0x1"
+            },
+            {
+              "line": 1154,
+              "text": "    61fc:      \tldp\tx29, x30, [sp, #0x40]"
+            },
+            {
+              "line": 1155,
+              "text": "    6200:      \tadd\tsp, sp, #0x50"
+            },
+            {
+              "line": 1157,
+              "text": "    6208:      \tldur\tx22, [x29, #-0x18]"
+            },
+            {
+              "line": 1158,
+              "text": "    620c:      \tldp\tq0, q1, [sp]"
+            },
+            {
+              "line": 1159,
+              "text": "    6210:      \tldp\tx29, x30, [sp, #0x40]"
+            },
+            {
+              "line": 1160,
+              "text": "    6214:      \tadd\tsp, sp, #0x50"
+            }
+          ]
+        },
+        {
+          "phase": "metadata",
+          "address": "0000000000015ca0",
+          "assembly_line": 17356,
+          "emitted_all_path_instructions": 72,
+          "ordinary_call_sites": 0,
+          "entry_frame_bytes_excluding_red_zone": 0,
+          "stack_instruction_count": 0,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": false,
+          "native_tail_sites": [
+            "15d98"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "40eaaddbd5c0dd1071d87fe259ec8cc0168bbd675a70ecbd5069478a1bdbb957",
+          "selected_instructions": [
+            {
+              "line": 17357,
+              "text": "   15ca0:      \tldrb\tw8, [x24, #0x8]"
+            },
+            {
+              "line": 17358,
+              "text": "   15ca4:      \ttbz\tw8, #0x0, 0x15d74"
+            },
+            {
+              "line": 17359,
+              "text": "   15ca8:      \tldr\tx9, [x24]"
+            },
+            {
+              "line": 17360,
+              "text": "   15cac:      \tmov\tw8, v2.s[2]"
+            },
+            {
+              "line": 17361,
+              "text": "   15cb0:      \tldp\tx11, x10, [x9, #0x10]"
+            },
+            {
+              "line": 17362,
+              "text": "   15cb4:      \tldur\tq3, [x10, #0x8]"
+            },
+            {
+              "line": 17363,
+              "text": "   15cb8:      \tlsr\tx8, x11, x8"
+            },
+            {
+              "line": 17364,
+              "text": "   15cbc:      \tdup\tv4.16b, w8"
+            },
+            {
+              "line": 17365,
+              "text": "   15cc0:      \tmvn\tw11, w8"
+            },
+            {
+              "line": 17366,
+              "text": "   15cc4:      \tcmeq\tv3.16b, v3.16b, v4.16b"
+            },
+            {
+              "line": 17367,
+              "text": "   15cc8:      \tshrn\tv3.8b, v3.8h, #0x4"
+            },
+            {
+              "line": 17368,
+              "text": "   15ccc:      \tfmov\tx8, d3"
+            },
+            {
+              "line": 17404,
+              "text": "   15d5c:      \tnop"
+            },
+            {
+              "line": 17405,
+              "text": "   15d60:      \tprfm\tpldl1keep, [x14]"
+            },
+            {
+              "line": 17406,
+              "text": "   15d64:      \tadd\tx14, x14, x23"
+            },
+            {
+              "line": 17407,
+              "text": "   15d68:      \tcmp\tx14, x13"
+            },
+            {
+              "line": 17408,
+              "text": "   15d6c:      \tb.ls\t0x15d60"
+            },
+            {
+              "line": 17409,
+              "text": "   15d70:      \tb\t0x15d20"
+            },
+            {
+              "line": 17410,
+              "text": "   15d74:      \tadrp\tx8, 0x15000"
+            },
+            {
+              "line": 17411,
+              "text": "   15d78:      \tadd\tx8, x8, #0xdc0"
+            },
+            {
+              "line": 17412,
+              "text": "   15d7c:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 17413,
+              "text": "   15d80:      \tcbz\tx21, 0x15d9c"
+            },
+            {
+              "line": 17414,
+              "text": "   15d84:      \tldr\tx22, [x20, #0xe8]"
+            },
+            {
+              "line": 17415,
+              "text": "   15d88:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 17416,
+              "text": "   15d8c:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 17417,
+              "text": "   15d90:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 17418,
+              "text": "   15d94:      \tstr\tx8, [x20, #0xe8]"
+            },
+            {
+              "line": 17419,
+              "text": "   15d98:      \tbr\tx0"
+            },
+            {
+              "line": 17420,
+              "text": "   15d9c:      \tstr\txzr, [x20, #0x150]"
+            }
+          ]
+        },
+        {
+          "phase": "payload",
+          "address": "0000000000015dc0",
+          "assembly_line": 17430,
+          "emitted_all_path_instructions": 104,
+          "ordinary_call_sites": 0,
+          "entry_frame_bytes_excluding_red_zone": 0,
+          "stack_instruction_count": 0,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": false,
+          "native_tail_sites": [
+            "15f3c"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "ecda408664113221220708c5bc65c5ab240953aca773486d71ed53e2d02c99ba",
+          "selected_instructions": [
+            {
+              "line": 17431,
+              "text": "   15dc0:      \tldr\tx8, [x24, #0x18]"
+            },
+            {
+              "line": 17432,
+              "text": "   15dc4:      \tcbz\tx8, 0x15ef8"
+            },
+            {
+              "line": 17433,
+              "text": "   15dc8:      \tldr\tx8, [x24, #0x10]"
+            },
+            {
+              "line": 17434,
+              "text": "   15dcc:      \tldr\tx9, [x8, #0x40]"
+            },
+            {
+              "line": 17435,
+              "text": "   15dd0:      \tcbz\tx9, 0x15ef8"
+            },
+            {
+              "line": 17436,
+              "text": "   15dd4:      \tldr\tx11, [x8, #0x28]"
+            },
+            {
+              "line": 17437,
+              "text": "   15dd8:      \tldr\tx10, [x8, #0x18]"
+            },
+            {
+              "line": 17438,
+              "text": "   15ddc:      \tcbz\tx11, 0x15e2c"
+            },
+            {
+              "line": 17439,
+              "text": "   15de0:      \tldr\tx15, [x8, #0x10]"
+            },
+            {
+              "line": 17440,
+              "text": "   15de4:      \tmov\tx12, v1.d[1]"
+            },
+            {
+              "line": 17441,
+              "text": "   15de8:      \tadd\tx13, x10, #0x18"
+            },
+            {
+              "line": 17442,
+              "text": "   15dec:      \tmov\tw14, v2.s[1]"
+            },
+            {
+              "line": 17511,
+              "text": "   15f00:      \tldr\tx9, [x24]"
+            },
+            {
+              "line": 17512,
+              "text": "   15f04:      \tldr\tx9, [x9, #0x40]"
+            },
+            {
+              "line": 17513,
+              "text": "   15f08:      \tcbnz\tx9, 0x15f18"
+            },
+            {
+              "line": 17514,
+              "text": "   15f0c:      \tand\tx8, x8, #0xfffffffffffffffe"
+            },
+            {
+              "line": 17515,
+              "text": "   15f10:      \tstr\tx8, [x24, #0x8]"
+            },
+            {
+              "line": 17516,
+              "text": "   15f14:      \tcbz\tx8, 0x15f48"
+            },
+            {
+              "line": 17517,
+              "text": "   15f18:      \tadrp\tx8, 0x15000"
+            },
+            {
+              "line": 17518,
+              "text": "   15f1c:      \tadd\tx8, x8, #0xca0"
+            },
+            {
+              "line": 17519,
+              "text": "   15f20:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 17520,
+              "text": "   15f24:      \tcbz\tx21, 0x15f40"
+            },
+            {
+              "line": 17521,
+              "text": "   15f28:      \tldr\tx22, [x20, #0xe8]"
+            },
+            {
+              "line": 17522,
+              "text": "   15f2c:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 17523,
+              "text": "   15f30:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 17524,
+              "text": "   15f34:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 17525,
+              "text": "   15f38:      \tstr\tx8, [x20, #0xe8]"
+            },
+            {
+              "line": 17526,
+              "text": "   15f3c:      \tbr\tx0"
+            },
+            {
+              "line": 17527,
+              "text": "   15f40:      \tstr\txzr, [x20, #0x150]"
+            }
+          ]
+        }
+      ]
+    },
+    "cold_snapshot_grain1": {
+      "mode": "snapshot",
+      "configured_grain": 1,
+      "assembly_member": "assembly-neon-cold_snapshot_grain1.txt",
+      "assembly_sha256": "ef49b45ed9b2ada82460a4198477eda081eef412456faa3bef26d6d2b4670ea8",
+      "reported_codegen_member": "cold-codegen-neon.json",
+      "reported_codegen_sha256": "1d01d2434bf6fb19f7c1a46e5463401392f3a87dd185763c48ccb811467892c5",
+      "selected_headers": {
+        "controls/new/loom/ring.h": "c20f1d37871f9652035e63b0bfd33068e394e06ad91e55a1be29f9976ae0f117",
+        "controls/new/loom/cohort.h": "aaecd2c4ada55186e1a19011a8ab6a119924f002ef3e523f4c03ab3ebe7c0c97",
+        "controls/prepared-tail/map.h": "113dd0c3acff82bcb26c97282a48b2167754fa3e67f0d51f79ee070098cbbd4a"
+      },
+      "bodies": [
+        {
+          "phase": "payload_cold",
+          "address": "0000000000006064",
+          "assembly_line": 1053,
+          "emitted_all_path_instructions": 36,
+          "ordinary_call_sites": 1,
+          "entry_frame_bytes_excluding_red_zone": 16,
+          "stack_instruction_count": 5,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": true,
+          "native_tail_sites": [
+            "60dc"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "856ca6ffbc5d9f580a4dc3de2b26518f1ecad33a4593d0ea1154ed4b585aa79b",
+          "selected_instructions": [
+            {
+              "line": 1054,
+              "text": "    6064:      \tstp\tx29, x30, [sp, #-0x10]!"
+            },
+            {
+              "line": 1055,
+              "text": "    6068:      \tmov\tx29, sp"
+            },
+            {
+              "line": 1056,
+              "text": "    606c:      \tmov\tx0, x24"
+            },
+            {
+              "line": 1057,
+              "text": "    6070:      \tbl\t0x60f4"
+            },
+            {
+              "line": 1058,
+              "text": "    6074:      \tldr\td0, [x0, #0x40]"
+            },
+            {
+              "line": 1059,
+              "text": "    6078:      \tldr\td1, [x0, #0x58]"
+            },
+            {
+              "line": 1060,
+              "text": "    607c:      \tadd\tx8, x0, #0x50"
+            },
+            {
+              "line": 1061,
+              "text": "    6080:      \tadd\tx9, x0, #0x60"
+            },
+            {
+              "line": 1062,
+              "text": "    6084:      \tldr\tq2, [x0, #0x70]"
+            },
+            {
+              "line": 1063,
+              "text": "    6088:      \tldr\tx23, [x0, #0x8]"
+            },
+            {
+              "line": 1064,
+              "text": "    608c:      \tld1\t{ v0.d }[1], [x8]"
+            },
+            {
+              "line": 1065,
+              "text": "    6090:      \tld1\t{ v1.d }[1], [x9]"
+            },
+            {
+              "line": 1069,
+              "text": "    60a0:      \tldr\tx9, [x9, #0x40]"
+            },
+            {
+              "line": 1070,
+              "text": "    60a4:      \tcbnz\tx9, 0x60b4"
+            },
+            {
+              "line": 1071,
+              "text": "    60a8:      \tand\tx8, x8, #0xfffffffffffffffe"
+            },
+            {
+              "line": 1072,
+              "text": "    60ac:      \tstr\tx8, [x24, #0x8]"
+            },
+            {
+              "line": 1073,
+              "text": "    60b0:      \tcbz\tx8, 0x60ec"
+            },
+            {
+              "line": 1074,
+              "text": "    60b4:      \tadrp\tx8, 0x15000"
+            },
+            {
+              "line": 1075,
+              "text": "    60b8:      \tadd\tx8, x8, #0xe60"
+            },
+            {
+              "line": 1076,
+              "text": "    60bc:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 1077,
+              "text": "    60c0:      \tcbz\tx21, 0x60e0"
+            },
+            {
+              "line": 1078,
+              "text": "    60c4:      \tldr\tx22, [x20, #0xe8]"
+            },
+            {
+              "line": 1079,
+              "text": "    60c8:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 1080,
+              "text": "    60cc:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 1081,
+              "text": "    60d0:      \tstr\tx8, [x20, #0xe8]"
+            },
+            {
+              "line": 1082,
+              "text": "    60d4:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 1083,
+              "text": "    60d8:      \tldp\tx29, x30, [sp], #0x10"
+            },
+            {
+              "line": 1084,
+              "text": "    60dc:      \tbr\tx0"
+            },
+            {
+              "line": 1085,
+              "text": "    60e0:      \tstr\txzr, [x20, #0x150]"
+            },
+            {
+              "line": 1086,
+              "text": "    60e4:      \tldp\tx29, x30, [sp], #0x10"
+            },
+            {
+              "line": 1088,
+              "text": "    60ec:      \tldp\tx29, x30, [sp], #0x10"
+            }
+          ]
+        },
+        {
+          "phase": "finish_cold",
+          "address": "00000000000060f4",
+          "assembly_line": 1091,
+          "emitted_all_path_instructions": 152,
+          "ordinary_call_sites": 2,
+          "entry_frame_bytes_excluding_red_zone": 112,
+          "stack_instruction_count": 19,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": true,
+          "native_tail_sites": [],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "bc2d73d61a00e1034a7e1e6a57ebd612788563ec2c64e5de882a75cf7b104504",
+          "selected_instructions": [
+            {
+              "line": 1092,
+              "text": "    60f4:      \tsub\tsp, sp, #0x70"
+            },
+            {
+              "line": 1093,
+              "text": "    60f8:      \tstp\tx29, x30, [sp, #0x10]"
+            },
+            {
+              "line": 1094,
+              "text": "    60fc:      \tstp\tx28, x27, [sp, #0x20]"
+            },
+            {
+              "line": 1095,
+              "text": "    6100:      \tstp\tx26, x25, [sp, #0x30]"
+            },
+            {
+              "line": 1096,
+              "text": "    6104:      \tstp\tx24, x23, [sp, #0x40]"
+            },
+            {
+              "line": 1097,
+              "text": "    6108:      \tstp\tx22, x21, [sp, #0x50]"
+            },
+            {
+              "line": 1098,
+              "text": "    610c:      \tstp\tx20, x19, [sp, #0x60]"
+            },
+            {
+              "line": 1099,
+              "text": "    6110:      \tadd\tx29, sp, #0x10"
+            },
+            {
+              "line": 1100,
+              "text": "    6114:      \tldp\tx27, x19, [x0, #0x20]"
+            },
+            {
+              "line": 1101,
+              "text": "    6118:      \tldr\tx24, [x0, #0x10]"
+            },
+            {
+              "line": 1102,
+              "text": "    611c:      \tmov\tw8, #0x48               // =72"
+            },
+            {
+              "line": 1103,
+              "text": "    6120:      \tmov\tx21, x0"
+            },
+            {
+              "line": 1110,
+              "text": "    613c:      \tldr\tx1, [x28, #0x8]"
+            },
+            {
+              "line": 1111,
+              "text": "    6140:      \tmov\tx0, x20"
+            },
+            {
+              "line": 1112,
+              "text": "    6144:      \tstr\tq0, [sp]"
+            },
+            {
+              "line": 1113,
+              "text": "    6148:      \tbl\t0x9aa0"
+            },
+            {
+              "line": 1114,
+              "text": "    614c:      \tldp\tx9, x10, [x28, #0x30]"
+            },
+            {
+              "line": 1115,
+              "text": "    6150:      \ttst\tw1, #0x1"
+            },
+            {
+              "line": 1116,
+              "text": "    6154:      \tand\tx11, x1, #0x1"
+            },
+            {
+              "line": 1128,
+              "text": "    6184:      \tldr\tq0, [sp]"
+            },
+            {
+              "line": 1159,
+              "text": "    6200:      \tldp\tx20, x19, [sp, #0x60]"
+            },
+            {
+              "line": 1160,
+              "text": "    6204:      \tldp\tx22, x21, [sp, #0x50]"
+            },
+            {
+              "line": 1161,
+              "text": "    6208:      \tldp\tx24, x23, [sp, #0x40]"
+            },
+            {
+              "line": 1162,
+              "text": "    620c:      \tldp\tx26, x25, [sp, #0x30]"
+            },
+            {
+              "line": 1163,
+              "text": "    6210:      \tldp\tx28, x27, [sp, #0x20]"
+            },
+            {
+              "line": 1164,
+              "text": "    6214:      \tldp\tx29, x30, [sp, #0x10]"
+            },
+            {
+              "line": 1165,
+              "text": "    6218:      \tadd\tsp, sp, #0x70"
+            },
+            {
+              "line": 1174,
+              "text": "    623c:      \tldr\tq0, [sp]"
+            },
+            {
+              "line": 1190,
+              "text": "    627c:      \tcbz\tw8, 0x62b4"
+            },
+            {
+              "line": 1191,
+              "text": "    6280:      \tldr\tx1, [x24, #0x8]"
+            },
+            {
+              "line": 1192,
+              "text": "    6284:      \tmov\tx0, x20"
+            },
+            {
+              "line": 1193,
+              "text": "    6288:      \tbl\t0x9aa0"
+            },
+            {
+              "line": 1194,
+              "text": "    628c:      \ttst\tw1, #0x1"
+            },
+            {
+              "line": 1195,
+              "text": "    6290:      \tand\tx9, x1, #0x1"
+            },
+            {
+              "line": 1196,
+              "text": "    6294:      \tcsel\tx8, x0, xzr, ne"
+            },
+            {
+              "line": 1216,
+              "text": "    62e4:      \tldr\tq0, [sp]"
+            }
+          ]
+        },
+        {
+          "phase": "metadata",
+          "address": "0000000000015e60",
+          "assembly_line": 17476,
+          "emitted_all_path_instructions": 72,
+          "ordinary_call_sites": 0,
+          "entry_frame_bytes_excluding_red_zone": 0,
+          "stack_instruction_count": 0,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": false,
+          "native_tail_sites": [
+            "15f58"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "a3d2fab63252854c28260daf09e3134cfbcfebbeadf881023151c1a96836f2b2",
+          "selected_instructions": [
+            {
+              "line": 17477,
+              "text": "   15e60:      \tldrb\tw8, [x24, #0x8]"
+            },
+            {
+              "line": 17478,
+              "text": "   15e64:      \ttbz\tw8, #0x0, 0x15f34"
+            },
+            {
+              "line": 17479,
+              "text": "   15e68:      \tldr\tx9, [x24]"
+            },
+            {
+              "line": 17480,
+              "text": "   15e6c:      \tmov\tw8, v2.s[2]"
+            },
+            {
+              "line": 17481,
+              "text": "   15e70:      \tldp\tx11, x10, [x9, #0x10]"
+            },
+            {
+              "line": 17482,
+              "text": "   15e74:      \tldur\tq3, [x10, #0x8]"
+            },
+            {
+              "line": 17483,
+              "text": "   15e78:      \tlsr\tx8, x11, x8"
+            },
+            {
+              "line": 17484,
+              "text": "   15e7c:      \tdup\tv4.16b, w8"
+            },
+            {
+              "line": 17485,
+              "text": "   15e80:      \tmvn\tw11, w8"
+            },
+            {
+              "line": 17486,
+              "text": "   15e84:      \tcmeq\tv3.16b, v3.16b, v4.16b"
+            },
+            {
+              "line": 17487,
+              "text": "   15e88:      \tshrn\tv3.8b, v3.8h, #0x4"
+            },
+            {
+              "line": 17488,
+              "text": "   15e8c:      \tfmov\tx8, d3"
+            },
+            {
+              "line": 17524,
+              "text": "   15f1c:      \tnop"
+            },
+            {
+              "line": 17525,
+              "text": "   15f20:      \tprfm\tpldl1keep, [x14]"
+            },
+            {
+              "line": 17526,
+              "text": "   15f24:      \tadd\tx14, x14, x23"
+            },
+            {
+              "line": 17527,
+              "text": "   15f28:      \tcmp\tx14, x13"
+            },
+            {
+              "line": 17528,
+              "text": "   15f2c:      \tb.ls\t0x15f20"
+            },
+            {
+              "line": 17529,
+              "text": "   15f30:      \tb\t0x15ee0"
+            },
+            {
+              "line": 17530,
+              "text": "   15f34:      \tadrp\tx8, 0x15000"
+            },
+            {
+              "line": 17531,
+              "text": "   15f38:      \tadd\tx8, x8, #0xf80"
+            },
+            {
+              "line": 17532,
+              "text": "   15f3c:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 17533,
+              "text": "   15f40:      \tcbz\tx21, 0x15f5c"
+            },
+            {
+              "line": 17534,
+              "text": "   15f44:      \tldr\tx22, [x20, #0xe8]"
+            },
+            {
+              "line": 17535,
+              "text": "   15f48:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 17536,
+              "text": "   15f4c:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 17537,
+              "text": "   15f50:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 17538,
+              "text": "   15f54:      \tstr\tx8, [x20, #0xe8]"
+            },
+            {
+              "line": 17539,
+              "text": "   15f58:      \tbr\tx0"
+            },
+            {
+              "line": 17540,
+              "text": "   15f5c:      \tstr\txzr, [x20, #0x150]"
+            }
+          ]
+        },
+        {
+          "phase": "payload",
+          "address": "0000000000015f80",
+          "assembly_line": 17550,
+          "emitted_all_path_instructions": 104,
+          "ordinary_call_sites": 0,
+          "entry_frame_bytes_excluding_red_zone": 0,
+          "stack_instruction_count": 0,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": false,
+          "native_tail_sites": [
+            "160fc"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "e56ab19e7cdb6093175193f4f4a1559ee1fcdc35f8538e965737729469c6e872",
+          "selected_instructions": [
+            {
+              "line": 17551,
+              "text": "   15f80:      \tldr\tx8, [x24, #0x18]"
+            },
+            {
+              "line": 17552,
+              "text": "   15f84:      \tcbz\tx8, 0x160b8"
+            },
+            {
+              "line": 17553,
+              "text": "   15f88:      \tldr\tx8, [x24, #0x10]"
+            },
+            {
+              "line": 17554,
+              "text": "   15f8c:      \tldr\tx9, [x8, #0x40]"
+            },
+            {
+              "line": 17555,
+              "text": "   15f90:      \tcbz\tx9, 0x160b8"
+            },
+            {
+              "line": 17556,
+              "text": "   15f94:      \tldr\tx11, [x8, #0x28]"
+            },
+            {
+              "line": 17557,
+              "text": "   15f98:      \tldr\tx10, [x8, #0x18]"
+            },
+            {
+              "line": 17558,
+              "text": "   15f9c:      \tcbz\tx11, 0x15fec"
+            },
+            {
+              "line": 17559,
+              "text": "   15fa0:      \tldr\tx15, [x8, #0x10]"
+            },
+            {
+              "line": 17560,
+              "text": "   15fa4:      \tmov\tx12, v1.d[1]"
+            },
+            {
+              "line": 17561,
+              "text": "   15fa8:      \tadd\tx13, x10, #0x18"
+            },
+            {
+              "line": 17562,
+              "text": "   15fac:      \tmov\tw14, v2.s[1]"
+            },
+            {
+              "line": 17631,
+              "text": "   160c0:      \tldr\tx9, [x24]"
+            },
+            {
+              "line": 17632,
+              "text": "   160c4:      \tldr\tx9, [x9, #0x40]"
+            },
+            {
+              "line": 17633,
+              "text": "   160c8:      \tcbnz\tx9, 0x160d8"
+            },
+            {
+              "line": 17634,
+              "text": "   160cc:      \tand\tx8, x8, #0xfffffffffffffffe"
+            },
+            {
+              "line": 17635,
+              "text": "   160d0:      \tstr\tx8, [x24, #0x8]"
+            },
+            {
+              "line": 17636,
+              "text": "   160d4:      \tcbz\tx8, 0x16108"
+            },
+            {
+              "line": 17637,
+              "text": "   160d8:      \tadrp\tx8, 0x15000"
+            },
+            {
+              "line": 17638,
+              "text": "   160dc:      \tadd\tx8, x8, #0xe60"
+            },
+            {
+              "line": 17639,
+              "text": "   160e0:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 17640,
+              "text": "   160e4:      \tcbz\tx21, 0x16100"
+            },
+            {
+              "line": 17641,
+              "text": "   160e8:      \tldr\tx22, [x20, #0xe8]"
+            },
+            {
+              "line": 17642,
+              "text": "   160ec:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 17643,
+              "text": "   160f0:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 17644,
+              "text": "   160f4:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 17645,
+              "text": "   160f8:      \tstr\tx8, [x20, #0xe8]"
+            },
+            {
+              "line": 17646,
+              "text": "   160fc:      \tbr\tx0"
+            },
+            {
+              "line": 17647,
+              "text": "   16100:      \tstr\txzr, [x20, #0x150]"
+            }
+          ]
+        }
+      ]
+    },
+    "cold_vector_grain4": {
+      "mode": "vector",
+      "configured_grain": 4,
+      "assembly_member": "assembly-neon-cold_vector_grain4.txt",
+      "assembly_sha256": "7b17e2a656eb0e4774aaff900992eee70016ab0e7e2ea8eae57e1806b364671b",
+      "reported_codegen_member": "cold-codegen-neon.json",
+      "reported_codegen_sha256": "1d01d2434bf6fb19f7c1a46e5463401392f3a87dd185763c48ccb811467892c5",
+      "selected_headers": {
+        "controls/new/loom/ring.h": "c20f1d37871f9652035e63b0bfd33068e394e06ad91e55a1be29f9976ae0f117",
+        "controls/new/loom/cohort.h": "aaecd2c4ada55186e1a19011a8ab6a119924f002ef3e523f4c03ab3ebe7c0c97",
+        "controls/prepared-tail/map.h": "113dd0c3acff82bcb26c97282a48b2167754fa3e67f0d51f79ee070098cbbd4a"
+      },
+      "bodies": [
+        {
+          "phase": "payload_cold",
+          "address": "00000000000060a8",
+          "assembly_line": 1068,
+          "emitted_all_path_instructions": 205,
+          "ordinary_call_sites": 2,
+          "entry_frame_bytes_excluding_red_zone": 144,
+          "stack_instruction_count": 41,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": true,
+          "native_tail_sites": [
+            "63a4"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "ec7e86b554e9e189e527a949343c689e8b79a11c52f88e3c278082016e5d7493",
+          "selected_instructions": [
+            {
+              "line": 1069,
+              "text": "    60a8:      \tsub\tsp, sp, #0x90"
+            },
+            {
+              "line": 1070,
+              "text": "    60ac:      \tstp\tx29, x30, [sp, #0x80]"
+            },
+            {
+              "line": 1071,
+              "text": "    60b0:      \tadd\tx29, sp, #0x80"
+            },
+            {
+              "line": 1072,
+              "text": "    60b4:      \tmov\tx8, v0.d[1]"
+            },
+            {
+              "line": 1073,
+              "text": "    60b8:      \tldr\tx25, [x24, #0x10]"
+            },
+            {
+              "line": 1074,
+              "text": "    60bc:      \tldr\tx19, [x24, #0x20]"
+            },
+            {
+              "line": 1075,
+              "text": "    60c0:      \tstur\tq2, [x29, #-0x20]"
+            },
+            {
+              "line": 1076,
+              "text": "    60c4:      \tstp\tx22, x21, [sp, #0x10]"
+            },
+            {
+              "line": 1077,
+              "text": "    60c8:      \tstr\tx20, [sp, #0x20]"
+            },
+            {
+              "line": 1078,
+              "text": "    60cc:      \tstr\tq0, [sp]"
+            },
+            {
+              "line": 1079,
+              "text": "    60d0:      \tstur\tx8, [x29, #-0x8]"
+            },
+            {
+              "line": 1080,
+              "text": "    60d4:      \tfmov\tx8, d1"
+            },
+            {
+              "line": 1081,
+              "text": "    60d8:      \tstr\tq1, [sp, #0x30]"
+            },
+            {
+              "line": 1083,
+              "text": "    60e0:      \tstur\tx0, [x29, #-0x38]"
+            },
+            {
+              "line": 1084,
+              "text": "    60e4:      \tstur\tx8, [x29, #-0x10]"
+            },
+            {
+              "line": 1085,
+              "text": "    60e8:      \tmov\tw8, #0x48               // =72"
+            },
+            {
+              "line": 1086,
+              "text": "    60ec:      \tmadd\tx20, x19, x8, x25"
+            },
+            {
+              "line": 1087,
+              "text": "    60f0:      \tldr\tx1, [x20, #0x8]"
+            },
+            {
+              "line": 1088,
+              "text": "    60f4:      \tbl\t0x9ba0"
+            },
+            {
+              "line": 1089,
+              "text": "    60f8:      \tldp\tx9, x10, [x20, #0x30]"
+            },
+            {
+              "line": 1090,
+              "text": "    60fc:      \ttst\tw1, #0x1"
+            },
+            {
+              "line": 1091,
+              "text": "    6100:      \tand\tx8, x1, #0x1"
+            },
+            {
+              "line": 1092,
+              "text": "    6104:      \tldur\tq0, [x29, #-0x20]"
+            },
+            {
+              "line": 1103,
+              "text": "    6130:      \tldp\tx9, x12, [x29, #-0x10]"
+            },
+            {
+              "line": 1105,
+              "text": "    6138:      \tldur\tq0, [x29, #-0x20]"
+            },
+            {
+              "line": 1136,
+              "text": "    61b4:      \tldr\tq0, [sp, #0x30]"
+            },
+            {
+              "line": 1139,
+              "text": "    61c0:      \tldur\tq0, [x29, #-0x20]"
+            },
+            {
+              "line": 1143,
+              "text": "    61d0:      \tstr\tx8, [sp, #0x28]"
+            },
+            {
+              "line": 1145,
+              "text": "    61d8:      \tstur\tx8, [x29, #-0x28]"
+            },
+            {
+              "line": 1147,
+              "text": "    61e0:      \tstur\tx8, [x29, #-0x30]"
+            },
+            {
+              "line": 1171,
+              "text": "    6240:      \tcbz\tw8, 0x6274"
+            },
+            {
+              "line": 1172,
+              "text": "    6244:      \tldr\tx1, [x22, #0x8]"
+            },
+            {
+              "line": 1173,
+              "text": "    6248:      \tldur\tx0, [x29, #-0x38]"
+            },
+            {
+              "line": 1174,
+              "text": "    624c:      \tbl\t0x9ba0"
+            },
+            {
+              "line": 1175,
+              "text": "    6250:      \ttst\tw1, #0x1"
+            },
+            {
+              "line": 1176,
+              "text": "    6254:      \tand\tx9, x1, #0x1"
+            },
+            {
+              "line": 1177,
+              "text": "    6258:      \tcsel\tx8, x0, xzr, ne"
+            },
+            {
+              "line": 1179,
+              "text": "    6260:      \tldr\tx9, [sp, #0x28]"
+            },
+            {
+              "line": 1194,
+              "text": "    629c:      \tldp\tx9, x11, [x29, #-0x10]"
+            },
+            {
+              "line": 1196,
+              "text": "    62a4:      \tldur\tx12, [x29, #-0x28]"
+            },
+            {
+              "line": 1215,
+              "text": "    62f0:      \tldur\tx9, [x29, #-0x30]"
+            },
+            {
+              "line": 1244,
+              "text": "    6364:      \tldp\tx10, x9, [sp, #0x10]"
+            },
+            {
+              "line": 1245,
+              "text": "    6368:      \tadrp\tx8, 0x16000"
+            },
+            {
+              "line": 1246,
+              "text": "    636c:      \tadd\tx8, x8, #0x580"
+            },
+            {
+              "line": 1247,
+              "text": "    6370:      \tstr\tx8, [x10]"
+            },
+            {
+              "line": 1248,
+              "text": "    6374:      \tcbz\tx9, 0x63c8"
+            },
+            {
+              "line": 1249,
+              "text": "    6378:      \tldr\tx20, [sp, #0x20]"
+            },
+            {
+              "line": 1250,
+              "text": "    637c:      \tldr\tq0, [sp]"
+            },
+            {
+              "line": 1251,
+              "text": "    6380:      \tldr\tq1, [sp, #0x30]"
+            },
+            {
+              "line": 1252,
+              "text": "    6384:      \tsub\tx21, x9, #0x1"
+            },
+            {
+              "line": 1253,
+              "text": "    6388:      \tldr\tx22, [x20, #0xe8]"
+            },
+            {
+              "line": 1254,
+              "text": "    638c:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 1255,
+              "text": "    6390:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 1256,
+              "text": "    6394:      \tstr\tx8, [x20, #0xe8]"
+            },
+            {
+              "line": 1257,
+              "text": "    6398:      \tldur\tq2, [x29, #-0x20]"
+            },
+            {
+              "line": 1258,
+              "text": "    639c:      \tldp\tx29, x30, [sp, #0x80]"
+            },
+            {
+              "line": 1259,
+              "text": "    63a0:      \tadd\tsp, sp, #0x90"
+            },
+            {
+              "line": 1260,
+              "text": "    63a4:      \tbr\tx0"
+            },
+            {
+              "line": 1261,
+              "text": "    63a8:      \tldr\tq0, [sp]"
+            },
+            {
+              "line": 1262,
+              "text": "    63ac:      \tldr\tq1, [sp, #0x30]"
+            },
+            {
+              "line": 1263,
+              "text": "    63b0:      \tldp\tx21, x20, [sp, #0x18]"
+            },
+            {
+              "line": 1264,
+              "text": "    63b4:      \tldr\tx22, [sp, #0x10]"
+            },
+            {
+              "line": 1265,
+              "text": "    63b8:      \tldur\tq2, [x29, #-0x20]"
+            },
+            {
+              "line": 1266,
+              "text": "    63bc:      \tldp\tx29, x30, [sp, #0x80]"
+            },
+            {
+              "line": 1267,
+              "text": "    63c0:      \tadd\tsp, sp, #0x90"
+            },
+            {
+              "line": 1269,
+              "text": "    63c8:      \tldr\tx8, [sp, #0x20]"
+            },
+            {
+              "line": 1271,
+              "text": "    63d0:      \tldp\tx29, x30, [sp, #0x80]"
+            },
+            {
+              "line": 1272,
+              "text": "    63d4:      \tadd\tsp, sp, #0x90"
+            }
+          ]
+        },
+        {
+          "phase": "metadata",
+          "address": "0000000000016580",
+          "assembly_line": 17924,
+          "emitted_all_path_instructions": 216,
+          "ordinary_call_sites": 0,
+          "entry_frame_bytes_excluding_red_zone": 0,
+          "stack_instruction_count": 0,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": false,
+          "native_tail_sites": [
+            "168b8"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "d185b763c9e3044cda670889e6c03a20f476b4fe3774fc18b2b3aa408b65000e",
+          "selected_instructions": [
+            {
+              "line": 17925,
+              "text": "   16580:      \tldp\tx11, x13, [x24]"
+            },
+            {
+              "line": 17926,
+              "text": "   16584:      \tmov\tw8, v2.s[1]"
+            },
+            {
+              "line": 17927,
+              "text": "   16588:      \tneg\tx10, x23"
+            },
+            {
+              "line": 17928,
+              "text": "   1658c:      \tsub\tx9, x8, #0x1"
+            },
+            {
+              "line": 17929,
+              "text": "   16590:      \tmov\tw12, v2.s[2]"
+            },
+            {
+              "line": 17930,
+              "text": "   16594:      \ttbz\tw13, #0x0, 0x16654"
+            },
+            {
+              "line": 17931,
+              "text": "   16598:      \tldp\tx14, x15, [x11, #0x10]"
+            },
+            {
+              "line": 17932,
+              "text": "   1659c:      \tldur\tq3, [x15, #0x8]"
+            },
+            {
+              "line": 17933,
+              "text": "   165a0:      \tlsr\tx14, x14, x12"
+            },
+            {
+              "line": 17934,
+              "text": "   165a4:      \tdup\tv4.16b, w14"
+            },
+            {
+              "line": 17935,
+              "text": "   165a8:      \tmvn\tw16, w14"
+            },
+            {
+              "line": 17936,
+              "text": "   165ac:      \tcmeq\tv3.16b, v3.16b, v4.16b"
+            },
+            {
+              "line": 18116,
+              "text": "   1687c:      \tnop"
+            },
+            {
+              "line": 18117,
+              "text": "   16880:      \tprfm\tpldl1keep, [x14]"
+            },
+            {
+              "line": 18118,
+              "text": "   16884:      \tadd\tx14, x14, x23"
+            },
+            {
+              "line": 18119,
+              "text": "   16888:      \tcmp\tx14, x13"
+            },
+            {
+              "line": 18120,
+              "text": "   1688c:      \tb.ls\t0x16880"
+            },
+            {
+              "line": 18121,
+              "text": "   16890:      \tb\t0x16840"
+            },
+            {
+              "line": 18122,
+              "text": "   16894:      \tadrp\tx8, 0x16000"
+            },
+            {
+              "line": 18123,
+              "text": "   16898:      \tadd\tx8, x8, #0x8e0"
+            },
+            {
+              "line": 18124,
+              "text": "   1689c:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 18125,
+              "text": "   168a0:      \tcbz\tx21, 0x168bc"
+            },
+            {
+              "line": 18126,
+              "text": "   168a4:      \tldr\tx22, [x20, #0xe8]"
+            },
+            {
+              "line": 18127,
+              "text": "   168a8:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 18128,
+              "text": "   168ac:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 18129,
+              "text": "   168b0:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 18130,
+              "text": "   168b4:      \tstr\tx8, [x20, #0xe8]"
+            },
+            {
+              "line": 18131,
+              "text": "   168b8:      \tbr\tx0"
+            },
+            {
+              "line": 18132,
+              "text": "   168bc:      \tstr\txzr, [x20, #0x150]"
+            }
+          ]
+        },
+        {
+          "phase": "payload",
+          "address": "00000000000168e0",
+          "assembly_line": 18142,
+          "emitted_all_path_instructions": 328,
+          "ordinary_call_sites": 0,
+          "entry_frame_bytes_excluding_red_zone": 0,
+          "stack_instruction_count": 0,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": false,
+          "native_tail_sites": [
+            "16d60"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "7e40582461ed6e8b95aa92fd629467d7a069913fe209ff80bf1fbf3d497bc738",
+          "selected_instructions": [
+            {
+              "line": 18143,
+              "text": "   168e0:      \tldr\tx17, [x24, #0x18]"
+            },
+            {
+              "line": 18144,
+              "text": "   168e4:      \tcbz\tx17, 0x16d1c"
+            },
+            {
+              "line": 18145,
+              "text": "   168e8:      \tldr\tx9, [x24, #0x10]"
+            },
+            {
+              "line": 18146,
+              "text": "   168ec:      \tmov\tw15, v2.s[1]"
+            },
+            {
+              "line": 18147,
+              "text": "   168f0:      \tadd\tw10, w15, #0xf8"
+            },
+            {
+              "line": 18148,
+              "text": "   168f4:      \tmov\tx8, v0.d[1]"
+            },
+            {
+              "line": 18149,
+              "text": "   168f8:      \tmov\tx14, v1.d[1]"
+            },
+            {
+              "line": 18150,
+              "text": "   168fc:      \tand\tx16, x10, #0xff"
+            },
+            {
+              "line": 18151,
+              "text": "   16900:      \tfmov\tx11, d1"
+            },
+            {
+              "line": 18152,
+              "text": "   16904:      \tneg\tx10, x23"
+            },
+            {
+              "line": 18153,
+              "text": "   16908:      \tldr\tx18, [x9, #0x40]"
+            },
+            {
+              "line": 18154,
+              "text": "   1690c:      \tmov\tw12, v2.s[3]"
+            },
+            {
+              "line": 18416,
+              "text": "   16d24:      \ttbnz\tw9, #0x0, 0x16d64"
+            },
+            {
+              "line": 18417,
+              "text": "   16d28:      \ttbnz\tw9, #0x1, 0x16d78"
+            },
+            {
+              "line": 18418,
+              "text": "   16d2c:      \ttbnz\tw9, #0x2, 0x16d8c"
+            },
+            {
+              "line": 18419,
+              "text": "   16d30:      \ttbnz\tw9, #0x3, 0x16da0"
+            },
+            {
+              "line": 18420,
+              "text": "   16d34:      \tstr\tx8, [x24, #0x8]"
+            },
+            {
+              "line": 18421,
+              "text": "   16d38:      \tcbz\tx8, 0x16db8"
+            },
+            {
+              "line": 18422,
+              "text": "   16d3c:      \tadrp\tx8, 0x16000"
+            },
+            {
+              "line": 18423,
+              "text": "   16d40:      \tadd\tx8, x8, #0x580"
+            },
+            {
+              "line": 18424,
+              "text": "   16d44:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 18425,
+              "text": "   16d48:      \tcbz\tx21, 0x16dbc"
+            },
+            {
+              "line": 18426,
+              "text": "   16d4c:      \tldr\tx22, [x20, #0xe8]"
+            },
+            {
+              "line": 18427,
+              "text": "   16d50:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 18428,
+              "text": "   16d54:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 18429,
+              "text": "   16d58:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 18430,
+              "text": "   16d5c:      \tstr\tx8, [x20, #0xe8]"
+            },
+            {
+              "line": 18431,
+              "text": "   16d60:      \tbr\tx0"
+            },
+            {
+              "line": 18432,
+              "text": "   16d64:      \tldr\tx8, [x10, #0x40]"
+            }
+          ]
+        }
+      ]
+    },
+    "cold_snapshot_grain4": {
+      "mode": "snapshot",
+      "configured_grain": 4,
+      "assembly_member": "assembly-neon-cold_snapshot_grain4.txt",
+      "assembly_sha256": "837e076a44621045a317f25334f8ff4aa4d97e4bc57f2fc34fc147ae0b71cbaf",
+      "reported_codegen_member": "cold-codegen-neon.json",
+      "reported_codegen_sha256": "1d01d2434bf6fb19f7c1a46e5463401392f3a87dd185763c48ccb811467892c5",
+      "selected_headers": {
+        "controls/new/loom/ring.h": "c20f1d37871f9652035e63b0bfd33068e394e06ad91e55a1be29f9976ae0f117",
+        "controls/new/loom/cohort.h": "aaecd2c4ada55186e1a19011a8ab6a119924f002ef3e523f4c03ab3ebe7c0c97",
+        "controls/prepared-tail/map.h": "113dd0c3acff82bcb26c97282a48b2167754fa3e67f0d51f79ee070098cbbd4a"
+      },
+      "bodies": [
+        {
+          "phase": "payload_cold",
+          "address": "00000000000060cc",
+          "assembly_line": 1079,
+          "emitted_all_path_instructions": 47,
+          "ordinary_call_sites": 1,
+          "entry_frame_bytes_excluding_red_zone": 16,
+          "stack_instruction_count": 5,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": true,
+          "native_tail_sites": [
+            "6170"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "343a096b9c908b7f618d2d0e968fe1277bb57b5700dfcb71865c3f9164db4d32",
+          "selected_instructions": [
+            {
+              "line": 1080,
+              "text": "    60cc:      \tstp\tx29, x30, [sp, #-0x10]!"
+            },
+            {
+              "line": 1081,
+              "text": "    60d0:      \tmov\tx29, sp"
+            },
+            {
+              "line": 1082,
+              "text": "    60d4:      \tmov\tx0, x24"
+            },
+            {
+              "line": 1083,
+              "text": "    60d8:      \tbl\t0x6188"
+            },
+            {
+              "line": 1084,
+              "text": "    60dc:      \tldr\tq2, [x0, #0x70]"
+            },
+            {
+              "line": 1085,
+              "text": "    60e0:      \tldp\tx14, x13, [x24]"
+            },
+            {
+              "line": 1086,
+              "text": "    60e4:      \tldp\tx9, x10, [x0, #0x50]"
+            },
+            {
+              "line": 1087,
+              "text": "    60e8:      \tmov\tw16, #0x1               // =1"
+            },
+            {
+              "line": 1088,
+              "text": "    60ec:      \tldr\tx8, [x0, #0x60]"
+            },
+            {
+              "line": 1089,
+              "text": "    60f0:      \tldr\tx12, [x0, #0x40]"
+            },
+            {
+              "line": 1090,
+              "text": "    60f4:      \tldr\tx23, [x0, #0x8]"
+            },
+            {
+              "line": 1091,
+              "text": "    60f8:      \tmov\tx11, xzr"
+            },
+            {
+              "line": 1106,
+              "text": "    6134:      \tstr\tx14, [x24, #0x8]"
+            },
+            {
+              "line": 1107,
+              "text": "    6138:      \tfmov\td1, x10"
+            },
+            {
+              "line": 1108,
+              "text": "    613c:      \tmov\tv0.d[1], x9"
+            },
+            {
+              "line": 1109,
+              "text": "    6140:      \tmov\tv1.d[1], x8"
+            },
+            {
+              "line": 1110,
+              "text": "    6144:      \tcbz\tx14, 0x6174"
+            },
+            {
+              "line": 1111,
+              "text": "    6148:      \tadrp\tx8, 0x16000"
+            },
+            {
+              "line": 1112,
+              "text": "    614c:      \tadd\tx8, x8, #0x6c0"
+            },
+            {
+              "line": 1113,
+              "text": "    6150:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 1114,
+              "text": "    6154:      \tcbz\tx21, 0x617c"
+            },
+            {
+              "line": 1115,
+              "text": "    6158:      \tldr\tx22, [x20, #0xe8]"
+            },
+            {
+              "line": 1116,
+              "text": "    615c:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 1117,
+              "text": "    6160:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 1118,
+              "text": "    6164:      \tstr\tx8, [x20, #0xe8]"
+            },
+            {
+              "line": 1119,
+              "text": "    6168:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 1120,
+              "text": "    616c:      \tldp\tx29, x30, [sp], #0x10"
+            },
+            {
+              "line": 1121,
+              "text": "    6170:      \tbr\tx0"
+            },
+            {
+              "line": 1122,
+              "text": "    6174:      \tldp\tx29, x30, [sp], #0x10"
+            },
+            {
+              "line": 1125,
+              "text": "    6180:      \tldp\tx29, x30, [sp], #0x10"
+            }
+          ]
+        },
+        {
+          "phase": "finish_cold",
+          "address": "0000000000006188",
+          "assembly_line": 1128,
+          "emitted_all_path_instructions": 168,
+          "ordinary_call_sites": 2,
+          "entry_frame_bytes_excluding_red_zone": 160,
+          "stack_instruction_count": 28,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": true,
+          "native_tail_sites": [],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "e955ffa7d5263e89a9cd21bb33ad0ce579e7028dc0abceaa961d4e497adf0ba2",
+          "selected_instructions": [
+            {
+              "line": 1129,
+              "text": "    6188:      \tsub\tsp, sp, #0xa0"
+            },
+            {
+              "line": 1130,
+              "text": "    618c:      \tstp\tx29, x30, [sp, #0x40]"
+            },
+            {
+              "line": 1131,
+              "text": "    6190:      \tstp\tx28, x27, [sp, #0x50]"
+            },
+            {
+              "line": 1132,
+              "text": "    6194:      \tstp\tx26, x25, [sp, #0x60]"
+            },
+            {
+              "line": 1133,
+              "text": "    6198:      \tstp\tx24, x23, [sp, #0x70]"
+            },
+            {
+              "line": 1134,
+              "text": "    619c:      \tstp\tx22, x21, [sp, #0x80]"
+            },
+            {
+              "line": 1135,
+              "text": "    61a0:      \tstp\tx20, x19, [sp, #0x90]"
+            },
+            {
+              "line": 1136,
+              "text": "    61a4:      \tadd\tx29, sp, #0x40"
+            },
+            {
+              "line": 1137,
+              "text": "    61a8:      \tldp\tx21, x20, [x0, #0x20]"
+            },
+            {
+              "line": 1138,
+              "text": "    61ac:      \tmov\tx19, x0"
+            },
+            {
+              "line": 1139,
+              "text": "    61b0:      \tldr\tx28, [x0, #0x10]"
+            },
+            {
+              "line": 1140,
+              "text": "    61b4:      \tldp\tx9, x8, [x20, #0x50]"
+            },
+            {
+              "line": 1145,
+              "text": "    61c8:      \tstp\tx8, x9, [x29, #-0x10]"
+            },
+            {
+              "line": 1147,
+              "text": "    61d0:      \tstr\tx0, [sp, #0x10]"
+            },
+            {
+              "line": 1148,
+              "text": "    61d4:      \tmadd\tx22, x21, x8, x28"
+            },
+            {
+              "line": 1149,
+              "text": "    61d8:      \tstr\tq0, [sp, #0x20]"
+            },
+            {
+              "line": 1150,
+              "text": "    61dc:      \tldr\tx1, [x22, #0x8]"
+            },
+            {
+              "line": 1151,
+              "text": "    61e0:      \tbl\t0x9c20"
+            },
+            {
+              "line": 1152,
+              "text": "    61e4:      \tldp\tx9, x10, [x22, #0x30]"
+            },
+            {
+              "line": 1153,
+              "text": "    61e8:      \tldr\tq0, [sp, #0x20]"
+            },
+            {
+              "line": 1154,
+              "text": "    61ec:      \ttst\tw1, #0x1"
+            },
+            {
+              "line": 1166,
+              "text": "    621c:      \tldp\tx9, x12, [x29, #-0x10]"
+            },
+            {
+              "line": 1202,
+              "text": "    62ac:      \tstr\tx8, [sp, #0x8]"
+            },
+            {
+              "line": 1204,
+              "text": "    62b4:      \tstr\tx8, [sp, #0x20]"
+            },
+            {
+              "line": 1206,
+              "text": "    62bc:      \tstr\tx8, [sp, #0x18]"
+            },
+            {
+              "line": 1231,
+              "text": "    6320:      \tldr\tx1, [x24, #0x8]"
+            },
+            {
+              "line": 1232,
+              "text": "    6324:      \tldr\tx0, [sp, #0x10]"
+            },
+            {
+              "line": 1233,
+              "text": "    6328:      \tmov\tx22, x14"
+            },
+            {
+              "line": 1234,
+              "text": "    632c:      \tbl\t0x9c20"
+            },
+            {
+              "line": 1235,
+              "text": "    6330:      \ttst\tw1, #0x1"
+            },
+            {
+              "line": 1236,
+              "text": "    6334:      \tmov\tw15, #0x48              // =72"
+            },
+            {
+              "line": 1237,
+              "text": "    6338:      \tand\tx9, x1, #0x1"
+            },
+            {
+              "line": 1241,
+              "text": "    6348:      \tldr\tx9, [sp, #0x8]"
+            },
+            {
+              "line": 1256,
+              "text": "    6384:      \tldp\tx9, x11, [x29, #-0x10]"
+            },
+            {
+              "line": 1258,
+              "text": "    638c:      \tldr\tx12, [sp, #0x20]"
+            },
+            {
+              "line": 1277,
+              "text": "    63d8:      \tldr\tx9, [sp, #0x18]"
+            },
+            {
+              "line": 1289,
+              "text": "    6408:      \tldp\tx20, x19, [sp, #0x90]"
+            },
+            {
+              "line": 1290,
+              "text": "    640c:      \tldp\tx22, x21, [sp, #0x80]"
+            },
+            {
+              "line": 1291,
+              "text": "    6410:      \tldp\tx24, x23, [sp, #0x70]"
+            },
+            {
+              "line": 1292,
+              "text": "    6414:      \tldp\tx26, x25, [sp, #0x60]"
+            },
+            {
+              "line": 1293,
+              "text": "    6418:      \tldp\tx28, x27, [sp, #0x50]"
+            },
+            {
+              "line": 1294,
+              "text": "    641c:      \tldp\tx29, x30, [sp, #0x40]"
+            },
+            {
+              "line": 1295,
+              "text": "    6420:      \tadd\tsp, sp, #0xa0"
+            }
+          ]
+        },
+        {
+          "phase": "metadata",
+          "address": "00000000000166c0",
+          "assembly_line": 18012,
+          "emitted_all_path_instructions": 216,
+          "ordinary_call_sites": 0,
+          "entry_frame_bytes_excluding_red_zone": 0,
+          "stack_instruction_count": 0,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": false,
+          "native_tail_sites": [
+            "169f8"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "9cf2ce046a370c17fd69f7b66f71788fb440646ec84586f7bbfc4b751fd7c30f",
+          "selected_instructions": [
+            {
+              "line": 18013,
+              "text": "   166c0:      \tldp\tx11, x13, [x24]"
+            },
+            {
+              "line": 18014,
+              "text": "   166c4:      \tmov\tw8, v2.s[1]"
+            },
+            {
+              "line": 18015,
+              "text": "   166c8:      \tneg\tx10, x23"
+            },
+            {
+              "line": 18016,
+              "text": "   166cc:      \tsub\tx9, x8, #0x1"
+            },
+            {
+              "line": 18017,
+              "text": "   166d0:      \tmov\tw12, v2.s[2]"
+            },
+            {
+              "line": 18018,
+              "text": "   166d4:      \ttbz\tw13, #0x0, 0x16794"
+            },
+            {
+              "line": 18019,
+              "text": "   166d8:      \tldp\tx14, x15, [x11, #0x10]"
+            },
+            {
+              "line": 18020,
+              "text": "   166dc:      \tldur\tq3, [x15, #0x8]"
+            },
+            {
+              "line": 18021,
+              "text": "   166e0:      \tlsr\tx14, x14, x12"
+            },
+            {
+              "line": 18022,
+              "text": "   166e4:      \tdup\tv4.16b, w14"
+            },
+            {
+              "line": 18023,
+              "text": "   166e8:      \tmvn\tw16, w14"
+            },
+            {
+              "line": 18024,
+              "text": "   166ec:      \tcmeq\tv3.16b, v3.16b, v4.16b"
+            },
+            {
+              "line": 18204,
+              "text": "   169bc:      \tnop"
+            },
+            {
+              "line": 18205,
+              "text": "   169c0:      \tprfm\tpldl1keep, [x14]"
+            },
+            {
+              "line": 18206,
+              "text": "   169c4:      \tadd\tx14, x14, x23"
+            },
+            {
+              "line": 18207,
+              "text": "   169c8:      \tcmp\tx14, x13"
+            },
+            {
+              "line": 18208,
+              "text": "   169cc:      \tb.ls\t0x169c0"
+            },
+            {
+              "line": 18209,
+              "text": "   169d0:      \tb\t0x16980"
+            },
+            {
+              "line": 18210,
+              "text": "   169d4:      \tadrp\tx8, 0x16000"
+            },
+            {
+              "line": 18211,
+              "text": "   169d8:      \tadd\tx8, x8, #0xa20"
+            },
+            {
+              "line": 18212,
+              "text": "   169dc:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 18213,
+              "text": "   169e0:      \tcbz\tx21, 0x169fc"
+            },
+            {
+              "line": 18214,
+              "text": "   169e4:      \tldr\tx22, [x20, #0xe8]"
+            },
+            {
+              "line": 18215,
+              "text": "   169e8:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 18216,
+              "text": "   169ec:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 18217,
+              "text": "   169f0:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 18218,
+              "text": "   169f4:      \tstr\tx8, [x20, #0xe8]"
+            },
+            {
+              "line": 18219,
+              "text": "   169f8:      \tbr\tx0"
+            },
+            {
+              "line": 18220,
+              "text": "   169fc:      \tstr\txzr, [x20, #0x150]"
+            }
+          ]
+        },
+        {
+          "phase": "payload",
+          "address": "0000000000016a20",
+          "assembly_line": 18230,
+          "emitted_all_path_instructions": 328,
+          "ordinary_call_sites": 0,
+          "entry_frame_bytes_excluding_red_zone": 0,
+          "stack_instruction_count": 0,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": false,
+          "native_tail_sites": [
+            "16ea0"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "70572cd0843d017a09b70c08c719af19e5bf2cb17c28ade2e97924683526bc3a",
+          "selected_instructions": [
+            {
+              "line": 18231,
+              "text": "   16a20:      \tldr\tx17, [x24, #0x18]"
+            },
+            {
+              "line": 18232,
+              "text": "   16a24:      \tcbz\tx17, 0x16e5c"
+            },
+            {
+              "line": 18233,
+              "text": "   16a28:      \tldr\tx9, [x24, #0x10]"
+            },
+            {
+              "line": 18234,
+              "text": "   16a2c:      \tmov\tw15, v2.s[1]"
+            },
+            {
+              "line": 18235,
+              "text": "   16a30:      \tadd\tw10, w15, #0xf8"
+            },
+            {
+              "line": 18236,
+              "text": "   16a34:      \tmov\tx8, v0.d[1]"
+            },
+            {
+              "line": 18237,
+              "text": "   16a38:      \tmov\tx14, v1.d[1]"
+            },
+            {
+              "line": 18238,
+              "text": "   16a3c:      \tand\tx16, x10, #0xff"
+            },
+            {
+              "line": 18239,
+              "text": "   16a40:      \tfmov\tx11, d1"
+            },
+            {
+              "line": 18240,
+              "text": "   16a44:      \tneg\tx10, x23"
+            },
+            {
+              "line": 18241,
+              "text": "   16a48:      \tldr\tx18, [x9, #0x40]"
+            },
+            {
+              "line": 18242,
+              "text": "   16a4c:      \tmov\tw12, v2.s[3]"
+            },
+            {
+              "line": 18504,
+              "text": "   16e64:      \ttbnz\tw9, #0x0, 0x16ea4"
+            },
+            {
+              "line": 18505,
+              "text": "   16e68:      \ttbnz\tw9, #0x1, 0x16eb8"
+            },
+            {
+              "line": 18506,
+              "text": "   16e6c:      \ttbnz\tw9, #0x2, 0x16ecc"
+            },
+            {
+              "line": 18507,
+              "text": "   16e70:      \ttbnz\tw9, #0x3, 0x16ee0"
+            },
+            {
+              "line": 18508,
+              "text": "   16e74:      \tstr\tx8, [x24, #0x8]"
+            },
+            {
+              "line": 18509,
+              "text": "   16e78:      \tcbz\tx8, 0x16ef8"
+            },
+            {
+              "line": 18510,
+              "text": "   16e7c:      \tadrp\tx8, 0x16000"
+            },
+            {
+              "line": 18511,
+              "text": "   16e80:      \tadd\tx8, x8, #0x6c0"
+            },
+            {
+              "line": 18512,
+              "text": "   16e84:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 18513,
+              "text": "   16e88:      \tcbz\tx21, 0x16efc"
+            },
+            {
+              "line": 18514,
+              "text": "   16e8c:      \tldr\tx22, [x20, #0xe8]"
+            },
+            {
+              "line": 18515,
+              "text": "   16e90:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 18516,
+              "text": "   16e94:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 18517,
+              "text": "   16e98:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 18518,
+              "text": "   16e9c:      \tstr\tx8, [x20, #0xe8]"
+            },
+            {
+              "line": 18519,
+              "text": "   16ea0:      \tbr\tx0"
+            },
+            {
+              "line": 18520,
+              "text": "   16ea4:      \tldr\tx8, [x10, #0x40]"
+            }
+          ]
+        }
+      ]
+    },
+    "cold_slim_grain1": {
+      "mode": "slim",
+      "configured_grain": 1,
+      "assembly_member": "assembly-neon-cold_slim_grain1.txt",
+      "assembly_sha256": "0d18ee13b7d1b4f92c3335604a9d93814319d047ccc83daf0ed23b0880733b01",
+      "reported_codegen_member": "cold-codegen-neon.json",
+      "reported_codegen_sha256": "1d01d2434bf6fb19f7c1a46e5463401392f3a87dd185763c48ccb811467892c5",
+      "selected_headers": {
+        "controls/new/loom/ring.h": "c20f1d37871f9652035e63b0bfd33068e394e06ad91e55a1be29f9976ae0f117",
+        "controls/new/loom/cohort.h": "aaecd2c4ada55186e1a19011a8ab6a119924f002ef3e523f4c03ab3ebe7c0c97",
+        "controls/cold/map.h": "8bb867672aa7c4265f95a97f9960b2d6c35901bccc547e0729480917707ff130"
+      },
+      "bodies": [
+        {
+          "phase": "payload_cold",
+          "address": "000000000000601c",
+          "assembly_line": 1033,
+          "emitted_all_path_instructions": 174,
+          "ordinary_call_sites": 2,
+          "entry_frame_bytes_excluding_red_zone": 16,
+          "stack_instruction_count": 5,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": true,
+          "native_tail_sites": [
+            "62bc"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "c05ff102f42a354d89f212a74a505a19436d1e3b8a2e6f441b0ccde251e40c8f",
+          "selected_instructions": [
+            {
+              "line": 1034,
+              "text": "    601c:      \tstp\tx29, x30, [sp, #-0x10]!"
+            },
+            {
+              "line": 1035,
+              "text": "    6020:      \tmov\tx29, sp"
+            },
+            {
+              "line": 1036,
+              "text": "    6024:      \tldr\tx25, [x24, #0x8]"
+            },
+            {
+              "line": 1037,
+              "text": "    6028:      \ttbz\tw25, #0x0, 0x628c"
+            },
+            {
+              "line": 1038,
+              "text": "    602c:      \tldr\tx8, [x24, #0x20]"
+            },
+            {
+              "line": 1039,
+              "text": "    6030:      \tldr\tx26, [x24]"
+            },
+            {
+              "line": 1040,
+              "text": "    6034:      \tcmp\tx26, x8"
+            },
+            {
+              "line": 1041,
+              "text": "    6038:      \tb.lo\t0x628c"
+            },
+            {
+              "line": 1042,
+              "text": "    603c:      \tldr\tx19, [x23, #0x40]"
+            },
+            {
+              "line": 1043,
+              "text": "    6040:      \tb.eq\t0x60d0"
+            },
+            {
+              "line": 1044,
+              "text": "    6044:      \tldr\tx10, [x26, #0x28]"
+            },
+            {
+              "line": 1045,
+              "text": "    6048:      \tldr\tx9, [x26, #0x18]"
+            },
+            {
+              "line": 1071,
+              "text": "    60b0:      \tcbz\tw8, 0x61b8"
+            },
+            {
+              "line": 1072,
+              "text": "    60b4:      \tldr\tx1, [x26, #0x8]"
+            },
+            {
+              "line": 1073,
+              "text": "    60b8:      \tmov\tx0, x19"
+            },
+            {
+              "line": 1074,
+              "text": "    60bc:      \tbl\t0x9200"
+            },
+            {
+              "line": 1075,
+              "text": "    60c0:      \ttst\tw1, #0x1"
+            },
+            {
+              "line": 1076,
+              "text": "    60c4:      \tand\tx9, x1, #0x1"
+            },
+            {
+              "line": 1077,
+              "text": "    60c8:      \tcsel\tx8, x0, xzr, ne"
+            },
+            {
+              "line": 1078,
+              "text": "    60cc:      \tb\t0x61d8"
+            },
+            {
+              "line": 1079,
+              "text": "    60d0:      \tldr\tx1, [x26, #0x8]"
+            },
+            {
+              "line": 1080,
+              "text": "    60d4:      \tmov\tx0, x19"
+            },
+            {
+              "line": 1081,
+              "text": "    60d8:      \tbl\t0x9200"
+            },
+            {
+              "line": 1082,
+              "text": "    60dc:      \tldp\tx9, x10, [x26, #0x30]"
+            },
+            {
+              "line": 1083,
+              "text": "    60e0:      \ttst\tw1, #0x1"
+            },
+            {
+              "line": 1084,
+              "text": "    60e4:      \tand\tx11, x1, #0x1"
+            },
+            {
+              "line": 1187,
+              "text": "    6280:      \tprfm\tpldl1keep, [x10]"
+            },
+            {
+              "line": 1188,
+              "text": "    6284:      \tb\t0x6274"
+            },
+            {
+              "line": 1189,
+              "text": "    6288:      \tand\tx25, x25, #0xfffffffffffffffe"
+            },
+            {
+              "line": 1190,
+              "text": "    628c:      \tstr\tx25, [x24, #0x8]"
+            },
+            {
+              "line": 1191,
+              "text": "    6290:      \tcbz\tx25, 0x62c0"
+            },
+            {
+              "line": 1192,
+              "text": "    6294:      \tadrp\tx8, 0x15000"
+            },
+            {
+              "line": 1193,
+              "text": "    6298:      \tadd\tx8, x8, #0x2e0"
+            },
+            {
+              "line": 1194,
+              "text": "    629c:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 1195,
+              "text": "    62a0:      \tcbz\tx21, 0x62c8"
+            },
+            {
+              "line": 1196,
+              "text": "    62a4:      \tldr\tx22, [x20, #0xa8]"
+            },
+            {
+              "line": 1197,
+              "text": "    62a8:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 1198,
+              "text": "    62ac:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 1199,
+              "text": "    62b0:      \tstr\tx8, [x20, #0xa8]"
+            },
+            {
+              "line": 1200,
+              "text": "    62b4:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 1201,
+              "text": "    62b8:      \tldp\tx29, x30, [sp], #0x10"
+            },
+            {
+              "line": 1202,
+              "text": "    62bc:      \tbr\tx0"
+            },
+            {
+              "line": 1203,
+              "text": "    62c0:      \tldp\tx29, x30, [sp], #0x10"
+            },
+            {
+              "line": 1206,
+              "text": "    62cc:      \tldp\tx29, x30, [sp], #0x10"
+            }
+          ]
+        },
+        {
+          "phase": "metadata",
+          "address": "00000000000152e0",
+          "assembly_line": 16728,
+          "emitted_all_path_instructions": 80,
+          "ordinary_call_sites": 0,
+          "entry_frame_bytes_excluding_red_zone": 0,
+          "stack_instruction_count": 0,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": false,
+          "native_tail_sites": [
+            "153fc"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "be911fe20625dfca4c4a1def6aca00593af4f0f2c8339c7a4d478087f2f7cc21",
+          "selected_instructions": [
+            {
+              "line": 16729,
+              "text": "   152e0:      \tldrb\tw8, [x24, #0x8]"
+            },
+            {
+              "line": 16730,
+              "text": "   152e4:      \ttbz\tw8, #0x0, 0x153d8"
+            },
+            {
+              "line": 16731,
+              "text": "   152e8:      \tldr\tx9, [x23, #0x40]"
+            },
+            {
+              "line": 16732,
+              "text": "   152ec:      \tldr\tx11, [x24]"
+            },
+            {
+              "line": 16733,
+              "text": "   152f0:      \tldp\tx8, x10, [x11, #0x10]"
+            },
+            {
+              "line": 16734,
+              "text": "   152f4:      \tldr\tw12, [x9, #0x5c]"
+            },
+            {
+              "line": 16735,
+              "text": "   152f8:      \tldr\tw13, [x9, #0x54]"
+            },
+            {
+              "line": 16736,
+              "text": "   152fc:      \tldr\tq0, [x10, x12]"
+            },
+            {
+              "line": 16737,
+              "text": "   15300:      \tldr\tw12, [x9, #0x4c]"
+            },
+            {
+              "line": 16738,
+              "text": "   15304:      \tcmp\tw13, #0x40"
+            },
+            {
+              "line": 16739,
+              "text": "   15308:      \tlsr\tx8, x8, x12"
+            },
+            {
+              "line": 16740,
+              "text": "   1530c:      \tmov\tx12, #-0x1              // =-1"
+            },
+            {
+              "line": 16785,
+              "text": "   153c0:      \tb.hi\t0x1538c"
+            },
+            {
+              "line": 16786,
+              "text": "   153c4:      \tprfm\tpldl1keep, [x15]"
+            },
+            {
+              "line": 16787,
+              "text": "   153c8:      \tadd\tx15, x15, x11"
+            },
+            {
+              "line": 16788,
+              "text": "   153cc:      \tcmp\tx15, x14"
+            },
+            {
+              "line": 16789,
+              "text": "   153d0:      \tb.ls\t0x153c4"
+            },
+            {
+              "line": 16790,
+              "text": "   153d4:      \tb\t0x1538c"
+            },
+            {
+              "line": 16791,
+              "text": "   153d8:      \tadrp\tx8, 0x15000"
+            },
+            {
+              "line": 16792,
+              "text": "   153dc:      \tadd\tx8, x8, #0x420"
+            },
+            {
+              "line": 16793,
+              "text": "   153e0:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 16794,
+              "text": "   153e4:      \tcbz\tx21, 0x15400"
+            },
+            {
+              "line": 16795,
+              "text": "   153e8:      \tldr\tx22, [x20, #0xa8]"
+            },
+            {
+              "line": 16796,
+              "text": "   153ec:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 16797,
+              "text": "   153f0:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 16798,
+              "text": "   153f4:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 16799,
+              "text": "   153f8:      \tstr\tx8, [x20, #0xa8]"
+            },
+            {
+              "line": 16800,
+              "text": "   153fc:      \tbr\tx0"
+            },
+            {
+              "line": 16801,
+              "text": "   15400:      \tstr\txzr, [x20, #0x110]"
+            }
+          ]
+        },
+        {
+          "phase": "payload",
+          "address": "0000000000015420",
+          "assembly_line": 16810,
+          "emitted_all_path_instructions": 128,
+          "ordinary_call_sites": 0,
+          "entry_frame_bytes_excluding_red_zone": 0,
+          "stack_instruction_count": 0,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": false,
+          "native_tail_sites": [
+            "154e4"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "081f1a72584ed8221944c11de63945b12684262f8cd11fd52e155586dd317c61",
+          "selected_instructions": [
+            {
+              "line": 16811,
+              "text": "   15420:      \tldr\tx8, [x24, #0x8]"
+            },
+            {
+              "line": 16812,
+              "text": "   15424:      \ttbnz\tw8, #0x0, 0x15434"
+            },
+            {
+              "line": 16813,
+              "text": "   15428:      \tstr\tx8, [x24, #0x8]"
+            },
+            {
+              "line": 16814,
+              "text": "   1542c:      \tcbnz\tx8, 0x154c0"
+            },
+            {
+              "line": 16815,
+              "text": "   15430:      \tb\t0x15600"
+            },
+            {
+              "line": 16816,
+              "text": "   15434:      \tldr\tx9, [x24]"
+            },
+            {
+              "line": 16817,
+              "text": "   15438:      \tldr\tx10, [x23, #0x40]"
+            },
+            {
+              "line": 16818,
+              "text": "   1543c:      \tldr\tx13, [x9, #0x28]"
+            },
+            {
+              "line": 16819,
+              "text": "   15440:      \tldr\tx12, [x9, #0x18]"
+            },
+            {
+              "line": 16820,
+              "text": "   15444:      \tcbz\tx13, 0x154ac"
+            },
+            {
+              "line": 16821,
+              "text": "   15448:      \tldrb\tw15, [x10, #0x68]"
+            },
+            {
+              "line": 16822,
+              "text": "   1544c:      \tldp\tw18, w14, [x10, #0x4c]"
+            },
+            {
+              "line": 16845,
+              "text": "   154a8:      \tb.ne\t0x15480"
+            },
+            {
+              "line": 16846,
+              "text": "   154ac:      \tldr\tw11, [x12, #0x4]"
+            },
+            {
+              "line": 16847,
+              "text": "   154b0:      \tcbz\tw11, 0x15508"
+            },
+            {
+              "line": 16848,
+              "text": "   154b4:      \tstr\tx8, [x24, #0x8]"
+            },
+            {
+              "line": 16849,
+              "text": "   154b8:      \tcbnz\tx9, 0x15604"
+            },
+            {
+              "line": 16850,
+              "text": "   154bc:      \tcbz\tx8, 0x15600"
+            },
+            {
+              "line": 16851,
+              "text": "   154c0:      \tadrp\tx8, 0x15000"
+            },
+            {
+              "line": 16852,
+              "text": "   154c4:      \tadd\tx8, x8, #0x2e0"
+            },
+            {
+              "line": 16853,
+              "text": "   154c8:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 16854,
+              "text": "   154cc:      \tcbz\tx21, 0x154e8"
+            },
+            {
+              "line": 16855,
+              "text": "   154d0:      \tldr\tx22, [x20, #0xa8]"
+            },
+            {
+              "line": 16856,
+              "text": "   154d4:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 16857,
+              "text": "   154d8:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 16858,
+              "text": "   154dc:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 16859,
+              "text": "   154e0:      \tstr\tx8, [x20, #0xa8]"
+            },
+            {
+              "line": 16860,
+              "text": "   154e4:      \tbr\tx0"
+            },
+            {
+              "line": 16861,
+              "text": "   154e8:      \tstr\txzr, [x20, #0x110]"
+            }
+          ]
+        }
+      ]
+    },
+    "cold_slim_grain4": {
+      "mode": "slim",
+      "configured_grain": 4,
+      "assembly_member": "assembly-neon-cold_slim_grain4.txt",
+      "assembly_sha256": "f0eef1d07bad24bbe8d977859338271ca591284f1ec7dac7b92f42adf244d6a1",
+      "reported_codegen_member": "cold-codegen-neon.json",
+      "reported_codegen_sha256": "1d01d2434bf6fb19f7c1a46e5463401392f3a87dd185763c48ccb811467892c5",
+      "selected_headers": {
+        "controls/new/loom/ring.h": "c20f1d37871f9652035e63b0bfd33068e394e06ad91e55a1be29f9976ae0f117",
+        "controls/new/loom/cohort.h": "aaecd2c4ada55186e1a19011a8ab6a119924f002ef3e523f4c03ab3ebe7c0c97",
+        "controls/cold/map.h": "8bb867672aa7c4265f95a97f9960b2d6c35901bccc547e0729480917707ff130"
+      },
+      "bodies": [
+        {
+          "phase": "payload_cold",
+          "address": "0000000000006014",
+          "assembly_line": 1031,
+          "emitted_all_path_instructions": 202,
+          "ordinary_call_sites": 2,
+          "entry_frame_bytes_excluding_red_zone": 64,
+          "stack_instruction_count": 23,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": true,
+          "native_tail_sites": [
+            "630c"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "bf5a7699c02e356ae14d9f6b4fe42607fcec99d5c8fc4d48cdb123bca22888bf",
+          "selected_instructions": [
+            {
+              "line": 1032,
+              "text": "    6014:      \tsub\tsp, sp, #0x40"
+            },
+            {
+              "line": 1033,
+              "text": "    6018:      \tstp\tx29, x30, [sp, #0x30]"
+            },
+            {
+              "line": 1034,
+              "text": "    601c:      \tadd\tx29, sp, #0x30"
+            },
+            {
+              "line": 1035,
+              "text": "    6020:      \tstr\tx22, [sp, #0x8]"
+            },
+            {
+              "line": 1036,
+              "text": "    6024:      \tldr\tx19, [x23, #0x40]"
+            },
+            {
+              "line": 1037,
+              "text": "    6028:      \tldr\tx28, [x24, #0x20]"
+            },
+            {
+              "line": 1038,
+              "text": "    602c:      \tmov\tx25, xzr"
+            },
+            {
+              "line": 1039,
+              "text": "    6030:      \tldp\tx22, x26, [x24]"
+            },
+            {
+              "line": 1040,
+              "text": "    6034:      \tstr\tx21, [sp, #0x18]"
+            },
+            {
+              "line": 1041,
+              "text": "    6038:      \tstp\tx20, x23, [x29, #-0x10]"
+            },
+            {
+              "line": 1042,
+              "text": "    603c:      \tmov\tw21, #0x1               // =1"
+            },
+            {
+              "line": 1043,
+              "text": "    6040:      \tmov\tw20, #0x48              // =72"
+            },
+            {
+              "line": 1044,
+              "text": "    6044:      \tstr\tx24, [sp, #0x10]"
+            },
+            {
+              "line": 1085,
+              "text": "    60e8:      \tcbz\tw8, 0x61ec"
+            },
+            {
+              "line": 1086,
+              "text": "    60ec:      \tldr\tx1, [x27, #0x8]"
+            },
+            {
+              "line": 1087,
+              "text": "    60f0:      \tmov\tx0, x19"
+            },
+            {
+              "line": 1088,
+              "text": "    60f4:      \tbl\t0x9340"
+            },
+            {
+              "line": 1089,
+              "text": "    60f8:      \ttst\tw1, #0x1"
+            },
+            {
+              "line": 1090,
+              "text": "    60fc:      \tand\tx9, x1, #0x1"
+            },
+            {
+              "line": 1091,
+              "text": "    6100:      \tcsel\tx8, x0, xzr, ne"
+            },
+            {
+              "line": 1092,
+              "text": "    6104:      \tb\t0x620c"
+            },
+            {
+              "line": 1093,
+              "text": "    6108:      \tldr\tx1, [x27, #0x8]"
+            },
+            {
+              "line": 1094,
+              "text": "    610c:      \tmov\tx0, x19"
+            },
+            {
+              "line": 1095,
+              "text": "    6110:      \tbl\t0x9340"
+            },
+            {
+              "line": 1096,
+              "text": "    6114:      \tldp\tx9, x10, [x27, #0x30]"
+            },
+            {
+              "line": 1097,
+              "text": "    6118:      \ttst\tw1, #0x1"
+            },
+            {
+              "line": 1098,
+              "text": "    611c:      \tand\tx11, x1, #0x1"
+            },
+            {
+              "line": 1133,
+              "text": "    61a8:      \tldur\tx8, [x29, #-0x8]"
+            },
+            {
+              "line": 1192,
+              "text": "    6294:      \tldur\tx8, [x29, #-0x8]"
+            },
+            {
+              "line": 1205,
+              "text": "    62c8:      \tldr\tx24, [sp, #0x10]"
+            },
+            {
+              "line": 1207,
+              "text": "    62d0:      \tcbz\tx23, 0x6310"
+            },
+            {
+              "line": 1208,
+              "text": "    62d4:      \tldr\tx9, [sp, #0x8]"
+            },
+            {
+              "line": 1209,
+              "text": "    62d8:      \tadrp\tx8, 0x15000"
+            },
+            {
+              "line": 1210,
+              "text": "    62dc:      \tadd\tx8, x8, #0x8c0"
+            },
+            {
+              "line": 1211,
+              "text": "    62e0:      \tstr\tx8, [x9]"
+            },
+            {
+              "line": 1212,
+              "text": "    62e4:      \tldr\tx9, [sp, #0x18]"
+            },
+            {
+              "line": 1213,
+              "text": "    62e8:      \tcbz\tx9, 0x6328"
+            },
+            {
+              "line": 1214,
+              "text": "    62ec:      \tldp\tx20, x23, [x29, #-0x10]"
+            },
+            {
+              "line": 1215,
+              "text": "    62f0:      \tsub\tx21, x9, #0x1"
+            },
+            {
+              "line": 1216,
+              "text": "    62f4:      \tldr\tx22, [x20, #0xa8]"
+            },
+            {
+              "line": 1217,
+              "text": "    62f8:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 1218,
+              "text": "    62fc:      \tstr\tx8, [x20, #0xa8]"
+            },
+            {
+              "line": 1219,
+              "text": "    6300:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 1220,
+              "text": "    6304:      \tldp\tx29, x30, [sp, #0x30]"
+            },
+            {
+              "line": 1221,
+              "text": "    6308:      \tadd\tsp, sp, #0x40"
+            },
+            {
+              "line": 1222,
+              "text": "    630c:      \tbr\tx0"
+            },
+            {
+              "line": 1223,
+              "text": "    6310:      \tldp\tx20, x23, [x29, #-0x10]"
+            },
+            {
+              "line": 1224,
+              "text": "    6314:      \tldr\tx21, [sp, #0x18]"
+            },
+            {
+              "line": 1225,
+              "text": "    6318:      \tldr\tx22, [sp, #0x8]"
+            },
+            {
+              "line": 1226,
+              "text": "    631c:      \tldp\tx29, x30, [sp, #0x30]"
+            },
+            {
+              "line": 1227,
+              "text": "    6320:      \tadd\tsp, sp, #0x40"
+            },
+            {
+              "line": 1229,
+              "text": "    6328:      \tldur\tx8, [x29, #-0x10]"
+            },
+            {
+              "line": 1231,
+              "text": "    6330:      \tldp\tx29, x30, [sp, #0x30]"
+            },
+            {
+              "line": 1232,
+              "text": "    6334:      \tadd\tsp, sp, #0x40"
+            }
+          ]
+        },
+        {
+          "phase": "metadata",
+          "address": "00000000000158c0",
+          "assembly_line": 17104,
+          "emitted_all_path_instructions": 272,
+          "ordinary_call_sites": 0,
+          "entry_frame_bytes_excluding_red_zone": 0,
+          "stack_instruction_count": 0,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": false,
+          "native_tail_sites": [
+            "15cd8"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "4fa5fa698ac95c3498824309a107efb134cf7e846d4720e61d4362db8bc279a9",
+          "selected_instructions": [
+            {
+              "line": 17105,
+              "text": "   158c0:      \tldr\tx8, [x23, #0x40]"
+            },
+            {
+              "line": 17106,
+              "text": "   158c4:      \tldp\tx9, x10, [x24]"
+            },
+            {
+              "line": 17107,
+              "text": "   158c8:      \ttbz\tw10, #0x0, 0x159b4"
+            },
+            {
+              "line": 17108,
+              "text": "   158cc:      \tldp\tx11, x12, [x9, #0x10]"
+            },
+            {
+              "line": 17109,
+              "text": "   158d0:      \tldr\tw13, [x8, #0x5c]"
+            },
+            {
+              "line": 17110,
+              "text": "   158d4:      \tldr\tw14, [x8, #0x54]"
+            },
+            {
+              "line": 17111,
+              "text": "   158d8:      \tcmp\tw14, #0x40"
+            },
+            {
+              "line": 17112,
+              "text": "   158dc:      \tldr\tq0, [x12, x13]"
+            },
+            {
+              "line": 17113,
+              "text": "   158e0:      \tldr\tw13, [x8, #0x4c]"
+            },
+            {
+              "line": 17114,
+              "text": "   158e4:      \tlsr\tx11, x11, x13"
+            },
+            {
+              "line": 17115,
+              "text": "   158e8:      \tmov\tx13, #-0x1              // =-1"
+            },
+            {
+              "line": 17116,
+              "text": "   158ec:      \tlsl\tx15, x13, x14"
+            },
+            {
+              "line": 17352,
+              "text": "   15c9c:      \tnop"
+            },
+            {
+              "line": 17353,
+              "text": "   15ca0:      \tprfm\tpldl1keep, [x15]"
+            },
+            {
+              "line": 17354,
+              "text": "   15ca4:      \tadd\tx15, x15, x11"
+            },
+            {
+              "line": 17355,
+              "text": "   15ca8:      \tcmp\tx15, x14"
+            },
+            {
+              "line": 17356,
+              "text": "   15cac:      \tb.ls\t0x15ca0"
+            },
+            {
+              "line": 17357,
+              "text": "   15cb0:      \tb\t0x15c60"
+            },
+            {
+              "line": 17358,
+              "text": "   15cb4:      \tadrp\tx8, 0x15000"
+            },
+            {
+              "line": 17359,
+              "text": "   15cb8:      \tadd\tx8, x8, #0xd00"
+            },
+            {
+              "line": 17360,
+              "text": "   15cbc:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 17361,
+              "text": "   15cc0:      \tcbz\tx21, 0x15cdc"
+            },
+            {
+              "line": 17362,
+              "text": "   15cc4:      \tldr\tx22, [x20, #0xa8]"
+            },
+            {
+              "line": 17363,
+              "text": "   15cc8:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 17364,
+              "text": "   15ccc:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 17365,
+              "text": "   15cd0:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 17366,
+              "text": "   15cd4:      \tstr\tx8, [x20, #0xa8]"
+            },
+            {
+              "line": 17367,
+              "text": "   15cd8:      \tbr\tx0"
+            },
+            {
+              "line": 17368,
+              "text": "   15cdc:      \tstr\txzr, [x20, #0x110]"
+            }
+          ]
+        },
+        {
+          "phase": "payload",
+          "address": "0000000000015d00",
+          "assembly_line": 17378,
+          "emitted_all_path_instructions": 128,
+          "ordinary_call_sites": 0,
+          "entry_frame_bytes_excluding_red_zone": 0,
+          "stack_instruction_count": 0,
+          "red_zone_memory_instruction_count": 0,
+          "stack_accounting": "SP plus proved x29 frame base on ARM; RSP/push/pop plus proved RBP frame base on x86; no nested callee sum",
+          "arm_x29_is_frame_base": false,
+          "native_tail_sites": [
+            "15ee4"
+          ],
+          "excerpt_format": "Actual address/mnemonic/operands with verbose symbol annotations omitted; line numbers plus SHA256 of raw selected lines joined with newline (no trailing newline) recover exact text.",
+          "raw_selected_lines_sha256": "fe05b1b46fe012cd9f5e186b83331c9a521d2a3052461a9faa3878a7c2cffa64",
+          "selected_instructions": [
+            {
+              "line": 17379,
+              "text": "   15d00:      \tldr\tx9, [x23, #0x40]"
+            },
+            {
+              "line": 17380,
+              "text": "   15d04:      \tldp\tx11, x10, [x24]"
+            },
+            {
+              "line": 17381,
+              "text": "   15d08:      \tmov\tx15, #0xe5b9            // =58809"
+            },
+            {
+              "line": 17382,
+              "text": "   15d0c:      \tmov\tx16, #0x11eb            // =4587"
+            },
+            {
+              "line": 17383,
+              "text": "   15d10:      \tmov\tw12, #0x1               // =1"
+            },
+            {
+              "line": 17384,
+              "text": "   15d14:      \tmovk\tx15, #0x1ce4, lsl #16"
+            },
+            {
+              "line": 17385,
+              "text": "   15d18:      \tmovk\tx16, #0x1331, lsl #16"
+            },
+            {
+              "line": 17386,
+              "text": "   15d1c:      \tmov\tw14, #0x48              // =72"
+            },
+            {
+              "line": 17387,
+              "text": "   15d20:      \tmov\tx17, #-0x1              // =-1"
+            },
+            {
+              "line": 17388,
+              "text": "   15d24:      \tmov\tx8, xzr"
+            },
+            {
+              "line": 17389,
+              "text": "   15d28:      \tmov\tx18, xzr"
+            },
+            {
+              "line": 17390,
+              "text": "   15d2c:      \tmovk\tx15, #0x476d, lsl #32"
+            },
+            {
+              "line": 17485,
+              "text": "   15ea8:      \tcmp\tx25, x19"
+            },
+            {
+              "line": 17486,
+              "text": "   15eac:      \tb.ls\t0x15ea0"
+            },
+            {
+              "line": 17487,
+              "text": "   15eb0:      \tb\t0x15d48"
+            },
+            {
+              "line": 17488,
+              "text": "   15eb4:      \tstr\tx13, [x24, #0x8]"
+            },
+            {
+              "line": 17489,
+              "text": "   15eb8:      \tcbnz\tx18, 0x15ef4"
+            },
+            {
+              "line": 17490,
+              "text": "   15ebc:      \tcbz\tx13, 0x15ee8"
+            },
+            {
+              "line": 17491,
+              "text": "   15ec0:      \tadrp\tx8, 0x15000"
+            },
+            {
+              "line": 17492,
+              "text": "   15ec4:      \tadd\tx8, x8, #0x8c0"
+            },
+            {
+              "line": 17493,
+              "text": "   15ec8:      \tstr\tx8, [x22]"
+            },
+            {
+              "line": 17494,
+              "text": "   15ecc:      \tcbz\tx21, 0x15eec"
+            },
+            {
+              "line": 17495,
+              "text": "   15ed0:      \tldr\tx22, [x20, #0xa8]"
+            },
+            {
+              "line": 17496,
+              "text": "   15ed4:      \tsub\tx21, x21, #0x1"
+            },
+            {
+              "line": 17497,
+              "text": "   15ed8:      \tldp\tx0, x8, [x22]"
+            },
+            {
+              "line": 17498,
+              "text": "   15edc:      \tldr\tx24, [x22, #0x10]"
+            },
+            {
+              "line": 17499,
+              "text": "   15ee0:      \tstr\tx8, [x20, #0xa8]"
+            },
+            {
+              "line": 17500,
+              "text": "   15ee4:      \tbr\tx0"
+            },
+            {
+              "line": 17501,
+              "text": "   15ee8:      \tb\t0x10300"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

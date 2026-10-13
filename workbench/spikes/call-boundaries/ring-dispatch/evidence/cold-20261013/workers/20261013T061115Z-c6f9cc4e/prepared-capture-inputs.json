@@ -1,0 +1,46 @@
+{
+  "scope": "exact self-contained combined control capture inputs; no main files changed",
+  "files": {
+    "ring.cpp": {
+      "sha256": "1f971406efe089c0cfa9340275e6d6ce6cf71542ffce08a3349c58bb7f6fe86e",
+      "bytes": 24199
+    },
+    "map.h": {
+      "sha256": "113dd0c3acff82bcb26c97282a48b2167754fa3e67f0d51f79ee070098cbbd4a",
+      "bytes": 35380
+    },
+    "facts.h": {
+      "sha256": "1d113a28d6bf1ecc2cc865eaf15a376773dda419fdf6c345cae202681c9cad9d",
+      "bytes": 6787
+    },
+    "semantics.h": {
+      "sha256": "7fb6438c808cdba03cf9de7d46627c871d925b75c843f20803bb815169539e58",
+      "bytes": 8472
+    },
+    "snapshot.cpp": {
+      "sha256": "72d968ded016290e78c319db9cbe619e4c608644881e5a35cce0591e41768fd0",
+      "bytes": 24757
+    },
+    "snapshot-semantics.h": {
+      "sha256": "064f13485b3f1863c6f993ac114aa4d47fc4b6428b73410eb0e5d086bb3e0c85",
+      "bytes": 8530
+    },
+    "baseline.h": {
+      "sha256": "4b907e4b40db0e5c4ec2e85bc50639bea6207ed7d27b4cb97c2c136e3ec4d367",
+      "bytes": 4325
+    }
+  },
+  "dependencies": "local quoted includes plus frozen Loom/Ikea/Orbital headers and Abseil from reference fixture",
+  "equality_proof": [
+    "run configures Ring shared prefix from context and passes that same context to every scheduled operation.",
+    "scheduled binds each Frame snapshot to its context parameter before push; Context and Map remain alive through full drain.",
+    "ragged_check and cold_semantics each configure from the same named const Context whose address is stored in Frames before push.",
+    "No context/facts/shared mutation occurs between configure and close. Helper returns the exact borrowed snapshot; each reconstructed field uses the same admitted expression as shared_arguments."
+  ],
+  "lifetime_proof": [
+    "Frame snapshot is a borrow of the enclosing operation; it is never a callback-local address.",
+    "All cold first/rest updates and completed-mask updates occur within the already charged payload visit; helper cannot suspend.",
+    "Cancellation destroys removed Frames after release_if; subsequent oracle steps prove no stale Frame execution. Context remains alive for other admitted Frames."
+  ],
+  "qualification": "AArch64 forced cases and O3 ASan/UBSan always-UAR same cases pass; x86 compiler-only; original unpinned abort remains unresolved"
+}

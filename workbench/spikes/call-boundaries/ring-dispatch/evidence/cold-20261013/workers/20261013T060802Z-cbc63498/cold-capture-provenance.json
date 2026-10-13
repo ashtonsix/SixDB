@@ -1,0 +1,37 @@
+{
+  "base_fixture_commit": "2a32da161d3a7eacbafad869f7362927d358a0c6",
+  "source_identities": {
+    "controls/shared/ring.cpp": "ca1c2a346614ecd11d228426193f8928b93ef0580036815baf23e0673a44d24c",
+    "controls/cold/ring.cpp": "db5edd1a5491687a769883b14f1ae0fa687ead4b503d13c3f0281ac063d705b7",
+    "controls/cold/map.h": "8bb867672aa7c4265f95a97f9960b2d6c35901bccc547e0729480917707ff130",
+    "controls/cold/semantics.h": "128cb3ff240a93bf36f82596077cf26040e6b38c18bc6a7e6e067fe132d7a395",
+    "controls/prepared-tail/ring.cpp": "1f971406efe089c0cfa9340275e6d6ce6cf71542ffce08a3349c58bb7f6fe86e",
+    "controls/prepared-tail/snapshot.cpp": "72d968ded016290e78c319db9cbe619e4c608644881e5a35cce0591e41768fd0",
+    "controls/prepared-tail/facts.h": "1d113a28d6bf1ecc2cc865eaf15a376773dda419fdf6c345cae202681c9cad9d",
+    "controls/prepared-tail/map.h": "113dd0c3acff82bcb26c97282a48b2167754fa3e67f0d51f79ee070098cbbd4a",
+    "controls/prepared-tail/semantics.h": "7fb6438c808cdba03cf9de7d46627c871d925b75c843f20803bb815169539e58",
+    "controls/prepared-tail/snapshot-semantics.h": "064f13485b3f1863c6f993ac114aa4d47fc4b6428b73410eb0e5d086bb3e0c85",
+    "controls/prepared-tail/baseline.h": "4b907e4b40db0e5c4ec2e85bc50639bea6207ed7d27b4cb97c2c136e3ec4d367",
+    "loom/include/loom/ring.h": "c20f1d37871f9652035e63b0bfd33068e394e06ad91e55a1be29f9976ae0f117",
+    "loom/include/loom/cohort.h": "aaecd2c4ada55186e1a19011a8ab6a119924f002ef3e523f4c03ab3ebe7c0c97",
+    "controls/new/loom/ring.h": "c20f1d37871f9652035e63b0bfd33068e394e06ad91e55a1be29f9976ae0f117",
+    "controls/new/loom/cohort.h": "aaecd2c4ada55186e1a19011a8ab6a119924f002ef3e523f4c03ab3ebe7c0c97",
+    "loom/src/ring.cpp": "af9109504294614a9f1f914609a35269df5032e22873e02aab96ffc26e48b984",
+    "workbench/spikes/hashtable/map.h": "865404bd45748f1a08aba58a55b0bb8f19546c65a397171e3a9765c0821eb548",
+    "controls/slim/ring.cpp": "73acd3ee6456da4c21375fafee74d8b90be74bda7b0b04be38938dd34a9dbf30"
+  },
+  "factors": {
+    "reference": "Exact committed direct-Cohort Shared pointer driver; Cohort16B, Slot56B.",
+    "sync": "Frame40B pointer Shared, ordered ready classification, ordinary synchronous fallback.",
+    "tail": "Same Frame40B and ready helper, musttail cold continuation before synchronous remaining members.",
+    "vector": "Same ordered Frame40B, prepared immutable facts carried as three 128-bit vector carriers plus line-size scalar; stage-specific kernels reuse facts without hardware queries.",
+    "snapshot": "Mechanism control: Frame48B appends borrowed immutable operation Context pointer; native cold wrapper calls ordinary helper and reconstructs exact admitted vector carriers after it. Hot callback bodies otherwise exact vector source.",
+    "slim": "Optional sixth matched mechanism control: Frame40B/Slot56B, same pointer Shared and ready helpers as tail; Cohort.advance merges ready work and completion commit. First deferred Job pointer selects cold; cold Cohort.advance skips earlier survivors and completes deferred/rest in original ascending order. Same-array pointer ordering is valid within the admitted contiguous Cohort span. No scheduler/API change, no presumed static/native speed win; red-zone/cold frame costs separately retained."
+  },
+  "physical_work": "N16 unchanged Map storage, original/manual consumers and initialized primary/candidate windows; cold-positive lengths proven once; setup/jobs/probes/groups/enqueue/drain included in every timed operation.",
+  "visit_semantics": "One charged native group visit including ready prefix and bounded cold work; same Cursor forwarded to cold; first downstream prefix not rescanned; remaining active group completed in ascending order; <=effective_grain useful stage work per native visit; one final scheduler yield/finish.",
+  "snapshot_contract": "Context initialized before configure and every admission, facts/map/hints immutable for the full pending operation. Frame snapshot equals the Shared values initially configured. No set_shared while pending; Context and Frame outlive drain or returned-boundary release/cancellation. Cold helper returns that same pointer, packs bit-identical Shared values, then tails. No per-visit hardware query, atomic, or additional dependency work. Snapshot cold helper ordinary-call cost is charged.",
+  "qualification": "Native loom_validate16 + O3 ASan/UBSan always-UAR six Loom checks before timing. All ten new caller target forced cases run release and sanitizer. Independently inserted key->next-key oracle, primary hit/miss/downstream hit/miss/real secondary and overflow, ragged zero lengths, exact budgets, queued promotion and active/queued cancellation. Full normal workload also independently checks every result and actual scheduler visits; useful visits derived analytically only for equal chain lengths.",
+  "codegen_limit": "Source/cross receipts are not native timing. Native runner records per body ordinary calls, emitted instructions, explicit SP instructions and x86 red-zone operations. Entry allocation excludes x86 red zone; RBP is counted as stack only if it is actually established as frame base. Snapshot total cold footprint includes separate ordinary finish_cold helper; wrapper alone is not total footprint.",
+  "order_control": "Every matched ISA/n/chains cell has two disjoint outer passes: forward0 and reverse1, each seven reps/executable and unchanged eight-arm internal order. Both pass receipts admitted separately and compared for order sensitivity; filenames include pass."
+}

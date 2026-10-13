@@ -1,0 +1,61 @@
+{
+  "job_id": "20261013T060802Z-4115eefc",
+  "status": {
+    "artifact": {
+      "bucket": "calico-fleet-artifacts",
+      "bytes": 11653343,
+      "files": 47,
+      "format": 1,
+      "key": "sixdb/artifacts/sha256/28b9cbe87694ef8b091ddc5c546b0a8c342a0ecb500fcebeabd27ade5f88444b.tar.gz",
+      "kind": "files",
+      "region": "us-east-1",
+      "sha256": "28b9cbe87694ef8b091ddc5c546b0a8c342a0ecb500fcebeabd27ade5f88444b",
+      "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/28b9cbe87694ef8b091ddc5c546b0a8c342a0ecb500fcebeabd27ade5f88444b.tar.gz"
+    },
+    "failure_phase": "running",
+    "job": "20261013T060802Z-4115eefc",
+    "script_returncode": 1,
+    "script_seconds": 278.51461601257324,
+    "state": "failed",
+    "updated_at": 1791872087.0046287,
+    "worker": {
+      "id": "20261013T060802Z-4115eefc",
+      "instance_id": "i-0d27e504e57e92c49",
+      "max_end": 1791886090.0806158,
+      "reuse_count": 0,
+      "reused": false
+    },
+    "worker_seconds_before_collection": 321.119957447052
+  },
+  "job_source": {
+    "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+    "digest": "e1294dfb1e593aa7d0338d1502678aa8731dcef9498f65d88907d135b5704d19",
+    "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+    "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+    "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+    "sha256": "131a4496283c1a9fe8ff67e70a085a22726ca28ca9712f4324facac392ec04e9"
+  },
+  "result_archive": {
+    "bucket": "calico-fleet-artifacts",
+    "bytes": 11653343,
+    "files": 47,
+    "format": 1,
+    "key": "sixdb/artifacts/sha256/28b9cbe87694ef8b091ddc5c546b0a8c342a0ecb500fcebeabd27ade5f88444b.tar.gz",
+    "kind": "files",
+    "region": "us-east-1",
+    "sha256": "28b9cbe87694ef8b091ddc5c546b0a8c342a0ecb500fcebeabd27ade5f88444b",
+    "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/28b9cbe87694ef8b091ddc5c546b0a8c342a0ecb500fcebeabd27ade5f88444b.tar.gz"
+  },
+  "admitted_timing_cells": 0,
+  "referenced_members": {
+    "build-asan-neon.log": {
+      "sha256": "be916f9f7c2e668c002cbffded0dacb66356c6f4650148199910cc78ecb325be",
+      "bytes": 1148,
+      "retained_as": "failed/20261013T060802Z-4115eefc/build-asan-neon.txt"
+    },
+    "script.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  }
+}

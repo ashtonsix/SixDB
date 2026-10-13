@@ -1,0 +1,23 @@
+{
+  "status": "pass",
+  "commit": "8d640b9e3a2a384eaad733f61a92c1c1e019a879",
+  "manifest_files_except_self": 3169,
+  "runner_sha256": "52238a4ed7ff6adc84cefafe3a1cc89dda35be6dcd3175c194ae9137a1bfe77a",
+  "factors": [
+    "reference",
+    "sync",
+    "tail",
+    "vector",
+    "snapshot",
+    "slim"
+  ],
+  "review": "Source keyset/hashes and selected identities match clean commit. Original manual/complete/timed/jobs/result and Map core method bodies byte-identical. Frame and cold sequencing constraints independently inspected. Per-cell two-pass counterbalance present. No prelaunch semantic blocker.",
+  "limits": [
+    "reference16B Cohort versus Frame40B sync includes layout/loop adaptation; do not attribute entire change to native cold mechanism.",
+    "snapshot48B adds borrowed pointer, ordinary finish_cold and reconstruction; include helper in cold cost.",
+    "ARM codegen stack lists SP operands and misses x29-relative spills; inspect full ASM for total stack memory. X86 RBP general arithmetic correctly excluded as stack unless frame base.",
+    "Visit counter is actual; useful item-stage visits only equal-length derived. Count budgets do not imply a time cap for long downstream work.",
+    "No PMU/stall/cache-tier cause established by these uninstrumented timings.",
+    "Prepared vector facts factor is distinct from the separate private SIMD Cursor scratch, which is not part of this native campaign."
+  ]
+}

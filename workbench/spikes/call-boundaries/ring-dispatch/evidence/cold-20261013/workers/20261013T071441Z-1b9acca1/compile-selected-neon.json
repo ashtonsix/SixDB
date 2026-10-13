@@ -1,0 +1,411 @@
+{
+  "isa": "neon",
+  "members": {
+    "compile-neon.json": {
+      "sha256": "c225f20b6be30e10c08213fb221e73082de7ff0c156cc49773721509ad29e92c",
+      "selected_commands": [
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom.dir/src/worker.cpp.o -c /opt/sixdb/source/loom/src/worker.cpp",
+          "file": "/opt/sixdb/source/loom/src/worker.cpp",
+          "output": "loom/CMakeFiles/loom.dir/src/worker.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom.dir/src/ring.cpp.o -c /opt/sixdb/source/loom/src/ring.cpp",
+          "file": "/opt/sixdb/source/loom/src/ring.cpp",
+          "output": "loom/CMakeFiles/loom.dir/src/ring.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom.dir/src/hints.cpp.o -c /opt/sixdb/source/loom/src/hints.cpp",
+          "file": "/opt/sixdb/source/loom/src/hints.cpp",
+          "output": "loom/CMakeFiles/loom.dir/src/hints.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom.dir/src/hardware.cpp.o -c /opt/sixdb/source/loom/src/hardware.cpp",
+          "file": "/opt/sixdb/source/loom/src/hardware.cpp",
+          "output": "loom/CMakeFiles/loom.dir/src/hardware.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_worker_check.dir/test/worker.cpp.o -c /opt/sixdb/source/loom/test/worker.cpp",
+          "file": "/opt/sixdb/source/loom/test/worker.cpp",
+          "output": "loom/CMakeFiles/loom_worker_check.dir/test/worker.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_capacity_check.dir/test/capacity.cpp.o -c /opt/sixdb/source/loom/test/capacity.cpp",
+          "file": "/opt/sixdb/source/loom/test/capacity.cpp",
+          "output": "loom/CMakeFiles/loom_capacity_check.dir/test/capacity.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_ring_check.dir/test/ring.cpp.o -c /opt/sixdb/source/loom/test/ring.cpp",
+          "file": "/opt/sixdb/source/loom/test/ring.cpp",
+          "output": "loom/CMakeFiles/loom_ring_check.dir/test/ring.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_ring_rotation_check.dir/test/ring_rotation.cpp.o -c /opt/sixdb/source/loom/test/ring_rotation.cpp",
+          "file": "/opt/sixdb/source/loom/test/ring_rotation.cpp",
+          "output": "loom/CMakeFiles/loom_ring_rotation_check.dir/test/ring_rotation.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_ring_shared_check.dir/test/ring_shared.cpp.o -c /opt/sixdb/source/loom/test/ring_shared.cpp",
+          "file": "/opt/sixdb/source/loom/test/ring_shared.cpp",
+          "output": "loom/CMakeFiles/loom_ring_shared_check.dir/test/ring_shared.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_cohort_check.dir/test/cohort.cpp.o -c /opt/sixdb/source/loom/test/cohort.cpp",
+          "file": "/opt/sixdb/source/loom/test/cohort.cpp",
+          "output": "loom/CMakeFiles/loom_cohort_check.dir/test/cohort.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_hint_check.dir/test/hints.cpp.o -c /opt/sixdb/source/loom/test/hints.cpp",
+          "file": "/opt/sixdb/source/loom/test/hints.cpp",
+          "output": "loom/CMakeFiles/loom_hint_check.dir/test/hints.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_hardware_check.dir/test/hardware.cpp.o -c /opt/sixdb/source/loom/test/hardware.cpp",
+          "file": "/opt/sixdb/source/loom/test/hardware.cpp",
+          "output": "loom/CMakeFiles/loom_hardware_check.dir/test/hardware.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_example_hints.dir/examples/hints.cpp.o -c /opt/sixdb/source/loom/examples/hints.cpp",
+          "file": "/opt/sixdb/source/loom/examples/hints.cpp",
+          "output": "loom/CMakeFiles/loom_example_hints.dir/examples/hints.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_example_hardware.dir/examples/hardware.cpp.o -c /opt/sixdb/source/loom/examples/hardware.cpp",
+          "file": "/opt/sixdb/source/loom/examples/hardware.cpp",
+          "output": "loom/CMakeFiles/loom_example_hardware.dir/examples/hardware.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_ring_probe.dir/test/ring_probe.cpp.o -c /opt/sixdb/source/loom/test/ring_probe.cpp",
+          "file": "/opt/sixdb/source/loom/test/ring_probe.cpp",
+          "output": "loom/CMakeFiles/loom_ring_probe.dir/test/ring_probe.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_hold_probe.dir/test/hold_probe.cpp.o -c /opt/sixdb/source/loom/test/hold_probe.cpp",
+          "file": "/opt/sixdb/source/loom/test/hold_probe.cpp",
+          "output": "loom/CMakeFiles/loom_hold_probe.dir/test/hold_probe.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/ikea/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_example_allocation.dir/examples/allocation.cpp.o -c /opt/sixdb/source/loom/examples/allocation.cpp",
+          "file": "/opt/sixdb/source/loom/examples/allocation.cpp",
+          "output": "loom/CMakeFiles/loom_example_allocation.dir/examples/allocation.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_example_capacity.dir/examples/capacity.cpp.o -c /opt/sixdb/source/loom/examples/capacity.cpp",
+          "file": "/opt/sixdb/source/loom/examples/capacity.cpp",
+          "output": "loom/CMakeFiles/loom_example_capacity.dir/examples/capacity.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_example_preparation.dir/examples/preparation.cpp.o -c /opt/sixdb/source/loom/examples/preparation.cpp",
+          "file": "/opt/sixdb/source/loom/examples/preparation.cpp",
+          "output": "loom/CMakeFiles/loom_example_preparation.dir/examples/preparation.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_example_partition.dir/examples/partition.cpp.o -c /opt/sixdb/source/loom/examples/partition.cpp",
+          "file": "/opt/sixdb/source/loom/examples/partition.cpp",
+          "output": "loom/CMakeFiles/loom_example_partition.dir/examples/partition.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_budget_check.dir/test/budget.cpp.o -c /opt/sixdb/source/loom/test/budget.cpp",
+          "file": "/opt/sixdb/source/loom/test/budget.cpp",
+          "output": "loom/CMakeFiles/loom_budget_check.dir/test/budget.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=1 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-neon/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_reference_grain1.dir/__/__/__/controls/shared/ring.cpp.o -c /opt/sixdb/source/controls/shared/ring.cpp",
+          "file": "/opt/sixdb/source/controls/shared/ring.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_reference_grain1.dir/__/__/__/controls/shared/ring.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=1 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DLOOM_NATIVE_COLD_FALLBACK=0 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-neon/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_sync_grain1.dir/__/__/__/controls/cold/ring.cpp.o -c /opt/sixdb/source/controls/cold/ring.cpp",
+          "file": "/opt/sixdb/source/controls/cold/ring.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_sync_grain1.dir/__/__/__/controls/cold/ring.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=1 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DLOOM_NATIVE_COLD_FALLBACK=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-neon/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_tail_grain1.dir/__/__/__/controls/cold/ring.cpp.o -c /opt/sixdb/source/controls/cold/ring.cpp",
+          "file": "/opt/sixdb/source/controls/cold/ring.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_tail_grain1.dir/__/__/__/controls/cold/ring.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=4 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-neon/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_reference_grain4.dir/__/__/__/controls/shared/ring.cpp.o -c /opt/sixdb/source/controls/shared/ring.cpp",
+          "file": "/opt/sixdb/source/controls/shared/ring.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_reference_grain4.dir/__/__/__/controls/shared/ring.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=4 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DLOOM_NATIVE_COLD_FALLBACK=0 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-neon/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_sync_grain4.dir/__/__/__/controls/cold/ring.cpp.o -c /opt/sixdb/source/controls/cold/ring.cpp",
+          "file": "/opt/sixdb/source/controls/cold/ring.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_sync_grain4.dir/__/__/__/controls/cold/ring.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=4 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DLOOM_NATIVE_COLD_FALLBACK=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-neon/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_tail_grain4.dir/__/__/__/controls/cold/ring.cpp.o -c /opt/sixdb/source/controls/cold/ring.cpp",
+          "file": "/opt/sixdb/source/controls/cold/ring.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_tail_grain4.dir/__/__/__/controls/cold/ring.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=1 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DLOOM_NATIVE_COLD_FALLBACK=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-neon/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_vector_grain1.dir/__/__/__/controls/prepared-tail/ring.cpp.o -c /opt/sixdb/source/controls/prepared-tail/ring.cpp",
+          "file": "/opt/sixdb/source/controls/prepared-tail/ring.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_vector_grain1.dir/__/__/__/controls/prepared-tail/ring.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=1 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DLOOM_NATIVE_COLD_FALLBACK=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-neon/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_snapshot_grain1.dir/__/__/__/controls/prepared-tail/snapshot.cpp.o -c /opt/sixdb/source/controls/prepared-tail/snapshot.cpp",
+          "file": "/opt/sixdb/source/controls/prepared-tail/snapshot.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_snapshot_grain1.dir/__/__/__/controls/prepared-tail/snapshot.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=4 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DLOOM_NATIVE_COLD_FALLBACK=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-neon/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_vector_grain4.dir/__/__/__/controls/prepared-tail/ring.cpp.o -c /opt/sixdb/source/controls/prepared-tail/ring.cpp",
+          "file": "/opt/sixdb/source/controls/prepared-tail/ring.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_vector_grain4.dir/__/__/__/controls/prepared-tail/ring.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=4 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DLOOM_NATIVE_COLD_FALLBACK=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-neon/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_snapshot_grain4.dir/__/__/__/controls/prepared-tail/snapshot.cpp.o -c /opt/sixdb/source/controls/prepared-tail/snapshot.cpp",
+          "file": "/opt/sixdb/source/controls/prepared-tail/snapshot.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_snapshot_grain4.dir/__/__/__/controls/prepared-tail/snapshot.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=1 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DLOOM_NATIVE_COLD_FALLBACK=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/controls/cold -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-neon/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_slim_grain1.dir/__/__/__/controls/slim/ring.cpp.o -c /opt/sixdb/source/controls/slim/ring.cpp",
+          "file": "/opt/sixdb/source/controls/slim/ring.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_slim_grain1.dir/__/__/__/controls/slim/ring.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=4 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DLOOM_NATIVE_COLD_FALLBACK=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/controls/cold -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-neon/_deps/hashtable_abseil-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_slim_grain4.dir/__/__/__/controls/slim/ring.cpp.o -c /opt/sixdb/source/controls/slim/ring.cpp",
+          "file": "/opt/sixdb/source/controls/slim/ring.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_slim_grain4.dir/__/__/__/controls/slim/ring.cpp.o"
+        }
+      ]
+    },
+    "compile-asan-neon.json": {
+      "sha256": "817ab6115ea25973a5be43e10e4e50b14e3efcd066c12f69790fc056c19f7530",
+      "selected_commands": [
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom.dir/src/worker.cpp.o -c /opt/sixdb/source/loom/src/worker.cpp",
+          "file": "/opt/sixdb/source/loom/src/worker.cpp",
+          "output": "loom/CMakeFiles/loom.dir/src/worker.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom.dir/src/ring.cpp.o -c /opt/sixdb/source/loom/src/ring.cpp",
+          "file": "/opt/sixdb/source/loom/src/ring.cpp",
+          "output": "loom/CMakeFiles/loom.dir/src/ring.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom.dir/src/hints.cpp.o -c /opt/sixdb/source/loom/src/hints.cpp",
+          "file": "/opt/sixdb/source/loom/src/hints.cpp",
+          "output": "loom/CMakeFiles/loom.dir/src/hints.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom.dir/src/hardware.cpp.o -c /opt/sixdb/source/loom/src/hardware.cpp",
+          "file": "/opt/sixdb/source/loom/src/hardware.cpp",
+          "output": "loom/CMakeFiles/loom.dir/src/hardware.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_worker_check.dir/test/worker.cpp.o -c /opt/sixdb/source/loom/test/worker.cpp",
+          "file": "/opt/sixdb/source/loom/test/worker.cpp",
+          "output": "loom/CMakeFiles/loom_worker_check.dir/test/worker.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_capacity_check.dir/test/capacity.cpp.o -c /opt/sixdb/source/loom/test/capacity.cpp",
+          "file": "/opt/sixdb/source/loom/test/capacity.cpp",
+          "output": "loom/CMakeFiles/loom_capacity_check.dir/test/capacity.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_ring_check.dir/test/ring.cpp.o -c /opt/sixdb/source/loom/test/ring.cpp",
+          "file": "/opt/sixdb/source/loom/test/ring.cpp",
+          "output": "loom/CMakeFiles/loom_ring_check.dir/test/ring.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_ring_rotation_check.dir/test/ring_rotation.cpp.o -c /opt/sixdb/source/loom/test/ring_rotation.cpp",
+          "file": "/opt/sixdb/source/loom/test/ring_rotation.cpp",
+          "output": "loom/CMakeFiles/loom_ring_rotation_check.dir/test/ring_rotation.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_ring_shared_check.dir/test/ring_shared.cpp.o -c /opt/sixdb/source/loom/test/ring_shared.cpp",
+          "file": "/opt/sixdb/source/loom/test/ring_shared.cpp",
+          "output": "loom/CMakeFiles/loom_ring_shared_check.dir/test/ring_shared.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_cohort_check.dir/test/cohort.cpp.o -c /opt/sixdb/source/loom/test/cohort.cpp",
+          "file": "/opt/sixdb/source/loom/test/cohort.cpp",
+          "output": "loom/CMakeFiles/loom_cohort_check.dir/test/cohort.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/ikea/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_hint_check.dir/test/hints.cpp.o -c /opt/sixdb/source/loom/test/hints.cpp",
+          "file": "/opt/sixdb/source/loom/test/hints.cpp",
+          "output": "loom/CMakeFiles/loom_hint_check.dir/test/hints.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_hardware_check.dir/test/hardware.cpp.o -c /opt/sixdb/source/loom/test/hardware.cpp",
+          "file": "/opt/sixdb/source/loom/test/hardware.cpp",
+          "output": "loom/CMakeFiles/loom_hardware_check.dir/test/hardware.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_example_hints.dir/examples/hints.cpp.o -c /opt/sixdb/source/loom/examples/hints.cpp",
+          "file": "/opt/sixdb/source/loom/examples/hints.cpp",
+          "output": "loom/CMakeFiles/loom_example_hints.dir/examples/hints.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_example_hardware.dir/examples/hardware.cpp.o -c /opt/sixdb/source/loom/examples/hardware.cpp",
+          "file": "/opt/sixdb/source/loom/examples/hardware.cpp",
+          "output": "loom/CMakeFiles/loom_example_hardware.dir/examples/hardware.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_ring_probe.dir/test/ring_probe.cpp.o -c /opt/sixdb/source/loom/test/ring_probe.cpp",
+          "file": "/opt/sixdb/source/loom/test/ring_probe.cpp",
+          "output": "loom/CMakeFiles/loom_ring_probe.dir/test/ring_probe.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_hold_probe.dir/test/hold_probe.cpp.o -c /opt/sixdb/source/loom/test/hold_probe.cpp",
+          "file": "/opt/sixdb/source/loom/test/hold_probe.cpp",
+          "output": "loom/CMakeFiles/loom_hold_probe.dir/test/hold_probe.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/ikea/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_example_allocation.dir/examples/allocation.cpp.o -c /opt/sixdb/source/loom/examples/allocation.cpp",
+          "file": "/opt/sixdb/source/loom/examples/allocation.cpp",
+          "output": "loom/CMakeFiles/loom_example_allocation.dir/examples/allocation.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_example_capacity.dir/examples/capacity.cpp.o -c /opt/sixdb/source/loom/examples/capacity.cpp",
+          "file": "/opt/sixdb/source/loom/examples/capacity.cpp",
+          "output": "loom/CMakeFiles/loom_example_capacity.dir/examples/capacity.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_example_preparation.dir/examples/preparation.cpp.o -c /opt/sixdb/source/loom/examples/preparation.cpp",
+          "file": "/opt/sixdb/source/loom/examples/preparation.cpp",
+          "output": "loom/CMakeFiles/loom_example_preparation.dir/examples/preparation.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_example_partition.dir/examples/partition.cpp.o -c /opt/sixdb/source/loom/examples/partition.cpp",
+          "file": "/opt/sixdb/source/loom/examples/partition.cpp",
+          "output": "loom/CMakeFiles/loom_example_partition.dir/examples/partition.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/loom/include -I/opt/sixdb/source/orbital/include -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o loom/CMakeFiles/loom_budget_check.dir/test/budget.cpp.o -c /opt/sixdb/source/loom/test/budget.cpp",
+          "file": "/opt/sixdb/source/loom/test/budget.cpp",
+          "output": "loom/CMakeFiles/loom_budget_check.dir/test/budget.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=1 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-asan-neon/_deps/hashtable_abseil-src -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_reference_grain1.dir/__/__/__/controls/shared/ring.cpp.o -c /opt/sixdb/source/controls/shared/ring.cpp",
+          "file": "/opt/sixdb/source/controls/shared/ring.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_reference_grain1.dir/__/__/__/controls/shared/ring.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=1 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DLOOM_NATIVE_COLD_FALLBACK=0 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-asan-neon/_deps/hashtable_abseil-src -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_sync_grain1.dir/__/__/__/controls/cold/ring.cpp.o -c /opt/sixdb/source/controls/cold/ring.cpp",
+          "file": "/opt/sixdb/source/controls/cold/ring.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_sync_grain1.dir/__/__/__/controls/cold/ring.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=1 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DLOOM_NATIVE_COLD_FALLBACK=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-asan-neon/_deps/hashtable_abseil-src -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_tail_grain1.dir/__/__/__/controls/cold/ring.cpp.o -c /opt/sixdb/source/controls/cold/ring.cpp",
+          "file": "/opt/sixdb/source/controls/cold/ring.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_tail_grain1.dir/__/__/__/controls/cold/ring.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=4 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-asan-neon/_deps/hashtable_abseil-src -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_reference_grain4.dir/__/__/__/controls/shared/ring.cpp.o -c /opt/sixdb/source/controls/shared/ring.cpp",
+          "file": "/opt/sixdb/source/controls/shared/ring.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_reference_grain4.dir/__/__/__/controls/shared/ring.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=4 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DLOOM_NATIVE_COLD_FALLBACK=0 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-asan-neon/_deps/hashtable_abseil-src -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_sync_grain4.dir/__/__/__/controls/cold/ring.cpp.o -c /opt/sixdb/source/controls/cold/ring.cpp",
+          "file": "/opt/sixdb/source/controls/cold/ring.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_sync_grain4.dir/__/__/__/controls/cold/ring.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=4 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DLOOM_NATIVE_COLD_FALLBACK=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-asan-neon/_deps/hashtable_abseil-src -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_tail_grain4.dir/__/__/__/controls/cold/ring.cpp.o -c /opt/sixdb/source/controls/cold/ring.cpp",
+          "file": "/opt/sixdb/source/controls/cold/ring.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_tail_grain4.dir/__/__/__/controls/cold/ring.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=1 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DLOOM_NATIVE_COLD_FALLBACK=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-asan-neon/_deps/hashtable_abseil-src -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_vector_grain1.dir/__/__/__/controls/prepared-tail/ring.cpp.o -c /opt/sixdb/source/controls/prepared-tail/ring.cpp",
+          "file": "/opt/sixdb/source/controls/prepared-tail/ring.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_vector_grain1.dir/__/__/__/controls/prepared-tail/ring.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=1 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DLOOM_NATIVE_COLD_FALLBACK=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-asan-neon/_deps/hashtable_abseil-src -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_snapshot_grain1.dir/__/__/__/controls/prepared-tail/snapshot.cpp.o -c /opt/sixdb/source/controls/prepared-tail/snapshot.cpp",
+          "file": "/opt/sixdb/source/controls/prepared-tail/snapshot.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_snapshot_grain1.dir/__/__/__/controls/prepared-tail/snapshot.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=4 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DLOOM_NATIVE_COLD_FALLBACK=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-asan-neon/_deps/hashtable_abseil-src -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_vector_grain4.dir/__/__/__/controls/prepared-tail/ring.cpp.o -c /opt/sixdb/source/controls/prepared-tail/ring.cpp",
+          "file": "/opt/sixdb/source/controls/prepared-tail/ring.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_vector_grain4.dir/__/__/__/controls/prepared-tail/ring.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=4 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DLOOM_NATIVE_COLD_FALLBACK=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-asan-neon/_deps/hashtable_abseil-src -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_snapshot_grain4.dir/__/__/__/controls/prepared-tail/snapshot.cpp.o -c /opt/sixdb/source/controls/prepared-tail/snapshot.cpp",
+          "file": "/opt/sixdb/source/controls/prepared-tail/snapshot.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_snapshot_grain4.dir/__/__/__/controls/prepared-tail/snapshot.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=1 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DLOOM_NATIVE_COLD_FALLBACK=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/controls/cold -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-asan-neon/_deps/hashtable_abseil-src -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_slim_grain1.dir/__/__/__/controls/slim/ring.cpp.o -c /opt/sixdb/source/controls/slim/ring.cpp",
+          "file": "/opt/sixdb/source/controls/slim/ring.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_slim_grain1.dir/__/__/__/controls/slim/ring.cpp.o"
+        },
+        {
+          "directory": "/opt/sixdb/source/build/loom-cold-asan-neon",
+          "command": "/usr/bin/clang++-21 -DLOOM_COHORT_GRAIN=4 -DLOOM_HINT_WINDOW_COLD_POSITIVE=1 -DLOOM_NATIVE_COLD_FALLBACK=1 -DNDEBUG -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/controls/new -I/opt/sixdb/source/controls/cold -I/opt/sixdb/source/workbench/spikes/hashtable -I/opt/sixdb/source/ikea/include -I/opt/sixdb/source/orbital/include -I/opt/sixdb/source/loom/include -isystem /opt/sixdb/source/build/loom-cold-asan-neon/_deps/hashtable_abseil-src -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-return=always -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -fno-vectorize -fno-slp-vectorize -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_slim_grain4.dir/__/__/__/controls/slim/ring.cpp.o -c /opt/sixdb/source/controls/slim/ring.cpp",
+          "file": "/opt/sixdb/source/controls/slim/ring.cpp",
+          "output": "workbench/spikes/hashtable/CMakeFiles/hashtable_ring_cold_slim_grain4.dir/__/__/__/controls/slim/ring.cpp.o"
+        }
+      ]
+    }
+  }
+}

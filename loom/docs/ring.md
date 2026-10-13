@@ -2,10 +2,10 @@
 
 `Ring<Native...>` rotates independent memory continuations with one native
 signature. Different callback functions and operation owners can share that
-rotation. Native pointer arguments keep their qualified operation state alive
-until completion or returned-boundary cleanup; the Ring does not acquire that
-ownership itself. The [module guide](../README.md#memory-rings) owns admission,
-storage and hardware-policy usage.
+rotation. Owners keep operation state referenced by native pointer arguments
+qualified and alive until completion or returned-boundary cleanup; the Ring does
+not acquire that ownership itself. The [module guide](../README.md#memory-rings)
+owns admission, storage and hardware-policy usage.
 
 The first callback parameter is `Ring::Cursor`, followed by `Ring::Slot*`, any
 shared prefix and the declared local arguments. Carry the Cursor unchanged through each tail
@@ -50,6 +50,18 @@ common pointees; they remain qualified whenever pending work can use them,
 until a valid replacement or owner close.
 Register capacity remains finite: inspect concrete scalar/vector signatures for
 spills rather than assuming a wider prefix is free.
+An opaque common context pointer still leaves its fields to be loaded by each
+callback. Frequently reused immutable kernel addresses and layout facts can
+instead be prepared outside visits and carried explicitly in the prefix.
+Qualify them for every pending frame, and compare the complete ready and cold
+paths: saved field loads can be offset by additional register spills.
+
+Ikea or another operation author owns kernel preparation, format-specific facts
+and dependency stages. Reuse those kernels in ordinary execution and Ring
+callbacks; keep their native carrier packing private to the operation binding.
+Loom owns rotation, service budgets, argument transfer and worker hardware/pressure
+policy. Mixed operations keep their distinct prepared facts in operation frames
+and share only values that are invariant across the rotation.
 
 The generic jump restores every declared local argument for the next callback.
 If a packet is used only by the payload stage, keep it in a stable operation
@@ -84,6 +96,17 @@ cold failure paths. Select useful dependency boundaries rather than splitting
 ready arithmetic into additional visits. Hardware/pressure policy remains a
 returned-boundary snapshot, with no hardware query or profile atomic inside a
 native handoff.
+
+A ready stage can tail-transfer directly to a cold continuation with the same
+native signature, forwarding the received Cursor, Slot and common prefix.
+That transfer stays inside the current visit: it does not rotate the Ring,
+restore another Slot or consume another visit. Keep any progress needed by the
+cold continuation in qualified operation state, and bound the combined work
+before its final `yield`, `yield_unchanged` or `finish`. Resolve the first deferred
+item without replaying its ready prefix; preserve the remaining item order.
+This can move ordinary fallback calls and their register saves out of a ready
+body. Inspect both bodies: the cold continuation still pays its own calls and
+spills, and a wider shared prefix can increase those costs.
 
 `spin` enters through one fixed ordinary bridge, outside the per-visit path.
 This preserves a realigned ordinary caller's stack base across the native
