@@ -33,31 +33,61 @@ struct RingCounters {
 #endif
 
 namespace detail {
-template<class Sequence, class... Native> class MemoryRing;
+template<class SharedSequence, class Sequence, class SharedArguments, class... Native>
+class MemoryRing;
 
-template<std::size_t... I, class... Native>
-class alignas(64) MemoryRing<std::index_sequence<I...>, Native...> {
+template<std::size_t... S, std::size_t... I, class... Shared, class... Native>
+class alignas(64) MemoryRing<std::index_sequence<S...>, std::index_sequence<I...>,
+    std::tuple<Shared...>, Native...> {
   // Native scalar/pointer/vector values only. Aggregate carriers and owning
   // closures belong to the operation, not to an implicit erased Ring ABI.
   static_assert(((!std::is_class_v<Native> && !std::is_union_v<Native> &&
                    !std::is_array_v<Native> && std::is_trivially_copyable_v<Native> &&
                    std::is_trivially_destructible_v<Native> &&
                    std::is_same_v<Native, std::remove_cv_t<Native>>) && ...));
+  static_assert(((!std::is_class_v<Shared> && !std::is_union_v<Shared> &&
+                   !std::is_array_v<Shared> && std::is_trivially_copyable_v<Shared> &&
+                   std::is_trivially_destructible_v<Shared> &&
+                   std::is_same_v<Shared, std::remove_cv_t<Shared>>) && ...));
 
 public:
   struct Slot;
+  // The scheduler's countdown stays in the native register transfer rather
+  // than operation arguments or per-visit Ring memory. Authors carry it intact.
+  class Cursor {
+    friend class MemoryRing;
+    MemoryRing* ring_;
+    std::uint64_t remaining_;
+    Cursor(MemoryRing* ring, std::uint64_t remaining) noexcept
+        : ring_(ring), remaining_(remaining) {}
+  public:
+    [[gnu::always_inline]] MemoryRing* operator->() const noexcept { return ring_; }
+  };
+  static_assert(std::is_trivially_copyable_v<Cursor> &&
+      sizeof(Cursor) == 2 * sizeof(std::uint64_t));
   using Arguments = std::tuple<Native...>;
+  using SharedArguments = std::tuple<Shared...>;
+  /// Same scheduler with a register-carried invariant prefix. Shared values
+  /// apply to every admitted frame; operation-specific state stays in Arguments.
+  /// Every callback forwards the received prefix unchanged through tail calls.
+  template<class... Common> using WithShared = MemoryRing<std::index_sequence_for<Common...>,
+      std::index_sequence_for<Native...>, std::tuple<Common...>, Native...>;
   // Native bodies must not throw. Pinned Clang rejects musttail inside C++
   // noexcept functions even for plain scalar calls, so the private tail ABI
   // expresses this as an author contract instead of an exception specification.
-  typedef LOOM_NATIVE_CC void (*Function)(MemoryRing*, Slot*, Native...);
+  typedef LOOM_NATIVE_CC void (*Function)(Cursor, Slot*, Shared..., Native...);
 
   struct Slot {
+    // Keep the dispatch prefix together; two pointer arguments make a 64 B
+    // Slot without padding an independent admission record to pointer alignment.
     Function function{};
+    Slot* next{};
     Arguments arguments{};
-    struct Dependency { const void* address{}; std::uint8_t selector{}; } dependency;
-    Slot *next{}, *previous{};
+    Slot* previous{};
     std::size_t inventory{};
+    struct Dependency { const void* address{}; std::uint8_t selector{}; };
+    const void* dependency_address{};
+    std::uint8_t dependency_selector{};
     bool completed{};
   };
 
@@ -72,7 +102,17 @@ public:
   /// remains at its address until owner close after drain or explicit discard.
   /// Failure leaves the Ring unconfigured.
   [[nodiscard]] orbital::Result<void> configure(Worker& worker, RingCapacity capacity,
-      std::size_t page_bytes = 0) {
+      std::size_t page_bytes = 0) requires(sizeof...(Shared) == 0) {
+    return configure_impl(worker, capacity, SharedArguments{}, page_bytes);
+  }
+  [[nodiscard]] orbital::Result<void> configure(Worker& worker, RingCapacity capacity,
+      SharedArguments shared, std::size_t page_bytes = 0) requires(sizeof...(Shared) != 0) {
+    return configure_impl(worker, capacity, shared, page_bytes);
+  }
+
+private:
+  [[nodiscard]] orbital::Result<void> configure_impl(Worker& worker, RingCapacity capacity,
+      SharedArguments shared, std::size_t page_bytes) {
     assert(orbital::worker::on_lane(worker.lane));
     const auto& policy = worker.hints;
     if (worker_ || !valid_hint_profile(policy.profile) || unsigned(policy.pressure) > 1 ||
@@ -87,6 +127,7 @@ public:
     overflow_ = reinterpret_cast<Slot**>(base + storage_.layout.overflow);
     capacity_ = capacity;
     hints_ = policy;
+    shared_ = shared;
     const auto count = capacity.active + capacity.overflow;
     for (std::size_t i = 0; i < count; ++i) {
       std::construct_at(slots_ + i);
@@ -100,6 +141,8 @@ public:
     worker_ = &worker;
     return {};
   }
+
+public:
 
   /// Owner thread only. Accepted pointers/state stay qualified and stable
   /// through overflow and native use. Refusal consumes no inventory or work.
@@ -130,6 +173,14 @@ public:
     return {};
   }
   const HintPolicy& hint_policy() const noexcept { return hints_; }
+  /// Returned boundary only. Values remain invariant through the next spin and
+  /// must preserve the meaning and physical qualification of all pending frames.
+  [[nodiscard]] orbital::Result<void> set_shared(SharedArguments shared) noexcept {
+    if (!worker_ || spinning_ || !orbital::worker::on_lane(worker_->lane))
+      return std::unexpected(orbital::Error::conflict);
+    shared_ = shared;
+    return {};
+  }
   /// Address retains the class's contiguous minimum window and physical use.
   /// Activity, content stability and logical version remain the caller's proof.
   [[gnu::always_inline]] void prefetch(DemandClass demand, const void* address) const noexcept {
@@ -146,7 +197,8 @@ private:
     auto& slot = slots_[free_[--free_count_]];
     slot.function = function;
     slot.arguments = arguments;
-    slot.dependency = dependency;
+    slot.dependency_address = dependency.address;
+    slot.dependency_selector = dependency.selector;
     slot.completed = false;
     ++counters_.accepted;
     if (live_ < capacity_.active) {
@@ -167,20 +219,17 @@ public:
   /// cache readiness; count budgeting adds no clock test/read to each switch.
   std::uint64_t spin(SpinBudget budget) noexcept {
     assert(worker_ && orbital::worker::on_lane(worker_->lane) && !spinning_);
-    visit_limit_ = budget.visits;
-    spin_visits_ = 0;
+    spin_left_ = budget.visits;
     if (!budget.visits || !live_) return 0;
     spinning_ = true;
     Arguments empty{};
-#if defined(__aarch64__)
-    enter(yield, this, nullptr, std::get<I>(empty)...);
-#else
-    yield(this, nullptr, std::get<I>(empty)...);
-#endif
+    enter(resume, Cursor{this, budget.visits}, nullptr,
+        std::get<S>(shared_)..., std::get<I>(empty)...);
     spinning_ = false;
-    counters_.visits += spin_visits_;
-    if (pending() && spin_visits_ == budget.visits) ++counters_.budget_stops;
-    return spin_visits_;
+    const auto visits = budget.visits - spin_left_;
+    counters_.visits += visits;
+    if (pending() && visits == budget.visits) ++counters_.budget_stops;
+    return visits;
   }
 
   /// Marks the current slot for retirement on its next tail-call to yield.
@@ -188,14 +237,33 @@ public:
 
   /// Tail-call with the callback's current slot and next arguments. Continuation
   /// targets stay stable through later visits; never pass a callback's local state.
-  static LOOM_NATIVE_CC void yield(MemoryRing* ring, Slot* current, Native... values) {
-    if (current) {
-      if (current->completed) {
-        [[clang::musttail]] return retire_yield(ring, current, values...);
-      }
-      current->arguments = Arguments{values...};
+  [[gnu::always_inline]] static LOOM_NATIVE_CC void
+  yield(Cursor ring, Slot* current, Shared... shared, Native... values) {
+    if (current->completed) {
+      [[clang::musttail]] return finish(ring, current, shared..., values...);
     }
-    [[clang::musttail]] return resume(ring, nullptr, values...);
+    ((std::get<I>(current->arguments) = values), ...);
+    [[clang::musttail]] return resume(ring, nullptr, shared..., values...);
+  }
+
+  /// Requeue with the already stored Arguments. Pass the callback's original
+  /// values for musttail signature matching; this path does not save them.
+  /// The current frame remains live. Use finish for its final visit.
+  [[gnu::always_inline]] static LOOM_NATIVE_CC void
+  yield_unchanged(Cursor ring, Slot*, Shared... shared, Native... values) {
+    [[clang::musttail]] return resume(ring, nullptr, shared..., values...);
+  }
+
+  /// Final tail transfer. Result publication precedes this call; the Slot and
+  /// its Arguments cease to be live before another callback is dispatched.
+  [[gnu::noinline]] static LOOM_NATIVE_CC void
+  finish(Cursor ring, Slot* slot, Shared... shared, Native... values) {
+    ring->retire(*slot);
+    if (!ring->live_) {
+      ring->spin_left_ = ring.remaining_;
+      return;
+    }
+    [[clang::musttail]] return resume(ring, nullptr, shared..., values...);
   }
 
   std::size_t pending() const noexcept { return live_ + overflow_count_; }
@@ -288,6 +356,7 @@ private:
   RingStorage storage_;
   RingCapacity capacity_;
   HintPolicy hints_;
+  [[no_unique_address]] SharedArguments shared_;
   Slot* slots_{};
   std::size_t* free_{};
   Slot** overflow_{};
@@ -295,7 +364,7 @@ private:
   std::size_t free_count_{}, live_{};
   std::size_t overflow_head_{}, overflow_tail_{}, overflow_count_{};
   RingCounters counters_;
-  std::uint64_t spin_visits_{}, visit_limit_{};
+  std::uint64_t spin_left_{};
   bool spinning_{};
 
   static void increment(std::size_t& cursor, std::size_t size) noexcept {
@@ -303,11 +372,11 @@ private:
   }
 
   [[gnu::always_inline]] void hint_admission(const Slot& slot) noexcept {
-    const auto selector = slot.dependency.selector;
+    const auto selector = slot.dependency_selector;
     if (selector >= 16)
-      prefetch_selected(hints_.codes[selector - 16], slot.dependency.address, hints_.profile.geometry);
+      prefetch_selected(hints_.codes[selector - 16], slot.dependency_address, hints_.profile.geometry);
     else
-      prefetch_selected(static_cast<Hint>(selector), slot.dependency.address,
+      prefetch_selected(static_cast<Hint>(selector), slot.dependency_address,
           {64, hints_.profile.geometry.page_bytes});
   }
 
@@ -365,42 +434,36 @@ private:
     else unlink(slot);
   }
 
-  Slot* next() noexcept {
-    auto* slot = next_;
-    next_ = slot->next;
-    return slot;
-  }
-
   [[gnu::always_inline]] static LOOM_NATIVE_CC void
-  resume(MemoryRing* ring, Slot*, Native...) {
-    if (!ring->live_ || ring->spin_visits_ == ring->visit_limit_) return;
-    auto* slot = ring->next();
-    ++ring->spin_visits_;
-    [[clang::musttail]] return slot->function(ring, slot, std::get<I>(slot->arguments)...);
+  resume(Cursor ring, Slot*, Shared... shared, Native...) {
+    if (!ring.remaining_) {
+      ring->spin_left_ = 0;
+      return;
+    }
+    auto* slot = ring->next_;
+    ring->next_ = slot->next;
+    --ring.remaining_;
+    [[clang::musttail]] return slot->function(ring, slot, shared...,
+        std::get<I>(slot->arguments)...);
   }
 
-  [[gnu::noinline]] static LOOM_NATIVE_CC void
-  retire_yield(MemoryRing* ring, Slot* slot, Native... values) {
-    ring->retire(*slot);
-    [[clang::musttail]] return resume(ring, nullptr, values...);
-  }
-
-#if defined(__aarch64__)
-  // Pinned Clang can retain a realigned caller's frame base in x19 across a
-  // preserve_none call. The fixed-frame AAPCS bridge keeps that borrow safe;
-  // native callbacks stay instrumented under ASan/UBSan.
+  // Isolate the native call from a realigned ordinary caller's frame base:
+  // AArch64 can retain x19 across it; x86 rejects a native invoke that clobbers
+  // the ASan fake stack's RBX base. This fixed-frame ordinary bridge keeps that
+  // borrow safe. Actual native state and tail transfers remain instrumented.
   __attribute__((noinline, no_sanitize("address", "undefined"))) static void
-  enter(Function first, MemoryRing* ring, Slot* slot, Native... values) noexcept {
-    first(ring, slot, values...);
+  enter(Function first, Cursor ring, Slot* slot, Shared... shared, Native... values) noexcept {
+    first(ring, slot, shared..., values...);
   }
-#endif
 };
 } // namespace detail
 
 /// A reusable owner-lane bank for one scalar/pointer/vector callback signature.
-/// Callbacks must not throw and transfer through yield using [[clang::musttail]].
+/// Callbacks carry Cursor intact and transfer using [[clang::musttail]].
+/// They must not throw or retain a Cursor from an earlier visit.
 /// Argument targets remain qualified and stable until retired or discarded.
 template<class... Native>
-using Ring = detail::MemoryRing<std::index_sequence_for<Native...>, Native...>;
+using Ring = detail::MemoryRing<std::index_sequence<>, std::index_sequence_for<Native...>,
+    std::tuple<>, Native...>;
 
 } // namespace loom

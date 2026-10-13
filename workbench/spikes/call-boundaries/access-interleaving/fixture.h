@@ -57,7 +57,7 @@ template<std::size_t> using Part = Vector;
 template<class> struct Family;
 template<std::size_t... V> struct Family<std::index_sequence<V...>> {
   using Ring = loom::Ring<Frame*, Word, Word, Word, Part<V>...>;
-  static LOOM_NATIVE_CC void work(Ring*, typename Ring::Slot*, Frame*,
+  static LOOM_NATIVE_CC void work(typename Ring::Cursor, typename Ring::Slot*, Frame*,
                                  Word row, Word remaining, Word sum, Part<V>...);
   static bool enqueue(Ring&, Frame&);
 };

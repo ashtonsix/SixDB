@@ -1,7 +1,9 @@
-#include <loom/ring.h>
-#include <array>
+#include <loom/detail/ring_storage.h>
+#include <loom/worker.h>
+#include <algorithm>
 #include <bit>
 #include <limits>
+#include <utility>
 
 namespace loom {
 namespace detail {

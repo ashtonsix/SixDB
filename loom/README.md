@@ -91,8 +91,13 @@ Its circular active frontier skips vacant capacity. Selective cleanup runs at a
 returned boundary and preserves surviving rotation and overflow order.
 
 Callbacks carry explicit scalar, pointer or vector arguments and tail-transfer
-through `yield` with `[[clang::musttail]]`. Their pointers must name stable
-qualified operation state, never a previous callback's local plan or View.
+with `[[clang::musttail]]`. `yield` saves changed arguments; `yield_unchanged`
+reuses stored arguments, and `finish` retires the current frame directly.
+The [continuation guide](docs/ring.md) explains these paths and rotation budgets.
+An optional bound common prefix stays in the native register transfer, and
+bounded [cohorts](include/loom/cohort.h) can amortize small item stages per visit.
+Their pointers must name stable qualified operation state, never a previous
+callback's local plan or View.
 Native callbacks must not throw. The private tail signatures omit C++
 `noexcept` because the pinned compiler rejects that combination with `musttail`.
 Concrete argument families need pinned-compiler qualification. Ring spin budgets

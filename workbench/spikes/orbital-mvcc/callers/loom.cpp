@@ -684,7 +684,7 @@ struct RingFrame {
   bool completed{};
 };
 using Ring = loom::Ring<RingFrame*, Word, Word, Word>;
-LOOM_NATIVE_CC void native(Ring* ring, Ring::Slot* slot, RingFrame* frame,
+LOOM_NATIVE_CC void native(Ring::Cursor ring, Ring::Slot* slot, RingFrame* frame,
                           Word row, Word remaining, Word sum) {
   sum += frame->body->reader.get_unchecked(row);
   if (++row == frame->body->shape.rows) row = 0;

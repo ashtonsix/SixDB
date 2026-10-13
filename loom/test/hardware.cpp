@@ -693,7 +693,7 @@ void lifecycle_checks(const loom::HardwareContext& real) {
 
 struct Job { const std::uint64_t* values{}; std::uint64_t result{}, completed{}; };
 using Ring = loom::Ring<std::uint64_t, std::uint64_t, std::uint64_t, Job*>;
-LOOM_NATIVE_CC void native(Ring* ring, Ring::Slot* slot, std::uint64_t cursor,
+LOOM_NATIVE_CC void native(Ring::Cursor ring, Ring::Slot* slot, std::uint64_t cursor,
     std::uint64_t remaining, std::uint64_t sum, Job* job) {
   sum += job->values[cursor];
   cursor = (cursor + 7) & 63;

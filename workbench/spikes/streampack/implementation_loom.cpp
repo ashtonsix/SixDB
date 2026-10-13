@@ -119,7 +119,7 @@ template<bool Hints, class Access> void admission_hint(const Frame<Access>& f,
 template<class Access, bool Hints> struct Native {
     using F = Frame<Access>;
     using Ring = loom::Ring<F*, unsigned, unsigned, std::uint64_t, std::uintptr_t, std::uintptr_t>;
-    static LOOM_NATIVE_CC void geometry(Ring* ring, typename Ring::Slot* slot, F* f,
+    static LOOM_NATIVE_CC void geometry(typename Ring::Cursor ring, typename Ring::Slot* slot, F* f,
         unsigned row, unsigned left, std::uint64_t digest, std::uintptr_t, std::uintptr_t) {
         const auto p = geometry_body(*f, row, left, digest);
         if (!p.live) ring->complete(*slot);
@@ -130,7 +130,7 @@ template<class Access, bool Hints> struct Native {
         [[clang::musttail]] return Ring::yield(ring, slot, f, row, left, digest,
             std::uintptr_t(p.value.offset), std::uintptr_t(p.value.length));
     }
-    static LOOM_NATIVE_CC void payload(Ring* ring, typename Ring::Slot* slot, F* f,
+    static LOOM_NATIVE_CC void payload(typename Ring::Cursor ring, typename Ring::Slot* slot, F* f,
         unsigned row, unsigned left, std::uint64_t digest, std::uintptr_t offset, std::uintptr_t length) {
         const auto next = payload_body(*f, row, left, digest, offset, length);
         if (next.done) ring->complete(*slot);

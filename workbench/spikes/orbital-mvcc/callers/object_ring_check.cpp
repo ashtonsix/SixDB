@@ -226,7 +226,7 @@ struct HistoryFrame {
   HistoryFrame& operator=(const HistoryFrame&) = delete;
 };
 using HistoryRing = loom::Ring<HistoryFrame*,std::uint64_t>;
-LOOM_NATIVE_CC void history_visit(HistoryRing* ring, HistoryRing::Slot* slot, HistoryFrame* frame,
+LOOM_NATIVE_CC void history_visit(HistoryRing::Cursor ring, HistoryRing::Slot* slot, HistoryFrame* frame,
                                  std::uint64_t phase) {
   constexpr auto encoding = lr::law::ReadLaw::canonical();
   const v::tp::byte* source{};

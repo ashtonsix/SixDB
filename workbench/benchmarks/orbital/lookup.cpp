@@ -5,9 +5,9 @@
 
 namespace orbital_bench::lookup {
 namespace {
-template<Stage> LOOM_NATIVE_CC void native(NativeRing*, NativeRing::Slot*, Frame*);
+template<Stage> LOOM_NATIVE_CC void native(NativeRing::Cursor, NativeRing::Slot*, Frame*);
 struct NativeRoute {
-  NativeRing* ring;
+  NativeRing::Cursor ring;
   NativeRing::Slot* slot;
   template<Stage Next> [[gnu::always_inline]] void go(Frame&, State&) const noexcept {
     slot->function = native<Next>;
@@ -114,7 +114,7 @@ template<Stage Current, class Route>
     }
   }
 }
-template<Stage Current> LOOM_NATIVE_CC void native(NativeRing* ring, NativeRing::Slot* slot, Frame* frame) {
+template<Stage Current> LOOM_NATIVE_CC void native(NativeRing::Cursor ring, NativeRing::Slot* slot, Frame* frame) {
   body<Current>(*frame, frame->state, NativeRoute{ring, slot});
   [[clang::musttail]] return NativeRing::yield(ring, slot, frame);
 }

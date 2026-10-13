@@ -61,7 +61,7 @@ template<Pattern Kind>
   }
 }
 
-[[gnu::always_inline]] inline void finish(NativeRing* ring, NativeRing::Slot* slot,
+[[gnu::always_inline]] inline void finish(NativeRing::Cursor ring, NativeRing::Slot* slot,
     std::uint64_t remaining, std::uint64_t sum, Job* job) noexcept {
   if (!remaining) {
     job->result = sum;
@@ -75,7 +75,7 @@ template<Pattern Kind>
 // restriction on C++ noexcept with musttail. Ordinary hint procedures do return.
 #define LOOM_POLICY_INLINE_ENTRY(NAME, PATTERN, PROCEDURE) \
 extern "C" [[gnu::noinline]] LOOM_NATIVE_CC void loom_policy_##NAME( \
-    NativeRing* ring, NativeRing::Slot* slot, const std::byte* cursor, \
+    NativeRing::Cursor ring, NativeRing::Slot* slot, const std::byte* cursor, \
     std::uint64_t remaining, std::uint64_t sum, Job* job) { \
   cursor = advance<Pattern::PATTERN>(cursor, sum, job->geometry); \
   issue<Procedure::PROCEDURE>(cursor, job->geometry); \
@@ -103,7 +103,7 @@ LOOM_POLICY_INLINE_FAMILY(linear, linear)
 
 #define LOOM_POLICY_PROCEDURE_ENTRY(NAME, PATTERN) \
 extern "C" [[gnu::noinline]] LOOM_NATIVE_CC void loom_policy_##NAME##_procedure( \
-    NativeRing* ring, NativeRing::Slot* slot, const std::byte* cursor, \
+    NativeRing::Cursor ring, NativeRing::Slot* slot, const std::byte* cursor, \
     std::uint64_t remaining, std::uint64_t sum, Job* job) { \
   cursor = advance<Pattern::PATTERN>(cursor, sum, job->geometry); \
   (*job->hints)[job->code](cursor, job->geometry); \
@@ -118,7 +118,7 @@ LOOM_POLICY_PROCEDURE_ENTRY(linear, linear)
 
 #define LOOM_POLICY_SWITCH_ENTRY(NAME, PATTERN) \
 extern "C" [[gnu::noinline]] LOOM_NATIVE_CC void loom_policy_##NAME##_switch( \
-    NativeRing* ring, NativeRing::Slot* slot, const std::byte* cursor, \
+    NativeRing::Cursor ring, NativeRing::Slot* slot, const std::byte* cursor, \
     std::uint64_t remaining, std::uint64_t sum, Job* job) { \
   cursor = advance<Pattern::PATTERN>(cursor, sum, job->geometry); \
   issue_selected((*job->codes)[job->code], cursor, job->geometry); \

@@ -73,7 +73,7 @@ struct Input {
   }
 };
 
-LOOM_NATIVE_CC void scalar(Scalar* ring, Scalar::Slot* slot, std::uint64_t cursor,
+LOOM_NATIVE_CC void scalar(Scalar::Cursor ring, Scalar::Slot* slot, std::uint64_t cursor,
     std::uint64_t remaining, std::uint64_t sum, Job* job) {
   const auto& node = job->nodes[cursor];
   sum += node.value;
@@ -86,7 +86,7 @@ LOOM_NATIVE_CC void scalar(Scalar* ring, Scalar::Slot* slot, std::uint64_t curso
   [[clang::musttail]] return Scalar::yield(ring, slot, cursor, remaining, sum, job);
 }
 
-LOOM_NATIVE_CC void other_scalar(Scalar* ring, Scalar::Slot* slot, std::uint64_t cursor,
+LOOM_NATIVE_CC void other_scalar(Scalar::Cursor ring, Scalar::Slot* slot, std::uint64_t cursor,
     std::uint64_t remaining, std::uint64_t sum, Job* job) {
   const auto& node = job->nodes[cursor];
   sum += node.value ^ 0x33;
@@ -99,7 +99,7 @@ LOOM_NATIVE_CC void other_scalar(Scalar* ring, Scalar::Slot* slot, std::uint64_t
   [[clang::musttail]] return Scalar::yield(ring, slot, cursor, remaining, sum, job);
 }
 
-LOOM_NATIVE_CC void vectors(Vectors* ring, Vectors::Slot* slot, std::uint64_t cursor,
+LOOM_NATIVE_CC void vectors(Vectors::Cursor ring, Vectors::Slot* slot, std::uint64_t cursor,
     std::uint64_t remaining, std::uint64_t sum, Job* job, Vector x, Vector y) {
   const auto& node = job->nodes[cursor];
   sum += node.value;
@@ -243,7 +243,7 @@ struct RotationJob {
   bool attempted{}, accepted{};
 };
 
-LOOM_NATIVE_CC void rotation(Rotation* ring, Rotation::Slot* slot, std::uint64_t remaining,
+LOOM_NATIVE_CC void rotation(Rotation::Cursor ring, Rotation::Slot* slot, std::uint64_t remaining,
     std::uint64_t sum, RotationJob* job) {
   job->log->ids[job->log->used++] = job->id;
   sum += job->id * 13 + remaining;
@@ -340,7 +340,7 @@ void rotation_checks(Fixture& fixture) {
         "survivor exact accepted disposition");
 }
 
-LOOM_NATIVE_CC void clobber_entry(Scalar* ring, Scalar::Slot* slot, std::uint64_t cursor,
+LOOM_NATIVE_CC void clobber_entry(Scalar::Cursor ring, Scalar::Slot* slot, std::uint64_t cursor,
     std::uint64_t remaining, std::uint64_t sum, Job* job) {
 #if defined(__aarch64__)
   __asm__ volatile("mov x19, #321" ::: "x19");

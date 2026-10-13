@@ -127,7 +127,7 @@ template<bool Vectors> std::uint64_t result(const Values<Vectors>& values) {
 }
 
 template<loom::Hint Kind, bool Alternate>
-LOOM_NATIVE_CC void scalar(ScalarRing* ring, ScalarRing::Slot* slot, std::uint64_t cursor,
+LOOM_NATIVE_CC void scalar(ScalarRing::Cursor ring, ScalarRing::Slot* slot, std::uint64_t cursor,
     std::uint64_t remaining, std::uint64_t sum, Job* job) {
   Values<false> values{cursor, sum};
   useful<Kind, Alternate>(job->nodes, values);
@@ -140,7 +140,7 @@ LOOM_NATIVE_CC void scalar(ScalarRing* ring, ScalarRing::Slot* slot, std::uint64
 }
 
 template<loom::Hint Kind, bool Alternate>
-LOOM_NATIVE_CC void vectors(VectorRing* ring, VectorRing::Slot* slot, std::uint64_t cursor,
+LOOM_NATIVE_CC void vectors(VectorRing::Cursor ring, VectorRing::Slot* slot, std::uint64_t cursor,
     std::uint64_t remaining, std::uint64_t sum, Job* job, Vector x, Vector y) {
   Values<true> values{cursor, sum, x, y};
   useful<Kind, Alternate>(job->nodes, values);

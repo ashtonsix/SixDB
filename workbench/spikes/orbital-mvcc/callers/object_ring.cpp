@@ -35,9 +35,9 @@ template<bool Hints>
   --state.remaining;
 }
 
-template<Stage, bool> LOOM_NATIVE_CC void native(Ring*, Ring::Slot*, Frame*, Word, Word, Word, Word, Word);
+template<Stage, bool> LOOM_NATIVE_CC void native(Ring::Cursor, Ring::Slot*, Frame*, Word, Word, Word, Word, Word);
 struct NativeRoute {
-  Ring* ring;
+  Ring::Cursor ring;
   Ring::Slot* slot;
   template<Stage Next, bool Hints> [[gnu::always_inline]] void go(Frame&) const noexcept {
     slot->function = native<Next, Hints>;
@@ -89,7 +89,7 @@ template<Stage Current, bool Hints, class Route>
   }
 }
 template<Stage Current, bool Hints>
-LOOM_NATIVE_CC void native(Ring* ring, Ring::Slot* slot, Frame* frame,
+LOOM_NATIVE_CC void native(Ring::Cursor ring, Ring::Slot* slot, Frame* frame,
     Word key, Word first, Word last, Word remaining, Word digest) {
   State state{key, first, last, remaining, digest};
   body<Current, Hints>(*frame, state, ring->hint_policy(), NativeRoute{ring, slot});

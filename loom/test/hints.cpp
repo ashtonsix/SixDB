@@ -220,7 +220,7 @@ template<std::size_t> using Part = Vector;
 template<class> struct Family;
 template<std::size_t... V> struct Family<std::index_sequence<V...>> {
   using Ring = loom::Ring<Frame*, std::uint64_t, std::uint64_t, std::uint64_t, Part<V>...>;
-  [[gnu::noinline]] static LOOM_NATIVE_CC void work(Ring* ring, typename Ring::Slot* slot, Frame* frame,
+  [[gnu::noinline]] static LOOM_NATIVE_CC void work(typename Ring::Cursor ring, typename Ring::Slot* slot, Frame* frame,
       std::uint64_t row, std::uint64_t remaining, std::uint64_t sum, Part<V>... values) {
     const auto decoded = frame->input->reader.get_unchecked(row);
     const Carrier accumulator{{values...}};
@@ -238,7 +238,7 @@ template<std::size_t... V> struct Family<std::index_sequence<V...>> {
     }
     [[clang::musttail]] return Ring::yield(ring, slot, frame, row, remaining, sum, next.v[V]...);
   }
-  static LOOM_NATIVE_CC void clobber(Ring* ring, typename Ring::Slot* slot, Frame* frame,
+  static LOOM_NATIVE_CC void clobber(typename Ring::Cursor ring, typename Ring::Slot* slot, Frame* frame,
       std::uint64_t row, std::uint64_t remaining, std::uint64_t sum, Part<V>... values) {
 #if defined(__aarch64__)
     __asm__ volatile("mov x19, #321" ::: "x19");

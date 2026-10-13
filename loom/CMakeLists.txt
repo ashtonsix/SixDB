@@ -20,6 +20,24 @@ sixdb_target(loom_ring_check)
 target_link_libraries(loom_ring_check PRIVATE loom)
 add_test(NAME loom_ring_check COMMAND loom_ring_check)
 
+add_executable(loom_ring_rotation_check EXCLUDE_FROM_ALL test/ring_rotation.cpp)
+sixdb_target(loom_ring_rotation_check)
+target_link_libraries(loom_ring_rotation_check PRIVATE loom)
+add_test(NAME loom_ring_rotation_check COMMAND loom_ring_rotation_check)
+set_tests_properties(loom_ring_rotation_check PROPERTIES TIMEOUT 30)
+
+add_executable(loom_ring_shared_check EXCLUDE_FROM_ALL test/ring_shared.cpp)
+sixdb_target(loom_ring_shared_check)
+target_link_libraries(loom_ring_shared_check PRIVATE loom)
+add_test(NAME loom_ring_shared_check COMMAND loom_ring_shared_check)
+set_tests_properties(loom_ring_shared_check PROPERTIES TIMEOUT 30)
+
+add_executable(loom_cohort_check EXCLUDE_FROM_ALL test/cohort.cpp)
+sixdb_target(loom_cohort_check)
+target_link_libraries(loom_cohort_check PRIVATE loom)
+add_test(NAME loom_cohort_check COMMAND loom_cohort_check)
+set_tests_properties(loom_cohort_check PROPERTIES TIMEOUT 30)
+
 add_executable(loom_hint_check EXCLUDE_FROM_ALL test/hints.cpp)
 sixdb_target(loom_hint_check)
 target_link_libraries(loom_hint_check PRIVATE loom ikea::tuplepack)
@@ -80,7 +98,7 @@ add_test(NAME loom_budget_check COMMAND loom_budget_check)
 set_tests_properties(loom_budget_check PROPERTIES TIMEOUT 60)
 
 set_tests_properties(
-  loom_worker_check loom_capacity_check loom_ring_check loom_hint_check
+  loom_worker_check loom_capacity_check loom_ring_check loom_ring_rotation_check loom_ring_shared_check loom_cohort_check loom_hint_check
   loom_hardware_check loom_example_hints loom_example_hardware loom_example_allocation
   loom_example_capacity loom_example_partition loom_example_preparation_window
   loom_example_preparation_finite loom_budget_check
@@ -89,5 +107,5 @@ set_tests_properties(
 add_custom_target(loom_validate
   COMMAND "${CMAKE_CTEST_COMMAND}" --test-dir "${PROJECT_BINARY_DIR}"
     --output-on-failure --no-tests=error -L "^loom-runtime$"
-  DEPENDS loom_worker_check loom_capacity_check loom_ring_check loom_hint_check loom_hardware_check loom_example_hints loom_example_hardware loom_example_allocation loom_example_capacity loom_example_partition loom_example_preparation loom_budget_check
+  DEPENDS loom_worker_check loom_capacity_check loom_ring_check loom_ring_rotation_check loom_ring_shared_check loom_cohort_check loom_hint_check loom_hardware_check loom_example_hints loom_example_hardware loom_example_allocation loom_example_capacity loom_example_partition loom_example_preparation loom_budget_check
   USES_TERMINAL VERBATIM)

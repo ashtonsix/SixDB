@@ -30,7 +30,7 @@ struct Family<Copies, Metadata, std::index_sequence<G...>, std::index_sequence<V
   };
   using Ring = loom::Ring<Job*, Word, Word, Word, Scalar<G>..., Part<V>...>;
 
-  [[gnu::noinline]] static LOOM_NATIVE_CC void callback(Ring* ring, typename Ring::Slot* slot,
+  [[gnu::noinline]] static LOOM_NATIVE_CC void callback(typename Ring::Cursor ring, typename Ring::Slot* slot,
       Job* job, Word row, Word remaining, Word sum, Scalar<G>... metadata, Part<V>... vectors) {
     const auto decoded=job->reader->get_unchecked(row);
     std::array<Vector, Copies * Carrier::parts> parts{vectors...};

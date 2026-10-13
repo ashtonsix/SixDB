@@ -46,7 +46,7 @@ using Ring = loom::Ring<std::uint64_t, std::uint64_t, std::uint64_t, NativeJob*>
 
 // The operation has already captured every address and extent. Native callbacks
 // do bounded ordinary work, with no allocation, wait, clock or shared counter.
-LOOM_NATIVE_CC void background(Ring* ring, Ring::Slot* slot, std::uint64_t cursor,
+LOOM_NATIVE_CC void background(Ring::Cursor ring, Ring::Slot* slot, std::uint64_t cursor,
     std::uint64_t left, std::uint64_t sum, NativeJob* job) {
   sum += job->input[cursor % input_count];
   ++cursor; --left; ++job->steps; job->sum = sum;
@@ -54,7 +54,7 @@ LOOM_NATIVE_CC void background(Ring* ring, Ring::Slot* slot, std::uint64_t curso
   [[clang::musttail]] return Ring::yield(ring, slot, cursor, left, sum, job);
 }
 
-LOOM_NATIVE_CC void produce(Ring* ring, Ring::Slot* slot, std::uint64_t cursor,
+LOOM_NATIVE_CC void produce(Ring::Cursor ring, Ring::Slot* slot, std::uint64_t cursor,
     std::uint64_t left, std::uint64_t sum, NativeJob* job) {
   const auto count = std::min<std::uint64_t>(left, grain);
   for (std::uint64_t i = 0; i < count; ++i, ++cursor) {
@@ -67,7 +67,7 @@ LOOM_NATIVE_CC void produce(Ring* ring, Ring::Slot* slot, std::uint64_t cursor,
   [[clang::musttail]] return Ring::yield(ring, slot, cursor, left, sum, job);
 }
 
-LOOM_NATIVE_CC void consume(Ring* ring, Ring::Slot* slot, std::uint64_t cursor,
+LOOM_NATIVE_CC void consume(Ring::Cursor ring, Ring::Slot* slot, std::uint64_t cursor,
     std::uint64_t left, std::uint64_t sum, NativeJob* job) {
   const auto count = std::min<std::uint64_t>(left, grain);
   for (std::uint64_t i = 0; i < count; ++i, ++cursor) {

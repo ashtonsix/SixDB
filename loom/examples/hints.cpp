@@ -12,16 +12,19 @@
 namespace {
 void check(bool value) { if (!value) std::abort(); }
 struct alignas(64) Node { std::uint64_t next{}, value{}; std::array<std::uint64_t, 6> padding{}; };
-struct Frame { const Node* nodes{}; loom::DemandClass demand; std::uint64_t result{}; };
-using Ring = loom::Ring<Frame*, std::uint64_t, std::uint64_t, std::uint64_t>;
-LOOM_NATIVE_CC void visit(Ring* ring, Ring::Slot* slot, Frame* frame,
+struct Frame { loom::DemandClass demand; std::uint64_t result{}; };
+using Ring = loom::Ring<Frame*, std::uint64_t, std::uint64_t, std::uint64_t>::WithShared<const Node*>;
+LOOM_NATIVE_CC void visit(Ring::Cursor ring, Ring::Slot* slot, const Node* nodes, Frame* frame,
     std::uint64_t cursor, std::uint64_t left, std::uint64_t sum) {
-  const auto& node = frame->nodes[cursor];
+  const auto& node = nodes[cursor];
   sum += node.value;
   cursor = node.next;
-  ring->prefetch(frame->demand, frame->nodes + cursor);
-  if (!--left) { frame->result = sum; ring->complete(*slot); }
-  [[clang::musttail]] return Ring::yield(ring, slot, frame, cursor, left, sum);
+  if (!--left) {
+    frame->result = sum;
+    [[clang::musttail]] return Ring::finish(ring, slot, nodes, frame, cursor, left, sum);
+  }
+  ring->prefetch(frame->demand, nodes + cursor);
+  [[clang::musttail]] return Ring::yield(ring, slot, nodes, frame, cursor, left, sum);
 }
 }
 int main(int argc, char** argv) {
@@ -49,7 +52,9 @@ int main(int argc, char** argv) {
   for (unsigned i = 0; i < 64; ++i) std::construct_at(nodes + i, Node{(i * 5 + 3) & 63, i * 73 + 19, {}});
   auto demand = loom::bind_demand({loom::MemoryPattern::irregular, sizeof(Node)}, sizeof(Node));
   check(bool(demand));
-  Ring ring; check(bool(ring.configure(worker, {4, 0})));
+  // This base is common to every frame. Load it once at spin entry, then carry
+  // it through the native tail jumps instead of restoring it from each Slot.
+  Ring ring; check(bool(ring.configure(worker, {4, 0}, {nodes})));
   std::array<Frame, 4> frames;
   const auto deadline = std::chrono::steady_clock::now() + options.limits.wall_time + std::chrono::seconds(1);
   std::uint64_t batches = 0;
@@ -57,7 +62,7 @@ int main(int argc, char** argv) {
     check(bool(loom::refresh_hints(worker)));
     check(bool(ring.refresh_hints()));
     for (unsigned i = 0; i < frames.size(); ++i) {
-      frames[i] = {nodes, *demand, 0};
+      frames[i] = {*demand, 0};
       check(ring.push(visit, {&frames[i], i, 31, 0}, loom::MemoryDependency{nodes + i, *demand}));
     }
     while (ring.pending()) ring.spin({128});

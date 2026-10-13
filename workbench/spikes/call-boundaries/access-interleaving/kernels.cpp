@@ -70,7 +70,7 @@ ACCESS_MANUAL(8)
 
 template<std::size_t... V>
 [[gnu::noinline]] LOOM_NATIVE_CC void Family<std::index_sequence<V...>>::work(
-    Ring* ring, typename Ring::Slot* slot, Frame* frame, Word row, Word remaining,
+    typename Ring::Cursor ring, typename Ring::Slot* slot, Frame* frame, Word row, Word remaining,
     Word sum, Part<V>... values) {
   const auto decoded = frame->selected->reader.get_unchecked(row);
   const Word first = tp::native::word<0>(decoded);

@@ -56,11 +56,11 @@ template<class Reader> struct Job {
 template<class Reader> using Ring = loom::Ring<Job<Reader>*, unsigned, unsigned, std::uint64_t, const std::byte*>;
 
 template<bool Hints, class Reader>
-LOOM_NATIVE_CC void payload(Ring<Reader>*, typename Ring<Reader>::Slot*, Job<Reader>*, unsigned,
+LOOM_NATIVE_CC void payload(typename Ring<Reader>::Cursor, typename Ring<Reader>::Slot*, Job<Reader>*, unsigned,
     unsigned, std::uint64_t, const std::byte*);
 
 template<bool Hints, class Reader>
-LOOM_NATIVE_CC void geometry(Ring<Reader>* ring, typename Ring<Reader>::Slot* slot,
+LOOM_NATIVE_CC void geometry(typename Ring<Reader>::Cursor ring, typename Ring<Reader>::Slot* slot,
     Job<Reader>* job, unsigned row, unsigned remaining, std::uint64_t sum, const std::byte*) {
   const auto value = job->reader->value(row);
   const auto* tail = value.data() + value.size() - 4;
@@ -70,7 +70,7 @@ LOOM_NATIVE_CC void geometry(Ring<Reader>* ring, typename Ring<Reader>::Slot* sl
 }
 
 template<bool Hints, class Reader>
-LOOM_NATIVE_CC void payload(Ring<Reader>* ring, typename Ring<Reader>::Slot* slot,
+LOOM_NATIVE_CC void payload(typename Ring<Reader>::Cursor ring, typename Ring<Reader>::Slot* slot,
     Job<Reader>* job, unsigned row, unsigned remaining, std::uint64_t sum, const std::byte* tail) {
   std::memcpy(&row, tail, 4);
   if (!--remaining) {
